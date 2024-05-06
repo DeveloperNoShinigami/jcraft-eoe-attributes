@@ -16,10 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.arna.fabric.JCraftFabric"
+      "net.arna.jcraft.fabric.JCraftFabric"
     ],
     "client": [
-      "net.arna.fabric.client.JCraftFabricClient"
+      "net.arna.jcraft.fabric.client.JCraftFabricClient"
     ]
   },
   "mixins": [

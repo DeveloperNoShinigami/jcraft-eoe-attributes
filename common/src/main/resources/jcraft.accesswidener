@@ -1,0 +1,21 @@
+accessWidener v2 named
+
+accessible method net/minecraft/entity/damage/DamageTracker getBiggestFall ()Lnet/minecraft/entity/damage/DamageRecord;
+accessible field net/minecraft/block/entity/AbstractFurnaceBlockEntity burnTime I
+accessible field net/minecraft/server/world/ServerWorld sleepManager Lnet/minecraft/server/world/SleepManager;
+
+
+accessible field net/minecraft/client/render/RenderLayer$MultiPhase phases Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+accessible method net/minecraft/client/gl/ShaderProgram addUniform (Lcom/google/gson/JsonElement;)V
+accessible field net/minecraft/client/gl/ShaderProgram uniforms Ljava/util/List;
+accessible method net/minecraft/client/render/GameRenderer getFov (Lnet/minecraft/client/render/Camera;FZ)D
+accessible field net/minecraft/client/gl/PostEffectProcessor passes Ljava/util/List;
+accessible class net/minecraft/client/render/RenderPhase$ShaderProgram
+accessible field net/minecraft/client/render/BackgroundRenderer$FogData fogStart F
+accessible field net/minecraft/client/render/BackgroundRenderer$FogData fogEnd F
+accessible field net/minecraft/client/render/BackgroundRenderer$FogData fogShape Lnet/minecraft/client/render/FogShape;
+accessible class net/minecraft/client/render/RenderLayer$MultiPhaseParameters
+accessible class net/minecraft/client/render/RenderLayer$MultiPhase
+
+accessible method net/minecraft/block/IceBlock melt (Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V
+accessible field net/minecraft/entity/ai/control/MoveControl sidewaysMovement F
