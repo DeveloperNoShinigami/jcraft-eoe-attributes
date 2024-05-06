@@ -1,0 +1,11 @@
+/.gradle/*
+/fabric/run/*
+/fabric/build/*
+/forge/run/*
+/forge/build/*
+/.idea/*
+/common/run/*
+/common/build/*
+/fabric/.gradle/*
+/forge/.gradle/*
+/common/.gradle/*
