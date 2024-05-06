@@ -1,20 +1,17 @@
 package net.arna.jcraft.registry;
 
+import dev.architectury.registry.registries.Registrar;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.block.FoolishSandBlock;
-import net.arna.jcraft.common.block.ShaderTestBlock;
 import net.arna.jcraft.common.block.SoulBlock;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.item.*;
 import net.arna.jcraft.common.spec.SpecType;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.MapColor;
+import net.minecraft.block.*;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.*;
@@ -29,7 +26,13 @@ import net.minecraft.world.World;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static net.arna.jcraft.JCraft.MANAGER;
+
 public interface JObjectRegistry {
+
+    Registrar<Item> ITEM_REGISTRY = MANAGER.get().get(Registries.ITEM);
+    Registrar<Block> BLOCK_REGISTRY = MANAGER.get().get(Registries.BLOCK);
+
     Map<Block, Identifier> BLOCKS = new LinkedHashMap<>();
     Map<Item, Identifier> ITEMS = new LinkedHashMap<>();
 
@@ -97,26 +100,25 @@ public interface JObjectRegistry {
     Item MOCK_ITEM = register("mock_item", new MockItem());
 
     //Block
-    Block FOOLISH_SAND_BLOCK = register("foolish_sand_block", new FoolishSandBlock(FabricBlockSettings.create()
+    Block FOOLISH_SAND_BLOCK = register("foolish_sand_block", new FoolishSandBlock(AbstractBlock.Settings.create()
             .strength(0.5f)
             .sounds(BlockSoundGroup.SAND)
     ), settings(), true);
-    Block SOUL_BLOCK = register("soul_block", new SoulBlock(FabricBlockSettings.create()
+    Block SOUL_BLOCK = register("soul_block", new SoulBlock(AbstractBlock.Settings.create()
             .strength(4.0f)
             .sounds(BlockSoundGroup.SOUL_SOIL)
     ), settings(), true);
-    Block METEORITE_BLOCK = register("meteorite_block", new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK)
+    Block METEORITE_BLOCK = register("meteorite_block", new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)
             .requiresTool()
             .strength(6.0f, 1200f)
             .sounds(BlockSoundGroup.ANCIENT_DEBRIS)
     ), settings(), true);
-    Block METEORITE_IRON_ORE_BLOCK = register("meteorite_iron_ore_block", new Block(FabricBlockSettings.copyOf(Blocks.IRON_ORE)
+    Block METEORITE_IRON_ORE_BLOCK = register("meteorite_iron_ore_block", new Block(AbstractBlock.Settings.copy(Blocks.IRON_ORE)
             .requiresTool()
             .strength(9.0f, 1200f)
             .sounds(BlockSoundGroup.ANCIENT_DEBRIS)
     ), settings(), true);
-    Block COFFIN_BLOCK = register("coffin", new CoffinBlock(FabricBlockSettings.create().sounds(BlockSoundGroup.WOOD).nonOpaque()), settings(), true);
-    Block SHADER_TEST_BLOCK = register("shader_test_block", new ShaderTestBlock(FabricBlockSettings.create()), settings(), true);
+    Block COFFIN_BLOCK = register("coffin", new CoffinBlock(AbstractBlock.Settings.create().sounds(BlockSoundGroup.WOOD).nonOpaque()), settings(), true);
 
     static Item.Settings settings() {
         return new Item.Settings();
@@ -136,8 +138,12 @@ public interface JObjectRegistry {
     }
 
     static void init() {
-        BLOCKS.keySet().forEach(block -> Registry.register(Registries.BLOCK, BLOCKS.get(block), block));
-        ITEMS.keySet().forEach(item -> Registry.register(Registries.ITEM, ITEMS.get(item), item));
+        BLOCKS.keySet().forEach(block -> {
+            BLOCK_REGISTRY.register(BLOCKS.get(block), () -> block);
+        });
+        ITEMS.keySet().forEach(item -> {
+            ITEM_REGISTRY.register(ITEMS.get(item), () -> item);
+        });
 
         DispenserBlock.registerBehavior(KNIFE, new ProjectileDispenserBehavior() {
             @Override

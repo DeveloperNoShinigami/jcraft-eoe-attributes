@@ -19,3 +19,5 @@ accessible class net/minecraft/client/render/RenderLayer$MultiPhase
 
 accessible method net/minecraft/block/IceBlock melt (Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V
 accessible field net/minecraft/entity/ai/control/MoveControl sidewaysMovement F
+
+accessible method net/minecraft/command/argument/ArgumentTypes register (Lnet/minecraft/registry/Registry;Ljava/lang/String;Ljava/lang/Class;Lnet/minecraft/command/argument/serialize/ArgumentSerializer;)Lnet/minecraft/command/argument/serialize/ArgumentSerializer;

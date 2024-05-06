@@ -1,5 +1,6 @@
 package net.arna.jcraft.registry;
 
+import dev.architectury.event.events.common.EntityEvent;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.JComponents;
@@ -15,15 +16,6 @@ import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.tickable.Revivables;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JUtils;
-import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;

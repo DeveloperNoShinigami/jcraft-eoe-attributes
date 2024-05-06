@@ -1,12 +1,15 @@
 package net.arna.jcraft.registry;
 
+import dev.architectury.registry.level.entity.EntityAttributeRegistry;
+import dev.architectury.registry.registries.Registrar;
+import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.block.tile.CoffinTileEntity;
 import net.arna.jcraft.common.entity.*;
 import net.arna.jcraft.common.entity.projectile.*;
 import net.arna.jcraft.common.entity.stand.*;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -18,362 +21,452 @@ import net.minecraft.world.World;
 
 import java.util.function.Function;
 
+import static net.arna.jcraft.JCraft.MANAGER;
+
 public interface JEntityTypeRegistry {
 
-    EntityType<StarPlatinumEntity> STAR_PLATINUM = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("starplatinum"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(StarPlatinumEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    Registrar<EntityType<?>> REGISTRY = MANAGER.get().get(Registries.ENTITY_TYPE);
+
+    RegistrySupplier<EntityType<StarPlatinumEntity>> STAR_PLATINUM = REGISTRY.register(JCraft.id("starplatinum"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(StarPlatinumEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(
+                    0.6f,
+                    1.8f
+            ).build(null)
     );
 
-    EntityType<SPTWEntity> SPTW = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("sptw"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(SPTWEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<SPTWEntity>> SPTW = REGISTRY.register(JCraft.id("sptw"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(SPTWEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(
+                    0.6f,
+                    1.8f
+            ).build(null)
     );
 
-    EntityType<KingCrimsonEntity> KING_CRIMSON = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("kingcrimson"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(KingCrimsonEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<KingCrimsonEntity>> KING_CRIMSON = REGISTRY.register(JCraft.id("kingcrimson"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(KingCrimsonEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(
+                    0.6f,
+                    1.8f
+            ).build(null)
     );
 
-    EntityType<TheWorldEntity> THE_WORLD = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("theworld"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(TheWorldEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<TheWorldEntity>> THE_WORLD = REGISTRY.register(JCraft.id("theworld"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(TheWorldEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(
+                    0.6f,
+                    1.8f
+            ).build(null)
     );
 
-    EntityType<D4CEntity> D4C = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("d4c"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(D4CEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<D4CEntity>> D4C = REGISTRY.register(JCraft.id("d4c"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(D4CEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(
+                    0.6f,
+                    1.8f
+            ).build(null)
     );
 
-    EntityType<CreamEntity> CREAM = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("cream"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(CreamEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<CreamEntity>> CREAM = REGISTRY.register(JCraft.id("cream"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(CreamEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(
+                    0.6f,
+                    1.8f
+            ).build(null)
     );
 
-    EntityType<KillerQueenEntity> KILLER_QUEEN = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("killerqueen"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(KillerQueenEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<KillerQueenEntity>> KILLER_QUEEN = REGISTRY.register(JCraft.id("killerqueen"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(KillerQueenEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(
+                    0.6f,
+                    1.8f
+            ).build(null)
     );
 
-    EntityType<KQBTDEntity> KILLER_QUEEN_BITES_THE_DUST = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("kqbtd"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(KQBTDEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<KQBTDEntity>> KILLER_QUEEN_BITES_THE_DUST = REGISTRY.register(JCraft.id("kqbtd"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(KQBTDEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(
+                    0.6f,
+                    1.8f
+            ).build(null)
     );
 
-    EntityType<SheerHeartAttackEntity> SHEER_HEART_ATTACK = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("sha"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, SheerHeartAttackEntity::new).dimensions(EntityDimensions.fixed(0.5f, 0.5f)).build()
+    RegistrySupplier<EntityType<SheerHeartAttackEntity>> SHEER_HEART_ATTACK = REGISTRY.register(JCraft.id("sha"),
+            () -> EntityType.Builder.create(
+                    SheerHeartAttackEntity::new,
+                    SpawnGroup.CREATURE
+            ).setDimensions(
+                    0.5f,
+                    0.5f
+            ).build(null)
     );
 
-    EntityType<WhiteSnakeEntity> WHITE_SNAKE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("whitesnake"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(WhiteSnakeEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<WhiteSnakeEntity>> WHITE_SNAKE = REGISTRY.register(JCraft.id("whitesnake"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(WhiteSnakeEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build(null)
     );
 
-    EntityType<CMoonEntity> C_MOON = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("cmoon"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(CMoonEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<CMoonEntity>> C_MOON = REGISTRY.register(JCraft.id("cmoon"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(CMoonEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build(null)
     );
 
-    EntityType<MadeInHeavenEntity> MADE_IN_HEAVEN = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("mih"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(MadeInHeavenEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 2.1f)).build()
+    RegistrySupplier<EntityType<MadeInHeavenEntity>> MADE_IN_HEAVEN = REGISTRY.register(JCraft.id("mih"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(MadeInHeavenEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 2.1f).build(null)
     );
 
-    EntityType<TheWorldOverHeavenEntity> THE_WORLD_OVER_HEAVEN = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("twoh"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(TheWorldOverHeavenEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<TheWorldOverHeavenEntity>> THE_WORLD_OVER_HEAVEN = REGISTRY.register(JCraft.id("twoh"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(TheWorldOverHeavenEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build(null)
     );
 
-    EntityType<SilverChariotEntity> SILVER_CHARIOT = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("silverchariot"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(SilverChariotEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<SilverChariotEntity>> SILVER_CHARIOT = REGISTRY.register(JCraft.id("silverchariot"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(SilverChariotEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build(null)
     );
 
-    EntityType<MagiciansRedEntity> MAGICIANS_RED = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("mr"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(MagiciansRedEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<MagiciansRedEntity>> MAGICIANS_RED = REGISTRY.register(JCraft.id("mr"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(MagiciansRedEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build(null)
     );
 
-    EntityType<TheFoolEntity> THE_FOOL = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("thefool"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(TheFoolEntity::new))
-                    .dimensions(EntityDimensions.fixed(2f, 2f))
-                    .fireImmune()
-                    .build()
+    RegistrySupplier<EntityType<TheFoolEntity>> THE_FOOL = REGISTRY.register(JCraft.id("thefool"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(TheFoolEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(2f, 2f).makeFireImmune().build(null)
     );
 
-    EntityType<GoldExperienceEntity> GOLD_EXPERIENCE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("goldexperience"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(GoldExperienceEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
-    );
-    EntityType<GETreeEntity> GE_TREE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("getree"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, ((EntityType<GETreeEntity> type, World world) -> new GETreeEntity(type, world))).dimensions(EntityDimensions.fixed(0.6f, 0.8f)).build()
-    );
-    EntityType<GESnakeEntity> GE_SNAKE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("gesnake"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, GESnakeEntity::new).dimensions(EntityDimensions.fixed(1f, 0.3f)).build()
-    );
-    EntityType<GEFrogEntity> GE_FROG = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("gefrog"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, GEFrogEntity::new).dimensions(EntityDimensions.fixed(0.3f, 0.3f)).build()
-    );
-    EntityType<GEButterflyEntity> GE_BUTTERFLY = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("gebutterfly"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, GEButterflyEntity::new).dimensions(EntityDimensions.fixed(0.3f, 0.3f)).build()
+    RegistrySupplier<EntityType<GoldExperienceEntity>> GOLD_EXPERIENCE = REGISTRY.register(JCraft.id("goldexperience"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(GoldExperienceEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build(null)
     );
 
-    EntityType<HGEntity> HIEROPHANT_GREEN = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("hierophant_green"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(HGEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<GETreeEntity>> GE_TREE = REGISTRY.register(JCraft.id("getree"),
+            () -> EntityType.Builder.create(
+                    ((EntityType<GETreeEntity> type, World world) -> new GETreeEntity(type, world)),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 0.8f).build(null)
     );
 
-    EntityType<TheSunEntity> THE_SUN = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("the_sun"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(TheSunEntity::new)).dimensions(EntityDimensions.fixed(2f, 2f)).build()
+    RegistrySupplier<EntityType<GESnakeEntity>> GE_SNAKE = REGISTRY.register(JCraft.id("gesnake"),
+            () -> EntityType.Builder.create(
+                    (GESnakeEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(1f, 0.3f).build(null)
     );
 
-    EntityType<PurpleHazeEntity> PURPLE_HAZE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("purple_haze"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(PurpleHazeEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<GEFrogEntity>> GE_FROG = REGISTRY.register(JCraft.id("gefrog"),
+            () -> EntityType.Builder.create(
+                    (GEFrogEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.3f, 0.3f).build(null)
     );
 
-    EntityType<PurpleHazeDistortionEntity> PURPLE_HAZE_DISTORTION = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("purple_haze_distortion"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(PurpleHazeDistortionEntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<GEButterflyEntity>> GE_BUTTERFLY = REGISTRY.register(JCraft.id("gebutterfly"),
+            () -> EntityType.Builder.create(
+                    (GEButterflyEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.3f, 0.3f).build(null)
     );
 
-    EntityType<GEREntity> GER = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("ger"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorldOnlyEntityFactory.from(GEREntity::new)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
-    );
-    EntityType<GERScorpionEntity> GER_SCORPION = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("gerscorpion"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, GERScorpionEntity::new).dimensions(EntityDimensions.fixed(0.4f, 0.4f)).build()
+
+    RegistrySupplier<EntityType<HGEntity>> HIEROPHANT_GREEN = REGISTRY.register(JCraft.id("hierophant_green"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(HGEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build(null)
     );
 
-    // Player clone
-    EntityType<PlayerCloneEntity> PLAYER_CLONE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("playerclone"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, (EntityType<PlayerCloneEntity> entityType, World world) -> new PlayerCloneEntity(world)).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+    RegistrySupplier<EntityType<TheSunEntity>> THE_SUN = REGISTRY.register(JCraft.id("the_sun"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(TheSunEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(2f, 2f).build(null)
+    );
+
+    RegistrySupplier<EntityType<PurpleHazeEntity>> PURPLE_HAZE = REGISTRY.register(JCraft.id("purple_haze"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(PurpleHazeEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build(null)
+    );
+
+    RegistrySupplier<EntityType<PurpleHazeDistortionEntity>> PURPLE_HAZE_DISTORTION = REGISTRY.register(JCraft.id("purple_haze_distortion"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(PurpleHazeDistortionEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build(null)
+    );
+
+    RegistrySupplier<EntityType<GEREntity>> GER = REGISTRY.register(JCraft.id("ger"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(GEREntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build(null)
+    );
+
+    RegistrySupplier<EntityType<GERScorpionEntity>> GER_SCORPION = REGISTRY.register(JCraft.id("gerscorpion"),
+            () -> EntityType.Builder.create(
+                    GERScorpionEntity::new, SpawnGroup.CREATURE)
+                    .setDimensions(0.4f, 0.4f)
+                    .build(null)
+    );
+
+    RegistrySupplier<EntityType<PlayerCloneEntity>> PLAYER_CLONE = REGISTRY.register(JCraft.id("playerclone"),
+            () -> EntityType.Builder.create(
+                    (EntityType<PlayerCloneEntity> entityType, World world) -> new PlayerCloneEntity(world), SpawnGroup.CREATURE)
+                    .setDimensions(0.6f, 1.8f)
+                    .build(null)
     );
 
     // Take note of the extra <KnifeProjectile> and tracked values
-    EntityType<KnifeProjectile> KNIFE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("knife"),
-            FabricEntityTypeBuilder.<KnifeProjectile>create(SpawnGroup.MISC, KnifeProjectile::new)
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).trackRangeChunks(6).trackedUpdateRate(10).build()
+    RegistrySupplier<EntityType<KnifeProjectile>> KNIFE = REGISTRY.register(JCraft.id("knife"),
+            () -> EntityType.Builder.create(
+                    (EntityType<KnifeProjectile> entityType, World world) -> new KnifeProjectile(world), SpawnGroup.MISC)
+                    .setDimensions(0.5f, 0.5f)
+                    .maxTrackingRange(6)
+                    .trackingTickInterval(10)
+                    .build(null)
     );
 
-    EntityType<EmeraldProjectile> EMERALD = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("emerald"),
-            FabricEntityTypeBuilder.<EmeraldProjectile>create(SpawnGroup.MISC, EmeraldProjectile::new)
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).trackRangeChunks(6).trackedUpdateRate(15).build()
+    RegistrySupplier<EntityType<EmeraldProjectile>> EMERALD = REGISTRY.register(JCraft.id("emerald"),
+            () -> EntityType.Builder.create(
+                            (EntityType<EmeraldProjectile> entityType, World world) -> new EmeraldProjectile(world),
+                            SpawnGroup.MISC
+                    ).setDimensions(0.5f, 0.5f)
+                    .maxTrackingRange(6)
+                    .trackingTickInterval(15)
+                    .build(null)
     );
 
-    EntityType<BulletProjectile> BULLET = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("bullet"),
-            FabricEntityTypeBuilder.<BulletProjectile>create(SpawnGroup.MISC, BulletProjectile::new)
-                    .dimensions(EntityDimensions.fixed(0.1f, 0.1f)).trackRangeChunks(6).trackedUpdateRate(10).build()
+    RegistrySupplier<EntityType<BulletProjectile>> BULLET = REGISTRY.register(JCraft.id("bullet"),
+            () -> EntityType.Builder.create(
+                            (EntityType<BulletProjectile> entityType, World world) -> new BulletProjectile(entityType, world),
+                            SpawnGroup.MISC
+                    ).setDimensions(0.1f, 0.1f)
+                    .maxTrackingRange(6)
+                    .trackingTickInterval(10)
+                    .build(null)
     );
 
-    EntityType<RapierProjectile> RAPIER = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("rapier"),
-            FabricEntityTypeBuilder.<RapierProjectile>create(SpawnGroup.MISC, RapierProjectile::new)
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).trackRangeChunks(6).trackedUpdateRate(15).build()
+    RegistrySupplier<EntityType<RapierProjectile>> RAPIER = REGISTRY.register(JCraft.id("rapier"),
+            () -> EntityType.Builder.create(
+                            (EntityType<RapierProjectile> entityType, World world) -> new RapierProjectile(entityType, world),
+                            SpawnGroup.MISC
+                    ).setDimensions(0.5f, 0.5f)
+                    .maxTrackingRange(6)
+                    .trackingTickInterval(15)
+                    .build(null)
     );
 
-    EntityType<AnkhProjectile> ANKH = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("ankh"),
-            FabricEntityTypeBuilder.<AnkhProjectile>create(SpawnGroup.MISC, AnkhProjectile::new)
-                    .dimensions(EntityDimensions.fixed(0.75f, 0.75f)).trackRangeChunks(6).trackedUpdateRate(20).build()
+    RegistrySupplier<EntityType<AnkhProjectile>> ANKH = REGISTRY.register(JCraft.id("ankh"),
+            () -> EntityType.Builder.create(
+                            (EntityType<AnkhProjectile> entityType, World world) -> new AnkhProjectile(entityType, world),
+                            SpawnGroup.MISC
+                    ).setDimensions(0.75f, 0.75f)
+                    .maxTrackingRange(6)
+                    .trackingTickInterval(20)
+                    .build(null)
     );
 
-    EntityType<MeteorProjectile> METEOR = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("meteor"),
-            FabricEntityTypeBuilder.<MeteorProjectile>create(SpawnGroup.MISC, MeteorProjectile::new)
-                    .dimensions(EntityDimensions.fixed(1.0f, 1.0f)).trackRangeChunks(6).trackedUpdateRate(20).build()
+    RegistrySupplier<EntityType<MeteorProjectile>> METEOR = REGISTRY.register(JCraft.id("meteor"),
+            () -> EntityType.Builder.create(
+                            (EntityType<MeteorProjectile> entityType, World world) -> new MeteorProjectile(entityType, world),
+                            SpawnGroup.MISC
+                    ).setDimensions(1.0f, 1.0f)
+                    .maxTrackingRange(6)
+                    .trackingTickInterval(20)
+                    .build(null)
     );
 
-    EntityType<BubbleProjectile> BUBBLE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("bubble"),
-            FabricEntityTypeBuilder.<BubbleProjectile>create(SpawnGroup.MISC, BubbleProjectile::new)
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).trackRangeChunks(8).trackedUpdateRate(20).build()
+    RegistrySupplier<EntityType<BubbleProjectile>> BUBBLE = REGISTRY.register(JCraft.id("bubble"),
+            () -> EntityType.Builder.create(
+                            (EntityType<BubbleProjectile> entityType, World world) -> new BubbleProjectile(entityType, world),
+                            SpawnGroup.MISC
+                    ).setDimensions(0.5f, 0.5f)
+                    .maxTrackingRange(8)
+                    .trackingTickInterval(20)
+                    .build(null)
     );
 
-    EntityType<BloodProjectile> BLOOD_PROJECTILE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("bloodprojectile"),
-            FabricEntityTypeBuilder.<BloodProjectile>create(SpawnGroup.MISC, BloodProjectile::new)
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).trackRangeChunks(4).trackedUpdateRate(10).build()
+    RegistrySupplier<EntityType<BloodProjectile>> BLOOD_PROJECTILE = REGISTRY.register(JCraft.id("bloodprojectile"),
+            () -> EntityType.Builder.create(
+                            (EntityType<BloodProjectile> entityType, World world) -> new BloodProjectile(entityType, world),
+                            SpawnGroup.MISC
+                    ).setDimensions(0.5f, 0.5f)
+                    .maxTrackingRange(4)
+                    .trackingTickInterval(10)
+                    .build(null)
     );
 
-    EntityType<LaserProjectile> LASER_PROJECTILE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("laserprojectile"),
-            FabricEntityTypeBuilder.<LaserProjectile>create(SpawnGroup.MISC, LaserProjectile::new)
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).trackRangeChunks(4).trackedUpdateRate(10).build()
+    RegistrySupplier<EntityType<LaserProjectile>> LASER_PROJECTILE = REGISTRY.register(JCraft.id("laserprojectile"),
+            () -> EntityType.Builder.create(
+                            (EntityType<LaserProjectile> entityType, World world) -> new LaserProjectile(entityType, world),
+                            SpawnGroup.MISC
+                    ).setDimensions(0.5f, 0.5f)
+                    .maxTrackingRange(4)
+                    .trackingTickInterval(10)
+                    .build(null)
     );
 
-    EntityType<PHCapsuleProjectile> PH_CAPSULE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("ph_capsule"),
-            FabricEntityTypeBuilder.<PHCapsuleProjectile>create(SpawnGroup.MISC, (type, world) -> new PHCapsuleProjectile(world))
-                    .dimensions(EntityDimensions.fixed(0.75f, 0.75f)).trackRangeChunks(6).trackedUpdateRate(20).build()
+    RegistrySupplier<EntityType<PHCapsuleProjectile>> PH_CAPSULE = REGISTRY.register(JCraft.id("ph_capsule"),
+            () -> EntityType.Builder.create(
+                            (EntityType<PHCapsuleProjectile> entityType, World world) -> new PHCapsuleProjectile(world),
+                            SpawnGroup.MISC
+                    ).setDimensions(0.75f, 0.75f)
+                    .maxTrackingRange(6)
+                    .trackingTickInterval(20)
+                    .build(null)
     );
 
-    EntityType<LifeDetectorEntity> LIFE_DETECTOR = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("lifedetector"),
-                FabricEntityTypeBuilder.create(SpawnGroup.MISC, LifeDetectorEntity::new)
-                        .dimensions(EntityDimensions.fixed(1f, 1f)).build()
+    RegistrySupplier<EntityType<LifeDetectorEntity>> LIFE_DETECTOR = REGISTRY.register(JCraft.id("lifedetector"),
+            () -> EntityType.Builder.create(
+                            LifeDetectorEntity::new,
+                            SpawnGroup.MISC
+                    ).setDimensions(1f, 1f)
+                    .build(null)
     );
 
-    EntityType<HGNetEntity> HG_NET = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("hg_net"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, HGNetEntity::new)
-                    .dimensions(EntityDimensions.fixed(2f, 4f)).build()
+    RegistrySupplier<EntityType<HGNetEntity>> HG_NET = REGISTRY.register(JCraft.id("hg_net"),
+            () -> EntityType.Builder.create(
+                            HGNetEntity::new,
+                            SpawnGroup.MISC
+                    ).setDimensions(2f, 4f)
+                    .build(null)
     );
 
-    EntityType<RedBindEntity> RED_BIND = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("redbind"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, RedBindEntity::new)
-                    .dimensions(EntityDimensions.fixed(1f, 2f)).build()
+    RegistrySupplier<EntityType<RedBindEntity>> RED_BIND = REGISTRY.register(JCraft.id("redbind"),
+            () -> EntityType.Builder.create(
+                            RedBindEntity::new,
+                            SpawnGroup.MISC
+                    ).setDimensions(1f, 2f)
+                    .build(null)
     );
 
-    EntityType<BlockProjectile> BLOCK_PROJECTILE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("blockprojectile"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, BlockProjectile::new)
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).build()
+    RegistrySupplier<EntityType<BlockProjectile>> BLOCK_PROJECTILE = REGISTRY.register(JCraft.id("blockprojectile"),
+            () -> EntityType.Builder.create(
+                            BlockProjectile::new,
+                            SpawnGroup.MISC
+                    ).setDimensions(0.5f, 0.5f)
+                    .build(null)
     );
 
-    EntityType<SandTornadoEntity> SAND_TORNADO = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("sandtornado"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, SandTornadoEntity::new)
-                    .dimensions(EntityDimensions.fixed(1f, 2f)).build()
+    RegistrySupplier<EntityType<SandTornadoEntity>> SAND_TORNADO = REGISTRY.register(JCraft.id("sandtornado"),
+            () -> EntityType.Builder.create(
+                            SandTornadoEntity::new,
+                            SpawnGroup.MISC
+                    ).setDimensions(1f, 2f)
+                    .build(null)
     );
 
-    EntityType<WSAcidProjectile> WS_ACID_PROJECTILE = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("wsacidprojectile"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, WorldOnlyEntityFactory.from(WSAcidProjectile::new))
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).trackRangeChunks(4).trackedUpdateRate(10).build()
+    RegistrySupplier<EntityType<WSAcidProjectile>> WS_ACID_PROJECTILE = REGISTRY.register(JCraft.id("wsacidprojectile"),
+            () -> EntityType.Builder.create(
+                            WorldOnlyEntityFactory.from(WSAcidProjectile::new),
+                            SpawnGroup.MISC
+                    ).setDimensions(0.5f, 0.5f)
+                    .maxTrackingRange(4)
+                    .trackingTickInterval(10)
+                    .build(null)
     );
 
-    EntityType<SunBeamProjectile> SUN_BEAM = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("sunbeam"),
-            FabricEntityTypeBuilder.<SunBeamProjectile>create(SpawnGroup.MISC, (type, world) -> new SunBeamProjectile(world))
-                    .dimensions(EntityDimensions.fixed(0.5f, 0.5f)).trackRangeChunks(4).trackedUpdateRate(10).build()
+    RegistrySupplier<EntityType<SunBeamProjectile>> SUN_BEAM = REGISTRY.register(JCraft.id("sunbeam"),
+            () -> EntityType.Builder.create(
+                            (EntityType<SunBeamProjectile> entityType, World world) -> new SunBeamProjectile(world),
+                            SpawnGroup.MISC
+                    ).setDimensions(1f, 2f)
+                    .build(null)
     );
 
-    EntityType<PurpleHazeCloudEntity> PURPLE_HAZE_COUD = Registry.register(
-            Registries.ENTITY_TYPE,
-            JCraft.id("purple_haze_cloud"),
-            FabricEntityTypeBuilder.<PurpleHazeCloudEntity>create(SpawnGroup.MISC, (type, world) -> new PurpleHazeCloudEntity(world))
-                    .dimensions(EntityDimensions.changing(1.0f, 1.0f)).build()
+    RegistrySupplier<EntityType<PurpleHazeCloudEntity>> PURPLE_HAZE_COUD = REGISTRY.register(JCraft.id("purple_haze_cloud"),
+            () -> EntityType.Builder.create(
+                            (EntityType<PurpleHazeCloudEntity> entityType, World world) -> new PurpleHazeCloudEntity(world),
+                            SpawnGroup.MISC
+                    ).setDimensions(1f, 1f)
+                    .build(null)
     );
 
     static void registerEntities() {
-        FabricDefaultAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(SPTW, SPTWEntity.createMobAttributes());
-
-        FabricDefaultAttributeRegistry.register(KING_CRIMSON, KingCrimsonEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(CREAM, CreamEntity.createMobAttributes());
-
-        FabricDefaultAttributeRegistry.register(KILLER_QUEEN, KillerQueenEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(KILLER_QUEEN_BITES_THE_DUST, KQBTDEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(SHEER_HEART_ATTACK, SheerHeartAttackEntity.createMobAttributes()
+        EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
+        EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
+        EntityAttributeRegistry.register(KING_CRIMSON, KingCrimsonEntity::createMobAttributes);
+        EntityAttributeRegistry.register(CREAM, CreamEntity::createMobAttributes);
+        EntityAttributeRegistry.register(KILLER_QUEEN, KillerQueenEntity::createMobAttributes);
+        EntityAttributeRegistry.register(KILLER_QUEEN_BITES_THE_DUST, KQBTDEntity::createMobAttributes);
+        EntityAttributeRegistry.register(SHEER_HEART_ATTACK, () -> SheerHeartAttackEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_ARMOR, 20)
                 .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 12)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.15)
-        );
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.15));
 
-        FabricDefaultAttributeRegistry.register(WHITE_SNAKE, WhiteSnakeEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(C_MOON, CMoonEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(MADE_IN_HEAVEN, MadeInHeavenEntity.createMobAttributes());
+        EntityAttributeRegistry.register(WHITE_SNAKE, WhiteSnakeEntity::createMobAttributes);
+        EntityAttributeRegistry.register(C_MOON, CMoonEntity::createMobAttributes);
 
-        FabricDefaultAttributeRegistry.register(THE_WORLD, TheWorldEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(THE_WORLD_OVER_HEAVEN, TheWorldOverHeavenEntity.createMobAttributes());
+        EntityAttributeRegistry.register(MADE_IN_HEAVEN, MadeInHeavenEntity::createMobAttributes);
+        EntityAttributeRegistry.register(THE_WORLD, TheWorldEntity::createMobAttributes);
+        EntityAttributeRegistry.register(THE_WORLD_OVER_HEAVEN, TheWorldOverHeavenEntity::createMobAttributes);
+        EntityAttributeRegistry.register(SILVER_CHARIOT, SilverChariotEntity::createMobAttributes);
+        EntityAttributeRegistry.register(MAGICIANS_RED, MagiciansRedEntity::createMobAttributes);
+        EntityAttributeRegistry.register(THE_FOOL, TheFoolEntity::createMobAttributes);
+        EntityAttributeRegistry.register(HIEROPHANT_GREEN, HGEntity::createMobAttributes);
+        EntityAttributeRegistry.register(THE_SUN, TheSunEntity::createMobAttributes);
 
-        FabricDefaultAttributeRegistry.register(SILVER_CHARIOT, SilverChariotEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(MAGICIANS_RED, MagiciansRedEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(THE_FOOL, TheFoolEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(HIEROPHANT_GREEN, HGEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(THE_SUN, TheSunEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(PURPLE_HAZE, AbstractPurpleHazeEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.55)
-        );
-        FabricDefaultAttributeRegistry.register(PURPLE_HAZE_DISTORTION, AbstractPurpleHazeEntity.createMobAttributes());
-
-        FabricDefaultAttributeRegistry.register(GOLD_EXPERIENCE, GoldExperienceEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(GER, GEREntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(GE_TREE, GETreeEntity.createLivingAttributes());
-        FabricDefaultAttributeRegistry.register(GE_FROG, GEFrogEntity.createFrogAttributes());
-        FabricDefaultAttributeRegistry.register(GE_BUTTERFLY, GEButterflyEntity.createButterflyAttributes());
-        FabricDefaultAttributeRegistry.register(GE_SNAKE, GESnakeEntity.createMobAttributes()
+        EntityAttributeRegistry.register(PURPLE_HAZE, () -> AbstractPurpleHazeEntity.createMobAttributes()
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.55));
+        EntityAttributeRegistry.register(PURPLE_HAZE_DISTORTION, AbstractPurpleHazeEntity::createMobAttributes);
+        EntityAttributeRegistry.register(GOLD_EXPERIENCE, GoldExperienceEntity::createMobAttributes);
+        EntityAttributeRegistry.register(GER, GEREntity::createMobAttributes);
+        EntityAttributeRegistry.register(GE_TREE, GETreeEntity::createLivingAttributes);
+        EntityAttributeRegistry.register(GE_FROG, GEFrogEntity::createFrogAttributes);
+        EntityAttributeRegistry.register(GE_BUTTERFLY, GEButterflyEntity::createButterflyAttributes);
+        EntityAttributeRegistry.register(GE_SNAKE, () -> GESnakeEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3)
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4)
-                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 0)
-        );
+                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 0));
 
-        FabricDefaultAttributeRegistry.register(GER_SCORPION, GERScorpionEntity.createMobAttributes()
+        EntityAttributeRegistry.register(GER_SCORPION, () -> GERScorpionEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3)
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0)
-                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 0)
-        );
-
-        FabricDefaultAttributeRegistry.register(D4C, D4CEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(PLAYER_CLONE, PlayerCloneEntity.createCloneAttributes());
-
-        FabricDefaultAttributeRegistry.register(HG_NET, HGNetEntity.createNetAttributes());
-
-        FabricDefaultAttributeRegistry.register(LIFE_DETECTOR, LifeDetectorEntity.createDetectorAttributes());
-        FabricDefaultAttributeRegistry.register(RED_BIND, LifeDetectorEntity.createDetectorAttributes()); // This will also do fine.
-        FabricDefaultAttributeRegistry.register(BLOCK_PROJECTILE, BlockProjectile.createBlockAttributes());
-        FabricDefaultAttributeRegistry.register(SAND_TORNADO, SandTornadoEntity.createTornadoAttributes());
+                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 0));
+        EntityAttributeRegistry.register(D4C, D4CEntity::createMobAttributes);
+        EntityAttributeRegistry.register(PLAYER_CLONE, PlayerCloneEntity::createCloneAttributes);
+        EntityAttributeRegistry.register(HG_NET, HGNetEntity::createNetAttributes);
+        EntityAttributeRegistry.register(LIFE_DETECTOR, LifeDetectorEntity::createDetectorAttributes);
+        EntityAttributeRegistry.register(RED_BIND, RedBindEntity::createLivingAttributes);
+        EntityAttributeRegistry.register(BLOCK_PROJECTILE, BlockProjectile::createBlockAttributes);
+        EntityAttributeRegistry.register(SAND_TORNADO, SandTornadoEntity::createTornadoAttributes);
     }
 
     @RequiredArgsConstructor(staticName = "from")
