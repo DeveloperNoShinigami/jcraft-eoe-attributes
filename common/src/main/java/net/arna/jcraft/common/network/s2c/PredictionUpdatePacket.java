@@ -1,8 +1,8 @@
 package net.arna.jcraft.common.network.s2c;
 
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Pair;
@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class PredictionUpdatePacket {
     public static void send(ServerPlayerEntity serverPlayerEntity, Set<Pair<Integer, Vec3d>> idPosPairs) {
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
         buf.writeInt(idPosPairs.size());
 
@@ -28,6 +28,6 @@ public class PredictionUpdatePacket {
                 }
         );
 
-        ServerPlayNetworking.send(serverPlayerEntity, JPacketRegistry.S2C_PREDICTION_UPDATE, buf);
+        NetworkManager.sendToPlayer(serverPlayerEntity, JPacketRegistry.S2C_PREDICTION_UPDATE, buf);
     }
 }

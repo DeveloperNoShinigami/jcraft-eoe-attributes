@@ -1,14 +1,12 @@
 package net.arna.jcraft.common.network;
 
+import dev.architectury.networking.NetworkManager;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.FakePlayer;
 import net.arna.jcraft.common.util.JUtils;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
@@ -20,7 +18,9 @@ import net.minecraft.world.RaycastContext;
 
 public class RemoteStandInteractPacket {
 
-    public static void handle(MinecraftServer server, ServerPlayerEntity serverPlayer, ServerPlayNetworkHandler serverPlayNetworkHandler, PacketByteBuf buf, PacketSender packetSender) {
+    public static void handle(PacketByteBuf buf, NetworkManager.PacketContext context) {
+        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) context.getPlayer();
+
         StandEntity<?, ?> stand = JUtils.getStand(serverPlayer);
         if (stand == null || !stand.isRemote()) return;
         ServerWorld world = (ServerWorld) serverPlayer.getWorld();

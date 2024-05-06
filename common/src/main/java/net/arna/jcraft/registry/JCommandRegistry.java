@@ -1,10 +1,14 @@
 package net.arna.jcraft.registry;
 
+import com.mojang.brigadier.CommandDispatcher;
 import net.arna.jcraft.common.command.*;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
 
 public interface JCommandRegistry {
-    static void registerCommands() {
+    static void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             InduceAttackCommand.register(dispatcher);
             AboutStandCommand.register(dispatcher);

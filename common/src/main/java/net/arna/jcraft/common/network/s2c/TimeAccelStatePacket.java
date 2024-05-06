@@ -1,14 +1,14 @@
 package net.arna.jcraft.common.network.s2c;
 
+import dev.architectury.event.events.common.TickEvent;
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import lombok.Data;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.util.Util;
@@ -31,7 +31,7 @@ public class TimeAccelStatePacket {
 
     static {
         // Decrease all durations.
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
+        TickEvent.SERVER_POST.register(server -> {
             // Avoid thread-safety issues by locking on our lock.
             synchronized (lock) {
                 new IntOpenHashSet(accelerations.keySet()).forEach(id -> {
@@ -42,7 +42,7 @@ public class TimeAccelStatePacket {
         });
 
         // Handle acceleration on server.
-        ServerTickEvents.END_WORLD_TICK.register(world -> {
+        TickEvent.SERVER_LEVEL_POST.register(world -> {
             if (!world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) return;
 
             double acceleration = getAcceleration(world);
@@ -51,12 +51,14 @@ public class TimeAccelStatePacket {
     }
 
     public static void sendStart(PlayerManager playerManager, MadeInHeavenEntity mih, int duration) {
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeVarInt(State.START.ordinal());
         buf.writeVarInt(mih.getId());
         buf.writeVarInt(duration);
 
-        playerManager.getPlayerList().forEach(player -> ServerPlayNetworking.send(player, JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf));
+        playerManager.getPlayerList().forEach(player -> {
+            NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
+        });
 
         synchronized (lock) {
             accelerations.put(mih.getId(), new TimeAcceleration(duration, mih.getId()));
@@ -64,11 +66,13 @@ public class TimeAccelStatePacket {
     }
 
     public static void sendStop(PlayerManager playerManager, MadeInHeavenEntity mih) {
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeVarInt(State.STOP.ordinal());
         buf.writeVarInt(mih.getId());
 
-        playerManager.getPlayerList().forEach(player -> ServerPlayNetworking.send(player, JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf));
+        playerManager.getPlayerList().forEach(player -> {
+            NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
+        });
 
         synchronized (lock) {
             accelerations.remove(mih.getId());

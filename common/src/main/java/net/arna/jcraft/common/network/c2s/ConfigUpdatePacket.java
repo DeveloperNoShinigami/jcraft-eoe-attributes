@@ -1,13 +1,11 @@
 package net.arna.jcraft.common.network.c2s;
 
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.config.ConfigOption;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -21,7 +19,10 @@ import java.util.Set;
 public class ConfigUpdatePacket {
     public static final Identifier ID = JCraft.id("config_update");
 
-    public static void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler network, PacketByteBuf buf, PacketSender sender) {
+    public static void handle(PacketByteBuf buf, NetworkManager.PacketContext context) {
+        ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+        MinecraftServer server = context.getPlayer().getServer();
+
         // Only operators can send this packet
         if (server.getPermissionLevel(player.getGameProfile()) < 2) {
             JCraft.LOGGER.warn("Player {} send a config update packet while not having permission to do so.",
@@ -36,13 +37,15 @@ public class ConfigUpdatePacket {
 
         // Broadcast changes to everyone except the person who made them.
         PacketByteBuf clientChangesBuf = writeClientChanges(changedOptions);
-        for (ServerPlayerEntity serverPlayer : PlayerLookup.all(server))
-            if (serverPlayer != player)
-                ServerPlayNetworking.send(serverPlayer, JPacketRegistry.S2C_SERVER_CONFIG, clientChangesBuf);
+        for (ServerPlayerEntity serverPlayer : PlayerLookup.all(server)) {
+            if (serverPlayer != player) {
+                NetworkManager.sendToPlayer(serverPlayer, JPacketRegistry.S2C_SERVER_CONFIG, clientChangesBuf);
+            }
+        }
     }
 
     private static PacketByteBuf writeClientChanges(Collection<ConfigOption> options) {
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBoolean(false); // Editable, doesn't matter if show is false
         buf.writeBoolean(false); // Show
 
@@ -51,6 +54,6 @@ public class ConfigUpdatePacket {
     }
 
     public static void sendOptionsToClient(ServerPlayerEntity player, Collection<ConfigOption> options) {
-        ServerPlayNetworking.send(player, JPacketRegistry.S2C_SERVER_CONFIG, writeClientChanges(options));
+        NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_SERVER_CONFIG, writeClientChanges(options));
     }
 }

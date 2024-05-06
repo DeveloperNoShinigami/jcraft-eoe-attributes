@@ -1,15 +1,14 @@
 package net.arna.jcraft.common.network.c2s;
 
-import net.arna.jcraft.JCraft;
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JObjectRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.UseAction;
 
@@ -21,12 +20,15 @@ public class StandBlockPacket {
     private static final Set<ServerPlayerEntity> blocking = Collections.newSetFromMap(new WeakHashMap<>());
 
     public static PacketByteBuf write(boolean isBlocking) {
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBoolean(isBlocking);
         return buf;
     }
 
-    public static void handle(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler network, PacketByteBuf buf, PacketSender sender) {
+    public static void handle(PacketByteBuf buf, NetworkManager.PacketContext context) {
+        ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+        MinecraftServer server = context.getPlayer().getServer();
+
         boolean blockDown = buf.readBoolean();
         server.execute(() -> {
             if (blockDown) blocking.add(player);
@@ -39,7 +41,7 @@ public class StandBlockPacket {
             if (!blocking && blockDown) {
                 if (allowBlockingWith(player.getMainHandStack()) && allowBlockingWith(player.getOffHandStack())) {
                     stand.wantToBlock = true;
-                    if (stand.canAttack() && !JCraft.isDashing(player)) stand.tryBlock();
+                    if (stand.canAttack() && !DashData.isDashing(player)) stand.tryBlock();
                 }
             } else if (blocking && !blockDown) stand.wantToBlock = false;
         });

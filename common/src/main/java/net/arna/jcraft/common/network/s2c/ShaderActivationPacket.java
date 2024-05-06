@@ -1,8 +1,8 @@
 package net.arna.jcraft.common.network.s2c;
 
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -21,14 +21,14 @@ public class ShaderActivationPacket {
      * @param type               which shader to use
      */
     public static void send(ServerPlayerEntity serverPlayerEntity, @Nullable Entity sourceShader, int tickDelay, int duration, Type type) {
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeInt(tickDelay);
         buf.writeInt(duration);
         buf.writeString(type.asString());
         if (sourceShader != null) {
             buf.writeInt(sourceShader.getId());
         }
-        ServerPlayNetworking.send(serverPlayerEntity, JPacketRegistry.S2C_SHADER_ACTIVATION, buf);
+        NetworkManager.sendToPlayer(serverPlayerEntity, JPacketRegistry.S2C_SHADER_ACTIVATION, buf);
     }
 
     public enum Type implements StringIdentifiable {

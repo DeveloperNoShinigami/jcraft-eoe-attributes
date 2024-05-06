@@ -1,9 +1,12 @@
 package net.arna.jcraft.registry;
 
+import dev.architectury.networking.NetworkChannel;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
 import net.minecraft.util.Identifier;
 
 public interface JPacketRegistry {
+
     // Shortened strings for the sake of saving bandwidth.
     // Further optimization would probably just be an int to char conversion + a static registration method.
     Identifier S2C_SERVER_CHANNEL_FEEDBACK = JCraft.id("sfc");
@@ -27,4 +30,5 @@ public interface JPacketRegistry {
     Identifier C2S_PLAYER_INPUT_HOLD = JCraft.id("plr_input_h");
     Identifier C2S_REMOTE_STAND_INTERACT = JCraft.id("rmt_stnd_act");
     Identifier C2S_PREDICTION_TRIGGER = JCraft.id("prdct_trig");
+
 }

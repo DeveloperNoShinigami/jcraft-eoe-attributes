@@ -2,6 +2,8 @@ package net.arna.jcraft;
 
 import com.google.common.base.Suppliers;
 import dev.architectury.event.events.common.EntityEvent;
+import dev.architectury.networking.NetworkManager;
+import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrarManager;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -14,7 +16,8 @@ import net.arna.jcraft.common.effects.DazedStatusEffect;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
-import net.arna.jcraft.common.network.c2s.StandBlockPacket;
+import net.arna.jcraft.common.network.RemoteStandInteractPacket;
+import net.arna.jcraft.common.network.c2s.*;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.network.s2c.ShaderDeactivationPacket;
@@ -23,20 +26,25 @@ import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
+import net.arna.jcraft.registry.JPacketRegistry;
+import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
@@ -68,6 +76,8 @@ public final class JCraft {
 
     //Obligatory lazy Registry
     public static final Supplier<RegistrarManager> MANAGER = Suppliers.memoize(() -> RegistrarManager.get(MOD_ID));
+
+    static final DeferredRegister<ItemGroup> TAB_REGISTER = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
 
     // Gamerules
     //public static final GameRules.Key<GameRules.BooleanRule> KINGCRIMSON_TELEPORT_EFFECT = GameRuleRegistry.register("kingCrimsonTeleportEffect", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
@@ -242,15 +252,16 @@ public final class JCraft {
         JServerConfig.init();
         JStatRegistry.init();
 
-        ServerPlayNetworking.registerGlobalReceiver(JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);
-        ServerPlayNetworking.registerGlobalReceiver(ConfigUpdatePacket.ID, ConfigUpdatePacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(JPacketRegistry.C2S_COOLDOWN_CANCEL, CooldownCancelPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(JPacketRegistry.C2S_REMOTE_STAND_INTERACT, RemoteStandInteractPacket::handle);
-        ServerPlayNetworking.registerGlobalReceiver(JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, ConfigUpdatePacket.ID, ConfigUpdatePacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_COOLDOWN_CANCEL, CooldownCancelPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_REMOTE_STAND_INTERACT, RemoteStandInteractPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket::handle);
 
-        ItemGroupEvents.MODIFY_ENTRIES_ALL.register(JCraft::appendJcraftGroupStacks);
+        TAB_REGISTER.register("general", JCraft::createItemGroup);
+        TAB_REGISTER.register();
     }
 
     public static void createParticle(ServerWorld world, double x, double y, double z, JParticleType type) {
@@ -351,5 +362,11 @@ public final class JCraft {
 
         finalEnt.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 100, 9, true, false, true));
         PastDimensions.enqueue(new DimensionData(finalEnt, pos, original.getRegistryKey()));
+    }
+
+    public static ItemGroup createItemGroup() {
+        return ItemGroup.create(ItemGroup.Row.TOP, 0)
+                .displayName(Text.translatable("itemGroup.jcraft"))
+                .build();
     }
 }

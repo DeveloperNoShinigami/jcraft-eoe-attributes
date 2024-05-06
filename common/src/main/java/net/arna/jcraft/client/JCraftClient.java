@@ -2,6 +2,7 @@ package net.arna.jcraft.client;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
+import dev.architectury.networking.NetworkManager;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import lombok.Getter;
@@ -369,8 +370,11 @@ public class JCraftClient implements ClientModInitializer {
                     heldMoves.put(value, true);
             });
 
-            if (!heldMoves.isEmpty())
-                ClientPlayNetworking.send(JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket.write(null, heldMoves));
+            if (!heldMoves.isEmpty()) {
+                NetworkManager.sendToServer(JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket.write(null, heldMoves));
+                //ClientPlayNetworking.send(JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket.write(null, heldMoves));
+            }
+
         }
 
         // Block
