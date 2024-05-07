@@ -10,3 +10,41 @@
 /forge/.gradle/*
 /common/.gradle/*
 /build/*
+
+# gradle
+
+.gradle/
+build/
+out/
+classes/
+
+# eclipse
+
+*.launch
+
+# idea
+
+.idea/
+*.iml
+*.ipr
+*.iws
+!.idea/icon.png
+
+# vscode
+
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# macos
+
+*.DS_Store
+
+# fabric
+
+run/
+
+# Datagen
+src/main/generated/
