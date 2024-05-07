@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.gravity.util;
 
 import dev.architectury.networking.NetworkManager;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
@@ -38,7 +39,7 @@ public class NetworkUtil {
             if (entity instanceof ServerPlayerEntity player)
                 NetworkManager.sendToPlayer(player, channel, buf);
         if (mode != PacketMode.ONLY_SELF)
-            for (ServerPlayerEntity player : PlayerLookup.tracking(entity))
+            for (ServerPlayerEntity player : JCraft.tracking(entity))
                 if (player != entity)
                     NetworkManager.sendToPlayer(player, channel, buf);
     }

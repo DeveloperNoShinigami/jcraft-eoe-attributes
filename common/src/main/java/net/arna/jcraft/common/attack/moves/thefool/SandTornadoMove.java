@@ -18,7 +18,7 @@ public class SandTornadoMove extends AbstractMove<SandTornadoMove, TheFoolEntity
 
     @Override
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
-        SandTornadoEntity sandTornado = new SandTornadoEntity(JEntityTypeRegistry.SAND_TORNADO, attacker.getWorld());
+        SandTornadoEntity sandTornado = new SandTornadoEntity(JEntityTypeRegistry.SAND_TORNADO.get(), attacker.getWorld());
         sandTornado.setMaster(user);
         sandTornado.refreshPositionAndAngles(attacker.getX(), attacker.getY() + 1.5, attacker.getZ(), attacker.getYaw(), attacker.getPitch());
         attacker.getWorld().spawnEntity(sandTornado);

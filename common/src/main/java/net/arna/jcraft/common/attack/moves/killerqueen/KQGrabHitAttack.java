@@ -11,6 +11,7 @@ import net.arna.jcraft.common.entity.stand.KillerQueenEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.LivingEntity;
@@ -34,7 +35,7 @@ public class KQGrabHitAttack extends AbstractMove<KQGrabHitAttack, KillerQueenEn
     public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
         attacker.playSound(JSoundRegistry.KQ_DETONATE, 1, 1);
 
-        CommonBombTrackerComponent.BombData bombData = JComponents.getBombTracker(user).getMainBomb();
+        CommonBombTrackerComponent.BombData bombData = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
 
         if (bombData.bombEntity instanceof LivingEntity livingEntity) {
             ServerWorld world = (ServerWorld) attacker.getWorld();

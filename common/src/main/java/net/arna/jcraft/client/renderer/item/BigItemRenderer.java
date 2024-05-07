@@ -17,7 +17,7 @@ import net.minecraft.util.profiler.Profiler;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-
+/*
 public class BigItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer, IdentifiableResourceReloadListener {
     private final Identifier id;
     private final Identifier scytheId;
@@ -65,3 +65,5 @@ public class BigItemRenderer implements BuiltinItemRendererRegistry.DynamicItemR
         }
     }
 }
+
+ */

@@ -36,7 +36,7 @@ public class TrackedKeyBinding {
     }
 
     public static TrackedKeyBinding createAndRegister(String translationKey, InputUtil.Type type, int code, String category) {
-        return wrap(KeyBindingHelper.registerKeyBinding(new KeyBinding(translationKey, type, code, category)));
+        return null; //TODO wrap(KeyBindingHelper.registerKeyBinding(new KeyBinding(translationKey, type, code, category)));
     }
 
     public static TrackedKeyBinding wrap(KeyBinding binding) {

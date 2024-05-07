@@ -31,7 +31,7 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
     }
 
     public void sync(Shockwave shockwave){
-        // JComponents.SHOCKWAVE_HANDLER.sync(world, (buf, player) -> writeSyncPacket(buf, shockwave));
+        // JComponentPlatformUtils.SHOCKWAVE_HANDLER.sync(world, (buf, player) -> writeSyncPacket(buf, shockwave));
     }
 
     public void readFromNbt(@NotNull NbtCompound tag) {

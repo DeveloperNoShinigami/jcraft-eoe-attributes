@@ -10,6 +10,7 @@ import net.arna.jcraft.common.gravity.util.packet.DefaultGravityPacket;
 import net.arna.jcraft.common.gravity.util.packet.InvertGravityPacket;
 import net.arna.jcraft.common.gravity.util.packet.OverwriteGravityPacket;
 import net.arna.jcraft.common.gravity.util.packet.UpdateGravityPacket;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
@@ -22,7 +23,7 @@ public class GravityChangerAPIClient {
 
     public static void addGravityClient(ClientPlayerEntity entity, Gravity gravity, Identifier verifier, PacketByteBuf verifierInfo) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
-        GravityChangerAPI.maybeGetSafe(GravityChangerAPI.GRAVITY_COMPONENT, entity).ifPresent(gc -> {
+        JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.addGravity(gravity, false);
             GravityChannelClient.UPDATE_GRAVITY.sendToServer(new UpdateGravityPacket(gravity, false), verifier, verifierInfo);
         });
@@ -30,7 +31,7 @@ public class GravityChangerAPIClient {
 
     public static void setGravityClient(ClientPlayerEntity entity, ArrayList<Gravity> gravity, Identifier verifier, PacketByteBuf verifierInfo) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
-        GravityChangerAPI.maybeGetSafe(GravityChangerAPI.GRAVITY_COMPONENT, entity).ifPresent(gc -> {
+        JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.setGravity(gravity, false);
             GravityChannelClient.OVERWRITE_GRAVITY.sendToServer(new OverwriteGravityPacket(gravity, false), verifier, verifierInfo);
         });
@@ -38,7 +39,7 @@ public class GravityChangerAPIClient {
 
     public static void setIsInvertedClient(ClientPlayerEntity entity, boolean isInverted, RotationParameters rotationParameters, Identifier verifier, PacketByteBuf verifierInfo) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
-        GravityChangerAPI.maybeGetSafe(GravityChangerAPI.GRAVITY_COMPONENT, entity).ifPresent(gc -> {
+        JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.invertGravity(isInverted, rotationParameters, false);
             GravityChannelClient.INVERT_GRAVITY.sendToServer(new InvertGravityPacket(isInverted, rotationParameters, false), verifier, verifierInfo);
         });
@@ -46,7 +47,7 @@ public class GravityChangerAPIClient {
 
     public static void clearGravityClient(ClientPlayerEntity entity, RotationParameters rotationParameters, Identifier verifier, PacketByteBuf verifierInfo) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
-        GravityChangerAPI.maybeGetSafe(GravityChangerAPI.GRAVITY_COMPONENT, entity).ifPresent(gc -> {
+        JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.clearGravity(rotationParameters, false);
             GravityChannelClient.OVERWRITE_GRAVITY.sendToServer(new OverwriteGravityPacket(new ArrayList<>(), false), verifier, verifierInfo);
         });
@@ -54,7 +55,7 @@ public class GravityChangerAPIClient {
 
     public static void setDefaultGravityDirectionClient(ClientPlayerEntity entity, Direction gravityDirection, RotationParameters rotationParameters, Identifier verifier, PacketByteBuf verifierInfo) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
-        GravityChangerAPI.maybeGetSafe(GravityChangerAPI.GRAVITY_COMPONENT, entity).ifPresent(gc -> {
+        JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.setDefaultGravityDirection(gravityDirection, rotationParameters, false);
             GravityChannelClient.DEFAULT_GRAVITY.sendToServer(new DefaultGravityPacket(gravityDirection, rotationParameters, false), verifier, verifierInfo);
         });

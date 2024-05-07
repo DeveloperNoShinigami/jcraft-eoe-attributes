@@ -42,7 +42,7 @@ public class FlightMove extends AbstractMove<FlightMove, GEREntity> {
             double y = user.getY();
             Vec3d vel = new Vec3d(user.getVelocity().x, 0.0, user.getVelocity().z);
             // Targetting priority
-            LivingEntity targetEntity = user.getDamageTracker().getBiggestFall();
+            LivingEntity targetEntity = (LivingEntity) user.getDamageTracker().getBiggestFall().damageSource().getAttacker();
             if (targetEntity == null && user instanceof MobEntity mob)
                 targetEntity = mob.getTarget();
             if (targetEntity == null)

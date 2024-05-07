@@ -2,20 +2,21 @@ package net.arna.jcraft.client.renderer.effects;
 
 import lombok.experimental.UtilityClass;
 import net.arna.jcraft.common.network.s2c.TimeAccelStatePacket;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 
 @UtilityClass
 public class TimeAccelerationEffectRenderer {
     
-    public static void init() {
-        WorldRenderEvents.START.register(TimeAccelerationEffectRenderer::render);
-    }
-    
-    private static void render(WorldRenderContext ctx) {
-        if (!ctx.world().getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) return;
 
-        double acceleration = TimeAccelStatePacket.getAcceleration(ctx.world());
+    public static void render(MatrixStack stack, Vec3d camPos, ClientWorld world, float tickDelta) {
+        if (!world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) return;
+
+        double acceleration = TimeAccelStatePacket.getAcceleration(world);
 
         long currentTime = Util.getMeasuringTimeMs();
         if (acceleration == 0) {
@@ -24,7 +25,7 @@ public class TimeAccelerationEffectRenderer {
         }
 
         double multiplier = (currentTime - TimeAccelStatePacket.lastUpdate) / 1000d;
-        ctx.world().setTimeOfDay((long) (ctx.world().getTimeOfDay() + acceleration * multiplier));
+        world.setTimeOfDay((long) (world.getTimeOfDay() + acceleration * multiplier));
 
         TimeAccelStatePacket.lastUpdate = currentTime;
     }

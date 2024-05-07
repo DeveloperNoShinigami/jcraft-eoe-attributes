@@ -7,6 +7,7 @@ import net.arna.jcraft.common.splatter.SplatterSection;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.*;
 import net.minecraft.world.LightType;
 import org.joml.Matrix4f;
@@ -14,12 +15,9 @@ import org.joml.Vector3f;
 
 public class SplatterEffectRenderer {
 
-    public static void init() {
-        WorldRenderEvents.AFTER_ENTITIES.register(SplatterEffectRenderer::render);
-    }
 
-    private static void render(WorldRenderContext ctx) {
-        JSplatterManager splatterManager = JUtils.getSplatterManager(ctx.world());
+    public static void render(MatrixStack matrices, Vec3d camPos, ClientWorld world, float tickDelta) {
+        JSplatterManager splatterManager = JUtils.getSplatterManager(world);
 
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
@@ -28,8 +26,6 @@ public class SplatterEffectRenderer {
         RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapProgram);
 
-        MatrixStack matrices = ctx.matrixStack();
-        Vec3d camPos = ctx.camera().getPos();
 
         splatterManager.iterateSplatters(splatter -> {
             if (splatter.isRemoved()) return;
@@ -42,7 +38,7 @@ public class SplatterEffectRenderer {
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
             buf.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT);
-            float alpha = splatter.getStrength(ctx.tickDelta());
+            float alpha = splatter.getStrength(tickDelta);
 
             for (SplatterSection section : splatter.getSections())
                 if (!section.isRemoved())

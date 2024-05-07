@@ -33,7 +33,7 @@ public abstract class ServerPlayerEntityMixin {
     }
 
     @Inject(
-            method = "teleport",
+            method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDFF)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",

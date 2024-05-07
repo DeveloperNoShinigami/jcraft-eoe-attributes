@@ -8,6 +8,7 @@ import net.arna.jcraft.common.entity.stand.AbstractKillerQueenEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -28,7 +29,7 @@ public class BombPlantAttack extends AbstractSimpleAttack<BombPlantAttack, Abstr
     private static final Vec3d halfBox = new Vec3d(0.5, 0.5, 0.5);
     @Override
     public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
-        CommonBombTrackerComponent.BombData mainBomb = JComponents.getBombTracker(user).getMainBomb();
+        CommonBombTrackerComponent.BombData mainBomb = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
 
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 

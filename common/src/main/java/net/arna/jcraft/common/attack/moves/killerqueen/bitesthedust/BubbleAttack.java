@@ -6,6 +6,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.BubbleProjectile;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 
@@ -28,7 +29,7 @@ public class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> {
         attacker.getWorld().spawnEntity(bubbleProjectile);
         ctx.set(BUBBLE_PROJECTILE, bubbleProjectile);
 
-        JComponents.getBombTracker(user).getMainBomb().setBomb(bubbleProjectile);
+        JComponentPlatformUtils.getBombTracker(user).getMainBomb().setBomb(bubbleProjectile);
 
         return Set.of();
     }

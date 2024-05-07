@@ -29,6 +29,8 @@ import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
+import net.arna.jcraft.mixin.EntityTrackerAccessor;
+import net.arna.jcraft.mixin.ThreadedAnvilChunkStorageAccessor;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.*;
 import net.minecraft.entity.Entity;
@@ -46,7 +48,10 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.EntityTrackingListener;
+import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -55,6 +60,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.ChunkManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -305,6 +311,26 @@ public final class JCraft {
         }
 
         return Collections.emptyList();
+    }
+
+    public static Collection<ServerPlayerEntity> tracking(Entity entity) {
+        Objects.requireNonNull(entity, "Entity cannot be null");
+        ChunkManager manager = entity.getWorld().getChunkManager();
+
+        if (manager instanceof ServerChunkManager) {
+            ThreadedAnvilChunkStorage storage = ((ServerChunkManager) manager).threadedAnvilChunkStorage;
+            EntityTrackerAccessor tracker = ((ThreadedAnvilChunkStorageAccessor) storage).getEntityTrackers().get(entity.getId());
+
+            // return an immutable collection to guard against accidental removals.
+            if (tracker != null) {
+                return Collections.unmodifiableCollection(tracker.getPlayersTracking()
+                        .stream().map(EntityTrackingListener::getPlayer).collect(Collectors.toSet()));
+            }
+
+            return Collections.emptySet();
+        }
+
+        throw new IllegalArgumentException("Only supported on server worlds!");
     }
 
     public static void createHitsparks(ServerWorld world, double x, double y, double z, JParticleType type, int sparkCount, double sparkSpeed) {

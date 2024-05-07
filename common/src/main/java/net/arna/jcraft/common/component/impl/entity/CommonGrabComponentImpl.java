@@ -70,7 +70,7 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
     }
 
     public void sync() {
-        //JComponents.GRAB.sync(grabbed);
+        //JComponentPlatformUtils.GRAB.sync(grabbed);
     }
 
     public boolean shouldSyncWith(ServerPlayerEntity player) {

@@ -3,6 +3,7 @@ plugins {
 }
 
 loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
     forge {
         mixinConfig "jcraft.mixins.json"
     }

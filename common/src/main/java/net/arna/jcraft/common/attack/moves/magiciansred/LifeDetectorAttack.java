@@ -18,7 +18,7 @@ public class LifeDetectorAttack extends AbstractMove<LifeDetectorAttack, Magicia
 
     @Override
     public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
-        LifeDetectorEntity lifeDetector = new LifeDetectorEntity(JEntityTypeRegistry.LIFE_DETECTOR, attacker.getWorld());
+        LifeDetectorEntity lifeDetector = new LifeDetectorEntity(JEntityTypeRegistry.LIFE_DETECTOR.get(), attacker.getWorld());
         lifeDetector.setMaster(user);
         lifeDetector.refreshPositionAndAngles(attacker.getX(), attacker.getY() + 1.5, attacker.getZ(), attacker.getYaw(), attacker.getPitch());
         attacker.getWorld().spawnEntity(lifeDetector);

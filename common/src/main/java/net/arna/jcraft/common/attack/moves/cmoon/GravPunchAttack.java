@@ -9,6 +9,7 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.Gravity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -42,7 +43,7 @@ public class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack, CMoon
     @Override
     public void performHook(CMoonEntity attacker, Set<LivingEntity> targets, Set<Box> boxes, DamageSource damageSource, Vec3d forwardPos, Vec3d rotationVector, MoveContext ctx) {
         if (targets.isEmpty()) return;
-        JComponents.getShockwaveHandler(attacker.getWorld()).addShockwave(forwardPos, new Vec3d(GravityChangerAPI.getGravityDirection(attacker).getUnitVector()), 3.0f);
+        JComponentPlatformUtils.getShockwaveHandler(attacker.getWorld()).addShockwave(forwardPos, new Vec3d(GravityChangerAPI.getGravityDirection(attacker).getUnitVector()), 3.0f);
     }
 
     @Override

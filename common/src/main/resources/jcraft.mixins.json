@@ -20,7 +20,6 @@
     "client.GameRendererMixin",
     "client.HeldItemFeatureRendererMixin",
     "client.InGameHudMixin",
-    "client.IntegratedServerLoaderMixin",
     "client.ItemRendererMixin",
     "client.KeyBindingMixin",
     "client.LivingEntityRendererMixin",
@@ -39,7 +38,6 @@
     "client.gravity.ItemPickupParticleMixin",
     "client.gravity.OtherClientPlayerEntityMixin",
     "client.gravity.PlayerEntityRendererMixin",
-    "client.sodium.vanilla.WorldRendererVanillaMixin"
   ],
   "mixins": [
     "AnvilScreenHandlerMixin",
@@ -48,6 +46,7 @@
     "EndCrystalEntityMixin",
     "EndPortalBlockMixin",
     "EntityMixin",
+    "EntityTrackerAccessor",
     "EntityTypeMixin",
     "ExplosionMixin",
     "GrindstoneScreenHandlerAnon2and3Mixin",
@@ -66,6 +65,7 @@
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
     "ServerWorldMixin",
+    "ThreadedAnvilChunkStorageAccessor",
     "TimestopBlockEntityMixin",
     "TimestopBlockMixin",
     "VillagerEntityMixin",

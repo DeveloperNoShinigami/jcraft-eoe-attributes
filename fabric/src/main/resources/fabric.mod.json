@@ -24,7 +24,7 @@
       "net.arna.jcraft.fabric.client.JCraftFabricClient"
     ],
     "cardinal-components": [
-      "net.arna.jcraft.fabric.common.component.JComponents"
+      "net.arna.jcraft.fabric.common.component.JComponentPlatformUtils"
     ],
     "modmenu": [
       "net.arna.jcraft.fabric.client.JModMenuIntegration"

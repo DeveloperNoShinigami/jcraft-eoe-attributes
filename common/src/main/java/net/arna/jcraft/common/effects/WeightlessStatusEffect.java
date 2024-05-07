@@ -5,6 +5,7 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.Gravity;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.effect.StatusEffect;
@@ -47,7 +48,7 @@ public class WeightlessStatusEffect extends StatusEffect {
                     0, 0, 0
             );
         } else {
-            CommonMiscComponent misc = JComponents.getMiscData(entity);
+            CommonMiscComponent misc = JComponentPlatformUtils.getMiscData(entity);
 
             if (!entity.isAlive()) {
                 entity.removeStatusEffect(this);
@@ -81,7 +82,7 @@ public class WeightlessStatusEffect extends StatusEffect {
 
         if (entity.getWorld().isClient) return;
 
-        CommonMiscComponent misc = JComponents.getMiscData(entity);
+        CommonMiscComponent misc = JComponentPlatformUtils.getMiscData(entity);
         misc.setPrevNoGrav(entity.hasNoGravity());
         misc.setHoverTime(0);
 
@@ -100,7 +101,7 @@ public class WeightlessStatusEffect extends StatusEffect {
 
         if (entity.getWorld().isClient) return;
         GravityChangerAPI.clearGravity(entity);
-        if (!JComponents.getMiscData(entity).getPrevNoGrav())
+        if (!JComponentPlatformUtils.getMiscData(entity).getPrevNoGrav())
             entity.setNoGravity(false);
     }
 }

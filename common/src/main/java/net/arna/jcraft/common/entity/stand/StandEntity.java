@@ -1387,7 +1387,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         } else wantToBlock = false;
 
         if (!enemyHasStand) { // Blocking logic against standless opponents
-            CommonCooldownsComponent cooldowns = JComponents.getCooldowns(mob);
+            CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(mob);
             if (cooldowns.getCooldown(CooldownType.DASH) > 0) // Careful approach
                 wantToBlock = distance > 2 && distance < 5; // Block at range <2, 5>
             else

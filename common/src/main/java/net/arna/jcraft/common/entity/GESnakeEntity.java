@@ -99,4 +99,9 @@ public class GESnakeEntity extends TameableEntity implements GeoEntity {
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
     }
+
+    @Override
+    public EntityView method_48926() {
+        return null;
+    }
 }

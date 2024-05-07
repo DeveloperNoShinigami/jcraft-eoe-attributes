@@ -12,6 +12,7 @@ import net.arna.jcraft.common.entity.stand.AbstractKillerQueenEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.Entity;
@@ -31,7 +32,7 @@ public class DetonateAttack extends AbstractMove<DetonateAttack, AbstractKillerQ
 
     @Override
     public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
-        CommonBombTrackerComponent.BombData bombData = JComponents.getBombTracker(user).getMainBomb();
+        CommonBombTrackerComponent.BombData bombData = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
 
         Entity bombEntity = bombData.bombEntity;
         Vec3d bombPos = bombData.getBombPos();

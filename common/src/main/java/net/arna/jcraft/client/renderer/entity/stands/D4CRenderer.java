@@ -23,7 +23,7 @@ import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
 
 import javax.annotation.Nullable;
 
-public class D4CRenderer extends ExtendedStandEntityRenderer<D4CEntity> {
+public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
 
     public D4CRenderer(EntityRendererFactory.Context context) {
         super(context, new StandEntityModel<>(StandType.D4C));

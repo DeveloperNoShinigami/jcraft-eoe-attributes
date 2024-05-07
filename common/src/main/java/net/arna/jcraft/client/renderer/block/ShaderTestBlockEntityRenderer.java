@@ -1,7 +1,6 @@
 package net.arna.jcraft.client.renderer.block;
 
 import net.arna.jcraft.client.registry.JRenderLayerRegistry;
-import net.arna.jcraft.common.block.entity.ShaderTestBlockEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -9,7 +8,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
-
+/*
 public class ShaderTestBlockEntityRenderer implements BlockEntityRenderer<ShaderTestBlockEntity> {
 
     public ShaderTestBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
@@ -60,3 +59,5 @@ public class ShaderTestBlockEntityRenderer implements BlockEntityRenderer<Shader
         return true;
     }
 }
+
+ */

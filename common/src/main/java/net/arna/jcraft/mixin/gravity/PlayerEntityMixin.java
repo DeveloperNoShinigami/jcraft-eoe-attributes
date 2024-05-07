@@ -61,8 +61,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             method = "travel",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/math/BlockPos;<init>(DDD)V",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/World;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;"
             )
     )
     private void modify_move_multiply_0(Args args) {

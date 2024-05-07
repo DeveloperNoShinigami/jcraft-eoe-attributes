@@ -13,6 +13,7 @@ import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.EquipmentSlot;
@@ -103,7 +104,7 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
 
     private void summonFakeKC(KingCrimsonEntity attacker) {
         MobEntity doppelganger = attacker.getMoveContext().get(DOPPELGANGER);
-        CommonStandComponent standData = JComponents.getStandData(doppelganger);
+        CommonStandComponent standData = JComponentPlatformUtils.getStandData(doppelganger);
         standData.setTypeAndSkin(attacker.getStandType(), attacker.getSkin());
 
         StandEntity<?, ?> clone = JCraft.summon(attacker.getWorld(), doppelganger);

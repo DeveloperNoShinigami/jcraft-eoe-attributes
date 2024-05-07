@@ -3,7 +3,6 @@ package net.arna.jcraft.client.particle;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.arna.jcraft.client.rendering.handler.InversionShaderHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -41,8 +40,8 @@ public class JParticleTextureSheet {
         public void begin(BufferBuilder builder, TextureManager textureManager) {
             // Doesn't seem to work by using a blend function, so we'll use a shader instead.
             // Think that is because of the render order, but I'm not sure.
-            InversionShaderHandler.getToInvertBuffer().copyDepthFrom(MinecraftClient.getInstance().getFramebuffer()); // Copy depth buffer
-            InversionShaderHandler.getToInvertBuffer().beginWrite(true); // Render to inversion buffer
+            //TODO InversionShaderHandler.getToInvertBuffer().copyDepthFrom(MinecraftClient.getInstance().getFramebuffer()); // Copy depth buffer
+            //TODO InversionShaderHandler.getToInvertBuffer().beginWrite(true); // Render to inversion buffer
 
             RenderSystem.disableBlend();
             RenderSystem.enableDepthTest();

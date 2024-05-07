@@ -1,6 +1,7 @@
 package net.arna.jcraft.client.renderer.effects;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.architectury.event.events.client.ClientTickEvent;
 import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.util.RenderUtils;
 import net.arna.jcraft.common.attack.moves.kingcrimson.PredictionMove;
@@ -11,6 +12,8 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.Window;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -24,8 +27,7 @@ public class TimeErasePredictionEffectRenderer {
     private static Framebuffer predictionsBuffer;
 
     public static void init() {
-        WorldRenderEvents.AFTER_ENTITIES.register(TimeErasePredictionEffectRenderer::render);
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvent.CLIENT_POST.register(client -> {
             if (ticksLeft < 0) {
                 predictions.clear();
                 return;
@@ -59,7 +61,7 @@ public class TimeErasePredictionEffectRenderer {
     }
 
     @SuppressWarnings("deprecation") // Minecraft does this too.
-    private static void render(WorldRenderContext ctx) {
+    public static void render(MatrixStack stack, Vec3d camPos, ClientWorld world, float tickDelta, VertexConsumerProvider pConsumers) {
         if (ticksLeft < 0) {
             if (ticksLeft == -1) {
                 predictionsBuffer.clear(false);
@@ -69,7 +71,7 @@ public class TimeErasePredictionEffectRenderer {
         }
 
         // Ensure these are drawn and empty
-        VertexConsumerProvider.Immediate consumers = (VertexConsumerProvider.Immediate) Objects.requireNonNull(ctx.consumers());
+        VertexConsumerProvider.Immediate consumers = (VertexConsumerProvider.Immediate) Objects.requireNonNull(pConsumers);
         consumers.draw(TexturedRenderLayers.getEntitySolid());
         consumers.draw(TexturedRenderLayers.getEntityCutout());
 
@@ -85,7 +87,6 @@ public class TimeErasePredictionEffectRenderer {
 
         // Render entities
         EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
-        Vec3d camPos = ctx.camera().getPos();
 
         for (Map.Entry<Entity, Vec3d> prediction : predictionsSet) {
             Entity entity = prediction.getKey();
@@ -96,7 +97,7 @@ public class TimeErasePredictionEffectRenderer {
 
             int blockLight = Math.max(entity.isOnFire() ? 15 : entity.getWorld().getLightLevel(LightType.BLOCK, bPos), 7);
             int skyLight = Math.max(entity.getWorld().getLightLevel(LightType.SKY, bPos), 7);
-            entityRenderDispatcher.render(entity, pos.x, pos.y - 0.1, pos.z, entity.getYaw(), ctx.tickDelta(), ctx.matrixStack(),
+            entityRenderDispatcher.render(entity, pos.x, pos.y - 0.1, pos.z, entity.getYaw(), tickDelta, stack,
                     consumers, LightmapTextureManager.pack(blockLight, skyLight));
         }
 

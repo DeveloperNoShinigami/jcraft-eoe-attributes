@@ -5,6 +5,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractGrabAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.KillerQueenEntity;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.LivingEntity;
 
 import java.util.Set;
@@ -18,7 +19,7 @@ public class KQGrabAttack extends AbstractGrabAttack<KQGrabAttack, KillerQueenEn
     @Override
     public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-        targets.stream().findFirst().ifPresent(JComponents.getBombTracker(user).getMainBomb()::setBomb);
+        targets.stream().findFirst().ifPresent(JComponentPlatformUtils.getBombTracker(user).getMainBomb()::setBomb);
         return targets;
     }
 

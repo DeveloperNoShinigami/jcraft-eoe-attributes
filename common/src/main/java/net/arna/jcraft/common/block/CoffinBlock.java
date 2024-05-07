@@ -93,7 +93,7 @@ public class CoffinBlock extends BedBlock {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return JBlockEntityTypeRegistry.COFFIN_TILE.instantiate(pos, state);
+        return JBlockEntityTypeRegistry.COFFIN_TILE.get().instantiate(pos, state);
     }
 
     @Override

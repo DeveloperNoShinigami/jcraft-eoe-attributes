@@ -8,6 +8,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -50,7 +51,7 @@ public class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack, TheWo
                 target.heal(4f);
 
                 if (!(target instanceof MobEntity)) return;
-                JComponents.getMiscData(target).setSlavedTo(attacker.getUserOrThrow().getUuid());
+                JComponentPlatformUtils.getMiscData(target).setSlavedTo(attacker.getUserOrThrow().getUuid());
                 overwriteTimes.add(1048576);
                 overwriteTargets.add(target);
             }

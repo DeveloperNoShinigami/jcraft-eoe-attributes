@@ -1,11 +1,10 @@
 package net.arna.jcraft.client.gravity.util;
 
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.util.GravityVerifierRegistry;
 import net.arna.jcraft.common.gravity.util.packet.*;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
@@ -27,7 +26,7 @@ public class GravityChannelClient<P extends GravityPacket> {
         gravityVerifierRegistry = new GravityVerifierRegistry<>();
     }
 
-    public void receiveFromServer(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+    public void receiveFromServer(MinecraftClient client, PacketByteBuf buf) {
         int entityId = buf.readInt();
         P packet = packetFactory.read(buf);
         client.execute(() -> NetworkUtilClient.getGravityComponent(client, entityId).ifPresent(packet::run));
@@ -38,7 +37,7 @@ public class GravityChannelClient<P extends GravityPacket> {
         packet.write(buf);
         buf.writeIdentifier(verifier);
         buf.writeByteArray(verifierInfoBuf.array());
-        ClientPlayNetworking.send(channel, buf);
+        NetworkManager.sendToServer(channel, buf);
     }
 
     public GravityVerifierRegistry<P> getVerifierRegistry() {
@@ -46,7 +45,7 @@ public class GravityChannelClient<P extends GravityPacket> {
     }
 
     public void registerClientReceiver() {
-        ClientPlayNetworking.registerGlobalReceiver(channel, this::receiveFromServer);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, channel, (buf, d) -> receiveFromServer(MinecraftClient.getInstance(), buf));
     }
 
     public static void init() {

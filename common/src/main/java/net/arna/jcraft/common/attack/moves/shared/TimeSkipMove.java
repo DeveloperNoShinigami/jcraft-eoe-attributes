@@ -9,6 +9,7 @@ import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.MobilityType;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -65,7 +66,7 @@ public class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends AbstractM
         Vec3d tpPos = hitResult.getPos();
 
         // 3s minimum ult cooldown
-        CommonCooldownsComponent cooldowns = JComponents.getCooldowns(user);
+        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
         if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) < 60)
             cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 60);
 

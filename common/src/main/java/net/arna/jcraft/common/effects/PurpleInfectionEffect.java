@@ -2,6 +2,7 @@ package net.arna.jcraft.common.effects;
 
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -23,7 +24,7 @@ public class PurpleInfectionEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        StandType standType = JComponents.getStandData(entity).getType();
+        StandType standType = JComponentPlatformUtils.getStandData(entity).getType();
         float damage = 0.6666f; // 1/3rd of a heart
         if (standType == StandType.PURPLE_HAZE_DISTORTION)
             damage /= 3.0f;

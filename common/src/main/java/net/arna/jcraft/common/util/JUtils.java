@@ -179,7 +179,7 @@ public final class JUtils {
     }
 
     public static void serverPlaySound(SoundEvent sound, ServerWorld serverWorld, Vec3d pos, double radius) {
-        PlayerLookup.around(serverWorld, pos, radius).forEach(
+        JCraft.around(serverWorld, pos, radius).forEach(
                 serverPlayer -> serverPlayer.networkHandler.sendPacket(
                         new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(sound), SoundCategory.PLAYERS, pos.x, pos.y, pos.z, 1, 1, 0)
                 )
@@ -382,7 +382,7 @@ public final class JUtils {
         explosion.affectWorld(true);
 
         if (world.isClient) return;
-        for (ServerPlayerEntity player : PlayerLookup.around((ServerWorld) world, new Vec3d(x, y, z), 64))
+        for (ServerPlayerEntity player : JCraft.around((ServerWorld) world, new Vec3d(x, y, z), 64))
             JExplosionPacket.send(player, x, y, z, power, explosion, modifier);
     }
 
@@ -407,7 +407,7 @@ public final class JUtils {
     }
 
     public static boolean isAffectedByTimeStop(Entity entity) {
-        return JComponents.getTimeStopData(entity).getTicks() > 0;
+        return JComponentPlatformUtils.getTimeStopData(entity).getTicks() > 0;
     }
 
     public static boolean canDamage(DamageSource damageSource, Entity ent) {
@@ -496,7 +496,7 @@ public final class JUtils {
             Map.entry(EntityType.IRON_GOLEM, 0.0f),
             Map.entry(EntityType.SNOW_GOLEM, 0.0f),
 
-            Map.entry(JEntityTypeRegistry.SHEER_HEART_ATTACK, 0.0f)
+            Map.entry(JEntityTypeRegistry.SHEER_HEART_ATTACK.get(), 0.0f)
     );
 
     public static float getBloodMult(LivingEntity entity) {

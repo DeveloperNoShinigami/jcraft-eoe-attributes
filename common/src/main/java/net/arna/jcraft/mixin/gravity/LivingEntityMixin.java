@@ -188,11 +188,13 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Inject(
-            method = "updateLimbs",
+            method = "updateLimbs(Z)V",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void inject_updateLimbs(LivingEntity entity, boolean flutter, CallbackInfo ci) {
+    private void inject_updateLimbs(boolean flutter, CallbackInfo ci) {
+        LivingEntity entity = LivingEntity.class.cast(this);
+
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) return;
 
@@ -400,6 +402,7 @@ public abstract class LivingEntityMixin extends Entity {
         return RotationUtil.vecWorldToPlayer(attacker.getEyePos(), gravityDirection).z;
     }
 
+    /*TODO
     @Redirect(
             method = "baseTick",
             at = @At(
@@ -415,6 +418,8 @@ public abstract class LivingEntityMixin extends Entity {
 
         return BlockPos.ofFloored(this.getEyePos());
     }
+
+     */
 
     @Redirect(
             method = "spawnItemParticles",

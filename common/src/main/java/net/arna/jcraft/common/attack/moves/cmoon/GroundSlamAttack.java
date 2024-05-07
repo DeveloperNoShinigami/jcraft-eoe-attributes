@@ -6,6 +6,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.FallingBlockEntity;
@@ -66,7 +67,7 @@ public class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttack, CMo
             }
         }
 
-        JComponents.getShockwaveHandler(attacker.getWorld()).addShockwave(attacker.getPos().add(rotationVector), new Vec3d(GravityChangerAPI.getGravityDirection(attacker).getUnitVector()), 4.0f);
+        JComponentPlatformUtils.getShockwaveHandler(attacker.getWorld()).addShockwave(attacker.getPos().add(rotationVector), new Vec3d(GravityChangerAPI.getGravityDirection(attacker).getUnitVector()), 4.0f);
     }
 
     @Override

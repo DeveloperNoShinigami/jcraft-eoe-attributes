@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -28,7 +29,7 @@ public class ClearStandCommand {
 
         for (Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
-                CommonStandComponent standData = JComponents.STAND.get(livingEntity);
+                CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
 
                 if (standData.getType() == null) continue;
                 standData.setType(null);

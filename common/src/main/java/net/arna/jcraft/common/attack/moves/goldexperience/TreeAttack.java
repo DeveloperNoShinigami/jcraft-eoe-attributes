@@ -27,7 +27,7 @@ public class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExperienceE
     public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        GETreeEntity tree = new GETreeEntity(JEntityTypeRegistry.GE_TREE, attacker.getWorld(), user.getRotationVector().multiply(1.33));
+        GETreeEntity tree = new GETreeEntity(JEntityTypeRegistry.GE_TREE.get(), attacker.getWorld(), user.getRotationVector().multiply(1.33));
         tree.setMaster(user);
 
         Direction gravity = GravityChangerAPI.getGravityDirection(attacker);

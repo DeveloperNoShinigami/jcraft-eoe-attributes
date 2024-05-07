@@ -41,7 +41,7 @@ public abstract class PostProcessor {
                 u.set(invertedProjectionMatrix);
             }),
             Pair.of("nearPlaneDistance", u -> u.set(GameRenderer.CAMERA_DEPTH)),
-            Pair.of("farPlaneDistance", u -> u.set(MC.gameRenderer.getFarPlaneDistance())),
+            //TODO Pair.of("farPlaneDistance", u -> u.set(MC.gameRenderer.getFarPlaneDistance())),
             Pair.of("fov", u -> u.set((float) Math.toRadians(MC.gameRenderer.getFov(MC.gameRenderer.getCamera(), MC.getTickDelta(), true)))),
             Pair.of("aspectRatio", u -> u.set((float) MC.getWindow().getWidth() / (float) MC.getWindow().getHeight()))
     );

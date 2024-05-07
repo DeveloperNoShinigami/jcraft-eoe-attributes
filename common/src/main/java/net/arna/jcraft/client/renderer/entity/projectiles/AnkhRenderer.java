@@ -9,6 +9,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class AnkhRenderer extends GeoEntityRenderer<AnkhProjectile> {
@@ -22,10 +23,7 @@ public class AnkhRenderer extends GeoEntityRenderer<AnkhProjectile> {
     }
 
     @Override
-    public RenderLayer getRenderType(AnkhProjectile animatable, float partialTicks, MatrixStack stack,
-                                     VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                     Identifier textureLocation) {
-
+    public RenderLayer getRenderType(AnkhProjectile animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
         return RenderLayer.getEyes(getTextureLocation(animatable));
     }
 

@@ -8,6 +8,7 @@ import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.LivingEntity;
 
 import java.util.Set;
@@ -58,7 +59,7 @@ public abstract class AbstractGrabAttack<T extends AbstractGrabAttack<T, A, S>, 
             if (stand != null) stand.blocking = false;
             JUtils.cancelMoves(target);
 
-            JComponents.getGrab(target).startGrab(attacker.getBaseEntity(), grabDuration, grabOffset);
+            JComponentPlatformUtils.getGrab(target).startGrab(attacker.getBaseEntity(), grabDuration, grabOffset);
 
             JUtils.setVelocity(target, 0, 0, 0);
 

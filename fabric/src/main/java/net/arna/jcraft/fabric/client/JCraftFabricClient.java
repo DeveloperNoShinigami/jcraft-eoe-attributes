@@ -1,6 +1,7 @@
 package net.arna.jcraft.fabric.client;
 
 import net.arna.jcraft.client.events.JWorldRenderEvents;
+import net.arna.jcraft.client.renderer.effects.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 
@@ -14,6 +15,26 @@ public final class JCraftFabricClient implements ClientModInitializer {
 
         WorldRenderEvents.LAST.register(context -> {
             JWorldRenderEvents.onLast(context.matrixStack(), context.camera().getPos(), context.worldRenderer());
+        });
+
+        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
+            AttackHitboxEffectRenderer.render(context.matrixStack(), context.camera().getPos(), context.worldRenderer(), context.consumers());
+        });
+
+        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
+            ShockwaveEffectRenderer.render(context.matrixStack(), context.camera().getPos(), context.world(), context.consumers());
+        });
+
+        WorldRenderEvents.START.register(context -> {
+            TimeAccelerationEffectRenderer.render(context.matrixStack(), context.camera().getPos(), context.world(), context.tickDelta());
+        });
+
+        WorldRenderEvents.START.register(context -> {
+            SplatterEffectRenderer.render(context.matrixStack(), context.camera().getPos(), context.world(), context.tickDelta());
+        });
+
+        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
+            TimeErasePredictionEffectRenderer.render(context.matrixStack(), context.camera().getPos(), context.world(), context.tickDelta(), context.consumers());
         });
     }
 }

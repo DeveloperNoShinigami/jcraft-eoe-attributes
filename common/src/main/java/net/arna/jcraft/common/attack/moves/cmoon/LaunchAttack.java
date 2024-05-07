@@ -27,7 +27,7 @@ public class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoonEntity
     public @NonNull Set<LivingEntity> perform(CMoonEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        BlockProjectile block = new BlockProjectile(JEntityTypeRegistry.BLOCK_PROJECTILE, attacker.getWorld());
+        BlockProjectile block = new BlockProjectile(JEntityTypeRegistry.BLOCK_PROJECTILE.get(), attacker.getWorld());
         BlockState steppingState = attacker.getSteppingBlockState();
         if (steppingState.isAir() || !steppingState.isOpaque())
             block.setBlockStack(Items.STONE.getDefaultStack());

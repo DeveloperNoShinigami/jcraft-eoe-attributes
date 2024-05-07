@@ -38,6 +38,7 @@ import java.util.List;
 
 import static net.minecraft.client.render.entity.LivingEntityRenderer.getOverlay;
 
+@Deprecated(forRemoval = true)
 public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends DynamicGeoEntityRenderer<T> {
     protected ItemStack mainHandItem, offHandItem;
 

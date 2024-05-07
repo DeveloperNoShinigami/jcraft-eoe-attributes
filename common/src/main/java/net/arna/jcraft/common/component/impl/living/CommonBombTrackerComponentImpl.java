@@ -45,7 +45,7 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
     }
 
     public void sync() {
-        //JComponents.BOMB_TRACKER.sync(entity);
+        //JComponentPlatformUtils.BOMB_TRACKER.sync(entity);
         main.dirty = false;
         btd.dirty = false;
     }

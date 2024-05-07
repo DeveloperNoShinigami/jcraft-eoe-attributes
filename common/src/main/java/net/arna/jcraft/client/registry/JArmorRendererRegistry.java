@@ -17,12 +17,6 @@ public class JArmorRendererRegistry {
 
     public static void registerArmorRenderers() {
 
-
-        GeoArmorRenderer.registerArmorRenderer(new DIOCapeRenderer(), null,
-                JObjectRegistry.DIOCAPE, null, null);
-
-
-
     }
 
     public static void createRenderer(Consumer<Object> consumer, GeoArmorRenderer<?> pRenderer) {

@@ -6,6 +6,7 @@ import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -34,7 +35,7 @@ public class BubbleCounterAttack extends AbstractCounterAttack<BubbleCounterAtta
             JUtils.cancelMoves(livingEntity);
         }
 
-        JComponents.getBombTracker(attacker.getUser()).getMainBomb().setBomb(countered);
+        JComponentPlatformUtils.getBombTracker(attacker.getUser()).getMainBomb().setBomb(countered);
         //stand.playSound(JSoundRegistry.BTD_COUNTER_HIT, 1, 1);
     }
 

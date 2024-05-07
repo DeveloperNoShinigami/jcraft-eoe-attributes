@@ -20,7 +20,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
 
-public class PurpleHazeRenderer extends ExtendedStandEntityRenderer<AbstractPurpleHazeEntity<?, ?>> {
+public class PurpleHazeRenderer extends StandEntityRenderer<AbstractPurpleHazeEntity<?, ?>> {
     public PurpleHazeRenderer(EntityRendererFactory.Context context) {
         super(context, new PurpleHazeModel(false));
 

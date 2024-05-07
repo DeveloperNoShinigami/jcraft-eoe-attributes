@@ -18,8 +18,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
+import java.awt.*;
 import java.util.Collections;
 
 public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
@@ -48,19 +52,15 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
     }
 
     @Override
-    public void render(TheSunEntity animatable, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
+    public void actuallyRender(MatrixStack poseStack, TheSunEntity animatable, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         packedLight = 255;
 
-        setCurrentModelRenderCycle(EModelRenderCycle.INITIAL);
         poseStack.push();
 
         float scale = lerpScale(animatable, partialTick);
         poseStack.scale(scale, scale, scale);
 
-        this.dispatchedMat = poseStack.peek().getPositionMatrix().copy();
-        EntityModelData entityModelData = new EntityModelData();
-        entityModelData.isSitting = false;
-        entityModelData.isChild = animatable.isBaby();
+        this.modelRenderTranslations = new Matrix4f(poseStack.peek().getPositionMatrix());
 
         float lerpBodyRot = MathHelper.lerpAngleDegrees(partialTick, animatable.prevBodyYaw, animatable.bodyYaw);
         float lerpHeadRot = MathHelper.lerpAngleDegrees(partialTick, animatable.prevHeadYaw, animatable.headYaw);
@@ -82,57 +82,39 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
 
         applyRotations(animatable, poseStack, ageInTicks, lerpBodyRot, partialTick);
 
-        if (animatable.isAlive()) {
-            limbSwingAmount = MathHelper.lerp(partialTick, animatable.lastLimbDistance, animatable.limbDistance);
-            limbSwing = animatable.limbAngle - animatable.limbDistance * (1 - partialTick);
+        AnimationState<TheSunEntity> predicate = new AnimationState<TheSunEntity>(animatable, limbSwing, limbSwingAmount, partialTick, false);
 
-            if (animatable.isBaby())
-                limbSwing *= 3f;
 
-            if (limbSwingAmount > 1f)
-                limbSwingAmount = 1f;
-        }
-
-        float headPitch = MathHelper.lerp(partialTick, animatable.prevPitch, animatable.getPitch());
-        entityModelData.headPitch = -headPitch;
-        entityModelData.netHeadYaw = -netHeadYaw;
-
-        AnimationEvent<TheSunEntity> predicate = new AnimationEvent<>(animatable, limbSwing, limbSwingAmount, partialTick,
-                (limbSwingAmount <= -getSwingMotionAnimThreshold() || limbSwingAmount > getSwingMotionAnimThreshold()), Collections.singletonList(entityModelData));
-        GeoModel model = this.modelProvider.getModel(this.modelProvider.getModelResource(animatable));
-
-        this.modelProvider.setCustomAnimations(animatable, getInstanceId(animatable), predicate);
+        this.model.setCustomAnimations(animatable, getInstanceId(animatable), predicate);
 
         //poseStack.translate(0, 0.01f, 0);
         RenderSystem.setShaderTexture(0, getTextureLocation(animatable));
 
-        Color renderColor = getRenderColor(animatable, partialTick, poseStack, bufferSource, null, packedLight);
-        RenderLayer renderType = getRenderType(animatable, partialTick, poseStack, bufferSource, null, packedLight,
-                getTextureLocation(animatable));
+        var renderColor = getRenderColor(animatable, partialTick, packedLight);
+
 
         if (!animatable.isInvisibleTo(MinecraftClient.getInstance().player)) {
             VertexConsumer glintBuffer = bufferSource.getBuffer(RenderLayer.getDirectEntityGlint());
             VertexConsumer translucentBuffer = bufferSource
                     .getBuffer(RenderLayer.getEntityTranslucentCull(getTextureLocation(animatable)));
 
-            render(model, animatable, partialTick, renderType, poseStack, bufferSource,
-                    glintBuffer != translucentBuffer ? VertexConsumers.union(glintBuffer, translucentBuffer)
-                            : null,
-                    packedLight, getOverlay(animatable, 0), renderColor.getRed() / 255f,
+            super.actuallyRender(
+                    poseStack,
+                    animatable,
+                    model,
+                    renderType,
+                    bufferSource,
+                    glintBuffer != translucentBuffer ? VertexConsumers.union(glintBuffer, translucentBuffer) : null,
+                    isReRender,
+                    partialTick,
+                    packedLight,
+                    getPackedOverlay(animatable, 0), renderColor.getRed() / 255f,
                     renderColor.getGreen() / 255f, renderColor.getBlue() / 255f,
-                    renderColor.getAlpha() / 255f);
+                    renderColor.getAlpha() / 255f
+            );
         }
 
-        //if (!animatable.isSpectator()) {
-            for (GeoLayerRenderer<TheSunEntity> layerRenderer : this.layerRenderers) {
-                renderLayer(poseStack, bufferSource, packedLight, animatable, limbSwing, limbSwingAmount, partialTick, ageInTicks,
-                        netHeadYaw, headPitch, bufferSource, layerRenderer);
-            }
-        //}
-
-        if (FabricLoader.getInstance().isModLoaded("patchouli"))
-            PatchouliCompat.patchouliLoaded(poseStack);
-
         poseStack.pop();
+
     }
 }

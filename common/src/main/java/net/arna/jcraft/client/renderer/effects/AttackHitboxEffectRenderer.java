@@ -26,7 +26,7 @@ public class AttackHitboxEffectRenderer {
     private static final List<Pair<LongLongPair, Box>> highPriorityBoxes = new ArrayList<>(); // These do not get evicted.
 
     public static void init() {
-        WorldRenderEvents.AFTER_ENTITIES.register(AttackHitboxEffectRenderer::render);
+
     }
 
     public static void addHitboxes(Iterable<Box> boxes) {
@@ -43,32 +43,30 @@ public class AttackHitboxEffectRenderer {
     }
 
     @Synchronized
-    private static void render(WorldRenderContext ctx) {
+    public static void render(MatrixStack matrices, Vec3d camPos, WorldRenderer worldRenderer, VertexConsumerProvider consumerProvider) {
         if (!MinecraftClient.getInstance().getEntityRenderDispatcher().shouldRenderHitboxes()) return;
 
         RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
 
-        Vec3d camPos = ctx.camera().getPos();
-        MatrixStack matrices = ctx.matrixStack();
         matrices.push();
         matrices.translate(-camPos.x, -camPos.y, -camPos.z);
 
-        renderBoxes(ctx, matrices, hitboxes);
-        renderBoxes(ctx, matrices, highPriorityBoxes);
+        renderBoxes(consumerProvider, matrices, hitboxes);
+        renderBoxes(consumerProvider, matrices, highPriorityBoxes);
 
         matrices.pop();
     }
 
-    private static void renderBoxes(WorldRenderContext ctx, MatrixStack matrices, Collection<Pair<LongLongPair, Box>> boxes) {
+    private static void renderBoxes(VertexConsumerProvider consumerProvider, MatrixStack matrices, Collection<Pair<LongLongPair, Box>> boxes) {
         for (Iterator<Pair<LongLongPair, Box>> iterator = boxes.iterator(); iterator.hasNext();) {
             Pair<LongLongPair, Box> pair = iterator.next();
-            renderBox(ctx, pair.right(), matrices);
+            renderBox(consumerProvider, pair.right(), matrices);
             if (Util.getEpochTimeMs() - pair.left().leftLong() > pair.left().rightLong()) iterator.remove();
         }
     }
 
     @SuppressWarnings("DuplicatedCode") // Don't care
-    private static void renderBox(WorldRenderContext ctx, Box box, MatrixStack matrices) {
+    private static void renderBox(VertexConsumerProvider consumerProvider, Box box, MatrixStack matrices) {
         // Draw faces
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder quadsVc = tess.getBuffer();
@@ -133,7 +131,7 @@ public class AttackHitboxEffectRenderer {
         RenderSystem.disableDepthTest();
 
         // Draw lines
-        VertexConsumer linesVc = Objects.requireNonNull(ctx.consumers()).getBuffer(RenderLayer.LINES);
+        VertexConsumer linesVc = Objects.requireNonNull(consumerProvider).getBuffer(RenderLayer.LINES);
         WorldRenderer.drawBox(matrices, linesVc, box, 1f, 0f, 0f, 1f);
     }
 }

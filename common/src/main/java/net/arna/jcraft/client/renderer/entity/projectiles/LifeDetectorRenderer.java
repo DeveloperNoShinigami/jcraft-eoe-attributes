@@ -26,7 +26,7 @@ public class LifeDetectorRenderer extends GeoEntityRenderer<LifeDetectorEntity> 
     @Override
     public void render(LifeDetectorEntity animatable, float yaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
         poseStack.push();
-        poseStack.multiply(Quaternionf.fromEulerXyz(3.1415f, 3.1415f, 0)); // Why is this necessary???
+        poseStack.multiply(new Quaternionf().rotateXYZ(3.1415f, 3.1415f, 0)); // Why is this necessary???
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
         poseStack.pop();
     }

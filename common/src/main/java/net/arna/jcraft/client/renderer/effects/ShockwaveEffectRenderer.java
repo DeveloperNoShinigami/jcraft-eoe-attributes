@@ -3,8 +3,10 @@ package net.arna.jcraft.client.renderer.effects;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
@@ -19,15 +21,9 @@ public class ShockwaveEffectRenderer {
             .mapToObj(i -> JCraft.id("textures/effect/shockwave/shockwave_" + i + ".png"))
             .toList();
 
-    public static void init() {
-        WorldRenderEvents.AFTER_ENTITIES.register(ShockwaveEffectRenderer::render);
-    }
+    public static void render(MatrixStack stack, Vec3d camPos, ClientWorld world, VertexConsumerProvider consumerProvider) {
 
-    private static void render(WorldRenderContext ctx) {
-        MatrixStack stack = ctx.matrixStack();
-        Vec3d camPos = ctx.camera().getPos();
-
-        CommonShockwaveHandlerComponent shockwaveHandler = JComponents.getShockwaveHandler(ctx.world());
+        CommonShockwaveHandlerComponent shockwaveHandler = JComponentPlatformUtils.getShockwaveHandler(world);
 
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
@@ -44,8 +40,8 @@ public class ShockwaveEffectRenderer {
             Matrix4f mat = stack.peek().getPositionMatrix();
 
             // Calculate light
-            int blockLight = ctx.world().getLightLevel(LightType.BLOCK, shockwave.getBlockPos());
-            int skyLight = ctx.world().getLightLevel(LightType.SKY, shockwave.getBlockPos());
+            int blockLight = world.getLightLevel(LightType.BLOCK, shockwave.getBlockPos());
+            int skyLight = world.getLightLevel(LightType.SKY, shockwave.getBlockPos());
             int light = LightmapTextureManager.pack(blockLight, skyLight);
 
             // Set texture

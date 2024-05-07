@@ -38,7 +38,7 @@ public class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienc
             case SNAKE -> {
                 if (item.getMaxCount() <= 1) return Set.of();
 
-                GESnakeEntity snake = new GESnakeEntity(JEntityTypeRegistry.GE_SNAKE, attacker.getWorld());
+                GESnakeEntity snake = new GESnakeEntity(JEntityTypeRegistry.GE_SNAKE.get(), attacker.getWorld());
                 //todo: fix snake not working for mobs
                 if (user instanceof PlayerEntity playerEntity) snake.setOwner(playerEntity);
                 animal = snake;
@@ -46,12 +46,12 @@ public class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienc
             case FROG -> {
                 if (item.getMaxCount() <= 1) return Set.of();
 
-                GEFrogEntity frog = new GEFrogEntity(JEntityTypeRegistry.GE_FROG, attacker.getWorld());
+                GEFrogEntity frog = new GEFrogEntity(JEntityTypeRegistry.GE_FROG.get(), attacker.getWorld());
                 frog.setMaster(user);
                 animal = frog;
             }
             case BUTTERFLY -> {
-                GEButterflyEntity butterfly = new GEButterflyEntity(JEntityTypeRegistry.GE_BUTTERFLY, attacker.getWorld());
+                GEButterflyEntity butterfly = new GEButterflyEntity(JEntityTypeRegistry.GE_BUTTERFLY.get(), attacker.getWorld());
                 butterfly.setMaster(user);
                 animal = butterfly;
             }

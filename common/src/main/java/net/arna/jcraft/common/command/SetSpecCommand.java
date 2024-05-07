@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.spec.SpecType;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.CommandManager;
@@ -32,7 +33,7 @@ public class SetSpecCommand {
 
         if (targets.isEmpty()) return 0;
         for (PlayerEntity player : targets)
-            JComponents.getSpecData(player).setType(specType);
+            JComponentPlatformUtils.getSpecData(player).setType(specType);
 
         return 1;
     }

@@ -8,6 +8,7 @@ import net.arna.jcraft.common.entity.projectile.LaserProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.spec.VampireSpec;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Vec3d;
 
@@ -41,7 +42,7 @@ public class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, VampireSp
 
             attacker.getEntityWorld().spawnEntity(laser);
 
-            JComponents.getShockwaveHandler(user.getWorld()).addShockwave(offsetHeightPos, rotVec, 2);
+            JComponentPlatformUtils.getShockwaveHandler(user.getWorld()).addShockwave(offsetHeightPos, rotVec, 2);
         }
 
         return Set.of();

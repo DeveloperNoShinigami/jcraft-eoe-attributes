@@ -7,6 +7,10 @@ architectury {
     fabric()
 }
 
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}
+
 configurations {
     common {
         canBeResolved = true
@@ -55,12 +59,35 @@ dependencies {
     modApi "com.terraformersmc:modmenu:7.2.2"
 }
 
-processResources {
-    inputs.property 'version', project.version
+File generatedResourcesDir = file("src/generated/resources")
+tasks.register("copyAccessWidener", Copy) {
+    from(project(":common").file("src/main/resources/jcraft.accesswidener"))
+    into(generatedResourcesDir)
+}
 
-    filesMatching('fabric.mod.json') {
-        expand version: project.version
+sourceSets {
+    main {
+        resources {
+            srcDir(generatedResourcesDir)
+        }
     }
+}
+
+processResources {
+    dependsOn("copyAccessWidener")
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+sourcesJar {
+    dependsOn "copyAccessWidener"
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE // Ignore duplicate jcraft.accesswidener files
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
 }
 
 shadowJar {

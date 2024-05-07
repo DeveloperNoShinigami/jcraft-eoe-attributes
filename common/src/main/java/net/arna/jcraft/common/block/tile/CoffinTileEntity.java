@@ -20,7 +20,7 @@ public class CoffinTileEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public CoffinTileEntity(BlockPos pos, BlockState state) {
-        super(JBlockEntityTypeRegistry.COFFIN_TILE, pos, state);
+        super(JBlockEntityTypeRegistry.COFFIN_TILE.get(), pos, state);
     }
 
 

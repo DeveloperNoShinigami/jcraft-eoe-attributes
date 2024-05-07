@@ -22,7 +22,7 @@ public class RenderUtils {
 
     public static ShaderProgram getShader(RenderLayer type) {
         if (type instanceof RenderLayer.MultiPhase compositeRenderType) {
-            Optional<Supplier<ShaderProgram>> shader = compositeRenderType.phases.shader.supplier;
+            Optional<Supplier<ShaderProgram>> shader = compositeRenderType.phases.program.supplier;
             if (shader.isPresent()) {
                 return shader.get().get();
             }

@@ -8,6 +8,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.LivingEntity;
@@ -136,7 +137,7 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
             Vec3d rotVec = user.getRotationVector();
             shockwavePos = shockwavePos.add(rotVec);
             shockwavePos = shockwavePos.add(RotationUtil.vecPlayerToWorld(new Vec3d(0, attackerEntity.getHeight() / 1.8 - getOffset(), 0), GravityChangerAPI.getGravityDirection(user)));
-            JComponents.getShockwaveHandler(attacker.getEntityWorld())
+            JComponentPlatformUtils.getShockwaveHandler(attacker.getEntityWorld())
                     .addShockwave(shockwavePos, user.getRotationVector(), getDamage() / 1.5f);
         }));
     }

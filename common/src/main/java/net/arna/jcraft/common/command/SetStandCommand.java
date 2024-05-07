@@ -8,6 +8,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -43,7 +44,7 @@ public class SetStandCommand {
 
         for (Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
-                CommonStandComponent standData = JComponents.getStandData(livingEntity);
+                CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
                 standData.setTypeAndSkin(type, skin);
 
                 livingEntity.detach();

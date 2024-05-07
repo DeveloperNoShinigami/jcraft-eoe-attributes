@@ -22,7 +22,7 @@ public class NetSetMove extends AbstractMove<NetSetMove, HGEntity> {
     public @NonNull Set<LivingEntity> perform(HGEntity attacker, LivingEntity user, MoveContext ctx) {
         Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
 
-        HGNetEntity net = new HGNetEntity(JEntityTypeRegistry.HG_NET, attacker.getWorld());
+        HGNetEntity net = new HGNetEntity(JEntityTypeRegistry.HG_NET.get(), attacker.getWorld());
         net.setSkin(attacker.getSkin());
         net.refreshPositionAndAngles(
                 attacker.getX() + gravity.getOffsetX(),

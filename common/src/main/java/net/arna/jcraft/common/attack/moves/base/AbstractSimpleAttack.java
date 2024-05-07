@@ -14,6 +14,7 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -269,7 +270,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
             Vec3d shockwavePos = attackerEntity.getPos();
             shockwavePos = shockwavePos.add(attackerEntity.getRotationVector());
             shockwavePos = shockwavePos.add(RotationUtil.vecPlayerToWorld(new Vec3d(0, attackerEntity.getHeight() / 2.0 - offset, 0), GravityChangerAPI.getGravityDirection(user)));
-            JComponents.getShockwaveHandler(attacker.getEntityWorld())
+            JComponentPlatformUtils.getShockwaveHandler(attacker.getEntityWorld())
                     .addShockwave(shockwavePos, attackerEntity.getRotationVector(), damage / 2.5f);
         }));
         return getThis();

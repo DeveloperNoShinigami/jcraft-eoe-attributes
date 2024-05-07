@@ -20,7 +20,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
 
-public class WhiteSnakeRenderer extends ExtendedStandEntityRenderer<WhiteSnakeEntity> {
+public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
     public WhiteSnakeRenderer(EntityRendererFactory.Context context) {
         super(context, new WhiteSnakeModel());
 

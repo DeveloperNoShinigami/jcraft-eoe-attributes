@@ -16,13 +16,11 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.gravity.util.GravityChannelClient;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
-import net.arna.jcraft.client.gui.hud.ScreenFreezeRenderer;
 import net.arna.jcraft.client.net.ClientPacketHandler;
 import net.arna.jcraft.client.particle.*;
 import net.arna.jcraft.client.registry.*;
 import net.arna.jcraft.client.renderer.block.CoffinTileRenderer;
 import net.arna.jcraft.client.renderer.effects.*;
-import net.arna.jcraft.client.renderer.item.BigItemRenderer;
 import net.arna.jcraft.client.rendering.RenderHandler;
 import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
 import net.arna.jcraft.client.util.ClientEntityHandlerImpl;
@@ -48,7 +46,6 @@ import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -114,8 +111,8 @@ public class JCraftClient implements ClientModInitializer {
 
         ReloadListenerRegistry.register(ResourceType.CLIENT_RESOURCES, new DecimalFormatUpdater());
 
-        ClientTickEvent.CLIENT_POST.register(ScreenFreezeRenderer::onEndTick);
-        ClientGuiEvent.RENDER_HUD.register(ScreenFreezeRenderer::onHudRender);
+        //ClientTickEvent.CLIENT_POST.register(ScreenFreezeRenderer::onEndTick);
+        //ClientGuiEvent.RENDER_HUD.register(ScreenFreezeRenderer::onHudRender);
 
         GravityChannelClient.init();
 
@@ -179,10 +176,7 @@ public class JCraftClient implements ClientModInitializer {
         ClientPacketHandler.init();
 
         AttackHitboxEffectRenderer.init();
-        TimeAccelerationEffectRenderer.init();
         TimeErasePredictionEffectRenderer.init();
-        SplatterEffectRenderer.init();
-        ShockwaveEffectRenderer.init();
 
         ClientGuiEvent.RENDER_HUD.register(this::renderHud);
 
@@ -192,7 +186,7 @@ public class JCraftClient implements ClientModInitializer {
         if (!FabricLoader.getInstance().isDevelopmentEnvironment()) return;
 
         Identifier itemId = JObjectRegistry.ITEMS.get(JObjectRegistry.DEBUG_WAND);
-        BigItemRenderer itemRenderer = new BigItemRenderer(itemId);
+        //BigItemRenderer itemRenderer = new BigItemRenderer(itemId);
 
         /*TODO
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(itemRenderer);

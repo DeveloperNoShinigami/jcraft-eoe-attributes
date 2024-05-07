@@ -567,7 +567,8 @@ public abstract class EntityMixin {
                     value = "INVOKE_ASSIGN",
                     target = "Lnet/minecraft/entity/Entity;getVelocity()Lnet/minecraft/util/math/Vec3d;",
                     ordinal = 0
-            )
+            ),
+            ordinal = 0
     )
     private Vec3d modify_updateMovementInFluid_Vec3d_0(Vec3d vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);

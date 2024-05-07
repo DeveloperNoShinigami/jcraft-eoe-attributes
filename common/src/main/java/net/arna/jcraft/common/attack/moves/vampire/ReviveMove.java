@@ -5,6 +5,7 @@ import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.tickable.Revivables;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -43,7 +44,7 @@ public class ReviveMove<A extends IAttacker<? extends A, ?>> extends AbstractMov
                     entity.setPosition(revivable.getPos());
                     entity.age = 1;
                     if (user instanceof ServerPlayerEntity serverPlayer)
-                        JComponents.getMiscData(living).setSlavedTo(serverPlayer.getUuid());
+                        JComponentPlatformUtils.getMiscData(living).setSlavedTo(serverPlayer.getUuid());
                     if (!isBoss(living)) {
                         serverWorld.spawnEntity(entity);
                         Revivables.removeRevivable(revivable);

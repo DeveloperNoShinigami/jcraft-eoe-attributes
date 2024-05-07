@@ -6,6 +6,7 @@ import net.fabricmc.api.ModInitializer;
 import net.arna.jcraft.JCraft;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.loot.LootTable;
 
 import java.util.function.Consumer;

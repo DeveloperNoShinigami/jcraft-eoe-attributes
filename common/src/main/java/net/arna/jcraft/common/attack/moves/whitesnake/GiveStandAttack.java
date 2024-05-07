@@ -8,6 +8,7 @@ import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -46,7 +47,7 @@ public class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, White
                     int itemSkin = 0;
 
                     NbtCompound data = itemStack.getOrCreateNbt();
-                    CommonStandComponent standData = JComponents.getStandData(target);
+                    CommonStandComponent standData = JComponentPlatformUtils.getStandData(target);
 
                     StandType targetStand = standData.getType();
                     if (targetStand != null) return; // Can't overwrite other's stands

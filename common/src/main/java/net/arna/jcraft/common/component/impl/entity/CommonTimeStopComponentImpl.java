@@ -32,7 +32,7 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
     }
 
     public void sync(){
-        //JComponents.TIME_STOP.sync(entity);
+        //JComponentPlatformUtils.TIME_STOP.sync(entity);
     }
 
     @Override

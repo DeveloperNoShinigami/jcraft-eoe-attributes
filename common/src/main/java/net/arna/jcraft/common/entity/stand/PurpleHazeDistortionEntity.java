@@ -11,6 +11,7 @@ import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.minecraft.entity.EntityType;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -78,6 +79,10 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
                     Text.literal("unblockable, combo finisher")
             );
 
+    public PurpleHazeDistortionEntity(EntityType type, World worldIn) {
+        this(worldIn);
+    }
+    
     public PurpleHazeDistortionEntity(World worldIn) {
         super(StandType.PURPLE_HAZE_DISTORTION, worldIn);
 

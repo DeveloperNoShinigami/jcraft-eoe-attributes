@@ -41,7 +41,7 @@ public class RedBindAttack extends AbstractSimpleAttack<RedBindAttack, Magicians
         StandEntity.stun(boundEntity, RedBindEntity.ticksToLive, 0);
 
         // Create and bind
-        RedBindEntity redBind = new RedBindEntity(JEntityTypeRegistry.RED_BIND, attacker.getWorld());
+        RedBindEntity redBind = new RedBindEntity(JEntityTypeRegistry.RED_BIND.get(), attacker.getWorld());
         redBind.setPosition(boundEntity.getPos());
         redBind.setMaster(user);
         redBind.setBoundEntity(boundEntity);

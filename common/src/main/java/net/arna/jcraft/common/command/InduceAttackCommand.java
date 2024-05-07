@@ -7,6 +7,7 @@ import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -53,8 +54,8 @@ public class InduceAttackCommand {
         if (stand) {
             for (Entity entity : targets) {
                 if (entity instanceof LivingEntity living) {
-                    JComponents.getCooldowns(living).clear();
-                    StandEntity<?, ?> standEntity = JComponents.getStandData(living).getStand();
+                    JComponentPlatformUtils.getCooldowns(living).clear();
+                    StandEntity<?, ?> standEntity = JComponentPlatformUtils.getStandData(living).getStand();
 
                     if (standEntity != null) {
                             if (standEntity.initMove(type)) {
@@ -71,7 +72,7 @@ public class InduceAttackCommand {
         } else {
             for (Entity entity : targets) {
                 if (!(entity instanceof PlayerEntity player)) continue;
-                JComponents.getCooldowns(player).clear();
+                JComponentPlatformUtils.getCooldowns(player).clear();
                 JSpec<?, ?> spec = JUtils.getSpec(player);
 
                 if (spec != null) {
