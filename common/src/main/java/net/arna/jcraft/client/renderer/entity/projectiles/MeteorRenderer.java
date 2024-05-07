@@ -1,6 +1,7 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
 import net.arna.jcraft.client.model.entity.MeteorModel;
+import net.arna.jcraft.common.entity.projectile.BlockProjectile;
 import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -18,10 +19,8 @@ public class MeteorRenderer extends GeoEntityRenderer<MeteorProjectile> {
     }
 
     @Override
-    public RenderLayer getRenderType(MeteorProjectile animatable, float partialTicks, MatrixStack stack,
-                                     VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                     Identifier textureLocation) {
-        return RenderLayer.getEyes(getTextureLocation(animatable));
+    public RenderLayer getRenderType(MeteorProjectile animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
+        return RenderLayer.getEyes(texture);
     }
 
     @Override

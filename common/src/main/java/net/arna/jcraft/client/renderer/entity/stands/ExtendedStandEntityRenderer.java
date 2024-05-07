@@ -22,7 +22,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.model.data.EntityModelData;
 import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -31,6 +33,8 @@ import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 import java.util.Collections;
 import java.util.List;
 
+import static net.minecraft.client.render.entity.LivingEntityRenderer.getOverlay;
+
 public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends DynamicGeoEntityRenderer<T> {
     protected ItemStack mainHandItem, offHandItem;
     protected ExtendedStandEntityRenderer(EntityRendererFactory.Context renderManager, GeoModel<T> modelProvider) {
@@ -38,10 +42,8 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends Dyn
     }
 
     @Override
-    public RenderLayer getRenderType(T animatable, float partialTicks, MatrixStack stack,
-                                     @Nullable VertexConsumerProvider renderTypeBuffer, @Nullable VertexConsumer vertexBuilder,
-                                     int packedLightIn, Identifier textureLocation) {
-        return StandEntityRenderer.renderTypeOf(animatable, textureLocation);
+    public RenderLayer getRenderType(T animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
+        return StandEntityRenderer.renderTypeOf(animatable, texture);
     }
 
     @Override
@@ -124,15 +126,14 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends Dyn
                     .getBuffer(RenderLayer.getEntityTranslucentCull(getTextureLocation(animatable)));
 
             render(model, animatable, partialTick, renderType, poseStack, bufferSource,
-                    glintBuffer != translucentBuffer ? VertexConsumers.union(glintBuffer, translucentBuffer)
-                            : null,
+                    glintBuffer != translucentBuffer ? VertexConsumers.union(glintBuffer, translucentBuffer) : null,
                     packedLight, getOverlay(animatable, 0), renderColor.getRed() / 255f,
                     renderColor.getGreen() / 255f, renderColor.getBlue() / 255f,
                     renderColor.getAlpha() / 255f);
         }
 
         if (!animatable.isSpectator()) {
-            for (GeoLayerRenderer<T> layerRenderer : this.layerRenderers) {
+            for (GeoRenderLayer<T> layerRenderer : this.getRenderLayers()) {
                 renderLayer(poseStack, bufferSource, packedLight, animatable, limbSwing, limbSwingAmount, partialTick, ageInTicks,
                         netHeadYaw, headPitch, bufferSource, layerRenderer);
             }
@@ -148,14 +149,14 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends Dyn
     protected int getBlockLight(T stand, BlockPos pos) {
         if (stand.hasUser()) {
             if (stand.isOnFire() || stand.getUserOrThrow().isOnFire()) return 15;
-            return stand.world.getLightLevel(LightType.BLOCK, stand.getUserOrThrow().getBlockPos());
+            return stand.getWorld().getLightLevel(LightType.BLOCK, stand.getUserOrThrow().getBlockPos());
         }
         return super.getBlockLight(stand, pos);
     }
 
     @Override
     protected int getSkyLight(T stand, BlockPos pos) {
-        return stand.hasUser() ? stand.world.getLightLevel(LightType.SKY, stand.getUserOrThrow().getBlockPos()) :
+        return stand.hasUser() ? stand.getWorld().getLightLevel(LightType.SKY, stand.getUserOrThrow().getBlockPos()) :
                 super.getSkyLight(stand, pos);
     }
 

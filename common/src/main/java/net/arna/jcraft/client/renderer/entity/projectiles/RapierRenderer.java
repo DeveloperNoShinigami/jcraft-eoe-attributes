@@ -2,6 +2,7 @@ package net.arna.jcraft.client.renderer.entity.projectiles;
 
 import net.arna.jcraft.client.model.entity.RapierModel;
 import net.arna.jcraft.common.entity.projectile.RapierProjectile;
+import net.arna.jcraft.common.entity.projectile.WSAcidProjectile;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -17,9 +18,7 @@ public class RapierRenderer extends GeoEntityRenderer<RapierProjectile> {
     }
 
     @Override
-    public RenderLayer getRenderType(RapierProjectile animatable, float partialTicks, MatrixStack stack,
-                                     VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                     Identifier textureLocation) {
-        return RenderLayer.getEntityTranslucent(getTextureLocation(animatable));
+    public RenderLayer getRenderType(RapierProjectile animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
+        return RenderLayer.getEntityTranslucent(texture);
     }
 }

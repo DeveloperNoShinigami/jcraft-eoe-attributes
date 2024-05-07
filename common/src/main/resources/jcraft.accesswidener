@@ -11,6 +11,7 @@ accessible field net/minecraft/client/gl/ShaderProgram uniforms Ljava/util/List;
 accessible method net/minecraft/client/render/GameRenderer getFov (Lnet/minecraft/client/render/Camera;FZ)D
 accessible field net/minecraft/client/gl/PostEffectProcessor passes Ljava/util/List;
 accessible class net/minecraft/client/render/RenderPhase$ShaderProgram
+accessible class net/minecraft/client/render/BackgroundRenderer$FogData
 accessible field net/minecraft/client/render/BackgroundRenderer$FogData fogStart F
 accessible field net/minecraft/client/render/BackgroundRenderer$FogData fogEnd F
 accessible field net/minecraft/client/render/BackgroundRenderer$FogData fogShape Lnet/minecraft/client/render/FogShape;

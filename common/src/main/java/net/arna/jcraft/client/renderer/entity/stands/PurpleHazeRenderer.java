@@ -11,11 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.example.client.DefaultBipedBoneIdents;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
 
 public class PurpleHazeRenderer extends ExtendedStandEntityRenderer<AbstractPurpleHazeEntity<?, ?>> {
     public PurpleHazeRenderer(EntityRendererFactory.Context context) {

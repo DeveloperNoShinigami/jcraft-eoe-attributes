@@ -16,9 +16,7 @@ public class WSAcidRenderer extends GeoEntityRenderer<WSAcidProjectile> {
     }
 
     @Override
-    public RenderLayer getRenderType(WSAcidProjectile animatable, float partialTicks, MatrixStack stack,
-                                     VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                     Identifier textureLocation) {
-        return RenderLayer.getEntityTranslucent(getTextureLocation(animatable));
+    public RenderLayer getRenderType(WSAcidProjectile animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
+        return RenderLayer.getEntityTranslucent(texture);
     }
 }

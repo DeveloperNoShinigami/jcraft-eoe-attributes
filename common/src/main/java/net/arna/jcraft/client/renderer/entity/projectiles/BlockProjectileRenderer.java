@@ -2,6 +2,7 @@ package net.arna.jcraft.client.renderer.entity.projectiles;
 
 import net.arna.jcraft.client.model.entity.BlockProjectileModel;
 import net.arna.jcraft.common.entity.projectile.BlockProjectile;
+import net.arna.jcraft.common.entity.projectile.RedBindEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -23,10 +24,8 @@ public class BlockProjectileRenderer extends GeoEntityRenderer<BlockProjectile> 
     }
 
     @Override
-    public RenderLayer getRenderType(BlockProjectile animatable, float partialTicks, MatrixStack stack,
-                                     VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                     Identifier textureLocation) {
-        return RenderLayer.getEyes(getTextureLocation(animatable));
+    public RenderLayer getRenderType(BlockProjectile animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
+        return RenderLayer.getEntityTranslucent(texture);
     }
 
     @Override

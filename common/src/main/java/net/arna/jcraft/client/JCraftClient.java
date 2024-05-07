@@ -24,7 +24,6 @@ import net.arna.jcraft.client.renderer.block.CoffinTileRenderer;
 import net.arna.jcraft.client.renderer.effects.*;
 import net.arna.jcraft.client.renderer.item.BigItemRenderer;
 import net.arna.jcraft.client.rendering.RenderHandler;
-import net.arna.jcraft.client.rendering.handler.*;
 import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
 import net.arna.jcraft.client.util.ClientEntityHandlerImpl;
 import net.arna.jcraft.client.util.TrackedKeyBinding;
@@ -125,12 +124,14 @@ public class JCraftClient implements ClientModInitializer {
         RenderHandler.init();
         JClientEventsRegistry.registerClientEvents();
         JModelPredicateProviderRegistry.register();
-
+/*TODO
         InversionShaderHandler.INSTANCE.init();
         ZaWarudoShaderHandler.INSTANCE.init();
         CrimsonShaderHandler.INSTANCE.init();
         EpitaphVignetteShaderHandler.INSTANCE.init();
         UIShaderHandler.INSTANCE.init(); // Should be last
+
+ */
 
         // Particle registration
         ParticleProviderRegistry.register(JParticleTypeRegistry.COMBO_BREAK, ComboBreakerParticle.Factory::new);
@@ -193,6 +194,7 @@ public class JCraftClient implements ClientModInitializer {
         Identifier itemId = JObjectRegistry.ITEMS.get(JObjectRegistry.DEBUG_WAND);
         BigItemRenderer itemRenderer = new BigItemRenderer(itemId);
 
+        /*TODO
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(itemRenderer);
         BuiltinItemRendererRegistry.INSTANCE.register(JObjectRegistry.DEBUG_WAND, itemRenderer);
 
@@ -200,6 +202,8 @@ public class JCraftClient implements ClientModInitializer {
             out.accept(new ModelIdentifier(new Identifier(itemId + "_gui"), "inventory"));
             out.accept(new ModelIdentifier(new Identifier(itemId + "_handheld"), "inventory"));
         });
+
+         */
     }
 
     /// TEXT HUD

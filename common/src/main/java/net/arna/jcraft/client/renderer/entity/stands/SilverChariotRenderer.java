@@ -16,7 +16,7 @@ public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEnti
 
     public SilverChariotRenderer(EntityRendererFactory.Context context) {
         super(context, new SilverChariotModel());
-        addLayer(new SCRapierLayer(this));
+        addRenderLayer(new SCRapierLayer(this));
     }
 
     // Adds ability to change render alpha

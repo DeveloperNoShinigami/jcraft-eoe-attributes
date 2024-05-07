@@ -1,6 +1,7 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
 import net.arna.jcraft.client.model.entity.SunBeamModel;
+import net.arna.jcraft.common.entity.projectile.LaserProjectile;
 import net.arna.jcraft.common.entity.projectile.SunBeamProjectile;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -22,10 +23,8 @@ public class SunBeamRenderer extends GeoEntityRenderer<SunBeamProjectile> {
     }
 
     @Override
-    public RenderLayer getRenderType(SunBeamProjectile animatable, float partialTicks, MatrixStack stack,
-                                     VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                     Identifier textureLocation) {
-        return RenderLayer.getEyes(getTextureLocation(animatable));
+    public RenderLayer getRenderType(SunBeamProjectile animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
+        return RenderLayer.getEyes(texture);
     }
 
     @Override

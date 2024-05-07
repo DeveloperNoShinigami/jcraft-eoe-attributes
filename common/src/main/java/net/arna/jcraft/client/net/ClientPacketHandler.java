@@ -16,8 +16,6 @@ import net.arna.jcraft.client.gui.ServerConfigUI;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.renderer.effects.AttackHitboxEffectRenderer;
 import net.arna.jcraft.client.renderer.effects.TimeErasePredictionEffectRenderer;
-import net.arna.jcraft.client.rendering.handler.CrimsonShaderHandler;
-import net.arna.jcraft.client.rendering.handler.ZaWarudoShaderHandler;
 import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.config.ConfigOption;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
@@ -394,18 +392,24 @@ public class ClientPacketHandler {
                 client.execute(() -> {
                     Entity sourceShader = world.getEntityById(id);
                     if (sourceShader instanceof LivingEntity livingEntity) {
+                        /*TODO
                         ZaWarudoShaderHandler zaWarudoShaderHandler = ZaWarudoShaderHandler.INSTANCE;
                         zaWarudoShaderHandler.shaderSourceEntity = Optional.of(livingEntity).orElse(client.player);
                         zaWarudoShaderHandler.effectLength = duration;
                         zaWarudoShaderHandler.shouldRender = true;
+
+                         */
                     }
                 });
             }
             case CRIMSON -> client.execute(() -> {
                 if (!JClientConfig.getInstance().isTimeEraseShader()) return;
+                /*TODO
                 CrimsonShaderHandler crimsonShaderHandler = CrimsonShaderHandler.INSTANCE;
                 crimsonShaderHandler.effectLength = duration;
                 crimsonShaderHandler.shouldRender = true;
+
+                 */
             });
         }
     }
@@ -418,14 +422,20 @@ public class ClientPacketHandler {
                 case NONE -> {
                 }
                 case ZA_WARUDO -> client.execute(() -> {
+                    /*TODO
                     ZaWarudoShaderHandler zaWarudoShaderHandler = ZaWarudoShaderHandler.INSTANCE;
                     zaWarudoShaderHandler.shouldRender = false;
                     zaWarudoShaderHandler.renderingEffect = false;
+
+                     */
                 });
                 case CRIMSON -> client.execute(() -> {
+                    /*TODO
                     CrimsonShaderHandler crimsonShaderHandler = CrimsonShaderHandler.INSTANCE;
                     crimsonShaderHandler.shouldRender = false;
                     crimsonShaderHandler.renderingEffect = false;
+
+                     */
                 });
             }
         }

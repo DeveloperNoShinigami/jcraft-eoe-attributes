@@ -2,6 +2,7 @@ package net.arna.jcraft.client.renderer.entity.projectiles;
 
 import net.arna.jcraft.client.model.entity.KnifeModel;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
+import net.arna.jcraft.common.entity.projectile.RapierProjectile;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -23,9 +24,7 @@ public class KnifeRenderer extends GeoEntityRenderer<KnifeProjectile> {
     }
 
     @Override
-    public RenderLayer getRenderType(KnifeProjectile animatable, float partialTicks, MatrixStack stack,
-                                     VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                     Identifier textureLocation) {
-        return RenderLayer.getEntityTranslucent(getTextureLocation(animatable));
+    public RenderLayer getRenderType(KnifeProjectile animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
+        return RenderLayer.getEntityTranslucent(texture);
     }
 }

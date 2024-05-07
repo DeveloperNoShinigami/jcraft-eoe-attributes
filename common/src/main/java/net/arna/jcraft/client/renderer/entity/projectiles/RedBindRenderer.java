@@ -1,6 +1,7 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
 import net.arna.jcraft.client.model.entity.RedBindModel;
+import net.arna.jcraft.common.entity.projectile.BloodProjectile;
 import net.arna.jcraft.common.entity.projectile.RedBindEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -16,10 +17,8 @@ public class RedBindRenderer extends GeoEntityRenderer<RedBindEntity> {
     }
 
     @Override
-    public RenderLayer getRenderType(RedBindEntity animatable, float partialTicks, MatrixStack stack,
-                                     VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
-                                     Identifier textureLocation) {
-        return RenderLayer.getEyes(getTextureLocation(animatable));
+    public RenderLayer getRenderType(RedBindEntity animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
+        return RenderLayer.getEntityTranslucent(texture);
     }
 
     @Override
