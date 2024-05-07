@@ -3,7 +3,7 @@ package net.arna.jcraft.client.renderer.features;
 import com.google.common.collect.Streams;
 import net.arna.jcraft.mixin.client.AnimalModelAccessor;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -29,7 +29,7 @@ public class StuckKnivesFeatureRenderer<T extends LivingEntity, M extends Animal
     }
 
     protected int getObjectCount(T entity) {
-        return PlatformUtils.getMiscData(entity).getStuckKnifeCount();
+        return ComponentPlatformUtils.getMiscData(entity).getStuckKnifeCount();
     }
 
     protected void renderObject(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, Entity entity, float directionX, float directionY, float directionZ, float tickDelta) {

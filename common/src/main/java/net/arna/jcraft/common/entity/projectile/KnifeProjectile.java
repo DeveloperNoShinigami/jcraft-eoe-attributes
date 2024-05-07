@@ -2,7 +2,7 @@ package net.arna.jcraft.common.entity.projectile;
 
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -159,7 +159,7 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
 
         JUtils.projectileDamageLogic(this, getWorld(), entity, Vec3d.ZERO, stunT, 1, false, 2, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
         playSound(SoundEvents.ITEM_TRIDENT_HIT, 1, 1);
-        if (entity instanceof LivingEntity living) PlatformUtils.getMiscData(living).stab();
+        if (entity instanceof LivingEntity living) ComponentPlatformUtils.getMiscData(living).stab();
         discard();
     }
 

@@ -16,7 +16,7 @@ public abstract class PlayerManagerMixin {
             method = "onPlayerConnect",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V",
+                    target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
                     ordinal = 0,
                     shift = At.Shift.AFTER
             )
@@ -31,7 +31,7 @@ public abstract class PlayerManagerMixin {
             method = "respawnPlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V",
+                    target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
                     ordinal = 1,
                     shift = At.Shift.AFTER
             )

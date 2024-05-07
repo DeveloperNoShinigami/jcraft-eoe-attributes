@@ -1,6 +1,6 @@
 package net.arna.jcraft.client.renderer.features;
 
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -23,7 +23,7 @@ public class ArmoredMoveFeatureRenderer<T extends LivingEntity, M extends Entity
         if (entity.isInvisible())
             return;
 
-        float armoredHitTicks = (float) PlatformUtils.getMiscData(entity).getArmoredHitTicks();
+        float armoredHitTicks = (float) ComponentPlatformUtils.getMiscData(entity).getArmoredHitTicks();
         float flashTime = MathHelper.lerp(1.0F - tickDelta, armoredHitTicks - 1, armoredHitTicks) / 10.0F;
 
         if (flashTime <= 0.0F)

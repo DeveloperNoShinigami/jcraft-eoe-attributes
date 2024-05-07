@@ -19,7 +19,7 @@ import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.SpecAnimationState;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -106,7 +106,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
     @Override
     public void setState(S state) {
-        PlayerLookup.world((ServerWorld) player.getWorld()).forEach(serverPlayer -> PlayerAnimPacket.sendSpec(
+        ((ServerWorld) player.getWorld()).getPlayers().forEach(serverPlayer -> PlayerAnimPacket.sendSpec(
                 player, serverPlayer, (this.state = state).getKey(getThis()), moveStun, 1f));
     }
 
@@ -161,7 +161,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
         if (!move.canBeInitiated(getThis())) return false;
 
-        CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(player);
+        CommonCooldownsComponent cooldowns = ComponentPlatformUtils.getCooldowns(player);
         int cd = cooldowns.getCooldown(cooldownType);
         if (cd > 0) return false;
         cooldowns.setCooldown(cooldownType, move.getCooldown());
@@ -199,7 +199,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     public void setPlayerAnimation(String animationID, int duration, float animationSpeed) {
-        PlayerLookup.world((ServerWorld) player.getWorld()).forEach(serverPlayer -> PlayerAnimPacket.sendSpec(
+        ((ServerWorld) player.getWorld()).getPlayers().forEach(serverPlayer -> PlayerAnimPacket.sendSpec(
                 player, serverPlayer, animationID, duration, animationSpeed));
     }
 

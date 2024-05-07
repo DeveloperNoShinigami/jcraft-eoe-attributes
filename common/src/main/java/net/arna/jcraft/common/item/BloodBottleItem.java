@@ -1,9 +1,8 @@
 package net.arna.jcraft.common.item;
 
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.item.TooltipContext;
@@ -46,7 +45,7 @@ public class BloodBottleItem extends Item {
         float blood = nbt.getFloat("Blood");
 
         if (blood >= 0.5f) {
-            CommonVampireComponent vampireComponent = PlatformUtils.getVampirism(playerEntity);
+            CommonVampireComponent vampireComponent = ComponentPlatformUtils.getVampirism(playerEntity);
 
             if (vampireComponent.isVampire()) {
                 boolean full = blood >= 1.0f;
@@ -126,7 +125,7 @@ public class BloodBottleItem extends Item {
 
     public static void appendStacks(ItemGroup group, List<ItemStack> stacks) {
         boolean full = group.getType() == ItemGroup.Type.SEARCH;
-        if (!full && group != JCraft.JCRAFT_GROUP) return;
+        if (!full) return;
 
         int step = 1;
         if (!full) step = 4;

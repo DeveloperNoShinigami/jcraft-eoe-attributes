@@ -18,10 +18,8 @@ public abstract class WitchEntityMixin {
             method = "attack",
             at = @At(
                     value = "INVOKE_ASSIGN",
-                    target = "Lnet/minecraft/entity/LivingEntity;getVelocity()Lnet/minecraft/util/math/Vec3d;",
-                    ordinal = 0
-            ),
-            ordinal = 0
+                    target = "Lnet/minecraft/entity/LivingEntity;getVelocity()Lnet/minecraft/util/math/Vec3d;"
+            )
     )
     private Vec3d modify_attack_Vec3d_0(Vec3d value, LivingEntity target, float pullProgress) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);

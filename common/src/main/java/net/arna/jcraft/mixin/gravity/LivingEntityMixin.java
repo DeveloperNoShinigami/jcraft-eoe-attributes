@@ -134,7 +134,7 @@ public abstract class LivingEntityMixin extends Entity {
             return blockPos;
         }
 
-        return new BlockPos(this.getPos().add(RotationUtil.vecPlayerToWorld(0, -0.20000000298023224D, 0, gravityDirection)));
+        return BlockPos.ofFloored(this.getPos().add(RotationUtil.vecPlayerToWorld(0, -0.20000000298023224D, 0, gravityDirection)));
     }
 
     @Redirect(
@@ -200,7 +200,7 @@ public abstract class LivingEntityMixin extends Entity {
 
         Vec3d playerPosDelta = RotationUtil.vecWorldToPlayer(entity.getX() - entity.prevX, entity.getY() - entity.prevY, entity.getZ() - entity.prevZ, gravityDirection);
 
-        entity.lastLimbDistance = entity.limbDistance;
+        //TODO ? entity.lastLimbDistance = entity.limbDistance;
         double d = playerPosDelta.x;
         double e = flutter ? playerPosDelta.y : 0.0D;
         double f = playerPosDelta.z;
@@ -209,8 +209,8 @@ public abstract class LivingEntityMixin extends Entity {
             g = 1.0F;
         }
 
-        entity.limbDistance += (g - entity.limbDistance) * 0.4F;
-        entity.limbAngle += entity.limbDistance;
+        //TODO ? entity.limbDistance += (g - entity.limbDistance) * 0.4F;
+        //TODO ? entity.limbAngle += entity.limbDistance;
     }
 
     @Redirect(
@@ -404,17 +404,16 @@ public abstract class LivingEntityMixin extends Entity {
             method = "baseTick",
             at = @At(
                     value = "NEW",
-                    target = "net/minecraft/util/math/BlockPos",
-                    ordinal = 0
+                    target = "net/minecraft/util/math/BlockPos"
             )
     )
     private BlockPos redirect_baseTick_new_0(double x, double y, double z) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
-            return new BlockPos(x, y, z);
+            return BlockPos.ofFloored(x, y, z);
         }
 
-        return new BlockPos(this.getEyePos());
+        return BlockPos.ofFloored(this.getEyePos());
     }
 
     @Redirect(

@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.item;
 
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -39,7 +39,7 @@ public class DebugWand extends Item {
         if (player.isSneaking())
             ShaderActivationPacket.send((ServerPlayerEntity) player, player, 0, 20 * 6, ShaderActivationPacket.Type.CRIMSON);
         else
-            PlatformUtils.getShockwaveHandler(context.getWorld()).addShockwave(context.getHitPos(), player.getRotationVector());
+            ComponentPlatformUtils.getShockwaveHandler(context.getWorld()).addShockwave(context.getHitPos(), player.getRotationVector());
 
         return super.useOnBlock(context);
     }

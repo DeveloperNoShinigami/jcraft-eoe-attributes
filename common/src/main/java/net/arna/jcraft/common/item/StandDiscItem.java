@@ -4,7 +4,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +19,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,7 +46,7 @@ public class StandDiscItem extends Item {
         ItemStack itemStack = user.getStackInHand(hand);
         if (world.isClient) return TypedActionResult.pass(itemStack);
 
-        if (user.getDamageTracker().wasRecentlyAttacked()) {
+        if (JCraft.wasRecentlyAttacked(user.getDamageTracker())) {
             user.sendMessage(Text.translatable("jcraft.disc.error"));
             return TypedActionResult.fail(itemStack);
         }
@@ -62,7 +61,7 @@ public class StandDiscItem extends Item {
         int userSkin = 0;
 
         NbtCompound data = itemStack.getOrCreateNbt();
-        CommonStandComponent standData = PlatformUtils.getStandData(user);
+        CommonStandComponent standData = ComponentPlatformUtils.getStandData(user);
 
         userStand = standData.getType();
         userSkin = standData.getSkin();
@@ -95,14 +94,9 @@ public class StandDiscItem extends Item {
                 .styled(s -> s.withColor(SKIN_LEVEL_COLORS[skin])));
     }
 
-    @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        appendStacks(group, (List<ItemStack>) stacks);
-    }
-
     public static void appendStacks(ItemGroup group, List<ItemStack> stacks) {
-        boolean full = group == ItemGroup.SEARCH;
-        if (!full && group != JCraft.JCRAFT_GROUP) return;
+        boolean full = group.getType() == ItemGroup.Type.SEARCH;
+        if (!full) return;
 
         stacks.add(new ItemStack(JObjectRegistry.STAND_DISC));
 

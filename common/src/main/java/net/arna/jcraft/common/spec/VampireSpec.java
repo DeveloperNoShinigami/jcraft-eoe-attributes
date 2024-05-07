@@ -15,7 +15,7 @@ import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.SpecAnimationState;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -107,7 +107,7 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
 
     public VampireSpec(PlayerEntity player) {
         super(SpecType.VAMPIRE, player);
-        vampireComponent = PlatformUtils.getVampirism(player);
+        vampireComponent = ComponentPlatformUtils.getVampirism(player);
         vampireComponent.setVampire(true);
     }
 

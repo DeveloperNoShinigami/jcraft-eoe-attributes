@@ -15,7 +15,7 @@ import net.arna.jcraft.common.tickable.*;
 import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.common.util.EntityInterest;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.arna.jcraft.registry.JDimensionRegistry;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
@@ -111,7 +111,7 @@ public class JServerEvents {
         for (ServerPlayerEntity player : JCraft.all(server)) {
             if (player == null || !player.isAlive()) continue;
 
-            if (player.getAttacker() != null) PlatformUtils.getMiscData(player).startDamageTimer();
+            if (player.getAttacker() != null) ComponentPlatformUtils.getMiscData(player).startDamageTimer();
         }
 
         // Burst handling
@@ -309,7 +309,7 @@ public class JServerEvents {
 
         if (entity instanceof MobEntity mob) {
             // Mark stand user mobs
-            CommonStandComponent standData = PlatformUtils.getStandData(mob);
+            CommonStandComponent standData = ComponentPlatformUtils.getStandData(mob);
             if (standData.getType() != null && standData.getType() != StandType.NONE) {
                 JEnemies.add(mob);
                 return EventResult.pass();

@@ -1,6 +1,7 @@
 package net.arna.jcraft.mixin;
 
 import net.arna.jcraft.common.util.IJSplatterManagerHolder;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +16,7 @@ public abstract class ServerWorldMixin implements IJSplatterManagerHolder {
     // Serverside timestop handling
     @Inject(cancellable = true, at = @At("HEAD"), method = "tickEntity")
     private void timestopTick(Entity entity, CallbackInfo ci) {
-        JComponents.getTimeStopData(entity).tick(ci);
+        ComponentPlatformUtils.getTimeStopData(entity).tick(ci);
     }
 
     @Inject(method = "tick", at = @At("RETURN"))

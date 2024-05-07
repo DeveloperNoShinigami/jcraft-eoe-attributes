@@ -6,9 +6,9 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vector3f;
 import net.minecraft.world.BlockView;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,7 +25,7 @@ public abstract class CameraMixin {
 
     @Shadow private Entity focusedEntity;
 
-    @Shadow @Final private Quaternion rotation;
+    @Shadow @Final private Quaternionf rotation;
 
     @Shadow private float lastCameraY;
 
@@ -58,8 +58,8 @@ public abstract class CameraMixin {
             this.setPos(x, y, z);
             return;
         }
-        long timeMs = focusedEntity.world.getTime()*50+(long)(storedTickDelta*50);
-        Quaternion gravityRotation = animation.getCurrentGravityRotation(gravityDirection, timeMs).copy();
+        long timeMs = focusedEntity.getWorld().getTime()*50+(long)(storedTickDelta*50);
+        Quaternionf gravityRotation = new Quaternionf(animation.getCurrentGravityRotation(gravityDirection, timeMs));
         gravityRotation.conjugate();
 
         double entityX = MathHelper.lerp(tickDelta, focusedEntity.prevX, focusedEntity.getX());
@@ -72,9 +72,9 @@ public abstract class CameraMixin {
         eyeOffset.rotate(gravityRotation);
 
         this.setPos(
-                entityX + eyeOffset.getX(),
-                entityY + eyeOffset.getY(),
-                entityZ + eyeOffset.getZ()
+                entityX + eyeOffset.x(),
+                entityY + eyeOffset.y(),
+                entityZ + eyeOffset.z()
         );
     }
 
@@ -82,9 +82,7 @@ public abstract class CameraMixin {
             method = "setRotation",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/math/Quaternion;hamiltonProduct(Lnet/minecraft/util/math/Quaternion;)V",
-                    ordinal = 1,
-                    shift = At.Shift.AFTER
+                    target = "Lorg/joml/Quaternionf;rotationYXZ(FFF)Lorg/joml/Quaternionf;"
             )
     )
     private void inject_setRotation(CallbackInfo ci) {
@@ -94,11 +92,11 @@ public abstract class CameraMixin {
             if(animationOptional.isEmpty()) return;
             RotationAnimation animation = animationOptional.get();
             if (gravityDirection == Direction.DOWN && !animation.isInAnimation()) return;
-            long timeMs = focusedEntity.world.getTime()*50+(long)(storedTickDelta*50);
-            Quaternion rotation = animation.getCurrentGravityRotation(gravityDirection, timeMs).copy();
+            long timeMs = focusedEntity.getWorld().getTime()*50+(long)(storedTickDelta*50);
+            Quaternionf rotation = new Quaternionf(animation.getCurrentGravityRotation(gravityDirection, timeMs));
             rotation.conjugate();
-            rotation.hamiltonProduct(this.rotation);
-            this.rotation.set(rotation.getX(), rotation.getY(), rotation.getZ(), rotation.getW());
+            rotation.mul(this.rotation);
+            this.rotation.set(rotation.x(), rotation.y(), rotation.z(), rotation.w());
         }
     }
 }

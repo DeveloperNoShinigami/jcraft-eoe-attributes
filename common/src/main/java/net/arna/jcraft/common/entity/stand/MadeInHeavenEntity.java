@@ -18,7 +18,7 @@ import net.arna.jcraft.common.network.s2c.TimeAccelStatePacket;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.block.Blocks;
@@ -315,7 +315,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         if (!move.canBeInitiated(this)) return false;
         LivingEntity player = getUserOrThrow();
 
-        CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(player);
+        CommonCooldownsComponent cooldowns = ComponentPlatformUtils.getCooldowns(player);
         int cooldown = cooldowns.getCooldown(cooldownType);
 
         if (cooldown > 0) return false;

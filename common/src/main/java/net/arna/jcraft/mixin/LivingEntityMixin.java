@@ -7,6 +7,7 @@ import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.IDamageScaler;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -61,7 +62,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     // Make stand users rideable entities in water (prevents stand desummon)
     @Inject(cancellable = true, method = "canBeRiddenInWater", at = @At("HEAD"))
     public void jcraft$canBeRiddenInWater(CallbackInfoReturnable<Boolean> cir) {
-        if (JComponents.getStandData((LivingEntity) (Object) this).getType() != null)
+        if (ComponentPlatformUtils.getStandData((LivingEntity) (Object) this).getType() != null)
             cir.setReturnValue(true);
     }
 
@@ -121,7 +122,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     // This is actually an implementation for players (mobs have their effect ticking properly stopped in TS), but PlayerEntity doesn't override this
     @Inject(cancellable = true, at = @At("HEAD"), method = "tickStatusEffects")
     protected void jcraft$tickStatusEffects(CallbackInfo ci) {
-        if (JComponents.getTimeStopData((LivingEntity) (Object) this).getTicks() > 0)
+        if (ComponentPlatformUtils.getTimeStopData((LivingEntity) (Object) this).getTicks() > 0)
             ci.cancel();
     }
 
@@ -133,7 +134,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
         if (entity.getFirstPassenger() instanceof KingCrimsonEntity kingCrimson && kingCrimson.getTETime() > 0)
             cir.setReturnValue(false);
 
-        if (JComponents.getMiscData(livingEntity).getMaster() == entity)
+        if (ComponentPlatformUtils.getMiscData(livingEntity).getMaster() == entity)
             cir.setReturnValue(false);
     }
 }

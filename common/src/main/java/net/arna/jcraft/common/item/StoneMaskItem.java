@@ -1,11 +1,11 @@
 package net.arna.jcraft.common.item;
 
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.registry.JArmorRendererRegistry;
-import net.arna.jcraft.client.renderer.armor.JotaroArmorRenderer;
 import net.arna.jcraft.client.renderer.armor.StoneMaskRenderer;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.spec.SpecType;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -45,8 +45,8 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
 
         if (slot != EquipmentSlot.HEAD.getEntitySlotId()) return;
 
-        if (entity instanceof PlayerEntity player && player.getDamageTracker().wasRecentlyAttacked()) {
-            CommonSpecComponent specComponent = PlatformUtils.getSpecData(player);
+        if (entity instanceof PlayerEntity player && JCraft.wasRecentlyAttacked(player.getDamageTracker())) {
+            CommonSpecComponent specComponent = ComponentPlatformUtils.getSpecData(player);
             if (specComponent.getType() != SpecType.VAMPIRE)
                 specComponent.setType(SpecType.VAMPIRE);
         }
@@ -66,7 +66,7 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
     private PlayState predicate(AnimationState<StoneMaskItem> state) {
         Entity entity = (Entity) state.getData(DataTickets.ENTITY);
         if (entity instanceof LivingEntity livingEntity) {
-            state.getController().setAnimation(RawAnimation.begin().thenLoop(livingEntity.getDamageTracker().wasRecentlyAttacked() ? "animation.stone_mask.clench" : "animation.stone_mask.dormant"));
+            state.getController().setAnimation(RawAnimation.begin().thenLoop(JCraft.wasRecentlyAttacked(livingEntity.getDamageTracker()) ? "animation.stone_mask.clench" : "animation.stone_mask.dormant"));
 
         }
         return PlayState.CONTINUE;

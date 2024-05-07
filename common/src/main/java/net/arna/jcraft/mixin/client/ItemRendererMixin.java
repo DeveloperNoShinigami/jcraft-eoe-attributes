@@ -41,12 +41,12 @@ public class ItemRendererMixin {
         return MockItem.isMockItem(stack) ? MockItem.getMockedStack(stack) : stack;
     }
 
-    @ModifyVariable(method = "renderGuiItemIcon", at = @At("HEAD"), argsOnly = true, ordinal = 0)
+    @ModifyVariable(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V", at = @At("HEAD"), argsOnly = true, ordinal = 0)
     private ItemStack mockModelInRenderGuiIcon(ItemStack stack) {
         return MockItem.isMockItem(stack) ? MockItem.getMockedStack(stack) : stack;
     }
 
-    @ModifyVariable(method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation$Mode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/world/World;III)V",
+    @ModifyVariable(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
             at = @At("HEAD"), argsOnly = true, ordinal = 0)
     private ItemStack mockModelInRenderItem(ItemStack stack) {
         return MockItem.isMockItem(stack) ? MockItem.getMockedStack(stack) : stack;

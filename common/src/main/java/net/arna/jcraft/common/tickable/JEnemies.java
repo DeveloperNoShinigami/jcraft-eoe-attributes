@@ -3,7 +3,7 @@ package net.arna.jcraft.common.tickable;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.registry.RegistryKey;
@@ -63,7 +63,7 @@ public class JEnemies {
             ServerWorld world = server.getWorld(enemyData.getValue());
 
             if (enemy.isAiDisabled()) continue;
-            CommonStandComponent standComponent = PlatformUtils.getStandData(enemy);
+            CommonStandComponent standComponent = ComponentPlatformUtils.getStandData(enemy);
             if (standComponent.getType() != null) {
                 StandEntity<?, ?> stand = standComponent.getStand();
                 if (stand == null) {

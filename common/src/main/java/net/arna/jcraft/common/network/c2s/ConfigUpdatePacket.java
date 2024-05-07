@@ -37,7 +37,7 @@ public class ConfigUpdatePacket {
 
         // Broadcast changes to everyone except the person who made them.
         PacketByteBuf clientChangesBuf = writeClientChanges(changedOptions);
-        for (ServerPlayerEntity serverPlayer : PlayerLookup.all(server)) {
+        for (ServerPlayerEntity serverPlayer : JCraft.all(server)) {
             if (serverPlayer != player) {
                 NetworkManager.sendToPlayer(serverPlayer, JPacketRegistry.S2C_SERVER_CONFIG, clientChangesBuf);
             }

@@ -17,7 +17,7 @@ import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.tickable.Revivables;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -91,18 +91,18 @@ public interface JEventsRegistry {
             if (living instanceof ServerPlayerEntity serverPlayer) {
                 GameRules gameRules = living.getWorld().getGameRules();
                 if (!gameRules.getBoolean(JCraft.KEEP_STAND))
-                    PlatformUtils.getStandData(living).setTypeAndSkin(StandType.NONE, 0);
+                    ComponentPlatformUtils.getStandData(living).setTypeAndSkin(StandType.NONE, 0);
                 if (!gameRules.getBoolean(JCraft.KEEP_SPEC))
-                    PlatformUtils.getSpecData(serverPlayer).setType(SpecType.NONE);
+                    ComponentPlatformUtils.getSpecData(serverPlayer).setType(SpecType.NONE);
 
                 if (source.getAttacker() instanceof LivingEntity killer) {
-                    PlatformUtils.getCooldowns(killer).clear(CooldownType.COMBO_BREAKER);
+                    ComponentPlatformUtils.getCooldowns(killer).clear(CooldownType.COMBO_BREAKER);
 
                     boolean killVampirism = JServerConfig.KILL_VAMPIRISM.getValue();
                     if (killer instanceof ServerPlayerEntity killerPlayer) {
                         if (killVampirism) {
                             killerPlayer.getHungerManager().add(20, 20f);
-                            CommonVampireComponent vampireComponent = PlatformUtils.getVampirism(killerPlayer);
+                            CommonVampireComponent vampireComponent = ComponentPlatformUtils.getVampirism(killerPlayer);
                             if (vampireComponent.isVampire())
                                 vampireComponent.setBlood(20.0f);
                         }

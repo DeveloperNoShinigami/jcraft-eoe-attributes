@@ -17,7 +17,7 @@ import net.arna.jcraft.common.network.s2c.ShaderDeactivationPacket;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.block.Blocks;
@@ -256,7 +256,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             case ULTIMATE -> {
                 // If predicting, and Time Erase isn't on cooldown
                 if (curMove != null && curMove.getOriginalMove() == PREDICTION && hasUser()) {
-                    CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(getUser());
+                    CommonCooldownsComponent cooldowns = ComponentPlatformUtils.getCooldowns(getUser());
                     if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) <= 0) {
                         cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 400);
                         PredictionMove.finishPrediction(this);
@@ -284,7 +284,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 moveCancel();
 
                 // 7 second time erase cooldown
-                CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(user);
+                CommonCooldownsComponent cooldowns = ComponentPlatformUtils.getCooldowns(user);
                 if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) < 140)
                     cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 140);
 
@@ -371,7 +371,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
     public void cancelTE() {
         LivingEntity user = getUserOrThrow();
-        CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(user);
+        CommonCooldownsComponent cooldowns = ComponentPlatformUtils.getCooldowns(user);
         cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) - getTETime() * 2);
 
         setTETime(0);

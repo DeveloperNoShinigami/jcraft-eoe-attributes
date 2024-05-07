@@ -2,6 +2,7 @@ package net.arna.jcraft.common.loot;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
+import dev.architectury.event.events.common.LootEvent;
 import net.arna.jcraft.common.enchantments.CinderellasKissEnchantment;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
@@ -31,6 +32,7 @@ public class JLootTableHelper {
                 new Identifier("chests/stronghold_library"),
                 new Identifier("chests/woodland_mansion")
         );
+
 
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             for (Consumer<LootTable.Builder> modification : modifications.get(id)) modification.accept(tableBuilder);

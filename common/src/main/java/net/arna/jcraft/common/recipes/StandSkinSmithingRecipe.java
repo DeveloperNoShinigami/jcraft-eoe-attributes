@@ -8,16 +8,17 @@ import net.arna.jcraft.registry.JObjectRegistry;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SmithingRecipe;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
-public class StandSkinSmithingRecipe extends SmithingRecipe {
+public class StandSkinSmithingRecipe implements SmithingRecipe {
     public static final Identifier ID = JCraft.id("stand_skin");
     public static final StandSkinSmithingRecipe INSTANCE = new StandSkinSmithingRecipe();
 
     private StandSkinSmithingRecipe() {
-        super(ID, Ingredient.EMPTY, Ingredient.EMPTY, ItemStack.EMPTY);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class StandSkinSmithingRecipe extends SmithingRecipe {
     }
 
     @Override
-    public ItemStack craft(Inventory inventory) {
+    public ItemStack craft(Inventory inventory, DynamicRegistryManager registryManager) {
         ItemStack discStack = inventory.getStack(0);
         ItemStack maskStack = inventory.getStack(1);
 
@@ -43,5 +44,35 @@ public class StandSkinSmithingRecipe extends SmithingRecipe {
         int skin = CinderellasKissEnchantment.getCKLevel(maskStack); // 0 is default skin
         StandDiscItem.setSkin(res, skin);
         return res;
+    }
+
+    @Override
+    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public Identifier getId() {
+        return ID;
+    }
+
+    @Override
+    public RecipeSerializer<?> getSerializer() {
+        return null;//TODO
+    }
+
+    @Override
+    public boolean testTemplate(ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean testBase(ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean testAddition(ItemStack stack) {
+        return false;
     }
 }

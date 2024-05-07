@@ -4,7 +4,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,7 +36,7 @@ public abstract class StandObtainmentItem extends Item {
         ItemStack itemStack = user.getStackInHand(hand);
         if (world.isClient) return TypedActionResult.consume(itemStack);
 
-        CommonStandComponent standData = PlatformUtils.getStandData(user);
+        CommonStandComponent standData = ComponentPlatformUtils.getStandData(user);
         StandType type = standData.getType();
 
         // Does the user have the appropriate stand and does he meet the evolution requirements?

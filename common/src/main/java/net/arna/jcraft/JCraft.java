@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
-import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrarManager;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -30,11 +29,11 @@ import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
-import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.platform.ComponentPlatformUtils;
 import net.arna.jcraft.registry.*;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
@@ -207,7 +206,7 @@ public final class JCraft {
     public static StandEntity<?, ?> summon(World world, LivingEntity user) {
         if (user.hasStatusEffect(JStatusRegistry.STANDLESS)) return null;
 
-        CommonStandComponent standData = PlatformUtils.getStandData(user);
+        CommonStandComponent standData = ComponentPlatformUtils.getStandData(user);
         StandType type = standData.getType();
         if (type == StandType.NONE) return null;
         StandEntity<?, ?> stand = type == null ? null : type.createNew(world);
@@ -331,7 +330,7 @@ public final class JCraft {
      */
     public static void comboBreak(ServerWorld world, LivingEntity player, StatusEffectInstance stun) {
         if (player.isSpectator()) return;
-        CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(player);
+        CommonCooldownsComponent cooldowns = ComponentPlatformUtils.getCooldowns(player);
 
         if (stun.getDuration() > 1 && DazedStatusEffect.canBeComboBroken(stun.getAmplifier()) && cooldowns.getCooldown(CooldownType.COMBO_BREAKER) <= 0) {
             cooldowns.startCooldown(CooldownType.COMBO_BREAKER);
@@ -396,6 +395,14 @@ public final class JCraft {
     public static ItemGroup createItemGroup() {
         return ItemGroup.create(ItemGroup.Row.TOP, 0)
                 .displayName(Text.translatable("itemGroup.jcraft"))
+                .entries((displayContext, entries) -> {
+
+                })
                 .build();
+    }
+
+    public static boolean wasRecentlyAttacked(DamageTracker tracker){
+        tracker.update();
+        return tracker.recentlyAttacked;
     }
 }
