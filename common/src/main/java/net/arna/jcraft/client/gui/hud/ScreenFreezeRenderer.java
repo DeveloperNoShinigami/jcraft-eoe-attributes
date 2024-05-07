@@ -2,7 +2,6 @@ package net.arna.jcraft.client.gui.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.JComponents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
@@ -11,7 +10,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class ScreenFreezeRenderer implements ClientTickEvents.EndTick, HudRenderCallback {

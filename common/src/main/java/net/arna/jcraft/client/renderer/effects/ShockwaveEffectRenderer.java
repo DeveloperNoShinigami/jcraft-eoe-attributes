@@ -2,8 +2,7 @@ package net.arna.jcraft.client.renderer.effects;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.world.ShockwaveHandlerComponent;
+import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.render.*;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class ShockwaveEffectRenderer {
-    private static final List<Identifier> TEXTURES = IntStream.range(0, ShockwaveHandlerComponent.Shockwave.MAX_AGE)
+    private static final List<Identifier> TEXTURES = IntStream.range(0, CommonShockwaveHandlerComponent.Shockwave.MAX_AGE)
             .mapToObj(i -> JCraft.id("textures/effect/shockwave/shockwave_" + i + ".png"))
             .toList();
 
@@ -30,14 +29,14 @@ public class ShockwaveEffectRenderer {
         MatrixStack stack = ctx.matrixStack();
         Vec3d camPos = ctx.camera().getPos();
 
-        ShockwaveHandlerComponent shockwaveHandler = JComponents.getShockwaveHandler(ctx.world());
+        CommonShockwaveHandlerComponent shockwaveHandler = JComponents.getShockwaveHandler(ctx.world());
 
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
         RenderSystem.disableCull();
         RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapProgram);
 
-        for (ShockwaveHandlerComponent.Shockwave shockwave : shockwaveHandler.getShockwaves()) {
+        for (CommonShockwaveHandlerComponent.Shockwave shockwave : shockwaveHandler.getShockwaves()) {
             stack.push();
 
             // Calculate matrix

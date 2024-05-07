@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.util;
 
-import net.arna.jcraft.common.component.living.BombTrackerComponent;
+import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
 import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
 import net.arna.jcraft.common.entity.stand.*;
 import net.minecraft.entity.Entity;
@@ -24,7 +24,7 @@ public class DummyClientEntityHandler implements IClientEntityHandler {
     public void sheerHeartAttackEntityTick(SheerHeartAttackEntity sHAEntity) {}
 
     @Override
-    public void bombTrackerParticleTick(Entity entity, BombTrackerComponent.BombData bombData) {}
+    public void bombTrackerParticleTick(Entity entity, CommonBombTrackerComponent.BombData bombData) {}
 
     @Override
     public void standEntityClientTick(StandEntity<?,?> stand) {}

@@ -8,7 +8,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.magiciansred.*;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -89,7 +89,7 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
             .withFinisher(15, HAMMERFIST_FLARE)
             .withCrouchingVariant(HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_1)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
                     Text.literal("Hammerfist"),
                     Text.literal("two-hit launcher")

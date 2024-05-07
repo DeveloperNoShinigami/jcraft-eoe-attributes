@@ -14,7 +14,7 @@ import net.arna.jcraft.common.attack.moves.shared.HealMove;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -141,7 +141,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             .withSound(JSoundRegistry.GE_REKKA2)
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withFollowup(REKKA3)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("Rekka (2nd Hit)"),
                     Text.literal("links into Light")
@@ -153,7 +153,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withFollowup(REKKA2)
             .withExtraHitBox(1.25)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
                     Text.literal("Rekka Series"),
                     Text.literal("a set of three attacks, which cancel into each other during recovery")

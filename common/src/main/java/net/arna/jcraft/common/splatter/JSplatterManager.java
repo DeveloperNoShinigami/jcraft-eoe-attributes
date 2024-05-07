@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.splatter;
 
+import dev.architectury.networking.NetworkChannel;
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.Pair;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -62,12 +62,12 @@ public class JSplatterManager {
         splatters.add(splatter);
         if (world.isClient) return splatter;
 
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         writeSplatter(splatter, buf);
 
         // We already confirmed this is a server-world.
         for (ServerPlayerEntity player : PlayerLookup.around((ServerWorld) world, pos, 64))
-            ServerPlayNetworking.send(player, JPacketRegistry.S2C_SPLATTER, buf);
+            NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_SPLATTER, buf);
 
         return splatter;
     }

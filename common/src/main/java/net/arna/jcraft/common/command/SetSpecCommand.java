@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
-import net.arna.jcraft.common.component.JComponents;
 import net.arna.jcraft.common.spec.SpecType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.player.PlayerEntity;

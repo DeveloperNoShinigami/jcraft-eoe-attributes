@@ -1,7 +1,6 @@
 package net.arna.jcraft.mixin;
 
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.VampireComponent;
+import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(HungerManager.class)
 public class HungerManagerMixin {
     @Unique
-    private VampireComponent vampireComponent;
+    private CommonVampireComponent vampireComponent;
     @Unique
     private boolean isVampire;
     @Unique private PlayerEntity player;

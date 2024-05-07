@@ -9,7 +9,7 @@ import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.theworld.overheaven.*;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -92,7 +92,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             .withAnim(State.SINGULARITY)
             .withImpactSound(JSoundRegistry.IMPACT_12)
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withInfo(
                     Text.literal("Singularity"),
@@ -103,7 +103,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             //.withSound(JSoundRegistry.TWOH_HEAVY)
             .withAnim(State.AIR_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_1)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withExtraHitBox(1, 0.75, 1)
             .withExtraHitBox(1, -0.5, 1)
@@ -119,7 +119,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             .withSound(JSoundRegistry.TWOH_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_12)
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("True Strike"),
@@ -129,7 +129,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             6f, 21, 3f, 0f, 0f, true)
             .withSound(JSoundRegistry.TWOH_SMITE)
             .withBlockStun(13)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("You won't run away!"),
                     Text.literal("summons a weaker lightning bolt at the aimed position")
@@ -139,7 +139,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             .withAerialVariant(AIR_SMITE)
             .withSound(JSoundRegistry.TWOH_SMITE)
             .withBlockStun(13)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("Evaporate"),
                     Text.literal("summons a powerful lightning bolt that deals high damage and stun")

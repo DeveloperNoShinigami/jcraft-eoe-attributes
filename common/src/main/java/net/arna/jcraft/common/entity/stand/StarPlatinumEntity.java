@@ -7,7 +7,7 @@ import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.starplatinum.InhaleAttack;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -98,7 +98,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             8, 14, 0.75f, 4f, 13, 1.6f, 0.2f, -0.4f, 0.5f)
             .withSound(JSoundRegistry.STAR_PLATINUM_KNEE)
             .withImpactSound(JSoundRegistry.IMPACT_6)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("Upward Knee"),
                     Text.literal("launches upward, larger and higher hitbox, higher stun")
@@ -108,7 +108,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withAerialVariant(KNEE_UP)
             .withSound(JSoundRegistry.STAR_PLATINUM_KNEE)
             .withImpactSound(JSoundRegistry.IMPACT_6)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
                     Text.literal("Knee"),
                     Text.literal("fast poke, low stun")

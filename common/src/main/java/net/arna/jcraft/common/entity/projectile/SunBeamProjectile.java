@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
 import net.arna.jcraft.common.util.JParticleType;
@@ -10,7 +10,6 @@ import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -140,7 +139,7 @@ public class SunBeamProjectile extends PersistentProjectileEntity implements Geo
                         for (LivingEntity l : hurtAll) {
                             LivingEntity target = JUtils.getUserIfStand(l);
                             damageLogic(getWorld(), target, Vec3d.ZERO, stun, 1, false, 1f,
-                                    true, 2, damageSource, owner, HitPropertyComponent.HitAnimation.values()[random.nextInt(3)]);
+                                    true, 2, damageSource, owner, CommonHitPropertyComponent.HitAnimation.values()[random.nextInt(3)]);
                         }
 
                         Vec3d hitPos = hurtAll.get(0).getPos();

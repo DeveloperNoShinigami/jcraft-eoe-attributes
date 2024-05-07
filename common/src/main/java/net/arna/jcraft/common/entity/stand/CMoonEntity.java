@@ -9,9 +9,8 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.cmoon.*;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.GravityShiftComponent;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonGravityShiftComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.projectile.BlockProjectile;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -41,7 +40,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withAnim(State.INVERSION_PUNCH)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withTargetProcessor(CMoonEntity::addInversionPunchInversion)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
                     Text.literal("Inversion Punch"),
                     Text.literal("very low stun, delayed slowness")
@@ -96,7 +95,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withSound(JSoundRegistry.CMOON_GROUNDSHOOT)
             .withImpactSound(JSoundRegistry.IMPACT_5)
             .withTargetProcessor(CMoonEntity::addInversion)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(
                     Text.literal("Block Launch"),
                     Text.literal("lifts a block from the ground and launches it at a delay/crouching and using this button resets the delay on nearby blocks")
@@ -232,7 +231,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                 return true;
             }
             case ULTIMATE -> {
-                GravityShiftComponent shiftComponent = JComponents.getGravityShift(getUserOrThrow());
+                CommonGravityShiftComponent shiftComponent = JComponents.getGravityShift(getUserOrThrow());
                 if (shiftComponent.isActive())
                     shiftComponent.swapRadialType();
                 else return super.initMove(type);

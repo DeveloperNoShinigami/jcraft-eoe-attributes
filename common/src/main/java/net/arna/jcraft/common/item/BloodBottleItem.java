@@ -1,14 +1,13 @@
 package net.arna.jcraft.common.item;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.VampireComponent;
+import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -22,7 +21,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +46,7 @@ public class BloodBottleItem extends Item {
         float blood = nbt.getFloat("Blood");
 
         if (blood >= 0.5f) {
-            VampireComponent vampireComponent = JComponents.getVampirism(playerEntity);
+            CommonVampireComponent vampireComponent = PlatformUtils.getVampirism(playerEntity);
 
             if (vampireComponent.isVampire()) {
                 boolean full = blood >= 1.0f;

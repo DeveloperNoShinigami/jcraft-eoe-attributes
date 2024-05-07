@@ -9,7 +9,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.EmeraldSplashAttack;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.NetSetMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.projectile.HGNetEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.IOwnable;
@@ -90,7 +90,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withLaunch()
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHyperArmor()
             .withInfo(
                     Text.literal("Sendoff"),
@@ -108,7 +108,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
     public static final SimpleAttack<HGEntity> EXTEND_FORWARD_SECOND = new SimpleAttack<HGEntity>(
             0, 13, 21, 1f, 5, 16, 0, 0.4f, 0)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withExtraHitBox(2.5, -0.5, 1.5)
             .withExtraHitBox(3.5    , -0.6, 1.5)
             .withInfo(
@@ -117,7 +117,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             );
     public static final SimpleAttack<HGEntity> EXTEND_FORWARD = new SimpleAttack<HGEntity>(
             100, 10, 21, 1f, 5, 15, 1.5f, 0.7f, 0.2f)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withSound(JSoundRegistry.HG_EXTEND)
             .withExtraHitBox(2, -0.1, 1.5)
             .withFinisher(12, EXTEND_FORWARD_SECOND)
@@ -128,7 +128,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
     public static final SimpleAttack<HGEntity> EXTEND_UP_SECOND = new SimpleAttack<HGEntity>(
             0, 13, 21, 1f, 5, 16, 0, 0.4f, 0)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withExtraHitBox(2, 0.5, 1.5)
             .withExtraHitBox(3, 0.75, 1.5)
             .withInfo(
@@ -140,7 +140,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             .withCrouchingVariant(EXTEND_FORWARD)
 
             .withSound(JSoundRegistry.HG_EXTEND)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withExtraHitBox(2, 0.1, 1.5)
             .withFinisher(12, EXTEND_UP_SECOND)
             .withInfo(

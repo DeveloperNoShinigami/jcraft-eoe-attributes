@@ -11,9 +11,8 @@ import net.arna.jcraft.common.attack.moves.shared.EffectInflictingAttack;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.component.living.CooldownsComponent;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
-import net.arna.jcraft.common.component.JComponents;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.network.s2c.TimeAccelStatePacket;
 import net.arna.jcraft.common.util.CooldownType;
@@ -52,7 +51,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withAnim(State.SPEED_CHOP)
             .withImpactSound(SoundEvents.ITEM_TRIDENT_HIT)
             .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("Speed Chop"),
                     Text.literal("tiny stun, procs bleed")
@@ -112,7 +111,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withSound(JSoundRegistry.MIH_LEGCRUSHER)
             .withImpactSound(JSoundRegistry.TW_KICK_HIT)
             .withExtraHitBox(0, -0.5, 1)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("Leg Crusher"),
@@ -125,7 +124,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withSound(JSoundRegistry.MIH_LEGCRUSHER)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withExtraHitBox(0, -0.5, 1)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("Low Kick"),
@@ -136,7 +135,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withSound(JSoundRegistry.MIH_FURYCHOP)
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("Fury Chop"),
@@ -150,7 +149,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withHyperArmor()
             .withBlockStun(4)
             .withHitSpark(JParticleType.HIT_SPARK_3)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
                     Text.literal("Roundabout Donut"),
                     Text.literal("feigns stand desummon, uninterruptible combo starter")
@@ -315,7 +314,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         if (!move.canBeInitiated(this)) return false;
         LivingEntity player = getUserOrThrow();
 
-        CooldownsComponent cooldowns = JComponents.getCooldowns(player);
+        CommonCooldownsComponent cooldowns = JComponents.getCooldowns(player);
         int cooldown = cooldowns.getCooldown(cooldownType);
 
         if (cooldown > 0) return false;

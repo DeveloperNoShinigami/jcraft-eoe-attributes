@@ -6,7 +6,7 @@ import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.starplatinum.theworld.GroundSlamAttack;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -77,7 +77,7 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
             .withSound(JSoundRegistry.SPTW_BACKHAND)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withExtraHitBox(1f)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("Backhand"),
@@ -88,7 +88,7 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
             .withSound(JSoundRegistry.SPTW_UPPERCUT)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHyperArmor()
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withInfo(
                     Text.literal("What an ugly watch (Slam)"),
@@ -110,7 +110,7 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
             .withImpactSound(JSoundRegistry.IMPACT_6)
             .withLaunch()
             .withHyperArmor()
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("What an ugly watch (Uppercut)"),

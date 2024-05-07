@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import lombok.Setter;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.entity.Entity;
@@ -90,7 +90,7 @@ public class LaserProjectile extends PersistentProjectileEntity implements GeoEn
         if (owner.hasPassenger(entity) || entity == owner || hit.contains(entity)) return;
 
         JUtils.projectileDamageLogic(this, getWorld(), entity, getVelocity(), 20, 1, false,
-                5f, 0, HitPropertyComponent.HitAnimation.CRUSH, unblockable, false);
+                5f, 0, CommonHitPropertyComponent.HitAnimation.CRUSH, unblockable, false);
         hit.add(entity);
     }
 

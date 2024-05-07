@@ -1,12 +1,11 @@
 package net.arna.jcraft.common.entity.projectile;
 
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.EndCrystalEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -55,7 +54,7 @@ public class BloodProjectile extends PersistentProjectileEntity implements GeoEn
             if (entity instanceof StandEntity<?, ?> stand && stand.hasUser())
                 target = stand.getUserOrThrow();
             damageLogic(getWorld(), target, Vec3d.ZERO, 10, 1, false, 2f,
-                    false, 6, getWorld().getDamageSources().thrown(this, owner), owner, HitPropertyComponent.HitAnimation.MID);
+                    false, 6, getWorld().getDamageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 60, 0, false, true));
             discard();
         }

@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.PurpleHazeCloudEntity;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
 import net.arna.jcraft.common.util.JUtils;
@@ -43,7 +43,7 @@ public class PHCapsuleProjectile extends PersistentProjectileEntity implements G
             if (getOwner() != null && entityHitResult.getEntity().isConnectedThroughVehicle(getOwner())) return;
 
             JUtils.projectileDamageLogic(this, getWorld(), entityHitResult.getEntity(), getVelocity().multiply(0.1),
-                    2, 1, false, 2f, 2, HitPropertyComponent.HitAnimation.MID);
+                    2, 1, false, 2f, 2, CommonHitPropertyComponent.HitAnimation.MID);
         }
 
         discard();

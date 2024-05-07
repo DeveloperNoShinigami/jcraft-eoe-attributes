@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity;
 
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.ICustomDamageHandler;
 import net.arna.jcraft.common.util.IOwnable;
 import net.minecraft.entity.Entity;
@@ -71,7 +71,7 @@ public class GEFrogEntity extends FrogEntity implements IOwnable, ICustomDamageH
     }
 
     @Override
-    public boolean handleDamage(Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, HitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
+    public boolean handleDamage(Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
         if (attacker instanceof LivingEntity living)
             damageLogic(attacker.getWorld(), living, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, canBackstab, unblockable);
         return false;

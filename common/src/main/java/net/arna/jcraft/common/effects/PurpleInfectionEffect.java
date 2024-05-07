@@ -1,6 +1,5 @@
 package net.arna.jcraft.common.effects;
 
-import net.arna.jcraft.common.component.JComponents;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.entity.LivingEntity;

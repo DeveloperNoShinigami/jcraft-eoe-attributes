@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.block.Blocks;
@@ -132,7 +132,7 @@ public class EmeraldProjectile extends PersistentProjectileEntity implements Geo
         int blockstun = 4;
         int stunT = 10;
 
-        JUtils.projectileDamageLogic(this, getWorld(), entity, Vec3d.ZERO, stunT, 1, false, 1, blockstun, HitPropertyComponent.HitAnimation.MID);
+        JUtils.projectileDamageLogic(this, getWorld(), entity, Vec3d.ZERO, stunT, 1, false, 1, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
         playSound(SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK, 1, 1);
         discard();
     }

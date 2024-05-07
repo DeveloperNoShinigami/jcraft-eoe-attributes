@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static net.arna.jcraft.common.attack.moves.goldexperience.requiem.LifeBeamAttack.CHARGE_TIME;
-import static net.arna.jcraft.common.component.living.HitPropertyComponent.HitAnimation.*;
+import static net.arna.jcraft.common.component.living.CommonHitPropertyComponent.HitAnimation.*;
 
 public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public static final SimpleAttack<GEREntity> LIGHT_FOLLOWUP = new SimpleAttack<GEREntity>(

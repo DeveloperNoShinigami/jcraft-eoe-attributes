@@ -13,7 +13,7 @@ import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.*;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -56,7 +56,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(ITEM_PLACE)
             .withImpactSound(JSoundRegistry.IMPACT_2)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("Chop"),
                     Text.literal("relatively quick combo starter"));

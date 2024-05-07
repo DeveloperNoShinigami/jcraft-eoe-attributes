@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.gravity.util;
 
-import net.arna.jcraft.common.component.entity.GravityComponent;
+import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -24,8 +24,8 @@ public class NetworkUtil {
 
     //Access gravity component
 
-    public static Optional<GravityComponent> getGravityComponent(Entity entity) {
-        GravityComponent gc = GravityChangerAPI.getGravityComponent(entity);
+    public static Optional<CommonGravityComponent> getGravityComponent(Entity entity) {
+        CommonGravityComponent gc = GravityChangerAPI.getGravityComponent(entity);
         if (gc == null) return Optional.empty();
         return Optional.of(gc);
     }

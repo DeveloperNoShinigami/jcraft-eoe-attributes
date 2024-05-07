@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
@@ -120,7 +120,7 @@ public class RapierProjectile extends PersistentProjectileEntity implements GeoE
         if (owner.hasPassenger(entity) || entity == owner) return;
         if (this.isOnFire()) entity.setOnFireFor(5);
 
-        JUtils.projectileDamageLogic(this, getWorld(), entity, Vec3d.ZERO, 20, 1, false, 2, 6, HitPropertyComponent.HitAnimation.MID);
+        JUtils.projectileDamageLogic(this, getWorld(), entity, Vec3d.ZERO, 20, 1, false, 2, 6, CommonHitPropertyComponent.HitAnimation.MID);
         playSound(SoundEvents.ITEM_TRIDENT_HIT, 1, 1);
         discard();
     }

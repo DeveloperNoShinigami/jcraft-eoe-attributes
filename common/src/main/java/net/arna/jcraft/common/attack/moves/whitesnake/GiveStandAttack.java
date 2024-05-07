@@ -4,8 +4,7 @@ import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.StandComponent;
+import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
@@ -47,7 +46,7 @@ public class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, White
                     int itemSkin = 0;
 
                     NbtCompound data = itemStack.getOrCreateNbt();
-                    StandComponent standData = JComponents.getStandData(target);
+                    CommonStandComponent standData = JComponents.getStandData(target);
 
                     StandType targetStand = standData.getType();
                     if (targetStand != null) return; // Can't overwrite other's stands

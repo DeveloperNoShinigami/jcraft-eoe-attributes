@@ -4,7 +4,6 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractGrabAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.component.JComponents;
 import net.arna.jcraft.common.entity.stand.KillerQueenEntity;
 import net.minecraft.entity.LivingEntity;
 

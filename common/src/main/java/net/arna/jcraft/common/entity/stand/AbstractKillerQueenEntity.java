@@ -9,8 +9,7 @@ import net.arna.jcraft.common.attack.moves.killerqueen.DetonateAttack;
 import net.arna.jcraft.common.attack.moves.killerqueen.ExplosiveDashAttack;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.CooldownsComponent;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
@@ -150,7 +149,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             }
 
             case SPECIAL1 -> {
-                CooldownsComponent cooldowns = JComponents.getCooldowns(user);
+                CommonCooldownsComponent cooldowns = JComponents.getCooldowns(user);
 
                 if (user.isInSneakingPose() && cooldowns.getCooldown(CooldownType.STAND_SP1) <= 0) {
                     BlockPos standingOn = user.getBlockPos().offset(GravityChangerAPI.getGravityDirection(user));

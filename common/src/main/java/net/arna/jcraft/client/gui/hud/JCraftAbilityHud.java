@@ -6,8 +6,7 @@ import lombok.experimental.UtilityClass;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.util.RenderUtils;
-import net.arna.jcraft.common.component.living.CooldownsComponent;
-import net.arna.jcraft.common.component.JComponents;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.CooldownType;
@@ -17,8 +16,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -204,7 +201,7 @@ public class JCraftAbilityHud {
      * @return Progress value of cooldown between 0 and 1 if it is present, otherwise defaults to -1
      */
     private static double getCooldownProgress(CooldownType type) {
-        CooldownsComponent cooldowns = JComponents.getCooldowns(MinecraftClient.getInstance().player);
+        CommonCooldownsComponent cooldowns = JComponents.getCooldowns(MinecraftClient.getInstance().player);
         int cooldown = cooldowns.getCooldown(type);
         int initialDuration = cooldowns.getInitialDuration(type);
 

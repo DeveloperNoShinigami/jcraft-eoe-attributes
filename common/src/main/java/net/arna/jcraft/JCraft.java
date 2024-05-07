@@ -1,21 +1,23 @@
 package net.arna.jcraft;
 
 import com.google.common.base.Suppliers;
-import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrarManager;
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 import lombok.Setter;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.CooldownsComponent;
-import net.arna.jcraft.common.component.living.StandComponent;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.common.component.living.CommonStandComponent;
+import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.effects.DazedStatusEffect;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
+import net.arna.jcraft.common.gravity.util.GravityChannel;
+import net.arna.jcraft.common.loot.JLootTableHelper;
 import net.arna.jcraft.common.network.RemoteStandInteractPacket;
 import net.arna.jcraft.common.network.c2s.*;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
@@ -26,8 +28,8 @@ import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
-import net.arna.jcraft.registry.JPacketRegistry;
-import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.registry.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -199,7 +201,7 @@ public final class JCraft {
     public static StandEntity<?, ?> summon(World world, LivingEntity user) {
         if (user.hasStatusEffect(JStatusRegistry.STANDLESS)) return null;
 
-        StandComponent standData = JComponents.STAND.get(user);
+        CommonStandComponent standData = PlatformUtils.getStandData(user);
         StandType type = standData.getType();
         if (type == StandType.NONE) return null;
         StandEntity<?, ?> stand = type == null ? null : type.createNew(world);
@@ -266,7 +268,7 @@ public final class JCraft {
 
     public static void createParticle(ServerWorld world, double x, double y, double z, JParticleType type) {
         if (world == null || type == null) return;
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
         buf.writeShort(3);
         buf.writeDouble(x);
@@ -281,7 +283,7 @@ public final class JCraft {
 
     public static void createHitsparks(ServerWorld world, double x, double y, double z, JParticleType type, int sparkCount, double sparkSpeed) {
         if (world == null || type == null) return;
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
         buf.writeShort(5);
         buf.writeDouble(x);
@@ -302,7 +304,7 @@ public final class JCraft {
      */
     public static void comboBreak(ServerWorld world, LivingEntity player, StatusEffectInstance stun) {
         if (player.isSpectator()) return;
-        CooldownsComponent cooldowns = JComponents.getCooldowns(player);
+        CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(player);
 
         if (stun.getDuration() > 1 && DazedStatusEffect.canBeComboBroken(stun.getAmplifier()) && cooldowns.getCooldown(CooldownType.COMBO_BREAKER) <= 0) {
             cooldowns.startCooldown(CooldownType.COMBO_BREAKER);

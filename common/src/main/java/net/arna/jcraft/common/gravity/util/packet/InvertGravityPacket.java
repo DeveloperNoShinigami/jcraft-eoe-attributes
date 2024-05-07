@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.gravity.util.packet;
 
 import net.arna.jcraft.common.gravity.api.RotationParameters;
-import net.arna.jcraft.common.component.entity.GravityComponent;
+import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.util.NetworkUtil;
 import net.minecraft.network.PacketByteBuf;
 
@@ -32,7 +32,7 @@ public class InvertGravityPacket extends GravityPacket {
     }
 
     @Override
-    public void run(GravityComponent gc) {
+    public void run(CommonGravityComponent gc) {
         gc.invertGravity(inverted, rotationParameters, initialGravity);
     }
 

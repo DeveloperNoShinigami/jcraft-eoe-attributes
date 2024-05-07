@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.common.util.JUtils;
@@ -111,7 +111,7 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
                     LivingEntity target = JUtils.getUserIfStand(living);
                     if (target.isConnectedThroughVehicle(master)) return;
                     StandEntity.damageLogic(getWorld(), target, circulation, 10, 1, false, 2f, true, 6,
-                            getWorld().getDamageSources().mobAttack(master), master, HitPropertyComponent.HitAnimation.MID, false);
+                            getWorld().getDamageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false);
                 }
                 hitsLeft--;
             }

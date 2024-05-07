@@ -1,6 +1,5 @@
 package net.arna.jcraft.common.item;
 
-import net.arna.jcraft.SneakyClientGetter;
 import net.arna.jcraft.client.registry.JArmorRendererRegistry;
 import net.arna.jcraft.client.renderer.armor.DIOArmorRenderer;
 import net.minecraft.entity.EquipmentSlot;

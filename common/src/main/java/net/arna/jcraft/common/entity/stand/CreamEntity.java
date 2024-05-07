@@ -11,7 +11,7 @@ import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.cream.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
@@ -22,7 +22,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -56,7 +55,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             7, 13, 0.75f, 6f, 20, 1.75f, 0.75f, 0.3f,
             List.of(new StatusEffectInstance(StatusEffects.SLOWNESS, 40, 1)))
             .withAnim(State.BITE)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withSound(SoundEvents.ENTITY_EVOKER_FANGS_ATTACK)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -87,7 +86,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHyperArmor()
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("Vertical Chop"),
                     Text.literal("slow, uninterruptible combo starter"));
@@ -183,7 +182,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     public static final SimpleAttack<CreamEntity> SWIPE = new SimpleAttack<CreamEntity>(20, 7,
             14, 0.5f, 5f, 20, 2f, 0.75f, 0.2f)
             .withImpactSound(JSoundRegistry.IMPACT_3)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("Swipe"),
                     Text.literal("quick air-to-ground poke"));
@@ -201,7 +200,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             36, 0.5f, 7f, 15, 2f, 0.1f, 0.3f, IntSet.of(10, 17, 25))
             .withSound(JSoundRegistry.CREAM_COMBO)
             .withImpactSound(JSoundRegistry.IMPACT_3)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("Aerial Assault"),
                     Text.literal("less stun than grounded version"));

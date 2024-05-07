@@ -15,9 +15,8 @@ import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.CooldownsComponent;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -586,7 +585,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (!move.canBeInitiated(getThis())) return false;
 
         if (cooldownType != null && move.getCooldown() > 0) {
-            CooldownsComponent cooldowns = JComponents.getCooldowns(getUser());
+            CommonCooldownsComponent cooldowns = JComponents.getCooldowns(getUser());
             int cooldown = cooldowns.getCooldown(cooldownType);
 
             if (cooldown > 0) return false;
@@ -1008,7 +1007,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      */
     public static void damageLogic(World world, LivingEntity ent, Vec3d kbVec, int stunTicks, int stunLevel,
                                    boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source,
-                                   Entity attacker, HitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
+                                   Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
         if (world == null || world.isClient || ent == null || !ent.canTakeDamage()) return;
         if (world.getGameRules().getBoolean(JCraft.COMBO_COUNTER) && attacker instanceof ServerPlayerEntity playerEntity)
             comboCounterLogic(playerEntity, ent);
@@ -1027,7 +1026,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * @param damage       damage in half hearts
      * @param lift         will the attack lift the victim upon an aerial hit?
      */
-    public static void damageLogic(World world, LivingEntity ent, Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, HitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab) {
+    public static void damageLogic(World world, LivingEntity ent, Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab) {
         if (world == null || world.isClient || ent == null || !ent.canTakeDamage()) return;
         if (world.getGameRules().getBoolean(JCraft.COMBO_COUNTER) && attacker instanceof ServerPlayerEntity playerEntity)
             comboCounterLogic(playerEntity, ent);
@@ -1046,7 +1045,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * @param damage       damage in half hearts
      * @param lift         will the attack lift the victim upon an aerial hit?
      */
-    public static void damageLogic(World world, LivingEntity ent, Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, HitPropertyComponent.HitAnimation hitAnimation) {
+    public static void damageLogic(World world, LivingEntity ent, Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation) {
         if (world == null || world.isClient || ent == null || !ent.canTakeDamage()) return;
         if (world.getGameRules().getBoolean(JCraft.COMBO_COUNTER) && attacker instanceof ServerPlayerEntity playerEntity)
             comboCounterLogic(playerEntity, ent);
@@ -1093,7 +1092,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      */
     private static void baseDamageLogic(LivingEntity ent, Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun,
                                         float damage, boolean lift, int blockstun, DamageSource source, @Nullable Entity attacker,
-                                        HitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
+                                        CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
         if (ent instanceof ICustomDamageHandler customDamageHandler)
             if (!customDamageHandler.handleDamage(kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, canBackstab, unblockable))
                 return;
@@ -1384,7 +1383,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         } else wantToBlock = false;
 
         if (!enemyHasStand) { // Blocking logic against standless opponents
-            CooldownsComponent cooldowns = JComponents.getCooldowns(mob);
+            CommonCooldownsComponent cooldowns = JComponents.getCooldowns(mob);
             if (cooldowns.getCooldown(CooldownType.DASH) > 0) // Careful approach
                 wantToBlock = distance > 2 && distance < 5; // Block at range <2, 5>
             else
@@ -1549,7 +1548,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return MoveSelectionResult.PASS;
     }
 
-    private @Nullable Pair<AbstractMove<?, ?>, Boolean> selectAttack(CooldownsComponent cooldowns, LivingEntity mob, LivingEntity target, int stunTicks, int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
+    private @Nullable Pair<AbstractMove<?, ?>, Boolean> selectAttack(CommonCooldownsComponent cooldowns, LivingEntity mob, LivingEntity target, int stunTicks, int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
         AbstractMove<?, ? super E> selectedAttack;
         boolean needsCrouch = false;
         boolean doFinalChecks = true; // Refuses to run the move if certain conditions are met
@@ -1734,7 +1733,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * @return whether the damage logic should proceed in harming the stand itself
      */
     @Override
-    public boolean handleDamage(Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, HitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
+    public boolean handleDamage(Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
         if (hasUser()) {
             boolean hit = true;
 

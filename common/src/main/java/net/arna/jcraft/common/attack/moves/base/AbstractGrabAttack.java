@@ -6,7 +6,6 @@ import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.component.JComponents;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.entity.LivingEntity;

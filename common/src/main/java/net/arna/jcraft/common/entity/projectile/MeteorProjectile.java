@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
@@ -11,7 +11,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -120,7 +119,7 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
 
         entity.setOnFireFor(3);
         JUtils.projectileDamageLogic(this, getWorld(), entity, getVelocity(), 20, 1, false,
-                6f, 10, HitPropertyComponent.HitAnimation.HIGH);
+                6f, 10, CommonHitPropertyComponent.HitAnimation.HIGH);
         if (explosive && ticksInGround < 1) {
             explode();
             playSound(getSound(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
@@ -209,7 +208,7 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
             for (LivingEntity l : hurtAll) {
                 LivingEntity target = JUtils.getUserIfStand(l);
                 damageLogic(getWorld(), target, l.getPos().subtract(getPos()).normalize(), 20, 3, false, 5f,
-                        false, 10, JDamageSources.create(getWorld(), DamageTypes.ON_FIRE), owner, HitPropertyComponent.HitAnimation.LAUNCH);
+                        false, 10, JDamageSources.create(getWorld(), DamageTypes.ON_FIRE), owner, CommonHitPropertyComponent.HitAnimation.LAUNCH);
             }
         }
     }

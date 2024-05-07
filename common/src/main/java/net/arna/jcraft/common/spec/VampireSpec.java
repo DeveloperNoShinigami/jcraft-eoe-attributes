@@ -9,20 +9,19 @@ import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.vampire.BloodSuckAttack;
 import net.arna.jcraft.common.attack.moves.vampire.ReviveMove;
 import net.arna.jcraft.common.attack.moves.vampire.SpaceRipperAttack;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
-import net.arna.jcraft.common.component.living.VampireComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.SpecAnimationState;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
 public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
@@ -31,14 +30,14 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withStaticY()
             .withHitSpark(JParticleType.HIT_SPARK_2)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(Text.literal("Axe Kick"), Text.literal("jab"));
 
     public static final UppercutAttack<VampireSpec> SWEEP = new UppercutAttack<VampireSpec>(30, 6,
             12, 1f, 5f, 12, 1.5f, 0.2f, 0.5f, 0.5f)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withStaticY()
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(Text.literal("Sweep Kick"), Text.literal("fast launcher"));
 
     public static final SimpleAttack<VampireSpec> ROUNDHOUSE = new SimpleAttack<VampireSpec>(30, 8,
@@ -97,7 +96,7 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
             .withSound(JSoundRegistry.VAMPIRE_REANIMATE)
             .withInfo(Text.literal("Resurrection"), Text.literal("revives humanoid/undead enemies within 5 meters, that died within the last 1 minute"));
 
-    private final VampireComponent vampireComponent;
+    private final CommonVampireComponent vampireComponent;
     private boolean nightVision = true;
 
     private static void toggleNightVision(VampireSpec attacker, LivingEntity living, MoveContext moveContext) {
@@ -108,7 +107,7 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
 
     public VampireSpec(PlayerEntity player) {
         super(SpecType.VAMPIRE, player);
-        vampireComponent = JComponents.getVampirism(player);
+        vampireComponent = PlatformUtils.getVampirism(player);
         vampireComponent.setVampire(true);
     }
 

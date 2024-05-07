@@ -5,7 +5,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.PurpleHazeCloudEntity;
 import net.arna.jcraft.common.entity.projectile.PHCapsuleProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -64,7 +64,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withImpactSound(JSoundRegistry.IMPACT_4)
             .withExtraHitBox(0, 0.35, 1.25)
             .withHitSpark(JParticleType.HIT_SPARK_2)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
                     Text.literal("Backhand"),
                     Text.literal("launches vertically, infects (3s) on hit")
@@ -144,7 +144,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             30 * 20, 30, 0.75f, 3f, 11, 1.75f, 0.45f, 0.2f, IntSet.of(14, 24))
             .withSound(JSoundRegistry.PH_ULTIMATE)
             .withHitSpark(JParticleType.HIT_SPARK_1)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withAction(AbstractPurpleHazeEntity::performUlt)
             .withHyperArmor()
             .withInfo(
@@ -169,7 +169,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withSound(JSoundRegistry.PH_REKKA2)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             // .withFollowup(REKKA3)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
                     Text.literal("Rekka (2nd Hit)"),
                     Text.literal("links into Light")
@@ -180,7 +180,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withImpactSound(JSoundRegistry.IMPACT_1)
             // .withFollowup(REKKA2)
             .withExtraHitBox(1.5)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInitAction(AbstractPurpleHazeEntity::lunge)
             .withMobilityType(MobilityType.DASH)
             .withInfo(
@@ -194,7 +194,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withSound(JSoundRegistry.PH_GROUNDSLAM)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withAction(AbstractPurpleHazeEntity::groundSlam)
             .withInfo(
                     Text.literal("Ground Slam"),

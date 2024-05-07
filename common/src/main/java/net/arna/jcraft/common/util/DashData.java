@@ -1,10 +1,11 @@
 package net.arna.jcraft.common.util;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.CooldownsComponent;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.platform.PlatformUtils;
+import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -44,7 +45,7 @@ public class DashData {
     }
 
     public static void tryDash(int forward, int side, LivingEntity entity) {
-        CooldownsComponent cooldowns = JComponents.COOLDOWNS.get(entity);
+        CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(entity);
         if (cooldowns.getCooldown(CooldownType.DASH) > 0 || !entity.isOnGround() || entity.hasStatusEffect(JStatusRegistry.DAZED) || entity.hasStatusEffect(JStatusRegistry.KNOCKDOWN))
             return;
         cooldowns.setCooldown(CooldownType.DASH, JCraft.dashCooldown);

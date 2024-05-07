@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.util;
 
 import net.arna.jcraft.client.model.entity.StandEntityModel;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
@@ -136,7 +136,7 @@ public class JClientUtils {
         part.roll = defaultTransform.roll;
     }
 
-    public static void animateHit(HitPropertyComponent.HitAnimation hitAnimation, long endHitAnimTime, Vec3d randomRotation, ModelPart head, @Nullable ModelPart hat, ModelPart body, ModelPart rightArm, ModelPart leftArm, ModelPart rightLeg, ModelPart leftLeg) {
+    public static void animateHit(CommonHitPropertyComponent.HitAnimation hitAnimation, long endHitAnimTime, Vec3d randomRotation, ModelPart head, @Nullable ModelPart hat, ModelPart body, ModelPart rightArm, ModelPart leftArm, ModelPart rightLeg, ModelPart leftLeg) {
         if (endHitAnimTime > 20L)
             endHitAnimTime = 20L;
         float angDegrees = endHitAnimTime * RAD_TO_DEG;

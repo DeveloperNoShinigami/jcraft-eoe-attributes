@@ -10,7 +10,7 @@ import net.arna.jcraft.common.attack.moves.shared.EffectInflictingAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
 import net.arna.jcraft.common.attack.moves.thefool.*;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -51,7 +51,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             20, 14, 1.5f, 2.5f, 7, 1.5f, 0.2f, 0.25f, IntSet.of(5, 8, 11))
             .withAnim(State.DRILL)
             .withBlockStun(4)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withExtraHitBox(1.75, -0.1, 0.75)
             .withInfo(
                     Text.literal("Drill"),
@@ -81,7 +81,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             );
     public static final AirBarrageAttack AIR_BARRAGE = new AirBarrageAttack(240, 0, 30,
             1f, 1f, 10, 2f, 0.1f, 0f, 3)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("Burn Rubber"),
                     Text.literal("slows down all movement, combo starter/extender")
@@ -102,7 +102,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withExtraHitBox(1.5)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHyperArmor()
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
                     Text.literal("Launch"),
                     Text.literal("uninterruptible, slow, vertically launching uppercut")
@@ -112,7 +112,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withBlockStun(5)
             .withSound(JSoundRegistry.FOOL_BARK1)
             .withImpactSound(JSoundRegistry.IMPACT_2)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("Slam"),
@@ -124,7 +124,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withSound(JSoundRegistry.FOOL_BARK2)
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withLift(false)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(Text.literal("Pound"), Text.literal("""
                     has followups which create different sand patterns based on which key was pressed:
@@ -176,7 +176,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withExtraHitBox(1.5)
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
                     Text.literal("Suffocating Sandstorm"),
                     Text.literal("very slow, traps the opponent in a cloud of blinding and slowing sand")

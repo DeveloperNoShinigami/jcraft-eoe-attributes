@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
@@ -9,7 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -136,7 +135,7 @@ public class BulletProjectile extends PersistentProjectileEntity implements GeoE
                 Entity owner = getOwner();
                 LivingEntity target = JUtils.getUserIfStand(living);
                 StandEntity.damageLogic(getWorld(), target, getVelocity().normalize(), stunTicks, 1,
-                        false, damage, true, 4 + damage, getWorld().getDamageSources().thrown(this, owner), owner, HitPropertyComponent.HitAnimation.MID);
+                        false, damage, true, 4 + damage, getWorld().getDamageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
                 JUtils.serverPlaySound(JSoundRegistry.BULLET_PENETRATE, (ServerWorld) getWorld(), getPos(), 32);
                 discard();
             }

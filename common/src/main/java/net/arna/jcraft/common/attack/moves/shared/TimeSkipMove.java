@@ -5,8 +5,7 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.component.living.CooldownsComponent;
-import net.arna.jcraft.common.component.JComponents;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.MobilityType;
@@ -66,7 +65,7 @@ public class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends AbstractM
         Vec3d tpPos = hitResult.getPos();
 
         // 3s minimum ult cooldown
-        CooldownsComponent cooldowns = JComponents.getCooldowns(user);
+        CommonCooldownsComponent cooldowns = JComponents.getCooldowns(user);
         if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) < 60)
             cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 60);
 

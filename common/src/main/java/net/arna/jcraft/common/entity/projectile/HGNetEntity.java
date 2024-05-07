@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.ICustomDamageHandler;
@@ -145,7 +145,7 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
                                 if (!living.isConnectedThroughVehicle(master))
                                     StandEntity.damageLogic(
                                             getWorld(), living, launchVec, 15, 3, false, 5f, false, 10,
-                                            getWorld().getDamageSources().mobAttack(this), master, HitPropertyComponent.HitAnimation.HIGH
+                                            getWorld().getDamageSources().mobAttack(this), master, CommonHitPropertyComponent.HitAnimation.HIGH
                                     );
                             }
                     );
@@ -283,7 +283,7 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
     }
 
     @Override
-    public boolean handleDamage(Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, HitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
+    public boolean handleDamage(Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
         if (attacker == master || (attacker instanceof IOwnable ownable && ownable.getMaster() == master))
             return false;
         return true;

@@ -24,8 +24,7 @@ import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
 import net.arna.jcraft.client.util.ClientEntityHandlerImpl;
 import net.arna.jcraft.client.util.TrackedKeyBinding;
 import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.CooldownsComponent;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
 import net.arna.jcraft.common.network.c2s.StandBlockPacket;
@@ -54,7 +53,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -236,7 +234,7 @@ public class JCraftClient implements ClientModInitializer {
 
         // Draw text HUD
         if (!useIcons) {
-            CooldownsComponent cooldowns = JComponents.getCooldowns(player);
+            CommonCooldownsComponent cooldowns = JComponents.getCooldowns(player);
 
             CooldownType[] values = CooldownType.values();
             for (int i = 0; i < values.length; i++) {

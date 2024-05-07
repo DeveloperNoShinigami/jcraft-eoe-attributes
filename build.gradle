@@ -35,6 +35,10 @@ subprojects {
             url 'https://maven.kosmx.dev/'
         }
         maven { url = "https://maven.parchmentmc.org" }
+        maven {
+            name = "Ladysnake"
+            url = "https://maven.ladysnake.org/releases"
+        }
     }
 
     dependencies {

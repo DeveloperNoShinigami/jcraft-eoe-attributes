@@ -3,8 +3,7 @@ package net.arna.jcraft.common.attack.moves.killerqueen;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
-import net.arna.jcraft.common.component.living.BombTrackerComponent;
-import net.arna.jcraft.common.component.JComponents;
+import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
 import net.arna.jcraft.common.entity.stand.AbstractKillerQueenEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
@@ -29,7 +28,7 @@ public class BombPlantAttack extends AbstractSimpleAttack<BombPlantAttack, Abstr
     private static final Vec3d halfBox = new Vec3d(0.5, 0.5, 0.5);
     @Override
     public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
-        BombTrackerComponent.BombData mainBomb = JComponents.getBombTracker(user).getMainBomb();
+        CommonBombTrackerComponent.BombData mainBomb = JComponents.getBombTracker(user).getMainBomb();
 
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 

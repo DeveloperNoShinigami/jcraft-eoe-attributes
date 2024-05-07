@@ -7,7 +7,7 @@ import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
 import net.arna.jcraft.common.attack.moves.shared.UppercutAttack;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.SpecAnimationState;
@@ -26,7 +26,7 @@ public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
             .withCrouchingVariant(HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitSpark(JParticleType.HIT_SPARK_2)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withArmor(3)
             .withInfo(Text.literal("Tornado Kick"), Text.literal("3 points of armor, high stun"));
     public static final SimpleMultiHitAttack<BrawlerSpec> COMBO = new SimpleMultiHitAttack<BrawlerSpec>(360,
@@ -38,7 +38,7 @@ public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
             1f, 6f, 16, 1.5f, 0.4f, 0f)
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitSpark(JParticleType.HIT_SPARK_2)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(Text.literal("Gut Punch"), Text.literal("good stun"));
     public static final KnockdownAttack<BrawlerSpec> SWEEP = new KnockdownAttack<BrawlerSpec>(30, 11, 18,
             1f, 5f, 16, 1.5f, 0.6f, 0.85f, 25)
@@ -51,7 +51,7 @@ public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
             .withImpactSound(JSoundRegistry.IMPACT_6)
             .withExtraHitBox(0.25, 0, 1)
             .withStaticY()
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(Text.literal("Right Low Kick"), Text.literal("fast jab"));
 
     public BrawlerSpec(PlayerEntity player) {

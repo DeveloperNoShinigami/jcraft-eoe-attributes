@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.EntityType;
@@ -98,7 +98,7 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
             Vec3d vel = boundEntity.getPos().add(0, 0.5, 0).subtract(master.getPos());
             Vec3d launch = vel.normalize().multiply(1.25);
             StandEntity.damageLogic(boundEntity.getWorld(), boundEntity, launch, 20, 3, true,
-                    6, false, 4, getWorld().getDamageSources().mobAttack(master), master, HitPropertyComponent.HitAnimation.MID, false, true);
+                    6, false, 4, getWorld().getDamageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false, true);
         }
 
         dataTracker.set(EXPLODED, true);

@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.spec;
 
 import com.google.common.base.MoreObjects;
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,17 +12,15 @@ import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.CooldownsComponent;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.SpecAnimationState;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
@@ -162,7 +161,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
         if (!move.canBeInitiated(getThis())) return false;
 
-        CooldownsComponent cooldowns = JComponents.getCooldowns(player);
+        CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(player);
         int cd = cooldowns.getCooldown(cooldownType);
         if (cd > 0) return false;
         cooldowns.setCooldown(cooldownType, move.getCooldown());
@@ -213,7 +212,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
         if (player == null) return;
         // Cancel player animation if it exists
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeShort(13);
         buf.writeInt(player.getId());
         ServerWorld serverWorld = (ServerWorld) player.getWorld();

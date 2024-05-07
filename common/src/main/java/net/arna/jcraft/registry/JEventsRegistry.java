@@ -1,10 +1,8 @@
 package net.arna.jcraft.registry;
 
-import dev.architectury.event.events.common.EntityEvent;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.block.CoffinBlock;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.VampireComponent;
+import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.config.ConfigOption;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -99,7 +97,7 @@ public interface JEventsRegistry {
                     if (killer instanceof ServerPlayerEntity killerPlayer) {
                         if (killVampirism) {
                             killerPlayer.getHungerManager().add(20, 20f);
-                            VampireComponent vampireComponent = JComponents.getVampirism(killerPlayer);
+                            CommonVampireComponent vampireComponent = JComponents.getVampirism(killerPlayer);
                             if (vampireComponent.isVampire())
                                 vampireComponent.setBlood(20.0f);
                         }

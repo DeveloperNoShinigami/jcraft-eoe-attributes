@@ -1,11 +1,7 @@
 package net.arna.jcraft.common.gravity.api;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.entity.GravityComponent;
+import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.RotationAnimation;
 import net.arna.jcraft.common.gravity.util.*;
 import net.arna.jcraft.common.gravity.util.packet.DefaultGravityPacket;
@@ -23,8 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class GravityChangerAPI {
-    public static final ComponentKey<GravityComponent> GRAVITY_COMPONENT =
-            ComponentRegistry.getOrCreate(JCraft.id("gravity_direction"), GravityComponent.class);
+    public static final ComponentKey<CommonGravityComponent> GRAVITY_COMPONENT =
+            ComponentRegistry.getOrCreate(JCraft.id("gravity_direction"), CommonGravityComponent.class);
 
     // workaround for a CCA bug; maybeGet throws an NPE in internal code if the DataTracker isn't initialized
     // null check the component container to avoid it
@@ -46,21 +42,21 @@ public abstract class GravityChangerAPI {
      */
     public static Direction getGravityDirection(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(GravityComponent::getGravityDirection).orElse(Direction.DOWN);
+            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getGravityDirection).orElse(Direction.DOWN);
         }
         return Direction.DOWN;
     }
 
     public static List<Gravity> getGravityList(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(GravityComponent::getGravity).orElse(new ArrayList<>());
+            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getGravity).orElse(new ArrayList<>());
         }
         return new ArrayList<>();
     }
 
     public static Direction getPrevGravityDirection(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(GravityComponent::getPrevGravityDirection).orElse(Direction.DOWN);
+            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getPrevGravityDirection).orElse(Direction.DOWN);
         }
         return Direction.DOWN;
     }
@@ -71,28 +67,28 @@ public abstract class GravityChangerAPI {
      */
     public static Direction getDefaultGravityDirection(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(GravityComponent::getDefaultGravityDirection).orElse(Direction.DOWN);
+            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getDefaultGravityDirection).orElse(Direction.DOWN);
         }
         return Direction.DOWN;
     }
 
     public static Direction getActualGravityDirection(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(GravityComponent::getActualGravityDirection).orElse(Direction.DOWN);
+            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getActualGravityDirection).orElse(Direction.DOWN);
         }
         return Direction.DOWN;
     }
 
     public static boolean getIsInverted(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(GravityComponent::getInvertGravity).orElse(false);
+            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getInvertGravity).orElse(false);
         }
         return false;
     }
 
     public static Optional<RotationAnimation> getGravityAnimation(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(GravityComponent::getGravityAnimation);
+            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getGravityAnimation);
         }
         return Optional.empty();
     }
@@ -178,7 +174,7 @@ public abstract class GravityChangerAPI {
      * For internal use only, direct calls on GravityComponent will cause de-sync between client and server.
      */
     @Nullable
-    public static GravityComponent getGravityComponent(Entity entity) {
+    public static CommonGravityComponent getGravityComponent(Entity entity) {
         return maybeGetSafe(GRAVITY_COMPONENT, entity).orElse(null);
     }
 

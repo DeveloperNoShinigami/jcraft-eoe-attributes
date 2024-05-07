@@ -3,7 +3,7 @@ package net.arna.jcraft.client.util;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.particle.AuraArcParticle;
 import net.arna.jcraft.client.particle.AuraBlobParticle;
-import net.arna.jcraft.common.component.living.BombTrackerComponent;
+import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
 import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
 import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -36,7 +36,7 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
     private ClientEntityHandlerImpl() {}
 
     @Override
-    public void bombTrackerParticleTick(Entity entity, BombTrackerComponent.BombData bombData) {
+    public void bombTrackerParticleTick(Entity entity, CommonBombTrackerComponent.BombData bombData) {
         Vec3d bombPos = bombData.getBombPos();
         if (bombPos == null) return;
         ClientWorld clientWorld = (ClientWorld) entity.getWorld();

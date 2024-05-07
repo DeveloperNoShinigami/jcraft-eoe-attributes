@@ -1,6 +1,5 @@
 package net.arna.jcraft.common.item;
 
-import net.arna.jcraft.common.component.JComponents;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.util.JUtils;

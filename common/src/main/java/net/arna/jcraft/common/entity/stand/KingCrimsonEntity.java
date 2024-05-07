@@ -8,9 +8,8 @@ import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.moves.kingcrimson.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.component.living.CooldownsComponent;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
-import net.arna.jcraft.common.component.JComponents;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.network.s2c.ShaderDeactivationPacket;
@@ -100,7 +99,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             .withSound(JSoundRegistry.KC_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_9)
             .withExtraHitBox(0, 0.5, 1)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("Vertical Chop"),
@@ -120,7 +119,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withExtraHitBox(0, 0.5, 1)
             .withBlockStun(4)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("Eye Chop"),
                     Text.literal("blindness on hit, combo starter, low blockstun")
@@ -258,7 +257,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             case ULTIMATE -> {
                 // If predicting, and Time Erase isn't on cooldown
                 if (curMove != null && curMove.getOriginalMove() == PREDICTION && hasUser()) {
-                    CooldownsComponent cooldowns = JComponents.getCooldowns(getUser());
+                    CommonCooldownsComponent cooldowns = JComponents.getCooldowns(getUser());
                     if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) <= 0) {
                         cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 400);
                         PredictionMove.finishPrediction(this);
@@ -286,7 +285,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 moveCancel();
 
                 // 7 second time erase cooldown
-                CooldownsComponent cooldowns = JComponents.getCooldowns(user);
+                CommonCooldownsComponent cooldowns = JComponents.getCooldowns(user);
                 if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) < 140)
                     cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 140);
 
@@ -371,7 +370,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
     public void cancelTE() {
         LivingEntity user = getUserOrThrow();
-        CooldownsComponent cooldowns = JComponents.getCooldowns(user);
+        CommonCooldownsComponent cooldowns = JComponents.getCooldowns(user);
         cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) - getTETime() * 2);
 
         setTETime(0);

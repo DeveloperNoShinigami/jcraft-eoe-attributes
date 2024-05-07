@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.util;
 
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.projectile.JAttackEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -14,11 +14,9 @@ import net.arna.jcraft.common.network.s2c.JExplosionPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.splatter.JSplatterManager;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SideShapeType;
 import net.minecraft.entity.Entity;
@@ -30,7 +28,6 @@ import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.decoration.EndCrystalEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -111,7 +108,7 @@ public final class JUtils {
     }
 
     public static void displayHitboxes(World world, Collection<Box> boxes) {
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeShort(1);
         buf.writeVarInt(boxes.size());
 
@@ -174,7 +171,7 @@ public final class JUtils {
     }
 
     public static JSpec<?,?> getSpec(PlayerEntity player) {
-        return JComponents.getSpecData(player).getSpec();
+        return PlatformUtils.getSpecData(player).getSpec();
     }
 
     public static void serverPlaySound(SoundEvent sound, ServerWorld serverWorld, Vec3d pos) {
@@ -267,11 +264,11 @@ public final class JUtils {
         return ent;
     }
 
-    public static void projectileDamageLogic(ProjectileEntity proj, World world, Entity ent, Vec3d kb, int stunT, int stunType, boolean overrideStun, float damage, int blockstun, HitPropertyComponent.HitAnimation hitAnimation) {
+    public static void projectileDamageLogic(ProjectileEntity proj, World world, Entity ent, Vec3d kb, int stunT, int stunType, boolean overrideStun, float damage, int blockstun, CommonHitPropertyComponent.HitAnimation hitAnimation) {
         projectileDamageLogic(proj, world, ent, kb, stunT, stunType, overrideStun, damage, blockstun, hitAnimation, false, false);
     }
 
-    public static void projectileDamageLogic(ProjectileEntity proj, World world, Entity ent, Vec3d kb, int stunT, int stunType, boolean overrideStun, float damage, int blockstun, HitPropertyComponent.HitAnimation hitAnimation, boolean unblockable, boolean canBackstab) {
+    public static void projectileDamageLogic(ProjectileEntity proj, World world, Entity ent, Vec3d kb, int stunT, int stunType, boolean overrideStun, float damage, int blockstun, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean unblockable, boolean canBackstab) {
         if (world.isClient) return;
         Objects.requireNonNull(proj, "Attempted to run ProjectileDamageLogic with invalid projectile in world " + world);
         Entity owner = proj.getOwner();
@@ -406,7 +403,7 @@ public final class JUtils {
 
     @Nullable
     public static StandEntity<?, ?> getStand(LivingEntity entity) {
-        return entity == null ? null : entity instanceof StandEntity<?, ?> stand ? stand : JComponents.getStandData(entity).getStand();
+        return entity == null ? null : entity instanceof StandEntity<?, ?> stand ? stand : PlatformUtils.getStandData(entity).getStand();
     }
 
     public static boolean isAffectedByTimeStop(Entity entity) {

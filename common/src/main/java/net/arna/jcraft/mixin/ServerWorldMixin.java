@@ -1,6 +1,5 @@
 package net.arna.jcraft.mixin;
 
-import net.arna.jcraft.common.component.JComponents;
 import net.arna.jcraft.common.util.IJSplatterManagerHolder;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;

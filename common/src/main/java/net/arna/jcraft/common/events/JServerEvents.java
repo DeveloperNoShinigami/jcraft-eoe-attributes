@@ -5,8 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.JCraft.DashData;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.StandComponent;
+import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.item.MockItem;
@@ -309,7 +308,7 @@ public class JServerEvents {
 
         if (entity instanceof MobEntity mob) {
             // Mark stand user mobs
-            StandComponent standData = JComponents.getStandData(mob);
+            CommonStandComponent standData = JComponents.getStandData(mob);
             if (standData.getType() != null && standData.getType() != StandType.NONE) {
                 JEnemies.add(mob);
                 return;

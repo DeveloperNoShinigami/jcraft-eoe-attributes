@@ -8,7 +8,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.theworld.FeignBarrageCounterAttack;
 import net.arna.jcraft.common.attack.moves.theworld.TWDonutAttack;
-import net.arna.jcraft.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
@@ -33,7 +33,7 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withExtraHitBox(0, 0, 1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(
                     Text.literal("Low Kick"),
                     Text.literal("slower, higher stun, low hitbox")
@@ -70,7 +70,7 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             16, 1.85f, 0.25f, 0.4f)
             .withSound(JSoundRegistry.TW_KICK)
             .withImpactSound(JSoundRegistry.TW_KICK_HIT)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.LOW)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("Sweep"),
@@ -81,7 +81,7 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withCrouchingVariant(SWEEP)
             .withSound(JSoundRegistry.TW_KICK)
             .withImpactSound(JSoundRegistry.TW_KICK_HIT)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.HIGH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("Roundhouse"),
@@ -144,7 +144,7 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withSound(JSoundRegistry.TW_CHARGE)
             .withImpactSound(JSoundRegistry.TW_CHARGE_HIT)
             .withHitSpark(JParticleType.HIT_SPARK_2)
-            .withHitAnimation(HitPropertyComponent.HitAnimation.CRUSH)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withBlockStun(11)
             .withInfo(
                     Text.literal("Forward Charge"),

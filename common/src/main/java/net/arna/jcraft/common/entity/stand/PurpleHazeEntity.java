@@ -9,8 +9,7 @@ import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.player.PhComponent;
+import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -347,7 +346,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
             if (!getWorld().isClient()) {
                 setMove(PLAY, State.PLAY);
 
-                final PhComponent ph = JComponents.getPhData(player);
+                final CommonPhComponent ph = JComponents.getPhData(player);
                 ph.increaseLevel();
                 if (ph.getLevel() >= 5) {
                     ph.resetLevel();

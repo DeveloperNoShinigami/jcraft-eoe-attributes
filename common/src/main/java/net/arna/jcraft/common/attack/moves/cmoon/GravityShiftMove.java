@@ -3,7 +3,6 @@ package net.arna.jcraft.common.attack.moves.cmoon;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.component.JComponents;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
 import net.minecraft.entity.LivingEntity;
 

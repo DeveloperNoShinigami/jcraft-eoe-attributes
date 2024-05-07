@@ -3,7 +3,6 @@ package net.arna.jcraft.client.gui.hud;
 import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.Setter;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.JComponents;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
@@ -14,7 +13,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 

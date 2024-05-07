@@ -1,8 +1,7 @@
 package net.arna.jcraft.client.renderer.features;
 
 import com.google.common.collect.Streams;
-import net.arna.jcraft.client.mixin.AnimalModelAccessor;
-import net.arna.jcraft.common.component.JComponents;
+import net.arna.jcraft.mixin.client.AnimalModelAccessor;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumerProvider;

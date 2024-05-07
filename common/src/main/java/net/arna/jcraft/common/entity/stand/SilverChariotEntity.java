@@ -9,8 +9,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.silverchariot.*;
-import net.arna.jcraft.common.component.JComponents;
-import net.arna.jcraft.common.component.living.CooldownsComponent;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -329,7 +328,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         if (!move.canBeInitiated(this)) return false;
 
         LivingEntity user = getUserOrThrow();
-        CooldownsComponent cooldowns = JComponents.getCooldowns(user);
+        CommonCooldownsComponent cooldowns = JComponents.getCooldowns(user);
         int cooldown = cooldowns.getCooldown(cooldownType);
 
         if (cooldown > 0) return false;

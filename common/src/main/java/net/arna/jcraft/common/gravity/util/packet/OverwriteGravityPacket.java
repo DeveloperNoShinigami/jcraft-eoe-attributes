@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.gravity.util.packet;
 
-import net.arna.jcraft.common.component.entity.GravityComponent;
+import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
 import net.arna.jcraft.common.gravity.util.Gravity;
 import net.arna.jcraft.common.gravity.util.NetworkUtil;
@@ -36,7 +36,7 @@ public class OverwriteGravityPacket extends GravityPacket {
     }
 
     @Override
-    public void run(GravityComponent gc) {
+    public void run(CommonGravityComponent gc) {
         gc.setGravity(gravityList, initialGravity);
     }
 
