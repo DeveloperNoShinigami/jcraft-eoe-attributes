@@ -17,11 +17,8 @@ public class CreamRenderer extends StandEntityRenderer<CreamEntity> {
     }
 
     @Override
-    public RenderLayer getRenderType(CreamEntity animatable, float partialTicks, MatrixStack stack,
-                                     @Nullable VertexConsumerProvider renderTypeBuffer, @Nullable VertexConsumer vertexBuilder,
-                                     int packedLightIn, Identifier textureLocation) {
-        return animatable.getVoidTime() > 0 ? RenderLayer.getEntitySolid(textureLocation) :
-                super.getRenderType(animatable, partialTicks, stack, renderTypeBuffer, vertexBuilder, packedLightIn, textureLocation);
+    public RenderLayer getRenderType(CreamEntity animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
+        return animatable.getVoidTime() > 0 ? RenderLayer.getEntitySolid(texture) : super.getRenderType(animatable, texture, bufferSource, partialTick);
     }
 
     @Override

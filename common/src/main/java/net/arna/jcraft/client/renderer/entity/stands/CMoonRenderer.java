@@ -15,6 +15,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 
 public class CMoonRenderer extends StandEntityRenderer<CMoonEntity> {
@@ -26,8 +27,8 @@ public class CMoonRenderer extends StandEntityRenderer<CMoonEntity> {
     }
 
     @Override
-    public void render(GeoModel model, CMoonEntity stand, float tickDelta, RenderLayer type, MatrixStack matrixStackIn, VertexConsumerProvider vertexConsumerProvider, VertexConsumer vertexConsumer, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        super.render(model, stand, tickDelta, type, matrixStackIn, vertexConsumerProvider, vertexConsumer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    public void actuallyRender(MatrixStack poseStack, CMoonEntity stand, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
         if (stand.getState() == CMoonEntity.State.GRAV_PUNCH && stand.getMoveStun() > gravWindup) {
             if (currentTick < 0 || currentTick != stand.age) {

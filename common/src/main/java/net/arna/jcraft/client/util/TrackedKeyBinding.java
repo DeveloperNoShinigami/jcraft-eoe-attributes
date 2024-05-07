@@ -1,5 +1,6 @@
 package net.arna.jcraft.client.util;
 
+import dev.architectury.event.events.client.ClientTickEvent;
 import lombok.Getter;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -19,7 +20,7 @@ public class TrackedKeyBinding {
 
     static {
         // Reset values
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvent.CLIENT_POST.register(client -> {
             bindings.values().forEach(TrackedKeyBinding::reset);
             if (client.currentScreen != null) {
                 bindings.values().stream()

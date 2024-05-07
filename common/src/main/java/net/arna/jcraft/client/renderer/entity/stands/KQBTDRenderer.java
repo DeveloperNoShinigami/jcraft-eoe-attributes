@@ -9,6 +9,6 @@ public class KQBTDRenderer extends StandEntityRenderer<KQBTDEntity> {
 
     public KQBTDRenderer(EntityRendererFactory.Context context) {
         super(context, new KQBTDModel());
-        this.addLayer(new KQBTDEyesLayer(this));
+        this.addRenderLayer(new KQBTDEyesLayer(this));
     }
 }

@@ -69,6 +69,8 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     }
 
     // Better than a mixin, makes stands look towards the users HEAD rotation as opposed to body
+
+
     @Override
     public void render(T animatable, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource,
                        int packedLight) {

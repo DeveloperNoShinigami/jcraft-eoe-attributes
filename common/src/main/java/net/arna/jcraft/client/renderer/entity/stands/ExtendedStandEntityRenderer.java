@@ -1,6 +1,7 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
@@ -22,6 +23,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.model.GeoModel;
@@ -38,6 +40,10 @@ import static net.minecraft.client.render.entity.LivingEntityRenderer.getOverlay
 
 public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends DynamicGeoEntityRenderer<T> {
     protected ItemStack mainHandItem, offHandItem;
+
+    protected static final String LEFT_HAND = "bipedHandLeft";
+    protected static final String RIGHT_HAND = "bipedHandRight";
+
     protected ExtendedStandEntityRenderer(EntityRendererFactory.Context renderManager, GeoModel<T> modelProvider) {
         super(renderManager, modelProvider);
     }
@@ -47,6 +53,15 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends Dyn
         return StandEntityRenderer.renderTypeOf(animatable, texture);
     }
 
+    @Override
+    public void preRender(MatrixStack poseStack, T animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+
+        this.mainHandItem = animatable.getMainHandStack();
+        this.offHandItem = animatable.getOffHandStack();
+    }
+
+/*
     @Override
     public void render(T animatable, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
         poseStack.push();
@@ -104,7 +119,7 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends Dyn
         }
 
         AnimationState<T> predicate = new AnimationState<T>(animatable, limbSwing, limbSwingAmount, partialTick,
-                (limbSwingAmount <= -getSwingMotionAnimThreshold() || limbSwingAmount > getSwingMotionAnimThreshold()), Collections.singletonList(entityModelData));
+                (limbSwingAmount <= -getSwingMotionAnimThreshold() || limbSwingAmount > getSwingMotionAnimThreshold()));
 
         this.model.setCustomAnimations(animatable, getInstanceId(animatable), predicate);
 
@@ -119,8 +134,10 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends Dyn
             VertexConsumer translucentBuffer = bufferSource
                     .getBuffer(RenderLayer.getEntityTranslucentCull(getTextureLocation(animatable)));
 
+            var uni = VertexConsumers.union(glintBuffer, translucentBuffer);
             actuallyRender(model, animatable, partialTick, renderType, poseStack, bufferSource,
-                    glintBuffer != translucentBuffer ? VertexConsumers.union(glintBuffer, translucentBuffer) : null,
+                    false,
+                    glintBuffer != translucentBuffer ? uni : null,
                     packedLight, getOverlay(animatable, 0), renderColor.getRed() / 255f,
                     renderColor.getGreen() / 255f, renderColor.getBlue() / 255f,
                     renderColor.getAlpha() / 255f);
@@ -137,6 +154,12 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends Dyn
             PatchouliCompat.patchouliLoaded(poseStack);
 
         poseStack.pop();
+    }
+
+ */
+
+    protected float getSwingMotionAnimThreshold() {
+        return 0.15f;
     }
 
     @Override

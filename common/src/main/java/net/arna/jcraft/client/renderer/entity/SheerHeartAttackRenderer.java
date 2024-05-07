@@ -18,10 +18,7 @@ public class SheerHeartAttackRenderer extends GeoEntityRenderer<SheerHeartAttack
     }
 
     @Override
-    public RenderLayer getRenderType(SheerHeartAttackEntity animatable, float partialTicks, MatrixStack stack,
-                                     @Nullable VertexConsumerProvider renderTypeBuffer, @Nullable VertexConsumer vertexBuilder,
-                                     int packedLightIn, Identifier textureLocation) {
-
+    public RenderLayer getRenderType(SheerHeartAttackEntity animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
         return RenderLayer.getEntityTranslucent(this.getTextureLocation(animatable));
     }
 }

@@ -2,6 +2,7 @@ package net.arna.jcraft.client.util;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import dev.architectury.event.events.client.ClientTickEvent;
 import net.arna.jcraft.client.rendering.CloneSkinTracker;
 import net.arna.jcraft.common.entity.PlayerCloneEntity;
 import net.minecraft.client.MinecraftClient;
@@ -23,16 +24,17 @@ public class PlayerCloneClientPlayerEntity extends AbstractClientPlayerEntity {
     private final PlayerCloneEntity clone;
 
     static {
-        ClientTickEvents.END_WORLD_TICK.register(world -> entities.stream()
+
+        ClientTickEvent.CLIENT_LEVEL_POST.register(world -> entities.stream()
                 .filter(LivingEntity::isAlive)
                 .forEach(PlayerCloneClientPlayerEntity::tick));
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvent.CLIENT_POST.register(client -> {
             if (client.world == null) entities.clear();
         });
     }
 
     public PlayerCloneClientPlayerEntity(PlayerCloneEntity clone) {
-        super(Objects.requireNonNull(MinecraftClient.getInstance().world), CLONE_PROFILE, null);
+        super(Objects.requireNonNull(MinecraftClient.getInstance().world), CLONE_PROFILE);
         this.clone = clone;
         entities.add(this);
     }
@@ -138,9 +140,9 @@ public class PlayerCloneClientPlayerEntity extends AbstractClientPlayerEntity {
         hurtTime = clone.hurtTime;
         maxHurtTime = clone.maxHurtTime;
 
-        lastLimbDistance = clone.lastLimbDistance;
-        limbDistance = clone.limbDistance;
-        limbAngle = clone.limbAngle;
+        //TODO lastLimbDistance = clone.lastLimbDistance;
+        //limbDistance = clone.limbDistance;
+        //limbAngle = clone.limbAngle;
 
         handSwinging = clone.handSwinging;
         lastHandSwingProgress = clone.lastHandSwingProgress;

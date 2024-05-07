@@ -8,63 +8,90 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShieldItem;
+import net.minecraft.util.math.RotationAxis;
+import software.bernie.example.client.renderer.entity.GremlinRenderer;
+import software.bernie.example.entity.DynamicExampleEntity;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
+
+import javax.annotation.Nullable;
 
 public class D4CRenderer extends ExtendedStandEntityRenderer<D4CEntity> {
+
     public D4CRenderer(EntityRendererFactory.Context context) {
         super(context, new StandEntityModel<>(StandType.D4C));
+
+        addRenderLayer(new BlockAndItemGeoLayer<>(this) {
+
+            @Nullable
+            @Override
+            protected ItemStack getStackForBone(GeoBone bone, D4CEntity animatable) {
+                // Retrieve the items in the entity's hands for the relevant bone
+                return switch (bone.getName()) {
+                    case LEFT_HAND -> animatable.isLeftHanded() ?
+                            D4CRenderer.this.mainHandItem : D4CRenderer.this.offHandItem;
+                    case RIGHT_HAND -> animatable.isLeftHanded() ?
+                            D4CRenderer.this.offHandItem : D4CRenderer.this.mainHandItem;
+                    default -> null;
+                };
+            }
+
+            @Override
+            protected ModelTransformationMode getTransformTypeForStack(GeoBone bone, ItemStack stack, D4CEntity animatable) {
+                // Apply the camera transform for the given hand
+                return switch (bone.getName()) {
+                    case LEFT_HAND, RIGHT_HAND -> ModelTransformationMode.THIRD_PERSON_RIGHT_HAND;
+                    default -> ModelTransformationMode.NONE;
+                };
+            }
+
+            // Do some quick render modifications depending on what the item is
+            @Override
+            protected void renderStackForBone(MatrixStack poseStack, GeoBone bone, ItemStack stack, D4CEntity animatable,
+                                              VertexConsumerProvider bufferSource, float partialTick, int packedLight, int packedOverlay) {
+                float ang = -90f;
+                D4CEntity.State state = animatable.getState();
+                if (state == D4CEntity.State.THROW || state == D4CEntity.State.GIVE_GUN)
+                    ang += (animatable.getMoveStun() + 1f - partialTick) * 65f;
+                poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(ang));
+
+                if (stack == D4CRenderer.this.mainHandItem) {
+                    poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
+
+                    if (stack.getItem() instanceof ShieldItem)
+                        poseStack.translate(0, 0.125, -0.25);
+                }
+                else if (stack == D4CRenderer.this.offHandItem) {
+                    poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
+
+                    if (stack.getItem() instanceof ShieldItem) {
+                        poseStack.translate(0, 0.125, 0.25);
+                        poseStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+                    }
+                }
+
+                super.renderStackForBone(poseStack, bone, stack, animatable, bufferSource, partialTick, packedLight, packedOverlay);
+            }
+        });
     }
 
     @Override
-    public void render(GeoModel model, D4CEntity animatable, float tickDelta, RenderLayer type, MatrixStack matrixStackIn, VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        float a = StandEntityRenderer.getAlpha(animatable, tickDelta);
+    public void actuallyRender(MatrixStack poseStack, D4CEntity animatable, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        float a = StandEntityRenderer.getAlpha(animatable, partialTick);
         float gR = 1.0f - a;
-        super.render(model, animatable, tickDelta, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green - gR, blue, a);
+
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green - gR, blue, a);
     }
 
     /*
         /execute as @e[type=jcraft:d4c] run data merge entity @s {HandItems:[{id:"jcraft:fv_revolver", Count:1b},{id:"jcraft:fv_revolver", Count:1b}]}
      */
     protected float partialTick = 0f;
-    @Override
-    public void renderEarly(D4CEntity animatable, MatrixStack poseStack, float partialTick, VertexConsumerProvider bufferSource, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float partialTicks) {
-        this.mainHandItem = animatable.getEquippedStack(EquipmentSlot.MAINHAND);
-        this.offHandItem = animatable.getEquippedStack(EquipmentSlot.OFFHAND);
-        this.partialTick = partialTick;
-
-        super.renderEarly(animatable, poseStack, partialTick, bufferSource, buffer, packedLight, packedOverlay, red, green, blue, partialTicks);
-    }
-
-    @Override
-    protected ItemStack getHeldItemForBone(String boneName, D4CEntity currentEntity) {
-        return switch (boneName) {
-            case DefaultBipedBoneIdents.LEFT_HAND_BONE_IDENT ->
-                    currentEntity.isLeftHanded() ? mainHandItem : offHandItem;
-            case DefaultBipedBoneIdents.RIGHT_HAND_BONE_IDENT ->
-                    currentEntity.isLeftHanded() ? offHandItem : mainHandItem;
-            default -> null;
-        };
-    }
-
-    @Override
-    protected ModelTransformation.Mode getCameraTransformForItemAtBone(ItemStack boneItem, String boneName) {
-        return switch (boneName) {
-            case DefaultBipedBoneIdents.LEFT_HAND_BONE_IDENT, DefaultBipedBoneIdents.RIGHT_HAND_BONE_IDENT ->
-                    ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND; // Do Defaults
-            default -> ModelTransformation.Mode.NONE;
-        };
-    }
-
-    @Override
-    protected void preRenderItem(MatrixStack stack, ItemStack item, String boneName, D4CEntity currentEntity, IBone bone) {
-        //todo: fix d4c revolver rotation; a hack is currently implemented due to something (sodium?) breaking hand rotation for d4c
-        float ang = -90f;
-        D4CEntity.State state = currentEntity.getState();
-        if (state == D4CEntity.State.THROW || state == D4CEntity.State.GIVE_GUN)
-            ang += (currentEntity.getMoveStun() + 1f - this.partialTick) * 65f;
-        stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(ang));
-    }
 }

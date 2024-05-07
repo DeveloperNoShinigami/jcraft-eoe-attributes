@@ -35,8 +35,9 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
     protected int getSkyLight(TheSunEntity entity, BlockPos pos) { return 15; }
 
     //TODO: translucent layer that isn't layered over and has no shading
+
     @Override
-    public RenderLayer getRenderType(TheSunEntity animatable, float partialTick, MatrixStack poseStack, @Nullable VertexConsumerProvider bufferSource, @Nullable VertexConsumer buffer, int packedLight, Identifier texture) {
+    public RenderLayer getRenderType(TheSunEntity animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
         return RenderLayer.getEntityAlpha(texture);
     }
 

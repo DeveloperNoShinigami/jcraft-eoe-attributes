@@ -34,41 +34,9 @@ public class GESnakeRenderer extends DynamicGeoEntityRenderer<GESnakeEntity> {
     }
 
     @Override
-    protected ModelTransformation.Mode getCameraTransformForItemAtBone(ItemStack boneItem, String boneName) {
-        return ModelTransformation.Mode.NONE;
-    }
-
-    @Override
     protected void preRenderItem(MatrixStack stack, ItemStack item, String boneName, GESnakeEntity currentEntity, IBone bone) {
         if (item == this.mainHandItem) {
             stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-90f));
         }
-    }
-
-    @Override
-    protected boolean isArmorBone(GeoBone bone) {
-        return false;
-    }
-
-    @Override
-    protected Identifier getTextureForBone(String boneName, GESnakeEntity currentEntity) {
-        return null;
-    }
-
-    @Override
-    protected BlockState getHeldBlockForBone(String boneName, GESnakeEntity currentEntity) {
-        return null;
-    }
-
-    @Override
-    protected void postRenderItem(MatrixStack PoseStack, ItemStack item, String boneName, GESnakeEntity currentEntity, IBone bone) {
-    }
-
-    @Override
-    protected void preRenderBlock(MatrixStack PoseStack, BlockState block, String boneName, GESnakeEntity currentEntity) {
-    }
-
-    @Override
-    protected void postRenderBlock(MatrixStack PoseStack, BlockState block, String boneName, GESnakeEntity currentEntity) {
     }
 }

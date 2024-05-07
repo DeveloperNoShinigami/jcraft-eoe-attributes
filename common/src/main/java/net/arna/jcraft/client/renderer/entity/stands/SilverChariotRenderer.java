@@ -10,7 +10,9 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEntity> {
 
@@ -20,33 +22,32 @@ public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEnti
     }
 
     // Adds ability to change render alpha
-    @Override
-    public void render(GeoModel model, SilverChariotEntity animatable, float tickDelta, RenderLayer type, MatrixStack matrixStack,
-                       VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn,
-                       float red, float green, float blue, float alpha) {
-        super.render(model, animatable, tickDelta, type, matrixStack, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
 
+
+    @Override
+    public void actuallyRender(MatrixStack poseStack, SilverChariotEntity animatable, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         if (animatable.getMode() == SilverChariotEntity.Mode.ARMORLESS && animatable.hasUser()) for (double i = 0; i < 3; i++)
             renderAfter(animatable.getUserOrThrow(), JUtils.deltaPos(animatable).multiply(i * 2.0), 1f,
-                    model, animatable, tickDelta, RenderLayer.getEntityNoOutline(getTextureLocation(animatable)),
-                    matrixStack, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue,
+                    model, animatable, partialTick, RenderLayer.getEntityNoOutline(getTextureLocation(animatable)),
+                    poseStack, bufferSource, buffer, packedLight, packedOverlay, red, green, blue,
                     alpha);
     }
 
-    private void renderAfter(LivingEntity user, Vec3d velocity, float a, GeoModel model, SilverChariotEntity animatable,
+    private void renderAfter(LivingEntity user, Vec3d velocity, float a, BakedGeoModel model, SilverChariotEntity animatable,
                              float partialTicks, RenderLayer type, MatrixStack matrixStack, VertexConsumerProvider renderTypeBuffer,
                              VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         matrixStack.push();
 
-        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(user.bodyYaw));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(user.bodyYaw));
 
         double y = velocity.y;
         if (-0.2 < -y && y < 0.2)
             y = 0;
 
         matrixStack.translate(velocity.x, y, velocity.z);
-        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-user.bodyYaw));
-        super.render(model, animatable, partialTicks, type, matrixStack, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, a);
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-user.bodyYaw));
+        super.actuallyRender(matrixStack, animatable, model, type, renderTypeBuffer, vertexBuilder, false, partialTicks, packedLightIn, packedOverlayIn, red, green, blue, a);
         matrixStack.pop();
     }
 }

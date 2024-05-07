@@ -12,6 +12,8 @@ import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
+import org.joml.Vector3d;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 public class GoldExperienceRenderer extends StandEntityRenderer<GoldExperienceEntity> {
     private int currentTick = -1;
@@ -22,8 +24,8 @@ public class GoldExperienceRenderer extends StandEntityRenderer<GoldExperienceEn
     }
 
     @Override
-    public void render(GeoModel model, GoldExperienceEntity stand, float tickDelta, RenderLayer type, MatrixStack matrixStackIn, VertexConsumerProvider vertexConsumerProvider, VertexConsumer vertexConsumer, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        super.render(model, stand, tickDelta, type, matrixStackIn, vertexConsumerProvider, vertexConsumer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+    public void actuallyRender(MatrixStack poseStack, GoldExperienceEntity stand, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
         if (stand.getState() == GoldExperienceEntity.State.OVERCLOCK && stand.getMoveStun() > overclockWindupPoint) {
             if (currentTick < 0 || currentTick != stand.age) {
