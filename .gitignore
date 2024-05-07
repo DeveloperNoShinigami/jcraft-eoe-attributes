@@ -9,3 +9,4 @@
 /fabric/.gradle/*
 /forge/.gradle/*
 /common/.gradle/*
+/build/*
