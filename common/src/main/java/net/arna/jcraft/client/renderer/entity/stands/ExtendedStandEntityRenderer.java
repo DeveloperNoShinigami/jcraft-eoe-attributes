@@ -22,6 +22,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
@@ -48,21 +49,20 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends Dyn
 
     @Override
     public void render(T animatable, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
-        setCurrentModelRenderCycle(EModelRenderCycle.INITIAL);
         poseStack.push();
 
         Entity leashHolder = animatable.getHoldingEntity();
         if (leashHolder != null) renderLeash(animatable, partialTick, poseStack, bufferSource, leashHolder);
 
-        this.dispatchedMat = poseStack.peek().getPositionMatrix().copy();
-        boolean shouldSit = animatable.hasVehicle() && (animatable.getVehicle() != null);
-        EntityModelData entityModelData = new EntityModelData();
-        entityModelData.isSitting = shouldSit;
-        entityModelData.isChild = animatable.isBaby();
-
+        //this.dispatchedMat = poseStack.peek().getPositionMatrix().copy();
+        float headPitch = MathHelper.lerp(partialTick, animatable.prevPitch, animatable.getPitch());
         float lerpBodyRot = MathHelper.lerpAngleDegrees(partialTick, animatable.prevBodyYaw, animatable.bodyYaw);
         float lerpHeadRot = MathHelper.lerpAngleDegrees(partialTick, animatable.prevHeadYaw, animatable.headYaw);
         float netHeadYaw = lerpHeadRot - lerpBodyRot;
+        boolean shouldSit = animatable.hasVehicle() && (animatable.getVehicle() != null);
+        EntityModelData entityModelData = new EntityModelData(shouldSit, animatable.isBaby(), -netHeadYaw, -headPitch);
+
+
 
         if (shouldSit && !animatable.isFree() && animatable.getVehicle() instanceof LivingEntity livingentity) {
             lerpBodyRot = MathHelper.lerpAngleDegrees(partialTick, livingentity.prevHeadYaw, livingentity.headYaw);
@@ -103,29 +103,23 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends Dyn
                 limbSwingAmount = 1f;
         }
 
-        float headPitch = MathHelper.lerp(partialTick, animatable.prevPitch, animatable.getPitch());
-        entityModelData.headPitch = -headPitch;
-        entityModelData.netHeadYaw = -netHeadYaw;
-
-        AnimationEvent<T> predicate = new AnimationEvent<T>(animatable, limbSwing, limbSwingAmount, partialTick,
+        AnimationState<T> predicate = new AnimationState<T>(animatable, limbSwing, limbSwingAmount, partialTick,
                 (limbSwingAmount <= -getSwingMotionAnimThreshold() || limbSwingAmount > getSwingMotionAnimThreshold()), Collections.singletonList(entityModelData));
-        GeoModel model = this.modelProvider.getModel(this.modelProvider.getModelResource(animatable));
 
-        this.modelProvider.setCustomAnimations(animatable, getInstanceId(animatable), predicate);
+        this.model.setCustomAnimations(animatable, getInstanceId(animatable), predicate);
 
         poseStack.translate(0, 0.01f, 0);
         RenderSystem.setShaderTexture(0, getTextureLocation(animatable));
 
-        Color renderColor = getRenderColor(animatable, partialTick, poseStack, bufferSource, null, packedLight);
-        RenderLayer renderType = getRenderType(animatable, partialTick, poseStack, bufferSource, null, packedLight,
-                getTextureLocation(animatable));
+        Color renderColor = getRenderColor(animatable, partialTick, packedLight);
+        RenderLayer renderType = getRenderType(animatable, getTextureLocation(animatable), bufferSource, partialTick);
 
         if (!animatable.isInvisibleTo(MinecraftClient.getInstance().player)) {
             VertexConsumer glintBuffer = bufferSource.getBuffer(RenderLayer.getDirectEntityGlint());
             VertexConsumer translucentBuffer = bufferSource
                     .getBuffer(RenderLayer.getEntityTranslucentCull(getTextureLocation(animatable)));
 
-            render(model, animatable, partialTick, renderType, poseStack, bufferSource,
+            actuallyRender(model, animatable, partialTick, renderType, poseStack, bufferSource,
                     glintBuffer != translucentBuffer ? VertexConsumers.union(glintBuffer, translucentBuffer) : null,
                     packedLight, getOverlay(animatable, 0), renderColor.getRed() / 255f,
                     renderColor.getGreen() / 255f, renderColor.getBlue() / 255f,
@@ -158,53 +152,5 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends Dyn
     protected int getSkyLight(T stand, BlockPos pos) {
         return stand.hasUser() ? stand.getWorld().getLightLevel(LightType.SKY, stand.getUserOrThrow().getBlockPos()) :
                 super.getSkyLight(stand, pos);
-    }
-
-    @Override
-    protected boolean isArmorBone(GeoBone bone) {
-        return false;
-    }
-
-    @Nullable
-    @Override
-    protected Identifier getTextureForBone(String boneName, T currentEntity) {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    protected ItemStack getHeldItemForBone(String boneName, T currentEntity) {
-        return null;
-    }
-
-    @Override
-    protected ModelTransformation.Mode getCameraTransformForItemAtBone(ItemStack boneItem, String boneName) {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    protected BlockState getHeldBlockForBone(String boneName, T currentEntity) {
-        return null;
-    }
-
-    @Override
-    protected void preRenderItem(MatrixStack PoseStack, ItemStack item, String boneName, T currentEntity, IBone bone) {
-
-    }
-
-    @Override
-    protected void preRenderBlock(MatrixStack PoseStack, BlockState block, String boneName, T currentEntity) {
-
-    }
-
-    @Override
-    protected void postRenderItem(MatrixStack PoseStack, ItemStack item, String boneName, T currentEntity, IBone bone) {
-
-    }
-
-    @Override
-    protected void postRenderBlock(MatrixStack PoseStack, BlockState block, String boneName, T currentEntity) {
-
     }
 }
