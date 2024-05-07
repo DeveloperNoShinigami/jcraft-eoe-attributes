@@ -5,7 +5,6 @@ import com.google.common.collect.MultimapBuilder;
 import dev.architectury.event.events.common.LootEvent;
 import net.arna.jcraft.common.enchantments.CinderellasKissEnchantment;
 import net.arna.jcraft.registry.JObjectRegistry;
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
@@ -33,10 +32,12 @@ public class JLootTableHelper {
                 new Identifier("chests/woodland_mansion")
         );
 
-
+        /*
+        //TODO
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             for (Consumer<LootTable.Builder> modification : modifications.get(id)) modification.accept(tableBuilder);
         });
+         */
     }
 
     public static void registerModification(Consumer<LootTable.Builder> modifier, Identifier... lootTables) {

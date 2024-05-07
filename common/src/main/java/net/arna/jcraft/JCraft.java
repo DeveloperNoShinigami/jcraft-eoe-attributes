@@ -29,7 +29,7 @@ import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -206,7 +206,7 @@ public final class JCraft {
     public static StandEntity<?, ?> summon(World world, LivingEntity user) {
         if (user.hasStatusEffect(JStatusRegistry.STANDLESS)) return null;
 
-        CommonStandComponent standData = ComponentPlatformUtils.getStandData(user);
+        CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
         StandType type = standData.getType();
         if (type == StandType.NONE) return null;
         StandEntity<?, ?> stand = type == null ? null : type.createNew(world);
@@ -330,7 +330,7 @@ public final class JCraft {
      */
     public static void comboBreak(ServerWorld world, LivingEntity player, StatusEffectInstance stun) {
         if (player.isSpectator()) return;
-        CommonCooldownsComponent cooldowns = ComponentPlatformUtils.getCooldowns(player);
+        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(player);
 
         if (stun.getDuration() > 1 && DazedStatusEffect.canBeComboBroken(stun.getAmplifier()) && cooldowns.getCooldown(CooldownType.COMBO_BREAKER) <= 0) {
             cooldowns.startCooldown(CooldownType.COMBO_BREAKER);

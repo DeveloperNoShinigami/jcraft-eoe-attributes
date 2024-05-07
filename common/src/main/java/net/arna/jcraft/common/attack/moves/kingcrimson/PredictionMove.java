@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.attack.moves.kingcrimson;
 
 import com.google.common.reflect.TypeToken;
+import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
@@ -9,9 +10,8 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -44,7 +44,7 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
 
         // Send epitaph state start
         if (attacker.getUser() instanceof ServerPlayerEntity player)
-            ServerPlayNetworking.send(player, JPacketRegistry.S2C_EPITAPH_STATE,
+            NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_EPITAPH_STATE,
                     new PacketByteBuf(Unpooled.buffer().writeBoolean(true)));
     }
 
@@ -74,10 +74,10 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
         for (Entity entity : getEntitiesToCatch(attacker.getWorld(), attacker, player))
             predictionInfo.put(entity, entity.getPos());
 
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBoolean(true);
         buf.writeVarInt(getWindupPoint());
-        ServerPlayNetworking.send(player, JPacketRegistry.S2C_TIME_ERASE_PREDICTION_STATE, buf);
+        NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ERASE_PREDICTION_STATE, buf);
     }
 
     public static void finishPrediction(KingCrimsonEntity attacker) {
@@ -101,8 +101,8 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
 
     public static void cancelPrediction(KingCrimsonEntity attacker, Map<Entity, Vec3d> predictionInfo) {
         if (attacker.getUser() instanceof ServerPlayerEntity player) {
-            ServerPlayNetworking.send(player, JPacketRegistry.S2C_EPITAPH_STATE, new PacketByteBuf(Unpooled.buffer().writeBoolean(false)));
-            ServerPlayNetworking.send(player, JPacketRegistry.S2C_TIME_ERASE_PREDICTION_STATE, new PacketByteBuf(Unpooled.buffer().writeBoolean(false)));
+            NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_EPITAPH_STATE, new PacketByteBuf(Unpooled.buffer().writeBoolean(false)));
+            NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ERASE_PREDICTION_STATE, new PacketByteBuf(Unpooled.buffer().writeBoolean(false)));
         }
 
         predictionInfo.clear();
@@ -159,7 +159,7 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
         // If moving faster than 0.01 m/s, account for distance traveled
         Vec3d velocity = entity.getVelocity();
         if (entity instanceof PlayerEntity player) // EXTREMELY cursed implementation of player velocity because NOTHING ELSE WORKS
-            velocity = JComponents.MISC.get(player).getDesiredVelocity();
+            velocity = JComponentPlatformUtils.getMiscData(player).getDesiredVelocity();
         //JCraft.LOGGER.info("Target is moving at a velocity of: " + velocity);
         if (velocity.lengthSquared() > 0.0001) {
             Vec3d velocityComp = new Vec3d(velocity.x * ticksLeft, Math.max(0, velocity.y * ticksLeft), velocity.z * ticksLeft);

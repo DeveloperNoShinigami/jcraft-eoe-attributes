@@ -4,7 +4,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -61,7 +61,7 @@ public class StandDiscItem extends Item {
         int userSkin = 0;
 
         NbtCompound data = itemStack.getOrCreateNbt();
-        CommonStandComponent standData = ComponentPlatformUtils.getStandData(user);
+        CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
 
         userStand = standData.getType();
         userSkin = standData.getSkin();

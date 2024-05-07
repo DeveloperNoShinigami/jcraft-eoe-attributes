@@ -13,7 +13,7 @@ import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.SpecAnimationState;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
@@ -117,7 +117,7 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
             anubisSpec.setTicksSinceLastHit(0);
             if (anubisSpec.attackSpeedMult < 2.0f) {
                 anubisSpec.attackSpeedMult += 0.2f;
-                ComponentPlatformUtils.getMiscData(playerEntity).setAttackSpeedMult(anubisSpec.attackSpeedMult);
+                JComponentPlatformUtils.getMiscData(playerEntity).setAttackSpeedMult(anubisSpec.attackSpeedMult);
             }
         }
     }
@@ -227,7 +227,7 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
         if (++ticksSinceLastHit > 80 && attackSpeedMult > 1f) {
             ticksSinceLastHit = 0; // Technically untrue, but all this serves for is counting 5s since last hit then rolling over
             attackSpeedMult -= 0.2f;
-            ComponentPlatformUtils.getMiscData(player).setAttackSpeedMult(attackSpeedMult);
+            JComponentPlatformUtils.getMiscData(player).setAttackSpeedMult(attackSpeedMult);
         }
     }
 

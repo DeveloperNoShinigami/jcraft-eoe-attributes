@@ -13,7 +13,6 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 
 public class BlockProjectileRenderer extends GeoEntityRenderer<BlockProjectile> {
     private final ItemRenderer itemRenderer;

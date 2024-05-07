@@ -34,7 +34,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
 import net.arna.jcraft.common.network.c2s.StandBlockPacket;
 import net.arna.jcraft.common.util.*;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.arna.jcraft.registry.JPacketRegistry;
@@ -235,7 +235,7 @@ public class JCraftClient implements ClientModInitializer {
 
         // Draw text HUD
         if (!useIcons) {
-            CommonCooldownsComponent cooldowns = ComponentPlatformUtils.getCooldowns(player);
+            CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(player);
 
             CooldownType[] values = CooldownType.values();
             for (int i = 0; i < values.length; i++) {
@@ -409,7 +409,7 @@ public class JCraftClient implements ClientModInitializer {
 
             for (Entity entity : toStop)
                 if (!entity.hasVehicle() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle())
-                    ComponentPlatformUtils.getTimeStopData(entity).setTicks(2);
+                    JComponentPlatformUtils.getTimeStopData(entity).setTicks(2);
         }
     }
 

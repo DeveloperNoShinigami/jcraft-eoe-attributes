@@ -1,11 +1,10 @@
 package net.arna.jcraft.common.gravity.util;
 
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
 import net.arna.jcraft.common.gravity.util.packet.*;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -32,16 +31,16 @@ public class GravityChannel<P extends GravityPacket> {
     }
 
     public void sendToClient(Entity entity, P packet, PacketMode mode) {
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeInt(entity.getId());
         packet.write(buf);
         sendToTracking(entity, channel, buf, mode);
     }
 
-    public void receiveFromClient(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+    public void receiveFromClient(PacketByteBuf buf, MinecraftServer server, ServerPlayerEntity player) {
         P packet = packetFactory.read(buf);
         Identifier verifier = buf.readIdentifier();
-        PacketByteBuf verifierInfoBuf = PacketByteBufs.create();
+        PacketByteBuf verifierInfoBuf = new PacketByteBuf(Unpooled.buffer());
         verifierInfoBuf.writeBytes(buf.readByteArray());
         server.execute(() -> getGravityComponent(player).ifPresent(gc -> {
             GravityVerifierRegistry.VerifierFunction<P> v = gravityVerifierRegistry.get(verifier);
@@ -65,7 +64,9 @@ public class GravityChannel<P extends GravityPacket> {
     }
 
     public void registerServerReceiver() {
-        ServerPlayNetworking.registerGlobalReceiver(channel, this::receiveFromClient);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, channel, (buf, context) -> {
+            receiveFromClient(buf, context.getPlayer().getServer(), (ServerPlayerEntity) context.getPlayer());
+        });
     }
 
     public static void init() {

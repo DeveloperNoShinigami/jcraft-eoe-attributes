@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.attack.moves.thefool;
 
+import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
@@ -10,8 +11,7 @@ import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JUtils;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
@@ -40,7 +40,7 @@ public class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
         Vec3d pos = user.getEyePos();
 
         // Display sand effect
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
         buf.writeShort(11);
         buf.writeDouble(pos.x);
@@ -48,7 +48,7 @@ public class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
         buf.writeDouble(pos.z);
         buf.writeDouble(2);
 
-        for (ServerPlayerEntity sendPlayer : PlayerLookup.world((ServerWorld) attacker.getWorld())) {
+        for (ServerPlayerEntity sendPlayer : ((ServerWorld) attacker.getWorld()).getPlayers()) {
             ServerChannelFeedbackPacket.send(sendPlayer, buf);
             if (sendPlayer == user) continue;
             if (sendPlayer.isInRange(user, 4)) // Blind players caught in the cloud
@@ -109,7 +109,7 @@ public class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
         if (sandClone != null) sandClone.kill();
         ctx.set(SAND_CLONE, clone);
         if (clone == null) return;
-        JComponents.getStandData(clone).setType(StandType.NONE);
+        JComponentPlatformUtils.getStandData(clone).setType(StandType.NONE);
         applySandCloneModifiers(clone);
     }
 

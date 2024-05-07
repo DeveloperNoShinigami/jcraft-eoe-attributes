@@ -14,7 +14,7 @@ import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.text.Text;
@@ -153,7 +153,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
                                                               double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
         if (enemyStand != null && enemyStand.blocking) return MoveSelectionResult.STOP;
 
-        Vec3d bombPos = ComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
+        Vec3d bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
         if (attack == DETONATE && bombPos != null && target.squaredDistanceTo(bombPos) < 9.0D) {
             return MoveSelectionResult.USE;
         } else if (attack == BTD_PLANT && moveContext.get(BTDPlantAttack.BTD_ENTITY) != null) {

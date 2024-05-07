@@ -9,7 +9,6 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 
 public class WSAcidRenderer extends GeoEntityRenderer<WSAcidProjectile> {
     public WSAcidRenderer(EntityRendererFactory.Context renderManagerIn) {

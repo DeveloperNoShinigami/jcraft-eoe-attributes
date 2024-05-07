@@ -8,6 +8,7 @@ import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import dev.onyxstudios.cca.api.v3.world.WorldComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.world.WorldComponentInitializer;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.fabric.common.component.entity.GrabComponent;
 import net.arna.jcraft.fabric.common.component.entity.GravityComponent;
 import net.arna.jcraft.fabric.common.component.entity.TimeStopComponent;
@@ -31,6 +32,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class JComponents implements EntityComponentInitializer, WorldComponentInitializer {
+
     public static final ComponentKey<GravityComponent> GRAVITY_MODIFIER =
             ComponentRegistry.getOrCreate(JCraft.id("gravity_direction"), GravityComponent.class);
     public static final ComponentKey<StandComponent> STAND =

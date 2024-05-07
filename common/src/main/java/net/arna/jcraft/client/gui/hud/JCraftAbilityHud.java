@@ -11,7 +11,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -202,7 +202,7 @@ public class JCraftAbilityHud {
      * @return Progress value of cooldown between 0 and 1 if it is present, otherwise defaults to -1
      */
     private static double getCooldownProgress(CooldownType type) {
-        CommonCooldownsComponent cooldowns = ComponentPlatformUtils.getCooldowns(MinecraftClient.getInstance().player);
+        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(MinecraftClient.getInstance().player);
         int cooldown = cooldowns.getCooldown(type);
         int initialDuration = cooldowns.getInitialDuration(type);
 

@@ -10,8 +10,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Quaternion;
+import org.joml.Quaternionf;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
+
 
 public class LifeDetectorRenderer extends GeoEntityRenderer<LifeDetectorEntity> {
     public LifeDetectorRenderer(EntityRendererFactory.Context renderManagerIn) { super(renderManagerIn, new LifeDetectorModel()); }
@@ -26,7 +27,7 @@ public class LifeDetectorRenderer extends GeoEntityRenderer<LifeDetectorEntity> 
     @Override
     public void render(LifeDetectorEntity animatable, float yaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
         poseStack.push();
-        poseStack.multiply(Quaternion.fromEulerXyz(3.1415f, 3.1415f, 0)); // Why is this necessary???
+        poseStack.multiply(Quaternionf.fromEulerXyz(3.1415f, 3.1415f, 0)); // Why is this necessary???
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
         poseStack.pop();
     }

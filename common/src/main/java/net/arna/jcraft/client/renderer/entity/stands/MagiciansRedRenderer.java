@@ -10,23 +10,25 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.particle.ParticleTypes;
+import org.joml.Vector3d;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
 public class MagiciansRedRenderer extends StandEntityRenderer<MagiciansRedEntity> {
     public MagiciansRedRenderer(EntityRendererFactory.Context context) {
         super(context, new MagiciansRedModel());
-        addLayer(new MRGlowLayer(this));
+        addRenderLayer(new MRGlowLayer(this));
     }
 
     @Override
-    public void render(GeoModel model, MagiciansRedEntity stand, float tickDelta, RenderLayer type, MatrixStack matrixStackIn, VertexConsumerProvider vertexConsumerProvider, VertexConsumer vertexConsumer, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
-        super.render(model, stand, tickDelta, type, matrixStackIn, vertexConsumerProvider, vertexConsumer, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-
-        if (stand.getState() == MagiciansRedEntity.State.RED_BIND) {
+    public void actuallyRender(MatrixStack poseStack, MagiciansRedEntity animatable, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        if (animatable.getState() == MagiciansRedEntity.State.RED_BIND) {
             if (MinecraftClient.getInstance().isPaused()) return;
             model.getBone("rope3").ifPresent(bone -> {
                 Vector3d worldPos = bone.getWorldPosition();
 
-                stand.getEntityWorld().addParticle(ParticleTypes.FLAME,
+                animatable.getEntityWorld().addParticle(ParticleTypes.FLAME,
                         worldPos.x, worldPos.y, worldPos.z,
                         0.0, 0.0, 0.0
                 );

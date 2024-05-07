@@ -4,7 +4,7 @@ import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -54,7 +54,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
 
     @Inject(method = "setAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelPart;copyTransform(Lnet/minecraft/client/model/ModelPart;)V", shift = At.Shift.BEFORE))
     public void jcraft$setAngles(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo info) {
-        CommonHitPropertyComponent hitProperties = ComponentPlatformUtils.getHitProperties(livingEntity);
+        CommonHitPropertyComponent hitProperties = JComponentPlatformUtils.getHitProperties(livingEntity);
         long endHitAnimTime = hitProperties.endHitAnimTime();
         if (endHitAnimTime > 0) {
             JClientUtils.animateHit(hitProperties.getHitAnimation(), livingEntity.isAlive() ? endHitAnimTime : 0, hitProperties.getRandomRotation(), head, hat, body, rightArm, leftArm, rightLeg, leftLeg);

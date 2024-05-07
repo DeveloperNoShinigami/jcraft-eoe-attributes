@@ -3,9 +3,9 @@ package net.arna.jcraft.client.model.entity;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class MeteorModel extends AnimatedGeoModel<MeteorProjectile> {
+public class MeteorModel extends GeoModel<MeteorProjectile> {
     @Override
     public Identifier getModelResource(MeteorProjectile object) {
         return JCraft.id("geo/meteor.geo.json");

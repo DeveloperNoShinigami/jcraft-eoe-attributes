@@ -7,7 +7,7 @@ import net.arna.jcraft.common.network.s2c.ComboCounterPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.IComboCounter;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -93,7 +93,7 @@ public abstract class PlayerEntityMixin implements IComboCounter {
         PlayerEntity player = (PlayerEntity) (Object) this;
         if (JUtils.isAffectedByTimeStop(player)) return;
 
-        JSpec<?, ?> spec = ComponentPlatformUtils.getSpecData(player).getSpec();
+        JSpec<?, ?> spec = JComponentPlatformUtils.getSpecData(player).getSpec();
         if (spec != null) spec.tickSpec();
 
         if (lastAttacked == null || !lastAttacked.isAlive()) return;
@@ -127,7 +127,7 @@ public abstract class PlayerEntityMixin implements IComboCounter {
         // Can't M1 without a weapon while stand ON
         if (JUtils.getStand(player) != null && player.getMainHandStack().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()) info.cancel();
 
-        JSpec<?, ?> spec = ComponentPlatformUtils.getSpecData(player).getSpec();
+        JSpec<?, ?> spec = JComponentPlatformUtils.getSpecData(player).getSpec();
         if (spec != null && spec.moveStun > 0) info.cancel();
     }
 

@@ -1,7 +1,7 @@
 package net.arna.jcraft.mixin;
 
 import net.arna.jcraft.common.component.living.CommonVampireComponent;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,7 +33,7 @@ public class HungerManagerMixin {
 
     @Inject(method = "update", at = @At("HEAD"), cancellable = true)
     void jcraft$updateVampirism(PlayerEntity player, CallbackInfo ci) {
-        this.vampireComponent = ComponentPlatformUtils.getVampirism(player);
+        this.vampireComponent = JComponentPlatformUtils.getVampirism(player);
         this.isVampire = vampireComponent.isVampire();
         this.player = player;
 

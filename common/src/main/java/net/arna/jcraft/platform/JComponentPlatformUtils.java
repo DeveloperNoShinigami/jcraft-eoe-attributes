@@ -1,76 +1,89 @@
 package net.arna.jcraft.platform;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.arna.jcraft.common.component.entity.CommonGrabComponent;
+import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.component.entity.CommonTimeStopComponent;
 import net.arna.jcraft.common.component.living.*;
 import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
-import net.arna.jcraft.fabric.common.component.JComponents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
-public class ComponentPlatformUtilsImpl {
-    
+import java.util.Optional;
+
+/** What's Sterner Cooking???
+ *
+ * So some things are only available on either forge or fabric, so we need a way to use api specific methods sometimes.
+ * Both our forge and fabric project have a {@link net/arna/platform/PlatformUtilsImpl} which handles the platform.
+ */
+public class JComponentPlatformUtils {
+
+    @ExpectPlatform
     public static CommonStandComponent getStandData(LivingEntity entity) {
-        return JComponents.STAND.get(entity);
+        throw new AssertionError();
     }
 
-    
+    @ExpectPlatform
     public static CommonSpecComponent getSpecData(PlayerEntity player) {
-        return JComponents.SPEC.get(player);
+        throw new AssertionError();
     }
 
-    
+    @ExpectPlatform
     public static CommonPhComponent getPhData(PlayerEntity player) {
-        return JComponents.PH.get(player);
+        throw new AssertionError();
     }
 
-    
+    @ExpectPlatform
     public static CommonCooldownsComponent getCooldowns(LivingEntity entity) {
-        return JComponents.COOLDOWNS.get(entity);
+        throw new AssertionError();
     }
 
-    
+    @ExpectPlatform
     public static CommonTimeStopComponent getTimeStopData(Entity entity) {
-        return JComponents.TIME_STOP.get(entity);
+        throw new AssertionError();
     }
 
-    
+    @ExpectPlatform
     public static CommonMiscComponent getMiscData(LivingEntity entity) {
-        return JComponents.MISC.get(entity);
+        throw new AssertionError();
     }
 
-    
+    @ExpectPlatform
     public static CommonBombTrackerComponent getBombTracker(LivingEntity entity) {
-        return JComponents.BOMB_TRACKER.get(entity);
+        throw new AssertionError();
     }
 
-    
+    @ExpectPlatform
     public static CommonGrabComponent getGrab(LivingEntity entity) {
-        return JComponents.GRAB.get(entity);
+        throw new AssertionError();
     }
 
-    
+    @ExpectPlatform
     public static CommonHitPropertyComponent getHitProperties(LivingEntity livingEntity) {
-        return JComponents.HIT_PROPERTY.get(livingEntity);
+        throw new AssertionError();
     }
 
-    
-    public static CommonGravityShiftComponent getGravityShift(LivingEntity livingEntity) {
-        return JComponents.GRAVITY_SHIFT.get(livingEntity);
+    @ExpectPlatform
+    public static Optional<CommonGravityComponent> getGravity(Entity entity) {
+        throw new AssertionError();
     }
 
-    
+    @ExpectPlatform
+    public static CommonGravityShiftComponent getGravityShift(Entity entity) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static CommonShockwaveHandlerComponent getShockwaveHandler(World world) {
-        return JComponents.SHOCKWAVE_HANDLER.get(world);
+        throw new AssertionError();
     }
 
-    
+    @ExpectPlatform
     public static CommonVampireComponent getVampirism(LivingEntity living) {
-        return JComponents.VAMPIRE.get(living);
+        throw new AssertionError();
     }
 }

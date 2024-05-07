@@ -14,7 +14,7 @@ import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.projectile.BlockProjectile;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
@@ -232,7 +232,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                 return true;
             }
             case ULTIMATE -> {
-                CommonGravityShiftComponent shiftComponent = ComponentPlatformUtils.getGravityShift(getUserOrThrow());
+                CommonGravityShiftComponent shiftComponent = JComponentPlatformUtils.getGravityShift(getUserOrThrow());
                 if (shiftComponent.isActive())
                     shiftComponent.swapRadialType();
                 else return super.initMove(type);

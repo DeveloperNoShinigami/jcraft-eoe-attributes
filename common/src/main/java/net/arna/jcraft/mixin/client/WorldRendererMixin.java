@@ -1,7 +1,7 @@
 package net.arna.jcraft.mixin.client;
 
 import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -19,7 +19,7 @@ public class WorldRendererMixin {
     @ModifyArgs(method = "renderEntity(Lnet/minecraft/entity/Entity;DDDFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/EntityRenderDispatcher;render(Lnet/minecraft/entity/Entity;DDDFFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V"))
     private void jcraft$deltaTick(Args args) {
         Entity entity = args.get(0);
-        if (ComponentPlatformUtils.getTimeStopData(entity).getTicks() > 0) {
+        if (JComponentPlatformUtils.getTimeStopData(entity).getTicks() > 0) {
             args.set(5, 0.0F);
         } // Args 0 = ent, 5 = deltatick
     }

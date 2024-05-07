@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.attack.moves.goldexperience.requiem;
 
 import com.google.common.reflect.TypeToken;
+import io.netty.buffer.Unpooled;
 import lombok.Data;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
@@ -9,7 +10,6 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.GEREntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -84,7 +84,7 @@ public class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREntity> 
             Entity entity = data.getEntity();
             if (entity == null || !entity.isAlive()) continue;
             Vec3d position = data.getOriginalPos();
-            PacketByteBuf buf = PacketByteBufs.create();
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeShort(7);
 
             buf.writeInt(entity.getId());

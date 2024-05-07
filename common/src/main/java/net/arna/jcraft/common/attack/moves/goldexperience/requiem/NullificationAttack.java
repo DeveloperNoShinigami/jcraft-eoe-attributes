@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.attack.moves.goldexperience.requiem;
 
+import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
@@ -9,7 +10,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -39,14 +40,14 @@ public class NullificationAttack extends AbstractCounterAttack<NullificationAtta
 
         if (countered == null || !attacker.hasUser()) return;
 
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeShort(14);
         buf.writeInt(countered.getId());
         buf.writeInt(counterStopTime);
         for (PlayerEntity sendPlayer : attacker.getWorld().getPlayers())
             if (sendPlayer instanceof ServerPlayerEntity serverPlayerEntity)
                 ServerChannelFeedbackPacket.send(serverPlayerEntity, buf);
-        JComponents.getTimeStopData(countered).setTicks(counterStopTime);
+        JComponentPlatformUtils.getTimeStopData(countered).setTicks(counterStopTime);
 
         if (countered instanceof LivingEntity living) {
             StandEntity.stun(living, 10, 0);

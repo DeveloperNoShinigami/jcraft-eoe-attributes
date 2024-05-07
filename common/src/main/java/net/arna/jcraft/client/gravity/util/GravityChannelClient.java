@@ -34,7 +34,7 @@ public class GravityChannelClient<P extends GravityPacket> {
     }
 
     public void sendToServer(P packet, Identifier verifier, PacketByteBuf verifierInfoBuf) {
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         packet.write(buf);
         buf.writeIdentifier(verifier);
         buf.writeByteArray(verifierInfoBuf.array());

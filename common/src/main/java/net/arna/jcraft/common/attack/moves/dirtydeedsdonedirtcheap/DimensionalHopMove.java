@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap;
 
+import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
@@ -11,7 +12,6 @@ import net.arna.jcraft.mixin.ChunkLightProviderAccessor;
 import net.arna.jcraft.mixin.LightStorageAccessor;
 import net.arna.jcraft.mixin.LightingProviderAccessor;
 import net.arna.jcraft.registry.JDimensionRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
@@ -155,7 +155,7 @@ public class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove,
                 ChunkSection[] copies = IntStream.range(0, sections.length)
                         .mapToObj(i -> {
                             ChunkSection copy = new ChunkSection(world.getRegistryManager().get(RegistryKeys.BIOME));
-                            PacketByteBuf serialized = PacketByteBufs.create();
+                            PacketByteBuf serialized = new PacketByteBuf(Unpooled.buffer());
                             sections[i].toPacket(serialized);
                             copy.readDataPacket(serialized);
                             return copy;

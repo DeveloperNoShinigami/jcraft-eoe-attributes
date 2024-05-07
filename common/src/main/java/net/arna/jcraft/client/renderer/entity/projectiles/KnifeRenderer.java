@@ -11,7 +11,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 
 public class KnifeRenderer extends GeoEntityRenderer<KnifeProjectile> {
 
@@ -20,7 +19,7 @@ public class KnifeRenderer extends GeoEntityRenderer<KnifeProjectile> {
     }
 
     protected int getBlockLight(KnifeProjectile entityIn, BlockPos partialTicks) {
-        return (entityIn.getLightning() || entityIn.isOnFire()) ? 15 : entityIn.world.getLightLevel(LightType.BLOCK, entityIn.getBlockPos());
+        return (entityIn.getLightning() || entityIn.isOnFire()) ? 15 : entityIn.getWorld().getLightLevel(LightType.BLOCK, entityIn.getBlockPos());
     }
 
     @Override

@@ -2,7 +2,7 @@ package net.arna.jcraft.client.gui.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gui.DrawContext;
@@ -37,7 +37,7 @@ public class ScreenFreezeRenderer  {
         }
 
 
-        int i = ComponentPlatformUtils.getTimeStopData(player).getTicks();
+        int i = JComponentPlatformUtils.getTimeStopData(player).getTicks();
         if (i > 0 && shouldScreenGrab) {
             screenImage = getScreenImage(client.getFramebuffer());
             shouldScreenGrab = false;

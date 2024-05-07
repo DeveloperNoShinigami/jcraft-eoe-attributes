@@ -5,7 +5,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.gui.hud.JCraftHudOverlay;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -55,7 +55,7 @@ public abstract class InGameHudMixin  {
     )
     void showVampireBloodIcons(DrawContext instance, Identifier texture, int x, int y, int u, int v, int width, int height) {
         PlayerEntity player = client.player;
-        if (ComponentPlatformUtils.getVampirism(player).isVampire()) {
+        if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
             instance.drawTexture(texture, x, y, 0, 0, width, height, 9, 9);
             RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
         } else {
@@ -83,7 +83,7 @@ public abstract class InGameHudMixin  {
     )
     void switchToEmptyBloodIcon(DrawContext context, CallbackInfo ci) {
         PlayerEntity player = client.player;
-        if (ComponentPlatformUtils.getVampirism(player).isVampire()) {
+        if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
             RenderSystem.setShaderTexture(0, EMPTY_BLOOD_ICON);
         }
     }
@@ -107,7 +107,7 @@ public abstract class InGameHudMixin  {
     )
     void switchToHalfBloodIcon(DrawContext context, CallbackInfo ci) {
         PlayerEntity player = client.player;
-        if (ComponentPlatformUtils.getVampirism(player).isVampire()) {
+        if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
             RenderSystem.setShaderTexture(0, HALF_BLOOD_ICON);
         }
     }
@@ -132,7 +132,7 @@ public abstract class InGameHudMixin  {
     )
     void switchToFullBloodIcon(DrawContext context, CallbackInfo ci) {
         PlayerEntity player = client.player;
-        if (ComponentPlatformUtils.getVampirism(player).isVampire()) {
+        if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
             RenderSystem.setShaderTexture(0, FULL_BLOOD_ICON);
         }
     }

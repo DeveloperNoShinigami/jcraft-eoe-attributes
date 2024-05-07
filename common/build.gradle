@@ -17,6 +17,7 @@ dependencies {
 
     //Player Anim
     modApi("dev.kosmx.player-anim:player-animation-lib:${player_anim_version}")
+    modApi("dev.kosmx.player-anim:player-animation-lib-fabric:${player_anim_version}")
 
     //Cloth
     modApi "me.shedaniel.cloth:cloth-config:11.1.118"

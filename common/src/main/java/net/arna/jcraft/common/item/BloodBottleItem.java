@@ -2,7 +2,7 @@ package net.arna.jcraft.common.item;
 
 import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.item.TooltipContext;
@@ -45,7 +45,7 @@ public class BloodBottleItem extends Item {
         float blood = nbt.getFloat("Blood");
 
         if (blood >= 0.5f) {
-            CommonVampireComponent vampireComponent = ComponentPlatformUtils.getVampirism(playerEntity);
+            CommonVampireComponent vampireComponent = JComponentPlatformUtils.getVampirism(playerEntity);
 
             if (vampireComponent.isVampire()) {
                 boolean full = blood >= 1.0f;

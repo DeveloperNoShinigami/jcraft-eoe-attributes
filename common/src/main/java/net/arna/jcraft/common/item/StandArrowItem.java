@@ -3,7 +3,7 @@ package net.arna.jcraft.common.item;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,7 +36,7 @@ public class StandArrowItem extends Item {
 
         // Roll for stand (can't roll the same one twice)
         if (!world.isClient) {
-            CommonStandComponent standData = ComponentPlatformUtils.getStandData(user);
+            CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
 
             Random random = Random.create();
             StandType oldType = standData.getType();

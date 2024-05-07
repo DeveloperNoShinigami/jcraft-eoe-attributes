@@ -14,7 +14,7 @@ import net.arna.jcraft.common.network.s2c.JExplosionPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.splatter.JSplatterManager;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.block.BlockState;
@@ -171,7 +171,7 @@ public final class JUtils {
     }
 
     public static JSpec<?,?> getSpec(PlayerEntity player) {
-        return ComponentPlatformUtils.getSpecData(player).getSpec();
+        return JComponentPlatformUtils.getSpecData(player).getSpec();
     }
 
     public static void serverPlaySound(SoundEvent sound, ServerWorld serverWorld, Vec3d pos) {
@@ -403,7 +403,7 @@ public final class JUtils {
 
     @Nullable
     public static StandEntity<?, ?> getStand(LivingEntity entity) {
-        return entity == null ? null : entity instanceof StandEntity<?, ?> stand ? stand : ComponentPlatformUtils.getStandData(entity).getStand();
+        return entity == null ? null : entity instanceof StandEntity<?, ?> stand ? stand : JComponentPlatformUtils.getStandData(entity).getStand();
     }
 
     public static boolean isAffectedByTimeStop(Entity entity) {

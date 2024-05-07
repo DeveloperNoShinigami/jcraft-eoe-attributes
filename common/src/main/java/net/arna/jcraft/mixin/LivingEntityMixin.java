@@ -7,7 +7,7 @@ import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.IDamageScaler;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -58,13 +58,15 @@ public abstract class LivingEntityMixin implements IDamageScaler {
         if (hitCount > 0 && !living.hasStatusEffect(JStatusRegistry.DAZED))
             ((IDamageScaler) this).jcraft$resetHitCount();
     }
-
+/*TODO
     // Make stand users rideable entities in water (prevents stand desummon)
     @Inject(cancellable = true, method = "canBeRiddenInWater", at = @At("HEAD"))
     public void jcraft$canBeRiddenInWater(CallbackInfoReturnable<Boolean> cir) {
-        if (ComponentPlatformUtils.getStandData((LivingEntity) (Object) this).getType() != null)
+        if (JComponentPlatformUtils.getStandData((LivingEntity) (Object) this).getType() != null)
             cir.setReturnValue(true);
     }
+
+ */
 
     @Inject(cancellable = true, method = "onAttacking", at = @At("HEAD"))
     public void jcraft$onAttacking(Entity target, CallbackInfo info) {
@@ -122,7 +124,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     // This is actually an implementation for players (mobs have their effect ticking properly stopped in TS), but PlayerEntity doesn't override this
     @Inject(cancellable = true, at = @At("HEAD"), method = "tickStatusEffects")
     protected void jcraft$tickStatusEffects(CallbackInfo ci) {
-        if (ComponentPlatformUtils.getTimeStopData((LivingEntity) (Object) this).getTicks() > 0)
+        if (JComponentPlatformUtils.getTimeStopData((LivingEntity) (Object) this).getTicks() > 0)
             ci.cancel();
     }
 
@@ -134,7 +136,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
         if (entity.getFirstPassenger() instanceof KingCrimsonEntity kingCrimson && kingCrimson.getTETime() > 0)
             cir.setReturnValue(false);
 
-        if (ComponentPlatformUtils.getMiscData(livingEntity).getMaster() == entity)
+        if (JComponentPlatformUtils.getMiscData(livingEntity).getMaster() == entity)
             cir.setReturnValue(false);
     }
 }

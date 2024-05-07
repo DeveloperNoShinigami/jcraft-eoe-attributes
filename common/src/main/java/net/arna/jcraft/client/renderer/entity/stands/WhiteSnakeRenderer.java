@@ -11,6 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 import org.jetbrains.annotations.Nullable;
 
 public class WhiteSnakeRenderer extends ExtendedStandEntityRenderer<WhiteSnakeEntity> {
@@ -61,8 +62,8 @@ public class WhiteSnakeRenderer extends ExtendedStandEntityRenderer<WhiteSnakeEn
 
     @Override
     protected void preRenderItem(MatrixStack stack, ItemStack item, String boneName, WhiteSnakeEntity currentEntity, IBone bone) {
-        stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(bone.getRotationX() - 90f));
-        stack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(bone.getRotationY() - 90f));
-        stack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(bone.getRotationZ()));
+        stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(bone.getRotationX() - 90f));
+        stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(bone.getRotationY() - 90f));
+        stack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(bone.getRotationZ()));
     }
 }

@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.attack.moves.magiciansred;
 
+import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
@@ -12,7 +13,6 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -85,7 +85,7 @@ public class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAtt
         }
 
         // Particles
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeShort(10);
 
         buf.writeDouble(hurricanePos.x);

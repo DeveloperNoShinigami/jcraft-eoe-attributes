@@ -5,7 +5,7 @@ import net.arna.jcraft.client.registry.JArmorRendererRegistry;
 import net.arna.jcraft.client.renderer.armor.StoneMaskRenderer;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.spec.SpecType;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -46,7 +46,7 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
         if (slot != EquipmentSlot.HEAD.getEntitySlotId()) return;
 
         if (entity instanceof PlayerEntity player && JCraft.wasRecentlyAttacked(player.getDamageTracker())) {
-            CommonSpecComponent specComponent = ComponentPlatformUtils.getSpecData(player);
+            CommonSpecComponent specComponent = JComponentPlatformUtils.getSpecData(player);
             if (specComponent.getType() != SpecType.VAMPIRE)
                 specComponent.setType(SpecType.VAMPIRE);
         }

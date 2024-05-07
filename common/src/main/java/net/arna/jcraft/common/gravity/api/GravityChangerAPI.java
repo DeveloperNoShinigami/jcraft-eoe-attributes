@@ -8,6 +8,7 @@ import net.arna.jcraft.common.gravity.util.packet.DefaultGravityPacket;
 import net.arna.jcraft.common.gravity.util.packet.InvertGravityPacket;
 import net.arna.jcraft.common.gravity.util.packet.OverwriteGravityPacket;
 import net.arna.jcraft.common.gravity.util.packet.UpdateGravityPacket;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -19,21 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class GravityChangerAPI {
-    public static final ComponentKey<CommonGravityComponent> GRAVITY_COMPONENT =
-            ComponentRegistry.getOrCreate(JCraft.id("gravity_direction"), CommonGravityComponent.class);
-
-    // workaround for a CCA bug; maybeGet throws an NPE in internal code if the DataTracker isn't initialized
-    // null check the component container to avoid it
-    public static <C extends Component, V> Optional<C> maybeGetSafe(ComponentKey<C> key, @Nullable V provider) {
-        if (provider instanceof ComponentProvider p) {
-            var cc = p.getComponentContainer();
-            if (cc != null) {
-                return Optional.ofNullable(key.getInternal(cc));
-            }
-        }
-        return Optional.empty();
-    }
-
+    
     /**
      * Returns the applied gravity direction for the given player
      * This is the direction that directly affects everything this mod changes
@@ -42,21 +29,21 @@ public abstract class GravityChangerAPI {
      */
     public static Direction getGravityDirection(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getGravityDirection).orElse(Direction.DOWN);
+            return JComponentPlatformUtils.getGravity(entity).map(CommonGravityComponent::getGravityDirection).orElse(Direction.DOWN);
         }
         return Direction.DOWN;
     }
 
     public static List<Gravity> getGravityList(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getGravity).orElse(new ArrayList<>());
+            return JComponentPlatformUtils.getGravity(entity).map(CommonGravityComponent::getGravity).orElse(new ArrayList<>());
         }
         return new ArrayList<>();
     }
 
     public static Direction getPrevGravityDirection(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getPrevGravityDirection).orElse(Direction.DOWN);
+            return JComponentPlatformUtils.getGravity(entity).map(CommonGravityComponent::getPrevGravityDirection).orElse(Direction.DOWN);
         }
         return Direction.DOWN;
     }
@@ -67,28 +54,28 @@ public abstract class GravityChangerAPI {
      */
     public static Direction getDefaultGravityDirection(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getDefaultGravityDirection).orElse(Direction.DOWN);
+            return JComponentPlatformUtils.getGravity(entity).map(CommonGravityComponent::getDefaultGravityDirection).orElse(Direction.DOWN);
         }
         return Direction.DOWN;
     }
 
     public static Direction getActualGravityDirection(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getActualGravityDirection).orElse(Direction.DOWN);
+            return JComponentPlatformUtils.getGravity(entity).map(CommonGravityComponent::getActualGravityDirection).orElse(Direction.DOWN);
         }
         return Direction.DOWN;
     }
 
     public static boolean getIsInverted(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getInvertGravity).orElse(false);
+            return JComponentPlatformUtils.getGravity(entity).map(CommonGravityComponent::getInvertGravity).orElse(false);
         }
         return false;
     }
 
     public static Optional<RotationAnimation> getGravityAnimation(Entity entity) {
         if (EntityTags.canChangeGravity(entity)) {
-            return maybeGetSafe(GRAVITY_COMPONENT, entity).map(CommonGravityComponent::getGravityAnimation);
+            return JComponentPlatformUtils.getGravity(entity).map(CommonGravityComponent::getGravityAnimation);
         }
         return Optional.empty();
     }
@@ -101,7 +88,7 @@ public abstract class GravityChangerAPI {
      */
     public static void addGravity(Entity entity, Gravity gravity) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
-        maybeGetSafe(GRAVITY_COMPONENT, entity).ifPresent(gc -> {
+        JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.addGravity(gravity, false);
             GravityChannel.UPDATE_GRAVITY.sendToClient(entity, new UpdateGravityPacket(gravity, false), NetworkUtil.PacketMode.EVERYONE);
         });
@@ -117,13 +104,13 @@ public abstract class GravityChangerAPI {
 
     public static void updateGravity(Entity entity, RotationParameters rotationParameters) {
         if (EntityTags.canChangeGravity(entity)) {
-            maybeGetSafe(GRAVITY_COMPONENT, entity).ifPresent(gc -> gc.updateGravity(rotationParameters, false));
+            JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> gc.updateGravity(rotationParameters, false));
         }
     }
 
     public static void setGravity(Entity entity, List<Gravity> gravity) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
-        maybeGetSafe(GRAVITY_COMPONENT, entity).ifPresent(gc -> {
+        JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.setGravity(gravity, false);
             GravityChannel.OVERWRITE_GRAVITY.sendToClient(entity, new OverwriteGravityPacket(gravity, false), NetworkUtil.PacketMode.EVERYONE);
         });
@@ -135,7 +122,7 @@ public abstract class GravityChangerAPI {
 
     public static void setIsInverted(Entity entity, boolean isInverted, RotationParameters rotationParameters) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
-        maybeGetSafe(GRAVITY_COMPONENT, entity).ifPresent(gc -> {
+        JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.invertGravity(isInverted, rotationParameters, false);
             GravityChannel.INVERT_GRAVITY.sendToClient(entity, new InvertGravityPacket(isInverted, rotationParameters, false), NetworkUtil.PacketMode.EVERYONE);
         });
@@ -147,7 +134,7 @@ public abstract class GravityChangerAPI {
 
     public static void clearGravity(Entity entity, RotationParameters rotationParameters) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
-        maybeGetSafe(GRAVITY_COMPONENT, entity).ifPresent(gc -> {
+        JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.clearGravity(rotationParameters, false);
             GravityChannel.OVERWRITE_GRAVITY.sendToClient(entity, new OverwriteGravityPacket(new ArrayList<>(), false), NetworkUtil.PacketMode.EVERYONE);
         });
@@ -164,7 +151,7 @@ public abstract class GravityChangerAPI {
 
     public static void setDefaultGravityDirection(Entity entity, Direction gravityDirection, RotationParameters rotationParameters) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
-        maybeGetSafe(GRAVITY_COMPONENT, entity).ifPresent(gc -> {
+        JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.setDefaultGravityDirection(gravityDirection, rotationParameters, false);
             GravityChannel.DEFAULT_GRAVITY.sendToClient(entity, new DefaultGravityPacket(gravityDirection, rotationParameters, false), NetworkUtil.PacketMode.EVERYONE);
         });
@@ -175,7 +162,7 @@ public abstract class GravityChangerAPI {
      */
     @Nullable
     public static CommonGravityComponent getGravityComponent(Entity entity) {
-        return maybeGetSafe(GRAVITY_COMPONENT, entity).orElse(null);
+        return JComponentPlatformUtils.getGravity(entity).orElse(null);
     }
 
     /**

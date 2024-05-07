@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.gravity.util;
 
+import dev.architectury.networking.NetworkManager;
 import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -36,11 +36,11 @@ public class NetworkUtil {
         //PlayerLookup.tracking(entity) might not return the player if entity is a player, so it has to be done separately
         if (mode != PacketMode.EVERYONE_BUT_SELF)
             if (entity instanceof ServerPlayerEntity player)
-                ServerPlayNetworking.send(player, channel, buf);
+                NetworkManager.sendToPlayer(player, channel, buf);
         if (mode != PacketMode.ONLY_SELF)
             for (ServerPlayerEntity player : PlayerLookup.tracking(entity))
                 if (player != entity)
-                    ServerPlayNetworking.send(player, channel, buf);
+                    NetworkManager.sendToPlayer(player, channel, buf);
     }
 
     //Writing to buffer

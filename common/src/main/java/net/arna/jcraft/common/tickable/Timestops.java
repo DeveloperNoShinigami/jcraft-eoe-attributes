@@ -3,7 +3,7 @@ package net.arna.jcraft.common.tickable;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.util.DimensionData;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -43,7 +43,7 @@ public class Timestops {
                 for (Entity entity : toStop)
                     if (!entity.hasVehicle() && entity != user && (!(entity instanceof LivingEntity living) || entity != JUtils.getStand(living)) &&
                             entity != user.getVehicle())
-                        ComponentPlatformUtils.getTimeStopData(entity).setTicks(2);
+                        JComponentPlatformUtils.getTimeStopData(entity).setTicks(2);
 
                 newActiveTimestops.add(timestop);
             }

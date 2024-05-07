@@ -76,9 +76,9 @@ public class RenderUtils {
         return MathHelper.sqrt(distSqr(a));
     }
 
-    public static void renderBlockAtPosition(WorldRenderContext context, Vec3d pos, Identifier texture, float alpha) {
-        renderBlockAtPosition(context.matrixStack(), context.camera(), pos, texture, alpha, GameRenderer::getPositionColorTexProgram);
-    }
+//TODO    public static void renderBlockAtPosition(WorldRenderContext context, Vec3d pos, Identifier texture, float alpha) {
+//        renderBlockAtPosition(context.matrixStack(), context.camera(), pos, texture, alpha, GameRenderer::getPositionColorTexProgram);
+//    }
 
     public static void renderBlockAtPosition(MatrixStack matrixStack, Camera camera, Vec3d pos, Identifier texture, float alpha) {
         renderBlockAtPosition(matrixStack, camera, pos, texture, alpha, GameRenderer::getPositionColorTexProgram);
@@ -142,8 +142,8 @@ public class RenderUtils {
     public static void startOverlayRender() {
         Window window = MinecraftClient.getInstance().getWindow();
         RenderSystem.backupProjectionMatrix();
-        Matrix4f matrix4f = Matrix4f.projectionMatrix(0.0f, window.getScaledWidth(), 0.0f,
-                window.getScaledHeight(), 1000.0f, 3000.0f);
+        /*TODO
+        Matrix4f matrix4f = Matrix4f.projectionMatrix(0.0f, window.getScaledWidth(), 0.0f, window.getScaledHeight(), 1000.0f, 3000.0f);
         RenderSystem.setProjectionMatrix(matrix4f);
 
         MatrixStack mvStack = RenderSystem.getModelViewStack();
@@ -151,6 +151,8 @@ public class RenderUtils {
         mvStack.loadIdentity();
         mvStack.translate(0.0, 0.0, -2000.0);
         RenderSystem.applyModelViewMatrix();
+
+         */
     }
 
     public static void endOverlayRender() {

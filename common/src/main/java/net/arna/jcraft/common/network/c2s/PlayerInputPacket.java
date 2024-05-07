@@ -14,7 +14,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.*;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.network.PacketByteBuf;
@@ -81,7 +81,7 @@ public class PlayerInputPacket {
 
                 int forward = sm.calcForward();
                 int side = sm.calcSide();
-                ComponentPlatformUtils.getMiscData(player).updateRemoteInputs(forward, side, sm.jumping);
+                JComponentPlatformUtils.getMiscData(player).updateRemoteInputs(forward, side, sm.jumping);
 
                 StandEntity<?, ?> stand = JUtils.getStand(player);
                 if (stand != null) stand.updateRemoteInputs(forward, side, sm.jumping, sm.sneaking);
@@ -92,7 +92,7 @@ public class PlayerInputPacket {
 
                 if (DashData.isDashing(player))
                     // 5s cooldown for superjumping
-                    ComponentPlatformUtils.getCooldowns(player).setCooldown(CooldownType.DASH, 100);
+                    JComponentPlatformUtils.getCooldowns(player).setCooldown(CooldownType.DASH, 100);
 
                 checkComboBreak(player);
             }
@@ -249,7 +249,7 @@ public class PlayerInputPacket {
                     buf2.writeInt(0);
                     ServerChannelFeedbackPacket.send(player, buf2);
 
-                    CommonStandComponent standData = ComponentPlatformUtils.getStandData(player);
+                    CommonStandComponent standData = JComponentPlatformUtils.getStandData(player);
                     StandEntity<?, ?> stand = standData.getStand();
                     if (stand != null) {
                         int moveStun = stand.getMoveStun();

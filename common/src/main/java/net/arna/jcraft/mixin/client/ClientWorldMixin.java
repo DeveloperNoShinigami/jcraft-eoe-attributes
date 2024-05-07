@@ -2,7 +2,7 @@ package net.arna.jcraft.mixin.client;
 
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.arna.jcraft.common.util.IJSplatterManagerHolder;
-import net.arna.jcraft.platform.ComponentPlatformUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -22,7 +22,7 @@ public abstract class ClientWorldMixin implements IJSplatterManagerHolder {
     // Clientside timestop handling
     @Inject(cancellable = true, at = @At("HEAD"), method = "tickEntity")
     private void timestopTick(Entity entity, CallbackInfo ci) {
-        ComponentPlatformUtils.getTimeStopData(entity).tick(ci);
+        JComponentPlatformUtils.getTimeStopData(entity).tick(ci);
     }
 
     // Cream void deafness
