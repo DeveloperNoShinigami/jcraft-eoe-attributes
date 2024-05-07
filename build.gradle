@@ -39,6 +39,8 @@ subprojects {
             name = "Ladysnake"
             url = "https://maven.ladysnake.org/releases"
         }
+        maven { url "https://maven.terraformersmc.com/releases/" }
+        maven { url "https://maven.shedaniel.me/" }
     }
 
     dependencies {

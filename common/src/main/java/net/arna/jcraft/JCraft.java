@@ -1,8 +1,10 @@
 package net.arna.jcraft;
 
 import com.google.common.base.Suppliers;
+import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
+import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrarManager;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -30,6 +32,7 @@ import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.*;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -60,6 +63,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.stun;
 
@@ -83,13 +87,14 @@ public final class JCraft {
 
     // Gamerules
     //public static final GameRules.Key<GameRules.BooleanRule> KINGCRIMSON_TELEPORT_EFFECT = GameRuleRegistry.register("kingCrimsonTeleportEffect", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
-    public static final GameRules.Key<GameRules.BooleanRule> COMBO_COUNTER = GameRuleRegistry.register("comboCounter", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
-    public static final GameRules.Key<GameRules.IntRule> CHANCE_MOB_SPAWNS_WITH_STAND = GameRuleRegistry.register("chanceMobSpawnsWithStand", GameRules.Category.MOBS, GameRuleFactory.createIntRule(5, 0, 100));
-    public static final GameRules.Key<GameRules.BooleanRule> ALLOW_MOB_EVOLVED_STANDS = GameRuleRegistry.register("allowMobEvolvedStands", GameRules.Category.MOBS, GameRuleFactory.createBooleanRule(false));
-    public static final GameRules.Key<GameRules.BooleanRule> STAND_GRIEFING = GameRuleRegistry.register("standGriefing", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
-    public static final GameRules.Key<GameRules.BooleanRule> KEEP_STAND = GameRuleRegistry.register("keepStand", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
-    public static final GameRules.Key<GameRules.BooleanRule> KEEP_SPEC = GameRuleRegistry.register("keepSpec", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(true));
+    public static final GameRules.Key<GameRules.BooleanRule> COMBO_COUNTER = GameRules.register("comboCounter", GameRules.Category.MISC, GameRules.BooleanRule.create(true));
+    public static final GameRules.Key<GameRules.IntRule> CHANCE_MOB_SPAWNS_WITH_STAND = GameRules.register("chanceMobSpawnsWithStand", GameRules.Category.MOBS, GameRules.IntRule.create(5));
+    public static final GameRules.Key<GameRules.BooleanRule> ALLOW_MOB_EVOLVED_STANDS = GameRules.register("allowMobEvolvedStands", GameRules.Category.MOBS, GameRules.BooleanRule.create(false));
+    public static final GameRules.Key<GameRules.BooleanRule> STAND_GRIEFING = GameRules.register("standGriefing", GameRules.Category.MISC, GameRules.BooleanRule.create(true));
+    public static final GameRules.Key<GameRules.BooleanRule> KEEP_STAND = GameRules.register("keepStand", GameRules.Category.MISC, GameRules.BooleanRule.create(true));
+    public static final GameRules.Key<GameRules.BooleanRule> KEEP_SPEC = GameRules.register("keepSpec", GameRules.Category.MISC, GameRules.BooleanRule.create(true));
     //public static GameRules.Key<GameRules.IntRule> DAMAGE_MULT = GameRuleRegistry.register("jcraftDamageMult", GameRules.Category.MISC, GameRuleFactory.createIntRule(0, 0, 100));
+
 
     // Dimensional travel bullshit
     /**
@@ -135,7 +140,8 @@ public final class JCraft {
 
         // Synchronization
         PacketByteBuf buf = TimeStopStatePacket.createStartPacket(timestopper.getId(), position, worldRegistryKey, duration);
-        PlayerLookup.world(world).forEach( playerEntity -> TimeStopStatePacket.send(playerEntity, buf) ); // Sends to unaffected players because they may walk into range
+        world.getPlayers().forEach( playerEntity -> TimeStopStatePacket.send(playerEntity, buf)); // Sends to unaffected players because they may walk into range
+
 
         List<ServerPlayerEntity> toStop = world.getEntitiesByClass(ServerPlayerEntity.class,
                 new Box(position.add(96.0, 96.0, 96.0), position.subtract(96.0, 96.0, 96.0)), EntityPredicates.VALID_LIVING_ENTITY);
@@ -160,7 +166,7 @@ public final class JCraft {
 
         // Synchronization
         PacketByteBuf buf = TimeStopStatePacket.createStopPacket(timestopper.getId());
-        PlayerLookup.world(serverWorld).forEach( playerEntity -> TimeStopStatePacket.send(playerEntity, buf) );
+        serverWorld.getPlayers().forEach(playerEntity -> TimeStopStatePacket.send(playerEntity, buf));
 
         Vec3d position = timestop.pos;
 
@@ -242,7 +248,7 @@ public final class JCraft {
         // Registration
         JObjectRegistry.init();
         JBlockEntityTypeRegistry.init();
-        JCommandRegistry.registerCommands();
+        CommandRegistrationEvent.EVENT.register(JCommandRegistry::registerCommands);
         JEventsRegistry.registerEvents();
         JStatusRegistry.registerStatuses();
         JSoundRegistry.registerSounds();
@@ -276,9 +282,30 @@ public final class JCraft {
         buf.writeDouble(z);
         buf.writeEnumConstant(type);
 
-        PlayerLookup.around(world, new Vec3d(x, y, z), 128).forEach(
+        around(world, new Vec3d(x, y, z), 128).forEach(
                 serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf)
         );
+
+    }
+
+    public static Collection<ServerPlayerEntity> around(ServerWorld world, Vec3d pos, double radius) {
+        double radiusSq = radius * radius;
+
+        return world.getPlayers()
+                .stream()
+                .filter((p) -> p.squaredDistanceTo(pos) <= radiusSq)
+                .collect(Collectors.toList());
+    }
+
+    public static Collection<ServerPlayerEntity> all(MinecraftServer server) {
+        Objects.requireNonNull(server, "The server cannot be null");
+
+        // return an immutable collection to guard against accidental removals.
+        if (server.getPlayerManager() != null) {
+            return Collections.unmodifiableCollection(server.getPlayerManager().getPlayerList());
+        }
+
+        return Collections.emptyList();
     }
 
     public static void createHitsparks(ServerWorld world, double x, double y, double z, JParticleType type, int sparkCount, double sparkSpeed) {
@@ -293,7 +320,7 @@ public final class JCraft {
         buf.writeInt(sparkCount);
         buf.writeDouble(sparkSpeed);
 
-        PlayerLookup.around(world, new Vec3d(x, y, z), 128).forEach(
+        around(world, new Vec3d(x, y, z), 128).forEach(
                 serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf)
         );
     }

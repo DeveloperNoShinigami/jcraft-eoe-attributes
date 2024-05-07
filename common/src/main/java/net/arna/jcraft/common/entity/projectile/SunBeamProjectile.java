@@ -65,7 +65,7 @@ public class SunBeamProjectile extends PersistentProjectileEntity implements Geo
     }
 
     public SunBeamProjectile(World world) {
-        super(JEntityTypeRegistry.SUN_BEAM, world);
+        super(JEntityTypeRegistry.SUN_BEAM.get(), world);
         this.setNoGravity(true);
         ignoreCameraFrustum = true;
     }

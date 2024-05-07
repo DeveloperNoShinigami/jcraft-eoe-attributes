@@ -34,7 +34,7 @@ public class AnkhProjectile extends PersistentProjectileEntity implements GeoEnt
     }
 
     public AnkhProjectile(World world, LivingEntity owner) {
-        super(JEntityTypeRegistry.ANKH, owner, world);
+        super(JEntityTypeRegistry.ANKH.get(), owner, world);
         this.setOwner(owner);
         this.pickupType = PickupPermission.DISALLOWED;
     }

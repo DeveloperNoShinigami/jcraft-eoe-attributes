@@ -14,6 +14,7 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.block.Blocks;
@@ -149,12 +150,12 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             }
 
             case SPECIAL1 -> {
-                CommonCooldownsComponent cooldowns = JComponents.getCooldowns(user);
+                CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(user);
 
                 if (user.isInSneakingPose() && cooldowns.getCooldown(CooldownType.STAND_SP1) <= 0) {
                     BlockPos standingOn = user.getBlockPos().offset(GravityChangerAPI.getGravityDirection(user));
                     if (!getWorld().getBlockState(standingOn).isAir()) {
-                        JComponents.getBombTracker(user).getMainBomb().setBomb(standingOn);
+                        PlatformUtils.getBombTracker(user).getMainBomb().setBomb(standingOn);
                         cooldowns.setCooldown(CooldownType.STAND_SP1, BOMB_PLANT.getCooldown());
                     }
 
@@ -178,7 +179,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
     public MoveSelectionResult specificMoveSelectionCriterion(AbstractMove<?, ? super E> attack, LivingEntity mob, LivingEntity target, int stunTicks,
                                                               int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
         if (enemyStand != null && enemyStand.blocking) return MoveSelectionResult.STOP;
-        Vec3d bombPos = JComponents.getBombTracker(mob).getMainBomb().getBombPos();
+        Vec3d bombPos = PlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
         return bombPos != null && attack == DETONATE && target.squaredDistanceTo(bombPos) < 9.0D ?
                 MoveSelectionResult.USE : MoveSelectionResult.PASS;
     }

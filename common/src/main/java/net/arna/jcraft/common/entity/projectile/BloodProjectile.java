@@ -31,7 +31,7 @@ public class BloodProjectile extends PersistentProjectileEntity implements GeoEn
     }
 
     public BloodProjectile(World world, LivingEntity owner) {
-        super(JEntityTypeRegistry.BLOOD_PROJECTILE, owner, world);
+        super(JEntityTypeRegistry.BLOOD_PROJECTILE.get(), owner, world);
         this.setSound(SoundEvents.BLOCK_SLIME_BLOCK_FALL);
         this.setOwner(owner);
     }

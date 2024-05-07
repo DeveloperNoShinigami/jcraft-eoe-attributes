@@ -20,11 +20,11 @@ public class PHCapsuleProjectile extends PersistentProjectileEntity implements G
     private AbstractPurpleHazeEntity.PoisonType poisonType;
 
     public PHCapsuleProjectile(World world) {
-        super(JEntityTypeRegistry.PH_CAPSULE, world);
+        super(JEntityTypeRegistry.PH_CAPSULE.get(), world);
     }
 
     public PHCapsuleProjectile(LivingEntity owner, World world, AbstractPurpleHazeEntity.PoisonType poisonType) {
-        super(JEntityTypeRegistry.PH_CAPSULE, owner, world);
+        super(JEntityTypeRegistry.PH_CAPSULE.get(), owner, world);
         this.poisonType = poisonType;
     }
 

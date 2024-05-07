@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
 import com.google.common.base.MoreObjects;
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -25,11 +27,10 @@ import net.arna.jcraft.common.network.s2c.ComboCounterPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.mixin.LivingEntityInvoker;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.DamageUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -48,6 +49,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -585,7 +587,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (!move.canBeInitiated(getThis())) return false;
 
         if (cooldownType != null && move.getCooldown() > 0) {
-            CommonCooldownsComponent cooldowns = JComponents.getCooldowns(getUser());
+            CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(getUser());
             int cooldown = cooldowns.getCooldown(cooldownType);
 
             if (cooldown > 0) return false;
@@ -673,9 +675,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         // Statistics
         World world = ent.getWorld();
         if (ent instanceof PlayerEntity) {
-            if (world instanceof ServerWorld serverWorld)
-                serverWorld.getChunkManager().sendToNearbyPlayers(ent, ServerPlayNetworking.createS2CPacket(
-                        JPacketRegistry.S2C_STAND_HURT, PacketByteBufs.create().writeVarInt(ent.getId())));
+            if (world instanceof ServerWorld serverWorld) {
+                var packet = NetworkManager.toPacket(NetworkManager.Side.S2C, JPacketRegistry.S2C_STAND_HURT, new PacketByteBuf(Unpooled.buffer()).writeVarInt(ent.getId()));
+                serverWorld.getChunkManager().sendToNearbyPlayers(ent, packet);
+            }
+
         } else {
             world.sendEntityStatus(ent, (byte) 2);
         }
@@ -923,7 +927,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 }
             }
 
-            if (wantToBlock && !blocking && (user == null || !JCraft.isDashing(user)) && canAttack()) {
+            if (wantToBlock && !blocking && (user == null || !DashData.isDashing(user)) && canAttack()) {
                 if (isFree() && !isRemote())
                     setFree(false);
                 tryBlock();
@@ -1118,7 +1122,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 if (--stand.armorPoints < 0)
                     stand.cancelMove();
                 else
-                    JComponents.getMiscData(ent).displayArmoredHit();
+                    PlatformUtils.getMiscData(ent).displayArmoredHit();
             }
 
             if (stand.blocking && !stand.isRemote()) {
@@ -1169,7 +1173,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             stun(ent, stunTicks, stunLevel);
 
             if (hitAnimation != null)
-                JComponents.getHitProperties(ent).setHitAnimation(hitAnimation, stunTicks);
+                PlatformUtils.getHitProperties(ent).setHitAnimation(hitAnimation, stunTicks);
 
             if (!tsHit)
                 ent.addVelocity(kbVec.x, kbVec.y, kbVec.z);
@@ -1182,7 +1186,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 if (--spec.armorPoints < 0)
                     spec.cancelMove();
                 else
-                    JComponents.getMiscData(playerEntity).displayArmoredHit();
+                    PlatformUtils.getMiscData(playerEntity).displayArmoredHit();
             }
         }
 
@@ -1211,7 +1215,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         if (tsHit)
-            JComponents.getTimeStopData(ent).addTotalVelocity(kbVec);
+            PlatformUtils.getTimeStopData(ent).addTotalVelocity(kbVec);
         else
             JUtils.syncVelocityUpdate(ent);
     }
@@ -1361,7 +1365,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         // If none was found, try to find a spec attack
         if (enemyAttack == null) {
             if (target instanceof PlayerEntity player) {
-                enemySpec = JComponents.getSpecData(player).getSpec();
+                enemySpec = PlatformUtils.getSpecData(player).getSpec();
 
                 if (enemySpec != null) {
                     enemyMoveStun = enemySpec.moveStun;
@@ -1413,7 +1417,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         //JCraft.LOGGER.info("Want to block: " + wantToBlock);
         stand.wantToBlock = wantToBlock;
         if (wantToBlock) {
-            if (!stand.blocking && stand.canAttack() && !JCraft.isDashing(mob))
+            if (!stand.blocking && stand.canAttack() && !DashData.isDashing(mob))
                 stand.tryBlock();
         } else {
             stand.blocking = false;
@@ -1438,7 +1442,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             // Overestimating stun up to 1/4 of a second for longer combos and frametraps
             int stunTicks = stun != null ? stun.getDuration() + stand.random.nextInt(5) : 0;
             stunTicks += blockPlusTicks;
-            stunTicks += JComponents.getTimeStopData(target).getTicks();
+            stunTicks += PlatformUtils.getTimeStopData(target).getTicks();
 
             // Only select or buffer attacks when necessary
             if (stand.getMoveStun() <= 1) {
@@ -1446,11 +1450,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 Pair<AbstractMove<?, ?>, Boolean> selectedAttackData;
                 if (mob instanceof StandEntity<?, ?> standEntity && standEntity.hasUser())
                     selectedAttackData = stand.selectAttack(
-                            JComponents.getCooldowns(standEntity.getUser()),
+                            PlatformUtils.getCooldowns(standEntity.getUser()),
                             mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
                 else
                     selectedAttackData = stand.selectAttack(
-                            JComponents.getCooldowns(mob),
+                            PlatformUtils.getCooldowns(mob),
                             mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
 
                 if (selectedAttackData != null) {
@@ -1488,7 +1492,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             // Dash to targeted location/evasion
             BlockPos targetPos = entityNavigation.getTargetPos();
             if (targetPos != null && mob.isOnGround() && targetPos.getSquaredDistance(target.getPos()) > 2.25)
-                JCraft.tryDash(evade ? -1 : 1, evade ? stand.random.nextInt(2) - 1 : 0, mob);
+                DashData.tryDash(evade ? -1 : 1, evade ? stand.random.nextInt(2) - 1 : 0, mob);
 
             // Move away during combo to prevent point-blank misses
             float sStrafe = MathHelper.sin(stand.age * 0.02f) / 3f;
@@ -1520,7 +1524,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (user == null) return;
         // This check helps users intuitively use light and its followup without mis-inputting
         // Such a check should be applied to any quick move with a followup
-        if (type != MoveInputType.LIGHT || JComponents.COOLDOWNS.get(user).getCooldown(CooldownType.STAND_LIGHT) <= 0)
+        if (type != MoveInputType.LIGHT || PlatformUtils.getCooldowns(user).getCooldown(CooldownType.STAND_LIGHT) <= 0)
             queuedMove = type;
     }
 

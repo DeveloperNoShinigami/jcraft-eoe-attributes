@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.stand;
 
+import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
@@ -16,11 +17,9 @@ import net.arna.jcraft.common.network.s2c.ShaderDeactivationPacket;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -257,7 +256,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             case ULTIMATE -> {
                 // If predicting, and Time Erase isn't on cooldown
                 if (curMove != null && curMove.getOriginalMove() == PREDICTION && hasUser()) {
-                    CommonCooldownsComponent cooldowns = JComponents.getCooldowns(getUser());
+                    CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(getUser());
                     if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) <= 0) {
                         cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 400);
                         PredictionMove.finishPrediction(this);
@@ -285,7 +284,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 moveCancel();
 
                 // 7 second time erase cooldown
-                CommonCooldownsComponent cooldowns = JComponents.getCooldowns(user);
+                CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(user);
                 if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) < 140)
                     cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 140);
 
@@ -293,7 +292,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 Vec3d oPos = user.getPos();
                 Box bBox = user.getBoundingBox();
                 for (ServerPlayerEntity serverPlayer : ((ServerWorld) getWorld()).getPlayers()) {
-                    PacketByteBuf buf = PacketByteBufs.create();
+                    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                     buf.writeVarInt(2);
                     buf.writeDouble(oPos.x);
                     buf.writeDouble(oPos.y);
@@ -306,7 +305,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
                 // Stop epitaph state
                 if (user instanceof ServerPlayerEntity player)
-                    ServerPlayNetworking.send(player, JPacketRegistry.S2C_EPITAPH_STATE, new PacketByteBuf(Unpooled.buffer().writeBoolean(false)));
+                    NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_EPITAPH_STATE, new PacketByteBuf(Unpooled.buffer().writeBoolean(false)));
             }
             case UTILITY -> {
                 if (getTETime() > 0) cancelTE();
@@ -326,7 +325,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         Vec3d pos = user.getPos();
         Box bBox = user.getBoundingBox();
 
-        PacketByteBuf buf = PacketByteBufs.create();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeShort(2);
         buf.writeDouble(pos.x);
         buf.writeDouble(pos.y);
@@ -335,7 +334,9 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         buf.writeDouble(bBox.getYLength());
         buf.writeDouble(bBox.getZLength());
 
-        PlayerLookup.world((ServerWorld) getWorld()).forEach(serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf));
+        if (getWorld() instanceof ServerWorld serverWorld) {
+            serverWorld.getPlayers().forEach(serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf));
+        }
     }
 
     public void moveCancel() {
@@ -370,7 +371,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
     public void cancelTE() {
         LivingEntity user = getUserOrThrow();
-        CommonCooldownsComponent cooldowns = JComponents.getCooldowns(user);
+        CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(user);
         cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) - getTETime() * 2);
 
         setTETime(0);

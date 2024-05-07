@@ -51,7 +51,7 @@ public class RapierProjectile extends PersistentProjectileEntity implements GeoE
     }
 
     public RapierProjectile(World world, LivingEntity owner, StandEntity<?, ?> silverChariot) {
-        super(JEntityTypeRegistry.RAPIER, owner, world);
+        super(JEntityTypeRegistry.RAPIER.get(), owner, world);
         this.setOwner(owner);
         this.origin = silverChariot;
     }

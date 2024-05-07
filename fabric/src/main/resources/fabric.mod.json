@@ -25,6 +25,9 @@
     ],
     "cardinal-components": [
       "net.arna.jcraft.fabric.common.component.JComponents"
+    ],
+    "modmenu": [
+      "net.arna.jcraft.fabric.client.JModMenuIntegration"
     ]
   },
   "accessWidener" : "jcraft.accesswidener",

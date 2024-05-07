@@ -80,7 +80,7 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
     }
 
     public MeteorProjectile(World world, LivingEntity owner) {
-        super(JEntityTypeRegistry.METEOR, owner, world);
+        super(JEntityTypeRegistry.METEOR.get(), owner, world);
         this.setOwner(owner);
         this.pickupType = PickupPermission.DISALLOWED;
     }

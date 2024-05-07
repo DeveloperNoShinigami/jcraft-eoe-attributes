@@ -17,4 +17,7 @@ dependencies {
 
     //Player Anim
     include modImplementation("dev.kosmx.player-anim:player-animation-lib:${player_anim_version}")
+
+    //Cloth
+    modApi "me.shedaniel.cloth:cloth-config:11.1.118"
 }

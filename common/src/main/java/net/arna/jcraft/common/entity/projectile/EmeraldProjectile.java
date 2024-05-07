@@ -36,11 +36,11 @@ public class EmeraldProjectile extends PersistentProjectileEntity implements Geo
     }
 
     public EmeraldProjectile(World world) {
-        super(JEntityTypeRegistry.EMERALD, world);
+        super(JEntityTypeRegistry.EMERALD.get(), world);
     }
 
     public EmeraldProjectile(World world, LivingEntity owner) {
-        super(JEntityTypeRegistry.EMERALD, owner, world);
+        super(JEntityTypeRegistry.EMERALD.get(), owner, world);
         setNoGravity(true);
         setOwner(owner);
         setSound(SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK);

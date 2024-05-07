@@ -34,7 +34,7 @@ public class LaserProjectile extends PersistentProjectileEntity implements GeoEn
     }
 
     public LaserProjectile(World world, LivingEntity owner) {
-        super(JEntityTypeRegistry.LASER_PROJECTILE, owner, world);
+        super(JEntityTypeRegistry.LASER_PROJECTILE.get(), owner, world);
         this.setOwner(owner);
     }
 

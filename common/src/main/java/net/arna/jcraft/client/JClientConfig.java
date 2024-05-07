@@ -1,5 +1,6 @@
 package net.arna.jcraft.client;
 
+import dev.architectury.networking.NetworkManager;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
@@ -8,7 +9,6 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.network.c2s.PredictionTriggerPacket;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 // Annotations to use here: https://shedaniel.gitbook.io/cloth-config/auto-config/annotations
 @SuppressWarnings("FieldMayBeFinal")
@@ -33,10 +33,8 @@ public class JClientConfig implements ConfigData {
     public void setClientsidePrediction(boolean clientsidePrediction) {
         this.clientsidePrediction = clientsidePrediction;
 
-        ClientPlayNetworking.send(
-                JPacketRegistry.C2S_PREDICTION_TRIGGER,
-                PredictionTriggerPacket.write(clientsidePrediction)
-        );
+        NetworkManager.sendToServer( JPacketRegistry.C2S_PREDICTION_TRIGGER,
+                PredictionTriggerPacket.write(clientsidePrediction));
     }
 
     public enum UIPos {

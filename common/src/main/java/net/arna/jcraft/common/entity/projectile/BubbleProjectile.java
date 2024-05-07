@@ -32,7 +32,7 @@ public class BubbleProjectile extends PersistentProjectileEntity implements GeoE
     }
 
     public BubbleProjectile(World world, LivingEntity owner) {
-        super(JEntityTypeRegistry.BUBBLE, owner, world);
+        super(JEntityTypeRegistry.BUBBLE.get(), owner, world);
         this.setOwner(owner);
     }
 

@@ -7,7 +7,6 @@ import net.arna.jcraft.common.util.JExplosionModifier;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
@@ -127,7 +126,7 @@ public class SheerHeartAttackEntity extends MobEntity implements GeoEntity, IOwn
                 UUID ownerId = getOwnerId();
                 if (ownerId != null) {
                     ServerWorld serverWorld = (ServerWorld) getWorld();
-                    for (ServerPlayerEntity serverPlayerEntity : PlayerLookup.world(serverWorld)) {
+                    for (ServerPlayerEntity serverPlayerEntity : (serverWorld).getPlayers()) {
                         if (serverPlayerEntity.getUuid().equals(ownerId))
                             master = serverPlayerEntity;
                     }

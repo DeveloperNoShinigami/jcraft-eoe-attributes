@@ -24,50 +24,50 @@ public enum StandType {
      * For players, this is functionally identical to null, for entities this disables obtaining a stand.
      */
     NONE(), // 255
-    STAR_PLATINUM(JEntityTypeRegistry.STAR_PLATINUM, StarPlatinumEntity::new, "starplatinum",                   // 1
+    STAR_PLATINUM(JEntityTypeRegistry.STAR_PLATINUM.get(), StarPlatinumEntity::new, "starplatinum",                   // 1
             Text.literal("Manga"), Text.literal("Arcade"), Text.literal("OVA")),
-    THE_WORLD(JEntityTypeRegistry.THE_WORLD, TheWorldEntity::new, "theworld",                                   // 2
+    THE_WORLD(JEntityTypeRegistry.THE_WORLD.get(), TheWorldEntity::new, "theworld",                                   // 2
             Text.literal("OVA"), Text.literal("Black"), Text.literal("Greatest High")),
-    KING_CRIMSON(JEntityTypeRegistry.KING_CRIMSON, KingCrimsonEntity::new, "kingcrimson",                       // 3
+    KING_CRIMSON(JEntityTypeRegistry.KING_CRIMSON.get(), KingCrimsonEntity::new, "kingcrimson",                       // 3
             Text.literal("Royal"), Text.literal("Manga"), Text.literal("Nightshade")),
-    D4C(JEntityTypeRegistry.D4C, D4CEntity::new, "d4c",                                                         // 4
+    D4C(JEntityTypeRegistry.D4C.get(), D4CEntity::new, "d4c",                                                         // 4
             Text.literal("Jojoveller"), Text.literal("Teaser"), Text.literal("Spangled")),
-    CREAM(JEntityTypeRegistry.CREAM, CreamEntity::new, "cream",                                                 // 5
+    CREAM(JEntityTypeRegistry.CREAM.get(), CreamEntity::new, "cream",                                                 // 5
             Text.literal("Menace"), Text.literal("Eraser"), Text.literal("White Void")),
-    KILLER_QUEEN(JEntityTypeRegistry.KILLER_QUEEN, KillerQueenEntity::new, "killerqueen",                       // 6
+    KILLER_QUEEN(JEntityTypeRegistry.KILLER_QUEEN.get(), KillerQueenEntity::new, "killerqueen",                       // 6
             Text.literal("Gunpowder"), Text.literal("Deadly"), Text.literal("1999")),
-    WHITE_SNAKE(JEntityTypeRegistry.WHITE_SNAKE, WhiteSnakeEntity::new, "whitesnake",                           // 7
+    WHITE_SNAKE(JEntityTypeRegistry.WHITE_SNAKE.get(), WhiteSnakeEntity::new, "whitesnake",                           // 7
             Text.literal("Melting"), Text.literal("Mamba"), Text.literal("Redsnake")),
-    SILVER_CHARIOT(JEntityTypeRegistry.SILVER_CHARIOT, SilverChariotEntity::new, "silverchariot",               // 8
+    SILVER_CHARIOT(JEntityTypeRegistry.SILVER_CHARIOT.get(), SilverChariotEntity::new, "silverchariot",               // 8
             Text.literal("Gold Chariot"), Text.literal("OVA"), Text.literal("Vento")),
-    MAGICIANS_RED(JEntityTypeRegistry.MAGICIANS_RED, MagiciansRedEntity::new, "mr",                             // 9
+    MAGICIANS_RED(JEntityTypeRegistry.MAGICIANS_RED.get(), MagiciansRedEntity::new, "mr",                             // 9
             Text.literal("Purple"), Text.literal("OVA"), Text.literal("Fried")),
-    THE_FOOL(JEntityTypeRegistry.THE_FOOL, TheFoolEntity::new, "thefool",                                       // 10
+    THE_FOOL(JEntityTypeRegistry.THE_FOOL.get(), TheFoolEntity::new, "thefool",                                       // 10
             Text.literal("Chilled"), Text.literal("OVA"), Text.literal("Neon")),
-    GOLD_EXPERIENCE(JEntityTypeRegistry.GOLD_EXPERIENCE, GoldExperienceEntity::new, "goldexperience",       // 11
+    GOLD_EXPERIENCE(JEntityTypeRegistry.GOLD_EXPERIENCE.get(), GoldExperienceEntity::new, "goldexperience",       // 11
             Text.literal("Anime"), Text.literal("Spectre"), Text.literal("Burning Passion")),
-    HIEROPHANT_GREEN(JEntityTypeRegistry.HIEROPHANT_GREEN, HGEntity::new, "hierophantgreen",       // 12
+    HIEROPHANT_GREEN(JEntityTypeRegistry.HIEROPHANT_GREEN.get(), HGEntity::new, "hierophantgreen",       // 12
             Text.literal("Cold"), Text.literal("Burning"), Text.literal("Seaside")),
-    THE_SUN(JEntityTypeRegistry.THE_SUN, TheSunEntity::new, "the_sun",       // 13
+    THE_SUN(JEntityTypeRegistry.THE_SUN.get(), TheSunEntity::new, "the_sun",       // 13
             Text.literal(":D"), Text.literal("Neutron Star"), Text.literal("Dark")),
-    PURPLE_HAZE(JEntityTypeRegistry.PURPLE_HAZE, PurpleHazeEntity::new, "purple_haze",       // 14
+    PURPLE_HAZE(JEntityTypeRegistry.PURPLE_HAZE.get(), PurpleHazeEntity::new, "purple_haze",       // 14
             Text.literal("Toxin"), Text.literal("Stopping Force"), Text.literal("Reversal")),
 
 
     // Evolutions
-    C_MOON(JEntityTypeRegistry.C_MOON, CMoonEntity::new, "cmoon", true,                                             // -1
+    C_MOON(JEntityTypeRegistry.C_MOON.get(), CMoonEntity::new, "cmoon", true,                                             // -1
             Text.literal("Inversion"), Text.literal("Gravity"), Text.literal("Rose")),
-    MADE_IN_HEAVEN(JEntityTypeRegistry.MADE_IN_HEAVEN, MadeInHeavenEntity::new, "mih", true,                        // -2
+    MADE_IN_HEAVEN(JEntityTypeRegistry.MADE_IN_HEAVEN.get(), MadeInHeavenEntity::new, "mih", true,                        // -2
             Text.literal("Brick"), Text.literal("Daft"), Text.literal("Nightmare")),
-    THE_WORLD_OVER_HEAVEN(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN, TheWorldOverHeavenEntity::new, "twoh", true,   // -3
+    THE_WORLD_OVER_HEAVEN(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN.get(), TheWorldOverHeavenEntity::new, "twoh", true,   // -3
             Text.literal("Shooting Star"), Text.literal("Above the Clouds"), Text.literal("Dirt to Divinity")),
-    KILLER_QUEEN_BITES_THE_DUST(JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST, KQBTDEntity::new, "kqbtd",true,    // -4
+    KILLER_QUEEN_BITES_THE_DUST(JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST.get(), KQBTDEntity::new, "kqbtd",true,    // -4
             Text.literal("Veiled"), Text.literal("Back from the Dead"), Text.literal("Garf")),
-    GOLD_EXPERIENCE_REQUIEM(JEntityTypeRegistry.GER, GEREntity::new, "ger", true,                                   // -5
+    GOLD_EXPERIENCE_REQUIEM(JEntityTypeRegistry.GER.get(), GEREntity::new, "ger", true,                                   // -5
             Text.literal("Silver"), Text.literal("Manga"), Text.literal("Cherry Blossom")),
-    STAR_PLATINUM_THE_WORLD(JEntityTypeRegistry.SPTW, SPTWEntity::new, "sptw", true,                                // -6
+    STAR_PLATINUM_THE_WORLD(JEntityTypeRegistry.SPTW.get(), SPTWEntity::new, "sptw", true,                                // -6
             Text.literal("Judge, Jury, Executioner"), Text.literal("Diamond"), Text.literal("Over Heaven")),
-    PURPLE_HAZE_DISTORTION(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION, PurpleHazeDistortionEntity::new, "purple_haze_distortion", true,       // -7
+    PURPLE_HAZE_DISTORTION(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION.get(), PurpleHazeDistortionEntity::new, "purple_haze_distortion", true,       // -7
             Text.literal("Black Knight"), Text.literal("Vintage"), Text.literal("Reversal")),;
 
 

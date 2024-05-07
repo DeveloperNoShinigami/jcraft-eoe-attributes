@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import net.arna.jcraft.common.entity.ai.goal.CloneAttackGoal;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.entity.EquipmentSlot;
@@ -81,7 +80,7 @@ public class PlayerCloneEntity extends HostileEntity implements RangedAttackMob,
     }
 
     public PlayerCloneEntity(World world) {
-        super(JEntityTypeRegistry.PLAYER_CLONE, world);
+        super(JEntityTypeRegistry.PLAYER_CLONE.get(), world);
         Arrays.fill(armorDropChances, 2.0F);
         Arrays.fill(handDropChances, 2.0F);
 
@@ -333,7 +332,7 @@ public class PlayerCloneEntity extends HostileEntity implements RangedAttackMob,
                 // If the master id is set, but the master isn't (when loaded via NBT data), find master
                 UUID master = this.getMasterId();
                 if (master != null)
-                    for (ServerPlayerEntity serverPlayerEntity : PlayerLookup.world((ServerWorld) getWorld()))
+                    for (ServerPlayerEntity serverPlayerEntity : ((ServerWorld) getWorld()).getPlayers())
                         if (serverPlayerEntity.getUuid().equals(master))
                             this.master = serverPlayerEntity;
             }

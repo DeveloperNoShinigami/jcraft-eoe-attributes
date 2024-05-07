@@ -10,6 +10,7 @@ import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 /** What's Sterner Cooking???

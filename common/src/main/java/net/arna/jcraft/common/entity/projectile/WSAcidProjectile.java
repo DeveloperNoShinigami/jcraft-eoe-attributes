@@ -41,11 +41,11 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
     }
 
     public WSAcidProjectile(World world) {
-        super(JEntityTypeRegistry.WS_ACID_PROJECTILE, world);
+        super(JEntityTypeRegistry.WS_ACID_PROJECTILE.get(), world);
     }
 
     public WSAcidProjectile(World world, LivingEntity owner) {
-        super(JEntityTypeRegistry.WS_ACID_PROJECTILE, owner, world);
+        super(JEntityTypeRegistry.WS_ACID_PROJECTILE.get(), owner, world);
         setSound(SoundEvents.BLOCK_SLIME_BLOCK_FALL);
         setOwner(owner);
         pickupType = PickupPermission.DISALLOWED;

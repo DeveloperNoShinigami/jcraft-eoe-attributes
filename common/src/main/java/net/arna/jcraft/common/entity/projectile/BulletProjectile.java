@@ -60,7 +60,7 @@ public class BulletProjectile extends PersistentProjectileEntity implements GeoE
     }
 
     public BulletProjectile(World world, LivingEntity owner, float caliber, float length, int stunTicks, int damage) {
-        super(JEntityTypeRegistry.BULLET, owner, world);
+        super(JEntityTypeRegistry.BULLET.get(), owner, world);
 
         setCaliber(caliber);
         this.stunTicks = stunTicks;

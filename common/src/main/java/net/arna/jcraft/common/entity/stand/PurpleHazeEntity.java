@@ -13,6 +13,7 @@ import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.Entity;
@@ -135,7 +136,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     @Override
     public void desummon() {
         if (toEvolve && hasUser()) {
-            JComponents.getStandData(getUserOrThrow()).setType(StandType.PURPLE_HAZE_DISTORTION);
+            PlatformUtils.getStandData(getUserOrThrow()).setType(StandType.PURPLE_HAZE_DISTORTION);
             JCraft.summon(getWorld(), getUserOrThrow());
         }
 
@@ -327,7 +328,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     @Override
     public void freshKill(@Nullable LivingEntity entity) {
         super.freshKill(entity);
-        if (!StandType.isNone(JComponents.getStandData(entity).getType()))
+        if (!StandType.isNone(PlatformUtils.getStandData(entity).getType()))
             flowerable = true;
     }
 
@@ -346,7 +347,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
             if (!getWorld().isClient()) {
                 setMove(PLAY, State.PLAY);
 
-                final CommonPhComponent ph = JComponents.getPhData(player);
+                final CommonPhComponent ph = PlatformUtils.getPhData(player);
                 ph.increaseLevel();
                 if (ph.getLevel() >= 5) {
                     ph.resetLevel();

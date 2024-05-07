@@ -4,7 +4,6 @@ import dev.architectury.event.EventResult;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.JCraft.DashData;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -20,7 +19,6 @@ import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.JDimensionRegistry;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
@@ -94,7 +92,7 @@ public class JServerEvents {
                         adjustedPing = MAX_COMPENSATION_MS;
                     double pingTicks = adjustedPing * MS_TO_TICKS;
 
-                    Set<Pair<Integer, Vec3d>> idPosPairs = PlayerLookup.around((ServerWorld) subscriber.getWorld(), subscriber.getPos(), PREDICTION_RADIUS)
+                    Set<Pair<Integer, Vec3d>> idPosPairs = JCraft.around((ServerWorld) subscriber.getWorld(), subscriber.getPos(), PREDICTION_RADIUS)
                             .stream()
                             .filter(serverPlayer -> serverPlayer != subscriber)
                             .map(
@@ -110,7 +108,7 @@ public class JServerEvents {
         );
 
         // Player logic (cooldown handling and DamageTimer counting)
-        for (ServerPlayerEntity player : PlayerLookup.all(server)) {
+        for (ServerPlayerEntity player : JCraft.all(server)) {
             if (player == null || !player.isAlive()) continue;
 
             if (player.getAttacker() != null) PlatformUtils.getMiscData(player).startDamageTimer();

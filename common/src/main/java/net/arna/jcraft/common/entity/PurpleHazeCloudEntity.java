@@ -52,7 +52,7 @@ public class PurpleHazeCloudEntity extends Entity {
     }
 
     public PurpleHazeCloudEntity(World world) {
-        super(JEntityTypeRegistry.PURPLE_HAZE_COUD, world);
+        super(JEntityTypeRegistry.PURPLE_HAZE_COUD.get(), world);
     }
 
     @Override
