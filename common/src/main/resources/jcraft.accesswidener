@@ -21,3 +21,7 @@ accessible method net/minecraft/block/IceBlock melt (Lnet/minecraft/block/BlockS
 accessible field net/minecraft/entity/ai/control/MoveControl sidewaysMovement F
 
 accessible method net/minecraft/command/argument/ArgumentTypes register (Lnet/minecraft/registry/Registry;Ljava/lang/String;Ljava/lang/Class;Lnet/minecraft/command/argument/serialize/ArgumentSerializer;)Lnet/minecraft/command/argument/serialize/ArgumentSerializer;
+accessible method net/minecraft/particle/DefaultParticleType <init> (Z)V
+
+
+

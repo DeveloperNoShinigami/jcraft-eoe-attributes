@@ -9,6 +9,7 @@ import net.minecraft.server.command.ServerCommandSource;
 
 public interface JCommandRegistry {
     static void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
+
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             InduceAttackCommand.register(dispatcher);
             AboutStandCommand.register(dispatcher);

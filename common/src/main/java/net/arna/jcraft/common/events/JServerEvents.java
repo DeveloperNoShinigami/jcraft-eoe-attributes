@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.events;
 
+import dev.architectury.event.EventResult;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.arna.jcraft.JCraft;
@@ -12,8 +13,10 @@ import net.arna.jcraft.common.item.MockItem;
 import net.arna.jcraft.common.network.c2s.PredictionTriggerPacket;
 import net.arna.jcraft.common.network.s2c.PredictionUpdatePacket;
 import net.arna.jcraft.common.tickable.*;
+import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.common.util.EntityInterest;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.JDimensionRegistry;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
@@ -110,7 +113,7 @@ public class JServerEvents {
         for (ServerPlayerEntity player : PlayerLookup.all(server)) {
             if (player == null || !player.isAlive()) continue;
 
-            if (player.getAttacker() != null) JComponents.getMiscData(player).startDamageTimer();
+            if (player.getAttacker() != null) PlatformUtils.getMiscData(player).startDamageTimer();
         }
 
         // Burst handling
@@ -262,24 +265,24 @@ public class JServerEvents {
         }
     }
 
-    public static void entityLoad(Entity entity, ServerWorld world) {
+    public static EventResult entityLoad(Entity entity, World world) {
         // If an item was spawned
         if (entity instanceof ItemEntity item) {
             ItemStack stack = item.getStack();
 
             if (stack.isOf(JObjectRegistry.ANUBIS)) {
                 item.setPickupDelay(0);
-                return;
+                return EventResult.pass();
             }
 
             if (stack.isOf(JObjectRegistry.FV_REVOLVER)) {
                 JCraft.markItemOfInterest(item, EntityInterest.itemAttractionInterest(JObjectRegistry.FV_REVOLVER));
-                return;
+                return EventResult.pass();
             }
 
             // ... in the AU
             if (world.getRegistryKey().equals(JDimensionRegistry.AU_DIMENSION_KEY)) {
-                if (item.getOwner() != null || MockItem.isMockItem(stack)) return;
+                if (item.getOwner() != null || MockItem.isMockItem(stack)) return null;
 
                 ItemStack mockStack = MockItem.createMockStack(stack); // Convert it to a mock item (incompatible and useless)
                 if (stack.getItem() instanceof BlockItem) // ... and mark down all relevant data
@@ -308,23 +311,24 @@ public class JServerEvents {
 
         if (entity instanceof MobEntity mob) {
             // Mark stand user mobs
-            CommonStandComponent standData = JComponents.getStandData(mob);
+            CommonStandComponent standData = PlatformUtils.getStandData(mob);
             if (standData.getType() != null && standData.getType() != StandType.NONE) {
                 JEnemies.add(mob);
-                return;
+                return EventResult.pass();
             }
 
             // Create new stand user mobs
-            if (mob.age > 0) return;
-            if (standData.getType() != null) return;
+            if (mob.age > 0) return null;
+            if (standData.getType() != null) return null;
             EntityGroup group = mob.getGroup();
 
-            if (group != EntityGroup.UNDEAD && group != EntityGroup.ILLAGER && !(mob instanceof EndermanEntity)) return;
+            if (group != EntityGroup.UNDEAD && group != EntityGroup.ILLAGER && !(mob instanceof EndermanEntity))
+                return EventResult.pass();
             Random random = new Random();
             GameRules gameRules = world.getGameRules();
 
             // STAND
-            if (100 - random.nextInt(0, 100) > gameRules.getInt(CHANCE_MOB_SPAWNS_WITH_STAND)) return;
+            if (100 - random.nextInt(0, 100) > gameRules.getInt(CHANCE_MOB_SPAWNS_WITH_STAND)) return null;
             List<StandType> types = gameRules.getBoolean(ALLOW_MOB_EVOLVED_STANDS) ? StandType.getAllStandTypes() : StandType.getRegularStandTypes();
             StandType type = types.get(random.nextInt(types.size()));
             standData.setType(type);
@@ -336,7 +340,7 @@ public class JServerEvents {
             if (movementSpeed != null && movementSpeed.getBaseValue() < 0.3) movementSpeed.setBaseValue(0.3);
 
             // EQUIPMENT
-            if (mob.getMaxHealth() > 100.0) return;
+            if (mob.getMaxHealth() > 100.0) return EventResult.pass();
 
             DefaultedList<ItemStack> handItems = (DefaultedList<ItemStack>) mob.getHandItems(), armorItems = (DefaultedList<ItemStack>) mob.getArmorItems();
             // Silver chariot users may spawn with Anubis (25% chance)
@@ -361,5 +365,6 @@ public class JServerEvents {
 
             JEnemies.add(mob);
         }
+        return EventResult.pass();
     }
 }

@@ -7,8 +7,6 @@ import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.longs.LongLongPair;
 import lombok.Synchronized;
 import lombok.experimental.UtilityClass;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;

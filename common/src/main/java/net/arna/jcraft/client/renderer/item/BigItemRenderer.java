@@ -1,7 +1,5 @@
 package net.arna.jcraft.client.renderer.item;
 
-import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;

@@ -1,7 +1,6 @@
 package net.arna.jcraft.client.registry;
 
 import com.mojang.datafixers.util.Pair;
-import me.jellysquid.mods.sodium.client.gl.shader.ShaderParser;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.rendering.PostProcessHandler;
 import net.arna.jcraft.client.rendering.post.TimestopShaderPostProcessor;

@@ -3,8 +3,6 @@ package net.arna.jcraft.client.renderer.effects;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;

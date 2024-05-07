@@ -2,8 +2,6 @@ package net.arna.jcraft.client.renderer.effects;
 
 import lombok.experimental.UtilityClass;
 import net.arna.jcraft.common.network.s2c.TimeAccelStatePacket;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.util.Util;
 import net.minecraft.world.GameRules;
 

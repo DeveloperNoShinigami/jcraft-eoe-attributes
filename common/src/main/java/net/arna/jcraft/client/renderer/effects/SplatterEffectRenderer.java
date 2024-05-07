@@ -5,8 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.arna.jcraft.common.splatter.JSplatterManager;
 import net.arna.jcraft.common.splatter.SplatterSection;
 import net.arna.jcraft.common.util.JUtils;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.*;

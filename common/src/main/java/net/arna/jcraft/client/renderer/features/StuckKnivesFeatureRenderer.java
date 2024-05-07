@@ -3,6 +3,7 @@ package net.arna.jcraft.client.renderer.features;
 import com.google.common.collect.Streams;
 import net.arna.jcraft.mixin.client.AnimalModelAccessor;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -28,12 +29,12 @@ public class StuckKnivesFeatureRenderer<T extends LivingEntity, M extends Animal
     }
 
     protected int getObjectCount(T entity) {
-        return JComponents.getMiscData(entity).getStuckKnifeCount();
+        return PlatformUtils.getMiscData(entity).getStuckKnifeCount();
     }
 
     protected void renderObject(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, Entity entity, float directionX, float directionY, float directionZ, float tickDelta) {
         float f = MathHelper.sqrt(directionX * directionX + directionZ * directionZ);
-        KnifeProjectile knife = new KnifeProjectile(entity.world);
+        KnifeProjectile knife = new KnifeProjectile(entity.getWorld());
         knife.setPos(entity.getX(), entity.getY(), entity.getZ());
         knife.setYaw((float)(Math.atan2(directionX, directionZ) * 57.2957763671875));
         knife.setPitch((float)(Math.atan2(directionY, f) * 57.2957763671875));
