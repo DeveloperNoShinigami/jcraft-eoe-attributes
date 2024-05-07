@@ -1,5 +1,8 @@
 package net.arna.jcraft.common.item;
 
+import net.arna.jcraft.client.registry.JArmorRendererRegistry;
+import net.arna.jcraft.client.renderer.armor.JotaroArmorRenderer;
+import net.arna.jcraft.client.renderer.armor.StoneMaskRenderer;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.platform.PlatformUtils;
@@ -30,6 +33,7 @@ import java.util.function.Supplier;
 
 public class StoneMaskItem extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     public StoneMaskItem(ArmorMaterial materialIn, Type slot, Settings builder) {
         super(materialIn, slot, builder);
@@ -75,11 +79,11 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
 
     @Override
     public void createRenderer(Consumer<Object> consumer) {
-
+        JArmorRendererRegistry.createRenderer(consumer, new StoneMaskRenderer());
     }
 
     @Override
     public Supplier<Object> getRenderProvider() {
-        return null;
+        return renderProvider;
     }
 }

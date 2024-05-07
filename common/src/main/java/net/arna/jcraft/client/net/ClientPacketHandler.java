@@ -1,6 +1,7 @@
 package net.arna.jcraft.client.net;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.architectury.networking.NetworkManager;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
@@ -56,7 +57,7 @@ import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 import static net.arna.jcraft.registry.JPacketRegistry.*;
-import static net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver;
+
 
 @UtilityClass
 public class ClientPacketHandler {
@@ -114,11 +115,15 @@ public class ClientPacketHandler {
     }
 
     private static void register(Identifier id, Consumer<PacketByteBuf> handler) {
-        registerGlobalReceiver(id, (client, handler1, buf, responseSender) -> handler.accept(buf));
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, id, (buf, context) -> {
+            handler.accept(buf);
+        });
     }
 
     private static void register(Identifier id, BiConsumer<MinecraftClient, PacketByteBuf> handler) {
-        registerGlobalReceiver(id, (client, handler1, buf, responseSender) -> handler.accept(client, buf));
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, id, (buf, context) -> {
+            handler.accept(MinecraftClient.getInstance(), buf);
+        });
     }
 
     public static void handleAnimation(@NotNull MinecraftClient client, PacketByteBuf buf) {

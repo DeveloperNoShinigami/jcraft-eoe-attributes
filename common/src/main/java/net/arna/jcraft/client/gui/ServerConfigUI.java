@@ -1,14 +1,15 @@
 package net.arna.jcraft.client.gui;
 
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.impl.builders.*;
 import net.arna.jcraft.common.config.*;
 import net.arna.jcraft.common.network.c2s.ConfigUpdatePacket;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
@@ -100,8 +101,8 @@ public class ServerConfigUI {
         }
 
         builder.setEditable(editable);
-        builder.setSavingRunnable(() -> ClientPlayNetworking.send(ConfigUpdatePacket.ID, ConfigOption.writeOptions(
-                PacketByteBufs.create(), changedOptions)));
+        builder.setSavingRunnable(() -> NetworkManager.sendToServer(ConfigUpdatePacket.ID, ConfigOption.writeOptions(
+                new PacketByteBuf(Unpooled.buffer()), changedOptions)));
         MinecraftClient.getInstance().setScreen(builder.build());
     }
 }

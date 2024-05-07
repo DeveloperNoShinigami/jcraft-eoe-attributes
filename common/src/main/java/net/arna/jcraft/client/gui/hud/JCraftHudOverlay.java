@@ -9,6 +9,7 @@ import net.arna.jcraft.common.entity.stand.TheSunEntity;
 import net.arna.jcraft.common.spec.AnubisSpec;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -60,7 +61,7 @@ public class JCraftHudOverlay {
 
         JSpec<?, ?> spec = JUtils.getSpec(player);
         if (spec instanceof AnubisSpec) {
-            int displayBloodlust = (int) ((JComponents.getMiscData(player).getAttackSpeedMult() - 1.0f) * 5);
+            int displayBloodlust = (int) ((PlatformUtils.getMiscData(player).getAttackSpeedMult() - 1.0f) * 5);
             if (displayBloodlust > 0)
                 BLOODLUST_GAUGE.render(ctx, gaugeX, height + gaugeHeightOffset, displayBloodlust);
         }

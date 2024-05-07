@@ -1,10 +1,10 @@
 package net.arna.jcraft.client.gui.hud;
 
+import dev.architectury.event.events.client.ClientTickEvent;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.rendering.FrameCounter;
 import net.arna.jcraft.client.rendering.HUDAnimation;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.client.texture.TextureManager;
@@ -28,7 +28,7 @@ public class EpitaphOverlay {
     private static int countdown;
 
     static {
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        ClientTickEvent.CLIENT_POST.register(client -> {
             if (countdown == 0) stop();
             if (countdown < 0) return;
             countdown--;

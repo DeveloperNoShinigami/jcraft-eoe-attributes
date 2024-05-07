@@ -2,7 +2,12 @@ package net.arna.jcraft.client;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
+import dev.architectury.event.events.client.ClientGuiEvent;
+import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.networking.NetworkManager;
+import dev.architectury.registry.ReloadListenerRegistry;
+import dev.architectury.registry.client.particle.ParticleProviderRegistry;
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import lombok.Getter;
@@ -11,6 +16,7 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.gravity.util.GravityChannelClient;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
+import net.arna.jcraft.client.gui.hud.ScreenFreezeRenderer;
 import net.arna.jcraft.client.net.ClientPacketHandler;
 import net.arna.jcraft.client.particle.*;
 import net.arna.jcraft.client.registry.*;
@@ -29,6 +35,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
 import net.arna.jcraft.common.network.c2s.StandBlockPacket;
 import net.arna.jcraft.common.util.*;
+import net.arna.jcraft.platform.PlatformUtils;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
 import net.arna.jcraft.registry.JObjectRegistry;
 import net.arna.jcraft.registry.JPacketRegistry;
@@ -46,8 +53,10 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceReloader;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Unit;
@@ -105,7 +114,10 @@ public class JCraftClient implements ClientModInitializer {
         AutoConfig.register(JClientConfig.class, JanksonConfigSerializer::new);
         JClientConfig.load();
 
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new DecimalFormatUpdater());
+        ReloadListenerRegistry.register(ResourceType.CLIENT_RESOURCES, new DecimalFormatUpdater());
+
+        ClientTickEvent.CLIENT_POST.register(ScreenFreezeRenderer::onEndTick);
+        ClientGuiEvent.RENDER_HUD.register(ScreenFreezeRenderer::onHudRender);
 
         GravityChannelClient.init();
 
@@ -122,36 +134,34 @@ public class JCraftClient implements ClientModInitializer {
         UIShaderHandler.INSTANCE.init(); // Should be last
 
         // Particle registration
-        ParticleFactoryRegistry particleFactoryRegistry = ParticleFactoryRegistry.getInstance();
-        particleFactoryRegistry.register(JParticleTypeRegistry.COMBO_BREAK, ComboBreakerParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.COOLDOWN_CANCEL, CooldownCancelParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.HITSPARK_1, provider -> new HitsparkParticle.Factory(provider, 0.4f, 5));
-        particleFactoryRegistry.register(JParticleTypeRegistry.HITSPARK_2, provider -> new HitsparkParticle.Factory(provider, 0.66f, 6));
-        particleFactoryRegistry.register(JParticleTypeRegistry.HITSPARK_3, provider -> new HitsparkParticle.Factory(provider, 1f, 8));
-        particleFactoryRegistry.register(JParticleTypeRegistry.KCPARTICLE, KCParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.BACKSTAB, BackstabParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.SPEED_PARTICLE, SpeedParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.BITES_THE_DUST, BitesTheDustParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.BOOM_1, BoomParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.PIXEL, PixelParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.BLOCKSPARK, provider -> new BlocksparkParticle.Factory(provider, 0.15f));
-        particleFactoryRegistry.register(JParticleTypeRegistry.GO, GoParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.AURA_ARC, AuraArcParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.AURA_BLOB, AuraBlobParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.INVERSION, InversionParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.SUN_LOCK_ON, BackstabParticle.Factory::new); // 9 frames, reusing
-        particleFactoryRegistry.register(JParticleTypeRegistry.PURPLE_HAZE_CLOUD, PurpleHazeCloudParticle.Factory::new);
-        particleFactoryRegistry.register(JParticleTypeRegistry.PURPLE_HAZE_PARTICLE, PurpleHazeErraticParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.COMBO_BREAK, ComboBreakerParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.COOLDOWN_CANCEL, CooldownCancelParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.HITSPARK_1, provider -> new HitsparkParticle.Factory(provider, 0.4f, 5));
+        ParticleProviderRegistry.register(JParticleTypeRegistry.HITSPARK_2, provider -> new HitsparkParticle.Factory(provider, 0.66f, 6));
+        ParticleProviderRegistry.register(JParticleTypeRegistry.HITSPARK_3, provider -> new HitsparkParticle.Factory(provider, 1f, 8));
+        ParticleProviderRegistry.register(JParticleTypeRegistry.KCPARTICLE, KCParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.BACKSTAB, BackstabParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.SPEED_PARTICLE, SpeedParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.BITES_THE_DUST, BitesTheDustParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.BOOM_1, BoomParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.PIXEL, PixelParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.BLOCKSPARK, provider -> new BlocksparkParticle.Factory(provider, 0.15f));
+        ParticleProviderRegistry.register(JParticleTypeRegistry.GO, GoParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.AURA_ARC, AuraArcParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.AURA_BLOB, AuraBlobParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.INVERSION, InversionParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.SUN_LOCK_ON, BackstabParticle.Factory::new); // 9 frames, reusing
+        ParticleProviderRegistry.register(JParticleTypeRegistry.PURPLE_HAZE_CLOUD, PurpleHazeCloudParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.PURPLE_HAZE_PARTICLE, PurpleHazeErraticParticle.Factory::new);
 
         // Renderer registration
         JEntityRendererRegister.registerEntityRenderers();
         JArmorRendererRegistry.registerArmorRenderers();
-        BlockEntityRendererFactories.register(JBlockEntityTypeRegistry.SHADER_TEST_BLOCK_ENTITY, ShaderTestBlockEntityRenderer::new);
-        BlockEntityRendererFactories.register(JBlockEntityTypeRegistry.COFFIN_TILE, CoffinTileRenderer::new);
+        BlockEntityRendererFactories.register(JBlockEntityTypeRegistry.COFFIN_TILE.get(), CoffinTileRenderer::new);
 
         // This HAS to be registered before TrackingKeyBinding is initialized.
-        ClientTickEvents.END_CLIENT_TICK.register(this::tickClient);
-        ClientTickEvents.END_WORLD_TICK.register(new SkyBoxManager());
+        ClientTickEvent.CLIENT_POST.register(this::tickClient);
+        ClientTickEvent.CLIENT_LEVEL_POST.register(level -> new SkyBoxManager());
 
         // Keybinding registration
         standSummon = TrackedKeyBinding.createAndRegister("key.jcraft.standsummon", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_N, "key.category.jcraft");
@@ -174,7 +184,7 @@ public class JCraftClient implements ClientModInitializer {
         SplatterEffectRenderer.init();
         ShockwaveEffectRenderer.init();
 
-        HudRenderCallback.EVENT.register(this::renderHud);
+        ClientGuiEvent.RENDER_HUD.register(this::renderHud);
 
         // Run when the MinecraftClient instance is fully initialized.
         MinecraftClient.getInstance().send(EpitaphOverlay::preload);
@@ -183,6 +193,7 @@ public class JCraftClient implements ClientModInitializer {
 
         Identifier itemId = JObjectRegistry.ITEMS.get(JObjectRegistry.DEBUG_WAND);
         BigItemRenderer itemRenderer = new BigItemRenderer(itemId);
+
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(itemRenderer);
         BuiltinItemRendererRegistry.INSTANCE.register(JObjectRegistry.DEBUG_WAND, itemRenderer);
 
@@ -225,7 +236,7 @@ public class JCraftClient implements ClientModInitializer {
 
         // Draw text HUD
         if (!useIcons) {
-            CommonCooldownsComponent cooldowns = JComponents.getCooldowns(player);
+            CommonCooldownsComponent cooldowns = PlatformUtils.getCooldowns(player);
 
             CooldownType[] values = CooldownType.values();
             for (int i = 0; i < values.length; i++) {
@@ -351,7 +362,7 @@ public class JCraftClient implements ClientModInitializer {
             Object2BooleanMap<MoveInputType> moveInput = getChangedInputs(getBindings());
 
             if (!movementInput.isEmpty() || !moveInput.isEmpty())
-                ClientPlayNetworking.send(JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket.write(movementInput, moveInput));
+                NetworkManager.sendToServer(JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket.write(movementInput, moveInput));
 
             Object2BooleanMap<MoveInputType> heldMoves = new Object2BooleanOpenHashMap<>();
             getBindings().forEach((key, value) -> {
@@ -369,14 +380,14 @@ public class JCraftClient implements ClientModInitializer {
         // Block
         if (getTrackedUseKey().isChangedThisTick()) {
             boolean pressed = getTrackedUseKey().isPressedThisTick();
-                ClientPlayNetworking.send(JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket.write(pressed));
+            NetworkManager.sendToServer(JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket.write(pressed));
             if (stand != null && stand.isRemoteAndControllable() && pressed)
-                ClientPlayNetworking.send(JPacketRegistry.C2S_REMOTE_STAND_INTERACT, PacketByteBufs.create());
+                NetworkManager.sendToServer(JPacketRegistry.C2S_REMOTE_STAND_INTERACT, new PacketByteBuf(Unpooled.buffer()));
         }
 
         // Cooldown Cancel
         if (cooldownCancel.isPressedThisTick())
-            ClientPlayNetworking.send(JPacketRegistry.C2S_COOLDOWN_CANCEL, PacketByteBufs.create());
+            NetworkManager.sendToServer(JPacketRegistry.C2S_COOLDOWN_CANCEL, new PacketByteBuf(Unpooled.buffer()));
 
         if (client.isPaused() && client.isInSingleplayer()) return;
 
@@ -399,7 +410,7 @@ public class JCraftClient implements ClientModInitializer {
 
             for (Entity entity : toStop)
                 if (!entity.hasVehicle() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle())
-                    JComponents.getTimeStopData(entity).setTicks(2);
+                    PlatformUtils.getTimeStopData(entity).setTicks(2);
         }
     }
 
@@ -428,7 +439,7 @@ public class JCraftClient implements ClientModInitializer {
     }
 
     @Getter
-    private static class DecimalFormatUpdater implements IdentifiableResourceReloadListener {
+    private static class DecimalFormatUpdater implements ResourceReloader {
         private final Identifier fabricId = JCraft.id("decimal_format_updater");
 
         @Override
