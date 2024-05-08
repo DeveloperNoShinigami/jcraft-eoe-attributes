@@ -80,7 +80,7 @@ import static net.arna.jcraft.client.gui.hud.JCraftAbilityHud.getHudX;
 import static net.arna.jcraft.client.util.JClientUtils.activeTimestops;
 
 @Environment(EnvType.CLIENT)
-public class JCraftClient implements ClientModInitializer {
+public class JCraftClient {
     // Keybinds
     public static TrackedKeyBinding standSummon, heavyKey, barrageKey, ultKey, special1Key, special2Key, special3Key,
             comboBreaker, cooldownCancel, utility, dash;
@@ -105,8 +105,7 @@ public class JCraftClient implements ClientModInitializer {
     public static boolean comboStarted = false;
     public static int framesSinceComboStarted = 0;
 
-    @Override
-    public void onInitializeClient() {
+    public static void init() {
         JCraft.setClientEntityHandler(ClientEntityHandlerImpl.INSTANCE);
 
         AutoConfig.register(JClientConfig.class, JanksonConfigSerializer::new);

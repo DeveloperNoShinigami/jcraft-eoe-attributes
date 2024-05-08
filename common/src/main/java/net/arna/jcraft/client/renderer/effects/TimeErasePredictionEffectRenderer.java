@@ -24,7 +24,7 @@ import java.util.*;
 public class TimeErasePredictionEffectRenderer {
     private static int ticksLeft = 0;
     private static final Map<Entity, Vec3d> predictions = new WeakHashMap<>();
-    private static Framebuffer predictionsBuffer;
+    private static Framebuffer predictionsBuffer = MinecraftClient.getInstance().getFramebuffer();
 
     public static void init() {
         ClientTickEvent.CLIENT_POST.register(client -> {

@@ -42,7 +42,7 @@ public class CooldownsComponentImpl extends CommonCooldownsComponentImpl impleme
 
     @Override
     public void readFromNbt(@NonNull NbtCompound tag) {
-        readFromNbt(tag);
+        super.readFromNbt(tag);
     }
 
 

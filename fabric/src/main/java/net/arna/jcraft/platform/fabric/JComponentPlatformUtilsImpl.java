@@ -1,7 +1,5 @@
-package net.arna.jcraft.platform;
+package net.arna.jcraft.platform.fabric;
 
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import net.arna.jcraft.common.component.entity.CommonGrabComponent;
 import net.arna.jcraft.common.component.entity.CommonGravityComponent;
@@ -11,12 +9,10 @@ import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.arna.jcraft.fabric.common.component.JComponents;
-import net.arna.jcraft.fabric.common.component.entity.GravityComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
