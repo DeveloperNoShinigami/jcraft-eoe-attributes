@@ -45,7 +45,8 @@ dependencies {
     implementation("com.eliotlash.mclib:mclib:20")
 
     //Player Anim
-    include modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${player_anim_version}")
+
+    modImplementation "dev.kosmx.player-anim:player-animation-lib-fabric:${rootProject.player_anim_version}"
 
     //CCA
     include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.0.2")

@@ -1,10 +1,8 @@
 package net.arna.jcraft.common.item;
 
-import net.arna.jcraft.client.registry.JArmorRendererRegistry;
-import net.arna.jcraft.client.renderer.armor.JotaroArmorRenderer;
 import net.arna.jcraft.client.renderer.armor.KarsArmorRenderer;
 import net.arna.jcraft.client.renderer.armor.RedHatRenderer;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.EquipmentSlot;
@@ -76,10 +74,10 @@ public class SunProtectionItem extends ArmorItem implements GeoItem {
             @Override
             public @NotNull BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
                 if (this.renderer == null) {
-                    if (itemStack.isOf(JObjectRegistry.KARSHEADWRAP)) {
+                    if (itemStack.isOf(JItemRegistry.KARSHEADWRAP.get())) {
                         this.renderer = new KarsArmorRenderer();
                     }
-                    if (itemStack.isOf(JObjectRegistry.RED_HAT)) {
+                    if (itemStack.isOf(JItemRegistry.RED_HAT.get())) {
                         this.renderer = new RedHatRenderer();
                     }
                 }

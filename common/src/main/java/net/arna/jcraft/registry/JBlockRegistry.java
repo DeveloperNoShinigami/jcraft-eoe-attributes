@@ -1,0 +1,53 @@
+package net.arna.jcraft.registry;
+
+import dev.architectury.registry.registries.RegistrySupplier;
+import net.arna.jcraft.common.block.CoffinBlock;
+import net.arna.jcraft.common.block.FoolishSandBlock;
+import net.arna.jcraft.common.block.SoulBlock;
+import net.arna.jcraft.common.item.*;
+import net.arna.jcraft.common.spec.SpecType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterials;
+import net.minecraft.item.Item;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import static net.arna.jcraft.JCraft.BLOCK_REGISTRY;
+import static net.arna.jcraft.JCraft.ITEM_REGISTRY;
+
+public interface JBlockRegistry {
+
+    //Block
+    RegistrySupplier<Block> FOOLISH_SAND_BLOCK = BLOCK_REGISTRY.register("foolish_sand_block", () -> new FoolishSandBlock(AbstractBlock.Settings.create()
+            .strength(0.5f)
+            .sounds(BlockSoundGroup.SAND)
+    ));
+    RegistrySupplier<Block> SOUL_BLOCK = BLOCK_REGISTRY.register("soul_block", () -> new SoulBlock(AbstractBlock.Settings.create()
+            .strength(4.0f)
+            .sounds(BlockSoundGroup.SOUL_SOIL)
+    ));
+    RegistrySupplier<Block> METEORITE_BLOCK = BLOCK_REGISTRY.register("meteorite_block", () -> new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)
+            .requiresTool()
+            .strength(6.0f, 1200f)
+            .sounds(BlockSoundGroup.ANCIENT_DEBRIS)
+    ));
+    RegistrySupplier<Block> METEORITE_IRON_ORE_BLOCK = BLOCK_REGISTRY.register("meteorite_iron_ore_block", () -> new Block(AbstractBlock.Settings.copy(Blocks.IRON_ORE)
+            .requiresTool()
+            .strength(9.0f, 1200f)
+            .sounds(BlockSoundGroup.ANCIENT_DEBRIS)
+    ));
+    RegistrySupplier<Block> COFFIN_BLOCK = BLOCK_REGISTRY.register("coffin", () -> new CoffinBlock(AbstractBlock.Settings.create().sounds(BlockSoundGroup.WOOD).nonOpaque()));
+
+
+    static void init() {
+
+    }
+}

@@ -33,12 +33,15 @@ import net.arna.jcraft.mixin.EntityTrackerAccessor;
 import net.arna.jcraft.mixin.ThreadedAnvilChunkStorageAccessor;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.*;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
@@ -244,6 +247,12 @@ public final class JCraft {
         return new Identifier(MOD_ID, name);
     }
 
+    public static DeferredRegister<EntityType<?>> ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ENTITY_TYPE);
+    public static DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ITEM);
+    public static DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK);
+
+
+
     public static void init() {
         GravityChannel.init();
 
@@ -251,7 +260,13 @@ public final class JCraft {
         JParticleTypeRegistry.initParticleTypes();
 
         // Registration
-        JObjectRegistry.init();
+        JEntityTypeRegistry.init();
+        ENTITY_TYPE_REGISTRY.register();
+        JBlockRegistry.init();
+        BLOCK_REGISTRY.register();
+        JItemRegistry.init();
+        ITEM_REGISTRY.register();
+
         JBlockEntityTypeRegistry.init();
         CommandRegistrationEvent.EVENT.register(JCommandRegistry::registerCommands);
         JEventsRegistry.registerEvents();

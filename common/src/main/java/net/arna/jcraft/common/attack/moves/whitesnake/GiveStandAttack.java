@@ -9,7 +9,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -27,7 +27,7 @@ public class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, White
     public boolean canBeInitiated(WhiteSnakeEntity attacker) {
         if (!attacker.hasUser())
             return false;
-        return super.canBeInitiated(attacker) && attacker.getUserOrThrow().getOffHandStack().getItem() == JObjectRegistry.STAND_DISC;
+        return super.canBeInitiated(attacker) && attacker.getUserOrThrow().getOffHandStack().getItem() == JItemRegistry.STAND_DISC;
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -71,7 +71,7 @@ public class AnubisItem extends Item {
         if (user.isSneaking() || world.isClient || (stand != null && stand.blocking)) return TypedActionResult.fail(item);
 
         JUtils.serverPlaySound(JSoundRegistry.ANUBIS_SHEATHE, (ServerWorld) world, user.getPos());
-        user.setStackInHand(hand, new ItemStack(JObjectRegistry.ANUBISSHEATHED));
+        user.setStackInHand(hand, new ItemStack(JItemRegistry.ANUBISSHEATHED.get()));
 
         return TypedActionResult.success(item);
     }

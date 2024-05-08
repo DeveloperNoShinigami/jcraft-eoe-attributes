@@ -1,13 +1,10 @@
 package net.arna.jcraft.client.registry;
 
-import net.arna.jcraft.client.renderer.armor.*;
-import net.arna.jcraft.registry.JObjectRegistry;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.example.client.renderer.armor.WolfArmorRenderer;
 import software.bernie.geckolib.animatable.client.RenderProvider;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 

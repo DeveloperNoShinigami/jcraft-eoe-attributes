@@ -1,7 +1,7 @@
 package net.arna.jcraft.mixin;
 
 import net.arna.jcraft.common.item.StandDiscItem;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
@@ -18,7 +18,7 @@ public class GrindstoneScreenHandlerAnon2and3Mixin extends Slot {
 
     @Inject(method = "canInsert", at = @At("HEAD"), cancellable = true)
     private void canInsertStandDiscs(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (stack.getItem() == JObjectRegistry.STAND_DISC && !StandDiscItem.isEmptyDisc(stack))
+        if (stack.getItem() == JItemRegistry.STAND_DISC && !StandDiscItem.isEmptyDisc(stack))
             // This is executed before the item is inserted, so both slots must be empty when inserting a disc.
             // You cannot insert two discs simultaneously.
             cir.setReturnValue(inventory.getStack(0).isEmpty() && inventory.getStack(1).isEmpty());

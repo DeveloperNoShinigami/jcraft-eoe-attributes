@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.enchantments;
 
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentTarget;
@@ -21,7 +21,7 @@ public class CinderellasKissEnchantment extends Enchantment {
 
     @Override
     public boolean isAcceptableItem(ItemStack stack) {
-        return stack.getItem() == JObjectRegistry.CINDERELLA_MASK;
+        return stack.getItem() == JItemRegistry.CINDERELLA_MASK;
     }
     
     public static int getCKLevel(ItemStack stack) {

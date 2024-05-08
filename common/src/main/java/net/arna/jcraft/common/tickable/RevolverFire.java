@@ -3,7 +3,7 @@ package net.arna.jcraft.common.tickable;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.item.FVRevolverItem;
 import net.arna.jcraft.common.util.DimensionData;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -32,7 +32,7 @@ public class RevolverFire {
                     }
 
                     ItemStack main = user.getMainHandStack();
-                    if (main.getItem() == JObjectRegistry.FV_REVOLVER)
+                    if (main.getItem() == JItemRegistry.FV_REVOLVER)
                         FVRevolverItem.fire(main, world, user);
                 }
             }

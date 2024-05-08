@@ -5,7 +5,7 @@ import io.netty.buffer.Unpooled;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -48,7 +48,7 @@ public class StandBlockPacket {
     }
 
     private static boolean allowBlockingWith(ItemStack itemStack) {
-        if (itemStack.isOf(JObjectRegistry.ANUBIS) || itemStack.isOf(JObjectRegistry.ANUBISSHEATHED))
+        if (itemStack.isOf(JItemRegistry.ANUBIS.get()) || itemStack.isOf(JItemRegistry.ANUBISSHEATHED.get()))
             return true;
         return itemStack.getUseAction() == UseAction.NONE;
     }

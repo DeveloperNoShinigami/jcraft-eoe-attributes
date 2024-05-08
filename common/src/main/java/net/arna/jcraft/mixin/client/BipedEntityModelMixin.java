@@ -5,7 +5,7 @@ import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.CrossbowPosing;
@@ -61,7 +61,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
             return;
         }
 
-        if (livingEntity.isHolding(JObjectRegistry.FV_REVOLVER))
+        if (livingEntity.isHolding(JItemRegistry.FV_REVOLVER.get()))
             CrossbowPosing.hold(rightArm, leftArm, head, livingEntity.getMainArm() == Arm.RIGHT);
 
         if (livingEntity.getPose() == EntityPose.STANDING) {

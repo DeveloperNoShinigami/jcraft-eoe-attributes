@@ -2,9 +2,8 @@ package net.arna.jcraft.common.loot;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import dev.architectury.event.events.common.LootEvent;
 import net.arna.jcraft.common.enchantments.CinderellasKissEnchantment;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
@@ -46,7 +45,7 @@ public class JLootTableHelper {
 
     private static void addMaskPool(LootTable.Builder builder) {
         builder.pool(LootPool.builder()
-                .with(ItemEntry.builder(JObjectRegistry.CINDERELLA_MASK)
+                .with(ItemEntry.builder(JItemRegistry.CINDERELLA_MASK.get())
                         .weight(1) // 33% chance
                         .apply(new SetEnchantmentsLootFunction.Builder()
                                 // Binomial distribution with n = 3, p = 0.4, plotter here:
@@ -66,7 +65,7 @@ public class JLootTableHelper {
                 .conditionally(RandomChanceLootCondition.builder(0.08f)));
 
         builder.pool(LootPool.builder()
-                .with(ItemEntry.builder(JObjectRegistry.STONE_MASK))
+                .with(ItemEntry.builder(JItemRegistry.STONE_MASK.get()))
                 .conditionally(RandomChanceLootCondition.builder(0.04f)));
     }
 }

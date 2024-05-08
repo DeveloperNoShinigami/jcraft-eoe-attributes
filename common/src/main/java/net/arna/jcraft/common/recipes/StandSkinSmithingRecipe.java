@@ -4,10 +4,9 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.enchantments.CinderellasKissEnchantment;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.item.StandDiscItem;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SmithingRecipe;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -29,8 +28,8 @@ public class StandSkinSmithingRecipe implements SmithingRecipe {
         StandType standType = StandDiscItem.getStandType(discStack);
         if (standType == null) return false;
 
-        return discStack.getItem() == JObjectRegistry.STAND_DISC &&
-                maskStack.getItem() == JObjectRegistry.CINDERELLA_MASK &&
+        return discStack.getItem() == JItemRegistry.STAND_DISC &&
+                maskStack.getItem() == JItemRegistry.CINDERELLA_MASK &&
                 CinderellasKissEnchantment.getCKLevel(maskStack) <= standType.getSkinCount();
     }
 

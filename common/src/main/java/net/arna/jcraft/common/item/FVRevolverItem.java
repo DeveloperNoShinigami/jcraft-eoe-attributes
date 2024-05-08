@@ -3,7 +3,7 @@ package net.arna.jcraft.common.item;
 import net.arna.jcraft.common.entity.projectile.BulletProjectile;
 import net.arna.jcraft.common.tickable.RevolverFire;
 import net.arna.jcraft.common.util.DimensionData;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.client.item.TooltipContext;
@@ -48,7 +48,7 @@ public class FVRevolverItem extends Item {
         int shots = data.getInt("Shots");
         if (shots < 1) return TypedActionResult.fail(itemStack);
         if (!world.isClient) {
-            user.getItemCooldownManager().set(JObjectRegistry.FV_REVOLVER, 4); // Unusable until fires
+            user.getItemCooldownManager().set(JItemRegistry.FV_REVOLVER.get(), 4); // Unusable until fires
             RevolverFire.enqueue(new DimensionData(user, world.getRegistryKey(), 3));
         }
         return TypedActionResult.success(itemStack);
@@ -67,8 +67,8 @@ public class FVRevolverItem extends Item {
         world.spawnEntity(bullet);
 
         if (user instanceof PlayerEntity player) {
-            player.getItemCooldownManager().set(JObjectRegistry.FV_REVOLVER, 11); // Refire time
-            player.incrementStat(Stats.USED.getOrCreateStat(JObjectRegistry.FV_REVOLVER));
+            player.getItemCooldownManager().set(JItemRegistry.FV_REVOLVER.get(), 11); // Refire time
+            player.incrementStat(Stats.USED.getOrCreateStat(JItemRegistry.FV_REVOLVER.get()));
         }
     }
 

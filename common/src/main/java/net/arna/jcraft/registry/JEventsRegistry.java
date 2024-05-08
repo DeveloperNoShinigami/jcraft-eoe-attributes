@@ -35,7 +35,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.GameRules;
 
-import static net.arna.jcraft.registry.JObjectRegistry.COFFIN_BLOCK;
+import static net.arna.jcraft.registry.JItemRegistry.COFFIN_BLOCK;
 
 public interface JEventsRegistry {
     static void registerEvents() {
@@ -164,7 +164,7 @@ public interface JEventsRegistry {
 
     public static ActionResult allowSleep(PlayerEntity player, BlockPos sleepingPos){
         if (player.getWorld() instanceof ServerWorld serverWorld) {
-            if (serverWorld.getBlockState(sleepingPos).isOf(COFFIN_BLOCK)) {
+            if (serverWorld.getBlockState(sleepingPos).isOf(JBlockRegistry.COFFIN_BLOCK.get())) {
                 return serverWorld.isDay() ? ActionResult.SUCCESS : ActionResult.FAIL;
             }
         }
@@ -173,7 +173,7 @@ public interface JEventsRegistry {
     }
 
     public static ActionResult allowBed(Entity entity, BlockPos sleepingPos, BlockState state, boolean b){
-        if (state.isOf(COFFIN_BLOCK))
+        if (state.isOf(JBlockRegistry.COFFIN_BLOCK.get()))
             if (entity instanceof ServerPlayerEntity serverPlayer)
                 return serverPlayer.canResetTimeBySleeping() ? ActionResult.FAIL : ActionResult.SUCCESS;
         return ActionResult.PASS;
@@ -181,7 +181,7 @@ public interface JEventsRegistry {
 
     public static Direction modifySleepingDirection(Entity entity, BlockPos sleepingPos, Direction sleepingDirection){
         BlockState state = entity.getWorld().getBlockState(sleepingPos);
-        if (state.isOf(COFFIN_BLOCK))
+        if (state.isOf(JBlockRegistry.COFFIN_BLOCK.get()))
             return state.get(CoffinBlock.FACING);
         return sleepingDirection;
     }
@@ -189,7 +189,7 @@ public interface JEventsRegistry {
     public static void stopSleeping(Entity entity, BlockPos sleepingPos){
         if (entity instanceof ServerPlayerEntity serverPlayer && serverPlayer.canResetTimeBySleeping() && serverPlayer.getWorld() instanceof ServerWorld serverWorld) {
             BlockState state = serverWorld.getBlockState(sleepingPos);
-            if (state.isOf(COFFIN_BLOCK)) {
+            if (state.isOf(JBlockRegistry.COFFIN_BLOCK.get())) {
                 if (serverWorld.sleepManager.canSkipNight(serverWorld.getGameRules().getInt(GameRules.PLAYERS_SLEEPING_PERCENTAGE))
                         && serverWorld.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE))
                     serverWorld.setTimeOfDay(13000);

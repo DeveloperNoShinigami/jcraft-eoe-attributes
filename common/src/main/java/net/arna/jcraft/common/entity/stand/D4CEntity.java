@@ -18,7 +18,7 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JDimensionRegistry;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EquipmentSlot;
@@ -195,7 +195,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     }
 
     private static void equipRevolver(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        attacker.equipStack(EquipmentSlot.MAINHAND, JObjectRegistry.FV_REVOLVER.getDefaultStack());
+        attacker.equipStack(EquipmentSlot.MAINHAND, JItemRegistry.FV_REVOLVER.get().getDefaultStack());
     }
 
     @Override

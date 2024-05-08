@@ -2,11 +2,11 @@ package net.arna.jcraft.common.block;
 
 import com.mojang.datafixers.util.Either;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JBlockRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -25,9 +25,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -112,7 +110,7 @@ public class CoffinBlock extends BedBlock {
         spawnBreakParticles(world, player, pos, state);
         world.emitGameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Emitter.of(player, state));
         if (!player.getAbilities().creativeMode)
-            dropStack(world, pos, new ItemStack(JObjectRegistry.COFFIN_BLOCK));
+            dropStack(world, pos, new ItemStack(JBlockRegistry.COFFIN_BLOCK.get()));
     }
 
     @Override

@@ -33,7 +33,7 @@ import net.arna.jcraft.common.network.c2s.StandBlockPacket;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.fabricmc.api.ClientModInitializer;
@@ -185,7 +185,7 @@ public class JCraftClient implements ClientModInitializer {
 
         if (!FabricLoader.getInstance().isDevelopmentEnvironment()) return;
 
-        Identifier itemId = JObjectRegistry.ITEMS.get(JObjectRegistry.DEBUG_WAND);
+        Identifier itemId = JItemRegistry.ITEMS.get(JItemRegistry.DEBUG_WAND);
         //BigItemRenderer itemRenderer = new BigItemRenderer(itemId);
 
         /*TODO

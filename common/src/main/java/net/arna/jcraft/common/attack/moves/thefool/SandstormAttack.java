@@ -8,7 +8,8 @@ import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JBlockRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -43,7 +44,7 @@ public class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFo
 
         for (int i = 0; i < 8; i++) {
             FallingBlockEntity sand = FallingBlockEntity.spawnFromBlock(attacker.getWorld(), superTarget.getBlockPos(),
-                    JObjectRegistry.FOOLISH_SAND_BLOCK.getDefaultState());
+                    JBlockRegistry.FOOLISH_SAND_BLOCK.get().getDefaultState());
             sand.timeFalling = -160;
             sand.noClip = true;
             sand.dropItem = false;

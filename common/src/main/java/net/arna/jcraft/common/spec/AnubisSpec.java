@@ -14,7 +14,7 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.SpecAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.LivingEntity;
@@ -124,13 +124,13 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
 
     private static void unsheatheAttack(AnubisSpec attacker, LivingEntity user, MoveContext ctx, @Nullable Set<LivingEntity> targets) {
         if (user.getWorld() instanceof ServerWorld serverWorld) {
-            if (user.getMainHandStack().isOf(JObjectRegistry.ANUBISSHEATHED)) {
+            if (user.getMainHandStack().isOf(JItemRegistry.ANUBISSHEATHED.get())) {
                 JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE, serverWorld, user.getPos());
-                user.setStackInHand(Hand.MAIN_HAND, new ItemStack(JObjectRegistry.ANUBIS));
+                user.setStackInHand(Hand.MAIN_HAND, new ItemStack(JItemRegistry.ANUBIS.get()));
             }
-            if (user.getOffHandStack().isOf(JObjectRegistry.ANUBISSHEATHED)) {
+            if (user.getOffHandStack().isOf(JItemRegistry.ANUBISSHEATHED.get())) {
                 JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE, serverWorld, user.getPos());
-                user.setStackInHand(Hand.OFF_HAND, new ItemStack(JObjectRegistry.ANUBIS));
+                user.setStackInHand(Hand.OFF_HAND, new ItemStack(JItemRegistry.ANUBIS.get()));
             }
         }
     }
@@ -172,10 +172,10 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
     }
 
     private static boolean isHoldingSheathedAnubis(AnubisSpec spec) {
-        return spec.player.isHolding(JObjectRegistry.ANUBISSHEATHED);
+        return spec.player.isHolding(JItemRegistry.ANUBISSHEATHED.get());
     }
     private static boolean isHoldingAnubis(AnubisSpec spec) {
-        return spec.player.isHolding(JObjectRegistry.ANUBIS);
+        return spec.player.isHolding(JItemRegistry.ANUBIS.get());
     }
 
     @Override

@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.item;
 
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,7 +26,7 @@ public class BulletItem extends Item {
     }
 
     public static ItemStack ofCaliber(float caliber) {
-        ItemStack s = new ItemStack(JObjectRegistry.BULLET);
+        ItemStack s = new ItemStack(JItemRegistry.BULLET.get());
         NbtCompound nbt = s.getOrCreateNbt();
         nbt.putFloat("Caliber", caliber);
         return s;

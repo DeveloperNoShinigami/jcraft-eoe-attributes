@@ -3,7 +3,7 @@ package net.arna.jcraft.common.item;
 import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
@@ -130,7 +130,7 @@ public class BloodBottleItem extends Item {
         int step = 1;
         if (!full) step = 4;
         for (int i = 0; i <= 16; i += step) {
-            ItemStack stack = new ItemStack(JObjectRegistry.BLOOD_BOTTLE);
+            ItemStack stack = new ItemStack(JItemRegistry.BLOOD_BOTTLE.get());
             stack.getOrCreateNbt().putFloat("Blood", i);
             stacks.add(stack);
         }

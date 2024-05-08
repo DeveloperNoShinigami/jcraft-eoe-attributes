@@ -4,7 +4,7 @@ import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -77,7 +77,7 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
 
     @Override
     public ItemStack asItemStack() {
-        return new ItemStack(JObjectRegistry.KNIFE);
+        return new ItemStack(JItemRegistry.KNIFE.get());
     }
 
     @Override

@@ -1,7 +1,6 @@
 package net.arna.jcraft.common.item;
 
-import net.arna.jcraft.JCraft;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -18,7 +17,7 @@ public class MockItem extends Item {
     }
 
     public static boolean isMockItem(ItemStack stack) {
-        return stack.getItem() == JObjectRegistry.MOCK_ITEM;
+        return stack.getItem() == JItemRegistry.MOCK_ITEM;
     }
 
     public static ItemStack getMockedStack(ItemStack mockItemStack) {
@@ -40,7 +39,7 @@ public class MockItem extends Item {
         // No need to create a mock stack if it already is one
         if (isMockItem(stack)) return stack;
 
-        ItemStack mockStack = new ItemStack(JObjectRegistry.MOCK_ITEM, stack.getCount());
+        ItemStack mockStack = new ItemStack(JItemRegistry.MOCK_ITEM.get(), stack.getCount());
         NbtCompound nbt = mockStack.getOrCreateNbt();
         // Register which item it's mocking and copy all relevant NBT data
         nbt.putString("MockItem", Registries.ITEM.getId(stack.getItem()).toString());

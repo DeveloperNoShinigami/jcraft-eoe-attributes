@@ -14,7 +14,7 @@ import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -318,7 +318,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
             AbstractMove<?, ? super SilverChariotEntity> followup = curMove.getFollowup();
             if (followup != null) setMove(followup, (State) followup.getAnimation());
-        } else if (type == MoveType.SPECIAL1 && getUserOrThrow().isHolding(JObjectRegistry.ANUBIS) && curMove != null && curMove.getOriginalMove() == SPIN_BARRAGE && getMoveStun() < 7) {
+        } else if (type == MoveType.SPECIAL1 && getUserOrThrow().isHolding(JItemRegistry.ANUBIS.get()) && curMove != null && curMove.getOriginalMove() == SPIN_BARRAGE && getMoveStun() < 7) {
             setMove(ANUBIS_SPIN_BARRAGE, (State) ANUBIS_SPIN_BARRAGE.getAnimation());
         } else return super.initMove(type);
         return true;
@@ -375,10 +375,10 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         }
 
         // getOffHandStack() must be an AnubisItem
-        boolean hasAnubis = getOffHandStack().isOf(JObjectRegistry.ANUBIS) || user.getMainHandStack().getItem() == JObjectRegistry.ANUBIS;
+        boolean hasAnubis = getOffHandStack().isOf(JItemRegistry.ANUBIS.get()) || user.getMainHandStack().getItem() == JItemRegistry.ANUBIS;
 
         if (user instanceof PlayerEntity player) {
-            hasAnubis |= player.getInventory().contains(JObjectRegistry.ANUBIS.getDefaultStack());
+            hasAnubis |= player.getInventory().contains(JItemRegistry.ANUBIS.get().getDefaultStack());
 
             if (curMove == null && getOffHandStack() != null) {
                 player.giveItemStack(getOffHandStack());

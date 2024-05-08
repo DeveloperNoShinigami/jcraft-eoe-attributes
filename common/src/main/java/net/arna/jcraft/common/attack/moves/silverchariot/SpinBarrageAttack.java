@@ -4,7 +4,7 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -23,12 +23,12 @@ public class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAttack, 
         LivingEntity user = attacker.getUser();
         if (user != null) {
             ItemStack mainHand = user.getMainHandStack(), offHand = user.getOffHandStack();
-            if (mainHand.isOf(JObjectRegistry.ANUBIS)) {
+            if (mainHand.isOf(JItemRegistry.ANUBIS.get())) {
                 attacker.setStackInHand(Hand.OFF_HAND, mainHand.copy());
                 mainHand.decrement(1);
                 return;
             }
-            if (offHand.isOf(JObjectRegistry.ANUBIS)) {
+            if (offHand.isOf(JItemRegistry.ANUBIS.get())) {
                 attacker.setStackInHand(Hand.OFF_HAND, offHand.copy());
                 offHand.decrement(1);
                 return;

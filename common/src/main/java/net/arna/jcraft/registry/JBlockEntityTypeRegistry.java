@@ -14,7 +14,7 @@ public interface JBlockEntityTypeRegistry {
     Registrar<BlockEntityType<?>> REGISTRY = MANAGER.get().get(Registries.BLOCK_ENTITY_TYPE);
 
     RegistrySupplier<BlockEntityType<CoffinTileEntity>> COFFIN_TILE = REGISTRY.register(JCraft.id("coffin_block_entity"),
-            () -> BlockEntityType.Builder.create(CoffinTileEntity::new, JObjectRegistry.COFFIN_BLOCK).build(null));
+            () -> BlockEntityType.Builder.create(CoffinTileEntity::new, JBlockRegistry.COFFIN_BLOCK.get()).build(null));
 
 
     static void init() {

@@ -6,7 +6,7 @@ import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -72,7 +72,7 @@ public class RapierProjectile extends PersistentProjectileEntity implements GeoE
 
     @Override
     public ItemStack asItemStack() {
-        return new ItemStack(JObjectRegistry.KNIFE);
+        return new ItemStack(JItemRegistry.KNIFE.get());
     }
 
     @Override

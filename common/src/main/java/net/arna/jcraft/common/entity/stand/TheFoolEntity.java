@@ -14,7 +14,8 @@ import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JBlockRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.block.BlockState;
@@ -381,7 +382,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public static void createFoolishSand(World world, BlockPos pos, Vec3d vel) {
         BlockPos midBlockPos = pos.add(0, 1, 0);
         if (world.getBlockState(midBlockPos).isOpaque()) return;
-        FallingBlockEntity sand = FallingBlockEntity.spawnFromBlock(world, midBlockPos, JObjectRegistry.FOOLISH_SAND_BLOCK.getDefaultState());
+        FallingBlockEntity sand = FallingBlockEntity.spawnFromBlock(world, midBlockPos, JBlockRegistry.FOOLISH_SAND_BLOCK.get().getDefaultState());
         sand.setHurtEntities(5f, 5);
         sand.setVelocity(vel);
         sand.velocityModified = true;

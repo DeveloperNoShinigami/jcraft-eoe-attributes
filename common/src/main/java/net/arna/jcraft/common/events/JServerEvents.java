@@ -17,7 +17,7 @@ import net.arna.jcraft.common.util.EntityInterest;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JDimensionRegistry;
-import net.arna.jcraft.registry.JObjectRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
@@ -268,13 +268,13 @@ public class JServerEvents {
         if (entity instanceof ItemEntity item) {
             ItemStack stack = item.getStack();
 
-            if (stack.isOf(JObjectRegistry.ANUBIS)) {
+            if (stack.isOf(JItemRegistry.ANUBIS.get())) {
                 item.setPickupDelay(0);
                 return EventResult.pass();
             }
 
-            if (stack.isOf(JObjectRegistry.FV_REVOLVER)) {
-                JCraft.markItemOfInterest(item, EntityInterest.itemAttractionInterest(JObjectRegistry.FV_REVOLVER));
+            if (stack.isOf(JItemRegistry.FV_REVOLVER.get())) {
+                JCraft.markItemOfInterest(item, EntityInterest.itemAttractionInterest(JItemRegistry.FV_REVOLVER.get()));
                 return EventResult.pass();
             }
 
@@ -343,10 +343,10 @@ public class JServerEvents {
             DefaultedList<ItemStack> handItems = (DefaultedList<ItemStack>) mob.getHandItems(), armorItems = (DefaultedList<ItemStack>) mob.getArmorItems();
             // Silver chariot users may spawn with Anubis (25% chance)
             if (type == StandType.SILVER_CHARIOT && random.nextInt(5) == 4)
-                handItems.set(0, new ItemStack(JObjectRegistry.ANUBIS));
+                handItems.set(0, new ItemStack(JItemRegistry.ANUBIS.get()));
 
             if (random.nextInt(0, 100) >= 90) {
-                handItems.set(1, new ItemStack(JObjectRegistry.STANDARROW));
+                handItems.set(1, new ItemStack(JItemRegistry.STANDARROW.get()));
                 mob.setEquipmentDropChance(EquipmentSlot.OFFHAND, 100f);
             }
 
