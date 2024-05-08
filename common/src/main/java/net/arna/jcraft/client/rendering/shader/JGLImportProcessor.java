@@ -15,20 +15,18 @@ import java.nio.charset.StandardCharsets;
  * Make sure we can have the CORE shaders in our own namespace
  */
 public class JGLImportProcessor extends GlImportProcessor {
+
     @Nullable
     @Override
-    public String loadImport(boolean inline, String name) {
-        JCraft.LOGGER.debug("Loading moj_import in EffectShader: " + name);
-
-        Identifier id = new Identifier(name);
-        Identifier id1 = new Identifier(id.getNamespace(), "shaders/include/" + id.getPath() + ".glsl");
-
-        Resource resource = MinecraftClient.getInstance().getResourceManager().getResource(id1).orElseThrow();
-
+    public String loadImport(boolean pUseFullPath, String pDirectory) {
+        Identifier resourcelocation = new Identifier(pDirectory);
+        Identifier resourcelocation1 = new Identifier(resourcelocation.getNamespace(), "shaders/include/" + resourcelocation.getPath());
         try {
-            return IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
+            Resource resource1 = MinecraftClient.getInstance().getResourceManager().getResource(resourcelocation1).get();
+
+            return IOUtils.toString(resource1.getInputStream(), StandardCharsets.UTF_8);
         } catch (IOException ioexception) {
-            JCraft.LOGGER.error("Could not open GLSL import {}: {}", name, ioexception.getMessage());
+            JCraft.LOGGER.error("Could not open GLSL import {}: {}", pDirectory, ioexception.getMessage());
             return "#error " + ioexception.getMessage();
         }
     }

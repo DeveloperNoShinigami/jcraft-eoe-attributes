@@ -33,3 +33,5 @@ accessible field net/minecraft/client/render/RenderLayer$MultiPhaseParameters pr
 accessible field net/minecraft/client/render/RenderPhase$ShaderProgram supplier Ljava/util/Optional;
 extendable method net/minecraft/client/gl/ShaderProgram addUniform (Lcom/google/gson/JsonElement;)V
 
+accessible field net/minecraft/client/gl/ShaderProgram loadedUniforms Ljava/util/Map;
+

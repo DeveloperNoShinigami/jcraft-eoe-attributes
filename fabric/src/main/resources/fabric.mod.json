@@ -24,7 +24,7 @@
       "net.arna.jcraft.fabric.client.JCraftFabricClient"
     ],
     "cardinal-components": [
-      "net.arna.jcraft.fabric.common.component.JComponentPlatformUtils"
+      "net.arna.jcraft.fabric.common.component.JComponents"
     ],
     "modmenu": [
       "net.arna.jcraft.fabric.client.JModMenuIntegration"
@@ -32,7 +32,8 @@
   },
   "accessWidener" : "jcraft.accesswidener",
   "mixins": [
-    "jcraft.mixins.json"
+    "jcraft.mixins.json",
+    "jcraft-fabric.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.11",

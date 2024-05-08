@@ -37,7 +37,7 @@
     "client.gravity.InGameOverlayRendererMixin",
     "client.gravity.ItemPickupParticleMixin",
     "client.gravity.OtherClientPlayerEntityMixin",
-    "client.gravity.PlayerEntityRendererMixin",
+    "client.gravity.PlayerEntityRendererMixin"
   ],
   "mixins": [
     "AnvilScreenHandlerMixin",

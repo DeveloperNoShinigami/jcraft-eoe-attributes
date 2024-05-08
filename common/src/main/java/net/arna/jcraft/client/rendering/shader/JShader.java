@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.ShaderProgram;
+import net.minecraft.client.gl.Uniform;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.resource.ResourceFactory;
 import net.minecraft.util.Identifier;
@@ -13,11 +14,17 @@ import net.minecraft.util.JsonHelper;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * This class is for adding CORE shaders, not post processed
  */
 public class JShader extends ShaderProgram {
+
+    protected Map<String, Consumer<Uniform>> defaultUniformData;
+
     public JShader(ResourceFactory factory, String name, VertexFormat format) throws IOException {
         super(factory, name, format);
     }
@@ -31,14 +38,20 @@ public class JShader extends ShaderProgram {
         };
     }
 
-    //TODO this has to be reworked in 1.19.3+ to FabricShaderProgram
-    public static String rewriteAsId(String input, String containedId) {
-        Identifier contained = new Identifier(containedId);
-        return contained.getNamespace() + Identifier.NAMESPACE_SEPARATOR + input.replace(containedId, contained.getPath());
-    }
 
     public void setUniformDefaults() {
-        getHolder().setUniformDefaults();
+        for (Map.Entry<String, Consumer<Uniform>> defaultDataEntry : getDefaultUniformData().entrySet()) {
+            final Uniform t = loadedUniforms.get(defaultDataEntry.getKey());
+            defaultDataEntry.getValue().accept(t);
+            float f = 0;
+        }
+    }
+
+    public Map<String, Consumer<Uniform>> getDefaultUniformData() {
+        if (defaultUniformData == null) {
+            defaultUniformData = new HashMap<>();
+        }
+        return defaultUniformData;
     }
 
     public ShaderHolder getHolder() {
