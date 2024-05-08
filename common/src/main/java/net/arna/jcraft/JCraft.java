@@ -5,6 +5,7 @@ import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrarManager;
+import dev.architectury.registry.registries.RegistrySupplier;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -409,9 +410,14 @@ public final class JCraft {
 
     public static ItemGroup createItemGroup() {
         return ItemGroup.create(ItemGroup.Row.TOP, 0)
-                .displayName(Text.translatable("itemGroup.jcraft"))
+                .displayName(Text.translatable("itemGroup.jcraft.main"))
+                .icon(() -> JItemRegistry.STANDARROW.get().getDefaultStack())
                 .entries((displayContext, entries) -> {
-
+                    for (Map.Entry<RegistrySupplier<Item>, Identifier> i : JItemRegistry.ITEMS.entrySet()) {
+                        if (!i.getKey().get().getDefaultStack().isOf(JItemRegistry.DEBUG_WAND.get())) {
+                            entries.add(i.getKey().get());
+                        }
+                    }
                 })
                 .build();
     }

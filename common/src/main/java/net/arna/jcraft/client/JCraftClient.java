@@ -178,7 +178,7 @@ public class JCraftClient {
 
         if (!FabricLoader.getInstance().isDevelopmentEnvironment()) return;
 
-        Identifier itemId = JItemRegistry.ITEMS.get(JItemRegistry.DEBUG_WAND);
+        //Identifier itemId = JItemRegistry.ITEMS.get(JItemRegistry.DEBUG_WAND);
         //BigItemRenderer itemRenderer = new BigItemRenderer(itemId);
 
         /*TODO
