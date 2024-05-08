@@ -268,7 +268,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_book", InventoryChangedCriterion.Conditions.items(Items.WRITABLE_BOOK))
                 .offerTo(exporter);
         // hot sand
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JBlockRegistry.HOT_SAND_BLOCK.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.HOT_SAND_BLOCK.get(), 8)
                 .pattern("SSS")
                 .pattern("SMS")
                 .pattern("SSS")

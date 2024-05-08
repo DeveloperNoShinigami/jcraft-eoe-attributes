@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
+  "category": "building",
   "key": {
     "M": {
       "item": "minecraft:magma_block"
@@ -15,6 +15,7 @@
     "SSS"
   ],
   "result": {
+    "count": 8,
     "item": "jcraft:hot_sand_block"
   },
   "show_notification": true
