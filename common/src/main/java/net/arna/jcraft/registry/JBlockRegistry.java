@@ -3,6 +3,7 @@ package net.arna.jcraft.registry;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.block.FoolishSandBlock;
+import net.arna.jcraft.common.block.HotSandBlock;
 import net.arna.jcraft.common.block.SoulBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -31,6 +32,10 @@ public interface JBlockRegistry {
             .requiresTool()
             .strength(9.0f, 1200f)
             .sounds(BlockSoundGroup.ANCIENT_DEBRIS)
+    ));
+    RegistrySupplier<Block> HOT_SAND_BLOCK = BLOCK_REGISTRY.register("hot_sand_block", () -> new HotSandBlock(AbstractBlock.Settings.create()
+            .strength(0.5f)
+            .sounds(BlockSoundGroup.SAND)
     ));
     RegistrySupplier<Block> COFFIN_BLOCK = BLOCK_REGISTRY.register("coffin", () -> new CoffinBlock(AbstractBlock.Settings.create().sounds(BlockSoundGroup.WOOD).nonOpaque()));
 

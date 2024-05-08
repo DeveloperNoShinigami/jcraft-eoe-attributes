@@ -267,5 +267,15 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_nether_star", InventoryChangedCriterion.Conditions.items(Items.NETHER_STAR))
                 .criterion("has_book", InventoryChangedCriterion.Conditions.items(Items.WRITABLE_BOOK))
                 .offerTo(exporter);
+        // hot sand
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JBlockRegistry.HOT_SAND_BLOCK.get())
+                .pattern("SSS")
+                .pattern("SMS")
+                .pattern("SSS")
+                .input('M', Items.MAGMA_BLOCK)
+                .input('S', Items.SAND)
+                .criterion("has_sand", InventoryChangedCriterion.Conditions.items(Items.SAND))
+                .criterion("has_magma_block", InventoryChangedCriterion.Conditions.items(Items.MAGMA_BLOCK))
+                .offerTo(exporter);
     }
 }
