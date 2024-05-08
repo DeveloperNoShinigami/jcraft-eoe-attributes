@@ -1,4 +1,4 @@
-package net.arna.jcraft.common.callbacks;
+package net.arna.jcraft.common.events;
 
 import dev.architectury.event.Event;
 import dev.architectury.event.EventFactory;
@@ -9,8 +9,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 /**
  * Callback called when a player inputs a move.
  */
-public interface JServerPlayerInputCallback {
-    Event<JServerPlayerInputCallback> EVENT = EventFactory.createEventResult();
+public interface JServerPlayerInputEvent {
+    Event<JServerPlayerInputEvent> EVENT = EventFactory.createEventResult();
 
     /**
      * Called when a player inputs a move.

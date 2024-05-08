@@ -14,6 +14,7 @@ import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.effects.DazedStatusEffect;
+import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
@@ -34,6 +35,10 @@ import net.arna.jcraft.mixin.ThreadedAnvilChunkStorageAccessor;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.*;
 import net.minecraft.block.Block;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -41,8 +46,10 @@ import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -60,6 +67,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -74,6 +82,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.stun;
+import static net.arna.jcraft.registry.JItemRegistry.KNIFE;
 
 public final class JCraft {
     // Unchanging mod values
@@ -89,9 +98,12 @@ public final class JCraft {
     public static final GravityChangerConfig gravityConfig = new GravityChangerConfig(); // TODO incorporate this into our own config
 
     //Obligatory lazy Registry
-    public static final Supplier<RegistrarManager> MANAGER = Suppliers.memoize(() -> RegistrarManager.get(MOD_ID));
+    public static DeferredRegister<EntityType<?>> ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ENTITY_TYPE);
+    public static DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ITEM);
+    public static DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK);
+    public static DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK_ENTITY_TYPE);
 
-    static final DeferredRegister<ItemGroup> TAB_REGISTER = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
+    public static final DeferredRegister<ItemGroup> TAB_REGISTER = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
 
     // Gamerules
     //public static final GameRules.Key<GameRules.BooleanRule> KINGCRIMSON_TELEPORT_EFFECT = GameRuleRegistry.register("kingCrimsonTeleportEffect", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
@@ -126,6 +138,57 @@ public final class JCraft {
     @Getter
     @Setter
     private static IClientEntityHandler clientEntityHandler = DummyClientEntityHandler.INSTANCE;
+
+    public static void init() {
+        GravityChannel.init();
+
+        // Particle registration (serverside)
+        JParticleTypeRegistry.initParticleTypes();
+
+        // Registration
+        JEntityTypeRegistry.init();
+        ENTITY_TYPE_REGISTRY.register();
+        JBlockRegistry.init();
+        BLOCK_REGISTRY.register();
+        JItemRegistry.init();
+        ITEM_REGISTRY.register();
+        JBlockEntityTypeRegistry.init();
+        BLOCK_ENTITY_TYPE_REGISTRY.register();
+
+
+        CommandRegistrationEvent.EVENT.register(JCommandRegistry::registerCommands);
+        JEventsRegistry.registerEvents();
+        JStatusRegistry.registerStatuses();
+        JSoundRegistry.registerSounds();
+        JEntityTypeRegistry.registerAttributes();
+        JDimensionRegistry.registerDimensions();
+        JArgumentTypeRegistry.registerArgumentTypes();
+        JEnchantmentRegistry.init();
+        JLootTableHelper.init();
+        JServerConfig.init();
+        JStatRegistry.init();
+
+        TAB_REGISTER.register("general", JCraft::createItemGroup);
+        TAB_REGISTER.register();
+
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, ConfigUpdatePacket.ID, ConfigUpdatePacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_COOLDOWN_CANCEL, CooldownCancelPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_REMOTE_STAND_INTERACT, RemoteStandInteractPacket::handle);
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket::handle);
+
+
+        DispenserBlock.registerBehavior(KNIFE.get(), new ProjectileDispenserBehavior() {
+            @Override
+            protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
+                KnifeProjectile knife = new KnifeProjectile(world);
+                knife.setPosition(position.getX(), position.getY(), position.getZ());
+                return knife;
+            }
+        });
+    }
 
     public static void markItemOfInterest(@NotNull Entity entity, @NotNull EntityInterest interest) {
         entitiesOfInterest.put(entity, interest);
@@ -243,55 +306,6 @@ public final class JCraft {
         return stand;
     }
 
-    public static Identifier id(String name) {
-        return new Identifier(MOD_ID, name);
-    }
-
-    public static DeferredRegister<EntityType<?>> ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ENTITY_TYPE);
-    public static DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ITEM);
-    public static DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK);
-
-
-
-    public static void init() {
-        GravityChannel.init();
-
-        // Particle registration (serverside)
-        JParticleTypeRegistry.initParticleTypes();
-
-        // Registration
-        JEntityTypeRegistry.init();
-        ENTITY_TYPE_REGISTRY.register();
-        JBlockRegistry.init();
-        BLOCK_REGISTRY.register();
-        JItemRegistry.init();
-        ITEM_REGISTRY.register();
-
-        JBlockEntityTypeRegistry.init();
-        CommandRegistrationEvent.EVENT.register(JCommandRegistry::registerCommands);
-        JEventsRegistry.registerEvents();
-        JStatusRegistry.registerStatuses();
-        JSoundRegistry.registerSounds();
-        JEntityTypeRegistry.registerEntities();
-        JDimensionRegistry.registerDimensions();
-        JArgumentTypeRegistry.registerArgumentTypes();
-        JEnchantmentRegistry.init();
-        JLootTableHelper.init();
-        JServerConfig.init();
-        JStatRegistry.init();
-
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, ConfigUpdatePacket.ID, ConfigUpdatePacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_COOLDOWN_CANCEL, CooldownCancelPacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_REMOTE_STAND_INTERACT, RemoteStandInteractPacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket::handle);
-
-        TAB_REGISTER.register("general", JCraft::createItemGroup);
-        TAB_REGISTER.register();
-    }
-
     public static void createParticle(ServerWorld world, double x, double y, double z, JParticleType type) {
         if (world == null || type == null) return;
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
@@ -302,50 +316,10 @@ public final class JCraft {
         buf.writeDouble(z);
         buf.writeEnumConstant(type);
 
-        around(world, new Vec3d(x, y, z), 128).forEach(
+        JUtils.around(world, new Vec3d(x, y, z), 128).forEach(
                 serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf)
         );
 
-    }
-
-    public static Collection<ServerPlayerEntity> around(ServerWorld world, Vec3d pos, double radius) {
-        double radiusSq = radius * radius;
-
-        return world.getPlayers()
-                .stream()
-                .filter((p) -> p.squaredDistanceTo(pos) <= radiusSq)
-                .collect(Collectors.toList());
-    }
-
-    public static Collection<ServerPlayerEntity> all(MinecraftServer server) {
-        Objects.requireNonNull(server, "The server cannot be null");
-
-        // return an immutable collection to guard against accidental removals.
-        if (server.getPlayerManager() != null) {
-            return Collections.unmodifiableCollection(server.getPlayerManager().getPlayerList());
-        }
-
-        return Collections.emptyList();
-    }
-
-    public static Collection<ServerPlayerEntity> tracking(Entity entity) {
-        Objects.requireNonNull(entity, "Entity cannot be null");
-        ChunkManager manager = entity.getWorld().getChunkManager();
-
-        if (manager instanceof ServerChunkManager) {
-            ThreadedAnvilChunkStorage storage = ((ServerChunkManager) manager).threadedAnvilChunkStorage;
-            EntityTrackerAccessor tracker = ((ThreadedAnvilChunkStorageAccessor) storage).getEntityTrackers().get(entity.getId());
-
-            // return an immutable collection to guard against accidental removals.
-            if (tracker != null) {
-                return Collections.unmodifiableCollection(tracker.getPlayersTracking()
-                        .stream().map(EntityTrackingListener::getPlayer).collect(Collectors.toSet()));
-            }
-
-            return Collections.emptySet();
-        }
-
-        throw new IllegalArgumentException("Only supported on server worlds!");
     }
 
     public static void createHitsparks(ServerWorld world, double x, double y, double z, JParticleType type, int sparkCount, double sparkSpeed) {
@@ -360,7 +334,7 @@ public final class JCraft {
         buf.writeInt(sparkCount);
         buf.writeDouble(sparkSpeed);
 
-        around(world, new Vec3d(x, y, z), 128).forEach(
+        JUtils.around(world, new Vec3d(x, y, z), 128).forEach(
                 serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf)
         );
     }
@@ -445,5 +419,9 @@ public final class JCraft {
     public static boolean wasRecentlyAttacked(DamageTracker tracker){
         tracker.update();
         return tracker.recentlyAttacked;
+    }
+
+    public static Identifier id(String name) {
+        return new Identifier(MOD_ID, name);
     }
 }

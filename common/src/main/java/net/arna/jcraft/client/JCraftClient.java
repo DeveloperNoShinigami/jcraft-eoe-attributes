@@ -79,7 +79,7 @@ import static net.arna.jcraft.client.util.JClientUtils.activeTimestops;
 
 public class JCraftClient implements ClientModInitializer {
     // Keybinds
-    private static TrackedKeyBinding standSummon, heavyKey, barrageKey, ultKey, special1Key, special2Key, special3Key,
+    public static TrackedKeyBinding standSummon, heavyKey, barrageKey, ultKey, special1Key, special2Key, special3Key,
             comboBreaker, cooldownCancel, utility, dash;
     @SuppressWarnings({"ConstantValue", "DataFlowIssue"}) // Not the case here cuz of the lazy getter.
     @Getter(lazy = true)
@@ -98,9 +98,9 @@ public class JCraftClient implements ClientModInitializer {
     private static final Map<TrackedKeyBinding, MovementInputType> movementBindings = createMovementBindingsMap();
     @Getter(lazy = true)
     private static final TrackedKeyBinding trackedUseKey = TrackedKeyBinding.wrap(MinecraftClient.getInstance().options.useKey);
-    private static Supplier<DecimalFormat> decimalFormat = Suppliers.memoize(JCraftClient::createDecimalFormat);
-    private static boolean comboStarted = false;
-    private static int framesSinceComboStarted = 0;
+    public static Supplier<DecimalFormat> decimalFormat = Suppliers.memoize(JCraftClient::createDecimalFormat);
+    public static boolean comboStarted = false;
+    public static int framesSinceComboStarted = 0;
 
     @Override
     public void onInitializeClient() {
@@ -110,9 +110,6 @@ public class JCraftClient implements ClientModInitializer {
         JClientConfig.load();
 
         ReloadListenerRegistry.register(ResourceType.CLIENT_RESOURCES, new DecimalFormatUpdater());
-
-        //ClientTickEvent.CLIENT_POST.register(ScreenFreezeRenderer::onEndTick);
-        //ClientGuiEvent.RENDER_HUD.register(ScreenFreezeRenderer::onHudRender);
 
         GravityChannelClient.init();
 
@@ -156,10 +153,6 @@ public class JCraftClient implements ClientModInitializer {
         JArmorRendererRegistry.registerArmorRenderers();
         BlockEntityRendererFactories.register(JBlockEntityTypeRegistry.COFFIN_TILE.get(), CoffinTileRenderer::new);
 
-        // This HAS to be registered before TrackingKeyBinding is initialized.
-        ClientTickEvent.CLIENT_POST.register(this::tickClient);
-        ClientTickEvent.CLIENT_LEVEL_POST.register(level -> new SkyBoxManager());
-
         // Keybinding registration
         standSummon = TrackedKeyBinding.createAndRegister("key.jcraft.standsummon", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_N, "key.category.jcraft");
         heavyKey = TrackedKeyBinding.createAndRegister("key.jcraft.heavy", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_R, "key.category.jcraft");
@@ -177,8 +170,6 @@ public class JCraftClient implements ClientModInitializer {
 
         AttackHitboxEffectRenderer.init();
         TimeErasePredictionEffectRenderer.init();
-
-        ClientGuiEvent.RENDER_HUD.register(this::renderHud);
 
         // Run when the MinecraftClient instance is fully initialized.
         MinecraftClient.getInstance().send(EpitaphOverlay::preload);
@@ -201,121 +192,12 @@ public class JCraftClient implements ClientModInitializer {
     }
 
     /// TEXT HUD
-    private final List<String> comboRemarks = List.of("admin rdm!!!", "baby combo", "caught lackin", "kinda ez", "skill issue", "cancelled on twitter", "sent to bulgaria", "down bad");
+    public static final List<String> comboRemarks = List.of("admin rdm!!!", "baby combo", "caught lackin", "kinda ez", "skill issue", "cancelled on twitter", "sent to bulgaria", "down bad");
     public static int comboCounter = 0;
     public static float damageScaling = 1.00f;
     public static int framesSinceCounted = 0;
 
-    private void renderHud(DrawContext ctx, float tickDelta) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
-        if (player == null) {
-            JCraft.LOGGER.fatal("Attempted to render hud with no player!");
-            return;
-        }
 
-        framesSinceCounted++;
-
-        boolean isMid = JClientConfig.getInstance().getUiPosition() == JClientConfig.UIPos.MIDDLE;
-        boolean useIcons = JClientConfig.getInstance().isIconHud();
-        StandEntity<?, ?> stand = JUtils.getStand(player);
-
-        TextRenderer textRenderer = client.inGameHud.getTextRenderer();
-
-        int selectedX = getHudX(client.getWindow().getScaledWidth(), 128);
-        int selectedY = client.getWindow().getScaledHeight();
-
-        switch (JClientConfig.getInstance().getUiPosition()) {
-            case LEFT -> selectedY /= 20;
-            case MIDDLE -> selectedY /= 3;
-            case RIGHT -> selectedY = (int) (selectedY / 2.25f);
-        }
-
-        // Draw text HUD
-        if (!useIcons) {
-            CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(player);
-
-            CooldownType[] values = CooldownType.values();
-            for (int i = 0; i < values.length; i++) {
-                CooldownType type = values[i];
-                int cooldownTicks = cooldowns.getCooldown(type);
-
-                if (cooldownTicks == 0) continue;
-                double cooldown = (cooldownTicks - tickDelta) / 20d;
-
-                // These are (mainly) based off of keybindings which are client-only and thus have
-                // to be done here and cannot be done in CooldownType.
-                String keyBindText = switch (type) {
-                    case STAND_LIGHT -> "M1";
-                    case HEAVY, STAND_HEAVY -> generateName(heavyKey.getParent());
-                    case BARRAGE, STAND_BARRAGE -> generateName(barrageKey.getParent());
-                    case ULTIMATE, STAND_ULTIMATE -> generateName(ultKey.getParent());
-                    case SPECIAL1, STAND_SP1 -> generateName(special1Key.getParent());
-                    case SPECIAL2, STAND_SP2 -> generateName(special2Key.getParent());
-                    case SPECIAL3, STAND_SP3 -> generateName(special3Key.getParent());
-                    case UTILITY -> generateName(utility.getParent());
-                    case COMBO_BREAKER -> "Combo Breaker";
-                    case COOLDOWN_CANCEL -> generateName(cooldownCancel.getParent());
-                    case DASH -> generateName(dash.getParent());
-                };
-
-                CooldownType.Category category = type.getCategory();
-
-                boolean isSpec = category == CooldownType.Category.SPEC;
-                boolean isUniversal = category == CooldownType.Category.UNIVERSAL;
-                float defaultAlpha = 0.65f;
-                int xOffset = 0;
-
-                String finalText = keyBindText + " - " + decimalFormat.get().format(MathHelper.clamp(cooldown, 0.0, 9999.0)) + "s";
-
-                if (category == CooldownType.Category.STAND || isSpec) {
-                    if (!isSpec) finalText = "s." + finalText;
-
-                    if ((isSpec && stand != null) || (!isSpec && stand == null)) {
-                        xOffset = 48;
-                        defaultAlpha = 0.3f;
-                    }
-                }
-
-                int offsetIndex = i;
-                if (isSpec)
-                    offsetIndex -= 7;
-                else if (isUniversal)
-                    offsetIndex -= 6;
-                float offsetY = selectedY * 1.25f + 9f * offsetIndex;
-
-                ctx.drawTextWithShadow(
-                        textRenderer,
-                        finalText,
-                        selectedX + xOffset,
-                        (int) offsetY,
-                        ColorUtils.HSBAtoRGBA(0.3f - (float) cooldown * 10f / 720f, (cooldown < 1.6) ? 0.0f : 1.0f, 1.0f, (cooldown < 1.6) ? 1.0f : defaultAlpha)
-                );
-
-            }
-        }
-
-        // Draw Combo Counter
-        if (comboCounter > 0 && player.getWorld().getGameRules().getBoolean(JCraft.COMBO_COUNTER) && framesSinceCounted <= 180) {
-            String remark = "epic tod free download";
-            if (comboCounter < comboRemarks.size() * 7)
-                remark = comboRemarks.get(Math.floorDiv(comboCounter, 7));
-
-            boolean recentHit = framesSinceCounted < 5;
-
-            Random random = player.getRandom();
-
-            if (comboStarted && ++framesSinceComboStarted > 59) comboStarted = false;
-
-            ctx.drawTextWithShadow(
-                    textRenderer,
-                    comboCounter + " - (" + Math.round(damageScaling * 100f) + "%) - " + remark,
-                    (int) (selectedX + (isMid && useIcons ? 54f : 0) + (recentHit ? tickDelta * random.nextFloat() * 5f : 0)),
-                    (int) (selectedY * (1.15f) + (recentHit ? tickDelta * random.nextFloat() * 5f : 0)),
-                    ColorUtils.HSBAtoRGBA(comboCounter / 360f - 1f, comboStarted ? framesSinceComboStarted / 60f : 1f, 1f, 0.8f)
-            );
-        }
-    }
 
     public static void markComboStarted() {
         comboStarted = true;
@@ -338,7 +220,7 @@ public class JCraftClient implements ClientModInitializer {
     /**
      * @return a cleaned-up version of TranslatableText name of button
      */
-    private String generateName(KeyBinding keyBinding) {
+    public static String generateName(KeyBinding keyBinding) {
         String str = keyBinding.getBoundKeyTranslationKey();
         String[] components = str.split("\\.");
         String last = components[components.length - 1];
@@ -347,71 +229,7 @@ public class JCraftClient implements ClientModInitializer {
         return StringUtils.capitalize(secondLast) + StringUtils.capitalize(last);
     }
 
-    private void tickClient(MinecraftClient client) {
-        ClientPlayerEntity player = client.player;
-        if (player == null) return;
-        StandEntity<?, ?> stand = JUtils.getStand(player);
-
-        // Handle JCraft inputs (stand, spec, universal controls)
-        // Regular input (all moves, regular Minecraft movement (WASD and jumping) and dashing)
-        if (player.isAlive()) {
-            Object2BooleanMap<MovementInputType> movementInput = getChangedInputs(getMovementBindings());
-            Object2BooleanMap<MoveInputType> moveInput = getChangedInputs(getBindings());
-
-            if (!movementInput.isEmpty() || !moveInput.isEmpty())
-                NetworkManager.sendToServer(JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket.write(movementInput, moveInput));
-
-            Object2BooleanMap<MoveInputType> heldMoves = new Object2BooleanOpenHashMap<>();
-            getBindings().forEach((key, value) -> {
-                if (key.isDown())
-                    heldMoves.put(value, true);
-            });
-
-            if (!heldMoves.isEmpty()) {
-                NetworkManager.sendToServer(JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket.write(null, heldMoves));
-                //ClientPlayNetworking.send(JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket.write(null, heldMoves));
-            }
-
-        }
-
-        // Block
-        if (getTrackedUseKey().isChangedThisTick()) {
-            boolean pressed = getTrackedUseKey().isPressedThisTick();
-            NetworkManager.sendToServer(JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket.write(pressed));
-            if (stand != null && stand.isRemoteAndControllable() && pressed)
-                NetworkManager.sendToServer(JPacketRegistry.C2S_REMOTE_STAND_INTERACT, new PacketByteBuf(Unpooled.buffer()));
-        }
-
-        // Cooldown Cancel
-        if (cooldownCancel.isPressedThisTick())
-            NetworkManager.sendToServer(JPacketRegistry.C2S_COOLDOWN_CANCEL, new PacketByteBuf(Unpooled.buffer()));
-
-        if (client.isPaused() && client.isInSingleplayer()) return;
-
-        // Timestop handling (nearly identical to serverside, but toStop is obtained in user.world instead of server world)
-        Iterator<DimensionData> iter = activeTimestops.iterator();
-
-        while (iter.hasNext()) {
-            DimensionData timestop = iter.next();
-            LivingEntity user = timestop.user;
-
-            if (user == null || !user.isAlive() || --timestop.timer <= 0) {
-                iter.remove();
-                continue;
-            }
-
-            Vec3d pos = timestop.pos;
-
-            List<? extends Entity> toStop = user.getWorld().getEntitiesByClass(Entity.class,
-                    new Box(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
-
-            for (Entity entity : toStop)
-                if (!entity.hasVehicle() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle())
-                    JComponentPlatformUtils.getTimeStopData(entity).setTicks(2);
-        }
-    }
-
-    private static <E extends Enum<E>> Object2BooleanMap<E> getChangedInputs(Map<TrackedKeyBinding, E> bindings) {
+    public static <E extends Enum<E>> Object2BooleanMap<E> getChangedInputs(Map<TrackedKeyBinding, E> bindings) {
         return bindings.entrySet().stream()
                 .filter(entry -> entry.getKey().isChangedThisTick())
                 .collect(Object2BooleanOpenHashMap::new, (map, entry) -> map.put(entry.getValue(), entry.getKey().isPressedThisTick()),

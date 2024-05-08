@@ -71,7 +71,7 @@ public class DashData {
             JSpec<?, ?> spec = JUtils.getSpec(player);
 
             if (spec == null || spec.moveStun < 1)
-                JCraft.around((ServerWorld) entity.getWorld(), entity.getPos(), 96).forEach(
+                JUtils.around((ServerWorld) entity.getWorld(), entity.getPos(), 96).forEach(
                         serverPlayer -> PlayerAnimPacket.send(player, serverPlayer, "dash"));
         }
     }

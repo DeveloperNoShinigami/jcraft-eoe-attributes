@@ -7,6 +7,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -38,7 +39,7 @@ public class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, TheFool
         buf.writeDouble(pos.z);
         buf.writeDouble(0.5);
 
-        for (ServerPlayerEntity sendPlayer : JCraft.around((ServerWorld) attacker.getWorld(), pos, 96))
+        for (ServerPlayerEntity sendPlayer : JUtils.around((ServerWorld) attacker.getWorld(), pos, 96))
             ServerChannelFeedbackPacket.send(sendPlayer, buf);
 
         return targets;

@@ -14,6 +14,8 @@ import net.arna.jcraft.common.network.s2c.JExplosionPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.splatter.JSplatterManager;
+import net.arna.jcraft.mixin.EntityTrackerAccessor;
+import net.arna.jcraft.mixin.ThreadedAnvilChunkStorageAccessor;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
@@ -39,8 +41,12 @@ import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.EntityTypeTags;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.EntityTrackingListener;
+import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.hit.BlockHitResult;
@@ -49,6 +55,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.ChunkManager;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,6 +64,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 
@@ -179,7 +187,7 @@ public final class JUtils {
     }
 
     public static void serverPlaySound(SoundEvent sound, ServerWorld serverWorld, Vec3d pos, double radius) {
-        JCraft.around(serverWorld, pos, radius).forEach(
+        around(serverWorld, pos, radius).forEach(
                 serverPlayer -> serverPlayer.networkHandler.sendPacket(
                         new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(sound), SoundCategory.PLAYERS, pos.x, pos.y, pos.z, 1, 1, 0)
                 )
@@ -382,7 +390,7 @@ public final class JUtils {
         explosion.affectWorld(true);
 
         if (world.isClient) return;
-        for (ServerPlayerEntity player : JCraft.around((ServerWorld) world, new Vec3d(x, y, z), 64))
+        for (ServerPlayerEntity player : around((ServerWorld) world, new Vec3d(x, y, z), 64))
             JExplosionPacket.send(player, x, y, z, power, explosion, modifier);
     }
 
@@ -550,5 +558,45 @@ public final class JUtils {
             Vec3d vec3d = shooter.getVelocity();
             projectile.setVelocity(projectile.getVelocity().add(vec3d.x, shooter.isOnGround() ? 0.0 : vec3d.y, vec3d.z));
         }
+    }
+
+    public static Collection<ServerPlayerEntity> around(ServerWorld world, Vec3d pos, double radius) {
+        double radiusSq = radius * radius;
+
+        return world.getPlayers()
+                .stream()
+                .filter((p) -> p.squaredDistanceTo(pos) <= radiusSq)
+                .collect(Collectors.toList());
+    }
+
+    public static Collection<ServerPlayerEntity> all(MinecraftServer server) {
+        Objects.requireNonNull(server, "The server cannot be null");
+
+        // return an immutable collection to guard against accidental removals.
+        if (server.getPlayerManager() != null) {
+            return Collections.unmodifiableCollection(server.getPlayerManager().getPlayerList());
+        }
+
+        return Collections.emptyList();
+    }
+
+    public static Collection<ServerPlayerEntity> tracking(Entity entity) {
+        Objects.requireNonNull(entity, "Entity cannot be null");
+        ChunkManager manager = entity.getWorld().getChunkManager();
+
+        if (manager instanceof ServerChunkManager) {
+            ThreadedAnvilChunkStorage storage = ((ServerChunkManager) manager).threadedAnvilChunkStorage;
+            EntityTrackerAccessor tracker = ((ThreadedAnvilChunkStorageAccessor) storage).getEntityTrackers().get(entity.getId());
+
+            // return an immutable collection to guard against accidental removals.
+            if (tracker != null) {
+                return Collections.unmodifiableCollection(tracker.getPlayersTracking()
+                        .stream().map(EntityTrackingListener::getPlayer).collect(Collectors.toSet()));
+            }
+
+            return Collections.emptySet();
+        }
+
+        throw new IllegalArgumentException("Only supported on server worlds!");
     }
 }

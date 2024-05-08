@@ -1,6 +1,6 @@
 package net.arna.jcraft.fabric.client;
 
-import net.arna.jcraft.client.events.JWorldRenderEvents;
+import net.arna.jcraft.client.events.JClientEvents;
 import net.arna.jcraft.client.renderer.effects.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -10,11 +10,11 @@ public final class JCraftFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
         // This entrypoint is suitable for setting up client-specific logic, such as rendering.
         WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> {
-            JWorldRenderEvents.afterTranslucent(context.matrixStack(), context.camera().getPos(), context.worldRenderer());
+            JClientEvents.afterTranslucent(context.matrixStack(), context.camera().getPos(), context.worldRenderer());
         });
 
         WorldRenderEvents.LAST.register(context -> {
-            JWorldRenderEvents.onLast(context.matrixStack(), context.camera().getPos(), context.worldRenderer());
+            JClientEvents.onLast(context.matrixStack(), context.camera().getPos(), context.worldRenderer());
         });
 
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {

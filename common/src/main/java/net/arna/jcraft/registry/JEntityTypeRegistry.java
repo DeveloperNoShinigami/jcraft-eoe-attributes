@@ -23,14 +23,9 @@ import net.minecraft.world.World;
 
 import java.util.function.Function;
 
-import static net.arna.jcraft.JCraft.MANAGER;
 import static net.arna.jcraft.JCraft.ENTITY_TYPE_REGISTRY;
 
 public interface JEntityTypeRegistry {
-
-    //Registrar<EntityType<?>> ENTITY_TYPE_REGISTRY = MANAGER.get().get(Registries.ENTITY_TYPE);
-   
-
 
     RegistrySupplier<EntityType<StarPlatinumEntity>> STAR_PLATINUM = ENTITY_TYPE_REGISTRY.register(JCraft.id("starplatinum"),
             () -> EntityType.Builder.create(
@@ -422,7 +417,7 @@ public interface JEntityTypeRegistry {
                     .build("purple_haze_cloud")
     );
 
-    static void registerEntities() {
+    static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
         EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
         EntityAttributeRegistry.register(KING_CRIMSON, KingCrimsonEntity::createMobAttributes);

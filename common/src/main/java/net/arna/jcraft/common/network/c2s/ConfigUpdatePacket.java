@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.config.ConfigOption;
 import net.arna.jcraft.common.config.JServerConfig;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -37,7 +38,7 @@ public class ConfigUpdatePacket {
 
         // Broadcast changes to everyone except the person who made them.
         PacketByteBuf clientChangesBuf = writeClientChanges(changedOptions);
-        for (ServerPlayerEntity serverPlayer : JCraft.all(server)) {
+        for (ServerPlayerEntity serverPlayer : JUtils.all(server)) {
             if (serverPlayer != player) {
                 NetworkManager.sendToPlayer(serverPlayer, JPacketRegistry.S2C_SERVER_CONFIG, clientChangesBuf);
             }

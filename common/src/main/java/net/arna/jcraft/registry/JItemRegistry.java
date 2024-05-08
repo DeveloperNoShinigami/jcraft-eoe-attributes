@@ -112,16 +112,6 @@ public interface JItemRegistry {
     }
 
     static void init() {
-        /*TODO
-        DispenserBlock.registerBehavior(KNIFE.get(), new ProjectileDispenserBehavior() {
-            @Override
-            protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
-                KnifeProjectile knife = new KnifeProjectile(world);
-                knife.setPosition(position.getX(), position.getY(), position.getZ());
-                return knife;
-            }
-        });
 
-         */
     }
 }

@@ -5,6 +5,7 @@ import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.Pair;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
@@ -67,7 +68,7 @@ public class JSplatterManager {
         writeSplatter(splatter, buf);
 
         // We already confirmed this is a server-world.
-        for (ServerPlayerEntity player : JCraft.around((ServerWorld) world, pos, 64))
+        for (ServerPlayerEntity player : JUtils.around((ServerWorld) world, pos, 64))
             NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_SPLATTER, buf);
 
         return splatter;

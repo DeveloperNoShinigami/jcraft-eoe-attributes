@@ -1,10 +1,19 @@
 package net.arna.jcraft.client.registry;
 
-import net.arna.jcraft.client.events.JJoinServerEvents;
-import net.arna.jcraft.client.events.JWorldRenderEvents;
+import dev.architectury.event.events.client.ClientGuiEvent;
+import dev.architectury.event.events.client.ClientPlayerEvent;
+import dev.architectury.event.events.client.ClientTickEvent;
+import net.arna.jcraft.client.events.JClientEvents;
+import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
 
 public interface JClientEventsRegistry {
     static void registerClientEvents() {
-        JJoinServerEvents.init();
+        ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(JClientEvents::clientPlayerJoin);
+
+        // This HAS to be registered before TrackingKeyBinding is initialized.
+        ClientTickEvent.CLIENT_POST.register(JClientEvents::tickClient);
+        ClientTickEvent.CLIENT_LEVEL_POST.register(level -> new SkyBoxManager());
+
+        ClientGuiEvent.RENDER_HUD.register(JClientEvents::renderHud);
     }
 }

@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.callbacks.JServerPlayerInputCallback;
+import net.arna.jcraft.common.events.JServerPlayerInputEvent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
@@ -57,7 +57,7 @@ public class PlayerInputPacket {
                                     if (newValue <= 0 || !JUtils.canHoldMove(player, type)) {
                                         instance.execute(() -> {
                                             boolean success = true;
-                                            JServerPlayerInputCallback.EVENT.invoker().onPlayerInput(player, type, false, success);
+                                            JServerPlayerInputEvent.EVENT.invoker().onPlayerInput(player, type, false, success);
 
                                             StandEntity<?, ?> stand = JUtils.getStand(player);
                                             if (stand != null && stand.allowMoveHandling()) {
@@ -198,7 +198,7 @@ public class PlayerInputPacket {
                 successMap.computeIfAbsent(player, p -> new Object2BooleanOpenHashMap<>()).put(type, b.booleanValue());
 
                 server.execute(() -> {
-                    JServerPlayerInputCallback.EVENT.invoker().onPlayerInput(player, type, true, b);
+                    JServerPlayerInputEvent.EVENT.invoker().onPlayerInput(player, type, true, b);
                     boolean success = b;
 
                     StandEntity<?, ?> stand = JUtils.getStand(player);
@@ -216,7 +216,7 @@ public class PlayerInputPacket {
                 boolean b = successMap.computeIfAbsent(player, p -> new Object2BooleanOpenHashMap<>()).getOrDefault(type, false);
 
                 server.execute(() -> {
-                    JServerPlayerInputCallback.EVENT.invoker().onPlayerInput(player, type, false, b);
+                    JServerPlayerInputEvent.EVENT.invoker().onPlayerInput(player, type, false, b);
                     boolean success = b;
 
                     StandEntity<?, ?> stand = JUtils.getStand(player);

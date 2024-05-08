@@ -17,7 +17,7 @@ import net.minecraft.util.Identifier;
 import java.util.function.Consumer;
 
 public class JLootTableHelper {
-    private static final Multimap<Identifier, Consumer<LootTable.Builder>> modifications = MultimapBuilder.hashKeys().linkedHashSetValues().build();
+    public static final Multimap<Identifier, Consumer<LootTable.Builder>> modifications = MultimapBuilder.hashKeys().linkedHashSetValues().build();
 
     public static void init() {
         registerModification(JLootTableHelper::addMaskPool,
@@ -30,13 +30,6 @@ public class JLootTableHelper {
                 new Identifier("chests/stronghold_library"),
                 new Identifier("chests/woodland_mansion")
         );
-
-        /*
-        //TODO
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
-            for (Consumer<LootTable.Builder> modification : modifications.get(id)) modification.accept(tableBuilder);
-        });
-         */
     }
 
     public static void registerModification(Consumer<LootTable.Builder> modifier, Identifier... lootTables) {
