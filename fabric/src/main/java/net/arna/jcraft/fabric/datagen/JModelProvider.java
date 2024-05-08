@@ -23,29 +23,29 @@ public class JModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerator generator) {
-        generator.register(JItemRegistry.BOXINGGLOVES.get(), Models.GENERATED);
+        generator.register(JItemRegistry.BOXING_GLOVES.get(), Models.GENERATED);
         generator.register(JItemRegistry.BULLET.get(), Models.GENERATED);
         generator.register(JItemRegistry.CINDERELLA_MASK.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIOBOOTS.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIOCAPE.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIOHEADBAND.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIOJACKET.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIOPANTS.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIOSDIARY.get(), Models.GENERATED);
-        generator.register(JItemRegistry.GREENBABY.get(), Models.GENERATED);
-        generator.register(JItemRegistry.JOTAROBOOTS.get(), Models.GENERATED);
-        generator.register(JItemRegistry.JOTAROCAP.get(), Models.GENERATED);
-        generator.register(JItemRegistry.JOTAROJACKET.get(), Models.GENERATED);
-        generator.register(JItemRegistry.JOTAROPANTS.get(), Models.GENERATED);
-        generator.register(JItemRegistry.KARSHEADWRAP.get(), Models.GENERATED);
+        generator.register(JItemRegistry.DIO_BOOTS.get(), Models.GENERATED);
+        generator.register(JItemRegistry.DIO_CAPE.get(), Models.GENERATED);
+        generator.register(JItemRegistry.DIO_HEADBAND.get(), Models.GENERATED);
+        generator.register(JItemRegistry.DIO_JACKET.get(), Models.GENERATED);
+        generator.register(JItemRegistry.DIO_PANTS.get(), Models.GENERATED);
+        generator.register(JItemRegistry.DIOS_DIARY.get(), Models.GENERATED);
+        generator.register(JItemRegistry.GREEN_BABY.get(), Models.GENERATED);
+        generator.register(JItemRegistry.JOTARO_BOOTS.get(), Models.GENERATED);
+        generator.register(JItemRegistry.JOTARO_CAP.get(), Models.GENERATED);
+        generator.register(JItemRegistry.JOTARO_JACKET.get(), Models.GENERATED);
+        generator.register(JItemRegistry.JOTARO_PANTS.get(), Models.GENERATED);
+        generator.register(JItemRegistry.KARS_HEADWRAP.get(), Models.GENERATED);
         generator.register(JItemRegistry.KNIFE.get(), Models.HANDHELD);
         generator.register(JItemRegistry.KQ_COIN.get(), Models.GENERATED);
-        generator.register(JItemRegistry.LIVINGARROW.get(), Models.HANDHELD);
+        generator.register(JItemRegistry.LIVING_ARROW.get(), Models.HANDHELD);
         generator.register(JItemRegistry.RED_HAT.get(), Models.GENERATED);
-        generator.register(JItemRegistry.REQUIEMARROW.get(), Models.GENERATED);
-        generator.register(JItemRegistry.REQUIEMRUBY.get(), Models.HANDHELD);
-        generator.register(JItemRegistry.SINNERSSOUL.get(), Models.GENERATED);
-        generator.register(JItemRegistry.STANDARROW.get(), Models.HANDHELD);
+        generator.register(JItemRegistry.REQUIEM_ARROW.get(), Models.GENERATED);
+        generator.register(JItemRegistry.REQUIEM_RUBY.get(), Models.HANDHELD);
+        generator.register(JItemRegistry.SINNERS_SOUL.get(), Models.GENERATED);
+        generator.register(JItemRegistry.STAND_ARROW.get(), Models.HANDHELD);
         generator.register(JItemRegistry.STAND_ARROWHEAD.get(), Models.GENERATED);
         generator.register(JItemRegistry.STAND_DISC.get(), Models.GENERATED);
         generator.register(JItemRegistry.STELLAR_IRON_INGOT.get(), Models.GENERATED);

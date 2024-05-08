@@ -66,7 +66,7 @@ public class FlutteringArmorItem extends ArmorItem implements GeoItem {
             @Override
             public @NotNull BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
                 if (this.renderer == null) {
-                    if (itemStack.isOf(JItemRegistry.DIOCAPE.get())) {
+                    if (itemStack.isOf(JItemRegistry.DIO_CAPE.get())) {
                         this.renderer = new DIOCapeRenderer();
                     } else {
                         this.renderer = new JotaroArmorRenderer();

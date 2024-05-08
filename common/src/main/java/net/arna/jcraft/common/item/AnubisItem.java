@@ -73,7 +73,7 @@ public class AnubisItem extends Item {
         }
 
         JUtils.serverPlaySound(JSoundRegistry.ANUBIS_SHEATHE, (ServerWorld) world, user.getPos());
-        user.setStackInHand(hand, new ItemStack(JItemRegistry.ANUBISSHEATHED.get()));
+        user.setStackInHand(hand, new ItemStack(JItemRegistry.ANUBIS_SHEATHED.get()));
 
         return TypedActionResult.success(item);
     }

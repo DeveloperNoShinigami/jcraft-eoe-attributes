@@ -35,7 +35,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         consumer.accept(obtainMeteoriteIronOre);
         // obtain stand arrow
         final Advancement obtainStandArrow = Advancement.Builder.create()
-                .display(JItemRegistry.STANDARROW.get(),
+                .display(JItemRegistry.STAND_ARROW.get(),
                         Text.literal("Stand Proud"),
                         Text.literal("Obtain a Stand Arrow"),
                         null,
@@ -44,7 +44,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false,
                         false)
                 .parent(obtainMeteoriteIronOre)
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STANDARROW.get()))
+                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STAND_ARROW.get()))
                 .build(JCraft.id("obtain_stand_arrow"));
         consumer.accept(obtainStandArrow);
         // obtain stand CD
@@ -63,7 +63,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         consumer.accept(obtainStandDisc);
         // obtain living arrow
         final Advancement obtainLivingArrow = Advancement.Builder.create()
-                .display(JItemRegistry.LIVINGARROW.get(),
+                .display(JItemRegistry.LIVING_ARROW.get(),
                         Text.literal("It's Alive!"),
                         Text.literal("Obtain a Living Arrow"),
                         null,
@@ -72,12 +72,12 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false,
                         false)
                 .parent(obtainStandArrow)
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.LIVINGARROW.get()))
+                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.LIVING_ARROW.get()))
                 .build(JCraft.id("obtain_living_arrow"));
         consumer.accept(obtainLivingArrow);
         // obtain requiem arrow
         final Advancement obtainRequiemArrow = Advancement.Builder.create()
-                .display(JItemRegistry.REQUIEMARROW.get(),
+                .display(JItemRegistry.REQUIEM_ARROW.get(),
                         Text.literal("Requiem"),
                         Text.literal("Obtain a Requiem Arrow"),
                         null,
@@ -86,7 +86,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false,
                         false)
                 .parent(obtainStandArrow)
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.REQUIEMARROW.get()))
+                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.REQUIEM_ARROW.get()))
                 .build(JCraft.id("obtain_requiem_arrow"));
         consumer.accept(obtainRequiemArrow);
         // find stone mask
@@ -119,7 +119,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         consumer.accept(obtainCoffin);
         // obtain sun protections
         final Advancement obtainSunProtection = Advancement.Builder.create()
-                .display(JItemRegistry.KARSHEADWRAP.get(),
+                .display(JItemRegistry.KARS_HEADWRAP.get(),
                         Text.literal("Rise and Shine"),
                         Text.literal("Obtain all sun protection items"),
                         null,
@@ -128,7 +128,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false,
                         false)
                 .parent(findStoneMask)
-                .criterion("has_kars_headwrap", InventoryChangedCriterion.Conditions.items(JItemRegistry.KARSHEADWRAP.get()))
+                .criterion("has_kars_headwrap", InventoryChangedCriterion.Conditions.items(JItemRegistry.KARS_HEADWRAP.get()))
                 .criterion("has_red_hat", InventoryChangedCriterion.Conditions.items(JItemRegistry.RED_HAT.get()))
                 .build(JCraft.id("obtain_sun_protection"));
         consumer.accept(obtainSunProtection);
@@ -148,7 +148,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         consumer.accept(obtainBloodBottle);
         // obtain Jotaro outfit
         final Advancement obtainJotaroOutfit = Advancement.Builder.create()
-                .display(JItemRegistry.JOTAROCAP.get(),
+                .display(JItemRegistry.JOTARO_CAP.get(),
                         Text.literal("ORA ORA"),
                         Text.literal("Obtain all of Jotaro's clothes"),
                         null,
@@ -157,16 +157,16 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false,
                         false)
                 .parent(obtainMeteoriteIronOre)
-                .criterion("has_jotaro_cap", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTAROCAP.get()))
-                .criterion("has_jotaro_jacket", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTAROJACKET.get()))
-                .criterion("has_jotaro_pants", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTAROPANTS.get()))
-                .criterion("has_jotaro_boots", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTAROBOOTS.get()))
+                .criterion("has_jotaro_cap", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTARO_CAP.get()))
+                .criterion("has_jotaro_jacket", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTARO_JACKET.get()))
+                .criterion("has_jotaro_pants", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTARO_PANTS.get()))
+                .criterion("has_jotaro_boots", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTARO_BOOTS.get()))
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_jotaro_outfit"));
         consumer.accept(obtainJotaroOutfit);
         // obtain Dio outfit
         final Advancement obtainDioOutfit = Advancement.Builder.create()
-                .display(JItemRegistry.DIOHEADBAND.get(),
+                .display(JItemRegistry.DIO_HEADBAND.get(),
                         Text.literal("MUDA MUDA"),
                         Text.literal("Obtain all of Dio's clothes"),
                         null,
@@ -175,18 +175,18 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false,
                         false)
                 .parent(obtainMeteoriteIronOre)
-                .criterion("has_dio_headband", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIOHEADBAND.get()))
-                .criterion("has_dio_jacket", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIOJACKET.get()))
-                .criterion("has_dio_cape", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIOCAPE.get()))
-                .criterion("has_dio_pants", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIOPANTS.get()))
-                .criterion("has_dio_boots", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIOBOOTS.get()))
+                .criterion("has_dio_headband", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIO_HEADBAND.get()))
+                .criterion("has_dio_jacket", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIO_JACKET.get()))
+                .criterion("has_dio_cape", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIO_CAPE.get()))
+                .criterion("has_dio_pants", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIO_PANTS.get()))
+                .criterion("has_dio_boots", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIO_BOOTS.get()))
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .rewards(AdvancementRewards.Builder.recipe(JCraft.id("dios_diary")))
                 .build(JCraft.id("obtain_dio_outfit"));
         consumer.accept(obtainDioOutfit);
         // obtain Dio's diary
         final Advancement obtainDiosDiary = Advancement.Builder.create()
-                .display(JItemRegistry.DIOSDIARY.get(),
+                .display(JItemRegistry.DIOS_DIARY.get(),
                         Text.literal("It was me, DIO!"),
                         Text.literal("Obtain Dio's diary"),
                         null,
@@ -195,7 +195,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false,
                         false)
                 .parent(obtainDioOutfit)
-                .criterion("has_diary", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIOSDIARY.get()))
+                .criterion("has_diary", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIOS_DIARY.get()))
                 .rewards(AdvancementRewards.Builder.experience(500))
                 .build(JCraft.id("obtain_dios_diary"));
         consumer.accept(obtainDiosDiary);

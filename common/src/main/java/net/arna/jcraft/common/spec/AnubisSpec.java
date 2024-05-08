@@ -129,11 +129,11 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
 
     private static void unsheatheAttack(AnubisSpec attacker, LivingEntity user, MoveContext ctx, @Nullable Set<LivingEntity> targets) {
         if (user.getWorld() instanceof ServerWorld serverWorld) {
-            if (user.getMainHandStack().isOf(JItemRegistry.ANUBISSHEATHED.get())) {
+            if (user.getMainHandStack().isOf(JItemRegistry.ANUBIS_SHEATHED.get())) {
                 JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE, serverWorld, user.getPos());
                 user.setStackInHand(Hand.MAIN_HAND, new ItemStack(JItemRegistry.ANUBIS.get()));
             }
-            if (user.getOffHandStack().isOf(JItemRegistry.ANUBISSHEATHED.get())) {
+            if (user.getOffHandStack().isOf(JItemRegistry.ANUBIS_SHEATHED.get())) {
                 JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE, serverWorld, user.getPos());
                 user.setStackInHand(Hand.OFF_HAND, new ItemStack(JItemRegistry.ANUBIS.get()));
             }
@@ -180,7 +180,7 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
     }
 
     private static boolean isHoldingSheathedAnubis(AnubisSpec spec) {
-        return spec.player.isHolding(JItemRegistry.ANUBISSHEATHED.get());
+        return spec.player.isHolding(JItemRegistry.ANUBIS_SHEATHED.get());
     }
 
     private static boolean isHoldingAnubis(AnubisSpec spec) {

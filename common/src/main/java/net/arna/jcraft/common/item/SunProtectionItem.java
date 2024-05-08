@@ -75,7 +75,7 @@ public class SunProtectionItem extends ArmorItem implements GeoItem {
             @Override
             public @NotNull BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
                 if (this.renderer == null) {
-                    if (itemStack.isOf(JItemRegistry.KARSHEADWRAP.get())) {
+                    if (itemStack.isOf(JItemRegistry.KARS_HEADWRAP.get())) {
                         this.renderer = new KarsArmorRenderer();
                     }
                     if (itemStack.isOf(JItemRegistry.RED_HAT.get())) {

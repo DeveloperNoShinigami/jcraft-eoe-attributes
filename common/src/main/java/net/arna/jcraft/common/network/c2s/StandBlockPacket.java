@@ -57,7 +57,7 @@ public class StandBlockPacket {
     }
 
     private static boolean allowBlockingWith(ItemStack itemStack) {
-        if (itemStack.isOf(JItemRegistry.ANUBIS.get()) || itemStack.isOf(JItemRegistry.ANUBISSHEATHED.get())) {
+        if (itemStack.isOf(JItemRegistry.ANUBIS.get()) || itemStack.isOf(JItemRegistry.ANUBIS_SHEATHED.get())) {
             return true;
         }
         return itemStack.getUseAction() == UseAction.NONE;

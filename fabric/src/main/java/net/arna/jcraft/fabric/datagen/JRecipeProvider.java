@@ -54,7 +54,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_ingot", InventoryChangedCriterion.Conditions.items(JItemRegistry.STELLAR_IRON_INGOT.get()))
                 .offerTo(exporter);
         // stand arrow
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.STANDARROW.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.STAND_ARROW.get())
                 .pattern("  A")
                 .pattern(" S ")
                 .pattern("F  ")
@@ -68,12 +68,12 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .pattern("FFF")
                 .pattern("FAF")
                 .pattern("FFF")
-                .input('A', JItemRegistry.STANDARROW.get())
+                .input('A', JItemRegistry.STAND_ARROW.get())
                 .input('F', Items.DISC_FRAGMENT_5)
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STANDARROW.get()))
+                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STAND_ARROW.get()))
                 .offerTo(exporter);
         // sinner's soul
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.SINNERSSOUL.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.SINNERS_SOUL.get())
                 .pattern("SSS")
                 .pattern("SFS")
                 .pattern("SSS")
@@ -82,27 +82,27 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_soul_sand", InventoryChangedCriterion.Conditions.items(Items.SOUL_SAND))
                 .offerTo(exporter);
         // living arrow
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.LIVINGARROW.get())
-                .input(JItemRegistry.STANDARROW.get())
-                .input(JItemRegistry.SINNERSSOUL.get())
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STANDARROW.get()))
-                .criterion("has_sinners_soul", InventoryChangedCriterion.Conditions.items(JItemRegistry.SINNERSSOUL.get()))
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.LIVING_ARROW.get())
+                .input(JItemRegistry.STAND_ARROW.get())
+                .input(JItemRegistry.SINNERS_SOUL.get())
+                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STAND_ARROW.get()))
+                .criterion("has_sinners_soul", InventoryChangedCriterion.Conditions.items(JItemRegistry.SINNERS_SOUL.get()))
                 .offerTo(exporter);
         // soul block
         ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.SOUL_BLOCK.get())
-                .input(JItemRegistry.SINNERSSOUL.get())
-                .input(JItemRegistry.SINNERSSOUL.get())
-                .input(JItemRegistry.SINNERSSOUL.get())
-                .input(JItemRegistry.SINNERSSOUL.get())
-                .input(JItemRegistry.SINNERSSOUL.get())
-                .input(JItemRegistry.SINNERSSOUL.get())
-                .input(JItemRegistry.SINNERSSOUL.get())
-                .input(JItemRegistry.SINNERSSOUL.get())
-                .input(JItemRegistry.SINNERSSOUL.get())
-                .criterion("has_sinners_soul", InventoryChangedCriterion.Conditions.items(JItemRegistry.SINNERSSOUL.get()))
+                .input(JItemRegistry.SINNERS_SOUL.get())
+                .input(JItemRegistry.SINNERS_SOUL.get())
+                .input(JItemRegistry.SINNERS_SOUL.get())
+                .input(JItemRegistry.SINNERS_SOUL.get())
+                .input(JItemRegistry.SINNERS_SOUL.get())
+                .input(JItemRegistry.SINNERS_SOUL.get())
+                .input(JItemRegistry.SINNERS_SOUL.get())
+                .input(JItemRegistry.SINNERS_SOUL.get())
+                .input(JItemRegistry.SINNERS_SOUL.get())
+                .criterion("has_sinners_soul", InventoryChangedCriterion.Conditions.items(JItemRegistry.SINNERS_SOUL.get()))
                 .offerTo(exporter);
         // requiem ruby
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.REQUIEMRUBY.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.REQUIEM_RUBY.get())
                 .pattern("RDR")
                 .pattern("ENE")
                 .pattern("RDR")
@@ -114,12 +114,12 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_redstone_block", InventoryChangedCriterion.Conditions.items(Items.REDSTONE_BLOCK))
                 .offerTo(exporter);
         // requiem arrow
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.REQUIEMARROW.get())
-                .input(JItemRegistry.STANDARROW.get())
-                .input(JItemRegistry.REQUIEMRUBY.get())
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.REQUIEM_ARROW.get())
+                .input(JItemRegistry.STAND_ARROW.get())
+                .input(JItemRegistry.REQUIEM_RUBY.get())
                 .input(Items.TIPPED_ARROW)
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STANDARROW.get()))
-                .criterion("has_ruby", InventoryChangedCriterion.Conditions.items(JItemRegistry.REQUIEMRUBY.get()))
+                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STAND_ARROW.get()))
+                .criterion("has_ruby", InventoryChangedCriterion.Conditions.items(JItemRegistry.REQUIEM_RUBY.get()))
                 .offerTo(exporter);
         // coffin
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.COFFIN_BLOCK.get())
@@ -145,7 +145,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_yellow_bed", InventoryChangedCriterion.Conditions.items(Items.YELLOW_BED))
                 .offerTo(exporter);
         // Kars' headwrap
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.KARSHEADWRAP.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.KARS_HEADWRAP.get())
                 .pattern(" C ")
                 .pattern("L L")
                 .pattern(" B ")
@@ -173,7 +173,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_glass", InventoryChangedCriterion.Conditions.items(Items.GLASS))
                 .offerTo(exporter);
         // Jotaro's cap
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.JOTAROCAP.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.JOTARO_CAP.get())
                 .pattern("BYB")
                 .pattern("BHB")
                 .input('B', Items.BLACK_DYE)
@@ -182,7 +182,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_netherite_helmet", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_HELMET))
                 .offerTo(exporter);
         // Jotaro's jacket
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.JOTAROJACKET.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.JOTARO_JACKET.get())
                 .pattern("B B")
                 .pattern("BCB")
                 .pattern("BBB")
@@ -191,7 +191,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_netherite_chestplate", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_CHESTPLATE))
                 .offerTo(exporter);
         // Jotaro's pants
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.JOTAROPANTS.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.JOTARO_PANTS.get())
                 .pattern("YYY")
                 .pattern("BLB")
                 .pattern("B B")
@@ -201,7 +201,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_netherite_leggings", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_LEGGINGS))
                 .offerTo(exporter);
         // Jotaro's boots
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.JOTAROBOOTS.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.JOTARO_BOOTS.get())
                 .pattern("BNB")
                 .pattern("B B")
                 .input('B', Items.BLACK_DYE)
@@ -209,14 +209,14 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_netherite_boots", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_BOOTS))
                 .offerTo(exporter);
         // Dio's headband
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIOHEADBAND.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIO_HEADBAND.get())
                 .pattern("GHG")
                 .input('G', Items.GREEN_DYE)
                 .input('H', Items.NETHERITE_HELMET)
                 .criterion("has_netherite_helmet", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_HELMET))
                 .offerTo(exporter);
         // Dio's jacket
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIOJACKET.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIO_JACKET.get())
                 .pattern("Y Y")
                 .pattern("YCY")
                 .pattern("YBY")
@@ -226,7 +226,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_netherite_chestplate", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_CHESTPLATE))
                 .offerTo(exporter);
         // Dio's cape
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIOCAPE.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIO_CAPE.get())
                 .pattern("RLR")
                 .pattern("LCL")
                 .pattern("LLL")
@@ -236,7 +236,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_netherite_chestplate", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_CHESTPLATE))
                 .offerTo(exporter);
         // Dio's pants
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIOPANTS.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIO_PANTS.get())
                 .pattern("GGG")
                 .pattern("YLY")
                 .pattern("Y Y")
@@ -246,7 +246,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_netherite_leggings", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_LEGGINGS))
                 .offerTo(exporter);
         // Dio's boots
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIOBOOTS.get())
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIO_BOOTS.get())
                 .pattern("YBY")
                 .pattern("Y Y")
                 .input('B', Items.NETHERITE_BOOTS)
@@ -254,7 +254,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_netherite_boots", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_BOOTS))
                 .offerTo(exporter);
         // Dio's diary
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIOSDIARY.get())
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIOS_DIARY.get())
                 .input(Items.WAXED_OXIDIZED_COPPER)
                 .input(Items.GOLD_BLOCK)
                 .input(Items.NETHERITE_BLOCK)

@@ -427,7 +427,7 @@ public final class JCraft {
     public static ItemGroup createItemGroup() {
         return ItemGroup.create(ItemGroup.Row.TOP, 0)
                 .displayName(Text.translatable("itemGroup.jcraft.main"))
-                .icon(() -> JItemRegistry.STANDARROW.get().getDefaultStack())
+                .icon(() -> JItemRegistry.STAND_ARROW.get().getDefaultStack())
                 .entries((displayContext, entries) -> {
                     for (Map.Entry<RegistrySupplier<Item>, Identifier> i : JItemRegistry.ITEMS.entrySet()) {
                         if (!i.getKey().get().getDefaultStack().isOf(JItemRegistry.DEBUG_WAND.get())) {

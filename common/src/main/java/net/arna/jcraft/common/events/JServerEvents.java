@@ -399,7 +399,7 @@ public class JServerEvents {
             }
 
             if (random.nextInt(0, 100) >= 90) {
-                handItems.set(1, new ItemStack(JItemRegistry.STANDARROW.get()));
+                handItems.set(1, new ItemStack(JItemRegistry.STAND_ARROW.get()));
                 mob.setEquipmentDropChance(EquipmentSlot.OFFHAND, 100f);
             }
 
