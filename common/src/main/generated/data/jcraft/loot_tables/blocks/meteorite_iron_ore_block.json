@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "jcraft:coffin"
+          "name": "jcraft:meteorite_iron_ore_block"
         }
       ],
       "rolls": 1.0

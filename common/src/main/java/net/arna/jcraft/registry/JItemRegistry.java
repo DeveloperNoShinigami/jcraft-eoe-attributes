@@ -96,7 +96,7 @@ public interface JItemRegistry {
     RegistrySupplier<Item> HOT_SAND_BLOCK = register("hot_sand_block",
             () -> new BlockItem(JBlockRegistry.HOT_SAND_BLOCK.get(), settings()));
     RegistrySupplier<Item> COFFIN_BLOCK = register("coffin",
-            () -> new BlockItem(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get(), settings()));
+            () -> new BlockItem(JBlockRegistry.COFFIN_BLOCK.get(), settings()));
 
     private void register() {
 
