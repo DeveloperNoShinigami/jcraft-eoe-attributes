@@ -1,6 +1,7 @@
 package net.arna.jcraft.client.util;
 
 import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import lombok.Getter;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -36,7 +37,10 @@ public class TrackedKeyBinding {
     }
 
     public static TrackedKeyBinding createAndRegister(String translationKey, InputUtil.Type type, int code, String category) {
-        return null; //TODO wrap(KeyBindingHelper.registerKeyBinding(new KeyBinding(translationKey, type, code, category)));
+        KeyBinding keyBinding = new KeyBinding(translationKey, type, code, category);
+        KeyMappingRegistry.register(keyBinding);
+
+        return wrap(keyBinding);
     }
 
     public static TrackedKeyBinding wrap(KeyBinding binding) {

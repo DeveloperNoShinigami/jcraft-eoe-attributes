@@ -19,6 +19,8 @@ import net.arna.jcraft.common.network.c2s.StandBlockPacket;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -42,6 +44,7 @@ import static net.arna.jcraft.client.JCraftClient.*;
 import static net.arna.jcraft.client.gui.hud.JCraftAbilityHud.getHudX;
 import static net.arna.jcraft.client.util.JClientUtils.activeTimestops;
 
+@Environment(EnvType.CLIENT)
 public class JClientEvents {
 
     public static void onLast(MatrixStack matrixStack, Vec3d cameraPos, WorldRenderer worldRenderer) {

@@ -5,6 +5,8 @@ import lombok.Getter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.rendering.FrameCounter;
 import net.arna.jcraft.client.rendering.HUDAnimation;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.client.texture.TextureManager;
@@ -16,6 +18,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Environment(EnvType.CLIENT)
 public class EpitaphOverlay {
     public static final long FRAME_TIME = 1000000000 / 60; // Time of one frame in nanoseconds.
     private static final float VIGNETTE_INTENSITY = 5f;

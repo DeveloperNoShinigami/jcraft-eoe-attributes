@@ -5,11 +5,14 @@ import net.arna.jcraft.client.renderer.entity.*;
 import net.arna.jcraft.client.renderer.entity.projectiles.*;
 import net.arna.jcraft.client.renderer.entity.stands.*;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public interface JEntityRendererRegister {
     static void registerEntityRenderers() {
 

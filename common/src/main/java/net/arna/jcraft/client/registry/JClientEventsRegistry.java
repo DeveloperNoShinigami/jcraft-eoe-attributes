@@ -5,7 +5,10 @@ import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.arna.jcraft.client.events.JClientEvents;
 import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
+@Environment(EnvType.CLIENT)
 public interface JClientEventsRegistry {
     static void registerClientEvents() {
         ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(JClientEvents::clientPlayerJoin);

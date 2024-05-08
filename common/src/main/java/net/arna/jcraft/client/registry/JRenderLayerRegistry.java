@@ -3,6 +3,8 @@ package net.arna.jcraft.client.registry;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.rendering.Phases;
 import net.arna.jcraft.client.rendering.RenderHandler;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
@@ -11,6 +13,7 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class JRenderLayerRegistry extends RenderPhase {
 
     public JRenderLayerRegistry(String name, Runnable beginAction, Runnable endAction) {

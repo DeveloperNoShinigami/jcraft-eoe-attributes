@@ -37,6 +37,8 @@ import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -77,6 +79,7 @@ import java.util.function.Supplier;
 import static net.arna.jcraft.client.gui.hud.JCraftAbilityHud.getHudX;
 import static net.arna.jcraft.client.util.JClientUtils.activeTimestops;
 
+@Environment(EnvType.CLIENT)
 public class JCraftClient implements ClientModInitializer {
     // Keybinds
     public static TrackedKeyBinding standSummon, heavyKey, barrageKey, ultKey, special1Key, special2Key, special3Key,

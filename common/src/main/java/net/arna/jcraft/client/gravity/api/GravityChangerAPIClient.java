@@ -11,6 +11,8 @@ import net.arna.jcraft.common.gravity.util.packet.InvertGravityPacket;
 import net.arna.jcraft.common.gravity.util.packet.OverwriteGravityPacket;
 import net.arna.jcraft.common.gravity.util.packet.UpdateGravityPacket;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
@@ -19,6 +21,7 @@ import net.minecraft.util.math.Direction;
 
 import java.util.ArrayList;
 
+@Environment(EnvType.CLIENT)
 public class GravityChangerAPIClient {
 
     public static void addGravityClient(ClientPlayerEntity entity, Gravity gravity, Identifier verifier, PacketByteBuf verifierInfo) {

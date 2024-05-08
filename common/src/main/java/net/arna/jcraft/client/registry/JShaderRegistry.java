@@ -6,6 +6,8 @@ import net.arna.jcraft.client.rendering.PostProcessHandler;
 import net.arna.jcraft.client.rendering.post.TimestopShaderPostProcessor;
 import net.arna.jcraft.client.rendering.shader.JShader;
 import net.arna.jcraft.client.rendering.shader.ShaderHolder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.resource.ResourceFactory;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class JShaderRegistry {
     public static List<Pair<ShaderProgram, Consumer<ShaderProgram>>> shaderList;
 

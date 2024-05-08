@@ -10,6 +10,8 @@ import net.arna.jcraft.common.spec.AnubisSpec;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -17,6 +19,7 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.util.Identifier;
 import org.joml.Vector3f;
 
+@Environment(EnvType.CLIENT)
 public class JCraftHudOverlay {
     private static final Identifier EMPTY_GAUGE = JCraft.id("textures/gui/empty_gauge.png");
     private static final Identifier FULL_GAUGE = JCraft.id("textures/gui/full_gauge.png");

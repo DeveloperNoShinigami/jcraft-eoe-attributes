@@ -1,5 +1,7 @@
 package net.arna.jcraft.client.registry;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -10,6 +12,7 @@ import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
 import java.util.function.Consumer;
 
+@Environment(EnvType.CLIENT)
 public class JArmorRendererRegistry {
 
     public static void registerArmorRenderers() {
