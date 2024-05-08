@@ -161,10 +161,10 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
         );
 
         freespace = """
-                    BNBs:
-                                            
-                        -the superman
-                        M1>cr.Time Strike>Backhand>What an Ugly Watch>delay M1>Timestop~Star Breaker>dash/Timeskip>Barrage>M1""";
+                BNBs:
+                                        
+                    -the superman
+                    M1>cr.Time Strike>Backhand>What an Ugly Watch>delay M1>Timestop~Star Breaker>dash/Timeskip>Barrage>M1""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.8f, 0.6f, 1.0f),
@@ -191,7 +191,9 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
 
     @Override
     public void desummon() {
-        if (tsTime > 0) return;
+        if (tsTime > 0) {
+            return;
+        }
         super.desummon();
     }
 
@@ -199,10 +201,14 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
     public boolean initMove(MoveType type) {
         if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
             AbstractMove<?, ? super SPTWEntity> followup = curMove.getFollowup();
-            if (followup != null) setMove(followup, (State) followup.getAnimation());
+            if (followup != null) {
+                setMove(followup, (State) followup.getAnimation());
+            }
         } else {
             boolean s = super.initMove(type);
-            if (type == MoveType.SPECIAL1) turnAround = getUserOrThrow().isSneaking();
+            if (type == MoveType.SPECIAL1) {
+                turnAround = getUserOrThrow().isSneaking();
+            }
             return s;
         }
 
@@ -212,8 +218,9 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
     @Override
     public void tick() {
         super.tick();
-        if (!hasUser() || getWorld().isClient || curMove == null || curMove.getOriginalMove() != TIME_STRIKE || getMoveStun() != 7)
+        if (!hasUser() || getWorld().isClient || curMove == null || curMove.getOriginalMove() != TIME_STRIKE || getMoveStun() != 7) {
             return;
+        }
 
         /*
             NbtCompound userData = ((IEntityDataSaver)user).getPersistentData();
@@ -225,7 +232,9 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
         Vec3d prevPos = user.getEyePos();
 
         TimeSkipMove.doTimeSkip(this, user, 2.5, List.of(JSoundRegistry.STAR_PLATINUM_TIMESKIP));
-        if (turnAround) user.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, prevPos);
+        if (turnAround) {
+            user.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, prevPos);
+        }
     }
 
     @Override

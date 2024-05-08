@@ -24,8 +24,9 @@ public class SpeedParticle extends AbstractSlowingParticle {
         float c = 1f - (float) age / (float) maxAge;
         this.setColor(c * 0.2f, c, c);
 
-        if (!this.dead)
+        if (!this.dead) {
             this.setSprite(spriteProvider.getSprite(random));
+        }
     }
 
     @Override

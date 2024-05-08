@@ -31,9 +31,12 @@ public class SetSpecCommand {
         SpecType specType = context.getArgument("spec", SpecType.class);
         Collection<? extends PlayerEntity> targets = EntityArgumentType.getPlayers(context, "players");
 
-        if (targets.isEmpty()) return 0;
-        for (PlayerEntity player : targets)
+        if (targets.isEmpty()) {
+            return 0;
+        }
+        for (PlayerEntity player : targets) {
             JComponentPlatformUtils.getSpecData(player).setType(specType);
+        }
 
         return 1;
     }

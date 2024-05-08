@@ -1,8 +1,6 @@
 package net.arna.jcraft.registry;
 
-import dev.architectury.networking.NetworkChannel;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
 import net.minecraft.util.Identifier;
 
 public interface JPacketRegistry {

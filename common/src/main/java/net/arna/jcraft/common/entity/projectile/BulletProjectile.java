@@ -82,7 +82,9 @@ public class BulletProjectile extends PersistentProjectileEntity implements GeoE
             BlockHitResult blockHitResult = (BlockHitResult) hitResult;
             BlockPos blockPos = blockHitResult.getBlockPos();
             BlockState blockState = getWorld().getBlockState(blockPos);
-            if (blockState.isAir()) return;
+            if (blockState.isAir()) {
+                return;
+            }
 
             // Calculate penetrative value and decide if it should land
             Vec3i intNormal = blockHitResult.getSide().getVector();
@@ -97,8 +99,9 @@ public class BulletProjectile extends PersistentProjectileEntity implements GeoE
             // Ek = mv^2/2
             double kineticEnergy = mass * impactVec.lengthSquared() / 2;
             double hardness = blockState.getBlock().getHardness();
-            if (hardness < 0)
+            if (hardness < 0) {
                 hardness = 32767;
+            }
 
             double penAngle = 45.0 + hardness * 5; // This is bs but so is minecraft physics
 
@@ -116,7 +119,9 @@ public class BulletProjectile extends PersistentProjectileEntity implements GeoE
                 }
             } else { // Ricochet
                 setVelocity(impactVec.add(normal).multiply(0.5 / hardness));
-                if (!getWorld().isClient) JUtils.serverPlaySound(JSoundRegistry.BULLET_RICOCHET, (ServerWorld) getWorld(), getPos(), 32);
+                if (!getWorld().isClient) {
+                    JUtils.serverPlaySound(JSoundRegistry.BULLET_RICOCHET, (ServerWorld) getWorld(), getPos(), 32);
+                }
             }
         }
     }
@@ -139,8 +144,9 @@ public class BulletProjectile extends PersistentProjectileEntity implements GeoE
                 JUtils.serverPlaySound(JSoundRegistry.BULLET_PENETRATE, (ServerWorld) getWorld(), getPos(), 32);
                 discard();
             }
-        } else
+        } else {
             super.onEntityHit(entityHitResult);
+        }
     }
 
     @Override

@@ -17,8 +17,9 @@ public class GoParticle extends AbstractSlowingParticle {
     public void tick() {
         super.tick();
         this.scale = (age - 0.03f * age * age) * 0.1f;
-        if (age % 5 == 0)
+        if (age % 5 == 0) {
             setSprite(spriteProvider.getSprite(random));
+        }
     }
 
     public ParticleTextureSheet getType() {

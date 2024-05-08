@@ -34,17 +34,22 @@ public class StandSkinCommand {
 
     public static int run(CommandContext<ServerCommandSource> ctx, int skin) throws CommandSyntaxException {
         Collection<? extends Entity> targets = EntityArgumentType.getEntities(ctx, "targets");
-        if (targets.isEmpty()) return 0;
+        if (targets.isEmpty()) {
+            return 0;
+        }
         for (Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
                 CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
                 StandEntity<?, ?> stand = standData.getStand();
 
-                if (stand == null) continue;
+                if (stand == null) {
+                    continue;
+                }
 
                 StandType type = stand.getStandType();
-                if (skin <= type.getSkinCount())
+                if (skin <= type.getSkinCount()) {
                     standData.setSkin(skin);
+                }
 
                 livingEntity.detach();
                 summon(entity.getWorld(), livingEntity);

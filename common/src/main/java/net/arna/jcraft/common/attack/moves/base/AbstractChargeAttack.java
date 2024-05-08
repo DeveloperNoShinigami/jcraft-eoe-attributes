@@ -17,7 +17,7 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
     private final S hitAnimState;
 
     protected AbstractChargeAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                                float hitboxSize, float knockback, float offset, S hitAnimState) {
+                                   float hitboxSize, float knockback, float offset, S hitAnimState) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
 
         this.hitAnimState = hitAnimState;
@@ -65,7 +65,9 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
             //stand.setDistanceOffset(1 + attackDist * t * t);
             attacker.setFreePos(new Vector3f((float) newPos.x, (float) newPos.y, (float) newPos.z));
             attacker.setFree(true);
-        } else prepDetachmentMove(attacker, attacker.getUserOrThrow());
+        } else {
+            prepDetachmentMove(attacker, attacker.getUserOrThrow());
+        }
     }
 
     public static void prepDetachmentMove(StandEntity<?, ?> attacker, LivingEntity user) {

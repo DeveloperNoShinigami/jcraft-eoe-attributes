@@ -7,18 +7,13 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.util.math.RotationAxis;
-import software.bernie.example.client.renderer.entity.GremlinRenderer;
-import software.bernie.example.entity.DynamicExampleEntity;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
 
 import javax.annotation.Nullable;
@@ -58,17 +53,18 @@ public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
                                               VertexConsumerProvider bufferSource, float partialTick, int packedLight, int packedOverlay) {
                 float ang = -90f;
                 D4CEntity.State state = animatable.getState();
-                if (state == D4CEntity.State.THROW || state == D4CEntity.State.GIVE_GUN)
+                if (state == D4CEntity.State.THROW || state == D4CEntity.State.GIVE_GUN) {
                     ang += (animatable.getMoveStun() + 1f - partialTick) * 65f;
+                }
                 poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(ang));
 
                 if (stack == D4CRenderer.this.mainHandItem) {
                     poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
 
-                    if (stack.getItem() instanceof ShieldItem)
+                    if (stack.getItem() instanceof ShieldItem) {
                         poseStack.translate(0, 0.125, -0.25);
-                }
-                else if (stack == D4CRenderer.this.offHandItem) {
+                    }
+                } else if (stack == D4CRenderer.this.offHandItem) {
                     poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
 
                     if (stack.getItem() instanceof ShieldItem) {

@@ -178,7 +178,9 @@ public abstract class LivingEntityMixin extends Entity {
     )
     private void inject_getBoundingBox(EntityPose pose, CallbackInfoReturnable<Box> cir) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
-        if (gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         Box box = cir.getReturnValue();
         if (gravityDirection.getDirection() == Direction.AxisDirection.POSITIVE) {
@@ -196,7 +198,9 @@ public abstract class LivingEntityMixin extends Entity {
         LivingEntity entity = LivingEntity.class.cast(this);
 
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if (gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         ci.cancel();
 
@@ -466,7 +470,9 @@ public abstract class LivingEntityMixin extends Entity {
     )
     private void modify_tickStatusEffects_addParticle_0(Args args) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
-        if (gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         Vec3d vec3d = this.getPos().subtract(RotationUtil.vecPlayerToWorld(this.getPos().subtract(args.get(1), args.get(2), args.get(3)), gravityDirection));
         args.set(1, vec3d.x);
@@ -484,7 +490,9 @@ public abstract class LivingEntityMixin extends Entity {
     )
     private void modify_addDeathParticless_addParticle_0(Args args) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
-        if (gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         Vec3d vec3d = this.getPos().subtract(RotationUtil.vecPlayerToWorld(this.getPos().subtract(args.get(1), args.get(2), args.get(3)), gravityDirection));
         args.set(1, vec3d.x);

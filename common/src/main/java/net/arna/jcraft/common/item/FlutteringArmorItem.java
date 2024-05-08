@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.item;
 
-import net.arna.jcraft.client.renderer.armor.*;
+import net.arna.jcraft.client.renderer.armor.DIOCapeRenderer;
+import net.arna.jcraft.client.renderer.armor.JotaroArmorRenderer;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -27,6 +28,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
 /**
  * {@link ArmorItem} animated by GeckoLib to flutter when its wearer is moving.
  */

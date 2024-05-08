@@ -123,7 +123,9 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     public boolean canHoldMove(@Nullable MoveInputType type) {
-        if (type == null || type.getMoveType() == null) return false;
+        if (type == null || type.getMoveType() == null) {
+            return false;
+        }
 
         MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(type.getMoveType(), getThis());
         return entry == null ? type.isHoldable() : MoreObjects.firstNonNull(entry.getMove().getIsHoldable(), type.isHoldable());
@@ -143,12 +145,17 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
     public boolean handleMove(MoveType type, float animationSpeed) {
         MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(type, getThis());
-        if (entry == null) return false;
+        if (entry == null) {
+            return false;
+        }
 
         if (player.isSneaking()) {
-            if (entry.getCrouchingVariant() != null)
+            if (entry.getCrouchingVariant() != null) {
                 entry = entry.getCrouchingVariant();
-        } else if (!player.isOnGround() && entry.getAerialVariant() != null) entry = entry.getAerialVariant();
+            }
+        } else if (!player.isOnGround() && entry.getAerialVariant() != null) {
+            entry = entry.getAerialVariant();
+        }
         return handleMove(entry.getMove(), entry.getCooldownType(), entry.getAnimState(), animationSpeed);
     }
 
@@ -159,11 +166,15 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     public boolean handleMove(AbstractMove<?, ? super A> move, CooldownType cooldownType, @Nullable S state, float animationSpeed) {
         move = moveMap.getRegisteredMoveFor(move);
 
-        if (!move.canBeInitiated(getThis())) return false;
+        if (!move.canBeInitiated(getThis())) {
+            return false;
+        }
 
         CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(player);
         int cd = cooldowns.getCooldown(cooldownType);
-        if (cd > 0) return false;
+        if (cd > 0) {
+            return false;
+        }
         cooldowns.setCooldown(cooldownType, move.getCooldown());
 
         move.onInitiate(getThis());
@@ -175,10 +186,11 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
                 .withWindup((int) (move.getWindup() / animationSpeed));
         moveStun = curMove.getDuration();
 
-        if (curMove instanceof AbstractMultiHitAttack<?,?> multiHitAttack)
+        if (curMove instanceof AbstractMultiHitAttack<?, ?> multiHitAttack) {
             multiHitAttack.withHitMoments(IntSet.of(multiHitAttack.getHitMoments().intStream()
                     .map(i -> (int) (i / animationSpeed))
                     .toArray()));
+        }
 
         var finisher = curMove.getFinisher();
         if (finisher != null) {
@@ -186,14 +198,16 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             curMove.modifyFinisherTime(finisherSwapTick);
             // Ensure the finisher will happen
             int finisherWindupTime = finisher.right().getWindup() + 1;
-            if (moveStun < finisherWindupTime)
+            if (moveStun < finisherWindupTime) {
                 moveStun = finisherWindupTime;
+            }
         }
 
         armorPoints = move.getArmor();
 
-        if (state != null)
+        if (state != null) {
             setPlayerAnimation((this.state = state).getKey(getThis()), moveStun, animationSpeed);
+        }
 
         return true;
     }
@@ -204,30 +218,38 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     public void cancelMove() {
-        if (curMove != null) curMove.onCancel(getThis());
+        if (curMove != null) {
+            curMove.onCancel(getThis());
+        }
         curMove = null;
         queuedMove = null;
         armorPoints = 0;
         moveStun = 0;
 
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
         // Cancel player animation if it exists
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeShort(13);
         buf.writeInt(player.getId());
         ServerWorld serverWorld = (ServerWorld) player.getWorld();
-        for (ServerPlayerEntity sendPlayer : serverWorld.getPlayers())
+        for (ServerPlayerEntity sendPlayer : serverWorld.getPlayers()) {
             ServerChannelFeedbackPacket.send(sendPlayer, buf);
+        }
     }
 
     public boolean shouldSneak() {
         return false;
     }
 
-    public void processAttackClient() {}
+    public void processAttackClient() {
+    }
 
     public void tickSpec() {
-        if (player.isSpectator()) return;
+        if (player.isSpectator()) {
+            return;
+        }
 
         World world = player.getWorld();
 
@@ -255,7 +277,9 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
                 queuedMove = null;
             }
 
-            if (curMove != previousAttack && curMove != null) previousAttack = curMove;
+            if (curMove != previousAttack && curMove != null) {
+                previousAttack = curMove;
+            }
             return;
         }
 

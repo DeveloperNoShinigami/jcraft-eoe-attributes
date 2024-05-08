@@ -15,8 +15,9 @@ public class JExplosionPacket {
 
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         nativePacket.write(buf);
-        if (modifier == null) buf.writeBoolean(false);
-        else {
+        if (modifier == null) {
+            buf.writeBoolean(false);
+        } else {
             buf.writeBoolean(true);
             modifier.write(buf, player.getWorld().random);
         }

@@ -39,18 +39,27 @@ public class CloneAttackGoal extends Goal {
                 return false;
             } else {
                 Path path = cloneNavigation.findPathTo(target, 0);
-                if (path != null) return true;
-                else return this.getSquaredMaxAttackDistance(target) >= clone.squaredDistanceTo(target);
+                if (path != null) {
+                    return true;
+                } else {
+                    return this.getSquaredMaxAttackDistance(target) >= clone.squaredDistanceTo(target);
+                }
             }
         }
     }
 
     public boolean shouldContinue() {
-        if (target == null) return false;
-        else if (!target.isAlive() ||target.isRemoved()) return false;
-        else if (clone.squaredDistanceTo(target) > 1024.0D) return false;
-        else if (target == clone.getMaster()) return false;
-        else return !cloneNavigation.isIdle() || this.canStart();
+        if (target == null) {
+            return false;
+        } else if (!target.isAlive() || target.isRemoved()) {
+            return false;
+        } else if (clone.squaredDistanceTo(target) > 1024.0D) {
+            return false;
+        } else if (target == clone.getMaster()) {
+            return false;
+        } else {
+            return !cloneNavigation.isIdle() || this.canStart();
+        }
     }
 
     public void start() {
@@ -69,7 +78,9 @@ public class CloneAttackGoal extends Goal {
     }
 
     public void tick() {
-        if (target == null) return;
+        if (target == null) {
+            return;
+        }
 
         cloneNavigation.startMovingTo(target, speed);
         cloneLookControl.lookAt(target, 30.0F, 30.0F);

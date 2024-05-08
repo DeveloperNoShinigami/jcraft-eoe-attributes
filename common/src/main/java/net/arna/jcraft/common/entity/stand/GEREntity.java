@@ -142,8 +142,8 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
             .withInfo(
                     Text.literal("Life Beam"),
                     Text.literal("""
-                    Summons a fast rock projectile that turns into a homing scorpion a small time after landing.
-                    If charged for a minimum of 0.9 seconds, the scorpion inflicts poison and deals more stun.""")
+                            Summons a fast rock projectile that turns into a homing scorpion a small time after landing.
+                            If charged for a minimum of 0.9 seconds, the scorpion inflicts poison and deals more stun.""")
             );
     public static final NullificationAttack NULLIFICATION = new NullificationAttack(480, 5, 35, 1f)
             .withSound(JSoundRegistry.GE_HEAL)
@@ -156,7 +156,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
             .withInfo(
                     Text.literal("Return to Zero"),
                     Text.literal("initial press: saves the state of " +
-                    "every entity in a 4 chunk radius, second press: reverts all states except users\nDoesn't affect player inventories")
+                            "every entity in a 4 chunk radius, second press: reverts all states except users\nDoesn't affect player inventories")
             );
     public static final FlightMove FLIGHT = new FlightMove(320, 1, 0, 0f)
             .withSound(JSoundRegistry.GER_FLY)
@@ -228,12 +228,16 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
 
     @Override
     public boolean initMove(MoveType type) {
-        if (type == MoveType.ULTIMATE && !moveContext.get(ReturnToZeroMove.ENTITY_DATA).isEmpty())
+        if (type == MoveType.ULTIMATE && !moveContext.get(ReturnToZeroMove.ENTITY_DATA).isEmpty()) {
             RETURN_TO_ZERO.returnToZero(this);
-        else if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
+        } else if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
             AbstractMove<?, ? super GEREntity> followup = curMove.getFollowup();
-            if (followup != null) setMove(followup, (State) followup.getAnimation());
-        } else return super.initMove(type);
+            if (followup != null) {
+                setMove(followup, (State) followup.getAnimation());
+            }
+        } else {
+            return super.initMove(type);
+        }
 
         return true;
     }
@@ -249,12 +253,15 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     private static void pacifyMobs(LivingEntity target) {
         target.setAttacker(null);
 
-        if (!(target instanceof MobEntity mob)) return;
+        if (!(target instanceof MobEntity mob)) {
+            return;
+        }
         stun(mob, 10, 0);
         mob.setTarget(null);
         mob.setAttacking(null);
-        if (mob instanceof Angerable angerable)
+        if (mob instanceof Angerable angerable) {
             angerable.stopAnger();
+        }
     }
 
     @Override
@@ -268,19 +275,23 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
 
     @Override
     public void tick() {
-        if (age == 1) playSound(JSoundRegistry.GER_SUMMON, 1f, 1f);
+        if (age == 1) {
+            playSound(JSoundRegistry.GER_SUMMON, 1f, 1f);
+        }
         super.tick();
 
         if (getWorld().isClient) {
-            if (getState() == State.LASER && getMoveStun() == (LIFE_BEAM_CHARGE.getDuration() - 18))  {
+            if (getState() == State.LASER && getMoveStun() == (LIFE_BEAM_CHARGE.getDuration() - 18)) {
                 Vec3d offset = GravityChangerAPI.getEyeOffset(this);
                 double x = getX() + offset.x, y = getY() + offset.y, z = getZ() + offset.z;
-                for (int i = 0; i < 12; i++)
+                for (int i = 0; i < 12; i++) {
                     getWorld().addParticle(ParticleTypes.WITCH, x, y, z, random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
+                }
             }
         } else {
-            if (curMove != null && curMove.getOriginalMove() == LIFE_BEAM_CHARGE)
+            if (curMove != null && curMove.getOriginalMove() == LIFE_BEAM_CHARGE) {
                 getMoveContext().incrementInt(CHARGE_TIME, 1);
+            }
         }
         FLIGHT.tickFlight(this);
         RETURN_TO_ZERO.tickReturnInfo(this);

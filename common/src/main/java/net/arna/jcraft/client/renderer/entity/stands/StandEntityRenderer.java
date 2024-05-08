@@ -3,7 +3,6 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -12,12 +11,10 @@ import net.minecraft.client.render.VertexConsumers;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
@@ -30,10 +27,6 @@ import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.renderer.GeoRenderer;
-import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
-
-import java.util.Collections;
 
 public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityRenderer<T> {
 
@@ -76,7 +69,9 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
 
         float a = getAlpha(stand, partialTick);
         a *= alpha;
-        if (a <= 0.01f) return;
+        if (a <= 0.01f) {
+            return;
+        }
 
         super.preRender(poseStack, stand, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, getRed(stand, red, a), getGreen(stand, green, a), getBlue(stand, blue, a), alpha);
     }
@@ -90,7 +85,9 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
         poseStack.push();
 
         Entity leashHolder = animatable.getHoldingEntity();
-        if (leashHolder != null) renderLeash(animatable, partialTick, poseStack, bufferSource, leashHolder);
+        if (leashHolder != null) {
+            renderLeash(animatable, partialTick, poseStack, bufferSource, leashHolder);
+        }
 
         boolean shouldSit = animatable.hasVehicle() && (animatable.getVehicle() != null);
         float lerpBodyRot = MathHelper.lerpAngleDegrees(partialTick, animatable.prevBodyYaw, animatable.bodyYaw);
@@ -103,8 +100,9 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             float clampedHeadYaw = MathHelper.clamp(MathHelper.wrapDegrees(netHeadYaw), -85, 85);
             lerpBodyRot = lerpHeadRot - clampedHeadYaw;
 
-            if (clampedHeadYaw * clampedHeadYaw > 2500f)
+            if (clampedHeadYaw * clampedHeadYaw > 2500f) {
                 lerpBodyRot += clampedHeadYaw * 0.2f;
+            }
 
             netHeadYaw = lerpHeadRot - lerpBodyRot;
         }
@@ -127,7 +125,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             float headPitch = MathHelper.lerp(partialTick, animatable.prevPitch, animatable.getPitch());
             float motionThreshold = getMotionAnimThreshold(animatable);
             Vec3d velocity = animatable.getVelocity();
-            float avgVelocity = (float)(Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
+            float avgVelocity = (float) (Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
             AnimationState<T> animationState = new AnimationState<T>(animatable, limbSwing, limbSwingAmount, partialTick, avgVelocity >= motionThreshold && limbSwingAmount != 0);
             long instanceId = getInstanceId(animatable);
 
@@ -175,9 +173,13 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
 
     @Override
     protected int getBlockLight(T stand, BlockPos pos) {
-        if (!stand.hasUser()) return super.getBlockLight(stand, pos);
+        if (!stand.hasUser()) {
+            return super.getBlockLight(stand, pos);
+        }
 
-        if (stand.isOnFire() || stand.getUserOrThrow().isOnFire()) return 15;
+        if (stand.isOnFire() || stand.getUserOrThrow().isOnFire()) {
+            return 15;
+        }
         return stand.getWorld().getLightLevel(LightType.BLOCK, stand.getUserOrThrow().getBlockPos());
     }
 
@@ -193,13 +195,19 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     }
 
     public static float getAlpha(StandEntity<?, ?> stand, float tickDelta) {
-        if (!shouldApplyAlpha(stand)) return 1f;
+        if (!shouldApplyAlpha(stand)) {
+            return 1f;
+        }
 
         // If we have an alpha override this tick and had one last tick too, just use that.
-        if (stand.hasAlphaOverride() && stand.getPrevAlpha() >= 0) return stand.getAlphaOverride();
+        if (stand.hasAlphaOverride() && stand.getPrevAlpha() >= 0) {
+            return stand.getAlphaOverride();
+        }
 
         float a = MathHelper.clamp((float) stand.squaredDistanceTo(MinecraftClient.getInstance().player) / 2f, 0, 1);
-        if (!stand.hasAlphaOverride()) return a; // If we don't have an override, use this alpha value.
+        if (!stand.hasAlphaOverride()) {
+            return a; // If we don't have an override, use this alpha value.
+        }
 
         // If we do have an override, but didn't last tick, lerp between the previous alpha and the override.
         return MathHelper.lerp(tickDelta, a, stand.getAlphaOverride());

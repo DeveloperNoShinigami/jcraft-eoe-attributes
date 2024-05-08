@@ -19,7 +19,9 @@ import java.util.Optional;
 
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
-    @Shadow @Final private Camera camera;
+    @Shadow
+    @Final
+    private Camera camera;
 
     @Inject(
             method = "renderWorld",
@@ -35,9 +37,11 @@ public abstract class GameRendererMixin {
             Entity focusedEntity = this.camera.getFocusedEntity();
             Direction gravityDirection = GravityChangerAPI.getGravityDirection(focusedEntity);
             Optional<RotationAnimation> animationOptional = GravityChangerAPI.getGravityAnimation(focusedEntity);
-            if(animationOptional.isEmpty()) return;
+            if (animationOptional.isEmpty()) {
+                return;
+            }
             RotationAnimation animation = animationOptional.get();
-            long timeMs = focusedEntity.getWorld().getTime()*50+(long)(tickDelta*50);
+            long timeMs = focusedEntity.getWorld().getTime() * 50 + (long) (tickDelta * 50);
             Quaternionf currentGravityRotation = animation.getCurrentGravityRotation(gravityDirection, timeMs);
             matrix.multiply(currentGravityRotation);
         }

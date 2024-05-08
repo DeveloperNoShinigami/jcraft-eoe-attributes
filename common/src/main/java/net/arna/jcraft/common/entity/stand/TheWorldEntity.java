@@ -51,7 +51,7 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
                     Text.literal("quick combo finisher")
             );
     public static final SimpleAttack<TheWorldEntity> LIGHT = SimpleAttack.<TheWorldEntity>lightAttack(
-            5, 7, 0.75f, 5, 10, 0.1f, -0.1f)
+                    5, 7, 0.75f, 5, 10, 0.1f, -0.1f)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(LOW_KICK)
@@ -133,8 +133,11 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
                     Text.literal("Lunge"),
                     Text.literal("user & stand charge forward, launches")
             );
+
     private static void doCharge(TheWorldEntity attacker, LivingEntity user, MoveContext moveContext) {
-        if (attacker.isFree()) return;
+        if (attacker.isFree()) {
+            return;
+        }
         JUtils.addVelocity(user, attacker.getRotationVector().multiply(0.75));
     }
 
@@ -212,15 +215,21 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
     public boolean initMove(MoveType type) {
         if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
             AbstractMove<?, ? super TheWorldEntity> followup = curMove.getFollowup();
-            if (followup != null) setMove(followup, (State) followup.getAnimation());
+            if (followup != null) {
+                setMove(followup, (State) followup.getAnimation());
+            }
 
             return true;
-        } else return super.initMove(type);
+        } else {
+            return super.initMove(type);
+        }
     }
 
     @Override
     public void desummon() {
-        if (tsTime > 0) return;
+        if (tsTime > 0) {
+            return;
+        }
         super.desummon();
     }
 
@@ -236,7 +245,9 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
 
     @Override
     protected void playSummonSound() {
-        if (shouldNotPlaySummonSound()) return;
+        if (shouldNotPlaySummonSound()) {
+            return;
+        }
 
         playSound(JSoundRegistry.TW_SUMMON, 1f, 1f);
         playSound(JSoundRegistry.MUDA_DA, 1f, 1f);

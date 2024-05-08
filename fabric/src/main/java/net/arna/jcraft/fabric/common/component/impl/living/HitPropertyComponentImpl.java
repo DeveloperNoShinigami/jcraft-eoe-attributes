@@ -1,6 +1,5 @@
 package net.arna.jcraft.fabric.common.component.impl.living;
 
-import lombok.Getter;
 import net.arna.jcraft.common.component.impl.living.CommonHitPropertyComponentImpl;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.living.HitPropertyComponent;
@@ -8,8 +7,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
 
 public class HitPropertyComponentImpl extends CommonHitPropertyComponentImpl implements HitPropertyComponent {
     private final Entity entity;
@@ -48,6 +45,7 @@ public class HitPropertyComponentImpl extends CommonHitPropertyComponentImpl imp
     public void readFromNbt(NbtCompound tag) {
         super.readFromNbt(tag);
     }
+
     @Override
     public void writeToNbt(NbtCompound tag) {
         super.writeToNbt(tag);

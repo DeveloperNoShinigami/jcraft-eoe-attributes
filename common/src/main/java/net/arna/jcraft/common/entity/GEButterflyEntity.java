@@ -62,7 +62,9 @@ public class GEButterflyEntity extends FlyingEntity implements GeoEntity, IOwnab
             if (player.getStackInHand(hand).isEmpty()) {
                 player.setStackInHand(hand, getMainHandStack());
                 discard();
-            } else return ActionResult.FAIL;
+            } else {
+                return ActionResult.FAIL;
+            }
             return ActionResult.SUCCESS;
         }
         return ActionResult.FAIL;
@@ -72,16 +74,19 @@ public class GEButterflyEntity extends FlyingEntity implements GeoEntity, IOwnab
     public void tick() {
         super.tick();
 
-        if (getWorld().isClient || !hasMaster) return;
+        if (getWorld().isClient || !hasMaster) {
+            return;
+        }
         if (master == null) {
             kill();
             return;
         }
 
-        if (squaredDistanceTo(master) > 16)
+        if (squaredDistanceTo(master) > 16) {
             navigation.startMovingTo(master, 1.0);
-        else if (navigation.isFollowingPath())
+        } else if (navigation.isFollowingPath()) {
             navigation.stop();
+        }
     }
 
     public static DefaultAttributeContainer.Builder createButterflyAttributes() {
@@ -94,16 +99,18 @@ public class GEButterflyEntity extends FlyingEntity implements GeoEntity, IOwnab
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
         nbt.putBoolean("HasMaster", hasMaster);
-        if (master instanceof PlayerEntity player)
+        if (master instanceof PlayerEntity player) {
             nbt.putUuid("MasterUUID", player.getUuid());
+        }
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
         hasMaster = nbt.getBoolean("HasMaster");
-        if (nbt.containsUuid("MasterUUID"))
+        if (nbt.containsUuid("MasterUUID")) {
             setMaster(getWorld().getPlayerByUuid(nbt.getUuid("MasterUUID")));
+        }
     }
 
     // Animations
@@ -118,7 +125,9 @@ public class GEButterflyEntity extends FlyingEntity implements GeoEntity, IOwnab
         if (isAlive()) {
             state.setAnimation(RawAnimation.begin().thenLoop("animation.gebutterfly.idle"));
             return PlayState.CONTINUE;
-        } else return PlayState.STOP;
+        } else {
+            return PlayState.STOP;
+        }
     }
 
     @Override

@@ -2,9 +2,7 @@ package net.arna.jcraft.client.renderer.entity.projectiles;
 
 import net.arna.jcraft.client.model.entity.BulletModel;
 import net.arna.jcraft.common.entity.projectile.BulletProjectile;
-import net.arna.jcraft.common.entity.projectile.LifeDetectorEntity;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,6 +14,7 @@ public class BulletRenderer extends GeoEntityRenderer<BulletProjectile> {
     public BulletRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new BulletModel()); // 3x1x1 px cuboid model
     }
+
     @Override
     public RenderLayer getRenderType(BulletProjectile animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
         return RenderLayer.getEntitySolid(texture);

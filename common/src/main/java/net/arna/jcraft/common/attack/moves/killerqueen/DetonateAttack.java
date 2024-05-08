@@ -38,8 +38,9 @@ public class DetonateAttack extends AbstractMove<DetonateAttack, AbstractKillerQ
         Vec3d bombPos = bombData.getBombPos();
 
         if (bombPos != null) {
-            if (bombEntity instanceof ItemEntity || bombEntity instanceof BubbleProjectile)
+            if (bombEntity instanceof ItemEntity || bombEntity instanceof BubbleProjectile) {
                 bombEntity.discard();
+            }
             explode(attacker, user, bombPos);
         }
 

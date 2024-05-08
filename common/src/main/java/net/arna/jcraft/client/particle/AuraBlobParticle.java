@@ -30,11 +30,13 @@ public class AuraBlobParticle extends AbstractSlowingParticle {
             setVelocity(deltaPos.x, deltaPos.y, deltaPos.z);
         }
     }
+
     public void tick() {
         super.tick();
         tryMatchParent();
-        if (age % 3 == 0)
+        if (age % 3 == 0) {
             setSprite(spriteProvider.getSprite(random));
+        }
     }
 
     public ParticleTextureSheet getType() {

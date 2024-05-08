@@ -1,45 +1,22 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexConsumers;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.model.data.EntityModelData;
 import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
-import software.bernie.geckolib.renderer.GeoArmorRenderer;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
-
-import java.util.Collections;
-import java.util.List;
-
-import static net.minecraft.client.render.entity.LivingEntityRenderer.getOverlay;
 
 @Deprecated(forRemoval = true)
-public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends DynamicGeoEntityRenderer<T> {
+public class ExtendedStandEntityRenderer<T extends StandEntity<?, ?>> extends DynamicGeoEntityRenderer<T> {
     protected ItemStack mainHandItem, offHandItem;
 
     protected static final String LEFT_HAND = "bipedHandLeft";
@@ -166,7 +143,9 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?,?>> extends Dyn
     @Override
     protected int getBlockLight(T stand, BlockPos pos) {
         if (stand.hasUser()) {
-            if (stand.isOnFire() || stand.getUserOrThrow().isOnFire()) return 15;
+            if (stand.isOnFire() || stand.getUserOrThrow().isOnFire()) {
+                return 15;
+            }
             return stand.getWorld().getLightLevel(LightType.BLOCK, stand.getUserOrThrow().getBlockPos());
         }
         return super.getBlockLight(stand, pos);

@@ -27,7 +27,9 @@ public class SCCounterAttack extends AbstractCounterAttack<SCCounterAttack, Silv
     public void counter(@NonNull SilverChariotEntity attacker, Entity countered, DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
 
-        if (!(countered instanceof LivingEntity ent)) return;
+        if (!(countered instanceof LivingEntity ent)) {
+            return;
+        }
         StandEntity.stun(ent, 30, 0);
         JUtils.cancelMoves(ent);
     }

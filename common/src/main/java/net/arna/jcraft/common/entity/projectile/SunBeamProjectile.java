@@ -95,8 +95,9 @@ public class SunBeamProjectile extends PersistentProjectileEntity implements Geo
 
         Vec3d curPos = getPos();
 
-        if (age > 5 && age <= 10)
+        if (age > 5 && age <= 10) {
             length += maxLength / 5;
+        }
 
         if (getWorld().isClient()) {
             if (age <= 20) {
@@ -118,7 +119,9 @@ public class SunBeamProjectile extends PersistentProjectileEntity implements Geo
                     filter.add(owner);
                     filter.add(sun);
                     filter.add(this);
-                    if (owner.hasPassengers()) filter.addAll(owner.getPassengerList());
+                    if (owner.hasPassengers()) {
+                        filter.addAll(owner.getPassengerList());
+                    }
 
                     DamageSource damageSource = JDamageSources.create(getWorld(), DamageTypes.MOB_ATTACK, owner);
 
@@ -150,7 +153,9 @@ public class SunBeamProjectile extends PersistentProjectileEntity implements Geo
                                 JParticleType.HIT_SPARK_1);
                     }
                 }
-            } else if (age >= 24) kill();
+            } else if (age >= 24) {
+                kill();
+            }
         }
     }
 

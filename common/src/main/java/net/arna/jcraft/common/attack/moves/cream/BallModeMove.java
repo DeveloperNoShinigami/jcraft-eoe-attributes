@@ -17,13 +17,18 @@ public class BallModeMove extends AbstractMove<BallModeMove, CreamEntity> {
     public BallModeMove(int cooldown, int windup, int duration, float moveDistance, boolean enter) {
         super(cooldown, windup, duration, moveDistance);
         this.enter = enter;
-        if (enter) mobilityType = MobilityType.FLIGHT;
+        if (enter) {
+            mobilityType = MobilityType.FLIGHT;
+        }
     }
 
     @Override
     public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user, MoveContext ctx) {
-        if (enter) attacker.beginHalfBall();
-        else attacker.endHalfBall();
+        if (enter) {
+            attacker.beginHalfBall();
+        } else {
+            attacker.endHalfBall();
+        }
         return Set.of();
     }
 

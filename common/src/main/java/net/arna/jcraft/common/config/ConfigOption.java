@@ -26,7 +26,9 @@ public abstract class ConfigOption {
         this.key = key;
         this.category = category;
 
-        if (options.put(key, this) != null) throw new IllegalArgumentException("Option with the given key already exists: " + key);
+        if (options.put(key, this) != null) {
+            throw new IllegalArgumentException("Option with the given key already exists: " + key);
+        }
     }
 
     @NonNull

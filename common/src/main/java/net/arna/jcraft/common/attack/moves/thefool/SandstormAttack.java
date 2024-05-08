@@ -9,7 +9,6 @@ import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JBlockRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -25,7 +24,8 @@ import java.util.Set;
 
 public class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFoolEntity> {
     public static final MoveVariable<LivingEntity> SUPER_TARGET = new MoveVariable<>(LivingEntity.class);
-    public static final MoveVariable<List<FallingBlockEntity>> SANDS = new MoveVariable<>(new TypeToken<>() {});
+    public static final MoveVariable<List<FallingBlockEntity>> SANDS = new MoveVariable<>(new TypeToken<>() {
+    });
 
     public SandstormAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback, float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
@@ -35,7 +35,9 @@ public class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFo
     @Override
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-        if (targets.isEmpty()) return targets;
+        if (targets.isEmpty()) {
+            return targets;
+        }
 
         LivingEntity superTarget = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
         ctx.set(SUPER_TARGET, superTarget);
@@ -91,8 +93,9 @@ public class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFo
         int i = 0;
         int j = 1;
         for (FallingBlockEntity sand : sands) {
-            if (sand == null || sand.isRemoved())
+            if (sand == null || sand.isRemoved()) {
                 continue;
+            }
             i++;
             j *= -1;
 

@@ -48,7 +48,8 @@ public class GameRendererMixin {
 
     @Inject(method = "method_18144", at = @At("HEAD"), cancellable = true)
     private static void preventUserHittingCreamWhenInBall(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        if (entity instanceof CreamEntity cream && cream.isHalfBall() && JUtils.getStand(MinecraftClient.getInstance().player) == cream)
+        if (entity instanceof CreamEntity cream && cream.isHalfBall() && JUtils.getStand(MinecraftClient.getInstance().player) == cream) {
             cir.setReturnValue(false);
+        }
     }
 }

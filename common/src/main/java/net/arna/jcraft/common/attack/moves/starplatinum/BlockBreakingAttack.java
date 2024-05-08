@@ -27,14 +27,16 @@ public class BlockBreakingAttack extends AbstractSimpleAttack<BlockBreakingAttac
     public void performHook(AbstractStarPlatinumEntity<?, ?> attacker, Set<LivingEntity> targets, Set<Box> boxes, DamageSource damageSource, Vec3d forwardPos, Vec3d rotationVector, MoveContext ctx) {
         World world = attacker.getWorld();
         if (world.getGameRules().getBoolean(JCraft.STAND_GRIEFING)) {
-            BlockPos bPos = attacker.getBlockPos().add((int)rotationVector.x * 1, (int)rotationVector.y * 1, (int)rotationVector.z * 1);
+            BlockPos bPos = attacker.getBlockPos().add((int) rotationVector.x * 1, (int) rotationVector.y * 1, (int) rotationVector.z * 1);
             for (int x = -1; x < 2; x++) {
                 for (int y = -1; y < 2; y++) {
                     for (int z = -1; z < 2; z++) {
                         BlockPos curPos = bPos.add(x, y, z);
                         BlockState curState = world.getBlockState(curPos);
 
-                        if (curState.getBlock().getBlastResistance() > 10f || curState.isAir()) continue;
+                        if (curState.getBlock().getBlastResistance() > 10f || curState.isAir()) {
+                            continue;
+                        }
 
                         world.syncWorldEvent(null, 2001, curPos, getRawIdFromState(curState)); // Particles
 

@@ -1,16 +1,13 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
 import net.arna.jcraft.client.model.entity.WhiteSnakeModel;
-import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.util.Identifier;
@@ -60,10 +57,10 @@ public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
                 if (stack == WhiteSnakeRenderer.this.mainHandItem) {
                     poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
 
-                    if (stack.getItem() instanceof ShieldItem)
+                    if (stack.getItem() instanceof ShieldItem) {
                         poseStack.translate(0, 0.125, -0.25);
-                }
-                else if (stack == WhiteSnakeRenderer.this.offHandItem) {
+                    }
+                } else if (stack == WhiteSnakeRenderer.this.offHandItem) {
                     poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
 
                     if (stack.getItem() instanceof ShieldItem) {

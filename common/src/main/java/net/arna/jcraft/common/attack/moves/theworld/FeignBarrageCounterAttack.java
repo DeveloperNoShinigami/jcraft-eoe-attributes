@@ -34,7 +34,9 @@ public class FeignBarrageCounterAttack extends AbstractCounterAttack<FeignBarrag
     public void counter(@NonNull TheWorldEntity attacker, Entity countered, DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
 
-        if (countered == null || !attacker.hasUser()) return;
+        if (countered == null || !attacker.hasUser()) {
+            return;
+        }
         LivingEntity user = attacker.getUserOrThrow();
         Vec3d behind = countered.getPos().subtract(countered.getRotationVector());
 

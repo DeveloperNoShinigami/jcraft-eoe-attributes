@@ -31,12 +31,15 @@ public class ClearStandCommand {
             if (entity instanceof LivingEntity livingEntity) {
                 CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
 
-                if (standData.getType() == null) continue;
+                if (standData.getType() == null) {
+                    continue;
+                }
                 standData.setType(null);
 
                 StandEntity<?, ?> stand = standData.getStand();
-                if (stand != null)
+                if (stand != null) {
                     stand.detach();
+                }
             }
         }
         return 1;

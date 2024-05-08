@@ -10,7 +10,6 @@ import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -35,8 +34,9 @@ public class D4CCounterAttack extends AbstractCounterAttack<D4CCounterAttack, D4
         var bl = counteredDamageSource.isOf(DamageTypes.MOB_PROJECTILE);
         var bl2 = counteredDamageSource.isOf(DamageTypes.MAGIC);
 
-        if (countered == null || !attacker.hasUser() || bl || bl2)
+        if (countered == null || !attacker.hasUser() || bl || bl2) {
             return;
+        }
 
         LivingEntity user = attacker.getUserOrThrow();
         Vec3d trueKnockback = countered.getPos().subtract(user.getPos()).normalize().multiply(1.5);

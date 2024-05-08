@@ -20,7 +20,9 @@ public class PostProcessHandler {
     }
 
     public static void copyDepthBuffer() {
-        if (didCopyDepth) return;
+        if (didCopyDepth) {
+            return;
+        }
         instances.forEach(PostProcessor::copyDepthBuffer);
         didCopyDepth = true;
     }

@@ -1,11 +1,9 @@
 package net.arna.jcraft.client.model.entity;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib.core.animation.AnimationState;
 
 public class SilverChariotModel extends StandEntityModel<SilverChariotEntity> {
     private static final Identifier NO_ARMOR_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/no_armor.png");

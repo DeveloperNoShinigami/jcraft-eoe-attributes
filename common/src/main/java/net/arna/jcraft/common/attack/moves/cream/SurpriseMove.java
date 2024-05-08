@@ -1,17 +1,13 @@
 package net.arna.jcraft.common.attack.moves.cream;
 
 import lombok.NonNull;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
-import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
 import org.joml.Vector3f;
 
 import java.util.Set;

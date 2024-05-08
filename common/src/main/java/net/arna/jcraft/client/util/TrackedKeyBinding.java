@@ -28,7 +28,9 @@ public class TrackedKeyBinding {
                         .filter(TrackedKeyBinding::isDown)
                         .forEach(TrackedKeyBinding::markReleased);
                 resetForScreen = true;
-            } else resetForScreen = false;
+            } else {
+                resetForScreen = false;
+            }
         });
     }
 
@@ -51,10 +53,15 @@ public class TrackedKeyBinding {
 
     public static void onKeyPressSet(KeyBinding binding, boolean pressed) {
         TrackedKeyBinding trackedBinding = bindings.get(binding);
-        if (trackedBinding == null) return;
+        if (trackedBinding == null) {
+            return;
+        }
 
-        if (pressed) trackedBinding.markPressed();
-        else trackedBinding.markReleased();
+        if (pressed) {
+            trackedBinding.markPressed();
+        } else {
+            trackedBinding.markReleased();
+        }
     }
 
     public boolean isDown() {
@@ -63,7 +70,9 @@ public class TrackedKeyBinding {
 
     private void markPressed() {
         changedThisTick = true;
-        if (!releasedThisTick) pressedThisTick = true;
+        if (!releasedThisTick) {
+            pressedThisTick = true;
+        }
     }
 
     private void markReleased() {

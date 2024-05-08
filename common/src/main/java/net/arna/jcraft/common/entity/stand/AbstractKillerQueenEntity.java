@@ -125,22 +125,30 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
     // Moveset
     @Override
     public boolean initMove(MoveType type) {
-        if (!hasUser()) return false;
+        if (!hasUser()) {
+            return false;
+        }
 
         LivingEntity user = getUserOrThrow();
-        if (user.hasStatusEffect(JStatusRegistry.DAZED)) return false;
+        if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
+            return false;
+        }
 
         switch (type) {
             case LIGHT -> {
                 boolean idling = getMoveStun() <= 0;
                 if (curMove == null || curMove.getFollowup() == null) {
                     if (idling) {
-                        if (user.isSneaking()) detonate();
-                        else return super.initMove(MoveType.LIGHT);
+                        if (user.isSneaking()) {
+                            detonate();
+                        } else {
+                            return super.initMove(MoveType.LIGHT);
+                        }
                     }
                 } else if (getMoveStun() < curMove.getWindupPoint()) {
-                    if (user.isSneaking()) detonate();
-                    else {
+                    if (user.isSneaking()) {
+                        detonate();
+                    } else {
                         AbstractMove<?, ? super E> followup = curMove.getFollowup();
                         setMove(followup, (S) followup.getAnimation());
                     }
@@ -160,7 +168,9 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
                     }
 
                     return true;
-                } else return handleMove(MoveType.SPECIAL1);
+                } else {
+                    return handleMove(MoveType.SPECIAL1);
+                }
             }
 
             default -> {
@@ -171,14 +181,18 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
 
     @Override
     public void desummon() {
-        if (coin != null) coin.discard();
+        if (coin != null) {
+            coin.discard();
+        }
         super.desummon();
     }
 
     @Override
     public MoveSelectionResult specificMoveSelectionCriterion(AbstractMove<?, ? super E> attack, LivingEntity mob, LivingEntity target, int stunTicks,
                                                               int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
-        if (enemyStand != null && enemyStand.blocking) return MoveSelectionResult.STOP;
+        if (enemyStand != null && enemyStand.blocking) {
+            return MoveSelectionResult.STOP;
+        }
         Vec3d bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
         return bombPos != null && attack == DETONATE && target.squaredDistanceTo(bombPos) < 9.0D ?
                 MoveSelectionResult.USE : MoveSelectionResult.PASS;
@@ -188,12 +202,17 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
     public void tick() {
         super.tick();
 
-        if (hasUser())
-            if (getCurrentMove() instanceof DetonateAttack) queuedMove = null;
+        if (hasUser()) {
+            if (getCurrentMove() instanceof DetonateAttack) {
+                queuedMove = null;
+            }
+        }
     }
 
     // Animation code
     protected abstract S getDetonateState();
+
     protected abstract S getLightState();
+
     protected abstract S getBarrageState();
 }

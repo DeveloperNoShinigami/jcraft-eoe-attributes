@@ -1,16 +1,5 @@
 package net.arna.jcraft.client.rendering.handler;
 
-import net.arna.jcraft.JCraft;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 //public class ZaWarudoShaderHandler extends StandShaderHandler {
 //    public static ZaWarudoShaderHandler INSTANCE = new ZaWarudoShaderHandler();
 //    public final Identifier SHADER_ID = JCraft.id("shaders/post/za_warudo.json");

@@ -36,6 +36,7 @@ import java.util.stream.Stream;
  * Can be extended to support all kinds of box attacks.
  * Moves that don't attack (i.e. don't have a hitbox) such as time-stop or dim-hop,
  * should probably not extend this. Anything else probably should.
+ *
  * @param <T>
  * @param <A>
  */
@@ -74,6 +75,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Sets the damage of this attack.
      * Should be set using the constructor. This is only to modify copies.
+     *
      * @param damage The damage of this attack
      * @return This attack
      */
@@ -85,6 +87,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Sets the hitbox size of this attack.
      * Should be set using the constructor. This is only to modify copies.
+     *
      * @param hitboxSize The hitbox size of this attack
      * @return This attack
      */
@@ -96,6 +99,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Sets the knockback of this attack.
      * Should be set using the constructor. This is only to modify copies.
+     *
      * @param knockback The knockback of this attack
      * @return This attack
      */
@@ -107,6 +111,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Sets the offset of this attack.
      * Should be set using the constructor. This is only to modify copies.
+     *
      * @param offset The offset of this attack
      * @return This attack
      */
@@ -118,6 +123,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Sets the stun of this attack.
      * Should be set using the constructor. This is only to modify copies.
+     *
      * @param stun The stun of this attack
      * @return This attack
      */
@@ -128,6 +134,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     /**
      * Sets the type to stun the target with.
+     *
      * @param type The type of stun to apply
      * @return This attack
      */
@@ -139,8 +146,9 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Sets that the current stun should be removed from targets when applying stun.
      * Defaults to {@code false}.
-     * @see #withOverrideStun(boolean)
+     *
      * @return This attack
+     * @see #withOverrideStun(boolean)
      */
     public T withOverrideStun() {
         return withOverrideStun(true);
@@ -149,6 +157,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Sets whether the current stun should be removed from targets when applying stun.
      * Defaults to {@code false}.
+     *
      * @return This attack
      */
     public T withOverrideStun(boolean overrideStun) {
@@ -159,6 +168,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Sets whether targets should remain stuck in the air while this attack is active.
      * Defaults to {@code true}
+     *
      * @param lift The new value of {@code lift}
      * @return This attack
      */
@@ -170,6 +180,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Sets whether the attack can backstab.
      * Defaults to {@code true}.
+     *
      * @param canBackstab Whether the attack can backstab
      * @return This attack
      */
@@ -182,6 +193,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * Sets the stun applied to the user when this attack is performed on a target that is blocking.
      * A positive value implies that the default calculation of {@code damage + 4} should be overridden
      * by the value passed here.
+     *
      * @param blockStun The number of ticks to stun for
      * @return This attack
      */
@@ -194,6 +206,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * Sets whether the user's pitch should influence the positioning of hitboxes.
      * If {@code false}, the hitbox will be moved up or down depending on the user's pitch,
      * otherwise, the y-position (or whatever it is, depending on the gravity) will be static.
+     *
      * @return This attack
      */
     public T withStaticY() {
@@ -208,6 +221,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Sets the blockable type of this attack.
      * Defaults to {@link BlockableType#BLOCKABLE BLOCKABLE}.
+     *
      * @param blockableType The new blockable type
      * @return This attack
      */
@@ -218,6 +232,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     /**
      * Sets the hit animation the enemy will perform when hit by this attack.
+     *
      * @return This attack
      */
     public T withHitAnimation(CommonHitPropertyComponent.HitAnimation hitAnimation) {
@@ -228,9 +243,10 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Adds an extra hitbox with the given size to use with every attack
      * along with the main hitbox.
+     *
      * @param size The size of the hitbox
-     * @see #withExtraHitBox(double, double, double)
      * @return This attack
+     * @see #withExtraHitBox(double, double, double)
      */
     public T withExtraHitBox(double size) {
         return withExtraHitBox(new HitBoxData(size));
@@ -239,9 +255,10 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * Adds an extra hitbox with the given size and offsets to use with every attack
      * along with the main hitbox.
-     * @param forwardOffset The forward offset of the hitbox
+     *
+     * @param forwardOffset  The forward offset of the hitbox
      * @param verticalOffset The vertical offset of the hitbox
-     * @param size The size of the hitbox
+     * @param size           The size of the hitbox
      * @return This attack
      */
     public T withExtraHitBox(double forwardOffset, double verticalOffset, double size) {
@@ -250,6 +267,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     /**
      * Adds an extra hitbox to use with every attack along with the main hitbox.
+     *
      * @param hitBox The hitbox to add
      * @return This attack
      */
@@ -260,12 +278,15 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     /**
      * Marks this attack as a launch attack.
+     *
      * @return This attack
      */
     public T withLaunch() {
         withLaunchNoShockwave();
         withAction(((attacker, user, ctx, targets) -> {
-            if (targets.isEmpty()) return;
+            if (targets.isEmpty()) {
+                return;
+            }
             LivingEntity attackerEntity = attacker.getBaseEntity();
             Vec3d shockwavePos = attackerEntity.getPos();
             shockwavePos = shockwavePos.add(attackerEntity.getRotationVector());
@@ -285,6 +306,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     /**
      * Sets the hit spark particle this attack will use when it hits something.
+     *
      * @param particle The hit spark particle to use
      * @return This attack
      */
@@ -295,6 +317,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     /**
      * Adds a new target processor to this attack.
+     *
      * @param targetProcessor The target processor to add
      * @return This attack
      */
@@ -305,6 +328,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     /**
      * Adds a new target post-processor to this attack.
+     *
      * @param targetProcessor The target processor to add
      * @return This attack
      */
@@ -335,9 +359,10 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * Finds all valid targets that can be damaged with the given damage source
      * by the given attacker, contained in the given boxes.
      * Also maps all attackers found to their user. I.e. redirecting damage done to attackers to their users.
-     * @param attacker The attacker that will be doing the damage
-     * @param boxCenter The center of the box to check in
-     * @param boxSize The size of the box to check in
+     *
+     * @param attacker     The attacker that will be doing the damage
+     * @param boxCenter    The center of the box to check in
+     * @param boxSize      The size of the box to check in
      * @param damageSource The damage source to check for
      * @return All found valid targets
      */
@@ -349,8 +374,9 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * Finds all valid targets that can be damaged with the given damage source
      * by the given attacker, contained in the given boxes.
      * Also maps all attackers found to their user. I.e. redirecting damage done to attackers to their users.
-     * @param attacker The attacker that will be doing the damage
-     * @param box The box to check in
+     *
+     * @param attacker     The attacker that will be doing the damage
+     * @param box          The box to check in
      * @param damageSource The damage source to check for
      * @return All found valid targets
      */
@@ -362,8 +388,9 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * Finds all valid targets that can be damaged with the given damage source
      * by the given attacker, contained in the given boxes.
      * Also maps all attackers found to their user. I.e., redirecting damage done to attackers to their users.
-     * @param attacker The attacker that will be doing the damage
-     * @param boxes The boxes to check in
+     *
+     * @param attacker     The attacker that will be doing the damage
+     * @param boxes        The boxes to check in
      * @param damageSource The damage source to check for
      * @return All found valid targets
      */
@@ -375,10 +402,11 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * Finds all valid targets that can be damaged with the given damage source
      * by the given attacker, contained in the given boxes.
      * Also maps all attackers found to their user. I.e., redirecting damage done to attackers to their users.
-     * @param attacker The attacker that will be doing the damage
-     * @param boxes The boxes to check in
+     *
+     * @param attacker     The attacker that will be doing the damage
+     * @param boxes        The boxes to check in
      * @param damageSource The damage source to check for
-     * @param mayHitUser Whether the user of the attacker can be hit
+     * @param mayHitUser   Whether the user of the attacker can be hit
      * @return All found valid targets
      */
     public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, Set<Box> boxes, @Nullable DamageSource damageSource,
@@ -391,10 +419,11 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * by the given attacker, contained in the given boxes.
      * Also maps all attackers found to their user.
      * I.e., redirecting damage done to stands to their users.
-     * @param attacker The attacker that will be doing the damage
-     * @param boxes The boxes to check in
+     *
+     * @param attacker     The attacker that will be doing the damage
+     * @param boxes        The boxes to check in
      * @param damageSource The damage source to check for
-     * @param type The type of entities to look for
+     * @param type         The type of entities to look for
      * @return All found valid targets
      */
     public static <T extends Entity> @NonNull Set<T> findHits(IAttacker<?, ?> attacker, @NonNull Set<Box> boxes,
@@ -406,25 +435,26 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * Finds all valid targets that can be damaged with the given damage source
      * by the given attacker, contained in the given boxes.
      * Also maps all attackers found to their user. I.e., redirecting damage done to stands to their users.
-     * @param attacker The attacker that will be doing the damage
-     * @param boxes The boxes to check in
+     *
+     * @param attacker     The attacker that will be doing the damage
+     * @param boxes        The boxes to check in
      * @param damageSource The damage source to check for
-     * @param type The type of entities to look for
-     * @param mayHitUser Whether the user of the attacker can be hit
+     * @param type         The type of entities to look for
+     * @param mayHitUser   Whether the user of the attacker can be hit
      * @return All found valid targets
      */
     public static <T extends Entity> @NonNull Set<T> findHits(IAttacker<?, ?> attacker, @NonNull Set<Box> boxes,
-                                                     @Nullable DamageSource damageSource, Class<T> type, boolean mayHitUser) {
+                                                              @Nullable DamageSource damageSource, Class<T> type, boolean mayHitUser) {
         LivingEntity user = attacker.getUser();
         return boxes.stream()
                 .flatMap(box -> attacker.getEntityWorld().getEntitiesByClass(type, box, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(e ->
-                        e != attacker
-                            && (mayHitUser || e != user
-                            && e != user.getVehicle()
-                            && e != JUtils.getStand(user))
+                                e != attacker
+                                        && (mayHitUser || e != user
+                                        && e != user.getVehicle()
+                                        && e != JUtils.getStand(user))
                         )
                 ).stream())
-                .flatMap(e -> e instanceof StandEntity<?,?> hitStand &&
+                .flatMap(e -> e instanceof StandEntity<?, ?> hitStand &&
                         !hitStand.isRemote() &&
                         hitStand.hasUser() &&
                         type.isInstance(hitStand.getUserOrThrow()) ? Stream.of(e, type.cast(hitStand.getUserOrThrow())) : Stream.of(e))
@@ -437,8 +467,9 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
         Vec3d userRotVec = user.getRotationVector();
         Direction gravDir = GravityChangerAPI.getGravityDirection(user);
-        if (gravDir == Direction.UP)
+        if (gravDir == Direction.UP) {
             userRotVec = new Vec3d(userRotVec.x, -userRotVec.y, userRotVec.z);
+        }
 
         Vec3d hPos = getOffsetHeightPos(attacker);
         Vec3d rotVec = (staticY || attacker.isRemote()) ? getRotVec(attacker) : userRotVec;
@@ -460,14 +491,15 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     /**
      * A hook for processing the attack with more context than {@link #perform(IAttacker, LivingEntity, MoveContext)}
      *
-     * @param targets           The valid targets found within the attack's hitboxes
-     * @param boxes             The attack's hitboxes
-     * @param damageSource      The attacker's damageSource
-     * @param forwardPos        The offset forward position
-     * @param rotationVector    The attacker's rotation unit vector
-     * @param ctx               The attacker's MoveContext instance
+     * @param targets        The valid targets found within the attack's hitboxes
+     * @param boxes          The attack's hitboxes
+     * @param damageSource   The attacker's damageSource
+     * @param forwardPos     The offset forward position
+     * @param rotationVector The attacker's rotation unit vector
+     * @param ctx            The attacker's MoveContext instance
      */
-    public void performHook(A attacker, Set<LivingEntity> targets, Set<Box> boxes, DamageSource damageSource, Vec3d forwardPos, Vec3d rotationVector, MoveContext ctx) {}
+    public void performHook(A attacker, Set<LivingEntity> targets, Set<Box> boxes, DamageSource damageSource, Vec3d forwardPos, Vec3d rotationVector, MoveContext ctx) {
+    }
 
     /**
      * Calculates the boxes for this attack.
@@ -482,7 +514,9 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @return All boxes that should be attacked
      */
     protected Set<Box> calculateBoxes(A attacker, LivingEntity user, Vec3d rotVec, Vec3d upVec, Vec3d hPos, Vec3d fPos) {
-        if (hitboxSize <= 0 && extraHitBoxes.isEmpty()) return Set.of();
+        if (hitboxSize <= 0 && extraHitBoxes.isEmpty()) {
+            return Set.of();
+        }
 
         Set<Box> boxes = new HashSet<>();
         boxes.add(createBox(fPos, hitboxSize));
@@ -493,17 +527,20 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     /**
      * Performs this attack on the given boxes.
-     * @param attacker The attacker that will be performing this attack.
-     * @param boxes The boxes in which to search for targets.
+     *
+     * @param attacker     The attacker that will be performing this attack.
+     * @param boxes        The boxes in which to search for targets.
      * @param damageSource The damage source to use when applying damage to the targets.
-     * @param center The center of this attack. This is where the particle will be spawned at.
+     * @param center       The center of this attack. This is where the particle will be spawned at.
      * @return A set of all affected targets.
      */
     protected final Set<LivingEntity> attackBoxes(A attacker, Set<Box> boxes, DamageSource damageSource, Vec3d center) {
         JUtils.displayHitboxes(attacker.getEntityWorld(), boxes);
 
         Set<LivingEntity> targets = findHits(attacker, boxes, damageSource, mayHitUser);
-        if (targets.isEmpty()) return Set.of();
+        if (targets.isEmpty()) {
+            return Set.of();
+        }
 
         ServerWorld serverWorld = (ServerWorld) attacker.getEntityWorld();
 
@@ -517,9 +554,9 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
         for (LivingEntity target : validateTargets(attacker, targets)) {
             Vec3d pos = target.getPos().add(GravityChangerAPI.getEyeOffset(target).multiply(0.65)).subtract(rotVec.multiply(0.65));
             boolean blocking = JUtils.isBlocking(target);
-            if (blocking)
+            if (blocking) {
                 JCraft.createHitsparks(serverWorld, pos.getX(), pos.getY(), pos.getZ(), JParticleType.BLOCK_SPARK, 3, 0);
-            else {
+            } else {
                 JCraft.createHitsparks(serverWorld, pos.getX(), pos.getY(), pos.getZ(), JParticleType.PIXEL, 2 + (int) damage * 2, 0.5);
 
                 JCraft.createParticle(serverWorld,
@@ -538,18 +575,20 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
         }
 
         // Sounds
-        if (anyHit)
+        if (anyHit) {
             getImpactSounds().forEach(sound -> attacker.playAttackerSound(sound, 1f, 1f));
+        }
 
         return targets;
     }
 
     /**
      * Gets called for every target hit by {@link #attackBoxes(IAttacker, Set, DamageSource, Vec3d)}.
-     * @param attacker The attacker that performed this
-     * @param target The target to process
-     * @param kbVec The knockback vector to pass to {@link StandEntity#damageLogic(World, LivingEntity, Vec3d, int, int,
-     * boolean, float, boolean, int, DamageSource, Entity, CommonHitPropertyComponent.HitAnimation, boolean, boolean)}
+     *
+     * @param attacker     The attacker that performed this
+     * @param target       The target to process
+     * @param kbVec        The knockback vector to pass to {@link StandEntity#damageLogic(World, LivingEntity, Vec3d, int, int,
+     *                     boolean, float, boolean, int, DamageSource, Entity, CommonHitPropertyComponent.HitAnimation, boolean, boolean)}
      * @param damageSource The damage source to apply damage with
      */
     protected void processTarget(A attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource) {

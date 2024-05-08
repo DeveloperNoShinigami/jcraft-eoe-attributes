@@ -15,7 +15,6 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JBlockRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.block.BlockState;
@@ -70,7 +69,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Text.literal("Swipe"),
                     Text.literal("quick combo finisher")
             );
-    public static final SimpleAttack<TheFoolEntity> LIGHT = new SimpleAttack<TheFoolEntity>( 30, 7,
+    public static final SimpleAttack<TheFoolEntity> LIGHT = new SimpleAttack<TheFoolEntity>(30, 7,
             14, 1.5f, 6, 15, 2, 0.5f, -0.1f)
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withExtraHitBox(0, 0.25, 1)
@@ -215,7 +214,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         freespace =
                 """
                         CROUCHING reduces attack distance by half, allowing better space control
-                        
+                                                
                         BNBs:
                             M1>Pound~Slam>Launch>M1>Burn Rubber>Finisher*
                             Burn Rubber>M1>Pound~Slam>Launch>Finisher*
@@ -269,16 +268,21 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                 }
 
                 boolean s = super.initMove(type);
-                if (type == MoveType.SPECIAL2 && !getUserOrThrow().isOnGround() || type == MoveType.SPECIAL3)
+                if (type == MoveType.SPECIAL2 && !getUserOrThrow().isOnGround() || type == MoveType.SPECIAL3) {
                     setSand(true);
+                }
 
                 return s;
             }
             case LIGHT -> {
                 if (curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
                     AbstractMove<?, ? super TheFoolEntity> followup = curMove.getFollowup();
-                    if (followup != null) setMove(followup, (State) followup.getAnimation());
-                } else return super.initMove(type);
+                    if (followup != null) {
+                        setMove(followup, (State) followup.getAnimation());
+                    }
+                } else {
+                    return super.initMove(type);
+                }
             }
             default -> {
                 return super.initMove(type);
@@ -321,22 +325,29 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     @Override
     public void standBlock() {
         LivingEntity user = getUser();
-        if (user == null) return;
+        if (user == null) {
+            return;
+        }
 
         // Clear glider
-        if (getState() == State.GLIDE)
+        if (getState() == State.GLIDE) {
             cancelMove();
+        }
 
         // The Fool does a special block depending on your height
         boolean sand = user.getHeight() < 1.8f;
         setSand(sand);
-        if (sand) this.setDistanceOffset(0);
+        if (sand) {
+            this.setDistanceOffset(0);
+        }
 
         // Projectile deflection
         List<ProjectileEntity> toDeflect = getWorld().getEntitiesByClass(ProjectileEntity.class, getBoundingBox().expand(0.75f), EntityPredicates.VALID_ENTITY);
 
         for (ProjectileEntity projectile : toDeflect) {
-            if (projectile.getOwner() == user) continue;
+            if (projectile.getOwner() == user) {
+                continue;
+            }
             projectile.setVelocity(projectile.getVelocity().multiply(-0.5).add(0, -0.1, 0));
             projectile.velocityModified = true;
         }
@@ -348,7 +359,9 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
 
     @Override
     public boolean shouldOffsetHeight() {
-        if (getState() == State.GLIDE || getState() == State.SAND_WAVE || getState() == State.BLOCK) return false;
+        if (getState() == State.GLIDE || getState() == State.SAND_WAVE || getState() == State.BLOCK) {
+            return false;
+        }
         return super.shouldOffsetHeight();
     }
 
@@ -356,8 +369,12 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public boolean canAttack() {
         if (hasUser()) {
             LivingEntity user = getUserOrThrow();
-            if (JUtils.isAffectedByTimeStop(user) || user.hasStatusEffect(JStatusRegistry.DAZED)) return false;
-            if (curMove != null && curMove.getOriginalMove() == GLIDE) return true;
+            if (JUtils.isAffectedByTimeStop(user) || user.hasStatusEffect(JStatusRegistry.DAZED)) {
+                return false;
+            }
+            if (curMove != null && curMove.getOriginalMove() == GLIDE) {
+                return true;
+            }
             return getMoveStun() <= 0;
         }
         return false;
@@ -368,7 +385,9 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         if (getUser() != null && getUser().isSneaking()) {
             setSand(true);
             super.setMove(move.copy().withMoveDistance(move.getMoveDistance() / 2f), animState);
-        } else super.setMove(move, animState);
+        } else {
+            super.setMove(move, animState);
+        }
     }
 
     @Override
@@ -381,7 +400,9 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
 
     public static void createFoolishSand(World world, BlockPos pos, Vec3d vel) {
         BlockPos midBlockPos = pos.add(0, 1, 0);
-        if (world.getBlockState(midBlockPos).isOpaque()) return;
+        if (world.getBlockState(midBlockPos).isOpaque()) {
+            return;
+        }
         FallingBlockEntity sand = FallingBlockEntity.spawnFromBlock(world, midBlockPos, JBlockRegistry.FOOLISH_SAND_BLOCK.get().getDefaultState());
         sand.setHurtEntities(5f, 5);
         sand.setVelocity(vel);
@@ -396,10 +417,14 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public void tick() {
         super.tick();
 
-        if (!hasUser()) return;
+        if (!hasUser()) {
+            return;
+        }
 
         if (getWorld().isClient) {
-            if (age % 2 != 0) return;
+            if (age % 2 != 0) {
+                return;
+            }
             Vec3d pos = getPos();
             // If the fool is using any morphing attack, the amount of sand multiplies, and the stand itself changes color
             int particleNum = isWave() ? 32 : 1 + MathHelper.clamp(getMoveStun() / 2, 0, 5) * (isSand() ? 2 : 1);
@@ -421,10 +446,14 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         }
 
         AbstractMove<?, ? super TheFoolEntity> move = curMove;
-        if (lastRemoteInputTime - age > 4) updateRemoteInputs(0, 0, false, false);
+        if (lastRemoteInputTime - age > 4) {
+            updateRemoteInputs(0, 0, false, false);
+        }
         if (move != null) {
             int slamType = moveContext.getInt(SlamAttack.VARIANT);
-            if (move.getOriginalMove() == SLAM && slamType != 1) queuedMove = null;
+            if (move.getOriginalMove() == SLAM && slamType != 1) {
+                queuedMove = null;
+            }
         } else if (!blocking && getMoveStun() < 1) { // If idle, reset back to normal material
             setSand(false);
             setWave(false);

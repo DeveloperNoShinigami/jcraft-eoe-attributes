@@ -29,9 +29,11 @@ public class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoonEntity
 
         BlockProjectile block = new BlockProjectile(JEntityTypeRegistry.BLOCK_PROJECTILE.get(), attacker.getWorld());
         BlockState steppingState = attacker.getSteppingBlockState();
-        if (steppingState.isAir() || !steppingState.isOpaque())
+        if (steppingState.isAir() || !steppingState.isOpaque()) {
             block.setBlockStack(Items.STONE.getDefaultStack());
-        else block.setBlockStack(steppingState.getBlock().asItem().getDefaultStack());
+        } else {
+            block.setBlockStack(steppingState.getBlock().asItem().getDefaultStack());
+        }
 
         Vec3i hoverDir = GravityChangerAPI.getGravityDirection(user).getVector().multiply(-1);
 

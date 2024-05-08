@@ -44,7 +44,9 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
         entity.fallDistance = 0;
         entity.setPosition(entity.getPos()); // Causes bounding box recalculation
 
-        if (initialGravity) return;
+        if (initialGravity) {
+            return;
+        }
 
         if (!(entity instanceof ServerPlayerEntity)) {
             //A relativeRotationCentre of zero will result in zero translation
@@ -64,7 +66,9 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
             }
         }
 
-        if (!shouldChangeVelocity()) return;
+        if (!shouldChangeVelocity()) {
+            return;
+        }
         Vec3d realWorldVelocity = getRealWorldVelocity(entity, prevGravityDirection);
         if (rotationParameters.rotateVelocity()) {
             //Rotate velocity with gravity, this will cause things to appear to take a sharp turn
@@ -93,8 +97,12 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
     private boolean shouldChangeVelocity() {
-        if (entity instanceof FishingBobberEntity) return true;
-        if (entity instanceof FireworkRocketEntity) return true;
+        if (entity instanceof FishingBobberEntity) {
+            return true;
+        }
+        if (entity instanceof FireworkRocketEntity) {
+            return true;
+        }
         return !(entity instanceof ProjectileEntity);
     }
 
@@ -250,8 +258,9 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     public void addGravity(Gravity gravity, boolean initialGravity) {
         if (canChangeGravity()) {
             gravityList.removeIf(g -> Objects.equals(g.source(), gravity.source()));
-            if (gravity.direction() != null)
+            if (gravity.direction() != null) {
                 gravityList.add(new Gravity(gravity));
+            }
             updateGravity(gravity.rotationParameters(), initialGravity);
         }
     }
@@ -267,12 +276,18 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
         gravityList = new ArrayList<>(_gravityList);
         Gravity highestAfter = getHighestPriority();
 
-        if (highestBefore == highestAfter) return;
-        if (highestBefore == null) updateGravity(highestAfter.rotationParameters(), initialGravity);
-        else if (highestAfter == null) updateGravity(highestBefore.rotationParameters(), initialGravity);
-        else if (highestBefore.priority() > highestAfter.priority())
+        if (highestBefore == highestAfter) {
+            return;
+        }
+        if (highestBefore == null) {
+            updateGravity(highestAfter.rotationParameters(), initialGravity);
+        } else if (highestAfter == null) {
             updateGravity(highestBefore.rotationParameters(), initialGravity);
-        else updateGravity(highestAfter.rotationParameters(), initialGravity);
+        } else if (highestBefore.priority() > highestAfter.priority()) {
+            updateGravity(highestBefore.rotationParameters(), initialGravity);
+        } else {
+            updateGravity(highestAfter.rotationParameters(), initialGravity);
+        }
     }
 
     @Override
@@ -327,9 +342,15 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
         RotationParameters rp = new RotationParameters(false, false, false, 0);
         updateGravity(rp, true);
         //Check if an initial sync is required (actual sync happens in tick() because the network handler isn't initialised here yet)
-        if (oldDefaultGravity != defaultGravityDirection) needsInitialSync = true;
-        if (oldList.isEmpty() != gravityList.isEmpty()) needsInitialSync = true;
-        if (oldIsInverted != isInverted) needsInitialSync = true;
+        if (oldDefaultGravity != defaultGravityDirection) {
+            needsInitialSync = true;
+        }
+        if (oldList.isEmpty() != gravityList.isEmpty()) {
+            needsInitialSync = true;
+        }
+        if (oldIsInverted != isInverted) {
+            needsInitialSync = true;
+        }
     }
 
     public void writeToNbt(@NotNull NbtCompound nbt) {
@@ -351,8 +372,9 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
 
     public void tick() {
         Entity vehicle = entity.getVehicle();
-        if (vehicle != null)
+        if (vehicle != null) {
             addGravity(new Gravity(GravityChangerAPI.getGravityDirection(vehicle), 99999999, 2, "vehicle"), true);
+        }
         List<Gravity> gravityList = getGravity();
         Gravity highestBefore = getHighestPriority();
         if (gravityList.removeIf(g -> g.duration() == 0)) {

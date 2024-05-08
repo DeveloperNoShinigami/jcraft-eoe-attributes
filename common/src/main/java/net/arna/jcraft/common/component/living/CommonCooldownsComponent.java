@@ -5,6 +5,7 @@ import net.arna.jcraft.common.util.CooldownType;
 public interface CommonCooldownsComponent {
     /**
      * Gets the current cooldown in ticks for the given type.
+     *
      * @param type The type to check for
      * @return the current cooldown in ticks for the given type
      */
@@ -13,6 +14,7 @@ public interface CommonCooldownsComponent {
     /**
      * Returns the initial duration for the given type.
      * When {@link #setCooldown(CooldownType, int)} is called, this value is updated.
+     *
      * @param type The type to get the initial duration for.
      * @return The initial duration for the given type.
      */
@@ -20,14 +22,17 @@ public interface CommonCooldownsComponent {
 
     /**
      * Sets the cooldown for the given type.
-     * @param type The type to set a cooldown for
+     *
+     * @param type     The type to set a cooldown for
      * @param duration The duration of the cooldown
      */
     void setCooldown(CooldownType type, int duration);
 
     default void startCooldown(CooldownType type) {
-        if (type.getDuration() < 0) throw new IllegalArgumentException("Given type has no default duration. " +
-                "Please use #setCooldown(CooldownType, int)");
+        if (type.getDuration() < 0) {
+            throw new IllegalArgumentException("Given type has no default duration. " +
+                    "Please use #setCooldown(CooldownType, int)");
+        }
         setCooldown(type, type.getDuration());
     }
 
@@ -38,6 +43,7 @@ public interface CommonCooldownsComponent {
 
     /**
      * Removes the cooldown of the given type.
+     *
      * @param type The type to remove
      */
     void clear(CooldownType type);

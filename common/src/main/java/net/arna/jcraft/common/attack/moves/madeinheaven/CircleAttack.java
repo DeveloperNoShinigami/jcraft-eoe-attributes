@@ -64,22 +64,26 @@ public class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenEntity>
         ctx.setInt(CIRCLING_TIME, 0);
         ctx.set(TARGET, null);
         attacker.setCirclingTarget(null);
-        if (attacker.getAccelTime() <= 0) attacker.setAfterimage(false);
+        if (attacker.getAccelTime() <= 0) {
+            attacker.setAfterimage(false);
+        }
     }
 
     public void tickCircle(MadeInHeavenEntity attacker) {
         MoveContext ctx = attacker.getMoveContext();
         int circlingTime = ctx.getInt(CIRCLING_TIME);
-        if (circlingTime <= 0 || !attacker.hasUser()) return;
+        if (circlingTime <= 0 || !attacker.hasUser()) {
+            return;
+        }
 
         LivingEntity user = attacker.getUserOrThrow();
 
         ctx.setInt(CIRCLING_TIME, --circlingTime);
         LivingEntity target = ctx.get(TARGET);
 
-        if (target == null || !target.isAlive() || target.isRemoved())
+        if (target == null || !target.isAlive() || target.isRemoved()) {
             circlingTime = 1;
-        else {
+        } else {
             float orbitProg = ctx.getFloat(ORBIT_PROG);
             ctx.setFloat(ORBIT_PROG, orbitProg += 0.15f);
 
@@ -107,25 +111,30 @@ public class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenEntity>
                 Vec3d orbitPos = target.getEyePos().add(Math.sin(orbitProg) * 7, 0, Math.cos(orbitProg) * 7);
                 Vec3d towardsVel = orbitPos.subtract(user.getPos()).normalize();
                 double stabilization = user.getPos().distanceTo(orbitPos);
-                if (stabilization > 0.5) stabilization = 0.5;
+                if (stabilization > 0.5) {
+                    stabilization = 0.5;
+                }
                 newVelocity = user.getVelocity().multiply(stabilization).add(towardsVel);
             }
 
             JUtils.setVelocity(user, newVelocity.x, newVelocity.y, newVelocity.z);
         }
 
-        if (circlingTime == 1 || user.hasStatusEffect(JStatusRegistry.DAZED)) endCircle(attacker);
+        if (circlingTime == 1 || user.hasStatusEffect(JStatusRegistry.DAZED)) {
+            endCircle(attacker);
+        }
     }
 
     public static void createSpeedParticles(MadeInHeavenEntity attacker, Entity entity) {
         Random random = attacker.getRandom();
         Box box = entity.getBoundingBox();
-        for (int i = 0; i < box.getAverageSideLength(); i++)
+        for (int i = 0; i < box.getAverageSideLength(); i++) {
             entity.getWorld().addParticle(JParticleTypeRegistry.SPEED_PARTICLE,
                     random.nextDouble() * box.getXLength() + box.minX,
                     random.nextDouble() * box.getYLength() + box.minY,
                     random.nextDouble() * box.getZLength() + box.minZ,
                     0, 0, 0);
+        }
     }
 
     @Override

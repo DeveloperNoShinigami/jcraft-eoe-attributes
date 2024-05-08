@@ -26,12 +26,12 @@ public abstract class AbstractSpecGrabAttack<
     private final double grabOffset;
 
     protected AbstractSpecGrabAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize,
-                                 float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState) {
+                                     float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState) {
         this(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMove, hitState, hitMove.getWindup() - 1, 1);
     }
 
     protected AbstractSpecGrabAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize,
-                                 float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState, int grabDuration, double grabOffset) {
+                                     float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState, int grabDuration, double grabOffset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);
 
         grab = true;
@@ -50,12 +50,16 @@ public abstract class AbstractSpecGrabAttack<
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-        if (targets.isEmpty()) return targets;
+        if (targets.isEmpty()) {
+            return targets;
+        }
         boolean anyHit = false;
 
         for (LivingEntity target : targets) {
             StandEntity<?, ?> stand = JUtils.getStand(target);
-            if (stand != null && stand.blocking) continue;
+            if (stand != null && stand.blocking) {
+                continue;
+            }
 
             anyHit = true;
             JUtils.cancelMoves(target);

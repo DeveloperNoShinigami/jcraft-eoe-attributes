@@ -31,12 +31,16 @@ public class PlayerCloneRenderer extends BipedEntityRenderer<PlayerCloneEntity, 
     public boolean shouldRender(PlayerCloneEntity clone, Frustum frustum, double d, double e, double f) {
         boolean s = super.shouldRender(clone, frustum, d, e, f);
 
-        if (clone.shouldRenderForMaster()) return s;
+        if (clone.shouldRenderForMaster()) {
+            return s;
+        }
 
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         if (player != null) {
             UUID masterId = clone.getMasterId();
-            if (masterId == null) return s;
+            if (masterId == null) {
+                return s;
+            }
             return !masterId.equals(player.getUuid());
         }
         return s;
@@ -45,7 +49,9 @@ public class PlayerCloneRenderer extends BipedEntityRenderer<PlayerCloneEntity, 
     @Override
     public void render(PlayerCloneEntity clone, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         PlayerCloneClientPlayerEntity clonePlayer = CloneSkinTracker.toPlayer(clone);
-        if (clonePlayer == null) return;
+        if (clonePlayer == null) {
+            return;
+        }
         parent.render(clonePlayer, f, g, matrixStack, vertexConsumerProvider, i);
     }
 

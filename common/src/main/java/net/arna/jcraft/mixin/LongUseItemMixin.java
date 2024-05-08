@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class LongUseItemMixin {
     @Inject(cancellable = true, at = @At("HEAD"), method = "onStoppedUsing") // Inability to use items while stunned
     private void jcraft$onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks, CallbackInfo ci) {
-        if (user.hasStatusEffect(JStatusRegistry.DAZED))
+        if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
             ci.cancel();
+        }
     }
 }

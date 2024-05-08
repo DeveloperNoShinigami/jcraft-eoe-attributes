@@ -38,7 +38,7 @@ public class SplatterSection {
 
     public static Vector3f calcCenter(Vector3f min, Vector3f max) {
         Vector3f center = new Vector3f(min);
-        Vector3f delta =  new Vector3f(max); // Delta = (max - min) / 2
+        Vector3f delta = new Vector3f(max); // Delta = (max - min) / 2
         delta.sub(min);
         delta = delta.div(2);
         center.add(delta); // (max - min) / 2 + min = center
@@ -63,10 +63,10 @@ public class SplatterSection {
      * Returns a version of this section wrapped around a vertical face.
      * Uses the same UVs as this section, but with different (vertical) coordinates.
      *
-     * @param direction The direction this section faces
-     * @param min       The minimum coordinates
-     * @param max       The maximum coordinates
-     * @param uvModification   What to do with the UVs.
+     * @param direction      The direction this section faces
+     * @param min            The minimum coordinates
+     * @param max            The maximum coordinates
+     * @param uvModification What to do with the UVs.
      * @return A wrapped version of this section
      */
     @SuppressWarnings("SuspiciousNameCombination") // Yes, that's the idea.
@@ -106,8 +106,12 @@ public class SplatterSection {
     }
 
     public void tick() {
-        if (removed) return;
-        if (!hasValidAnchor() || SplatterSplitter.isValidAnchor(world, blockPos)) removed = true;
+        if (removed) {
+            return;
+        }
+        if (!hasValidAnchor() || SplatterSplitter.isValidAnchor(world, blockPos)) {
+            removed = true;
+        }
     }
 
     // Mostly for debugging

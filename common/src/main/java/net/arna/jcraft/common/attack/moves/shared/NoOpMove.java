@@ -13,6 +13,7 @@ import java.util.Set;
  * Meant to be used either as a temporary placeholder when developing stands or specs or
  * for moves that don't really do anything apart from what's done in the initMove method
  * in either the stand or the spec.
+ *
  * @param <A>
  */
 public class NoOpMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<NoOpMove<A>, A> {

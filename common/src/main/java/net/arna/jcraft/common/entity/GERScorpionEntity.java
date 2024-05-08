@@ -36,8 +36,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
 
-import static net.arna.jcraft.common.util.JUtils.canDamage;
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
+import static net.arna.jcraft.common.util.JUtils.canDamage;
 
 public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable {
     private static final TrackedData<Optional<UUID>> OWNERUUID;
@@ -108,7 +108,9 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        if (nbt.contains("OwnerUUID")) setOwnerUUID(nbt.getUuid("OwnerUUID"));
+        if (nbt.contains("OwnerUUID")) {
+            setOwnerUUID(nbt.getUuid("OwnerUUID"));
+        }
     }
 
     @Override
@@ -135,8 +137,9 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
     // Ease of use
     @Override
     public boolean hasNoGravity() {
-        if (isRock())
+        if (isRock()) {
             return true;
+        }
         return super.hasNoGravity();
     }
 
@@ -154,7 +157,9 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
         Vec3d curPos = getPos();
 
         if (getWorld().isClient) {
-            if (!isRock()) landedTimer += 1;
+            if (!isRock()) {
+                landedTimer += 1;
+            }
             double x = getX();
             double y = getY();
             double z = getZ();
@@ -182,17 +187,22 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
                 Set<Entity> filter = new HashSet<>();
                 filter.add(owner);
                 filter.add(this);
-                if (owner.hasPassengers()) filter.addAll(owner.getPassengerList());
+                if (owner.hasPassengers()) {
+                    filter.addAll(owner.getPassengerList());
+                }
                 DamageSource damageSource = getWorld().getDamageSources().mobAttack(owner);
                 if (isRock()) {
                     if (!getVelocity().equals(initialVel)) // Ghetto collision check
+                    {
                         Transform();
+                    }
 
                     // Recursive hitbox check between current and previous position
                     Vec3d towardsVec = curPos.subtract(new Vec3d(prevX, prevY, prevZ));
                     List<LivingEntity> hurtAll = new ArrayList<>();
-                    for (double i = 0; i < 3; i++)
+                    for (double i = 0; i < 3; i++) {
                         hurtAll.addAll(JUtils.generateHitbox(getWorld(), curPos.add(towardsVec.multiply(i / 3)), 0.5, filter));
+                    }
 
                     hurtAll.removeIf(e -> !canDamage(damageSource, e));
 
@@ -217,25 +227,32 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
                             Vec3d eyePos = jumpTarget.getPos().add(0, jumpTarget.getHeight() / 2, 0);
                             lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, eyePos);
                             setVelocity(getVelocity().add(eyePos.subtract(getPos()).multiply(0.33))); // Non-normalized to account for distance
-                        } else addVelocity(0, 0.65, 0);
+                        } else {
+                            addVelocity(0, 0.65, 0);
+                        }
                         velocityModified = true;
                     }
 
                     if (landedTimer == 20) { // Sting followup, 5t gap
                         Set<LivingEntity> hurt = JUtils.generateHitbox(getWorld(), getPos(), 1.5, filter);
-                        if (isCharged()) for (LivingEntity l : hurt) {
-                            LivingEntity target = JUtils.getUserIfStand(l);
-                            target.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 60, 0, false, true));
-                            damageLogic(getWorld(), target, Vec3d.ZERO, 15, 1, false, 3f, true, 7, damageSource, owner, CommonHitPropertyComponent.HitAnimation.MID);
-                        }
-                        else for (LivingEntity l : hurt) {
-                            LivingEntity target = JUtils.getUserIfStand(l);
-                            damageLogic(getWorld(), target, Vec3d.ZERO, 15, 1, false, 3f, true, 7, damageSource, owner, CommonHitPropertyComponent.HitAnimation.MID);
+                        if (isCharged()) {
+                            for (LivingEntity l : hurt) {
+                                LivingEntity target = JUtils.getUserIfStand(l);
+                                target.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 60, 0, false, true));
+                                damageLogic(getWorld(), target, Vec3d.ZERO, 15, 1, false, 3f, true, 7, damageSource, owner, CommonHitPropertyComponent.HitAnimation.MID);
+                            }
+                        } else {
+                            for (LivingEntity l : hurt) {
+                                LivingEntity target = JUtils.getUserIfStand(l);
+                                damageLogic(getWorld(), target, Vec3d.ZERO, 15, 1, false, 3f, true, 7, damageSource, owner, CommonHitPropertyComponent.HitAnimation.MID);
+                            }
                         }
                     }
                 }
 
-                if (age > 30) kill();
+                if (age > 30) {
+                    kill();
+                }
             } else if (getOwnerUUID().isPresent()) {
                 UUID searchID = getOwnerUUID().get();
                 Box box = Box.of(this.getPos(), 64, 64, 64);
@@ -250,8 +267,9 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
                     }
                 }
 
-                if (!found)
+                if (!found) {
                     kill();
+                }
             }
         }
     }
@@ -265,10 +283,11 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
     }
 
     private PlayState predicate(AnimationState<GERScorpionEntity> state) {
-        if (this.isRock())
+        if (this.isRock()) {
             state.setAnimation(RawAnimation.begin().thenLoop("animation.gerscorpion.rock"));
-        else
+        } else {
             state.setAnimation(RawAnimation.begin().thenPlay("animation.gerscorpion.transform").thenPlayAndHold("animation.gerscorpion.attack"));
+        }
         return PlayState.CONTINUE;
     }
 

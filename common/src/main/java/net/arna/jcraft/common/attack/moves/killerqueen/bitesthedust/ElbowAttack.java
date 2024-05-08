@@ -22,8 +22,9 @@ public class ElbowAttack extends AbstractSimpleAttack<ElbowAttack, KQBTDEntity> 
     @Override
     public @NonNull Set<LivingEntity> perform(KQBTDEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-        for (LivingEntity target : targets)
+        for (LivingEntity target : targets) {
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 5, 4, true, false));
+        }
 
         return targets;
     }

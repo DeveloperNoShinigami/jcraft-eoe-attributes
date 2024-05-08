@@ -15,10 +15,11 @@ import net.minecraft.world.World;
 
 import java.util.Optional;
 
-/** What's Sterner Cooking???
- *
+/**
+ * What's Sterner Cooking???
+ * <p>
  * So some things are only available on either forge or fabric, so we need a way to use api specific methods sometimes.
- * Both our forge and fabric project have a {@link net/arna/platform/PlatformUtilsImpl} which handles the platform.
+ * Both our forge and fabric project have a {@link net/arna/platform/$/JComponentPlatformUtilsImpl} which handles the platform.
  */
 public class JComponentPlatformUtils {
 

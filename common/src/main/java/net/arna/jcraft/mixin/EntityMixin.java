@@ -22,6 +22,7 @@ public abstract class EntityMixin {
 
     /**
      * Stand positioning mixin function
+     *
      * @param passenger stand entity
      */
     @Inject(method = "updatePassengerPosition(Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/Entity$PositionUpdater;)V", at = @At("HEAD"), cancellable = true)
@@ -58,18 +59,23 @@ public abstract class EntityMixin {
     @SuppressWarnings("ConstantValue")
     @Inject(method = "shouldSpawnSprintingParticles", at = @At("HEAD"), cancellable = true)
     private void jcraft$shouldSpawnSprintingParticles(CallbackInfoReturnable<Boolean> cir) {
-        if ((Object) this instanceof LivingEntity living && JUtils.getStand(living) instanceof KingCrimsonEntity kc && kc.getTETime() > 0)
+        if ((Object) this instanceof LivingEntity living && JUtils.getStand(living) instanceof KingCrimsonEntity kc && kc.getTETime() > 0) {
             cir.setReturnValue(false);
+        }
     }
     //todo (polishing): stand position autosolver
 
     @SuppressWarnings("ConstantValue")
     @Inject(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;copyFrom(Lnet/minecraft/entity/Entity;)V"))
     private void doNotPlayDesummonSoundWhenMovingWorld(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
-        if (!((Object) this instanceof LivingEntity living)) return;
+        if (!((Object) this instanceof LivingEntity living)) {
+            return;
+        }
 
         StandEntity<?, ?> stand = JUtils.getStand(living);
-        if (stand == null) return;
+        if (stand == null) {
+            return;
+        }
 
         stand.setPlayDesummonSound(false);
     }

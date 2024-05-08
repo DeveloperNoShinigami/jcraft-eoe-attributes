@@ -1,24 +1,12 @@
 package net.arna.jcraft.fabric.common.component.impl.living;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntRBTreeMap;
 import lombok.NonNull;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.impl.living.CommonCooldownsComponentImpl;
-import net.arna.jcraft.common.config.JServerConfig;
-import net.arna.jcraft.common.util.CooldownType;
-import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.living.CooldownsComponent;
-import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.Vec3d;
 
 public class CooldownsComponentImpl extends CommonCooldownsComponentImpl implements CooldownsComponent {
 

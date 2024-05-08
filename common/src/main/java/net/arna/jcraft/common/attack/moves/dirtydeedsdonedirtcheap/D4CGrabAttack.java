@@ -19,7 +19,9 @@ public class D4CGrabAttack extends AbstractGrabAttack<D4CGrabAttack, D4CEntity, 
     public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        if (targets.isEmpty()) attacker.getMainHandStack().decrement(1);
+        if (targets.isEmpty()) {
+            attacker.getMainHandStack().decrement(1);
+        }
 
         return targets;
     }

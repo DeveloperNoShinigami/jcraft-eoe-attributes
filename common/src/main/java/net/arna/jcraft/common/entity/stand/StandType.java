@@ -61,14 +61,15 @@ public enum StandType {
             Text.literal("Brick"), Text.literal("Daft"), Text.literal("Nightmare")),
     THE_WORLD_OVER_HEAVEN(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN.get(), TheWorldOverHeavenEntity::new, "twoh", true,   // -3
             Text.literal("Shooting Star"), Text.literal("Above the Clouds"), Text.literal("Dirt to Divinity")),
-    KILLER_QUEEN_BITES_THE_DUST(JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST.get(), KQBTDEntity::new, "kqbtd",true,    // -4
+    KILLER_QUEEN_BITES_THE_DUST(JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST.get(), KQBTDEntity::new, "kqbtd", true,    // -4
             Text.literal("Veiled"), Text.literal("Back from the Dead"), Text.literal("Garf")),
     GOLD_EXPERIENCE_REQUIEM(JEntityTypeRegistry.GER.get(), GEREntity::new, "ger", true,                                   // -5
             Text.literal("Silver"), Text.literal("Manga"), Text.literal("Cherry Blossom")),
     STAR_PLATINUM_THE_WORLD(JEntityTypeRegistry.SPTW.get(), SPTWEntity::new, "sptw", true,                                // -6
             Text.literal("Judge, Jury, Executioner"), Text.literal("Diamond"), Text.literal("Over Heaven")),
     PURPLE_HAZE_DISTORTION(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION.get(), PurpleHazeDistortionEntity::new, "purple_haze_distortion", true,       // -7
-            Text.literal("Black Knight"), Text.literal("Vintage"), Text.literal("Reversal")),;
+            Text.literal("Black Knight"), Text.literal("Vintage"), Text.literal("Reversal")),
+    ;
 
 
     @Getter(lazy = true)

@@ -71,7 +71,9 @@ public class WeightlessStatusEffect extends StatusEffect {
                 int newHoverTime = misc.getHoverTime() + 1;
                 misc.setHoverTime(newHoverTime);
                 if (newHoverTime > 10) // If not near ground for half a second
+                {
                     entity.removeStatusEffect(this);
+                }
             }
         }
     }
@@ -80,28 +82,38 @@ public class WeightlessStatusEffect extends StatusEffect {
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onApplied(entity, attributes, amplifier);
 
-        if (entity.getWorld().isClient) return;
+        if (entity.getWorld().isClient) {
+            return;
+        }
 
         CommonMiscComponent misc = JComponentPlatformUtils.getMiscData(entity);
         misc.setPrevNoGrav(entity.hasNoGravity());
         misc.setHoverTime(0);
 
-        if (entity.isDead()) return; // Don't screw with the gravity of dead entities, it will persist on players
+        if (entity.isDead()) {
+            return; // Don't screw with the gravity of dead entities, it will persist on players
+        }
 
         Direction lookDir = JUtils.getLookDirection(entity);
         if (amplifier == 1) {
-            if (lookDir != GravityChangerAPI.getGravityDirection(entity))
+            if (lookDir != GravityChangerAPI.getGravityDirection(entity)) {
                 GravityChangerAPI.addGravity(entity, new Gravity(lookDir, 1, 200, "effect"));
-        } else entity.setNoGravity(true);
+            }
+        } else {
+            entity.setNoGravity(true);
+        }
     }
 
     @Override
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onRemoved(entity, attributes, amplifier);
 
-        if (entity.getWorld().isClient) return;
+        if (entity.getWorld().isClient) {
+            return;
+        }
         GravityChangerAPI.clearGravity(entity);
-        if (!JComponentPlatformUtils.getMiscData(entity).getPrevNoGrav())
+        if (!JComponentPlatformUtils.getMiscData(entity).getPrevNoGrav()) {
             entity.setNoGravity(false);
+        }
     }
 }

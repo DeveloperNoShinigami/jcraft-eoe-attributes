@@ -16,12 +16,12 @@ import net.minecraft.util.math.random.Random;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.model.GeoModel;
 
 public class CMoonRenderer extends StandEntityRenderer<CMoonEntity> {
     private int currentTick = -1;
     private static final int gravWindup = CMoonEntity.GRAV_PUNCH.getWindupPoint();
     private static final ParticleEffect chargeParticle = new DustParticleEffect(new Vector3f(0.8f, 0.2f, 1.0f), 2.0f);
+
     public CMoonRenderer(EntityRendererFactory.Context context) {
         super(context, new StandEntityModel<>(StandType.C_MOON));
     }

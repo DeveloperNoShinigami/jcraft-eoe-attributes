@@ -15,7 +15,9 @@ public class AirBarrageAttack extends AbstractBarrageAttack<AirBarrageAttack, Th
     public void tick(TheFoolEntity attacker) {
         super.tick(attacker);
 
-        if (!attacker.hasUser()) return;
+        if (!attacker.hasUser()) {
+            return;
+        }
 
         LivingEntity user = attacker.getUserOrThrow();
         user.setVelocity(user.getVelocity().multiply(0.5).add(0, 0.01, 0));

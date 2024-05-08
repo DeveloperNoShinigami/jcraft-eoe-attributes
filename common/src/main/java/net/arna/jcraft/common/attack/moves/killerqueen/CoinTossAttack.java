@@ -27,7 +27,9 @@ public class CoinTossAttack extends AbstractMove<CoinTossAttack, KillerQueenEnti
     public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
         ItemEntity coin = ctx.get(COIN);
         Vec3d lookVec = user.getRotationVector().multiply(0.75);
-        if (coin != null) coin.discard();
+        if (coin != null) {
+            coin.discard();
+        }
         coin = new ItemEntity(attacker.getWorld(), user.getX(), user.getY() + user.getHeight() * 2 / 3, user.getZ(),
                 new ItemStack(JItemRegistry.KQ_COIN.get(), 1), lookVec.x, lookVec.y, lookVec.z);
         coin.setPickupDelayInfinite();

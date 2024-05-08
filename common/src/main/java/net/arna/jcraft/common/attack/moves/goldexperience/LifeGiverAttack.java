@@ -28,23 +28,33 @@ public class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienc
     @Override
     public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
         ItemStack item = user.getOffHandStack(); // Get offhand, or if unavailable main hand stack
-        if (item.isEmpty()) item = user.getMainHandStack();
-        if (item.isEmpty()) return Set.of();
+        if (item.isEmpty()) {
+            item = user.getMainHandStack();
+        }
+        if (item.isEmpty()) {
+            return Set.of();
+        }
 
         LivingEntity animal = null;
         ItemStack animalItem = item.copy();
         animalItem.setCount(1);
         switch (ctx.get(TYPE_TO_SUMMON)) {
             case SNAKE -> {
-                if (item.getMaxCount() <= 1) return Set.of();
+                if (item.getMaxCount() <= 1) {
+                    return Set.of();
+                }
 
                 GESnakeEntity snake = new GESnakeEntity(JEntityTypeRegistry.GE_SNAKE.get(), attacker.getWorld());
                 //todo: fix snake not working for mobs
-                if (user instanceof PlayerEntity playerEntity) snake.setOwner(playerEntity);
+                if (user instanceof PlayerEntity playerEntity) {
+                    snake.setOwner(playerEntity);
+                }
                 animal = snake;
             }
             case FROG -> {
-                if (item.getMaxCount() <= 1) return Set.of();
+                if (item.getMaxCount() <= 1) {
+                    return Set.of();
+                }
 
                 GEFrogEntity frog = new GEFrogEntity(JEntityTypeRegistry.GE_FROG.get(), attacker.getWorld());
                 frog.setMaster(user);

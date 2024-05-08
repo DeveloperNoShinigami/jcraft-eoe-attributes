@@ -77,17 +77,24 @@ public class LaserProjectile extends PersistentProjectileEntity implements GeoEn
                         vel.x / 2, vel.y / 2, vel.z / 2
                 );
             }
-        } else if (--lifetime < 1)
+        } else if (--lifetime < 1) {
             discard();
+        }
     }
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) return;
+        if (getWorld().isClient) {
+            return;
+        }
         Entity owner = getOwner();
-        if (owner == null) return;
+        if (owner == null) {
+            return;
+        }
         Entity entity = entityHitResult.getEntity();
-        if (owner.hasPassenger(entity) || entity == owner || hit.contains(entity)) return;
+        if (owner.hasPassenger(entity) || entity == owner || hit.contains(entity)) {
+            return;
+        }
 
         JUtils.projectileDamageLogic(this, getWorld(), entity, getVelocity(), 20, 1, false,
                 5f, 0, CommonHitPropertyComponent.HitAnimation.CRUSH, unblockable, false);

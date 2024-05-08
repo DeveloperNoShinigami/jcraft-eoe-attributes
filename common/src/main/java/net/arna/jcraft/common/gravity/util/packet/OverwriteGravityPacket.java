@@ -23,15 +23,18 @@ public class OverwriteGravityPacket extends GravityPacket {
     public OverwriteGravityPacket(PacketByteBuf buf) {
         int listSize = buf.readInt();
         gravityList = new ArrayList<>();
-        for (int i = 0; i < listSize; i++)
+        for (int i = 0; i < listSize; i++) {
             gravityList.add(NetworkUtil.readGravity(buf));
+        }
         initialGravity = buf.readBoolean();
     }
 
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeInt(gravityList.size());
-        for (Gravity gravity : gravityList) NetworkUtil.writeGravity(buf, gravity);
+        for (Gravity gravity : gravityList) {
+            NetworkUtil.writeGravity(buf, gravity);
+        }
         buf.writeBoolean(initialGravity);
     }
 
@@ -43,7 +46,9 @@ public class OverwriteGravityPacket extends GravityPacket {
     @Override
     public RotationParameters getRotationParameters() {
         Optional<Gravity> max = gravityList.stream().max(Comparator.comparingInt(Gravity::priority));
-        if (max.isEmpty()) return new RotationParameters();
+        if (max.isEmpty()) {
+            return new RotationParameters();
+        }
         return max.get().rotationParameters();
     }
 }

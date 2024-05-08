@@ -44,7 +44,9 @@ public class StandDiscItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        if (world.isClient) return TypedActionResult.pass(itemStack);
+        if (world.isClient) {
+            return TypedActionResult.pass(itemStack);
+        }
 
         if (JCraft.wasRecentlyAttacked(user.getDamageTracker())) {
             user.sendMessage(Text.translatable("jcraft.disc.error"));
@@ -65,15 +67,21 @@ public class StandDiscItem extends Item {
 
         userStand = standData.getType();
         userSkin = standData.getSkin();
-        if (data.contains("StandID", NbtElement.INT_TYPE)) itemStand = StandType.fromId(data.getInt("StandID"));
-        if (data.contains("Skin", NbtElement.INT_TYPE)) itemSkin = data.getInt("Skin");
+        if (data.contains("StandID", NbtElement.INT_TYPE)) {
+            itemStand = StandType.fromId(data.getInt("StandID"));
+        }
+        if (data.contains("Skin", NbtElement.INT_TYPE)) {
+            itemSkin = data.getInt("Skin");
+        }
 
         standData.setTypeAndSkin(itemStand, itemSkin);
         data.putInt("StandID", userStand == null ? 0 : userStand.getId());
         data.putInt("Skin", userSkin);
 
         StandEntity<?, ?> stand = standData.getStand();
-        if (stand != null) stand.discard();
+        if (stand != null) {
+            stand.discard();
+        }
         JCraft.summon(world, user);
 
         return TypedActionResult.success(itemStack);
@@ -96,17 +104,23 @@ public class StandDiscItem extends Item {
 
     public static void appendStacks(ItemGroup group, List<ItemStack> stacks) {
         boolean full = group.getType() == ItemGroup.Type.SEARCH;
-        if (!full) return;
+        if (!full) {
+            return;
+        }
 
         stacks.add(new ItemStack(JItemRegistry.STAND_DISC.get()));
 
-        for (StandType standType : StandType.values())
-            for (int skin = 0; skin <= (full ? standType.getSkinCount() : 0); skin++)
+        for (StandType standType : StandType.values()) {
+            for (int skin = 0; skin <= (full ? standType.getSkinCount() : 0); skin++) {
                 stacks.add(StandDiscItem.createDiscStack(standType, skin));
+            }
+        }
     }
 
     public static ItemStack createDiscStack(StandType type, int skin) {
-        if (skin < 0 || skin > type.getSkinCount()) throw new IllegalArgumentException("Skin out of bounds");
+        if (skin < 0 || skin > type.getSkinCount()) {
+            throw new IllegalArgumentException("Skin out of bounds");
+        }
 
         ItemStack stack = new ItemStack(JItemRegistry.STAND_DISC.get());
         NbtCompound nbt = stack.getOrCreateNbt();
@@ -121,21 +135,27 @@ public class StandDiscItem extends Item {
     }
 
     public static StandType getStandType(ItemStack stack) {
-        if (!stack.isOf(JItemRegistry.STAND_DISC.get())) return null;
+        if (!stack.isOf(JItemRegistry.STAND_DISC.get())) {
+            return null;
+        }
 
         NbtCompound nbt = stack.getNbt();
         return nbt == null || !nbt.contains("StandID", NbtElement.INT_TYPE) ? null : StandType.fromId(nbt.getInt("StandID"));
     }
 
     public static void setSkin(ItemStack stack, int skin) {
-        if (!stack.isOf(JItemRegistry.STAND_DISC.get())) return;
+        if (!stack.isOf(JItemRegistry.STAND_DISC.get())) {
+            return;
+        }
 
         NbtCompound nbt = stack.getOrCreateNbt();
         nbt.putInt("Skin", skin);
     }
 
     public static int getSkin(ItemStack stack) {
-        if (!stack.isOf(JItemRegistry.STAND_DISC.get())) return 0;
+        if (!stack.isOf(JItemRegistry.STAND_DISC.get())) {
+            return 0;
+        }
 
         NbtCompound nbt = stack.getNbt();
         return nbt == null || !nbt.contains("Skin", NbtElement.INT_TYPE) ? 0 : nbt.getInt("Skin");

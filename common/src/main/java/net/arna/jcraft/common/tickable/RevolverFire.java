@@ -14,17 +14,24 @@ import java.util.List;
 
 public class RevolverFire {
     protected static final List<DimensionData> toFire = new ArrayList<>();
-    public static void enqueue(DimensionData dimensionData) { toFire.add(dimensionData); }
-    public static void remove(DimensionData dimensionData) { toFire.remove(dimensionData); }
+
+    public static void enqueue(DimensionData dimensionData) {
+        toFire.add(dimensionData);
+    }
+
+    public static void remove(DimensionData dimensionData) {
+        toFire.remove(dimensionData);
+    }
+
     public static void tick(MinecraftServer server) {
         List<DimensionData> newToFire = new ArrayList<>();
 
         for (DimensionData toFireData : toFire) {
             LivingEntity user = toFireData.user;
             if (user != null && user.isAlive()) {
-                if (toFireData.timer-- > 0)
+                if (toFireData.timer-- > 0) {
                     newToFire.add(toFireData);
-                else {
+                } else {
                     ServerWorld world = server.getWorld(toFireData.worldKey);
                     if (world == null) {
                         JCraft.LOGGER.fatal("World that toFireData belongs to no longer exists! Key: " + toFireData.worldKey + " user: " + user);
@@ -32,8 +39,9 @@ public class RevolverFire {
                     }
 
                     ItemStack main = user.getMainHandStack();
-                    if (main.getItem() == JItemRegistry.FV_REVOLVER)
+                    if (main.getItem() == JItemRegistry.FV_REVOLVER) {
                         FVRevolverItem.fire(main, world, user);
+                    }
                 }
             }
         }

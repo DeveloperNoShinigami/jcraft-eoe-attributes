@@ -4,7 +4,6 @@
   "item.jcraft.stand_arrow": "Stand Arrow",
   "item.jcraft.living_arrow": "Living Arrow",
   "item.jcraft.requiem_arrow": "Requiem Arrow",
-
   "item.jcraft.boxing_gloves": "Boxing Gloves",
   "item.jcraft.requiem_ruby": "Requiem Ruby",
   "item.jcraft.fv_revolver": "Revolver",
@@ -23,36 +22,27 @@
   "item.jcraft.cinderella_mask": "Cinderella Mask",
   "item.jcraft.mock_item": "Mock Item",
   "item.jcraft.blood_bottle": "Blood Bottle",
-
   "item.jcraft.dio_headband": "DIO's Headband",
   "item.jcraft.dio_jacket": "DIO's Jacket",
   "item.jcraft.dio_pants": "DIO's Pants",
   "item.jcraft.dio_boots": "DIO's Boots",
   "item.jcraft.dio_cape": "DIO's Cape",
-
   "item.jcraft.jotaro_cap": "Jotaro's Cap",
   "item.jcraft.jotaro_jacket": "Jotaro's Jacket",
   "item.jcraft.jotaro_pants": "Jotaro's Pants",
   "item.jcraft.jotaro_boots": "Jotaro's Boots",
-
   "item.jcraft.red_hat": "Red Hat",
   "item.jcraft.kars_headwrap": "Kars' Head Wrap",
   "item.jcraft.stone_mask": "Stone Mask",
-
   "item.jcraft.debug_wand": "Debug Wand",
-
   "item.jcraft.bullet": "Bullet",
-
   "itemGroup.jcraft.main": "JCraft Items",
-
   "block.jcraft.coffin": "Coffin",
   "block.jcraft.soul_block": "Block of Suffering",
   "block.jcraft.meteorite_block": "Meteorite Block",
   "block.jcraft.meteorite_iron_ore_block": "Meteorite Iron Ore",
   "block.jcraft.foolish_sand_block": "Foolish Sand",
-
   "enchantment.jcraft.cinderellas_kiss": "Cinderella's Kiss",
-
   "key.category.jcraft": "JCraft Binds",
   "key.jcraft.standsummon": "Stand Summon",
   "key.jcraft.heavy": "Heavy",
@@ -65,7 +55,6 @@
   "key.jcraft.cooldowncancel": "Cooldown Cancel",
   "key.jcraft.utility": "Utility",
   "key.jcraft.dash": "Dash",
-
   "entity.jcraft.nostand": "None",
   "entity.jcraft.starplatinum": "Star Platinum",
   "entity.jcraft.sptw": "Star Platinum: The World",
@@ -76,40 +65,32 @@
   "entity.jcraft.thefool": "The Fool",
   "entity.jcraft.hierophantgreen": "Hierophant Green",
   "entity.jcraft.hg_net": "Hierophant Tentacles",
-
   "entity.jcraft.killerqueen": "Killer Queen",
   "entity.jcraft.kqbtd": "Killer Queen: Bites the Dust",
   "entity.jcraft.sha": "Sheer Heart Attack",
-
   "entity.jcraft.mr": "Magicians Red",
   "entity.jcraft.lifedetector": "Life Detector",
-
   "entity.jcraft.goldexperience": "Gold Experience",
   "entity.jcraft.ger": "Gold Experience: Requiem",
   "entity.jcraft.gefrog": "Frog",
   "entity.jcraft.getree": "Tree",
   "entity.jcraft.gesnake": "Snake",
   "entity.jcraft.gerscorpion": "Scorpion",
-
   "entity.jcraft.the_sun": "The Sun",
   "entity.jcraft.purple_haze": "Purple Haze",
   "entity.jcraft.purple_haze_distortion": "Purple Haze: Distortion",
-
   "entity.jcraft.whitesnake": "Whitesnake",
   "entity.jcraft.cmoon": "C-Moon",
   "entity.jcraft.block": "Block",
   "entity.jcraft.mih": "Made in Heaven",
   "entity.jcraft.theworld": "The World",
   "entity.jcraft.twoh": "The World: Over Heaven",
-
   "entity.jcraft.playerclone": "Clone",
   "entity.jcraft.playerclone_slim": "Clone",
-
   "entity.jcraft.knife": "Knife",
   "entity.jcraft.ankh": "Ankh",
   "entity.jcraft.bullet": "Bullet",
   "entity.jcraft.emerald": "Emerald ",
-
   "effect.jcraft.dazed_effect": "Dazed",
   "effect.jcraft.ws_poison": "Melting",
   "effect.jcraft.standless": "Standless",
@@ -118,7 +99,6 @@
   "effect.jcraft.weightless": "Weightless",
   "effect.jcraft.bleeding": "Bleeding",
   "effect.jcraft.phpoison": "Purple Haze",
-
   "gamerule.showHitboxes": "Show JCraft hitboxes",
   "gamerule.kingCrimsonTeleportEffect": "King Crimson's teleport displacement",
   "gamerule.comboCounter": "Show combo counter",
@@ -126,19 +106,16 @@
   "gamerule.allowMobEvolvedStands": "Allow mobs to spawn with evolved stands",
   "gamerule.creamBlackHoleErasesBlocks": "Allow creams black hole to erase blocks",
   "gamerule.defaultSpec": "Default Spec",
-
   "subtitles.jcraft.twts": "Time, stop!",
   "subtitles.jcraft.timeerase": "King Crimson!",
   "subtitles.jcraft.sptw": "Star Platinum: The World!",
   "subtitles.jcraft.twohts": "The World: Over Heaven!",
   "subtitles.jcraft.backstab": "BACKSTAB!",
   "subtitles.jcraft.armoredhit": "ARMORED HIT!",
-
   "spec.jcraft.brawler": "Brawler",
   "spec.jcraft.anubis": "Anubis",
   "spec.jcraft.vampire": "Vampire",
   "spec.jcraft.unnamed": "No Spec",
-
   "jcraft.midnightconfig.title": "JCraft Config",
   "jcraft.midnightconfig.ANIME_VOICES": "Enable Anime Voicelines",
   "jcraft.midnightconfig.UI_POSITION": "UI Position",
@@ -148,48 +125,32 @@
   "jcraft.midnightconfig.ICON_HUD": "Icon HUD",
   "jcraft.midnightconfig.TE_SHADER": "Use Time Erase Shader",
   "jcraft.midnightconfig.EPITAPH_OVERLAY": "Epitaph Overlay",
-
   "jcraft.anubis.unsheathe": "Unsheathing Anubis will override your spec, are you sure?",
   "jcraft.anubis.namedesc": "§9The sword/stand named after the Egyptian god of death",
   "jcraft.anubis.bloodthirstdesc": "§eBloodthirsty. §9Fuels itself on any and all violence.",
   "jcraft.anubis.removaldesc": "§eHard to get rid of.",
   "jcraft.anubis.desc": "§9Can §esheathed §9with §eRMB.",
   "jcraft.sheathedanubis.blockdesc": "§9Can used to §eblock §9with §eCrouch + RMB.",
-  "jcraft.sheathedanubis.desc" : "§9Can be §eunsheathed",
-
+  "jcraft.sheathedanubis.desc": "§9Can be §eunsheathed",
   "jcraft.requiemarrow.desc": "§eAble to grant immense power to those worthy.",
-
   "jcraft.livingarrow.desc": "§9An arrow with a mind of its own.",
   "jcraft.livingarrow.evodesc": "§9(§eKiller Queen & Star Platinum §9evolution item)",
-
   "jcraft.greenbaby.desc": "§9A peculiar green child.",
   "jcraft.greenbaby.evodesc": "§9(§eWhitesnake §9evolution item)",
-
   "jcraft.diosdiary.desc": "§9Contains the musings of a long dead man.",
   "jcraft.diosdiary.evodesc": "§9(§eC-Moon & The World §9evolution item)",
-
   "jcraft.disc.error": "Cannot use disc while in combat!",
-
   "jcraft.revolver.shots": "§9Shots:",
-
   "jcraft.knife.chargetime": "§9Maximum charge time:",
-
   "jcraft.bullet.caliber": "§9Caliber:",
-
   "jcraft.boxinggloves.desc": "§eBrawler §9spec obtainment item",
-
   "jcraft.stonemask.desc": "§eVampirism §9spec obtainment item",
-
   "jcraft.blood_bottle.units": "Blood units: ",
-
   "jcraft.cinderella_mask.enchdesc": "Needs an §9enchantment§r.",
   "jcraft.cinderella_mask.usedesc": "Use with a full Stand Disc in a Smithing table to get a skin.",
-
   "jcraft.sunprotection.desc": "Protects from the Sun.",
-
   "jcraft.commands.error.nospec": "No spec found!",
   "jcraft.commands.error.nostand": "No stand found!",
-
   "jcraft.movetype.light": "Light",
   "jcraft.movetype.heavy": "Heavy",
   "jcraft.movetype.barrage": "Barrage",
@@ -198,40 +159,32 @@
   "jcraft.movetype.special3": "Special 3",
   "jcraft.movetype.ultimate": "Ultimate",
   "jcraft.movetype.utility": "Utility",
-
   "warning.jcraft.spec.change": "Using this will change your spec, are you sure?",
-
   "death.attack.stand": "%1$s was retired",
   "death.attack.stand.item": "%1$s was retired by %2$s while wielding %3$s",
   "death.attack.stand.player": "%1$s was retired by %2$s",
   "death.attack.stand.player.item": "%1$s was retired by %2$s while wielding %3$s",
-
   "death.attack.wsacid": "%1$s was melted",
   "death.attack.wsacid.item": "%1$s was melted by %2$s while wielding %3$s",
   "death.attack.wsacid.player": "%1$s was melted by %2$s",
   "death.attack.wsacid.player.item": "%1$s was melted by %2$s while wielding %3$s",
-
   "death.attack.jbleeding": "%1$s bled out",
   "death.attack.jbleeding.item": "%1$s bled out while fighting %2$s while wielding %3$s",
   "death.attack.jbleeding.player": "%1$s bled out while fighting %2$s",
   "death.attack.jbleeding.player.item": "%1$s bled out while fighting %2$s while wielding %3$s",
-
   "death.attack.phpoison": "%1$s was eradicated by the Purple Haze",
   "death.attack.phpoison.item": "%1$s was eradicated by the Purple Haze while fighting %2$s while wielding %3$s",
   "death.attack.phpoison.player": "%1$s was eradicated by the Purple Haze while fighting %2$s",
   "death.attack.phpoison.player.item": "%1$s was eradicated by the Purple Haze while fighting %2$s while wielding %3$s",
-
   "commands.gravity.get.self": "Your gravity is %s",
   "commands.gravity.get.other": "%s's gravity is %s",
   "commands.gravity.set.self": "Set own gravity to %s",
   "commands.gravity.set.other": "Set %s's gravity to %s",
-
   "text.autoconfig.jcraft.option.uiPosition": "UI Position",
   "text.autoconfig.jcraft.option.iconHud": "Icon HUD",
   "text.autoconfig.jcraft.option.standAuras": "Stand Auras",
   "text.autoconfig.jcraft.option.timeEraseShader": "Time Erase Shader",
   "text.autoconfig.jcraft.option.epitaphOverlay": "Epitaph Overlay",
-
   "jcraft.serverconfig.category.balance": "Balance",
   "jcraft.serverconfig.option.sptwTimeStopDuration": "Star Platinum The World Timestop Duration",
   "jcraft.serverconfig.option.twTimeStopDuration": "The World Timestop Duration",
@@ -252,10 +205,8 @@
   "jcraft.serverconfig.option.cooldownMultiplier": "Cooldown Duration Multiplier",
   "jcraft.serverconfig.option.enableIPS": "Enable Stun Falloff (Stun reduction is proportional to damage scaling; use with low cooldowns)",
   "jcraft.serverconfig.option.enableFriendlyFire": "Enable Friendly Fire (Uses scoreboard teams)",
-
   "jcraft.serverconfig.category.minecraft_rebalance": "Minecraft Balance",
   "jcraft.serverconfig.option.reduceDeadlyExplosions": "Reduce Deadly Explosion Power (End Crystals, Beds, Respawn Anchors)",
-
   "jcraft.serverconfig.category.interaction": "Interaction",
   "jcraft.serverconfig.option.universalAbilities": "Universal Abilities",
   "jcraft.serverconfig.option.exclusiveStands": "Exclusive Stands",

@@ -21,7 +21,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getEyeY_0(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getEyeY();
         }
 
@@ -38,7 +38,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getX_0(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getX();
         }
 
@@ -55,7 +55,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getZ_0(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getZ();
         }
 
@@ -72,7 +72,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getEyeY_1(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getEyeY();
         }
 
@@ -89,7 +89,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getX_1(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getX();
         }
 
@@ -106,7 +106,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getZ_1(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getZ();
         }
 
@@ -123,7 +123,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getEyeY_2(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getEyeY();
         }
 
@@ -140,7 +140,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getX_2(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getX();
         }
 
@@ -157,7 +157,7 @@ public abstract class BiomeEffectSoundPlayerMixin {
     )
     private double redirect_method_26271_getZ_2(ClientPlayerEntity clientPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(clientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return clientPlayerEntity.getZ();
         }
 

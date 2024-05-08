@@ -2,22 +2,14 @@ package net.arna.jcraft.common.item;
 
 import net.arna.jcraft.client.registry.JArmorRendererRegistry;
 import net.arna.jcraft.client.renderer.armor.DIOArmorRenderer;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import software.bernie.example.client.renderer.armor.WolfArmorRenderer;
 import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.animatable.client.RenderProvider;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
@@ -29,6 +21,7 @@ public class DIOArmorItem extends ArmorItem implements GeoItem {
     public DIOArmorItem(ArmorMaterial materialIn, Type slot, Settings builder) {
         super(materialIn, slot, builder);
     }
+
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     @Override

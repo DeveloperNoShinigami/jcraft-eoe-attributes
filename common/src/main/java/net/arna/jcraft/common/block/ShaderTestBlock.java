@@ -1,11 +1,5 @@
 package net.arna.jcraft.common.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
-import org.jetbrains.annotations.Nullable;
-
 /*
 @Deprecated(forRemoval = true)
 public class ShaderTestBlock extends BlockWithEntity {

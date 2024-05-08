@@ -1,15 +1,33 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    { "item": "jcraft:knife" },
-    { "item": "jcraft:knife" },
-    { "item": "jcraft:knife" },
-    { "item": "jcraft:knife" },
-    { "item": "jcraft:knife" },
-    { "item": "jcraft:knife" },
-    { "item": "jcraft:knife" },
-    { "item": "jcraft:knife" },
-    { "item": "jcraft:knife" }
+    {
+      "item": "jcraft:knife"
+    },
+    {
+      "item": "jcraft:knife"
+    },
+    {
+      "item": "jcraft:knife"
+    },
+    {
+      "item": "jcraft:knife"
+    },
+    {
+      "item": "jcraft:knife"
+    },
+    {
+      "item": "jcraft:knife"
+    },
+    {
+      "item": "jcraft:knife"
+    },
+    {
+      "item": "jcraft:knife"
+    },
+    {
+      "item": "jcraft:knife"
+    }
   ],
   "result": {
     "item": "jcraft:knife_bundle"

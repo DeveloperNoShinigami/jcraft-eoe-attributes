@@ -18,12 +18,12 @@ public class BloodSuckAttack<A extends JSpec<A, S>, S extends Enum<S> & SpecAnim
     public static final MoveVariable<LivingEntity> TARGET = new MoveVariable<>(LivingEntity.class);
 
     public BloodSuckAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
-                      float hitboxSize, float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState, int grabDuration, double grabOffset) {
+                           float hitboxSize, float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState, int grabDuration, double grabOffset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMove, hitState, grabDuration, grabOffset);
     }
 
     public BloodSuckAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
-                      float hitboxSize, float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState) {
+                           float hitboxSize, float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMove, hitState);
     }
 
@@ -35,8 +35,9 @@ public class BloodSuckAttack<A extends JSpec<A, S>, S extends Enum<S> & SpecAnim
     @Override
     public void performHook(A attacker, Set<LivingEntity> targets, Set<Box> boxes, DamageSource damageSource, Vec3d forwardPos, Vec3d rotationVector, MoveContext ctx) {
         super.performHook(attacker, targets, boxes, damageSource, forwardPos, rotationVector, ctx);
-        if (!targets.isEmpty())
+        if (!targets.isEmpty()) {
             ctx.set(TARGET, targets.stream().findFirst().get());
+        }
     }
 
     @Override

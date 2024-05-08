@@ -3,7 +3,6 @@ package net.arna.jcraft.common.block.tile;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
 import net.arna.jcraft.registry.JBlockRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
@@ -30,8 +29,9 @@ public class CoffinTileEntity extends BlockEntity implements GeoBlockEntity {
     }
 
     private PlayState predicate(AnimationState animationState) {
-        if (!world.getBlockState(getPos()).isOf(JBlockRegistry.COFFIN_BLOCK.get()))
+        if (!world.getBlockState(getPos()).isOf(JBlockRegistry.COFFIN_BLOCK.get())) {
             return PlayState.STOP;
+        }
 
         boolean occupied = getCachedState().get(CoffinBlock.OCCUPIED);
 

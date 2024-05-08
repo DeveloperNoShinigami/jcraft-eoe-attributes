@@ -29,7 +29,9 @@ public class PlayerCloneClientPlayerEntity extends AbstractClientPlayerEntity {
                 .filter(LivingEntity::isAlive)
                 .forEach(PlayerCloneClientPlayerEntity::tick));
         ClientTickEvent.CLIENT_POST.register(client -> {
-            if (client.world == null) entities.clear();
+            if (client.world == null) {
+                entities.clear();
+            }
         });
     }
 
@@ -116,8 +118,9 @@ public class PlayerCloneClientPlayerEntity extends AbstractClientPlayerEntity {
         setStuckArrowCount(clone.getStuckArrowCount());
         setStingerCount(clone.getStingerCount());
 
-        for (EquipmentSlot slot : EquipmentSlot.values())
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
             equipStack(slot, clone.getEquippedStack(slot));
+        }
     }
 
     @Override

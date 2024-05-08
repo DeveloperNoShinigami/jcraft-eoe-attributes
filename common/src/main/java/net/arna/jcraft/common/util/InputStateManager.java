@@ -11,15 +11,23 @@ public class InputStateManager {
 
     public int calcForward() {
         int forward = 0;
-        if (this.forward) forward++;
-        if (backward) forward--;
+        if (this.forward) {
+            forward++;
+        }
+        if (backward) {
+            forward--;
+        }
         return forward;
     }
 
     public int calcSide() {
         int side = 0;
-        if (left) side++;
-        if (right) side--;
+        if (left) {
+            side++;
+        }
+        if (right) {
+            side--;
+        }
         return side;
     }
 

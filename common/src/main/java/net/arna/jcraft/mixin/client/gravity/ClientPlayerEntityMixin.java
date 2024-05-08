@@ -6,12 +6,10 @@ import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,7 +23,8 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
         super(world, profile);
     }
 
-    @Shadow protected abstract boolean wouldCollideAt(BlockPos pos);
+    @Shadow
+    protected abstract boolean wouldCollideAt(BlockPos pos);
 
     @Redirect(
             method = "wouldCollideAt",
@@ -37,7 +36,7 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     )
     private Box redirect_wouldCollideAt_new_0(double x1, double y1, double z1, double x2, double y2, double z2, BlockPos pos) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return new Box(x1, y1, z1, x2, y2, z2);
         }
 
@@ -59,21 +58,23 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
     )
     private void inject_pushOutOfBlocks(double x, double z, CallbackInfo ci) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
-        if(gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         ci.cancel();
 
         Vec3d pos = RotationUtil.vecPlayerToWorld(x - this.getX(), 0.0D, z - this.getZ(), gravityDirection).add(this.getPos());
         BlockPos blockPos = BlockPos.ofFloored(pos);
         if (this.wouldCollideAt(blockPos)) {
-            double dx = pos.x - (double)blockPos.getX();
-            double dy = pos.y - (double)blockPos.getY();
-            double dz = pos.z - (double)blockPos.getZ();
+            double dx = pos.x - (double) blockPos.getX();
+            double dy = pos.y - (double) blockPos.getY();
+            double dz = pos.z - (double) blockPos.getZ();
             Direction direction = null;
             double minDistToEdge = Double.MAX_VALUE;
 
             Direction[] directions = new Direction[]{Direction.WEST, Direction.EAST, Direction.NORTH, Direction.SOUTH};
-            for(Direction playerDirection : directions) {
+            for (Direction playerDirection : directions) {
                 Direction worldDirection = RotationUtil.dirPlayerToWorld(playerDirection, gravityDirection);
 
                 double g = worldDirection.getAxis().choose(dx, dy, dz);
@@ -87,9 +88,9 @@ public abstract class ClientPlayerEntityMixin extends AbstractClientPlayerEntity
             if (direction != null) {
                 Vec3d velocity = this.getVelocity();
                 if (direction.getAxis() == Direction.Axis.X) {
-                    this.setVelocity(0.1D * (double)direction.getOffsetX(), velocity.y, velocity.z);
-                } else if(direction.getAxis() == Direction.Axis.Z) {
-                    this.setVelocity(velocity.x, velocity.y, 0.1D * (double)direction.getOffsetZ());
+                    this.setVelocity(0.1D * (double) direction.getOffsetX(), velocity.y, velocity.z);
+                } else if (direction.getAxis() == Direction.Axis.Z) {
+                    this.setVelocity(velocity.x, velocity.y, 0.1D * (double) direction.getOffsetZ());
                 }
             }
         }

@@ -3,8 +3,6 @@ package net.arna.jcraft.client.model.entity;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
 import net.minecraft.util.Identifier;
-import software.bernie.example.client.renderer.entity.layer.CoolKidGlassesLayer;
-import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 
 public class AnkhModel extends GeoModel<AnkhProjectile> {

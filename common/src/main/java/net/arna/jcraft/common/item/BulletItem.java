@@ -20,8 +20,9 @@ public class BulletItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         NbtCompound itemData = stack.getNbt();
 
-        if (itemData != null && itemData.contains("Caliber"))
+        if (itemData != null && itemData.contains("Caliber")) {
             tooltip.add(Text.translatable("jcraft.bullet.caliber").append(" §e" + itemData.getFloat("Caliber") + "§9mm"));
+        }
         super.appendTooltip(stack, world, tooltip, context);
     }
 

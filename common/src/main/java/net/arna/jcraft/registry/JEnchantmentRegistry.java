@@ -8,9 +8,10 @@ import net.minecraft.registry.Registry;
 
 public interface JEnchantmentRegistry {
     Enchantment CINDERELLAS_KISS = register("cinderellas_kiss", CinderellasKissEnchantment.INSTANCE);
-    
-    static void init() {}
-    
+
+    static void init() {
+    }
+
     static Enchantment register(String id, Enchantment enchantment) {
         Registry.register(Registries.ENCHANTMENT, JCraft.id(id), enchantment);
         return enchantment;

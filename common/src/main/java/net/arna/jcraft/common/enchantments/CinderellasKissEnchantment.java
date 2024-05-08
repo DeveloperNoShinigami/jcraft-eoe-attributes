@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 
 public class CinderellasKissEnchantment extends Enchantment {
     public static final CinderellasKissEnchantment INSTANCE = new CinderellasKissEnchantment();
-    
+
     private CinderellasKissEnchantment() {
         super(Rarity.RARE, EnchantmentTarget.WEARABLE, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }
@@ -23,7 +23,7 @@ public class CinderellasKissEnchantment extends Enchantment {
     public boolean isAcceptableItem(ItemStack stack) {
         return stack.getItem() == JItemRegistry.CINDERELLA_MASK;
     }
-    
+
     public static int getCKLevel(ItemStack stack) {
         return EnchantmentHelper.getLevel(INSTANCE, stack);
     }

@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.arna.jcraft.client.model.entity.TheSunModel;
 import net.arna.jcraft.client.renderer.entity.layer.SunGlowLayer;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -23,9 +22,6 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-import java.awt.*;
-import java.util.Collections;
-
 public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
     public SunRenderer(EntityRendererFactory.Context renderManager) {
         super(renderManager, new TheSunModel());
@@ -33,10 +29,14 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
     }
 
     @Override
-    protected int getBlockLight(TheSunEntity entity, BlockPos pos) { return 15; }
+    protected int getBlockLight(TheSunEntity entity, BlockPos pos) {
+        return 15;
+    }
 
     @Override
-    protected int getSkyLight(TheSunEntity entity, BlockPos pos) { return 15; }
+    protected int getSkyLight(TheSunEntity entity, BlockPos pos) {
+        return 15;
+    }
 
     //TODO: translucent layer that isn't layered over and has no shading
 

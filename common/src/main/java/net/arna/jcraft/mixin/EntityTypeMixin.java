@@ -25,21 +25,29 @@ public class EntityTypeMixin {
     // Loading stands from NBT tends to break them.
     @Inject(method = "getEntityFromNbt", at = @At("HEAD"), cancellable = true)
     private static void doNotLoadStandEntities(NbtCompound nbt, World world, CallbackInfoReturnable<Optional<Entity>> cir) {
-        if (shouldLoadStands > 0) return;
+        if (shouldLoadStands > 0) {
+            return;
+        }
 
         EntityType<?> entityType = Registries.ENTITY_TYPE.get(new Identifier(nbt.getString("id")));
-        if (StandType.getEntityTypes().contains(entityType)) cir.setReturnValue(Optional.empty());
+        if (StandType.getEntityTypes().contains(entityType)) {
+            cir.setReturnValue(Optional.empty());
+        }
     }
 
     @Inject(method = "method_17843", at = @At("HEAD"))
     private static void doLoadStandsWhenLoadingArmorStandPre(NbtCompound nbtCompound, World world, Function<Entity, Entity> function,
-                                                          Entity entity, CallbackInfoReturnable<Entity> cir) {
-        if (entity instanceof ArmorStandEntity) shouldLoadStands = Math.max(1, shouldLoadStands + 1);
+                                                             Entity entity, CallbackInfoReturnable<Entity> cir) {
+        if (entity instanceof ArmorStandEntity) {
+            shouldLoadStands = Math.max(1, shouldLoadStands + 1);
+        }
     }
 
     @Inject(method = "method_17843", at = @At("RETURN"))
     private static void doLoadStandsWhenLoadingArmorStandPost(NbtCompound nbtCompound, World world, Function<Entity, Entity> function,
-                                                          Entity entity, CallbackInfoReturnable<Entity> cir) {
-        if (entity instanceof ArmorStandEntity) shouldLoadStands--;
+                                                              Entity entity, CallbackInfoReturnable<Entity> cir) {
+        if (entity instanceof ArmorStandEntity) {
+            shouldLoadStands--;
+        }
     }
 }

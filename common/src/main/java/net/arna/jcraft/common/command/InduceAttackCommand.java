@@ -58,12 +58,12 @@ public class InduceAttackCommand {
                     StandEntity<?, ?> standEntity = JComponentPlatformUtils.getStandData(living).getStand();
 
                     if (standEntity != null) {
-                            if (standEntity.initMove(type)) {
-                                source.sendFeedback(()->Text.literal("Initiating stand attack " + typeName + " for " + living.getName().getString()), true);
-                            } else {
-                                source.sendFeedback(()->Text.literal("Queueing stand attack " + typeName + " for " + living.getName().getString()), true);
-                                standEntity.queueMove(MoveInputType.fromMoveType(type));
-                            }
+                        if (standEntity.initMove(type)) {
+                            source.sendFeedback(() -> Text.literal("Initiating stand attack " + typeName + " for " + living.getName().getString()), true);
+                        } else {
+                            source.sendFeedback(() -> Text.literal("Queueing stand attack " + typeName + " for " + living.getName().getString()), true);
+                            standEntity.queueMove(MoveInputType.fromMoveType(type));
+                        }
 
                         flag = 1;
                     }
@@ -71,15 +71,17 @@ public class InduceAttackCommand {
             }
         } else {
             for (Entity entity : targets) {
-                if (!(entity instanceof PlayerEntity player)) continue;
+                if (!(entity instanceof PlayerEntity player)) {
+                    continue;
+                }
                 JComponentPlatformUtils.getCooldowns(player).clear();
                 JSpec<?, ?> spec = JUtils.getSpec(player);
 
                 if (spec != null) {
                     if (spec.initMove(type)) {
-                        source.sendFeedback(()->Text.literal("Initiating spec attack " + typeName + " for " + entity.getName().getString()), true);
+                        source.sendFeedback(() -> Text.literal("Initiating spec attack " + typeName + " for " + entity.getName().getString()), true);
                     } else {
-                        source.sendFeedback(()->Text.literal("Queueing spec attack " + typeName + " for " + entity.getName().getString()), true);
+                        source.sendFeedback(() -> Text.literal("Queueing spec attack " + typeName + " for " + entity.getName().getString()), true);
                         spec.queuedMove = MoveInputType.fromMoveType(type);
                     }
 

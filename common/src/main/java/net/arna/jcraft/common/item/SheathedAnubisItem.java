@@ -27,6 +27,7 @@ public class SheathedAnubisItem extends SpecObtainmentItem {
     public UseAction getUseAction(ItemStack stack) {
         return UseAction.BLOCK;
     }
+
     public int getMaxUseTime(ItemStack stack) {
         return 72000;
     }
@@ -48,10 +49,14 @@ public class SheathedAnubisItem extends SpecObtainmentItem {
         if (user.isSneaking()) { // Block
             user.setCurrentHand(hand);
         } else { // Unsheathe
-            if (world.isClient) return TypedActionResult.fail(itemStack);
+            if (world.isClient) {
+                return TypedActionResult.fail(itemStack);
+            }
             StandEntity<?, ?> stand = JUtils.getStand(user);
-            if (stand != null && stand.blocking) return TypedActionResult.fail(itemStack);
-            ServerWorld serverWorld = (ServerWorld)world;
+            if (stand != null && stand.blocking) {
+                return TypedActionResult.fail(itemStack);
+            }
+            ServerWorld serverWorld = (ServerWorld) world;
 
             boolean specChanged = tryGetSpec(user);
             if (specChanged) {
@@ -70,8 +75,12 @@ public class SheathedAnubisItem extends SpecObtainmentItem {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-        if (world.isClient) return;
+        if (world.isClient) {
+            return;
+        }
         if (entity instanceof PlayerEntity player) // Bloodlust
+        {
             AnubisItem.handleAnubisEffects(player.getLastAttackTime() - player.age, player);
+        }
     }
 }

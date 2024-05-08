@@ -22,6 +22,7 @@ import static net.arna.jcraft.common.entity.projectile.RapierProjectile.POSSESSE
 public class SCRapierLayer extends GeoRenderLayer<SilverChariotEntity> {
     private static final Identifier MODEL = JCraft.id("geo/silver_chariot.geo.json");
     private static List<Identifier> skins;
+
     public SCRapierLayer(GeoRenderer<SilverChariotEntity> entityRendererIn) {
         super(entityRendererIn);
 

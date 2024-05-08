@@ -25,8 +25,9 @@ public class BerryBushAttack extends AbstractSimpleAttack<BerryBushAttack, GoldE
     public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
         World world = attacker.getWorld();
         BlockPos blockPos = attacker.getBlockPos();
-        if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.down()).isOpaque())
+        if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.down()).isOpaque()) {
             world.setBlockState(blockPos, berryBush);
+        }
 
         return super.perform(attacker, user, ctx);
     }

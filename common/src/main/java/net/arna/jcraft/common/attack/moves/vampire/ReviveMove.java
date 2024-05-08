@@ -32,24 +32,28 @@ public class ReviveMove<A extends IAttacker<? extends A, ?>> extends AbstractMov
             EntityType<?> entityType = revivable.getType();
 
             // Convert Testificates to zombie Testificates
-            if (entityType.isIn(EntityTypeTags.RAIDERS) || entityType.equals(EntityType.VILLAGER))
+            if (entityType.isIn(EntityTypeTags.RAIDERS) || entityType.equals(EntityType.VILLAGER)) {
                 entityType = EntityType.ZOMBIE_VILLAGER;
+            }
             // Humans to zombies
-            if (entityType.equals(EntityType.PLAYER))
+            if (entityType.equals(EntityType.PLAYER)) {
                 entityType = EntityType.ZOMBIE;
+            }
 
             Entity entity = entityType.create(serverWorld);
-            if (entity instanceof LivingEntity living)
+            if (entity instanceof LivingEntity living) {
                 if (living.isUndead()) {
                     entity.setPosition(revivable.getPos());
                     entity.age = 1;
-                    if (user instanceof ServerPlayerEntity serverPlayer)
+                    if (user instanceof ServerPlayerEntity serverPlayer) {
                         JComponentPlatformUtils.getMiscData(living).setSlavedTo(serverPlayer.getUuid());
+                    }
                     if (!isBoss(living)) {
                         serverWorld.spawnEntity(entity);
                         Revivables.removeRevivable(revivable);
                     }
                 }
+            }
         }
         return Set.of();
     }

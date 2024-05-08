@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * A simple attack that performs at set points.
  * These points are the time in ticks from when the attack is initiated.
+ *
  * @param <T>
  * @param <A>
  */
@@ -47,7 +48,9 @@ public abstract class AbstractMultiHitAttack<T extends AbstractMultiHitAttack<T,
         int tick = getDuration() - attacker.getMoveStun();
         AtomicInteger blow = new AtomicInteger(-1);
         hitMoments.forEach(i -> {
-            if (tick >= i) blow.getAndIncrement();
+            if (tick >= i) {
+                blow.getAndIncrement();
+            }
         });
 
         return blow.get();

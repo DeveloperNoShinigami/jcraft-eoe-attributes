@@ -106,7 +106,9 @@ public class JCraftAbilityHud {
     public static void render(DrawContext ctx, boolean renderCooldownOverlay) {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
 
         boolean isMid = JClientConfig.getInstance().getUiPosition() == JClientConfig.UIPos.MIDDLE;
         boolean useIcons = JClientConfig.getInstance().isIconHud();
@@ -120,8 +122,9 @@ public class JCraftAbilityHud {
 
             if (stand == null) {
                 // Render cooldown HUD for specs
-                if (spec != null)
+                if (spec != null) {
                     renderIcons(ctx, SPEC_ICONS, selectedX, selectedY, spec.getType().getInternalName().toLowerCase(), renderCooldownOverlay);
+                }
             } else {
                 // Render cooldown HUD for stands
                 renderIcons(ctx, isMid ? STAND_ICONS_MID : STAND_ICONS, selectedX, selectedY, stand.getType().getUntranslatedName(), renderCooldownOverlay);
@@ -133,10 +136,11 @@ public class JCraftAbilityHud {
 
     /**
      * Renders specified list of icons.
-     * @param icons list of icons to render
+     *
+     * @param icons     list of icons to render
      * @param selectedX x offset (in pixels) accounting for player's config choice
      * @param selectedY y offset (in pixels) accounting for player's config choice
-     * @param type decides which resource folder is loaded when rendering icons
+     * @param type      decides which resource folder is loaded when rendering icons
      */
     private static void renderIcons(DrawContext ctx, Map<CooldownType, IconPos> icons, int selectedX, int selectedY,
                                     String type, boolean renderCooldownOverlay) {
@@ -145,16 +149,20 @@ public class JCraftAbilityHud {
             int iconY = iconPos.y() + selectedY;
 
             double cd = getCooldownProgress(cooldownType);
-            if (cd < 0) return;
+            if (cd < 0) {
+                return;
+            }
 
-            if (!renderCooldownOverlay) renderBorder(ctx, iconX, iconY);
+            if (!renderCooldownOverlay) {
+                renderBorder(ctx, iconX, iconY);
+            }
             renderIcon(ctx, iconX, iconY, type, iconPos.name(), cd, renderCooldownOverlay);
         });
     }
 
     public static void renderIcon(DrawContext ctx, int x, int y, String type, String icon, double cd, boolean renderCooldownOverlay) {
-        Identifier texture = JCraft.id("textures/gui/ability_icons/" + type + "/"+ icon + ".png");
-        renderIcon(ctx,  x, y, texture, icon, cd, renderCooldownOverlay);
+        Identifier texture = JCraft.id("textures/gui/ability_icons/" + type + "/" + icon + ".png");
+        renderIcon(ctx, x, y, texture, icon, cd, renderCooldownOverlay);
     }
 
     public static void renderIcon(DrawContext ctx, int x, int y, Identifier texture, String fallback, double cd, boolean renderCooldownOverlay) {
@@ -164,24 +172,27 @@ public class JCraftAbilityHud {
         if (isTextureAvailable(texture)) {
             RenderSystem.setShaderTexture(0, texture);
         } else {
-            texture = JCraft.id("textures/gui/ability_icons/fallback/"+ fallback + ".png");
+            texture = JCraft.id("textures/gui/ability_icons/fallback/" + fallback + ".png");
             RenderSystem.setShaderTexture(0, texture);
         }
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        if (!renderCooldownOverlay) ctx.drawTexture(texture, x + 2 , y + 2,0,0,18,18, 18 ,18);
-        else renderCooldown(cd, x, y);
+        if (!renderCooldownOverlay) {
+            ctx.drawTexture(texture, x + 2, y + 2, 0, 0, 18, 18, 18, 18);
+        } else {
+            renderCooldown(cd, x, y);
+        }
         RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
         matrices.pop();
     }
 
-    public static void renderBorder(DrawContext ctx, int x, int y){
+    public static void renderBorder(DrawContext ctx, int x, int y) {
         var matrices = ctx.getMatrices();
         matrices.push();
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        ctx.drawTexture(JCraft.id("textures/gui/ability_icons/border.png"), x , y,0,0,22,22, 22 ,22);
+        ctx.drawTexture(JCraft.id("textures/gui/ability_icons/border.png"), x, y, 0, 0, 22, 22, 22, 22);
         RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
@@ -225,5 +236,6 @@ public class JCraftAbilityHud {
         return ((value - min) / (max - min));
     }
 
-    private record IconPos(String name, int x, int y){}
+    private record IconPos(String name, int x, int y) {
+    }
 }

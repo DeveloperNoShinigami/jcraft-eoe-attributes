@@ -59,8 +59,10 @@ public class MoveContext {
     @NotNull
     private <T> Entry<T> getEntry(MoveVariable<T> variable) {
         Entry<?> entry = entries.get(variable);
-        if (entry == null) throw new IllegalArgumentException("No entry for the given variable could be found. " +
-                "Has it been registered?");
+        if (entry == null) {
+            throw new IllegalArgumentException("No entry for the given variable could be found. " +
+                    "Has it been registered?");
+        }
 
         return (Entry<T>) entry;
     }

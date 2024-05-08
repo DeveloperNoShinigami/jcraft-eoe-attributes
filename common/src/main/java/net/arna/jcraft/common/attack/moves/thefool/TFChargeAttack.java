@@ -2,7 +2,6 @@ package net.arna.jcraft.common.attack.moves.thefool;
 
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
@@ -25,7 +24,9 @@ public class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, TheFool
     @Override
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-        if (targets.isEmpty()) return targets;
+        if (targets.isEmpty()) {
+            return targets;
+        }
 
         attacker.setSand(true);
         Vec3d pos = attacker.getEyePos();
@@ -39,8 +40,9 @@ public class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, TheFool
         buf.writeDouble(pos.z);
         buf.writeDouble(0.5);
 
-        for (ServerPlayerEntity sendPlayer : JUtils.around((ServerWorld) attacker.getWorld(), pos, 96))
+        for (ServerPlayerEntity sendPlayer : JUtils.around((ServerWorld) attacker.getWorld(), pos, 96)) {
             ServerChannelFeedbackPacket.send(sendPlayer, buf);
+        }
 
         return targets;
     }

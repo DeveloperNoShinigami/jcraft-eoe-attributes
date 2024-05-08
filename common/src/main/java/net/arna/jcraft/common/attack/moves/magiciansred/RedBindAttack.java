@@ -22,11 +22,15 @@ public class RedBindAttack extends AbstractSimpleAttack<RedBindAttack, Magicians
     @Override
     public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-        if (targets.isEmpty()) return targets;
+        if (targets.isEmpty()) {
+            return targets;
+        }
 
         LivingEntity boundEntity = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
 
-        if (JUtils.isBlocking(boundEntity)) return Set.of();
+        if (JUtils.isBlocking(boundEntity)) {
+            return Set.of();
+        }
 
         // Remove Stand
         StandEntity<?, ?> boundStand = JUtils.getStand(boundEntity);

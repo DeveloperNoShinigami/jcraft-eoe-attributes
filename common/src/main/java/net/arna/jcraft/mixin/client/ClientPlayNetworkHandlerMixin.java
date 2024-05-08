@@ -10,8 +10,9 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class ClientPlayNetworkHandlerMixin {
     @ModifyArg(method = "onEntityPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;updateTrackedPositionAndAngles(DDDFFIZ)V"), index = 5)
     private int modifyInterpolationSteps(int original) {
-        if (JClientConfig.getInstance().isClientsidePrediction())
+        if (JClientConfig.getInstance().isClientsidePrediction()) {
             return 2; // 3 -> 2
+        }
         return original;
     }
 }

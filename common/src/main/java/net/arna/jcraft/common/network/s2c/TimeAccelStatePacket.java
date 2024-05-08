@@ -35,15 +35,20 @@ public class TimeAccelStatePacket {
             // Avoid thread-safety issues by locking on our lock.
             synchronized (lock) {
                 new IntOpenHashSet(accelerations.keySet()).forEach(id -> {
-                    if (accelerations.get(id).getDuration() <= 0) accelerations.remove(id);
-                    else accelerations.get(id).decrementDuration();
+                    if (accelerations.get(id).getDuration() <= 0) {
+                        accelerations.remove(id);
+                    } else {
+                        accelerations.get(id).decrementDuration();
+                    }
                 });
             }
         });
 
         // Handle acceleration on server.
         TickEvent.SERVER_LEVEL_POST.register(world -> {
-            if (!world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) return;
+            if (!world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
+                return;
+            }
 
             double acceleration = getAcceleration(world);
             world.setTimeOfDay((long) (world.getTimeOfDay() + acceleration * 0.05));

@@ -13,10 +13,11 @@ public class BleedingEffect extends StatusEffect {
     @Override
     public boolean canApplyUpdateEffect(int duration, int amplifier) {
         int i = 40 >> amplifier;
-        if (i > 0)
+        if (i > 0) {
             return duration % i == 0;
-        else
+        } else {
             return true;
+        }
     }
 
     @Override

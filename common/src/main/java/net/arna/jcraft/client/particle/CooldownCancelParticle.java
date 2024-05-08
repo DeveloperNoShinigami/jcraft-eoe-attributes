@@ -21,9 +21,11 @@ public class CooldownCancelParticle extends JGlowingParticle {
 
     public static class Factory implements ParticleFactory<DefaultParticleType> {
         private final SpriteProvider spriteProvider;
+
         public Factory(SpriteProvider spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
+
         public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
             return new CooldownCancelParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
         }

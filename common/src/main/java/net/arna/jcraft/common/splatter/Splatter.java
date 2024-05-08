@@ -67,7 +67,9 @@ public class Splatter {
     }
 
     public float getStrength(float tickDelta) {
-        if (tickDelta <= 0.001) return getStrength(type.getMaxAge(), age);
+        if (tickDelta <= 0.001) {
+            return getStrength(type.getMaxAge(), age);
+        }
         return MathHelper.lerp(tickDelta, getStrength(type.getMaxAge(), age - 1), getStrength(type.getMaxAge(), age));
     }
 
@@ -76,7 +78,9 @@ public class Splatter {
     }
 
     public void tick() {
-        if (removed) return;
+        if (removed) {
+            return;
+        }
 
         if (age++ == type.getMaxAge()) {
             removed = true;
@@ -84,14 +88,17 @@ public class Splatter {
         }
 
         if (!world.isClient) {
-            if (type == SplatterType.ACID && age % 4 == 0)
-                for (LivingEntity hit : world.getEntitiesByClass(LivingEntity.class, mainBox, EntityPredicates.VALID_LIVING_ENTITY))
+            if (type == SplatterType.ACID && age % 4 == 0) {
+                for (LivingEntity hit : world.getEntitiesByClass(LivingEntity.class, mainBox, EntityPredicates.VALID_LIVING_ENTITY)) {
                     if (intersects(hit.getBoundingBox())) {
-                        if (hit.isConnectedThroughVehicle(creator) || (hit instanceof StandEntity<?,?> stand && stand.getUser() == creator) )
+                        if (hit.isConnectedThroughVehicle(creator) || (hit instanceof StandEntity<?, ?> stand && stand.getUser() == creator)) {
                             continue;
+                        }
                         hit.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WSPOISON, 20, 0, true, false));
                         hit.damage(JDamageSources.whitesnakePoison(creator), 2f);
                     }
+                }
+            }
         }
 
         removed = sections.stream()
@@ -101,7 +108,9 @@ public class Splatter {
     }
 
     public boolean intersects(Box box) {
-        if (box == null || !mainBox.intersects(box)) return false;
+        if (box == null || !mainBox.intersects(box)) {
+            return false;
+        }
 
         return sections.stream()
                 .filter(section -> !section.isRemoved())

@@ -18,6 +18,7 @@ public class EntityInterest {
     public EntityInterest() {
 
     }
+
     public EntityInterest(ItemInterestType type) {
         this();
         this.type = type;

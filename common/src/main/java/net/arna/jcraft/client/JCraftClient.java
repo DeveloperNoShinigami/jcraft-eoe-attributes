@@ -2,12 +2,8 @@ package net.arna.jcraft.client;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
-import dev.architectury.event.events.client.ClientGuiEvent;
-import dev.architectury.event.events.client.ClientTickEvent;
-import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.client.particle.ParticleProviderRegistry;
-import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import lombok.Getter;
@@ -20,47 +16,30 @@ import net.arna.jcraft.client.net.ClientPacketHandler;
 import net.arna.jcraft.client.particle.*;
 import net.arna.jcraft.client.registry.*;
 import net.arna.jcraft.client.renderer.block.CoffinTileRenderer;
-import net.arna.jcraft.client.renderer.effects.*;
+import net.arna.jcraft.client.renderer.effects.AttackHitboxEffectRenderer;
+import net.arna.jcraft.client.renderer.effects.TimeErasePredictionEffectRenderer;
 import net.arna.jcraft.client.rendering.RenderHandler;
-import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
 import net.arna.jcraft.client.util.ClientEntityHandlerImpl;
 import net.arna.jcraft.client.util.TrackedKeyBinding;
 import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
-import net.arna.jcraft.common.network.c2s.StandBlockPacket;
-import net.arna.jcraft.common.util.*;
-import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.common.util.MovementInputType;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
-import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceReloader;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Unit;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.util.profiler.Profiler;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -68,16 +47,12 @@ import org.lwjgl.glfw.GLFW;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
-
-import static net.arna.jcraft.client.gui.hud.JCraftAbilityHud.getHudX;
-import static net.arna.jcraft.client.util.JClientUtils.activeTimestops;
 
 @Environment(EnvType.CLIENT)
 public class JCraftClient {
@@ -176,7 +151,9 @@ public class JCraftClient {
         // Run when the MinecraftClient instance is fully initialized.
         MinecraftClient.getInstance().send(EpitaphOverlay::preload);
 
-        if (!FabricLoader.getInstance().isDevelopmentEnvironment()) return;
+        if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            return;
+        }
 
         //Identifier itemId = JItemRegistry.ITEMS.get(JItemRegistry.DEBUG_WAND);
         //BigItemRenderer itemRenderer = new BigItemRenderer(itemId);
@@ -198,7 +175,6 @@ public class JCraftClient {
     public static int comboCounter = 0;
     public static float damageScaling = 1.00f;
     public static int framesSinceCounted = 0;
-
 
 
     public static void markComboStarted() {
@@ -227,7 +203,9 @@ public class JCraftClient {
         String[] components = str.split("\\.");
         String last = components[components.length - 1];
         String secondLast = components[components.length - 2] + " ";
-        if (components[components.length - 2].equals("keyboard")) secondLast = "";
+        if (components[components.length - 2].equals("keyboard")) {
+            secondLast = "";
+        }
         return StringUtils.capitalize(secondLast) + StringUtils.capitalize(last);
     }
 
@@ -241,7 +219,9 @@ public class JCraftClient {
     @Nullable
     public static StandEntity<?, ?> getStandEntity() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        if (player == null) return null;
+        if (player == null) {
+            return null;
+        }
 
         return player.getPassengerList().stream()
                 .filter(e -> e instanceof StandEntity)

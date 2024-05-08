@@ -21,9 +21,11 @@ import java.util.Map;
 @Mixin(RecipeManager.class)
 public class RecipeManagerMixin {
 
-    @Shadow private Map<RecipeType<?>, Map<Identifier, Recipe<?>>> recipes;
+    @Shadow
+    private Map<RecipeType<?>, Map<Identifier, Recipe<?>>> recipes;
 
-    @Shadow private Map<Identifier, Recipe<?>> recipesById;
+    @Shadow
+    private Map<Identifier, Recipe<?>> recipesById;
 
     @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/util/profiler/Profiler;)V", at = @At("RETURN"))
     private void addStandSkinSmithingRecipe(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler, CallbackInfo ci) {
@@ -32,7 +34,7 @@ public class RecipeManagerMixin {
         smithingRecipes.put(StandSkinSmithingRecipe.ID, StandSkinSmithingRecipe.INSTANCE);
         recipes.put(RecipeType.SMITHING, ImmutableMap.copyOf(smithingRecipes));
         recipes = ImmutableMap.copyOf(recipes);
-        
+
         recipesById = new HashMap<>(recipesById);
         recipesById.put(StandSkinSmithingRecipe.ID, StandSkinSmithingRecipe.INSTANCE);
         recipesById = ImmutableMap.copyOf(recipesById);

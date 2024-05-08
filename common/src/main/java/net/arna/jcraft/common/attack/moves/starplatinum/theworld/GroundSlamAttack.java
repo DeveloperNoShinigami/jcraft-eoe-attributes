@@ -27,8 +27,9 @@ public class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttack, SPT
             target.addVelocity(launchVec.x, launchVec.y + 0.4, launchVec.z);
 
             target.velocityModified = true;
-            if (target instanceof ServerPlayerEntity serverPlayer)
+            if (target instanceof ServerPlayerEntity serverPlayer) {
                 serverPlayer.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(serverPlayer));
+            }
         }
 
         return targets;

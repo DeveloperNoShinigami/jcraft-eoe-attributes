@@ -145,10 +145,10 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             .withInfo(
                     Text.literal("Prediction/Move Cancel"),
                     Text.literal("""
-                              This move cannot be buffered.
-                              Shows the projected future location of nearby entities, using Time Erase will force them to the projected locations. (20s TE cooldown)
-                              While predicting, you are slowed down.
-                              Move Cancel - Using Special 3 during any move cancels it and puts Time Erase on a 7s cooldown. (But does not require TE to be usable)""")
+                            This move cannot be buffered.
+                            Shows the projected future location of nearby entities, using Time Erase will force them to the projected locations. (20s TE cooldown)
+                            While predicting, you are slowed down.
+                            Move Cancel - Using Special 3 during any move cancels it and puts Time Erase on a 7s cooldown. (But does not require TE to be usable)""")
             );
     public static final TimeEraseMove TIME_ERASE = new TimeEraseMove(1000, 5, 15, 1f, 120)
             .withInfo(
@@ -247,11 +247,14 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 boolean idling = getMoveStun() <= 0;
 
                 if (curMove == null || curMove.getOriginalMove() != VERTICAL_CHOP) {
-                    if (idling)
+                    if (idling) {
                         return super.initMove(type);
-                    else
+                    } else {
                         return false;
-                } else if (getMoveStun() < 7) setMove(OVERHEAD_HOOK, State.OVERHEAD);
+                    }
+                } else if (getMoveStun() < 7) {
+                    setMove(OVERHEAD_HOOK, State.OVERHEAD);
+                }
             }
             case ULTIMATE -> {
                 // If predicting, and Time Erase isn't on cooldown
@@ -264,8 +267,9 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 }
 
                 // If not predicting, do other Time Erase logic
-                if (!canAttack())
+                if (!canAttack()) {
                     return false;
+                }
 
                 if (getTETime() > 0) {
                     cancelTE();
@@ -278,15 +282,18 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 LivingEntity user = getUserOrThrow();
                 boolean start = getMoveStun() <= 0;
 
-                if (start) return super.initMove(type);
+                if (start) {
+                    return super.initMove(type);
+                }
 
                 // When used during a move, cancels it and puts time erase on cooldown
                 moveCancel();
 
                 // 7 second time erase cooldown
                 CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
-                if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) < 140)
+                if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) < 140) {
                     cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 140);
+                }
 
                 // Particle effects
                 Vec3d oPos = user.getPos();
@@ -304,11 +311,14 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 }
 
                 // Stop epitaph state
-                if (user instanceof ServerPlayerEntity player)
+                if (user instanceof ServerPlayerEntity player) {
                     NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_EPITAPH_STATE, new PacketByteBuf(Unpooled.buffer().writeBoolean(false)));
+                }
             }
             case UTILITY -> {
-                if (getTETime() > 0) cancelTE();
+                if (getTETime() > 0) {
+                    cancelTE();
+                }
                 return super.initMove(type);
             }
             default -> {
@@ -354,8 +364,9 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
     @Override
     public void desummon() {
-        if (this.getTETime() < 1)
+        if (this.getTETime() < 1) {
             super.desummon();
+        }
     }
 
     @Override
@@ -376,10 +387,13 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
         setTETime(0);
         MobEntity doppelganger = moveContext.get(TimeEraseMove.DOPPELGANGER);
-        if (doppelganger != null) doppelganger.discard();
+        if (doppelganger != null) {
+            doppelganger.discard();
+        }
 
-        if (user instanceof ServerPlayerEntity serverPlayer)
+        if (user instanceof ServerPlayerEntity serverPlayer) {
             ShaderDeactivationPacket.send(serverPlayer, ShaderActivationPacket.Type.CRIMSON);
+        }
     }
 
     @Override
@@ -387,14 +401,20 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         super.tick();
 
         LivingEntity user = this.getUser();
-        if (user == null) return;
-        if (getWorld().isClient) return;
+        if (user == null) {
+            return;
+        }
+        if (getWorld().isClient) {
+            return;
+        }
         TIME_ERASE.tickTimeErase(this);
     }
 
     @Override
     public void queueMove(MoveInputType type) {
-        if (type == MoveInputType.SPECIAL3) return;
+        if (type == MoveInputType.SPECIAL3) {
+            return;
+        }
         super.queueMove(type);
     }
 

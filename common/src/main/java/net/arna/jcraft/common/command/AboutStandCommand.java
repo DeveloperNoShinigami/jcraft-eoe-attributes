@@ -47,19 +47,23 @@ public class AboutStandCommand {
         MutableText pros = Text.empty()
                 .append(Text.literal("PROS:").formatted(Formatting.DARK_AQUA))
                 .append(Text.literal("\n"));
-        for (String pro : stand.pros) pros
-                .append(Text.literal("● ").formatted(Formatting.DARK_AQUA))
-                .append(Text.literal(pro))
-                .append(Text.literal("\n"));
+        for (String pro : stand.pros) {
+            pros
+                    .append(Text.literal("● ").formatted(Formatting.DARK_AQUA))
+                    .append(Text.literal(pro))
+                    .append(Text.literal("\n"));
+        }
         resp.append(pros);
 
         MutableText cons = Text.empty()
                 .append(Text.literal("CONS:").formatted(Formatting.DARK_RED))
                 .append(Text.literal("\n"));
-        for (String con : stand.cons) cons
-                .append(Text.literal("● ").formatted(Formatting.DARK_RED))
-                .append(Text.literal(con))
-                .append(Text.literal("\n"));
+        for (String con : stand.cons) {
+            cons
+                    .append(Text.literal("● ").formatted(Formatting.DARK_RED))
+                    .append(Text.literal(con))
+                    .append(Text.literal("\n"));
+        }
         resp.append(cons);
 
         resp.append(Text.literal("\n"));
@@ -70,19 +74,22 @@ public class AboutStandCommand {
                 .append(Text.literal("\n"));
 
         MoveMap<?, ?> moveMap = stand.getMoveMap();
-        for (MoveType type : MoveType.values())
+        for (MoveType type : MoveType.values()) {
             for (MoveMap.Entry<?, ?> entry : moveMap.getEntries(type)) {
                 // Move itself
                 appendMove(entry, moves, Text.literal("● ").formatted(Formatting.GREEN), false);
 
                 // Crouching variant
-                if (entry.getCrouchingVariant() != null)
+                if (entry.getCrouchingVariant() != null) {
                     appendMove(entry.getCrouchingVariant(), moves, Text.literal("  ● CROUCHING ").formatted(Formatting.DARK_AQUA), true);
+                }
 
                 // Aerial variant
-                if (entry.getAerialVariant() != null)
+                if (entry.getAerialVariant() != null) {
                     appendMove(entry.getAerialVariant(), moves, Text.literal("  ● AERIAL ").formatted(Formatting.GOLD), true);
+                }
             }
+        }
         resp.append(moves);
 
         // Free Space

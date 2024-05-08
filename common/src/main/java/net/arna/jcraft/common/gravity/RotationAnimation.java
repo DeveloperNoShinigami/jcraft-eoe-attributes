@@ -6,7 +6,10 @@ import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.Validate;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -120,7 +123,9 @@ public class RotationAnimation {
 
     public void toNbt(NbtCompound nbt) {
         nbt.putBoolean("InAnimation", inAnimation);
-        if (!inAnimation) return;
+        if (!inAnimation) {
+            return;
+        }
 
         nbt.putFloat("Q0X", startGravityRotation.x());
         nbt.putFloat("Q0Y", startGravityRotation.y());
@@ -136,7 +141,9 @@ public class RotationAnimation {
 
     public void fromNbt(NbtCompound nbt) {
         inAnimation = nbt.getBoolean("InAnimation");//Will return false if no such element exists
-        if (!inAnimation) return;
+        if (!inAnimation) {
+            return;
+        }
 
         startGravityRotation = new Quaternionf(
                 nbt.getFloat("Q0X"),

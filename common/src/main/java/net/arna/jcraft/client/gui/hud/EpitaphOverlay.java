@@ -32,8 +32,12 @@ public class EpitaphOverlay {
 
     static {
         ClientTickEvent.CLIENT_POST.register(client -> {
-            if (countdown == 0) stop();
-            if (countdown < 0) return;
+            if (countdown == 0) {
+                stop();
+            }
+            if (countdown < 0) {
+                return;
+            }
             countdown--;
         });
     }
@@ -41,7 +45,9 @@ public class EpitaphOverlay {
     public static void preload() {
         TextureManager texMan = MinecraftClient.getInstance().getTextureManager();
         ExecutorService executor = Executors.newCachedThreadPool();
-        for (State state : State.values()) state.preload(texMan, executor);
+        for (State state : State.values()) {
+            state.preload(texMan, executor);
+        }
     }
 
     public static void start() {
@@ -52,27 +58,38 @@ public class EpitaphOverlay {
     }
 
     public static void stop() {
-        if (state == State.NONE) return;
+        if (state == State.NONE) {
+            return;
+        }
         shouldStop = true;
         countdown = -1;
     }
 
     public static void render() {
-        if (!shouldRender() || frameCounter == null || state.getAnimation() == null) return;
-        if (MinecraftClient.getInstance().isPaused()) frameCounter.pause();
-        else frameCounter.unpause();
+        if (!shouldRender() || frameCounter == null || state.getAnimation() == null) {
+            return;
+        }
+        if (MinecraftClient.getInstance().isPaused()) {
+            frameCounter.pause();
+        } else {
+            frameCounter.unpause();
+        }
 
         int currentFrame = frameCounter.getCurrentFrame();
         if (currentFrame < 0 || shouldStop && currentFrame < lastFrame) {
             // Move to next state.
             state = state.nextState(shouldStop);
             frameCounter = state.getFrameCounter();
-            if (frameCounter != null) frameCounter.start();
+            if (frameCounter != null) {
+                frameCounter.start();
+            }
             currentFrame = 0;
             shouldStop = false;
         }
 
-        if (state == State.NONE) return;
+        if (state == State.NONE) {
+            return;
+        }
         state.getFrame(lastFrame = currentFrame).render();
     }
 
@@ -87,7 +104,7 @@ public class EpitaphOverlay {
     public static float getVignetteIntensity() {
         return state == State.INTRO ? MathHelper.lerp(getIntroProgress(), 0f, VIGNETTE_INTENSITY) :
                 state == State.OUTRO ? MathHelper.lerp(getOutroProgress(), VIGNETTE_INTENSITY, 150f) :
-                VIGNETTE_INTENSITY;
+                        VIGNETTE_INTENSITY;
     }
 
     public static float getVignetteExtend() {
@@ -124,21 +141,27 @@ public class EpitaphOverlay {
 
         /**
          * Loads all textures onto the GPU to prevent lag when the animation is first started.
+         *
          * @param textureManager The texture manager that should be used to load the textures
-         * @param executor The executor to load the textures with.
+         * @param executor       The executor to load the textures with.
          */
         private void preload(TextureManager textureManager, Executor executor) {
-            if (animation == null) return;
+            if (animation == null) {
+                return;
+            }
             animation.preload(textureManager, executor);
         }
 
         /**
          * Gets the frame at the given index.
+         *
          * @param index The index of the frame to get
          * @return the frame at the given index.
          */
         public HUDAnimation.Frame getFrame(int index) {
-            if (animation == null) throw new IllegalStateException("NONE state has no animation.");
+            if (animation == null) {
+                throw new IllegalStateException("NONE state has no animation.");
+            }
             return animation.getFrame(index);
         }
 
@@ -146,11 +169,14 @@ public class EpitaphOverlay {
          * Acquires the next state.
          * If the end of this state has not yet been reached, this state is returned.
          * Otherwise, the next state is returned unless the current state is {@link State#LOOP LOOP}.
+         *
          * @param forceOutro Whether to move to the outro state regardless of what our current state is.
          * @return The next state
          */
         public State nextState(boolean forceOutro) {
-            if (animation == null) return this;
+            if (animation == null) {
+                return this;
+            }
             return forceOutro ? this == OUTRO ? NONE : OUTRO : this == LOOP ? this : values()[(ordinal() + 1) % values().length];
         }
     }

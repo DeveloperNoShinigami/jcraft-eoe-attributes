@@ -17,8 +17,9 @@ public class BlocksparkParticle extends AbstractSlowingParticle {
 
     public void tick() {
         super.tick();
-        if (age % 2 == 0)
+        if (age % 2 == 0) {
             setSprite(spriteProvider.getSprite(random));
+        }
     }
 
     public ParticleTextureSheet getType() {

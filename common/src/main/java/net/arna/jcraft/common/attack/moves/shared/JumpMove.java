@@ -30,7 +30,9 @@ public class JumpMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<
 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
-        if (!user.isOnGround()) return Set.of();
+        if (!user.isOnGround()) {
+            return Set.of();
+        }
         Vec3d upVel = Vec3d.of(GravityChangerAPI.getGravityDirection(user).getVector()).multiply(-0.5);
         Vec3d jumpVel = Vec3d.fromPolar(user.getPitch(), user.getYaw()).multiply(strength).add(upVel);
         JUtils.setVelocity(user, jumpVel.x, jumpVel.y, jumpVel.z);

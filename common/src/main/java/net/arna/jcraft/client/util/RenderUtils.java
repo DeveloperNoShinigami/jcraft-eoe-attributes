@@ -84,7 +84,7 @@ public class RenderUtils {
         renderBlockAtPosition(matrixStack, camera, pos, texture, alpha, GameRenderer::getPositionColorTexProgram);
     }
 
-    public static void renderBlock(MatrixStack matrixStack, VertexConsumer vertexConsumer){
+    public static void renderBlock(MatrixStack matrixStack, VertexConsumer vertexConsumer) {
 
         Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
         renderSide(matrix4f, vertexConsumer, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F);

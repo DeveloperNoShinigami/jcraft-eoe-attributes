@@ -6,5 +6,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 public class CoffinTileRenderer extends GeoBlockRenderer<CoffinTileEntity> {
-    public CoffinTileRenderer(BlockEntityRendererFactory.Context context) { super(new CoffinModel()); }
+    public CoffinTileRenderer(BlockEntityRendererFactory.Context context) {
+        super(new CoffinModel());
+    }
 }

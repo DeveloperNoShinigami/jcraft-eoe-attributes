@@ -86,7 +86,9 @@ public class SheerHeartAttackEntity extends MobEntity implements GeoEntity, IOwn
 
     @Override
     protected void applyDamage(DamageSource source, float amount) {
-        if (source.isOf(DamageTypes.EXPLOSION)) return;
+        if (source.isOf(DamageTypes.EXPLOSION)) {
+            return;
+        }
         super.applyDamage(source, amount);
     }
 
@@ -105,8 +107,9 @@ public class SheerHeartAttackEntity extends MobEntity implements GeoEntity, IOwn
     @Override
     public boolean damage(DamageSource source, float amount) {
         // 256 value is arbitrary, to stop /kill from also killing the owner
-        if (master != null && amount < 256)
+        if (master != null && amount < 256) {
             master.damage(source, amount / 4); // Reflect damage to owner (SHA is the right hand of KQ)
+        }
         return super.damage(source, amount);
     }
 
@@ -127,22 +130,27 @@ public class SheerHeartAttackEntity extends MobEntity implements GeoEntity, IOwn
                 if (ownerId != null) {
                     ServerWorld serverWorld = (ServerWorld) getWorld();
                     for (ServerPlayerEntity serverPlayerEntity : (serverWorld).getPlayers()) {
-                        if (serverPlayerEntity.getUuid().equals(ownerId))
+                        if (serverPlayerEntity.getUuid().equals(ownerId)) {
                             master = serverPlayerEntity;
+                        }
                     }
                 }
             }
 
             LivingEntity attacking = getAttacking();
-            if (attacking != null && canTarget(attacking))
+            if (attacking != null && canTarget(attacking)) {
                 setTarget(attacking);
+            }
         } else {
-            if (age % 19 == 0 && isOnGround() && getVelocity().lengthSquared() > 0.005)
+            if (age % 19 == 0 && isOnGround() && getVelocity().lengthSquared() > 0.005) {
                 playSound(JSoundRegistry.SHA_TREAD, 0.5f, 1.0f);
+            }
 
             //50s is the cooldown period
             //15s is how long SHA can be out for
-            if (age > 300 || !master.isAlive()) kill();
+            if (age > 300 || !master.isAlive()) {
+                kill();
+            }
 
             Vec3d pos = getPos();
             LivingEntity target = getTarget();
@@ -159,8 +167,12 @@ public class SheerHeartAttackEntity extends MobEntity implements GeoEntity, IOwn
                     LivingEntity hotTarget = null;
 
                     for (LivingEntity living : toTrack) {
-                        if (!canTarget(living)) continue;
-                        if (living.hasVehicle() && living.getVehicle() == master) continue;
+                        if (!canTarget(living)) {
+                            continue;
+                        }
+                        if (living.hasVehicle() && living.getVehicle() == master) {
+                            continue;
+                        }
 
                         // Prioritize heat
                         if (living.isOnFire()) {
@@ -172,15 +184,23 @@ public class SheerHeartAttackEntity extends MobEntity implements GeoEntity, IOwn
 
                         // Discourage undead (cold)
                         if (coldTarget == null || hotTarget == null) {
-                            if (living.isUndead()) coldTarget = living;
-                            else hotTarget = living;
+                            if (living.isUndead()) {
+                                coldTarget = living;
+                            } else {
+                                hotTarget = living;
+                            }
                         }
                     }
 
-                    if (hotTarget != null) setTarget(hotTarget);
-                    else if (coldTarget != null) setTarget(coldTarget);
+                    if (hotTarget != null) {
+                        setTarget(hotTarget);
+                    } else if (coldTarget != null) {
+                        setTarget(coldTarget);
+                    }
                 }
-            } else if (!canTarget(target)) setTarget(null);
+            } else if (!canTarget(target)) {
+                setTarget(null);
+            }
         }
     }
 
@@ -188,7 +208,7 @@ public class SheerHeartAttackEntity extends MobEntity implements GeoEntity, IOwn
         JUtils.explode(getWorld(), this, getX(), getY(), getZ(), 1.8f,
                 JExplosionModifier.builder().particle(JParticleTypeRegistry.BOOM_1)
                         .destructionType(
-                        getWorld().getGameRules().getBoolean(JCraft.STAND_GRIEFING) ? Explosion.DestructionType.DESTROY : Explosion.DestructionType.KEEP)
+                                getWorld().getGameRules().getBoolean(JCraft.STAND_GRIEFING) ? Explosion.DestructionType.DESTROY : Explosion.DestructionType.KEEP)
                         .particleVelocity(Vec3d.ZERO)
                         .build());
     }

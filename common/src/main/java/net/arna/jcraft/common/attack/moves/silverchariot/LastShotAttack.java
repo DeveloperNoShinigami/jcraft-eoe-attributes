@@ -17,13 +17,15 @@ public class LastShotAttack extends AbstractMove<LastShotAttack, SilverChariotEn
 
     @Override
     public @NonNull Set<LivingEntity> perform(SilverChariotEntity attacker, LivingEntity user, MoveContext ctx) {
-        if (!attacker.hasRapier()) return Set.of();
+        if (!attacker.hasRapier()) {
+            return Set.of();
+        }
 
         RapierProjectile rapier = new RapierProjectile(attacker.getWorld(), user, attacker);
         rapier.setVelocity(attacker, user.getPitch(), user.getYaw(), 0, 2, 1);
         rapier.setSkin(attacker.getMode() != SilverChariotEntity.Mode.ARMORLESS ?
-                        -attacker.getMode().ordinal() : // Armorless and possessed output -1 and -2
-                        attacker.getSkin());
+                -attacker.getMode().ordinal() : // Armorless and possessed output -1 and -2
+                attacker.getSkin());
         attacker.getWorld().spawnEntity(rapier);
         attacker.setHasRapier(false);
 

@@ -22,7 +22,7 @@ public abstract class PlayerEntityRendererMixin {
     )
     private Vec3d modify_setupTransforms_Vec3d_0(Vec3d vec3d, AbstractClientPlayerEntity abstractClientPlayerEntity, MatrixStack matrixStack, float f, float g, float h) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(abstractClientPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
 

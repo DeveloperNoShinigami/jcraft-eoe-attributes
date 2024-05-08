@@ -52,7 +52,9 @@ public class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAtt
         World world = stand.getWorld();
 
         // Run every four ticks because the hurricane's meant to be slow, and it's convenient for CPU usage
-        if (stand.age % 4 != 0 || hurricaneTime <= 0) return;
+        if (stand.age % 4 != 0 || hurricaneTime <= 0) {
+            return;
+        }
         ctx.setInt(HURRICANE_TIME, --hurricaneTime);
 
         // Homing
@@ -62,8 +64,9 @@ public class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAtt
 
         if (!nearbyEnts.isEmpty()) {
             Vec3d avgPos = Vec3d.ZERO;
-            for (LivingEntity livingEntity : nearbyEnts)
+            for (LivingEntity livingEntity : nearbyEnts) {
                 avgPos = avgPos.add(livingEntity.getEyePos());
+            }
             avgPos = avgPos.multiply(1.0 / nearbyEnts.size());
 
             ctx.set(HURRICANE_POS, hurricanePos = hurricanePos.add(avgPos.subtract(hurricanePos).normalize().multiply(0.5)));
@@ -79,9 +82,12 @@ public class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAtt
             if (hurricaneTime > 1) {
                 StandEntity.damageLogic(world, target, new Vec3d(Math.sin(stand.age / 10.0) * 3, 0.0, Math.cos(stand.age / 10.0) * 3),
                         10, 1, false, 0.5f, true, 5, JDamageSources.stand(stand), user, CommonHitPropertyComponent.HitAnimation.MID);
-                if (hurricaneTime > 15)
+                if (hurricaneTime > 15) {
                     ctx.setInt(HURRICANE_TIME, 15); // Allows for zoning up until it hits something
-            } else target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 20, 0));
+                }
+            } else {
+                target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 20, 0));
+            }
         }
 
         // Particles
@@ -92,8 +98,9 @@ public class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAtt
         buf.writeDouble(hurricanePos.y);
         buf.writeDouble(hurricanePos.z);
 
-        for (ServerPlayerEntity sendPlayer : ((ServerWorld) world).getPlayers())
+        for (ServerPlayerEntity sendPlayer : ((ServerWorld) world).getPlayers()) {
             ServerChannelFeedbackPacket.send(sendPlayer, buf);
+        }
     }
 
     @Override

@@ -75,7 +75,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Text.literal("reset tool, combos back into light")
             );
     public static final SimpleAttack<HGEntity> LIGHT = SimpleAttack.<HGEntity>lightAttack(
-            7, 9, 0.75f, 5f, 10, 0.15f, 0.2f)
+                    7, 9, 0.75f, 5f, 10, 0.15f, 0.2f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(CROUCHING_LIGHT)
             .withAerialVariant(AIR_LIGHT)
@@ -110,7 +110,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             0, 13, 21, 1f, 5, 16, 0, 0.4f, 0)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withExtraHitBox(2.5, -0.5, 1.5)
-            .withExtraHitBox(3.5    , -0.6, 1.5)
+            .withExtraHitBox(3.5, -0.6, 1.5)
             .withInfo(
                     Text.literal("Extend (Forward, Second Hit)"),
                     Text.empty()
@@ -163,19 +163,19 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             .withInfo(
                     Text.literal("Emerald Splash"),
                     Text.literal("""
-                    Fires 3 bursts of emeralds at the opponent.
-                    Bursts contain 3-6 emeralds depending on how long you hold."""));
+                            Fires 3 bursts of emeralds at the opponent.
+                            Bursts contain 3-6 emeralds depending on how long you hold."""));
 
     public static final NetSetMove NET_SET = new NetSetMove(200, 9, 15, 1f)
             .withSound(JSoundRegistry.HG_NET_SET)
             .withInfo(
                     Text.literal("Tentacle Place"),
                     Text.literal("""
-                    Places a Hierophant Tentacle at Hierophant's feet.
-                    Tentacles automatically grasp anything that touches them that isn't the user (10s cooldown).
-                    Use crouching Emerald Splash to fire from the Tentacles remotely.
-                    Tentacles cannot fire if grabbing.
-                    """));
+                            Places a Hierophant Tentacle at Hierophant's feet.
+                            Tentacles automatically grasp anything that touches them that isn't the user (10s cooldown).
+                            Use crouching Emerald Splash to fire from the Tentacles remotely.
+                            Tentacles cannot fire if grabbing.
+                            """));
     public static final PilotModeMove<HGEntity> PILOT_MODE = new PilotModeMove<HGEntity>(20)
             .withInfo(
                     Text.literal("Pilot Mode"),
@@ -208,10 +208,10 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             .withInfo(
                     Text.literal("All-Consuming Emerald Splash"),
                     Text.literal("""
-                    Fires a long, oppressive stream of emeralds at the opponent.
-                    These emeralds may bounce off walls up to 5 times.
-                    Nearby Tentacles will do the same, but immediately start wilting after use.
-                    """));
+                            Fires a long, oppressive stream of emeralds at the opponent.
+                            These emeralds may bounce off walls up to 5 times.
+                            Nearby Tentacles will do the same, but immediately start wilting after use.
+                            """));
 
     public HGEntity(World worldIn) {
         super(StandType.HIEROPHANT_GREEN, worldIn, JSoundRegistry.HG_SUMMON);
@@ -271,9 +271,13 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         LivingEntity user = getUserOrThrow();
         if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
             AbstractMove<?, ? super HGEntity> followup = curMove.getFollowup();
-            if (followup != null) setMove(followup, (State) followup.getAnimation());
+            if (followup != null) {
+                setMove(followup, (State) followup.getAnimation());
+            }
         } else if (type == MoveType.SPECIAL1 && user.isSneaking()) {
-            if (!JUtils.canAct(user)) return false;
+            if (!JUtils.canAct(user)) {
+                return false;
+            }
 
             List<HGNetEntity> nets = getWorld().getEntitiesByClass(HGNetEntity.class,
                     getBoundingBox().expand(64), EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
@@ -287,17 +291,22 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             if (!nets.isEmpty()) {
                 Vec3d pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getRotationVector().multiply(96)), RaycastContext.FluidHandling.NONE,
                         (entity -> {
-                            if (entity instanceof IOwnable ownable && ownable.getMaster() == user)
+                            if (entity instanceof IOwnable ownable && ownable.getMaster() == user) {
                                 return false;
+                            }
                             return true;
                         }));
 
                 for (HGNetEntity net : nets) {
-                    if (net.getMaster() != user) continue;
+                    if (net.getMaster() != user) {
+                        continue;
+                    }
                     net.tryFireAt(pos, false);
                 }
             }
-        } else return super.initMove(type);
+        } else {
+            return super.initMove(type);
+        }
 
         return true;
     }
@@ -312,13 +321,16 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         super.tick();
 
         if (!getWorld().isClient) {
-            if (curMove != null && curMove.getOriginalMove() == EMERALD_CHARGE)
+            if (curMove != null && curMove.getOriginalMove() == EMERALD_CHARGE) {
                 getMoveContext().incrementInt(CHARGE_TIME, 1);
+            }
         }
 
         boolean isRemote = isRemote();
         setNoGravity(isRemote);
-        if (!isRemote) return;
+        if (!isRemote) {
+            return;
+        }
 
         if (getWorld().isClient) {
             // Called for EVERYONE
@@ -330,10 +342,18 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             tickRemoteMovement(f, s, getRemoteJumpInput(), getRemoteSneakInput());
 
             if (getState() == State.IDLE && getMoveStun() <= 0) { // Replace idle anim
-                if (s > 0) setStateNoReset(State.RIGHT);
-                if (s < 0) setStateNoReset(State.LEFT);
-                if (f < 0) setStateNoReset(State.BACKWARD);
-                if (f > 0) setStateNoReset(State.FORWARD);
+                if (s > 0) {
+                    setStateNoReset(State.RIGHT);
+                }
+                if (s < 0) {
+                    setStateNoReset(State.LEFT);
+                }
+                if (f < 0) {
+                    setStateNoReset(State.BACKWARD);
+                }
+                if (f > 0) {
+                    setStateNoReset(State.FORWARD);
+                }
             }
         }
     }
@@ -343,7 +363,9 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         onLanding();
 
         // 1 tick of inertia, helping movement be fluid as well as dealing with packet drops
-        if (lastRemoteInputTime - age > 2) updateRemoteInputs(0, 0, false, false);
+        if (lastRemoteInputTime - age > 2) {
+            updateRemoteInputs(0, 0, false, false);
+        }
         Vec3d rotVec = new Vec3d(getRotationVector().x, 0, getRotationVector().z).normalize();
 
         double dragMult = getMoveStun() > 0 ? 0.1 : 0.2;
@@ -351,11 +373,13 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
         Vec3d upVec = GravityChangerAPI.getEyeOffset(this);
 
-        if (jump)
+        if (jump) {
             remoteSpeed = remoteSpeed.add(upVec.multiply(moveSpeed));
+        }
 
-        if (sneak)
+        if (sneak) {
             remoteSpeed = remoteSpeed.subtract(upVec.multiply(moveSpeed));
+        }
 
         remoteSpeed = remoteSpeed
                 .add(rotVec.multiply(f * moveSpeed)) // Forward movement
@@ -364,8 +388,9 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         remoteSpeed = remoteSpeed.multiply(dragMult);
 
         Vec3d userPos = getUserOrThrow().getPos();
-        if (pos.add(remoteSpeed).squaredDistanceTo(userPos) > 30 * 30)
+        if (pos.add(remoteSpeed).squaredDistanceTo(userPos) > 30 * 30) {
             remoteSpeed = userPos.subtract(pos).multiply(0.025); // 1/40th so it scales with distance
+        }
 
         addVelocity(-getVelocity().x * 0.2, -getVelocity().y * 0.2, -getVelocity().z * 0.2);
         addVelocity(remoteSpeed.x, remoteSpeed.y, remoteSpeed.z);

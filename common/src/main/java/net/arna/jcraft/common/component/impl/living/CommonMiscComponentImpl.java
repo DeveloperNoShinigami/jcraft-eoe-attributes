@@ -41,7 +41,9 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
 
     @Override
     public void updateRemoteInputs(int forward, int sideways, boolean jumping) {
-        if (!(entity instanceof PlayerEntity player)) return;
+        if (!(entity instanceof PlayerEntity player)) {
+            return;
+        }
 
         Vec3d v = new Vec3d(forward, 0, sideways).normalize();
 
@@ -51,8 +53,9 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
         float moveSpeed = player.getMovementSpeed();
         desiredVelocity = rotVec.multiply(v.x * moveSpeed) // W/S
                 .add(rotVec.rotateY(1.5707963f).multiply(v.z * moveSpeed)); // A/D
-        if (jumping && player.isOnGround())
+        if (jumping && player.isOnGround()) {
             desiredVelocity = desiredVelocity.add(0, player.getJumpBoostVelocityModifier() * 0.42F, 0);
+        }
     }
 
     @Override
@@ -66,6 +69,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
         this.damageTimer = 600;
         sync();
     }
+
     @Override
     public boolean isOnDamageTimer() {
         return damageTimer > 0;
@@ -80,6 +84,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
     public boolean getPrevNoGrav() {
         return prevNoGrav;
     }
+
     @Override
     public void setPrevNoGrav(boolean prevNoGrav) {
         this.prevNoGrav = prevNoGrav;
@@ -87,8 +92,9 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
 
     @Override
     public void stab() {
-        if (++stuckKnifeCount > 16)
+        if (++stuckKnifeCount > 16) {
             stuckKnifeCount = 16;
+        }
         updateKnifeTimer();
     }
 
@@ -106,10 +112,16 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
     }
 
     public void tick() {
-        if (damageTimer > 0) damageTimer--;
-        if (armoredHitTicks > 0) armoredHitTicks--;
+        if (damageTimer > 0) {
+            damageTimer--;
+        }
+        if (armoredHitTicks > 0) {
+            armoredHitTicks--;
+        }
 
-        if (entity.getWorld().isClient()) return;
+        if (entity.getWorld().isClient()) {
+            return;
+        }
 
         if (slavedTo != null) {
             if (master == null) {
@@ -119,17 +131,23 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
                 }
             } else {
                 if (entity instanceof MobEntity mob) { // Targeting and movement for mobs
-                    if (mob.getTarget() == master)
+                    if (mob.getTarget() == master) {
                         mob.setTarget(null);
+                    }
 
                     LivingEntity victim = master.getAttacking();
                     if (victim == null) {
                         LivingEntity adv = master.getPrimeAdversary();
-                        if (adv != null && adv.isAlive()) mob.setTarget(adv);
-                    } else if (victim.isAlive()) mob.setTarget(victim);
+                        if (adv != null && adv.isAlive()) {
+                            mob.setTarget(adv);
+                        }
+                    } else if (victim.isAlive()) {
+                        mob.setTarget(victim);
+                    }
 
-                    if (mob.squaredDistanceTo(entity) > 256)
+                    if (mob.squaredDistanceTo(entity) > 256) {
                         mob.getNavigation().startMovingTo(entity, 1);
+                    }
                 }
             }
         }
@@ -174,8 +192,9 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
         NbtCompound dvComp = tag.getCompound("DesiredVelocity");
         desiredVelocity = new Vec3d(dvComp.getDouble("X"), dvComp.getDouble("Y"), dvComp.getDouble("Z"));
         damageTimer = tag.getInt("DamageTimer");
-        if (tag.containsUuid("SlavedTo"))
+        if (tag.containsUuid("SlavedTo")) {
             slavedTo = tag.getUuid("SlavedTo");
+        }
     }
 
     public void writeToNbt(@NonNull NbtCompound tag) {
@@ -185,7 +204,8 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
         dvComp.putDouble("Z", desiredVelocity.getZ());
         tag.put("DesiredVelocity", dvComp);
         tag.putInt("DamageTimer", damageTimer);
-        if (slavedTo != null)
+        if (slavedTo != null) {
             tag.putUuid("SlavedTo", slavedTo);
+        }
     }
 }

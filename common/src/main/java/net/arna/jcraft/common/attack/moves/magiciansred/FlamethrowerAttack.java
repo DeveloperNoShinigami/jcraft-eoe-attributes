@@ -17,9 +17,11 @@ public class FlamethrowerAttack extends AbstractBarrageAttack<FlamethrowerAttack
     @Override
     public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-        for (LivingEntity target : targets)
-            if (!target.isOnFire())
+        for (LivingEntity target : targets) {
+            if (!target.isOnFire()) {
                 target.setOnFireFor(getInterval());
+            }
+        }
         return targets;
     }
 

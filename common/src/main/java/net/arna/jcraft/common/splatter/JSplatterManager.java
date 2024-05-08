@@ -1,10 +1,8 @@
 package net.arna.jcraft.common.splatter;
 
-import dev.architectury.networking.NetworkChannel;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.Pair;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.minecraft.entity.Entity;
@@ -32,7 +30,8 @@ public class JSplatterManager {
 
     /**
      * Adds a new splatter to the world with a default range of 0.5.
-     * @param pos The position of this splatter
+     *
+     * @param pos  The position of this splatter
      * @param type The type of this splatter
      */
     public Splatter addSplatter(Vec3d pos, SplatterType type) {
@@ -41,8 +40,9 @@ public class JSplatterManager {
 
     /**
      * Adds a new splatter to the world with the given range in both the x and z direction.
-     * @param pos The position of this splatter
-     * @param type The type of this splatter
+     *
+     * @param pos   The position of this splatter
+     * @param type  The type of this splatter
      * @param range The range of this splatter in both directions
      */
     public Splatter addSplatter(Vec3d pos, SplatterType type, float range, @Nullable Entity creator) {
@@ -51,8 +51,9 @@ public class JSplatterManager {
 
     /**
      * Adds a new splatter to the world with optionally a different range in the x and z direction.
-     * @param pos The position of this splatter
-     * @param type The type of this splatter
+     *
+     * @param pos    The position of this splatter
+     * @param type   The type of this splatter
      * @param xRange The range of this splatter on the x-axis
      * @param zRange The range of this splatter on the z-axis
      */
@@ -62,14 +63,17 @@ public class JSplatterManager {
 
         Splatter splatter = new Splatter(world, pos, anchoredPos.right().getOpposite(), type, xRange, zRange, creator);
         splatters.add(splatter);
-        if (world.isClient) return splatter;
+        if (world.isClient) {
+            return splatter;
+        }
 
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         writeSplatter(splatter, buf);
 
         // We already confirmed this is a server-world.
-        for (ServerPlayerEntity player : JUtils.around((ServerWorld) world, pos, 64))
+        for (ServerPlayerEntity player : JUtils.around((ServerWorld) world, pos, 64)) {
             NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_SPLATTER, buf);
+        }
 
         return splatter;
     }

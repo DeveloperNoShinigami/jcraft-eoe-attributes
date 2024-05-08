@@ -1,13 +1,11 @@
 package net.arna.jcraft.client.model.entity;
 
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
-import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Vec3d;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.model.GeoModel;
 
 public class KingCrimsonModel extends StandEntityModel<KingCrimsonEntity> {
 
@@ -16,11 +14,12 @@ public class KingCrimsonModel extends StandEntityModel<KingCrimsonEntity> {
     }
 
 
-
     @Override
     public void setCustomAnimations(KingCrimsonEntity animatable, long instanceId, AnimationState<KingCrimsonEntity> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
-        if (!animatable.hasUser()) return;
+        if (!animatable.hasUser()) {
+            return;
+        }
 
         LivingEntity user = animatable.getUserOrThrow();
         float overVel = 0;

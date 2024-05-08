@@ -44,7 +44,9 @@ public class TimeAccelerationMove extends AbstractMove<TimeAccelerationMove, Mad
             List<Entity> toCatch = attacker.getWorld().getEntitiesByClass(Entity.class,
                     attacker.getBoundingBox().expand(96), EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
             for (Entity entity : toCatch) {
-                if (entity instanceof LivingEntity) continue;
+                if (entity instanceof LivingEntity) {
+                    continue;
+                }
                 entity.tick();
             }
         } else if (aTime == 1) {
@@ -54,7 +56,9 @@ public class TimeAccelerationMove extends AbstractMove<TimeAccelerationMove, Mad
                         EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != attacker.getUser()));
 
                 for (LivingEntity entity : toCatch) // 15s of Standless to any victims of Universe Reset
+                {
                     entity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.STANDLESS, 300, 0, true, false));
+                }
             }
 
             attacker.setAfterimage(false);

@@ -74,20 +74,24 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
     public void tick() {
         if (!getWorld().isClient) {
             if (boundEntity == null) { // If boundEntity data was wiped, attempt to recover
-                if (getVehicle() instanceof LivingEntity living) setBoundEntity(living);
+                if (getVehicle() instanceof LivingEntity living) {
+                    setBoundEntity(living);
+                }
             } else if (!hasVehicle() && !hasExploded()) { // If detached
                 detonate();
             }
 
-            if (boundEntity == null)
+            if (boundEntity == null) {
                 discard();
-            else if ( !hasExploded() && (--timeLeft <= 0 || boundEntity.getHealth() < boundHealth) )
+            } else if (!hasExploded() && (--timeLeft <= 0 || boundEntity.getHealth() < boundHealth)) {
                 detonate();
+            }
 
             // In practice, redbind lasts slightly longer than the duration, so to account for this,
             // we add two ticks of standless until we're actually done.
-            if (boundEntity != null && boundEntity.getStatusEffect(JStatusRegistry.STANDLESS) == null)
+            if (boundEntity != null && boundEntity.getStatusEffect(JStatusRegistry.STANDLESS) == null) {
                 boundEntity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.STANDLESS, 2, 0, true, false));
+            }
         }
 
         super.tick();

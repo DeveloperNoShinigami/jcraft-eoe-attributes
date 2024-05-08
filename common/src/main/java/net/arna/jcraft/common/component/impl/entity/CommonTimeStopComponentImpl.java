@@ -10,7 +10,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.arna.jcraft.common.util.JUtils.*;
+import static net.arna.jcraft.common.util.JUtils.addVelocity;
+import static net.arna.jcraft.common.util.JUtils.stopTick;
 
 @Getter
 public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
@@ -26,12 +27,14 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
     @Override
     public void setTicks(int ticks) {
         if (this.ticks <= 0) // If just beginning a new Timestop
+        {
             totalVelocity = Vec3d.ZERO;
+        }
         this.ticks = ticks;
         sync();
     }
 
-    public void sync(){
+    public void sync() {
         //JComponentPlatformUtils.TIME_STOP.sync(entity);
     }
 
@@ -42,10 +45,14 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
 
     @Override
     public void tick(CallbackInfo ci) {
-        if (ticks <= 0) return;
+        if (ticks <= 0) {
+            return;
+        }
 
         stopTick(entity);
-        for (Entity passenger : entity.getPassengerList()) stopTick(passenger);
+        for (Entity passenger : entity.getPassengerList()) {
+            stopTick(passenger);
+        }
         ticks--;
 
         if (ticks == 0 && totalVelocity.lengthSquared() > 0.01) {

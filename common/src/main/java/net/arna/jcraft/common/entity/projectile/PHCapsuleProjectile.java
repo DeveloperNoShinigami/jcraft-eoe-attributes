@@ -35,12 +35,16 @@ public class PHCapsuleProjectile extends PersistentProjectileEntity implements G
 
     @Override
     protected void onCollision(HitResult hitResult) {
-        if (getWorld().isClient())
+        if (getWorld().isClient()) {
             return;
-        if (hitResult.getType() == HitResult.Type.MISS)
+        }
+        if (hitResult.getType() == HitResult.Type.MISS) {
             return;
+        }
         if (hitResult instanceof EntityHitResult entityHitResult) {
-            if (getOwner() != null && entityHitResult.getEntity().isConnectedThroughVehicle(getOwner())) return;
+            if (getOwner() != null && entityHitResult.getEntity().isConnectedThroughVehicle(getOwner())) {
+                return;
+            }
 
             JUtils.projectileDamageLogic(this, getWorld(), entityHitResult.getEntity(), getVelocity().multiply(0.1),
                     2, 1, false, 2f, 2, CommonHitPropertyComponent.HitAnimation.MID);

@@ -46,7 +46,9 @@ public class JExplosionModifier {
     private <T> void write(T t, PacketByteBuf buf, BiConsumer<PacketByteBuf, T> writer) {
         boolean nonNull = t != null;
         buf.writeBoolean(nonNull);
-        if (nonNull) writer.accept(buf, t);
+        if (nonNull) {
+            writer.accept(buf, t);
+        }
     }
 
     public static JExplosionModifier read(PacketByteBuf buf) {
@@ -57,8 +59,12 @@ public class JExplosionModifier {
                 .particleVelocity(read(buf, b -> new Vec3d(b.readDouble(), b.readDouble(), b.readDouble())))
                 .sound(read(buf, b -> Registries.SOUND_EVENT.get(b.readRegistryKey(RegistryKeys.SOUND_EVENT))))
                 .soundCategory(read(buf, b -> SoundCategory.values()[b.readVarInt()]));
-        if (buf.readBoolean()) builder.volume(buf.readFloat());
-        if (buf.readBoolean()) builder.pitch(buf.readFloat());
+        if (buf.readBoolean()) {
+            builder.volume(buf.readFloat());
+        }
+        if (buf.readBoolean()) {
+            builder.pitch(buf.readFloat());
+        }
 
         return builder.build();
     }

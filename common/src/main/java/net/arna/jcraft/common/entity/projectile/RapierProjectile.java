@@ -81,15 +81,17 @@ public class RapierProjectile extends PersistentProjectileEntity implements GeoE
         if (getWorld().isClient) {
             if (!inGround) {
                 Vec3d vel = getVelocity();
-                for (double i = 0; i < 3.0; i++)
+                for (double i = 0; i < 3.0; i++) {
                     getWorld().addParticle(
                             ParticleTypes.ELECTRIC_SPARK,
                             MathHelper.lerp(i / 3.0, getX(), prevX), MathHelper.lerp(i / 3.0, getY(), prevY), MathHelper.lerp(i / 3.0, getZ(), prevZ),
                             vel.x, vel.y, vel.z
                     );
+                }
             }
-        } else if (origin == null || !origin.isAlive() || ++ticksInAir > 640)
+        } else if (origin == null || !origin.isAlive() || ++ticksInAir > 640) {
             discard();
+        }
     }
 
     @Override
@@ -113,12 +115,20 @@ public class RapierProjectile extends PersistentProjectileEntity implements GeoE
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) return;
+        if (getWorld().isClient) {
+            return;
+        }
         Entity owner = this.getOwner();
-        if (owner == null) return;
+        if (owner == null) {
+            return;
+        }
         Entity entity = entityHitResult.getEntity();
-        if (owner.hasPassenger(entity) || entity == owner) return;
-        if (this.isOnFire()) entity.setOnFireFor(5);
+        if (owner.hasPassenger(entity) || entity == owner) {
+            return;
+        }
+        if (this.isOnFire()) {
+            entity.setOnFireFor(5);
+        }
 
         JUtils.projectileDamageLogic(this, getWorld(), entity, Vec3d.ZERO, 20, 1, false, 2, 6, CommonHitPropertyComponent.HitAnimation.MID);
         playSound(SoundEvents.ITEM_TRIDENT_HIT, 1, 1);
@@ -127,8 +137,9 @@ public class RapierProjectile extends PersistentProjectileEntity implements GeoE
 
     @Override
     protected boolean tryPickup(PlayerEntity player) {
-        if (player != getOwner() || !(JUtils.getStand(player) instanceof SilverChariotEntity silverChariot))
+        if (player != getOwner() || !(JUtils.getStand(player) instanceof SilverChariotEntity silverChariot)) {
             return false;
+        }
 
         silverChariot.setHasRapier(true);
         return true;

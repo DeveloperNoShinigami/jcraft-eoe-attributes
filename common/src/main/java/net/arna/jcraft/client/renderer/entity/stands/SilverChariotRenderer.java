@@ -27,11 +27,14 @@ public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEnti
     @Override
     public void actuallyRender(MatrixStack poseStack, SilverChariotEntity animatable, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-        if (animatable.getMode() == SilverChariotEntity.Mode.ARMORLESS && animatable.hasUser()) for (double i = 0; i < 3; i++)
-            renderAfter(animatable.getUserOrThrow(), JUtils.deltaPos(animatable).multiply(i * 2.0), 1f,
-                    model, animatable, partialTick, RenderLayer.getEntityNoOutline(getTextureLocation(animatable)),
-                    poseStack, bufferSource, buffer, packedLight, packedOverlay, red, green, blue,
-                    alpha);
+        if (animatable.getMode() == SilverChariotEntity.Mode.ARMORLESS && animatable.hasUser()) {
+            for (double i = 0; i < 3; i++) {
+                renderAfter(animatable.getUserOrThrow(), JUtils.deltaPos(animatable).multiply(i * 2.0), 1f,
+                        model, animatable, partialTick, RenderLayer.getEntityNoOutline(getTextureLocation(animatable)),
+                        poseStack, bufferSource, buffer, packedLight, packedOverlay, red, green, blue,
+                        alpha);
+            }
+        }
     }
 
     private void renderAfter(LivingEntity user, Vec3d velocity, float a, BakedGeoModel model, SilverChariotEntity animatable,
@@ -42,8 +45,9 @@ public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEnti
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(user.bodyYaw));
 
         double y = velocity.y;
-        if (-0.2 < -y && y < 0.2)
+        if (-0.2 < -y && y < 0.2) {
             y = 0;
+        }
 
         matrixStack.translate(velocity.x, y, velocity.z);
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-user.bodyYaw));

@@ -45,8 +45,9 @@ public class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAttack, 
 
     @Override
     public void tick(SilverChariotEntity attacker) {
-        if (attacker.getMoveStun() == 1)
+        if (attacker.getMoveStun() == 1) {
             giveBack(attacker);
+        }
         super.tick(attacker);
     }
 
@@ -54,10 +55,11 @@ public class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAttack, 
         LivingEntity user = attacker.getUser();
         ItemStack itemStack = attacker.getOffHandStack();
         if (user != null && itemStack != null && !itemStack.isEmpty()) {
-            if (user instanceof ServerPlayerEntity serverPlayer)
+            if (user instanceof ServerPlayerEntity serverPlayer) {
                 serverPlayer.giveItemStack(itemStack);
-            else
+            } else {
                 user.setStackInHand(Hand.MAIN_HAND, itemStack);
+            }
             itemStack.decrement(1);
         }
     }

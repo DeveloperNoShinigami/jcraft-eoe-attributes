@@ -14,7 +14,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(ItemPickupParticle.class)
 public abstract class ItemPickupParticleMixin {
-    @Shadow @Final private Entity interactingEntity;
+    @Shadow
+    @Final
+    private Entity interactingEntity;
 
     @ModifyVariable(
             method = "buildGeometry",
@@ -28,7 +30,7 @@ public abstract class ItemPickupParticleMixin {
     )
     private double modify_buildGeometry_double_0(double value) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.interactingEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return value;
         }
 
@@ -47,7 +49,7 @@ public abstract class ItemPickupParticleMixin {
     )
     private double modify_buildGeometry_double_1(double value) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.interactingEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return value;
         }
 
@@ -66,7 +68,7 @@ public abstract class ItemPickupParticleMixin {
     )
     private double modify_buildGeometry_double_2(double value) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.interactingEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return value;
         }
 

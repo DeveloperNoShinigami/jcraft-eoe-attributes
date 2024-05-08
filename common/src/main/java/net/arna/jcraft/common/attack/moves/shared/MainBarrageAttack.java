@@ -47,8 +47,9 @@ public class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extends Abst
 
     @Override
     public boolean canFinish(A attacker) {
-        if (attacker.getMoveContext().getBoolean(BREAK_BLOCKS))
+        if (attacker.getMoveContext().getBoolean(BREAK_BLOCKS)) {
             return false;
+        }
         return super.canFinish(attacker);
     }
 
@@ -56,8 +57,9 @@ public class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extends Abst
     public void onUserMoveInput(A attacker, MoveInputType type, boolean pressed, boolean moveInitiated) {
         super.onUserMoveInput(attacker, type, pressed, moveInitiated);
         // Mining barrages may be held
-        if (attacker.getMoveContext().getBoolean(BREAK_BLOCKS) && type.getMoveType() == getMoveType() && !pressed)
+        if (attacker.getMoveContext().getBoolean(BREAK_BLOCKS) && type.getMoveType() == getMoveType() && !pressed) {
             attacker.cancelMove();
+        }
     }
 
     @Override
@@ -91,9 +93,12 @@ public class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extends Abst
 
     private void breakIfPossible(ServerWorld world, BlockPos pos, LivingEntity user) {
         Block block = world.getBlockState(pos).getBlock();
-        if (block.getHardness() < 0) return;
-        if (block.getHardness() <= mineableHardness)
+        if (block.getHardness() < 0) {
+            return;
+        }
+        if (block.getHardness() <= mineableHardness) {
             world.breakBlock(pos, true, user);
+        }
     }
 
     @Override

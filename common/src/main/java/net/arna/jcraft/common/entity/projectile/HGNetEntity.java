@@ -78,8 +78,9 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
     }
 
     public void setCharged(boolean charged) {
-        if (isCharged() != charged)
+        if (isCharged() != charged) {
             dataTracker.set(CHARGED, charged);
+        }
     }
 
     public int getState() {
@@ -91,8 +92,9 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
     }
 
     public void setState(int state) {
-        if (getState() != state)
+        if (getState() != state) {
             dataTracker.set(STATE, state);
+        }
     }
 
     public void setSkin(int skin) {
@@ -117,8 +119,9 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
 
     @Override
     public void tick() {
-        if (getBlockStateAtPos().isOpaque())
+        if (getBlockStateAtPos().isOpaque()) {
             setVelocity(0, 0, 0);
+        }
 
         super.tick();
 
@@ -142,11 +145,12 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
                     JUtils.displayHitbox(getWorld(), getBoundingBox());
                     getInsideEntities().forEach(
                             living -> {
-                                if (!living.isConnectedThroughVehicle(master))
+                                if (!living.isConnectedThroughVehicle(master)) {
                                     StandEntity.damageLogic(
                                             getWorld(), living, launchVec, 15, 3, false, 5f, false, 10,
                                             getWorld().getDamageSources().mobAttack(this), master, CommonHitPropertyComponent.HitAnimation.HIGH
                                     );
+                                }
                             }
                     );
                 }
@@ -156,12 +160,14 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
                         JUtils.displayHitbox(getWorld(), getBoundingBox());
                         getInsideEntities().forEach(
                                 living -> {
-                                    if (!JUtils.isBlocking(living) && !living.isConnectedThroughVehicle(master))
+                                    if (!JUtils.isBlocking(living) && !living.isConnectedThroughVehicle(master)) {
                                         StandEntity.stun(living, 17, 0);
+                                    }
                                 }
                         );
-                    } else if (animTimer <= -20)
+                    } else if (animTimer <= -20) {
                         setState(0);
+                    }
                 } else {
                     if (animTimer > 0) {
                         if (animTimer % 8 == 0) {
@@ -172,14 +178,16 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
                                 Vec3d emeraldPos = getPos().add(heightOffset).add(JUtils.randUnitVec(getRandom()));
                                 emerald.setPosition(emeraldPos);
                                 emerald.setVelocity(target.subtract(emeraldPos).normalize().multiply(1.5));
-                                if (finalAttack)
+                                if (finalAttack) {
                                     emerald.withReflect();
+                                }
 
                                 getWorld().spawnEntity(emerald);
                             }
                         }
-                    } else if (finalAttack)
+                    } else if (finalAttack) {
                         lifeTime = 20;
+                    }
                 }
             } else {
                 if (animTimer > 0) {
@@ -188,8 +196,9 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
                 }
             }
 
-            if (--fireCooldown < 0)
+            if (--fireCooldown < 0) {
                 setCharged(true);
+            }
             constrictCooldown--;
             animTimer--;
         }
@@ -209,8 +218,9 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (source.isOf(DamageTypes.IN_WALL))
+        if (source.isOf(DamageTypes.IN_WALL)) {
             return false;
+        }
         return super.damage(source, amount);
     }
 
@@ -225,11 +235,21 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
     }
 
     private void tryConstrict(Entity entity) {
-        if (!JUtils.canAct(this)) return;
-        if (entity == null) return;
-        if (master == null || entity.isConnectedThroughVehicle(master)) return;
-        if (entity instanceof JAttackEntity attackEntity && attackEntity.getMaster() == master) return;
-        if (entity instanceof StandEntity<?,?> stand && stand.getUser() == master) return;
+        if (!JUtils.canAct(this)) {
+            return;
+        }
+        if (entity == null) {
+            return;
+        }
+        if (master == null || entity.isConnectedThroughVehicle(master)) {
+            return;
+        }
+        if (entity instanceof JAttackEntity attackEntity && attackEntity.getMaster() == master) {
+            return;
+        }
+        if (entity instanceof StandEntity<?, ?> stand && stand.getUser() == master) {
+            return;
+        }
 
         // Not constricting or dying
         if (getState() < 2 && constrictCooldown <= 0) {
@@ -263,8 +283,9 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
 
     @Override
     public boolean addStatusEffect(StatusEffectInstance effect, @Nullable Entity source) {
-        if (effect.getEffectType() == JStatusRegistry.DAZED)
+        if (effect.getEffectType() == JStatusRegistry.DAZED) {
             return super.addStatusEffect(effect, source);
+        }
         return false;
     }
 
@@ -284,8 +305,9 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
 
     @Override
     public boolean handleDamage(Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
-        if (attacker == master || (attacker instanceof IOwnable ownable && ownable.getMaster() == master))
+        if (attacker == master || (attacker instanceof IOwnable ownable && ownable.getMaster() == master)) {
             return false;
+        }
         return true;
     }
 
@@ -294,11 +316,16 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
         super.writeCustomDataToNbt(tag);
         tag.putInt("lifeTime", lifeTime);
 
-        if (master == null) return;
+        if (master == null) {
+            return;
+        }
         boolean ownerIsPlayer = master instanceof PlayerEntity;
         tag.putBoolean("playerOwner", ownerIsPlayer);
-        if (ownerIsPlayer) tag.putUuid("ownerUUID", master.getUuid());
-        else tag.putInt("ownerID", master.getId());
+        if (ownerIsPlayer) {
+            tag.putUuid("ownerUUID", master.getUuid());
+        } else {
+            tag.putInt("ownerID", master.getId());
+        }
     }
 
     @Override
@@ -307,8 +334,11 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
         lifeTime = tag.getInt("lifeTime");
 
         boolean ownerIsPlayer = tag.getBoolean("playerOwner");
-        if (ownerIsPlayer) master = getWorld().getPlayerByUuid(tag.getUuid("ownerUUID"));
-        else master = (LivingEntity) getWorld().getEntityById(tag.getInt("ownerID")); // Always is living
+        if (ownerIsPlayer) {
+            master = getWorld().getPlayerByUuid(tag.getUuid("ownerUUID"));
+        } else {
+            master = (LivingEntity) getWorld().getEntityById(tag.getInt("ownerID")); // Always is living
+        }
     }
 
     // Animations
@@ -320,9 +350,9 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
     }
 
     private PlayState predicate(AnimationState<GeoAnimatable> state) {
-        if (age < 5)
+        if (age < 5) {
             state.setAnimation(RawAnimation.begin().thenPlay("animation.hg_nets.spawn"));
-        else {
+        } else {
             if (getState() == 3) {
                 state.setAnimation(RawAnimation.begin().thenPlay("animation.hg_nets.wilt"));
             } else if (getState() == 2) {

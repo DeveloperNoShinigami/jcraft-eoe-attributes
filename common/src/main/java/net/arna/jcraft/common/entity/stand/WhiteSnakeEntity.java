@@ -51,7 +51,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                     Text.literal("quick combo finisher")
             );
     public static final SimpleAttack<WhiteSnakeEntity> LIGHT = SimpleAttack.<WhiteSnakeEntity>lightAttack(
-            7, 11, 0.75f, 5f, 13, 0.2f, 0.2f)
+                    7, 11, 0.75f, 5f, 13, 0.2f, 0.2f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(UPPERCUT)
             .withImpactSound(JSoundRegistry.IMPACT_3)
@@ -182,7 +182,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                         BNBs:
                             -the gimp
                             M1>Gut Punch>Poison Spew
-                        
+                                                
                             -the el mayo (optimal damage with disk moves)
                             Memory Disk>M1>Barrage>Leg Crusher>Stand Disk>M1~M1
                                         
@@ -210,10 +210,11 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
         moves.register(MoveType.SPECIAL1, MEMORY_DISC, State.DISC_TAKE);
         moves.register(MoveType.SPECIAL2, LEG_CRUSHER, State.LEG_CRUSHER);
         moves.register(MoveType.SPECIAL3, POISON_SPEW, State.ACID_SPEW).withCrouchingVariant(State.ACID_SPEW_CHARGED);
-        if (isRemote())
+        if (isRemote()) {
             moves.register(MoveType.ULTIMATE, MELT_YOUR_HEART, State.MELT_YOUR_HEART);
-        else
+        } else {
             moves.register(MoveType.ULTIMATE, STAND_DISC, State.DISC_TAKE).withCrouchingVariant(State.DISC_GIVE);
+        }
 
         moves.register(MoveType.UTILITY, PILOT_MODE);
     }
@@ -222,17 +223,23 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
     public boolean initMove(MoveType type) {
         if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
             AbstractMove<?, ? super WhiteSnakeEntity> followup = curMove.getFollowup();
-            if (followup != null) setMove(followup, (State) followup.getAnimation());
+            if (followup != null) {
+                setMove(followup, (State) followup.getAnimation());
+            }
 
             return true;
-        } else return super.initMove(type);
+        } else {
+            return super.initMove(type);
+        }
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (!isRemoteAndControllable()) return;
+        if (!isRemoteAndControllable()) {
+            return;
+        }
 
         if (getWorld().isClient) {
             // Called for EVERYONE
@@ -245,25 +252,36 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             tickRemoteMovement(f, s, jump);
 
             if (getState() == State.IDLE) { // Replace idle anim
-                if (s > 0) setStateNoReset(isOnGround() ? State.RIGHT : State.RIGHT_DASH);
-                if (s < 0) setStateNoReset(isOnGround() ? State.LEFT : State.LEFT_DASH);
-                if (f < 0) setStateNoReset(isOnGround() ? State.BACKWARD : State.BACKWARD_DASH);
-                if (f > 0) setStateNoReset(isOnGround() ? State.FORWARD : State.FORWARD_DASH);
+                if (s > 0) {
+                    setStateNoReset(isOnGround() ? State.RIGHT : State.RIGHT_DASH);
+                }
+                if (s < 0) {
+                    setStateNoReset(isOnGround() ? State.LEFT : State.LEFT_DASH);
+                }
+                if (f < 0) {
+                    setStateNoReset(isOnGround() ? State.BACKWARD : State.BACKWARD_DASH);
+                }
+                if (f > 0) {
+                    setStateNoReset(isOnGround() ? State.FORWARD : State.FORWARD_DASH);
+                }
             }
         }
     }
 
     /**
      * Movement control for a grounded remote stand.
-     * @param f Forward input
-     * @param s +Right/-Left input
+     *
+     * @param f    Forward input
+     * @param s    +Right/-Left input
      * @param jump Jump input
      */
     public void tickRemoteMovement(double f, double s, boolean jump) {
         Vec3d pos = getPos();
 
         // 1 tick of inertia, helping movement be fluid as well as dealing with packet drops
-        if (lastRemoteInputTime - age > 2) updateRemoteInputs(0, 0, false, false);
+        if (lastRemoteInputTime - age > 2) {
+            updateRemoteInputs(0, 0, false, false);
+        }
         Vec3d rotVec = new Vec3d(getRotationVector().x, 0, getRotationVector().z).normalize();
 
         double dragMult = getMoveStun() > 0 ? 0.2 : 0.4;
@@ -272,9 +290,11 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
         boolean climbing = getBlockStateAtPos().streamTags().anyMatch(tag -> tag == BlockTags.CLIMBABLE);
         boolean swimming = !getWorld().getFluidState(getBlockPos()).isEmpty();
 
-        if (climbing || swimming) dragMult *= 0.5;
+        if (climbing || swimming) {
+            dragMult *= 0.5;
+        }
 
-        if ( (climbing || swimming ) && jump) { // Climb or Swim
+        if ((climbing || swimming) && jump) { // Climb or Swim
             addVelocity(0, 0.1, 0);
         } else { // Jump
             if (onGround) {
@@ -296,8 +316,9 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
         remoteSpeed = remoteSpeed.multiply(dragMult);
 
         Vec3d userPos = getUserOrThrow().getPos();
-        if (pos.add(remoteSpeed).squaredDistanceTo(userPos) > 400)
+        if (pos.add(remoteSpeed).squaredDistanceTo(userPos) > 400) {
             remoteSpeed = userPos.subtract(pos).multiply(0.025); // 1/40th so it scales with distance
+        }
 
         addVelocity(remoteSpeed.x, remoteSpeed.y, remoteSpeed.z);
         velocityDirty = true;

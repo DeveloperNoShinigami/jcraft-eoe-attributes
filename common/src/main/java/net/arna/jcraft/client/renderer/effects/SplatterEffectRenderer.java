@@ -8,7 +8,8 @@ import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -28,7 +29,9 @@ public class SplatterEffectRenderer {
 
 
         splatterManager.iterateSplatters(splatter -> {
-            if (splatter.isRemoved()) return;
+            if (splatter.isRemoved()) {
+                return;
+            }
 
             RenderSystem.setShaderTexture(0, splatter.getType().getTexture());
 
@@ -40,9 +43,11 @@ public class SplatterEffectRenderer {
             buf.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT);
             float alpha = splatter.getStrength(tickDelta);
 
-            for (SplatterSection section : splatter.getSections())
-                if (!section.isRemoved())
+            for (SplatterSection section : splatter.getSections()) {
+                if (!section.isRemoved()) {
                     renderSection(section, buf, matrices, alpha, splatter.getOffset());
+                }
+            }
 
             tess.draw();
             matrices.pop();

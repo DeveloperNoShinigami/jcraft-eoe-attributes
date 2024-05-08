@@ -48,7 +48,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -79,14 +78,18 @@ public class ClientPacketHandler {
 
     private static void handlePrediction(@NotNull MinecraftClient client, PacketByteBuf buf) {
         int size = buf.readInt();
-        if (size == 0) return;
+        if (size == 0) {
+            return;
+        }
         for (int i = 0; i < size; i++) {
             int entID = buf.readInt();
             Vec3d predictedPos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
 
             client.execute(() -> {
                 Entity ent = client.world.getEntityById(entID);
-                if (ent == null) return;
+                if (ent == null) {
+                    return;
+                }
                 // ent.setPos() is awful in tandem with getTrackedPosition().setPos();
                 ent.getTrackedPosition().setPos(predictedPos);
             });
@@ -94,7 +97,9 @@ public class ClientPacketHandler {
     }
 
     private static void handleTimeStop(@NotNull MinecraftClient client, PacketByteBuf buf) {
-        if (client.world == null || client.player == null) return;
+        if (client.world == null || client.player == null) {
+            return;
+        }
 
         boolean isStart = buf.readBoolean();
         int entID = buf.readInt();
@@ -106,10 +111,14 @@ public class ClientPacketHandler {
 
             client.execute(() -> {
                 Entity ent = client.world.getEntityById(entID);
-                if (!(ent instanceof LivingEntity livingEntity)) return;
-                JClientUtils.activeTimestops.add( new DimensionData(livingEntity, position, registryKey, time) );
+                if (!(ent instanceof LivingEntity livingEntity)) {
+                    return;
+                }
+                JClientUtils.activeTimestops.add(new DimensionData(livingEntity, position, registryKey, time));
             });
-        } else JClientUtils.removeTimestop(entID);
+        } else {
+            JClientUtils.removeTimestop(entID);
+        }
     }
 
     private static void register(Identifier id, Consumer<PacketByteBuf> handler) {
@@ -125,7 +134,9 @@ public class ClientPacketHandler {
     }
 
     public static void handleAnimation(@NotNull MinecraftClient client, PacketByteBuf buf) {
-        if (client.world == null || client.player == null) return;
+        if (client.world == null || client.player == null) {
+            return;
+        }
 
         int entID = buf.readInt();
         String animID = buf.readString(); // I know exactly how unoptimized this is, but I fail to care
@@ -158,8 +169,9 @@ public class ClientPacketHandler {
                 }
 
                 // Remove last speed modifier, this is rather primitive but will do for now
-                if ( animationContainer.size() > 0 )
+                if (animationContainer.size() > 0) {
                     animationContainer.removeModifier(0);
+                }
 
                 // Synchronize spec values
                 if (isSpec) {
@@ -182,7 +194,9 @@ public class ClientPacketHandler {
     }
 
     public static void handleChannelFeedback(@NotNull MinecraftClient client, PacketByteBuf buf) {
-        if (client.world == null || client.player == null) return;
+        if (client.world == null || client.player == null) {
+            return;
+        }
 
         short control = buf.readShort();
         switch (control) {
@@ -271,7 +285,9 @@ public class ClientPacketHandler {
 
                 client.execute(() -> {
                     Entity ent = client.world.getEntityById(entID);
-                    if (ent == null) return;
+                    if (ent == null) {
+                        return;
+                    }
                     Vec3d currentPos = ent.getEyePos();
                     Vec3d originalToCurrent = currentPos.subtract(originalPos).normalize();
                     for (double h = 0; h < currentPos.distanceTo(originalPos); ++h) {
@@ -382,7 +398,9 @@ public class ClientPacketHandler {
         int duration = buf.readInt();
         ShaderActivationPacket.Type type = ShaderActivationPacket.Type.byName(buf.readString());
         World world = client.world;
-        if (world == null) return;
+        if (world == null) {
+            return;
+        }
 
         switch (type) {
             case NONE -> {
@@ -403,7 +421,9 @@ public class ClientPacketHandler {
                 });
             }
             case CRIMSON -> client.execute(() -> {
-                if (!JClientConfig.getInstance().isTimeEraseShader()) return;
+                if (!JClientConfig.getInstance().isTimeEraseShader()) {
+                    return;
+                }
                 /*TODO
                 CrimsonShaderHandler crimsonShaderHandler = CrimsonShaderHandler.INSTANCE;
                 crimsonShaderHandler.effectLength = duration;
@@ -445,18 +465,24 @@ public class ClientPacketHandler {
         TimeAccelStatePacket.State state = TimeAccelStatePacket.State.values()[buf.readVarInt()];
         Entity e = client.world == null ? null : client.world.getEntityById(buf.readVarInt());
 
-        if (!(e instanceof MadeInHeavenEntity mih) || !mih.isAlive()) return;
+        if (!(e instanceof MadeInHeavenEntity mih) || !mih.isAlive()) {
+            return;
+        }
 
         switch (state) {
-            case START -> TimeAccelStatePacket.accelerations.put(mih.getId(), new TimeAccelStatePacket.TimeAcceleration(buf.readVarInt(), mih.getId()));
+            case START ->
+                    TimeAccelStatePacket.accelerations.put(mih.getId(), new TimeAccelStatePacket.TimeAcceleration(buf.readVarInt(), mih.getId()));
             case STOP -> TimeAccelStatePacket.accelerations.remove(mih.getId());
         }
     }
 
     public static void handleEpitaphOverlayState(PacketByteBuf buf) {
         boolean start = buf.readBoolean();
-        if (start) EpitaphOverlay.start();
-        else EpitaphOverlay.stop();
+        if (start) {
+            EpitaphOverlay.start();
+        } else {
+            EpitaphOverlay.stop();
+        }
     }
 
     public static void handlePredictionState(@NotNull MinecraftClient client, PacketByteBuf buf) {
@@ -464,8 +490,11 @@ public class ClientPacketHandler {
         int length = start ? buf.readVarInt() : 0;
 
         client.execute(() -> {
-            if (start) TimeErasePredictionEffectRenderer.startEffect(length);
-            else TimeErasePredictionEffectRenderer.stopEffect();
+            if (start) {
+                TimeErasePredictionEffectRenderer.startEffect(length);
+            } else {
+                TimeErasePredictionEffectRenderer.stopEffect();
+            }
         });
     }
 
@@ -475,7 +504,9 @@ public class ClientPacketHandler {
 
         ConfigOption.readOptions(buf);
 
-        if (show) client.execute(() -> ServerConfigUI.show(editable));
+        if (show) {
+            client.execute(() -> ServerConfigUI.show(editable));
+        }
     }
 
     private static void handleJExplosion(@NotNull MinecraftClient client, PacketByteBuf buf) {
@@ -494,7 +525,9 @@ public class ClientPacketHandler {
 
     private static void handleComboCounter(@NotNull MinecraftClient minecraftClient, PacketByteBuf buf) {
         JCraftClient.comboCounter = buf.readInt();
-        if (JCraftClient.comboCounter == 1) JCraftClient.markComboStarted();
+        if (JCraftClient.comboCounter == 1) {
+            JCraftClient.markComboStarted();
+        }
 
         JCraftClient.damageScaling = buf.readFloat();
 
@@ -503,7 +536,9 @@ public class ClientPacketHandler {
 
     private static void handleSplatter(MinecraftClient client, PacketByteBuf buf) {
         ClientWorld world = client.world;
-        if (world == null) return;
+        if (world == null) {
+            return;
+        }
 
         Splatter splatter = JUtils.getSplatterManager(world).readSplatter(buf);
 
@@ -517,10 +552,14 @@ public class ClientPacketHandler {
     private static void handleStandHurt(MinecraftClient client, PacketByteBuf buf) {
         int entityId = buf.readVarInt();
         client.execute(() -> {
-            if (client.world == null) return;
+            if (client.world == null) {
+                return;
+            }
 
             Entity entity = client.world.getEntityById(entityId);
-            if (!(entity instanceof LivingEntity living)) return;
+            if (!(entity instanceof LivingEntity living)) {
+                return;
+            }
 
             // LivingEntity#handleStatus(byte) case 2, but without the sound
             //living.limbDistance = 1.5f; TODO check this

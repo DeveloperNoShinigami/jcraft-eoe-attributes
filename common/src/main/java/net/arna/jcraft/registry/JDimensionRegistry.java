@@ -1,7 +1,6 @@
 package net.arna.jcraft.registry;
 
 import net.arna.jcraft.JCraft;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.world.World;

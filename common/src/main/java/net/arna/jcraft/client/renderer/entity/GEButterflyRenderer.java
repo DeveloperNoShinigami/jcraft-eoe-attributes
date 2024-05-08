@@ -2,13 +2,10 @@ package net.arna.jcraft.client.renderer.entity;
 
 import net.arna.jcraft.client.model.entity.GEButterflyModel;
 import net.arna.jcraft.common.entity.GEButterflyEntity;
-import net.arna.jcraft.common.entity.GESnakeEntity;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
@@ -21,8 +18,6 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
 import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
-
-import java.util.Objects;
 
 public class GEButterflyRenderer extends DynamicGeoEntityRenderer<GEButterflyEntity> {
     protected ItemStack mainHandItem;
@@ -61,8 +56,9 @@ public class GEButterflyRenderer extends DynamicGeoEntityRenderer<GEButterflyEnt
                     poseStack.scale(0.33f, 0.33f, 0.33f);
                     poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
 
-                    if (stack.getItem() instanceof ShieldItem)
+                    if (stack.getItem() instanceof ShieldItem) {
                         poseStack.translate(0, 0.125, -0.25);
+                    }
                 }
 
                 super.renderStackForBone(poseStack, bone, stack, animatable, bufferSource, partialTick, packedLight, packedOverlay);

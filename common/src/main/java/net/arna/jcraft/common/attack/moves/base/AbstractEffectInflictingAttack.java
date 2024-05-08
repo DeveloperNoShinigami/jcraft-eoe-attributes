@@ -31,7 +31,8 @@ public abstract class AbstractEffectInflictingAttack<T extends AbstractEffectInf
     }
 
     static void inflictEffects(LivingEntity target, List<StatusEffectInstance> effects, boolean nonBlockableEffects) {
-        if (nonBlockableEffects || !JUtils.isBlocking(target))
+        if (nonBlockableEffects || !JUtils.isBlocking(target)) {
             effects.forEach(effect -> target.addStatusEffect(new StatusEffectInstance(effect)));
+        }
     }
 }

@@ -26,7 +26,9 @@ public class StandSkinSmithingRecipe implements SmithingRecipe {
         ItemStack maskStack = inventory.getStack(1);
 
         StandType standType = StandDiscItem.getStandType(discStack);
-        if (standType == null) return false;
+        if (standType == null) {
+            return false;
+        }
 
         return discStack.getItem() == JItemRegistry.STAND_DISC &&
                 maskStack.getItem() == JItemRegistry.CINDERELLA_MASK &&

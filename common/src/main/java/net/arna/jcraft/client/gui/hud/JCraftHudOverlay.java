@@ -33,7 +33,9 @@ public class JCraftHudOverlay {
 
     public static void render(DrawContext ctx) {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (client == null) return;
+        if (client == null) {
+            return;
+        }
 
         int width = client.getWindow().getScaledWidth();
         int height = client.getWindow().getScaledHeight();
@@ -56,17 +58,20 @@ public class JCraftHudOverlay {
                         gaugeX,
                         height + gaugeHeightOffset,
                         (int) (theSun.getScale() * 10.0F));
-            } else
+            } else {
                 BLOCK_GAUGE.render(ctx, gaugeX, height + gaugeHeightOffset, (int) stand.getStandGauge());
-            if (stand instanceof MadeInHeavenEntity madeInHeaven && madeInHeaven.getAccelTime() > 0)
+            }
+            if (stand instanceof MadeInHeavenEntity madeInHeaven && madeInHeaven.getAccelTime() > 0) {
                 TIME_ACCEL_GAUGE.render(ctx, gaugeX, height + gaugeHeightOffset, madeInHeaven.getSpeedometer());
+            }
         }
 
         JSpec<?, ?> spec = JUtils.getSpec(player);
         if (spec instanceof AnubisSpec) {
             int displayBloodlust = (int) ((JComponentPlatformUtils.getMiscData(player).getAttackSpeedMult() - 1.0f) * 5);
-            if (displayBloodlust > 0)
+            if (displayBloodlust > 0) {
                 BLOODLUST_GAUGE.render(ctx, gaugeX, height + gaugeHeightOffset, displayBloodlust);
+            }
         }
     }
 

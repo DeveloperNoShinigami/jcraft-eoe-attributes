@@ -43,24 +43,32 @@ public class BloodProjectile extends PersistentProjectileEntity implements GeoEn
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) return;
+        if (getWorld().isClient) {
+            return;
+        }
         Entity owner = getOwner();
-        if (owner == null) return;
+        if (owner == null) {
+            return;
+        }
         Entity entity = entityHitResult.getEntity();
-        if (owner.hasPassenger(entity) || entity == owner) return;
+        if (owner.hasPassenger(entity) || entity == owner) {
+            return;
+        }
 
         if (entity instanceof LivingEntity living) {
             LivingEntity target = living;
-            if (entity instanceof StandEntity<?, ?> stand && stand.hasUser())
+            if (entity instanceof StandEntity<?, ?> stand && stand.hasUser()) {
                 target = stand.getUserOrThrow();
+            }
             damageLogic(getWorld(), target, Vec3d.ZERO, 10, 1, false, 2f,
                     false, 6, getWorld().getDamageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
             target.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 60, 0, false, true));
             discard();
         }
 
-        if (entity instanceof EndCrystalEntity endCrystal)
+        if (entity instanceof EndCrystalEntity endCrystal) {
             endCrystal.damage(getWorld().getDamageSources().thrown(this, owner), 2f);
+        }
 
         playSound(SoundEvents.BLOCK_SLIME_BLOCK_FALL, 1, 0.5f);
     }

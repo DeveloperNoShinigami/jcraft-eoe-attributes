@@ -32,8 +32,12 @@ public class FloatOption extends ConfigOption {
     }
 
     public void setValue(float value) {
-        if (min != null && value < min) value = min;
-        if (max != null && value > max) value = max;
+        if (min != null && value < min) {
+            value = min;
+        }
+        if (max != null && value > max) {
+            value = max;
+        }
         this.value = value;
     }
 

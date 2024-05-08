@@ -17,7 +17,9 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(GrindstoneScreenHandler.class)
 public class GrindstoneScreenHandlerMixin {
-    @Shadow @Final Inventory input;
+    @Shadow
+    @Final
+    Inventory input;
 
     @ModifyVariable(method = "updateResult", at = @At("STORE"), ordinal = 2)
     private boolean allowStandDiscs(boolean value) {
@@ -25,14 +27,18 @@ public class GrindstoneScreenHandlerMixin {
         ItemStack stack2 = input.getStack(1);
 
         ItemStack stack = stack1.isEmpty() ? stack2 : stack1;
-        if (stack.getItem() != JItemRegistry.STAND_DISC) return value;
+        if (stack.getItem() != JItemRegistry.STAND_DISC) {
+            return value;
+        }
 
         return StandDiscItem.isEmptyDisc(stack); // True means not allowed
     }
 
     @Inject(method = "grind", at = @At("RETURN"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     private void grindStandDisc(ItemStack stack, int damage, int amount, CallbackInfoReturnable<ItemStack> cir, ItemStack copy) {
-        if (copy.getItem() != JItemRegistry.STAND_DISC) return;
+        if (copy.getItem() != JItemRegistry.STAND_DISC) {
+            return;
+        }
 
         if (StandDiscItem.isEmptyDisc(copy)) {
             cir.setReturnValue(ItemStack.EMPTY);
@@ -40,7 +46,9 @@ public class GrindstoneScreenHandlerMixin {
         }
 
         NbtCompound nbt = copy.getNbt();
-        if (nbt == null) return; // Should be impossible
+        if (nbt == null) {
+            return; // Should be impossible
+        }
 
         nbt.remove("StandID");
         nbt.remove("Skin");

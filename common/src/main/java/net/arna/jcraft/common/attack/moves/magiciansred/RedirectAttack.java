@@ -31,7 +31,9 @@ public class RedirectAttack extends AbstractMove<RedirectAttack, MagiciansRedEnt
             Vec3d pos = JUtils.raycastAll(user, eyePos, eyePos.add(user.getRotationVector().multiply(24)), RaycastContext.FluidHandling.NONE);
 
             for (AnkhProjectile ankh : ankhs) {
-                if (ankh.getOwner() != user) continue;
+                if (ankh.getOwner() != user) {
+                    continue;
+                }
                 ankh.setVariation(false);
                 ankh.setVelocity(pos.subtract(ankh.getPos()).normalize().multiply(0.6));
             }

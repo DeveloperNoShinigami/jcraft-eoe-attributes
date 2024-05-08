@@ -5,7 +5,6 @@ import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
-import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;

@@ -11,7 +11,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.resource.ResourceFactory;
-import net.minecraft.resource.ResourceManager;
 
 import java.io.IOException;
 import java.util.ArrayList;

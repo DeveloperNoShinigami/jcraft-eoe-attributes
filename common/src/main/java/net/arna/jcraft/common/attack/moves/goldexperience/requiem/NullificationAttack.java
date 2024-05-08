@@ -38,15 +38,19 @@ public class NullificationAttack extends AbstractCounterAttack<NullificationAtta
     public void counter(@NonNull GEREntity attacker, Entity countered, DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
 
-        if (countered == null || !attacker.hasUser()) return;
+        if (countered == null || !attacker.hasUser()) {
+            return;
+        }
 
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeShort(14);
         buf.writeInt(countered.getId());
         buf.writeInt(counterStopTime);
-        for (PlayerEntity sendPlayer : attacker.getWorld().getPlayers())
-            if (sendPlayer instanceof ServerPlayerEntity serverPlayerEntity)
+        for (PlayerEntity sendPlayer : attacker.getWorld().getPlayers()) {
+            if (sendPlayer instanceof ServerPlayerEntity serverPlayerEntity) {
                 ServerChannelFeedbackPacket.send(serverPlayerEntity, buf);
+            }
+        }
         JComponentPlatformUtils.getTimeStopData(countered).setTicks(counterStopTime);
 
         if (countered instanceof LivingEntity living) {

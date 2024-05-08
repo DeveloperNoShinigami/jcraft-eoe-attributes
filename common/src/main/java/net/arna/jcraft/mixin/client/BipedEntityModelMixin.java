@@ -2,7 +2,7 @@ package net.arna.jcraft.mixin.client;
 
 import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.entity.stand.*;
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JItemRegistry;
@@ -61,8 +61,9 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
             return;
         }
 
-        if (livingEntity.isHolding(JItemRegistry.FV_REVOLVER.get()))
+        if (livingEntity.isHolding(JItemRegistry.FV_REVOLVER.get())) {
             CrossbowPosing.hold(rightArm, leftArm, head, livingEntity.getMainArm() == Arm.RIGHT);
+        }
 
         if (livingEntity.getPose() == EntityPose.STANDING) {
             JClientUtils.resetPartAngles(body);
@@ -182,8 +183,9 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
                             leftArm.pitch = speedInfluence;
                         }
 
-                        if (rightArmPose == BipedEntityModel.ArmPose.EMPTY)
+                        if (rightArmPose == BipedEntityModel.ArmPose.EMPTY) {
                             rightArm.pitch = speedInfluence;
+                        }
                     }
                 }
             }

@@ -30,11 +30,16 @@ import java.util.Optional;
 
 @Mixin(EntityRenderDispatcher.class)
 public abstract class EntityRenderDispatcherMixin {
-    @Shadow @Final private static RenderLayer SHADOW_LAYER;
+    @Shadow
+    @Final
+    private static RenderLayer SHADOW_LAYER;
 
-    @Shadow private boolean renderShadows;
+    @Shadow
+    private boolean renderShadows;
 
-    @Shadow private static void drawShadowVertex(MatrixStack.Entry entry, VertexConsumer vertices, float alpha, float x, float y, float z, float u, float v) {}
+    @Shadow
+    private static void drawShadowVertex(MatrixStack.Entry entry, VertexConsumer vertices, float alpha, float x, float y, float z, float u, float v) {
+    }
 
     @Inject(
             method = "render",
@@ -46,15 +51,19 @@ public abstract class EntityRenderDispatcherMixin {
             )
     )
     private void inject_render_0(Entity entity, double x, double y, double z, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        if(!(entity instanceof ProjectileEntity) && !(entity instanceof ExperienceOrbEntity) && !entity.getType().getRegistryEntry().isIn(EntityTags.FORBIDDEN_ENTITY_RENDERING)) {
+        if (!(entity instanceof ProjectileEntity) && !(entity instanceof ExperienceOrbEntity) && !entity.getType().getRegistryEntry().isIn(EntityTags.FORBIDDEN_ENTITY_RENDERING)) {
             Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-            if (!this.renderShadows) return;
+            if (!this.renderShadows) {
+                return;
+            }
 
             matrices.push();
             Optional<RotationAnimation> animationOptional = GravityChangerAPI.getGravityAnimation(entity);
-            if(animationOptional.isEmpty()) return;
+            if (animationOptional.isEmpty()) {
+                return;
+            }
             RotationAnimation animation = animationOptional.get();
-            long timeMs = entity.getWorld().getTime()*50+(long)(tickDelta*50);
+            long timeMs = entity.getWorld().getTime() * 50 + (long) (tickDelta * 50);
             matrices.multiply(QuaternionUtil.inversed(animation.getCurrentGravityRotation(gravityDirection, timeMs)));
         }
     }
@@ -68,9 +77,11 @@ public abstract class EntityRenderDispatcherMixin {
             )
     )
     private void inject_render_1(Entity entity, double x, double y, double z, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        if(!(entity instanceof ProjectileEntity) && !(entity instanceof ExperienceOrbEntity) && !entity.getType().getRegistryEntry().isIn(EntityTags.FORBIDDEN_ENTITY_RENDERING)) {
+        if (!(entity instanceof ProjectileEntity) && !(entity instanceof ExperienceOrbEntity) && !entity.getType().getRegistryEntry().isIn(EntityTags.FORBIDDEN_ENTITY_RENDERING)) {
             Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-            if (!this.renderShadows) return;
+            if (!this.renderShadows) {
+                return;
+            }
 
             matrices.pop();
         }
@@ -86,10 +97,14 @@ public abstract class EntityRenderDispatcherMixin {
             )
     )
     private void inject_render_2(Entity entity, double x, double y, double z, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-        if(!(entity instanceof ProjectileEntity) && !(entity instanceof ExperienceOrbEntity) && !entity.getType().getRegistryEntry().isIn(EntityTags.FORBIDDEN_ENTITY_RENDERING)) {
+        if (!(entity instanceof ProjectileEntity) && !(entity instanceof ExperienceOrbEntity) && !entity.getType().getRegistryEntry().isIn(EntityTags.FORBIDDEN_ENTITY_RENDERING)) {
             Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-            if (gravityDirection == Direction.DOWN) return;
-            if (!this.renderShadows) return;
+            if (gravityDirection == Direction.DOWN) {
+                return;
+            }
+            if (!this.renderShadows) {
+                return;
+            }
 
             matrices.multiply(RotationUtil.getCameraRotationQuaternion(gravityDirection));
         }
@@ -102,7 +117,9 @@ public abstract class EntityRenderDispatcherMixin {
     )
     private static void inject_renderShadow(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Entity entity, float opacity, float tickDelta, WorldView world, float radius, CallbackInfo ci) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         ci.cancel();
 
@@ -114,7 +131,7 @@ public abstract class EntityRenderDispatcherMixin {
         MatrixStack.Entry entry = matrices.peek();
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(SHADOW_LAYER);
 
-        for(BlockPos blockPos : BlockPos.iterate(BlockPos.ofFloored(minShadowPos), BlockPos.ofFloored(maxShadowPos))) {
+        for (BlockPos blockPos : BlockPos.iterate(BlockPos.ofFloored(minShadowPos), BlockPos.ofFloored(maxShadowPos))) {
             gravitychanger$renderShadowPartPlayer(entry, vertexConsumer, world, blockPos, x, y, z, radius, opacity, gravityDirection);
         }
     }
@@ -127,7 +144,7 @@ public abstract class EntityRenderDispatcherMixin {
                 VoxelShape voxelShape = blockStateBelow.getOutlineShape(world, posBelow);
                 if (!voxelShape.isEmpty()) {
                     Vec3d playerPos = RotationUtil.vecWorldToPlayer(x, y, z, gravityDirection);
-                    float alpha = (float)(((double)opacity - (playerPos.y - (RotationUtil.vecWorldToPlayer(Vec3d.ofCenter(pos), gravityDirection).y - 0.5D)) / 2.0D) * 0.5D * (double)world.getBrightness(pos));
+                    float alpha = (float) (((double) opacity - (playerPos.y - (RotationUtil.vecWorldToPlayer(Vec3d.ofCenter(pos), gravityDirection).y - 0.5D)) / 2.0D) * 0.5D * (double) world.getBrightness(pos));
                     if (alpha >= 0.0F) {
                         if (alpha > 1.0F) {
                             alpha = 1.0F;
@@ -137,12 +154,12 @@ public abstract class EntityRenderDispatcherMixin {
                         Vec3d playerCenterPos = RotationUtil.vecWorldToPlayer(centerPos, gravityDirection);
 
                         Vec3d playerRelNN = playerCenterPos.add(-0.5D, -0.5D, -0.5D).subtract(playerPos);
-                        Vec3d playerRelPP = playerCenterPos.add( 0.5D, -0.5D,  0.5D).subtract(playerPos);
+                        Vec3d playerRelPP = playerCenterPos.add(0.5D, -0.5D, 0.5D).subtract(playerPos);
 
                         Vec3d relNN = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(-0.5D, -0.5D, -0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
-                        Vec3d relNP = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(-0.5D, -0.5D,  0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
-                        Vec3d relPN = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld( 0.5D, -0.5D, -0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
-                        Vec3d relPP = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(0.5D, -0.5D,  0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
+                        Vec3d relNP = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(-0.5D, -0.5D, 0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
+                        Vec3d relPN = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(0.5D, -0.5D, -0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
+                        Vec3d relPP = RotationUtil.vecWorldToPlayer(centerPos.add(RotationUtil.vecPlayerToWorld(0.5D, -0.5D, 0.5D, gravityDirection)).subtract(x, y, z), gravityDirection);
 
                         float minU = -(float) playerRelNN.x / 2.0F / radius + 0.5F;
                         float maxU = -(float) playerRelPP.x / 2.0F / radius + 0.5F;
@@ -168,7 +185,7 @@ public abstract class EntityRenderDispatcherMixin {
     )
     private static Box modify_renderHitbox_Box_0(Box box, MatrixStack matrices, VertexConsumer vertices, Entity entity, float tickDelta) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return box;
         }
 
@@ -184,7 +201,7 @@ public abstract class EntityRenderDispatcherMixin {
     )
     private static Vec3d modify_renderHitbox_Vec3d_0(Vec3d vec3d, MatrixStack matrices, VertexConsumer vertices, Entity entity, float tickDelta) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
 

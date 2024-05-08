@@ -22,7 +22,9 @@ public class RemoteStandInteractPacket {
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) context.getPlayer();
 
         StandEntity<?, ?> stand = JUtils.getStand(serverPlayer);
-        if (stand == null || !stand.isRemote()) return;
+        if (stand == null || !stand.isRemote()) {
+            return;
+        }
         ServerWorld world = (ServerWorld) serverPlayer.getWorld();
 
         Vec3d eyePos = RotationUtil.vecPlayerToWorld(stand.getEyePos(), GravityChangerAPI.getGravityDirection(stand));
@@ -37,7 +39,9 @@ public class RemoteStandInteractPacket {
                 )
         );
 
-        if (hitResult.getType() == HitResult.Type.MISS) return;
+        if (hitResult.getType() == HitResult.Type.MISS) {
+            return;
+        }
         BlockPos hitPos = hitResult.getBlockPos();
         world.getBlockState(hitPos).onUse(world, new FakePlayer(world), Hand.MAIN_HAND, hitResult);
     }

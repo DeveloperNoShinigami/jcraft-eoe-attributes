@@ -7,8 +7,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
 public interface JParticleTypeRegistry {
-    
-    
+
+
     DefaultParticleType AURA_ARC = new DefaultParticleType(false);
     DefaultParticleType AURA_BLOB = new DefaultParticleType(false);
     DefaultParticleType COMBO_BREAK = new DefaultParticleType(false);

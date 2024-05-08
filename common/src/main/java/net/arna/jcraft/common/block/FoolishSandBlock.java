@@ -35,8 +35,9 @@ public class FoolishSandBlock extends FallingBlock {
         for (Direction direction : Direction.values()) {
             blockPos.set(pos, direction);
             BlockState blockState = world.getBlockState(blockPos);
-            if (blockState.isOf(this) && !increaseAge(blockState, world, blockPos))
+            if (blockState.isOf(this) && !increaseAge(blockState, world, blockPos)) {
                 world.scheduleBlockTick(blockPos, this, 20);
+            }
         }
     }
 

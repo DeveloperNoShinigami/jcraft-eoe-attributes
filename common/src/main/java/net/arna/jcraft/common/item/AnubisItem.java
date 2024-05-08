@@ -68,7 +68,9 @@ public class AnubisItem extends Item {
         ItemStack item = user.getStackInHand(hand);
         StandEntity<?, ?> stand = JUtils.getStand(user);
 
-        if (user.isSneaking() || world.isClient || (stand != null && stand.blocking)) return TypedActionResult.fail(item);
+        if (user.isSneaking() || world.isClient || (stand != null && stand.blocking)) {
+            return TypedActionResult.fail(item);
+        }
 
         JUtils.serverPlaySound(JSoundRegistry.ANUBIS_SHEATHE, (ServerWorld) world, user.getPos());
         user.setStackInHand(hand, new ItemStack(JItemRegistry.ANUBISSHEATHED.get()));
@@ -103,8 +105,12 @@ public class AnubisItem extends Item {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-        if (world.isClient) return;
+        if (world.isClient) {
+            return;
+        }
         if (entity instanceof PlayerEntity player) // Bloodlust
+        {
             handleAnubisEffects(player.getLastAttackTime() - player.age, player);
+        }
     }
 }

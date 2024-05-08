@@ -30,7 +30,7 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
         sync(shockwave);
     }
 
-    public void sync(Shockwave shockwave){
+    public void sync(Shockwave shockwave) {
         // JComponentPlatformUtils.SHOCKWAVE_HANDLER.sync(world, (buf, player) -> writeSyncPacket(buf, shockwave));
     }
 
@@ -86,7 +86,7 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
 
     public void applySyncPacket(PacketByteBuf buf) {
         int count = buf.readInt();
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++) {
             shockwaves.add(new Shockwave(
                     buf.readDouble(),
                     buf.readDouble(),
@@ -96,6 +96,7 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
                     buf.readFloat(),
                     buf.readInt()
             ));
+        }
     }
 
     public void tick() {

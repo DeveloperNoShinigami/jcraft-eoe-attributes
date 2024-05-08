@@ -22,7 +22,9 @@ public class MockItem extends Item {
 
     public static ItemStack getMockedStack(ItemStack mockItemStack) {
         NbtCompound nbt = mockItemStack.getNbt();
-        if (nbt == null || !nbt.contains("MockItem", NbtElement.STRING_TYPE)) return FALLBACK;
+        if (nbt == null || !nbt.contains("MockItem", NbtElement.STRING_TYPE)) {
+            return FALLBACK;
+        }
 
         String mockItemId = nbt.getString("MockItem");
         Item mockItem = Registries.ITEM.get(new Identifier(mockItemId));
@@ -37,13 +39,17 @@ public class MockItem extends Item {
 
     public static ItemStack createMockStack(ItemStack stack) {
         // No need to create a mock stack if it already is one
-        if (isMockItem(stack)) return stack;
+        if (isMockItem(stack)) {
+            return stack;
+        }
 
         ItemStack mockStack = new ItemStack(JItemRegistry.MOCK_ITEM.get(), stack.getCount());
         NbtCompound nbt = mockStack.getOrCreateNbt();
         // Register which item it's mocking and copy all relevant NBT data
         nbt.putString("MockItem", Registries.ITEM.getId(stack.getItem()).toString());
-        if (stack.getNbt() != null) nbt.put("MockData", stack.getNbt());
+        if (stack.getNbt() != null) {
+            nbt.put("MockData", stack.getNbt());
+        }
 
         return mockStack;
     }

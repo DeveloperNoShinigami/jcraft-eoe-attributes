@@ -14,13 +14,17 @@ public class ItemStackMixin {
     @Inject(method = "isOf", at = @At("HEAD"), cancellable = true)
     private void mockItem(Item item, CallbackInfoReturnable<Boolean> cir) {
         ItemStack thiz = (ItemStack) (Object) this;
-        if (MockItem.isMockItem(thiz)) cir.setReturnValue(MockItem.getMockedStack(thiz).isOf(item));
+        if (MockItem.isMockItem(thiz)) {
+            cir.setReturnValue(MockItem.getMockedStack(thiz).isOf(item));
+        }
     }
 
     @Inject(method = "areEqual", at = @At("HEAD"), cancellable = true)
     private static void mockItemEqualsCheck(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> cir) {
 
-        if (!MockItem.isMockItem(left) && !MockItem.isMockItem(right)) return;
+        if (!MockItem.isMockItem(left) && !MockItem.isMockItem(right)) {
+            return;
+        }
 
         ItemStack stack1 = MockItem.isMockItem(left) ? MockItem.getMockedStack(left) : left;
         ItemStack stack2 = MockItem.isMockItem(right) ? MockItem.getMockedStack(right) : right;

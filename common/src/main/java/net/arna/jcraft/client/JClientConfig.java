@@ -33,7 +33,7 @@ public class JClientConfig implements ConfigData {
     public void setClientsidePrediction(boolean clientsidePrediction) {
         this.clientsidePrediction = clientsidePrediction;
 
-        NetworkManager.sendToServer( JPacketRegistry.C2S_PREDICTION_TRIGGER,
+        NetworkManager.sendToServer(JPacketRegistry.C2S_PREDICTION_TRIGGER,
                 PredictionTriggerPacket.write(clientsidePrediction));
     }
 

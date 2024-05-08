@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(RamImpactTask.class)
 public abstract class RamImpactTaskMixin {
-    @Shadow private Vec3d direction;
+    @Shadow
+    private Vec3d direction;
 
     @Redirect(
             method = "keepRunning(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/passive/GoatEntity;J)V",
@@ -26,7 +27,7 @@ public abstract class RamImpactTaskMixin {
     )
     private void redirect_keepRunning_takeKnockback_0(LivingEntity target, double strength, double x, double z) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             target.takeKnockback(strength, x, z);
             return;
         }

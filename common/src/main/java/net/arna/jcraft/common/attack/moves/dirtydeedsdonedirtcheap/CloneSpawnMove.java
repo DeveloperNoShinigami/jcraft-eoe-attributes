@@ -28,6 +28,7 @@ public class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity> {
         EMPTY(Items.AIR);
 
         public final Item weapon;
+
         CloneType(Item weapon) {
             this.weapon = weapon;
         }
@@ -49,8 +50,9 @@ public class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity> {
     @Override
     public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
         ItemStack weapon = ctx.get(CLONE_TYPE).weapon.getDefaultStack();
-        if (weapon.isDamageable())
+        if (weapon.isDamageable()) {
             weapon.setDamage(weapon.getMaxDamage());
+        }
 
         if (user instanceof ServerPlayerEntity playerEntity) {
             PlayerCloneEntity clone = new PlayerCloneEntity(attacker.getWorld());

@@ -60,7 +60,9 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
             .withAction((attacker, user, ctx, targets) -> {
                 user.heal(1);
                 float bloodMult = JUtils.getBloodMult(ctx.get(BloodSuckAttack.TARGET));
-                if (bloodMult <= 0) return;
+                if (bloodMult <= 0) {
+                    return;
+                }
                 attacker.vampireComponent.setBlood(attacker.vampireComponent.getBlood() + 2 * bloodMult);
                 JUtils.serverPlaySound(JSoundRegistry.VAMPIRE_SUCK, (ServerWorld) user.getWorld(), user.getPos(), 32);
             })
@@ -73,7 +75,7 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
             .withHitSpark(JParticleType.BACK_STAB) // todo: bloodsuck particles
             .withInfo(Text.literal("Blood Suck"), Text.literal("blockable grab"));
 
-    public static final SpaceRipperAttack SPACE_RIPPER_ATTACK = new SpaceRipperAttack(300, 1, 10,1f)
+    public static final SpaceRipperAttack SPACE_RIPPER_ATTACK = new SpaceRipperAttack(300, 1, 10, 1f)
             .withAction((attacker, user, ctx, targets) -> JUtils.serverPlaySound(JSoundRegistry.VAMPIRE_LASER_FIRE, (ServerWorld) user.getWorld(), user.getPos(), 96))
             .withInfo(Text.literal("Space Ripper Stingy Eyes (Fire)"), Text.empty());
     public static final HoldableMove<VampireSpec, State> SPACE_RIPPER_CHARGE = new HoldableMove<>(
@@ -101,8 +103,9 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
 
     private static void toggleNightVision(VampireSpec attacker, LivingEntity living, MoveContext moveContext) {
         attacker.nightVision = !attacker.nightVision;
-        if (!attacker.nightVision)
+        if (!attacker.nightVision) {
             living.removeStatusEffect(StatusEffects.NIGHT_VISION);
+        }
     }
 
     public VampireSpec(PlayerEntity player) {
@@ -127,11 +130,15 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
     @Override
     public void tickSpec() {
         super.tickSpec();
-        if (!hasUser() || getUserOrThrow().getWorld().isClient) return;
-        if (nightVision)
+        if (!hasUser() || getUserOrThrow().getWorld().isClient) {
+            return;
+        }
+        if (nightVision) {
             getUserOrThrow().addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 400, 0, true, false));
-        if (curMove != null && curMove.getOriginalMove() == SPACE_RIPPER_CHARGE)
+        }
+        if (curMove != null && curMove.getOriginalMove() == SPACE_RIPPER_CHARGE) {
             getMoveContext().incrementInt(SpaceRipperAttack.CHARGE_TIME, 1);
+        }
     }
 
     @Override

@@ -37,7 +37,9 @@ public class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> {
 
         MoveContext ctx = attacker.getMoveContext();
         boolean placingFirstStack = ctx.getBoolean(PLACING_FIRST_STACK);
-        if (placingFirstStack) ctx.set(PLACING, placeableStacks.get(attacker.getRandom().nextInt(placeableStacks.size())));
+        if (placingFirstStack) {
+            ctx.set(PLACING, placeableStacks.get(attacker.getRandom().nextInt(placeableStacks.size())));
+        }
 
         attacker.equipStack(EquipmentSlot.OFFHAND, ctx.get(PLACING).copy());
         ctx.setBoolean(PLACING_FIRST_STACK, !placingFirstStack);

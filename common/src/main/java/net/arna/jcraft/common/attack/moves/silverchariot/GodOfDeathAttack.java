@@ -21,8 +21,11 @@ public class GodOfDeathAttack extends AbstractSimpleAttack<GodOfDeathAttack, Sil
     public @NonNull Set<LivingEntity> perform(SilverChariotEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        if (targets.isEmpty()) StandEntity.stun(user, 30, 1);
-        else attacker.setMove(getFollowup(), SilverChariotEntity.State.BEAT_DOWN);
+        if (targets.isEmpty()) {
+            StandEntity.stun(user, 30, 1);
+        } else {
+            attacker.setMove(getFollowup(), SilverChariotEntity.State.BEAT_DOWN);
+        }
 
         return targets;
     }

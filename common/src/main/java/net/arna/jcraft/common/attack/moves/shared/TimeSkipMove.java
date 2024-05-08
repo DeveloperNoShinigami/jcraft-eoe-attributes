@@ -32,8 +32,9 @@ public class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends AbstractM
 
     @Override
     public boolean canBeInitiated(A attacker) {
-        if (Timestops.getTimestop(attacker.getUser()) != null)
+        if (Timestops.getTimestop(attacker.getUser()) != null) {
             return false;
+        }
         return super.canBeInitiated(attacker);
     }
 
@@ -53,8 +54,9 @@ public class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends AbstractM
     public static void doTimeSkip(IAttacker<?, ?> attacker, LivingEntity user, double distance, List<SoundEvent> sounds) {
         boolean hasVehicle = user.hasVehicle();
 
-        if (hasVehicle)
+        if (hasVehicle) {
             distance /= 3;
+        }
 
         Vec3d eyePos = user.getEyePos();
         HitResult hitResult = attacker.getEntityWorld().raycast(
@@ -67,14 +69,19 @@ public class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends AbstractM
 
         // 3s minimum ult cooldown
         CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
-        if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) < 60)
+        if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) < 60) {
             cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 60);
+        }
 
-        if (hasVehicle) user.getRootVehicle().setPosition(tpPos.x, tpPos.y, tpPos.z);
-        else user.teleport(tpPos.x, tpPos.y, tpPos.z);
+        if (hasVehicle) {
+            user.getRootVehicle().setPosition(tpPos.x, tpPos.y, tpPos.z);
+        } else {
+            user.teleport(tpPos.x, tpPos.y, tpPos.z);
+        }
 
-        for (SoundEvent sound : sounds)
+        for (SoundEvent sound : sounds) {
             attacker.getEntityWorld().playSound(null, tpPos.x, tpPos.y, tpPos.z, sound, SoundCategory.PLAYERS, 1f, 1f);
+        }
     }
 
     @Override

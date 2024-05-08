@@ -28,8 +28,9 @@ public class GEFrogEntity extends FrogEntity implements IOwnable, ICustomDamageH
             return true;
         }
 
-        if (source.getAttacker() instanceof LivingEntity living)
+        if (source.getAttacker() instanceof LivingEntity living) {
             return living.damage(source, amount);
+        }
         return false;
     }
 
@@ -52,14 +53,16 @@ public class GEFrogEntity extends FrogEntity implements IOwnable, ICustomDamageH
         boolean server = !getWorld().isClient;
 
         if (server) {
-            if (master == null) kill();
-            else {
+            if (master == null) {
+                kill();
+            } else {
                 // Go to master
                 getNavigation().startMovingTo(master, 3);
             }
 
-            if (--timeToLive == 0)
+            if (--timeToLive == 0) {
                 kill();
+            }
         }
 
         super.tick();
@@ -72,8 +75,9 @@ public class GEFrogEntity extends FrogEntity implements IOwnable, ICustomDamageH
 
     @Override
     public boolean handleDamage(Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
-        if (attacker instanceof LivingEntity living)
+        if (attacker instanceof LivingEntity living) {
             damageLogic(attacker.getWorld(), living, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, canBackstab, unblockable);
+        }
         return false;
     }
 }

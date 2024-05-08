@@ -19,8 +19,15 @@ import java.util.List;
 
 public class Timestops {
     protected static final List<DimensionData> timestops = new ArrayList<>();
-    public static void enqueue(DimensionData dimensionData) { timestops.add(dimensionData); }
-    public static void remove(DimensionData dimensionData) { timestops.remove(dimensionData); }
+
+    public static void enqueue(DimensionData dimensionData) {
+        timestops.add(dimensionData);
+    }
+
+    public static void remove(DimensionData dimensionData) {
+        timestops.remove(dimensionData);
+    }
+
     public static void tick(MinecraftServer server) {
         List<DimensionData> newActiveTimestops = new ArrayList<>();
 
@@ -40,10 +47,12 @@ public class Timestops {
                 List<? extends Entity> toStop = world.getEntitiesByClass(Entity.class,
                         new Box(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
 
-                for (Entity entity : toStop)
+                for (Entity entity : toStop) {
                     if (!entity.hasVehicle() && entity != user && (!(entity instanceof LivingEntity living) || entity != JUtils.getStand(living)) &&
-                            entity != user.getVehicle())
+                            entity != user.getVehicle()) {
                         JComponentPlatformUtils.getTimeStopData(entity).setTicks(2);
+                    }
+                }
 
                 newActiveTimestops.add(timestop);
             }
@@ -54,33 +63,43 @@ public class Timestops {
     }
 
     public static boolean isInTSRange(Vec3d pos) {
-        for (DimensionData timeStop : timestops)
-            if (timeStop != null)
-                if (timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536)
+        for (DimensionData timeStop : timestops) {
+            if (timeStop != null) {
+                if (timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                     return true;
+                }
+            }
+        }
 
         return false;
     }
 
     public static boolean isInTSRange(BlockPos pos) {
-        for (DimensionData timeStop : timestops)
-            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536)
+        for (DimensionData timeStop : timestops) {
+            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return true;
+            }
+        }
 
         return false;
     }
 
     public static int getTicksIfInTSRange(BlockPos pos) {
-        for (DimensionData timeStop : timestops)
-            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536)
+        for (DimensionData timeStop : timestops) {
+            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return timeStop.timer;
+            }
+        }
 
         return 0;
     }
 
     public static @Nullable DimensionData getTimestop(Entity entity) {
-        for (DimensionData d : timestops)
-            if (d.user == entity) return d;
+        for (DimensionData d : timestops) {
+            if (d.user == entity) {
+                return d;
+            }
+        }
         return null;
     }
 }

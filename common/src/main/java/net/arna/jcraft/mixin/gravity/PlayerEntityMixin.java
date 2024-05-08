@@ -131,7 +131,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     )
     private void inject_adjustMovementForSneaking(Vec3d movement, MovementType type, CallbackInfoReturnable<Vec3d> cir) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         Vec3d playerMovement = RotationUtil.vecWorldToPlayer(movement, gravityDirection);
 
@@ -281,7 +283,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     )
     private void modify_addDeathParticless_addParticle_0(Args args) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         Vec3d vec3d = this.getPos().subtract(RotationUtil.vecPlayerToWorld(this.getPos().subtract(args.get(1), args.get(2), args.get(3)), gravityDirection));
         args.set(1, vec3d.x);
@@ -299,7 +303,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     )
     private void modify_tickMovement_expand_0(Args args) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         Vec3d vec3d = RotationUtil.maskPlayerToWorld(args.get(0), args.get(1), args.get(2), gravityDirection);
         args.set(0, vec3d.x);
@@ -317,7 +323,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     )
     private void modify_tickMovement_expand_1(Args args) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         Vec3d vec3d = RotationUtil.maskPlayerToWorld(args.get(0), args.get(1), args.get(2), gravityDirection);
         args.set(0, vec3d.x);

@@ -31,9 +31,13 @@ public class SHAAttackGoal extends Goal {
     }
 
     public boolean shouldContinue() {
-        if (!target.isAlive() || target.isRemoved()) return false;
-        else if (sha.squaredDistanceTo(target) > 1024.0D) return false;
-        else return !sha.getNavigation().isIdle() || canStart();
+        if (!target.isAlive() || target.isRemoved()) {
+            return false;
+        } else if (sha.squaredDistanceTo(target) > 1024.0D) {
+            return false;
+        } else {
+            return !sha.getNavigation().isIdle() || canStart();
+        }
     }
 
     public void stop() {

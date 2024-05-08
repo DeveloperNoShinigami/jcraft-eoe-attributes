@@ -19,6 +19,7 @@ public class GoldExperienceRenderer extends StandEntityRenderer<GoldExperienceEn
     private int currentTick = -1;
     private static final int overclockWindupPoint = GoldExperienceEntity.OVERCLOCK.getWindupPoint();
     private static final ParticleEffect chargeParticle = ParticleTypes.COMPOSTER;
+
     public GoldExperienceRenderer(EntityRendererFactory.Context context) {
         super(context, new GoldenExperienceModel());
     }

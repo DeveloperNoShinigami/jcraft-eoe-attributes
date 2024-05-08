@@ -3,7 +3,6 @@ package net.arna.jcraft.common.block;
 import com.mojang.datafixers.util.Either;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
 import net.arna.jcraft.registry.JBlockRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -40,22 +39,25 @@ public class CoffinBlock extends BedBlock {
         if (world.isClient) {
             return ActionResult.CONSUME;
         } else {
-            if (!state.isOf(this))
+            if (!state.isOf(this)) {
                 return ActionResult.CONSUME;
+            }
 
             Direction facing = state.get(FACING);
 
             if (!isBedWorking(world)) {
                 world.removeBlock(pos, false);
                 BlockPos blockPos = pos.offset(facing.getOpposite());
-                if (world.getBlockState(blockPos).isOf(this))
+                if (world.getBlockState(blockPos).isOf(this)) {
                     world.removeBlock(blockPos, false);
+                }
 
                 Vec3d vec3d = pos.toCenterPos();
-                world.createExplosion(null, world.getDamageSources().badRespawnPoint(vec3d), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0F, true, World.ExplosionSourceType.BLOCK);
+                world.createExplosion(null, world.getDamageSources().badRespawnPoint(vec3d), null, (double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5, 5.0F, true, World.ExplosionSourceType.BLOCK);
             } else if (state.get(OCCUPIED)) {
-                if (!wakeVillager(world, pos))
+                if (!wakeVillager(world, pos)) {
                     player.sendMessage(Text.translatable("block.minecraft.bed.occupied"), true);
+                }
             } else {
                 Either<PlayerEntity.SleepFailureReason, Unit> sleep = player.trySleep(pos);
                 if (sleep.right().isPresent()) {
@@ -72,7 +74,9 @@ public class CoffinBlock extends BedBlock {
 
     private boolean wakeVillager(World world, BlockPos pos) {
         List<VillagerEntity> list = world.getEntitiesByClass(VillagerEntity.class, new Box(pos), LivingEntity::isSleeping);
-        if (list.isEmpty()) return false;
+        if (list.isEmpty()) {
+            return false;
+        }
         list.get(0).wakeUp();
         return true;
     }
@@ -109,8 +113,9 @@ public class CoffinBlock extends BedBlock {
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         spawnBreakParticles(world, player, pos, state);
         world.emitGameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Emitter.of(player, state));
-        if (!player.getAbilities().creativeMode)
+        if (!player.getAbilities().creativeMode) {
             dropStack(world, pos, new ItemStack(JBlockRegistry.COFFIN_BLOCK.get()));
+        }
     }
 
     @Override

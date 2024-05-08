@@ -4,24 +4,12 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.block.FoolishSandBlock;
 import net.arna.jcraft.common.block.SoulBlock;
-import net.arna.jcraft.common.item.*;
-import net.arna.jcraft.common.spec.SpecType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterials;
-import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Rarity;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static net.arna.jcraft.JCraft.BLOCK_REGISTRY;
-import static net.arna.jcraft.JCraft.ITEM_REGISTRY;
 
 public interface JBlockRegistry {
 

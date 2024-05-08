@@ -47,23 +47,31 @@ public class DazedStatusEffect extends StatusEffect {
         if (amplifier < 2) { // Immobilizing stun
             yVel = MathHelper.clamp(yVel, -0.5, 0.5);
             horizontalMult = 0.8;
-        } else if (amplifier == 3) horizontalMult = 1;
+        } else if (amplifier == 3) {
+            horizontalMult = 1;
+        }
 
         entity.setVelocity(eVel.x * horizontalMult, yVel, eVel.z * horizontalMult);
 
-        if (amplifier == 2) return; // Blockstun should not disable targetting
-        if (!(entity instanceof MobEntity mob)) return;
+        if (amplifier == 2) {
+            return; // Blockstun should not disable targetting
+        }
+        if (!(entity instanceof MobEntity mob)) {
+            return;
+        }
         mob.setTarget(null);
         mob.setAttacking(false);
     }
 
     @Override
     public double adjustModifierAmount(int amplifier, EntityAttributeModifier modifier) {
-        if (Objects.equals(modifier.getId(), slowUUID)) return switch (amplifier) {
-            case 3, 1, 0 -> -1;
-            case 4 -> -0.25;
-            default -> 0;
-        };
+        if (Objects.equals(modifier.getId(), slowUUID)) {
+            return switch (amplifier) {
+                case 3, 1, 0 -> -1;
+                case 4 -> -0.25;
+                default -> 0;
+            };
+        }
 
         return super.adjustModifierAmount(amplifier, modifier);
     }

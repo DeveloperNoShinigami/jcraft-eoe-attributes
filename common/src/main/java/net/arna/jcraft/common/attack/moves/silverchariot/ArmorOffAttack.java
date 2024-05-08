@@ -27,12 +27,16 @@ public class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, SilverC
     }
 
     public void tickArmor(SilverChariotEntity stand) {
-        if (stand.getMode() != SilverChariotEntity.Mode.ARMORLESS) return;
+        if (stand.getMode() != SilverChariotEntity.Mode.ARMORLESS) {
+            return;
+        }
 
         int armorTime = stand.getMoveContext().getInt(ARMOR_TIME);
-        if (--armorTime > 0)
+        if (--armorTime > 0) {
             stand.getMoveContext().setInt(ARMOR_TIME, armorTime);
-        else stand.setMode(SilverChariotEntity.Mode.REGULAR);
+        } else {
+            stand.setMode(SilverChariotEntity.Mode.REGULAR);
+        }
     }
 
     @Override

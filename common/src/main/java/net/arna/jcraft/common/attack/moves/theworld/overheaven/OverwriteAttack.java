@@ -21,7 +21,8 @@ import java.util.List;
 
 public class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack, TheWorldOverHeavenEntity> {
     public static final MoveVariable<IntList> OVERWRITE_TIMES = new MoveVariable<>(IntList.class);
-    public static final MoveVariable<List<LivingEntity>> OVERWRITE_TARGETS = new MoveVariable<>(new TypeToken<>() {});
+    public static final MoveVariable<List<LivingEntity>> OVERWRITE_TARGETS = new MoveVariable<>(new TypeToken<>() {
+    });
 
     public OverwriteAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                            float hitboxSize, float knockback, float offset) {
@@ -50,7 +51,9 @@ public class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack, TheWo
             case 3 -> {
                 target.heal(4f);
 
-                if (!(target instanceof MobEntity)) return;
+                if (!(target instanceof MobEntity)) {
+                    return;
+                }
                 JComponentPlatformUtils.getMiscData(target).setSlavedTo(attacker.getUserOrThrow().getUuid());
                 overwriteTimes.add(1048576);
                 overwriteTargets.add(target);

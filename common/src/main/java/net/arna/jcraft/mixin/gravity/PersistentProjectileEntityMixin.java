@@ -51,7 +51,9 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
     )
     private static void modifyargs_init_init_0(Args args, EntityType<? extends ThrownEntity> type, LivingEntity owner, World world) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
-        if (gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         Vec3d pos = owner.getEyePos().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
         args.set(1, pos.x);

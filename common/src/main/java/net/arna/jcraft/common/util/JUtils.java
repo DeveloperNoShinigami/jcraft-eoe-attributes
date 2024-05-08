@@ -83,14 +83,17 @@ public final class JUtils {
         GravityChangerAPI.addWorldVelocity(entity, vel.x, vel.y, vel.z);
         syncVelocityUpdate(entity);
     }
+
     public static void addVelocity(Entity entity, double x, double y, double z) {
         GravityChangerAPI.addWorldVelocity(entity, x, y, z);
         syncVelocityUpdate(entity);
     }
+
     public static void setVelocity(Entity entity, Vec3d vel) {
         entity.setVelocity(vel.x, vel.y, vel.z);
         syncVelocityUpdate(entity);
     }
+
     public static void setVelocity(Entity entity, double x, double y, double z) {
         entity.setVelocity(x, y, z);
         syncVelocityUpdate(entity);
@@ -98,8 +101,9 @@ public final class JUtils {
 
     public static void syncVelocityUpdate(Entity entity) {
         entity.velocityModified = true;
-        if (entity instanceof ServerPlayerEntity serverPlayer)
+        if (entity instanceof ServerPlayerEntity serverPlayer) {
             serverPlayer.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(entity));
+        }
     }
 
     public static boolean canAct(LivingEntity living) {
@@ -129,13 +133,25 @@ public final class JUtils {
         double maxZ = Double.MIN_VALUE;
 
         for (Box box : boxes) {
-            if (box.minX < minX) minX = box.minX;
-            if (box.minY < minY) minY = box.minY;
-            if (box.minZ < minZ) minZ = box.minZ;
+            if (box.minX < minX) {
+                minX = box.minX;
+            }
+            if (box.minY < minY) {
+                minY = box.minY;
+            }
+            if (box.minZ < minZ) {
+                minZ = box.minZ;
+            }
 
-            if (box.maxX < maxX) maxX = box.maxX;
-            if (box.maxY < maxY) maxY = box.maxY;
-            if (box.maxZ < maxZ) maxZ = box.maxZ;
+            if (box.maxX < maxX) {
+                maxX = box.maxX;
+            }
+            if (box.maxY < maxY) {
+                maxY = box.maxY;
+            }
+            if (box.maxZ < maxZ) {
+                maxZ = box.maxZ;
+            }
 
             buf.writeDouble(box.minX);
             buf.writeDouble(box.minY);
@@ -165,20 +181,25 @@ public final class JUtils {
         Vec3d v1 = center.subtract(size, size, size);
         Vec3d v2 = center.add(size, size, size);
 
-        if (size > 0) displayHitbox(world, v1, v2);
+        if (size > 0) {
+            displayHitbox(world, v1, v2);
+        }
 
         List<LivingEntity> hit = world.getEntitiesByClass(LivingEntity.class, new Box(v1, v2),
                 EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(predicate));
         Set<LivingEntity> toReturn = new HashSet<>(hit);
         for (LivingEntity l : hit)
-            //JCraft.LOGGER.info("Stand: " + stand);
-            if (l instanceof StandEntity<?, ?> stand && stand.hasUser())
+        //JCraft.LOGGER.info("Stand: " + stand);
+        {
+            if (l instanceof StandEntity<?, ?> stand && stand.hasUser()) {
                 toReturn.add(stand.getUserOrThrow());
+            }
+        }
 
         return toReturn;
     }
 
-    public static JSpec<?,?> getSpec(PlayerEntity player) {
+    public static JSpec<?, ?> getSpec(PlayerEntity player) {
         return JComponentPlatformUtils.getSpecData(player).getSpec();
     }
 
@@ -216,8 +237,9 @@ public final class JUtils {
         double rangeSquared = start.squaredDistanceTo(end);
 
         Predicate<Entity> combined = EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR;
-        if (entityPredicate != null)
+        if (entityPredicate != null) {
             combined = combined.and(entityPredicate);
+        }
 
         EntityHitResult eHit = ProjectileUtil.raycast(entity, start, end,
                 entity.getBoundingBox().expand(rangeSquared), // Not technically necessary but doesn't matter
@@ -231,10 +253,11 @@ public final class JUtils {
 
         if (entityHit && !eHit.getEntity().isConnectedThroughVehicle(entity)) {
             Vec3d entityPos = eHit.getPos();
-            if (blockPos.squaredDistanceTo(start) > entityPos.squaredDistanceTo(start))
+            if (blockPos.squaredDistanceTo(start) > entityPos.squaredDistanceTo(start)) {
                 return entityPos;
-            else
+            } else {
                 return blockPos;
+            }
         }
 
         return blockPos;
@@ -267,8 +290,9 @@ public final class JUtils {
      * @return the stand user if the specified entity is a {@link StandEntity}
      */
     public static LivingEntity getUserIfStand(LivingEntity ent) {
-        if (ent instanceof StandEntity<?, ?> stand && stand.hasUser())
+        if (ent instanceof StandEntity<?, ?> stand && stand.hasUser()) {
             return stand.getUser();
+        }
         return ent;
     }
 
@@ -277,7 +301,9 @@ public final class JUtils {
     }
 
     public static void projectileDamageLogic(ProjectileEntity proj, World world, Entity ent, Vec3d kb, int stunT, int stunType, boolean overrideStun, float damage, int blockstun, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean unblockable, boolean canBackstab) {
-        if (world.isClient) return;
+        if (world.isClient) {
+            return;
+        }
         Objects.requireNonNull(proj, "Attempted to run ProjectileDamageLogic with invalid projectile in world " + world);
         Entity owner = proj.getOwner();
         DamageSource source;
@@ -289,18 +315,22 @@ public final class JUtils {
 
         if (ent instanceof LivingEntity living) {
             LivingEntity target = living;
-            if (ent instanceof StandEntity<?, ?> stand)
+            if (ent instanceof StandEntity<?, ?> stand) {
                 target = stand.getUser();
+            }
             damageLogic(world, target, kb, stunT, stunType, overrideStun, damage, false, blockstun, source, owner, hitAnimation, canBackstab, unblockable);
         }
 
-        if (ent instanceof EndCrystalEntity endCrystal)
+        if (ent instanceof EndCrystalEntity endCrystal) {
             endCrystal.damage(source, damage);
+        }
     }
 
     //To check method ms usage, use spark[something]
     public static boolean isBlocking(LivingEntity entity) {
-        if (entity instanceof StandEntity<?, ?> stand) return stand.blocking;
+        if (entity instanceof StandEntity<?, ?> stand) {
+            return stand.blocking;
+        }
         StandEntity<?, ?> stand = JUtils.getStand(entity);
         return stand != null && stand.blocking;
     }
@@ -351,17 +381,22 @@ public final class JUtils {
             for (int x = originX - radius; x <= originX + radius; x++) {
                 for (int z = originZ - radius; z <= originZ + radius; z++) {
                     double distance = Math.sqrt(Math.pow(x - originX, 2) + Math.pow(y - originY, 2) + Math.pow(z - originZ, 2));
-                    if (!(distance <= radius)) continue;
+                    if (!(distance <= radius)) {
+                        continue;
+                    }
 
                     double skipProbability = (distance / radius);
-                    if (!(world.getRandom().nextDouble() > skipProbability / 2)) continue;
+                    if (!(world.getRandom().nextDouble() > skipProbability / 2)) {
+                        continue;
+                    }
 
                     BlockPos pos = new BlockPos(x, y, z);
                     BlockState state = world.getBlockState(pos);
                     int x0 = x - originX + radius;
                     int z0 = z - originZ + radius;
-                    if (!state.isSideSolid(world, pos, Direction.UP, SideShapeType.RIGID) || array[x0][z0])
+                    if (!state.isSideSolid(world, pos, Direction.UP, SideShapeType.RIGID) || array[x0][z0]) {
                         continue;
+                    }
 
                     array[x0][z0] = true;
 
@@ -389,16 +424,20 @@ public final class JUtils {
         explosion.collectBlocksAndDamageEntities();
         explosion.affectWorld(true);
 
-        if (world.isClient) return;
-        for (ServerPlayerEntity player : around((ServerWorld) world, new Vec3d(x, y, z), 64))
+        if (world.isClient) {
+            return;
+        }
+        for (ServerPlayerEntity player : around((ServerWorld) world, new Vec3d(x, y, z), 64)) {
             JExplosionPacket.send(player, x, y, z, power, explosion, modifier);
+        }
     }
 
     /**
      * Supposed to be used in a stream.
      * Turns every object in the stream into a pair of its index in the stream and the object.
-     * @return A function that turns every object into an enumerated pair.
+     *
      * @param <T> The type of the object
+     * @return A function that turns every object into an enumerated pair.
      */
     public static <T> Function<T, IntObjectPair<T>> enumerate() {
         AtomicInteger index = new AtomicInteger();
@@ -425,16 +464,21 @@ public final class JUtils {
 
     /**
      * Cancels the Spec and Stand moves for a specified {@link LivingEntity}
+     *
      * @param livingEntity Entity to cancel the moves of
      */
     public static void cancelMoves(LivingEntity livingEntity) {
         if (livingEntity instanceof PlayerEntity player) {
             JSpec<?, ?> spec = JUtils.getSpec(player);
-            if (spec != null) spec.cancelMove();
+            if (spec != null) {
+                spec.cancelMove();
+            }
         }
 
         StandEntity<?, ?> stand = JUtils.getStand(livingEntity);
-        if (stand != null) stand.cancelMove();
+        if (stand != null) {
+            stand.cancelMove();
+        }
     }
 
     /**
@@ -510,23 +554,30 @@ public final class JUtils {
     public static float getBloodMult(LivingEntity entity) {
         EntityType<?> type = entity.getType();
 
-        if (type.isIn(EntityTypeTags.RAIDERS))
+        if (type.isIn(EntityTypeTags.RAIDERS)) {
             return 1.5f;
+        }
 
-        if (type.isIn(EntityTypeTags.SKELETONS) || entity instanceof JAttackEntity)
+        if (type.isIn(EntityTypeTags.SKELETONS) || entity instanceof JAttackEntity) {
             return 0;
+        }
 
         if (type.isIn(EntityTypeTags.AXOLOTL_HUNT_TARGETS)) // Fishes
+        {
             return 0.25f;
+        }
 
-        if (entity instanceof AnimalEntity)
+        if (entity instanceof AnimalEntity) {
             return 0.5f;
+        }
 
-        if (uniqueBloodMults.containsKey(type))
+        if (uniqueBloodMults.containsKey(type)) {
             return uniqueBloodMults.get(type);
+        }
 
-        if (!entity.isUndead())
+        if (!entity.isUndead()) {
             return entity.getMaxHealth() / 20.0f;
+        }
 
         return 0;
     }
@@ -541,12 +592,13 @@ public final class JUtils {
 
     /**
      * Shoots a projectile without interference from GravityAPI.
+     *
      * @param projectile
-     * @param shooter Entity this projectile inherits velocity from
-     * @param pitch in degrees
-     * @param yaw in degrees
-     * @param roll in degrees
-     * @param speed in meters per tick
+     * @param shooter    Entity this projectile inherits velocity from
+     * @param pitch      in degrees
+     * @param yaw        in degrees
+     * @param roll       in degrees
+     * @param speed      in meters per tick
      * @param divergence Spread, done via a {@link Vec3d} of {@link net.minecraft.util.math.random.Random#nextTriangular(double, double)} calls
      */
     public static void shoot(@NotNull ProjectileEntity projectile, @Nullable Entity shooter, float pitch, float yaw, float roll, float speed, float divergence) {

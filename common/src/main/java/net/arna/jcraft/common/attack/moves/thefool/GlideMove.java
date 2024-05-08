@@ -23,7 +23,9 @@ public class GlideMove extends AbstractMove<GlideMove, TheFoolEntity> {
         super.tick(attacker);
 
         LivingEntity user = attacker.getUser();
-        if (user == null) return;
+        if (user == null) {
+            return;
+        }
 
         user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 4, 4, true, false));
         double yVel = attacker.getRemoteJumpInput() ? 0.07 : 0;

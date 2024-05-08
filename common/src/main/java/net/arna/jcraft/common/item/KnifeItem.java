@@ -53,8 +53,9 @@ public class KnifeItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        if (user.hasStatusEffect(JStatusRegistry.DAZED))
+        if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
             return TypedActionResult.fail(stack);
+        }
 
         user.setCurrentHand(hand);
         return TypedActionResult.consume(stack);
@@ -62,7 +63,9 @@ public class KnifeItem extends Item {
 
     protected float getSpeedMult(ItemStack stack, int remainingUseTicks) {
         float speedMult = (getMaxUseTime(stack) - remainingUseTicks);
-        if (speedMult > getChargeTime()) speedMult = getChargeTime();
+        if (speedMult > getChargeTime()) {
+            speedMult = getChargeTime();
+        }
         speedMult /= getChargeTime();
         return speedMult;
     }
@@ -79,14 +82,17 @@ public class KnifeItem extends Item {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (user.hasStatusEffect(JStatusRegistry.DAZED))
+        if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
             return;
+        }
 
         if (!world.isClient) {
             if (user instanceof ServerPlayerEntity serverPlayer) {
                 serverPlayer.getItemCooldownManager().set(this, 15);
                 serverPlayer.incrementStat(Stats.USED.getOrCreateStat(this));
-                if (!serverPlayer.getAbilities().creativeMode) stack.decrement(1);
+                if (!serverPlayer.getAbilities().creativeMode) {
+                    stack.decrement(1);
+                }
             }
 
             KnifeProjectile knife = new KnifeProjectile(world, user);

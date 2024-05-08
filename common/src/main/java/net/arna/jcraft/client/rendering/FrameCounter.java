@@ -25,7 +25,7 @@ public class FrameCounter {
      */
     @Getter
     private final boolean shouldLoop;
-//    @Getter
+    //    @Getter
     private long start, offset;
     @Getter
     private boolean paused;
@@ -49,7 +49,9 @@ public class FrameCounter {
      * Updates the offset and pauses the counting.
      */
     public void pause() {
-        if (paused) return;
+        if (paused) {
+            return;
+        }
         offset += Util.getMeasuringTimeNano() - start;
         paused = true;
     }
@@ -58,7 +60,9 @@ public class FrameCounter {
      * Updates the start time and unpauses the counting.
      */
     public void unpause() {
-        if (!paused) return;
+        if (!paused) {
+            return;
+        }
         start = Util.getMeasuringTimeNano();
         paused = false;
     }
@@ -67,10 +71,11 @@ public class FrameCounter {
      * Gets the frame the counter is currently at.
      * If the frame is greater than the frame-count and the
      * animation does not loop, returns {@code -1} instead.
+     *
      * @return Either the current frame or {@code -1}
      */
     public int getCurrentFrame() {
-        long d = (paused ? 0 :  Util.getMeasuringTimeNano() - start) + offset;
+        long d = (paused ? 0 : Util.getMeasuringTimeNano() - start) + offset;
         int frame = (int) (d / singleFrameTime);
 
         return !shouldLoop && frame >= frameCount ? -1 : frame % frameCount;

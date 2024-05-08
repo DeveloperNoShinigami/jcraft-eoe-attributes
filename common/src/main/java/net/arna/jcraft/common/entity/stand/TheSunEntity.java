@@ -2,7 +2,6 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
@@ -23,7 +22,6 @@ import net.minecraft.block.FluidDrainable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageSources;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -80,8 +78,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                 MeteorProjectile meteor = fireMeteor(attacker, user, pos, getLookVector(pos, attacker.targetPosition), 2.5f, 0f);
                 meteor.setNoGravity(true);
 
-                if (attacker.getScale() == MAX_SCALE)
+                if (attacker.getScale() == MAX_SCALE) {
                     meteor.setExplosive(true);
+                }
             })
             .markRanged()
             .withInfo(
@@ -107,8 +106,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
             100, 10, 110, 0, 0, 0, 0, 0, 0, 2
     )
             .withAction((attacker, user, ctx, targets) -> {
-                for (int i = 0; i < attacker.getScale(); i++)
+                for (int i = 0; i < attacker.getScale(); i++) {
                     fireMeteor(attacker, user, attacker.randomPos(), JUtils.randUnitVec(attacker.random), 1.25f, 0f);
+                }
             })
             .withSound(JSoundRegistry.SUN_SHOWER)
             .withoutSlowness()
@@ -199,8 +199,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         meteor.setVelocity(velocity.x, velocity.y, velocity.z, speed, divergence);
 
         attacker.getWorld().spawnEntity(meteor);
-        if (!attacker.getCurrentMove().isBarrage())
+        if (!attacker.getCurrentMove().isBarrage()) {
             attacker.playSound(JSoundRegistry.SUN_METEOR_FIRE, 1f, 1f);
+        }
 
         return meteor;
     }
@@ -249,7 +250,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
 
         description = "Long-range Projectile ZONER";
 
-        freespace = "Cannot buffer moves.\n Must stay within "+ MAX_DISTANCE + " of the user, otherwise it loses size and disappears.\nGrace period of 1 second before heat field activates after summoning.\nHeat field applies Nausea > Weakness > Slowness > Burning as entities get closer.\n";
+        freespace = "Cannot buffer moves.\n Must stay within " + MAX_DISTANCE + " of the user, otherwise it loses size and disappears.\nGrace period of 1 second before heat field activates after summoning.\nHeat field applies Nausea > Weakness > Slowness > Burning as entities get closer.\n";
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0f, 0.8f, 0.4f),
@@ -333,7 +334,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                     Vec3d rangeMod = user.getRotationVector().multiply(MAX_DISTANCE);
                     desiredPosition = getWorld().raycast(new RaycastContext(eP, eP.add(rangeMod),
                             RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, user)).getPos();
-                } else togglePassive();
+                } else {
+                    togglePassive();
+                }
             }
             default -> {
                 return super.handleMove(type);
@@ -343,7 +346,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     private void setTargetPosition(LivingEntity user) {
-        if (user == null) return;
+        if (user == null) {
+            return;
+        }
 
         Vec3d eP = user.getEyePos();
         Vec3d rangeMod = user.getRotationVector().multiply(AIMING_DISTANCE);
@@ -353,13 +358,17 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                 AIMING_DISTANCE * AIMING_DISTANCE
         );
 
-        if (eHit != null) targetPosition = eHit.getPos();
-        else targetPosition = user.getWorld().raycast(new RaycastContext(eP, eP.add(rangeMod),
-                RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, user)).getPos();
+        if (eHit != null) {
+            targetPosition = eHit.getPos();
+        } else {
+            targetPosition = user.getWorld().raycast(new RaycastContext(eP, eP.add(rangeMod),
+                    RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, user)).getPos();
+        }
 
-        if (user instanceof ServerPlayerEntity serverPlayer)
+        if (user instanceof ServerPlayerEntity serverPlayer) {
             serverPlayer.networkHandler.sendPacket(new ParticleS2CPacket(JParticleTypeRegistry.SUN_LOCK_ON, true,
-            targetPosition.x, targetPosition.y, targetPosition.z, 0, 0, 0, 0, 1));
+                    targetPosition.x, targetPosition.y, targetPosition.z, 0, 0, 0, 0, 1));
+        }
     }
 
     @Override
@@ -383,7 +392,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (source.isIn(DamageTypeTags.IS_FIRE) || source.isOf(DamageTypes.IN_WALL)) return false;
+        if (source.isIn(DamageTypeTags.IS_FIRE) || source.isOf(DamageTypes.IN_WALL)) {
+            return false;
+        }
         return super.damage(source, amount);
     }
 
@@ -408,10 +419,12 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     @Override
-    public void tryBlock() {}
+    public void tryBlock() {
+    }
 
     /**
      * Modified from {@link Entity#pushAwayFrom(Entity)}.
+     *
      * @param entity The entity to push away.
      */
     @Override
@@ -426,15 +439,18 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                     d /= f;
                     e /= f;
                     double g = 1.0 / f;
-                    if (g > 1.0) g = 1.0;
+                    if (g > 1.0) {
+                        g = 1.0;
+                    }
 
                     d *= g;
                     e *= g;
                     d *= 0.1;
                     e *= 0.1;
 
-                    if (entity.isPushable())
+                    if (entity.isPushable()) {
                         entity.addVelocity(d, 0.0, e);
+                    }
                 }
             }
         }
@@ -450,7 +466,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         super.tick();
 
         LivingEntity user = getUser();
-        if (user == null) return;
+        if (user == null) {
+            return;
+        }
 
         float scale = getScale();
         float heatFieldSize = scale * 20.0F;
@@ -458,11 +476,12 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         if (getWorld().isClient()) {
             Vec3d pos = randomPos();
             Vec3d vel = JUtils.randUnitVec(random).multiply(0.2 * scale).add(getVelocity());
-            for (int i = 0; i < (int)(heatFieldSize); i++)
-                getWorld().addParticle( getSkin() == 2 ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
+            for (int i = 0; i < (int) (heatFieldSize); i++) {
+                getWorld().addParticle(getSkin() == 2 ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                         false, pos.x, pos.y, pos.z,
                         vel.x, vel.y, vel.z
                 );
+            }
 
         } else {
             speed = 0.5F / scale;
@@ -470,8 +489,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
             Vec3d pos = getPos();
             Vec3d userPos = user.getPos();
 
-            if (!isRemote())
+            if (!isRemote()) {
                 setRemote(true);
+            }
 
             // Fly away when summoned
             if (desiredPosition == null) {
@@ -483,8 +503,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                 double distance = pos.squaredDistanceTo(userPos);
                 if (distance > MAX_DISTANCE * MAX_DISTANCE) {
                     desiredPosition = desiredPosition.add(userPos.subtract(pos).normalize());
-                    if (++overextensionTime > 20)
+                    if (++overextensionTime > 20) {
                         dataTracker.set(SCALE, MathHelper.clamp(getScale() - 0.1f, MIN_SCALE, MAX_SCALE));
+                    }
                 } else {
                     overextensionTime = 0;
                 }
@@ -499,22 +520,25 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
             }
 
             if (age > 20) {
-                if (age % 40 == 0 && random.nextDouble() >= 0.5)
+                if (age % 40 == 0 && random.nextDouble() >= 0.5) {
                     playSound(JSoundRegistry.SUN_IDLE, 1f, random.nextFloat());
+                }
 
                 if (heatFieldSize > 0) {
                     Collection<Entity> entities = getWorld().getOtherEntities(this, getBoundingBox().expand(heatFieldSize), EntityPredicates.VALID_ENTITY.and(this::canSee));
                     for (Entity entity : entities) {
                         double distance = entity.squaredDistanceTo(this);
                         double exposure = 125.0 * scale;
-                        if (distance == 0)
+                        if (distance == 0) {
                             exposure *= 10;
-                        else
+                        } else {
                             exposure *= 1 / distance;
+                        }
 
                         if (exposure > 2) {
-                            if (exposure > 8)
-                                entity.damage(JDamageSources.create( getWorld(), DamageTypes.ON_FIRE), 1.5f);
+                            if (exposure > 8) {
+                                entity.damage(JDamageSources.create(getWorld(), DamageTypes.ON_FIRE), 1.5f);
+                            }
                             entity.setOnFireFor(2);
                         }
 

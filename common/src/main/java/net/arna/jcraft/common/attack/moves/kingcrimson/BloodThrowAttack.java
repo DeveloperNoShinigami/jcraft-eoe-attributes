@@ -6,7 +6,6 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.BloodProjectile;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 
 import java.util.Set;

@@ -30,7 +30,7 @@ public class ServerConfigUI {
                     IntOption intOption = (IntOption) option;
                     if (intOption.getMin() != null && intOption.getMax() != null) {
                         IntSliderBuilder sliderBuilder = builder.entryBuilder().startIntSlider(optionText, intOption.getValue(),
-                                intOption.getMin(), intOption.getMax())
+                                        intOption.getMin(), intOption.getMax())
                                 .setDefaultValue(intOption.getDefaultValue())
                                 .setSaveConsumer(value -> {
                                     intOption.setValue(value);
@@ -46,11 +46,17 @@ public class ServerConfigUI {
                                     changedOptions.add(intOption);
                                 });
 
-                        if (intOption.getMin() != null) fieldBuilder.setMin(intOption.getMin());
-                        else fieldBuilder.removeMin();
+                        if (intOption.getMin() != null) {
+                            fieldBuilder.setMin(intOption.getMin());
+                        } else {
+                            fieldBuilder.removeMin();
+                        }
 
-                        if (intOption.getMax() != null) fieldBuilder.setMax(intOption.getMax());
-                        else fieldBuilder.removeMax();
+                        if (intOption.getMax() != null) {
+                            fieldBuilder.setMax(intOption.getMax());
+                        } else {
+                            fieldBuilder.removeMax();
+                        }
 
                         yield fieldBuilder.build();
                     }
@@ -64,11 +70,17 @@ public class ServerConfigUI {
                                 changedOptions.add(floatOption);
                             });
 
-                    if (floatOption.getMin() != null) fieldBuilder.setMin(floatOption.getMin());
-                    else fieldBuilder.removeMin();
+                    if (floatOption.getMin() != null) {
+                        fieldBuilder.setMin(floatOption.getMin());
+                    } else {
+                        fieldBuilder.removeMin();
+                    }
 
-                    if (floatOption.getMax() != null) fieldBuilder.setMax(floatOption.getMax());
-                    else fieldBuilder.removeMax();
+                    if (floatOption.getMax() != null) {
+                        fieldBuilder.setMax(floatOption.getMax());
+                    } else {
+                        fieldBuilder.removeMax();
+                    }
 
                     yield fieldBuilder.build();
                 }

@@ -55,8 +55,9 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;tickMovement()V", shift = At.Shift.AFTER))
     public void jcraft$tick(CallbackInfo callbackInfo) {
         LivingEntity living = LivingEntity.class.cast(this);
-        if (hitCount > 0 && !living.hasStatusEffect(JStatusRegistry.DAZED))
+        if (hitCount > 0 && !living.hasStatusEffect(JStatusRegistry.DAZED)) {
             ((IDamageScaler) this).jcraft$resetHitCount();
+        }
     }
 /*TODO
     // Make stand users rideable entities in water (prevents stand desummon)
@@ -70,7 +71,9 @@ public abstract class LivingEntityMixin implements IDamageScaler {
 
     @Inject(cancellable = true, method = "onAttacking", at = @At("HEAD"))
     public void jcraft$onAttacking(Entity target, CallbackInfo info) {
-        if (JUtils.isAffectedByTimeStop((LivingEntity) (Object) this)) info.cancel();
+        if (JUtils.isAffectedByTimeStop((LivingEntity) (Object) this)) {
+            info.cancel();
+        }
     }
 
     // Inability to jump in specific circumstances
@@ -83,7 +86,9 @@ public abstract class LivingEntityMixin implements IDamageScaler {
                 entity.hasStatusEffect(JStatusRegistry.KNOCKDOWN) || // Knocked down
                         (stun != null && stun.getAmplifier() != 2) || // Stunned (not blocking)
                         (stand != null && stand.isRemoteAndControllable()) // Stand ON in controllable remote mode
-        ) cir.setReturnValue(-1.0D); // Nullify jump
+        ) {
+            cir.setReturnValue(-1.0D); // Nullify jump
+        }
         /*
         else if (stand != null && (stand.curAttack != null && stand.curAttack.attackType == AttackType.BARRAGE)) { // Stand ON and barraging
             cir.setReturnValue(-0.5D); // Reduce jump
@@ -96,10 +101,13 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     protected void jcraft$applyDamage(DamageSource source, float amount, CallbackInfo info) {
         LivingEntity player = ((LivingEntity) (Object) this);
 
-        if (!(player.getFirstPassenger() instanceof StandEntity<?, ?> stand)) return;
-        AbstractMove<?, ?> attack = stand.curMove;
-        if (attack == null || !attack.isCounter() || stand.getMoveStun() >= (attack.getDuration() - attack.getWindup()))
+        if (!(player.getFirstPassenger() instanceof StandEntity<?, ?> stand)) {
             return;
+        }
+        AbstractMove<?, ?> attack = stand.curMove;
+        if (attack == null || !attack.isCounter() || stand.getMoveStun() >= (attack.getDuration() - attack.getWindup())) {
+            return;
+        }
 
         //noinspection unchecked,rawtypes // Generic types can be annoying sometimes. This is fine.
         ((AbstractCounterAttack) attack).counter(stand, source.getAttacker(), source);
@@ -124,19 +132,23 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     // This is actually an implementation for players (mobs have their effect ticking properly stopped in TS), but PlayerEntity doesn't override this
     @Inject(cancellable = true, at = @At("HEAD"), method = "tickStatusEffects")
     protected void jcraft$tickStatusEffects(CallbackInfo ci) {
-        if (JComponentPlatformUtils.getTimeStopData((LivingEntity) (Object) this).getTicks() > 0)
+        if (JComponentPlatformUtils.getTimeStopData((LivingEntity) (Object) this).getTicks() > 0) {
             ci.cancel();
+        }
     }
 
     private static @Unique void doChecks(Entity entity, CallbackInfoReturnable<Boolean> cir, LivingEntity livingEntity) {
         if ((livingEntity.hasStatusEffect(JStatusRegistry.DAZED) && !JUtils.isBlocking(livingEntity)) ||
-                livingEntity.hasStatusEffect(JStatusRegistry.KNOCKDOWN))
+                livingEntity.hasStatusEffect(JStatusRegistry.KNOCKDOWN)) {
             cir.setReturnValue(false);
+        }
 
-        if (entity.getFirstPassenger() instanceof KingCrimsonEntity kingCrimson && kingCrimson.getTETime() > 0)
+        if (entity.getFirstPassenger() instanceof KingCrimsonEntity kingCrimson && kingCrimson.getTETime() > 0) {
             cir.setReturnValue(false);
+        }
 
-        if (JComponentPlatformUtils.getMiscData(livingEntity).getMaster() == entity)
+        if (JComponentPlatformUtils.getMiscData(livingEntity).getMaster() == entity) {
             cir.setReturnValue(false);
+        }
     }
 }

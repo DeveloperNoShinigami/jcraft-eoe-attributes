@@ -17,11 +17,14 @@ import java.util.List;
 
 public class Revivables {
     public static class ReviveData {
-        @NonNull @Getter
+        @NonNull
+        @Getter
         final EntityType<?> type;
-        @NonNull @Getter
+        @NonNull
+        @Getter
         final Vec3d pos;
-        @NonNull final RegistryKey<World> worldKey;
+        @NonNull
+        final RegistryKey<World> worldKey;
         public int timer = 20 * 60; // 1min
 
         private ReviveData(@NotNull EntityType<?> type, @NotNull Vec3d pos, @NotNull RegistryKey<World> worldKey) {
@@ -59,8 +62,9 @@ public class Revivables {
 
     public static boolean removeRevivableAt(Vec3d pos) {
         for (ReviveData revivable : revivables) {
-            if (revivable.pos == pos)
+            if (revivable.pos == pos) {
                 return revivables.remove(revivable);
+            }
         }
         return false;
     }
@@ -69,8 +73,9 @@ public class Revivables {
     public static List<ReviveData> getAround(Vec3d pos, double distance) {
         List<ReviveData> out = new ArrayList<>();
         for (ReviveData revivable : revivables) {
-            if (revivable.pos.squaredDistanceTo(pos) <= distance*distance)
+            if (revivable.pos.squaredDistanceTo(pos) <= distance * distance) {
                 out.add(revivable);
+            }
         }
         return out;
     }
@@ -78,8 +83,9 @@ public class Revivables {
     public static void tick(MinecraftServer server) {
         List<ReviveData> newRevivables = new ArrayList<>();
         for (ReviveData revivable : revivables) {
-            if (--revivable.timer > 1)
+            if (--revivable.timer > 1) {
                 newRevivables.add(revivable);
+            }
         }
         revivables.clear();
         revivables.addAll(newRevivables);

@@ -30,7 +30,7 @@
       "net.arna.jcraft.fabric.client.JModMenuIntegration"
     ]
   },
-  "accessWidener" : "jcraft.accesswidener",
+  "accessWidener": "jcraft.accesswidener",
   "mixins": [
     "jcraft.mixins.json",
     "jcraft-fabric.mixins.json"

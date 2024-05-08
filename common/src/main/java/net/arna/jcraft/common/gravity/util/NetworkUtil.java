@@ -1,11 +1,9 @@
 package net.arna.jcraft.common.gravity.util;
 
 import dev.architectury.networking.NetworkManager;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
-
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
@@ -28,7 +26,9 @@ public class NetworkUtil {
 
     public static Optional<CommonGravityComponent> getGravityComponent(Entity entity) {
         CommonGravityComponent gc = GravityChangerAPI.getGravityComponent(entity);
-        if (gc == null) return Optional.empty();
+        if (gc == null) {
+            return Optional.empty();
+        }
         return Optional.of(gc);
     }
 
@@ -36,13 +36,18 @@ public class NetworkUtil {
 
     public static void sendToTracking(Entity entity, Identifier channel, PacketByteBuf buf, PacketMode mode) {
         //PlayerLookup.tracking(entity) might not return the player if entity is a player, so it has to be done separately
-        if (mode != PacketMode.EVERYONE_BUT_SELF)
-            if (entity instanceof ServerPlayerEntity player)
+        if (mode != PacketMode.EVERYONE_BUT_SELF) {
+            if (entity instanceof ServerPlayerEntity player) {
                 NetworkManager.sendToPlayer(player, channel, buf);
-        if (mode != PacketMode.ONLY_SELF)
-            for (ServerPlayerEntity player : JUtils.tracking(entity))
-                if (player != entity)
+            }
+        }
+        if (mode != PacketMode.ONLY_SELF) {
+            for (ServerPlayerEntity player : JUtils.tracking(entity)) {
+                if (player != entity) {
                     NetworkManager.sendToPlayer(player, channel, buf);
+                }
+            }
+        }
     }
 
     //Writing to buffer

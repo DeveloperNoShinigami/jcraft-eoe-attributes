@@ -69,28 +69,38 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) return;
+        if (getWorld().isClient) {
+            return;
+        }
 
         Entity owner = getOwner();
-        if (owner == null) return;
+        if (owner == null) {
+            return;
+        }
 
-        if (dataTracker.get(MYH)) return; // Melt your Heart variants of this phase through entities
+        if (dataTracker.get(MYH)) {
+            return; // Melt your Heart variants of this phase through entities
+        }
 
         Entity entity = entityHitResult.getEntity();
-        if (owner.hasPassenger(entity) || entity == owner) return;
+        if (owner.hasPassenger(entity) || entity == owner) {
+            return;
+        }
 
         if (entity instanceof LivingEntity living) {
             LivingEntity target = living;
-            if (entity instanceof StandEntity<?, ?> stand && stand.hasUser())
+            if (entity instanceof StandEntity<?, ?> stand && stand.hasUser()) {
                 target = stand.getUserOrThrow();
+            }
             damageLogic(getWorld(), target, Vec3d.ZERO, 10, 1, false, 5f, false, 6,
                     getWorld().getDamageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
             target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WSPOISON, 60, 0, false, true));
             discard();
         }
 
-        if (entity instanceof EndCrystalEntity endCrystal)
+        if (entity instanceof EndCrystalEntity endCrystal) {
             endCrystal.damage(getWorld().getDamageSources().thrown(this, owner), 2f);
+        }
 
         playSound(SoundEvents.ITEM_BUCKET_EMPTY, 1, 0.5f);
     }
@@ -100,8 +110,12 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
     @Override
     protected void age() {
         super.age();
-        if (getWorld().isClient) return;
-        if (timeOnSurface++ >= 100) discard();
+        if (getWorld().isClient) {
+            return;
+        }
+        if (timeOnSurface++ >= 100) {
+            discard();
+        }
         splat();
     }
 
@@ -109,7 +123,9 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
     public void tick() {
         Entity owner = getOwner();
         if (owner == null) {
-            if (!getWorld().isClient) discard();
+            if (!getWorld().isClient) {
+                discard();
+            }
             return;
         }
 

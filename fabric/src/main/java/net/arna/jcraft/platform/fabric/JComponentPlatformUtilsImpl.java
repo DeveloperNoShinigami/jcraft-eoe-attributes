@@ -17,47 +17,47 @@ import net.minecraft.world.World;
 import java.util.Optional;
 
 public class JComponentPlatformUtilsImpl {
-    
+
     public static CommonStandComponent getStandData(LivingEntity entity) {
         return JComponents.STAND.get(entity);
     }
 
-    
+
     public static CommonSpecComponent getSpecData(PlayerEntity player) {
         return JComponents.SPEC.get(player);
     }
 
-    
+
     public static CommonPhComponent getPhData(PlayerEntity player) {
         return JComponents.PH.get(player);
     }
 
-    
+
     public static CommonCooldownsComponent getCooldowns(LivingEntity entity) {
         return JComponents.COOLDOWNS.get(entity);
     }
 
-    
+
     public static CommonTimeStopComponent getTimeStopData(Entity entity) {
         return JComponents.TIME_STOP.get(entity);
     }
 
-    
+
     public static CommonMiscComponent getMiscData(LivingEntity entity) {
         return JComponents.MISC.get(entity);
     }
 
-    
+
     public static CommonBombTrackerComponent getBombTracker(LivingEntity entity) {
         return JComponents.BOMB_TRACKER.get(entity);
     }
 
-    
+
     public static CommonGrabComponent getGrab(LivingEntity entity) {
         return JComponents.GRAB.get(entity);
     }
 
-    
+
     public static CommonHitPropertyComponent getHitProperties(LivingEntity livingEntity) {
         return JComponents.HIT_PROPERTY.get(livingEntity);
     }
@@ -72,16 +72,16 @@ public class JComponentPlatformUtilsImpl {
 
         return Optional.empty();
     }
-    
+
     public static CommonGravityShiftComponent getGravityShift(LivingEntity livingEntity) {
         return JComponents.GRAVITY_SHIFT.get(livingEntity);
     }
-    
+
     public static CommonShockwaveHandlerComponent getShockwaveHandler(World world) {
         return JComponents.SHOCKWAVE_HANDLER.get(world);
     }
 
-    
+
     public static CommonVampireComponent getVampirism(LivingEntity living) {
         return JComponents.VAMPIRE.get(living);
     }

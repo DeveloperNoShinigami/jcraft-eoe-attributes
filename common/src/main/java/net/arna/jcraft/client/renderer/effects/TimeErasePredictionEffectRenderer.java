@@ -33,7 +33,9 @@ public class TimeErasePredictionEffectRenderer {
                 return;
             }
 
-            if (!MinecraftClient.getInstance().isPaused()) ticksLeft--;
+            if (!MinecraftClient.getInstance().isPaused()) {
+                ticksLeft--;
+            }
 
             synchronized (predictions) {
                 updatePredictions();
@@ -47,12 +49,15 @@ public class TimeErasePredictionEffectRenderer {
     }
 
     public static void startEffect(int length) {
-        if (length <= 0) throw new IllegalArgumentException("Length must be at least 1.");
+        if (length <= 0) {
+            throw new IllegalArgumentException("Length must be at least 1.");
+        }
         ticksLeft = length;
 
         MinecraftClient client = MinecraftClient.getInstance();
-        for (Entity entity : PredictionMove.getEntitiesToCatch(client.world, JCraftClient.getStandEntity(), client.player))
+        for (Entity entity : PredictionMove.getEntitiesToCatch(client.world, JCraftClient.getStandEntity(), client.player)) {
             predictions.put(entity, entity.getPos());
+        }
     }
 
     public static void stopEffect() {
@@ -90,7 +95,9 @@ public class TimeErasePredictionEffectRenderer {
 
         for (Map.Entry<Entity, Vec3d> prediction : predictionsSet) {
             Entity entity = prediction.getKey();
-            if (entity == null || !entity.isAlive()) continue;
+            if (entity == null || !entity.isAlive()) {
+                continue;
+            }
 
             Vec3d pos = prediction.getValue().subtract(camPos);
             BlockPos bPos = BlockPos.ofFloored(prediction.getValue());

@@ -30,7 +30,9 @@ public class BoxingGlovesItem extends SpecObtainmentItem {
         if (!world.isClient) {
             boolean specChanged = tryGetSpec(user);
             if (specChanged) {
-                if (!user.isCreative()) itemStack.decrement(1);
+                if (!user.isCreative()) {
+                    itemStack.decrement(1);
+                }
                 user.getItemCooldownManager().set(this, 20);
             }
         }

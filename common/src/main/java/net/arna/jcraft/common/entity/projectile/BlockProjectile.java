@@ -128,11 +128,14 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
                 return;
             }
 
-            if (dataTracker.get(EFFECT) != 0)
+            if (dataTracker.get(EFFECT) != 0) {
                 setEffect(0);
+            }
 
             if (hit || isOnGround() || age > 200) // Placing this here delays it by 1 tick, allowing the client to see the proper end position
+            {
                 breakBlock();
+            }
 
             timeToLaunch--;
             if (timeToLaunch == 0) {
@@ -174,14 +177,18 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
                 DamageSource damageSource = getWorld().getDamageSources().mobAttack(master);
                 for (LivingEntity living : toHurt) {
                     LivingEntity target = JUtils.getUserIfStand(living);
-                    if (target == master || target == this || !JUtils.canDamage(damageSource, target)) continue;
+                    if (target == master || target == this || !JUtils.canDamage(damageSource, target)) {
+                        continue;
+                    }
                     hit = true;
                     StandEntity.damageLogic(getWorld(), target, getVelocity(), 15, 1, true,
                             6, false, 11, damageSource, master, CommonHitPropertyComponent.HitAnimation.MID, false);
                 }
             }
 
-            if (timeLaunched == 20) setNoGravity(false);
+            if (timeLaunched == 20) {
+                setNoGravity(false);
+            }
         }
     }
 
@@ -200,7 +207,9 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if (source.getSource() != null) return false;
+        if (source.getSource() != null) {
+            return false;
+        }
         return super.damage(source, amount);
     }
 
@@ -233,23 +242,27 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
     @Override
     public void writeCustomDataToNbt(NbtCompound tag) {
         super.writeCustomDataToNbt(tag);
-        if (master == null) return;
+        if (master == null) {
+            return;
+        }
         boolean ownerIsPlayer = master instanceof PlayerEntity;
         tag.putBoolean("playerOwner", ownerIsPlayer);
-        if (ownerIsPlayer)
+        if (ownerIsPlayer) {
             tag.putUuid("ownerUUID", master.getUuid());
-        else
+        } else {
             tag.putInt("ownerID", master.getId());
+        }
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound tag) {
         super.readCustomDataFromNbt(tag);
         boolean ownerIsPlayer = tag.getBoolean("playerOwner");
-        if (ownerIsPlayer)
+        if (ownerIsPlayer) {
             master = getWorld().getPlayerByUuid(tag.getUuid("ownerUUID"));
-        else
+        } else {
             master = (LivingEntity) getWorld().getEntityById(tag.getInt("ownerID")); // Always is living
+        }
     }
 
     @Override

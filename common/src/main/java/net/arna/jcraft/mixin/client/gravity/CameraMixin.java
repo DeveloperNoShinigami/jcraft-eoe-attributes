@@ -21,20 +21,26 @@ import java.util.Optional;
 
 @Mixin(Camera.class)
 public abstract class CameraMixin {
-    @Shadow protected abstract void setPos(double x, double y, double z);
+    @Shadow
+    protected abstract void setPos(double x, double y, double z);
 
-    @Shadow private Entity focusedEntity;
+    @Shadow
+    private Entity focusedEntity;
 
-    @Shadow @Final private Quaternionf rotation;
+    @Shadow
+    @Final
+    private Quaternionf rotation;
 
-    @Shadow private float lastCameraY;
+    @Shadow
+    private float lastCameraY;
 
-    @Shadow private float cameraY;
+    @Shadow
+    private float cameraY;
 
     private float storedTickDelta = 0.f;
 
-    @Inject(method="update", at=@At("HEAD"))
-    private void inject_update(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci){
+    @Inject(method = "update", at = @At("HEAD"))
+    private void inject_update(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
         storedTickDelta = tickDelta;
     }
 
@@ -49,7 +55,7 @@ public abstract class CameraMixin {
     private void redirect_update_setPos_0(Camera camera, double x, double y, double z, BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(focusedEntity);
         Optional<RotationAnimation> animationOptional = GravityChangerAPI.getGravityAnimation(focusedEntity);
-        if(animationOptional.isEmpty()){
+        if (animationOptional.isEmpty()) {
             this.setPos(x, y, z);
             return;
         }
@@ -58,7 +64,7 @@ public abstract class CameraMixin {
             this.setPos(x, y, z);
             return;
         }
-        long timeMs = focusedEntity.getWorld().getTime()*50+(long)(storedTickDelta*50);
+        long timeMs = focusedEntity.getWorld().getTime() * 50 + (long) (storedTickDelta * 50);
         Quaternionf gravityRotation = new Quaternionf(animation.getCurrentGravityRotation(gravityDirection, timeMs));
         gravityRotation.conjugate();
 
@@ -86,13 +92,17 @@ public abstract class CameraMixin {
             )
     )
     private void inject_setRotation(CallbackInfo ci) {
-        if(this.focusedEntity !=null) {
+        if (this.focusedEntity != null) {
             Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.focusedEntity);
             Optional<RotationAnimation> animationOptional = GravityChangerAPI.getGravityAnimation(focusedEntity);
-            if(animationOptional.isEmpty()) return;
+            if (animationOptional.isEmpty()) {
+                return;
+            }
             RotationAnimation animation = animationOptional.get();
-            if (gravityDirection == Direction.DOWN && !animation.isInAnimation()) return;
-            long timeMs = focusedEntity.getWorld().getTime()*50+(long)(storedTickDelta*50);
+            if (gravityDirection == Direction.DOWN && !animation.isInAnimation()) {
+                return;
+            }
+            long timeMs = focusedEntity.getWorld().getTime() * 50 + (long) (storedTickDelta * 50);
             Quaternionf rotation = new Quaternionf(animation.getCurrentGravityRotation(gravityDirection, timeMs));
             rotation.conjugate();
             rotation.mul(this.rotation);

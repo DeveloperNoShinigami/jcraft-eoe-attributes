@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(AnvilScreenHandler.class)
 public class AnvilScreenHandlerMixin {
-    
+
     @Redirect(method = "updateResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isDamageable()Z", ordinal = 1))
     private boolean allowMasks(ItemStack stack) {
         return stack.getItem() == JItemRegistry.CINDERELLA_MASK || stack.isDamageable();

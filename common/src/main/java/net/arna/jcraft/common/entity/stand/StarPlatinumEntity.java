@@ -49,7 +49,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     Text.literal("quick combo finisher")
             );
     public static final SimpleAttack<StarPlatinumEntity> LIGHT = SimpleAttack.<StarPlatinumEntity>lightAttack(
-            5, 7, 0.75f, 5f, 10, 0.2f, -0.1f)
+                    5, 7, 0.75f, 5f, 10, 0.2f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(UPPERCUT)
             .withImpactSound(JSoundRegistry.IMPACT_1)

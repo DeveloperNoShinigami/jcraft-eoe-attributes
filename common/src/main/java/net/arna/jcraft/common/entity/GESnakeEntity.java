@@ -78,7 +78,9 @@ public class GESnakeEntity extends TameableEntity implements GeoEntity {
     }
 
     private PlayState attackPredicate(AnimationState<GESnakeEntity> state) {
-        if (!handSwinging) return PlayState.STOP;
+        if (!handSwinging) {
+            return PlayState.STOP;
+        }
 
         state.setAnimation(RawAnimation.begin().thenLoop("animation.gesnake.attack"));
         return PlayState.CONTINUE;

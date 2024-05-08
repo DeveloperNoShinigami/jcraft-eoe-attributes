@@ -24,7 +24,8 @@ import java.util.Map;
 
 @Mixin(EntityRenderDispatcher.class)
 public abstract class EntityRenderDispatcherMixin {
-    @Shadow public abstract <T extends Entity> EntityRenderer<? super T> getRenderer(T entity);
+    @Shadow
+    public abstract <T extends Entity> EntityRenderer<? super T> getRenderer(T entity);
 
     private final @Unique Map<String, PlayerCloneRenderer> cloneRenderers = new HashMap<>();
 
@@ -55,7 +56,9 @@ public abstract class EntityRenderDispatcherMixin {
     @SuppressWarnings("unchecked")
     @Inject(method = "getRenderer", at = @At("HEAD"), cancellable = true)
     private <T extends Entity> void getCloneRenderer(T entity, CallbackInfoReturnable<EntityRenderer<? super T>> cir) {
-        if (!(entity instanceof PlayerCloneEntity clone)) return;
+        if (!(entity instanceof PlayerCloneEntity clone)) {
+            return;
+        }
 
         cir.setReturnValue((EntityRenderer<? super T>) cloneRenderers.getOrDefault(CloneSkinTracker.getModelFor(clone),
                 cloneRenderers.get("default")));

@@ -8,7 +8,6 @@ import net.arna.jcraft.common.gravity.util.packet.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -47,7 +46,9 @@ public class GravityChannel<P extends GravityPacket> {
             if (v != null && v.check(player, verifierInfoBuf, packet)) {
                 packet.run(gc);
                 sendToClient(player, packet, PacketMode.EVERYONE_BUT_SELF);
-            } else sendFullStatePacket(player, PacketMode.ONLY_SELF, packet.getRotationParameters(), false);
+            } else {
+                sendFullStatePacket(player, PacketMode.ONLY_SELF, packet.getRotationParameters(), false);
+            }
         }));
     }
 

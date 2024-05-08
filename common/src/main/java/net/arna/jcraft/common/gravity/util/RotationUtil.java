@@ -214,7 +214,9 @@ public abstract class RotationUtil {
         double sinNegYaw = x / cosPitch;
         double cosNegYaw = MathHelper.clamp(z / cosPitch, -1, 1);
         double radNegYaw = Math.acos(cosNegYaw);
-        if (sinNegYaw < 0) radNegYaw = Math.PI * 2 - radNegYaw;
+        if (sinNegYaw < 0) {
+            radNegYaw = Math.PI * 2 - radNegYaw;
+        }
 
         return new Vec2f(MathHelper.wrapDegrees((float) (-radNegYaw) / 0.017453292F), (float) (radPitch) / 0.017453292F);
     }
@@ -235,7 +237,7 @@ public abstract class RotationUtil {
         Vec3d start = new Vec3d(d1.getUnitVector());
         Vec3d end = new Vec3d(d2.getUnitVector());
         if (d1.getOpposite() == d2) {
-            return QuaternionUtil.quaternionf(new Vector3f(0f , 0f, -1f), 180.0f, true);
+            return QuaternionUtil.quaternionf(new Vector3f(0f, 0f, -1f), 180.0f, true);
         } else {
             return QuaternionUtil.getRotationBetween(start, end);
         }

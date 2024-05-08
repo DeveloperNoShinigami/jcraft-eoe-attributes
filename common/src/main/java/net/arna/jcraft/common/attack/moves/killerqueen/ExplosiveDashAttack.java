@@ -8,7 +8,6 @@ import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 
 import java.util.Set;
 

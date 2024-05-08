@@ -21,8 +21,11 @@ public class TFComboAttack extends AbstractMultiHitAttack<TFComboAttack, TheFool
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        if (getBlow(attacker) == 2) for (LivingEntity ent : targets)
-            ent.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 20, 0, true, false));
+        if (getBlow(attacker) == 2) {
+            for (LivingEntity ent : targets) {
+                ent.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 20, 0, true, false));
+            }
+        }
 
         return targets;
     }

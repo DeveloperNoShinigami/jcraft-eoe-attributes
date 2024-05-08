@@ -8,9 +8,9 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.events.JServerPlayerInputEvent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.common.events.JServerPlayerInputEvent;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.*;
@@ -66,12 +66,14 @@ public class PlayerInputPacket {
                                             }
 
                                             JSpec<?, ?> spec = JUtils.getSpec(player);
-                                            if (spec != null)
+                                            if (spec != null) {
                                                 spec.onUserMoveInput(type, false, success);
+                                            }
                                         });
                                         sm.heldInputs.remove(type);
-                                    } else
+                                    } else {
                                         sm.heldInputs.put(type, newValue);
+                                    }
                                 }
                             }
                     );
@@ -84,15 +86,23 @@ public class PlayerInputPacket {
                 JComponentPlatformUtils.getMiscData(player).updateRemoteInputs(forward, side, sm.jumping);
 
                 StandEntity<?, ?> stand = JUtils.getStand(player);
-                if (stand != null) stand.updateRemoteInputs(forward, side, sm.jumping, sm.sneaking);
+                if (stand != null) {
+                    stand.updateRemoteInputs(forward, side, sm.jumping, sm.sneaking);
+                }
 
-                if (sm.dashing) DashData.tryDash(forward, side, player);
+                if (sm.dashing) {
+                    DashData.tryDash(forward, side, player);
+                }
 
-                if (!sm.jumping) continue;
+                if (!sm.jumping) {
+                    continue;
+                }
 
                 if (DashData.isDashing(player))
-                    // 5s cooldown for superjumping
+                // 5s cooldown for superjumping
+                {
                     JComponentPlatformUtils.getCooldowns(player).setCooldown(CooldownType.DASH, 100);
+                }
 
                 checkComboBreak(player);
             }
@@ -142,8 +152,9 @@ public class PlayerInputPacket {
         for (int i = 0; i < count; i++) {
             MoveInputType type = buf.readEnumConstant(MoveInputType.class);
             buf.readBoolean(); // Throwaway hold input data
-            if (JUtils.canHoldMove(player, type))
+            if (JUtils.canHoldMove(player, type)) {
                 sm.heldInputs.put(type, HOLD_TIMEOUT_TICKS);
+            }
         }
     }
 
@@ -164,17 +175,25 @@ public class PlayerInputPacket {
                 case RIGHT -> sm.right = pressed;
             }
 
-            if (type == MovementInputType.JUMP) sm.jumping = pressed;
+            if (type == MovementInputType.JUMP) {
+                sm.jumping = pressed;
+            }
 
-            if (type == MovementInputType.CROUCH) sm.sneaking = pressed;
+            if (type == MovementInputType.CROUCH) {
+                sm.sneaking = pressed;
+            }
 
             if (type == MovementInputType.DASH) {
                 sm.dashing = pressed;
-                if (pressed) server.execute(() -> DashData.tryDash(sm.calcForward(), sm.calcSide(), player));
+                if (pressed) {
+                    server.execute(() -> DashData.tryDash(sm.calcForward(), sm.calcSide(), player));
+                }
             }
         }
 
-        if (sm.jumping) server.execute(() -> checkComboBreak(player));
+        if (sm.jumping) {
+            server.execute(() -> checkComboBreak(player));
+        }
     }
 
 
@@ -190,29 +209,34 @@ public class PlayerInputPacket {
             boolean pressed = buf.readBoolean();
 
             if (JUtils.canHoldMove(player, type)) {
-                if (pressed) sm.heldInputs.put(type, HOLD_TIMEOUT_TICKS);
-                else sm.heldInputs.put(type, 0);
+                if (pressed) {
+                    sm.heldInputs.put(type, HOLD_TIMEOUT_TICKS);
+                } else {
+                    sm.heldInputs.put(type, 0);
+                }
             }
 
-            if (pressed) handleMoveInput(server, player, type).thenAccept(b -> {
-                successMap.computeIfAbsent(player, p -> new Object2BooleanOpenHashMap<>()).put(type, b.booleanValue());
+            if (pressed) {
+                handleMoveInput(server, player, type).thenAccept(b -> {
+                    successMap.computeIfAbsent(player, p -> new Object2BooleanOpenHashMap<>()).put(type, b.booleanValue());
 
-                server.execute(() -> {
-                    JServerPlayerInputEvent.EVENT.invoker().onPlayerInput(player, type, true, b);
-                    boolean success = b;
+                    server.execute(() -> {
+                        JServerPlayerInputEvent.EVENT.invoker().onPlayerInput(player, type, true, b);
+                        boolean success = b;
 
-                    StandEntity<?, ?> stand = JUtils.getStand(player);
-                    if (stand != null && stand.allowMoveHandling()) {
-                        stand.onUserMoveInput(type, true, success);
-                        success = false; // If a stand is out, the move input success belongs to it.
-                    }
+                        StandEntity<?, ?> stand = JUtils.getStand(player);
+                        if (stand != null && stand.allowMoveHandling()) {
+                            stand.onUserMoveInput(type, true, success);
+                            success = false; // If a stand is out, the move input success belongs to it.
+                        }
 
-                    JSpec<?, ?> spec = JUtils.getSpec(player);
-                    if (spec != null)
-                        spec.onUserMoveInput(type, true, success);
+                        JSpec<?, ?> spec = JUtils.getSpec(player);
+                        if (spec != null) {
+                            spec.onUserMoveInput(type, true, success);
+                        }
+                    });
                 });
-            });
-            else {
+            } else {
                 boolean b = successMap.computeIfAbsent(player, p -> new Object2BooleanOpenHashMap<>()).getOrDefault(type, false);
 
                 server.execute(() -> {
@@ -226,8 +250,9 @@ public class PlayerInputPacket {
                     }
 
                     JSpec<?, ?> spec = JUtils.getSpec(player);
-                    if (spec != null)
+                    if (spec != null) {
                         spec.onUserMoveInput(type, false, success);
+                    }
                 });
             }
         }
@@ -235,6 +260,7 @@ public class PlayerInputPacket {
 
     /**
      * javadoc pliz :>
+     *
      * @param player that sent the input
      * @return
      */
@@ -267,18 +293,24 @@ public class PlayerInputPacket {
                 }
                 case LIGHT -> {
                     StandEntity<?, ?> stand = JUtils.getStand(player);
-                    if (stand == null || !stand.allowMoveHandling()) return;
+                    if (stand == null || !stand.allowMoveHandling()) {
+                        return;
+                    }
 
                     future.complete(initStandMove(stand, MoveInputType.LIGHT));
                 }
                 case UTILITY -> {
                     boolean s;
                     StandEntity<?, ?> stand = JUtils.getStand(player);
-                    if (stand != null) s = initStandMove(stand, MoveInputType.UTILITY);
-                    else {
+                    if (stand != null) {
+                        s = initStandMove(stand, MoveInputType.UTILITY);
+                    } else {
                         StandEntity<?, ?> stand2 = JCraft.summon(world, player);
-                        if (stand2 != null) s = stand2.initMove(MoveType.UTILITY);
-                        else s = false;
+                        if (stand2 != null) {
+                            s = stand2.initMove(MoveType.UTILITY);
+                        } else {
+                            s = false;
+                        }
                     }
 
                     future.complete(s);
@@ -292,14 +324,20 @@ public class PlayerInputPacket {
 
     private static boolean initStandOrSpecMove(ServerPlayerEntity player, MoveInputType type) {
         StandEntity<?, ?> stand = JUtils.getStand(player);
-        if (stand != null && stand.allowMoveHandling()) return initStandMove(stand, type);
-        else {
+        if (stand != null && stand.allowMoveHandling()) {
+            return initStandMove(stand, type);
+        } else {
             JSpec<?, ?> spec = JUtils.getSpec(player);
-            if (spec == null) return false;
+            if (spec == null) {
+                return false;
+            }
 
-            if (spec.initMove(type.getMoveType())) return true;
-            if (spec.moveStun > 0 && spec.moveStun < SPEC_QUEUE_MOVESTUN_LIMIT)
+            if (spec.initMove(type.getMoveType())) {
+                return true;
+            }
+            if (spec.moveStun > 0 && spec.moveStun < SPEC_QUEUE_MOVESTUN_LIMIT) {
                 spec.queuedMove = type;
+            }
 
             return false;
         }
@@ -309,9 +347,12 @@ public class PlayerInputPacket {
         if (!stand.blocking) {
             int moveStun = stand.getMoveStun();
 
-            if (stand.initMove(type.getMoveType())) return true;
-            if (moveStun > 0 && moveStun < QUEUE_MOVESTUN_LIMIT)
+            if (stand.initMove(type.getMoveType())) {
+                return true;
+            }
+            if (moveStun > 0 && moveStun < QUEUE_MOVESTUN_LIMIT) {
                 stand.queueMove(type);
+            }
         }
 
         return false;
@@ -320,10 +361,14 @@ public class PlayerInputPacket {
     private static void checkComboBreak(ServerPlayerEntity player) {
         // Combo break if stunned, jumping and crouching
         InputStateManager sm = getInputStateManager(player);
-        if (sm == null || !sm.jumping || !player.isSneaking() || JUtils.isBlocking(player)) return;
+        if (sm == null || !sm.jumping || !player.isSneaking() || JUtils.isBlocking(player)) {
+            return;
+        }
 
         StatusEffectInstance stun = player.getStatusEffect(JStatusRegistry.DAZED);
-        if (stun != null) JCraft.comboBreak((ServerWorld) player.getWorld(), player, stun);
+        if (stun != null) {
+            JCraft.comboBreak((ServerWorld) player.getWorld(), player, stun);
+        }
     }
 
     public static InputStateManager getInputStateManager(ServerPlayerEntity player) {

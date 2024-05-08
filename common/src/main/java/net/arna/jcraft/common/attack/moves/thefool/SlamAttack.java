@@ -36,12 +36,13 @@ public class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEntity> 
             }
             case 3 -> {
                 Vec3d rotVec = user.getRotationVector();
-                for (double i = 0; i < 7; i++)
+                for (double i = 0; i < 7; i++) {
                     for (double y = 0; y < i; y++) {
                         double hDiv = 4.5 * (1 + y / i);
                         TheFoolEntity.createFoolishSand(attacker.getWorld(), attacker.getBlockPos(),
                                 new Vec3d(rotVec.x * Math.sqrt(i) / hDiv, y / 4.3, rotVec.z * Math.sqrt(i) / hDiv));
                     }
+                }
             }
         }
 

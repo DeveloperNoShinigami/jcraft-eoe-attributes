@@ -37,8 +37,9 @@ public class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, VampireSp
             Vec3d offsetHeightPos = attacker.getBaseEntity().getPos().add(offset);
             laser.setPosition(offsetHeightPos);
 
-            if (chargeTime > 24)
+            if (chargeTime > 24) {
                 laser.setUnblockable(true);
+            }
 
             attacker.getEntityWorld().spawnEntity(laser);
 

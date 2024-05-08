@@ -41,8 +41,9 @@ public class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSplashAtt
             Vec3d heightOffset = upVec.multiply(0.75);
             emerald.setPosition(attacker.getBaseEntity().getPos().add(heightOffset));
 
-            if (reflect)
+            if (reflect) {
                 emerald.withReflect();
+            }
 
             attacker.getWorld().spawnEntity(emerald);
         }
@@ -63,8 +64,9 @@ public class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSplashAtt
     @Override
     public @NonNull EmeraldSplashAttack copy() {
         EmeraldSplashAttack emeraldSplashAttack = copyExtras(new EmeraldSplashAttack(getCooldown(), getDuration(), getMoveDistance(), getDamage(), getStun(), getKnockback(), getOffset(), getHitMoments(), speed));
-        if (reflect)
+        if (reflect) {
             emeraldSplashAttack.withReflect();
+        }
         return emeraldSplashAttack;
     }
 }

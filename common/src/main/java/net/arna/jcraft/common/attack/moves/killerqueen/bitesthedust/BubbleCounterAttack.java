@@ -28,7 +28,9 @@ public class BubbleCounterAttack extends AbstractCounterAttack<BubbleCounterAtta
     @Override
     public void counter(@NonNull KQBTDEntity attacker, Entity countered, DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
-        if (countered == null || !attacker.hasUser() || counteredDamageSource.isOf(DamageTypes.MAGIC)) return;
+        if (countered == null || !attacker.hasUser() || counteredDamageSource.isOf(DamageTypes.MAGIC)) {
+            return;
+        }
 
         if (countered instanceof LivingEntity livingEntity) {
             StandEntity.stun(livingEntity, 10, 3);

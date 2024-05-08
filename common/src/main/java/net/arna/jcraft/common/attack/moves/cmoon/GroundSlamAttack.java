@@ -31,8 +31,9 @@ public class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttack, CMo
         LivingEntity user = attacker.getUserOrThrow();
         GravityChangerAPI.setWorldVelocity(target, GravityChangerAPI.getGravityDirection(user).getUnitVector());
         target.velocityModified = true;
-        if (user.isSneaking())
+        if (user.isSneaking()) {
             target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 30, 0, true, false));
+        }
     }
 
     @Override
@@ -55,7 +56,9 @@ public class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttack, CMo
                         BlockPos curPos = bPos.add(x, y, z);
                         BlockState curState = world.getBlockState(curPos);
 
-                        if (curState.getBlock().getBlastResistance() > 10f || curState.isAir()) continue;
+                        if (curState.getBlock().getBlastResistance() > 10f || curState.isAir()) {
+                            continue;
+                        }
 
                         FallingBlockEntity fallingBlock = FallingBlockEntity.spawnFromBlock(world, curPos, curState);
                         fallingBlock.setVelocity(-gravityVector.getX() * 0.5, -gravityVector.getY() * 0.5, -gravityVector.getZ() * 0.5);

@@ -65,7 +65,8 @@ public class JServerConfig {
 
     // Empty method to force class initialization.
     // Not doing this breaks the /jconfig command (cuz this class won't be initialized on clients).
-    public static void init() {}
+    public static void init() {
+    }
 
     @SneakyThrows
     public static void load(MinecraftServer server) {
@@ -79,7 +80,9 @@ public class JServerConfig {
             JsonObject data = gson.fromJson(reader, JsonObject.class);
             for (String key : data.keySet()) {
                 ConfigOption option = ConfigOption.getImmutableOptions().get(key);
-                if (option != null) option.read(data.get(key));
+                if (option != null) {
+                    option.read(data.get(key));
+                }
             }
         } catch (IOException e) {
             JCraft.LOGGER.error("An error occurred trying to read the server config.", e);

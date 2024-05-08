@@ -15,17 +15,28 @@ import java.util.Set;
 
 public class PastDimensions {
     protected static final List<DimensionData> dimensions = new ArrayList<>();
-    public static void enqueue(DimensionData dimensionData) { dimensions.add(dimensionData); }
-    public static void remove(DimensionData dimensionData) { dimensions.remove(dimensionData); }
+
+    public static void enqueue(DimensionData dimensionData) {
+        dimensions.add(dimensionData);
+    }
+
+    public static void remove(DimensionData dimensionData) {
+        dimensions.remove(dimensionData);
+    }
+
     public static void tick(MinecraftServer server) {
         List<DimensionData> newDimensions = new ArrayList<>();
 
         for (DimensionData dimensionData : dimensions) {
             Entity user = dimensionData.user;
-            if (user == null || !user.isAlive()) continue;
+            if (user == null || !user.isAlive()) {
+                continue;
+            }
 
             ServerWorld original = server.getWorld(dimensionData.worldKey);
-            if (user.getWorld() == original) continue;
+            if (user.getWorld() == original) {
+                continue;
+            }
 
             if (--dimensionData.timer > 1) {
                 newDimensions.add(dimensionData);
@@ -33,13 +44,17 @@ public class PastDimensions {
             }
 
             Vec3d dimPos = user.getPos(); //dimValues.pos;
-            if (user instanceof ServerPlayerEntity player)
+            if (user instanceof ServerPlayerEntity player) {
                 player.teleport(original, dimPos.x, dimPos.y, dimPos.z, player.getYaw(), player.getPitch());
-            else JCraft.teleportToWorld(user, original, dimPos.x, dimPos.y, dimPos.z);
+            } else {
+                JCraft.teleportToWorld(user, original, dimPos.x, dimPos.y, dimPos.z);
+            }
         }
 
         if (JCraft.preloadLockTicks <= 0 && newDimensions.isEmpty()) // Nobody left in AU
+        {
             JCraft.clearPreloadedChunks();
+        }
 
         dimensions.clear();
         dimensions.addAll(newDimensions);
@@ -55,8 +70,9 @@ public class PastDimensions {
                 continue;
             }
 
-            if (dimV.user != user)
+            if (dimV.user != user) {
                 continue;
+            }
             isStored = true;
             dimV.timer = 1;
         }

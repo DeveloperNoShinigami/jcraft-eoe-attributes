@@ -7,10 +7,14 @@ import net.minecraft.entity.Entity;
 
 public interface IClientEntityHandler {
     void bombTrackerParticleTick(Entity entity, CommonBombTrackerComponent.BombData bombData);
-    void standEntityClientTick(StandEntity<?,?> stand);
+
+    void standEntityClientTick(StandEntity<?, ?> stand);
 
     void whiteSnakeRemoteClientTick(WhiteSnakeEntity whiteSnakeEntity);
+
     void hierophantGreenRemoteClientTick(HGEntity hgEntity);
-    void purpleHazeRemoteClientTick(AbstractPurpleHazeEntity<?,?> purpleHazeEntity);
+
+    void purpleHazeRemoteClientTick(AbstractPurpleHazeEntity<?, ?> purpleHazeEntity);
+
     void sheerHeartAttackEntityTick(SheerHeartAttackEntity sHAEntity);
 }

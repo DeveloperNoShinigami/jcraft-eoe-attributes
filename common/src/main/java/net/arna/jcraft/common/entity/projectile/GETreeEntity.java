@@ -23,9 +23,11 @@ import java.util.Set;
 
 public class GETreeEntity extends JAttackEntity implements GeoEntity {
     private final Vec3d launchVec;
+
     public GETreeEntity(EntityType<? extends LivingEntity> type, World world) {
         this(type, world, Vec3d.ZERO);
     }
+
     public GETreeEntity(EntityType<? extends LivingEntity> type, World world, Vec3d launchVec) {
         super(type, world);
         this.setInvulnerable(true);
@@ -35,21 +37,28 @@ public class GETreeEntity extends JAttackEntity implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        if (age > 120) discard();
+        if (age > 120) {
+            discard();
+        }
 
-        if (getWorld().isClient || master == null) return;
+        if (getWorld().isClient || master == null) {
+            return;
+        }
 
         if (age == 4) {
             DamageSource ds = getWorld().getDamageSources().mobAttack(master);
             Set<LivingEntity> hurt = JUtils.generateHitbox(getWorld(), getPos().add(launchVec.normalize()), 2.5, Set.of(this, master));
 
             for (LivingEntity living : hurt) {
-                if (!JUtils.canDamage(ds, living)) continue;
+                if (!JUtils.canDamage(ds, living)) {
+                    continue;
+                }
 
                 LivingEntity target = JUtils.getUserIfStand(living);
-                if (master != target)
+                if (master != target) {
                     StandEntity.damageLogic(getWorld(), target, Vec3d.ZERO, 25, 3,
                             false, 7f, false, 11, ds, master, CommonHitPropertyComponent.HitAnimation.MID, false);
+                }
                 JUtils.addVelocity(target, launchVec.x, launchVec.y, launchVec.z);
             }
         }

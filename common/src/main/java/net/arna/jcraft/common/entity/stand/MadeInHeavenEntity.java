@@ -218,13 +218,13 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
 
         freespace =
                 """
-                PASSIVE: Speed I
-                
-                BNBs:
-                    -the flashbang
-                    (Donut>M1>)Speed Slice>Low Kick>Fury Chop>M1>Barrage>dash>M1~M1
-                    
-                    -""";
+                        PASSIVE: Speed I
+                                        
+                        BNBs:
+                            -the flashbang
+                            (Donut>M1>)Speed Slice>Low Kick>Fury Chop>M1>Barrage>dash>M1~M1
+                            
+                            -""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.9f, 0.8f, 0.8f),
@@ -253,8 +253,12 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     public boolean initMove(MoveType type) {
         if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
             AbstractMove<?, ? super MadeInHeavenEntity> followup = curMove.getFollowup();
-            if (followup != null) setMove(followup, (State) followup.getAnimation());
-        } else return super.initMove(type);
+            if (followup != null) {
+                setMove(followup, (State) followup.getAnimation());
+            }
+        } else {
+            return super.initMove(type);
+        }
 
         return true;
     }
@@ -272,7 +276,9 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     }
 
     public void incrementSpeedometer() {
-        if (speedometer >= MAXIMUM_SPEEDOMETER) return;
+        if (speedometer >= MAXIMUM_SPEEDOMETER) {
+            return;
+        }
 
         speedometer++;
         //JCraft.LOGGER.info("Speedometer increased to: " + speedometer);
@@ -312,13 +318,17 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
 
     @Override
     public boolean handleMove(AbstractMove<?, ? super MadeInHeavenEntity> move, CooldownType cooldownType, State animState) {
-        if (!move.canBeInitiated(this)) return false;
+        if (!move.canBeInitiated(this)) {
+            return false;
+        }
         LivingEntity player = getUserOrThrow();
 
         CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(player);
         int cooldown = cooldowns.getCooldown(cooldownType);
 
-        if (cooldown > 0) return false;
+        if (cooldown > 0) {
+            return false;
+        }
 
         int cdDiv = getAccelTime() > 0 ? 2 : 1;
         cooldowns.setCooldown(cooldownType, move.getCooldown() / cdDiv);
@@ -328,13 +338,16 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     }
 
     private static void tryIncrementSpeedometer(MadeInHeavenEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
-        if (attacker.getAccelTime() > 0 && !targets.isEmpty()) attacker.incrementSpeedometer();
+        if (attacker.getAccelTime() > 0 && !targets.isEmpty()) {
+            attacker.incrementSpeedometer();
+        }
     }
 
     @Override
     public void desummon() {
-        if (!getWorld().isClient() && getAccelTime() > 0)
+        if (!getWorld().isClient() && getAccelTime() > 0) {
             TimeAccelStatePacket.sendStop(getServer().getPlayerManager(), this);
+        }
         super.desummon();
     }
 
@@ -342,7 +355,9 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     public void tick() {
         super.tick();
 
-        if (!hasUser()) return;
+        if (!hasUser()) {
+            return;
+        }
         LivingEntity user = getUserOrThrow();
         int aTime = getAccelTime();
 
@@ -357,14 +372,16 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                 int amplifier = speedometer / 3;
                 user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 20, amplifier, true, false));
                 user.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 20, amplifier, true, false));
-            } else
+            } else {
                 user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 40, 0, true, false));
+            }
         }
 
         if (getWorld().isClient) {
             Entity clientCircleTarget = getCircleTarget();
-            if (clientCircleTarget != null)
+            if (clientCircleTarget != null) {
                 lookAtWithoutReset(user, EntityAnchorArgumentType.EntityAnchor.EYES, clientCircleTarget.getEyePos());
+            }
 
             if (getAccelTime() > 1) { // Updating on the client, to make sure all is smooth
                 CircleAttack.createSpeedParticles(this, this);
@@ -373,9 +390,12 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                         getBoundingBox().expand(96), EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
 
                 for (Entity entity : toCatch) {
-                    if (entity instanceof LivingEntity) continue;
-                    if (entity.getPos().squaredDistanceTo(new Vec3d(entity.prevX, entity.prevY, entity.prevZ)) > 0)
+                    if (entity instanceof LivingEntity) {
+                        continue;
+                    }
+                    if (entity.getPos().squaredDistanceTo(new Vec3d(entity.prevX, entity.prevY, entity.prevZ)) > 0) {
                         CircleAttack.createSpeedParticles(this, entity);
+                    }
                     entity.tick();
                 }
             }
@@ -399,8 +419,8 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         double e = target.y - vec3d.y;
         double f = target.z - vec3d.z;
         double g = Math.sqrt(d * d + f * f);
-        entity.setPitch(MathHelper.wrapDegrees((float)(-(MathHelper.atan2(e, g) * 57.2957763671875))));
-        entity.setYaw(MathHelper.wrapDegrees((float)(MathHelper.atan2(f, d) * 57.2957763671875) - 90.0f));
+        entity.setPitch(MathHelper.wrapDegrees((float) (-(MathHelper.atan2(e, g) * 57.2957763671875))));
+        entity.setYaw(MathHelper.wrapDegrees((float) (MathHelper.atan2(f, d) * 57.2957763671875) - 90.0f));
         entity.setHeadYaw(entity.getYaw());
     }
 

@@ -107,9 +107,13 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         Entity owner = getOwner();
-        if (owner == null) return;
+        if (owner == null) {
+            return;
+        }
         Entity entity = entityHitResult.getEntity();
-        if (owner.hasPassenger(entity) || entity == owner || entity == sun) return;
+        if (owner.hasPassenger(entity) || entity == owner || entity == sun) {
+            return;
+        }
 
         if (getWorld().isClient) {
             // Hack that displays explosion without needing sync
@@ -125,8 +129,9 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
             playSound(getSound(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
             // Hack that prevents another explosion
             ticksInGround = 1;
-        } else
+        } else {
             discard();
+        }
     }
 
     @Override
@@ -171,8 +176,9 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
             );
         } else {
             if (this.inGround) {
-                if (explosive && ticksInGround == 0)
+                if (explosive && ticksInGround == 0) {
                     explode();
+                }
                 this.ticksInGround++;
                 if (!explosive || ticksInGround > 10) {
                     discard();
@@ -227,11 +233,12 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
     }
 
     private PlayState predicate(AnimationState<GeoAnimatable> state) {
-        if (inGround)
+        if (inGround) {
             state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.meteor.explode"));
-        else
+        } else {
             state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.meteor.spawn")
                     .thenLoop("animation.meteor.idle"));
+        }
         return PlayState.CONTINUE;
     }
 

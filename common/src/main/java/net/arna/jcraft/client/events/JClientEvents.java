@@ -1,7 +1,6 @@
 package net.arna.jcraft.client.events;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
@@ -23,7 +22,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.WorldRenderer;
@@ -40,8 +38,6 @@ import org.joml.Matrix4f;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 import static net.arna.jcraft.client.JCraftClient.*;
 import static net.arna.jcraft.client.gui.hud.JCraftAbilityHud.getHudX;
@@ -121,7 +117,9 @@ public class JClientEvents {
                 CooldownType type = values[i];
                 int cooldownTicks = cooldowns.getCooldown(type);
 
-                if (cooldownTicks == 0) continue;
+                if (cooldownTicks == 0) {
+                    continue;
+                }
                 double cooldown = (cooldownTicks - tickDelta) / 20d;
 
                 // These are (mainly) based off of keybindings which are client-only and thus have
@@ -150,7 +148,9 @@ public class JClientEvents {
                 String finalText = keyBindText + " - " + JCraftClient.decimalFormat.get().format(MathHelper.clamp(cooldown, 0.0, 9999.0)) + "s";
 
                 if (category == CooldownType.Category.STAND || isSpec) {
-                    if (!isSpec) finalText = "s." + finalText;
+                    if (!isSpec) {
+                        finalText = "s." + finalText;
+                    }
 
                     if ((isSpec && stand != null) || (!isSpec && stand == null)) {
                         xOffset = 48;
@@ -159,10 +159,11 @@ public class JClientEvents {
                 }
 
                 int offsetIndex = i;
-                if (isSpec)
+                if (isSpec) {
                     offsetIndex -= 7;
-                else if (isUniversal)
+                } else if (isUniversal) {
                     offsetIndex -= 6;
+                }
                 float offsetY = selectedY * 1.25f + 9f * offsetIndex;
 
                 ctx.drawTextWithShadow(
@@ -179,14 +180,17 @@ public class JClientEvents {
         // Draw Combo Counter
         if (comboCounter > 0 && player.getWorld().getGameRules().getBoolean(JCraft.COMBO_COUNTER) && framesSinceCounted <= 180) {
             String remark = "epic tod free download";
-            if (comboCounter < JCraftClient.comboRemarks.size() * 7)
+            if (comboCounter < JCraftClient.comboRemarks.size() * 7) {
                 remark = comboRemarks.get(Math.floorDiv(comboCounter, 7));
+            }
 
             boolean recentHit = framesSinceCounted < 5;
 
             Random random = player.getRandom();
 
-            if (comboStarted && ++framesSinceComboStarted > 59) comboStarted = false;
+            if (comboStarted && ++framesSinceComboStarted > 59) {
+                comboStarted = false;
+            }
 
             ctx.drawTextWithShadow(
                     textRenderer,
@@ -200,7 +204,9 @@ public class JClientEvents {
 
     public static void tickClient(MinecraftClient client) {
         ClientPlayerEntity player = client.player;
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
         StandEntity<?, ?> stand = JUtils.getStand(player);
 
         // Handle JCraft inputs (stand, spec, universal controls)
@@ -209,13 +215,15 @@ public class JClientEvents {
             Object2BooleanMap<MovementInputType> movementInput = getChangedInputs(getMovementBindings());
             Object2BooleanMap<MoveInputType> moveInput = getChangedInputs(getBindings());
 
-            if (!movementInput.isEmpty() || !moveInput.isEmpty())
+            if (!movementInput.isEmpty() || !moveInput.isEmpty()) {
                 NetworkManager.sendToServer(JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket.write(movementInput, moveInput));
+            }
 
             Object2BooleanMap<MoveInputType> heldMoves = new Object2BooleanOpenHashMap<>();
             getBindings().forEach((key, value) -> {
-                if (key.isDown())
+                if (key.isDown()) {
                     heldMoves.put(value, true);
+                }
             });
 
             if (!heldMoves.isEmpty()) {
@@ -229,15 +237,19 @@ public class JClientEvents {
         if (getTrackedUseKey().isChangedThisTick()) {
             boolean pressed = getTrackedUseKey().isPressedThisTick();
             NetworkManager.sendToServer(JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket.write(pressed));
-            if (stand != null && stand.isRemoteAndControllable() && pressed)
+            if (stand != null && stand.isRemoteAndControllable() && pressed) {
                 NetworkManager.sendToServer(JPacketRegistry.C2S_REMOTE_STAND_INTERACT, new PacketByteBuf(Unpooled.buffer()));
+            }
         }
 
         // Cooldown Cancel
-        if (cooldownCancel.isPressedThisTick())
+        if (cooldownCancel.isPressedThisTick()) {
             NetworkManager.sendToServer(JPacketRegistry.C2S_COOLDOWN_CANCEL, new PacketByteBuf(Unpooled.buffer()));
+        }
 
-        if (client.isPaused() && client.isInSingleplayer()) return;
+        if (client.isPaused() && client.isInSingleplayer()) {
+            return;
+        }
 
         // Timestop handling (nearly identical to serverside, but toStop is obtained in user.world instead of server world)
         Iterator<DimensionData> iter = activeTimestops.iterator();
@@ -256,9 +268,11 @@ public class JClientEvents {
             List<? extends Entity> toStop = user.getWorld().getEntitiesByClass(Entity.class,
                     new Box(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
 
-            for (Entity entity : toStop)
-                if (!entity.hasVehicle() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle())
+            for (Entity entity : toStop) {
+                if (!entity.hasVehicle() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle()) {
                     JComponentPlatformUtils.getTimeStopData(entity).setTicks(2);
+                }
+            }
         }
     }
 }

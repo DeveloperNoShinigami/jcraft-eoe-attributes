@@ -1,15 +1,12 @@
 package net.arna.jcraft.fabric.common.component.impl.living;
 
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.impl.living.CommonBombTrackerComponentImpl;
-import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.living.BombTrackerComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 public class BombTrackerComponentImpl extends CommonBombTrackerComponentImpl implements BombTrackerComponent {

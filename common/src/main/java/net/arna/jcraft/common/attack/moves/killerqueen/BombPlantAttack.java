@@ -27,6 +27,7 @@ public class BombPlantAttack extends AbstractSimpleAttack<BombPlantAttack, Abstr
     }
 
     private static final Vec3d halfBox = new Vec3d(0.5, 0.5, 0.5);
+
     @Override
     public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
         CommonBombTrackerComponent.BombData mainBomb = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
@@ -55,14 +56,17 @@ public class BombPlantAttack extends AbstractSimpleAttack<BombPlantAttack, Abstr
                     BlockState blockState = attacker.getWorld().getBlockState(closePos);
                     if (blockState.isAir()) {
                         blockState = attacker.getWorld().getBlockState(farPos);
-                        if (!blockState.isAir())
+                        if (!blockState.isAir()) {
                             mainBomb.setBomb(farPos);
-                    } else
+                        }
+                    } else {
                         mainBomb.setBomb(closePos);
+                    }
                 });
 
         return targets;
     }
+
     @Override
     protected @NonNull BombPlantAttack getThis() {
         return this;

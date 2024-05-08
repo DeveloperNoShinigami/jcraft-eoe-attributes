@@ -41,7 +41,7 @@ public class CrimsonSkyBox implements JSkyBox {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
 
-        for(int i = 0; i < 6; ++i) {
+        for (int i = 0; i < 6; ++i) {
             matrices.push();
             if (i == 1) {
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0F));

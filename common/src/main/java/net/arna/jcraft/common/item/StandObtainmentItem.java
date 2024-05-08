@@ -34,21 +34,26 @@ public abstract class StandObtainmentItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        if (world.isClient) return TypedActionResult.consume(itemStack);
+        if (world.isClient) {
+            return TypedActionResult.consume(itemStack);
+        }
 
         CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
         StandType type = standData.getType();
 
         // Does the user have the appropriate stand and does he meet the evolution requirements?
         if (standIOMap.containsKey(type) && canEvolve(world, user)) {
-            if (!user.isCreative())
+            if (!user.isCreative()) {
                 itemStack.decrement(1);
+            }
 
             standData.setType(standIOMap.get(type));
 
             // Re-summon users stand
             StandEntity<?, ?> stand = standData.getStand();
-            if (stand != null) stand.desummon();
+            if (stand != null) {
+                stand.desummon();
+            }
             JCraft.summon(world, user);
         }
 

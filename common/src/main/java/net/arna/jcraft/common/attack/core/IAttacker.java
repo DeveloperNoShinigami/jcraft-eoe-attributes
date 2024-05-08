@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Anything that can use moves must implement this interface.
  * It provides basic functionality that moves need.
+ *
  * @param <A> The type of the class implementing this interface
  * @param <S> The type of the animation state enum
  */
@@ -42,7 +43,7 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S> {
     boolean canHoldMove(@Nullable MoveInputType type);
 
     default void onUserMoveInput(AbstractMove<?, ? super A> currentMove, MoveInputType type, boolean pressed, boolean moveInitiated) {
-        if ((moveInitiated && pressed && canHoldMove(type)) ){
+        if ((moveInitiated && pressed && canHoldMove(type))) {
             setHoldingType(type);
         }
         if (getHoldingType() == type) {
@@ -80,7 +81,7 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S> {
 
     void setState(S state);
 
-    default void playAttackerSound(SoundEvent sound, float volume, float pitch)  {
+    default void playAttackerSound(SoundEvent sound, float volume, float pitch) {
         getBaseEntity().playSound(sound, volume, pitch);
     }
 

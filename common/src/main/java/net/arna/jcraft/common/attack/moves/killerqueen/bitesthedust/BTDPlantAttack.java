@@ -30,7 +30,9 @@ public class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEn
     @Override
     public @NonNull Set<LivingEntity> perform(KQBTDEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-        if (targets.isEmpty()) return Set.of();
+        if (targets.isEmpty()) {
+            return Set.of();
+        }
 
         Entity btdEntity = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
         if (btdEntity instanceof LivingEntity living) {
@@ -41,8 +43,9 @@ public class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEn
     }
 
     public void tickBomb(KQBTDEntity stand) {
-        if (stand.getUser() instanceof ServerPlayerEntity player)
+        if (stand.getUser() instanceof ServerPlayerEntity player) {
             displayBTDParticles(stand, player);
+        }
     }
 
     private void displayBTDParticles(KQBTDEntity stand, ServerPlayerEntity playerEntity) {
@@ -71,7 +74,9 @@ public class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEn
             dZ2 = bBox.getZLength();
         }
 
-        if (!bombExists) return;
+        if (!bombExists) {
+            return;
+        }
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeShort(9);
 
@@ -92,16 +97,18 @@ public class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEn
         Vec3d v2 = pos.add(-3, -3, -3);
         List<LivingEntity> list = stand.getWorld().getEntitiesByClass(LivingEntity.class, new Box(v1, v2),
                 EntityPredicates.VALID_LIVING_ENTITY.and(e -> e != bombEntity));
-        for (LivingEntity l : list)
+        for (LivingEntity l : list) {
             if (l.squaredDistanceTo(pos) < 9) {
                 anyInRange = true;
                 break;
             }
+        }
 
         buf.writeBoolean(anyInRange);
 
-        if (bBox.getAverageSideLength() > 0)
+        if (bBox.getAverageSideLength() > 0) {
             ServerChannelFeedbackPacket.send(playerEntity, buf);
+        }
     }
 
     @Override

@@ -22,10 +22,14 @@ public class MadeInHeavenRenderer extends StandEntityRenderer<MadeInHeavenEntity
     public void actuallyRender(MatrixStack poseStack, MadeInHeavenEntity animatable, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
-        if (!animatable.getAfterimage()) return;
+        if (!animatable.getAfterimage()) {
+            return;
+        }
 
         float aa = getAlpha(animatable, partialTick) - 0.5f;
-        if (aa < 0) aa = 0;
+        if (aa < 0) {
+            aa = 0;
+        }
 
         Vec3d baseVel = Vec3d.ZERO;
         float bodyYaw = animatable.bodyYaw;
@@ -35,10 +39,11 @@ public class MadeInHeavenRenderer extends StandEntityRenderer<MadeInHeavenEntity
             bodyYaw = user.bodyYaw;
         }
 
-        for (int i = 0; i <= 3; ++i)
+        for (int i = 0; i <= 3; ++i) {
             renderAfter(baseVel.multiply(i), bodyYaw, aa * (1f / i), model, animatable, partialTick,
                     RenderLayer.getEntityNoOutline(getTextureLocation(animatable)), poseStack, bufferSource,
                     buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        }
     }
 
     private void renderAfter(Vec3d velocity, float bodyYaw, float aa, BakedGeoModel model, MadeInHeavenEntity animatable,

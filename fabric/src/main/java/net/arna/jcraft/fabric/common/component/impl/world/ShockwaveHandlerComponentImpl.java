@@ -1,20 +1,13 @@
 package net.arna.jcraft.fabric.common.component.impl.world;
 
-import lombok.Getter;
 import net.arna.jcraft.common.component.impl.world.CommonShockwaveHandlerComponentImpl;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.world.ShockwaveHandlerComponent;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ShockwaveHandlerComponentImpl extends CommonShockwaveHandlerComponentImpl implements ShockwaveHandlerComponent {
 

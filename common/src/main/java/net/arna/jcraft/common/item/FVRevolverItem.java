@@ -33,8 +33,9 @@ public class FVRevolverItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         NbtCompound itemData = stack.getNbt();
 
-        if (itemData != null && itemData.contains("Shots"))
+        if (itemData != null && itemData.contains("Shots")) {
             tooltip.add(Text.translatable("jcraft.revolver.shots").append(" §e" + itemData.get("Shots")));
+        }
 
         super.appendTooltip(stack, world, tooltip, context);
     }
@@ -42,11 +43,14 @@ public class FVRevolverItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        if (user.hasStatusEffect(JStatusRegistry.DAZED))
+        if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
             return TypedActionResult.fail(itemStack);
+        }
         NbtCompound data = itemStack.getOrCreateNbt();
         int shots = data.getInt("Shots");
-        if (shots < 1) return TypedActionResult.fail(itemStack);
+        if (shots < 1) {
+            return TypedActionResult.fail(itemStack);
+        }
         if (!world.isClient) {
             user.getItemCooldownManager().set(JItemRegistry.FV_REVOLVER.get(), 4); // Unusable until fires
             RevolverFire.enqueue(new DimensionData(user, world.getRegistryKey(), 3));
@@ -57,13 +61,15 @@ public class FVRevolverItem extends Item {
     public static void fire(ItemStack itemStack, World world, LivingEntity user) {
         NbtCompound data = itemStack.getOrCreateNbt();
         int shots = data.getInt("Shots");
-        if (shots < 1) return;
+        if (shots < 1) {
+            return;
+        }
 
         data.putInt("Shots", shots - 1);
         world.playSound(null, user.getX(), user.getY(), user.getZ(), JSoundRegistry.REVOLVER_FIRE, SoundCategory.PLAYERS, 1f, 1f);
 
         BulletProjectile bullet = new BulletProjectile(world, user, 9f, 10f, 2, 5);
-        bullet.setVelocity(user, user.getPitch(), user.getYaw(), 0f,  10, 0F);
+        bullet.setVelocity(user, user.getPitch(), user.getYaw(), 0f, 10, 0F);
         world.spawnEntity(bullet);
 
         if (user instanceof PlayerEntity player) {
@@ -76,8 +82,9 @@ public class FVRevolverItem extends Item {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (!world.isClient()) {
             stack.setDamage(stack.getDamage() + 1);
-            if ((stack.getMaxDamage() - stack.getDamage()) <= 0)
+            if ((stack.getMaxDamage() - stack.getDamage()) <= 0) {
                 stack.decrement(1);
+            }
         }
 
         super.inventoryTick(stack, world, entity, slot, selected);

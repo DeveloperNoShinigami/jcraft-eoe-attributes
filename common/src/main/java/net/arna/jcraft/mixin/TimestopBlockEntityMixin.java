@@ -13,6 +13,8 @@ public class TimestopBlockEntityMixin {
     @SuppressWarnings("CancellableInjectionUsage") // The warning is flat out wrong
     @Inject(method = "canTickBlockEntity", at = @At("HEAD"), cancellable = true)
     void jcraft$canTickBlockEntity(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (Timestops.isInTSRange(pos)) cir.cancel();
+        if (Timestops.isInTSRange(pos)) {
+            cir.cancel();
+        }
     }
 }

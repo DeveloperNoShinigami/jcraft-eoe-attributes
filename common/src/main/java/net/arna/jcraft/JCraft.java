@@ -1,10 +1,8 @@
 package net.arna.jcraft;
 
-import com.google.common.base.Suppliers;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
-import dev.architectury.registry.registries.RegistrarManager;
 import dev.architectury.registry.registries.RegistrySupplier;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -31,14 +29,11 @@ import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
-import net.arna.jcraft.mixin.EntityTrackerAccessor;
-import net.arna.jcraft.mixin.ThreadedAnvilChunkStorageAccessor;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -59,10 +54,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.EntityTrackingListener;
-import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.server.world.ThreadedAnvilChunkStorage;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -72,15 +64,12 @@ import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.ChunkManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.stun;
 import static net.arna.jcraft.registry.JItemRegistry.KNIFE;
@@ -212,7 +201,7 @@ public final class JCraft {
 
         // Synchronization
         PacketByteBuf buf = TimeStopStatePacket.createStartPacket(timestopper.getId(), position, worldRegistryKey, duration);
-        world.getPlayers().forEach( playerEntity -> TimeStopStatePacket.send(playerEntity, buf)); // Sends to unaffected players because they may walk into range
+        world.getPlayers().forEach(playerEntity -> TimeStopStatePacket.send(playerEntity, buf)); // Sends to unaffected players because they may walk into range
 
 
         List<ServerPlayerEntity> toStop = world.getEntitiesByClass(ServerPlayerEntity.class,
@@ -221,11 +210,14 @@ public final class JCraft {
         for (ServerPlayerEntity serverPlayer : toStop) {
             // Shader handling
             ShaderActivationPacket.send(serverPlayer, timestopper, 0, duration, ShaderActivationPacket.Type.ZA_WARUDO);
-            if (serverPlayer == timestopper || serverPlayer.isCreative()) continue;
+            if (serverPlayer == timestopper || serverPlayer.isCreative()) {
+                continue;
+            }
 
             // Puts all player items besides armor into cooldown for entire duration of timestop
-            for (int i = 0; i < serverPlayer.getInventory().main.size(); i++)
+            for (int i = 0; i < serverPlayer.getInventory().main.size(); i++) {
                 serverPlayer.getItemCooldownManager().set(serverPlayer.getInventory().main.get(i).getItem(), duration);
+            }
             serverPlayer.getItemCooldownManager().set(serverPlayer.getOffHandStack().getItem(), duration);
         }
     }
@@ -234,7 +226,9 @@ public final class JCraft {
         DimensionData timestop = Timestops.getTimestop(timestopper);
         World world = timestopper.getWorld();
 
-        if (timestop == null || !(world instanceof ServerWorld serverWorld)) return;
+        if (timestop == null || !(world instanceof ServerWorld serverWorld)) {
+            return;
+        }
 
         // Synchronization
         PacketByteBuf buf = TimeStopStatePacket.createStopPacket(timestopper.getId());
@@ -250,8 +244,9 @@ public final class JCraft {
             ShaderDeactivationPacket.send(serverPlayer, ShaderActivationPacket.Type.ZA_WARUDO);
 
             // Removes cooldowns
-            for (int i = 0; i < serverPlayer.getInventory().main.size(); i++)
+            for (int i = 0; i < serverPlayer.getInventory().main.size(); i++) {
                 serverPlayer.getItemCooldownManager().remove(serverPlayer.getInventory().main.get(i).getItem());
+            }
             serverPlayer.getItemCooldownManager().remove(serverPlayer.getOffHandStack().getItem());
         }
 
@@ -262,29 +257,40 @@ public final class JCraft {
      * Clears pre/force loaded chunks in the AU
      */
     public static void clearPreloadedChunks() {
-        if (preloadedChunks.isEmpty()) return;
-        for (ChunkPos p : preloadedChunks)
+        if (preloadedChunks.isEmpty()) {
+            return;
+        }
+        for (ChunkPos p : preloadedChunks) {
             auWorld.setChunkForced(p.x, p.z, false);
+        }
         preloadedChunks.clear();
     }
 
     public static void preloadChunk(ServerWorld auWorld, int chunkX, int chunkZ) {
         // Already loaded, no need to do so again.
-        if (auWorld.getForcedChunks().contains(new ChunkPos(chunkX, chunkZ).toLong())) return;
+        if (auWorld.getForcedChunks().contains(new ChunkPos(chunkX, chunkZ).toLong())) {
+            return;
+        }
 
         preloadedChunks.add(new ChunkPos(chunkX, chunkZ));
         auWorld.setChunkForced(chunkX, chunkZ, true);
     }
 
     public static StandEntity<?, ?> summon(World world, LivingEntity user) {
-        if (user.hasStatusEffect(JStatusRegistry.STANDLESS)) return null;
+        if (user.hasStatusEffect(JStatusRegistry.STANDLESS)) {
+            return null;
+        }
 
         CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
         StandType type = standData.getType();
-        if (type == StandType.NONE) return null;
+        if (type == StandType.NONE) {
+            return null;
+        }
         StandEntity<?, ?> stand = type == null ? null : type.createNew(world);
 
-        if (stand == null) return null;
+        if (stand == null) {
+            return null;
+        }
 
         int skin = standData.getSkin();
         stand.setSkin(skin);
@@ -308,7 +314,9 @@ public final class JCraft {
     }
 
     public static void createParticle(ServerWorld world, double x, double y, double z, JParticleType type) {
-        if (world == null || type == null) return;
+        if (world == null || type == null) {
+            return;
+        }
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
         buf.writeShort(3);
@@ -324,7 +332,9 @@ public final class JCraft {
     }
 
     public static void createHitsparks(ServerWorld world, double x, double y, double z, JParticleType type, int sparkCount, double sparkSpeed) {
-        if (world == null || type == null) return;
+        if (world == null || type == null) {
+            return;
+        }
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 
         buf.writeShort(5);
@@ -345,7 +355,9 @@ public final class JCraft {
      * This attack is blockable, launches and stuns on hit.
      */
     public static void comboBreak(ServerWorld world, LivingEntity player, StatusEffectInstance stun) {
-        if (player.isSpectator()) return;
+        if (player.isSpectator()) {
+            return;
+        }
         CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(player);
 
         if (stun.getDuration() > 1 && DazedStatusEffect.canBeComboBroken(stun.getAmplifier()) && cooldowns.getCooldown(CooldownType.COMBO_BREAKER) <= 0) {
@@ -387,7 +399,9 @@ public final class JCraft {
             JCraft.LOGGER.fatal("Alternate universe world does not exist!");
             return;
         }
-        if (original == au) return;
+        if (original == au) {
+            return;
+        }
 
         Vec3d pos = entity.getPos();
         LivingEntity finalEnt = entity;
@@ -397,7 +411,9 @@ public final class JCraft {
             player.networkHandler.sendPacket(
                     new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.D4C_ALT_UNIVERSE_AMBIENCE), SoundCategory.MUSIC, pos.x, pos.y - heightOffset, pos.z, 1.0F, 1.0F, 0)
             );
-        } else finalEnt = teleportToWorld(entity, au, entity.getX(), entity.getY() - heightOffset, entity.getZ());
+        } else {
+            finalEnt = teleportToWorld(entity, au, entity.getX(), entity.getY() - heightOffset, entity.getZ());
+        }
 
         if (finalEnt == null) {
             JCraft.LOGGER.error("Failed to teleport " + entity + " to alternate universe!");
@@ -422,7 +438,7 @@ public final class JCraft {
                 .build();
     }
 
-    public static boolean wasRecentlyAttacked(DamageTracker tracker){
+    public static boolean wasRecentlyAttacked(DamageTracker tracker) {
         tracker.update();
         return tracker.recentlyAttacked;
     }

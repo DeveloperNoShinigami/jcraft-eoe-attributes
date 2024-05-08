@@ -30,15 +30,20 @@ public class StandBlockCommand {
 
     public static int run(CommandContext<ServerCommandSource> ctx, boolean block) throws CommandSyntaxException {
         Collection<? extends Entity> targets = EntityArgumentType.getEntities(ctx, "targets");
-        if (targets.isEmpty()) return 0;
+        if (targets.isEmpty()) {
+            return 0;
+        }
         for (Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
                 StandEntity<?, ?> stand = JComponentPlatformUtils.getStandData(livingEntity).getStand();
 
-                if (stand == null) continue;
+                if (stand == null) {
+                    continue;
+                }
                 if (block) {
-                    if (stand.getMoveStun() < 1)
+                    if (stand.getMoveStun() < 1) {
                         stand.tryBlock();
+                    }
                 } else {
                     stand.tryUnblock();
                 }

@@ -16,7 +16,10 @@ import net.minecraft.entity.projectile.FishingBobberEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Arm;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
@@ -28,13 +31,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FishingBobberEntityRenderer.class)
 public abstract class FishingBobberEntityRendererMixin extends EntityRenderer<FishingBobberEntity> {
-    @Shadow @Final private static RenderLayer LAYER;
+    @Shadow
+    @Final
+    private static RenderLayer LAYER;
 
-    @Shadow private static void vertex(VertexConsumer buffer, Matrix4f matrix, Matrix3f normalMatrix, int light, float x, int y, int u, int v) {}
+    @Shadow
+    private static void vertex(VertexConsumer buffer, Matrix4f matrix, Matrix3f normalMatrix, int light, float x, int y, int u, int v) {
+    }
 
-    @Shadow private static void renderFishingLine(float x, float y, float z, VertexConsumer buffer, MatrixStack.Entry normal, float f, float g) {}
+    @Shadow
+    private static void renderFishingLine(float x, float y, float z, VertexConsumer buffer, MatrixStack.Entry normal, float f, float g) {
+    }
 
-    @Shadow private static float percentage(int value, int max) { return 0.0F; }
+    @Shadow
+    private static float percentage(int value, int max) {
+        return 0.0F;
+    }
 
     protected FishingBobberEntityRendererMixin(EntityRendererFactory.Context ctx) {
         super(ctx);
@@ -47,10 +59,14 @@ public abstract class FishingBobberEntityRendererMixin extends EntityRenderer<Fi
     )
     public void inject_render(FishingBobberEntity fishingBobberEntity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, CallbackInfo ci) {
         PlayerEntity playerEntity = fishingBobberEntity.getPlayerOwner();
-        if(playerEntity == null) return;
+        if (playerEntity == null) {
+            return;
+        }
 
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
-        if(gravityDirection == Direction.DOWN) return;
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
 
         ci.cancel();
 
@@ -107,13 +123,13 @@ public abstract class FishingBobberEntityRendererMixin extends EntityRenderer<Fi
         double bobberX = MathHelper.lerp(tickDelta, fishingBobberEntity.prevX, fishingBobberEntity.getX());
         double bobberY = MathHelper.lerp(tickDelta, fishingBobberEntity.prevY, fishingBobberEntity.getY()) + 0.25D;
         double bobberZ = MathHelper.lerp(tickDelta, fishingBobberEntity.prevZ, fishingBobberEntity.getZ());
-        float relX = (float)(lineStart.x - bobberX);
-        float relY = (float)(lineStart.y - bobberY);
-        float relZ = (float)(lineStart.z - bobberZ);
+        float relX = (float) (lineStart.x - bobberX);
+        float relY = (float) (lineStart.y - bobberY);
+        float relZ = (float) (lineStart.z - bobberZ);
         VertexConsumer vertexConsumer2 = vertexConsumerProvider.getBuffer(RenderLayer.getLineStrip());
         MatrixStack.Entry entry2 = matrixStack.peek();
 
-        for(int i = 0; i <= 16; ++i) {
+        for (int i = 0; i <= 16; ++i) {
             renderFishingLine(relX, relY, relZ, vertexConsumer2, entry2, percentage(i, 16), percentage(i + 1, 16));
         }
 

@@ -14,9 +14,10 @@ public interface JServerPlayerInputEvent {
 
     /**
      * Called when a player inputs a move.
-     * @param player The player that input the move
-     * @param moveInput The move the player input
-     * @param pressed Whether the move was pressed or released
+     *
+     * @param player      The player that input the move
+     * @param moveInput   The move the player input
+     * @param pressed     Whether the move was pressed or released
      * @param moveSuccess Whether the move was successful
      */
     EventResult onPlayerInput(ServerPlayerEntity player, MoveInputType moveInput, boolean pressed, boolean moveSuccess);

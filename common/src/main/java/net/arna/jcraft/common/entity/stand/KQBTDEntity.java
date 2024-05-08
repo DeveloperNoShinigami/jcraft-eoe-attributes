@@ -109,12 +109,12 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
         );
 
         freespace = """
-                    BNBs:
-                    -the kitty cat
-                    M1~Low>Barrage>Bomb Plant/Bites the Dust Plant
-                    
-                    -the ol razzle dazzle
-                    (Already bomb planted) M1~Low>Barrage>M1>Elbow>Detonate""";
+                BNBs:
+                -the kitty cat
+                M1~Low>Barrage>Bomb Plant/Bites the Dust Plant
+                                    
+                -the ol razzle dazzle
+                (Already bomb planted) M1~Low>Barrage>M1>Elbow>Detonate""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.9f, 0.7f, 0.8f),
@@ -141,17 +141,23 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     @Override
     public boolean initMove(MoveType type) {
         if (type == MoveType.ULTIMATE) {
-            if (moveContext.get(BTDPlantAttack.BTD_ENTITY) != null)
+            if (moveContext.get(BTDPlantAttack.BTD_ENTITY) != null) {
                 return handleMove(BTD_DETONATE, CooldownType.ULTIMATE, State.DETONATE);
-            else return handleMove(MoveType.ULTIMATE);
-        } else return super.initMove(type);
+            } else {
+                return handleMove(MoveType.ULTIMATE);
+            }
+        } else {
+            return super.initMove(type);
+        }
     }
 
     @Override
     public MoveSelectionResult specificMoveSelectionCriterion(AbstractMove<?, ? super KQBTDEntity> attack, LivingEntity mob,
                                                               LivingEntity target, int stunTicks, int enemyMoveStun,
                                                               double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
-        if (enemyStand != null && enemyStand.blocking) return MoveSelectionResult.STOP;
+        if (enemyStand != null && enemyStand.blocking) {
+            return MoveSelectionResult.STOP;
+        }
 
         Vec3d bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
         if (attack == DETONATE && bombPos != null && target.squaredDistanceTo(bombPos) < 9.0D) {
@@ -166,7 +172,9 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     public void tick() {
         super.tick();
 
-        if (!hasUser() || getWorld().isClient) return;
+        if (!hasUser() || getWorld().isClient) {
+            return;
+        }
 
         BUBBLE.tickBubble(this);
         BTD_PLANT.tickBomb(this);

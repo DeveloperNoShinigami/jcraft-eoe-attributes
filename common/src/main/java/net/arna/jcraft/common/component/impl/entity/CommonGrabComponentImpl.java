@@ -58,15 +58,19 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
     }
 
     public void tick() {
-        if (attacker != null)
+        if (attacker != null) {
             if (attacker.isAlive() && duration-- > 0) {
                 Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
                 Vec3d newPos = attacker.getPos()
                         .add(RotationUtil.vecPlayerToWorld(new Vec3d(0, verticalOffset, 0), gravity))
                         .add(attacker.getRotationVector().multiply(distance));
-                if (!attacker.getWorld().isTopSolid(BlockPos.ofFloored(newPos), grabbed))
+                if (!attacker.getWorld().isTopSolid(BlockPos.ofFloored(newPos), grabbed)) {
                     grabbed.setPosition(newPos);
-            } else endGrab();
+                }
+            } else {
+                endGrab();
+            }
+        }
     }
 
     public void sync() {
@@ -81,7 +85,9 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
     public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
         boolean notGrabbing = attacker == null;
         buf.writeBoolean(notGrabbing);
-        if (notGrabbing) return;
+        if (notGrabbing) {
+            return;
+        }
         buf.writeVarInt(attacker.getId());
         buf.writeVarInt(duration);
         buf.writeDouble(distance);
@@ -89,14 +95,18 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
     }
 
     public void applySyncPacket(PacketByteBuf buf) {
-        if (buf.readBoolean()) return;
+        if (buf.readBoolean()) {
+            return;
+        }
         attacker = grabbed.getWorld().getEntityById(buf.readVarInt());
         duration = buf.readVarInt();
         distance = buf.readDouble();
         verticalOffset = buf.readDouble();
     }
 
-    public void readFromNbt(@NotNull NbtCompound tag) { }
+    public void readFromNbt(@NotNull NbtCompound tag) {
+    }
 
-    public void writeToNbt(@NotNull NbtCompound tag) { }
+    public void writeToNbt(@NotNull NbtCompound tag) {
+    }
 }

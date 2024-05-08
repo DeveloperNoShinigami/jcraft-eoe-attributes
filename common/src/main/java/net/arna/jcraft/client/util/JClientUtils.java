@@ -35,30 +35,38 @@ public class JClientUtils {
     public static void removeTimestop(int timestopperId) {
         for (DimensionData timestop : activeTimestops) {
             Entity timestopper = timestop.user;
-            if (timestopper.getId() != timestopperId) continue;
+            if (timestopper.getId() != timestopperId) {
+                continue;
+            }
             timestop.timer = 0;
             return;
         }
     }
 
     public static boolean isInTSRange(Vec3d pos) {
-        for (DimensionData timeStop : activeTimestops)
-            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536)
+        for (DimensionData timeStop : activeTimestops) {
+            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return true;
+            }
+        }
         return false;
     }
 
     public static boolean isInTSRange(BlockPos pos) {
-        for (DimensionData timeStop : activeTimestops)
-            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536)
+        for (DimensionData timeStop : activeTimestops) {
+            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return true;
+            }
+        }
         return false;
     }
 
     public static int getTicksIfInTSRange(BlockPos pos) {
-        for (DimensionData timeStop : activeTimestops)
-            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536)
+        for (DimensionData timeStop : activeTimestops) {
+            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return timeStop.timer;
+            }
+        }
         return 0;
     }
 
@@ -85,8 +93,9 @@ public class JClientUtils {
             overVel = MathHelper.clamp((float) playerVel.horizontalLength() - 0.05f, -1f, 1f);
 
             // If going backwards
-            if (playerVel.normalize().add(entity.getRotationVector()).horizontalLengthSquared() < playerVel.normalize().horizontalLengthSquared())
+            if (playerVel.normalize().add(entity.getRotationVector()).horizontalLengthSquared() < playerVel.normalize().horizontalLengthSquared()) {
                 velInfluence *= -1;
+            }
 
             CoreGeoBone torso = animationProcessor.getBone("torso");
             if (torso != null) {
@@ -103,7 +112,9 @@ public class JClientUtils {
             CoreGeoBone head = animationProcessor.getBone("head");
             if (head != null) {
                 float headPitch = (player.getPitch() - overVel * velInfluence) * 3.1415f / 180f;
-                if (flipHead) headPitch = -headPitch;
+                if (flipHead) {
+                    headPitch = -headPitch;
+                }
                 head.setRotX(headPitch + hPO);
             }
         } else if (entity.getMoveStun() > 0) {
@@ -117,8 +128,9 @@ public class JClientUtils {
 
     public static boolean shouldForceRender(Entity entity) {
         if (entity instanceof D4CEntity d4c && d4c.getState() == D4CEntity.State.FLAG ||
-            entity instanceof KingCrimsonEntity kc && kc.getTETime() > 0 && kc.getUser() == MinecraftClient.getInstance().player)
+                entity instanceof KingCrimsonEntity kc && kc.getTETime() > 0 && kc.getUser() == MinecraftClient.getInstance().player) {
             return true;
+        }
         return entity instanceof CreamEntity cream && cream.isHalfBall();
     }
 
@@ -137,8 +149,9 @@ public class JClientUtils {
     }
 
     public static void animateHit(CommonHitPropertyComponent.HitAnimation hitAnimation, long endHitAnimTime, Vec3d randomRotation, ModelPart head, @Nullable ModelPart hat, ModelPart body, ModelPart rightArm, ModelPart leftArm, ModelPart rightLeg, ModelPart leftLeg) {
-        if (endHitAnimTime > 20L)
+        if (endHitAnimTime > 20L) {
             endHitAnimTime = 20L;
+        }
         float angDegrees = endHitAnimTime * RAD_TO_DEG;
 
         if (endHitAnimTime <= 1) {
@@ -151,7 +164,9 @@ public class JClientUtils {
         }
 
         if (endHitAnimTime == 0) // If dead
+        {
             return;
+        }
 
         switch (hitAnimation) {
             case HIGH -> {

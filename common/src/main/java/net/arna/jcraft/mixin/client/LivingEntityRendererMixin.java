@@ -31,9 +31,12 @@ import java.util.List;
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> extends EntityRenderer<T> implements FeatureRendererContext<T, M> {
 
-    @Shadow protected M model;
+    @Shadow
+    protected M model;
 
-    @Shadow @Final protected List<FeatureRenderer<T, M>> features;
+    @Shadow
+    @Final
+    protected List<FeatureRenderer<T, M>> features;
 
     protected LivingEntityRendererMixin(EntityRendererFactory.Context ctx) {
         super(ctx);
@@ -43,22 +46,28 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
     @Inject(at = @At("RETURN"), method = "<init>")
     private void addFeatureRenderers(EntityRendererFactory.Context ctx, EntityModel<?> model, float shadowRadius, CallbackInfo ci) {
         if (model instanceof AnimalModel<?>) // StuckKnives
+        {
             addFeature((FeatureRenderer<T, M>) new StuckKnivesFeatureRenderer<>(ctx, (LivingEntityRenderer<T, ? extends AnimalModel<T>>) (Object) this));
-        if (model != null)
-            addFeature((FeatureRenderer<T, M>) new ArmoredMoveFeatureRenderer<>(ctx, (LivingEntityRenderer<T, ? extends EntityModel<T>>) (Object) this ));
+        }
+        if (model != null) {
+            addFeature((FeatureRenderer<T, M>) new ArmoredMoveFeatureRenderer<>(ctx, (LivingEntityRenderer<T, ? extends EntityModel<T>>) (Object) this));
+        }
     }
 
     @Inject(method = "hasLabel(Lnet/minecraft/entity/LivingEntity;)Z", at = @At("HEAD"), cancellable = true)
     private void doNotRenderCloneLabel(T livingEntity, CallbackInfoReturnable<Boolean> cir) {
-        if (livingEntity instanceof PlayerCloneClientPlayerEntity) cir.setReturnValue(false);
+        if (livingEntity instanceof PlayerCloneClientPlayerEntity) {
+            cir.setReturnValue(false);
+        }
     }
 
     @Inject(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V",
             at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"))
     private void suckmahballs(T livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
         if (true || !(JUtils.getStand((LivingEntity) (Object) this) instanceof KingCrimsonEntity kc) || kc.getState() != KingCrimsonEntity.State.PREDICT ||
-                kc.getMoveStun() > (KingCrimsonEntity.PREDICTION.getWindupPoint()))
+                kc.getMoveStun() > (KingCrimsonEntity.PREDICTION.getWindupPoint())) {
             return;
+        }
 
         RenderLayer renderLayer = JRenderLayerRegistry.RRRE;
         if (renderLayer != null) {
@@ -73,7 +82,9 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
         }
     }
 
-    @Shadow protected abstract float getAnimationProgress(T entity, float tickDelta);
+    @Shadow
+    protected abstract float getAnimationProgress(T entity, float tickDelta);
 
-    @Shadow protected abstract boolean addFeature(FeatureRenderer<T, M> feature);
+    @Shadow
+    protected abstract boolean addFeature(FeatureRenderer<T, M> feature);
 }

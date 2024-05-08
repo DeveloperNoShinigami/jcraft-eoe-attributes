@@ -84,7 +84,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             .withInfo(
                     Text.literal("Dimensional Hop"),
                     Text.literal("travels to a random dimension at exact coordinates, " +
-                    "if user was hit in the last 30s, he is forced back, certified death button"));
+                            "if user was hit in the last 30s, he is forced back, certified death button"));
     public static final GiveGunMove GIVE_GUN = new GiveGunMove(280, 10, 14, 0.75f)
             .withSound(JSoundRegistry.D4C_THROW)
             .withInitAction(D4CEntity::equipRevolver)
@@ -126,12 +126,12 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             .withInfo(
                     Text.literal("Dimensional Clone"),
                     Text.literal("""
-                    summons an unlimited number of servants, crouch and interact to give/take items, press a special button to change their weapon
-                    Servant types:
-                    DEFAULT - Iron Sword
-                    SPECIAL 1 - Wooden Axe
-                    SPECIAL 2 - Bow
-                    SPECIAL 3 - None"""));
+                            summons an unlimited number of servants, crouch and interact to give/take items, press a special button to change their weapon
+                            Servant types:
+                            DEFAULT - Iron Sword
+                            SPECIAL 1 - Wooden Axe
+                            SPECIAL 2 - Bow
+                            SPECIAL 3 - None"""));
     public static final FlagMove FLAG = new FlagMove(280, 10, 60, 0f)
             .withSound(JSoundRegistry.D4C_UTILITY)
             .withInfo(
@@ -190,7 +190,9 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     }
 
     private static void doCharge(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        if (!user.isOnGround()) return;
+        if (!user.isOnGround()) {
+            return;
+        }
         JUtils.addVelocity(user, attacker.getRotationVector().multiply(0.75).add(0.0, 0.15, 0.0));
     }
 
@@ -232,8 +234,9 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
 
     @Override
     public void queueMove(MoveInputType type) {
-        if (curMove != null && curMove.getOriginalMove() == CLONE_SPAWN)
+        if (curMove != null && curMove.getOriginalMove() == CLONE_SPAWN) {
             return;
+        }
         super.queueMove(type);
     }
 

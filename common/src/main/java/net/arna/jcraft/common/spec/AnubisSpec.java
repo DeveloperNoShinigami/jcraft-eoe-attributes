@@ -8,7 +8,10 @@ import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.anubis.Rekka3Attack;
-import net.arna.jcraft.common.attack.moves.shared.*;
+import net.arna.jcraft.common.attack.moves.shared.KnockdownMultiHitAttack;
+import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
+import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
+import net.arna.jcraft.common.attack.moves.shared.UppercutAttack;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
@@ -102,7 +105,9 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
     protected float attackSpeedMult = 1f;
 
     private static void tryIncrementBloodlust(IAttacker<?, ?> attacker, LivingEntity living, MoveContext moveContext, Set<LivingEntity> targets) {
-        if (targets.isEmpty()) return;
+        if (targets.isEmpty()) {
+            return;
+        }
         boolean hit = true;
 
         for (LivingEntity target : targets) {
@@ -141,15 +146,18 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
             unsheatheAttack(attacker, user, ctx, targets);
             targets.forEach(
                     target -> {
-                        if (!JUtils.isBlocking(target))
+                        if (!JUtils.isBlocking(target)) {
                             target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 35, 0));
+                        }
                     }
             );
         }
     }
 
     private void resetLastHitTime(LivingEntity living, MoveContext moveContext, Set<LivingEntity> targets) {
-        if (targets.isEmpty()) return;
+        if (targets.isEmpty()) {
+            return;
+        }
         if (living instanceof PlayerEntity playerEntity) {
             AnubisSpec anubisSpec = (AnubisSpec) JUtils.getSpec(playerEntity);
             anubisSpec.setTicksSinceLastHit(0);
@@ -174,6 +182,7 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
     private static boolean isHoldingSheathedAnubis(AnubisSpec spec) {
         return spec.player.isHolding(JItemRegistry.ANUBISSHEATHED.get());
     }
+
     private static boolean isHoldingAnubis(AnubisSpec spec) {
         return spec.player.isHolding(JItemRegistry.ANUBIS.get());
     }
@@ -200,7 +209,9 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
                     s = getUserOrThrow().isSneaking() ?
                             handleMove(UNSHEATHING_SWEEP, CooldownType.SPECIAL1, State.UNSHEATHING_SWEEP, attackSpeedMult) :
                             handleMove(UNSHEATHING_ATTACK, CooldownType.SPECIAL1, State.UNSHEATHING_ATTACK, attackSpeedMult);
-                } else return false;
+                } else {
+                    return false;
+                }
 
                 return s;
             }
@@ -240,7 +251,8 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
         SWEEP("an.swp"),
         AERIAL_CLEAVE("an.acl"),
         UNSHEATHING_ATTACK("an.usa"),
-        UNSHEATHING_SWEEP("an.uss"),;
+        UNSHEATHING_SWEEP("an.uss"),
+        ;
 
         private final String key;
 

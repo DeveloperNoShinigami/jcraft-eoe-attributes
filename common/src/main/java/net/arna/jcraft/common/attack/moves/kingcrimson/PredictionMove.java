@@ -30,7 +30,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEntity> {
-    public static final MoveVariable<Map<Entity, Vec3d>> PREDICTION_INFO = new MoveVariable<>(new TypeToken<>() {});
+    public static final MoveVariable<Map<Entity, Vec3d>> PREDICTION_INFO = new MoveVariable<>(new TypeToken<>() {
+    });
 
     public PredictionMove(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
@@ -43,22 +44,26 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
         attacker.getMoveContext().get(PREDICTION_INFO).clear();
 
         // Send epitaph state start
-        if (attacker.getUser() instanceof ServerPlayerEntity player)
+        if (attacker.getUser() instanceof ServerPlayerEntity player) {
             NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_EPITAPH_STATE,
                     new PacketByteBuf(Unpooled.buffer().writeBoolean(true)));
+        }
     }
 
     @Override
     public void tick(KingCrimsonEntity attacker) {
         super.tick(attacker);
 
-        if (attacker.getMoveStun() == getWindupPoint())
+        if (attacker.getMoveStun() == getWindupPoint()) {
             beginPrediction(attacker); // Clientside prediction, serverside is in specialAttack()
+        }
 
         if (attacker.age % 2 == 0) {
             tickPredictions(attacker);
-            if (attacker.hasUser()) attacker.getUserOrThrow().addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS,
-                    10, 2, true, false));
+            if (attacker.hasUser()) {
+                attacker.getUserOrThrow().addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS,
+                        10, 2, true, false));
+            }
         }
     }
 
@@ -68,11 +73,14 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
     }
 
     public void beginPrediction(KingCrimsonEntity attacker) {
-        if (!(attacker.getUser() instanceof ServerPlayerEntity player)) return;
+        if (!(attacker.getUser() instanceof ServerPlayerEntity player)) {
+            return;
+        }
 
         Map<Entity, Vec3d> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
-        for (Entity entity : getEntitiesToCatch(attacker.getWorld(), attacker, player))
+        for (Entity entity : getEntitiesToCatch(attacker.getWorld(), attacker, player)) {
             predictionInfo.put(entity, entity.getPos());
+        }
 
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBoolean(true);
@@ -84,7 +92,9 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
         Map<Entity, Vec3d> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
         for (Map.Entry<Entity, Vec3d> prediction : predictionInfo.entrySet()) {
             Entity entity = prediction.getKey();
-            if (entity == null) continue;
+            if (entity == null) {
+                continue;
+            }
 
             Vec3d pos = prediction.getValue();
             entity.teleport(pos.x, pos.y, pos.z);
@@ -117,7 +127,9 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
     }
 
     public static List<Entity> getEntitiesToCatch(World world, StandEntity<?, ?> stand, PlayerEntity player) {
-        if (world == null || stand == null) return List.of();
+        if (world == null || stand == null) {
+            return List.of();
+        }
 
         return world.getEntitiesByClass(Entity.class, stand.getBoundingBox().expand(64),
                 EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(e -> e != stand && e != player));
@@ -128,17 +140,22 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e));
         Set<Entity> updated = new HashSet<>();
 
-        for (Map.Entry<Entity, Map.Entry<Entity, Vec3d>> prediction : predictions.entrySet())
+        for (Map.Entry<Entity, Map.Entry<Entity, Vec3d>> prediction : predictions.entrySet()) {
             updatePrediction(predictions, prediction.getValue(), updated, ticksLeft);
+        }
     }
 
     private static void updatePrediction(Map<Entity, Map.Entry<Entity, Vec3d>> predictions, Map.Entry<Entity, Vec3d> prediction,
                                          Set<Entity> updated, int ticksLeft) {
         Entity entity = prediction.getKey();
-        if (updated.contains(entity)) return;
+        if (updated.contains(entity)) {
+            return;
+        }
 
         updated.add(entity);
-        if (entity == null || !entity.isAlive()) return;
+        if (entity == null || !entity.isAlive()) {
+            return;
+        }
 
         World world = entity.getWorld();
 
@@ -159,7 +176,9 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
         // If moving faster than 0.01 m/s, account for distance traveled
         Vec3d velocity = entity.getVelocity();
         if (entity instanceof PlayerEntity player) // EXTREMELY cursed implementation of player velocity because NOTHING ELSE WORKS
+        {
             velocity = JComponentPlatformUtils.getMiscData(player).getDesiredVelocity();
+        }
         //JCraft.LOGGER.info("Target is moving at a velocity of: " + velocity);
         if (velocity.lengthSquared() > 0.0001) {
             Vec3d velocityComp = new Vec3d(velocity.x * ticksLeft, Math.max(0, velocity.y * ticksLeft), velocity.z * ticksLeft);
@@ -170,7 +189,9 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
 
         Entity vehicle = entity.getVehicle();
         if (vehicle != null) {
-            if (!predictions.containsKey(vehicle)) return;
+            if (!predictions.containsKey(vehicle)) {
+                return;
+            }
 
             // Ensure vehicle is updated.
             Map.Entry<Entity, Vec3d> vehiclePrediction = predictions.get(vehicle);
@@ -180,7 +201,9 @@ public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEnti
         }
 
         // Collision check between current and extrapolated future position
-        if (!changed) return;
+        if (!changed) {
+            return;
+        }
 
         //JCraft.LOGGER.info("Predicted position changed, time left: " + timeLeft);
         BlockHitResult hitResult = world.raycast(new RaycastContext(currentPos, futurePos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.SOURCE_ONLY, entity));

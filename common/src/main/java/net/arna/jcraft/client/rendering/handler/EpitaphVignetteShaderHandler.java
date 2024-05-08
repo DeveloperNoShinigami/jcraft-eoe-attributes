@@ -1,12 +1,5 @@
 package net.arna.jcraft.client.rendering.handler;
 
-import net.arna.jcraft.JCraft;
-import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.util.math.MatrixStack;
-import org.jetbrains.annotations.NotNull;
-
 //public class EpitaphVignetteShaderHandler extends StandShaderHandler {
 //    public static final EpitaphVignetteShaderHandler INSTANCE = new EpitaphVignetteShaderHandler();
 //    private static final ManagedShaderEffect SHADER = ShaderEffectManager.getInstance().manage(JCraft.id("shaders/post/epitaph_vignette.json"));

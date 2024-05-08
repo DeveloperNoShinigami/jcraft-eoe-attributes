@@ -84,10 +84,14 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
     public void tick() {
         super.tick();
 
-        if (!this.inGround) ++this.ticksInAir;
+        if (!this.inGround) {
+            ++this.ticksInAir;
+        }
 
         if (!getLightning()) {
-            if (ticksInAir > 640 && !getWorld().isClient) discard();
+            if (ticksInAir > 640 && !getWorld().isClient) {
+                discard();
+            }
             return;
         }
         if (getWorld().isClient) {
@@ -99,20 +103,27 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
             return;
         }
 
-        if (ticksInAir > 200 || inGround)
+        if (ticksInAir > 200 || inGround) {
             discard();
-        if (!delayed) return;
+        }
+        if (!delayed) {
+            return;
+        }
 
         delayTime--;
         Entity owner = getOwner();
-        if (owner == null) return;
+        if (owner == null) {
+            return;
+        }
 
         if (delayTime >= 1) {
             setVelocity(getVelocity().multiply(0.5));
             return;
         }
 
-        if (delayFired) return;
+        if (delayFired) {
+            return;
+        }
         Vec3d eP = owner.getEyePos();
         Vec3d rangeMod = owner.getRotationVector().multiply(24);
 
@@ -127,7 +138,9 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
         playSound(JSoundRegistry.TWOH_SHOOT, 1, 1);
 
         Vec3d hitPos = hitResult.getPos();
-        if (eHit != null) hitPos = eHit.getPos();
+        if (eHit != null) {
+            hitPos = eHit.getPos();
+        }
         setVelocity(new Vec3d(hitPos.x - getX(), hitPos.y - getY(), hitPos.z - getZ()).normalize());
 
         velocityDirty = true;
@@ -141,25 +154,37 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) return;
-        if (delayed && delayTime > 1) return;
+        if (getWorld().isClient) {
+            return;
+        }
+        if (delayed && delayTime > 1) {
+            return;
+        }
         Entity entity = entityHitResult.getEntity();
         Entity owner = this.getOwner();
 
-        if (owner != null && owner.hasPassenger(entity) || entity == owner) return;
+        if (owner != null && owner.hasPassenger(entity) || entity == owner) {
+            return;
+        }
 
-        if (isOnFire()) entity.setOnFireFor(5);
+        if (isOnFire()) {
+            entity.setOnFireFor(5);
+        }
 
         int blockstun = 4;
         int stunT = 0;
         if (getLightning()) {
             stunT = 20;
             blockstun = 6;
-        } else dropStack(asItemStack(), 0.1F);
+        } else {
+            dropStack(asItemStack(), 0.1F);
+        }
 
         JUtils.projectileDamageLogic(this, getWorld(), entity, Vec3d.ZERO, stunT, 1, false, 2, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
         playSound(SoundEvents.ITEM_TRIDENT_HIT, 1, 1);
-        if (entity instanceof LivingEntity living) JComponentPlatformUtils.getMiscData(living).stab();
+        if (entity instanceof LivingEntity living) {
+            JComponentPlatformUtils.getMiscData(living).stab();
+        }
         discard();
     }
 

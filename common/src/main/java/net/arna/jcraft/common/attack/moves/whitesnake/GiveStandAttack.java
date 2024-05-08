@@ -25,8 +25,9 @@ public class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, White
 
     @Override
     public boolean canBeInitiated(WhiteSnakeEntity attacker) {
-        if (!attacker.hasUser())
+        if (!attacker.hasUser()) {
             return false;
+        }
         return super.canBeInitiated(attacker) && attacker.getUserOrThrow().getOffHandStack().getItem() == JItemRegistry.STAND_DISC;
     }
 
@@ -50,17 +51,27 @@ public class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, White
                     CommonStandComponent standData = JComponentPlatformUtils.getStandData(target);
 
                     StandType targetStand = standData.getType();
-                    if (targetStand != null) return; // Can't overwrite other's stands
-                    if (data.contains("StandID", NbtElement.INT_TYPE)) itemStand = StandType.fromId(data.getInt("StandID"));
-                    if (itemStand == null) return;
-                    if (data.contains("Skin", NbtElement.INT_TYPE)) itemSkin = data.getInt("Skin");
+                    if (targetStand != null) {
+                        return; // Can't overwrite other's stands
+                    }
+                    if (data.contains("StandID", NbtElement.INT_TYPE)) {
+                        itemStand = StandType.fromId(data.getInt("StandID"));
+                    }
+                    if (itemStand == null) {
+                        return;
+                    }
+                    if (data.contains("Skin", NbtElement.INT_TYPE)) {
+                        itemSkin = data.getInt("Skin");
+                    }
 
                     standData.setTypeAndSkin(itemStand, itemSkin);
                     data.putInt("StandID", 0);
                     data.putInt("Skin", 0);
 
                     StandEntity<?, ?> stand = standData.getStand();
-                    if (stand != null) stand.discard();
+                    if (stand != null) {
+                        stand.discard();
+                    }
                     JCraft.summon(target.getWorld(), target);
                 }
         );

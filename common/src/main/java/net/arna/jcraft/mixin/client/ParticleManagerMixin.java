@@ -21,7 +21,9 @@ import java.util.List;
 
 @Mixin(ParticleManager.class)
 public class ParticleManagerMixin {
-    @Shadow @Mutable @Final
+    @Shadow
+    @Mutable
+    @Final
     private static List<ParticleTextureSheet> PARTICLE_TEXTURE_SHEETS;
     @Shadow
     protected ClientWorld world;
@@ -38,7 +40,7 @@ public class ParticleManagerMixin {
         ParticleAccessor particleAccessor = (ParticleAccessor) particle;
         if (
                 JClientUtils.isInTSRange(
-                new Vec3d( particleAccessor.getX(), particleAccessor.getY(), particleAccessor.getZ() )
+                        new Vec3d(particleAccessor.getX(), particleAccessor.getY(), particleAccessor.getZ())
                 )
         ) {
             particleAccessor.setPrevX(particleAccessor.getX());

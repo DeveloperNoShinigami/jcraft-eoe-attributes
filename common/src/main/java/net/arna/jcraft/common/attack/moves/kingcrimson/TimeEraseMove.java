@@ -43,9 +43,10 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
     public void onInitiate(KingCrimsonEntity attacker) {
         super.onInitiate(attacker);
 
-        if (attacker.getUser() instanceof ServerPlayerEntity player)
+        if (attacker.getUser() instanceof ServerPlayerEntity player) {
             player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.TIME_ERASE), SoundCategory.PLAYERS,
                     attacker.getX(), attacker.getY(), attacker.getZ(), 1, 1, 0));
+        }
     }
 
     @Override
@@ -68,11 +69,14 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
             clone.setMaster(player);
 
             doppelganger = clone;
-        } else if (user instanceof MobEntity mob)
+        } else if (user instanceof MobEntity mob) {
             doppelganger = JUtils.mobCloneOf(mob);
+        }
 
         ctx.set(DOPPELGANGER, doppelganger);
-        if (doppelganger == null) return Set.of();
+        if (doppelganger == null) {
+            return Set.of();
+        }
 
         // Copy rotation
         doppelganger.copyPositionAndRotation(user);
@@ -108,7 +112,9 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
         standData.setTypeAndSkin(attacker.getStandType(), attacker.getSkin());
 
         StandEntity<?, ?> clone = JCraft.summon(attacker.getWorld(), doppelganger);
-        if (clone == null) return;
+        if (clone == null) {
+            return;
+        }
 
         clone.blocking = true;
         clone.setMoveStun(32767);
@@ -116,15 +122,18 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
     }
 
     public void tickTimeErase(KingCrimsonEntity attacker) {
-        if (!attacker.hasUser()) return;
+        if (!attacker.hasUser()) {
+            return;
+        }
 
         LivingEntity user = attacker.getUserOrThrow();
         int teTime = attacker.getTETime();
         if (teTime > 0) {
             attacker.setTETime(--teTime);
 
-            if (attacker.blocking || attacker.curMove != null && attacker.getMoveStun() < attacker.curMove.getWindupPoint() * 2 / 3)
+            if (attacker.blocking || attacker.curMove != null && attacker.getMoveStun() < attacker.curMove.getWindupPoint() * 2 / 3) {
                 attacker.cancelTE();
+            }
 
             // Invulnerability and invisibility
             user.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 10, 9, true, false));
@@ -138,9 +147,10 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
 
             if (teTime <= 0) {
                 // Play exit noise
-                if (user instanceof ServerPlayerEntity player)
+                if (user instanceof ServerPlayerEntity player) {
                     player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.TIME_ERASE_EXIT),
                             SoundCategory.PLAYERS, attacker.getX(), attacker.getY(), attacker.getZ(), 1, 1, 0));
+                }
 
                 /* Return targets to position
                 for (TimeEraseData timeEraseData : timeEraseInfo) {
@@ -153,11 +163,15 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
 
         MobEntity doppelganger = attacker.getMoveContext().get(TimeEraseMove.DOPPELGANGER);
         if (teTime <= 0 && doppelganger != null) // Doppelgänger disappears at the end of Time Erase
+        {
             doppelganger.discard();
+        }
 
         attacker.setSilent(teTime > 0);
 
-        if (user.hasCustomName()) user.setCustomNameVisible(teTime <= 0);
+        if (user.hasCustomName()) {
+            user.setCustomNameVisible(teTime <= 0);
+        }
     }
 
     @Override

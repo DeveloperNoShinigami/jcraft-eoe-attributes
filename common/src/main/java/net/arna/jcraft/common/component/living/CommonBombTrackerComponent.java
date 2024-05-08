@@ -24,16 +24,22 @@ public interface CommonBombTrackerComponent {
 
         public @Nullable Vec3d getBombPos() {
             // Failsafe due to clientside bullshit
-            if (bombEntity == null) isEntity = false;
+            if (bombEntity == null) {
+                isEntity = false;
+            }
 
-            if (isEntity)
+            if (isEntity) {
                 return bombEntity.getPos();
-            if (isBlock)
+            }
+            if (isBlock) {
                 return Vec3d.of(bombBlock);
-            if (isItem && bombItem.getHolder() != null)
+            }
+            if (isItem && bombItem.getHolder() != null) {
                 return bombItem.getHolder().getPos();
+            }
             return null;
         }
+
         public void setBomb(@Nullable Entity entity) {
             isEntity = isBlock = isItem = false;
             if (entity != null) {
@@ -43,6 +49,7 @@ public interface CommonBombTrackerComponent {
 
             dirty = true;
         }
+
         public void setBomb(BlockPos blockPos) {
             isEntity = isItem = false;
             isBlock = true;
@@ -50,6 +57,7 @@ public interface CommonBombTrackerComponent {
 
             dirty = true;
         }
+
         public void setBomb(@Nullable ItemStack itemStack) {
             isEntity = isBlock = isItem = false;
             if (itemStack != null) {
@@ -62,5 +70,6 @@ public interface CommonBombTrackerComponent {
     }
 
     BombData getMainBomb();
+
     BombData getBTD();
 }

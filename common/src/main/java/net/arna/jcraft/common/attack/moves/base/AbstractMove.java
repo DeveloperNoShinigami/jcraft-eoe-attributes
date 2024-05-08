@@ -72,6 +72,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * Sets the cooldown of this move.
      * This is how many ticks the user has to wait to be able to use this attack again.
      * Should be set via the constructor, this is only to modify copies.
+     *
      * @param cooldown The cooldown of this move in ticks
      * @return This move
      */
@@ -84,6 +85,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * Sets the windup of this move.
      * This is how long it takes for the attack to perform after being initiated.
      * Should be set via the constructor, this is only to modify copies.
+     *
      * @param windup The windup of this move in ticks
      * @return This move
      */
@@ -94,6 +96,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Assigns an animation state to be used by the move, in case it can't be done in the movemap
+     *
      * @param state This moves animation
      * @return This move
      */
@@ -107,6 +110,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * This is how long this attack lasts. It is also how long the user has to wait before they
      * can initiate another attack.
      * Should be set via the constructor, this is only to modify copies.
+     *
      * @param duration The duration of this move in ticks
      * @return This move
      */
@@ -119,6 +123,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * Sets the move distance of this move.
      * This is how far away the stand is moved from the user when performing this move.
      * This should be set via the constructor; this is only to modify copies.
+     *
      * @param moveDistance The move distance of this move
      * @return This move
      */
@@ -129,7 +134,8 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Sets some information about this move displayed in commands.
-     * @param name The name of this move
+     *
+     * @param name        The name of this move
      * @param description The description of this move
      * @return This move
      */
@@ -142,13 +148,18 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Sets the crouching variant of this move. When invoking this move while crouching,
      * this variant is invoked instead.
+     *
      * @param crouchingVariant The crouching variant of this move.
      * @return This move
      */
     public T withCrouchingVariant(AbstractMove<?, ? super A> crouchingVariant) {
-        if (isCrouchingVariant) throw new IllegalStateException("Can't assign a crouching variant to a crouching variant.");
-        if (crouchingVariant.getCrouchingVariant() != null) throw new IllegalArgumentException("Given move has a " +
-                "crouching variant. Crouching variants cannot have crouching variants.");
+        if (isCrouchingVariant) {
+            throw new IllegalStateException("Can't assign a crouching variant to a crouching variant.");
+        }
+        if (crouchingVariant.getCrouchingVariant() != null) {
+            throw new IllegalArgumentException("Given move has a " +
+                    "crouching variant. Crouching variants cannot have crouching variants.");
+        }
 
         this.crouchingVariant = crouchingVariant.copy();
         this.crouchingVariant.isCrouchingVariant = true;
@@ -158,11 +169,14 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Sets the aerial variant of this move. When invoking this move while in the air,
      * this variant is invoked instead.
+     *
      * @param aerialVariant The aerial variant of this move.
      * @return This move
      */
     public T withAerialVariant(AbstractMove<?, ? super A> aerialVariant) {
-        if (isAerialVariant) throw new IllegalStateException("Can't assign an aerial variant to an aerial variant.");
+        if (isAerialVariant) {
+            throw new IllegalStateException("Can't assign an aerial variant to an aerial variant.");
+        }
 
         this.aerialVariant = aerialVariant.copy();
         this.aerialVariant.isAerialVariant = true;
@@ -171,6 +185,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Marks the move as a ranged move.
+     *
      * @return This move
      */
     public T markRanged() {
@@ -180,6 +195,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Allows the stand to hit its own user
+     *
      * @return This move
      */
     public T allowHitUser() {
@@ -189,6 +205,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Sets the move that will be initiated after this move is performed.
+     *
      * @param followup The move that will be initiated after this move is performed.
      * @return This move
      */
@@ -201,6 +218,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Adds a sound to play when this move is performed.
      * Can be called multiple times.
+     *
      * @param sound A sound to play when this move is performed.
      * @return This move
      */
@@ -212,6 +230,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Adds a sound to play when this move hits something.
      * Can be called multiple times.
+     *
      * @param sound A sound to play when this move hits something.
      * @return This move
      */
@@ -222,6 +241,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Sets the number of hits this attack can withstand before breaking.
+     *
      * @param armor The number of hits this attack can withstand
      * @return This move
      */
@@ -232,8 +252,9 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Sets the armor value to {@link Integer#MAX_VALUE}.
-     * @see #withArmor(int)
+     *
      * @return This move
+     * @see #withArmor(int)
      */
     public T withHyperArmor() {
         return withArmor(Integer.MAX_VALUE);
@@ -243,6 +264,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * Adds a new condition to the list of conditions.
      * All conditions must be met for a move to be allowed to be initiated.
      * If any return {@code false}, the move is not initiated.
+     *
      * @param condition The condition to add
      * @return This move
      */
@@ -254,6 +276,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Adds a new init action to this move.
      * Init actions are called at the end of {@link #onInitiate(IAttacker)}.
+     *
      * @param action An action
      * @return This move
      */
@@ -265,6 +288,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Adds an action to this move.
      * Actions are called after {@link #perform(IAttacker, LivingEntity, MoveContext)} is called.
+     *
      * @param action An action
      * @return This move
      */
@@ -275,6 +299,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Sets the mobility type the Stand User AI will use to determine how to use this attack.
+     *
      * @param mobilityType The mobility type of this attack
      * @return This attack
      */
@@ -285,8 +310,9 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Sets this move to be holdable.
-     * @see #withHoldable(Boolean)
+     *
      * @return This move
+     * @see #withHoldable(Boolean)
      */
     public T withHoldable() {
         return withHoldable(true);
@@ -306,6 +332,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Sets whether this move can be held.
+     *
      * @param holdable Whether this move can be held. {@code null} for default behavior (dependent on the move-type).
      * @return This move
      */
@@ -320,6 +347,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * seamlessly to the given attack without changing any values. (Such as move stun or cooldown)
      * This allows for some quick and dirty ways to achieve special handling without making a new move for it
      * or without reusing code from other moves.
+     *
      * @param tick How many ticks after the initiation of this attack the switch should occur
      * @param move The move to switch to
      * @return This move
@@ -354,20 +382,31 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Called when this move is registered to a {@link net.arna.jcraft.common.attack.core.MoveMap MoveMap}.
      * Not supposed to be called anywhere else.
+     *
      * @param type The MoveType this move is registered as
      */
     @ApiStatus.Internal
     public final void onRegister(MoveType type) {
         moveType = type;
 
-        if (crouchingVariant != null) crouchingVariant.onRegister(type);
-        if (aerialVariant != null) aerialVariant.onRegister(type);
-        if (followup != null) followup.onRegister(type);
-        if (finisher != null) finisher.right().onRegister(type);
+        if (crouchingVariant != null) {
+            crouchingVariant.onRegister(type);
+        }
+        if (aerialVariant != null) {
+            aerialVariant.onRegister(type);
+        }
+        if (followup != null) {
+            followup.onRegister(type);
+        }
+        if (finisher != null) {
+            finisher.right().onRegister(type);
+        }
 
         // TODO convert these to actual tests
         // THATS TOO BAD!
-        if (!FabricLoader.getInstance().isDevelopmentEnvironment()) return;
+        if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            return;
+        }
         testCopy();
         assert getThis() == this;
     }
@@ -376,6 +415,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Whether this attack may be initiated.
+     *
      * @param attacker The attacker to check for
      * @return Whether this attack may be initiated
      */
@@ -396,7 +436,8 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Called when this move is canceled. Does nothing by default.
      */
-    public void onCancel(A attacker) {}
+    public void onCancel(A attacker) {
+    }
 
     /**
      * Whether this attack should be allowed to move onto its finisher.
@@ -411,17 +452,22 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * Called separately for each attacker.
      * Invokes the {@link #perform(IAttacker, LivingEntity, MoveContext)} method if {@link #shouldPerform(IAttacker)}
      * returns {@code true} by default, but can be overridden to do whatever you want it to.
+     *
      * @param attacker The attacker to tick for.
      */
     public void tick(A attacker) {
-        if (finisher != null && canFinish(attacker) && finisher.leftInt() <= getDuration() - attacker.getMoveStun())
+        if (finisher != null && canFinish(attacker) && finisher.leftInt() <= getDuration() - attacker.getMoveStun()) {
             attacker.setCurrentMove(finisher.right());
-        if (shouldPerform(attacker)) doPerform(attacker);
+        }
+        if (shouldPerform(attacker)) {
+            doPerform(attacker);
+        }
     }
 
     /**
      * Returns whether {@link #perform(IAttacker, LivingEntity, MoveContext)} should be called this tick.
      * Ensures the attacker has a valid user.
+     *
      * @param attacker The attacker to check for.
      * @return Whether this move should be performed this tick.
      */
@@ -431,6 +477,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Invokes all {@link #withAction(MoveAction) actions} and calls {@link #perform(IAttacker, LivingEntity, MoveContext)}.
+     *
      * @param attacker The attacker that will be performing this move.
      */
     public final void doPerform(A attacker) {
@@ -443,23 +490,27 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Performs this move.
+     *
      * @param attacker The attacker that will be performing this move.
-     * @param user The user of the attacker. Will never be null.
-     * @param ctx The move context in which to store data.
+     * @param user     The user of the attacker. Will never be null.
+     * @param ctx      The move context in which to store data.
      * @return A set of all targeted entities.
      */
     public abstract @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx);
 
     /**
      * Register entries in the move context of an attacker to be used by this move.
+     *
      * @param ctx The context in which to register entries.
      */
-    public void registerContextEntries(MoveContext ctx) {}
+    public void registerContextEntries(MoveContext ctx) {
+    }
 
     /**
      * Gets the current blow this move is at.
      * For simple moves, this will always be 0.
      * For barrages or multi-hit moves, this can be greater than 0.
+     *
      * @param attacker The attacker to get the blow for
      * @return The current blow of this move for the given attacker
      */
@@ -471,6 +522,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Returns the point at which the windup has passed.
+     *
      * @return The point at which the windup has passed.
      */
     public int getWindupPoint() {
@@ -479,6 +531,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Returns whether the windup has passed.
+     *
      * @param attacker The attacker to check for
      * @return Whether the windup has passed
      */
@@ -488,19 +541,22 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Acquires the rotation vector for the given attacker, taking gravity into account.
+     *
      * @param attacker The attacker to get the rotation vector for
      * @return The rotation vector for the given attacker
      */
     public static Vec3d getRotVec(IAttacker<?, ?> attacker) {
         Vec3d rotVec = attacker.getBaseEntity().getRotationVector();
-        if (GravityChangerAPI.getGravityDirection(attacker.getUserOrThrow()) == Direction.UP)
+        if (GravityChangerAPI.getGravityDirection(attacker.getUserOrThrow()) == Direction.UP) {
             rotVec = new Vec3d(rotVec.x, -rotVec.y, rotVec.z);
+        }
 
         return rotVec;
     }
 
     /**
      * Acquires the position of the attacker's eyes while taking the gravity of the user into account.
+     *
      * @param attacker The attacker to get the eye position for
      * @return The eye position of the given attacker
      */
@@ -512,12 +568,14 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Called when a user inputs this move.
-     * @param attacker The attacker that input this move.
-     * @param type The {@link MoveInputType} of the move.
-     * @param pressed Whether the move was pressed or released.
+     *
+     * @param attacker      The attacker that input this move.
+     * @param type          The {@link MoveInputType} of the move.
+     * @param pressed       Whether the move was pressed or released.
      * @param moveInitiated Whether the move was initiated (or rejected because of e.g., a cooldown).
      */
-    public void onUserMoveInput(A attacker, MoveInputType type, boolean pressed, boolean moveInitiated) {}
+    public void onUserMoveInput(A attacker, MoveInputType type, boolean pressed, boolean moveInitiated) {
+    }
 
     /**
      * Simply returns {@code this}. Can only be implemented by final moves.
@@ -529,6 +587,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * An example of this is {@link SimpleAttack SimpleAttack} and
      * {@link AbstractSimpleAttack}. SimpleAttack is simply an empty implementation of AbstractSimpleAttack so that
      * AbstractSimpleAttack can be used standalone while also being able to be extended by other moves.
+     *
      * @return This move
      */
     protected abstract @NonNull T getThis();
@@ -536,6 +595,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Copies all extra data that is not included in the move's constructor to the copy.
      * Should be called in {@link #copy()} and should always call the super method.
+     *
      * @param base The instance to copy the data to.
      * @return The given base with copied data.
      */
@@ -570,6 +630,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Creates a copy of this attack.
+     *
      * @return A copy of this attack.
      */
     public abstract @NonNull T copy();
@@ -584,13 +645,23 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         copiedExtras = false;
         T copy = copy();
         //noinspection ConstantValue // That's the idea.
-        if (copy == null) throw new NullPointerException(getClass().getSimpleName() + "#copy() returned null");
-        if (!copiedExtras) throw new IllegalStateException(getClass().getSimpleName() + "#copy() does not " +
-                "call #copyExtras(AbstractMove).");
+        if (copy == null) {
+            throw new NullPointerException(getClass().getSimpleName() + "#copy() returned null");
+        }
+        if (!copiedExtras) {
+            throw new IllegalStateException(getClass().getSimpleName() + "#copy() does not " +
+                    "call #copyExtras(AbstractMove).");
+        }
 
-        if (crouchingVariant != null) crouchingVariant.testCopy();
-        if (aerialVariant != null) aerialVariant.testCopy();
-        if (followup != null) followup.testCopy();
+        if (crouchingVariant != null) {
+            crouchingVariant.testCopy();
+        }
+        if (aerialVariant != null) {
+            aerialVariant.testCopy();
+        }
+        if (followup != null) {
+            followup.testCopy();
+        }
     }
 
     @FunctionalInterface

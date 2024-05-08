@@ -6,7 +6,6 @@ import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.minecraft.entity.LivingEntity;
-import org.joml.Vector3f;
 
 public class CleaveAttack extends AbstractSimpleAttack<CleaveAttack, SilverChariotEntity> {
     public CleaveAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,

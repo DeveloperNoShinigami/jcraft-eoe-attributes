@@ -11,7 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ClientPlayerEntityMixin {
     @Inject(method = "dropSelectedItem", at = @At(value = "HEAD"), cancellable = true)
     private void jcraft$dropSelectedItem(boolean entireStack, CallbackInfoReturnable<Boolean> cir) {
-        if (!JUtils.canAct((ClientPlayerEntity) (Object) this))
+        if (!JUtils.canAct((ClientPlayerEntity) (Object) this)) {
             cir.cancel();
+        }
     }
 }

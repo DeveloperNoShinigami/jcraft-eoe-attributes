@@ -37,10 +37,14 @@ public class SetStandCommand {
 
     private static int executeSet(CommandContext<ServerCommandSource> ctx, int skin) throws CommandSyntaxException {
         Collection<? extends Entity> targets = EntityArgumentType.getEntities(ctx, "targets");
-        if (targets.isEmpty()) return 0;
+        if (targets.isEmpty()) {
+            return 0;
+        }
 
         StandType type = ctx.getArgument("stand", StandType.class);
-        if (skin > type.getSkinCount()) throw INVALID_SKIN.create(type.getSkinCount());
+        if (skin > type.getSkinCount()) {
+            throw INVALID_SKIN.create(type.getSkinCount());
+        }
 
         for (Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {

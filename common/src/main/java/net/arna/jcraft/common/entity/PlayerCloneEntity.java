@@ -20,7 +20,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
@@ -108,8 +107,9 @@ public class PlayerCloneEntity extends HostileEntity implements RangedAttackMob,
     public GameProfile getGameProfile() {
         if ((gameProfile == null || gameProfile.getId() == null || gameProfile.getName() == null ||
                 !gameProfile.getId().equals(getMasterId()) || !gameProfile.getName().equals(getMasterName())) &&
-                getMasterId() != null && getMasterName() != null)
+                getMasterId() != null && getMasterName() != null) {
             gameProfile = new GameProfile(getMasterId(), getMasterName());
+        }
 
         return gameProfile;
     }
@@ -122,11 +122,15 @@ public class PlayerCloneEntity extends HostileEntity implements RangedAttackMob,
         dataTracker.set(MASTER, Optional.of(m.getUuid()));
         dataTracker.set(MASTER_NAME, m.getEntityName());
 
-        if (!(m instanceof ServerPlayerEntity player)) return;
+        if (!(m instanceof ServerPlayerEntity player)) {
+            return;
+        }
         byte partMask = 0;
-        for (PlayerModelPart part : PlayerModelPart.values())
-            if (player.isPartVisible(part))
+        for (PlayerModelPart part : PlayerModelPart.values()) {
+            if (player.isPartVisible(part)) {
                 partMask |= (byte) part.getBitFlag();
+            }
+        }
 
         dataTracker.set(PART_MASK, partMask);
         setLeftHanded(player.getMainArm() == Arm.LEFT);
@@ -230,8 +234,9 @@ public class PlayerCloneEntity extends HostileEntity implements RangedAttackMob,
 
     @Override
     public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
-        if (player != master || !player.isSneaking() || !allowItemExchange)
+        if (player != master || !player.isSneaking() || !allowItemExchange) {
             return ActionResult.FAIL;
+        }
 
         ItemStack itemStack = player.getStackInHand(hand);
         if (!itemStack.isOf(Items.NAME_TAG)) {
@@ -248,10 +253,12 @@ public class PlayerCloneEntity extends HostileEntity implements RangedAttackMob,
                         return ActionResult.SUCCESS;
                     }
                 } else {
-                    if (this.isSlotDisabled(equipmentSlot))
+                    if (this.isSlotDisabled(equipmentSlot)) {
                         return ActionResult.FAIL;
-                    if (this.equip(player, equipmentSlot, itemStack, hand))
+                    }
+                    if (this.equip(player, equipmentSlot, itemStack, hand)) {
                         return ActionResult.SUCCESS;
+                    }
                 }
                 return ActionResult.PASS;
             }
@@ -302,10 +309,12 @@ public class PlayerCloneEntity extends HostileEntity implements RangedAttackMob,
         if (slot == EquipmentSlot.MAINHAND) {
             double maxCooldown = 10.0;
             Collection<EntityAttributeModifier> attackSpeedModifiers = getMainHandStack().getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.GENERIC_ATTACK_SPEED);
-            for (EntityAttributeModifier attackSpeedModifier : attackSpeedModifiers)
+            for (EntityAttributeModifier attackSpeedModifier : attackSpeedModifiers) {
                 maxCooldown *= -attackSpeedModifier.getValue();
-            if (maxCooldown < 0)
+            }
+            if (maxCooldown < 0) {
                 maxCooldown = 0;
+            }
 
             this.maxCooldown = (int) maxCooldown;
         }
@@ -316,7 +325,7 @@ public class PlayerCloneEntity extends HostileEntity implements RangedAttackMob,
         super.tick();
 
         if (getWorld().isClient()) {
-            if (isSand() && age % 4 == 0)
+            if (isSand() && age % 4 == 0) {
                 getWorld().addParticle(
                         new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.SAND.getDefaultState()),
                         getX() + getRandom().nextTriangular(0, 0.5),
@@ -324,6 +333,7 @@ public class PlayerCloneEntity extends HostileEntity implements RangedAttackMob,
                         getZ() + getRandom().nextTriangular(0, 0.5)
                         , 0, 0, 0
                 );
+            }
 
             //JCraft.getClientEntityHandler().playerCloneEntityClientTick(this);
         } else if (master == null) {
@@ -331,36 +341,45 @@ public class PlayerCloneEntity extends HostileEntity implements RangedAttackMob,
             if (age % 40 == 0) {
                 // If the master id is set, but the master isn't (when loaded via NBT data), find master
                 UUID master = this.getMasterId();
-                if (master != null)
-                    for (ServerPlayerEntity serverPlayerEntity : ((ServerWorld) getWorld()).getPlayers())
-                        if (serverPlayerEntity.getUuid().equals(master))
+                if (master != null) {
+                    for (ServerPlayerEntity serverPlayerEntity : ((ServerWorld) getWorld()).getPlayers()) {
+                        if (serverPlayerEntity.getUuid().equals(master)) {
                             this.master = serverPlayerEntity;
+                        }
+                    }
+                }
             }
 
             LivingEntity attacker = getAttacker();
-            if (attacker != null) setTarget(attacker);
+            if (attacker != null) {
+                setTarget(attacker);
+            }
         } else { // Serverside, & Master isn't null
             cooldown--;
 
             if (persistTarget == null) {
                 // Prioritize what the master is attacking, then what is attacking him
                 LivingEntity attacking = master.getAttacking();
-                if (attacking != null && attacking.isAlive())
+                if (attacking != null && attacking.isAlive()) {
                     persistTarget = attacking;
+                }
 
                 LivingEntity attacker = master.getAttacker();
-                if (attacker != null && attacker.isAlive())
+                if (attacker != null && attacker.isAlive()) {
                     persistTarget = attacker;
+                }
 
-                if (squaredDistanceTo(master) > 100)
+                if (squaredDistanceTo(master) > 100) {
                     navigation.startMovingTo(master, 1);
+                }
             } else if (persistTarget.isAlive() && canTarget(persistTarget)) {
                 this.setTarget(this.persistTarget);
             } else { // This is called once, usually when the opponent dies
                 persistTarget = null;
                 this.setTarget(null);
-                if (!navigation.isIdle())
+                if (!navigation.isIdle()) {
                     navigation.stop();
+                }
             }
         }
     }
@@ -373,13 +392,17 @@ public class PlayerCloneEntity extends HostileEntity implements RangedAttackMob,
     }
 
     public void updateAttackType() {
-        if (getWorld() == null || getWorld().isClient) return;
+        if (getWorld() == null || getWorld().isClient) {
+            return;
+        }
         goalSelector.remove(this.cloneAttackGoal);
         goalSelector.remove(this.bowAttackGoal);
         ItemStack itemStack = this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW));
-        if (itemStack.isOf(Items.BOW))
+        if (itemStack.isOf(Items.BOW)) {
             goalSelector.add(2, this.bowAttackGoal);
-        else goalSelector.add(2, this.cloneAttackGoal);
+        } else {
+            goalSelector.add(2, this.cloneAttackGoal);
+        }
     }
 
     @Override

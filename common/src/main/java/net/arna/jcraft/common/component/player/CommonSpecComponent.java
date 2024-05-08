@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface CommonSpecComponent {
     SpecType getType();
+
     void setType(@NonNull SpecType type);
 
     @Nullable

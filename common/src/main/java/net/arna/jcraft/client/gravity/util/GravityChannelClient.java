@@ -6,7 +6,6 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.util.GravityVerifierRegistry;
 import net.arna.jcraft.common.gravity.util.packet.*;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 

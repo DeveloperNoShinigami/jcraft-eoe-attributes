@@ -24,11 +24,11 @@ public abstract class ServerPlayerEntityMixin {
             )
     )
     private void inject_moveToWorld_sendPacket_1(CallbackInfoReturnable<ServerPlayerEntity> cir) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((ServerPlayerEntity)(Object)this);
-        if(gravityDirection != GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity)(Object)this) && JCraft.gravityConfig.resetGravityOnDimensionChange) {
-            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity)(Object)this, Direction.DOWN, new RotationParameters().rotationTime(0));
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((ServerPlayerEntity) (Object) this);
+        if (gravityDirection != GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity) (Object) this) && JCraft.gravityConfig.resetGravityOnDimensionChange) {
+            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity) (Object) this, Direction.DOWN, new RotationParameters().rotationTime(0));
         } else {
-            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity)(Object)this, GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity)(Object)this), new RotationParameters().rotationTime(0));
+            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity) (Object) this, GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity) (Object) this), new RotationParameters().rotationTime(0));
         }
     }
 
@@ -42,11 +42,11 @@ public abstract class ServerPlayerEntityMixin {
             )
     )
     private void inject_teleport_sendPacket_0(CallbackInfo ci) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((ServerPlayerEntity)(Object)this);
-        if(gravityDirection != GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity)(Object)this) && JCraft.gravityConfig.resetGravityOnDimensionChange) {
-            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity)(Object)this, Direction.DOWN, new RotationParameters().rotationTime(0));
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((ServerPlayerEntity) (Object) this);
+        if (gravityDirection != GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity) (Object) this) && JCraft.gravityConfig.resetGravityOnDimensionChange) {
+            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity) (Object) this, Direction.DOWN, new RotationParameters().rotationTime(0));
         } else {
-            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity)(Object)this, GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity)(Object)this), new RotationParameters().rotationTime(0));
+            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity) (Object) this, GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity) (Object) this), new RotationParameters().rotationTime(0));
         }
     }
 
@@ -55,9 +55,9 @@ public abstract class ServerPlayerEntityMixin {
             at = @At("TAIL")
     )
     private void inject_copyFrom(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
-        if(JCraft.gravityConfig.resetGravityOnRespawn) {
+        if (JCraft.gravityConfig.resetGravityOnRespawn) {
         } else {
-            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity)(Object)this, GravityChangerAPI.getDefaultGravityDirection(oldPlayer), new RotationParameters().rotationTime(0));
+            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity) (Object) this, GravityChangerAPI.getDefaultGravityDirection(oldPlayer), new RotationParameters().rotationTime(0));
         }
     }
 }

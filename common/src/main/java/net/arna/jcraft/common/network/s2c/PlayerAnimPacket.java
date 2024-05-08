@@ -11,8 +11,9 @@ public class PlayerAnimPacket {
 
     /**
      * Animates player (from) on player (to)'s end, while updating spec values
+     *
      * @param from ServerPlayerEntity to animate
-     * @param to ServerPlayerEntity that views animation
+     * @param to   ServerPlayerEntity that views animation
      */
     public static void sendSpec(PlayerEntity from, ServerPlayerEntity to, String animID, int moveStun, float animationSpeed) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
@@ -28,7 +29,7 @@ public class PlayerAnimPacket {
 
     /**
      * @param from ServerPlayerEntity to animate
-     * @param to ServerPlayerEntity that views animation
+     * @param to   ServerPlayerEntity that views animation
      */
     public static void send(PlayerEntity from, ServerPlayerEntity to, String animID) {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());

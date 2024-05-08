@@ -82,7 +82,7 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
     public PurpleHazeDistortionEntity(EntityType type, World worldIn) {
         this(worldIn);
     }
-    
+
     public PurpleHazeDistortionEntity(World worldIn) {
         super(StandType.PURPLE_HAZE_DISTORTION, worldIn);
 
@@ -131,10 +131,18 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
     @Override
     protected void tickRemoteState(double f, double s, boolean dashing) {
         if (getState() == State.IDLE) { // Replace idle anim
-            if (s > 0) setStateNoReset(dashing ? State.RIGHT : State.RIGHT_DASH);
-            if (s < 0) setStateNoReset(dashing ? State.LEFT : State.LEFT_DASH);
-            if (f < 0) setStateNoReset(dashing ? State.BACKWARD : State.BACKWARD_DASH);
-            if (f > 0) setStateNoReset(dashing ? State.FORWARD : State.FORWARD_DASH);
+            if (s > 0) {
+                setStateNoReset(dashing ? State.RIGHT : State.RIGHT_DASH);
+            }
+            if (s < 0) {
+                setStateNoReset(dashing ? State.LEFT : State.LEFT_DASH);
+            }
+            if (f < 0) {
+                setStateNoReset(dashing ? State.BACKWARD : State.BACKWARD_DASH);
+            }
+            if (f > 0) {
+                setStateNoReset(dashing ? State.FORWARD : State.FORWARD_DASH);
+            }
         }
     }
 
@@ -176,7 +184,8 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
         FORWARD_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.fdash"))),
         BACKWARD_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.bdash"))),
         LEFT_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.ldash"))),
-        RIGHT_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.rdash"))),;
+        RIGHT_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.rdash"))),
+        ;
 
         private final BiConsumer<PurpleHazeDistortionEntity, AnimationState> animator;
 

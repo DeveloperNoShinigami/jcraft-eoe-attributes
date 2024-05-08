@@ -9,23 +9,30 @@ import net.minecraft.entity.Entity;
 public class DummyClientEntityHandler implements IClientEntityHandler {
     public static final DummyClientEntityHandler INSTANCE = new DummyClientEntityHandler();
 
-    private DummyClientEntityHandler() {}
+    private DummyClientEntityHandler() {
+    }
 
     @Override
-    public void whiteSnakeRemoteClientTick(WhiteSnakeEntity whiteSnakeEntity) {}
+    public void whiteSnakeRemoteClientTick(WhiteSnakeEntity whiteSnakeEntity) {
+    }
 
     @Override
-    public void hierophantGreenRemoteClientTick(HGEntity hgEntity) {}
+    public void hierophantGreenRemoteClientTick(HGEntity hgEntity) {
+    }
 
     @Override
-    public void purpleHazeRemoteClientTick(AbstractPurpleHazeEntity<?,?> purpleHazeEntity) {}
+    public void purpleHazeRemoteClientTick(AbstractPurpleHazeEntity<?, ?> purpleHazeEntity) {
+    }
 
     @Override
-    public void sheerHeartAttackEntityTick(SheerHeartAttackEntity sHAEntity) {}
+    public void sheerHeartAttackEntityTick(SheerHeartAttackEntity sHAEntity) {
+    }
 
     @Override
-    public void bombTrackerParticleTick(Entity entity, CommonBombTrackerComponent.BombData bombData) {}
+    public void bombTrackerParticleTick(Entity entity, CommonBombTrackerComponent.BombData bombData) {
+    }
 
     @Override
-    public void standEntityClientTick(StandEntity<?,?> stand) {}
+    public void standEntityClientTick(StandEntity<?, ?> stand) {
+    }
 }

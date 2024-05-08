@@ -12,9 +12,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.LingeringPotionItem;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.math.Box;
@@ -35,8 +33,9 @@ public class PurpleHazeCloudEntity extends Entity {
     public PurpleHazeCloudEntity(World world, float radius, PoisonType poisonType) {
         this(world);
         setRadius(radius);
-        if (poisonType != null)
+        if (poisonType != null) {
             dataTracker.set(POISON_TYPE, poisonType.ordinal());
+        }
     }
 
     public float getRadius() {
@@ -131,8 +130,9 @@ public class PurpleHazeCloudEntity extends Entity {
                                     living.getStatusEffects().forEach(
                                             statusEffectInstance -> {
                                                 StatusEffect effectType = statusEffectInstance.getEffectType();
-                                                if (effectType != JStatusRegistry.DAZED && effectType != JStatusRegistry.KNOCKDOWN)
+                                                if (effectType != JStatusRegistry.DAZED && effectType != JStatusRegistry.KNOCKDOWN) {
                                                     toRemove.add(effectType);
+                                                }
                                             }
                                     );
 

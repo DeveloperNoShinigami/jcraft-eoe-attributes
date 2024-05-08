@@ -1,6 +1,5 @@
 package net.arna.jcraft.common.item;
 
-import net.arna.jcraft.JCraft;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

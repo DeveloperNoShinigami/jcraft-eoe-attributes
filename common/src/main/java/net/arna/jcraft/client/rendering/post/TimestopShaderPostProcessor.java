@@ -28,7 +28,7 @@ public class TimestopShaderPostProcessor extends PostProcessor {
 
     }
 
-    public boolean playEffect(Vec3d center, float time, Runnable omComplete){
+    public boolean playEffect(Vec3d center, float time, Runnable omComplete) {
         return !isActive();
     }
 }

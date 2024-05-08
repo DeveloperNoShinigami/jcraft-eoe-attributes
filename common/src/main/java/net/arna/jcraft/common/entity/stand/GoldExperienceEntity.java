@@ -216,22 +216,34 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
         switch (type) {
             case SPECIAL2 -> {
                 LivingEntity user = getUserOrThrow();
-                if (user.hasStatusEffect(JStatusRegistry.DAZED)) return false;
+                if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
+                    return false;
+                }
                 boolean idling = this.getMoveStun() <= 0;
                 if (curMove == null || curMove.getMoveType() != MoveType.SPECIAL2) {
-                    if (idling) return handleMove(MoveType.SPECIAL2);
-                    else return false;
-                } else if (curMove.getFollowup() != null && curMove.hasWindupPassed(this))
+                    if (idling) {
+                        return handleMove(MoveType.SPECIAL2);
+                    } else {
+                        return false;
+                    }
+                } else if (curMove.getFollowup() != null && curMove.hasWindupPassed(this)) {
                     setMove(curMove.getFollowup(), (State) curMove.getFollowup().getAnimation());
+                }
             }
             case SPECIAL3 -> {
-                if (!canAttack() || !hasUser()) return false;
+                if (!canAttack() || !hasUser()) {
+                    return false;
+                }
                 LivingEntity user = getUserOrThrow();
 
                 LifeGiverAttack.LifeGiverType toSummon = LifeGiverAttack.LifeGiverType.SNAKE;
                 if (user.isOnGround()) {
-                    if (user.isSneaking()) toSummon = LifeGiverAttack.LifeGiverType.FROG;
-                } else toSummon = LifeGiverAttack.LifeGiverType.BUTTERFLY;
+                    if (user.isSneaking()) {
+                        toSummon = LifeGiverAttack.LifeGiverType.FROG;
+                    }
+                } else {
+                    toSummon = LifeGiverAttack.LifeGiverType.BUTTERFLY;
+                }
                 moveContext.set(LifeGiverAttack.TYPE_TO_SUMMON, toSummon);
 
                 return handleMove(MoveType.SPECIAL3);
@@ -239,8 +251,12 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             case LIGHT -> {
                 if (curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
                     AbstractMove<?, ? super GoldExperienceEntity> followup = curMove.getFollowup();
-                    if (followup != null) setMove(followup, (State) followup.getAnimation());
-                } else return super.initMove(type);
+                    if (followup != null) {
+                        setMove(followup, (State) followup.getAnimation());
+                    }
+                } else {
+                    return super.initMove(type);
+                }
             }
             default -> {
                 return super.initMove(type);
@@ -277,7 +293,9 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
 
     @Override
     public boolean shouldOffsetHeight() {
-        if (getState() == State.LIFE_GIVER) return false;
+        if (getState() == State.LIFE_GIVER) {
+            return false;
+        }
         return super.shouldOffsetHeight();
     }
 

@@ -19,17 +19,27 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Unique
     private static double onPlayerMove_playerMovementY;
 
-    @Shadow public ServerPlayerEntity player;
+    @Shadow
+    public ServerPlayerEntity player;
 
-    @Shadow private static double clampHorizontal(double d) { return 0; }
+    @Shadow
+    private static double clampHorizontal(double d) {
+        return 0;
+    }
 
-    @Shadow private static double clampVertical(double d) { return 0; }
+    @Shadow
+    private static double clampVertical(double d) {
+        return 0;
+    }
 
-    @Shadow private double updatedX;
+    @Shadow
+    private double updatedX;
 
-    @Shadow private double updatedY;
+    @Shadow
+    private double updatedY;
 
-    @Shadow private double updatedZ;
+    @Shadow
+    private double updatedZ;
 
     @Redirect(
             method = "onPlayerMove",
@@ -41,7 +51,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     )
     private double redirect_onPlayerMove_getY_3(ServerPlayerEntity serverPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(serverPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return serverPlayerEntity.getY();
         }
 
@@ -58,7 +68,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     )
     private double redirect_onPlayerMove_getY_7(ServerPlayerEntity serverPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(serverPlayerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return serverPlayerEntity.getY();
         }
 
@@ -76,7 +86,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     )
     private boolean modify_onPlayerMove_boolean_0(boolean value, PlayerMoveC2SPacket packet) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return value;
         }
 
@@ -100,7 +110,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     )
     private double modify_onPlayerMove_double_12(double value) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return value;
         }
 
@@ -118,7 +128,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     )
     private Vec3d modify_onPlayerMove_move_0(Vec3d vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
 
@@ -169,7 +179,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     )
     private Vec3d modify_onVehicleMove_move_0(Vec3d vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return vec3d;
         }
 
@@ -203,12 +213,12 @@ public abstract class ServerPlayNetworkHandlerMixin {
     )
     private void modify_onVehicleMove_move_0(Args args) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
-        Vec3d argVec = new Vec3d(args.get(0),args.get(1),args.get(2));
+        Vec3d argVec = new Vec3d(args.get(0), args.get(1), args.get(2));
         argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
 
-        args.set(0,argVec.x);
-        args.set(1,argVec.y);
-        args.set(2,argVec.z);
+        args.set(0, argVec.x);
+        args.set(1, argVec.y);
+        args.set(2, argVec.z);
 
     }
 

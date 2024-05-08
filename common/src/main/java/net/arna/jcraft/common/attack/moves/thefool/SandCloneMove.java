@@ -50,9 +50,13 @@ public class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
 
         for (ServerPlayerEntity sendPlayer : ((ServerWorld) attacker.getWorld()).getPlayers()) {
             ServerChannelFeedbackPacket.send(sendPlayer, buf);
-            if (sendPlayer == user) continue;
+            if (sendPlayer == user) {
+                continue;
+            }
             if (sendPlayer.isInRange(user, 4)) // Blind players caught in the cloud
+            {
                 sendPlayer.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 0, true, false));
+            }
         }
 
         if (user.isSneaking()) {
@@ -95,20 +99,27 @@ public class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
 
     public void tickClone(TheFoolEntity attacker) {
         MobEntity sandClone = attacker.getMoveContext().get(SAND_CLONE);
-        if (sandClone != null && sandClone.age > 200)
+        if (sandClone != null && sandClone.age > 200) {
             setSandClone(attacker.getMoveContext(), null);
+        }
     }
 
     public void discardClone(TheFoolEntity attacker) {
         MobEntity sandClone = attacker.getMoveContext().get(SAND_CLONE);
-        if (sandClone != null) sandClone.discard();
+        if (sandClone != null) {
+            sandClone.discard();
+        }
     }
 
     private void setSandClone(MoveContext ctx, MobEntity clone) {
         MobEntity sandClone = ctx.get(SAND_CLONE);
-        if (sandClone != null) sandClone.kill();
+        if (sandClone != null) {
+            sandClone.kill();
+        }
         ctx.set(SAND_CLONE, clone);
-        if (clone == null) return;
+        if (clone == null) {
+            return;
+        }
         JComponentPlatformUtils.getStandData(clone).setType(StandType.NONE);
         applySandCloneModifiers(clone);
     }

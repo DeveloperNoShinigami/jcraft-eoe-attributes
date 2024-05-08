@@ -20,7 +20,7 @@ public class RapierModel extends GeoModel<RapierProjectile> {
 
     static {
         for (int i = 0; i < StandType.SILVER_CHARIOT.getSkinCount(); i++) {
-            skins.put(i, JCraft.id("textures/entity/stands/silver_chariot/rapier_" + (i == 0 ? "default" : "skin" + i) + ".png") );
+            skins.put(i, JCraft.id("textures/entity/stands/silver_chariot/rapier_" + (i == 0 ? "default" : "skin" + i) + ".png"));
         }
     }
 
@@ -32,8 +32,9 @@ public class RapierModel extends GeoModel<RapierProjectile> {
     @Override
     public Identifier getTextureResource(RapierProjectile object) {
         int skin = object.getSkin();
-        if (skins.containsKey(skin))
+        if (skins.containsKey(skin)) {
             return skins.get(skin);
+        }
 
         return skins.get(-1);
     }

@@ -17,18 +17,21 @@ public class HungerManagerMixin {
     private CommonVampireComponent vampireComponent;
     @Unique
     private boolean isVampire;
-    @Unique private PlayerEntity player;
+    @Unique
+    private PlayerEntity player;
 
     @Inject(method = "getFoodLevel", at = @At("HEAD"), cancellable = true)
     void jcraft$getBloodLevel(CallbackInfoReturnable<Integer> cir) {
-        if (this.isVampire)
+        if (this.isVampire) {
             cir.setReturnValue((int) Math.floor(vampireComponent.getBlood()));
+        }
     }
 
     @Inject(method = "getSaturationLevel", at = @At("HEAD"), cancellable = true)
     void jcraft$getSaturationLevel(CallbackInfoReturnable<Float> cir) {
-        if (this.isVampire)
+        if (this.isVampire) {
             cir.setReturnValue(0f);
+        }
     }
 
     @Inject(method = "update", at = @At("HEAD"), cancellable = true)
@@ -37,6 +40,8 @@ public class HungerManagerMixin {
         this.isVampire = vampireComponent.isVampire();
         this.player = player;
 
-        if (isVampire) ci.cancel();
+        if (isVampire) {
+            ci.cancel();
+        }
     }
 }

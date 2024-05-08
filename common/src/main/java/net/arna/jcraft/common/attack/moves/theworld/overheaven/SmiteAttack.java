@@ -46,8 +46,9 @@ public class SmiteAttack extends AbstractEffectInflictingAttack<SmiteAttack, The
 
         LivingEntity user = attacker.getUserOrThrow();
         MoveContext ctx = attacker.getMoveContext();
-        if (!aerial) ctx.set(LIGHTNING_POS, user.getPos());
-        else {
+        if (!aerial) {
+            ctx.set(LIGHTNING_POS, user.getPos());
+        } else {
             Vec3d eP = user.getEyePos();
             Vec3d rangeMod = user.getRotationVector().multiply(24);
             EntityHitResult eHit = ProjectileUtil.raycast(user, eP, eP.add(rangeMod),
@@ -56,9 +57,12 @@ public class SmiteAttack extends AbstractEffectInflictingAttack<SmiteAttack, The
                     576 // Squared
             );
 
-            if (eHit != null) ctx.set(LIGHTNING_POS, eHit.getPos());
-            else ctx.set(LIGHTNING_POS, attacker.getWorld().raycast(new RaycastContext(eP, eP.add(rangeMod),
-                    RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, user)).getPos());
+            if (eHit != null) {
+                ctx.set(LIGHTNING_POS, eHit.getPos());
+            } else {
+                ctx.set(LIGHTNING_POS, attacker.getWorld().raycast(new RaycastContext(eP, eP.add(rangeMod),
+                        RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, user)).getPos());
+            }
         }
 
         Vec3d lightningPos = ctx.get(LIGHTNING_POS);

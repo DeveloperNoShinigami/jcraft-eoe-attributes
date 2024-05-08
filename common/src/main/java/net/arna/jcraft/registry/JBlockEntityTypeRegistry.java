@@ -1,11 +1,9 @@
 package net.arna.jcraft.registry;
 
-import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.block.tile.CoffinTileEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.registry.Registries;
 
 import static net.arna.jcraft.JCraft.BLOCK_ENTITY_TYPE_REGISTRY;
 

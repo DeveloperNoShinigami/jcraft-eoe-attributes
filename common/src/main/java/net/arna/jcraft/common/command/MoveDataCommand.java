@@ -34,18 +34,21 @@ public class MoveDataCommand {
 
     public static int run(ServerCommandSource source, boolean stand) {
         PlayerEntity player = source.getPlayer();
-        if (player == null)
+        if (player == null) {
             return 0;
+        }
 
         AbstractMove<?, ? extends IAttacker<?, ?>> move;
 
         if (stand) {
             StandEntity<?, ?> standEntity = JUtils.getStand(player);
-            if (standEntity == null)
+            if (standEntity == null) {
                 return 0;
-            else {
+            } else {
                 move = standEntity.curMove;
-                if (move == null) move = standEntity.prevMove;
+                if (move == null) {
+                    move = standEntity.prevMove;
+                }
             }
         } else {
             JSpec<?, ?> spec = JUtils.getSpec(player);
@@ -53,16 +56,22 @@ public class MoveDataCommand {
                 return 0;
             } else {
                 move = spec.curMove;
-                if (move == null) move = spec.previousAttack;
+                if (move == null) {
+                    move = spec.previousAttack;
+                }
             }
         }
 
-        if (move == null) return 0;
+        if (move == null) {
+            return 0;
+        }
 
         int moveStun = move.getDuration();
         int initTime = move.getWindup();
 
-        if (initTime > 0) initTime -= 1;
+        if (initTime > 0) {
+            initTime -= 1;
+        }
 
         int startup = initTime;
         StringBuilder frames = new StringBuilder();
@@ -77,12 +86,14 @@ public class MoveDataCommand {
 
 
         int armor = move.getArmor();
-        if (armor > 0)
+        if (armor > 0) {
             mainFDMessage = mainFDMessage.concat("§rAttack has: §7" + (armor > 100 ? "Hyper Armor§r\n" : armor + " Armor Points§r\n"));
+        }
 
         if (move instanceof AbstractSimpleAttack<?, ?> attack) {
-            if (attack.getBlockableType() == BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
+            if (attack.getBlockableType() == BlockableType.NON_BLOCKABLE_EFFECTS_ONLY) {
                 mainFDMessage = mainFDMessage.concat("§rEffects on hit are §5UNBLOCKABLE§r\n");
+            }
 
             // Multihit vars
             boolean start = true;
@@ -120,7 +131,9 @@ public class MoveDataCommand {
                         j += 1;
                     }
                 }
-                if (fRec) recovery = 0;
+                if (fRec) {
+                    recovery = 0;
+                }
             } else if (attack instanceof AbstractMultiHitAttack<?, ?> multiHitAttack) {
                 IntSortedSet atks = multiHitAttack.getHitMoments();
                 int c = 0;

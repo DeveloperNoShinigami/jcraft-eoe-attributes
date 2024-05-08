@@ -34,7 +34,9 @@ public class SandWaveAttack extends AbstractEffectInflictingBarrageAttack<SandWa
         super.tick(attacker);
 
         LivingEntity user = attacker.getUser();
-        if (user == null || !user.isOnGround()) return;
+        if (user == null || !user.isOnGround()) {
+            return;
+        }
 
         Vec3d rotVec = user.getRotationVector().multiply(0.25);
         user.addVelocity(rotVec.x, 0, rotVec.z);

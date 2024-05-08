@@ -18,11 +18,15 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Explosion.class)
 public class ExplosionMixin implements IJExplosion {
-    @Shadow @Final
+    @Shadow
+    @Final
     private boolean createFire;
-    @Shadow @Final
+    @Shadow
+    @Final
     private Explosion.DestructionType destructionType;
-    @Shadow @Final private World world;
+    @Shadow
+    @Final
+    private World world;
     private @Unique JExplosionModifier modifier;
 
     // Interface implementation

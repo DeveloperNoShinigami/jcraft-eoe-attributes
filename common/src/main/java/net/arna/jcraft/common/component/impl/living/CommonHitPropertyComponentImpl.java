@@ -16,6 +16,7 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
     protected CommonHitPropertyComponent.HitAnimation hitAnimation = null;
     @Getter
     protected Vec3d randomRotation = Vec3d.ZERO;
+
     public CommonHitPropertyComponentImpl(Entity entity) {
         this.entity = entity;
     }
@@ -32,7 +33,8 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
         sync();
     }
 
-    public void tick() { }
+    public void tick() {
+    }
 
     public void sync() {
 
@@ -44,14 +46,16 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
 
     public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
         buf.writeVarLong(endHitAnimTime);
-        if (endHitAnimTime > 0)
+        if (endHitAnimTime > 0) {
             buf.writeVarInt(hitAnimation.ordinal());
+        }
     }
 
     public void applySyncPacket(PacketByteBuf buf) {
         endHitAnimTime = buf.readVarLong();
-        if (endHitAnimTime > 0)
+        if (endHitAnimTime > 0) {
             hitAnimation = CommonHitPropertyComponent.HitAnimation.values()[buf.readVarInt()];
+        }
 
         Random random = entity.getWorld().getRandom();
         randomRotation = new Vec3d(
@@ -61,7 +65,9 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
         );
     }
 
-    public void readFromNbt(NbtCompound tag) { }
+    public void readFromNbt(NbtCompound tag) {
+    }
 
-    public void writeToNbt(NbtCompound tag) { }
+    public void writeToNbt(NbtCompound tag) {
+    }
 }

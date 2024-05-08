@@ -44,17 +44,19 @@ public class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> extends Ab
     public void tick(A attacker) {
         super.tick(attacker);
         Entity attackerEntity = attacker.getBaseEntity();
-        if (attackerEntity instanceof StandEntity<?,?> stand)
+        if (attackerEntity instanceof StandEntity<?, ?> stand) {
             tickChargeBarrageAttack(stand, attacker.getMoveStun() < getWindupPoint(), getMoveDistance(), getWindupPoint());
-        else
+        } else {
             JCraft.LOGGER.error("Trying to tick ChargeBarrageAttack non non-stand entity; " + attackerEntity);
+        }
     }
 
     protected Vec3d advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
-        if (quadraticMovement)
+        if (quadraticMovement) {
             return attacker.getPos().add(getRotVec(attacker).multiply(
                     (moveDistance * attacker.getMoveStun()) / (windupPoint * windupPoint)
             ));
+        }
         return attacker.getPos().add(getRotVec(attacker).multiply(moveDistance / windupPoint));
     }
 
@@ -63,19 +65,25 @@ public class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> extends Ab
             Vec3d newPos = advanceChargePos(attacker, moveDistance, windupPoint);
             attacker.setFreePos(new Vector3f((float) newPos.x, (float) newPos.y, (float) newPos.z));
             attacker.setFree(true);
-        } else prepDetachmentMove(attacker, attacker.getUserOrThrow());
+        } else {
+            prepDetachmentMove(attacker, attacker.getUserOrThrow());
+        }
     }
 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         Entity attackerEntity = attacker.getBaseEntity();
-        if (targets.isEmpty() || attackerEntity == null) return targets;
+        if (targets.isEmpty() || attackerEntity == null) {
+            return targets;
+        }
 
         Vec3d avgPos = Vec3d.ZERO;
         float c = 0;
         for (LivingEntity target : targets) {
-            if (target instanceof StandEntity<?, ?>) continue;
+            if (target instanceof StandEntity<?, ?>) {
+                continue;
+            }
             avgPos = avgPos.add(target.getPos());
             c += 1f;
         }

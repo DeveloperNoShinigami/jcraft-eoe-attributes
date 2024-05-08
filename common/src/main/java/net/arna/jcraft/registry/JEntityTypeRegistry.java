@@ -1,24 +1,16 @@
 package net.arna.jcraft.registry;
 
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
-import dev.architectury.registry.registries.DeferredRegister;
-import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.block.tile.CoffinTileEntity;
 import net.arna.jcraft.common.entity.*;
 import net.arna.jcraft.common.entity.projectile.*;
 import net.arna.jcraft.common.entity.stand.*;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.world.World;
 
 import java.util.function.Function;
@@ -239,14 +231,14 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<GERScorpionEntity>> GER_SCORPION = ENTITY_TYPE_REGISTRY.register(JCraft.id("gerscorpion"),
             () -> EntityType.Builder.create(
-                    GERScorpionEntity::new, SpawnGroup.CREATURE)
+                            GERScorpionEntity::new, SpawnGroup.CREATURE)
                     .setDimensions(0.4f, 0.4f)
                     .build("gerscorpion")
     );
 
     RegistrySupplier<EntityType<PlayerCloneEntity>> PLAYER_CLONE = ENTITY_TYPE_REGISTRY.register(JCraft.id("playerclone"),
             () -> EntityType.Builder.create(
-                    (EntityType<PlayerCloneEntity> entityType, World world) -> new PlayerCloneEntity(world), SpawnGroup.CREATURE)
+                            (EntityType<PlayerCloneEntity> entityType, World world) -> new PlayerCloneEntity(world), SpawnGroup.CREATURE)
                     .setDimensions(0.6f, 1.8f)
                     .build("playerclone")
     );
@@ -254,7 +246,7 @@ public interface JEntityTypeRegistry {
     // Take note of the extra <KnifeProjectile> and tracked values
     RegistrySupplier<EntityType<KnifeProjectile>> KNIFE = ENTITY_TYPE_REGISTRY.register(JCraft.id("knife"),
             () -> EntityType.Builder.create(
-                    (EntityType<KnifeProjectile> entityType, World world) -> new KnifeProjectile(world), SpawnGroup.MISC)
+                            (EntityType<KnifeProjectile> entityType, World world) -> new KnifeProjectile(world), SpawnGroup.MISC)
                     .setDimensions(0.5f, 0.5f)
                     .maxTrackingRange(6)
                     .trackingTickInterval(10)

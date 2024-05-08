@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class GravityChangerAPI {
-    
+
     /**
      * Returns the applied gravity direction for the given player
      * This is the direction that directly affects everything this mod changes
@@ -87,7 +87,9 @@ public abstract class GravityChangerAPI {
      * This may not immediately change the applied gravity direction for the player, see GravityChangerAPI#getAppliedGravityDirection
      */
     public static void addGravity(Entity entity, Gravity gravity) {
-        if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
+        if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) {
+            return;
+        }
         JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.addGravity(gravity, false);
             GravityChannel.UPDATE_GRAVITY.sendToClient(entity, new UpdateGravityPacket(gravity, false), NetworkUtil.PacketMode.EVERYONE);
@@ -109,7 +111,9 @@ public abstract class GravityChangerAPI {
     }
 
     public static void setGravity(Entity entity, List<Gravity> gravity) {
-        if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
+        if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) {
+            return;
+        }
         JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.setGravity(gravity, false);
             GravityChannel.OVERWRITE_GRAVITY.sendToClient(entity, new OverwriteGravityPacket(gravity, false), NetworkUtil.PacketMode.EVERYONE);
@@ -121,7 +125,9 @@ public abstract class GravityChangerAPI {
     }
 
     public static void setIsInverted(Entity entity, boolean isInverted, RotationParameters rotationParameters) {
-        if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
+        if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) {
+            return;
+        }
         JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.invertGravity(isInverted, rotationParameters, false);
             GravityChannel.INVERT_GRAVITY.sendToClient(entity, new InvertGravityPacket(isInverted, rotationParameters, false), NetworkUtil.PacketMode.EVERYONE);
@@ -133,7 +139,9 @@ public abstract class GravityChangerAPI {
     }
 
     public static void clearGravity(Entity entity, RotationParameters rotationParameters) {
-        if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
+        if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) {
+            return;
+        }
         JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.clearGravity(rotationParameters, false);
             GravityChannel.OVERWRITE_GRAVITY.sendToClient(entity, new OverwriteGravityPacket(new ArrayList<>(), false), NetworkUtil.PacketMode.EVERYONE);
@@ -150,7 +158,9 @@ public abstract class GravityChangerAPI {
     }
 
     public static void setDefaultGravityDirection(Entity entity, Direction gravityDirection, RotationParameters rotationParameters) {
-        if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) return;
+        if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) {
+            return;
+        }
         JComponentPlatformUtils.getGravity(entity).ifPresent(gc -> {
             gc.setDefaultGravityDirection(gravityDirection, rotationParameters, false);
             GravityChannel.DEFAULT_GRAVITY.sendToClient(entity, new DefaultGravityPacket(gravityDirection, rotationParameters, false), NetworkUtil.PacketMode.EVERYONE);

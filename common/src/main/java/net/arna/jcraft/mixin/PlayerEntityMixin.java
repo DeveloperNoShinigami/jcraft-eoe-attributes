@@ -91,20 +91,29 @@ public abstract class PlayerEntityMixin implements IComboCounter {
     @Inject(at = @At("TAIL"), method = "tick")
     public void jcraft$playerTickTail(CallbackInfo info) {
         PlayerEntity player = (PlayerEntity) (Object) this;
-        if (JUtils.isAffectedByTimeStop(player)) return;
+        if (JUtils.isAffectedByTimeStop(player)) {
+            return;
+        }
 
         JSpec<?, ?> spec = JComponentPlatformUtils.getSpecData(player).getSpec();
-        if (spec != null) spec.tickSpec();
+        if (spec != null) {
+            spec.tickSpec();
+        }
 
-        if (lastAttacked == null || !lastAttacked.isAlive()) return;
+        if (lastAttacked == null || !lastAttacked.isAlive()) {
+            return;
+        }
 
         LivingEntity attacker = lastAttacked.getAttacker();
-        if (attacker == null || attacker == player) return;
+        if (attacker == null || attacker == player) {
+            return;
+        }
         lastAttacked = null;
         comboCount = 0;
 
-        if (player instanceof ServerPlayerEntity serverPlayer)
+        if (player instanceof ServerPlayerEntity serverPlayer) {
             ComboCounterPacket.send(serverPlayer, 0, 1.00f);
+        }
     }
 
     // KNOCKDOWN and poison preventing pose updating
@@ -122,13 +131,19 @@ public abstract class PlayerEntityMixin implements IComboCounter {
     @Inject(cancellable = true, method = "attack", at = @At("HEAD"))
     public void jcraft$attack(Entity target, CallbackInfo info) {
         PlayerEntity player = (PlayerEntity) (Object) this;
-        if (JUtils.isAffectedByTimeStop(player)) info.cancel();
+        if (JUtils.isAffectedByTimeStop(player)) {
+            info.cancel();
+        }
 
         // Can't M1 without a weapon while stand ON
-        if (JUtils.getStand(player) != null && player.getMainHandStack().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()) info.cancel();
+        if (JUtils.getStand(player) != null && player.getMainHandStack().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()) {
+            info.cancel();
+        }
 
         JSpec<?, ?> spec = JComponentPlatformUtils.getSpecData(player).getSpec();
-        if (spec != null && spec.moveStun > 0) info.cancel();
+        if (spec != null && spec.moveStun > 0) {
+            info.cancel();
+        }
     }
 
     // Counter hook - player entity
@@ -138,8 +153,9 @@ public abstract class PlayerEntityMixin implements IComboCounter {
 
         if (player.getFirstPassenger() instanceof StandEntity<?, ?> stand) {
             AbstractMove<?, ?> attack = stand.curMove;
-            if (attack == null || !attack.isCounter() || stand.getMoveStun() >= (attack.getDuration() - attack.getWindup()))
+            if (attack == null || !attack.isCounter() || stand.getMoveStun() >= (attack.getDuration() - attack.getWindup())) {
                 return;
+            }
 
             //noinspection unchecked,rawtypes // Generic types can be annoying sometimes. This is fine.
             ((AbstractCounterAttack) attack).counter(stand, source.getAttacker(), source);

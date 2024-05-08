@@ -82,12 +82,14 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
     @Override
     public void tick() {
         super.tick();
-        if (hasDisappeared()) return;
+        if (hasDisappeared()) {
+            return;
+        }
 
         Vec3d circulation = new Vec3d(MathHelper.sin(age * 0.25f) * 0.3f, 0.0, MathHelper.cos(age * 0.25f) * 0.3f);
 
         if (getWorld().isClient) {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++) {
                 getWorld().addParticle(
                         new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.SAND.getDefaultState()),
                         getX() + random.nextFloat() - 0.5f,
@@ -95,9 +97,12 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
                         getZ() + random.nextFloat() - 0.5f,
                         circulation.x, 0, circulation.z
                 );
+            }
         } else if (age % 5 == 0) {
             if (master == null) {
-                if (isAlive()) kill();
+                if (isAlive()) {
+                    kill();
+                }
                 return;
             }
 
@@ -109,7 +114,9 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
                 setVelocity(getVelocity().multiply(0.25));
                 for (LivingEntity living : toHurt) {
                     LivingEntity target = JUtils.getUserIfStand(living);
-                    if (target.isConnectedThroughVehicle(master)) return;
+                    if (target.isConnectedThroughVehicle(master)) {
+                        return;
+                    }
                     StandEntity.damageLogic(getWorld(), target, circulation, 10, 1, false, 2f, true, 6,
                             getWorld().getDamageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false);
                 }
@@ -118,8 +125,9 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
 
             velocityModified = true;
 
-            if (hitsLeft < 1 || getHealth() <= 0 || age >= 500)
+            if (hitsLeft < 1 || getHealth() <= 0 || age >= 500) {
                 disappear();
+            }
         }
     }
 
@@ -181,23 +189,27 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
     @Override
     public void writeCustomDataToNbt(NbtCompound tag) {
         super.writeCustomDataToNbt(tag);
-        if (master == null) return;
+        if (master == null) {
+            return;
+        }
         boolean ownerIsPlayer = master instanceof PlayerEntity;
         tag.putBoolean("playerOwner", ownerIsPlayer);
-        if (ownerIsPlayer)
+        if (ownerIsPlayer) {
             tag.putUuid("ownerUUID", master.getUuid());
-        else
+        } else {
             tag.putInt("ownerID", master.getId());
+        }
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound tag) {
         super.readCustomDataFromNbt(tag);
         boolean ownerIsPlayer = tag.getBoolean("playerOwner");
-        if (ownerIsPlayer)
+        if (ownerIsPlayer) {
             master = getWorld().getPlayerByUuid(tag.getUuid("ownerUUID"));
-        else
+        } else {
             master = (LivingEntity) getWorld().getEntityById(tag.getInt("ownerID")); // Always is living
+        }
     }
 
     @Override

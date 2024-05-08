@@ -19,9 +19,13 @@ import java.util.UUID;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public abstract class ClientPlayNetworkHandlerMixin {
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
-    @Shadow @Final private Map<UUID, PlayerListEntry> playerListEntries;
+    @Shadow
+    @Final
+    private Map<UUID, PlayerListEntry> playerListEntries;
 
     @Redirect(
             method = "onGameStateChange",
@@ -33,7 +37,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
     )
     private double redirect_onGameStateChange_getEyeY_0(PlayerEntity playerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return playerEntity.getEyeY();
         }
 
@@ -50,7 +54,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
     )
     private double redirect_onGameStateChange_getX_0(PlayerEntity playerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return playerEntity.getX();
         }
 
@@ -67,7 +71,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
     )
     private double redirect_onGameStateChange_getZ_0(PlayerEntity playerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return playerEntity.getZ();
         }
 
@@ -84,7 +88,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
     )
     private Vec3d redirect_onExplosion_add_0(Vec3d vec3d, double x, double y, double z) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(client.player);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return vec3d.add(x, y, z);
         }
 

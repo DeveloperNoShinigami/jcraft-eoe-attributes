@@ -20,14 +20,16 @@ public class ArmoredMoveFeatureRenderer<T extends LivingEntity, M extends Entity
 
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        if (entity.isInvisible())
+        if (entity.isInvisible()) {
             return;
+        }
 
         float armoredHitTicks = (float) JComponentPlatformUtils.getMiscData(entity).getArmoredHitTicks();
         float flashTime = MathHelper.lerp(1.0F - tickDelta, armoredHitTicks - 1, armoredHitTicks) / 10.0F;
 
-        if (flashTime <= 0.0F)
+        if (flashTime <= 0.0F) {
             return;
+        }
 
         M model = getContextModel();
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getLightning());

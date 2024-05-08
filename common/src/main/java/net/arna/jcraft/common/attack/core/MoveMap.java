@@ -39,12 +39,15 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
      */
     public void registerImmediate(@NonNull MoveType type, @NonNull AbstractMove<?, ? super A> move, @Nullable S animState) {
         Entry<A, S> entry = register(type, move, animState);
-        if (move.getCrouchingVariant() != null)
+        if (move.getCrouchingVariant() != null) {
             entry.withCrouchingVariant((S) move.getCrouchingVariant().getAnimation());
-        if (move.getAerialVariant() != null)
+        }
+        if (move.getAerialVariant() != null) {
             entry.withAerialVariant((S) move.getAerialVariant().getAnimation());
-        if (move.getFollowup() != null)
+        }
+        if (move.getFollowup() != null) {
             entry.withFollowUp((S) move.getFollowup().getAnimation());
+        }
     }
 
     public Entry<A, S> register(@NonNull MoveType type, @NonNull AbstractMove<?, ? super A> move, @Nullable CooldownType cooldownType, @Nullable S animState) {
@@ -52,7 +55,9 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
 
         AbstractMove<?, ? super A> copy = move.copy();
         //noinspection ConstantValue // That's the idea
-        if (copy == null) throw new IllegalStateException(move.getClass().getSimpleName() + "#copy() returned null.");
+        if (copy == null) {
+            throw new IllegalStateException(move.getClass().getSimpleName() + "#copy() returned null.");
+        }
 
         copy.onRegister(type);
 
@@ -64,6 +69,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
     /**
      * For any move that does not get referenced directly by any other move and is not invoked by a move-type,
      * but should still be included.
+     *
      * @param move The move to register
      * @return The entry for the given move
      */
@@ -87,7 +93,8 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
 
     /**
      * Finds first move of the given type that matches all conditions for the given attacker.
-     * @param type The type of move to find
+     *
+     * @param type     The type of move to find
      * @param attacker The attacker to test the move against
      * @return The first valid entry for the given type, or null if none are found.
      */
@@ -103,7 +110,9 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
      * Throws an {@link IllegalStateException} if this MoveMap is frozen.
      */
     private void checkFrozen() {
-        if (frozen) throw new IllegalStateException("MoveMap is already frozen.");
+        if (frozen) {
+            throw new IllegalStateException("MoveMap is already frozen.");
+        }
     }
 
     private void buildCopyMap() {
@@ -131,6 +140,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
 
     /**
      * Builds a list of all moves in this map.
+     *
      * @return A list of all moves in this map.
      */
     private List<AbstractMove<?, ? super A>> toList() {
@@ -142,6 +152,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
     /**
      * Returns a list of all moves in this map.
      * Includes variants and follow-ups, recursively.
+     *
      * @return A list of all moves in this map.
      */
     public List<AbstractMove<?, ? super A>> asMovesList() {
@@ -152,12 +163,15 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
     private Stream<Entry<A, S>> streamEntryAndChildren(Entry<A, S> entry) {
         Stream.Builder<Entry<A, S>> builder = Stream.builder();
         builder.add(entry);
-        if (entry.getCrouchingVariant() != null)
+        if (entry.getCrouchingVariant() != null) {
             streamEntryAndChildren(entry.getCrouchingVariant()).forEach(builder::add);
-        if (entry.getAerialVariant() != null)
+        }
+        if (entry.getAerialVariant() != null) {
             streamEntryAndChildren(entry.getAerialVariant()).forEach(builder::add);
-        if (entry.getFollowUp() != null)
+        }
+        if (entry.getFollowUp() != null) {
             streamEntryAndChildren(entry.getFollowUp()).forEach(builder::add);
+        }
 
         return builder.build();
     }
@@ -178,14 +192,17 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
             this.cooldownType = cooldownType;
             this.animState = animState;
 
-            if (move.getCrouchingVariant() != null)
+            if (move.getCrouchingVariant() != null) {
                 crouchingVariant = new Entry<>(this, type, move.getCrouchingVariant(), cooldownType, animState);
+            }
 
-            if (move.getAerialVariant() != null)
+            if (move.getAerialVariant() != null) {
                 aerialVariant = new Entry<>(this, type, move.getAerialVariant(), cooldownType, animState);
+            }
 
-            if (move.getFollowup() != null)
+            if (move.getFollowup() != null) {
                 followUp = new Entry<>(this, type, move.getFollowup(), cooldownType, animState);
+            }
         }
 
         /**
@@ -194,9 +211,10 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * crouching variant, the crouching variant will use the same cooldown type
          * and animation state as this entry.
          * Use this if you wish to use a different state for the crouching variant.
+         *
          * @param animState The animation state to use for the crouching variant of this move
-         * @see #withCrouchingVariant(CooldownType, Object)
          * @return The crouching variant entry
+         * @see #withCrouchingVariant(CooldownType, Object)
          */
         public Entry<A, S> withCrouchingVariant(S animState) {
             return withCrouchingVariant(cooldownType, animState);
@@ -208,14 +226,17 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * crouching variant, the crouching variant will use the same cooldown type
          * and animation state as this entry.
          * Use this if you wish to use a different state and cooldown type for the crouching variant.
+         *
          * @param cooldownType The cooldown type to use for the crouching variant of this move
-         * @param animState The animation state to use for the crouching variant of this move
-         * @see #withCrouchingVariant(Object)
+         * @param animState    The animation state to use for the crouching variant of this move
          * @return The crouching variant entry
+         * @see #withCrouchingVariant(Object)
          */
         public Entry<A, S> withCrouchingVariant(CooldownType cooldownType, S animState) {
-            if (move.getCrouchingVariant() == null) throw new IllegalArgumentException("The move of this entry has " +
-                    "no crouching variant.");
+            if (move.getCrouchingVariant() == null) {
+                throw new IllegalArgumentException("The move of this entry has " +
+                        "no crouching variant.");
+            }
             crouchingVariant = new Entry<>(this, type, move.getCrouchingVariant(), cooldownType, animState);
             return crouchingVariant;
         }
@@ -226,9 +247,10 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * aerial variant, the aerial variant will use the same cooldown type
          * and animation state as this entry.
          * Use this if you wish to use a different state for the aerial variant.
+         *
          * @param animState The animation state to use for the aerial variant of this move
-         * @see #withAerialVariant(CooldownType, Object)
          * @return The aerial variant entry
+         * @see #withAerialVariant(CooldownType, Object)
          */
         public Entry<A, S> withAerialVariant(S animState) {
             return withAerialVariant(cooldownType, animState);
@@ -240,14 +262,17 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * aerial variant, the aerial variant will use the same cooldown type
          * and animation state as this entry.
          * Use this if you wish to use a different state for the aerial variant.
+         *
          * @param cooldownType The cooldown type to use for the aerial variant of this move
-         * @param animState The animation state to use for the aerial variant of this move
-         * @see #withAerialVariant(Object)
+         * @param animState    The animation state to use for the aerial variant of this move
          * @return The aerial variant entry
+         * @see #withAerialVariant(Object)
          */
         public Entry<A, S> withAerialVariant(CooldownType cooldownType, S animState) {
-            if (move.getAerialVariant() == null) throw new IllegalArgumentException("The move of this entry has " +
-                    "no aerial variant.");
+            if (move.getAerialVariant() == null) {
+                throw new IllegalArgumentException("The move of this entry has " +
+                        "no aerial variant.");
+            }
             aerialVariant = new Entry<>(this, type, move.getAerialVariant(), cooldownType, animState);
             return aerialVariant;
         }
@@ -258,9 +283,10 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * follow-up, the follow-up will use the same cooldown type and
          * animation state as this entry.
          * Use this if you wish to use a different state for the follow-up.
+         *
          * @param animState The animation state to use for the crouching variant of this move
-         * @see #withFollowUp(CooldownType, Object)
          * @return The followup entry
+         * @see #withFollowUp(CooldownType, Object)
          */
         public Entry<A, S> withFollowUp(S animState) {
             return withFollowUp(cooldownType, animState);
@@ -272,14 +298,17 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * follow-up, the follow-up will use the same cooldown type and
          * animation state as this entry.
          * Use this if you wish to use a different cooldown type and state for the follow-up.
+         *
          * @param cooldownType The cooldown type to use for the follow-up of this move
-         * @param animState The animation state to use for the follow-up of this move
-         * @see #withFollowUp(CooldownType, Object)
+         * @param animState    The animation state to use for the follow-up of this move
          * @return The followup entry
+         * @see #withFollowUp(CooldownType, Object)
          */
         public Entry<A, S> withFollowUp(CooldownType cooldownType, S animState) {
-            if (move.getFollowup() == null) throw new IllegalArgumentException("The move of this entry has " +
-                    "no follow-up.");
+            if (move.getFollowup() == null) {
+                throw new IllegalArgumentException("The move of this entry has " +
+                        "no follow-up.");
+            }
             followUp = new Entry<>(this, type, move.getFollowup(), cooldownType, animState);
             return followUp;
         }

@@ -6,7 +6,6 @@ import net.arna.jcraft.fabric.common.component.living.GravityShiftComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Vec3d;
 
 public class GravityShiftComponentImpl extends CommonGravityShiftComponentImpl implements GravityShiftComponent {
 

@@ -54,19 +54,22 @@ public class AboutSpecCommand {
                 .append(Text.literal("\n"));
 
         MoveMap<?, ?> moveMap = spec.getMoveMap();
-        for (MoveType type : MoveType.values())
+        for (MoveType type : MoveType.values()) {
             for (MoveMap.Entry<?, ?> entry : moveMap.getEntries(type)) {
                 // Move itself
                 appendMove(entry, moves, Text.literal("● ").formatted(Formatting.GREEN), false);
 
                 // Crouching variant
-                if (entry.getCrouchingVariant() != null)
+                if (entry.getCrouchingVariant() != null) {
                     appendMove(entry.getCrouchingVariant(), moves, Text.literal("  ● CROUCHING ").formatted(Formatting.DARK_AQUA), true);
+                }
 
                 // Aerial variant
-                if (entry.getAerialVariant() != null)
+                if (entry.getAerialVariant() != null) {
                     appendMove(entry.getAerialVariant(), moves, Text.literal("  ● AERIAL ").formatted(Formatting.GOLD), true);
+                }
             }
+        }
         text.append(moves);
 
         // Details

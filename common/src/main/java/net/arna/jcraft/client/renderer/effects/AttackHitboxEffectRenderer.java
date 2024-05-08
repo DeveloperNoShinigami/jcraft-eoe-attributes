@@ -44,7 +44,9 @@ public class AttackHitboxEffectRenderer {
 
     @Synchronized
     public static void render(MatrixStack matrices, Vec3d camPos, WorldRenderer worldRenderer, VertexConsumerProvider consumerProvider) {
-        if (!MinecraftClient.getInstance().getEntityRenderDispatcher().shouldRenderHitboxes()) return;
+        if (!MinecraftClient.getInstance().getEntityRenderDispatcher().shouldRenderHitboxes()) {
+            return;
+        }
 
         RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
 
@@ -58,10 +60,12 @@ public class AttackHitboxEffectRenderer {
     }
 
     private static void renderBoxes(VertexConsumerProvider consumerProvider, MatrixStack matrices, Collection<Pair<LongLongPair, Box>> boxes) {
-        for (Iterator<Pair<LongLongPair, Box>> iterator = boxes.iterator(); iterator.hasNext();) {
+        for (Iterator<Pair<LongLongPair, Box>> iterator = boxes.iterator(); iterator.hasNext(); ) {
             Pair<LongLongPair, Box> pair = iterator.next();
             renderBox(consumerProvider, pair.right(), matrices);
-            if (Util.getEpochTimeMs() - pair.left().leftLong() > pair.left().rightLong()) iterator.remove();
+            if (Util.getEpochTimeMs() - pair.left().leftLong() > pair.left().rightLong()) {
+                iterator.remove();
+            }
         }
     }
 

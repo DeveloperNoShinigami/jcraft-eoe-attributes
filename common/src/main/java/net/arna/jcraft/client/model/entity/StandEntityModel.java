@@ -59,7 +59,9 @@ public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
     @Override
     public void setCustomAnimations(E animatable, long instanceId, AnimationState<E> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
-        if (skipCustomAnimations() || !animatable.hasUser()) return;
+        if (skipCustomAnimations() || !animatable.hasUser()) {
+            return;
+        }
 
         JClientUtils.animateGenericHumanoid(this, animatable, animatable.getUser(), animationState.getPartialTick(),
                 true, true, torsoPitchOffset, headPitchOffset, velInfluence);

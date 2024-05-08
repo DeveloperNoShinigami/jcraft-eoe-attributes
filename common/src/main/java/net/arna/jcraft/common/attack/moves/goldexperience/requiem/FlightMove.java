@@ -6,7 +6,6 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.GEREntity;
 import net.arna.jcraft.common.util.MobilityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
@@ -29,24 +28,29 @@ public class FlightMove extends AbstractMove<FlightMove, GEREntity> {
     }
 
     public void tickFlight(GEREntity attacker) {
-        if (!attacker.hasUser()) return;
+        if (!attacker.hasUser()) {
+            return;
+        }
         LivingEntity user = attacker.getUserOrThrow();
         // Must be run on client and server because of fun mod compatibility
         int flightTime = attacker.getFlightTime();
         flightTime -= 1;
         attacker.setFlightTime(flightTime);
         if (user instanceof PlayerEntity playerEntity) {
-            if (!playerEntity.isCreative() && !playerEntity.isSpectator())
+            if (!playerEntity.isCreative() && !playerEntity.isSpectator()) {
                 playerEntity.getAbilities().flying = (flightTime > 1);
+            }
         } else if (flightTime > 1) {
             double y = user.getY();
             Vec3d vel = new Vec3d(user.getVelocity().x, 0.0, user.getVelocity().z);
             // Targetting priority
             LivingEntity targetEntity = (LivingEntity) user.getDamageTracker().getBiggestFall().damageSource().getAttacker();
-            if (targetEntity == null && user instanceof MobEntity mob)
+            if (targetEntity == null && user instanceof MobEntity mob) {
                 targetEntity = mob.getTarget();
-            if (targetEntity == null)
+            }
+            if (targetEntity == null) {
                 targetEntity = user.getAttacker();
+            }
             // If target wasn't found, search in a radius
             Vec3d target = targetEntity != null ? targetEntity.getEyePos() :
                     attacker.getPos().add(Math.sin(attacker.age * 0.2) * 3, 0, Math.cos(attacker.age * 0.2) * 3);

@@ -43,12 +43,15 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        if (slot != EquipmentSlot.HEAD.getEntitySlotId()) return;
+        if (slot != EquipmentSlot.HEAD.getEntitySlotId()) {
+            return;
+        }
 
         if (entity instanceof PlayerEntity player && JCraft.wasRecentlyAttacked(player.getDamageTracker())) {
             CommonSpecComponent specComponent = JComponentPlatformUtils.getSpecData(player);
-            if (specComponent.getType() != SpecType.VAMPIRE)
+            if (specComponent.getType() != SpecType.VAMPIRE) {
                 specComponent.setType(SpecType.VAMPIRE);
+            }
         }
     }
 

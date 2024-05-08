@@ -24,6 +24,7 @@ import java.util.Set;
 
 /**
  * A simple attack that performs at a set interval.
+ *
  * @param <T>
  * @param <A>
  */
@@ -77,7 +78,9 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
 
     @Override
     protected Set<LivingEntity> validateTargets(A attacker, Set<LivingEntity> targets) {
-        if (!(attacker instanceof StandEntity<?,?> stand)) return targets;
+        if (!(attacker instanceof StandEntity<?, ?> stand)) {
+            return targets;
+        }
 
         // Barrage clashing logic.
         for (LivingEntity target : targets) {
@@ -95,10 +98,12 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
             onClash(target);
 
             // Override stun with high priority 0.5s stun, also stops all current sounds for cleaner audio cue
-            if (target instanceof ServerPlayerEntity serverPlayer)
+            if (target instanceof ServerPlayerEntity serverPlayer) {
                 serverPlayer.networkHandler.sendPacket(new StopSoundS2CPacket(null, SoundCategory.PLAYERS));
-            if (attacker.getUserOrThrow() instanceof ServerPlayerEntity serverPlayer)
+            }
+            if (attacker.getUserOrThrow() instanceof ServerPlayerEntity serverPlayer) {
                 serverPlayer.networkHandler.sendPacket(new StopSoundS2CPacket(null, SoundCategory.PLAYERS));
+            }
 
             // Cancels both barrages
             stand.cancelMove();
@@ -126,7 +131,9 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
 
     public T withBarrageShockwaves() {
         return this.withAction(((attacker, user, ctx, targets) -> {
-            if (targets.isEmpty()) return;
+            if (targets.isEmpty()) {
+                return;
+            }
             LivingEntity attackerEntity = attacker.getBaseEntity();
             Random random = attackerEntity.getRandom();
             Vec3d shockwavePos = attackerEntity.getPos().add(

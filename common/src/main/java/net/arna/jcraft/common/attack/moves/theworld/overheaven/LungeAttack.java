@@ -27,8 +27,9 @@ public class LungeAttack extends AbstractSimpleAttack<LungeAttack, TheWorldOverH
         super.tick(attacker);
 
         int moveStun = attacker.getMoveStun();
-        if (moveStun > 5 && moveStun <= 11)
+        if (moveStun > 5 && moveStun <= 11) {
             withMoveDistance(getMoveDistance() + 0.15f);
+        }
     }
 
     @Override

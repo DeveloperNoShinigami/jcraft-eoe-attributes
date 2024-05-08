@@ -194,7 +194,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                             2 armor points
                             Can be held, and released 0.75s in.
                             Depending on how much you hold, the damage and launch height increase."""
-            ));
+                    ));
     private static final TrackedData<Boolean> HAS_RAPIER;
     private static final TrackedData<Integer> MODE;
 
@@ -232,7 +232,9 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
 
     @Override
     public Vector3f getAuraColor() {
-        if (isPossessed()) return new Vector3f(1.0f, 0f, 0f);
+        if (isPossessed()) {
+            return new Vector3f(1.0f, 0f, 0f);
+        }
         return super.getAuraColor();
     }
 
@@ -257,9 +259,9 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
 
         freespace =
                 """
-                BNBs:
-                    (M1>)Charge~Barrage>M1>Spinning Blade>M1~M1
-                    (M1>)Charge~Barrage>God of Death""";
+                        BNBs:
+                            (M1>)Charge~Barrage>M1>Spinning Blade>M1~M1
+                            (M1>)Charge~Barrage>God of Death""";
 
         registerMoves();
     }
@@ -317,22 +319,30 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     public boolean initMove(MoveType type) {
         if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
             AbstractMove<?, ? super SilverChariotEntity> followup = curMove.getFollowup();
-            if (followup != null) setMove(followup, (State) followup.getAnimation());
+            if (followup != null) {
+                setMove(followup, (State) followup.getAnimation());
+            }
         } else if (type == MoveType.SPECIAL1 && getUserOrThrow().isHolding(JItemRegistry.ANUBIS.get()) && curMove != null && curMove.getOriginalMove() == SPIN_BARRAGE && getMoveStun() < 7) {
             setMove(ANUBIS_SPIN_BARRAGE, (State) ANUBIS_SPIN_BARRAGE.getAnimation());
-        } else return super.initMove(type);
+        } else {
+            return super.initMove(type);
+        }
         return true;
     }
 
     @Override
     public boolean handleMove(AbstractMove<?, ? super SilverChariotEntity> move, CooldownType cooldownType, State animState) {
-        if (!move.canBeInitiated(this)) return false;
+        if (!move.canBeInitiated(this)) {
+            return false;
+        }
 
         LivingEntity user = getUserOrThrow();
         CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
         int cooldown = cooldowns.getCooldown(cooldownType);
 
-        if (cooldown > 0) return false;
+        if (cooldown > 0) {
+            return false;
+        }
 
         AbstractMove<?, ? super SilverChariotEntity> attackRef = move.copy();
         if (getMode() == Mode.ARMORLESS) {
@@ -357,19 +367,23 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     public void tick() {
         super.tick();
 
-        if (!hasUser()) return;
+        if (!hasUser()) {
+            return;
+        }
         LivingEntity user = getUserOrThrow();
         Mode mode = getMode();
 
         if (getWorld().isClient) {
             // Possession particles
-            if (mode == Mode.POSSESSED)
-                for (int i = 0; i < 16; i++)
+            if (mode == Mode.POSSESSED) {
+                for (int i = 0; i < 16; i++) {
                     getWorld().addParticle(
                             ParticleTypes.ASH,
                             getX() + random.nextDouble() - 0.5, getY() + random.nextDouble() * 0.25 + 0.5, getZ() + random.nextDouble() - 0.5,
                             0.0, 0.0, 0.0
                     );
+                }
+            }
 
             return;
         }
@@ -397,8 +411,9 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         }
 
         ARMOR_OFF.tickArmor(this);
-        if (curMove != null && getMoveStun() % 10 == 0 && curMove.getOriginalMove() == CIRCLE_CHARGE)
+        if (curMove != null && getMoveStun() % 10 == 0 && curMove.getOriginalMove() == CIRCLE_CHARGE) {
             getMoveContext().incrementInt(CHARGE_TIME, 1);
+        }
     }
 
     @Override

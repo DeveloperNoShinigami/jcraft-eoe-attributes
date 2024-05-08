@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.arna.jcraft.client.gui.hud.JCraftAbilityHud.GUI_ICONS_TEXTURE;
 
 @Mixin(InGameHud.class)
-public abstract class InGameHudMixin  {
+public abstract class InGameHudMixin {
     @Shadow
     @Final
     private MinecraftClient client;
@@ -87,6 +87,7 @@ public abstract class InGameHudMixin  {
             RenderSystem.setShaderTexture(0, EMPTY_BLOOD_ICON);
         }
     }
+
     @Inject(
             method = "renderStatusBars",
             slice = @Slice(
@@ -136,11 +137,12 @@ public abstract class InGameHudMixin  {
             RenderSystem.setShaderTexture(0, FULL_BLOOD_ICON);
         }
     }
-    
+
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getFrozenTicks()I"))
     private void renderEpitaph(DrawContext context, float tickDelta, CallbackInfo ci) {
-        if (JClientConfig.getInstance().isEpitaphOverlay())
+        if (JClientConfig.getInstance().isEpitaphOverlay()) {
             EpitaphOverlay.render();
+        }
     }
 
     // Rendered using this mixin rather than HudRenderCallback, so it's behind chat.

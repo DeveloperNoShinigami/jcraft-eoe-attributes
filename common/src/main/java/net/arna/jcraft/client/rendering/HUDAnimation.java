@@ -52,7 +52,9 @@ public class HUDAnimation {
 
     public static HUDAnimation create(Identifier atlas, Identifier atlasData) {
         Optional<Resource> dataRes = MinecraftClient.getInstance().getResourceManager().getResource(atlasData);
-        if (dataRes.isEmpty()) throw new IllegalArgumentException("Atlas data not found.");
+        if (dataRes.isEmpty()) {
+            throw new IllegalArgumentException("Atlas data not found.");
+        }
 
         JsonObject data;
         try (BufferedReader reader = dataRes.get().getReader()) {
@@ -76,20 +78,28 @@ public class HUDAnimation {
     }
 
     private static void validateFrame(JsonElement frame) {
-        if (!frame.isJsonObject()) throw new IllegalArgumentException("Frame in atlas data is not an object");
+        if (!frame.isJsonObject()) {
+            throw new IllegalArgumentException("Frame in atlas data is not an object");
+        }
 
         JsonObject frameObj = frame.getAsJsonObject();
-        if (!FILE_NAME_PATTERN.asMatchPredicate().test(frameObj.get("filename").getAsString()))
+        if (!FILE_NAME_PATTERN.asMatchPredicate().test(frameObj.get("filename").getAsString())) {
             throw new IllegalArgumentException("Frame in atlas data has invalid filename (must be of format 'frame<i>' where <i> is a 1-based index.");
+        }
 
-        if (frameObj.get("rotated").getAsBoolean()) throw new IllegalArgumentException("Frames may not be rotated");
-        if (frameObj.get("trimmed").getAsBoolean()) throw new IllegalArgumentException("Frames may not be trimmed");
+        if (frameObj.get("rotated").getAsBoolean()) {
+            throw new IllegalArgumentException("Frames may not be rotated");
+        }
+        if (frameObj.get("trimmed").getAsBoolean()) {
+            throw new IllegalArgumentException("Frames may not be trimmed");
+        }
     }
 
     /**
      * Preloads the texture atlas with the given texture manager and executor.
+     *
      * @param textureManager The texture manager that will load the atlas.
-     * @param executor The executor used to load the atlas.
+     * @param executor       The executor used to load the atlas.
      */
     public void preload(TextureManager textureManager, Executor executor) {
         textureManager.loadTextureAsync(getAtlas(), executor);
@@ -101,7 +111,8 @@ public class HUDAnimation {
 
     /**
      * Creates a new frame-counter that fits this animation.
-     * @param framerate The framerate of this animation. Probably 60 fps.
+     *
+     * @param framerate  The framerate of this animation. Probably 60 fps.
      * @param shouldLoop Whether the frame-counter should wrap around
      *                   when it has reached the end of the animation.
      * @return A new frame-counter for this animation.

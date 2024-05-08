@@ -89,8 +89,9 @@ public class JServerEvents {
     private static final double MS_TO_TICKS = 1000.0 / 20.0; // 1000ms = 1s, 1s = 20t
 
     public static void serverTick(MinecraftServer server) {
-        if (JCraft.preloadLockTicks > 0)
+        if (JCraft.preloadLockTicks > 0) {
             JCraft.preloadLockTicks--;
+        }
 
         RevolverFire.tick(server);
         PastDimensions.tick(server);
@@ -101,8 +102,9 @@ public class JServerEvents {
         PredictionTriggerPacket.getSubscribers().forEach(
                 subscriber -> {
                     int adjustedPing = subscriber.pingMilliseconds;
-                    if (adjustedPing > MAX_COMPENSATION_MS)
+                    if (adjustedPing > MAX_COMPENSATION_MS) {
                         adjustedPing = MAX_COMPENSATION_MS;
+                    }
                     double pingTicks = adjustedPing * MS_TO_TICKS;
 
                     Set<Pair<Integer, Vec3d>> idPosPairs = JUtils.around((ServerWorld) subscriber.getWorld(), subscriber.getPos(), PREDICTION_RADIUS)
@@ -122,9 +124,13 @@ public class JServerEvents {
 
         // Player logic (cooldown handling and DamageTimer counting)
         for (ServerPlayerEntity player : JUtils.all(server)) {
-            if (player == null || !player.isAlive()) continue;
+            if (player == null || !player.isAlive()) {
+                continue;
+            }
 
-            if (player.getAttacker() != null) JComponentPlatformUtils.getMiscData(player).startDamageTimer();
+            if (player.getAttacker() != null) {
+                JComponentPlatformUtils.getMiscData(player).startDamageTimer();
+            }
         }
 
         // Burst handling
@@ -137,7 +143,9 @@ public class JServerEvents {
 
             Set<Entity> filter = new HashSet<>();
             filter.add(player);
-            if (player.hasPassengers()) filter.addAll(player.getPassengerList());
+            if (player.hasPassengers()) {
+                filter.addAll(player.getPassengerList());
+            }
 
             if (newVal > 0) {
                 newBurstTimers.put(player, newVal);
@@ -165,15 +173,18 @@ public class JServerEvents {
                         stand.cancelMove();
                     }
                 } else if (ent.getFirstPassenger() instanceof StandEntity<?, ?> stand) { // Stands should not have passengers
-                    if (stand.blocking) pushAway = false;
-                    else if (ent instanceof LivingEntity living) { // Stand users that aren't blocking get launched and their stand attacks are cancelled
+                    if (stand.blocking) {
+                        pushAway = false;
+                    } else if (ent instanceof LivingEntity living) { // Stand users that aren't blocking get launched and their stand attacks are cancelled
                         //awayVector = awayVector.multiply(0.5);
                         stun(living, 10, 3);
                         stand.cancelMove();
                     }
                 }
 
-                if (!pushAway) continue;
+                if (!pushAway) {
+                    continue;
+                }
                 JUtils.setVelocity(ent, awayVector.x, awayVector.y / 5 + 0.4, awayVector.z);
             }
         }
@@ -186,7 +197,9 @@ public class JServerEvents {
             DashData dash = entry.getValue();
             dash.tickDash();
 
-            if (dash.finished) JCraft.dashes.remove(entry.getKey());
+            if (dash.finished) {
+                JCraft.dashes.remove(entry.getKey());
+            }
         }
 
         // Handle items of interest
@@ -195,7 +208,9 @@ public class JServerEvents {
 
         for (Map.Entry<Entity, EntityInterest> entityAndInterest : entitiesOfInterest.entrySet()) {
             Entity entity = entityAndInterest.getKey();
-            if (entity == null || !entity.isAlive()) continue;
+            if (entity == null || !entity.isAlive()) {
+                continue;
+            }
             EntityInterest interest = entityAndInterest.getValue();
             ServerWorld serverWorld = (ServerWorld) entity.getWorld();
             boolean saveForNextIteration = true;
@@ -207,7 +222,9 @@ public class JServerEvents {
                     if (entity.squaredDistanceTo(attractionBlockPos.getX(), attractionBlockPos.getY(), attractionBlockPos.getZ()) < 4) {
                         boolean griefing = serverWorld.getGameRules().getBoolean(JCraft.STAND_GRIEFING);
                         dimensionalExplosion(serverWorld, griefing, entity);
-                        if (griefing) serverWorld.setBlockState(attractionBlockPos, Blocks.AIR.getDefaultState());
+                        if (griefing) {
+                            serverWorld.setBlockState(attractionBlockPos, Blocks.AIR.getDefaultState());
+                        }
                     } else {
                         BlockPos delta = attractionBlockPos.subtract(entity.getBlockPos());
                         Vec3d towardsVel = new Vec3d(delta.getX(), delta.getY(), delta.getZ()).normalize();
@@ -216,16 +233,18 @@ public class JServerEvents {
                     }
                 }
                 case ITEM_ATTRACTION -> {
-                    if (!(entity instanceof ItemEntity item)) continue;
+                    if (!(entity instanceof ItemEntity item)) {
+                        continue;
+                    }
                     for (Map.Entry<Entity, EntityInterest> entityAndInterest2 : entitiesOfInterest.entrySet()) {
                         Entity entity2 = entityAndInterest2.getKey();
                         if (entity2 instanceof ItemEntity item2) {
                             if (
                                     entityAndInterest2.getValue().getType() == EntityInterest.ItemInterestType.ITEM_ATTRACTION &&
-                                    item2 != entity &&
-                                    item2.getWorld() == serverWorld &&
-                                    item2.getStack().getItem() == item.getStack().getItem() &&
-                                    item2.squaredDistanceTo(entity) <= 256
+                                            item2 != entity &&
+                                            item2.getWorld() == serverWorld &&
+                                            item2.getStack().getItem() == item.getStack().getItem() &&
+                                            item2.squaredDistanceTo(entity) <= 256
                             ) {
                                 Vec3d converge = item2.getPos().subtract(entity.getPos());
                                 Vec3d towardsVector = converge.normalize().multiply(0.25);
@@ -242,7 +261,9 @@ public class JServerEvents {
                 }
             }
 
-            if (saveForNextIteration) newItemsOfInterest.put(entity, interest);
+            if (saveForNextIteration) {
+                newItemsOfInterest.put(entity, interest);
+            }
         }
 
         entitiesOfInterest.clear();
@@ -293,11 +314,15 @@ public class JServerEvents {
 
             // ... in the AU
             if (world.getRegistryKey().equals(JDimensionRegistry.AU_DIMENSION_KEY)) {
-                if (item.getOwner() != null || MockItem.isMockItem(stack)) return null;
+                if (item.getOwner() != null || MockItem.isMockItem(stack)) {
+                    return null;
+                }
 
                 ItemStack mockStack = MockItem.createMockStack(stack); // Convert it to a mock item (incompatible and useless)
                 if (stack.getItem() instanceof BlockItem) // ... and mark down all relevant data
+                {
                     mockStack.getOrCreateNbt().putIntArray("AttractPos", new int[]{item.getBlockX(), item.getBlockY(), item.getBlockZ()});
+                }
                 item.setStack(mockStack);
             } else { // ... outside the AU
                 if (MockItem.isMockItem(stack)) {
@@ -311,8 +336,9 @@ public class JServerEvents {
                                 Registries.ITEM.getId(
                                         world.getBlockState(attractBlockPos).getBlock().asItem()
                                 ).toString().equals(itemId)
-                        )
+                        ) {
                             JCraft.markItemOfInterest(item, blockAttractionInterest(attractBlockPos));
+                        }
                     } else { // if not attracted to a specific position, it's a general item to attract
                         JCraft.markItemOfInterest(item, itemAttractionInterest(stack.getItem()));
                     }
@@ -329,34 +355,48 @@ public class JServerEvents {
             }
 
             // Create new stand user mobs
-            if (mob.age > 0) return null;
-            if (standData.getType() != null) return null;
+            if (mob.age > 0) {
+                return null;
+            }
+            if (standData.getType() != null) {
+                return null;
+            }
             EntityGroup group = mob.getGroup();
 
-            if (group != EntityGroup.UNDEAD && group != EntityGroup.ILLAGER && !(mob instanceof EndermanEntity))
+            if (group != EntityGroup.UNDEAD && group != EntityGroup.ILLAGER && !(mob instanceof EndermanEntity)) {
                 return EventResult.pass();
+            }
             Random random = new Random();
             GameRules gameRules = world.getGameRules();
 
             // STAND
-            if (100 - random.nextInt(0, 100) > gameRules.getInt(CHANCE_MOB_SPAWNS_WITH_STAND)) return null;
+            if (100 - random.nextInt(0, 100) > gameRules.getInt(CHANCE_MOB_SPAWNS_WITH_STAND)) {
+                return null;
+            }
             List<StandType> types = gameRules.getBoolean(ALLOW_MOB_EVOLVED_STANDS) ? StandType.getAllStandTypes() : StandType.getRegularStandTypes();
             StandType type = types.get(random.nextInt(types.size()));
             standData.setType(type);
 
             // ATTRIBUTES
             EntityAttributeInstance followRange = mob.getAttributeInstance(EntityAttributes.GENERIC_FOLLOW_RANGE);
-            if (followRange != null) followRange.setBaseValue(128.0);
+            if (followRange != null) {
+                followRange.setBaseValue(128.0);
+            }
             EntityAttributeInstance movementSpeed = mob.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-            if (movementSpeed != null && movementSpeed.getBaseValue() < 0.3) movementSpeed.setBaseValue(0.3);
+            if (movementSpeed != null && movementSpeed.getBaseValue() < 0.3) {
+                movementSpeed.setBaseValue(0.3);
+            }
 
             // EQUIPMENT
-            if (mob.getMaxHealth() > 100.0) return EventResult.pass();
+            if (mob.getMaxHealth() > 100.0) {
+                return EventResult.pass();
+            }
 
             DefaultedList<ItemStack> handItems = (DefaultedList<ItemStack>) mob.getHandItems(), armorItems = (DefaultedList<ItemStack>) mob.getArmorItems();
             // Silver chariot users may spawn with Anubis (25% chance)
-            if (type == StandType.SILVER_CHARIOT && random.nextInt(5) == 4)
+            if (type == StandType.SILVER_CHARIOT && random.nextInt(5) == 4) {
                 handItems.set(0, new ItemStack(JItemRegistry.ANUBIS.get()));
+            }
 
             if (random.nextInt(0, 100) >= 90) {
                 handItems.set(1, new ItemStack(JItemRegistry.STANDARROW.get()));
@@ -380,43 +420,50 @@ public class JServerEvents {
     }
 
     public static EventResult rightClickBlock(PlayerEntity player, Hand hand, BlockPos blockPos, Direction direction) {
-        if (!JUtils.canAct(player))
+        if (!JUtils.canAct(player)) {
             return EventResult.interruptFalse();
+        }
 
         // Remote players do stuff with their stand, not themselves
         StandEntity<?, ?> stand = JUtils.getStand(player);
-        if (stand != null && stand.isRemoteAndControllable())
+        if (stand != null && stand.isRemoteAndControllable()) {
             return EventResult.interruptFalse();
+        }
 
         return EventResult.pass();
     }
 
     public static EventResult leftClickBlock(PlayerEntity player, Hand hand, BlockPos blockPos, Direction direction) {
-        if (!JUtils.canAct(player))
+        if (!JUtils.canAct(player)) {
             return EventResult.interruptFalse();
+        }
 
         // Remote players do stuff with their stand, not themselves
         StandEntity<?, ?> stand = JUtils.getStand(player);
-        if (stand != null && stand.isRemoteAndControllable())
+        if (stand != null && stand.isRemoteAndControllable()) {
             return EventResult.interruptFalse();
+        }
 
         return EventResult.pass();
     }
 
     public static CompoundEventResult<ItemStack> rightClick(PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
-        if (!JUtils.canAct(player))
+        if (!JUtils.canAct(player)) {
             return CompoundEventResult.interruptFalse(stack);
+        }
         return CompoundEventResult.pass();
     }
 
     public static EventResult death(LivingEntity living, DamageSource source) {
         if (living instanceof ServerPlayerEntity serverPlayer) {
             GameRules gameRules = living.getWorld().getGameRules();
-            if (!gameRules.getBoolean(JCraft.KEEP_STAND))
+            if (!gameRules.getBoolean(JCraft.KEEP_STAND)) {
                 JComponentPlatformUtils.getStandData(living).setTypeAndSkin(StandType.NONE, 0);
-            if (!gameRules.getBoolean(JCraft.KEEP_SPEC))
+            }
+            if (!gameRules.getBoolean(JCraft.KEEP_SPEC)) {
                 JComponentPlatformUtils.getSpecData(serverPlayer).setType(SpecType.NONE);
+            }
 
             if (source.getAttacker() instanceof LivingEntity killer) {
                 JComponentPlatformUtils.getCooldowns(killer).clear(CooldownType.COMBO_BREAKER);
@@ -426,12 +473,14 @@ public class JServerEvents {
                     if (killVampirism) {
                         killerPlayer.getHungerManager().add(20, 20f);
                         CommonVampireComponent vampireComponent = JComponentPlatformUtils.getVampirism(killerPlayer);
-                        if (vampireComponent.isVampire())
+                        if (vampireComponent.isVampire()) {
                             vampireComponent.setBlood(20.0f);
+                        }
                     }
                 }
-                if (killVampirism)
+                if (killVampirism) {
                     killer.setHealth(killer.getMaxHealth());
+                }
             }
         }
 
@@ -448,8 +497,9 @@ public class JServerEvents {
             // Only apply stun nerfs if hit with a weapon or a projectile
             if (attacker instanceof LivingEntity living) {
                 boolean hasWeapon = source.isOf(DamageTypes.MOB_PROJECTILE);
-                if (!hasWeapon)
+                if (!hasWeapon) {
                     hasWeapon = !living.getMainHandStack().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty();
+                }
                 toLaunch = hasWeapon;
             }
 
@@ -484,7 +534,7 @@ public class JServerEvents {
         return EventResult.pass();
     }
 
-    public static ActionResult allowSleep(PlayerEntity player, BlockPos sleepingPos){
+    public static ActionResult allowSleep(PlayerEntity player, BlockPos sleepingPos) {
         if (player.getWorld() instanceof ServerWorld serverWorld) {
             if (serverWorld.getBlockState(sleepingPos).isOf(JBlockRegistry.COFFIN_BLOCK.get())) {
                 return serverWorld.isDay() ? ActionResult.SUCCESS : ActionResult.FAIL;
@@ -494,27 +544,31 @@ public class JServerEvents {
         return ActionResult.PASS;
     }
 
-    public static ActionResult allowBed(Entity entity, BlockPos sleepingPos, BlockState state, boolean b){
-        if (state.isOf(JBlockRegistry.COFFIN_BLOCK.get()))
-            if (entity instanceof ServerPlayerEntity serverPlayer)
+    public static ActionResult allowBed(Entity entity, BlockPos sleepingPos, BlockState state, boolean b) {
+        if (state.isOf(JBlockRegistry.COFFIN_BLOCK.get())) {
+            if (entity instanceof ServerPlayerEntity serverPlayer) {
                 return serverPlayer.canResetTimeBySleeping() ? ActionResult.FAIL : ActionResult.SUCCESS;
+            }
+        }
         return ActionResult.PASS;
     }
 
-    public static Direction modifySleepingDirection(Entity entity, BlockPos sleepingPos, Direction sleepingDirection){
+    public static Direction modifySleepingDirection(Entity entity, BlockPos sleepingPos, Direction sleepingDirection) {
         BlockState state = entity.getWorld().getBlockState(sleepingPos);
-        if (state.isOf(JBlockRegistry.COFFIN_BLOCK.get()))
+        if (state.isOf(JBlockRegistry.COFFIN_BLOCK.get())) {
             return state.get(CoffinBlock.FACING);
+        }
         return sleepingDirection;
     }
 
-    public static void stopSleeping(Entity entity, BlockPos sleepingPos){
+    public static void stopSleeping(Entity entity, BlockPos sleepingPos) {
         if (entity instanceof ServerPlayerEntity serverPlayer && serverPlayer.canResetTimeBySleeping() && serverPlayer.getWorld() instanceof ServerWorld serverWorld) {
             BlockState state = serverWorld.getBlockState(sleepingPos);
             if (state.isOf(JBlockRegistry.COFFIN_BLOCK.get())) {
                 if (serverWorld.sleepManager.canSkipNight(serverWorld.getGameRules().getInt(GameRules.PLAYERS_SLEEPING_PERCENTAGE))
-                        && serverWorld.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE))
+                        && serverWorld.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
                     serverWorld.setTimeOfDay(13000);
+                }
                 serverWorld.setBlockState(sleepingPos, state.with(CoffinBlock.OCCUPIED, false));
             }
         }

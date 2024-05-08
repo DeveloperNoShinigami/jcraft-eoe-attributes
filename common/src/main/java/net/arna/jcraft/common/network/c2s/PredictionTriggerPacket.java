@@ -25,8 +25,11 @@ public class PredictionTriggerPacket {
 
         boolean enable = buf.readBoolean();
         server.execute(() -> {
-            if (enable) subscribers.add(player);
-            else subscribers.remove(player);
+            if (enable) {
+                subscribers.add(player);
+            } else {
+                subscribers.remove(player);
+            }
         });
     }
 

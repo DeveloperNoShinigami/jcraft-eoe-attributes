@@ -33,7 +33,9 @@ public class JLootTableHelper {
     }
 
     public static void registerModification(Consumer<LootTable.Builder> modifier, Identifier... lootTables) {
-        for (Identifier lootTable : lootTables) modifications.put(lootTable, modifier);
+        for (Identifier lootTable : lootTables) {
+            modifications.put(lootTable, modifier);
+        }
     }
 
     private static void addMaskPool(LootTable.Builder builder) {

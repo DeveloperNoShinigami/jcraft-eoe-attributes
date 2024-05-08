@@ -8,6 +8,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 /**
  * The simplest implementation of {@link AbstractMultiHitAttack}.
  * Only special feature is that it fires the same hitbox at set points.
+ *
  * @param <A>
  */
 public class SimpleMultiHitAttack<A extends IAttacker<? extends A, ?>> extends AbstractMultiHitAttack<SimpleMultiHitAttack<A>, A> {
@@ -26,8 +27,8 @@ public class SimpleMultiHitAttack<A extends IAttacker<? extends A, ?>> extends A
      * @param hitMoments   The ticks at which this attack is performed.
      */
     public static <A extends IAttacker<? extends A, ?>> SimpleMultiHitAttack<A> lightAttack(int duration, float moveDistance, float damage,
-                                                                                  int stun,
-                                                                                  float offset, IntCollection hitMoments) {
+                                                                                            int stun,
+                                                                                            float offset, IntCollection hitMoments) {
         return new SimpleMultiHitAttack<>(30, duration, moveDistance, damage, stun, 1.5f, 0.75f,
                 offset, hitMoments);
     }

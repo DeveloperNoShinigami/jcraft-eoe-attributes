@@ -27,7 +27,7 @@ public abstract class AbstractGrabAttack<T extends AbstractGrabAttack<T, A, S>, 
     }
 
     protected AbstractGrabAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize,
-                              float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState, int grabDuration, double grabOffset) {
+                                 float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState, int grabDuration, double grabOffset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);
 
         grab = true;
@@ -47,16 +47,22 @@ public abstract class AbstractGrabAttack<T extends AbstractGrabAttack<T, A, S>, 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-        if (targets.isEmpty()) return targets;
+        if (targets.isEmpty()) {
+            return targets;
+        }
 
         boolean unblockable = getBlockableType() == BlockableType.NON_BLOCKABLE;
 
         boolean anyHit = false;
         for (LivingEntity target : targets) {
-            if (JUtils.isBlocking(target) && !unblockable) continue;
+            if (JUtils.isBlocking(target) && !unblockable) {
+                continue;
+            }
 
             StandEntity<?, ?> stand = JUtils.getStand(target);
-            if (stand != null) stand.blocking = false;
+            if (stand != null) {
+                stand.blocking = false;
+            }
             JUtils.cancelMoves(target);
 
             JComponentPlatformUtils.getGrab(target).startGrab(attacker.getBaseEntity(), grabDuration, grabOffset);
@@ -66,8 +72,9 @@ public abstract class AbstractGrabAttack<T extends AbstractGrabAttack<T, A, S>, 
             anyHit = true;
         }
 
-        if (anyHit)
+        if (anyHit) {
             attacker.setMove(hitMove, hitState);
+        }
 
         return targets;
     }

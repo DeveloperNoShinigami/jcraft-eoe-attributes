@@ -61,10 +61,18 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
 
     @Override
     public boolean canTarget(LivingEntity target) {
-        if (target == null || master == null) return false;
-        if (target == this || target == master) return false;
-        if (target.isConnectedThroughVehicle(master)) return false;
-        if (target instanceof IOwnable ownable && ownable.getMaster() == master) return false;
+        if (target == null || master == null) {
+            return false;
+        }
+        if (target == this || target == master) {
+            return false;
+        }
+        if (target.isConnectedThroughVehicle(master)) {
+            return false;
+        }
+        if (target instanceof IOwnable ownable && ownable.getMaster() == master) {
+            return false;
+        }
         return target.canTakeDamage() && target.isAlive() && JUtils.canDamage(getWorld().getDamageSources().mobAttack(master), target);
     }
 
@@ -75,7 +83,9 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
         Vec3d pos = getPos();
         Set<LivingEntity> hurt = JUtils.generateHitbox(getWorld(), pos, 2.25, e -> true);
         for (LivingEntity living : hurt) {
-            if (!canTarget(living)) continue;
+            if (!canTarget(living)) {
+                continue;
+            }
             LivingEntity target = JUtils.getUserIfStand(living);
             Vec3d kbVec = target.getPos().subtract(pos).normalize();
             StandEntity.damageLogic(getWorld(), target, kbVec, 10, 1, false, 5f, true, 9,
@@ -92,16 +102,21 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        if (master == null) kill();
-        if (hasExploded()) return;
+        if (master == null) {
+            kill();
+        }
+        if (hasExploded()) {
+            return;
+        }
 
-        if (getWorld().isClient) getWorld().addParticle(
-                ParticleTypes.FLAME,
-                this.getX() + random.nextFloat() - 0.5f,
-                this.getY() + random.nextFloat() - 0.5f,
-                this.getZ() + random.nextFloat() - 0.5f,
-                0.0, 0.0, 0.0);
-        else {
+        if (getWorld().isClient) {
+            getWorld().addParticle(
+                    ParticleTypes.FLAME,
+                    this.getX() + random.nextFloat() - 0.5f,
+                    this.getY() + random.nextFloat() - 0.5f,
+                    this.getZ() + random.nextFloat() - 0.5f,
+                    0.0, 0.0, 0.0);
+        } else {
             if (target == null) {
                 if (this.age % 2 == 0) {
                     LivingEntity finalTarget = null;
@@ -109,14 +124,17 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
 
                     for (LivingEntity t :
                             targets) {
-                        if (!canTarget(t)) continue;
+                        if (!canTarget(t)) {
+                            continue;
+                        }
                         if (finalTarget == null) {
                             finalTarget = t;
                             continue;
                         }
                         // Prioritise nearest
-                        if (t.getPos().squaredDistanceTo(getPos()) < finalTarget.getPos().squaredDistanceTo(getPos()))
+                        if (t.getPos().squaredDistanceTo(getPos()) < finalTarget.getPos().squaredDistanceTo(getPos())) {
                             finalTarget = t;
+                        }
                     }
 
                     target = finalTarget;
@@ -124,10 +142,16 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
             } else if (target.isAlive()) {
                 Vec3d eyePos = target.getEyePos();
                 lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, eyePos);
-                if (this.squaredDistanceTo(eyePos) < 2.5) Explode(); //If closer than 1.58m
-            } else target = null;
+                if (this.squaredDistanceTo(eyePos) < 2.5) {
+                    Explode(); //If closer than 1.58m
+                }
+            } else {
+                target = null;
+            }
 
-            if (!hasExploded() && (this.age >= 300 || getHealth() <= 0f)) Explode();
+            if (!hasExploded() && (this.age >= 300 || getHealth() <= 0f)) {
+                Explode();
+            }
 
             // Lerp velocity to simulate inertia
             this.setVelocity(
@@ -185,19 +209,27 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
     @Override
     public void writeCustomDataToNbt(NbtCompound tag) {
         super.writeCustomDataToNbt(tag);
-        if (master == null) return;
+        if (master == null) {
+            return;
+        }
         boolean ownerIsPlayer = master instanceof PlayerEntity;
         tag.putBoolean("playerOwner", ownerIsPlayer);
-        if (ownerIsPlayer) tag.putUuid("ownerUUID", master.getUuid());
-        else tag.putInt("ownerID", master.getId());
+        if (ownerIsPlayer) {
+            tag.putUuid("ownerUUID", master.getUuid());
+        } else {
+            tag.putInt("ownerID", master.getId());
+        }
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound tag) {
         super.readCustomDataFromNbt(tag);
         boolean ownerIsPlayer = tag.getBoolean("playerOwner");
-        if (ownerIsPlayer) master = getWorld().getPlayerByUuid(tag.getUuid("ownerUUID"));
-        else master = (LivingEntity) getWorld().getEntityById(tag.getInt("ownerID")); // Always is living
+        if (ownerIsPlayer) {
+            master = getWorld().getPlayerByUuid(tag.getUuid("ownerUUID"));
+        } else {
+            master = (LivingEntity) getWorld().getEntityById(tag.getInt("ownerID")); // Always is living
+        }
     }
 
     // Animations

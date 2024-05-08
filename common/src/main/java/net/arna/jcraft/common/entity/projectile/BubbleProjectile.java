@@ -59,9 +59,11 @@ public class BubbleProjectile extends PersistentProjectileEntity implements GeoE
     @Override
     public void tick() {
         super.tick();
-        if (!getWorld().isClient())
-            if (getOwner() == null || age > 1600)
+        if (!getWorld().isClient()) {
+            if (getOwner() == null || age > 1600) {
                 discard();
+            }
+        }
     }
 
     @Override

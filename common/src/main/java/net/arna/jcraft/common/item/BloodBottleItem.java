@@ -51,13 +51,15 @@ public class BloodBottleItem extends Item {
                 boolean full = blood >= 1.0f;
                 if (playerEntity != null) {
                     playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
-                    if (!playerEntity.getAbilities().creativeMode && vampireComponent.getBlood() < 20)
+                    if (!playerEntity.getAbilities().creativeMode && vampireComponent.getBlood() < 20) {
                         nbt.putFloat("Blood", Math.max(--blood, 0));
+                    }
                 }
 
                 if (!world.isClient) {
-                    if (playerEntity instanceof ServerPlayerEntity)
+                    if (playerEntity instanceof ServerPlayerEntity) {
                         Criteria.CONSUME_ITEM.trigger((ServerPlayerEntity) playerEntity, stack);
+                    }
                     vampireComponent.setBlood(vampireComponent.getBlood() + (full ? 2 : 1));
                 }
 
@@ -76,27 +78,31 @@ public class BloodBottleItem extends Item {
 
     @Override
     public UseAction getUseAction(ItemStack stack) {
-        if (stack.getOrCreateNbt().getFloat("Blood") >= 0.5)
+        if (stack.getOrCreateNbt().getFloat("Blood") >= 0.5) {
             return UseAction.DRINK;
+        }
         return UseAction.NONE;
     }
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         NbtCompound nbt = stack.getNbt();
-        if (nbt != null && nbt.contains("Blood"))
+        if (nbt != null && nbt.contains("Blood")) {
             tooltip.add(Text.translatable("jcraft.blood_bottle.units").append(nbt.getFloat("Blood") + "/" + MAX_BLOOD));
+        }
         super.appendTooltip(stack, world, tooltip, context);
     }
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-        if (user.getItemCooldownManager().isCoolingDown(this) || !JUtils.canAct(user))
+        if (user.getItemCooldownManager().isCoolingDown(this) || !JUtils.canAct(user)) {
             return ActionResult.PASS;
+        }
 
         float bloodMult = JUtils.getBloodMult(entity);
-        if (bloodMult <= 0)
+        if (bloodMult <= 0) {
             return ActionResult.PASS;
+        }
 
         user.getItemCooldownManager().set(this, 15);
 
@@ -104,8 +110,9 @@ public class BloodBottleItem extends Item {
             entity.damage(user.getWorld().getDamageSources().playerAttack(user), 2);
             NbtCompound nbtCompound = stack.getOrCreateNbt();
             float newBlood = nbtCompound.getFloat("Blood") + bloodMult;
-            if (newBlood > MAX_BLOOD)
+            if (newBlood > MAX_BLOOD) {
                 newBlood = MAX_BLOOD;
+            }
             nbtCompound.putFloat("Blood", newBlood);
             user.setStackInHand(hand, stack);
         }
@@ -125,10 +132,14 @@ public class BloodBottleItem extends Item {
 
     public static void appendStacks(ItemGroup group, List<ItemStack> stacks) {
         boolean full = group.getType() == ItemGroup.Type.SEARCH;
-        if (!full) return;
+        if (!full) {
+            return;
+        }
 
         int step = 1;
-        if (!full) step = 4;
+        if (!full) {
+            step = 4;
+        }
         for (int i = 0; i <= 16; i += step) {
             ItemStack stack = new ItemStack(JItemRegistry.BLOOD_BOTTLE.get());
             stack.getOrCreateNbt().putFloat("Blood", i);

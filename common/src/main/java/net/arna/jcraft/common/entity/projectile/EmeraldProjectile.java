@@ -63,7 +63,6 @@ public class EmeraldProjectile extends PersistentProjectileEntity implements Geo
     }
 
 
-
     @Override
     public void tick() {
         super.tick();
@@ -76,9 +75,10 @@ public class EmeraldProjectile extends PersistentProjectileEntity implements Geo
                 double y = getY();
                 double z = getZ();
 
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < 8; i++) {
                     getWorld().addParticle(EMERALD_PARTICLE, x, y, z,
                             random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
+                }
             }
         }
 
@@ -93,8 +93,9 @@ public class EmeraldProjectile extends PersistentProjectileEntity implements Geo
             return;
         }
 
-        if (ticksInAir > 200)
+        if (ticksInAir > 200) {
             discard();
+        }
     }
 
     @Override
@@ -115,19 +116,29 @@ public class EmeraldProjectile extends PersistentProjectileEntity implements Geo
                     this.getWorld().emitGameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Emitter.of(this, this.getWorld().getBlockState(blockPos)));
                 }
             }
-        } else super.onCollision(hitResult);
+        } else {
+            super.onCollision(hitResult);
+        }
     }
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) return;
+        if (getWorld().isClient) {
+            return;
+        }
         Entity entity = entityHitResult.getEntity();
         Entity owner = this.getOwner();
 
-        if (owner != null && owner.hasPassenger(entity) || entity == owner) return;
-        if (entity instanceof JAttackEntity attackEntity && attackEntity.getMaster() == owner) return;
+        if (owner != null && owner.hasPassenger(entity) || entity == owner) {
+            return;
+        }
+        if (entity instanceof JAttackEntity attackEntity && attackEntity.getMaster() == owner) {
+            return;
+        }
 
-        if (isOnFire()) entity.setOnFireFor(5);
+        if (isOnFire()) {
+            entity.setOnFireFor(5);
+        }
 
         int blockstun = 4;
         int stunT = 10;

@@ -25,8 +25,9 @@ public class JArmorRendererRegistry {
 
             @Override
             public @NotNull BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
-                if (this.renderer == null)
+                if (this.renderer == null) {
                     this.renderer = pRenderer;
+                }
 
                 this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
 

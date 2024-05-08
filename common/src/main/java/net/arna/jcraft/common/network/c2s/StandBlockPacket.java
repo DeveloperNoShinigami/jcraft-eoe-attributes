@@ -31,25 +31,35 @@ public class StandBlockPacket {
 
         boolean blockDown = buf.readBoolean();
         server.execute(() -> {
-            if (blockDown) blocking.add(player);
-            else blocking.remove(player);
+            if (blockDown) {
+                blocking.add(player);
+            } else {
+                blocking.remove(player);
+            }
 
             StandEntity<?, ?> stand = JUtils.getStand(player);
-            if (stand == null) return;
+            if (stand == null) {
+                return;
+            }
 
             boolean blocking = stand.wantToBlock;
             if (!blocking && blockDown) {
                 if (allowBlockingWith(player.getMainHandStack()) && allowBlockingWith(player.getOffHandStack())) {
                     stand.wantToBlock = true;
-                    if (stand.canAttack() && !DashData.isDashing(player)) stand.tryBlock();
+                    if (stand.canAttack() && !DashData.isDashing(player)) {
+                        stand.tryBlock();
+                    }
                 }
-            } else if (blocking && !blockDown) stand.wantToBlock = false;
+            } else if (blocking && !blockDown) {
+                stand.wantToBlock = false;
+            }
         });
     }
 
     private static boolean allowBlockingWith(ItemStack itemStack) {
-        if (itemStack.isOf(JItemRegistry.ANUBIS.get()) || itemStack.isOf(JItemRegistry.ANUBISSHEATHED.get()))
+        if (itemStack.isOf(JItemRegistry.ANUBIS.get()) || itemStack.isOf(JItemRegistry.ANUBISSHEATHED.get())) {
             return true;
+        }
         return itemStack.getUseAction() == UseAction.NONE;
     }
 

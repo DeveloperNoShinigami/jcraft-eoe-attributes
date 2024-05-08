@@ -70,7 +70,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Text.literal("quick combo finisher")
             );
     public static final SimpleAttack<TheWorldOverHeavenEntity> PUNCH = SimpleAttack.<TheWorldOverHeavenEntity>lightAttack(
-            4, 7, 0.75f, 5f, 11, 0.2f, -0.1f)
+                    4, 7, 0.75f, 5f, 11, 0.2f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(LOW_KICK)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -162,11 +162,11 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             .withFollowup(OVERWRITE)
             .withSound(JSoundRegistry.TWOH_CHARGE_OVERWRITE)
             .withInfo(Text.literal("Reality Overwrite"), Text.literal("""
-                            charges (for a minimum of 1s) an unblockable punch that changes the reality of the hit victims
-                            While charging, (de)activate overwrite by pressing:
-                            SPECIAL 1 - makes victims unable to look at you (stops if TW:OH is desummoned)
-                            SPECIAL 2 - applies every damage over time effect to victims
-                            SPECIAL 3 - heals and enslaves mobs"""));
+                    charges (for a minimum of 1s) an unblockable punch that changes the reality of the hit victims
+                    While charging, (de)activate overwrite by pressing:
+                    SPECIAL 1 - makes victims unable to look at you (stops if TW:OH is desummoned)
+                    SPECIAL 2 - applies every damage over time effect to victims
+                    SPECIAL 3 - heals and enslaves mobs"""));
 
     public static final AerialDivineFinisherAttack AERIAL_DIVINE_FINISHER = new AerialDivineFinisherAttack(280,
             16, 22, 0.75f, 0f, 20, 1.5f, 0f, 0f)
@@ -246,8 +246,9 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
 
     @Override
     public Vector3f getAuraColor() {
-        if (getSkin() > 0)
+        if (getSkin() > 0) {
             return super.getAuraColor();
+        }
         Color auraColor = Color.ofHSB(age % 360f / 360f, 0.5f, 0.5f);
         return new Vector3f(auraColor.getRed(), auraColor.getGreen(), auraColor.getBlue());
     }
@@ -262,7 +263,9 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
 
     @Override
     public void desummon() {
-        if (tsTime > 0) return;
+        if (tsTime > 0) {
+            return;
+        }
         super.desummon();
     }
 
@@ -285,17 +288,20 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
     public boolean initMove(MoveType type) {
         switch (type) {
             case SPECIAL1, SPECIAL2, SPECIAL3 -> {
-                if (curMove != null && curMove.getOriginalMove() == CHARGE_OVERWRITE && getMoveStun() < 50)
+                if (curMove != null && curMove.getOriginalMove() == CHARGE_OVERWRITE && getMoveStun() < 50) {
                     initOverwrite(switch (type) {
                         default -> 1;
                         case SPECIAL2 -> 2;
                         case SPECIAL3 -> 3;
                     });
-                else return super.initMove(type);
+                } else {
+                    return super.initMove(type);
+                }
             }
             case ULTIMATE -> {
-                if (tsTime <= 0) return super.initMove(type);
-                else if (hasUser()) {
+                if (tsTime <= 0) {
+                    return super.initMove(type);
+                } else if (hasUser()) {
                     JCraft.stopTimestop(getUserOrThrow());
                     tsTime = 0;
                 }
@@ -303,8 +309,12 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             case LIGHT -> {
                 if (curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
                     AbstractMove<?, ? super TheWorldOverHeavenEntity> followup = curMove.getFollowup();
-                    if (followup != null) setMove(followup, (State) followup.getAnimation());
-                } else return super.initMove(type);
+                    if (followup != null) {
+                        setMove(followup, (State) followup.getAnimation());
+                    }
+                } else {
+                    return super.initMove(type);
+                }
             }
             default -> {
                 return super.initMove(type);
@@ -330,16 +340,22 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
     public void tick() {
         super.tick();
 
-        if (!hasUser()) return;
+        if (!hasUser()) {
+            return;
+        }
 
         IntList overwriteTimes = moveContext.get(OverwriteAttack.OVERWRITE_TIMES);
         List<LivingEntity> overwriteTargets = moveContext.get(OverwriteAttack.OVERWRITE_TARGETS);
         LivingEntity user = getUserOrThrow();
 
-        if (getWorld().isClient) return;
+        if (getWorld().isClient) {
+            return;
+        }
 
         int moveStun = getMoveStun();
-        if (moveStun <= 0 && getOverwriteType() != 0) setOverwriteType(0);
+        if (moveStun <= 0 && getOverwriteType() != 0) {
+            setOverwriteType(0);
+        }
 
         for (int i = 0; i < overwriteTimes.size(); i++) {
             int time = overwriteTimes.getInt(i);
@@ -364,10 +380,14 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                         entity.getEyePos().add(entity.getRotationVector().multiply(range)),
                         box, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR, range);
 
-                if (hitResult == null) continue;
+                if (hitResult == null) {
+                    continue;
+                }
                 Entity lookEntity = hitResult.getEntity();
 
-                if (lookEntity != user && lookEntity != this) continue;
+                if (lookEntity != user && lookEntity != this) {
+                    continue;
+                }
                 entity.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, getEyePos().add(
                         random.nextInt() * 10,
                         random.nextInt() * 10,
@@ -378,7 +398,9 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
 
     @Override
     protected void playSummonSound() {
-        if (shouldNotPlaySummonSound()) return;
+        if (shouldNotPlaySummonSound()) {
+            return;
+        }
 
         playSound(JSoundRegistry.TWOH_SUMMON, 1f, 1f);
         playSound(JSoundRegistry.TW_SUMMON, 1f, 1f);
@@ -408,7 +430,8 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
         LOW_KICK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.twoh.low_kick"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.twoh.light_followup"))),
         SINGULARITY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.twoh.singularity"))),
-        AIR_HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.twoh.air_heavy"))),;
+        AIR_HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.twoh.air_heavy"))),
+        ;
 
         private final Consumer<AnimationState> animator;
 

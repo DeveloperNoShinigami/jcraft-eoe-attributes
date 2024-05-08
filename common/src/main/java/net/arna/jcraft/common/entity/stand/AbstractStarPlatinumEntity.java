@@ -80,7 +80,9 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
 
     @Override
     public void desummon() {
-        if (tsTime > 0) return;
+        if (tsTime > 0) {
+            return;
+        }
         super.desummon();
     }
 }

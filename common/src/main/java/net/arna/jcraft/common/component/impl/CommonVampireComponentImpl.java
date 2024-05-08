@@ -38,18 +38,24 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
 
     public void tick() {
         World world = entity.getWorld();
-        if (world.isClient) return;
+        if (world.isClient) {
+            return;
+        }
 
         if (player != null) {
             JSpec<?, ?> spec = JUtils.getSpec(player);
-            if (spec == null || !spec.getType().equals(SpecType.VAMPIRE))
+            if (spec == null || !spec.getType().equals(SpecType.VAMPIRE)) {
                 setVampire(false);
+            }
         }
 
-        if (!isVampire) return;
+        if (!isVampire) {
+            return;
+        }
 
-        if (world.isDay() && !(entity.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof SunProtectionItem) && world.isSkyVisible(entity.getBlockPos()))
+        if (world.isDay() && !(entity.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof SunProtectionItem) && world.isSkyVisible(entity.getBlockPos())) {
             entity.setOnFireFor(1);
+        }
 
         if (blood < 1 && --starveTick < 1) {
             // Starve
@@ -73,8 +79,9 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
 
         // Prevent the player's default hunger from doing anything
         if (hungerManager == null) {
-            if (player != null)
+            if (player != null) {
                 hungerManager = player.getHungerManager();
+            }
         } else {
             // Vampires get tired slower
             if (hungerManager.getExhaustion() > 32.0F) {

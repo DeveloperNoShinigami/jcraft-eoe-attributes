@@ -22,7 +22,9 @@ public class TWDonutAttack extends AbstractSimpleAttack<TWDonutAttack, TheWorldE
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         // If missed, stun the user for 1.5 seconds
-        if (targets.isEmpty()) StandEntity.stun(user, 30, 0);
+        if (targets.isEmpty()) {
+            StandEntity.stun(user, 30, 0);
+        }
             /* If hit, impale and set position to middle of arm
         else for (LivingEntity entity : entities) {
             Vec3d pos = this.getPos().add(this.getRotationVector().multiply(1.5));

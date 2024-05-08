@@ -78,11 +78,17 @@ public class AnkhProjectile extends PersistentProjectileEntity implements GeoEnt
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) return;
+        if (getWorld().isClient) {
+            return;
+        }
         Entity owner = getOwner();
-        if (owner == null) return;
+        if (owner == null) {
+            return;
+        }
         Entity entity = entityHitResult.getEntity();
-        if (owner.hasPassenger(entity) || entity == owner) return;
+        if (owner.hasPassenger(entity) || entity == owner) {
+            return;
+        }
 
         entity.setOnFireFor(3);
         JUtils.projectileDamageLogic(this, getWorld(), entity, Vec3d.ZERO, 5, 1, false, 3.5f, 8, CommonHitPropertyComponent.HitAnimation.MID);
@@ -127,7 +133,9 @@ public class AnkhProjectile extends PersistentProjectileEntity implements GeoEnt
                 discard();
             } else {
                 this.ticksInAir++;
-                if (this.ticksInAir >= 600) discard();
+                if (this.ticksInAir >= 600) {
+                    discard();
+                }
             }
 
             if (this.getOwner() instanceof LivingEntity owner) {
@@ -146,7 +154,9 @@ public class AnkhProjectile extends PersistentProjectileEntity implements GeoEnt
 
                         Vec3d towardsVel = orbitPos.subtract(this.getPos()).normalize().multiply(0.2);
                         double stabilization = this.getPos().distanceTo(orbitPos);
-                        if (stabilization > 0.8) stabilization = 0.8;
+                        if (stabilization > 0.8) {
+                            stabilization = 0.8;
+                        }
                         this.setVelocity(this.getVelocity().multiply(stabilization).add(towardsVel));
                         this.velocityModified = true;
 
@@ -156,7 +166,9 @@ public class AnkhProjectile extends PersistentProjectileEntity implements GeoEnt
                         //HitResult hitResult = this.world.raycast(new RaycastContext(pos, nextPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
                         //if (hitResult.getType() != HitResult.Type.MISS) nextPos = hitResult.getPos();
                         EntityHitResult entityHitResult = this.getEntityCollision(pos, nextPos);
-                        if (entityHitResult != null) this.onEntityHit(entityHitResult);
+                        if (entityHitResult != null) {
+                            this.onEntityHit(entityHitResult);
+                        }
                     }
                 } else {
                     this.variation = false;

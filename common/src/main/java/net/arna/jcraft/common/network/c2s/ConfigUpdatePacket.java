@@ -9,7 +9,6 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;

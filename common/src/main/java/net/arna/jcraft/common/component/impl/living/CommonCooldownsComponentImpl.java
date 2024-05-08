@@ -55,7 +55,9 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
 
     @Override
     public void cooldownCancel() {
-        if (entity.isSpectator()) return;
+        if (entity.isSpectator()) {
+            return;
+        }
 
         if (entity instanceof PlayerEntity player && player.isCreative()) {
             // Creative gets boring cooldown cancel.
@@ -63,22 +65,29 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
             return;
         }
 
-        if (getCooldown(CooldownType.COOLDOWN_CANCEL) > 0) return;
-
-        if (!JServerConfig.ENABLE_MOVE_COOLDOWNS.getValue())
+        if (getCooldown(CooldownType.COOLDOWN_CANCEL) > 0) {
             return;
+        }
+
+        if (!JServerConfig.ENABLE_MOVE_COOLDOWNS.getValue()) {
+            return;
+        }
 
         skipSync = true;
-        for (CooldownType type : CooldownType.values())
-            if (!type.isNonResettable())
+        for (CooldownType type : CooldownType.values()) {
+            if (!type.isNonResettable()) {
                 clear(type);
+            }
+        }
         skipSync = false;
 
         startCooldown(CooldownType.COOLDOWN_CANCEL);
 
         Vec3d pPos = entity.getEyePos();
         entity.getWorld().playSoundFromEntity(null, entity, JSoundRegistry.COOLDOWN_CANCEL, SoundCategory.PLAYERS, 1, 1);
-        if (!entity.getWorld().isClient) JCraft.createParticle((ServerWorld) entity.getWorld(), pPos.x, pPos.y, pPos.z, JParticleType.COOLDOWN_CANCEL);
+        if (!entity.getWorld().isClient) {
+            JCraft.createParticle((ServerWorld) entity.getWorld(), pPos.x, pPos.y, pPos.z, JParticleType.COOLDOWN_CANCEL);
+        }
 
         sync();
     }
@@ -93,8 +102,9 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
     @Override
     public void clear() {
         skipSync = true;
-        for (CooldownType type : CooldownType.values())
+        for (CooldownType type : CooldownType.values()) {
             clear(type);
+        }
         skipSync = false;
 
         sync();
@@ -112,13 +122,19 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
         for (Object2IntMap.Entry<CooldownType> entry : cooldowns.object2IntEntrySet()) {
             // Leave at 1 tick on clients. We'll get a sync packet from the server when
             // it actually reaches 0.
-            if (isClient && entry.getIntValue() <= 1 || entry.getIntValue() <= 0) continue;
+            if (isClient && entry.getIntValue() <= 1 || entry.getIntValue() <= 0) {
+                continue;
+            }
 
             entry.setValue(entry.getIntValue() - 1);
-            if (!isClient && entry.getIntValue() <= 0) shouldSync = true;
+            if (!isClient && entry.getIntValue() <= 0) {
+                shouldSync = true;
+            }
         }
 
-        if (shouldSync) sync();
+        if (shouldSync) {
+            sync();
+        }
     }
 
     public void readFromNbt(@NonNull NbtCompound tag) {
@@ -127,10 +143,13 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
     }
 
     private static void readMap(Object2IntMap<CooldownType> map, NbtCompound tag) {
-        for (CooldownType type : CooldownType.values())
-            if (tag.contains(type.name(), NbtElement.INT_TYPE))
+        for (CooldownType type : CooldownType.values()) {
+            if (tag.contains(type.name(), NbtElement.INT_TYPE)) {
                 map.put(type, tag.getInt(type.name()));
-            else map.removeInt(type);
+            } else {
+                map.removeInt(type);
+            }
+        }
     }
 
     public void writeToNbt(@NonNull NbtCompound tag) {
@@ -141,7 +160,9 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
     private static NbtCompound writeMap(Object2IntMap<CooldownType> map) {
         NbtCompound nbt = new NbtCompound();
         map.object2IntEntrySet().forEach(entry -> {
-            if (entry.getIntValue() > 0) nbt.putInt(entry.getKey().name(), entry.getIntValue());
+            if (entry.getIntValue() > 0) {
+                nbt.putInt(entry.getKey().name(), entry.getIntValue());
+            }
         });
         return nbt;
     }

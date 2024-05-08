@@ -14,8 +14,9 @@ public class GravityVerifierRegistry<T extends GravityPacket> {
     private final Map<Identifier, VerifierFunction<T>> map = new HashMap<>();
 
     public void register(Identifier id, VerifierFunction<T> func) {
-        if (map.containsKey(id))
+        if (map.containsKey(id)) {
             JCraft.LOGGER.error(new Exception("Verifier function already set for identifier " + id));
+        }
         map.put(id, func);
     }
 

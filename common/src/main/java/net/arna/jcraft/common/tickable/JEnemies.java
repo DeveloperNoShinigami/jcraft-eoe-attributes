@@ -28,8 +28,9 @@ public class JEnemies {
     private static boolean ticking = false;
 
     public static void add(MobEntity entity) {
-        if (enemies.containsKey(entity))
+        if (enemies.containsKey(entity)) {
             return;
+        }
 
         if (ticking) {
             queuedEnemies.add(entity);
@@ -37,6 +38,7 @@ public class JEnemies {
             add(entity, entity.getWorld().getRegistryKey());
         }
     }
+
     public static void add(MobEntity entity, RegistryKey<World> registryKey) {
         enemies.put(entity, registryKey);
     }
@@ -62,7 +64,9 @@ public class JEnemies {
 
             ServerWorld world = server.getWorld(enemyData.getValue());
 
-            if (enemy.isAiDisabled()) continue;
+            if (enemy.isAiDisabled()) {
+                continue;
+            }
             CommonStandComponent standComponent = JComponentPlatformUtils.getStandData(enemy);
             if (standComponent.getType() != null) {
                 StandEntity<?, ?> stand = standComponent.getStand();

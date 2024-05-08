@@ -2,7 +2,6 @@ package net.arna.jcraft.fabric.common.component.impl.player;
 
 import lombok.NonNull;
 import net.arna.jcraft.common.component.impl.player.CommonSpecComponentImpl;
-import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.player.SpecComponent;
 import net.minecraft.entity.player.PlayerEntity;

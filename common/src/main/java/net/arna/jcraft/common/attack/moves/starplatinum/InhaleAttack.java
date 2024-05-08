@@ -40,7 +40,9 @@ public class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumEntity>
 
     public void tickInhale(StarPlatinumEntity attacker) {
         int inhaleTime = attacker.getInhaleTime();
-        if (inhaleTime <= 0 || !attacker.hasUser()) return;
+        if (inhaleTime <= 0 || !attacker.hasUser()) {
+            return;
+        }
 
         Vec3d rotVec = attacker.isFree() ? getRotVec(attacker) : attacker.getUserOrThrow().getRotationVector();
         Vec3d eyePos = attacker.isFree() ?
@@ -71,10 +73,14 @@ public class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumEntity>
         } else {
             attacker.setInhaleTime(--inhaleTime);
 
-            if (inhaleTime > 0)
+            if (inhaleTime > 0) {
                 attacker.setRotationOffset(90);
-            else attacker.setRotationOffset(225);
-            if (attacker.age % 2 != 0) return;
+            } else {
+                attacker.setRotationOffset(225);
+            }
+            if (attacker.age % 2 != 0) {
+                return;
+            }
 
             Box fBox = createBox(fPos, 2);
             Box ffBox = createBox(ffPos, 2);
@@ -86,7 +92,9 @@ public class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumEntity>
             for (Entity entity : hits) {
                 double distance = entity.getPos().distanceTo(eyePos);
                 if (distance > 3) // Falloff
+                {
                     distance -= distance * distance * 0.1;
+                }
 
                 entity.setVelocity(entity.getVelocity()
                         .subtract(rotVec.x, 0, rotVec.z)
@@ -94,8 +102,9 @@ public class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumEntity>
 
                 entity.velocityModified = true;
 
-                if (entity instanceof ServerPlayerEntity player)
+                if (entity instanceof ServerPlayerEntity player) {
                     player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+                }
             }
         }
     }

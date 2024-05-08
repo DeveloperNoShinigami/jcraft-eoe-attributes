@@ -36,8 +36,9 @@ public class KnifeBundleItem extends KnifeItem {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (user.hasStatusEffect(JStatusRegistry.DAZED))
+        if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
             return;
+        }
 
         if (!world.isClient) {
             float speedMult = getSpeedMult(stack, remainingUseTicks);
@@ -45,7 +46,9 @@ public class KnifeBundleItem extends KnifeItem {
             if (user instanceof ServerPlayerEntity serverPlayer) {
                 serverPlayer.getItemCooldownManager().set(this, 60);
                 serverPlayer.incrementStat(Stats.USED.getOrCreateStat(this));
-                if (!serverPlayer.getAbilities().creativeMode) stack.decrement(1);
+                if (!serverPlayer.getAbilities().creativeMode) {
+                    stack.decrement(1);
+                }
             }
 
             Random random = Random.create();

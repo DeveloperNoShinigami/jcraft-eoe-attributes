@@ -35,15 +35,23 @@ public class StunningMeleeAttackGoal extends Goal {
 
     public boolean canStart() {
         long l = this.mob.getWorld().getTime();
-        if (l - this.lastUpdateTime < 20L) return false;
+        if (l - this.lastUpdateTime < 20L) {
+            return false;
+        }
 
         lastUpdateTime = l;
         LivingEntity livingEntity = this.mob.getTarget();
-        if (livingEntity == null) return false;
-        if (!livingEntity.isAlive()) return false;
+        if (livingEntity == null) {
+            return false;
+        }
+        if (!livingEntity.isAlive()) {
+            return false;
+        }
 
         path = mob.getNavigation().findPathTo(livingEntity, 0);
-        if (path != null) return true;
+        if (path != null) {
+            return true;
+        }
 
         return this.getSquaredMaxAttackDistance(livingEntity) >=
                 mob.squaredDistanceTo(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
@@ -51,10 +59,18 @@ public class StunningMeleeAttackGoal extends Goal {
 
     public boolean shouldContinue() {
         LivingEntity livingEntity = mob.getTarget();
-        if (livingEntity == null) return false;
-        if (!livingEntity.isAlive()) return false;
-        if (!pauseWhenMobIdle) return !mob.getNavigation().isIdle();
-        if (!mob.isInWalkTargetRange(livingEntity.getBlockPos())) return false;
+        if (livingEntity == null) {
+            return false;
+        }
+        if (!livingEntity.isAlive()) {
+            return false;
+        }
+        if (!pauseWhenMobIdle) {
+            return !mob.getNavigation().isIdle();
+        }
+        if (!mob.isInWalkTargetRange(livingEntity.getBlockPos())) {
+            return false;
+        }
 
         return !(livingEntity instanceof PlayerEntity) || !livingEntity.isSpectator() && !((PlayerEntity) livingEntity).isCreative();
     }
@@ -68,7 +84,9 @@ public class StunningMeleeAttackGoal extends Goal {
 
     public void stop() {
         LivingEntity livingEntity = mob.getTarget();
-        if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(livingEntity)) mob.setTarget(null);
+        if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(livingEntity)) {
+            mob.setTarget(null);
+        }
 
         mob.setAttacking(false);
         mob.getNavigation().stop();
@@ -80,7 +98,9 @@ public class StunningMeleeAttackGoal extends Goal {
 
     public void tick() {
         LivingEntity target = mob.getTarget();
-        if (target == null) return;
+        if (target == null) {
+            return;
+        }
 
         mob.getLookControl().lookAt(target, 30.0F, 30.0F);
         double d = mob.squaredDistanceTo(target.getX(), target.getY(), target.getZ());
@@ -94,7 +114,9 @@ public class StunningMeleeAttackGoal extends Goal {
             targetZ = target.getZ();
             updateCountdownTicks = 4 + mob.getRandom().nextInt(7) + (d > 256 ? d > 1024 ? 10 : 5 : 0);
 
-            if (!mob.getNavigation().startMovingTo(target, speed)) updateCountdownTicks += 15;
+            if (!mob.getNavigation().startMovingTo(target, speed)) {
+                updateCountdownTicks += 15;
+            }
 
             updateCountdownTicks = getTickCount(updateCountdownTicks);
         }
@@ -105,12 +127,15 @@ public class StunningMeleeAttackGoal extends Goal {
 
     protected void attack(LivingEntity target, double squaredDistance) {
         double d = getSquaredMaxAttackDistance(target);
-        if (!(squaredDistance <= d) || cooldown > 0) return;
+        if (!(squaredDistance <= d) || cooldown > 0) {
+            return;
+        }
 
         resetCooldown();
         mob.swingHand(Hand.MAIN_HAND);
-        if (mob.tryAttack(target))
+        if (mob.tryAttack(target)) {
             target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED, this.stunT, 1, true, false));
+        }
     }
 
     protected void resetCooldown() {

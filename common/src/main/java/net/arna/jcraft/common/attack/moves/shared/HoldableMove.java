@@ -9,7 +9,7 @@ import net.minecraft.entity.LivingEntity;
 
 import java.util.Set;
 
-public class HoldableMove <A extends IAttacker<A, S>, S extends Enum<S>> extends AbstractHoldableMove<HoldableMove<A, S>, A, S> {
+public class HoldableMove<A extends IAttacker<A, S>, S extends Enum<S>> extends AbstractHoldableMove<HoldableMove<A, S>, A, S> {
     public HoldableMove(int cooldown, int windup, int duration, float attackDistance, AbstractMove<?, ? super A> followupMove, S followupState, int minimumCharge) {
         super(cooldown, windup, duration, attackDistance, followupMove, followupState, minimumCharge);
         withFollowup(followupMove);
@@ -28,7 +28,9 @@ public class HoldableMove <A extends IAttacker<A, S>, S extends Enum<S>> extends
     @Override
     public @NonNull HoldableMove<A, S> copy() {
         HoldableMove<A, S> copy = new HoldableMove<A, S>(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getFollowupMove(), getFollowupState(), getMinimumCharge());
-        if (setMoveStun) copy.shouldSetMoveStun();
+        if (setMoveStun) {
+            copy.shouldSetMoveStun();
+        }
         return copyExtras(copy);
     }
 }

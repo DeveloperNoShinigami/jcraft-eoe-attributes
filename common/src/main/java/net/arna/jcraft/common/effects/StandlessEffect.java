@@ -18,8 +18,12 @@ public class StandlessEffect extends StatusEffect {
 
     @Override
     public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        if (entity.getWorld().isClient()) return;
+        if (entity.getWorld().isClient()) {
+            return;
+        }
         StandEntity<?, ?> stand = JUtils.getStand(entity);
-        if (stand != null) stand.desummon();
+        if (stand != null) {
+            stand.desummon();
+        }
     }
 }

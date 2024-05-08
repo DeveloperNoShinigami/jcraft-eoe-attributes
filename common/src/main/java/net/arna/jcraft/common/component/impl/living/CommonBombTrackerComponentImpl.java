@@ -35,8 +35,9 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
         if (world.isClient) {
             JCraft.getClientEntityHandler().bombTrackerParticleTick(entity, main);
         } else {
-            if (main.dirty)
+            if (main.dirty) {
                 sync();
+            }
             /*
             if (btd.dirty)
                 sync();
@@ -58,10 +59,12 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
         buf.writeBoolean(bombData.isBlock);
         buf.writeBoolean(bombData.isEntity);
         buf.writeBoolean(bombData.isItem);
-        if (bombData.isEntity)
+        if (bombData.isEntity) {
             buf.writeVarInt(bombData.bombEntity.getId());
-        if (bombData.isBlock)
+        }
+        if (bombData.isBlock) {
             buf.writeBlockPos(bombData.bombBlock);
+        }
     }
 
     public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
@@ -73,10 +76,12 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
         bombData.isBlock = buf.readBoolean();
         bombData.isEntity = buf.readBoolean();
         bombData.isItem = buf.readBoolean();
-        if (bombData.isEntity)
+        if (bombData.isEntity) {
             bombData.bombEntity = entity.getWorld().getEntityById(buf.readVarInt());
-        if (bombData.isBlock)
+        }
+        if (bombData.isBlock) {
             bombData.bombBlock = buf.readBlockPos();
+        }
     }
 
     public void applySyncPacket(PacketByteBuf buf) {
@@ -85,7 +90,9 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
     }
 
 
-    public void readFromNbt(@NotNull NbtCompound tag) { }
+    public void readFromNbt(@NotNull NbtCompound tag) {
+    }
 
-    public void writeToNbt(@NotNull NbtCompound tag) { }
+    public void writeToNbt(@NotNull NbtCompound tag) {
+    }
 }

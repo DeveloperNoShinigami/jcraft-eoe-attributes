@@ -24,8 +24,10 @@ import net.minecraft.util.math.Vec3d;
 import java.util.*;
 
 public class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREntity> {
-    public static final MoveVariable<Map<Entity, NbtCompound>> ENTITY_DATA = new MoveVariable<>(new TypeToken<>() {});
-    public static final MoveVariable<List<ReturnData>> RETURN_INFO = new MoveVariable<>(new TypeToken<>() {});
+    public static final MoveVariable<Map<Entity, NbtCompound>> ENTITY_DATA = new MoveVariable<>(new TypeToken<>() {
+    });
+    public static final MoveVariable<List<ReturnData>> RETURN_INFO = new MoveVariable<>(new TypeToken<>() {
+    });
 
     public ReturnToZeroMove(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
@@ -56,7 +58,9 @@ public class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREntity> 
 
         for (Map.Entry<Entity, NbtCompound> data : entityData.entrySet()) {
             Entity ent = data.getKey();
-            if (!ent.isAlive()) continue;
+            if (!ent.isAlive()) {
+                continue;
+            }
             NbtCompound nbt = data.getValue();
 
             if (ent instanceof PlayerEntity playerEntity) {
@@ -79,10 +83,14 @@ public class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREntity> 
     }
 
     public void tickReturnInfo(GEREntity attacker) {
-        if (!(attacker.getUser() instanceof ServerPlayerEntity serverPlayer)) return;
+        if (!(attacker.getUser() instanceof ServerPlayerEntity serverPlayer)) {
+            return;
+        }
         for (ReturnData data : attacker.getMoveContext().get(RETURN_INFO)) {
             Entity entity = data.getEntity();
-            if (entity == null || !entity.isAlive()) continue;
+            if (entity == null || !entity.isAlive()) {
+                continue;
+            }
             Vec3d position = data.getOriginalPos();
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeShort(7);

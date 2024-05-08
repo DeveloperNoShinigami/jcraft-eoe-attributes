@@ -114,7 +114,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                     Text.literal("inverts enemy gravity and floats on hit (3s), high stun")
             );
     public static final GroundSlamAttack GROUND_SLAM = new GroundSlamAttack(240, 10, 18,
-            1f, 7f,  17, 3f, 0.2f, 1.4f)
+            1f, 7f, 17, 3f, 0.2f, 1.4f)
             .withSound(JSoundRegistry.CMOON_GROUNDSLAM)
             .withImpactSound(JSoundRegistry.IMPACT_10)
             .withTargetProcessor(CMoonEntity::addInversion)
@@ -130,9 +130,9 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withInfo(
                     Text.literal("Gravity Shift Radial"),
                     Text.literal("""
-                    repulses or attracts entities within 64m
-                    lasts 10 seconds
-                    swap between attraction/repulsion by pressing ultimate again""")
+                            repulses or attracts entities within 64m
+                            lasts 10 seconds
+                            swap between attraction/repulsion by pressing ultimate again""")
             );
     public static final GravityShiftPulseMove GRAV_SHIFT_PULSE = new GravityShiftPulseMove(1400, 20, 32, 1f)
             .withCrouchingVariant(GRAV_SHIFT)
@@ -140,11 +140,11 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withInfo(
                     Text.literal("Gravity Shift Directional"),
                     Text.literal("""
-                    changes the gravitational direction of entities within 16m to the direction the user is looking in
-                    lasts 30 seconds
-                    all affected entities cannot take fall damage
-                    affected entities lose the gravity shift if they move 100m away from the user
-                    """)
+                            changes the gravitational direction of entities within 16m to the direction the user is looking in
+                            lasts 30 seconds
+                            all affected entities cannot take fall damage
+                            affected entities lose the gravity shift if they move 100m away from the user
+                            """)
             );
     public static final GravitationalHopMove GRAVITATIONAL_HOP = new GravitationalHopMove(340)
             .withInfo(
@@ -216,8 +216,9 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     @Override
     public boolean shouldOffsetHeight() {
         // Ground slam forces no height offset
-        if (curMove != null && curMove.getMoveType() == MoveType.SPECIAL3)
+        if (curMove != null && curMove.getMoveType() == MoveType.SPECIAL3) {
             return false;
+        }
         return super.shouldOffsetHeight();
     }
 
@@ -225,24 +226,33 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     public boolean initMove(MoveType type) {
         switch (type) {
             case SPECIAL2 -> {
-                if (hasUser() && getUserOrThrow().isSneaking()) getWorld().getEntitiesByClass(BlockProjectile.class,
-                                getBoundingBox().expand(16), p -> p.isAlive() && p.getMaster() == getUser())
-                        .forEach(BlockProjectile::markRefresh);
-                else return super.initMove(type);
+                if (hasUser() && getUserOrThrow().isSneaking()) {
+                    getWorld().getEntitiesByClass(BlockProjectile.class,
+                                    getBoundingBox().expand(16), p -> p.isAlive() && p.getMaster() == getUser())
+                            .forEach(BlockProjectile::markRefresh);
+                } else {
+                    return super.initMove(type);
+                }
                 return true;
             }
             case ULTIMATE -> {
                 CommonGravityShiftComponent shiftComponent = JComponentPlatformUtils.getGravityShift(getUserOrThrow());
-                if (shiftComponent.isActive())
+                if (shiftComponent.isActive()) {
                     shiftComponent.swapRadialType();
-                else return super.initMove(type);
+                } else {
+                    return super.initMove(type);
+                }
                 return true;
             }
             case LIGHT -> {
                 if (curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
                     AbstractMove<?, ? super CMoonEntity> followup = curMove.getFollowup();
-                    if (followup != null) setMove(followup, (State) followup.getAnimation());
-                } else return super.initMove(type);
+                    if (followup != null) {
+                        setMove(followup, (State) followup.getAnimation());
+                    }
+                } else {
+                    return super.initMove(type);
+                }
                 return true;
             }
             default -> {
@@ -254,12 +264,16 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     @Override
     public void standBlock() {
         LivingEntity user = getUser();
-        if (user == null) return;
+        if (user == null) {
+            return;
+        }
         // Projectile deflection
         List<ProjectileEntity> toDeflect = getWorld().getEntitiesByClass(ProjectileEntity.class, getBoundingBox().expand(0.75f), EntityPredicates.VALID_ENTITY);
 
         for (ProjectileEntity projectile : toDeflect) {
-            if (projectile.getOwner() == user) continue;
+            if (projectile.getOwner() == user) {
+                continue;
+            }
             projectile.setVelocity(projectile.getPos().subtract(getPos()).normalize());
             projectile.velocityModified = true;
         }
@@ -272,10 +286,14 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     public void tick() {
         super.tick();
 
-        if (!hasUser()) return;
+        if (!hasUser()) {
+            return;
+        }
         LivingEntity user = getUserOrThrow();
 
-        if (getWorld().isClient) return;
+        if (getWorld().isClient) {
+            return;
+        }
 
         for (int i = 0; i < inversions.size(); i++) {
             Inversion inversion = inversions.get(i);
@@ -287,8 +305,9 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                 damage(inversion.getDamage(), getWorld().getDamageSources().mobAttack(user), entity);
                 inversions.remove(i);
 
-                if (inversion.doSlow)
+                if (inversion.doSlow) {
                     entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 1, true, false));
+                }
                 i--;
             }
         }

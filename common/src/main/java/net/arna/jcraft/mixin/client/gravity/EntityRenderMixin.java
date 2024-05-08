@@ -26,7 +26,7 @@ public abstract class EntityRenderMixin {
     )
     private Quaternionf redirect_renderLabelIfPresent_getRotation_0(EntityRenderDispatcher entityRenderDispatcher, Entity entity, Text text, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if(gravityDirection == Direction.DOWN) {
+        if (gravityDirection == Direction.DOWN) {
             return entityRenderDispatcher.getRotation();
         }
 

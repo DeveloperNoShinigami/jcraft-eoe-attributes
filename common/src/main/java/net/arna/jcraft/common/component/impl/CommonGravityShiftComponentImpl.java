@@ -35,10 +35,18 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
 
         public static @NotNull ShiftType fromId(int id) {
             switch (id) {
-                default -> { return NONE; }
-                case (1) -> { return DIRECTIONAL; }
-                case (2) -> { return RADIAL_REPULSE; }
-                case (3) -> { return RADIAL_ATTRACT; }
+                default -> {
+                    return NONE;
+                }
+                case (1) -> {
+                    return DIRECTIONAL;
+                }
+                case (2) -> {
+                    return RADIAL_REPULSE;
+                }
+                case (3) -> {
+                    return RADIAL_ATTRACT;
+                }
             }
         }
     }
@@ -59,7 +67,9 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
     }
 
     public void tick() {
-        if (time <= 0) return;
+        if (time <= 0) {
+            return;
+        }
         time--;
 
         World world = user.getWorld();
@@ -83,23 +93,32 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
             }
         } else {
             if (type == ShiftType.DIRECTIONAL) {
-                if (time < 1 && !shiftedEntities.isEmpty())
+                if (time < 1 && !shiftedEntities.isEmpty()) {
                     shiftedEntities.clear();
-                else for (Entity entity : shiftedEntities) {
-                    if (entity.squaredDistanceTo(user) > RANGE_SQR)
-                        GravityChangerAPI.setGravity(entity, GravityChangerAPI.getGravityList(entity).stream()
-                                .filter(g -> !GRAVITY_SOURCE.equals(g.source()))
-                                .toList());
-                    entity.onLanding(); // No fall damage
+                } else {
+                    for (Entity entity : shiftedEntities) {
+                        if (entity.squaredDistanceTo(user) > RANGE_SQR) {
+                            GravityChangerAPI.setGravity(entity, GravityChangerAPI.getGravityList(entity).stream()
+                                    .filter(g -> !GRAVITY_SOURCE.equals(g.source()))
+                                    .toList());
+                        }
+                        entity.onLanding(); // No fall damage
+                    }
                 }
             } else {
-                if (user.hasStatusEffect(JStatusRegistry.DAZED)) return;
+                if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
+                    return;
+                }
 
                 List<Entity> toCatch = world.getEntitiesByClass(Entity.class, user.getBoundingBox().expand(64), EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
 
                 for (Entity entity : toCatch) {
-                    if (entity.isConnectedThroughVehicle(user)) continue;
-                    if (entity instanceof BlockProjectile block && block.getMaster() == user) continue;
+                    if (entity.isConnectedThroughVehicle(user)) {
+                        continue;
+                    }
+                    if (entity instanceof BlockProjectile block && block.getMaster() == user) {
+                        continue;
+                    }
 
                     if (type == ShiftType.RADIAL_ATTRACT) {
                         entity.setVelocity(
@@ -111,8 +130,9 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
                         );
                     }
 
-                    if (entity instanceof ServerPlayerEntity serverPlayerEntity)
+                    if (entity instanceof ServerPlayerEntity serverPlayerEntity) {
                         serverPlayerEntity.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(serverPlayerEntity));
+                    }
                     entity.velocityModified = true;
                 }
             }
@@ -155,11 +175,14 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
 
     @Override
     public void swapRadialType() {
-        if (type == ShiftType.DIRECTIONAL) return;
-        if (type == ShiftType.RADIAL_ATTRACT)
+        if (type == ShiftType.DIRECTIONAL) {
+            return;
+        }
+        if (type == ShiftType.RADIAL_ATTRACT) {
             type = ShiftType.RADIAL_REPULSE;
-        else
+        } else {
             type = ShiftType.RADIAL_ATTRACT;
+        }
 
         sync();
     }
@@ -176,7 +199,9 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
     }
 
     public boolean shouldSyncWith(ServerPlayerEntity player) {
-        if (player.squaredDistanceTo(user) > RANGE_SQR) return false;
+        if (player.squaredDistanceTo(user) > RANGE_SQR) {
+            return false;
+        }
         return true;
     }
 
@@ -194,7 +219,7 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
         tag.putInt("Time", time);
         tag.putInt("Type", type.ordinal());
 
-        tag.putIntArray("Direction", new int[]{(int) particleDirection.x, (int) particleDirection.y, (int) particleDirection.z} );
+        tag.putIntArray("Direction", new int[]{(int) particleDirection.x, (int) particleDirection.y, (int) particleDirection.z});
         // Directional gravity shift partially breaks if the server resets.
         // At the moment, I don't care.
     }

@@ -30,6 +30,7 @@ public class AuraArcParticle extends AbstractSlowingParticle {
             setVelocity(deltaPos.x, deltaPos.y, deltaPos.z);
         }
     }
+
     public void tick() {
         super.tick();
         tryMatchParent();
@@ -47,7 +48,7 @@ public class AuraArcParticle extends AbstractSlowingParticle {
 
     public static class Factory implements ParticleFactory<DefaultParticleType> {
         private final SpriteProvider spriteProvider;
-        public static Vector3f color = new Vector3f(1f ,0f,0f);
+        public static Vector3f color = new Vector3f(1f, 0f, 0f);
         public static Entity parent = null;
 
         public Factory(SpriteProvider spriteProvider) {

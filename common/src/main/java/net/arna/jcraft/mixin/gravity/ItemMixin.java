@@ -21,7 +21,9 @@ public class ItemMixin {
     )
     private static float redirect_raycast_getYaw(PlayerEntity player) {
         Direction direction = GravityChangerAPI.getGravityDirection(player);
-        if (direction == Direction.DOWN) return player.getYaw();
+        if (direction == Direction.DOWN) {
+            return player.getYaw();
+        }
         return RotationUtil.rotPlayerToWorld(player.getYaw(), player.getPitch(), direction).x;
     }
 
@@ -35,7 +37,9 @@ public class ItemMixin {
     )
     private static float redirect_raycast_getPitch(PlayerEntity player) {
         Direction direction = GravityChangerAPI.getGravityDirection(player);
-        if (direction == Direction.DOWN) return player.getPitch();
+        if (direction == Direction.DOWN) {
+            return player.getPitch();
+        }
         return RotationUtil.rotPlayerToWorld(player.getYaw(), player.getPitch(), direction).y;
     }
 }

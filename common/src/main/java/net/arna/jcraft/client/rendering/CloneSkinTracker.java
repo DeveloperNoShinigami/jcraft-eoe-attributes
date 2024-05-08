@@ -19,18 +19,24 @@ public class CloneSkinTracker {
     private static final Set<PlayerCloneEntity> loading = Collections.newSetFromMap(new WeakHashMap<>());
 
     public static Identifier getSkinFor(PlayerCloneEntity clone, MinecraftProfileTexture.Type type) {
-        if (!skinCache.containsKey(clone)) load(clone);
+        if (!skinCache.containsKey(clone)) {
+            load(clone);
+        }
         Identifier skin = skinCache.getOrDefault(clone, Collections.emptyMap()).get(type);
         return skin == null && type == MinecraftProfileTexture.Type.SKIN ? DefaultSkinHelper.getTexture(clone.getMasterId()) : skin;
     }
 
     public static String getModelFor(PlayerCloneEntity clone) {
-        if (!skinCache.containsKey(clone)) load(clone);
+        if (!skinCache.containsKey(clone)) {
+            load(clone);
+        }
         return modelCache.getOrDefault(clone, clone.getMasterId() == null ? "default" : DefaultSkinHelper.getModel(clone.getMasterId()));
     }
 
     public static PlayerCloneClientPlayerEntity toPlayer(PlayerCloneEntity clone) {
-        if (clone.getGameProfile() == null) return null;
+        if (clone.getGameProfile() == null) {
+            return null;
+        }
         PlayerCloneClientPlayerEntity clonePlayer = playerCache.computeIfAbsent(clone, PlayerCloneClientPlayerEntity::new);
         clonePlayer.updateData();
         return clonePlayer;
@@ -38,10 +44,14 @@ public class CloneSkinTracker {
 
     private static void load(PlayerCloneEntity clone) {
         GameProfile profile = clone.getGameProfile();
-        if (profile == null) return;
+        if (profile == null) {
+            return;
+        }
 
         synchronized (loading) {
-            if (loading.contains(clone)) return;
+            if (loading.contains(clone)) {
+                return;
+            }
             loading.add(clone);
         }
 
@@ -53,7 +63,9 @@ public class CloneSkinTracker {
             }
 
             String model;
-            if (type != MinecraftProfileTexture.Type.SKIN || (model = texture.getMetadata("model")) == null) return;
+            if (type != MinecraftProfileTexture.Type.SKIN || (model = texture.getMetadata("model")) == null) {
+                return;
+            }
             modelCache.put(clone, model);
         }, true);
     }

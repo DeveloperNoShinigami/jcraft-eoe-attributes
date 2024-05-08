@@ -21,7 +21,9 @@ public class DebugWand extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (world.isClient) return TypedActionResult.pass(user.getStackInHand(hand));
+        if (world.isClient) {
+            return TypedActionResult.pass(user.getStackInHand(hand));
+        }
 
         if (user.isSneaking()) {
             world.playSound(null, user.getBlockPos(), JSoundRegistry.TW_TS_CLEAN, SoundCategory.PLAYERS, 1.2f, 1);
@@ -33,13 +35,16 @@ public class DebugWand extends Item {
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         PlayerEntity player = context.getPlayer();
-        if (player == null || context.getWorld().isClient) return ActionResult.PASS;
+        if (player == null || context.getWorld().isClient) {
+            return ActionResult.PASS;
+        }
 
         // Feel free to remove or modify these to debug other components/features.
-        if (player.isSneaking())
+        if (player.isSneaking()) {
             ShaderActivationPacket.send((ServerPlayerEntity) player, player, 0, 20 * 6, ShaderActivationPacket.Type.CRIMSON);
-        else
+        } else {
             JComponentPlatformUtils.getShockwaveHandler(context.getWorld()).addShockwave(context.getHitPos(), player.getRotationVector());
+        }
 
         return super.useOnBlock(context);
     }

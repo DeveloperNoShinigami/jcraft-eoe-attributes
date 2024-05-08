@@ -39,7 +39,9 @@ public class SunProtectionItem extends ArmorItem implements GeoItem {
 
     @Override
     public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-        if (ingredient.isOf(Items.LEATHER)) return true;
+        if (ingredient.isOf(Items.LEATHER)) {
+            return true;
+        }
         return super.canRepair(stack, ingredient);
     }
 
@@ -48,7 +50,6 @@ public class SunProtectionItem extends ArmorItem implements GeoItem {
         tooltip.add(Text.translatable("jcraft.sunprotection.desc"));
         super.appendTooltip(stack, world, tooltip, context);
     }
-
 
 
     @Override

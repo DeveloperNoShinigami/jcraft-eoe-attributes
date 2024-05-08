@@ -11,7 +11,8 @@ public class CooldownCancelPacket {
     public static void handle(PacketByteBuf buf, NetworkManager.PacketContext context) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
 
-        if (player.isCreative() || !player.hasStatusEffect(JStatusRegistry.DAZED))
+        if (player.isCreative() || !player.hasStatusEffect(JStatusRegistry.DAZED)) {
             JComponentPlatformUtils.getCooldowns(player).cooldownCancel();
+        }
     }
 }

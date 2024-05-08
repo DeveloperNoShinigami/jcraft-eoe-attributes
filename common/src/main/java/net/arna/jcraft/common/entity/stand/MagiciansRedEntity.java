@@ -153,19 +153,19 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
         );
 
         freespace = """
-                    PASSIVE: Fire Resistance
-    
-                    BNBs:
-                        -the "this move is fire"
-                        M1>Crossfire
-                        
-                        -the happy camper
-                        M1>Low Kick>Variation/Life Detector
-                        
-                        -the "omg i have setups????"
-                        M1>Hammerfist>dash>M1>Red Bind>
-                        ...Life Detector/Variation>any physical hit
-                        ...Hurricane""";
+                PASSIVE: Fire Resistance
+                    
+                BNBs:
+                    -the "this move is fire"
+                    M1>Crossfire
+                    
+                    -the happy camper
+                    M1>Low Kick>Variation/Life Detector
+                    
+                    -the "omg i have setups????"
+                    M1>Hammerfist>dash>M1>Red Bind>
+                    ...Life Detector/Variation>any physical hit
+                    ...Hurricane""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.9f, 0.6f, 0.3f),
@@ -195,8 +195,12 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
     public boolean initMove(MoveType type) {
         if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
             AbstractMove<?, ? super MagiciansRedEntity> followup = curMove.getFollowup();
-            if (followup != null) setMove(followup, (State) followup.getAnimation());
-        } else return super.initMove(type);
+            if (followup != null) {
+                setMove(followup, (State) followup.getAnimation());
+            }
+        } else {
+            return super.initMove(type);
+        }
 
         return true;
     }
@@ -207,29 +211,39 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
         Collection<Property<?>> properties = state.getProperties();
 
         boolean cantIgnite = false;
-        if (properties.contains(Properties.WATERLOGGED))
+        if (properties.contains(Properties.WATERLOGGED)) {
             cantIgnite = state.get(Properties.WATERLOGGED);
-        if (block == Blocks.REDSTONE_LAMP) return;
-        if (cantIgnite) return;
+        }
+        if (block == Blocks.REDSTONE_LAMP) {
+            return;
+        }
+        if (cantIgnite) {
+            return;
+        }
 
-        if (properties.contains(Properties.LIT))
+        if (properties.contains(Properties.LIT)) {
             world.setBlockState(blockPos, state.with(Properties.LIT, true));
+        }
         if (block == Blocks.WET_SPONGE) { // WetSpongeBlock has no drying function to call
             world.setBlockState(blockPos, Blocks.SPONGE.getDefaultState(), 3);
             world.syncWorldEvent(2009, blockPos, 0);
             world.playSound(null, blockPos, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, (1.0F + world.getRandom().nextFloat() * 0.2F) * 0.7F);
         }
-        if (world.getBlockEntity(blockPos) instanceof AbstractFurnaceBlockEntity furnaceBlock)
+        if (world.getBlockEntity(blockPos) instanceof AbstractFurnaceBlockEntity furnaceBlock) {
             furnaceBlock.burnTime = 220;
-        if (block instanceof IceBlock iceBlock)
+        }
+        if (block instanceof IceBlock iceBlock) {
             iceBlock.melt(state, world, blockPos);
+        }
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (!hasUser()) return;
+        if (!hasUser()) {
+            return;
+        }
 
         if (getWorld().isClient && getState() == State.BARRAGE && FLAMETHROWER.hasWindupPassed(this)) {
             Vec3d rotVec = getRotationVector();

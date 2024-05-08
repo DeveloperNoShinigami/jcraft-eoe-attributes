@@ -1,19 +1,14 @@
 package net.arna.jcraft.fabric;
 
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.argumenttype.AttackArgumentType;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.events.JServerEvents;
-import net.arna.jcraft.registry.JEventsRegistry;
 import net.fabricmc.api.ModInitializer;
-
-import net.arna.jcraft.JCraft;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.impl.client.rendering.FabricShaderProgram;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.loot.LootTable;
 

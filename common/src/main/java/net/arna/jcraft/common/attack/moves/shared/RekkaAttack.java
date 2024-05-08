@@ -27,7 +27,9 @@ public class RekkaAttack<A extends IAttacker<A, S> & GeoEntity, S extends Enum<S
     public RekkaAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize,
                        float knockback, float offset, int rekkaLevel, int switchStart, RekkaAttack<A, S> next, StandAnimationState<A> nextState) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);
-        if (rekkaLevel > 1) hitSpark = JParticleType.HIT_SPARK_2;
+        if (rekkaLevel > 1) {
+            hitSpark = JParticleType.HIT_SPARK_2;
+        }
         this.rekkaLevel = rekkaLevel;
         this.switchStart = switchStart;
         this.next = next;
@@ -38,10 +40,13 @@ public class RekkaAttack<A extends IAttacker<A, S> & GeoEntity, S extends Enum<S
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        if (rekkaLevel == 3)
-            for (LivingEntity target : targets)
-                if (!JUtils.isBlocking(target))
+        if (rekkaLevel == 3) {
+            for (LivingEntity target : targets) {
+                if (!JUtils.isBlocking(target)) {
                     target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 50, 0, true, false));
+                }
+            }
+        }
 
         return targets;
     }

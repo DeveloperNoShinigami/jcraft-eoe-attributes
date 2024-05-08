@@ -2,15 +2,10 @@ package net.arna.jcraft.registry;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.block.CoffinBlock;
-import net.arna.jcraft.common.block.FoolishSandBlock;
-import net.arna.jcraft.common.block.SoulBlock;
 import net.arna.jcraft.common.item.*;
 import net.arna.jcraft.common.spec.SpecType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.*;
 import net.minecraft.item.*;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 
@@ -91,7 +86,7 @@ public interface JItemRegistry {
     //Block
     RegistrySupplier<Item> FOOLISH_SAND_BLOCK = register("foolish_sand_block",
             () -> new BlockItem(JBlockRegistry.FOOLISH_SAND_BLOCK.get(), settings()
-    ));
+            ));
     RegistrySupplier<Item> SOUL_BLOCK = register("soul_block", () -> new BlockItem(JBlockRegistry.SOUL_BLOCK.get(), settings()
     ));
     RegistrySupplier<Item> METEORITE_BLOCK = register("meteorite_block", () -> new BlockItem(JBlockRegistry.METEORITE_BLOCK.get(), settings()
@@ -99,12 +94,12 @@ public interface JItemRegistry {
     RegistrySupplier<Item> METEORITE_IRON_ORE_BLOCK = register("meteorite_iron_ore_block",
             () -> new BlockItem(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get(), settings()
 
-    ));
+            ));
     RegistrySupplier<Item> COFFIN_BLOCK = register("coffin",
-            () -> new BlockItem(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get() ,settings()));
+            () -> new BlockItem(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get(), settings()));
 
-    private void register(){
-        
+    private void register() {
+
     }
 
     static RegistrySupplier<Item> register(String id, Supplier<Item> supplier) {
@@ -112,7 +107,7 @@ public interface JItemRegistry {
         ITEMS.put(item, JCraft.id(id));
         return item;
     }
-    
+
     static Item.Settings settings() {
         return new Item.Settings();
     }

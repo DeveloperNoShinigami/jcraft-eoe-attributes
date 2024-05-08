@@ -14,7 +14,6 @@ import net.arna.jcraft.mixin.LightingProviderAccessor;
 import net.arna.jcraft.registry.JDimensionRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -27,7 +26,6 @@ import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ChunkToNibbleArrayMap;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.chunk.light.LightingProvider;
-import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -53,29 +51,36 @@ public class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove,
 
         if (world.getRegistryKey().equals(JDimensionRegistry.AU_DIMENSION_KEY)) {
             // Logic for cancelling dimhop early, and generating failsafe data
-            if (!(user instanceof ServerPlayerEntity serverPlayer)) return Set.of();
+            if (!(user instanceof ServerPlayerEntity serverPlayer)) {
+                return Set.of();
+            }
 
             boolean isStored = PastDimensions.tryExit(user, targets); // Should always be true
 
             if (!isStored) { // If not stored, force your way back
                 BlockPos spawnPos = serverPlayer.getSpawnPointPosition(); // Prioritize spawn point
                 // Use current position if all else fails
-                if (spawnPos == null) spawnPos = serverPlayer.getBlockPos();
-                PastDimensions.enqueue( new DimensionData(user, new Vec3d(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ()), serverPlayer.getSpawnPointDimension()) );
+                if (spawnPos == null) {
+                    spawnPos = serverPlayer.getBlockPos();
+                }
+                PastDimensions.enqueue(new DimensionData(user, new Vec3d(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ()), serverPlayer.getSpawnPointDimension()));
             }
 
             return Set.of();
         }
 
-        if (JCraft.auWorld == null) throw new IllegalStateException("Alternate Universe could not be found.");
+        if (JCraft.auWorld == null) {
+            throw new IllegalStateException("Alternate Universe could not be found.");
+        }
 
         fixLightInAU(attacker, world, JCraft.auWorld);
 
         Set<LivingEntity> toHop = new HashSet<>(targets);
         toHop.add(user);
         int heightOffset = JCraft.auWorld.getHeight() - world.getHeight();
-        for (LivingEntity entity : toHop)
+        for (LivingEntity entity : toHop) {
             JCraft.dimensionHop(entity, heightOffset / 2);
+        }
 
         return targets;
     }
@@ -166,22 +171,31 @@ public class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove,
                 System.arraycopy(copies, 0, auSec, 0, Math.min(copies.length, auSec.length));
 
                 // Copy light for every section.
-                if (!someModMessedUpLight)
+                if (!someModMessedUpLight) {
                     for (int y = auWorld.getBottomY(); y < auWorld.getTopY(); y += 16) {
                         long cPos = ChunkSectionPos.toLong(new BlockPos(cX * 16, y, cZ * 16));
                         ChunkNibbleArray a;
                         a = ogBlockLightStorage.get(cPos);
-                        if (a != null) auBlockLightStorage.put(cPos, a);
+                        if (a != null) {
+                            auBlockLightStorage.put(cPos, a);
+                        }
 
                         a = ogUncachedBlockLightStorage.get(cPos);
-                        if (a != null) auUncachedBlockLightStorage.put(cPos, a);
+                        if (a != null) {
+                            auUncachedBlockLightStorage.put(cPos, a);
+                        }
 
                         a = ogSkyLightStorage.get(cPos);
-                        if (a != null) auSkyLightStorage.put(cPos, a);
+                        if (a != null) {
+                            auSkyLightStorage.put(cPos, a);
+                        }
 
                         a = ogUncachedSkyLightStorage.get(cPos);
-                        if (a != null) auUncachedSkyLightStorage.put(cPos, a);
+                        if (a != null) {
+                            auUncachedSkyLightStorage.put(cPos, a);
+                        }
                     }
+                }
             }
         }
 
@@ -194,7 +208,9 @@ public class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove,
             // If some mod felt the need to overwrite the light system,
             // they have probably improved the efficiency of this method.
             // Thus, it should theoretically be fine to call this for every block.
-            if (enableLightingFix && someModMessedUpLight) auWorld.getLightingProvider().checkBlock(pos);
+            if (enableLightingFix && someModMessedUpLight) {
+                auWorld.getLightingProvider().checkBlock(pos);
+            }
         }
     }
 

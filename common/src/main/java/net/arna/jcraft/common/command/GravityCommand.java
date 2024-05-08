@@ -34,18 +34,20 @@ public class GravityCommand {
         }
 
         LiteralArgumentBuilder<ServerCommandSource> literalSetDefault = literal("set");
-        for (Direction direction : Direction.values())
+        for (Direction direction : Direction.values()) {
             literalSetDefault.then(literal(direction.getName())
                     .executes(context -> executeSetDefault(context.getSource(), direction, Collections.singleton(context.getSource().getPlayer())))
                     .then(argument("entities", EntityArgumentType.entities())
                             .executes(context -> executeSetDefault(context.getSource(), direction, EntityArgumentType.getEntities(context, "entities")))));
+        }
 
         LiteralArgumentBuilder<ServerCommandSource> literalRotate = literal("rotate");
-        for (FacingDirection facingDirection : FacingDirection.values())
+        for (FacingDirection facingDirection : FacingDirection.values()) {
             literalRotate.then(literal(facingDirection.getName())
                     .executes(context -> executeRotate(context.getSource(), facingDirection, Collections.singleton(context.getSource().getPlayer())))
                     .then(argument("entities", EntityArgumentType.entities())
                             .executes(context -> executeRotate(context.getSource(), facingDirection, EntityArgumentType.getEntities(context, "entities")))));
+        }
 
         dispatcher.register(literal("jgravity").requires(source -> source.hasPermissionLevel(2))
                 .then(literal("get")
@@ -109,7 +111,8 @@ public class GravityCommand {
             Direction combinedRelativeDirection = switch (relativeDirection) {
                 case DOWN -> Direction.DOWN;
                 case UP -> Direction.UP;
-                case FORWARD, BACKWARD, LEFT, RIGHT -> Direction.fromHorizontal(relativeDirection.getHorizontalOffset() + Direction.fromRotation(entity.getYaw()).getHorizontal());
+                case FORWARD, BACKWARD, LEFT, RIGHT ->
+                        Direction.fromHorizontal(relativeDirection.getHorizontalOffset() + Direction.fromRotation(entity.getYaw()).getHorizontal());
             };
             Direction newGravityDirection = RotationUtil.dirPlayerToWorld(combinedRelativeDirection, gravityDirection);
             GravityChangerAPI.setDefaultGravityDirection(entity, newGravityDirection, new RotationParameters());

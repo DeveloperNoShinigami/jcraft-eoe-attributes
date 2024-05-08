@@ -31,7 +31,8 @@ public class HealMove<A extends IAttacker<? extends A, ?>> extends AbstractSimpl
 
     public HealMove(int cooldown, int windup, int duration, float moveDistance, float hitboxSize, float offset,
                     float health, HealTarget target) {
-        this(cooldown, windup, duration, moveDistance, hitboxSize, offset, health, target, e -> {});
+        this(cooldown, windup, duration, moveDistance, hitboxSize, offset, health, target, e -> {
+        });
     }
 
     public HealMove(int cooldown, int windup, int duration, float moveDistance, float hitboxSize, float offset,
@@ -60,16 +61,19 @@ public class HealMove<A extends IAttacker<? extends A, ?>> extends AbstractSimpl
                 boolean fertilized = false;
 
                 if (blockState.getBlock() instanceof Fertilizable fertilizable) {
-                    if (fertilizable.isFertilizable(world, blockPos, blockState, false))
+                    if (fertilizable.isFertilizable(world, blockPos, blockState, false)) {
                         if (fertilizable.canGrow(world, world.random, blockPos, blockState)) {
-                            for (int i = 0; i < 5; i++)
+                            for (int i = 0; i < 5; i++) {
                                 fertilizable.grow(world, world.random, blockPos, blockState);
+                            }
                             fertilized = true;
                         }
+                    }
                 }
 
-                if (!fertilized)
+                if (!fertilized) {
                     BoneMealItem.useOnGround(new ItemStack(Items.AIR), world, blockPos, Direction.DOWN);
+                }
 
                 world.syncWorldEvent(1505, blockPos, 0); // Display
             }

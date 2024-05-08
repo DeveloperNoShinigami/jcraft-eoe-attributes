@@ -18,7 +18,9 @@ public abstract class SpecObtainmentItem extends Item {
     }
 
     private boolean setSpec(PlayerEntity player) {
-        if (player == null) return false;
+        if (player == null) {
+            return false;
+        }
 
         JComponentPlatformUtils.getSpecData(player).setType(switchTo);
         warned = false;
@@ -32,9 +34,13 @@ public abstract class SpecObtainmentItem extends Item {
                 if (!warned) {
                     player.sendMessage(Text.translatable("warning.jcraft.spec.change"));
                     warned = true;
-                } else return setSpec(player);
+                } else {
+                    return setSpec(player);
+                }
             }
-        } else return setSpec(player);
+        } else {
+            return setSpec(player);
+        }
 
         return false;
     }
