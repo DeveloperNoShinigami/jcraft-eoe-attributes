@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:bone_block"
+    },
+    "M": {
+      "item": "minecraft:totem_of_undying"
+    },
+    "S": {
+      "item": "jcraft:soul_block"
+    }
+  },
+  "pattern": [
+    " B ",
+    "SMS",
+    " B "
+  ],
+  "result": {
+    "item": "jcraft:green_baby"
+  },
+  "show_notification": true
+}
