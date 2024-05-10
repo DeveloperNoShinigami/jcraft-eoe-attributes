@@ -19,6 +19,7 @@ public class JModelProvider extends FabricModelProvider {
         generator.registerSimpleCubeAll(JBlockRegistry.METEORITE_BLOCK.get());
         generator.registerSimpleCubeAll(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get());
         generator.registerSimpleCubeAll(JBlockRegistry.SOUL_BLOCK.get());
+        generator.registerSimpleCubeAll(JBlockRegistry.HOT_SAND_BLOCK.get());
     }
 
     @Override

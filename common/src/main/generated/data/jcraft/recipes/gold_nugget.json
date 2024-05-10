@@ -1,12 +1,13 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "jcraft:kq_coin"
     }
   ],
   "result": {
-    "item": "minecraft:gold_nugget",
-    "count": 2
+    "count": 2,
+    "item": "minecraft:gold_nugget"
   }
 }

@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_ore": {
+    "has_coin": {
       "conditions": {
         "items": [
           {
             "items": [
-              "jcraft:meteorite_iron_ore_block"
+              "jcraft:kq_coin"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "jcraft:stellar_iron_ingot_from_blasting"
+        "recipe": "minecraft:gold_nugget"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_ore",
+      "has_coin",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "jcraft:stellar_iron_ingot_from_blasting"
+      "minecraft:gold_nugget"
     ]
   },
   "sends_telemetry_event": false

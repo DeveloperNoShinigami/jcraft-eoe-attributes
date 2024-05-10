@@ -4,7 +4,7 @@
   "cookingtime": 200,
   "experience": 2.0,
   "ingredient": {
-    "item": "jcraft:coffin"
+    "item": "jcraft:meteorite_iron_ore_block"
   },
   "result": "jcraft:stellar_iron_ingot"
 }

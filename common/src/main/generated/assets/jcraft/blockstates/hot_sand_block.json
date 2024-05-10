@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "jcraft:block/hot_sand_block"
+    }
+  }
+}

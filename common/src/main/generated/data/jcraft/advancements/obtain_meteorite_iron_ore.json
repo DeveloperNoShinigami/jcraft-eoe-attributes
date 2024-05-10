@@ -5,7 +5,7 @@
         "items": [
           {
             "items": [
-              "jcraft:coffin"
+              "jcraft:meteorite_iron_ore_block"
             ]
           }
         ]
@@ -22,7 +22,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "jcraft:coffin"
+      "item": "jcraft:meteorite_iron_ore_block"
     },
     "show_toast": true,
     "title": {
