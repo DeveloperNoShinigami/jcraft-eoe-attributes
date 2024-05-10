@@ -1,4 +1,4 @@
-package net.arna.jcraft.client.rendering.shader;
+package net.arna.jcraft.client.rendering.api;
 
 import net.arna.jcraft.JCraft;
 import net.minecraft.client.MinecraftClient;

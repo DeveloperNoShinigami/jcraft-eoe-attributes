@@ -1,6 +1,6 @@
 package net.arna.jcraft.mixin.client;
 
-import net.arna.jcraft.client.rendering.shader.JGLImportProcessor;
+import net.arna.jcraft.client.rendering.api.JGLImportProcessor;
 import net.minecraft.client.gl.EffectShaderStage;
 import net.minecraft.client.gl.GlImportProcessor;
 import org.spongepowered.asm.mixin.Mixin;

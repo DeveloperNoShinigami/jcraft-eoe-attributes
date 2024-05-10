@@ -2,7 +2,7 @@ package net.arna.jcraft.client.registry;
 
 import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.client.rendering.PostProcessHandler;
+import net.arna.jcraft.client.rendering.api.PostProcessHandler;
 import net.arna.jcraft.client.rendering.post.TimestopShaderPostProcessor;
 import net.arna.jcraft.client.rendering.shader.JShader;
 import net.arna.jcraft.client.rendering.shader.ShaderHolder;
@@ -22,23 +22,25 @@ public class JShaderRegistry {
     public static List<Pair<ShaderProgram, Consumer<ShaderProgram>>> shaderList;
 
     //Core
-    public static ShaderHolder TEST = new ShaderHolder("DiffuseSampler", "DepthSampler", "OutSize", "ViewPort");
+    public static ShaderHolder TEST = new ShaderHolder(JCraft.id("space"), VertexFormats.POSITION_TEXTURE,"DiffuseSampler", "DepthSampler", "OutSize", "ViewPort");
 
-    public static ShaderHolder RREDE = new ShaderHolder();
+    public static ShaderHolder RREDE = new ShaderHolder( JCraft.id("rrede"), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL);
 
     //Post Processed
     public static final TimestopShaderPostProcessor ZA_WARUDO = new TimestopShaderPostProcessor();
 
     public static void init(ResourceFactory manager) throws IOException {
         shaderList = new ArrayList<>();
-        registerShader(JShader.createShaderInstance(TEST, manager, JCraft.id("space"), VertexFormats.POSITION_TEXTURE));
-        registerShader(JShader.createShaderInstance(RREDE, manager, JCraft.id("rrede"), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL));
+        registerShader(TEST.createInstance(manager));
+        registerShader(RREDE.createInstance(manager));
 
         PostProcessHandler.addInstance(ZA_WARUDO);
     }
 
     public static void registerShader(JShader jShaderInstance) {
-        registerShader(jShaderInstance, (shader) -> ((JShader) shader).getHolder().setInstance((JShader) shader));
+        registerShader(jShaderInstance, (shader) -> {
+
+        });
     }
 
     public static void registerShader(ShaderProgram shader, Consumer<ShaderProgram> onLoaded) {

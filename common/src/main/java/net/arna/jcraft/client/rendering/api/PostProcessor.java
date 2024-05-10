@@ -1,4 +1,4 @@
-package net.arna.jcraft.client.rendering;
+package net.arna.jcraft.client.rendering.api;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonParseException;

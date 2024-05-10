@@ -13,6 +13,8 @@ import net.minecraft.util.InvalidHierarchicalFileException;
 import net.minecraft.util.JsonHelper;
 
 import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,23 +23,13 @@ import java.util.function.Consumer;
 /**
  * This class is for adding CORE shaders, not post processed
  */
-public class JShader extends ShaderProgram {
+public abstract class JShader extends ShaderProgram {
 
     protected Map<String, Consumer<Uniform>> defaultUniformData;
 
-    public JShader(ResourceFactory factory, String name, VertexFormat format) throws IOException {
-        super(factory, name, format);
+    public JShader(ResourceFactory factory, Identifier name, VertexFormat format) throws IOException {
+        super(factory, name.toString(), format);
     }
-
-    public static JShader createShaderInstance(ShaderHolder shaderHolder, ResourceFactory pResourceProvider, Identifier id, VertexFormat pVertexFormat) throws IOException {
-        return new JShader(pResourceProvider, id.toString(), pVertexFormat) {
-            @Override
-            public ShaderHolder getHolder() {
-                return shaderHolder;
-            }
-        };
-    }
-
 
     public void setUniformDefaults() {
         for (Map.Entry<String, Consumer<Uniform>> defaultDataEntry : getDefaultUniformData().entrySet()) {
@@ -54,64 +46,43 @@ public class JShader extends ShaderProgram {
         return defaultUniformData;
     }
 
-    public ShaderHolder getHolder() {
-        return null;
-    }
+    public abstract ShaderHolder getHolder();
 
     @Override
     public void addUniform(JsonElement pJson) throws InvalidHierarchicalFileException {
-        if (getHolder().uniforms.isEmpty()) {
-            super.addUniform(pJson);
-            return;
-        }
+        super.addUniform(pJson);
+
         JsonObject jsonobject = JsonHelper.asObject(pJson, "uniform");
-        String name = JsonHelper.getString(jsonobject, "name");
-        int i = GlUniform.getTypeIndex(JsonHelper.getString(jsonobject, "type"));
-        int j = JsonHelper.getInt(jsonobject, "count");
-        float[] afloat = new float[Math.max(j, 16)];
-        JsonArray jsonarray = JsonHelper.getArray(jsonobject, "values");
-        if (jsonarray.size() != j && jsonarray.size() > 1) {
-            throw new InvalidHierarchicalFileException("Invalid amount of values specified (expected " + j + ", found " + jsonarray.size() + ")");
-        } else {
-            int k = 0;
+        String uniformName = JsonHelper.getString(jsonobject, "name");
+        if (getHolder().uniformsToCache.contains(uniformName)) {
+            GlUniform uniform = uniforms.get(uniforms.size() - 1);
 
-            for (JsonElement jsonelement : jsonarray) {
-                try {
-                    afloat[k] = JsonHelper.asFloat(jsonelement, "value");
-                } catch (Exception exception) {
-                    InvalidHierarchicalFileException chainedjsonexception = InvalidHierarchicalFileException.wrap(exception);
-                    chainedjsonexception.addInvalidKey("values[" + k + "]");
-                    throw chainedjsonexception;
+            Consumer<Uniform> consumer;
+            if (uniform.getDataType() <= 3) {
+                final IntBuffer buffer = uniform.getIntData();
+                buffer.position(0);
+                int[] array = new int[uniform.getCount()];
+                for (int i = 0; i < uniform.getCount(); i++) {
+                    array[i] = buffer.get(i);
                 }
-
-                ++k;
-            }
-
-            if (j > 1 && jsonarray.size() == 1) {
-                while (k < j) {
-                    afloat[k] = afloat[0];
-                    ++k;
-                }
-            }
-
-            int l = j > 1 && j <= 4 && i < 8 ? j - 1 : 0;
-            GlUniform uniform = new GlUniform(name, i + l, j, this);
-            if (i <= 3) {
-                uniform.setForDataType((int) afloat[0], (int) afloat[1], (int) afloat[2], (int) afloat[3]);
-                if (getHolder().uniforms.contains(name)) {
-                    getHolder().defaultUniformData.add(new UniformData.IntegerUniformData(name, i, new int[]{(int) afloat[0], (int) afloat[1], (int) afloat[2], (int) afloat[3]}));
-                }
-            } else if (i <= 7) {
-                uniform.setForDataType(afloat[0], afloat[1], afloat[2], afloat[3]);
+                consumer = u -> {
+                    buffer.position(0);
+                    buffer.put(array);
+                };
             } else {
-                uniform.set(Arrays.copyOfRange(afloat, 0, j));
-            }
-            if (i > 3) {
-                if (getHolder().uniforms.contains(name)) {
-                    getHolder().defaultUniformData.add(new UniformData.FloatUniformData(name, i, afloat));
+                final FloatBuffer buffer = uniform.getFloatData();
+                buffer.position(0);
+                float[] array = new float[uniform.getCount()];
+                for (int i = 0; i < uniform.getCount(); i++) {
+                    array[i] = buffer.get(i);
                 }
+                consumer = u -> {
+                    buffer.position(0);
+                    buffer.put(array);
+                };
             }
-            this.uniforms.add(uniform);
+
+            getDefaultUniformData().put(uniformName, consumer);
         }
     }
 }

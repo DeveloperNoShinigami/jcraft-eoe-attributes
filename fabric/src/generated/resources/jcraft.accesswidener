@@ -34,4 +34,5 @@ accessible field net/minecraft/client/render/RenderPhase$ShaderProgram supplier 
 extendable method net/minecraft/client/gl/ShaderProgram addUniform (Lcom/google/gson/JsonElement;)V
 
 accessible field net/minecraft/client/gl/ShaderProgram loadedUniforms Ljava/util/Map;
+accessible field net/minecraft/client/gl/JsonEffectShaderProgram samplerBinds Ljava/util/Map;
 

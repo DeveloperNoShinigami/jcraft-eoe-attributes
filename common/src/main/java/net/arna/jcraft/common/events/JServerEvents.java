@@ -298,6 +298,11 @@ public class JServerEvents {
     }
 
     public static EventResult entityLoad(Entity entity, World world) {
+
+        if (world == null) {
+            return EventResult.pass();
+        }
+
         // If an item was spawned
         if (entity instanceof ItemEntity item) {
             ItemStack stack = item.getStack();

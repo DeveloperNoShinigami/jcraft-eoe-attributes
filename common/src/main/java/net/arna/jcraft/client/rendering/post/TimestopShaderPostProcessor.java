@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.rendering.post;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.client.rendering.PostProcessor;
+import net.arna.jcraft.client.rendering.api.PostProcessor;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;

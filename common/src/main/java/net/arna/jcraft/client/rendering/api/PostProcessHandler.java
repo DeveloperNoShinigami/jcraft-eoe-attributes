@@ -1,4 +1,4 @@
-package net.arna.jcraft.client.rendering;
+package net.arna.jcraft.client.rendering.api;
 
 import net.minecraft.client.util.math.MatrixStack;
 
