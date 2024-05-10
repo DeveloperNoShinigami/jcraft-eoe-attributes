@@ -29,4 +29,6 @@ public interface JPacketRegistry {
     Identifier C2S_REMOTE_STAND_INTERACT = JCraft.id("rmt_stnd_act");
     Identifier C2S_PREDICTION_TRIGGER = JCraft.id("prdct_trig");
 
+    Identifier S2C_SYNC = JCraft.id("s2c_sync");
+    Identifier C2S_SYNC = JCraft.id("c2s_sync");
 }
