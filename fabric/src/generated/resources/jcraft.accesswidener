@@ -35,4 +35,5 @@ extendable method net/minecraft/client/gl/ShaderProgram addUniform (Lcom/google/
 
 accessible field net/minecraft/client/gl/ShaderProgram loadedUniforms Ljava/util/Map;
 accessible field net/minecraft/client/gl/JsonEffectShaderProgram samplerBinds Ljava/util/Map;
+accessible field net/minecraft/client/render/GameRenderer buffers Lnet/minecraft/client/render/BufferBuilderStorage;
 

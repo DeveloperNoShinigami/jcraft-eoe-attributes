@@ -128,7 +128,7 @@ public class ClientPacketHandler {
     }
 
     private static void register(Identifier id, BiConsumer<MinecraftClient, PacketByteBuf> handler) {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, id, (buf, context) -> {
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, id, (buf, context) -> {
             handler.accept(MinecraftClient.getInstance(), buf);
         });
     }
