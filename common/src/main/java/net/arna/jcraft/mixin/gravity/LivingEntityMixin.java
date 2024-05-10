@@ -406,7 +406,7 @@ public abstract class LivingEntityMixin extends Entity {
         return RotationUtil.vecWorldToPlayer(attacker.getEyePos(), gravityDirection).z;
     }
 
-    /*TODO
+
     @Redirect(
             method = "baseTick",
             at = @At(
@@ -423,7 +423,7 @@ public abstract class LivingEntityMixin extends Entity {
         return BlockPos.ofFloored(this.getEyePos());
     }
 
-     */
+
 
     @Redirect(
             method = "spawnItemParticles",

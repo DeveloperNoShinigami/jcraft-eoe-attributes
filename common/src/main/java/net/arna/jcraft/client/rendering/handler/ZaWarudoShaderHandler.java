@@ -22,7 +22,8 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
     public static ZaWarudoShaderHandler INSTANCE = new ZaWarudoShaderHandler();
     public final Identifier SHADER_ID = JCraft.id("shaders/post/za_warudo.json");
 
-    public float prevRadius, radius = 0f;
+    public float prevRadius = 0f;
+    public float radius = 0f;
     public long effectLength = 0;
 
     public @Nullable LivingEntity shaderSourceEntity = null;
@@ -37,9 +38,7 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
 
     @Override
     public void onWorldRendered(@NotNull MatrixStack matrices, @NotNull Camera camera, float tickDelta, long nanoTime) {
-        System.out.println("RENDERNOOO");
         if (renderingEffect) {
-            System.out.println("Render");
             SHADER.setUniformValue("InverseTransformMatrix", GlMatrices.getInverseTransformMatrix(projectionMatrix));
             Vec3d cameraPos = camera.getPos();
             SHADER.setUniformValue("CameraPosition", (float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
@@ -59,12 +58,10 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
     @Override
     public void tick(MinecraftClient client) {
        if (shouldRender) {
-           //System.out.println(renderingEffect);
             if (!renderingEffect) {
                 SHADER.setUniformValue("OuterSat", 1f);
                 ticks = 0;
                 radius = 0f;
-                System.out.println("Activate");
                 renderingEffect = true;
             }
             ticks++;
