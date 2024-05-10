@@ -81,6 +81,8 @@ public interface JItemRegistry {
     RegistrySupplier<Item> STELLAR_IRON_INGOT = register("stellar_iron_ingot", () -> new Item(settings()));
     RegistrySupplier<Item> STAND_ARROWHEAD = register("stand_arrowhead", () -> new Item(settings()));
 
+    RegistrySupplier<Item> MOCK_ITEM = register("mock_item", MockItem::new);
+
     //Block
     RegistrySupplier<Item> FOOLISH_SAND_BLOCK = register("foolish_sand_block",
             () -> new BlockItem(JBlockRegistry.FOOLISH_SAND_BLOCK.get(), settings()
