@@ -1,6 +1,7 @@
 package net.arna.jcraft.client.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.systems.VertexSorter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.*;
@@ -142,9 +143,16 @@ public class RenderUtils {
     public static void startOverlayRender() {
         Window window = MinecraftClient.getInstance().getWindow();
         RenderSystem.backupProjectionMatrix();
-        /*TODO
-        Matrix4f matrix4f = Matrix4f.projectionMatrix(0.0f, window.getScaledWidth(), 0.0f, window.getScaledHeight(), 1000.0f, 3000.0f);
-        RenderSystem.setProjectionMatrix(matrix4f);
+
+        // Define the parameters for the projection matrix
+        float fov = (float) Math.toRadians(45.0f); // Field of view in radians
+        float aspectRatio = (float) window.getScaledWidth() / window.getScaledHeight();
+        float zNear = 1000.0f;
+        float zFar = 3000.0f;
+
+        Matrix4f projectionMatrix = new Matrix4f().perspective(fov, aspectRatio, zNear, zFar);
+
+        RenderSystem.setProjectionMatrix(projectionMatrix, VertexSorter.BY_Z);
 
         MatrixStack mvStack = RenderSystem.getModelViewStack();
         mvStack.push();
@@ -152,7 +160,6 @@ public class RenderUtils {
         mvStack.translate(0.0, 0.0, -2000.0);
         RenderSystem.applyModelViewMatrix();
 
-         */
     }
 
     public static void endOverlayRender() {
