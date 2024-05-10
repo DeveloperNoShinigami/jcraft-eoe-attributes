@@ -1,6 +1,22 @@
 package net.arna.jcraft.client.rendering.handler;
 
+import dev.architectury.event.events.client.ClientTickEvent;
 import ladysnake.satin.api.event.PostWorldRenderCallbackV2;
+import ladysnake.satin.api.event.ShaderEffectRenderCallback;
+import ladysnake.satin.api.experimental.ReadableDepthFramebuffer;
+import ladysnake.satin.api.managed.ManagedShaderEffect;
+import ladysnake.satin.api.managed.ShaderEffectManager;
+import ladysnake.satin.api.util.GlMatrices;
+import net.arna.jcraft.JCraft;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ZaWarudoShaderHandler extends StandShaderHandler {
     public static ZaWarudoShaderHandler INSTANCE = new ZaWarudoShaderHandler();
@@ -39,7 +55,7 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void onEndTick(MinecraftClient client) {
+    public void tick(MinecraftClient client) {
        if (shouldRender) {
             if (!renderingEffect) {
                 SHADER.setUniformValue("OuterSat", 1f);
@@ -77,7 +93,7 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
 
     public void init() {
         PostWorldRenderCallbackV2.EVENT.register(this);
-        ClientTickEvents.END_CLIENT_TICK.register(this);
+        ClientTickEvent.CLIENT_POST.register(this);
         ShaderEffectRenderCallback.EVENT.register(this);
     }
 

@@ -19,6 +19,7 @@ import net.arna.jcraft.client.renderer.block.CoffinTileRenderer;
 import net.arna.jcraft.client.renderer.effects.AttackHitboxEffectRenderer;
 import net.arna.jcraft.client.renderer.effects.TimeErasePredictionEffectRenderer;
 import net.arna.jcraft.client.rendering.RenderHandler;
+import net.arna.jcraft.client.rendering.handler.*;
 import net.arna.jcraft.client.util.ClientEntityHandlerImpl;
 import net.arna.jcraft.client.util.TrackedKeyBinding;
 import net.arna.jcraft.common.attack.core.MoveInputType;
@@ -95,14 +96,14 @@ public class JCraftClient {
         RenderHandler.init();
         JClientEventsRegistry.registerClientEvents();
         JModelPredicateProviderRegistry.register();
-/*TODO
+
         InversionShaderHandler.INSTANCE.init();
         ZaWarudoShaderHandler.INSTANCE.init();
         CrimsonShaderHandler.INSTANCE.init();
         EpitaphVignetteShaderHandler.INSTANCE.init();
         UIShaderHandler.INSTANCE.init(); // Should be last
 
- */
+
 
         // Particle registration
         ParticleProviderRegistry.register(JParticleTypeRegistry.COMBO_BREAK, ComboBreakerParticle.Factory::new);

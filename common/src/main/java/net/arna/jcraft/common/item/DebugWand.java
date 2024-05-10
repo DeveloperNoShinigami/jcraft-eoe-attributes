@@ -43,8 +43,8 @@ public class DebugWand extends Item {
         // Feel free to remove or modify these to debug other components/features.
         if (player.isSneaking()) {
             System.out.println("ShaderTest?");
-            TimestopShaderPostProcessor.playEffect(player.getPos().toVector3f());
-            //ShaderActivationPacket.send((ServerPlayerEntity) player, player, 0, 20 * 6, ShaderActivationPacket.Type.CRIMSON);
+            //TimestopShaderPostProcessor.playEffect(player.getPos().toVector3f());
+            ShaderActivationPacket.send((ServerPlayerEntity) player, player, 0, 20 * 6, ShaderActivationPacket.Type.CRIMSON);
         } else {
             JComponentPlatformUtils.getShockwaveHandler(context.getWorld()).addShockwave(context.getHitPos(), player.getRotationVector());
         }
