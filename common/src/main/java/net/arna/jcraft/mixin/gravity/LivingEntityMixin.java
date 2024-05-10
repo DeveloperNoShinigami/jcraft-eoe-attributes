@@ -1,6 +1,8 @@
 package net.arna.jcraft.mixin.gravity;
 
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.minecraft.entity.*;
@@ -407,20 +409,20 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
 
-    @Redirect(
+    @WrapOperation(
             method = "baseTick",
             at = @At(
-                    value = "NEW",
-                    target = "net/minecraft/util/math/BlockPos"
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/BlockPos;ofFloored(DDD)Lnet/minecraft/util/math/BlockPos;"
             )
     )
-    private BlockPos redirect_baseTick_new_0(double x, double y, double z) {
+    private BlockPos redirect_baseTick_new_0(double x, double y, double z, Operation<BlockPos> original) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
             return BlockPos.ofFloored(x, y, z);
         }
 
-        return BlockPos.ofFloored(this.getEyePos());
+        return original.call(x, y, z);
     }
 
 
