@@ -31,7 +31,7 @@ public class GameRendererMixin {
         Vec3d cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
         matrix.push();
         matrix.translate(-cameraPos.getX(), -cameraPos.getY(), -cameraPos.getZ());
-        PostProcessHandler.renderLast(matrix);
+        //TODO PostProcessHandler.renderLast(matrix);
         matrix.pop();
     }
 
