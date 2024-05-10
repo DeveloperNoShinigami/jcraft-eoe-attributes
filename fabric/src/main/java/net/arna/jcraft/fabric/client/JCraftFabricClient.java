@@ -3,8 +3,15 @@ package net.arna.jcraft.fabric.client;
 import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.events.JClientEvents;
 import net.arna.jcraft.client.renderer.effects.*;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.resource.ResourceType;
+import net.minecraft.util.Identifier;
 
 public final class JCraftFabricClient implements ClientModInitializer {
     @Override
@@ -40,6 +47,16 @@ public final class JCraftFabricClient implements ClientModInitializer {
             TimeErasePredictionEffectRenderer.render(context.matrixStack(), context.camera().getPos(), context.world(), context.tickDelta(), context.consumers());
         });
 
+        Identifier itemId = JItemRegistry.ITEMS.get(JItemRegistry.DEBUG_WAND);
+        BigItemRenderer itemRenderer = new BigItemRenderer(itemId);
 
+
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(itemRenderer);
+        BuiltinItemRendererRegistry.INSTANCE.register(JItemRegistry.DEBUG_WAND.get(), itemRenderer);
+
+        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
+            out.accept(new ModelIdentifier(new Identifier(itemId + "_gui"), "inventory"));
+            out.accept(new ModelIdentifier(new Identifier(itemId + "_handheld"), "inventory"));
+        });
     }
 }

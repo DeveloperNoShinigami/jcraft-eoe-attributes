@@ -155,20 +155,6 @@ public class JCraftClient {
         if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
             return;
         }
-
-        //Identifier itemId = JItemRegistry.ITEMS.get(JItemRegistry.DEBUG_WAND);
-        //BigItemRenderer itemRenderer = new BigItemRenderer(itemId);
-
-        /*TODO
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(itemRenderer);
-        BuiltinItemRendererRegistry.INSTANCE.register(JObjectRegistry.DEBUG_WAND, itemRenderer);
-
-        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
-            out.accept(new ModelIdentifier(new Identifier(itemId + "_gui"), "inventory"));
-            out.accept(new ModelIdentifier(new Identifier(itemId + "_handheld"), "inventory"));
-        });
-
-         */
     }
 
     /// TEXT HUD
