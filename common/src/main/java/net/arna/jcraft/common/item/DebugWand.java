@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.item;
 
+import net.arna.jcraft.client.rendering.post.TimestopShaderPostProcessor;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -41,7 +42,9 @@ public class DebugWand extends Item {
 
         // Feel free to remove or modify these to debug other components/features.
         if (player.isSneaking()) {
-            ShaderActivationPacket.send((ServerPlayerEntity) player, player, 0, 20 * 6, ShaderActivationPacket.Type.CRIMSON);
+            System.out.println("ShaderTest?");
+            TimestopShaderPostProcessor.playEffect(player.getPos().toVector3f());
+            //ShaderActivationPacket.send((ServerPlayerEntity) player, player, 0, 20 * 6, ShaderActivationPacket.Type.CRIMSON);
         } else {
             JComponentPlatformUtils.getShockwaveHandler(context.getWorld()).addShockwave(context.getHitPos(), player.getRotationVector());
         }
