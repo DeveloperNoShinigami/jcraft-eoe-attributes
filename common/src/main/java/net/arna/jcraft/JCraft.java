@@ -3,7 +3,6 @@ package net.arna.jcraft;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
-import dev.architectury.registry.registries.RegistrySupplier;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -56,7 +55,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
@@ -88,12 +86,11 @@ public final class JCraft {
     public static final GravityChangerConfig gravityConfig = new GravityChangerConfig(); // TODO incorporate this into our own config
 
     //Obligatory lazy Registry
-    public static DeferredRegister<EntityType<?>> ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ENTITY_TYPE);
-    public static DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ITEM);
-    public static DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK);
-    public static DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK_ENTITY_TYPE);
-
-    public static final DeferredRegister<ItemGroup> TAB_REGISTER = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ENTITY_TYPE);
+    public static final DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ITEM);
+    public static final DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK_ENTITY_TYPE);
+    public static final DeferredRegister<ItemGroup> CREATIVE_TAB_REGISTRY = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
 
     // Gamerules
     //public static final GameRules.Key<GameRules.BooleanRule> KINGCRIMSON_TELEPORT_EFFECT = GameRuleRegistry.register("kingCrimsonTeleportEffect", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
@@ -144,6 +141,8 @@ public final class JCraft {
         ITEM_REGISTRY.register();
         JBlockEntityTypeRegistry.init();
         BLOCK_ENTITY_TYPE_REGISTRY.register();
+        JCreativeMenuTabRegistry.init();
+        CREATIVE_TAB_REGISTRY.register();
 
 
         CommandRegistrationEvent.EVENT.register(JCommandRegistry::registerCommands);
@@ -157,9 +156,6 @@ public final class JCraft {
         JLootTableHelper.init();
         JServerConfig.init();
         JStatRegistry.init();
-
-        TAB_REGISTER.register("general", JCraft::createItemGroup);
-        TAB_REGISTER.register();
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);
@@ -422,20 +418,6 @@ public final class JCraft {
 
         finalEnt.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 100, 9, true, false, true));
         PastDimensions.enqueue(new DimensionData(finalEnt, pos, original.getRegistryKey()));
-    }
-
-    public static ItemGroup createItemGroup() {
-        return ItemGroup.create(ItemGroup.Row.TOP, 0)
-                .displayName(Text.translatable("itemGroup.jcraft.main"))
-                .icon(() -> JItemRegistry.STAND_ARROW.get().getDefaultStack())
-                .entries((displayContext, entries) -> {
-                    for (Map.Entry<RegistrySupplier<Item>, Identifier> i : JItemRegistry.ITEMS.entrySet()) {
-                        if (!i.getKey().get().getDefaultStack().isOf(JItemRegistry.DEBUG_WAND.get())) {
-                            entries.add(i.getKey().get());
-                        }
-                    }
-                })
-                .build();
     }
 
     public static boolean wasRecentlyAttacked(DamageTracker tracker) {

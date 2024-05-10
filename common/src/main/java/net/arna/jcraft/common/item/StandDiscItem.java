@@ -9,7 +9,6 @@ import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -102,24 +101,9 @@ public class StandDiscItem extends Item {
                 .styled(s -> s.withColor(SKIN_LEVEL_COLORS[skin])));
     }
 
-    public static void appendStacks(ItemGroup group, List<ItemStack> stacks) {
-        boolean full = group.getType() == ItemGroup.Type.SEARCH;
-        if (!full) {
-            return;
-        }
-
-        stacks.add(new ItemStack(JItemRegistry.STAND_DISC.get()));
-
-        for (StandType standType : StandType.values()) {
-            for (int skin = 0; skin <= (full ? standType.getSkinCount() : 0); skin++) {
-                stacks.add(StandDiscItem.createDiscStack(standType, skin));
-            }
-        }
-    }
-
     public static ItemStack createDiscStack(StandType type, int skin) {
         if (skin < 0 || skin > type.getSkinCount()) {
-            throw new IllegalArgumentException("Skin out of bounds");
+            throw new IndexOutOfBoundsException("Skin out of bounds");
         }
 
         ItemStack stack = new ItemStack(JItemRegistry.STAND_DISC.get());

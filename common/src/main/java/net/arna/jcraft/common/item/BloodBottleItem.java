@@ -3,13 +3,11 @@ package net.arna.jcraft.common.item;
 import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
 import net.minecraft.nbt.NbtCompound;
@@ -125,25 +123,4 @@ public class BloodBottleItem extends Item {
         return MAX_USE_TIME;
     }
 
-    //@Override
-    //public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-    //    appendStacks(group, (List<ItemStack>) stacks);
-    //}
-
-    public static void appendStacks(ItemGroup group, List<ItemStack> stacks) {
-        boolean full = group.getType() == ItemGroup.Type.SEARCH;
-        if (!full) {
-            return;
-        }
-
-        int step = 1;
-        if (!full) {
-            step = 4;
-        }
-        for (int i = 0; i <= 16; i += step) {
-            ItemStack stack = new ItemStack(JItemRegistry.BLOOD_BOTTLE.get());
-            stack.getOrCreateNbt().putFloat("Blood", i);
-            stacks.add(stack);
-        }
-    }
 }
