@@ -1,22 +1,83 @@
 package net.arna.jcraft.registry;
 
+import dev.architectury.registry.CreativeTabRegistry;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.item.StandDiscItem;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 
 public interface JCreativeMenuTabRegistry {
 
     static void init() {
-        JCraft.CREATIVE_TAB_REGISTRY.register("general", JCreativeMenuTabRegistry::createItemGroup);
+        JCraft.CREATIVE_TAB_REGISTRY.register("general", JCreativeMenuTabRegistry::createJcraftItemGroup);
+        // natural blocks
+        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.NATURAL.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptAfter(Items.SANDSTONE, JItemRegistry.FOOLISH_SAND_BLOCK.get());
+            output.acceptAfter(JItemRegistry.FOOLISH_SAND_BLOCK.get(), JItemRegistry.HOT_SAND_BLOCK.get());
+            output.acceptBefore(Items.NETHER_GOLD_ORE, JItemRegistry.METEORITE_IRON_ORE_BLOCK.get());
+            output.acceptBefore(Items.OBSIDIAN, JItemRegistry.METEORITE_BLOCK.get());
+            output.acceptAfter(Items.SOUL_SOIL, JItemRegistry.SOUL_BLOCK.get());
+        });
+        // functional blocks
+        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.NATURAL.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptBefore(Items.CANDLE, JItemRegistry.COFFIN_BLOCK.get());
+        });
+        // tools
+        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.TOOLS.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_ARROW.get());
+            output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_DISC.get());
+        });
+        // combat
+        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.COMBAT.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptBefore(Items.WOODEN_AXE, JItemRegistry.ANUBIS_SHEATHED.get());
+            output.acceptBefore(Items.BOW, JItemRegistry.KNIFE.get());
+            output.acceptBefore(Items.BOW, JItemRegistry.KNIFEBUNDLE.get());
+            output.acceptBefore(Items.BOW, JItemRegistry.FV_REVOLVER.get());
+            output.acceptBefore(Items.BOW, JItemRegistry.BULLET.get());
+            output.acceptAfter(Items.NETHERITE_BOOTS, JItemRegistry.JOTARO_CAP.get());
+            output.acceptAfter(JItemRegistry.JOTARO_CAP.get(), JItemRegistry.JOTARO_JACKET.get());
+            output.acceptAfter(JItemRegistry.JOTARO_JACKET.get(), JItemRegistry.JOTARO_PANTS.get());
+            output.acceptAfter(JItemRegistry.JOTARO_PANTS.get(), JItemRegistry.JOTARO_BOOTS.get());
+            output.acceptAfter(JItemRegistry.JOTARO_BOOTS.get(), JItemRegistry.DIO_HEADBAND.get());
+            output.acceptAfter(JItemRegistry.DIO_HEADBAND.get(), JItemRegistry.DIO_JACKET.get());
+            output.acceptAfter(JItemRegistry.DIO_JACKET.get(), JItemRegistry.DIO_CAPE.get());
+            output.acceptAfter(JItemRegistry.DIO_CAPE.get(), JItemRegistry.DIO_PANTS.get());
+            output.acceptAfter(JItemRegistry.DIO_PANTS.get(), JItemRegistry.DIO_BOOTS.get());
+            output.acceptBefore(Items.SHIELD, JItemRegistry.BOXING_GLOVES.get());
+            output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.STONE_MASK.get());
+            output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.RED_HAT.get());
+            output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.KARS_HEADWRAP.get());
+        });
+        // ingredients
+        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.INGREDIENTS.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptBefore(Items.COPPER_INGOT, JItemRegistry.STELLAR_IRON_INGOT.get());
+            output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.LIVING_ARROW.get());
+            output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.REQUIEM_RUBY.get());
+            output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.REQUIEM_ARROW.get());
+            output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.GREEN_BABY.get());
+            output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.DIOS_DIARY.get());
+            output.acceptAfter(Items.GLASS_BOTTLE, JItemRegistry.BLOOD_BOTTLE.get());
+            output.acceptBefore(Items.WHITE_DYE, JItemRegistry.SINNERS_SOUL.get());
+            output.acceptBefore(Items.WHITE_DYE, JItemRegistry.STAND_ARROWHEAD.get());
+            output.acceptBefore(Items.WHITE_DYE, JItemRegistry.CINDERELLA_MASK.get());
+            output.acceptBefore(Items.BOWL, JItemRegistry.KQ_COIN.get());
+        });
+        // foods & drinks
+        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.FOOD_AND_DRINK.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+            final ItemStack bloodBottle = new ItemStack(JItemRegistry.BLOOD_BOTTLE.get());
+            bloodBottle.getOrCreateNbt().putFloat("Blood", 16f);
+            output.acceptBefore(Items.HONEY_BOTTLE, bloodBottle);
+        });
     }
 
-    static ItemGroup createItemGroup() {
+    static ItemGroup createJcraftItemGroup() {
         return ItemGroup.create(ItemGroup.Row.TOP, 0)
                 .displayName(Text.translatable("itemGroup.jcraft.main"))
                 .icon(() -> JItemRegistry.STAND_ARROW.get().getDefaultStack())

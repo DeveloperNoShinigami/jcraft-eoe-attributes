@@ -313,10 +313,11 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter);
         // green baby
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.GREEN_BABY.get())
-                .pattern(" B ")
+                .pattern("GBG")
                 .pattern("SMS")
-                .pattern(" B ")
+                .pattern("GBG")
                 .input('B', Items.BONE_BLOCK)
+                .input('G', Items.GREEN_DYE)
                 .input('M', Items.TOTEM_OF_UNDYING)
                 .input('S', JBlockRegistry.SOUL_BLOCK.get())
                 .criterion("has_totem", InventoryChangedCriterion.Conditions.items(Items.TOTEM_OF_UNDYING))
