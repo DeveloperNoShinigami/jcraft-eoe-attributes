@@ -71,6 +71,9 @@ dependencies {
 
     //Modmenu
     modApi "com.terraformersmc:modmenu:7.2.2"
+
+    //Satin
+    modImplementation "org.ladysnake:satin-fabric-1.18.0"
 }
 
 File generatedResourcesDir = file("src/generated/resources")

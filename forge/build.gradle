@@ -52,6 +52,9 @@ dependencies {
 
     //Cloth
     modApi "me.shedaniel.cloth:cloth-config-forge:11.1.118"
+
+    //Satin
+    modImplementation "org.ladysnake:satin-forge-1.18.0"
 }
 
 processResources {
