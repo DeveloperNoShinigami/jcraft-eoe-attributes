@@ -27,6 +27,7 @@ public class JTagProviders {
             getTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL).add(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.getId());
             getTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(JBlockRegistry.STELLAR_IRON_BLOCK.getId());
             getTagBuilder(BlockTags.SHOVEL_MINEABLE).add(JBlockRegistry.HOT_SAND_BLOCK.getId());
+            getTagBuilder(BlockTags.SOUL_SPEED_BLOCKS).add(JBlockRegistry.SOUL_BLOCK.getId());
         }
     }
 
