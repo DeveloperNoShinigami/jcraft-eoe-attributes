@@ -300,6 +300,15 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .criterion("has_sand", InventoryChangedCriterion.Conditions.items(Items.SAND))
                 .criterion("has_magma_block", InventoryChangedCriterion.Conditions.items(Items.MAGMA_BLOCK))
                 .offerTo(exporter);
+        // glass from smelting hot sand
+        CookingRecipeJsonBuilder.createSmelting(
+                        Ingredient.ofItems(JBlockRegistry.HOT_SAND_BLOCK.get()),
+                        RecipeCategory.BUILDING_BLOCKS,
+                        Items.GLASS,
+                        0.5f,
+                        200)
+                .criterion("has_sand", InventoryChangedCriterion.Conditions.items(JBlockRegistry.HOT_SAND_BLOCK.get()))
+                .offerTo(exporter, JCraft.id("glass_from_smelting_hot_sand"));
         // Anubis sheathed
         ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.ANUBIS_SHEATHED.get())
                 .pattern("LSI")
