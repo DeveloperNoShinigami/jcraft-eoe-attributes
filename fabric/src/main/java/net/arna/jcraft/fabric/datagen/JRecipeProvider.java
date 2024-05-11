@@ -33,7 +33,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                         2f,
                         200)
                 .criterion("has_ore", InventoryChangedCriterion.Conditions.items(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()))
-                .offerTo(exporter, JCraft.MOD_ID + ":stellar_iron_ingot_from_smelting");
+                .offerTo(exporter, JCraft.id("stellar_iron_ingot_from_smelting"));
         // stellar iron ingot from blasting
         CookingRecipeJsonBuilder.createBlasting(
                         Ingredient.ofItems(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()),
@@ -42,7 +42,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                         2f,
                         100)
                 .criterion("has_ore", InventoryChangedCriterion.Conditions.items(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()))
-                .offerTo(exporter, JCraft.MOD_ID + ":stellar_iron_ingot_from_blasting");
+                .offerTo(exporter, JCraft.id("stellar_iron_ingot_from_blasting"));
         // stand arrowhead
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.STAND_ARROWHEAD.get(), 3)
                 .pattern("NGI")
@@ -81,6 +81,11 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .input('S', Items.SOUL_SAND)
                 .criterion("has_soul_sand", InventoryChangedCriterion.Conditions.items(Items.SOUL_SAND))
                 .offerTo(exporter);
+        // sinner's soul from soul block
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.SINNERS_SOUL.get(), 9)
+                .input(JBlockRegistry.SOUL_BLOCK.get())
+                .criterion("has_soul_block", InventoryChangedCriterion.Conditions.items(JBlockRegistry.SOUL_BLOCK.get()))
+                .offerTo(exporter, JCraft.id("sinners_soul_from_soul_block"));
         // living arrow
         ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.LIVING_ARROW.get())
                 .input(JItemRegistry.STAND_ARROW.get())
