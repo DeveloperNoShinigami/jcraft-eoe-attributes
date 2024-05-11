@@ -44,6 +44,7 @@ public class JTagProviders {
         @Override
         protected void configure(RegistryWrapper.WrapperLookup arg) {
             getTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS).add(JItemRegistry.STELLAR_IRON_INGOT.getId());
+            getTagBuilder(ItemTags.BOOKSHELF_BOOKS).add(JItemRegistry.DIOS_DIARY.getId());
         }
     }
 
