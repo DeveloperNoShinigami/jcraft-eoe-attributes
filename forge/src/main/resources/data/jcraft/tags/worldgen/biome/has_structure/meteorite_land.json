@@ -1,5 +1,6 @@
 {
   "values": [
-    "#forge:in_desert"
+    "#forge:in_desert",
+    "minecraft:ice_spikes"
   ]
 }
