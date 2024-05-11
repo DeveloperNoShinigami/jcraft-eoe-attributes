@@ -1,14 +1,14 @@
 package net.arna.jcraft.common.block;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FallingBlock;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class HotSandBlock extends Block {
+public class HotSandBlock extends FallingBlock {
     public HotSandBlock(Settings settings) {
         super(settings);
     }
