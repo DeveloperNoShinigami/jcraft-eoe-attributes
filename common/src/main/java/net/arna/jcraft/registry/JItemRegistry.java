@@ -93,6 +93,8 @@ public interface JItemRegistry {
     ));
     RegistrySupplier<Item> METEORITE_IRON_ORE_BLOCK = register("meteorite_iron_ore_block",
             () -> new BlockItem(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get(), settings()));
+    RegistrySupplier<Item> STELLAR_IRON_BLOCK = register("stellar_iron_block",
+            () -> new BlockItem(JBlockRegistry.STELLAR_IRON_BLOCK.get(), settings()));
     RegistrySupplier<Item> HOT_SAND_BLOCK = register("hot_sand_block",
             () -> new BlockItem(JBlockRegistry.HOT_SAND_BLOCK.get(), settings()));
     RegistrySupplier<Item> COFFIN_BLOCK = register("coffin",

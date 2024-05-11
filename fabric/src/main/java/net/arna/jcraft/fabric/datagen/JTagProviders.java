@@ -19,8 +19,10 @@ public class JTagProviders {
         protected void configure(RegistryWrapper.WrapperLookup arg) {
             getTagBuilder(BlockTags.PICKAXE_MINEABLE).add(JBlockRegistry.METEORITE_BLOCK.getId());
             getTagBuilder(BlockTags.PICKAXE_MINEABLE).add(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.getId());
+            getTagBuilder(BlockTags.PICKAXE_MINEABLE).add(JBlockRegistry.STELLAR_IRON_BLOCK.getId());
             getTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL).add(JBlockRegistry.METEORITE_BLOCK.getId());
             getTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL).add(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.getId());
+            getTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(JBlockRegistry.STELLAR_IRON_BLOCK.getId());
             getTagBuilder(BlockTags.SHOVEL_MINEABLE).add(JBlockRegistry.HOT_SAND_BLOCK.getId());
         }
     }

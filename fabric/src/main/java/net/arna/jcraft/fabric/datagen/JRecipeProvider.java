@@ -43,6 +43,24 @@ public class JRecipeProvider extends FabricRecipeProvider {
                         100)
                 .criterion("has_ore", InventoryChangedCriterion.Conditions.items(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()))
                 .offerTo(exporter, JCraft.id("stellar_iron_ingot_from_blasting"));
+        // stellar iron ingot from block
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.STELLAR_IRON_INGOT.get(), 9)
+                .input(JBlockRegistry.STELLAR_IRON_BLOCK.get())
+                .criterion("has_block", InventoryChangedCriterion.Conditions.items(JBlockRegistry.STELLAR_IRON_BLOCK.get()))
+                .offerTo(exporter, JCraft.id("stellar_iron_ingot_from_block"));
+        // stellar iron block from ingot
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.STELLAR_IRON_BLOCK.get())
+                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .criterion("has_ingot", InventoryChangedCriterion.Conditions.items(JItemRegistry.STELLAR_IRON_INGOT.get()))
+                .offerTo(exporter);
         // stand arrowhead
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.STAND_ARROWHEAD.get(), 3)
                 .pattern("NGI")

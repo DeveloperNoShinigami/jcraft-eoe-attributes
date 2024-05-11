@@ -26,6 +26,7 @@ public class JLootTableProviders {
             addDrop(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get());
             addDrop(JBlockRegistry.SOUL_BLOCK.get());
             addDrop(JBlockRegistry.HOT_SAND_BLOCK.get());
+            addDrop(JBlockRegistry.STELLAR_IRON_BLOCK.get());
         }
     }
 

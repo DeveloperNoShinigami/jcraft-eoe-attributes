@@ -33,6 +33,11 @@ public interface JBlockRegistry {
             .strength(9.0f, 1200f)
             .sounds(BlockSoundGroup.ANCIENT_DEBRIS)
     ));
+    RegistrySupplier<Block> STELLAR_IRON_BLOCK = BLOCK_REGISTRY.register("stellar_iron_block", () -> new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)
+            .requiresTool()
+            .strength(7.5f, 1000f)
+            .sounds(BlockSoundGroup.NETHERITE)
+    ));
     RegistrySupplier<Block> HOT_SAND_BLOCK = BLOCK_REGISTRY.register("hot_sand_block", () -> new HotSandBlock(AbstractBlock.Settings.create()
             .strength(0.5f)
             .sounds(BlockSoundGroup.SAND)

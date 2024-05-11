@@ -17,6 +17,10 @@ public interface JCreativeMenuTabRegistry {
 
     static void init() {
         JCraft.CREATIVE_TAB_REGISTRY.register("general", JCreativeMenuTabRegistry::createJcraftItemGroup);
+        // building blocks
+        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.BUILDING_BLOCKS.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptBefore(Items.GOLD_BLOCK, JItemRegistry.STELLAR_IRON_BLOCK.get());
+        });
         // natural blocks
         CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.NATURAL.getValue()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptAfter(Items.SANDSTONE, JItemRegistry.FOOLISH_SAND_BLOCK.get());
@@ -87,6 +91,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.add(JItemRegistry.METEORITE_BLOCK.get());
                     entries.add(JItemRegistry.METEORITE_IRON_ORE_BLOCK.get());
                     entries.add(JItemRegistry.STELLAR_IRON_INGOT.get());
+                    entries.add(JItemRegistry.STELLAR_IRON_BLOCK.get());
                     entries.add(JItemRegistry.STAND_ARROWHEAD.get());
                     entries.add(JItemRegistry.STAND_ARROW.get());
                     entries.add(JItemRegistry.LIVING_ARROW.get());
