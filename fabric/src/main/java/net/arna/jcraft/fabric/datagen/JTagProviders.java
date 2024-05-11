@@ -1,6 +1,7 @@
 package net.arna.jcraft.fabric.datagen;
 
 import net.arna.jcraft.registry.JBlockRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -8,6 +9,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.ItemTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -41,7 +43,7 @@ public class JTagProviders {
 
         @Override
         protected void configure(RegistryWrapper.WrapperLookup arg) {
-
+            getTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS).add(JItemRegistry.STELLAR_IRON_INGOT.getId());
         }
     }
 
