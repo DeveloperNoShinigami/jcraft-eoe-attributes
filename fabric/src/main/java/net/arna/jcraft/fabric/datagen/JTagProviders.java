@@ -1,8 +1,11 @@
 package net.arna.jcraft.fabric.datagen;
 
 import net.arna.jcraft.registry.JBlockRegistry;
+import net.arna.jcraft.registry.JTagRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.entity.EntityType;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
 
@@ -47,7 +50,19 @@ public class JTagProviders {
 
         @Override
         protected void configure(RegistryWrapper.WrapperLookup arg) {
-
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.ZOMBIE));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.ZOMBIE_VILLAGER));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.SKELETON));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.WITHER_SKELETON));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.STRAY));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.PIGLIN));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.ZOMBIFIED_PIGLIN));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.VINDICATOR));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.EVOKER));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.PILLAGER));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.WITCH));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.VILLAGER));
+            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.ENDERMAN));
         }
     }
 

@@ -141,6 +141,7 @@ public final class JCraft {
         ITEM_REGISTRY.register();
         JBlockEntityTypeRegistry.init();
         BLOCK_ENTITY_TYPE_REGISTRY.register();
+        JTagRegistry.init();
         JCreativeMenuTabRegistry.init();
         CREATIVE_TAB_REGISTRY.register();
 
