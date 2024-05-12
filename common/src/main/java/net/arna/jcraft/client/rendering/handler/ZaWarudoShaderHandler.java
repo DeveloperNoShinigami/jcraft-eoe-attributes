@@ -51,7 +51,7 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
                 );
             }
             SHADER.setUniformValue("Radius", Math.max(0f, lerp(radius, prevRadius, tickDelta)));
-            SHADER.render(tickDelta);
+            //SHADER.render(tickDelta);
         }
     }
 

@@ -28,14 +28,12 @@ public class UIShaderHandler implements ShaderEffectRenderCallback {
 
     @Override
     public void renderShaderEffects(float tickDelta) {
-        return;
-
         // Do blending and masking
         //SHADER.render(tickDelta);
     }
 
     public void init() {
-        ShaderEffectRenderCallback.EVENT.register(this);
+        //ShaderEffectRenderCallback.EVENT.register(this);
         ClientGuiEvent.RENDER_HUD.register((graphics, tickDelta) -> {
             //if (MinecraftClient.getInstance().options.hudHidden) return;
 
