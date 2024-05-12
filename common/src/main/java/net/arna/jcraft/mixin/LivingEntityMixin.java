@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.mob.WardenEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -138,8 +139,11 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     }
 
     private static @Unique void doChecks(Entity entity, CallbackInfoReturnable<Boolean> cir, LivingEntity livingEntity) {
-        if ((livingEntity.hasStatusEffect(JStatusRegistry.DAZED) && !JUtils.isBlocking(livingEntity)) ||
-                livingEntity.hasStatusEffect(JStatusRegistry.KNOCKDOWN)) {
+        if (
+                ((livingEntity.hasStatusEffect(JStatusRegistry.DAZED) && !JUtils.isBlocking(livingEntity))
+                        || livingEntity.hasStatusEffect(JStatusRegistry.KNOCKDOWN))
+                        && (!(livingEntity instanceof WardenEntity))
+        ) {
             cir.setReturnValue(false);
         }
 
