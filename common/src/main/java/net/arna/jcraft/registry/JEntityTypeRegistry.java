@@ -401,7 +401,7 @@ public interface JEntityTypeRegistry {
                     .build("sunbeam")
     );
 
-    RegistrySupplier<EntityType<PurpleHazeCloudEntity>> PURPLE_HAZE_COUD = ENTITY_TYPE_REGISTRY.register(JCraft.id("purple_haze_cloud"),
+    RegistrySupplier<EntityType<PurpleHazeCloudEntity>> PURPLE_HAZE_CLOUD = ENTITY_TYPE_REGISTRY.register(JCraft.id("purple_haze_cloud"),
             () -> EntityType.Builder.create(
                             (EntityType<PurpleHazeCloudEntity> entityType, World world) -> new PurpleHazeCloudEntity(world),
                             SpawnGroup.MISC

@@ -72,7 +72,7 @@ public interface JEntityRendererRegister {
         EntityRendererRegistry.register(JEntityTypeRegistry.RAPIER, RapierRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.METEOR, MeteorRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.PH_CAPSULE, PHCapsuleRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.PURPLE_HAZE_COUD, JEntityRendererRegister::createEmpty);
+        EntityRendererRegistry.register(JEntityTypeRegistry.PURPLE_HAZE_CLOUD, JEntityRendererRegister::createEmpty);
     }
 
     private static <T extends Entity> EntityRenderer<T> createEmpty(EntityRendererFactory.Context ctx) {
