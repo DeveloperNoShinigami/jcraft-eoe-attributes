@@ -1,5 +1,6 @@
 package net.arna.jcraft.client.rendering.handler;
 
+import dev.architectury.event.events.client.ClientGuiEvent;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import ladysnake.satin.api.managed.ManagedFramebuffer;
 import ladysnake.satin.api.managed.ManagedShaderEffect;
@@ -27,30 +28,32 @@ public class UIShaderHandler implements ShaderEffectRenderCallback {
 
     @Override
     public void renderShaderEffects(float tickDelta) {
-        if (MinecraftClient.getInstance().options.hudHidden) return;
-
-        // Do necessary initialisation to render HUD stuff at this stage.
-        // HUD stuff should generally be rendered somewhere in InGameHud,
-        // but we do it here, so we can use different frame-buffers.
-        RenderUtils.startOverlayRender();
-
-        DrawContext drawContext = new DrawContext(MinecraftClient.getInstance(), MinecraftClient.getInstance().gameRenderer.buffers.getEntityVertexConsumers());// Render HUD
-        inputBuffer.clear();
-        inputBuffer.beginWrite(false);
-        JCraftAbilityHud.render(drawContext, false);
-
-        overlayBuffer.clear();
-        overlayBuffer.beginWrite(false);
-        JCraftAbilityHud.render(drawContext, true);
-
-        // Restore
-        RenderUtils.endOverlayRender();
+        return;
 
         // Do blending and masking
-        SHADER.render(tickDelta);
+        //SHADER.render(tickDelta);
     }
 
     public void init() {
         ShaderEffectRenderCallback.EVENT.register(this);
+        ClientGuiEvent.RENDER_HUD.register((graphics, tickDelta) -> {
+            //if (MinecraftClient.getInstance().options.hudHidden) return;
+
+            // Do necessary initialisation to render HUD stuff at this stage.
+            // HUD stuff should generally be rendered somewhere in InGameHud,
+            // but we do it here, so we can use different frame-buffers.
+            //RenderUtils.startOverlayRender();
+
+            //DrawContext drawContext = new DrawContext(MinecraftClient.getInstance(), MinecraftClient.getInstance().gameRenderer.buffers.getEntityVertexConsumers());// Render HUD
+            //inputBuffer.clear();
+            //inputBuffer.beginWrite(false);
+            JCraftAbilityHud.render(graphics, false);
+            //overlayBuffer.clear();
+            //overlayBuffer.beginWrite(false);
+            JCraftAbilityHud.render(graphics, true);
+
+            // Restore
+            //RenderUtils.endOverlayRender();
+        });
     }
 }

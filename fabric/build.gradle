@@ -64,9 +64,9 @@ dependencies {
     include modImplementation("maven.modrinth:trimmed:1.20.1-2.1.4+fabric")
 
     //CCA
-    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.0.2")
-    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.0.2")
-    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-world:5.0.2")
+    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.2")
+    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.2")
+    include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-world:5.2.2")
 
     //Cloth
     modApi "me.shedaniel.cloth:cloth-config-fabric:11.1.118"

@@ -169,11 +169,8 @@ public class JCraftAbilityHud {
         var matrices = ctx.getMatrices();
         matrices.push();
 
-        if (isTextureAvailable(texture)) {
-            RenderSystem.setShaderTexture(0, texture);
-        } else {
+        if (!isTextureAvailable(texture)) {
             texture = JCraft.id("textures/gui/ability_icons/fallback/" + fallback + ".png");
-            RenderSystem.setShaderTexture(0, texture);
         }
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
@@ -182,7 +179,6 @@ public class JCraftAbilityHud {
         } else {
             renderCooldown(cd, x, y);
         }
-        RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
         matrices.pop();
