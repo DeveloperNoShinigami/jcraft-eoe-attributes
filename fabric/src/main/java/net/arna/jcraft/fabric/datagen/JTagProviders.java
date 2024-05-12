@@ -46,6 +46,8 @@ public class JTagProviders {
 
         @Override
         protected void configure(RegistryWrapper.WrapperLookup arg) {
+            getTagBuilder(ItemTags.TRIM_MATERIALS).add(JItemRegistry.STELLAR_IRON_INGOT.getId());
+
             getTagBuilder(ItemTags.SAND).add(JItemRegistry.HOT_SAND_BLOCK.getId());
             getTagBuilder(ItemTags.SMELTS_TO_GLASS).add(JItemRegistry.HOT_SAND_BLOCK.getId());
 

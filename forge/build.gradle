@@ -50,6 +50,11 @@ dependencies {
     //Player Anim
     modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${player_anim_version}")
 
+    // Trimmed
+    runtimeOnly("io.github.llamalad7:mixinextras-common:${mixinextras_version}")
+    runtimeOnly("io.github.llamalad7:mixinextras-forge:${mixinextras_version}")
+    include modImplementation("maven.modrinth:trimmed:${minecraft_version}-${trimmed_version}+forge")
+
     //Cloth
     modApi "me.shedaniel.cloth:cloth-config-forge:11.1.118"
 
