@@ -27,6 +27,7 @@ import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JDimensionRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
+import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
@@ -37,7 +38,6 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -320,7 +320,7 @@ public class JServerEvents {
             // ... in the AU
             if (world.getRegistryKey().equals(JDimensionRegistry.AU_DIMENSION_KEY)) {
                 if (item.getOwner() != null || MockItem.isMockItem(stack)) {
-                    return null;
+                    return EventResult.pass();
                 }
 
                 ItemStack mockStack = MockItem.createMockStack(stack); // Convert it to a mock item (incompatible and useless)
@@ -361,14 +361,13 @@ public class JServerEvents {
 
             // Create new stand user mobs
             if (mob.age > 0) {
-                return null;
+                return EventResult.pass();
             }
             if (standData.getType() != null) {
-                return null;
+                return EventResult.pass();
             }
-            EntityGroup group = mob.getGroup();
 
-            if (group != EntityGroup.UNDEAD && group != EntityGroup.ILLAGER && !(mob instanceof EndermanEntity)) {
+            if (!mob.getType().isIn(JTagRegistry.CAN_HAVE_STAND)) {
                 return EventResult.pass();
             }
             Random random = new Random();
@@ -376,7 +375,7 @@ public class JServerEvents {
 
             // STAND
             if (100 - random.nextInt(0, 100) > gameRules.getInt(CHANCE_MOB_SPAWNS_WITH_STAND)) {
-                return null;
+                return EventResult.pass();
             }
             List<StandType> types = gameRules.getBoolean(ALLOW_MOB_EVOLVED_STANDS) ? StandType.getAllStandTypes() : StandType.getRegularStandTypes();
             StandType type = types.get(random.nextInt(types.size()));
