@@ -31,6 +31,7 @@ public class JTagProviders {
             getTagBuilder(BlockTags.SHOVEL_MINEABLE).add(JBlockRegistry.HOT_SAND_BLOCK.getId());
 
             getTagBuilder(BlockTags.SOUL_SPEED_BLOCKS).add(JBlockRegistry.SOUL_BLOCK.getId());
+            getTagBuilder(BlockTags.SOUL_FIRE_BASE_BLOCKS).add(JBlockRegistry.SOUL_BLOCK.getId());
             getTagBuilder(BlockTags.BEACON_BASE_BLOCKS).add(JBlockRegistry.STELLAR_IRON_BLOCK.getId());
             // we do not want bamboo on hot sand, hence we do not add hot sand to the sand tag
             getTagBuilder(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON).add(JBlockRegistry.HOT_SAND_BLOCK.getId());
