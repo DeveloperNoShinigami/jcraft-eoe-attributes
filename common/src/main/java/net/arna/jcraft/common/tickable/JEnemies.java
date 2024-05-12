@@ -24,7 +24,7 @@ public class JEnemies {
      * A queue designed to prevent any ConcurrentModificationException.
      * Stores to-be JEnemies temporarily if they were attempted to be registered while {@link JEnemies#ticking} is true.
      */
-    private static final PriorityQueue<MobEntity> queuedEnemies = new PriorityQueue<>();
+    private static final Queue<MobEntity> queuedEnemies = new LinkedList<>();
     private static boolean ticking = false;
 
     public static void add(MobEntity entity) {
