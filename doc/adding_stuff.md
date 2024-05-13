@@ -48,4 +48,5 @@
 11. Add `MyRenderer` to `JEntityRendererRegister`.
 12. Add `my.png`, `my.geo.json` and `my.animation.json` from the `my.bbmodel` file from our modelers.
 13. Maybe add a spawn egg (see above how).
-14. Test your addition.
+14. If the entity can have stands, add the line `JEnemies.add(this);` to the constructor of `MyEntity`.
+15. Test your addition.
