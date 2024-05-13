@@ -64,6 +64,7 @@ public class JTagProviders {
 
         @Override
         protected void configure(RegistryWrapper.WrapperLookup arg) {
+            // possible mob stand users
             getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.ZOMBIE));
             getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.ZOMBIE_VILLAGER));
             getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.SKELETON));
@@ -77,6 +78,8 @@ public class JTagProviders {
             getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.WITCH));
             getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.VILLAGER));
             getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.ENDERMAN));
+            // impossible to stun
+            getTagBuilder(JTagRegistry.CANNOT_BE_STUNNED).add(Registries.ENTITY_TYPE.getId(EntityType.WARDEN));
         }
     }
 

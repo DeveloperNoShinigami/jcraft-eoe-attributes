@@ -9,11 +9,11 @@ import net.arna.jcraft.common.util.IDamageScaler;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
+import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.WardenEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -142,7 +142,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
         if (
                 ((livingEntity.hasStatusEffect(JStatusRegistry.DAZED) && !JUtils.isBlocking(livingEntity))
                         || livingEntity.hasStatusEffect(JStatusRegistry.KNOCKDOWN))
-                        && (!(livingEntity instanceof WardenEntity))
+                        && (!livingEntity.getType().isIn(JTagRegistry.CANNOT_BE_STUNNED))
         ) {
             cir.setReturnValue(false);
         }
