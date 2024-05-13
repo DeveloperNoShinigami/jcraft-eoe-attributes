@@ -14,16 +14,13 @@ public class MaterialRulesFabric {
     public static MaterialRules.MaterialRule makeRules() {
         MaterialRules.MaterialCondition isAtOrAboveWaterLevel = MaterialRules.water(-1, 0);
 
-        MaterialRules.MaterialRule sandSurface = MaterialRules.sequence(MaterialRules.condition(isAtOrAboveWaterLevel, HOT_SAND), SANDSTONE);
+//        MaterialRules.MaterialRule sandSurface = MaterialRules.sequence(MaterialRules.condition(isAtOrAboveWaterLevel, HOT_SAND), SANDSTONE);
 
         return MaterialRules.sequence(
-                MaterialRules.sequence(MaterialRules.condition(MaterialRules.biome(JBiomeRegistry.DEVILS_PALM),
-                                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR, SANDSTONE)),
-                        MaterialRules.condition(MaterialRules.STONE_DEPTH_CEILING, HOT_SAND)
-                ),
-                // default
-                MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR, sandSurface)
-        );
+                MaterialRules.condition(MaterialRules.biome(JBiomeRegistry.DEVILS_PALM),
+                        MaterialRules.sequence(MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR, HOT_SAND), MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR_WITH_SURFACE_DEPTH_RANGE_6, SANDSTONE)
+                                )
+                ));
     }
 
     private static MaterialRules.MaterialRule makeStateRule(Block block) {
