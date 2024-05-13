@@ -409,6 +409,14 @@ public interface JEntityTypeRegistry {
                     .build("purple_haze_cloud")
     );
 
+    RegistrySupplier<EntityType<PetshopEntity>> PETSHOP = ENTITY_TYPE_REGISTRY.register(JCraft.id("petshop"),
+            () -> EntityType.Builder.create(
+                            (EntityType<PetshopEntity> entityType, World world) -> new PetshopEntity(world),
+                            SpawnGroup.MISC
+                    ).setDimensions(0.4f, 0.75f)
+                    .build("petshop")
+    );
+
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
         EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
@@ -459,6 +467,8 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(RED_BIND, RedBindEntity::createLivingAttributes);
         EntityAttributeRegistry.register(BLOCK_PROJECTILE, BlockProjectile::createBlockAttributes);
         EntityAttributeRegistry.register(SAND_TORNADO, SandTornadoEntity::createTornadoAttributes);
+
+        EntityAttributeRegistry.register(PETSHOP, PetshopEntity::createPetshopAttributes);
     }
 
     static void init() {

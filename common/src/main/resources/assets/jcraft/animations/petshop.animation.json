@@ -1,0 +1,86 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"tpose": {
+			"loop": true,
+			"bones": {
+				"tail": {
+					"rotation": {
+						"vector": [0, 0, -80]
+					}
+				},
+				"wingright": {
+					"rotation": {
+						"vector": [90, 0, 0]
+					}
+				},
+				"wingleft": {
+					"rotation": {
+						"vector": [-90, 0, 0]
+					}
+				}
+			}
+		},
+		"tpose2": {
+			"loop": true,
+			"bones": {
+				"tail": {
+					"rotation": {
+						"vector": [0, 0, -37.5]
+					}
+				},
+				"wingright": {
+					"rotation": {
+						"vector": [12.5, 0, -7.5]
+					}
+				},
+				"wingleft": {
+					"rotation": {
+						"vector": [-10, 0, -5]
+					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [0, -17.5, 0]
+					}
+				},
+				"eyelid2": {
+					"position": {
+						"vector": [0, -0.075, 0]
+					}
+				},
+				"iris": {
+					"position": {
+						"vector": [0, 0, -0.5]
+					}
+				},
+				"section1": {
+					"rotation": {
+						"vector": [0, -35, 30]
+					}
+				},
+				"section2": {
+					"rotation": {
+						"vector": [0, -60, 17.5]
+					}
+				},
+				"rightleg": {
+					"rotation": {
+						"vector": [0, 10, 0]
+					}
+				},
+				"chain": {
+					"rotation": {
+						"vector": [-14.92329, 1.13854, 4.31241]
+					}
+				},
+				"chain2": {
+					"rotation": {
+						"vector": [90, 0, 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

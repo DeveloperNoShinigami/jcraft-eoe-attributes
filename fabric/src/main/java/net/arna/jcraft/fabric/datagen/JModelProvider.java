@@ -6,9 +6,16 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.data.client.Model;
 import net.minecraft.data.client.Models;
+import net.minecraft.util.Identifier;
+
+import java.util.Optional;
 
 public class JModelProvider extends FabricModelProvider {
+
+    private static final Model SPAWN_EGG_MODEL = new Model(Optional.of(new Identifier("minecraft", "item/template_spawn_egg")), Optional.empty());
+
     public JModelProvider(FabricDataOutput output) {
         super(output);
     }
@@ -52,5 +59,7 @@ public class JModelProvider extends FabricModelProvider {
         generator.register(JItemRegistry.STAND_DISC.get(), Models.GENERATED);
         generator.register(JItemRegistry.STELLAR_IRON_INGOT.get(), Models.GENERATED);
         generator.register(JItemRegistry.STONE_MASK.get(), Models.GENERATED);
+
+        generator.register(JItemRegistry.PETSHOP_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
     }
 }

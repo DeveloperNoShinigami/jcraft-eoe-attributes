@@ -79,6 +79,10 @@ public interface JCreativeMenuTabRegistry {
             bloodBottle.getOrCreateNbt().putFloat("Blood", 16f);
             output.acceptBefore(Items.HONEY_BOTTLE, bloodBottle);
         });
+        // spawn eggs
+        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.SPAWN_EGGS.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptAfter(Items.PARROT_SPAWN_EGG, JItemRegistry.PETSHOP_SPAWN_EGG.get());
+        });
     }
 
     static ItemGroup createJcraftItemGroup() {
@@ -154,6 +158,8 @@ public interface JCreativeMenuTabRegistry {
                             entries.add(StandDiscItem.createDiscStack(standType, skin));
                         }
                     }
+                    // spawn eggs
+                    entries.add(JItemRegistry.PETSHOP_SPAWN_EGG.get());
                     // weird items
                     if (JItemRegistry.DEBUG_WAND != null) {
                         entries.add(JItemRegistry.DEBUG_WAND.get());
