@@ -60,6 +60,9 @@ dependencies {
     //Player Anim
     modImplementation "dev.kosmx.player-anim:player-animation-lib-fabric:${rootProject.player_anim_version}"
 
+    // Terrablender
+    modImplementation("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
+
     // Trimmed
     include modImplementation("maven.modrinth:trimmed:${minecraft_version}-${trimmed_version}+fabric")
 

@@ -2,6 +2,8 @@ package net.arna.jcraft.fabric.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.minecraft.registry.RegistryBuilder;
+import net.minecraft.registry.RegistryKeys;
 
 public final class JDataGen implements DataGeneratorEntrypoint {
     @Override
@@ -16,5 +18,11 @@ public final class JDataGen implements DataGeneratorEntrypoint {
         pack.addProvider(JTagProviders.JEntityTypeTags::new);
         pack.addProvider(JAdvancementProvider::new);
         pack.addProvider(JRecipeProvider::new);
+        pack.addProvider(JWorldProvider::new);
+    }
+
+    @Override
+    public void buildRegistry(RegistryBuilder registryBuilder) {
+        registryBuilder.addRegistry(RegistryKeys.BIOME, JBiomeProvider::bootstrap);
     }
 }

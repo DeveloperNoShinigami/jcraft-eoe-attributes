@@ -50,6 +50,9 @@ dependencies {
     //Player Anim
     modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${player_anim_version}")
 
+    // Terrablender
+    modImplementation("com.github.glitchfiend:TerraBlender-forge:${minecraft_version}-${terrablender_version}")
+
     // Trimmed
     runtimeOnly("io.github.llamalad7:mixinextras-common:${mixinextras_version}")
     runtimeOnly("io.github.llamalad7:mixinextras-forge:${mixinextras_version}")
