@@ -57,6 +57,8 @@ public interface JEntityRendererRegister {
         EntityRendererRegistry.register(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION, PurpleHazeDistortionRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.PURPLE_HAZE, PurpleHazeRenderer::new);
 
+        EntityRendererRegistry.register(JEntityTypeRegistry.HORUS, HorusRenderer::new);
+
         EntityRendererRegistry.register(JEntityTypeRegistry.LASER_PROJECTILE, LaserProjectileRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.BLOOD_PROJECTILE, BloodProjectileRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.BLOCK_PROJECTILE, BlockProjectileRenderer::new);

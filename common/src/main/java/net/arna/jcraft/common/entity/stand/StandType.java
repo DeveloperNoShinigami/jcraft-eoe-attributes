@@ -52,6 +52,7 @@ public enum StandType {
             Text.literal(":D"), Text.literal("Neutron Star"), Text.literal("Dark")),
     PURPLE_HAZE(JEntityTypeRegistry.PURPLE_HAZE.get(), PurpleHazeEntity::new, "purple_haze",       // 14
             Text.literal("Toxin"), Text.literal("Stopping Force"), Text.literal("Reversal")),
+    HORUS(JEntityTypeRegistry.HORUS.get(), HorusEntity::new, "horus"), // 15
 
 
     // Evolutions

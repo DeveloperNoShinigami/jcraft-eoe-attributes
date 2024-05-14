@@ -222,6 +222,13 @@ public interface JEntityTypeRegistry {
             ).setDimensions(0.6f, 1.8f).build("purple_haze_distortion")
     );
 
+    RegistrySupplier<EntityType<HorusEntity>> HORUS = ENTITY_TYPE_REGISTRY.register(JCraft.id("horus"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(HorusEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build("horus")
+    );
+
     RegistrySupplier<EntityType<GEREntity>> GER = ENTITY_TYPE_REGISTRY.register(JCraft.id("ger"),
             () -> EntityType.Builder.create(
                     WorldOnlyEntityFactory.from(GEREntity::new),
@@ -440,6 +447,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(THE_FOOL, TheFoolEntity::createMobAttributes);
         EntityAttributeRegistry.register(HIEROPHANT_GREEN, HGEntity::createMobAttributes);
         EntityAttributeRegistry.register(THE_SUN, TheSunEntity::createMobAttributes);
+        EntityAttributeRegistry.register(HORUS, HorusEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(PURPLE_HAZE, () -> AbstractPurpleHazeEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.55));
