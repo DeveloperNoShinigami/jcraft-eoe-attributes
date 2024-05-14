@@ -1,7 +1,7 @@
 {
   "credit": "Made with Blockbench",
   "textures": {
-    "0": "jcraft:item/knife_bundle"
+    "0": "jcraft:item/knife/knife"
   },
   "elements": [
     {
