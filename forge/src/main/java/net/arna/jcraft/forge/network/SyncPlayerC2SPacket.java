@@ -1,15 +1,12 @@
 package net.arna.jcraft.forge.network;
 
 import dev.architectury.networking.NetworkManager;
-import net.arna.jcraft.forge.capability.JPlayerDataCapability;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 public class SyncPlayerC2SPacket {
@@ -36,6 +33,6 @@ public class SyncPlayerC2SPacket {
     public void apply(Supplier<NetworkManager.PacketContext> ctx) {
         PlayerEntity player = ctx.get().getPlayer();
         // On receive
-        JPlayerDataCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
+        //JPlayerDataCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
     }
 }

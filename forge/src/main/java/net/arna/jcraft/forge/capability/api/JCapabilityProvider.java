@@ -1,4 +1,4 @@
-package net.arna.jcraft.forge.capability;
+package net.arna.jcraft.forge.capability.api;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Direction;

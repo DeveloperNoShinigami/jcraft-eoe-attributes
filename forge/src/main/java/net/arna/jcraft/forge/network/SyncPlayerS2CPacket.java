@@ -1,7 +1,6 @@
 package net.arna.jcraft.forge.network;
 
 import dev.architectury.networking.NetworkManager;
-import net.arna.jcraft.forge.capability.JPlayerDataCapability;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -38,6 +37,6 @@ public class SyncPlayerS2CPacket {
     @OnlyIn(Dist.CLIENT)
     public void applyClient(Supplier<NetworkManager.PacketContext> ctx){
         PlayerEntity player = MinecraftClient.getInstance().world.getPlayerByUuid(uuid);
-        JPlayerDataCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
+        //JPlayerDataCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
     }
 }
