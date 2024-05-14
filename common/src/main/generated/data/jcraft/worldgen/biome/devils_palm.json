@@ -7,7 +7,17 @@
     "water_color": 10203353,
     "water_fog_color": 6645121
   },
-  "features": [],
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "jcraft:sand_disk_pf"
+    ]
+  ],
   "has_precipitation": false,
   "spawn_costs": {},
   "spawners": {

@@ -23,6 +23,8 @@ public final class JDataGen implements DataGeneratorEntrypoint {
 
     @Override
     public void buildRegistry(RegistryBuilder registryBuilder) {
+        registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, JConfiguredFeatureProvider::bootstrap);
+        registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, JPlacedFeatureProvider::bootstrap);
         registryBuilder.addRegistry(RegistryKeys.BIOME, JBiomeProvider::bootstrap);
     }
 }

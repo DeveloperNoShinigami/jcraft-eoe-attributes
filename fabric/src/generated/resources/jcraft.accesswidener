@@ -37,3 +37,6 @@ accessible field net/minecraft/client/gl/ShaderProgram loadedUniforms Ljava/util
 accessible field net/minecraft/client/gl/JsonEffectShaderProgram samplerBinds Ljava/util/Map;
 accessible field net/minecraft/client/render/GameRenderer buffers Lnet/minecraft/client/render/BufferBuilderStorage;
 
+accessible method net/minecraft/world/gen/feature/OrePlacedFeatures modifiers (Lnet/minecraft/world/gen/placementmodifier/PlacementModifier;Lnet/minecraft/world/gen/placementmodifier/PlacementModifier;)Ljava/util/List;
+accessible method net/minecraft/world/gen/feature/OrePlacedFeatures modifiersWithCount (ILnet/minecraft/world/gen/placementmodifier/PlacementModifier;)Ljava/util/List;
+accessible method net/minecraft/world/gen/feature/OrePlacedFeatures modifiersWithRarity (ILnet/minecraft/world/gen/placementmodifier/PlacementModifier;)Ljava/util/List;

@@ -1,12 +1,14 @@
 package net.arna.jcraft.fabric.datagen;
 
 import net.arna.jcraft.registry.JBiomeRegistry;
+import net.arna.jcraft.registry.JPlacedFeatureRegistry;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
+import net.minecraft.world.gen.GenerationStep;
 
 public class JBiomeProvider {
 
@@ -20,6 +22,7 @@ public class JBiomeProvider {
         GenerationSettings.LookupBackedBuilder generationBuilder =
                 new GenerationSettings.LookupBackedBuilder(context.getRegistryLookup(RegistryKeys.PLACED_FEATURE),
                         context.getRegistryLookup(RegistryKeys.CONFIGURED_CARVER));
+        generationBuilder.feature(GenerationStep.Feature.UNDERGROUND_ORES, JPlacedFeatureRegistry.SAND_DISK);
 
         return new Biome.Builder()
                 .precipitation(false)
