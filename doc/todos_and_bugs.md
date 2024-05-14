@@ -1,6 +1,8 @@
 ## TODOs
 ### Hook tick on forge capabilities
-
+### Animations
+* Petshop
+* Horus
 
 ## Bugs
 ### Stands dont rotate correctly, pitch
