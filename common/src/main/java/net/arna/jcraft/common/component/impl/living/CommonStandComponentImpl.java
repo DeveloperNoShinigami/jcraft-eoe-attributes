@@ -66,12 +66,12 @@ public class CommonStandComponentImpl implements CommonStandComponent {
 
     public void readFromNbt(@NonNull NbtCompound tag) {
         int rawType = tag.getInt("Type");
-        type = rawType == 0 ? null : StandType.fromId(rawType);
+        type = rawType == 0 ? null : StandType.fromIdOrOrdinal(rawType);
         skin = tag.getInt("Skin");
     }
 
     public void writeToNbt(@NonNull NbtCompound tag) {
-        tag.putInt("Type", type == null ? 0 : type.getId());
+        tag.putInt("Type", type == null ? 0 : type.ordinal());
         tag.putInt("Skin", skin);
     }
 

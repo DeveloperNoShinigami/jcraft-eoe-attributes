@@ -55,7 +55,7 @@ public class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, White
                         return; // Can't overwrite other's stands
                     }
                     if (data.contains("StandID", NbtElement.INT_TYPE)) {
-                        itemStand = StandType.fromId(data.getInt("StandID"));
+                        itemStand = StandType.fromIdOrOrdinal(data.getInt("StandID"));
                     }
                     if (itemStand == null) {
                         return;

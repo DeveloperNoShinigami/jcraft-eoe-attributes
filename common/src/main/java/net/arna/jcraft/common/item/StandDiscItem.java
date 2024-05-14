@@ -67,14 +67,14 @@ public class StandDiscItem extends Item {
         userStand = standData.getType();
         userSkin = standData.getSkin();
         if (data.contains("StandID", NbtElement.INT_TYPE)) {
-            itemStand = StandType.fromId(data.getInt("StandID"));
+            itemStand = StandType.fromIdOrOrdinal(data.getInt("StandID"));
         }
         if (data.contains("Skin", NbtElement.INT_TYPE)) {
             itemSkin = data.getInt("Skin");
         }
 
         standData.setTypeAndSkin(itemStand, itemSkin);
-        data.putInt("StandID", userStand == null ? 0 : userStand.getId());
+        data.putInt("StandID", userStand == null ? 0 : userStand.ordinal());
         data.putInt("Skin", userSkin);
 
         StandEntity<?, ?> stand = standData.getStand();
@@ -108,7 +108,7 @@ public class StandDiscItem extends Item {
 
         ItemStack stack = new ItemStack(JItemRegistry.STAND_DISC.get());
         NbtCompound nbt = stack.getOrCreateNbt();
-        nbt.putInt("StandID", type.getId());
+        nbt.putInt("StandID", type.ordinal());
         nbt.putInt("Skin", skin);
 
         return stack;
@@ -124,7 +124,7 @@ public class StandDiscItem extends Item {
         }
 
         NbtCompound nbt = stack.getNbt();
-        return nbt == null || !nbt.contains("StandID", NbtElement.INT_TYPE) ? null : StandType.fromId(nbt.getInt("StandID"));
+        return nbt == null || !nbt.contains("StandID", NbtElement.INT_TYPE) ? null : StandType.fromIdOrOrdinal(nbt.getInt("StandID"));
     }
 
     public static void setSkin(ItemStack stack, int skin) {
