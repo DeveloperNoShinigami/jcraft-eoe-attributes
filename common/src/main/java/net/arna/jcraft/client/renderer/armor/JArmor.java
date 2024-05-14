@@ -34,30 +34,30 @@ public class JArmor<T extends Item & GeoItem> extends GeoArmorRenderer<T> {
     @Nullable
     @Override
     public GeoBone getLeftArmBone() {
-        return this.model.getBone("leftArm").orElse(super.getRightArmBone());
+        return this.model.getBone("leftArm").orElse(super.getLeftArmBone());
     }
 
     @Nullable
     @Override
     public GeoBone getRightLegBone() {
-        return this.model.getBone("rightLeg").orElse(super.getRightArmBone());
+        return this.model.getBone("rightLeg").orElse(super.getRightLegBone());
     }
 
     @Nullable
     @Override
     public GeoBone getLeftLegBone() {
-        return this.model.getBone("leftLeg").orElse(super.getRightArmBone());
+        return this.model.getBone("leftLeg").orElse(super.getLeftLegBone());
     }
 
     @Nullable
     @Override
     public GeoBone getRightBootBone() {
-        return this.model.getBone("rightBoot").orElse(super.getRightArmBone());
+        return this.model.getBone("rightBoot").orElse(super.getRightBootBone());
     }
 
     @Nullable
     @Override
     public GeoBone getLeftBootBone() {
-        return this.model.getBone("leftBoot").orElse(super.getRightArmBone());
+        return this.model.getBone("leftBoot").orElse(super.getLeftBootBone());
     }
 }
