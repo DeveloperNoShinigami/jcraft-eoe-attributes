@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class AnkhRenderer extends GeoEntityRenderer<AnkhProjectile> {
+public class AnkhRenderer extends GeoProjectileRenderer<AnkhProjectile> {
 
     public AnkhRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new AnkhModel());

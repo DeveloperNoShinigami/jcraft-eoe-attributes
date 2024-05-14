@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class BubbleRenderer extends GeoEntityRenderer<BubbleProjectile> {
+public class BubbleRenderer extends GeoProjectileRenderer<BubbleProjectile> {
     public BubbleRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new BubbleModel());
     }

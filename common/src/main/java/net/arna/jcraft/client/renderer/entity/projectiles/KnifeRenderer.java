@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class KnifeRenderer extends GeoEntityRenderer<KnifeProjectile> {
+public class KnifeRenderer extends GeoProjectileRenderer<KnifeProjectile> {
 
     public KnifeRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new KnifeModel());
@@ -24,4 +24,6 @@ public class KnifeRenderer extends GeoEntityRenderer<KnifeProjectile> {
     public RenderLayer getRenderType(KnifeProjectile animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
         return RenderLayer.getEntityTranslucent(texture);
     }
+
+
 }

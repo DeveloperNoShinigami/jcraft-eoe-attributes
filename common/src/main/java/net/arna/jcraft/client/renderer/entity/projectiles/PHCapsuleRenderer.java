@@ -7,7 +7,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class PHCapsuleRenderer extends GeoEntityRenderer<PHCapsuleProjectile> {
+public class PHCapsuleRenderer extends GeoProjectileRenderer<PHCapsuleProjectile> {
 
     public PHCapsuleRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new PHCapsuleModel());

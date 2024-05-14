@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 
-public class BulletRenderer extends GeoEntityRenderer<BulletProjectile> {
+public class BulletRenderer extends GeoProjectileRenderer<BulletProjectile> {
     public BulletRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new BulletModel()); // 3x1x1 px cuboid model
     }

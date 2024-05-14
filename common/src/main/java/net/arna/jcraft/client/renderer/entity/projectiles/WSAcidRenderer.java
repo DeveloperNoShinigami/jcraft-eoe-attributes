@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class WSAcidRenderer extends GeoEntityRenderer<WSAcidProjectile> {
+public class WSAcidRenderer extends GeoProjectileRenderer<WSAcidProjectile> {
     public WSAcidRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new WSAcidModel());
     }

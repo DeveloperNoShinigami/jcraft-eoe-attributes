@@ -5,7 +5,7 @@ import net.arna.jcraft.common.entity.projectile.EmeraldProjectile;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class EmeraldRenderer extends GeoEntityRenderer<EmeraldProjectile> {
+public class EmeraldRenderer extends GeoProjectileRenderer<EmeraldProjectile> {
     public EmeraldRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new EmeraldModel());
     }

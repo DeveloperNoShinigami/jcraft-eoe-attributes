@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 
-public class MeteorRenderer extends GeoEntityRenderer<MeteorProjectile> {
+public class MeteorRenderer extends GeoProjectileRenderer<MeteorProjectile> {
 
     public MeteorRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new MeteorModel());

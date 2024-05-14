@@ -12,7 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class BlockProjectileRenderer extends GeoEntityRenderer<BlockProjectile> {
+public class BlockProjectileRenderer extends GeoProjectileRenderer<BlockProjectile> {
     private final ItemRenderer itemRenderer;
 
     public BlockProjectileRenderer(EntityRendererFactory.Context ctx) {

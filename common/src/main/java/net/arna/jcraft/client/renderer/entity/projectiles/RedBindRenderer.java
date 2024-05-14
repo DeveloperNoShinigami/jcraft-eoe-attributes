@@ -9,7 +9,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class RedBindRenderer extends GeoEntityRenderer<RedBindEntity> {
+public class RedBindRenderer extends GeoProjectileRenderer<RedBindEntity> {
     public RedBindRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new RedBindModel());
     }

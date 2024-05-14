@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class BloodProjectileRenderer extends GeoEntityRenderer<BloodProjectile> {
+public class BloodProjectileRenderer extends GeoProjectileRenderer<BloodProjectile> {
     public BloodProjectileRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new BloodProjectileModel());
     }

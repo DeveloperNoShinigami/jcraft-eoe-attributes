@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class LaserProjectileRenderer extends GeoEntityRenderer<LaserProjectile> {
+public class LaserProjectileRenderer extends GeoProjectileRenderer<LaserProjectile> {
     public LaserProjectileRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new LaserProjectileModel());
     }

@@ -12,7 +12,7 @@ import org.joml.Quaternionf;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 
-public class LifeDetectorRenderer extends GeoEntityRenderer<LifeDetectorEntity> {
+public class LifeDetectorRenderer extends GeoProjectileRenderer<LifeDetectorEntity> {
     public LifeDetectorRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new LifeDetectorModel());
     }

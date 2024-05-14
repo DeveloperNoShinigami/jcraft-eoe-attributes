@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class SunBeamRenderer extends GeoEntityRenderer<SunBeamProjectile> {
+public class SunBeamRenderer extends GeoProjectileRenderer<SunBeamProjectile> {
 
     public SunBeamRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new SunBeamModel());

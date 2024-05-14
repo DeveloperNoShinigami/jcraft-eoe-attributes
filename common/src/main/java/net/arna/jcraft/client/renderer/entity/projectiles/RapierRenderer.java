@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class RapierRenderer extends GeoEntityRenderer<RapierProjectile> {
+public class RapierRenderer extends GeoProjectileRenderer<RapierProjectile> {
 
     public RapierRenderer(EntityRendererFactory.Context renderManagerIn) {
         super(renderManagerIn, new RapierModel());
