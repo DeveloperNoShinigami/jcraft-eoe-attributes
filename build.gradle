@@ -61,6 +61,8 @@ subprojects {
 
         compileOnly 'org.projectlombok:lombok:1.18.32'
         annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
+        modRuntimeOnly "com.ptsmods:devlogin:3.4.1"
     }
 
     java {
