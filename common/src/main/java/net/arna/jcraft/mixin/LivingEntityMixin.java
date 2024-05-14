@@ -79,7 +79,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
 
     // Inability to jump in specific circumstances
     @Inject(cancellable = true, method = "getJumpBoostVelocityModifier", at = @At("HEAD"))
-    public void jcraft$getJumpBoostVelocityModifier(CallbackInfoReturnable<Double> cir) {
+    public void jcraft$getJumpBoostVelocityModifier(CallbackInfoReturnable<Float> cir) {
         LivingEntity entity = ((LivingEntity) (Object) this);
         StandEntity<?, ?> stand = JUtils.getStand(entity);
         StatusEffectInstance stun = entity.getStatusEffect(JStatusRegistry.DAZED);
@@ -88,7 +88,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
                         (stun != null && stun.getAmplifier() != 2) || // Stunned (not blocking)
                         (stand != null && stand.isRemoteAndControllable()) // Stand ON in controllable remote mode
         ) {
-            cir.setReturnValue(-1.0D); // Nullify jump
+            cir.setReturnValue(-1.0f); // Nullify jump
         }
         /*
         else if (stand != null && (stand.curAttack != null && stand.curAttack.attackType == AttackType.BARRAGE)) { // Stand ON and barraging
