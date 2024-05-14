@@ -34,14 +34,31 @@
 9. Add the texture(s) for the block in `textures/item`. 
 10. Test your addition.
 
+## Adding a Stand
+1. Create the class `MyEntity` (replacing `My` with its name of course), subclassing `StandEntity`.
+2. Create an inner `enum` called `State` that implements `StandAnimationState` with at least two entries: `IDLE` and `BLOCK`.
+3. Implement `getThis()` (just returning `this`), `getStateValues()` (returning `State.values()`), `getSummonAnimation()` (returning `"animation.my.summon"`) and `getBlockState()` (returning `State.BLOCK`).
+4. Add a constructor that only takes a `World` as a parameter. Ignore the missing type for the `super` call right now.
+5. Add the type of the stand to `JEntityTypeRegistry`. The dimension parameter is the hitbox of the stand in blocks.
+6. Register the stand attributes in `JEntityTypeRegistry#registerAttributes`.
+7. Add the stand to `StandType`.
+8. Use the newly created `enum` entry in the `super` constructor of `MyEntity`.
+9. Create the class `MyModel` extending `StandEntityModel`.
+10. Create the class `MyRenderer` extending `GeoEntityRenderer`.
+11. Add `MyRenderer` to `JEntityRendererRegister`.
+12. Add the different skin PNGs, `my.geo.json` and `my.animation.json` from the `my.bbmodel` file from our modelers.
+13. Let someone take care of the animations.
+14. Add an English translation of the entity to `en_us.json`.
+15. Test your addition.
+
 ## Adding an Entity (Type)
 1. Create the class `MyEntity` (replacing `My` with its name of course), subclassing `Entity` or one of its subclasses (like `PathAwareEntity`).
 2. Add the interface `GeoEntity` to `MyEntity`.
 3. Add the line `private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);` to `MyEntity` and implement the interface getter accordingly.
 4. Add the method `public static DefaultAttributeContainer.Builder createMyAttributes()` to `MyEntity` and return the stats for your entity, e.g. use `MobEntity.createMobAttributes()`.
 5. Add a constructor that only takes a `World` as a parameter. Ignore the missing type for the `super` call right now.
-6. Add the type of the entity to `JEntityTypeRegistry`. The dimension parameter is the hitbox of your entity in blocks.
-7. Register your entity attributes in `JEntityTypeRegistry#registerAttributes`.
+6. Add the type of the entity to `JEntityTypeRegistry`. The dimension parameter is the hitbox of the entity in blocks.
+7. Register the entity attributes in `JEntityTypeRegistry#registerAttributes`.
 8. Use the newly created entity type in the `super` constructor of `MyEntity`.
 9. Create the class `MyModel` extending `GeoModel`. Model resource is `JCraft.id("geo/my.geo.json")` and texture resource is `JCraft.id("textures/entity/my.png")`.
 10. Create the class `MyRenderer` extending `GeoEntityRenderer`.

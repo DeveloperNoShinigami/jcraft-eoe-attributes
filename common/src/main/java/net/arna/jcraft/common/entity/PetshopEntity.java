@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.entity;
 
+import net.arna.jcraft.common.component.living.CommonStandComponent;
+import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.tickable.JEnemies;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -19,7 +22,9 @@ public class PetshopEntity extends PathAwareEntity implements GeoEntity {
     public PetshopEntity(World world) {
         super(JEntityTypeRegistry.PETSHOP.get(), world);
         JEnemies.add(this);
-        // TODO Ayutac set standtype to Horus
+        final CommonStandComponent standData = JComponentPlatformUtils.getStandData(this);
+        standData.setType(StandType.HORUS);
+        standData.setSkin(0);
     }
 
     public static DefaultAttributeContainer.Builder createPetshopAttributes() {
