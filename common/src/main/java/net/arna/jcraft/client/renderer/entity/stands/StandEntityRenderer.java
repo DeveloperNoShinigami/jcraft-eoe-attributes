@@ -99,7 +99,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             netHeadYaw = lerpHeadRot - lerpBodyRot;
         }
 
-        if (animatable.getPose() == EntityPose.SLEEPING && animatable != null) {
+        if (animatable.getPose() == EntityPose.SLEEPING) {
             Direction bedDirection = animatable.getSleepingDirection();
 
             if (bedDirection != null) {
@@ -131,12 +131,13 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             float motionThreshold = getMotionAnimThreshold(animatable);
             Vec3d velocity = animatable.getVelocity();
             float avgVelocity = (float)(Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
+            EntityModelData data = new EntityModelData(shouldSit, animatable.isBaby(), -netHeadYaw, -headPitch);
             AnimationState<T> animationState = new AnimationState<T>(animatable, limbSwing, limbSwingAmount, partialTick, avgVelocity >= motionThreshold && limbSwingAmount != 0);
             long instanceId = getInstanceId(animatable);
 
             animationState.setData(DataTickets.TICK, animatable.getTick(animatable));
             animationState.setData(DataTickets.ENTITY, animatable);
-            animationState.setData(DataTickets.ENTITY_MODEL_DATA, new EntityModelData(shouldSit, animatable.isBaby(), -netHeadYaw, -headPitch));
+            animationState.setData(DataTickets.ENTITY_MODEL_DATA, data);
             this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
             this.model.handleAnimations(animatable, instanceId, animationState);
         }

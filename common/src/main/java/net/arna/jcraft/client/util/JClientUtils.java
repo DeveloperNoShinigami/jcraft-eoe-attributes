@@ -93,9 +93,8 @@ public class JClientUtils {
             overVel = MathHelper.clamp((float) playerVel.horizontalLength() - 0.05f, -1f, 1f);
 
             // If going backwards
-            if (playerVel.normalize().add(entity.getRotationVector()).horizontalLengthSquared() < playerVel.normalize().horizontalLengthSquared()) {
+            if (playerVel.normalize().add(entity.getRotationVector()).horizontalLengthSquared() < playerVel.normalize().horizontalLengthSquared())
                 velInfluence *= -1;
-            }
 
             CoreGeoBone torso = animationProcessor.getBone("torso");
             if (torso != null) {
@@ -112,9 +111,7 @@ public class JClientUtils {
             CoreGeoBone head = animationProcessor.getBone("head");
             if (head != null) {
                 float headPitch = (player.getPitch() - overVel * velInfluence) * 3.1415f / 180f;
-                if (flipHead) {
-                    headPitch = -headPitch;
-                }
+                if (flipHead) headPitch = -headPitch;
                 head.setRotX(headPitch + hPO);
             }
         } else if (entity.getMoveStun() > 0) {
