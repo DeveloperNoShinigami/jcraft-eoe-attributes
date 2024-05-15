@@ -29,13 +29,13 @@ Modify the hitboxes to match the models of:
 basically, there is code in the current version
 that adds your players pitch
 to the stands pitch
-i think it references a base bone"
+i think it references a base bone"~~
 
-"jclientutils
+~~"jclientutils
 Arna - animateGenericHumanoid
-or something along those lines
+~~or something along those lines
 MrSterner — Today at 19:29
-thats not even in the render class:why~1:
+thats not even in the render class:why1:~~
 Arna — Today at 19:29
 should be in JStandModel or whatever we named it"~~
 
