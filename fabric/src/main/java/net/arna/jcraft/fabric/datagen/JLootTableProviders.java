@@ -1,22 +1,19 @@
 package net.arna.jcraft.fabric.datagen;
 
 import com.google.common.collect.Maps;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.entry.LootTableEntry;
 import net.minecraft.loot.function.LootFunction;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
@@ -48,21 +45,37 @@ public class JLootTableProviders {
     public static class EntityLoot extends SimpleFabricLootTableProvider {
 
         private final Map<Identifier, LootTable.Builder> loot = Maps.newHashMap();
+
         public EntityLoot(FabricDataOutput output) {
             super(output, LootContextTypes.ENTITY);
         }
 
-        //Add new entries here
+        // add new entries here
         private void generateLoot() {
             addDrop(JEntityTypeRegistry.PETSHOP.get(), this::petshopLoot);
+            addDrop(JEntityTypeRegistry.AYA_TSUJI.get(), this::ayaTsujiLoot);
+            addDrop(JEntityTypeRegistry.DARBY_OLDER.get(), this::darbyOlderLoot);
         }
 
-
-        //Loot builder for Petshop
+        // loot builder for Petshop
         private LootTable.Builder petshopLoot(EntityType<?> type) {
             return LootTable.builder()
                     .pool(constantPool(1f).with(ItemEntry.builder(Items.FEATHER).apply(uniformAmount(1f, 2f))))
                     .pool(constantPool(1f).with(ItemEntry.builder(Items.CHAIN).apply(constantAmount(1f))));
+        }
+
+        // loot builder for Aya Tsuji
+        private LootTable.Builder ayaTsujiLoot(EntityType<?> type) {
+            return LootTable.builder()
+                    .pool(constantPool(1f)
+                            .with(ItemEntry.builder(Items.AIR).weight(3).apply(constantAmount(1f)))
+                            .with(ItemEntry.builder(JItemRegistry.CINDERELLA_MASK.get()).weight(1).apply(constantAmount(1f))));
+        }
+
+        // loot builder for D'Arby Older
+        private LootTable.Builder darbyOlderLoot(EntityType<?> type) {
+            return LootTable.builder()
+                    .pool(constantPool(1f).with(ItemEntry.builder(Items.FEATHER).apply(uniformAmount(2f, 5f))));
         }
 
         public <T extends Entity> void addDrop(EntityType<T> type, Function<EntityType<T>, LootTable.Builder> function) {
