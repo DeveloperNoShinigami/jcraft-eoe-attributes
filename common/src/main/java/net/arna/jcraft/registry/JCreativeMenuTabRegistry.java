@@ -82,6 +82,7 @@ public interface JCreativeMenuTabRegistry {
         // spawn eggs
         CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.SPAWN_EGGS.getValue()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptAfter(Items.AXOLOTL_SPAWN_EGG, JItemRegistry.AYA_TSUJI_SPAWN_EGG.get());
+            output.acceptAfter(Items.CREEPER_SPAWN_EGG, JItemRegistry.DARBY_OLDER_SPAWN_EGG.get());
             output.acceptAfter(Items.PARROT_SPAWN_EGG, JItemRegistry.PETSHOP_SPAWN_EGG.get());
         });
     }
@@ -162,10 +163,10 @@ public interface JCreativeMenuTabRegistry {
                             entries.add(StandDiscItem.createDiscStack(standType, skin));
                         }
                     }
-                    // spawn eggs
-                    // season 3
+                    // spawn eggs season 3
+                    entries.add(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get());
                     entries.add(JItemRegistry.PETSHOP_SPAWN_EGG.get());
-                    // season 4
+                    // spawn eggs season 4
                     entries.add(JItemRegistry.AYA_TSUJI_SPAWN_EGG.get());
                     // weird items
                     if (JItemRegistry.DEBUG_WAND != null) {

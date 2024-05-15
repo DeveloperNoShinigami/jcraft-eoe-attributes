@@ -439,6 +439,14 @@ public interface JEntityTypeRegistry {
             ).setDimensions(0.65f, 1.7f).build("cinderella")
     );
 
+    RegistrySupplier<EntityType<DarbyOlderEntity>> DARBY_OLDER = ENTITY_TYPE_REGISTRY.register(JCraft.id("darby_older"),
+            () -> EntityType.Builder.create(
+                            (EntityType<DarbyOlderEntity> entityType, World world) -> new DarbyOlderEntity(world),
+                            SpawnGroup.MISC
+                    ).setDimensions(1f, 2f)
+                    .build("darby_older")
+    );
+
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
         EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
@@ -494,6 +502,7 @@ public interface JEntityTypeRegistry {
 
         EntityAttributeRegistry.register(PETSHOP, PetshopEntity::createPetshopAttributes);
         EntityAttributeRegistry.register(AYA_TSUJI, AyaTsujiEntity::createAyaTsujiAttributes);
+        EntityAttributeRegistry.register(DARBY_OLDER, DarbyOlderEntity::createDarbyOlderAttributes);
     }
 
     static void init() {
