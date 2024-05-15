@@ -15,7 +15,7 @@ public class WeakMoveVariable<T> extends MoveVariable<T> {
 
     @Override
     MoveContext.Entry<T> createEntry() {
-        return super.createEntry();
+        return new WeakEntry<>(getType());
     }
 
     private static class WeakEntry<T> extends MoveContext.Entry<T> {
