@@ -18,7 +18,6 @@ public class PetshopModel extends GeoModel<PetshopEntity> {
 
     @Override
     public Identifier getAnimationResource(PetshopEntity animatable) {
-        // TODO Arna
-        return JCraft.id("petshop");
+        return JCraft.id("animations/petshop.animation.json");
     }
 }

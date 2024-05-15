@@ -43,13 +43,12 @@ public class PetshopEntity extends PathAwareEntity implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", this::animationPredicate));
+        controllers.add(new AnimationController<>(this, "controller", this::animationPredicate));
         // TODO Arna
     }
 
     // conditions for certain animations to play (PlayState.CONTINUE)
-    private PlayState animationPredicate(AnimationState<GeoAnimatable> state) {
-        // if the entity is moving, play the "tpose" animation
+    private PlayState animationPredicate(AnimationState<PetshopEntity> state) {
         if (state.isMoving()) {
             state.setAnimation(RawAnimation.begin().thenLoop("walk"));
         }
