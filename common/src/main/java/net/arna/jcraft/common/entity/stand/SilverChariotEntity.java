@@ -244,10 +244,10 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         freespace =
                 """
                         BNBs:
-                            (Armor ON) M1>Barrage>M1>Cleave>Spinning Blade>Shooting Star>M1
-                            (Armor ON) Shooting Star>M1>Barrage>Impaling Thrust
-                            (Armor OFF) Shooting Star>M1>Spinning Blade>Barrage>M1>Cleave>Impaling Thrust
-                            (Armor OFF) M1>Spinning Blade>Barrage>Shooting Star>Cleave>M1
+                            (Armor ON) Light>Barrage>Light>Cleave>Spinning Blade>Shooting Star>Light
+                            (Armor ON) Shooting Star>Light>Barrage>Impaling Thrust
+                            (Armor OFF) Shooting Star>Light>Spinning Blade>Barrage>Light>Cleave>Impaling Thrust
+                            (Armor OFF) Light>Spinning Blade>Barrage>Shooting Star>Cleave>Light
                             (Armor OFF) Impaling Thrust>dash>Barrage>...
                         """;
 
@@ -260,8 +260,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         freespace =
                 """
                         BNBs:
-                            (M1>)Charge~Barrage>M1>Spinning Blade>M1~M1
-                            (M1>)Charge~Barrage>God of Death""";
+                            (Light>)Charge~Barrage>Light>Spinning Blade>Light~Light
+                            (Light>)Charge~Barrage>God of Death""";
 
         registerMoves();
     }

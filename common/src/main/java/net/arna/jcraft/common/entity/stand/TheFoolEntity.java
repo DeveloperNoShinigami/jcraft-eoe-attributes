@@ -216,17 +216,17 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                         CROUCHING reduces attack distance by half, allowing better space control
                                                 
                         BNBs:
-                            M1>Pound~Slam>Launch>M1>Burn Rubber>Finisher*
-                            Burn Rubber>M1>Pound~Slam>Launch>Finisher*
-                            Launch>M1>Burn Rubber>M1>Pound~Slam>Finisher*
+                            Light>Pound~Slam>Launch>Light>Burn Rubber>Finisher*
+                            Burn Rubber>Light>Pound~Slam>Launch>Finisher*
+                            Launch>Light>Burn Rubber>Light>Pound~Slam>Finisher*
 
                             Stylish:
                             the social distancing
-                            M1>Pound~Slam>M1>Combo>Charge>Sandwave
+                            Light>Pound~Slam>Light>Combo>Charge>Sandwave
                             the pancake flip
-                            Launch>Pound~Slam>M1>Burn Rubber>Finisher*
+                            Launch>Pound~Slam>Light>Burn Rubber>Finisher*
 
-                            *Finisher: M1>...
+                            *Finisher: Light>...
                                        Charge/Tornado>...
                                        Sand Clone/Sandwave""";
 

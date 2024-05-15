@@ -194,9 +194,9 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
         freespace = """
                 BNBs:
                 -the scorpy patty (sets up stand off transition)
-                (M1>)Barrage>jump>Overhead Kick>Life Beam>M1>Life Beam (second hit)
+                (Light>)Barrage>jump>Overhead Kick>Life Beam>Light>Life Beam (second hit)
                 -knockdown experience
-                M1>Barrage>Life Beam>M1~Overhead Smash>Life Beam (second hit)""";
+                Light>Barrage>Life Beam>Light~Overhead Smash>Life Beam (second hit)""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.7f, 0.8f, 1.0f),

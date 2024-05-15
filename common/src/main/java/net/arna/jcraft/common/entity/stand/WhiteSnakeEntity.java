@@ -181,16 +181,16 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                 """
                         BNBs:
                             -the gimp
-                            M1>Gut Punch>Poison Spew
+                            Light>Gut Punch>Poison Spew
                                                 
                             -the el mayo (optimal damage with disk moves)
-                            Memory Disk>M1>Barrage>Leg Crusher>Stand Disk>M1~M1
+                            Memory Disk>Light>Barrage>Leg Crusher>Stand Disk>Light~Light
                                         
                             -the gazebo (optimal damage without disk)
-                            M1>Barrage>Leg Crusher>Donut>M1~M1
+                            Light>Barrage>Leg Crusher>Donut>Light~Light
                             
                             -the protein shake (sets up mixups)
-                            M1>Barrage>Leg Crusher>Charged Spew""";
+                            Light>Barrage>Leg Crusher>Charged Spew""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(1f, 1f, 1f),

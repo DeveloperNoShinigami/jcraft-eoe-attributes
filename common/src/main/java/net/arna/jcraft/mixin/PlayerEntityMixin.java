@@ -127,7 +127,7 @@ public abstract class PlayerEntityMixin implements IComboCounter {
         }
     }
 
-    // Can't M1 in TS or during spec moves, LivingEntity does not override this
+    // Can't M1/Light in TS or during spec moves, LivingEntity does not override this
     @Inject(cancellable = true, method = "attack", at = @At("HEAD"))
     public void jcraft$attack(Entity target, CallbackInfo info) {
         PlayerEntity player = (PlayerEntity) (Object) this;
@@ -135,7 +135,7 @@ public abstract class PlayerEntityMixin implements IComboCounter {
             info.cancel();
         }
 
-        // Can't M1 without a weapon while stand ON
+        // Can't M1/Light without a weapon while stand ON
         if (JUtils.getStand(player) != null && player.getMainHandStack().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()) {
             info.cancel();
         }

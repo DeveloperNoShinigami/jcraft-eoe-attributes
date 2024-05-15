@@ -105,10 +105,10 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
         freespace = """
                 BNBs:
                     -Standard bomb plant confirm and SHA setup
-                    M1~M1>Barrage>Bomb plant>Detonate(>Sheer Heart Attack)
+                    Light~Light>Barrage>Bomb plant>Detonate(>Sheer Heart Attack)
                     
                     -Confirm while bomb plant is on cd
-                    M1~M1>Barrage>Heavy(>Sheer Heart Attack)""";
+                    Light~Light>Barrage>Heavy(>Sheer Heart Attack)""";
     }
 
     @Override

@@ -191,13 +191,13 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         freespace = """
                 BNBs:
                     -the gamer (THE bnb)
-                    M1>Barrage>delay.Move Cancel>M1>Heavy~Overhead
+                    Light>Barrage>delay.Move Cancel>Light>Heavy~Overhead
                     
                     -the loop zoopler (sub optimal damage for a setup that kills them if you guess right)
-                    Eye Chop>Donut>M1>Heavy~Overhead>Time Erase
+                    Eye Chop>Donut>Light>Heavy~Overhead>Time Erase
                     
                     -hits like a firetruck (death)
-                    Donut>Move Cancel>Timeskip>Barrage>Move Cancel>M1>Heavy>Move Cancel>Eye Chop>Sweep
+                    Donut>Move Cancel>Timeskip>Barrage>Move Cancel>Light>Heavy>Move Cancel>Eye Chop>Sweep
                     """;
 
         auraColors = new Vector3f[]{
