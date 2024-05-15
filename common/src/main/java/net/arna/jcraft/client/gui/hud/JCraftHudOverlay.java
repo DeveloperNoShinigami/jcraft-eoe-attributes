@@ -91,6 +91,7 @@ public class JCraftHudOverlay {
             //RenderSystem.setShaderTexture(0, FULL_GAUGE);
             ctx.drawTexture(FULL_GAUGE, x, y, 0, 0, value * gaugeWidth / max, 5, gaugeWidth, 5);
             gaugeHeightOffset -= 6;
+            RenderSystem.setShaderColor(1, 1, 1, 1f);
         }
     }
 }
