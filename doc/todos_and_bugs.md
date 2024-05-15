@@ -5,8 +5,22 @@
 * Horus
 * Aya Tsuji
 * Cinderella
+* Darby Older
+* Osiris
+* Darby Younger
+* Atum
+
+### Hitboxes
+Modify the hitboxes to match the models of:
+* Horus
+* Aya Tsuji
+* Darby Older
+* Osiris
+* Darby Younger
+* Atum
 
 ## Bugs
+### Knife bundle is thrown with handle first
 ### Stands dont rotate correctly, pitch
 "Arna - ik the exact line of code that fucks w this
 basically, there is code in the current version
