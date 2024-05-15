@@ -11,8 +11,13 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class PetshopEntity extends PathAwareEntity implements GeoEntity {
@@ -38,6 +43,18 @@ public class PetshopEntity extends PathAwareEntity implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        // TODO Arna
+        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", this::animationPredicate));
+    }
+
+    //Conditions for certain animations to Play (PlayState.CONTINUE)
+    private PlayState animationPredicate(AnimationState<GeoAnimatable> state) {
+        //If the entity is moving, play the "tpose" animation
+        if (state.isMoving()) {
+            state.setAnimation(RawAnimation.begin().thenLoop("tpose"));
+        } else { //else player "tpose2"
+            state.setAnimation(RawAnimation.begin().thenLoop("tpose2"));
+        }
+
+        return PlayState.CONTINUE;
     }
 }
