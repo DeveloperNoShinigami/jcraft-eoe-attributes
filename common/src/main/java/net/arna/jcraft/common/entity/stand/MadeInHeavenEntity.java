@@ -222,7 +222,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                                         
                         BNBs:
                             -the flashbang
-                            (Donut>M1>)Speed Slice>Low Kick>Fury Chop>M1>Barrage>dash>M1~M1
+                            (Donut>Light>)Speed Slice>Low Kick>Fury Chop>Light>Barrage>dash>Light~Light
                             
                             -""";
 

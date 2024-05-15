@@ -182,10 +182,10 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
         freespace = """
                 BNBs:
                     -the giogio
-                    M1>Barrage>M1>Tree>Rekka 1~2~3
+                    Light>Barrage>Light>Tree>Rekka 1~2~3
                     
                     -the superprince of gaming
-                    Rekka 1~2>M1>Barrage>M1>Tree>Heavy""";
+                    Rekka 1~2>Light>Barrage>Light>Tree>Heavy""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0f, 0.7f, 0.2f),

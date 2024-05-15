@@ -183,10 +183,10 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
                 """
                         BNBs:
                             -the sauce boss
-                            (M1>)Charge>cr.M1>Roundhouse>Barrage>M1>Donut>Roundhouse>M1~M1
+                            (Light>)Charge>cr.Light>Roundhouse>Barrage>Light>Donut>Roundhouse>Light~Light
                             
                             -the afternoon coffee
-                            Donut>Roundhouse>Charge>M1>Barrage>Roundhouse>M1~M1""";
+                            Donut>Roundhouse>Charge>Light>Barrage>Roundhouse>Light~Light""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0f, 0.7f, 0.3f),

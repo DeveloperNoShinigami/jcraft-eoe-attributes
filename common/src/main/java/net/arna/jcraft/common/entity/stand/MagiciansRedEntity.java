@@ -157,13 +157,13 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
                     
                 BNBs:
                     -the "this move is fire"
-                    M1>Crossfire
+                    Light>Crossfire
                     
                     -the happy camper
-                    M1>Low Kick>Variation/Life Detector
+                    Light>Low Kick>Variation/Life Detector
                     
                     -the "omg i have setups????"
-                    M1>Hammerfist>dash>M1>Red Bind>
+                    Light>Hammerfist>dash>Light>Red Bind>
                     ...Life Detector/Variation>any physical hit
                     ...Hurricane""";
 

@@ -111,10 +111,10 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
         freespace = """
                 BNBs:
                 -the kitty cat
-                M1~Low>Barrage>Bomb Plant/Bites the Dust Plant
+                Light~Low>Barrage>Bomb Plant/Bites the Dust Plant
                                     
                 -the ol razzle dazzle
-                (Already bomb planted) M1~Low>Barrage>M1>Elbow>Detonate""";
+                (Already bomb planted) Light~Low>Barrage>Light>Elbow>Detonate""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.9f, 0.7f, 0.8f),

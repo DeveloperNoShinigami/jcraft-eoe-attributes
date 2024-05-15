@@ -262,8 +262,8 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
         freespace = """
                 BNBs (i. - in Cream):
-                    M1>Assault>M1>Grab
-                    i.M1>land+s.OFF>s.ON+Assault>M1>Charge>Grab
+                    Light>Assault>Light>Grab
+                    i.Light>land+s.OFF>s.ON+Assault>Light>Charge>Grab
                     Chop>Destroy>Surprise
                     Chop>Void""";
 

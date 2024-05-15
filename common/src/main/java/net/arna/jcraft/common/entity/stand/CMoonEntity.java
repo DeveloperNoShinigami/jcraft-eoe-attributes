@@ -174,7 +174,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
 
                     BNBs:
                     -going up?
-                    M1>Barrage>jump>Block Launch>M1>Only One Punch>Block Launch (Projectile Hit)>...
+                    Light>Barrage>jump>Block Launch>Light>Only One Punch>Block Launch (Projectile Hit)>...
                         ...Grav. Hop>Ground Slam
                         ...Gut Punch""";
 

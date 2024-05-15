@@ -164,7 +164,7 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
                 BNBs:
                                         
                     -the superman
-                    M1>cr.Time Strike>Backhand>What an Ugly Watch>delay M1>Timestop~Star Breaker>dash/Timeskip>Barrage>M1""";
+                    Light>cr.Time Strike>Backhand>What an Ugly Watch>delay Light>Timestop~Star Breaker>dash/Timeskip>Barrage>Light""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.8f, 0.6f, 1.0f),

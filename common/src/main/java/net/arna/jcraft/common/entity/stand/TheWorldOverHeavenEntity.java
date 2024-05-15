@@ -231,10 +231,10 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                 """
                         BNBs:
                             -the ultrakill
-                            M1>Barrage>M1>Knives>Overwrite~S1/S2>dash>Singularity>Smite>M1~M1
+                            Light>Barrage>Light>Knives>Overwrite~S1/S2>dash>Singularity>Smite>Light~Light
                             
                             -JUDGE MENT
-                            crouching M1~M1>dash>Barrage>...""";
+                            crouching Light~Light>dash>Barrage>...""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.1f, 0.1f, 0.1f),

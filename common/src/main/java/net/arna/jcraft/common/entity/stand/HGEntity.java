@@ -234,8 +234,8 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                 """
                         BNBs:
                             -the calamari
-                            M1>Barrage>Net Set>delay.Emarald Splash>crouch.Emerald Splash>
-                            ...Extend>crouch.M1~M1
+                            Light>Barrage>Net Set>delay.Emarald Splash>crouch.Emerald Splash>
+                            ...Extend>crouch.Light~Light
                             ...Sendoff""";
 
         auraColors = new Vector3f[]{

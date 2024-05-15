@@ -226,10 +226,10 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
         freespace =
                 """
                         BNBs:
-                        M1 > Rekka1~Rekka2 > crouching M1 > Barrage >...
-                            ...crouching M1~M1
+                        Light > Rekka1~Rekka2 > crouching Light > Barrage >...
+                            ...crouching Light~Light
                             ...Ground Slam
-                            ...M1 > Grab
+                            ...Light > Grab
                         """;
     }
 
