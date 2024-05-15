@@ -4,6 +4,7 @@ import lombok.NonNull;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.SpecType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -26,7 +27,7 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     @Override
     public void setType(@NonNull SpecType type) {
         setTypeRaw(type);
-        sync();
+        sync(player);
     }
 
     private void setTypeRaw(SpecType type) {
@@ -40,7 +41,7 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
         return spec;
     }
 
-    public void sync() {
+    public void sync(Entity entity) {
     }
 
     public void readFromNbt(@NonNull NbtCompound tag) {

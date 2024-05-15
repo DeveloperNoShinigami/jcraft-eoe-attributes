@@ -1,6 +1,7 @@
 package net.arna.jcraft.forge.capability.impl.player;
 
 import net.arna.jcraft.common.component.impl.player.CommonPhComponentImpl;
+import net.arna.jcraft.common.component.impl.player.CommonSpecComponentImpl;
 import net.arna.jcraft.forge.JCraftForge;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
@@ -22,7 +23,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import static net.arna.jcraft.JCraft.MOD_ID;
 
-public class SpecCapability extends CommonPhComponentImpl implements JCapability {
+public class SpecCapability extends CommonSpecComponentImpl implements JCapability {
 
     public static Identifier SPEC_S2C = new Identifier(MOD_ID, "spec_s2c");
     public static Identifier SPEC_C2S = new Identifier(MOD_ID, "spec_c2s");
