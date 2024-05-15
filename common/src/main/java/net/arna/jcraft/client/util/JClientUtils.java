@@ -117,8 +117,8 @@ public class JClientUtils {
         } else if (entity.getMoveStun() > 0) {
             CoreGeoBone torso = animationProcessor.getBone("base");
             if (torso != null) {
-                float torsoPitch = (player.getPitch() * 0.9f) * 3.1415f / 180f;
-                torso.setRotX(torso.getRotX() - torsoPitch);
+                //float torsoPitch = (player.getPitch() * 0.9f) * 3.1415f / 180f;
+                //torso.setRotX(torso.getRotX() - torsoPitch);
             }
         }
     }
