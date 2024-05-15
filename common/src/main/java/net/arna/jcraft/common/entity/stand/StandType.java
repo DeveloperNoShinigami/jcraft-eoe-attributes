@@ -49,7 +49,6 @@ public enum StandType {
             Text.literal(":D"), Text.literal("Neutron Star"), Text.literal("Dark")),
     PURPLE_HAZE(JEntityTypeRegistry.PURPLE_HAZE.get(), PurpleHazeEntity::new, "purple_haze",
             Text.literal("Toxin"), Text.literal("Stopping Force"), Text.literal("Reversal")),
-    HORUS(JEntityTypeRegistry.HORUS.get(), HorusEntity::new, "horus"),
     C_MOON(JEntityTypeRegistry.C_MOON.get(), CMoonEntity::new, "cmoon", true,
             Text.literal("Inversion"), Text.literal("Gravity"), Text.literal("Rose")),
     MADE_IN_HEAVEN(JEntityTypeRegistry.MADE_IN_HEAVEN.get(), MadeInHeavenEntity::new, "mih", true,
@@ -64,6 +63,7 @@ public enum StandType {
             Text.literal("Judge, Jury, Executioner"), Text.literal("Diamond"), Text.literal("Over Heaven")),
     PURPLE_HAZE_DISTORTION(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION.get(), PurpleHazeDistortionEntity::new, "purple_haze_distortion", true,
             Text.literal("Black Knight"), Text.literal("Vintage"), Text.literal("Reversal")),
+    HORUS(JEntityTypeRegistry.HORUS.get(), HorusEntity::new, "horus"),
     ;
 
     /**
