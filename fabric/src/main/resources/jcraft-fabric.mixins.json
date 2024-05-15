@@ -6,10 +6,13 @@
     "EntityMixin",
     "ServerPlayerEntityMixin",
     "TimestopBlockMixin",
+    "gravity.EntityMixin",
+    "gravity.LivingEntityMixin",
     "gravity.ServerPlayerEntityMixin"
   ],
   "client": [
-    "ShaderProgramMixin"
+    "ShaderProgramMixin",
+    "client.KeyBindingMixin"
   ],
   "injectors": {
     "defaultRequire": 1

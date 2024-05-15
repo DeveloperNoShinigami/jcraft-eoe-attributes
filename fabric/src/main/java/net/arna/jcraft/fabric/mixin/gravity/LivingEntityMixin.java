@@ -1,4 +1,4 @@
-package net.arna.jcraft.mixin.gravity;
+package net.arna.jcraft.fabric.mixin.gravity;
 
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

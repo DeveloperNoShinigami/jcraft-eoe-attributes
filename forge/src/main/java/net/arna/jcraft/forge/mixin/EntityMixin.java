@@ -11,6 +11,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.TeleportTarget;
 import net.minecraftforge.common.util.ITeleporter;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -68,8 +69,8 @@ public abstract class EntityMixin {
     //todo (polishing): stand position autosolver
 
     @SuppressWarnings("ConstantValue")
-    @Inject(method = "changeDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;copyFrom(Lnet/minecraft/entity/Entity;)V"))
-    private void doNotPlayDesummonSoundWhenMovingWorld(ServerWorld arg, ITeleporter teleporter, CallbackInfoReturnable<Entity> cir) {
+    @Inject(method = "lambda$changeDimension$16", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;copyFrom(Lnet/minecraft/entity/Entity;)V"))
+    private void doNotPlayDesummonSoundWhenMovingWorld(ServerWorld arg, TeleportTarget portalinfo, Boolean spawnPortal, CallbackInfoReturnable<Entity> cir) {
         if (!((Object) this instanceof LivingEntity living)) {
             return;
         }

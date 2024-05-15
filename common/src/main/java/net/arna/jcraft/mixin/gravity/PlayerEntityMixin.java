@@ -6,6 +6,8 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -13,10 +15,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
@@ -57,36 +56,19 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     }
 
 
-    @ModifyArgs(
+    @ModifyArg(
             method = "travel",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/World;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;"
             )
     )
-    private void modify_move_multiply_0(Args args) {
+    private BlockPos modify_move_multiply_0(BlockPos pos) {
         Vec3d rotate = new Vec3d(0.0D, 1.0D - 0.1D, 0.0D);
         rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection(this));
-        args.set(0, (double) args.get(0) - rotate.x);
-        args.set(1, (double) args.get(1) - rotate.y + (1.0D - 0.1D));
-        args.set(2, (double) args.get(2) - rotate.z);
+        return BlockPos.ofFloored(pos.getX() - rotate.x, pos.getY() - rotate.y + (1.0D - 0.1D), pos.getZ()- rotate.z);
     }
-    //@Redirect(
-    //        method = "travel",
-    //        at = @At(
-    //                value = "NEW",
-    //                target = "Lnet/minecraft/util/math/BlockPos;<init>(DDD)V",
-    //                ordinal = 0
-    //        )
-    //)
-    //private BlockPos redirect_travel_new_0(double x, double y, double z) {
-    //    Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity)(Object)this);
-    //    if(gravityDirection == Direction.DOWN) {
-    //        return new BlockPos(x, y, z);
-    //    }
-//
-    //    return new BlockPos(this.getPos().add(RotationUtil.vecPlayerToWorld(0.0D, 1.0D - 0.1D, 0.0D, gravityDirection)));
-    //}
+
 
     @Redirect(
             method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;",
@@ -273,63 +255,171 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         return RotationUtil.rotPlayerToWorld(attacker.getYaw(), attacker.getPitch(), gravityDirection).x;
     }
 
-    @ModifyArgs(
+    @ModifyArg(
             method = "spawnParticles",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V",
                     ordinal = 0
-            )
+            ),
+            index = 1
     )
-    private void modify_addDeathParticless_addParticle_0(Args args) {
+    private double modify_addDeathParticless_addParticle_0(double x) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
-            return;
+            return x;
         }
-
-        Vec3d vec3d = this.getPos().subtract(RotationUtil.vecPlayerToWorld(this.getPos().subtract(args.get(1), args.get(2), args.get(3)), gravityDirection));
-        args.set(1, vec3d.x);
-        args.set(2, vec3d.y);
-        args.set(3, vec3d.z);
+        Vec3d vec3d = this.getPos().subtract(RotationUtil.vecPlayerToWorld(this.getPos().subtract(this.getParticleX(1.0), this.getRandomBodyY() + 1.0, this.getParticleZ(1.0)), gravityDirection));
+        return vec3d.x;
     }
 
-    @ModifyArgs(
+    @ModifyArg(
+            method = "spawnParticles",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V",
+                    ordinal = 0
+            ),
+            index = 1
+    )
+    private double modify_addDeathParticless_addParticle_1(double y) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        if (gravityDirection == Direction.DOWN) {
+            return y;
+        }
+        Vec3d vec3d = this.getPos().subtract(RotationUtil.vecPlayerToWorld(this.getPos().subtract(this.getParticleX(1.0), this.getRandomBodyY() + 1.0, this.getParticleZ(1.0)), gravityDirection));
+        return vec3d.y;
+    }
+
+    @ModifyArg(
+            method = "spawnParticles",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V",
+                    ordinal = 0
+            ),
+            index = 1
+    )
+    private double modify_addDeathParticless_addParticle_2(double z) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        if (gravityDirection == Direction.DOWN) {
+            return z;
+        }
+        Vec3d vec3d = this.getPos().subtract(RotationUtil.vecPlayerToWorld(this.getPos().subtract(this.getParticleX(1.0), this.getRandomBodyY() + 1.0, this.getParticleZ(1.0)), gravityDirection));
+        return vec3d.z;
+    }
+
+    @ModifyArg(
             method = "tickMovement",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/Box;expand(DDD)Lnet/minecraft/util/math/Box;",
                     ordinal = 0
-            )
+            ),
+            index = 1
     )
-    private void modify_tickMovement_expand_0(Args args) {
+    private double modify_tickMovement_expand_0(double x) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
-            return;
+            return x;
         }
 
-        Vec3d vec3d = RotationUtil.maskPlayerToWorld(args.get(0), args.get(1), args.get(2), gravityDirection);
-        args.set(0, vec3d.x);
-        args.set(1, vec3d.y);
-        args.set(2, vec3d.z);
+        Vec3d vec3d = RotationUtil.maskPlayerToWorld(1, 0, 1, gravityDirection);
+        return vec3d.x;
     }
 
-    @ModifyArgs(
+    @ModifyArg(
+            method = "tickMovement",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;expand(DDD)Lnet/minecraft/util/math/Box;",
+                    ordinal = 0
+            ),
+            index = 1
+    )
+    private double modify_tickMovement_expand_1(double y) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        if (gravityDirection == Direction.DOWN) {
+            return y;
+        }
+
+        Vec3d vec3d = RotationUtil.maskPlayerToWorld(1, 0, 1, gravityDirection);
+        return vec3d.y;
+    }
+
+    @ModifyArg(
+            method = "tickMovement",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;expand(DDD)Lnet/minecraft/util/math/Box;",
+                    ordinal = 0
+            ),
+            index = 1
+    )
+    private double modify_tickMovement_expand_2(double z) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        if (gravityDirection == Direction.DOWN) {
+            return z;
+        }
+
+        Vec3d vec3d = RotationUtil.maskPlayerToWorld(1, 0, 1, gravityDirection);
+        return vec3d.z;
+    }
+
+    @ModifyArg(
             method = "tickMovement",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/Box;expand(DDD)Lnet/minecraft/util/math/Box;",
                     ordinal = 1
-            )
+            ),
+            index = 1
     )
-    private void modify_tickMovement_expand_1(Args args) {
+    private double modify_tickMovement_expand_3(double x) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
-            return;
+            return x;
         }
 
-        Vec3d vec3d = RotationUtil.maskPlayerToWorld(args.get(0), args.get(1), args.get(2), gravityDirection);
-        args.set(0, vec3d.x);
-        args.set(1, vec3d.y);
-        args.set(2, vec3d.z);
+        Vec3d vec3d = RotationUtil.maskPlayerToWorld(1, 0, 1, gravityDirection);
+        return vec3d.x;
+    }
+
+    @ModifyArg(
+            method = "tickMovement",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;expand(DDD)Lnet/minecraft/util/math/Box;",
+                    ordinal = 1
+            ),
+            index = 1
+    )
+    private double modify_tickMovement_expand_4(double y) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        if (gravityDirection == Direction.DOWN) {
+            return y;
+        }
+
+        Vec3d vec3d = RotationUtil.maskPlayerToWorld(1, 0, 1, gravityDirection);
+        return vec3d.y;
+    }
+
+    @ModifyArg(
+            method = "tickMovement",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;expand(DDD)Lnet/minecraft/util/math/Box;",
+                    ordinal = 1
+            ),
+            index = 1
+    )
+    private double modify_tickMovement_expand_5(double z) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        if (gravityDirection == Direction.DOWN) {
+            return z;
+        }
+
+        Vec3d vec3d = RotationUtil.maskPlayerToWorld(1, 0, 1, gravityDirection);
+        return vec3d.z;
     }
 }

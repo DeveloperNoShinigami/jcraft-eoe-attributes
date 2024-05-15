@@ -204,22 +204,54 @@ public abstract class ServerPlayNetworkHandlerMixin {
     //}
 
 
-    @ModifyArgs(
+    @Unique private double xx;
+    @Unique private double yy;
+    @Unique private double zz;
+
+    @ModifyArg(
             method = "isEntityOnAir",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
-            )
+            ),
+            index = 0
     )
-    private void modify_onVehicleMove_move_0(Args args) {
+    private double modify_onVehicleMove_move_0(double x) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
-        Vec3d argVec = new Vec3d(args.get(0), args.get(1), args.get(2));
+        this.xx = x;
+        Vec3d argVec = new Vec3d(xx, yy, zz);
         argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
-
-        args.set(0, argVec.x);
-        args.set(1, argVec.y);
-        args.set(2, argVec.z);
-
+        return argVec.x;
     }
 
+    @ModifyArg(
+            method = "isEntityOnAir",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
+            ),
+            index = 0
+    )
+    private double modify_onVehicleMove_move_1(double y) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+        this.yy = y;
+        Vec3d argVec = new Vec3d(xx, yy, zz);
+        argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
+        return argVec.y;
+    }
+    @ModifyArg(
+            method = "isEntityOnAir",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
+            ),
+            index = 0
+    )
+    private double modify_onVehicleMove_move_2(double z) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+        this.zz = z;
+        Vec3d argVec = new Vec3d(xx, yy, zz);
+        argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
+        return argVec.z;
+    }
 }

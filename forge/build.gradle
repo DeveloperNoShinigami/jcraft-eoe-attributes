@@ -5,11 +5,11 @@ plugins {
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
     forge {
-        //mixinConfig "jcraft.mixins.json"
-        //mixinConfig "jcraft-forge.mixins.json"
+        mixinConfig "jcraft.mixins.json"
+        mixinConfig "jcraft-forge.mixins.json"
     }
     mixin {
-        //defaultRefmapName = "jcraft-refmap.json"
+        defaultRefmapName = "jcraft-refmap.json"
     }
 }
 

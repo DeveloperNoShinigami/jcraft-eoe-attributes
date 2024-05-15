@@ -1,6 +1,7 @@
 package net.arna.jcraft.mixin.gravity;
 
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.minecraft.entity.Entity;
@@ -13,6 +14,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
@@ -40,24 +42,57 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
         return modify;
     }
 
-
-    @ModifyArgs(
+    @ModifyArg(
             method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;<init>(Lnet/minecraft/entity/EntityType;DDDLnet/minecraft/world/World;)V",
-                    ordinal = 0
-            )
+                    target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;<init>(Lnet/minecraft/entity/EntityType;DDDLnet/minecraft/world/World;)V"
+            ),
+            index = 1
     )
-    private static void modifyargs_init_init_0(Args args, EntityType<? extends ThrownEntity> type, LivingEntity owner, World world) {
+    private static double modifyargs_init_init_0(double x, @Local LivingEntity owner) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
         if (gravityDirection == Direction.DOWN) {
-            return;
+            return x;
         }
 
         Vec3d pos = owner.getEyePos().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
-        args.set(1, pos.x);
-        args.set(2, pos.y);
-        args.set(3, pos.z);
+        return pos.x;
+    }
+
+    @ModifyArg(
+            method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;<init>(Lnet/minecraft/entity/EntityType;DDDLnet/minecraft/world/World;)V"
+            ),
+            index = 1
+    )
+    private static double modifyargs_init_init_1(double y, @Local LivingEntity owner) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
+        if (gravityDirection == Direction.DOWN) {
+            return y;
+        }
+
+        Vec3d pos = owner.getEyePos().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
+        return pos.y;
+    }
+
+    @ModifyArg(
+            method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;<init>(Lnet/minecraft/entity/EntityType;DDDLnet/minecraft/world/World;)V"
+            ),
+            index = 1
+    )
+    private static double modifyargs_init_init_2(double z, @Local LivingEntity owner) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
+        if (gravityDirection == Direction.DOWN) {
+            return z;
+        }
+
+        Vec3d pos = owner.getEyePos().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
+        return pos.z;
     }
 }

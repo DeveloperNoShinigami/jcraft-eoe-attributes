@@ -1,4 +1,4 @@
-package net.arna.jcraft.mixin.gravity;
+package net.arna.jcraft.forge.mixin.gravity;
 
 import com.google.common.collect.ImmutableList;
 import net.arna.jcraft.JCraft;
@@ -347,36 +347,64 @@ public abstract class EntityMixin {
         cir.setReturnValue(RotationUtil.vecPlayerToWorld(cir.getReturnValue(), gravityDirection));
     }
 
-    @ModifyArgs(
+    @ModifyArg(
             method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
-            )
+            ),
+            index = 1
     )
-    private void redirect_adjustMovementForCollisions_stretch_0(Args args) {
-        Vec3d rotate = new Vec3d(args.get(0), args.get(1), args.get(2));
+    private double redirect_adjustMovementForCollisions_stretch_0(double x) {
+        Vec3d rotate = new Vec3d(x, 0, 0);
         rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
-        args.set(0, rotate.x);
-        args.set(1, rotate.y);
-        args.set(2, rotate.z);
+        return rotate.x;
     }
 
-    @ModifyArgs(
+    @ModifyArg(
+            method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
+            ),
+            index = 1
+    )
+    private double redirect_adjustMovementForCollisions_stretch_1(double y) {
+        Vec3d rotate = new Vec3d(0, y, 0);
+        rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
+        return rotate.y;
+    }
+
+    @ModifyArg(
+            method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
+            ),
+            index = 1
+    )
+    private double redirect_adjustMovementForCollisions_stretch_2(double z) {
+        Vec3d rotate = new Vec3d(0, 0, z);
+        rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
+        return rotate.z;
+    }
+
+    @ModifyArg(
             method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/Box;offset(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Box;",
                     ordinal = 0
-            )
+            ),
+            index = 0
     )
-    private void redirect_adjustMovementForCollisions_offset_0(Args args) {
-        Vec3d rotate = args.get(0);
+    private Vec3d redirect_adjustMovementForCollisions_offset_0(Vec3d vec) {
+        Vec3d rotate = vec;
         rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
-        args.set(0, rotate);
+        return rotate;
     }
 
-    @ModifyArgs(
+    @ModifyArg(
             method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;",
             at = @At(
                     value = "INVOKE",
@@ -384,10 +412,10 @@ public abstract class EntityMixin {
                     ordinal = 1
             )
     )
-    private void redirect_adjustMovementForCollisions_offset_1(Args args) {
-        Vec3d rotate = args.get(0);
+    private Vec3d redirect_adjustMovementForCollisions_offset_1(Vec3d vec) {
+        Vec3d rotate = vec;
         rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
-        args.set(0, rotate);
+        return rotate;
     }
 
     @ModifyVariable(
@@ -531,20 +559,49 @@ public abstract class EntityMixin {
     //    cir.setReturnValue(RotationUtil.vecPlayerToWorld(playerMovementX, playerMovementY, playerMovementZ, gravityDirection));
     //}
 
-    @ModifyArgs(
+    @ModifyArg(
             method = "isInsideWall",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/Box;of(Lnet/minecraft/util/math/Vec3d;DDD)Lnet/minecraft/util/math/Box;",
                     ordinal = 0
-            )
+            ),
+            index = 1
     )
-    private void modify_isInsideWall_of_0(Args args) {
-        Vec3d rotate = new Vec3d(args.get(1), args.get(2), args.get(3));
+    private double modify_isInsideWall_of_0(double dx) {
+        Vec3d rotate = new Vec3d(dx, 0,0);
         rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
-        args.set(1, rotate.x);
-        args.set(2, rotate.y);
-        args.set(3, rotate.z);
+        return rotate.x;
+    }
+
+    @ModifyArg(
+            method = "isInsideWall",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;of(Lnet/minecraft/util/math/Vec3d;DDD)Lnet/minecraft/util/math/Box;",
+                    ordinal = 0
+            ),
+            index = 2
+    )
+    private double modify_isInsideWall_of_1(double dy) {
+        Vec3d rotate = new Vec3d(0, dy,0);
+        rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
+        return rotate.y;
+    }
+
+    @ModifyArg(
+            method = "isInsideWall",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;of(Lnet/minecraft/util/math/Vec3d;DDD)Lnet/minecraft/util/math/Box;",
+                    ordinal = 0
+            ),
+            index = 3
+    )
+    private double modify_isInsideWall_of_2(double dz) {
+        Vec3d rotate = new Vec3d(0, 0, dz);
+        rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
+        return rotate.z;
     }
 
     @ModifyArg(
@@ -589,7 +646,7 @@ public abstract class EntityMixin {
     }
 
     @ModifyVariable(
-            method = "updateMovementInFluid",
+            method = "lambda$updateFluidHeightAndDoFluidPushing$29",
             at = @At(
                     value = "INVOKE_ASSIGN",
                     target = "Lnet/minecraft/entity/Entity;getVelocity()Lnet/minecraft/util/math/Vec3d;",
@@ -607,13 +664,11 @@ public abstract class EntityMixin {
     }
 
     @ModifyArg(
-            method = "updateMovementInFluid",
+            method = "updateFluidHeightAndDoFluidPushing(Ljava/util/function/Predicate;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/math/Vec3d;add(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;",
-                    ordinal = 1
-            ),
-            index = 0
+                    target = "Lnet/minecraft/util/math/Vec3d;add(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;"
+            )
     )
     private Vec3d modify_updateMovementInFluid_add_0(Vec3d vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
@@ -705,20 +760,49 @@ public abstract class EntityMixin {
         }
     }
 
-    @ModifyArgs(
+    @ModifyArg(
             method = "doesNotCollide(DDD)Z",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/math/Box;offset(DDD)Lnet/minecraft/util/math/Box;",
                     ordinal = 0
-            )
+            ),
+            index = 0
     )
-    private void redirect_doesNotCollide_offset_0(Args args) {
-        Vec3d rotate = new Vec3d(args.get(0), args.get(1), args.get(2));
+    private double redirect_doesNotCollide_offset_0(double x) {
+        Vec3d rotate = new Vec3d(x, 0, 0);
         rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
-        args.set(0, rotate.x);
-        args.set(1, rotate.y);
-        args.set(2, rotate.z);
+        return rotate.x;
+    }
+
+    @ModifyArg(
+            method = "doesNotCollide(DDD)Z",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;offset(DDD)Lnet/minecraft/util/math/Box;",
+                    ordinal = 0
+            ),
+            index = 0
+    )
+    private double redirect_doesNotCollide_offset_1(double y) {
+        Vec3d rotate = new Vec3d(0, y, 0);
+        rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
+        return rotate.y;
+    }
+
+    @ModifyArg(
+            method = "doesNotCollide(DDD)Z",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/math/Box;offset(DDD)Lnet/minecraft/util/math/Box;",
+                    ordinal = 0
+            ),
+            index = 0
+    )
+    private double redirect_doesNotCollide_offset_2(double z) {
+        Vec3d rotate = new Vec3d(0, 0, z);
+        rotate = RotationUtil.vecPlayerToWorld(rotate, GravityChangerAPI.getGravityDirection((Entity) (Object) this));
+        return rotate.z;
     }
 
 

@@ -3,12 +3,14 @@
   "package": "net.arna.jcraft.forge.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "TimestopBlockMixin",
     "EntityMixin",
     "ServerPlayerEntityMixin",
+    "TimestopBlockMixin",
+    "gravity.LivingEntityMixin",
     "gravity.ServerPlayerEntityMixin"
   ],
   "client": [
+    "client.KeyBindingMixin"
   ],
   "injectors": {
     "defaultRequire": 1

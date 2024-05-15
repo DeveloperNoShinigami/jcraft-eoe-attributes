@@ -1,8 +1,9 @@
-package net.arna.jcraft.mixin.client;
+package net.arna.jcraft.forge.mixin.client;
 
 import net.arna.jcraft.client.util.TrackedKeyBinding;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraftforge.client.settings.KeyMappingLookup;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,9 +15,6 @@ import java.util.Map;
 
 @Mixin(KeyBinding.class)
 public class KeyBindingMixin {
-    @Shadow
-    @Final
-    private static Map<InputUtil.Key, KeyBinding> KEY_TO_BINDINGS;
 
     @Inject(method = "setPressed", at = @At("HEAD"))
     private void queueKeyPressOrRelease(boolean pressed, CallbackInfo ci) {

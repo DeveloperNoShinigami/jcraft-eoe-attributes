@@ -17,8 +17,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import java.util.List;
 import java.util.Map;
@@ -83,120 +82,43 @@ public abstract class AreaEffectCloudEntityMixin extends Entity {
     }
 
 
-    /*@Override
-    public Direction gravitychanger$getAppliedGravityDirection() {
-        Entity vehicle = this.getVehicle();
-        if(vehicle != null) {
-            return GravityChangerAPI.getGravityDirection(vehicle);
-        }
-
-        return GravityChangerAPI.getGravityDirection((AreaEffectCloudEntity)(Object)this);
-    }*/
-//
-//
-//
-    //  @Override
-    //  public void gravitychanger$onGravityChanged(Direction prevGravityDirection, boolean initialGravity) {
-    //      Direction gravityDirection = this.gravitychanger$getGravityDirection();
-//
-    //      this.fallDistance = 0;
-//
-    //      this.setBoundingBox(this.calculateBoundingBox());
-//
-    //      if(!initialGravity) {
-    //          // Adjust position to avoid suffocation in blocks when changing gravity
-    //          EntityDimensions dimensions = this.getDimensions(this.getPose());
-    //          Direction relativeDirection = RotationUtil.dirWorldToPlayer(gravityDirection, prevGravityDirection);
-    //          Vec3d relativePosOffset = switch(relativeDirection) {
-    //              case DOWN -> Vec3d.ZERO;
-    //              case UP -> new Vec3d(0.0D, dimensions.height - 1.0E-6D, 0.0D);
-    //              default -> Vec3d.of(relativeDirection.getVector()).multiply(dimensions.width / 2 - (gravityDirection.getDirection() == Direction.AxisDirection.POSITIVE ? 1.0E-6D : 0.0D)).add(0.0D, dimensions.width / 2 - (prevGravityDirection.getDirection() == Direction.AxisDirection.POSITIVE ? 1.0E-6D : 0.0D), 0.0D);
-    //          };
-    //          //this.setPosition(this.getPos().add(RotationUtil.vecPlayerToWorld(relativePosOffset, prevGravityDirection)));
-    //          if(GravityChangerMod.config.worldVelocity)
-    //          this.setVelocity(RotationUtil.vecWorldToPlayer(RotationUtil.vecPlayerToWorld(this.getVelocity(), prevGravityDirection), gravityDirection));
-//
-//
-//
-    //      }
-    //  }
-//
-    //  @Override
-    //  public Direction gravitychanger$getTrackedGravityDirection() {
-    //      return this.getDataTracker().get(gravitychanger$GRAVITY_DIRECTION);
-    //  }
-//
-    //  @Override
-    //  public void gravitychanger$setTrackedGravityDirection(Direction gravityDirection) {
-    //      this.getDataTracker().set(gravitychanger$GRAVITY_DIRECTION, gravityDirection);
-    //  }
-//
-//
-    //  @Override
-    //  public Direction gravitychanger$getDefaultTrackedGravityDirection() {
-    //      return this.getDataTracker().get(gravitychanger$DEFAULT_GRAVITY_DIRECTION);
-    //  }
-//
-    //  @Override
-    //  public void gravitychanger$setDefaultTrackedGravityDirection(Direction gravityDirection) {
-    //      this.getDataTracker().set(gravitychanger$DEFAULT_GRAVITY_DIRECTION, gravityDirection);
-    //  }
-//
-    //  @Override
-    //  public void gravitychanger$onTrackedData(TrackedData<?> data) {
-    //      if(!this.world.isClient) return;
-//
-    //      if(gravitychanger$GRAVITY_DIRECTION.equals(data)) {
-    //          Direction gravityDirection = this.gravitychanger$getGravityDirection();
-    //          if(this.gravitychanger$prevGravityDirection != gravityDirection) {
-    //              this.gravitychanger$onGravityChanged(this.gravitychanger$prevGravityDirection, true);
-    //              this.gravitychanger$prevGravityDirection = gravityDirection;
-    //          }
-    //      }
-    //  }
-//
-    //  @Inject(
-    //          method = "initDataTracker",
-    //          at = @At("RETURN")
-    //  )
-    //  private void inject_initDataTracker(CallbackInfo ci) {
-    //      this.dataTracker.startTracking(gravitychanger$GRAVITY_DIRECTION, Direction.DOWN);
-    //      this.dataTracker.startTracking(gravitychanger$DEFAULT_GRAVITY_DIRECTION, Direction.DOWN);
-    //  }
-//
-    //  @Inject(
-    //          method = "readCustomDataFromNbt",
-    //          at = @At("RETURN")
-    //  )
-    //  private void inject_readCustomDataFromNbt(NbtCompound nbt, CallbackInfo ci) {
-    //      if(nbt.contains("GravityDirection", NbtElement.INT_TYPE)) {
-    //          Direction gravityDirection = Direction.byId(nbt.getInt("GravityDirection"));
-    //          this.gravitychanger$setGravityDirection(gravityDirection, true);
-    //      }
-    //      if(nbt.contains("DefaultGravityDirection", NbtElement.INT_TYPE)) {
-    //          Direction gravityDirection = Direction.byId(nbt.getInt("DefaultGravityDirection"));
-    //          this.gravitychanger$setDefaultGravityDirection(gravityDirection, true);
-    //      }
-    //  }
-//
-    //  @Inject(
-    //          method = "writeCustomDataToNbt",
-    //          at = @At("RETURN")
-    //  )
-    //  private void inject_writeCustomDataToNbt(NbtCompound nbt, CallbackInfo ci) {
-    //      nbt.putInt("GravityDirection", this.gravitychanger$getGravityDirection().getId());
-    //      nbt.putInt("DefaultGravityDirection", this.gravitychanger$getDefaultGravityDirection().getId());
-    //  }
-
-
-    @ModifyArgs(
+    @ModifyArg(
             method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/World;addImportantParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"
-            )
+            ),
+            index = 1
     )
-    private void modify_move_multiply_0(Args args) {
+    private double modify_move_multiply_0(double x) {
+        return mod().x;
+    }
+
+    @ModifyArg(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/World;addImportantParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"
+            ),
+            index = 2
+    )
+    private double modify_move_multiply_1(double y) {
+        return mod().y;
+    }
+
+    @ModifyArg(
+            method = "tick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/World;addImportantParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"
+            ),
+            index = 3
+    )
+    private double modify_move_multiply_2(double z) {
+        return mod().z;
+    }
+
+    private Vec3d mod(){
         boolean bl = this.isWaiting();
         float f = this.getRadius();
 
@@ -218,11 +140,6 @@ public abstract class AreaEffectCloudEntityMixin extends Entity {
         e = modify.y;
         l = modify.z + (double) (MathHelper.sin(h) * k);
         modify = RotationUtil.vecPlayerToWorld(d, e, l, GravityChangerAPI.getGravityDirection(this));
-
-        args.set(1, modify.x);
-        args.set(2, modify.y);
-        args.set(3, modify.z);
+        return modify;
     }
-
-
 }
