@@ -23,7 +23,6 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.State> {
@@ -165,19 +164,9 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
         super(StandType.THE_WORLD, worldIn, JSoundRegistry.TW_SUMMON);
         idleRotation = 225f;
 
-        pros = List.of(
-                "fast m1",
-                "counter",
-                "versatile ranged moves",
-                "timestop & timeskip"
-        );
-
-        cons = List.of(
-                "no knockdowns",
-                "donut is high risk/high reward outside combos"
-        );
-
-        description = "Mid Range DOMINATOR";
+        description = "entity.jcraft.theworld.info.desc";
+        proCount = 4;
+        conCount = 2;
 
         freespace =
                 """

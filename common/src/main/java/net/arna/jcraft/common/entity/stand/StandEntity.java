@@ -141,8 +141,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     public int armorPoints;
 
     // Info
-    public List<String> pros;
-    public List<String> cons;
+    @Getter
+    protected int proCount;
+    @Getter
+    protected int conCount;
     public String description = "UNDESCRIBED";
     public String freespace;
 

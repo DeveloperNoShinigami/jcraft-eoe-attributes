@@ -3,6 +3,7 @@ package net.arna.jcraft.common.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -40,17 +41,17 @@ public class AboutStandCommand {
                 .append(Text.literal("\n")));
 
         // Description
-        resp.append(Text.literal(stand.description).formatted(Formatting.GREEN))
+        resp.append(Text.translatable(stand.description).formatted(Formatting.GREEN))
                 .append(Text.literal("\n"));
 
         // Pros & Cons
         MutableText pros = Text.empty()
                 .append(Text.literal("PROS:").formatted(Formatting.DARK_AQUA))
                 .append(Text.literal("\n"));
-        for (String pro : stand.pros) {
+        for (int p = 1; p <= stand.getProCount(); p++) {
             pros
                     .append(Text.literal("● ").formatted(Formatting.DARK_AQUA))
-                    .append(Text.literal(pro))
+                    .append(Text.translatable(String.format("entity.%s.%s.info.pro%d", JCraft.MOD_ID, stand.getStandType().getNameKey(), p)))
                     .append(Text.literal("\n"));
         }
         resp.append(pros);
@@ -58,10 +59,10 @@ public class AboutStandCommand {
         MutableText cons = Text.empty()
                 .append(Text.literal("CONS:").formatted(Formatting.DARK_RED))
                 .append(Text.literal("\n"));
-        for (String con : stand.cons) {
+        for (int c = 1; c <= stand.getConCount(); c++) {
             cons
                     .append(Text.literal("● ").formatted(Formatting.DARK_RED))
-                    .append(Text.literal(con))
+                    .append(Text.translatable(String.format("entity.%s.%s.info.con%d", JCraft.MOD_ID, stand.getStandType().getNameKey(), c)))
                     .append(Text.literal("\n"));
         }
         resp.append(cons);

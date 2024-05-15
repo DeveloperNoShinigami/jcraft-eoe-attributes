@@ -202,19 +202,9 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         super(StandType.MADE_IN_HEAVEN, worldIn, JSoundRegistry.MIH_SUMMON);
         idleRotation = -45f;
 
-        description = "Lightspeed RUSHDOWN";
-
-        pros = List.of(
-                "best mobility",
-                "great mixups",
-                "good pressure",
-                "low cooldowns"
-        );
-
-        cons = List.of(
-                "bad defensive options",
-                "relies on good spacing"
-        );
+        description = "entity.jcraft.mih.info.desc";
+        proCount = 4;
+        conCount = 2;
 
         freespace =
                 """

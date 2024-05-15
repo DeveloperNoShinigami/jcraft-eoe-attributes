@@ -163,19 +163,9 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
         super(StandType.WHITE_SNAKE, worldIn, JSoundRegistry.WS_SUMMON);
         idleRotation = 220f;
 
-        description = "All Range DISABLER";
-
-        pros = List.of(
-                "coverage on all ranges",
-                "high versatility",
-                "accessible win condition"
-        );
-
-        cons = List.of(
-                "no mobility options",
-                "slow pokes",
-                "below average damage"
-        );
+        description = "entity.jcraft.whitesnake.info.desc";
+        proCount = 3;
+        conCount = 3;
 
         freespace =
                 """

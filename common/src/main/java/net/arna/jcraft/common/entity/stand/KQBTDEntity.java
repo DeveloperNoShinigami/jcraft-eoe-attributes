@@ -25,7 +25,6 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQBTDEntity.State> {
@@ -94,19 +93,9 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     public KQBTDEntity(World worldIn) {
         super(StandType.KILLER_QUEEN_BITES_THE_DUST, worldIn, JSoundRegistry.KQBTD_SUMMON);
 
-        description = "Ascended Explosive SETPLAY";
-
-        pros = List.of(
-                "good stun",
-                "excellent setups",
-                "easy knockdowns and knockbacks",
-                "good zoning"
-        );
-
-        cons = List.of(
-                "mediocre pressure tools",
-                "no armored moves"
-        );
+        description = "entity.jcraft.kqbtd.info.desc";
+        proCount = 4;
+        conCount = 2;
 
         freespace = """
                 BNBs:

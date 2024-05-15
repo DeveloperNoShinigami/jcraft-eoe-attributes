@@ -30,7 +30,6 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
@@ -143,19 +142,9 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
 
         idleRotation = -45f;
 
-        description = "All Range, Multipurpose TRICKSTER";
-
-        pros = List.of(
-                "good combo tools",
-                "counter",
-                "extensive setups",
-                "good pressure"
-        );
-
-        cons = List.of(
-                "optimal setups and combos require preparation",
-                "slower than average"
-        );
+        description = "entity.jcraft.d4c.info.desc";
+        proCount = 4;
+        conCount = 2;
 
         freespace =
                 """

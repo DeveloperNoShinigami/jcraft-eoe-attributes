@@ -245,20 +245,9 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
         idleRotation = 220f;
 
-        description = "Close Range SETUP";
-
-        pros = List.of(
-                "many block bypassing options",
-                "powerful void state",
-                "good poking",
-                "good mobility"
-        );
-
-        cons = List.of(
-                "very variable reward on hit",
-                "blind and deaf in the void",
-                "above average cooldowns"
-        );
+        description = "entity.jcraft.cream.info.desc";
+        proCount = 4;
+        conCount = 3;
 
         freespace = """
                 BNBs (i. - in Cream):

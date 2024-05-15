@@ -27,8 +27,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQueenEntity<E, S>, S extends Enum<S> & StandAnimationState<E>> extends StandEntity<E, S>
         permits KillerQueenEntity, KQBTDEntity {
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LOW = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
@@ -87,20 +85,9 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
         super(type, worldIn, summonSound, true);
         idleRotation = -30f;
 
-        description = "Explosive SETPLAY";
-
-        pros = List.of(
-                "good stun",
-                "excellent setups",
-                "easy knockdowns",
-                "good zoning"
-        );
-
-        cons = List.of(
-                "interactive offense",
-                "below-average speed",
-                "limited combo tools"
-        );
+        description = "entity.jcraft.killerqueen.info.desc";
+        proCount = 4;
+        conCount = 3;
 
         freespace = """
                 BNBs:

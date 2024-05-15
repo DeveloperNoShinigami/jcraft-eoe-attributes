@@ -146,19 +146,9 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
 
         idleRotation = 315f;
 
-        description = "High Speed RUSHDOWN";
-
-        pros = List.of(
-                "high whiff punish power",
-                "high mobility",
-                "excellent mixups",
-                "near-instant timestop"
-        );
-
-        cons = List.of(
-                "burns through options quickly",
-                "hard to hitconfirm important options without using TS"
-        );
+        description = "entity.jcraft.sptw.info.desc";
+        proCount = 4;
+        conCount = 2;
 
         freespace = """
                 BNBs:

@@ -31,7 +31,6 @@ import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -207,18 +206,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         super(StandType.SILVER_CHARIOT, worldIn, JSoundRegistry.SC_SUMMON);
         idleRotation = 225f;
 
-        pros = List.of(
-                "fast m1",
-                "two barrages",
-                "excellent pokes and pressure",
-                "counter (Anubis only)"
-        );
-
-        cons = List.of(
-                "high execution requirement",
-                "low damage output",
-                "lacking in mobility"
-        );
+        proCount = 4;
+        conCount = 3;
 
         setNormalDesc();
 
@@ -239,7 +228,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     }
 
     private void setNormalDesc() {
-        description = "Close Range RUSHDOWN";
+        description = "entity.jcraft.silverchariot.info.desc";
 
         freespace =
                 """
@@ -255,7 +244,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     }
 
     private void setPossessedDesc() {
-        description = "Mid Range TRICKSTER";
+        description = "entity.jcraft.silverchariot2.info.desc";
 
         freespace =
                 """

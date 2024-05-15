@@ -125,6 +125,8 @@ public enum StandType {
     private final boolean obtainable;
     private final Function<World, StandEntity<?, ?>> ctor;
     @Getter
+    private final String nameKey;
+    @Getter
     private final Text nameText;
     @Getter
     private final List<Text> skinNames;
@@ -140,6 +142,7 @@ public enum StandType {
     StandType(EntityType<? extends StandEntity<?, ?>> entityType, Function<World, StandEntity<?, ?>> ctor, String nameKey, boolean evolution, boolean obtainable, Text... skinNames) {
         this.entityType = entityType;
         this.ctor = ctor;
+        this.nameKey = nameKey;
         this.nameText = Text.translatable("entity.jcraft." + nameKey);
         this.evolution = evolution;
         this.obtainable = obtainable;
@@ -149,6 +152,7 @@ public enum StandType {
     StandType() {
         this.entityType = null;
         this.ctor = null;
+        this.nameKey = "";
         this.nameText = Text.translatable("entity.jcraft.nostand");
         this.obtainable = false;
         this.evolution = false;

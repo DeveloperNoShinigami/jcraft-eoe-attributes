@@ -34,7 +34,6 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, MagiciansRedEntity.State> {
@@ -138,19 +137,9 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
         super(StandType.MAGICIANS_RED, worldIn, JSoundRegistry.MR_SUMMON);
         idleRotation = 225f;
 
-        description = "Tailor-made, Blazing ZONER";
-
-        pros = List.of(
-                "incredible setups",
-                "high damage",
-                "two knockdowns"
-        );
-
-        cons = List.of(
-                "easily blockable projectiles",
-                "no mobility options",
-                "no armored options"
-        );
+        description = "entity.jcraft.mr.info.desc";
+        proCount = 3;
+        conCount = 3;
 
         freespace = """
                 PASSIVE: Fire Resistance

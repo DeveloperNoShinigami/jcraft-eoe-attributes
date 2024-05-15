@@ -172,21 +172,9 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         idleDistance = 1f;
         idleRotation = -65f;
 
-        description = "Close-Range Deadly PUNISHER";
-
-        pros = List.of(
-                "extremely high damage output",
-                "priceless move cancel",
-                "counter",
-                "easy setups"
-        );
-
-        cons = List.of(
-                "below average speed",
-                "slow, limited armored options",
-                "limited pressure",
-                "hard to master"
-        );
+        description = "entity.jcraft.kingcrimson.info.desc";
+        proCount = 4;
+        conCount = 4;
 
         freespace = """
                 BNBs:

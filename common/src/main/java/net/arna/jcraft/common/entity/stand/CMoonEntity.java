@@ -157,17 +157,8 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
         super(StandType.C_MOON, worldIn, JSoundRegistry.CMOON_SUMMON);
         idleRotation = 220f;
 
-        pros = List.of(
-                "fast m1",
-                "very multipurpose",
-                "damaging aftereffect",
-                "good pressure"
-        );
-
-        cons = List.of(
-                "execution intensive",
-                "lacking in controlled horizontal movement"
-        );
+        proCount = 4;
+        conCount = 2;
 
         freespace = """
                 Passive: Inversion, all physical hits deal an extra half heart after 2s

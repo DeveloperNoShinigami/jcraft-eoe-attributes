@@ -195,21 +195,10 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         idleRotation = 225f;
         idleDistance = 2f;
 
-        pros = List.of(
-                "long reach",
-                "easy, accessible space control using crouching and multiple armored options",
-                "easy setups",
-                "good combo tools",
-                "doesn't receive chip damage on block"
-        );
 
-        cons = List.of(
-                "overall slow",
-                "extremely susceptible to rushdown",
-                "immobile while blocking"
-        );
-
-        description = "Poke and Setup-based ZONER";
+        description = "entity.jcraft.thefool.info.desc";
+        proCount = 5;
+        conCount = 3;
 
         freespace =
                 """

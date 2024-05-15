@@ -8,8 +8,6 @@ import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
 
-import java.util.List;
-
 public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPlatinumEntity<E, S>, S extends Enum<S> & StandAnimationState<E>> extends StandEntity<E, S>
         permits StarPlatinumEntity, SPTWEntity {
     public static final BlockBreakingAttack GROUND_BREAKER = new BlockBreakingAttack(
@@ -44,19 +42,9 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
         super(type, worldIn, JSoundRegistry.STAR_PLATINUM_SUMMON);
         idleRotation = 225f;
 
-        description = "High Speed RUSHDOWN";
-
-        pros = List.of(
-                "fast m1",
-                "long, damaging combos",
-                "low cooldowns"
-        );
-
-        cons = List.of(
-                "predictable playstyle",
-                "weak ranged coverage",
-                "weak mixups without inhale"
-        );
+        description = "entity.jcraft.starplatinum.info.desc";
+        proCount = 3;
+        conCount = 3;
 
         freespace =
                 """

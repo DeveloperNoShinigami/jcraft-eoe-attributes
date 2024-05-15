@@ -47,7 +47,6 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -239,16 +238,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
 
         idleRotation = 0;
 
-        pros = List.of(
-                "longest ranged coverage in the game",
-                "powerful area control"
-        );
-        cons = List.of(
-                "cannot block",
-                "heat field affects user"
-        );
-
-        description = "Long-range Projectile ZONER";
+        description = "entity.jcraft.the_sun.info.desc";
+        proCount = 2;
+        conCount = 2;
 
         freespace = "Cannot buffer moves.\n Must stay within " + MAX_DISTANCE + " of the user, otherwise it loses size and disappears.\nGrace period of 1 second before heat field activates after summoning.\nHeat field applies Nausea > Weakness > Slowness > Burning as entities get closer.\n";
 

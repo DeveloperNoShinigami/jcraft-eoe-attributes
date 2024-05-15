@@ -211,21 +211,9 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
         idleRotation = -45f;
         summonAnimDuration = 29;
 
-        description = "All Range DOMINATOR";
-
-        pros = List.of(
-                "very fast m1",
-                "powerful unblockable options",
-                "good ranged coverage",
-                "longest timestop"
-        );
-
-        cons = List.of(
-                "no knockdowns",
-                "unsafe pressure",
-                "committal",
-                "extremely expensive timestop setup"
-        );
+        description = "entity.jcraft.twoh.info.desc";
+        proCount = 4;
+        conCount = 4;
 
         freespace =
                 """

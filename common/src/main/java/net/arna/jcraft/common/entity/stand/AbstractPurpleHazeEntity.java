@@ -27,7 +27,6 @@ import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Set;
 
 import static net.arna.jcraft.registry.JStatusRegistry.PHPOISON;
@@ -209,19 +208,9 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
         super(type, worldIn, JSoundRegistry.PH_SUMMON);
         idleRotation = 225f;
 
-        description = "Fast Toxic FOOTSIES";
-
-        pros = List.of(
-                "fast buttons",
-                "oppressive, fast pressure",
-                "great area control"
-        );
-
-        cons = List.of(
-                "only one, rarely accessible armored move",
-                "mediocre damage without virus",
-                "no movement utility"
-        );
+        description = "entity.jcraft.purple_haze_distortion.info.desc";
+        proCount = 3;
+        conCount = 3;
 
         freespace =
                 """

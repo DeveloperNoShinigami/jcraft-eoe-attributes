@@ -27,7 +27,6 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import static net.arna.jcraft.common.attack.moves.goldexperience.requiem.LifeBeamAttack.CHARGE_TIME;
@@ -176,20 +175,9 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
 
         idleRotation = -30f;
 
-        description = "Impossible Ascended DEFENSE";
-
-        pros = List.of(
-                "very mobile",
-                "wide toolkit",
-                "excellent defense",
-                "setplay/combo tool (life beam)",
-                "undo button"
-        );
-
-        cons = List.of(
-                "low damage output",
-                "limited pressure"
-        );
+        description = "entity.jcraft.ger.info.desc";
+        proCount = 5;
+        conCount = 2;
 
         freespace = """
                 BNBs:

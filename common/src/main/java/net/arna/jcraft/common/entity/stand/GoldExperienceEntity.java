@@ -28,7 +28,6 @@ import org.joml.Vector3f;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, GoldExperienceEntity.State> {
@@ -164,20 +163,9 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
 
         idleRotation = -30f;
 
-        description = "Impenetrable Regenerative DEFENSE";
-
-        pros = List.of(
-                "good pressure",
-                "above average speed",
-                "excellent defense (tree, heal, snake, heavy)",
-                "excellent setups"
-        );
-
-        cons = List.of(
-                "requires setup to become threatening",
-                "no horizontal movement tools",
-                "snake is unreliable"
-        );
+        description = "entity.jcraft.goldexperience.info.desc";
+        proCount = 4;
+        conCount = 3;
 
         freespace = """
                 BNBs:

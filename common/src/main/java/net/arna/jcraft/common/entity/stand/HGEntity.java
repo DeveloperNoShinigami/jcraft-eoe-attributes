@@ -217,18 +217,9 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         super(StandType.HIEROPHANT_GREEN, worldIn, JSoundRegistry.HG_SUMMON);
         idleRotation = 220f;
 
-        description = "Long-range ZONER";
-
-        pros = List.of(
-                "best ranged coverage",
-                "good speed on most moves",
-                "tentacles are extremely multipurpose"
-        );
-
-        cons = List.of(
-                "mediocre combos without tentacles",
-                "mediocre close-range coverage"
-        );
+        description = "entity.jcraft.hierophantgreen.info.desc";
+        proCount = 3;
+        conCount = 2;
 
         freespace =
                 """
