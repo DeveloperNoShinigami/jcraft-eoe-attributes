@@ -47,7 +47,7 @@ public abstract class EntityMixin {
     @SuppressWarnings("ConstantValue")
     @Inject(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;copyFrom(Lnet/minecraft/entity/Entity;)V"))
     private void doNotPlayDesummonSoundWhenMovingWorld(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
-        EntityMixinLogic.doNotPlayDesummonSoundWhenMovingWorld((Entity) (Object) this, destination, cir);
+        EntityMixinLogic.doNotPlayDesummonSoundWhenMovingWorld((Entity) (Object) this);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))

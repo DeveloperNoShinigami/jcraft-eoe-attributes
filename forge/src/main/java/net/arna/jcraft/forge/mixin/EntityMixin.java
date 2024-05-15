@@ -49,7 +49,7 @@ public abstract class EntityMixin {
     @SuppressWarnings("ConstantValue")
     @Inject(method = "lambda$changeDimension$16", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;copyFrom(Lnet/minecraft/entity/Entity;)V"))
     private void doNotPlayDesummonSoundWhenMovingWorld(ServerWorld arg, TeleportTarget portalinfo, Boolean spawnPortal, CallbackInfoReturnable<Entity> cir) {
-        EntityMixinLogic.doNotPlayDesummonSoundWhenMovingWorld((Entity) (Object) this, arg, cir);
+        EntityMixinLogic.doNotPlayDesummonSoundWhenMovingWorld((Entity) (Object) this);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
