@@ -23,7 +23,7 @@ public class MiscComponentImpl extends CommonMiscComponentImpl implements MiscCo
     }
 
     @Override
-    public void sync() {
+    public void sync(Entity entity) {
         JComponents.MISC.sync(entity);
     }
 

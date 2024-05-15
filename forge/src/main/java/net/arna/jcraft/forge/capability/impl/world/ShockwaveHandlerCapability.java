@@ -6,13 +6,19 @@ import net.arna.jcraft.common.component.impl.world.CommonShockwaveHandlerCompone
 import net.arna.jcraft.forge.capability.api.JCapability;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 
+import static net.arna.jcraft.JCraft.MOD_ID;
+
 public class ShockwaveHandlerCapability extends CommonShockwaveHandlerComponentImpl implements JCapability {
+
+    public static Identifier SHOCK_S2C = new Identifier(MOD_ID, "shock_s2c");
+    public static Identifier SHOCK_C2S = new Identifier(MOD_ID, "shock_c2s");
 
     public static Capability<ShockwaveHandlerCapability> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });

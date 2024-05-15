@@ -6,6 +6,7 @@ import net.arna.jcraft.common.item.SunProtectionItem;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.util.JUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.HungerManager;
@@ -97,7 +98,7 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
     @Override
     public void setBlood(float blood) {
         this.blood = MathHelper.clamp(blood, 0, 20);
-        sync();
+        sync(entity);
     }
 
     @Override
@@ -108,10 +109,10 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
     @Override
     public void setVampire(boolean b) {
         this.isVampire = b;
-        sync();
+        sync(entity);
     }
 
-    public void sync() {
+    public void sync(Entity entity) {
     }
 
     public boolean shouldSyncWith(ServerPlayerEntity player) {

@@ -22,7 +22,7 @@ public class HitPropertyComponentImpl extends CommonHitPropertyComponentImpl imp
     }
 
     @Override
-    public void sync() {
+    public void sync(Entity entity) {
         JComponents.HIT_PROPERTY.sync(entity);
     }
 

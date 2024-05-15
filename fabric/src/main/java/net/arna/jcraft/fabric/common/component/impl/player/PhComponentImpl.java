@@ -4,6 +4,7 @@ import lombok.NonNull;
 import net.arna.jcraft.common.component.impl.player.CommonPhComponentImpl;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.player.PhComponent;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -17,7 +18,7 @@ public class PhComponentImpl extends CommonPhComponentImpl implements PhComponen
     }
 
     @Override
-    public void sync() {
+    public void sync(Entity entity) {
         JComponents.PH.sync(player);
     }
 

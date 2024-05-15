@@ -1,4 +1,4 @@
-package net.arna.jcraft.mixin.gravity;
+package net.arna.jcraft.fabric.mixin.gravity;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;

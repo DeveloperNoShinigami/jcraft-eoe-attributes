@@ -47,14 +47,14 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
         this.duration = duration;
         this.distance = distance;
         this.verticalOffset = verticalOffset;
-        sync();
+        sync(grabbed);
     }
 
     @Override
     public void endGrab() {
         this.attacker = null;
         this.duration = 0;
-        sync();
+        sync(grabbed);
     }
 
     public void tick() {
@@ -73,7 +73,7 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
         }
     }
 
-    public void sync() {
+    public void sync(Entity entity) {
         //JComponentPlatformUtils.GRAB.sync(grabbed);
     }
 

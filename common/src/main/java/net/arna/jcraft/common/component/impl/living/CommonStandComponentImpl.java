@@ -6,6 +6,7 @@ import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -28,7 +29,7 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     public void setTypeAndSkin(@Nullable StandType type, int skin) {
         this.type = type;
         this.skin = skin;
-        sync();
+        sync(entity);
     }
 
     @Override
@@ -38,13 +39,13 @@ public class CommonStandComponentImpl implements CommonStandComponent {
         }
 
         this.skin = MathHelper.clamp(skin, 0, type.getSkinCount());
-        sync();
+        sync(entity);
     }
 
     @Override
     public void setStand(@Nullable StandEntity<?, ?> stand) {
         this.stand = stand;
-        sync();
+        sync(entity);
     }
 
     @Nullable
@@ -61,7 +62,7 @@ public class CommonStandComponentImpl implements CommonStandComponent {
         return stand;
     }
 
-    public void sync() {
+    public void sync(Entity entity) {
     }
 
     public void readFromNbt(@NonNull NbtCompound tag) {

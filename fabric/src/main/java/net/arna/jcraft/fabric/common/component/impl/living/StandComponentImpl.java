@@ -18,7 +18,7 @@ public class StandComponentImpl extends CommonStandComponentImpl implements Stan
     }
 
     @Override
-    public void sync() {
+    public void sync(Entity entity) {
         JComponents.STAND.sync(entity);
     }
 

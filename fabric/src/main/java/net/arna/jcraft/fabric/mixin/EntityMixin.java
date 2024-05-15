@@ -1,7 +1,8 @@
-package net.arna.jcraft.mixin;
+package net.arna.jcraft.fabric.mixin;
 
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.common.events.ServerEntityTickEvent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
@@ -78,5 +79,10 @@ public abstract class EntityMixin {
         }
 
         stand.setPlayDesummonSound(false);
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void preTick(CallbackInfo ci) {
+        ServerEntityTickEvent.ENTITY_POST.invoker().tick((Entity) (Object) this);
     }
 }

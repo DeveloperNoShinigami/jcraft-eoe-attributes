@@ -18,7 +18,7 @@ public class CooldownsComponentImpl extends CommonCooldownsComponentImpl impleme
     }
 
     @Override
-    public void sync() {
+    public void sync(Entity entity) {
         if (skipSync) return; // To avoid packet spam.
         JComponents.COOLDOWNS.sync(entity);
     }

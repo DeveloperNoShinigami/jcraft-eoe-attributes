@@ -1,15 +1,14 @@
 {
   "required": true,
-  "package": "net.arna.jcraft.fabric.mixin",
+  "package": "net.arna.jcraft.forge.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "TimestopBlockMixin",
     "EntityMixin",
     "ServerPlayerEntityMixin",
-    "TimestopBlockMixin",
     "gravity.ServerPlayerEntityMixin"
   ],
   "client": [
-    "ShaderProgramMixin"
   ],
   "injectors": {
     "defaultRequire": 1

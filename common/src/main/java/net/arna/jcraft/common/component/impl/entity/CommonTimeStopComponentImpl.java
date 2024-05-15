@@ -31,10 +31,10 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
             totalVelocity = Vec3d.ZERO;
         }
         this.ticks = ticks;
-        sync();
+        sync(entity);
     }
 
-    public void sync() {
+    public void sync(Entity entity) {
         //JComponentPlatformUtils.TIME_STOP.sync(entity);
     }
 

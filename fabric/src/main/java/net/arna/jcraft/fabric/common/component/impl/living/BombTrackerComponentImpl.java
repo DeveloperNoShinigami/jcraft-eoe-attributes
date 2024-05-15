@@ -23,9 +23,9 @@ public class BombTrackerComponentImpl extends CommonBombTrackerComponentImpl imp
     }
 
     @Override
-    public void sync() {
+    public void sync(Entity entity) {
         JComponents.BOMB_TRACKER.sync(entity);
-        super.sync();
+        super.sync(entity);
     }
 
     @Override

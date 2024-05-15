@@ -30,13 +30,13 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
     public void setHitAnimation(CommonHitPropertyComponent.HitAnimation hitAnimation, int duration) {
         this.hitAnimation = hitAnimation;
         this.endHitAnimTime = entity.getWorld().getTime() + duration;
-        sync();
+        sync(entity);
     }
 
     public void tick() {
     }
 
-    public void sync() {
+    public void sync(Entity entity) {
 
     }
 

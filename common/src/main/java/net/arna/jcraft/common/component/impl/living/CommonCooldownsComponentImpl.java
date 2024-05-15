@@ -49,7 +49,7 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
             duration *= JServerConfig.COOLDOWN_MULTIPLIER.getValue();
             cooldowns.put(type, duration);
             initialDurations.put(type, duration);
-            sync();
+            sync(entity);
         }
     }
 
@@ -89,14 +89,14 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
             JCraft.createParticle((ServerWorld) entity.getWorld(), pPos.x, pPos.y, pPos.z, JParticleType.COOLDOWN_CANCEL);
         }
 
-        sync();
+        sync(entity);
     }
 
     @Override
     public void clear(CooldownType type) {
         cooldowns.put(type, 0);
         initialDurations.put(type, 0);
-        sync();
+        sync(entity);
     }
 
     @Override
@@ -107,10 +107,10 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
         }
         skipSync = false;
 
-        sync();
+        sync(entity);
     }
 
-    public void sync() {
+    public void sync(Entity entity) {
 
     }
 
@@ -133,7 +133,7 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
         }
 
         if (shouldSync) {
-            sync();
+            sync(entity);
         }
     }
 

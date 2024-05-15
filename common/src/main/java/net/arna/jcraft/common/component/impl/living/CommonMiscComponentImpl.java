@@ -61,13 +61,13 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
     @Override
     public void setSlavedTo(UUID slavedTo) {
         this.slavedTo = slavedTo;
-        sync();
+        sync(entity);
     }
 
     @Override
     public void startDamageTimer() {
         this.damageTimer = 600;
-        sync();
+        sync(entity);
     }
 
     @Override
@@ -102,13 +102,13 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
     public void displayArmoredHit() {
         entity.playSound(JSoundRegistry.ARMORED_HIT, 1.0F, 1.0F);
         armoredHitTicks = 10;
-        sync();
+        sync(entity);
     }
 
     @Override
     public void setAttackSpeedMult(float speedMult) {
         this.attackSpeedMult = speedMult;
-        sync();
+        sync(entity);
     }
 
     public void tick() {
@@ -166,10 +166,10 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
 
     private void updateKnifeTimer() {
         knifeTimer = 20 * (30 - stuckKnifeCount);
-        sync();
+        sync(entity);
     }
 
-    public void sync() {
+    public void sync(Entity entity) {
     }
 
     public boolean shouldSyncWith(ServerPlayerEntity player) {

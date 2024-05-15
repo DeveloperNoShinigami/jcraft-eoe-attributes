@@ -52,16 +52,31 @@ public class RuntimeEvents {
     @SubscribeEvent
     public static void entityJoin(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof ServerPlayerEntity serverPlayer) {
-            JCraftForge.syncSelf(PhCapability.getCapabilityOptional(serverPlayer), serverPlayer);
-            JCraftForge.syncSelf(SpecCapability.getCapabilityOptional(serverPlayer), serverPlayer);
+            PhCapability.syncEntityCapability(serverPlayer);
+            SpecCapability.syncEntityCapability(serverPlayer);
         }
     }
 
     @SubscribeEvent
-    public static void syncPlayerCapability(PlayerEvent.StartTracking event) {
-        if (event.getTarget() instanceof PlayerEntity player && player.getWorld() instanceof ServerWorld) {
-            JCraftForge.syncTracking(PhCapability.getCapabilityOptional(player), player);
-            JCraftForge.syncTracking(SpecCapability.getCapabilityOptional(player), player);
+    public static void syncEntityCapability(PlayerEvent.StartTracking event) {
+        if (event.getTarget().getWorld() instanceof ServerWorld) {
+            Entity entity = event.getTarget();
+
+            GrabCapability.syncEntityCapability(event);
+            TimeStopCapability.syncEntityCapability(event);
+
+            if (entity instanceof LivingEntity) {
+                BombTrackerCapability.syncEntityCapability(event);
+                CooldownsCapability.syncEntityCapability(event);
+                HitPropertyCapability.syncEntityCapability(event);
+                MiscCapability.syncEntityCapability(event);
+                StandCapability.syncEntityCapability(event);
+                VampireCapability.syncEntityCapability(event);
+            }
+            if (entity instanceof PlayerEntity) {
+                PhCapability.syncEntityCapability(event);
+                SpecCapability.syncEntityCapability(event);
+            }
         }
     }
 

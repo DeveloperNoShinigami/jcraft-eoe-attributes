@@ -1,4 +1,4 @@
-package net.arna.jcraft.mixin;
+package net.arna.jcraft.fabric.mixin;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.StandEntity;

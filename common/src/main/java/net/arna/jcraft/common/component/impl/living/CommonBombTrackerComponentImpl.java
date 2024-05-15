@@ -36,7 +36,7 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
             JCraft.getClientEntityHandler().bombTrackerParticleTick(entity, main);
         } else {
             if (main.dirty) {
-                sync();
+                sync(entity);
             }
             /*
             if (btd.dirty)
@@ -45,7 +45,7 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
         }
     }
 
-    public void sync() {
+    public void sync(Entity entity) {
         //JComponentPlatformUtils.BOMB_TRACKER.sync(entity);
         main.dirty = false;
         btd.dirty = false;

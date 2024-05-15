@@ -2,6 +2,7 @@ package net.arna.jcraft.common.component.impl.player;
 
 import lombok.NonNull;
 import net.arna.jcraft.common.component.player.CommonPhComponent;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,7 +30,7 @@ public class CommonPhComponentImpl implements CommonPhComponent {
         level = 0;
     }
 
-    public void sync() {
+    public void sync(Entity entity) {
     }
 
     public void readFromNbt(@NonNull NbtCompound tag) {

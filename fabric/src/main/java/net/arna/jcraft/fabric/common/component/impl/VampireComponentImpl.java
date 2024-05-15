@@ -3,6 +3,7 @@ package net.arna.jcraft.fabric.common.component.impl;
 import net.arna.jcraft.common.component.impl.CommonVampireComponentImpl;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.living.VampireComponent;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -23,7 +24,7 @@ public class VampireComponentImpl extends CommonVampireComponentImpl implements 
     }
 
     @Override
-    public void sync() {
+    public void sync(Entity entity) {
         JComponents.VAMPIRE.sync(entity);
     }
 

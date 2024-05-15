@@ -1,4 +1,4 @@
-package net.arna.jcraft.platform;
+package net.arna.jcraft.platform.forge;
 
 
 
