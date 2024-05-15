@@ -3,6 +3,8 @@
 ### Animations
 * Petshop
 * Horus
+* Aya Tsuji
+* Cinderella
 
 ## Bugs
 ### Stands dont rotate correctly, pitch
