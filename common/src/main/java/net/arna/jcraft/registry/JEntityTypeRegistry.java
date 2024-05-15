@@ -432,6 +432,13 @@ public interface JEntityTypeRegistry {
                     .build("aya_tsuji")
     );
 
+    RegistrySupplier<EntityType<CinderellaEntity>> CINDERELLA = ENTITY_TYPE_REGISTRY.register(JCraft.id("cinderella"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(CinderellaEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.65f, 1.7f).build("cinderella")
+    );
+
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
         EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
@@ -456,6 +463,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(HIEROPHANT_GREEN, HGEntity::createMobAttributes);
         EntityAttributeRegistry.register(THE_SUN, TheSunEntity::createMobAttributes);
         EntityAttributeRegistry.register(HORUS, HorusEntity::createMobAttributes);
+        EntityAttributeRegistry.register(CINDERELLA, CinderellaEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(PURPLE_HAZE, () -> AbstractPurpleHazeEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.55));

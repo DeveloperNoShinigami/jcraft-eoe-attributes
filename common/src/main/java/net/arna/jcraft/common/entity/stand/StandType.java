@@ -64,6 +64,7 @@ public enum StandType {
     PURPLE_HAZE_DISTORTION(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION.get(), PurpleHazeDistortionEntity::new, "purple_haze_distortion", true,
             Text.literal("Black Knight"), Text.literal("Vintage"), Text.literal("Reversal")),
     HORUS(JEntityTypeRegistry.HORUS.get(), HorusEntity::new, "horus"),
+    CINDERELLA(JEntityTypeRegistry.CINDERELLA.get(), CinderellaEntity::new, "cinderella", false, false),
     ;
 
     /**

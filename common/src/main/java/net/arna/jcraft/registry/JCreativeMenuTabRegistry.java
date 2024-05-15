@@ -155,6 +155,9 @@ public interface JCreativeMenuTabRegistry {
                     }
                     // stand discs
                     for (final StandType standType : StandType.values()) {
+                        if (standType != StandType.NONE && !standType.isObtainable()) {
+                            continue;
+                        }
                         for (int skin = 0; skin <= standType.getSkinCount(); skin++) {
                             entries.add(StandDiscItem.createDiscStack(standType, skin));
                         }
