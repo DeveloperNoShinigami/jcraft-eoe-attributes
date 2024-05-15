@@ -17,6 +17,10 @@ Modify the hitboxes to match the models of:
 * Osiris
 * Darby Younger
 * Atum
+
+### Translations
+* move the move names from literals to translatables
+
 ### Arch port
 https://trello.com/b/GFOQk6nR/arch-port-1201
 
