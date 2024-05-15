@@ -52,26 +52,29 @@ public class JLootTableProviders {
             super(output, LootContextTypes.ENTITY);
         }
 
-        @Override
-        public void accept(BiConsumer<Identifier, LootTable.Builder> consumer) {
-            this.generateLoot();
-            for (Map.Entry<Identifier, LootTable.Builder> entry : loot.entrySet()) {
-                consumer.accept(entry.getKey(), entry.getValue());
-            }
-        }
-
+        //Add new entries here
         private void generateLoot() {
             addDrop(JEntityTypeRegistry.PETSHOP.get(), this::petshopLoot);
+        }
+
+
+        //Loot builder for Petshop
+        private LootTable.Builder petshopLoot(EntityType<?> type) {
+            return LootTable.builder()
+                    .pool(constantPool(1f).with(ItemEntry.builder(Items.FEATHER).apply(uniformAmount(1f, 2f))))
+                    .pool(constantPool(1f).with(ItemEntry.builder(Items.CHAIN).apply(constantAmount(1f))));
         }
 
         public <T extends Entity> void addDrop(EntityType<T> type, Function<EntityType<T>, LootTable.Builder> function) {
             loot.put(type.getLootTableId(), function.apply(type));
         }
 
-        private LootTable.Builder petshopLoot(EntityType<?> type) {
-            return LootTable.builder()
-                    .pool(constantPool(1f).with(ItemEntry.builder(Items.FEATHER).apply(uniformAmount(1f, 2f))))
-                    .pool(constantPool(1f).with(ItemEntry.builder(Items.CHAIN).apply(constantAmount(1f))));
+        @Override
+        public void accept(BiConsumer<Identifier, LootTable.Builder> consumer) {
+            this.generateLoot();
+            for (Map.Entry<Identifier, LootTable.Builder> entry : loot.entrySet()) {
+                consumer.accept(entry.getKey(), entry.getValue());
+            }
         }
     }
 
