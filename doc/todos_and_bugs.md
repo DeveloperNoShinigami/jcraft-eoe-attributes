@@ -22,7 +22,10 @@ Modify the hitboxes to match the models of:
 ## Bugs
 ### Knife bundle is thrown with handle first
 ### Stands dont rotate correctly, pitch
-"Arna - ik the exact line of code that fucks w this
+
+* Might be fixed with this comment net/arna/jcraft/client/util/JClientUtils.java:120
+
+~~"Arna - ik the exact line of code that fucks w this
 basically, there is code in the current version
 that adds your players pitch
 to the stands pitch
@@ -34,8 +37,7 @@ or something along those lines
 MrSterner — Today at 19:29
 thats not even in the render class:why~1:
 Arna — Today at 19:29
-should be in JStandModel or whatever we named it"
+should be in JStandModel or whatever we named it"~~
 
-Might be fixed with this comment net/arna/jcraft/client/util/JClientUtils.java:120
 
 ### 
