@@ -19,10 +19,11 @@ public class OverworldRegionFabric extends Region {
         super(name, RegionType.OVERWORLD, weight);
     }
 
+    // see https://minecraft.fandom.com/wiki/Biome#Overworld_3
     @Override
     public void addBiomes(Registry<Biome> registry, Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> mapper) {
         VanillaParameterOverlayBuilder builder = new VanillaParameterOverlayBuilder();
-        // The parameters for this biome are chosen to resemble the ones for the desert biome.
+        // Devil's Palm: The parameters for this biome are chosen to resemble the ones for the desert biome.
         new ParameterPointListBuilder()
                 .temperature(Temperature.HOT)
                 .humidity(Humidity.FULL_RANGE)

@@ -10,6 +10,7 @@ import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.GenerationStep;
 
+// see https://minecraft.fandom.com/wiki/Custom_biome
 public class JBiomeProvider {
 
     public static void bootstrap(Registerable<Biome> context) {

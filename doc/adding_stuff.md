@@ -68,3 +68,25 @@
 14. Add an English translation of the entity to `en_us.json`.
 15. If the entity can have stands, add the line `JEnemies.add(this);` to the constructor of `MyEntity`.
 16. Test your addition.
+
+## Adding a Biome
+1. Add the biome to `JBiomeRegistry`.
+2. Add the biome with its properties in its own method to `JBiomeProvider`.
+3. Add the biome to `JBiomeProvider#bootstrap(…)`.
+4. Run datagen.
+### to a custom dimension
+5. Add the biome to the custom dimension.
+6. Test your addition.
+### to a vanilla dimension
+5. Add material rules for the biome if needed in `MaterialRulesFabric` and `MaterialRulesForge`.
+6. Add the biome generation parameters to `OverworldRegionFabric` and `OverworldRegionForge` (or the equivalents for Nether or End).
+7. Test your addition.
+
+## Adding a Feature
+1. Add the feature to `JConfiguredFeatureRegistry` (suffix: `"_cf"`).
+2. Add the feature to `JConfiguredFeatureProvider`.
+3. Add the feature to `JPlacedFeatureRegistry` (suffix: `"_pf`").
+4. Add the feature to `JPlacedFeatureProvider`.
+5. Add the feature to biomes in `JBiomeProvider`.
+6. Run datagen.
+7. Test your addition.

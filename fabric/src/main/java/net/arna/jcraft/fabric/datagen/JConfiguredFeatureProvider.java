@@ -12,6 +12,7 @@ import net.minecraft.world.gen.feature.DiskFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.stateprovider.PredicatedStateProvider;
 
+// see https://minecraft.fandom.com/wiki/Custom_feature
 public class JConfiguredFeatureProvider {
 
     public static void bootstrap(Registerable<ConfiguredFeature<?,?>> context) {
