@@ -12,6 +12,7 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.gravity.util.GravityChannelClient;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
+import net.arna.jcraft.client.gui.hud.JCraftAbilityHud;
 import net.arna.jcraft.client.net.ClientPacketHandler;
 import net.arna.jcraft.client.particle.*;
 import net.arna.jcraft.client.registry.*;
@@ -96,13 +97,12 @@ public class JCraftClient {
         RenderHandler.init();
         JClientEventsRegistry.registerClientEvents();
         JModelPredicateProviderRegistry.register();
+        JCraftAbilityHud.init();
 
         InversionShaderHandler.INSTANCE.init();
         ZaWarudoShaderHandler.INSTANCE.init();
         CrimsonShaderHandler.INSTANCE.init();
         EpitaphVignetteShaderHandler.INSTANCE.init();
-        UIShaderHandler.INSTANCE.init(); // Should be last
-
 
 
         // Particle registration
