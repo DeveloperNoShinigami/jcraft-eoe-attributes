@@ -81,6 +81,7 @@ public interface JCreativeMenuTabRegistry {
         });
         // spawn eggs
         CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.SPAWN_EGGS.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptAfter(Items.AXOLOTL_SPAWN_EGG, JItemRegistry.AYA_TSUJI_SPAWN_EGG.get());
             output.acceptAfter(Items.PARROT_SPAWN_EGG, JItemRegistry.PETSHOP_SPAWN_EGG.get());
         });
     }
@@ -159,7 +160,10 @@ public interface JCreativeMenuTabRegistry {
                         }
                     }
                     // spawn eggs
+                    // season 3
                     entries.add(JItemRegistry.PETSHOP_SPAWN_EGG.get());
+                    // season 4
+                    entries.add(JItemRegistry.AYA_TSUJI_SPAWN_EGG.get());
                     // weird items
                     if (JItemRegistry.DEBUG_WAND != null) {
                         entries.add(JItemRegistry.DEBUG_WAND.get());

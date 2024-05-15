@@ -61,5 +61,6 @@ public class JModelProvider extends FabricModelProvider {
         generator.register(JItemRegistry.STONE_MASK.get(), Models.GENERATED);
 
         generator.register(JItemRegistry.PETSHOP_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
+        generator.register(JItemRegistry.AYA_TSUJI_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
     }
 }

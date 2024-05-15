@@ -1,0 +1,96 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.aya_tsuji.pose": {
+			"loop": true,
+			"bones": {
+				"aya": {
+					"rotation": {
+						"vector": [0, 10, 0]
+					}
+				},
+				"torso": {
+					"rotation": {
+						"vector": [0, 20, 0]
+					}
+				},
+				"legLeft": {
+					"rotation": {
+						"vector": [-2.63757, -19.98755, 0.57561]
+					}
+				},
+				"kneeLeft": {
+					"rotation": {
+						"vector": [2.5, 0, 0]
+					}
+				},
+				"legRight": {
+					"rotation": {
+						"vector": [0, 7.5, 0]
+					}
+				},
+				"kneeRight": {
+					"rotation": {
+						"vector": [17.5, 0, 0]
+					}
+				},
+				"body": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"upperBody": {
+					"rotation": {
+						"vector": [-5, 0, 0]
+					}
+				},
+				"armLeft": {
+					"rotation": {
+						"vector": [8.82799, 43.74025, -6.48512]
+					},
+					"position": {
+						"vector": [-0.175, -0.1, 0.575]
+					}
+				},
+				"lowerLeft": {
+					"rotation": {
+						"vector": [-51.50965, 41.40863, 0.60721]
+					}
+				},
+				"armRight": {
+					"rotation": {
+						"vector": [-32.5, 0, 12.5]
+					},
+					"position": {
+						"vector": [0.325, -0.55, -0.325]
+					}
+				},
+				"lowerRight": {
+					"rotation": {
+						"vector": [12.33981, -86.79841, -86.49565]
+					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [7.5, -20, -5]
+					}
+				},
+				"eyeL": {
+					"position": {
+						"vector": [0.15, 0, 0]
+					}
+				},
+				"ponytail": {
+					"rotation": {
+						"vector": [42.31406, 39.44838, -45.15854]
+					}
+				},
+				"ponytail2": {
+					"rotation": {
+						"vector": [-13.64973, -6.27967, -46.74769]
+					}
+				}
+			}
+		}
+	}
+}

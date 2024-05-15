@@ -424,6 +424,14 @@ public interface JEntityTypeRegistry {
                     .build("petshop")
     );
 
+    RegistrySupplier<EntityType<AyaTsujiEntity>> AYA_TSUJI = ENTITY_TYPE_REGISTRY.register(JCraft.id("aya_tsuji"),
+            () -> EntityType.Builder.create(
+                            (EntityType<AyaTsujiEntity> entityType, World world) -> new AyaTsujiEntity(world),
+                            SpawnGroup.MISC
+                    ).setDimensions(1f, 2f)
+                    .build("aya_tsuji")
+    );
+
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
         EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
@@ -477,6 +485,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(SAND_TORNADO, SandTornadoEntity::createTornadoAttributes);
 
         EntityAttributeRegistry.register(PETSHOP, PetshopEntity::createPetshopAttributes);
+        EntityAttributeRegistry.register(AYA_TSUJI, AyaTsujiEntity::createAyaTsujiAttributes);
     }
 
     static void init() {
