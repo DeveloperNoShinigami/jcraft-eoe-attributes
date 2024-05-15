@@ -6,6 +6,7 @@ import net.arna.jcraft.common.events.ServerEntityTickEvent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.mixin_logic.EntityMixinLogic;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -28,30 +29,7 @@ public abstract class EntityMixin {
      */
     @Inject(method = "updatePassengerPosition(Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/Entity$PositionUpdater;)V", at = @At("HEAD"), cancellable = true)
     private void jcraft$updatePassengerPosition(Entity passenger, Entity.PositionUpdater positionUpdater, CallbackInfo info) {
-        if (passenger instanceof StandEntity<?, ?> stand) {
-            if (stand.isFree() && !stand.isRemote()) {
-                Vector3f freePos = stand.getFreePos();
-                positionUpdater.accept(passenger, freePos.x(), freePos.y(), freePos.z());
-                info.cancel();
-                return;
-            }
-
-            Entity e = ((Entity) (Object) this);
-            double dist = stand.getDistanceOffset();
-
-            float y = e.getYaw() + stand.getRotationOffset();
-            y *= (float) Math.PI / 180;
-
-            double heightOffset = stand.shouldOffsetHeight() ? Vec3d.fromPolar(e.getPitch(), e.getYaw()).y : 0;
-            Vec3d adjustedOffset = RotationUtil.vecPlayerToWorld(
-                    MathHelper.cos(y) * dist,
-                    passenger.getHeightOffset() + heightOffset,
-                    MathHelper.sin(y) * dist,
-                    GravityChangerAPI.getGravityDirection(e)
-            );
-            positionUpdater.accept(passenger, e.getX() + adjustedOffset.x, e.getY() + adjustedOffset.y, e.getZ() + adjustedOffset.z);
-            info.cancel();
-        }
+        EntityMixinLogic.jcraft$updatePassengerPosition((Entity)(Object)this, passenger, positionUpdater, info);
     }
 
     /**
@@ -69,16 +47,7 @@ public abstract class EntityMixin {
     @SuppressWarnings("ConstantValue")
     @Inject(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;copyFrom(Lnet/minecraft/entity/Entity;)V"))
     private void doNotPlayDesummonSoundWhenMovingWorld(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
-        if (!((Object) this instanceof LivingEntity living)) {
-            return;
-        }
-
-        StandEntity<?, ?> stand = JUtils.getStand(living);
-        if (stand == null) {
-            return;
-        }
-
-        stand.setPlayDesummonSound(false);
+        EntityMixinLogic.doNotPlayDesummonSoundWhenMovingWorld((Entity) (Object) this, destination, cir);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))

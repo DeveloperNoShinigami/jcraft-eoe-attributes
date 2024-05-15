@@ -5,6 +5,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.IJInputStateManagerHolder;
 import net.arna.jcraft.common.util.InputStateManager;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.mixin_logic.ServerPlayerEntityMixinLogic;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerEntityMixin implements IJInputStateManagerHolder {
+
     private @Unique boolean hadStand = false;
     private final @Unique InputStateManager inputStateManager = new InputStateManager();
 
@@ -30,24 +32,13 @@ public class ServerPlayerEntityMixin implements IJInputStateManagerHolder {
     // Inject at the end of the if-block
     @Inject(method = "moveToWorld", at = @At(value = "FIELD", target = "Lnet/minecraft/server/network/ServerPlayerEntity;syncedFoodLevel:I", shift = At.Shift.AFTER))
     private void resummonStandAfterWorldMove(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
-        if (!hadStand) {
-            return;
-        }
-        StandEntity<?, ?> stand = JCraft.summon(destination, (ServerPlayerEntity) (Object) this);
-        if (stand != null) {
-            stand.setPlaySummonSound(false);
-        }
+        ServerPlayerEntityMixinLogic.resummonStandAfterWorldMove((ServerPlayerEntity) (Object) this, hadStand, destination, cir);
     }
 
     @Inject(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;" +
             "removePlayer(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/entity/Entity$RemovalReason;)V"))
     private void doNotPlayDesummonSoundWhenMovingWorld(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
-        StandEntity<?, ?> stand = JUtils.getStand((ServerPlayerEntity) (Object) this);
-        if (stand == null) {
-            return;
-        }
-
-        stand.setPlayDesummonSound(false);
+        ServerPlayerEntityMixinLogic.doNotPlayDesummonSoundWhenMovingWorld((ServerPlayerEntity) (Object) this, destination, cir);
     }
 
     @Override
@@ -57,17 +48,11 @@ public class ServerPlayerEntityMixin implements IJInputStateManagerHolder {
 
     @Inject(at = @At("TAIL"), method = "copyFrom")
     private void copyInputStateManagerUponCopy(ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
-        if (!alive) {
-            return;
-        }
-        InputStateManager old = ((IJInputStateManagerHolder) oldPlayer).jcraft$getJInputStateManager();
-        inputStateManager.copyFrom(old);
+        ServerPlayerEntityMixinLogic.copyInputStateManagerUponCopy(inputStateManager, oldPlayer, alive, ci);
     }
 
     @Inject(method = "dropItem", at = @At(value = "HEAD"), cancellable = true)
     private void jcraft$dropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
-        if (!JUtils.canAct(((ServerPlayerEntity) (Object) this))) {
-            cir.cancel();
-        }
+        ServerPlayerEntityMixinLogic.jcraft$dropItem((ServerPlayerEntity) (Object) this, stack, throwRandomly, retainOwnership, cir);
     }
 }

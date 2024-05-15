@@ -3,6 +3,7 @@ package net.arna.jcraft.forge.mixin.gravity;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
+import net.arna.jcraft.mixin_logic.ServerPlayerEntityMixinLogic;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,12 +25,7 @@ public abstract class ServerPlayerEntityMixin {
             )
     )
     private void inject_moveToWorld_sendPacket_1(CallbackInfoReturnable<ServerPlayerEntity> cir) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((ServerPlayerEntity) (Object) this);
-        if (gravityDirection != GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity) (Object) this) && JCraft.gravityConfig.resetGravityOnDimensionChange) {
-            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity) (Object) this, Direction.DOWN, new RotationParameters().rotationTime(0));
-        } else {
-            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity) (Object) this, GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity) (Object) this), new RotationParameters().rotationTime(0));
-        }
+        ServerPlayerEntityMixinLogic.inject_moveToWorld_sendPacket_1((ServerPlayerEntity) (Object) this);
     }
 
     @Inject(
@@ -42,12 +38,7 @@ public abstract class ServerPlayerEntityMixin {
             )
     )
     private void inject_teleport_sendPacket_0(CallbackInfo ci) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((ServerPlayerEntity) (Object) this);
-        if (gravityDirection != GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity) (Object) this) && JCraft.gravityConfig.resetGravityOnDimensionChange) {
-            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity) (Object) this, Direction.DOWN, new RotationParameters().rotationTime(0));
-        } else {
-            GravityChangerAPI.setDefaultGravityDirection((ServerPlayerEntity) (Object) this, GravityChangerAPI.getDefaultGravityDirection((ServerPlayerEntity) (Object) this), new RotationParameters().rotationTime(0));
-        }
+        ServerPlayerEntityMixinLogic.inject_moveToWorld_sendPacket_1((ServerPlayerEntity) (Object) this);
     }
 
     @Inject(

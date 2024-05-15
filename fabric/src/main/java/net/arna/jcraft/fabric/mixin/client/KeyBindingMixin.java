@@ -14,9 +14,6 @@ import java.util.Map;
 
 @Mixin(KeyBinding.class)
 public class KeyBindingMixin {
-    @Shadow
-    @Final
-    private static Map<InputUtil.Key, KeyBinding> KEY_TO_BINDINGS;
 
     @Inject(method = "setPressed", at = @At("HEAD"))
     private void queueKeyPressOrRelease(boolean pressed, CallbackInfo ci) {
