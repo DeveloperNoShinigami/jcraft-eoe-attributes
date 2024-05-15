@@ -20,6 +20,7 @@ Modify the hitboxes to match the models of:
 
 ### Translations
 * move the move names from literals to translatables
+* Rename M1 to Light
 
 ### Arch port
 https://trello.com/b/GFOQk6nR/arch-port-1201
