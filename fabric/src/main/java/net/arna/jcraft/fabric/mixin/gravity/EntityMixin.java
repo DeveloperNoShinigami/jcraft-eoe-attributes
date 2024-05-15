@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
+import net.arna.jcraft.mixin_logic.EntityMixinLogic;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -122,21 +123,7 @@ public abstract class EntityMixin {
             cancellable = true
     )
     private void inject_calculateBoundingBox(CallbackInfoReturnable<Box> cir) {
-        Entity entity = ((Entity) (Object) this);
-        if (entity instanceof ProjectileEntity) {
-            return;
-        }
-
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return;
-        }
-
-        Box box = cir.getReturnValue().offset(this.pos.negate());
-        if (gravityDirection.getDirection() == Direction.AxisDirection.POSITIVE) {
-            box = box.offset(0.0D, -1.0E-6D, 0.0D);
-        }
-        cir.setReturnValue(RotationUtil.boxPlayerToWorld(box, gravityDirection).offset(this.pos));
+        EntityMixinLogic.inject_calculateBoundingBox((Entity) (Object) this, cir);
     }
 
     @Inject(
@@ -145,16 +132,7 @@ public abstract class EntityMixin {
             cancellable = true
     )
     private void inject_calculateBoundsForPose(EntityPose pos, CallbackInfoReturnable<Box> cir) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return;
-        }
-
-        Box box = cir.getReturnValue().offset(this.pos.negate());
-        if (gravityDirection.getDirection() == Direction.AxisDirection.POSITIVE) {
-            box = box.offset(0.0D, -1.0E-6D, 0.0D);
-        }
-        cir.setReturnValue(RotationUtil.boxPlayerToWorld(box, gravityDirection).offset(this.pos));
+        EntityMixinLogic.inject_calculateBoundsForPose((Entity) (Object) this, cir);
     }
 
     @Inject(
@@ -163,12 +141,7 @@ public abstract class EntityMixin {
             cancellable = true
     )
     private void inject_getRotationVector(CallbackInfoReturnable<Vec3d> cir) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return;
-        }
-
-        cir.setReturnValue(RotationUtil.vecPlayerToWorld(cir.getReturnValue(), gravityDirection));
+        EntityMixinLogic.inject_getRotationVector((Entity) (Object) this, cir);
     }
 
     @Inject(
@@ -177,12 +150,7 @@ public abstract class EntityMixin {
             cancellable = true
     )
     private void inject_getVelocityAffectingPos(CallbackInfoReturnable<BlockPos> cir) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return;
-        }
-
-        cir.setReturnValue(BlockPos.ofFloored(this.pos.add(Vec3d.of(gravityDirection.getVector()).multiply(0.5000001D))));
+        EntityMixinLogic.inject_getVelocityAffectingPos((Entity) (Object) this, cir);
     }
 
     @Inject(
@@ -191,12 +159,7 @@ public abstract class EntityMixin {
             cancellable = true
     )
     private void inject_getEyePos(CallbackInfoReturnable<Vec3d> cir) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return;
-        }
-
-        cir.setReturnValue(RotationUtil.vecPlayerToWorld(0.0D, this.standingEyeHeight, 0.0D, gravityDirection).add(this.pos));
+        EntityMixinLogic.inject_getEyePos((Entity) (Object) this, cir);
     }
 
     @Inject(
@@ -205,17 +168,7 @@ public abstract class EntityMixin {
             cancellable = true
     )
     private void inject_getCameraPosVec(float tickDelta, CallbackInfoReturnable<Vec3d> cir) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return;
-        }
-
-        Vec3d vec3d = RotationUtil.vecPlayerToWorld(0.0D, this.standingEyeHeight, 0.0D, gravityDirection);
-
-        double d = MathHelper.lerp(tickDelta, this.prevX, this.getX()) + vec3d.x;
-        double e = MathHelper.lerp(tickDelta, this.prevY, this.getY()) + vec3d.y;
-        double f = MathHelper.lerp(tickDelta, this.prevZ, this.getZ()) + vec3d.z;
-        cir.setReturnValue(new Vec3d(d, e, f));
+        EntityMixinLogic.inject_getCameraPosVec((Entity) (Object) this, tickDelta, cir);
     }
 
     @Inject(
@@ -224,12 +177,7 @@ public abstract class EntityMixin {
             cancellable = true
     )
     private void inject_getBrightnessAtFEyes(CallbackInfoReturnable<Float> cir) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return;
-        }
-
-        cir.setReturnValue(this.world.isPosLoaded(this.getBlockX(), this.getBlockZ()) ? this.world.getBrightness(BlockPos.ofFloored(this.getEyePos())) : 0.0F);
+        EntityMixinLogic.inject_getBrightnessAtFEyes((Entity) (Object) this, cir);
     }
 
     @ModifyVariable(
@@ -436,100 +384,8 @@ public abstract class EntityMixin {
     private static void redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(@Nullable Entity entity, Vec3d movement,
                                                                                            Box entityBoundingBox, World world, List<VoxelShape> collisions, CallbackInfoReturnable<Vec3d> cir,
                                                                                            ImmutableList.Builder<VoxelShape> shapeListBuilder) {
-        collisions = shapeListBuilder.build();
-        Direction gravityDirection;
-        if (entity == null || (gravityDirection = GravityChangerAPI.getGravityDirection(entity)) == Direction.DOWN) {
-            return;
-        }
-
-        Vec3d playerMovement = RotationUtil.vecWorldToPlayer(movement, gravityDirection);
-        double playerMovementX = playerMovement.x;
-        double playerMovementY = playerMovement.y;
-        double playerMovementZ = playerMovement.z;
-        Direction directionX = RotationUtil.dirPlayerToWorld(Direction.EAST, gravityDirection);
-        Direction directionY = RotationUtil.dirPlayerToWorld(Direction.UP, gravityDirection);
-        Direction directionZ = RotationUtil.dirPlayerToWorld(Direction.SOUTH, gravityDirection);
-        if (playerMovementY != 0.0D) {
-            playerMovementY = VoxelShapes.calculateMaxOffset(directionY.getAxis(), entityBoundingBox, collisions, playerMovementY * directionY.getDirection().offset()) * directionY.getDirection().offset();
-            if (playerMovementY != 0.0D) {
-                entityBoundingBox = entityBoundingBox.offset(RotationUtil.vecPlayerToWorld(0.0D, playerMovementY, 0.0D, gravityDirection));
-            }
-        }
-
-        boolean isZLargerThanX = Math.abs(playerMovementX) < Math.abs(playerMovementZ);
-        if (isZLargerThanX && playerMovementZ != 0.0D) {
-            playerMovementZ = VoxelShapes.calculateMaxOffset(directionZ.getAxis(), entityBoundingBox, collisions, playerMovementZ * directionZ.getDirection().offset()) * directionZ.getDirection().offset();
-            if (playerMovementZ != 0.0D) {
-                entityBoundingBox = entityBoundingBox.offset(RotationUtil.vecPlayerToWorld(0.0D, 0.0D, playerMovementZ, gravityDirection));
-            }
-        }
-
-        if (playerMovementX != 0.0D) {
-            playerMovementX = VoxelShapes.calculateMaxOffset(directionX.getAxis(), entityBoundingBox, collisions, playerMovementX * directionX.getDirection().offset()) * directionX.getDirection().offset();
-            if (!isZLargerThanX && playerMovementX != 0.0D) {
-                entityBoundingBox = entityBoundingBox.offset(RotationUtil.vecPlayerToWorld(playerMovementX, 0.0D, 0.0D, gravityDirection));
-            }
-        }
-
-        if (!isZLargerThanX && playerMovementZ != 0.0D) {
-            playerMovementZ = VoxelShapes.calculateMaxOffset(directionZ.getAxis(), entityBoundingBox, collisions, playerMovementZ * directionZ.getDirection().offset()) * directionZ.getDirection().offset();
-        }
-
-        cir.setReturnValue(RotationUtil.vecPlayerToWorld(playerMovementX, playerMovementY, playerMovementZ, gravityDirection));
+        EntityMixinLogic.redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(entity, movement, entityBoundingBox, world, collisions, cir, shapeListBuilder);
     }
-
-    //@Inject(
-    //        method = "adjustMovementForCollisions(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Box;Lnet/minecraft/world/World;Ljava/util/List;)Lnet/minecraft/util/math/Vec3d;",
-    //        at = @At(
-    //                value = "INVOKE",
-    //                target = "Lcom/google/common/collect/ImmutableList$Builder;addAll(Ljava/lang/Iterable;)Lcom/google/common/collect/ImmutableList$Builder;",
-    //                ordinal = 1,
-    //                shift = At.Shift.AFTER,
-    //                remap = false
-    //        ),
-    //        locals = LocalCapture.CAPTURE_FAILHARD,
-    //        cancellable = true)
-    //private static void redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(Entity entity, Vec3d movement, Box entityBoundingBox, World world, List<VoxelShape> collisions, CallbackInfoReturnable<Vec3d> cir, ImmutableList.Builder<VoxelShape> builder) {
-    //    Direction gravityDirection;
-    //    List<VoxelShape> collisionsProper = builder.build();
-    //    if(entity == null || (gravityDirection = GravityChangerAPI.getGravityDirection(entity)) == Direction.DOWN) {
-    //        return;
-    //    }
-//
-    //    Vec3d playerMovement = RotationUtil.vecWorldToPlayer(movement, gravityDirection);
-    //    double playerMovementX = playerMovement.x;
-    //    double playerMovementY = playerMovement.y;
-    //    double playerMovementZ = playerMovement.z;
-    //    Direction directionX = RotationUtil.dirPlayerToWorld(Direction.EAST, gravityDirection);
-    //    Direction directionY = RotationUtil.dirPlayerToWorld(Direction.UP, gravityDirection);
-    //    Direction directionZ = RotationUtil.dirPlayerToWorld(Direction.SOUTH, gravityDirection);
-    //    if (playerMovementY != 0.0D) {
-    //        playerMovementY = VoxelShapes.calculateMaxOffset(directionY.getAxis(), entityBoundingBox, collisionsProper, playerMovementY * directionY.getDirection().offset()) * directionY.getDirection().offset();
-    //        if (playerMovementY != 0.0D) {
-    //            entityBoundingBox = entityBoundingBox.offset(RotationUtil.vecPlayerToWorld(0.0D, playerMovementY, 0.0D, gravityDirection));
-    //        }
-    //    }
-//
-    //    boolean isZLargerThanX = Math.abs(playerMovementX) < Math.abs(playerMovementZ);
-    //    if (isZLargerThanX && playerMovementZ != 0.0D) {
-    //        playerMovementZ = VoxelShapes.calculateMaxOffset(directionZ.getAxis(), entityBoundingBox, collisionsProper, playerMovementZ * directionZ.getDirection().offset()) * directionZ.getDirection().offset();
-    //        if (playerMovementZ != 0.0D) {
-    //            entityBoundingBox = entityBoundingBox.offset(RotationUtil.vecPlayerToWorld(0.0D, 0.0D, playerMovementZ, gravityDirection));
-    //        }
-    //    }
-//
-    //    if (playerMovementX != 0.0D) {
-    //        playerMovementX = VoxelShapes.calculateMaxOffset(directionX.getAxis(), entityBoundingBox, collisionsProper, playerMovementX * directionX.getDirection().offset()) * directionX.getDirection().offset();
-    //        if (!isZLargerThanX && playerMovementX != 0.0D) {
-    //            entityBoundingBox = entityBoundingBox.offset(RotationUtil.vecPlayerToWorld(playerMovementX, 0.0D, 0.0D, gravityDirection));
-    //        }
-    //    }
-//
-    //    if (!isZLargerThanX && playerMovementZ != 0.0D) {
-    //        playerMovementZ = VoxelShapes.calculateMaxOffset(directionZ.getAxis(), entityBoundingBox, collisionsProper, playerMovementZ * directionZ.getDirection().offset()) * directionZ.getDirection().offset();
-    //    }
-    //    cir.setReturnValue(RotationUtil.vecPlayerToWorld(playerMovementX, playerMovementY, playerMovementZ, gravityDirection));
-    //}
 
     @ModifyArgs(
             method = "isInsideWall",
@@ -569,23 +425,7 @@ public abstract class EntityMixin {
             cancellable = true
     )
     private void inject_spawnSprintingParticles(CallbackInfo ci) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        if (gravityDirection == Direction.DOWN) {
-            return;
-        }
-
-        ci.cancel();
-
-        Vec3d floorPos = this.getPos().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.20000000298023224D, 0.0D, gravityDirection));
-
-        BlockPos blockPos = BlockPos.ofFloored(floorPos);
-        BlockState blockState = this.world.getBlockState(blockPos);
-        if (blockState.getRenderType() != BlockRenderType.INVISIBLE) {
-            Vec3d particlePos = this.getPos().add(RotationUtil.vecPlayerToWorld((this.random.nextDouble() - 0.5D) * (double) this.dimensions.width, 0.1D, (this.random.nextDouble() - 0.5D) * (double) this.dimensions.width, gravityDirection));
-            Vec3d playerVelocity = this.getVelocity();
-            Vec3d particleVelocity = RotationUtil.vecPlayerToWorld(playerVelocity.x * -4.0D, 1.5D, playerVelocity.z * -4.0D, gravityDirection);
-            this.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, blockState), particlePos.x, particlePos.y, particlePos.z, particleVelocity.x, particleVelocity.y, particleVelocity.z);
-        }
+        EntityMixinLogic.inject_spawnSprintingParticles((Entity) (Object) this, this.random, this.dimensions, ci);
     }
 
     @ModifyVariable(
@@ -631,68 +471,7 @@ public abstract class EntityMixin {
             cancellable = true
     )
     private void inject_pushAwayFrom(Entity entity, CallbackInfo ci) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
-        Direction otherGravityDirection = GravityChangerAPI.getGravityDirection(entity);
-
-        if (gravityDirection == Direction.DOWN && otherGravityDirection == Direction.DOWN) {
-            return;
-        }
-
-        ci.cancel();
-
-        if (!this.isConnectedThroughVehicle(entity)) {
-            if (!entity.noClip && !this.noClip) {
-                Vec3d entityOffset = entity.getBoundingBox().getCenter().subtract(this.getBoundingBox().getCenter());
-
-                {
-                    Vec3d playerEntityOffset = RotationUtil.vecWorldToPlayer(entityOffset, gravityDirection);
-                    double dx = playerEntityOffset.x;
-                    double dz = playerEntityOffset.z;
-                    double f = MathHelper.absMax(dx, dz);
-                    if (f >= 0.009999999776482582D) {
-                        f = Math.sqrt(f);
-                        dx /= f;
-                        dz /= f;
-                        double g = 1.0D / f;
-                        if (g > 1.0D) {
-                            g = 1.0D;
-                        }
-
-                        dx *= g;
-                        dz *= g;
-                        dx *= 0.05000000074505806D;
-                        dz *= 0.05000000074505806D;
-                        if (!this.hasPassengers()) {
-                            this.addVelocity(-dx, 0.0D, -dz);
-                        }
-                    }
-                }
-
-                {
-                    Vec3d entityEntityOffset = RotationUtil.vecWorldToPlayer(entityOffset, otherGravityDirection);
-                    double dx = entityEntityOffset.x;
-                    double dz = entityEntityOffset.z;
-                    double f = MathHelper.absMax(dx, dz);
-                    if (f >= 0.009999999776482582D) {
-                        f = Math.sqrt(f);
-                        dx /= f;
-                        dz /= f;
-                        double g = 1.0D / f;
-                        if (g > 1.0D) {
-                            g = 1.0D;
-                        }
-
-                        dx *= g;
-                        dz *= g;
-                        dx *= 0.05000000074505806D;
-                        dz *= 0.05000000074505806D;
-                        if (!entity.hasPassengers()) {
-                            entity.addVelocity(dx, 0.0D, dz);
-                        }
-                    }
-                }
-            }
-        }
+        EntityMixinLogic.inject_pushAwayFrom((Entity) (Object) this, entity, ci);
     }
 
     @Inject(
