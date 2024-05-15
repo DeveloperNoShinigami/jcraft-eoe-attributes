@@ -65,6 +65,7 @@ public enum StandType {
             Text.literal("Black Knight"), Text.literal("Vintage"), Text.literal("Reversal")),
     HORUS(JEntityTypeRegistry.HORUS.get(), HorusEntity::new, "horus"),
     CINDERELLA(JEntityTypeRegistry.CINDERELLA.get(), CinderellaEntity::new, "cinderella", false, false),
+    OSIRIS(JEntityTypeRegistry.OSIRIS.get(), OsirisEntity::new, "osiris", false, false),
     ;
 
     /**

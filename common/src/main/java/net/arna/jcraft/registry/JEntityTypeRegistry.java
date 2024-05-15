@@ -447,6 +447,13 @@ public interface JEntityTypeRegistry {
                     .build("darby_older")
     );
 
+    RegistrySupplier<EntityType<OsirisEntity>> OSIRIS = ENTITY_TYPE_REGISTRY.register(JCraft.id("osiris"),
+            () -> EntityType.Builder.create(
+                    WorldOnlyEntityFactory.from(OsirisEntity::new),
+                    SpawnGroup.CREATURE
+            ).setDimensions(0.6f, 1.8f).build("osiris")
+    );
+
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
         EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
@@ -472,6 +479,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(THE_SUN, TheSunEntity::createMobAttributes);
         EntityAttributeRegistry.register(HORUS, HorusEntity::createMobAttributes);
         EntityAttributeRegistry.register(CINDERELLA, CinderellaEntity::createMobAttributes);
+        EntityAttributeRegistry.register(OSIRIS, OsirisEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(PURPLE_HAZE, () -> AbstractPurpleHazeEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.55));
