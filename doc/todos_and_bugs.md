@@ -20,7 +20,7 @@ Modify the hitboxes to match the models of:
 * Atum
 
 ## Bugs
-### Knife bundle is thrown with handle first
+~~### Knife bundle is thrown with handle first~~
 ### Stands dont rotate correctly, pitch
 
 * Might be fixed with this comment net/arna/jcraft/client/util/JClientUtils.java:120
