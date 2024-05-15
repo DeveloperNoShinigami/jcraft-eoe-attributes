@@ -81,9 +81,13 @@ public interface JItemRegistry {
     RegistrySupplier<Item> STELLAR_IRON_INGOT = register("stellar_iron_ingot", () -> new Item(settings()));
     RegistrySupplier<Item> STAND_ARROWHEAD = register("stand_arrowhead", () -> new Item(settings()));
 
-    RegistrySupplier<Item> PETSHOP_SPAWN_EGG = register("petshop_spawn_egg", () -> new SpawnEggItem(JEntityTypeRegistry.PETSHOP.get(), 0xdfa244, 0x8325c3, settings()));
-    RegistrySupplier<Item> AYA_TSUJI_SPAWN_EGG = register("aya_tsuji_spawn_egg", () -> new SpawnEggItem(JEntityTypeRegistry.AYA_TSUJI.get(), 0xdfa244, 0x0fa7f3, settings()));
-    RegistrySupplier<Item> DARBY_OLDER_SPAWN_EGG = register("darby_older_spawn_egg", () -> new SpawnEggItem(JEntityTypeRegistry.DARBY_OLDER.get(), 0xdfa244, 0x8325c3, settings()));
+    int BASE_COLOR = 0xdfa244;
+    int SEASON_3_COLOR = 0x8325c3;
+    int SEASON_4_COLOR = 0x0fa7f3;
+    RegistrySupplier<Item> PETSHOP_SPAWN_EGG = register("petshop_spawn_egg", () -> new SpawnEggItem(JEntityTypeRegistry.PETSHOP.get(), BASE_COLOR, SEASON_3_COLOR, settings()));
+    RegistrySupplier<Item> AYA_TSUJI_SPAWN_EGG = register("aya_tsuji_spawn_egg", () -> new SpawnEggItem(JEntityTypeRegistry.AYA_TSUJI.get(), BASE_COLOR, SEASON_4_COLOR, settings()));
+    RegistrySupplier<Item> DARBY_OLDER_SPAWN_EGG = register("darby_older_spawn_egg", () -> new SpawnEggItem(JEntityTypeRegistry.DARBY_OLDER.get(), BASE_COLOR, SEASON_3_COLOR, settings()));
+    RegistrySupplier<Item> DARBY_YOUNGER_SPAWN_EGG = register("darby_younger_spawn_egg", () -> new SpawnEggItem(JEntityTypeRegistry.DARBY_YOUNGER.get(), BASE_COLOR, SEASON_3_COLOR, settings()));
 
     RegistrySupplier<Item> MOCK_ITEM = register("mock_item", MockItem::new);
 

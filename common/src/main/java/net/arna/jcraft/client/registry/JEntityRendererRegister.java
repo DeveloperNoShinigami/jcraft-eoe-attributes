@@ -81,6 +81,7 @@ public interface JEntityRendererRegister {
         EntityRendererRegistry.register(JEntityTypeRegistry.PETSHOP, PetshopRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.AYA_TSUJI, AyaTsujiRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.DARBY_OLDER, DarbyOlderRenderer::new);
+        EntityRendererRegistry.register(JEntityTypeRegistry.DARBY_YOUNGER, DarbyYoungerRenderer::new);
     }
 
     private static <T extends Entity> EntityRenderer<T> createEmpty(EntityRendererFactory.Context ctx) {
