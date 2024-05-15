@@ -22,6 +22,9 @@ public class DarbyYoungerEntity extends PathAwareEntity implements GeoEntity {
     public DarbyYoungerEntity(World world) {
         super(JEntityTypeRegistry.DARBY_YOUNGER.get(), world);
         JEnemies.add(this);
+        final CommonStandComponent standData = JComponentPlatformUtils.getStandData(this);
+        standData.setType(StandType.ATUM);
+        standData.setSkin(0);
     }
 
     @Override
