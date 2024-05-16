@@ -60,7 +60,7 @@
 6. Add the type of the entity to `JEntityTypeRegistry`. The dimension parameter is the hitbox of the entity in blocks.
 7. Register the entity attributes in `JEntityTypeRegistry#registerAttributes`.
 8. Use the newly created entity type in the `super` constructor of `MyEntity`.
-9. Create the class `MyModel` extending `GeoModel`. Model resource is `JCraft.id("geo/my.geo.json")` and texture resource is `JCraft.id("textures/entity/my.png")`.
+9. Create the class `MyModel` extending `GeoModel`. Model resource is `JCraft.id("geo/my.geo.json")`, texture resource is `JCraft.id("textures/entity/my.png")` and animation resource is `JCraft.id("animations/my.animation.json")`.
 10. Create the class `MyRenderer` extending `GeoEntityRenderer`.
 11. Add `MyRenderer` to `JEntityRendererRegister`.
 12. Add `my.png`, `my.geo.json` and `my.animation.json` from the `my.bbmodel` file from our modelers.

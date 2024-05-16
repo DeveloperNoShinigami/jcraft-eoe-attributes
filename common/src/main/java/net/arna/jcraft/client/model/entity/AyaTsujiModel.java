@@ -18,7 +18,6 @@ public class AyaTsujiModel extends GeoModel<AyaTsujiEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(AyaTsujiEntity animatable) {
-        // TODO Arna
-        return JCraft.id("aya_tsuji");
+        return JCraft.id("animations/aya_tsuji.animation.json");
     }
 }

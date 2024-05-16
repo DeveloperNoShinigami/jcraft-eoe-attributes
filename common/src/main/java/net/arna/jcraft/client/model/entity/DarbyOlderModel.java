@@ -18,7 +18,6 @@ public class DarbyOlderModel extends GeoModel<DarbyOlderEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(DarbyOlderEntity animatable) {
-        // TODO Arna
-        return JCraft.id("darby_older");
+        return JCraft.id("animations/darby_older.animation.json");
     }
 }
