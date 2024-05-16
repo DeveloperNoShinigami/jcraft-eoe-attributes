@@ -85,7 +85,6 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
         super(type, worldIn, summonSound, true);
         idleRotation = -30f;
 
-        description = "entity.jcraft.killerqueen.info.desc";
         proCount = 4;
         conCount = 3;
 

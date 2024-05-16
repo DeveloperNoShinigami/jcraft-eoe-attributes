@@ -163,7 +163,6 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
         super(StandType.WHITE_SNAKE, worldIn, JSoundRegistry.WS_SUMMON);
         idleRotation = 220f;
 
-        description = "entity.jcraft.whitesnake.info.desc";
         proCount = 3;
         conCount = 3;
 

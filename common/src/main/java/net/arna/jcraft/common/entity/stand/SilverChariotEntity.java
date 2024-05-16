@@ -228,7 +228,6 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     }
 
     private void setNormalDesc() {
-        description = "entity.jcraft.silverchariot.info.desc";
 
         freespace =
                 """
@@ -244,7 +243,6 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     }
 
     private void setPossessedDesc() {
-        description = "entity.jcraft.silverchariot2.info.desc";
 
         freespace =
                 """
@@ -253,6 +251,11 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                             (Light>)Charge~Barrage>God of Death""";
 
         registerMoves();
+    }
+
+    @Override
+    public int getModeOrdinal() {
+        return getMode().ordinal();
     }
 
     @Override

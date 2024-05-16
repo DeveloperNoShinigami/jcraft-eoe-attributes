@@ -152,7 +152,7 @@ public enum StandType {
     StandType() {
         this.entityType = null;
         this.ctor = null;
-        this.nameKey = "";
+        this.nameKey = "nostand";
         this.nameText = Text.translatable("entity.jcraft.nostand");
         this.obtainable = false;
         this.evolution = false;

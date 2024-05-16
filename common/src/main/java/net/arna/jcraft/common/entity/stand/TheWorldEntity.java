@@ -164,7 +164,6 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
         super(StandType.THE_WORLD, worldIn, JSoundRegistry.TW_SUMMON);
         idleRotation = 225f;
 
-        description = "entity.jcraft.theworld.info.desc";
         proCount = 4;
         conCount = 2;
 

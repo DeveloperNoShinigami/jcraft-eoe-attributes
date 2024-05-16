@@ -93,7 +93,6 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     public KQBTDEntity(World worldIn) {
         super(StandType.KILLER_QUEEN_BITES_THE_DUST, worldIn, JSoundRegistry.KQBTD_SUMMON);
 
-        description = "entity.jcraft.kqbtd.info.desc";
         proCount = 4;
         conCount = 2;
 

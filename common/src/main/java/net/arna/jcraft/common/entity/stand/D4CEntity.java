@@ -142,7 +142,6 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
 
         idleRotation = -45f;
 
-        description = "entity.jcraft.d4c.info.desc";
         proCount = 4;
         conCount = 2;
 

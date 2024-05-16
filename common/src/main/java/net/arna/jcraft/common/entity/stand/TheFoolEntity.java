@@ -196,7 +196,6 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         idleDistance = 2f;
 
 
-        description = "entity.jcraft.thefool.info.desc";
         proCount = 5;
         conCount = 3;
 

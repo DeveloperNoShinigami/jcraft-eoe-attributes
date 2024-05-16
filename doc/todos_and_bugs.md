@@ -18,6 +18,13 @@ Modify the hitboxes to match the models of:
 * Darby Younger
 * Atum
 
+### Descriptions
+* C-Moon
+* Horus
+* Cinderella
+* Osiris
+* Atum
+
 ### Translations
 * move the move names from literals to translatables
 

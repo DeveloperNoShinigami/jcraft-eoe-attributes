@@ -163,7 +163,6 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
 
         idleRotation = -30f;
 
-        description = "entity.jcraft.goldexperience.info.desc";
         proCount = 4;
         conCount = 3;
 

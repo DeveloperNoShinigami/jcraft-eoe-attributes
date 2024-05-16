@@ -202,7 +202,6 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         super(StandType.MADE_IN_HEAVEN, worldIn, JSoundRegistry.MIH_SUMMON);
         idleRotation = -45f;
 
-        description = "entity.jcraft.mih.info.desc";
         proCount = 4;
         conCount = 2;
 

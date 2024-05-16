@@ -172,7 +172,6 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         idleDistance = 1f;
         idleRotation = -65f;
 
-        description = "entity.jcraft.kingcrimson.info.desc";
         proCount = 4;
         conCount = 4;
 

@@ -245,7 +245,6 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
         idleRotation = 220f;
 
-        description = "entity.jcraft.cream.info.desc";
         proCount = 4;
         conCount = 3;
 

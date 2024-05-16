@@ -238,7 +238,6 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
 
         idleRotation = 0;
 
-        description = "entity.jcraft.the_sun.info.desc";
         proCount = 2;
         conCount = 2;
 

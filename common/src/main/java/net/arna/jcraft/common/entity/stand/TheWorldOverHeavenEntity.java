@@ -211,7 +211,6 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
         idleRotation = -45f;
         summonAnimDuration = 29;
 
-        description = "entity.jcraft.twoh.info.desc";
         proCount = 4;
         conCount = 4;
 

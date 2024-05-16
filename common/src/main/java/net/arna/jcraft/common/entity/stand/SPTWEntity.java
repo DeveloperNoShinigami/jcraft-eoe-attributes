@@ -146,7 +146,6 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
 
         idleRotation = 315f;
 
-        description = "entity.jcraft.sptw.info.desc";
         proCount = 4;
         conCount = 2;
 

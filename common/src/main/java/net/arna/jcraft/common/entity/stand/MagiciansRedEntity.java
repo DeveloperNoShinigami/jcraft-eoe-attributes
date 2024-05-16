@@ -137,7 +137,6 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
         super(StandType.MAGICIANS_RED, worldIn, JSoundRegistry.MR_SUMMON);
         idleRotation = 225f;
 
-        description = "entity.jcraft.mr.info.desc";
         proCount = 3;
         conCount = 3;
 

@@ -42,7 +42,6 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
         super(type, worldIn, JSoundRegistry.STAR_PLATINUM_SUMMON);
         idleRotation = 225f;
 
-        description = "entity.jcraft.starplatinum.info.desc";
         proCount = 3;
         conCount = 3;
 

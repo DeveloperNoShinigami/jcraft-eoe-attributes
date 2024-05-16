@@ -208,7 +208,6 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
         super(type, worldIn, JSoundRegistry.PH_SUMMON);
         idleRotation = 225f;
 
-        description = "entity.jcraft.purple_haze_distortion.info.desc";
         proCount = 3;
         conCount = 3;
 

@@ -41,7 +41,8 @@ public class AboutStandCommand {
                 .append(Text.literal("\n")));
 
         // Description
-        resp.append(Text.translatable(stand.description).formatted(Formatting.GREEN))
+        resp.append(Text.translatable(String.format("entity.%s.%s%s.info.desc", JCraft.MOD_ID, stand.getStandType().getNameKey(), stand.getModeOrdinal() == 0 ? "" : Integer.toString(stand.getModeOrdinal())))
+                        .formatted(Formatting.GREEN))
                 .append(Text.literal("\n"));
 
         // Pros & Cons

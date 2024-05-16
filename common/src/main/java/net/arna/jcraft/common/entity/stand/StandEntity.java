@@ -145,7 +145,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     protected int proCount;
     @Getter
     protected int conCount;
-    public String description = "UNDESCRIBED";
     public String freespace;
 
     // Player Movement Input
@@ -235,6 +234,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     public boolean hasUser() {
         return user != null;
+    }
+
+    public int getModeOrdinal() {
+        return 0;
     }
 
     public S getState() {

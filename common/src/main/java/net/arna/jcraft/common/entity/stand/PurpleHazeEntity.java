@@ -101,7 +101,6 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     public PurpleHazeEntity(World worldIn) {
         super(StandType.PURPLE_HAZE, worldIn);
 
-        description = "entity.jcraft.purple_haze.info.desc";
         conCount = 2;
 
         freespace = """

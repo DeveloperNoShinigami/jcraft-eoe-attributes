@@ -175,7 +175,6 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
 
         idleRotation = -30f;
 
-        description = "entity.jcraft.ger.info.desc";
         proCount = 5;
         conCount = 2;
 

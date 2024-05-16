@@ -217,7 +217,6 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         super(StandType.HIEROPHANT_GREEN, worldIn, JSoundRegistry.HG_SUMMON);
         idleRotation = 220f;
 
-        description = "entity.jcraft.hierophantgreen.info.desc";
         proCount = 3;
         conCount = 2;
 
