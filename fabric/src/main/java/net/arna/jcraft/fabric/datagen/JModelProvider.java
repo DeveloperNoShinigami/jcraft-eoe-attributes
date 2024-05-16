@@ -27,6 +27,7 @@ public class JModelProvider extends FabricModelProvider {
         generator.createTrivialCube(JBlockRegistry.SOUL_BLOCK.get());
         generator.createRotatedVariantBlock(JBlockRegistry.HOT_SAND_BLOCK.get());
         generator.createTrivialCube(JBlockRegistry.STELLAR_IRON_BLOCK.get());
+        generator.createTrivialCube(JBlockRegistry.CINDERELLA_GREEN_BLOCK.get());
     }
 
     @Override

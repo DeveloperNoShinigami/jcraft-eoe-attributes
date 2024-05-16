@@ -20,6 +20,7 @@ public interface JCreativeMenuTabRegistry {
         // building blocks
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.GOLD_BLOCK, JItemRegistry.STELLAR_IRON_BLOCK.get());
+            output.acceptBefore(Items.SEA_LANTERN, JItemRegistry.CINDERELLA_GREEN_BLOCK.get());
         });
         // natural blocks
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.NATURAL_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
@@ -114,6 +115,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.FOOLISH_SAND_BLOCK.get());
                     // misc
                     entries.accept(JItemRegistry.HOT_SAND_BLOCK.get());
+                    entries.accept(JItemRegistry.CINDERELLA_GREEN_BLOCK.get());
                     entries.accept(JItemRegistry.SINNERS_SOUL.get());
                     entries.accept(JItemRegistry.SOUL_BLOCK.get());
                     entries.accept(JItemRegistry.KNIFE.get());

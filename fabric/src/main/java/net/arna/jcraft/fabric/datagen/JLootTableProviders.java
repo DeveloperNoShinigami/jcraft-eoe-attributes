@@ -38,6 +38,7 @@ public class JLootTableProviders {
             dropSelf(JBlockRegistry.SOUL_BLOCK.get());
             dropSelf(JBlockRegistry.HOT_SAND_BLOCK.get());
             dropSelf(JBlockRegistry.STELLAR_IRON_BLOCK.get());
+            dropSelf(JBlockRegistry.CINDERELLA_GREEN_BLOCK.get());
         }
     }
 

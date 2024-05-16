@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public interface JBlockRegistry {
 
-
     DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.BLOCK);
 
     //Block
@@ -46,6 +45,8 @@ public interface JBlockRegistry {
     RegistrySupplier<Block> HOT_SAND_BLOCK = BLOCK_REGISTRY.register("hot_sand_block", () -> new HotSandBlock(BlockBehaviour.Properties.of()
             .strength(0.5f)
             .sound(SoundType.SAND)
+    ));
+    RegistrySupplier<Block> CINDERELLA_GREEN_BLOCK = BLOCK_REGISTRY.register("cinderella_green_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.GREEN_TERRACOTTA)
     ));
     RegistrySupplier<Block> COFFIN_BLOCK = BLOCK_REGISTRY.register("coffin", () -> new CoffinBlock(BlockBehaviour.Properties.of().sound(SoundType.WOOD).noOcclusion()));
 

@@ -13,12 +13,9 @@ import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SpawnEggItem;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-
-import static net.arna.jcraft.JCraft.*;
 
 public interface JItemRegistry {
 
@@ -111,6 +108,8 @@ public interface JItemRegistry {
             () -> new BlockItem(JBlockRegistry.STELLAR_IRON_BLOCK.get(), settings()));
     RegistrySupplier<Item> HOT_SAND_BLOCK = register("hot_sand_block",
             () -> new BlockItem(JBlockRegistry.HOT_SAND_BLOCK.get(), settings()));
+    RegistrySupplier<Item> CINDERELLA_GREEN_BLOCK = register("cinderella_green_block",
+            () -> new BlockItem(JBlockRegistry.CINDERELLA_GREEN_BLOCK.get(), settings()));
     RegistrySupplier<Item> COFFIN_BLOCK = register("coffin",
             () -> new BlockItem(JBlockRegistry.COFFIN_BLOCK.get(), settings()));
 

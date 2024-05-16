@@ -60,6 +60,15 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .requires(JItemRegistry.STELLAR_IRON_INGOT.get())
                 .unlockedBy("has_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STELLAR_IRON_INGOT.get()))
                 .save(exporter);
+        // cinderella green from smelting
+        SimpleCookingRecipeBuilder.smelting(
+                        Ingredient.of(Items.VERDANT_FROGLIGHT),
+                        RecipeCategory.BUILDING_BLOCKS,
+                        JItemRegistry.CINDERELLA_GREEN_BLOCK.get(),
+                        0.3f,
+                        200)
+                .unlockedBy("has_froglight", InventoryChangeTrigger.TriggerInstance.hasItems(Items.VERDANT_FROGLIGHT))
+                .save(exporter, JCraft.id("cinderella_green_from_smelting"));
         // stand arrowhead
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.STAND_ARROWHEAD.get(), 3)
                 .pattern("NGI")
