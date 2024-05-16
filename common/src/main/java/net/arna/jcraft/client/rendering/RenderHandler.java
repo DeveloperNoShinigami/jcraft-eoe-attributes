@@ -1,7 +1,6 @@
 package net.arna.jcraft.client.rendering;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.arna.jcraft.client.rendering.shader.JShader;
 import net.arna.jcraft.client.rendering.shader.ShaderUniformHandler;
 import net.arna.jcraft.client.util.RenderUtils;
 import net.fabricmc.loader.api.FabricLoader;
@@ -100,7 +99,7 @@ public class RenderHandler {
                 handler.updateShaderData(instance);
             }
             source.draw(type);
-            if (instance instanceof JShader jShader) {
+            if (instance instanceof IJShader jShader) {
                 jShader.setUniformDefaults();
             }
         }

@@ -1,10 +1,8 @@
-package net.arna.jcraft.client.rendering.shader;
+package net.arna.jcraft.forge.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.resource.ResourceFactory;
 import net.minecraft.util.Identifier;
 

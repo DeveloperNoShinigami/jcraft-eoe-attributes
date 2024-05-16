@@ -1,18 +1,13 @@
 package net.arna.jcraft.client.rendering.post;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.client.registry.JShaderRegistry;
 import net.arna.jcraft.client.rendering.api.MultiInstancePostProcessor;
-import net.arna.jcraft.client.rendering.api.PostProcessor;
-import net.arna.jcraft.client.rendering.shader.JShader;
 import net.arna.jcraft.client.util.Easing;
+import net.arna.jcraft.platform.JPlatformUtils;
 import net.minecraft.client.gl.JsonEffectShaderProgram;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 
 public class TimestopShaderPostProcessor extends MultiInstancePostProcessor<TimestopShaderFX> {
 
@@ -63,7 +58,7 @@ public class TimestopShaderPostProcessor extends MultiInstancePostProcessor<Time
 
     public static void playEffect(Vector3f center) {
         Runnable timeStop = () -> {
-            JShaderRegistry.ZA_WARUDO.addFxInstance(new TimestopShaderFX(center) {
+            JPlatformUtils.getZaWarudo().addFxInstance(new TimestopShaderFX(center) {
                 @Override
                 public void update(double deltaTime) {
                     super.update(deltaTime);

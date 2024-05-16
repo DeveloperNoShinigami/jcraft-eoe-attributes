@@ -3,6 +3,7 @@ package net.arna.jcraft.client.registry;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.rendering.Phases;
 import net.arna.jcraft.client.rendering.RenderHandler;
+import net.arna.jcraft.platform.JPlatformUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -26,7 +27,7 @@ public class JRenderLayerRegistry extends RenderPhase {
                     "transparent_block",
                     VertexFormats.POSITION,
                     VertexFormat.DrawMode.QUADS,
-                    new ShaderProgram(() -> JShaderRegistry.TEST.getInstance().get()),
+                    new ShaderProgram(() -> JPlatformUtils.getTest()),
                     Phases.NORMAL_TRANSPARENCY,
                     SpriteAtlasTexture.PARTICLE_ATLAS_TEXTURE);
 
@@ -36,7 +37,7 @@ public class JRenderLayerRegistry extends RenderPhase {
                     "rrre",
                     VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL,
                     VertexFormat.DrawMode.QUADS,
-                    new ShaderProgram(() -> JShaderRegistry.RREDE.getInstance().get()),
+                    new ShaderProgram(() -> JPlatformUtils.getRred()),
                     RenderPhase.TRANSLUCENT_TRANSPARENCY
             );
 

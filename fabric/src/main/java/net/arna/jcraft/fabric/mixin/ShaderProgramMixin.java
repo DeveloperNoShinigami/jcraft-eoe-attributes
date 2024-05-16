@@ -1,6 +1,6 @@
 package net.arna.jcraft.fabric.mixin;
 
-import net.arna.jcraft.client.rendering.shader.JShader;
+import net.arna.jcraft.fabric.client.JShader;
 import net.fabricmc.fabric.impl.client.rendering.FabricShaderProgram;
 import net.minecraft.client.gl.ShaderProgram;
 import org.spongepowered.asm.mixin.Final;

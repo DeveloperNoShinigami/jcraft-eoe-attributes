@@ -1,7 +1,6 @@
 package net.arna.jcraft.mixin.client;
 
 import com.mojang.datafixers.util.Pair;
-import net.arna.jcraft.client.registry.JShaderRegistry;
 import net.arna.jcraft.client.rendering.api.PostProcessHandler;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.arna.jcraft.common.util.JUtils;
@@ -33,12 +32,6 @@ public class GameRendererMixin {
         matrix.translate(-cameraPos.getX(), -cameraPos.getY(), -cameraPos.getZ());
         PostProcessHandler.renderLast(matrix);
         matrix.pop();
-    }
-
-    @Inject(method = "loadPrograms", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void jcraft$registerShaders(ResourceFactory manager, CallbackInfo ci, List<Pair<ShaderProgram, Consumer<ShaderProgram>>> list, List<Pair<ShaderProgram, Consumer<ShaderProgram>>> list2) throws IOException {
-        JShaderRegistry.init(manager);
-        list2.addAll(JShaderRegistry.shaderList);
     }
 
     @Inject(method = "onResized", at = @At(value = "HEAD"))

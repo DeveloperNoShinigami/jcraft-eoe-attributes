@@ -12,6 +12,7 @@
   ],
   "client": [
     "ShaderProgramMixin",
+    "client.GameRendererMixin",
     "client.KeyBindingMixin"
   ],
   "injectors": {

@@ -1,8 +1,7 @@
 package net.arna.jcraft.client.rendering.skybox;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.arna.jcraft.client.registry.JShaderRegistry;
-import net.arna.jcraft.client.rendering.shader.JShader;
+import net.arna.jcraft.platform.JPlatformUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.*;
@@ -32,7 +31,7 @@ public class CrimsonSkyBox implements JSkyBox {
         Matrix4f mat = matrices.peek().getPositionMatrix();
         Matrix4f invMat = new Matrix4f(mat);
         invMat.invert();
-        JShader jShader = (JShader) JShaderRegistry.TEST.getInstance().get();
+        var jShader =  JPlatformUtils.getTest();
         jShader.getUniformOrDefault("InverseTransformMatrix").set(invMat);
         jShader.getUniformOrDefault("Time").set((client.world.getTime() + tickDelta) / 20);
         Supplier<ShaderProgram> shaderInstanceSupplier = () -> jShader;

@@ -1,8 +1,8 @@
-package net.arna.jcraft.client.rendering.shader;
+package net.arna.jcraft.fabric.client;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.arna.jcraft.client.rendering.IJShader;
 import net.minecraft.client.gl.GlUniform;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.gl.Uniform;
@@ -15,7 +15,6 @@ import net.minecraft.util.JsonHelper;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -23,7 +22,7 @@ import java.util.function.Consumer;
 /**
  * This class is for adding CORE shaders, not post processed
  */
-public abstract class JShader extends ShaderProgram {
+public abstract class JShader extends ShaderProgram implements IJShader {
 
     protected Map<String, Consumer<Uniform>> defaultUniformData;
 
@@ -31,6 +30,7 @@ public abstract class JShader extends ShaderProgram {
         super(factory, name.toString(), format);
     }
 
+    @Override
     public void setUniformDefaults() {
         for (Map.Entry<String, Consumer<Uniform>> defaultDataEntry : getDefaultUniformData().entrySet()) {
             final Uniform t = loadedUniforms.get(defaultDataEntry.getKey());
