@@ -39,6 +39,7 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
     @Override
     public void onWorldRendered(@NotNull PoseStack matrices, @NotNull Camera camera, float tickDelta, long nanoTime) {
         if (renderingEffect) {
+            System.out.println("render : " + renderingEffect);
             SHADER.setUniformValue("InverseTransformMatrix", GlMatrices.getInverseTransformMatrix(projectionMatrix));
             Vec3 cameraPos = camera.getPosition();
             SHADER.setUniformValue("CameraPosition", (float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
@@ -57,7 +58,9 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
 
     @Override
     public void tick(Minecraft client) {
+
        if (shouldRender) {
+           System.out.println("tick : " + renderingEffect);
             if (!renderingEffect) {
                 SHADER.setUniformValue("OuterSat", 1f);
                 ticks = 0;
