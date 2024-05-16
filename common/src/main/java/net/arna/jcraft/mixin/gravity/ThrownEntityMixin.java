@@ -43,12 +43,11 @@ public abstract class ThrownEntityMixin {
         return modify;
     }
 
-    @ModifyArg(
-            method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",
+    @ModifyArg(//<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V
+            method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/projectile/thrown/ThrownEntity;<init>(Lnet/minecraft/entity/EntityType;DDDLnet/minecraft/world/World;)V",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;<init>(Lnet/minecraft/world/entity/EntityType;DDDLnet/minecraft/world/level/Level;)V"
             ),
             index = 1
     )
@@ -63,13 +62,12 @@ public abstract class ThrownEntityMixin {
     }
 
     @ModifyArg(
-            method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",
+            method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/projectile/thrown/ThrownEntity;<init>(Lnet/minecraft/entity/EntityType;DDDLnet/minecraft/world/World;)V",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;<init>(Lnet/minecraft/world/entity/EntityType;DDDLnet/minecraft/world/level/Level;)V"
             ),
-            index = 1
+            index = 2
     )
     private static double modifyargs_init_init_1(double y, @Local LivingEntity owner) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
@@ -82,13 +80,12 @@ public abstract class ThrownEntityMixin {
     }
 
     @ModifyArg(
-            method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",
+            method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/projectile/thrown/ThrownEntity;<init>(Lnet/minecraft/entity/EntityType;DDDLnet/minecraft/world/World;)V",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/projectile/ThrowableProjectile;<init>(Lnet/minecraft/world/entity/EntityType;DDDLnet/minecraft/world/level/Level;)V"
             ),
-            index = 1
+            index = 3
     )
     private static double modifyargs_init_init_2(double z, @Local LivingEntity owner) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);

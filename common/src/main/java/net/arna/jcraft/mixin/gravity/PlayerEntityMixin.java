@@ -232,7 +232,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             method = "attack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getYaw()F",
+                    target = "Lnet/minecraft/world/entity/player/Player;getYRot()F",
                     ordinal = 2
             )
     )

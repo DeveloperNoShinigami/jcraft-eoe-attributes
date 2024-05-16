@@ -25,7 +25,7 @@ public abstract class EntityMixin {
      *
      * @param passenger stand entity
      */
-    @Inject(method = "updatePassengerPosition(Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/Entity$PositionUpdater;)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "positionRider(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity$MoveFunction;)V", at = @At("HEAD"), cancellable = true)
     private void jcraft$updatePassengerPosition(Entity passenger, Entity.MoveFunction positionUpdater, CallbackInfo info) {
         EntityMixinLogic.jcraft$updatePassengerPosition((Entity)(Object)this, passenger, positionUpdater, info);
     }
@@ -34,7 +34,7 @@ public abstract class EntityMixin {
      * Disables sprinting particles during time erase
      */
     @SuppressWarnings("ConstantValue")
-    @Inject(method = "shouldSpawnSprintingParticles", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "canSpawnSprintParticle", at = @At("HEAD"), cancellable = true)
     private void jcraft$shouldSpawnSprintingParticles(CallbackInfoReturnable<Boolean> cir) {
         if ((Object) this instanceof LivingEntity living && JUtils.getStand(living) instanceof KingCrimsonEntity kc && kc.getTETime() > 0) {
             cir.setReturnValue(false);
@@ -43,7 +43,7 @@ public abstract class EntityMixin {
     //todo (polishing): stand position autosolver
 
     @SuppressWarnings("ConstantValue")
-    @Inject(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;copyFrom(Lnet/minecraft/entity/Entity;)V"))
+    @Inject(method = "changeDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;restoreFrom(Lnet/minecraft/world/entity/Entity;)V"))
     private void doNotPlayDesummonSoundWhenMovingWorld(ServerLevel destination, CallbackInfoReturnable<Entity> cir) {
         EntityMixinLogic.doNotPlayDesummonSoundWhenMovingWorld((Entity) (Object) this);
     }

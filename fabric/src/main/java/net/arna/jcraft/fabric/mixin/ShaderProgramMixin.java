@@ -16,7 +16,7 @@ abstract class ShaderProgramMixin {
     private String name;
 
     // Allow loading our ShaderPrograms from arbitrary namespaces.
-    @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Identifier;<init>(Ljava/lang/String;)V"), allow = 1)
+    @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/resources/ResourceLocation;<init>(Ljava/lang/String;)V"), allow = 1)
     private String modifyProgramId(String id) {
         if ((Object) this instanceof JShader) {
             return FabricShaderProgram.rewriteAsId(id, name);

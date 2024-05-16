@@ -13,11 +13,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Drowned.class)
 public abstract class DrownedEntityMixin {
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getX()D"
             )
     )
     private double redirect_attack_getX_0(LivingEntity target) {
@@ -30,11 +29,10 @@ public abstract class DrownedEntityMixin {
     }
 
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getBodyY(D)D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getY(D)D"
             )
     )
     private double redirect_attack_getBodyY_0(LivingEntity target, double heightScale) {
@@ -47,11 +45,10 @@ public abstract class DrownedEntityMixin {
     }
 
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getZ()D"
             )
     )
     private double redirect_attack_getZ_0(LivingEntity target) {
@@ -64,7 +61,7 @@ public abstract class DrownedEntityMixin {
     }
 
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/Math;sqrt(D)D"

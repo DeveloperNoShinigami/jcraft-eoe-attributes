@@ -8,7 +8,9 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(BedBlock.class)
 public class BedBlockMixin {
-    @ModifyArg(method = "onUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;createExplosion(Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/damage/DamageSource;Lnet/minecraft/world/explosion/ExplosionBehavior;Lnet/minecraft/util/math/Vec3d;FZLnet/minecraft/world/World$ExplosionSourceType;)Lnet/minecraft/world/explosion/Explosion;"), index = 4)
+    @ModifyArg(method = "use", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/level/Level;explode(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;Lnet/minecraft/world/level/ExplosionDamageCalculator;Lnet/minecraft/world/phys/Vec3;FZLnet/minecraft/world/level/Level$ExplosionInteraction;)Lnet/minecraft/world/level/Explosion;"
+    ), index = 4)
     private float modifyExplosionPower(float d) {
         if (JServerConfig.REDUCE_DEADLY_EXPLOSIONS.getValue()) {
             return 1.5f;

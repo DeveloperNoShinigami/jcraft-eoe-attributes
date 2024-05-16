@@ -14,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Mob.class)
 public abstract class MobEntityMixin {
     @Redirect(
-            method = "tryAttack",
+            method = "doHurtTarget",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/mob/MobEntity;getYaw()F",
+                    target = "Lnet/minecraft/world/entity/Mob;getYRot()F",
                     ordinal = 0
             )
     )
@@ -31,10 +31,10 @@ public abstract class MobEntityMixin {
     }
 
     @Redirect(
-            method = "tryAttack",
+            method = "doHurtTarget",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/mob/MobEntity;getYaw()F",
+                    target = "Lnet/minecraft/world/entity/Mob;getYRot()F",
                     ordinal = 1
             )
     )
@@ -48,10 +48,10 @@ public abstract class MobEntityMixin {
     }
 
     @Redirect(
-            method = "lookAtEntity",
+            method = "lookAt",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getEyeY()D",
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getEyeY()D",
                     ordinal = 0
             )
     )
@@ -65,10 +65,10 @@ public abstract class MobEntityMixin {
     }
 
     @Redirect(
-            method = "lookAtEntity",
+            method = "lookAt",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getX()D",
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D",
                     ordinal = 0
             )
     )
@@ -82,10 +82,10 @@ public abstract class MobEntityMixin {
     }
 
     @Redirect(
-            method = "lookAtEntity",
+            method = "lookAt",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getZ()D",
+                    target = "Lnet/minecraft/world/entity/Entity;getZ()D",
                     ordinal = 0
             )
     )

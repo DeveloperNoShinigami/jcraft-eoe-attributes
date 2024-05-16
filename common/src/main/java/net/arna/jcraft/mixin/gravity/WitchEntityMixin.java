@@ -15,10 +15,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Witch.class)
 public abstract class WitchEntityMixin {
     @ModifyVariable(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE_ASSIGN",
-                    target = "Lnet/minecraft/entity/LivingEntity;getVelocity()Lnet/minecraft/util/math/Vec3d;"
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"
             )
     )
     private Vec3 modify_attack_Vec3d_0(Vec3 value, LivingEntity target, float pullProgress) {
@@ -31,11 +31,10 @@ public abstract class WitchEntityMixin {
     }
 
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getX()D"
             )
     )
     private double redirect_attack_getX_0(LivingEntity target) {
@@ -48,11 +47,10 @@ public abstract class WitchEntityMixin {
     }
 
     @Redirect(
-            method = "attackPlayerGoal",
+            method = "Lnet/minecraft/world/entity/monster/Witch;attackPlayersGoal:Lnet/minecraft/world/entity/ai/goal/target/NearestAttackableWitchTargetGoal;",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getEyeY()D"
             )
     )
     private double redirect_attack_getEyeY_0(LivingEntity target) {
@@ -65,11 +63,10 @@ public abstract class WitchEntityMixin {
     }
 
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getZ()D"
             )
     )
     private double redirect_attack_getZ_0(LivingEntity target) {
@@ -82,7 +79,7 @@ public abstract class WitchEntityMixin {
     }
 
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/Math;sqrt(D)D"

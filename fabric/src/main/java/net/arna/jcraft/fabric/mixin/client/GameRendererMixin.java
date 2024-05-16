@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
 
-    @Inject(method = "loadPrograms", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "reloadShaders", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
     private void jcraft$registerShaders(ResourceProvider manager, CallbackInfo ci, List<Pair<ShaderInstance, Consumer<ShaderInstance>>> list, List<Pair<ShaderInstance, Consumer<ShaderInstance>>> list2) throws IOException {
         JShaderRegistry.init(manager);
         list2.addAll(JShaderRegistry.shaderList);

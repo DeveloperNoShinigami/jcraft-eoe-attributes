@@ -14,7 +14,7 @@ import java.util.Map;
 @Mixin(KeyMapping.class)
 public class KeyBindingMixin {
 
-    @Inject(method = "setPressed", at = @At("HEAD"))
+    @Inject(method = "setDown", at = @At("HEAD"))
     private void queueKeyPressOrRelease(boolean pressed, CallbackInfo ci) {
         KeyMapping binding = (KeyMapping) (Object) (this);
         if (pressed == binding.isDown()) {

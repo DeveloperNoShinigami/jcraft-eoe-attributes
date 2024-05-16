@@ -24,15 +24,15 @@ public class ParticleManagerMixin {
     @Shadow
     @Mutable
     @Final
-    private static List<ParticleRenderType> PARTICLE_TEXTURE_SHEETS;
+    private static List<ParticleRenderType> RENDER_ORDER;
     @Shadow
-    protected ClientLevel world;
+    protected ClientLevel level;
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void addSheets(CallbackInfo ci) {
-        List<ParticleRenderType> sheets = new ArrayList<>(PARTICLE_TEXTURE_SHEETS); // Create mutable copy
+        List<ParticleRenderType> sheets = new ArrayList<>(RENDER_ORDER); // Create mutable copy
         sheets.addAll(JParticleTextureSheet.J_SHEETS);
-        PARTICLE_TEXTURE_SHEETS = ImmutableList.copyOf(sheets);
+        RENDER_ORDER = ImmutableList.copyOf(sheets);
     }
 
     @Inject(method = "tickParticle", at = @At("HEAD"), cancellable = true)

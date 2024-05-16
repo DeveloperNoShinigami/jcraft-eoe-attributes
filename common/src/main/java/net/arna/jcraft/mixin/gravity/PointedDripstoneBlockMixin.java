@@ -16,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(PointedDripstoneBlock.class)
 public abstract class PointedDripstoneBlockMixin {
     @Redirect(
-            method = "onLandedUpon",
+            method = "fallOn",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockState;get(Lnet/minecraft/state/property/Property;)Ljava/lang/Comparable;",
+                    target = "Lnet/minecraft/world/level/block/state/BlockState;getValue(Lnet/minecraft/world/level/block/state/properties/Property;)Ljava/lang/Comparable;",
                     ordinal = 0
             )
     )

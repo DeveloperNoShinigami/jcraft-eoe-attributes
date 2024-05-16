@@ -19,10 +19,10 @@ public abstract class ItemPickupParticleMixin {
     private Entity interactingEntity;
 
     @ModifyVariable(
-            method = "buildGeometry",
+            method = "render",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getX()D",
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D",
                     ordinal = 1,
                     shift = At.Shift.BEFORE
             ),
@@ -38,10 +38,10 @@ public abstract class ItemPickupParticleMixin {
     }
 
     @ModifyVariable(
-            method = "buildGeometry",
+            method = "render",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getX()D",
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D",
                     ordinal = 1,
                     shift = At.Shift.BEFORE
             ),
@@ -57,10 +57,10 @@ public abstract class ItemPickupParticleMixin {
     }
 
     @ModifyVariable(
-            method = "buildGeometry",
+            method = "render",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getX()D",
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D",
                     ordinal = 1,
                     shift = At.Shift.BEFORE
             ),

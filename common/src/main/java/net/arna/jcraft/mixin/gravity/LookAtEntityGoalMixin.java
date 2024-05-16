@@ -15,7 +15,7 @@ public abstract class LookAtEntityGoalMixin {
             method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getEyeY()D",
+                    target = "Lnet/minecraft/world/entity/Entity;getEyeY()D",
                     ordinal = 0
             )
     )
@@ -32,7 +32,7 @@ public abstract class LookAtEntityGoalMixin {
             method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getX()D",
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D",
                     ordinal = 0
             )
     )
@@ -49,7 +49,7 @@ public abstract class LookAtEntityGoalMixin {
             method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getZ()D",
+                    target = "Lnet/minecraft/world/entity/Entity;getZ()D",
                     ordinal = 0
             )
     )

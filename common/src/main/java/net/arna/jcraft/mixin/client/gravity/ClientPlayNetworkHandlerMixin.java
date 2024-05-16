@@ -21,18 +21,17 @@ import java.util.UUID;
 public abstract class ClientPlayNetworkHandlerMixin {
     @Shadow
     @Final
-    private Minecraft client;
+    private Minecraft minecraft;
 
     @Shadow
     @Final
-    private Map<UUID, PlayerInfo> playerListEntries;
+    private Map<UUID, PlayerInfo> playerInfoMap;
 
     @Redirect(
-            method = "onGameStateChange",
+            method = "handleGameEvent",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/player/Player;getEyeY()D"
             )
     )
     private double redirect_onGameStateChange_getEyeY_0(Player playerEntity) {
@@ -45,11 +44,10 @@ public abstract class ClientPlayNetworkHandlerMixin {
     }
 
     @Redirect(
-            method = "onGameStateChange",
+            method = "handleGameEvent",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/player/Player;getX()D"
             )
     )
     private double redirect_onGameStateChange_getX_0(Player playerEntity) {
@@ -62,11 +60,10 @@ public abstract class ClientPlayNetworkHandlerMixin {
     }
 
     @Redirect(
-            method = "onGameStateChange",
+            method = "handleGameEvent",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/player/Player;getZ()D"
             )
     )
     private double redirect_onGameStateChange_getZ_0(Player playerEntity) {
@@ -79,15 +76,14 @@ public abstract class ClientPlayNetworkHandlerMixin {
     }
 
     @Redirect(
-            method = "onExplosion",
+            method = "handleExplosion",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/math/Vec3d;add(DDD)Lnet/minecraft/util/math/Vec3d;",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"
             )
     )
     private Vec3 redirect_onExplosion_add_0(Vec3 vec3d, double x, double y, double z) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(client.player);
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(minecraft.player);
         if (gravityDirection == Direction.DOWN) {
             return vec3d.add(x, y, z);
         }

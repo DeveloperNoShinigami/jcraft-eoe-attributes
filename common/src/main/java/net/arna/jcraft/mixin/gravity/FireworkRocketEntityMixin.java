@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class FireworkRocketEntityMixin extends Entity {
 
     @Shadow
-    private @Nullable LivingEntity shooter;
+    private @Nullable LivingEntity attachedToEntity;
 
 
     public FireworkRocketEntityMixin(EntityType<?> type, Level world) {
@@ -43,8 +43,8 @@ public abstract class FireworkRocketEntityMixin extends Entity {
             , ordinal = 0
     )
     public Vec3 tick(Vec3 value) {
-        if (shooter != null) {
-            value = RotationUtil.vecWorldToPlayer(value, GravityChangerAPI.getGravityDirection(shooter));
+        if (attachedToEntity != null) {
+            value = RotationUtil.vecWorldToPlayer(value, GravityChangerAPI.getGravityDirection(attachedToEntity));
         }
         return value;
     }

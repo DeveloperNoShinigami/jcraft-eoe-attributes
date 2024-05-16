@@ -13,11 +13,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(EnderMan.class)
 public abstract class EndermanEntityMixin {
     @Redirect(
-            method = "isPlayerStaring",
+            method = "isLookingAtMe",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/player/Player;getEyeY()D"
             )
     )
     private double redirect_isPlayerStaring_getEyeY_0(Player playerEntity) {
@@ -30,11 +29,10 @@ public abstract class EndermanEntityMixin {
     }
 
     @Redirect(
-            method = "isPlayerStaring",
+            method = "isLookingAtMe",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/player/Player;getX()D"
             )
     )
     private double redirect_isPlayerStaring_getX_0(Player playerEntity) {
@@ -47,10 +45,10 @@ public abstract class EndermanEntityMixin {
     }
 
     @Redirect(
-            method = "isPlayerStaring",
+            method = "isLookingAtMe",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getZ()D",
+                    target = "Lnet/minecraft/world/entity/player/Player;getZ()D",
                     ordinal = 0
             )
     )
@@ -64,11 +62,10 @@ public abstract class EndermanEntityMixin {
     }
 
     @Redirect(
-            method = "teleportTo(Lnet/minecraft/entity/Entity;)Z",
+            method = "teleportTowards",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"
             )
     )
     private double redirect_teleportTo_getEyeY_0(Entity entity) {
@@ -81,11 +78,10 @@ public abstract class EndermanEntityMixin {
     }
 
     @Redirect(
-            method = "teleportTo(Lnet/minecraft/entity/Entity;)Z",
+            method = "teleportTowards",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D"
             )
     )
     private double redirect_teleportTo_getX_0(Entity entity) {
@@ -98,10 +94,10 @@ public abstract class EndermanEntityMixin {
     }
 
     @Redirect(
-            method = "teleportTo(Lnet/minecraft/entity/Entity;)Z",
+            method = "teleportTowards",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getZ()D",
+                    target = "Lnet/minecraft/world/entity/Entity;getZ()D",
                     ordinal = 0
             )
     )

@@ -36,60 +36,62 @@ public class ExplosionMixin implements IJExplosion {
     }
 
     // Functionality
-    @Redirect(method = "affectWorld", at = @At(value = "FIELD", target = "Lnet/minecraft/world/explosion/Explosion;destructionType:Lnet/minecraft/world/explosion/Explosion$DestructionType;"), require = 2)
+    @Redirect(method = "finalizeExplosion", at = @At(value = "FIELD",
+            target = "Lnet/minecraft/world/level/Explosion;blockInteraction:Lnet/minecraft/world/level/Explosion$BlockInteraction;")
+            , require = 2)
     private Explosion.BlockInteraction overrideDestructionType(Explosion thiz) {
         return modifier == null || modifier.getDestructionType() == null ? destructionType : modifier.getDestructionType();
     }
 
-    @Redirect(method = "affectWorld", at = @At(value = "FIELD", target = "Lnet/minecraft/world/explosion/Explosion;createFire:Z"))
+    @Redirect(method = "finalizeExplosion", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/Explosion;fire:Z"))
     private boolean overrideCreateFire(Explosion thiz) {
         return modifier == null || modifier.getCreateFire() == null ? createFire : modifier.getCreateFire();
     }
 
-    @ModifyVariable(method = "affectWorld", at = @At("HEAD"), argsOnly = true)
+    @ModifyVariable(method = "finalizeExplosion", at = @At("HEAD"), argsOnly = true)
     private boolean overrideParticlesArgument(boolean particles) {
         return particles || modifier != null && modifier.getParticle() != null;
     }
 
-    @ModifyArg(method = "affectWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"), require = 2)
+    @ModifyArg(method = "finalizeExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), require = 2)
     private ParticleOptions overrideParticleEffect(ParticleOptions particle) {
         return modifier == null || modifier.getParticle() == null ? particle : modifier.getParticle();
     }
 
-    @ModifyArg(method = "affectWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"),
+    @ModifyArg(method = "finalizeExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"),
             require = 2, index = 4)
     private double overrideParticleVelocityX(double x) {
         return modifier == null || modifier.getParticleVelocity() == null ? x : modifier.getParticleVelocity().x;
     }
 
-    @ModifyArg(method = "affectWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"),
+    @ModifyArg(method = "finalizeExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"),
             require = 2, index = 5)
     private double overrideParticleVelocityY(double y) {
         return modifier == null || modifier.getParticleVelocity() == null ? y : modifier.getParticleVelocity().y;
     }
 
-    @ModifyArg(method = "affectWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addParticle(Lnet/minecraft/particle/ParticleEffect;DDDDDD)V"),
+    @ModifyArg(method = "finalizeExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"),
             require = 2, index = 6)
     private double overrideParticleVelocityZ(double z) {
         return modifier == null || modifier.getParticleVelocity() == null ? z : modifier.getParticleVelocity().z;
     }
 
-    @ModifyArg(method = "affectWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"))
+    @ModifyArg(method = "finalizeExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;playLocalSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V"))
     private SoundEvent overrideSound(SoundEvent sound) {
         return modifier == null || modifier.getSound() == null ? sound : modifier.getSound();
     }
 
-    @ModifyArg(method = "affectWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"))
+    @ModifyArg(method = "finalizeExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;playLocalSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V"))
     private SoundSource overrideSoundCategory(SoundSource category) {
         return modifier == null || modifier.getSoundCategory() == null ? category : modifier.getSoundCategory();
     }
 
-    @ModifyArg(method = "affectWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"), index = 5)
+    @ModifyArg(method = "finalizeExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;playLocalSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V"), index = 5)
     private float overrideVolume(float volume) {
         return modifier == null || modifier.getVolumeGetter() == null ? volume : modifier.getVolumeGetter().apply(world.random);
     }
 
-    @ModifyArg(method = "affectWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"), index = 6)
+    @ModifyArg(method = "finalizeExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;playLocalSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V"), index = 6)
     private float overridePitch(float pitch) {
         return modifier == null || modifier.getPitchGetter() == null ? pitch : modifier.getPitchGetter().apply(world.random);
     }

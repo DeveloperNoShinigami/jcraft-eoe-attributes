@@ -25,11 +25,10 @@ public abstract class FishingBobberEntityMixin extends Entity {
 
 
     @Redirect(
-            method = "<init>(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/world/World;II)V",
+            method = "<init>(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;II)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/projectile/FishingBobberEntity;refreshPositionAndAngles(DDDFF)V",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/projectile/FishingHook;moveTo(DDDFF)V"
             )
     )
     private void redirect_init_(FishingHook fishingBobberEntity, double x, double y, double z, float yaw, float pitch, Player thrower, Level world, int lureLevel, int luckOfTheSeaLevel) {
@@ -45,11 +44,10 @@ public abstract class FishingBobberEntityMixin extends Entity {
     }
 
     @ModifyVariable(
-            method = "<init>(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/world/World;II)V",
+            method = "<init>(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/Level;II)V",
             at = @At(
                     value = "INVOKE_ASSIGN",
-                    target = "Lnet/minecraft/util/math/Vec3d;multiply(DDD)Lnet/minecraft/util/math/Vec3d;",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;"
             ),
             ordinal = 0
     )

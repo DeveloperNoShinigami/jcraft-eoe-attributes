@@ -18,10 +18,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(EntityRenderer.class)
 public abstract class EntityRenderMixin {
     @Redirect(
-            method = "renderLabelIfPresent",
+            method = "renderNameTag",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/entity/EntityRenderDispatcher;getRotation()Lorg/joml/Quaternionf;"
+                    target = "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;cameraOrientation()Lorg/joml/Quaternionf;"
             )
     )
     private Quaternionf redirect_renderLabelIfPresent_getRotation_0(EntityRenderDispatcher entityRenderDispatcher, Entity entity, Component text, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {

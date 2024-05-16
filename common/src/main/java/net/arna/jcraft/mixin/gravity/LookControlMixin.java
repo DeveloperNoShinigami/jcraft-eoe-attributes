@@ -15,8 +15,7 @@ public abstract class LookControlMixin {
             method = "getWantedY(Lnet/minecraft/world/entity/Entity;)D",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/Entity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"
             )
     )
     private static double redirect_getLookingHeightForgetEyeY_0(Entity entity) {
@@ -32,8 +31,7 @@ public abstract class LookControlMixin {
             method = "setLookAt(Lnet/minecraft/world/entity/Entity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/Entity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D"
             )
     )
     private double redirect_lookAt_getX_0_0(Entity entity) {
@@ -49,8 +47,7 @@ public abstract class LookControlMixin {
             method = "setLookAt(Lnet/minecraft/world/entity/Entity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/Entity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getZ()D"
             )
     )
     private double redirect_lookAt_getZ_0_0(Entity entity) {
@@ -61,13 +58,12 @@ public abstract class LookControlMixin {
 
         return entity.getEyePosition().z;
     }
-
+/*TODO mojmap
     @Redirect(
             method = "setLookAt(Lnet/minecraft/world/entity/Entity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/Entity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D"
             )
     )
     private double redirect_lookAt_getX_0_1(Entity entity) {
@@ -83,8 +79,7 @@ public abstract class LookControlMixin {
             method = "setLookAt(Lnet/minecraft/world/entity/Entity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/Entity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getZ()D"
             )
     )
     private double redirect_lookAt_getZ_0_1(Entity entity) {
@@ -95,4 +90,6 @@ public abstract class LookControlMixin {
 
         return entity.getEyePosition().z;
     }
+
+ */
 }

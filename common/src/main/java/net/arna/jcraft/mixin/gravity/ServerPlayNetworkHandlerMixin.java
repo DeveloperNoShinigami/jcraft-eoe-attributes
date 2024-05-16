@@ -33,19 +33,19 @@ public abstract class ServerPlayNetworkHandlerMixin {
     }
 
     @Shadow
-    private double updatedX;
+    private double lastGoodX;
 
     @Shadow
-    private double updatedY;
+    private double lastGoodY;
 
     @Shadow
-    private double updatedZ;
+    private double lastGoodZ;
 
     @Redirect(
-            method = "onPlayerMove",
+            method = "handleMovePlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;getY()D",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;getY()D",
                     ordinal = 3
             )
     )
@@ -59,10 +59,10 @@ public abstract class ServerPlayNetworkHandlerMixin {
     }
 
     @Redirect(
-            method = "onPlayerMove",
+            method = "handleMovePlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;getY()D",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;getY()D",
                     ordinal = 7
             )
     )
@@ -76,10 +76,10 @@ public abstract class ServerPlayNetworkHandlerMixin {
     }
 
     @ModifyVariable(
-            method = "onPlayerMove",
+            method = "handleMovePlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;isOnGround()Z",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;onGround()Z",
                     ordinal = 0
             ),
             ordinal = 0
@@ -91,19 +91,19 @@ public abstract class ServerPlayNetworkHandlerMixin {
         }
 
         onPlayerMove_playerMovementY = RotationUtil.vecWorldToPlayer(
-                clampHorizontal(packet.getX(this.player.getX())) - this.updatedX,
-                clampVertical(packet.getY(this.player.getY())) - this.updatedY,
-                clampHorizontal(packet.getZ(this.player.getZ())) - this.updatedZ,
+                clampHorizontal(packet.getX(this.player.getX())) - this.lastGoodX,
+                clampVertical(packet.getY(this.player.getY())) - this.lastGoodY,
+                clampHorizontal(packet.getZ(this.player.getZ())) - this.lastGoodZ,
                 gravityDirection
         ).y;
         return onPlayerMove_playerMovementY > 0.0D;
     }
 
     @ModifyVariable(
-            method = "onPlayerMove",
+            method = "handleMovePlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;getX()D",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;getX()D",
                     ordinal = 5
             ),
             ordinal = 10
@@ -118,10 +118,10 @@ public abstract class ServerPlayNetworkHandlerMixin {
     }
 
     @ModifyArg(
-            method = "onPlayerMove",
+            method = "handleMovePlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;move(Lnet/minecraft/entity/MovementType;Lnet/minecraft/util/math/Vec3d;)V",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
                     ordinal = 0
             ),
             index = 1
@@ -170,10 +170,10 @@ public abstract class ServerPlayNetworkHandlerMixin {
     //}
 
     @ModifyArg(
-            method = "onVehicleMove",
+            method = "handleMoveVehicle",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;move(Lnet/minecraft/entity/MovementType;Lnet/minecraft/util/math/Vec3d;)V"
+                    target = "Lnet/minecraft/world/entity/Entity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V"
             ),
             index = 1
     )
@@ -209,10 +209,10 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Unique private double zz;
 
     @ModifyArg(
-            method = "isEntityOnAir",
+            method = "noBlocksAround",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
+                    target = "Lnet/minecraft/world/phys/AABB;expandTowards(DDD)Lnet/minecraft/world/phys/AABB;"
             ),
             index = 0
     )
@@ -225,10 +225,10 @@ public abstract class ServerPlayNetworkHandlerMixin {
     }
 
     @ModifyArg(
-            method = "isEntityOnAir",
+            method = "noBlocksAround",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
+                    target = "Lnet/minecraft/world/phys/AABB;expandTowards(DDD)Lnet/minecraft/world/phys/AABB;"
             ),
             index = 0
     )
@@ -240,10 +240,10 @@ public abstract class ServerPlayNetworkHandlerMixin {
         return argVec.y;
     }
     @ModifyArg(
-            method = "isEntityOnAir",
+            method = "noBlocksAround",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
+                    target = "Lnet/minecraft/world/phys/AABB;expandTowards(DDD)Lnet/minecraft/world/phys/AABB;"
             ),
             index = 0
     )

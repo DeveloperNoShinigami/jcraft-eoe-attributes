@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
 
-    @Inject(method = "is", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "is(Lnet/minecraft/world/item/Item;)Z", at = @At("HEAD"), cancellable = true)
     private void mockItem(Item item, CallbackInfoReturnable<Boolean> cir) {
         ItemStack thiz = (ItemStack) (Object) this;
         if (MockItem.isMockItem(thiz)) {

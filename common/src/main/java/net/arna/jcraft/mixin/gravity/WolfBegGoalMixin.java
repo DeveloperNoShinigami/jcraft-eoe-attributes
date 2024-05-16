@@ -15,8 +15,7 @@ public abstract class WolfBegGoalMixin {
             method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/player/Player;getEyeY()D"
             )
     )
     private double redirect_tick_getEyeY_0(Player playerEntity) {
@@ -32,8 +31,7 @@ public abstract class WolfBegGoalMixin {
             method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/player/Player;getX()D"
             )
     )
     private double redirect_tick_getX_0(Player playerEntity) {
@@ -49,7 +47,7 @@ public abstract class WolfBegGoalMixin {
             method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getZ()D",
+                    target = "Lnet/minecraft/world/entity/player/Player;getZ()D",
                     ordinal = 0
             )
     )

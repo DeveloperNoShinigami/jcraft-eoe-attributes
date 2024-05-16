@@ -14,11 +14,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Explosion.class)
 public abstract class ExplosionMixin {
     @Redirect(
-            method = "collectBlocksAndDamageEntities",
+            method = "explode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"
             )
     )
     private double redirect_collectBlocksAndDamageEntities_getEyeY_0(Entity entity) {
@@ -31,11 +30,10 @@ public abstract class ExplosionMixin {
     }
 
     @Redirect(
-            method = "collectBlocksAndDamageEntities",
+            method = "explode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D"
             )
     )
     private double redirect_collectBlocksAndDamageEntities_getX_0(Entity entity) {
@@ -48,11 +46,10 @@ public abstract class ExplosionMixin {
     }
 
     @Redirect(
-            method = "collectBlocksAndDamageEntities",
+            method = "explode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getZ()D"
             )
     )
     private double redirect_collectBlocksAndDamageEntities_getZ_0(Entity entity) {
@@ -65,11 +62,10 @@ public abstract class ExplosionMixin {
     }
 
     @Redirect(
-            method = "collectBlocksAndDamageEntities",
+            method = "explode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getVelocity()Lnet/minecraft/util/math/Vec3d;",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"
             )
     )
     private Vec3 redirect_collectBlocksAndDamageEntities_getVelocity_0(Entity entity) {
@@ -82,11 +78,10 @@ public abstract class ExplosionMixin {
     }
 
     @Redirect(
-            method = "collectBlocksAndDamageEntities",
+            method = "explode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;setVelocity(Lnet/minecraft/util/math/Vec3d;)V",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V"
             )
     )
     private void redirect_collectBlocksAndDamageEntities_setVelocity_0(Entity entity, Vec3 vec3d) {

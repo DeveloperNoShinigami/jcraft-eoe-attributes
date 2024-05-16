@@ -15,11 +15,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityMixin {
     @Redirect(
-            method = "pushEntities",
+            method = "moveCollidedEntities",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;move(Lnet/minecraft/entity/MovementType;Lnet/minecraft/util/math/Vec3d;)V",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V"
             )
     )
     private void redirect_pushEntities_move_0(Entity entity, MoverType movementType, Vec3 vec3d) {

@@ -44,8 +44,7 @@ public abstract class LivingEntityMixin extends Entity {
             method = "travel",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/entity/LivingEntity;getY()D"
             )
     )
     private double redirect_travel_getY_0(LivingEntity livingEntity) {

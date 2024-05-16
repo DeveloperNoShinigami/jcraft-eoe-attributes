@@ -25,14 +25,13 @@ public abstract class EntityShapeContextMixin {
 
     @Shadow
     @Final
-    private double minY;
+    private double entityBottom;
 
     @Redirect(
-            method = "<init>(Lnet/minecraft/entity/Entity;)V",
+            method = "<init>(Lnet/minecraft/world/entity/Entity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getY()D"
             )
     )
     private static double redirect_init_getY_0(Entity entity) {
@@ -59,6 +58,6 @@ public abstract class EntityShapeContextMixin {
             return;
         }
 
-        cir.setReturnValue(this.minY > RotationUtil.boxWorldToPlayer(new AABB(pos), gravityDirection).minY + RotationUtil.boxWorldToPlayer(shape.bounds().inflate(-9.999999747378752E-6D), gravityDirection).maxX);
+        cir.setReturnValue(this.entityBottom > RotationUtil.boxWorldToPlayer(new AABB(pos), gravityDirection).minY + RotationUtil.boxWorldToPlayer(shape.bounds().inflate(-9.999999747378752E-6D), gravityDirection).maxX);
     }
 }

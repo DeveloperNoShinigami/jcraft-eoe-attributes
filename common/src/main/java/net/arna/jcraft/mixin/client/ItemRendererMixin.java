@@ -23,16 +23,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ItemRendererMixin {
     @Shadow
     @Final
-    private ItemModelShaper models;
+    private ItemModelShaper itemModelShaper;
 
     @Inject(method = "getModel", at = @At("HEAD"), cancellable = true)
     private void jcraft$getHeldItemModel(ItemStack stack, Level world, LivingEntity entity, int seed, CallbackInfoReturnable<BakedModel> cir) {
         Item item = stack.getItem();
         if (item instanceof DebugWand) {
-            BakedModel bakedModel = models.getModelManager().getModel(new ModelResourceLocation("minecraft", "trident_in_hand", "inventory")); // this is the model type (not the texture), its insane that copy-pasting this works first try
+            BakedModel bakedModel = itemModelShaper.getModelManager().getModel(new ModelResourceLocation("minecraft", "trident_in_hand", "inventory")); // this is the model type (not the texture), its insane that copy-pasting this works first try
             ClientLevel clientWorld = world instanceof ClientLevel ? (ClientLevel) world : null;
             BakedModel bakedModel2 = bakedModel.getOverrides().resolve(bakedModel, stack, clientWorld, entity, seed);
-            cir.setReturnValue(bakedModel2 == null ? this.models.getModelManager().getMissingModel() : bakedModel2);
+            cir.setReturnValue(bakedModel2 == null ? this.itemModelShaper.getModelManager().getMissingModel() : bakedModel2);
         }
     }
 
@@ -41,12 +41,12 @@ public class ItemRendererMixin {
         return MockItem.isMockItem(stack) ? MockItem.getMockedStack(stack) : stack;
     }
 
-    @ModifyVariable(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V", at = @At("HEAD"), argsOnly = true, ordinal = 0)
+    @ModifyVariable(method = "render", at = @At("HEAD"), argsOnly = true, ordinal = 0)
     private ItemStack mockModelInRenderGuiIcon(ItemStack stack) {
         return MockItem.isMockItem(stack) ? MockItem.getMockedStack(stack) : stack;
     }
 
-    @ModifyVariable(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V",
+    @ModifyVariable(method = "render",
             at = @At("HEAD"), argsOnly = true, ordinal = 0)
     private ItemStack mockModelInRenderItem(ItemStack stack) {
         return MockItem.isMockItem(stack) ? MockItem.getMockedStack(stack) : stack;

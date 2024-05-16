@@ -20,7 +20,7 @@ public class BlockEntityRenderDispatcherMixin {
      * @reason MixinExtras was causing the mod to consider Sodium a dependency, the change itself is minor enough.
      */
     @Overwrite
-    private static <T extends BlockEntity> void render(BlockEntityRenderer<T> renderer, T blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers) {
+    private static <T extends BlockEntity> void setupAndRender(BlockEntityRenderer<T> renderer, T blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers) {
         Level world = blockEntity.getLevel();
         int i;
         if (world != null) {

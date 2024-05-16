@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Item.class)
 public class ItemMixin {
     @Redirect(
-            method = "raycast",
+            method = "getPlayerPOVHitResult",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getYaw()F",
+                    target = "Lnet/minecraft/world/entity/player/Player;getYRot()F",
                     ordinal = 0
             )
     )
@@ -28,10 +28,10 @@ public class ItemMixin {
     }
 
     @Redirect(
-            method = "raycast",
+            method = "getPlayerPOVHitResult",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getPitch()F",
+                    target = "Lnet/minecraft/world/entity/player/Player;getXRot()F",
                     ordinal = 0
             )
     )

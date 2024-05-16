@@ -52,7 +52,9 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
     public
     HumanoidModel.ArmPose rightArmPose;
 
-    @Inject(method = "setAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelPart;copyTransform(Lnet/minecraft/client/model/ModelPart;)V", shift = At.Shift.BEFORE))
+    @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/model/geom/ModelPart;copyFrom(Lnet/minecraft/client/model/geom/ModelPart;)V",
+            shift = At.Shift.BEFORE))
     public void jcraft$setAngles(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo info) {
         CommonHitPropertyComponent hitProperties = JComponentPlatformUtils.getHitProperties(livingEntity);
         long endHitAnimTime = hitProperties.endHitAnimTime();

@@ -18,10 +18,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Piglin.class)
 public abstract class PiglinEntityMixin implements CrossbowAttackMob {
     @Redirect(
-            method = "shoot",
+            method = "shootCrossbowProjectile",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/mob/PiglinEntity;shoot(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/entity/projectile/ProjectileEntity;FF)V",
+                    target = "Lnet/minecraft/world/entity/monster/piglin/Piglin;shootCrossbowProjectile(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/projectile/Projectile;FF)V",
                     ordinal = 0
             )
     )

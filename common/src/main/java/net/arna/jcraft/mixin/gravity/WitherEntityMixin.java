@@ -14,11 +14,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(WitherBoss.class)
 public abstract class WitherEntityMixin {
     @Redirect(
-            method = "shootSkullAt(ILnet/minecraft/entity/LivingEntity;)V",
+            method = "performRangedAttack(ILnet/minecraft/world/entity/LivingEntity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getX()D"
             )
     )
     private double redirect_shootSkullAt_getX_0(LivingEntity target) {
@@ -31,10 +30,10 @@ public abstract class WitherEntityMixin {
     }
 
     @Redirect(
-            method = "shootSkullAt(ILnet/minecraft/entity/LivingEntity;)V",
+            method = "performRangedAttack(ILnet/minecraft/world/entity/LivingEntity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getY()D",
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getY()D",
                     ordinal = 0
             )
     )
@@ -48,10 +47,10 @@ public abstract class WitherEntityMixin {
     }
 
     @Redirect(
-            method = "shootSkullAt(ILnet/minecraft/entity/LivingEntity;)V",
+            method = "performRangedAttack(ILnet/minecraft/world/entity/LivingEntity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getZ()D",
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getZ()D",
                     ordinal = 0
             )
     )
@@ -65,11 +64,10 @@ public abstract class WitherEntityMixin {
     }
 
     @Redirect(
-            method = "tickMovement",
+            method = "aiStep",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"
             )
     )
     private double redirect_tickMovement_getEyeY_0(Entity entity) {
@@ -82,11 +80,10 @@ public abstract class WitherEntityMixin {
     }
 
     @Redirect(
-            method = "tickMovement",
+            method = "aiStep",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D"
             )
     )
     private double redirect_tickMovement_getX_0(Entity entity) {
@@ -99,10 +96,10 @@ public abstract class WitherEntityMixin {
     }
 
     @Redirect(
-            method = "tickMovement",
+            method = "aiStep",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getZ()D",
+                    target = "Lnet/minecraft/world/entity/Entity;getZ()D",
                     ordinal = 0
             )
     )

@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(RamTarget.class)
 public abstract class RamImpactTaskMixin {
     @Shadow
-    private Vec3 direction;
+    private Vec3 ramDirection;
 
     @Redirect(
-            method = "keepRunning(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/entity/passive/GoatEntity;J)V",
+            method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/animal/goat/Goat;J)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;takeKnockback(DDD)V",
+                    target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDD)V",
                     ordinal = 0
             )
     )
@@ -32,7 +32,7 @@ public abstract class RamImpactTaskMixin {
             return;
         }
 
-        Vec3 direction = RotationUtil.vecWorldToPlayer(this.direction, gravityDirection);
+        Vec3 direction = RotationUtil.vecWorldToPlayer(this.ramDirection, gravityDirection);
         target.knockback(strength, direction.x, direction.z);
     }
 }

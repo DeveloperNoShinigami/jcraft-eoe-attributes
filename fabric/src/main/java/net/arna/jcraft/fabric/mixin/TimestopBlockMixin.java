@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelAccessor.class)
 public interface TimestopBlockMixin {
-    @Inject(method = "scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;ILnet/minecraft/world/tick/TickPriority;)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "scheduleTick(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;ILnet/minecraft/world/ticks/TickPriority;)V", at = @At("HEAD"), cancellable = true)
     private void jcraft$createAndScheduleBlockTick(BlockPos pos, Block block, int delay, TickPriority priority, CallbackInfo info) {
         int ticks = Timestops.getTicksIfInTSRange(pos);
 
@@ -27,7 +27,7 @@ public interface TimestopBlockMixin {
         }
     }
 
-    @Inject(method = "scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "scheduleTick(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;I)V", at = @At("HEAD"), cancellable = true)
     private void jcraft$createAndScheduleBlockTick(BlockPos pos, Block block, int delay, CallbackInfo info) {
         int ticks = Timestops.getTicksIfInTSRange(pos);
 
@@ -40,7 +40,7 @@ public interface TimestopBlockMixin {
         }
     }
 
-    @Inject(method = "scheduleFluidTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/fluid/Fluid;ILnet/minecraft/world/tick/TickPriority;)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "scheduleTick(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;ILnet/minecraft/world/ticks/TickPriority;)V", at = @At("HEAD"), cancellable = true)
     private void jcraft$createAndScheduleFluidTick(BlockPos pos, Fluid fluid, int delay, TickPriority priority, CallbackInfo info) {
         int ticks = Timestops.getTicksIfInTSRange(pos);
 
@@ -53,7 +53,7 @@ public interface TimestopBlockMixin {
         }
     }
 
-    @Inject(method = "scheduleFluidTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/fluid/Fluid;I)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "scheduleTick(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;I)V", at = @At("HEAD"), cancellable = true)
     private void jcraft$createAndScheduleFluidTick(BlockPos pos, Fluid fluid, int delay, CallbackInfo info) {
         int ticks = Timestops.getTicksIfInTSRange(pos);
 

@@ -23,7 +23,7 @@ public class EntityTypeMixin {
 
     // Prevent stand entities from being loaded from NBT, they will be reconstructed instead.
     // Loading stands from NBT tends to break them.
-    @Inject(method = "create", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "create(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/world/level/Level;)Ljava/util/Optional;", at = @At("HEAD"), cancellable = true)
     private static void doNotLoadStandEntities(CompoundTag nbt, Level world, CallbackInfoReturnable<Optional<Entity>> cir) {
         if (shouldLoadStands > 0) {
             return;

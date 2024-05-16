@@ -12,11 +12,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(CrossbowItem.class)
 public abstract class CrossbowItemMixin {
     @Redirect(
-            method = "shoot",
+            method = "shootProjectile",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getX()D"
             )
     )
     private static double redirect_shoot_getX_0(LivingEntity livingEntity) {
@@ -29,11 +28,10 @@ public abstract class CrossbowItemMixin {
     }
 
     @Redirect(
-            method = "shoot",
+            method = "shootProjectile",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getEyeY()D"
             )
     )
     private static double redirect_shoot_getEyeY_0(LivingEntity livingEntity) {
@@ -46,11 +44,10 @@ public abstract class CrossbowItemMixin {
     }
 
     @Redirect(
-            method = "shoot",
+            method = "shootProjectile",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getZ()D"
             )
     )
     private static double redirect_shoot_getZ_0(LivingEntity livingEntity) {
