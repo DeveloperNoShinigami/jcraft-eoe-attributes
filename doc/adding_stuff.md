@@ -48,7 +48,7 @@
 11. Add `MyRenderer` to `JEntityRendererRegister`.
 12. Add the different skin PNGs, `my.geo.json` and `my.animation.json` from the `my.bbmodel` file from our modelers.
 13. Let someone take care of the animations.
-14. Add an English translation of the entity to `en_us.json`.
+14. Add an English translation of the stand and its description to `en_us.json`.
 15. Test your addition.
 
 ## Adding an Entity (Type)
