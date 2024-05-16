@@ -4,6 +4,7 @@ import dev.architectury.networking.NetworkManager;
 import net.arna.jcraft.common.component.impl.player.CommonPhComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
+import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.StandCapability;
 import net.arna.jcraft.forge.capability.impl.living.VampireCapability;
 import net.minecraft.client.Minecraft;
@@ -45,7 +46,7 @@ public class PhCapability extends CommonPhComponentImpl implements JCapability {
 
     public static void syncEntityCapability(Entity entity) {
         if (entity instanceof Player living) {
-            JNetworkingForge.sendPackets(living, PH_S2C, PH_C2S, getCapability(living));
+            JNetworkingForge.sendPlayerPackets(living, PH_S2C, PH_C2S, getCapability(living));
         }
     }
 
@@ -78,21 +79,15 @@ public class PhCapability extends CommonPhComponentImpl implements JCapability {
     }
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, PH_S2C, (buf, context) -> {
-            UUID uuid = buf.readUUID();
-            CompoundTag nbt = buf.readNbt();
-            Player player = null;
-            if (Minecraft.getInstance().level != null) {
-                player = Minecraft.getInstance().level.getPlayerByUUID(uuid);
-            }
-            if (player != null) {
-                PhCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
-            }
+
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, PH_C2S, (buf, context) -> {
-            UUID uuid = buf.readUUID();
+            UUID id = buf.readUUID();
             CompoundTag nbt = buf.readNbt();
-            PhCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
+            if (Minecraft.getInstance().level != null) {
+                PhCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(id)).ifPresent(c -> c.deserializeNBT(nbt));
+            }
         });
     }
 }

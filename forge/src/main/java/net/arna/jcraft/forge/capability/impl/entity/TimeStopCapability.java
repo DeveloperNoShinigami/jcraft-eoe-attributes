@@ -76,16 +76,15 @@ public class TimeStopCapability extends CommonTimeStopComponentImpl implements J
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, TIME_S2C, (buf, context) -> {
-            UUID uuid = buf.readUUID();
-            CompoundTag nbt = buf.readNbt();
 
-            TimeStopCapability.getCapabilityOptional(context.getPlayer()).ifPresent(c -> c.deserializeNBT(nbt));
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, TIME_C2S, (buf, context) -> {
-            UUID uuid = buf.readUUID();
+            int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
-            TimeStopCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
+            if (Minecraft.getInstance().level != null) {
+                TimeStopCapability.getCapabilityOptional(Minecraft.getInstance().level.getEntity(id)).ifPresent(c -> c.deserializeNBT(nbt));
+            }
         });
     }
 }

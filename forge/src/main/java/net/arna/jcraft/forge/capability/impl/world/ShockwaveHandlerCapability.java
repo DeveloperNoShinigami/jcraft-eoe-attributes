@@ -55,13 +55,11 @@ public class ShockwaveHandlerCapability extends CommonShockwaveHandlerComponentI
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, SHOCK_S2C, (buf, context) -> {
-            UUID uuid = buf.readUUID();
-            CompoundTag nbt = buf.readNbt();
-            ShockwaveHandlerCapability.getCapabilityOptional(context.getPlayer().level()).ifPresent(c -> c.deserializeNBT(nbt));
+
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SHOCK_C2S, (buf, context) -> {
-            UUID uuid = buf.readUUID();
+            int uuid = buf.readInt();
             CompoundTag nbt = buf.readNbt();
             ShockwaveHandlerCapability.getCapabilityOptional(Minecraft.getInstance().level).ifPresent(c -> c.deserializeNBT(nbt));
         });

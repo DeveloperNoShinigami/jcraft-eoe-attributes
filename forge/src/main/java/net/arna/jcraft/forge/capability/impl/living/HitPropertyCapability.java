@@ -5,6 +5,7 @@ import net.arna.jcraft.common.component.impl.living.CommonCooldownsComponentImpl
 import net.arna.jcraft.common.component.impl.living.CommonHitPropertyComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
+import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -76,21 +77,15 @@ public class HitPropertyCapability extends CommonHitPropertyComponentImpl implem
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, HIT_S2C, (buf, context) -> {
-            UUID uuid = buf.readUUID();
-            CompoundTag nbt = buf.readNbt();
-            Player player = null;
-            if (Minecraft.getInstance().level != null) {
-                player = Minecraft.getInstance().level.getPlayerByUUID(uuid);
-            }
-            if (player != null) {
-                HitPropertyCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
-            }
+
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, HIT_C2S, (buf, context) -> {
-            UUID uuid = buf.readUUID();
+            int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
-            HitPropertyCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
+            if (Minecraft.getInstance().level != null) {
+                HitPropertyCapability.getCapabilityOptional(Minecraft.getInstance().level.getEntity(id)).ifPresent(c -> c.deserializeNBT(nbt));
+            }
         });
     }
 }
