@@ -76,7 +76,7 @@ public class TimeStopCapability extends CommonTimeStopComponentImpl implements J
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, TIME_S2C, (buf, context) -> {
-
+//TODO
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, TIME_C2S, (buf, context) -> {
