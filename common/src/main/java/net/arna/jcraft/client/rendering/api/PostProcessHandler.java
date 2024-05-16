@@ -1,7 +1,6 @@
 package net.arna.jcraft.client.rendering.api;
 
-import net.minecraft.client.util.math.MatrixStack;
-
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class PostProcessHandler {
         instances.forEach(i -> i.resize(width, height));
     }
 
-    public static void renderLast(MatrixStack matrices) {
+    public static void renderLast(PoseStack matrices) {
         copyDepthBuffer(); // copy the depth buffer if the mixin didn't trigger
 
         PostProcessor.viewModelStack = matrices;

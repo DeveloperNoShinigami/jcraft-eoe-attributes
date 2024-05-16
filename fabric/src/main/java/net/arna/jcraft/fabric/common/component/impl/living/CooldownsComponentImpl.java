@@ -4,9 +4,9 @@ import lombok.NonNull;
 import net.arna.jcraft.common.component.impl.living.CommonCooldownsComponentImpl;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.living.CooldownsComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 
 public class CooldownsComponentImpl extends CommonCooldownsComponentImpl implements CooldownsComponent {
 
@@ -29,18 +29,18 @@ public class CooldownsComponentImpl extends CommonCooldownsComponentImpl impleme
     }
 
     @Override
-    public void readFromNbt(@NonNull NbtCompound tag) {
+    public void readFromNbt(@NonNull CompoundTag tag) {
         super.readFromNbt(tag);
     }
 
 
     @Override
-    public void writeToNbt(@NonNull NbtCompound tag) {
+    public void writeToNbt(@NonNull CompoundTag tag) {
         super.writeToNbt(tag);
     }
 
     @Override
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
+    public boolean shouldSyncWith(ServerPlayer player) {
         return super.shouldSyncWith(player);
     }
 }

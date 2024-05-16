@@ -1,42 +1,42 @@
 package net.arna.jcraft.common.item;
 
 import net.arna.jcraft.registry.JItemRegistry;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class BulletItem extends Item {
-    public BulletItem(Settings settings) {
+    public BulletItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        NbtCompound itemData = stack.getNbt();
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+        CompoundTag itemData = stack.getTag();
 
         if (itemData != null && itemData.contains("Caliber")) {
-            tooltip.add(Text.translatable("jcraft.bullet.caliber").append(" §e" + itemData.getFloat("Caliber") + "§9mm"));
+            tooltip.add(Component.translatable("jcraft.bullet.caliber").append(" §e" + itemData.getFloat("Caliber") + "§9mm"));
         }
-        super.appendTooltip(stack, world, tooltip, context);
+        super.appendHoverText(stack, world, tooltip, context);
     }
 
     public static ItemStack ofCaliber(float caliber) {
         ItemStack s = new ItemStack(JItemRegistry.BULLET.get());
-        NbtCompound nbt = s.getOrCreateNbt();
+        CompoundTag nbt = s.getOrCreateTag();
         nbt.putFloat("Caliber", caliber);
         return s;
     }
 
     @Override
-    public ItemStack getDefaultStack() {
+    public ItemStack getDefaultInstance() {
         ItemStack s = new ItemStack(this);
-        NbtCompound nbt = s.getOrCreateNbt();
+        CompoundTag nbt = s.getOrCreateTag();
         nbt.putFloat("Caliber", 9);
         return s;
     }

@@ -5,11 +5,10 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.util.MobilityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class GlideMove extends AbstractMove<GlideMove, TheFoolEntity> {
@@ -27,11 +26,11 @@ public class GlideMove extends AbstractMove<GlideMove, TheFoolEntity> {
             return;
         }
 
-        user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 4, 4, true, false));
+        user.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 4, 4, true, false));
         double yVel = attacker.getRemoteJumpInput() ? 0.07 : 0;
-        Vec3d rotVec = user.getRotationVector().multiply(0.04);
-        user.addVelocity(rotVec.x, yVel, rotVec.z);
-        user.velocityModified = true;
+        Vec3 rotVec = user.getLookAngle().scale(0.04);
+        user.push(rotVec.x, yVel, rotVec.z);
+        user.hurtMarked = true;
     }
 
     @Override

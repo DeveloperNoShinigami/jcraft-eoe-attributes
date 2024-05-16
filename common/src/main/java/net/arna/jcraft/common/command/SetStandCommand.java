@@ -9,34 +9,33 @@ import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
-
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Collection;
 
 import static net.arna.jcraft.JCraft.summon;
 
 public class SetStandCommand {
     private static final DynamicCommandExceptionType INVALID_SKIN = new DynamicCommandExceptionType(s ->
-            Text.literal("The given stand only has " + s + " skins."));
+            Component.literal("The given stand only has " + s + " skins."));
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(CommandManager.literal("stand")
-                .then(CommandManager.literal("set")
-                        .requires(source -> source.hasPermissionLevel(2) || "Arna57".equals(source.getName()) || "MrSterner".equals(source.getName()))
-                        .then(CommandManager.argument("targets", EntityArgumentType.entities())
-                                .then(CommandManager.argument("stand", StandArgumentType.stand())
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("stand")
+                .then(Commands.literal("set")
+                        .requires(source -> source.hasPermission(2) || "Arna57".equals(source.getTextName()) || "MrSterner".equals(source.getTextName()))
+                        .then(Commands.argument("targets", EntityArgument.entities())
+                                .then(Commands.argument("stand", StandArgumentType.stand())
                                         .executes(ctx -> executeSet(ctx, 0))
-                                        .then(CommandManager.argument("skin", IntegerArgumentType.integer(0, 3))
+                                        .then(Commands.argument("skin", IntegerArgumentType.integer(0, 3))
                                                 .executes(ctx -> executeSet(ctx, ctx.getArgument("skin", Integer.class))))))));
     }
 
-    private static int executeSet(CommandContext<ServerCommandSource> ctx, int skin) throws CommandSyntaxException {
-        Collection<? extends Entity> targets = EntityArgumentType.getEntities(ctx, "targets");
+    private static int executeSet(CommandContext<CommandSourceStack> ctx, int skin) throws CommandSyntaxException {
+        Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
         if (targets.isEmpty()) {
             return 0;
         }
@@ -51,8 +50,8 @@ public class SetStandCommand {
                 CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
                 standData.setTypeAndSkin(type, skin);
 
-                livingEntity.detach();
-                summon(entity.getWorld(), livingEntity);
+                livingEntity.unRide();
+                summon(entity.level(), livingEntity);
             }
         }
 

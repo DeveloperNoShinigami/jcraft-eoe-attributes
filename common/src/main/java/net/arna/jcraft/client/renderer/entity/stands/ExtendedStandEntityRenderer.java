@@ -1,19 +1,20 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.renderer.DynamicGeoEntityRenderer;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.LightType;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.LightLayer;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
+
 
 @Deprecated(forRemoval = true)
 public class ExtendedStandEntityRenderer<T extends StandEntity<?, ?>> extends DynamicGeoEntityRenderer<T> {
@@ -22,21 +23,21 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?, ?>> extends Dy
     protected static final String LEFT_HAND = "bipedHandLeft";
     protected static final String RIGHT_HAND = "bipedHandRight";
 
-    protected ExtendedStandEntityRenderer(EntityRendererFactory.Context renderManager, GeoModel<T> modelProvider) {
+    protected ExtendedStandEntityRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> modelProvider) {
         super(renderManager, modelProvider);
     }
 
     @Override
-    public RenderLayer getRenderType(T animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
+    public RenderType getRenderType(T animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
         return StandEntityRenderer.renderTypeOf(animatable, texture);
     }
 
     @Override
-    public void preRender(MatrixStack poseStack, T animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, T animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
-        this.mainHandItem = animatable.getMainHandStack();
-        this.offHandItem = animatable.getOffHandStack();
+        this.mainHandItem = animatable.getMainHandItem();
+        this.offHandItem = animatable.getOffhandItem();
     }
 
 /*
@@ -140,20 +141,4 @@ public class ExtendedStandEntityRenderer<T extends StandEntity<?, ?>> extends Dy
         return 0.15f;
     }
 
-    @Override
-    protected int getBlockLight(T stand, BlockPos pos) {
-        if (stand.hasUser()) {
-            if (stand.isOnFire() || stand.getUserOrThrow().isOnFire()) {
-                return 15;
-            }
-            return stand.getWorld().getLightLevel(LightType.BLOCK, stand.getUserOrThrow().getBlockPos());
-        }
-        return super.getBlockLight(stand, pos);
-    }
-
-    @Override
-    protected int getSkyLight(T stand, BlockPos pos) {
-        return stand.hasUser() ? stand.getWorld().getLightLevel(LightType.SKY, stand.getUserOrThrow().getBlockPos()) :
-                super.getSkyLight(stand, pos);
-    }
 }

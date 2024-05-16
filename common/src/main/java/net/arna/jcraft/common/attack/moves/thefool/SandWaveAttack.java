@@ -5,17 +5,16 @@ import net.arna.jcraft.common.attack.moves.base.AbstractEffectInflictingBarrageA
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.util.MobilityType;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public class SandWaveAttack extends AbstractEffectInflictingBarrageAttack<SandWaveAttack, TheFoolEntity> {
     public SandWaveAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                           float hitboxSize, float knockback, float offset, int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval,
-                List.of(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 15, 0, true, false)));
+                List.of(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 15, 0, true, false)));
         mobilityType = MobilityType.DASH;
         ranged = true;
     }
@@ -34,13 +33,13 @@ public class SandWaveAttack extends AbstractEffectInflictingBarrageAttack<SandWa
         super.tick(attacker);
 
         LivingEntity user = attacker.getUser();
-        if (user == null || !user.isOnGround()) {
+        if (user == null || !user.onGround()) {
             return;
         }
 
-        Vec3d rotVec = user.getRotationVector().multiply(0.25);
-        user.addVelocity(rotVec.x, 0, rotVec.z);
-        user.velocityModified = true;
+        Vec3 rotVec = user.getLookAngle().scale(0.25);
+        user.push(rotVec.x, 0, rotVec.z);
+        user.hurtMarked = true;
     }
 
     @Override

@@ -6,27 +6,26 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JItemRegistry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.UseAction;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
 import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 public class StandBlockPacket {
-    private static final Set<ServerPlayerEntity> blocking = Collections.newSetFromMap(new WeakHashMap<>());
+    private static final Set<ServerPlayer> blocking = Collections.newSetFromMap(new WeakHashMap<>());
 
-    public static PacketByteBuf write(boolean isBlocking) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+    public static FriendlyByteBuf write(boolean isBlocking) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeBoolean(isBlocking);
         return buf;
     }
 
-    public static void handle(PacketByteBuf buf, NetworkManager.PacketContext context) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+    public static void handle(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
+        ServerPlayer player = (ServerPlayer) context.getPlayer();
         MinecraftServer server = context.getPlayer().getServer();
 
         boolean blockDown = buf.readBoolean();
@@ -44,7 +43,7 @@ public class StandBlockPacket {
 
             boolean blocking = stand.wantToBlock;
             if (!blocking && blockDown) {
-                if (allowBlockingWith(player.getMainHandStack()) && allowBlockingWith(player.getOffHandStack())) {
+                if (allowBlockingWith(player.getMainHandItem()) && allowBlockingWith(player.getOffhandItem())) {
                     stand.wantToBlock = true;
                     if (stand.canAttack() && !DashData.isDashing(player)) {
                         stand.tryBlock();
@@ -57,13 +56,13 @@ public class StandBlockPacket {
     }
 
     private static boolean allowBlockingWith(ItemStack itemStack) {
-        if (itemStack.isOf(JItemRegistry.ANUBIS.get()) || itemStack.isOf(JItemRegistry.ANUBIS_SHEATHED.get())) {
+        if (itemStack.is(JItemRegistry.ANUBIS.get()) || itemStack.is(JItemRegistry.ANUBIS_SHEATHED.get())) {
             return true;
         }
-        return itemStack.getUseAction() == UseAction.NONE;
+        return itemStack.getUseAnimation() == UseAnim.NONE;
     }
 
-    public static boolean isBlocking(ServerPlayerEntity player) {
+    public static boolean isBlocking(ServerPlayer player) {
         return blocking.contains(player);
     }
 }

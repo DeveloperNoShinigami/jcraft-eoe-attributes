@@ -5,18 +5,17 @@ import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
-
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class StandObtainmentItem extends Item {
-    public StandObtainmentItem(Settings settings) {
+    public StandObtainmentItem(Properties settings) {
         super(settings);
     }
 
@@ -25,17 +24,17 @@ public abstract class StandObtainmentItem extends Item {
      * Key - input
      * Value - output
      */
-    protected final Map<StandType, StandType> standIOMap = new HashMap<>();
+    public final Map<StandType, StandType> standIOMap = new HashMap<>();
 
-    protected boolean canEvolve(World world, PlayerEntity user) {
+    protected boolean canEvolve(Level world, Player user) {
         return true;
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        if (world.isClient) {
-            return TypedActionResult.consume(itemStack);
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        ItemStack itemStack = user.getItemInHand(hand);
+        if (world.isClientSide) {
+            return InteractionResultHolder.consume(itemStack);
         }
 
         CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
@@ -44,7 +43,7 @@ public abstract class StandObtainmentItem extends Item {
         // Does the user have the appropriate stand and does he meet the evolution requirements?
         if (standIOMap.containsKey(type) && canEvolve(world, user)) {
             if (!user.isCreative()) {
-                itemStack.decrement(1);
+                itemStack.shrink(1);
             }
 
             standData.setType(standIOMap.get(type));
@@ -57,6 +56,6 @@ public abstract class StandObtainmentItem extends Item {
             JCraft.summon(world, user);
         }
 
-        return TypedActionResult.consume(itemStack);
+        return InteractionResultHolder.consume(itemStack);
     }
 }

@@ -17,14 +17,14 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQueenEntity<E, S>, S extends Enum<S> & StandAnimationState<E>> extends StandEntity<E, S>
@@ -33,8 +33,8 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             0, 8, 13, 0.85f, 4f, 10, 1.5f, 0.25f, 0.1f)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withInfo(
-                    Text.literal("Low Punch"),
-                    Text.literal("frametrap tool, low stun")
+                    Component.literal("Low Punch"),
+                    Component.literal("frametrap tool, low stun")
             );
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT_FOLLOWUP = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
             0, 6, 13, 0.8f, 3f, 20, 1.5f, 0.5f, 0.1f)
@@ -42,13 +42,13 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             .withHitSpark(JParticleType.HIT_SPARK_2)
             // implemented in class: .withFollowup(LOW)
             .withInfo(
-                    Text.literal("Second Punch"),
-                    Text.literal("frametrap tool")
+                    Component.literal("Second Punch"),
+                    Component.literal("frametrap tool")
             );
     public static final DetonateAttack DETONATE = new DetonateAttack(20, 5, 6, 1f)
             .withInfo(
-                    Text.literal("Detonate"),
-                    Text.literal("tiny windup, move queueing is disabled while Detonate is active")
+                    Component.literal("Detonate"),
+                    Component.literal("tiny windup, move queueing is disabled while Detonate is active")
             );
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
             30, 6, 10, 0.75f, 3f, 10, 1.5f, 0.25f, 0.1f)
@@ -56,32 +56,32 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             .withCrouchingVariant(DETONATE)
             // implemented in class: .withFollowup(LIGHT_FOLLOWUP)
             .withInfo(
-                    Text.literal("Punch"),
-                    Text.literal("combo starter, decent speed, has two followups")
+                    Component.literal("Punch"),
+                    Component.literal("combo starter, decent speed, has two followups")
             );
     public static final MainBarrageAttack<AbstractKillerQueenEntity<?, ?>> BARRAGE = new MainBarrageAttack<AbstractKillerQueenEntity<?, ?>>(
-            240, 0, 40, 0.75f, 1f, 20, 2f, 0.1f, 0, 3, Blocks.DEEPSLATE.getHardness())
+            240, 0, 40, 0.75f, 1f, 20, 2f, 0.1f, 0, 3, Blocks.DEEPSLATE.defaultDestroyTime())
             .withSound(JSoundRegistry.KQ_BARRAGE.get())
             .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withInfo(
-                    Text.literal("Barrage"),
-                    Text.literal("fast reliable combo starter/extender, medium stun")
+                    Component.literal("Barrage"),
+                    Component.literal("fast reliable combo starter/extender, medium stun")
             );
     public static final BombPlantAttack BOMB_PLANT = new BombPlantAttack(280, 12, 20, 1f, 9, 1.5f, 0f)
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withBlockStun(8)
             .withInfo(
-                    Text.literal("Bomb Plant"),
-                    Text.literal("crouch to plant on the ground below you, stealthily")
+                    Component.literal("Bomb Plant"),
+                    Component.literal("crouch to plant on the ground below you, stealthily")
             );
     public static final ExplosiveDashAttack EXPLOSIVE_DASH = new ExplosiveDashAttack(240)
             .withInfo(
-                    Text.literal("Explosive Dash"),
-                    Text.literal("instantly boosts the user in the aimed direction")
+                    Component.literal("Explosive Dash"),
+                    Component.literal("instantly boosts the user in the aimed direction")
             );
     protected ItemEntity coin;
 
-    protected AbstractKillerQueenEntity(StandType type, World worldIn, @Nullable SoundEvent summonSound) {
+    protected AbstractKillerQueenEntity(StandType type, Level worldIn, @Nullable SoundEvent summonSound) {
         super(type, worldIn, summonSound, true);
         idleRotation = -30f;
 
@@ -116,7 +116,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
         }
 
         LivingEntity user = getUserOrThrow();
-        if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
+        if (user.hasEffect(JStatusRegistry.DAZED.get())) {
             return false;
         }
 
@@ -125,14 +125,14 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
                 boolean idling = getMoveStun() <= 0;
                 if (curMove == null || curMove.getFollowup() == null) {
                     if (idling) {
-                        if (user.isSneaking()) {
+                        if (user.isShiftKeyDown()) {
                             detonate();
                         } else {
                             return super.initMove(MoveType.LIGHT);
                         }
                     }
                 } else if (getMoveStun() < curMove.getWindupPoint()) {
-                    if (user.isSneaking()) {
+                    if (user.isShiftKeyDown()) {
                         detonate();
                     } else {
                         AbstractMove<?, ? super E> followup = curMove.getFollowup();
@@ -146,9 +146,9 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             case SPECIAL1 -> {
                 CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
 
-                if (user.isInSneakingPose() && cooldowns.getCooldown(CooldownType.STAND_SP1) <= 0) {
-                    BlockPos standingOn = user.getBlockPos().offset(GravityChangerAPI.getGravityDirection(user));
-                    if (!getWorld().getBlockState(standingOn).isAir()) {
+                if (user.isCrouching() && cooldowns.getCooldown(CooldownType.STAND_SP1) <= 0) {
+                    BlockPos standingOn = user.blockPosition().relative(GravityChangerAPI.getGravityDirection(user));
+                    if (!level().getBlockState(standingOn).isAir()) {
                         JComponentPlatformUtils.getBombTracker(user).getMainBomb().setBomb(standingOn);
                         cooldowns.setCooldown(CooldownType.STAND_SP1, BOMB_PLANT.getCooldown());
                     }
@@ -179,8 +179,8 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
         if (enemyStand != null && enemyStand.blocking) {
             return MoveSelectionResult.STOP;
         }
-        Vec3d bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
-        return bombPos != null && attack == DETONATE && target.squaredDistanceTo(bombPos) < 9.0D ?
+        Vec3 bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
+        return bombPos != null && attack == DETONATE && target.distanceToSqr(bombPos) < 9.0D ?
                 MoveSelectionResult.USE : MoveSelectionResult.PASS;
     }
 

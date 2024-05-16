@@ -8,9 +8,8 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.MobilityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 @Getter
@@ -25,16 +24,16 @@ public class JumpMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<
 
     @Override
     public boolean canBeInitiated(A attacker) {
-        return super.canBeInitiated(attacker) && attacker.getUser().isOnGround();
+        return super.canBeInitiated(attacker) && attacker.getUser().onGround();
     }
 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
-        if (!user.isOnGround()) {
+        if (!user.onGround()) {
             return Set.of();
         }
-        Vec3d upVel = Vec3d.of(GravityChangerAPI.getGravityDirection(user).getVector()).multiply(-0.5);
-        Vec3d jumpVel = Vec3d.fromPolar(user.getPitch(), user.getYaw()).multiply(strength).add(upVel);
+        Vec3 upVel = Vec3.atLowerCornerOf(GravityChangerAPI.getGravityDirection(user).getNormal()).scale(-0.5);
+        Vec3 jumpVel = Vec3.directionFromRotation(user.getXRot(), user.getYRot()).scale(strength).add(upVel);
         JUtils.setVelocity(user, jumpVel.x, jumpVel.y, jumpVel.z);
 
         return Set.of();

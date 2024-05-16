@@ -7,12 +7,11 @@ import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, TheFoolEntity, TheFoolEntity.State> {
@@ -29,10 +28,10 @@ public class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, TheFool
         }
 
         attacker.setSand(true);
-        Vec3d pos = attacker.getEyePos();
+        Vec3 pos = attacker.getEyePosition();
 
         // Display sand effect
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 
         buf.writeShort(11);
         buf.writeDouble(pos.x);
@@ -40,7 +39,7 @@ public class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, TheFool
         buf.writeDouble(pos.z);
         buf.writeDouble(0.5);
 
-        for (ServerPlayerEntity sendPlayer : JUtils.around((ServerWorld) attacker.getWorld(), pos, 96)) {
+        for (ServerPlayer sendPlayer : JUtils.around((ServerLevel) attacker.level(), pos, 96)) {
             ServerChannelFeedbackPacket.send(sendPlayer, buf);
         }
 

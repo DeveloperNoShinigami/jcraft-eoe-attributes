@@ -6,9 +6,8 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class CircleSlashAttack extends AbstractSimpleAttack<CircleSlashAttack, SilverChariotEntity> {
@@ -35,7 +34,7 @@ public class CircleSlashAttack extends AbstractSimpleAttack<CircleSlashAttack, S
         double launchMultiplier = getDamage() / 5; // damage [6.5 to 11]
 
         for (LivingEntity living : targets) {
-            Vec3d launchVec = living.getPos().subtract(user.getPos()).normalize().multiply(launchMultiplier);
+            Vec3 launchVec = living.position().subtract(user.position()).normalize().scale(launchMultiplier);
             JUtils.addVelocity(living, launchVec.x, launchVec.y + 0.2, launchVec.z);
         }
 

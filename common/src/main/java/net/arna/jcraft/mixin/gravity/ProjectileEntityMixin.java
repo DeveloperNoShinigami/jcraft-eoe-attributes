@@ -2,17 +2,17 @@ package net.arna.jcraft.mixin.gravity;
 
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.Projectile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(ProjectileEntity.class)
+@Mixin(Projectile.class)
 public abstract class ProjectileEntityMixin {
     @ModifyVariable(
-            method = "setVelocity(Lnet/minecraft/entity/Entity;FFFFF)V",
+            method = "shootFromRotation",
             at = @At("HEAD"),
             ordinal = 0,
             argsOnly = true
@@ -23,11 +23,11 @@ public abstract class ProjectileEntityMixin {
             return value;
         }
 
-        return RotationUtil.rotPlayerToWorld(user.getYaw(), user.getPitch(), gravityDirection).y;
+        return RotationUtil.rotPlayerToWorld(user.getYRot(), user.getXRot(), gravityDirection).y;
     }
 
     @ModifyVariable(
-            method = "setVelocity(Lnet/minecraft/entity/Entity;FFFFF)V",
+            method = "shootFromRotation",
             at = @At("HEAD"),
             ordinal = 1,
             argsOnly = true
@@ -38,6 +38,6 @@ public abstract class ProjectileEntityMixin {
             return value;
         }
 
-        return RotationUtil.rotPlayerToWorld(user.getYaw(), user.getPitch(), gravityDirection).x;
+        return RotationUtil.rotPlayerToWorld(user.getYRot(), user.getXRot(), gravityDirection).x;
     }
 }

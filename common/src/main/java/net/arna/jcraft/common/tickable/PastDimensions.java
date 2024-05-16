@@ -2,13 +2,12 @@ package net.arna.jcraft.common.tickable;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.util.DimensionData;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -33,8 +32,8 @@ public class PastDimensions {
                 continue;
             }
 
-            ServerWorld original = server.getWorld(dimensionData.worldKey);
-            if (user.getWorld() == original) {
+            ServerLevel original = server.getLevel(dimensionData.worldKey);
+            if (user.level() == original) {
                 continue;
             }
 
@@ -43,9 +42,9 @@ public class PastDimensions {
                 continue;
             }
 
-            Vec3d dimPos = user.getPos(); //dimValues.pos;
-            if (user instanceof ServerPlayerEntity player) {
-                player.teleport(original, dimPos.x, dimPos.y, dimPos.z, player.getYaw(), player.getPitch());
+            Vec3 dimPos = user.position(); //dimValues.pos;
+            if (user instanceof ServerPlayer player) {
+                player.teleportTo(original, dimPos.x, dimPos.y, dimPos.z, player.getYRot(), player.getXRot());
             } else {
                 JCraft.teleportToWorld(user, original, dimPos.x, dimPos.y, dimPos.z);
             }

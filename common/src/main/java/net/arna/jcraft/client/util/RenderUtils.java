@@ -1,16 +1,24 @@
 package net.arna.jcraft.client.util;
 
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.systems.VertexSorter;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.Window;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexSorting;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
 import java.awt.*;
@@ -21,9 +29,9 @@ public class RenderUtils {
 
     public static final int FULL_BRIGHT = 15728880;
 
-    public static ShaderProgram getShader(RenderLayer type) {
-        if (type instanceof RenderLayer.MultiPhase compositeRenderType) {
-            Optional<Supplier<ShaderProgram>> shader = compositeRenderType.phases.program.supplier;
+    public static ShaderInstance getShader(RenderType type) {
+        if (type instanceof RenderType.CompositeRenderType compositeRenderType) {
+            Optional<Supplier<ShaderInstance>> shader = compositeRenderType.state.shaderState.shader;
             if (shader.isPresent()) {
                 return shader.get().get();
             }
@@ -32,37 +40,37 @@ public class RenderUtils {
     }
 
     public static void renderGuiQuad(BufferBuilder buffer, int x, int y, int width, int height, int red, int green, int blue, int alpha) {
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        buffer.vertex(x, y, 0.0).color(red, green, blue, alpha).next();
-        buffer.vertex(x, (y + height), 0.0).color(red, green, blue, alpha).next();
-        buffer.vertex((x + width), (y + height), 0.0).color(red, green, blue, alpha).next();
-        buffer.vertex((x + width), y, 0.0).color(red, green, blue, alpha).next();
-        BufferRenderer.drawWithGlobalProgram(buffer.end());
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        buffer.vertex(x, y, 0.0).color(red, green, blue, alpha).endVertex();
+        buffer.vertex(x, (y + height), 0.0).color(red, green, blue, alpha).endVertex();
+        buffer.vertex((x + width), (y + height), 0.0).color(red, green, blue, alpha).endVertex();
+        buffer.vertex((x + width), y, 0.0).color(red, green, blue, alpha).endVertex();
+        BufferUploader.drawWithShader(buffer.end());
     }
 
     public static void vertexPos(VertexConsumer vertexConsumer, Matrix4f last, float x, float y, float z) {
-        vertexConsumer.vertex(last, x, y, z).next();
+        vertexConsumer.vertex(last, x, y, z).endVertex();
     }
 
     public static void vertexPosUV(VertexConsumer vertexConsumer, Matrix4f last, float x, float y, float z, float u, float v) {
-        vertexConsumer.vertex(last, x, y, z).texture(u, v).next();
+        vertexConsumer.vertex(last, x, y, z).uv(u, v).endVertex();
     }
 
     public static void vertexPosUVLight(VertexConsumer vertexConsumer, Matrix4f last, float x, float y, float z, float u, float v, int light) {
-        vertexConsumer.vertex(last, x, y, z).texture(u, v).light(light).next();
+        vertexConsumer.vertex(last, x, y, z).uv(u, v).uv2(light).endVertex();
     }
 
     public static void vertexPosColor(VertexConsumer vertexConsumer, Matrix4f last, float x, float y, float z, float r, float g, float b, float a) {
-        vertexConsumer.vertex(last, x, y, z).color(r, g, b, a).next();
+        vertexConsumer.vertex(last, x, y, z).color(r, g, b, a).endVertex();
     }
 
     public static void vertexPosColorUV(VertexConsumer vertexConsumer, Matrix4f last, float x, float y, float z, float r, float g, float b, float a, float u, float v) {
-        vertexConsumer.vertex(last, x, y, z).color(r, g, b, a).texture(u, v).next();
+        vertexConsumer.vertex(last, x, y, z).color(r, g, b, a).uv(u, v).endVertex();
     }
 
     public static void vertexPosColorUVLight(VertexConsumer vertexConsumer, Matrix4f last, float x, float y, float z, float r, float g, float b, float a, float u, float v, int light) {
-        vertexConsumer.vertex(last, x, y, z).color(r, g, b, a).texture(u, v).light(light).next();
+        vertexConsumer.vertex(last, x, y, z).color(r, g, b, a).uv(u, v).uv2(light).endVertex();
     }
 
     public static float distSqr(float... a) {
@@ -74,20 +82,20 @@ public class RenderUtils {
     }
 
     public static float distance(float... a) {
-        return MathHelper.sqrt(distSqr(a));
+        return Mth.sqrt(distSqr(a));
     }
 
 //TODO    public static void renderBlockAtPosition(WorldRenderContext context, Vec3d pos, Identifier texture, float alpha) {
 //        renderBlockAtPosition(context.matrixStack(), context.camera(), pos, texture, alpha, GameRenderer::getPositionColorTexProgram);
 //    }
 
-    public static void renderBlockAtPosition(MatrixStack matrixStack, Camera camera, Vec3d pos, Identifier texture, float alpha) {
-        renderBlockAtPosition(matrixStack, camera, pos, texture, alpha, GameRenderer::getPositionColorTexProgram);
+    public static void renderBlockAtPosition(PoseStack matrixStack, Camera camera, Vec3 pos, ResourceLocation texture, float alpha) {
+        renderBlockAtPosition(matrixStack, camera, pos, texture, alpha, GameRenderer::getPositionColorTexShader);
     }
 
-    public static void renderBlock(MatrixStack matrixStack, VertexConsumer vertexConsumer) {
+    public static void renderBlock(PoseStack matrixStack, VertexConsumer vertexConsumer) {
 
-        Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
+        Matrix4f matrix4f = matrixStack.last().pose();
         renderSide(matrix4f, vertexConsumer, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F);
         renderSide(matrix4f, vertexConsumer, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
         renderSide(matrix4f, vertexConsumer, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F);
@@ -96,25 +104,25 @@ public class RenderUtils {
     }
 
     private static void renderSide(Matrix4f model, VertexConsumer vertices, float x1, float x2, float y1, float y2, float z1, float z2, float z3, float z4) {
-        vertices.vertex(model, x1, y1, z1).next();
-        vertices.vertex(model, x2, y1, z2).next();
-        vertices.vertex(model, x2, y2, z3).next();
-        vertices.vertex(model, x1, y2, z4).next();
+        vertices.vertex(model, x1, y1, z1).endVertex();
+        vertices.vertex(model, x2, y1, z2).endVertex();
+        vertices.vertex(model, x2, y2, z3).endVertex();
+        vertices.vertex(model, x1, y2, z4).endVertex();
     }
 
     /**
      * Renders a Block at a pos
      */
-    public static void renderBlockAtPosition(MatrixStack matrixStack, Camera camera, Vec3d pos, Identifier texture, float alpha, Supplier<ShaderProgram> shader) {
-        matrixStack.push();
-        Vec3d transformedPos = pos.subtract(camera.getPos());
+    public static void renderBlockAtPosition(PoseStack matrixStack, Camera camera, Vec3 pos, ResourceLocation texture, float alpha, Supplier<ShaderInstance> shader) {
+        matrixStack.pushPose();
+        Vec3 transformedPos = pos.subtract(camera.getPosition());
         matrixStack.translate(transformedPos.x, transformedPos.y, transformedPos.z);
-        Matrix4f positionMatrix = matrixStack.peek().getPositionMatrix();
+        Matrix4f positionMatrix = matrixStack.last().pose();
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder buffer = tessellator.getBuilder();
 
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
         Color color = new Color(255, 255, 255);
         int intColor = color.getRGB();
@@ -127,36 +135,36 @@ public class RenderUtils {
             float z1 = direction == Direction.NORTH || direction == Direction.UP || direction == Direction.WEST ? 1 : 0;
             float z2 = direction == Direction.SOUTH || direction == Direction.DOWN || direction == Direction.EAST ? 1 : 0;
 
-            buffer.vertex(positionMatrix, x1, y1, z1).color(intColor).texture(0, 1).next();
-            buffer.vertex(positionMatrix, x1, y2, z2).color(intColor).texture(0, 0).next();
-            buffer.vertex(positionMatrix, x2, y2, z2).color(intColor).texture(1, 0).next();
-            buffer.vertex(positionMatrix, x2, y1, z1).color(intColor).texture(1, 1).next();
+            buffer.vertex(positionMatrix, x1, y1, z1).color(intColor).uv(0, 1).endVertex();
+            buffer.vertex(positionMatrix, x1, y2, z2).color(intColor).uv(0, 0).endVertex();
+            buffer.vertex(positionMatrix, x2, y2, z2).color(intColor).uv(1, 0).endVertex();
+            buffer.vertex(positionMatrix, x2, y1, z1).color(intColor).uv(1, 1).endVertex();
         }
 
         RenderSystem.setShader(shader);
         RenderSystem.setShaderTexture(0, texture);
-        tessellator.draw();
+        tessellator.end();
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     public static void startOverlayRender() {
-        Window window = MinecraftClient.getInstance().getWindow();
+        Window window = Minecraft.getInstance().getWindow();
         RenderSystem.backupProjectionMatrix();
 
         // Define the parameters for the projection matrix
         float fov = (float) Math.toRadians(45.0f); // Field of view in radians
-        float aspectRatio = (float) window.getScaledWidth() / window.getScaledHeight();
+        float aspectRatio = (float) window.getGuiScaledWidth() / window.getGuiScaledHeight();
         float zNear = 1000.0f;
         float zFar = 3000.0f;
 
         Matrix4f projectionMatrix = new Matrix4f().perspective(fov, aspectRatio, zNear, zFar);
 
-        RenderSystem.setProjectionMatrix(projectionMatrix, VertexSorter.BY_Z);
+        RenderSystem.setProjectionMatrix(projectionMatrix, VertexSorting.ORTHOGRAPHIC_Z);
 
-        MatrixStack mvStack = RenderSystem.getModelViewStack();
-        mvStack.push();
-        mvStack.loadIdentity();
+        PoseStack mvStack = RenderSystem.getModelViewStack();
+        mvStack.pushPose();
+        mvStack.setIdentity();
         mvStack.translate(0.0, 0.0, -2000.0);
         RenderSystem.applyModelViewMatrix();
 
@@ -164,6 +172,6 @@ public class RenderUtils {
 
     public static void endOverlayRender() {
         RenderSystem.restoreProjectionMatrix();
-        RenderSystem.getModelViewStack().pop();
+        RenderSystem.getModelViewStack().popPose();
     }
 }

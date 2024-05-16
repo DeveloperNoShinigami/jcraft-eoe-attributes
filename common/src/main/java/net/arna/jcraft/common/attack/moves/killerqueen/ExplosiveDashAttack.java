@@ -5,10 +5,9 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.AbstractKillerQueenEntity;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class ExplosiveDashAttack extends AbstractMove<ExplosiveDashAttack, AbstractKillerQueenEntity<?, ?>> {
@@ -19,15 +18,15 @@ public class ExplosiveDashAttack extends AbstractMove<ExplosiveDashAttack, Abstr
 
     @Override
     public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
-        Vec3d lookVec = user.getRotationVector().multiply(0.9);
-        attacker.getWorld().createExplosion(user,
+        Vec3 lookVec = user.getLookAngle().scale(0.9);
+        attacker.level().explode(user,
                 user.getX() - lookVec.x,
-                user.getY() + user.getHeight() / 2 - lookVec.y,
+                user.getY() + user.getBbHeight() / 2 - lookVec.y,
                 user.getZ() - lookVec.z,
-                1f, World.ExplosionSourceType.NONE);
+                1f, Level.ExplosionInteraction.NONE);
 
-        user.setVelocity(user.getVelocity().add(lookVec));
-        user.velocityModified = true;
+        user.setDeltaMovement(user.getDeltaMovement().add(lookVec));
+        user.hurtMarked = true;
 
         attacker.playSound(JSoundRegistry.KQ_DETONATE.get(), 1, 1);
 

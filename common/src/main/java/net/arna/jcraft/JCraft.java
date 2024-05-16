@@ -30,42 +30,38 @@ import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.*;
-import net.minecraft.block.Block;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageTracker;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
-import net.minecraft.particle.ParticleType;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.Position;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.CombatTracker;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -74,6 +70,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.stun;
+import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
+import static net.arna.jcraft.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
+import static net.arna.jcraft.registry.JItemRegistry.ITEM_REGISTRY;
 import static net.arna.jcraft.registry.JItemRegistry.KNIFE;
 
 public final class JCraft {
@@ -90,24 +89,24 @@ public final class JCraft {
     public static final GravityChangerConfig gravityConfig = new GravityChangerConfig(); // TODO incorporate this into our own config
 
     //Obligatory lazy Registry
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ENTITY_TYPE);
-    public static final DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.ITEM);
-    public static final DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK);
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK_ENTITY_TYPE);
-    public static final DeferredRegister<ItemGroup> CREATIVE_TAB_REGISTRY = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
-    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(MOD_ID, RegistryKeys.PARTICLE_TYPE);
-    public static final DeferredRegister<StatusEffect> EFFECTS = DeferredRegister.create(MOD_ID, RegistryKeys.STATUS_EFFECT);
-    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(MOD_ID, RegistryKeys.SOUND_EVENT);
-    public static final DeferredRegister<Enchantment> ENCHANTMENT = DeferredRegister.create(MOD_ID, RegistryKeys.ENCHANTMENT);
+
+
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.BLOCK_ENTITY_TYPE);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_TAB_REGISTRY = DeferredRegister.create(MOD_ID, Registries.CREATIVE_MODE_TAB);
+    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(MOD_ID, Registries.PARTICLE_TYPE);
+    public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(MOD_ID, Registries.MOB_EFFECT);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(MOD_ID, Registries.SOUND_EVENT);
+    public static final DeferredRegister<Enchantment> ENCHANTMENT = DeferredRegister.create(MOD_ID, Registries.ENCHANTMENT);
+    public static final DeferredRegister<PlacedFeature> PLACED_FEATURE = DeferredRegister.create(MOD_ID, Registries.PLACED_FEATURE);
 
     // Gamerules
     //public static final GameRules.Key<GameRules.BooleanRule> KINGCRIMSON_TELEPORT_EFFECT = GameRuleRegistry.register("kingCrimsonTeleportEffect", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
-    public static final GameRules.Key<GameRules.BooleanRule> COMBO_COUNTER = GameRules.register("comboCounter", GameRules.Category.MISC, GameRules.BooleanRule.create(true));
-    public static final GameRules.Key<GameRules.IntRule> CHANCE_MOB_SPAWNS_WITH_STAND = GameRules.register("chanceMobSpawnsWithStand", GameRules.Category.MOBS, GameRules.IntRule.create(5));
-    public static final GameRules.Key<GameRules.BooleanRule> ALLOW_MOB_EVOLVED_STANDS = GameRules.register("allowMobEvolvedStands", GameRules.Category.MOBS, GameRules.BooleanRule.create(false));
-    public static final GameRules.Key<GameRules.BooleanRule> STAND_GRIEFING = GameRules.register("standGriefing", GameRules.Category.MISC, GameRules.BooleanRule.create(true));
-    public static final GameRules.Key<GameRules.BooleanRule> KEEP_STAND = GameRules.register("keepStand", GameRules.Category.MISC, GameRules.BooleanRule.create(true));
-    public static final GameRules.Key<GameRules.BooleanRule> KEEP_SPEC = GameRules.register("keepSpec", GameRules.Category.MISC, GameRules.BooleanRule.create(true));
+    public static final GameRules.Key<GameRules.BooleanValue> COMBO_COUNTER = GameRules.register("comboCounter", GameRules.Category.MISC, GameRules.BooleanValue.create(true));
+    public static final GameRules.Key<GameRules.IntegerValue> CHANCE_MOB_SPAWNS_WITH_STAND = GameRules.register("chanceMobSpawnsWithStand", GameRules.Category.MOBS, GameRules.IntegerValue.create(5));
+    public static final GameRules.Key<GameRules.BooleanValue> ALLOW_MOB_EVOLVED_STANDS = GameRules.register("allowMobEvolvedStands", GameRules.Category.MOBS, GameRules.BooleanValue.create(false));
+    public static final GameRules.Key<GameRules.BooleanValue> STAND_GRIEFING = GameRules.register("standGriefing", GameRules.Category.MISC, GameRules.BooleanValue.create(true));
+    public static final GameRules.Key<GameRules.BooleanValue> KEEP_STAND = GameRules.register("keepStand", GameRules.Category.MISC, GameRules.BooleanValue.create(true));
+    public static final GameRules.Key<GameRules.BooleanValue> KEEP_SPEC = GameRules.register("keepSpec", GameRules.Category.MISC, GameRules.BooleanValue.create(true));
     //public static GameRules.Key<GameRules.IntRule> DAMAGE_MULT = GameRuleRegistry.register("jcraftDamageMult", GameRules.Category.MISC, GameRuleFactory.createIntRule(0, 0, 100));
 
 
@@ -116,7 +115,7 @@ public final class JCraft {
      * Used to lock the AU chunks from being unloaded automatically by JServerTickEvents
      */
     public static int preloadLockTicks = 0;
-    public static ServerWorld auWorld;
+    public static ServerLevel auWorld;
     private static final List<ChunkPos> preloadedChunks = new ArrayList<>();
 
     public static final Object2IntMap<LivingEntity> burstTimers = new Object2IntOpenHashMap<>();
@@ -134,20 +133,18 @@ public final class JCraft {
     @Setter
     private static IClientEntityHandler clientEntityHandler = DummyClientEntityHandler.INSTANCE;
 
+
     public static void init() {
         GravityChannel.init();
 
         // Particle registration (serverside)
         JParticleTypeRegistry.initParticleTypes();
+        PARTICLES.register();
 
         // Registration
-        JEntityTypeRegistry.init();
         ENTITY_TYPE_REGISTRY.register();
-        JBlockRegistry.init();
         BLOCK_REGISTRY.register();
-        JItemRegistry.init();
         ITEM_REGISTRY.register();
-        JBlockEntityTypeRegistry.init();
         BLOCK_ENTITY_TYPE_REGISTRY.register();
         JTagRegistry.init();
         JCreativeMenuTabRegistry.init();
@@ -203,22 +200,22 @@ public final class JCraft {
      * @param position in world
      */
     //todo: make TS stop animated textures
-    public static void beginTimestop(LivingEntity timestopper, Vec3d position, ServerWorld world, int duration) {
+    public static void beginTimestop(LivingEntity timestopper, Vec3 position, ServerLevel world, int duration) {
         //JCraft.LOGGER.info(timestopper + " is stopping time in world " + world + " for " + duration + " ticks.");
 
         // Registration
-        RegistryKey<World> worldRegistryKey = world.getRegistryKey();
+        ResourceKey<Level> worldRegistryKey = world.dimension();
         Timestops.enqueue(new DimensionData(timestopper, position, worldRegistryKey, duration));
 
         // Synchronization
-        PacketByteBuf buf = TimeStopStatePacket.createStartPacket(timestopper.getId(), position, worldRegistryKey, duration);
-        world.getPlayers().forEach(playerEntity -> TimeStopStatePacket.send(playerEntity, buf)); // Sends to unaffected players because they may walk into range
+        FriendlyByteBuf buf = TimeStopStatePacket.createStartPacket(timestopper.getId(), position, worldRegistryKey, duration);
+        world.players().forEach(playerEntity -> TimeStopStatePacket.send(playerEntity, buf)); // Sends to unaffected players because they may walk into range
 
 
-        List<ServerPlayerEntity> toStop = world.getEntitiesByClass(ServerPlayerEntity.class,
-                new Box(position.add(96.0, 96.0, 96.0), position.subtract(96.0, 96.0, 96.0)), EntityPredicates.VALID_LIVING_ENTITY);
+        List<ServerPlayer> toStop = world.getEntitiesOfClass(ServerPlayer.class,
+                new AABB(position.add(96.0, 96.0, 96.0), position.subtract(96.0, 96.0, 96.0)), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
 
-        for (ServerPlayerEntity serverPlayer : toStop) {
+        for (ServerPlayer serverPlayer : toStop) {
             // Shader handling
             ShaderActivationPacket.send(serverPlayer, timestopper, 0, duration, ShaderActivationPacket.Type.ZA_WARUDO);
             if (serverPlayer == timestopper || serverPlayer.isCreative()) {
@@ -226,39 +223,39 @@ public final class JCraft {
             }
 
             // Puts all player items besides armor into cooldown for entire duration of timestop
-            for (int i = 0; i < serverPlayer.getInventory().main.size(); i++) {
-                serverPlayer.getItemCooldownManager().set(serverPlayer.getInventory().main.get(i).getItem(), duration);
+            for (int i = 0; i < serverPlayer.getInventory().items.size(); i++) {
+                serverPlayer.getCooldowns().addCooldown(serverPlayer.getInventory().items.get(i).getItem(), duration);
             }
-            serverPlayer.getItemCooldownManager().set(serverPlayer.getOffHandStack().getItem(), duration);
+            serverPlayer.getCooldowns().addCooldown(serverPlayer.getOffhandItem().getItem(), duration);
         }
     }
 
     public static void stopTimestop(Entity timestopper) {
         DimensionData timestop = Timestops.getTimestop(timestopper);
-        World world = timestopper.getWorld();
+        Level world = timestopper.level();
 
-        if (timestop == null || !(world instanceof ServerWorld serverWorld)) {
+        if (timestop == null || !(world instanceof ServerLevel serverWorld)) {
             return;
         }
 
         // Synchronization
-        PacketByteBuf buf = TimeStopStatePacket.createStopPacket(timestopper.getId());
-        serverWorld.getPlayers().forEach(playerEntity -> TimeStopStatePacket.send(playerEntity, buf));
+        FriendlyByteBuf buf = TimeStopStatePacket.createStopPacket(timestopper.getId());
+        serverWorld.players().forEach(playerEntity -> TimeStopStatePacket.send(playerEntity, buf));
 
-        Vec3d position = timestop.pos;
+        Vec3 position = timestop.pos;
 
-        List<ServerPlayerEntity> toUnfreeze = serverWorld.getEntitiesByClass(ServerPlayerEntity.class,
-                new Box(position.add(96.0, 96.0, 96.0), position.subtract(96.0, 96.0, 96.0)), EntityPredicates.VALID_LIVING_ENTITY);
+        List<ServerPlayer> toUnfreeze = serverWorld.getEntitiesOfClass(ServerPlayer.class,
+                new AABB(position.add(96.0, 96.0, 96.0), position.subtract(96.0, 96.0, 96.0)), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
 
-        for (ServerPlayerEntity serverPlayer : toUnfreeze) {
+        for (ServerPlayer serverPlayer : toUnfreeze) {
             // Shader handling
             ShaderDeactivationPacket.send(serverPlayer, ShaderActivationPacket.Type.ZA_WARUDO);
 
             // Removes cooldowns
-            for (int i = 0; i < serverPlayer.getInventory().main.size(); i++) {
-                serverPlayer.getItemCooldownManager().remove(serverPlayer.getInventory().main.get(i).getItem());
+            for (int i = 0; i < serverPlayer.getInventory().items.size(); i++) {
+                serverPlayer.getCooldowns().removeCooldown(serverPlayer.getInventory().items.get(i).getItem());
             }
-            serverPlayer.getItemCooldownManager().remove(serverPlayer.getOffHandStack().getItem());
+            serverPlayer.getCooldowns().removeCooldown(serverPlayer.getOffhandItem().getItem());
         }
 
         Timestops.remove(timestop);
@@ -277,7 +274,7 @@ public final class JCraft {
         preloadedChunks.clear();
     }
 
-    public static void preloadChunk(ServerWorld auWorld, int chunkX, int chunkZ) {
+    public static void preloadChunk(ServerLevel auWorld, int chunkX, int chunkZ) {
         // Already loaded, no need to do so again.
         if (auWorld.getForcedChunks().contains(new ChunkPos(chunkX, chunkZ).toLong())) {
             return;
@@ -287,11 +284,10 @@ public final class JCraft {
         auWorld.setChunkForced(chunkX, chunkZ, true);
     }
 
-    public static StandEntity<?, ?> summon(World world, LivingEntity user) {
-        if (user.hasStatusEffect(JStatusRegistry.STANDLESS.get())) {
+    public static StandEntity<?, ?> summon(Level world, LivingEntity user) {
+        if (user.hasEffect(JStatusRegistry.STANDLESS.get())) {
             return null;
         }
-
         CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
         StandType type = standData.getType();
         if (type == StandType.NONE) {
@@ -305,58 +301,56 @@ public final class JCraft {
 
         int skin = standData.getSkin();
         stand.setSkin(skin);
-        stand.setPosition(user.getPos().subtract(user.getRotationVector()));
+        stand.setPos(user.position().subtract(user.getLookAngle()));
         stand.startRiding(user);
         stand.setUser(user);
 
-        if (user instanceof ServerPlayerEntity player) {
+        if (user instanceof ServerPlayer player) {
             if (JUtils.canAct(user) && StandBlockPacket.isBlocking(player)) {
                 stand.wantToBlock = true;
                 stand.tryBlock();
             }
-        } else if (user instanceof MobEntity mob) {
+        } else if (user instanceof Mob mob) {
             JEnemies.add(mob);
         }
-
-        world.spawnEntity(stand);
-
+        world.addFreshEntity(stand);
         standData.setStand(stand);
         return stand;
     }
 
-    public static void createParticle(ServerWorld world, double x, double y, double z, JParticleType type) {
+    public static void createParticle(ServerLevel world, double x, double y, double z, JParticleType type) {
         if (world == null || type == null) {
             return;
         }
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 
         buf.writeShort(3);
         buf.writeDouble(x);
         buf.writeDouble(y);
         buf.writeDouble(z);
-        buf.writeEnumConstant(type);
+        buf.writeEnum(type);
 
-        JUtils.around(world, new Vec3d(x, y, z), 128).forEach(
+        JUtils.around(world, new Vec3(x, y, z), 128).forEach(
                 serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf)
         );
 
     }
 
-    public static void createHitsparks(ServerWorld world, double x, double y, double z, JParticleType type, int sparkCount, double sparkSpeed) {
+    public static void createHitsparks(ServerLevel world, double x, double y, double z, JParticleType type, int sparkCount, double sparkSpeed) {
         if (world == null || type == null) {
             return;
         }
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 
         buf.writeShort(5);
         buf.writeDouble(x);
         buf.writeDouble(y);
         buf.writeDouble(z);
-        buf.writeEnumConstant(type);
+        buf.writeEnum(type);
         buf.writeInt(sparkCount);
         buf.writeDouble(sparkSpeed);
 
-        JUtils.around(world, new Vec3d(x, y, z), 128).forEach(
+        JUtils.around(world, new Vec3(x, y, z), 128).forEach(
                 serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf)
         );
     }
@@ -365,7 +359,7 @@ public final class JCraft {
      * Breaks out of a combo using a slightly delayed attack centered at the player.
      * This attack is blockable, launches and stuns on hit.
      */
-    public static void comboBreak(ServerWorld world, LivingEntity player, StatusEffectInstance stun) {
+    public static void comboBreak(ServerLevel world, LivingEntity player, MobEffectInstance stun) {
         if (player.isSpectator()) {
             return;
         }
@@ -376,26 +370,26 @@ public final class JCraft {
 
             stun(player, 5, 2); // Player is slowed down considerably pre-burst
 
-            world.playSoundFromEntity(null, player, JSoundRegistry.COMBO_BREAK.get(), SoundCategory.PLAYERS, 1, 1);
+            world.playSound(null, player, JSoundRegistry.COMBO_BREAK.get(), SoundSource.PLAYERS, 1, 1);
 
-            Vec3d pPos = player.getEyePos();
+            Vec3 pPos = player.getEyePosition();
             burstTimers.put(player, 4);
             createParticle(world, pPos.x, pPos.y, pPos.z, JParticleType.COMBO_BREAK);
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static @Nullable <T extends Entity> T teleportToWorld(T e, ServerWorld w, double x, double y, double z) {
+    public static @Nullable <T extends Entity> T teleportToWorld(T e, ServerLevel w, double x, double y, double z) {
         if (!e.isRemoved()) {
-            e.detach();
+            e.unRide();
             T entity = (T) e.getType().create(w);
             if (entity != null) {
-                entity.copyFrom(e);
-                entity.refreshPositionAndAngles(x, y, z, e.getYaw(), e.getPitch());
-                entity.setVelocity(e.getVelocity());
-                w.onDimensionChanged(entity);
+                entity.restoreFrom(e);
+                entity.moveTo(x, y, z, e.getYRot(), e.getXRot());
+                entity.setDeltaMovement(e.getDeltaMovement());
+                w.addDuringTeleport(entity);
                 e.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
-                w.resetIdleTimeout();
+                w.resetEmptyTime();
                 return entity;
             }
         }
@@ -403,9 +397,9 @@ public final class JCraft {
     }
 
     public static void dimensionHop(LivingEntity entity, int heightOffset) {
-        ServerWorld original = (ServerWorld) entity.getWorld();
+        ServerLevel original = (ServerLevel) entity.level();
         MinecraftServer server = original.getServer();
-        ServerWorld au = server.getWorld(JDimensionRegistry.AU_DIMENSION_KEY);
+        ServerLevel au = server.getLevel(JDimensionRegistry.AU_DIMENSION_KEY);
         if (au == null) {
             JCraft.LOGGER.fatal("Alternate universe world does not exist!");
             return;
@@ -414,13 +408,13 @@ public final class JCraft {
             return;
         }
 
-        Vec3d pos = entity.getPos();
+        Vec3 pos = entity.position();
         LivingEntity finalEnt = entity;
 
-        if (entity instanceof ServerPlayerEntity player) {
-            player.teleport(au, pos.x, pos.y - heightOffset, pos.z, entity.getYaw(), entity.getPitch());
-            player.networkHandler.sendPacket(
-                    new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.D4C_ALT_UNIVERSE_AMBIENCE.get()), SoundCategory.MUSIC, pos.x, pos.y - heightOffset, pos.z, 1.0F, 1.0F, 0)
+        if (entity instanceof ServerPlayer player) {
+            player.teleportTo(au, pos.x, pos.y - heightOffset, pos.z, entity.getYRot(), entity.getXRot());
+            player.connection.send(
+                    new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(JSoundRegistry.D4C_ALT_UNIVERSE_AMBIENCE.get()), SoundSource.MUSIC, pos.x, pos.y - heightOffset, pos.z, 1.0F, 1.0F, 0)
             );
         } else {
             finalEnt = teleportToWorld(entity, au, entity.getX(), entity.getY() - heightOffset, entity.getZ());
@@ -431,16 +425,16 @@ public final class JCraft {
             return;
         }
 
-        finalEnt.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 100, 9, true, false, true));
-        PastDimensions.enqueue(new DimensionData(finalEnt, pos, original.getRegistryKey()));
+        finalEnt.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 9, true, false, true));
+        PastDimensions.enqueue(new DimensionData(finalEnt, pos, original.dimension()));
     }
 
-    public static boolean wasRecentlyAttacked(DamageTracker tracker) {
-        tracker.update();
-        return tracker.recentlyAttacked;
+    public static boolean wasRecentlyAttacked(CombatTracker tracker) {
+        tracker.recheckStatus();
+        return tracker.inCombat;
     }
 
-    public static Identifier id(String name) {
-        return new Identifier(MOD_ID, name);
+    public static ResourceLocation id(String name) {
+        return new ResourceLocation(MOD_ID, name);
     }
 }

@@ -1,9 +1,8 @@
 package net.arna.jcraft.client.rendering.skybox;
 
 import com.google.common.collect.Lists;
-import net.minecraft.util.Identifier;
-
 import java.util.List;
+import net.minecraft.resources.ResourceLocation;
 
 public class Textures {
     private final List<Texture> textureList = Lists.newArrayList();
@@ -22,13 +21,13 @@ public class Textures {
     }
 
     public static class Texture {
-        private final Identifier textureId;
+        private final ResourceLocation textureId;
         private final float minU;
         private final float minV;
         private final float maxU;
         private final float maxV;
 
-        public Texture(Identifier textureId, float minU, float minV, float maxU, float maxV) {
+        public Texture(ResourceLocation textureId, float minU, float minV, float maxU, float maxV) {
             this.textureId = textureId;
             this.minU = minU;
             this.minV = minV;
@@ -36,11 +35,11 @@ public class Textures {
             this.maxV = maxV;
         }
 
-        public Texture(Identifier textureId) {
+        public Texture(ResourceLocation textureId) {
             this(textureId, 0.0F, 0.0F, 1.0F, 1.0F);
         }
 
-        public Identifier getTextureId() {
+        public ResourceLocation getTextureId() {
             return this.textureId;
         }
 

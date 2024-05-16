@@ -1,17 +1,16 @@
 package net.arna.jcraft.common.entity.ai.goal;
 
 import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.control.LookControl;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.pathing.EntityNavigation;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.control.LookControl;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import java.util.EnumSet;
 
 public class SHAAttackGoal extends Goal {
     private final SheerHeartAttackEntity sha;
     private final LookControl shaLookControl;
-    private final EntityNavigation shaNavigation;
+    private final PathNavigation shaNavigation;
     private final double speed;
     private int cooldown;
     private LivingEntity target;
@@ -21,22 +20,22 @@ public class SHAAttackGoal extends Goal {
         shaLookControl = sha.getLookControl();
         shaNavigation = sha.getNavigation();
         this.speed = speed;
-        setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+        setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         target = sha.getTarget();
         return target != null;
     }
 
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         if (!target.isAlive() || target.isRemoved()) {
             return false;
-        } else if (sha.squaredDistanceTo(target) > 1024.0D) {
+        } else if (sha.distanceToSqr(target) > 1024.0D) {
             return false;
         } else {
-            return !sha.getNavigation().isIdle() || canStart();
+            return !sha.getNavigation().isDone() || canUse();
         }
     }
 
@@ -45,16 +44,16 @@ public class SHAAttackGoal extends Goal {
         sha.getNavigation().stop();
     }
 
-    public boolean shouldRunEveryTick() {
+    public boolean requiresUpdateEveryTick() {
         return true;
     }
 
     public void tick() {
-        shaLookControl.lookAt(target, 30.0F, 30.0F);
-        shaNavigation.startMovingTo(target, speed);
+        shaLookControl.setLookAt(target, 30.0F, 30.0F);
+        shaNavigation.moveTo(target, speed);
 
         double d = 3.0; // SHA_width^2 * 4
-        double e = sha.squaredDistanceTo(target);
+        double e = sha.distanceToSqr(target);
 
         if (cooldown-- <= 0 && e <= d) {
             cooldown = 100;

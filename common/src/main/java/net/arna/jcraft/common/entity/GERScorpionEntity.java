@@ -5,111 +5,112 @@ import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.block.Blocks;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+
 
 import java.util.*;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
-
-public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable {
-    private static final TrackedData<Optional<UUID>> OWNERUUID;
-    private static final TrackedData<Boolean> ISROCK;
-    private static final TrackedData<Boolean> CHARGED;
-    private Vec3d initialVel;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+public class GERScorpionEntity extends Mob implements GeoEntity, IOwnable {
+    private static final EntityDataAccessor<Optional<UUID>> OWNERUUID;
+    private static final EntityDataAccessor<Boolean> ISROCK;
+    private static final EntityDataAccessor<Boolean> CHARGED;
+    private Vec3 initialVel;
     private LivingEntity jumpTarget;
     private LivingEntity owner;
     private int landedTimer;
 
     static {
-        OWNERUUID = DataTracker.registerData(GERScorpionEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
-        ISROCK = DataTracker.registerData(GERScorpionEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-        CHARGED = DataTracker.registerData(GERScorpionEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        OWNERUUID = SynchedEntityData.defineId(GERScorpionEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+        ISROCK = SynchedEntityData.defineId(GERScorpionEntity.class, EntityDataSerializers.BOOLEAN);
+        CHARGED = SynchedEntityData.defineId(GERScorpionEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
-    public GERScorpionEntity(EntityType<? extends MobEntity> entityType, World world) {
+    public GERScorpionEntity(EntityType<? extends Mob> entityType, Level world) {
         super(entityType, world);
-        this.setNoDrag(true);
+        this.setDiscardFriction(true);
     }
 
-    public void setInitialVel(Vec3d initV) {
-        this.setVelocity(initV);
+    public void setInitialVel(Vec3 initV) {
+        this.setDeltaMovement(initV);
         initialVel = initV;
     }
 
     public Optional<UUID> getOwnerUUID() {
-        return dataTracker.get(OWNERUUID);
+        return entityData.get(OWNERUUID);
     }
 
     public void setOwnerUUID(UUID uuid) {
-        dataTracker.set(OWNERUUID, Optional.of(uuid));
+        entityData.set(OWNERUUID, Optional.of(uuid));
     }
 
     public boolean isRock() {
-        return dataTracker.get(ISROCK);
+        return entityData.get(ISROCK);
     }
 
     public void setRock(boolean r) {
-        dataTracker.set(ISROCK, r);
+        entityData.set(ISROCK, r);
     }
 
     public boolean isCharged() {
-        return dataTracker.get(CHARGED);
+        return entityData.get(CHARGED);
     }
 
     private int rockStun = 15;
 
     public void charge() {
-        dataTracker.set(CHARGED, true);
+        entityData.set(CHARGED, true);
         rockStun = 21;
     }
 
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(OWNERUUID, Optional.empty());
-        dataTracker.startTracking(ISROCK, true);
-        dataTracker.startTracking(CHARGED, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(OWNERUUID, Optional.empty());
+        entityData.define(ISROCK, true);
+        entityData.define(CHARGED, false);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         Optional<UUID> ownerID = this.getOwnerUUID();
-        ownerID.ifPresent(id -> nbt.putUuid("OwnerUUID", id));
+        ownerID.ifPresent(id -> nbt.putUUID("OwnerUUID", id));
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         if (nbt.contains("OwnerUUID")) {
-            setOwnerUUID(nbt.getUuid("OwnerUUID"));
+            setOwnerUUID(nbt.getUUID("OwnerUUID"));
         }
     }
 
@@ -121,32 +122,32 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
     @Override
     public void setMaster(LivingEntity entity) {
         owner = entity;
-        setOwnerUUID(owner.getUuid());
+        setOwnerUUID(owner.getUUID());
     }
 
     // Scorpions aren't very heavy
     @Override
-    public void pushAwayFrom(Entity entity) {
+    public void push(Entity entity) {
     }
 
     @Override
-    public boolean collidesWith(Entity other) {
+    public boolean canCollideWith(Entity other) {
         return false;
     }
 
     // Ease of use
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         if (isRock()) {
             return true;
         }
-        return super.hasNoGravity();
+        return super.isNoGravity();
     }
 
     private void Transform() {
-        setVelocity(Vec3d.ZERO);
-        velocityModified = true;
-        setNoDrag(false);
+        setDeltaMovement(Vec3.ZERO);
+        hurtMarked = true;
+        setDiscardFriction(false);
         setRock(false);
     }
 
@@ -154,9 +155,9 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
     public void tick() {
         super.tick();
 
-        Vec3d curPos = getPos();
+        Vec3 curPos = position();
 
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             if (!isRock()) {
                 landedTimer += 1;
             }
@@ -164,17 +165,17 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
             double y = getY();
             double z = getZ();
             if (landedTimer < 1) { // Laser
-                Vec3d towardsVec = JUtils.deltaPos(this);
+                Vec3 towardsVec = JUtils.deltaPos(this);
                 for (double i = 0; i < 6; i++) {
                     double lerp = i / 6;
-                    getWorld().addParticle(
+                    level().addParticle(
                             isCharged() ? ParticleTypes.WITCH : ParticleTypes.COMPOSTER,
                             x + towardsVec.x * lerp, y + towardsVec.y * lerp, z + towardsVec.z * lerp,
                             towardsVec.x, towardsVec.y, towardsVec.z);
                 }
             } else if (landedTimer == 1) { // Landing burst
                 for (int i = 0; i < 8; i++) {
-                    getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.DIRT.getDefaultState()),
+                    level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.DIRT.defaultBlockState()),
                             x + random.nextFloat() - 0.5f,
                             y + random.nextFloat() - 0.5f,
                             z + random.nextFloat() - 0.5f,
@@ -187,21 +188,21 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
                 Set<Entity> filter = new HashSet<>();
                 filter.add(owner);
                 filter.add(this);
-                if (owner.hasPassengers()) {
-                    filter.addAll(owner.getPassengerList());
+                if (owner.isVehicle()) {
+                    filter.addAll(owner.getPassengers());
                 }
-                DamageSource damageSource = getWorld().getDamageSources().mobAttack(owner);
+                DamageSource damageSource = level().damageSources().mobAttack(owner);
                 if (isRock()) {
-                    if (!getVelocity().equals(initialVel)) // Ghetto collision check
+                    if (!getDeltaMovement().equals(initialVel)) // Ghetto collision check
                     {
                         Transform();
                     }
 
                     // Recursive hitbox check between current and previous position
-                    Vec3d towardsVec = curPos.subtract(new Vec3d(prevX, prevY, prevZ));
+                    Vec3 towardsVec = curPos.subtract(new Vec3(xo, yo, zo));
                     List<LivingEntity> hurtAll = new ArrayList<>();
                     for (double i = 0; i < 3; i++) {
-                        hurtAll.addAll(JUtils.generateHitbox(getWorld(), curPos.add(towardsVec.multiply(i / 3)), 0.5, filter));
+                        hurtAll.addAll(JUtils.generateHitbox(level(), curPos.add(towardsVec.scale(i / 3)), 0.5, filter));
                     }
 
                     hurtAll.removeIf(e -> !canDamage(damageSource, e));
@@ -210,11 +211,11 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
                         jumpTarget = hurtAll.get(0);
                         for (LivingEntity l : hurtAll) {
                             LivingEntity target = JUtils.getUserIfStand(l);
-                            damageLogic(getWorld(), target, getVelocity(), rockStun, 1, false, 6f,
+                            damageLogic(level(), target, getDeltaMovement(), rockStun, 1, false, 6f,
                                     true, 10, damageSource, owner, CommonHitPropertyComponent.HitAnimation.MID);
                         }
                         Transform();
-                        JCraft.createParticle((ServerWorld) this.getWorld(),
+                        JCraft.createParticle((ServerLevel) this.level(),
                                 curPos.x + random.nextGaussian() * 0.25,
                                 curPos.y + random.nextGaussian() * 0.25,
                                 curPos.z + random.nextGaussian() * 0.25,
@@ -224,43 +225,43 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
                     landedTimer += 1;
                     if (landedTimer == 15) { // Pounce at target
                         if (jumpTarget != null) {
-                            Vec3d eyePos = jumpTarget.getPos().add(0, jumpTarget.getHeight() / 2, 0);
-                            lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, eyePos);
-                            setVelocity(getVelocity().add(eyePos.subtract(getPos()).multiply(0.33))); // Non-normalized to account for distance
+                            Vec3 eyePos = jumpTarget.position().add(0, jumpTarget.getBbHeight() / 2, 0);
+                            lookAt(EntityAnchorArgument.Anchor.EYES, eyePos);
+                            setDeltaMovement(getDeltaMovement().add(eyePos.subtract(position()).scale(0.33))); // Non-normalized to account for distance
                         } else {
-                            addVelocity(0, 0.65, 0);
+                            push(0, 0.65, 0);
                         }
-                        velocityModified = true;
+                        hurtMarked = true;
                     }
 
                     if (landedTimer == 20) { // Sting followup, 5t gap
-                        Set<LivingEntity> hurt = JUtils.generateHitbox(getWorld(), getPos(), 1.5, filter);
+                        Set<LivingEntity> hurt = JUtils.generateHitbox(level(), position(), 1.5, filter);
                         if (isCharged()) {
                             for (LivingEntity l : hurt) {
                                 LivingEntity target = JUtils.getUserIfStand(l);
-                                target.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 60, 0, false, true));
-                                damageLogic(getWorld(), target, Vec3d.ZERO, 15, 1, false, 3f, true, 7, damageSource, owner, CommonHitPropertyComponent.HitAnimation.MID);
+                                target.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 0, false, true));
+                                damageLogic(level(), target, Vec3.ZERO, 15, 1, false, 3f, true, 7, damageSource, owner, CommonHitPropertyComponent.HitAnimation.MID);
                             }
                         } else {
                             for (LivingEntity l : hurt) {
                                 LivingEntity target = JUtils.getUserIfStand(l);
-                                damageLogic(getWorld(), target, Vec3d.ZERO, 15, 1, false, 3f, true, 7, damageSource, owner, CommonHitPropertyComponent.HitAnimation.MID);
+                                damageLogic(level(), target, Vec3.ZERO, 15, 1, false, 3f, true, 7, damageSource, owner, CommonHitPropertyComponent.HitAnimation.MID);
                             }
                         }
                     }
                 }
 
-                if (age > 30) {
+                if (tickCount > 30) {
                     kill();
                 }
             } else if (getOwnerUUID().isPresent()) {
                 UUID searchID = getOwnerUUID().get();
-                Box box = Box.of(this.getPos(), 64, 64, 64);
+                AABB box = AABB.ofSize(this.position(), 64, 64, 64);
                 boolean found = false;
 
                 for (LivingEntity e :
-                        getWorld().getEntitiesByClass(LivingEntity.class, box, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR)) {
-                    if (e.getUuid().equals(searchID)) {
+                        level().getEntitiesOfClass(LivingEntity.class, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR)) {
+                    if (e.getUUID().equals(searchID)) {
                         setMaster(e);
                         found = true;
                         break;
@@ -275,7 +276,7 @@ public class GERScorpionEntity extends MobEntity implements GeoEntity, IOwnable 
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {

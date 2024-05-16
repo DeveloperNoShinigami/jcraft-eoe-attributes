@@ -5,11 +5,11 @@ import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.GEREntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class OverheadKickAttack extends AbstractSimpleAttack<OverheadKickAttack, GEREntity> {
     public OverheadKickAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
@@ -19,11 +19,11 @@ public class OverheadKickAttack extends AbstractSimpleAttack<OverheadKickAttack,
     }
 
     @Override
-    protected void processTarget(GEREntity attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource) {
+    protected void processTarget(GEREntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         JUtils.addVelocity(target, 0, -1, 0);
-        target.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 5, 23, false, false));
+        target.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, 23, false, false));
     }
 
     @Override

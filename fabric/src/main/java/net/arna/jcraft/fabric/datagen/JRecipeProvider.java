@@ -5,16 +5,15 @@ import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.minecraft.advancement.criterion.InventoryChangedCriterion;
-import net.minecraft.data.server.recipe.CookingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.tag.ItemTags;
-
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Consumer;
 
 public class JRecipeProvider extends FabricRecipeProvider {
@@ -24,349 +23,349 @@ public class JRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
+    public void buildRecipes(Consumer<FinishedRecipe> exporter) {
         // stellar iron ingot from smelting
-        CookingRecipeJsonBuilder.createSmelting(
-                        Ingredient.ofItems(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()),
+        SimpleCookingRecipeBuilder.smelting(
+                        Ingredient.of(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()),
                         RecipeCategory.MISC,
                         JItemRegistry.STELLAR_IRON_INGOT.get(),
                         2f,
                         200)
-                .criterion("has_ore", InventoryChangedCriterion.Conditions.items(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()))
-                .offerTo(exporter, JCraft.id("stellar_iron_ingot_from_smelting"));
+                .unlockedBy("has_ore", InventoryChangeTrigger.TriggerInstance.hasItems(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()))
+                .save(exporter, JCraft.id("stellar_iron_ingot_from_smelting"));
         // stellar iron ingot from blasting
-        CookingRecipeJsonBuilder.createBlasting(
-                        Ingredient.ofItems(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()),
+        SimpleCookingRecipeBuilder.blasting(
+                        Ingredient.of(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()),
                         RecipeCategory.MISC,
                         JItemRegistry.STELLAR_IRON_INGOT.get(),
                         2f,
                         100)
-                .criterion("has_ore", InventoryChangedCriterion.Conditions.items(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()))
-                .offerTo(exporter, JCraft.id("stellar_iron_ingot_from_blasting"));
+                .unlockedBy("has_ore", InventoryChangeTrigger.TriggerInstance.hasItems(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()))
+                .save(exporter, JCraft.id("stellar_iron_ingot_from_blasting"));
         // stellar iron ingot from block
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.STELLAR_IRON_INGOT.get(), 9)
-                .input(JBlockRegistry.STELLAR_IRON_BLOCK.get())
-                .criterion("has_block", InventoryChangedCriterion.Conditions.items(JBlockRegistry.STELLAR_IRON_BLOCK.get()))
-                .offerTo(exporter, JCraft.id("stellar_iron_ingot_from_block"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, JItemRegistry.STELLAR_IRON_INGOT.get(), 9)
+                .requires(JBlockRegistry.STELLAR_IRON_BLOCK.get())
+                .unlockedBy("has_block", InventoryChangeTrigger.TriggerInstance.hasItems(JBlockRegistry.STELLAR_IRON_BLOCK.get()))
+                .save(exporter, JCraft.id("stellar_iron_ingot_from_block"));
         // stellar iron block from ingot
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.STELLAR_IRON_BLOCK.get())
-                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
-                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
-                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
-                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
-                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
-                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
-                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
-                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
-                .input(JItemRegistry.STELLAR_IRON_INGOT.get())
-                .criterion("has_ingot", InventoryChangedCriterion.Conditions.items(JItemRegistry.STELLAR_IRON_INGOT.get()))
-                .offerTo(exporter);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.STELLAR_IRON_BLOCK.get())
+                .requires(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .requires(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .requires(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .requires(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .requires(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .requires(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .requires(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .requires(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .requires(JItemRegistry.STELLAR_IRON_INGOT.get())
+                .unlockedBy("has_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STELLAR_IRON_INGOT.get()))
+                .save(exporter);
         // stand arrowhead
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.STAND_ARROWHEAD.get(), 3)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.STAND_ARROWHEAD.get(), 3)
                 .pattern("NGI")
                 .pattern("GIG")
                 .pattern(" GN")
-                .input('G', Items.GOLD_INGOT)
-                .input('I', JItemRegistry.STELLAR_IRON_INGOT.get())
-                .input('N', Items.GOLD_NUGGET)
-                .criterion("has_ingot", InventoryChangedCriterion.Conditions.items(JItemRegistry.STELLAR_IRON_INGOT.get()))
-                .offerTo(exporter);
+                .define('G', Items.GOLD_INGOT)
+                .define('I', JItemRegistry.STELLAR_IRON_INGOT.get())
+                .define('N', Items.GOLD_NUGGET)
+                .unlockedBy("has_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STELLAR_IRON_INGOT.get()))
+                .save(exporter);
         // stand arrow
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.STAND_ARROW.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.STAND_ARROW.get())
                 .pattern("  A")
                 .pattern(" S ")
                 .pattern("F  ")
-                .input('A', JItemRegistry.STAND_ARROWHEAD.get())
-                .input('F', Items.FEATHER)
-                .input('S', Items.STICK)
-                .criterion("has_arrowhead", InventoryChangedCriterion.Conditions.items(JItemRegistry.STAND_ARROWHEAD.get()))
-                .offerTo(exporter);
+                .define('A', JItemRegistry.STAND_ARROWHEAD.get())
+                .define('F', Items.FEATHER)
+                .define('S', Items.STICK)
+                .unlockedBy("has_arrowhead", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_ARROWHEAD.get()))
+                .save(exporter);
         // stand disk
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.STAND_DISC.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.STAND_DISC.get())
                 .pattern("FFF")
                 .pattern("FAF")
                 .pattern("FFF")
-                .input('A', JItemRegistry.STAND_ARROW.get())
-                .input('F', Items.DISC_FRAGMENT_5)
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STAND_ARROW.get()))
-                .offerTo(exporter);
+                .define('A', JItemRegistry.STAND_ARROW.get())
+                .define('F', Items.DISC_FRAGMENT_5)
+                .unlockedBy("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_ARROW.get()))
+                .save(exporter);
         // sinner's soul
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.SINNERS_SOUL.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.SINNERS_SOUL.get())
                 .pattern("SSS")
                 .pattern("SFS")
                 .pattern("SSS")
-                .input('F', Items.FERMENTED_SPIDER_EYE)
-                .input('S', Items.SOUL_SAND)
-                .criterion("has_soul_sand", InventoryChangedCriterion.Conditions.items(Items.SOUL_SAND))
-                .offerTo(exporter);
+                .define('F', Items.FERMENTED_SPIDER_EYE)
+                .define('S', Items.SOUL_SAND)
+                .unlockedBy("has_soul_sand", InventoryChangeTrigger.TriggerInstance.hasItems(Items.SOUL_SAND))
+                .save(exporter);
         // sinner's soul from soul block
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.SINNERS_SOUL.get(), 9)
-                .input(JBlockRegistry.SOUL_BLOCK.get())
-                .criterion("has_soul_block", InventoryChangedCriterion.Conditions.items(JBlockRegistry.SOUL_BLOCK.get()))
-                .offerTo(exporter, JCraft.id("sinners_soul_from_soul_block"));
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, JItemRegistry.SINNERS_SOUL.get(), 9)
+                .requires(JBlockRegistry.SOUL_BLOCK.get())
+                .unlockedBy("has_soul_block", InventoryChangeTrigger.TriggerInstance.hasItems(JBlockRegistry.SOUL_BLOCK.get()))
+                .save(exporter, JCraft.id("sinners_soul_from_soul_block"));
         // living arrow
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.LIVING_ARROW.get())
-                .input(JItemRegistry.STAND_ARROW.get())
-                .input(JItemRegistry.SINNERS_SOUL.get())
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STAND_ARROW.get()))
-                .criterion("has_sinners_soul", InventoryChangedCriterion.Conditions.items(JItemRegistry.SINNERS_SOUL.get()))
-                .offerTo(exporter);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, JItemRegistry.LIVING_ARROW.get())
+                .requires(JItemRegistry.STAND_ARROW.get())
+                .requires(JItemRegistry.SINNERS_SOUL.get())
+                .unlockedBy("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_ARROW.get()))
+                .unlockedBy("has_sinners_soul", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.SINNERS_SOUL.get()))
+                .save(exporter);
         // soul block
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.SOUL_BLOCK.get())
-                .input(JItemRegistry.SINNERS_SOUL.get())
-                .input(JItemRegistry.SINNERS_SOUL.get())
-                .input(JItemRegistry.SINNERS_SOUL.get())
-                .input(JItemRegistry.SINNERS_SOUL.get())
-                .input(JItemRegistry.SINNERS_SOUL.get())
-                .input(JItemRegistry.SINNERS_SOUL.get())
-                .input(JItemRegistry.SINNERS_SOUL.get())
-                .input(JItemRegistry.SINNERS_SOUL.get())
-                .input(JItemRegistry.SINNERS_SOUL.get())
-                .criterion("has_sinners_soul", InventoryChangedCriterion.Conditions.items(JItemRegistry.SINNERS_SOUL.get()))
-                .offerTo(exporter);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.SOUL_BLOCK.get())
+                .requires(JItemRegistry.SINNERS_SOUL.get())
+                .requires(JItemRegistry.SINNERS_SOUL.get())
+                .requires(JItemRegistry.SINNERS_SOUL.get())
+                .requires(JItemRegistry.SINNERS_SOUL.get())
+                .requires(JItemRegistry.SINNERS_SOUL.get())
+                .requires(JItemRegistry.SINNERS_SOUL.get())
+                .requires(JItemRegistry.SINNERS_SOUL.get())
+                .requires(JItemRegistry.SINNERS_SOUL.get())
+                .requires(JItemRegistry.SINNERS_SOUL.get())
+                .unlockedBy("has_sinners_soul", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.SINNERS_SOUL.get()))
+                .save(exporter);
         // requiem ruby
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.REQUIEM_RUBY.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.REQUIEM_RUBY.get())
                 .pattern("RDR")
                 .pattern("ENE")
                 .pattern("RDR")
-                .input('D', Items.DIAMOND_BLOCK)
-                .input('E', Items.EMERALD_BLOCK)
-                .input('N', Items.NETHER_STAR)
-                .input('R', Items.REDSTONE_BLOCK)
-                .criterion("has_nether_star", InventoryChangedCriterion.Conditions.items(Items.NETHER_STAR))
-                .criterion("has_redstone_block", InventoryChangedCriterion.Conditions.items(Items.REDSTONE_BLOCK))
-                .offerTo(exporter);
+                .define('D', Items.DIAMOND_BLOCK)
+                .define('E', Items.EMERALD_BLOCK)
+                .define('N', Items.NETHER_STAR)
+                .define('R', Items.REDSTONE_BLOCK)
+                .unlockedBy("has_nether_star", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHER_STAR))
+                .unlockedBy("has_redstone_block", InventoryChangeTrigger.TriggerInstance.hasItems(Items.REDSTONE_BLOCK))
+                .save(exporter);
         // requiem arrow
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.REQUIEM_ARROW.get())
-                .input(JItemRegistry.STAND_ARROW.get())
-                .input(JItemRegistry.REQUIEM_RUBY.get())
-                .input(Items.TIPPED_ARROW)
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STAND_ARROW.get()))
-                .criterion("has_ruby", InventoryChangedCriterion.Conditions.items(JItemRegistry.REQUIEM_RUBY.get()))
-                .offerTo(exporter);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, JItemRegistry.REQUIEM_ARROW.get())
+                .requires(JItemRegistry.STAND_ARROW.get())
+                .requires(JItemRegistry.REQUIEM_RUBY.get())
+                .requires(Items.TIPPED_ARROW)
+                .unlockedBy("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_ARROW.get()))
+                .unlockedBy("has_ruby", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.REQUIEM_RUBY.get()))
+                .save(exporter);
         // coffin
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.COFFIN_BLOCK.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.COFFIN_BLOCK.get())
                 .pattern("SSS")
                 .pattern("SBS")
-                .input('B', ItemTags.BEDS)
-                .input('S', ItemTags.WOODEN_SLABS)
-                .criterion("has_black_bed", InventoryChangedCriterion.Conditions.items(Items.BLACK_BED))
-                .criterion("has_blue_bed", InventoryChangedCriterion.Conditions.items(Items.BLUE_BED))
-                .criterion("has_brown_bed", InventoryChangedCriterion.Conditions.items(Items.BROWN_BED))
-                .criterion("has_cyan_bed", InventoryChangedCriterion.Conditions.items(Items.CYAN_BED))
-                .criterion("has_gray_bed", InventoryChangedCriterion.Conditions.items(Items.GRAY_BED))
-                .criterion("has_green_bed", InventoryChangedCriterion.Conditions.items(Items.GREEN_BED))
-                .criterion("has_light_blue_bed", InventoryChangedCriterion.Conditions.items(Items.LIGHT_BLUE_BED))
-                .criterion("has_light_grey_bed", InventoryChangedCriterion.Conditions.items(Items.LIGHT_GRAY_BED))
-                .criterion("has_lime_bed", InventoryChangedCriterion.Conditions.items(Items.LIME_BED))
-                .criterion("has_magenta_bed", InventoryChangedCriterion.Conditions.items(Items.MAGENTA_BED))
-                .criterion("has_orange_bed", InventoryChangedCriterion.Conditions.items(Items.ORANGE_BED))
-                .criterion("has_pink_bed", InventoryChangedCriterion.Conditions.items(Items.PINK_BED))
-                .criterion("has_purple_bed", InventoryChangedCriterion.Conditions.items(Items.PURPLE_BED))
-                .criterion("has_red_bed", InventoryChangedCriterion.Conditions.items(Items.RED_BED))
-                .criterion("has_white_bed", InventoryChangedCriterion.Conditions.items(Items.WHITE_BED))
-                .criterion("has_yellow_bed", InventoryChangedCriterion.Conditions.items(Items.YELLOW_BED))
-                .offerTo(exporter);
+                .define('B', ItemTags.BEDS)
+                .define('S', ItemTags.WOODEN_SLABS)
+                .unlockedBy("has_black_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BLACK_BED))
+                .unlockedBy("has_blue_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BLUE_BED))
+                .unlockedBy("has_brown_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BROWN_BED))
+                .unlockedBy("has_cyan_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.CYAN_BED))
+                .unlockedBy("has_gray_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.GRAY_BED))
+                .unlockedBy("has_green_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.GREEN_BED))
+                .unlockedBy("has_light_blue_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LIGHT_BLUE_BED))
+                .unlockedBy("has_light_grey_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LIGHT_GRAY_BED))
+                .unlockedBy("has_lime_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LIME_BED))
+                .unlockedBy("has_magenta_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.MAGENTA_BED))
+                .unlockedBy("has_orange_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.ORANGE_BED))
+                .unlockedBy("has_pink_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.PINK_BED))
+                .unlockedBy("has_purple_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.PURPLE_BED))
+                .unlockedBy("has_red_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.RED_BED))
+                .unlockedBy("has_white_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.WHITE_BED))
+                .unlockedBy("has_yellow_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.YELLOW_BED))
+                .save(exporter);
         // Kars' headwrap
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.KARS_HEADWRAP.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KARS_HEADWRAP.get())
                 .pattern(" C ")
                 .pattern("L L")
                 .pattern(" B ")
-                .input('B', Items.BLACK_DYE)
-                .input('C', Items.LEATHER_HELMET)
-                .input('L', Items.LEATHER)
-                .criterion("has_leather_helmet", InventoryChangedCriterion.Conditions.items(Items.LEATHER_HELMET))
-                .offerTo(exporter);
+                .define('B', Items.BLACK_DYE)
+                .define('C', Items.LEATHER_HELMET)
+                .define('L', Items.LEATHER)
+                .unlockedBy("has_leather_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER_HELMET))
+                .save(exporter);
         // red hat
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.RED_HAT.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.RED_HAT.get())
                 .pattern(" R ")
                 .pattern("LCL")
-                .input('C', Items.LEATHER_HELMET)
-                .input('L', Items.LEATHER)
-                .input('R', Items.RED_DYE)
-                .criterion("has_leather_helmet", InventoryChangedCriterion.Conditions.items(Items.LEATHER_HELMET))
-                .offerTo(exporter);
+                .define('C', Items.LEATHER_HELMET)
+                .define('L', Items.LEATHER)
+                .define('R', Items.RED_DYE)
+                .unlockedBy("has_leather_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER_HELMET))
+                .save(exporter);
         // blood bottle
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.BLOOD_BOTTLE.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.BLOOD_BOTTLE.get())
                 .pattern(" B ")
                 .pattern(" G ")
                 .pattern("GGG")
-                .input('B', ItemTags.BUTTONS)
-                .input('G', Items.GLASS)
-                .criterion("has_glass", InventoryChangedCriterion.Conditions.items(Items.GLASS))
-                .offerTo(exporter);
+                .define('B', ItemTags.BUTTONS)
+                .define('G', Items.GLASS)
+                .unlockedBy("has_glass", InventoryChangeTrigger.TriggerInstance.hasItems(Items.GLASS))
+                .save(exporter);
         // Jotaro's cap
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.JOTARO_CAP.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.JOTARO_CAP.get())
                 .pattern("BYB")
                 .pattern("BHB")
-                .input('B', Items.BLACK_DYE)
-                .input('H', Items.NETHERITE_HELMET)
-                .input('Y', Items.YELLOW_DYE)
-                .criterion("has_netherite_helmet", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_HELMET))
-                .offerTo(exporter);
+                .define('B', Items.BLACK_DYE)
+                .define('H', Items.NETHERITE_HELMET)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
         // Jotaro's jacket
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.JOTARO_JACKET.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.JOTARO_JACKET.get())
                 .pattern("B B")
                 .pattern("BCB")
                 .pattern("BBB")
-                .input('B', Items.BLACK_DYE)
-                .input('C', Items.NETHERITE_CHESTPLATE)
-                .criterion("has_netherite_chestplate", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_CHESTPLATE))
-                .offerTo(exporter);
+                .define('B', Items.BLACK_DYE)
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
         // Jotaro's pants
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.JOTARO_PANTS.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.JOTARO_PANTS.get())
                 .pattern("YYY")
                 .pattern("BLB")
                 .pattern("B B")
-                .input('B', Items.BLACK_DYE)
-                .input('L', Items.NETHERITE_LEGGINGS)
-                .input('Y', Items.YELLOW_DYE)
-                .criterion("has_netherite_leggings", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_LEGGINGS))
-                .offerTo(exporter);
+                .define('B', Items.BLACK_DYE)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
         // Jotaro's boots
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.JOTARO_BOOTS.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.JOTARO_BOOTS.get())
                 .pattern("BNB")
                 .pattern("B B")
-                .input('B', Items.BLACK_DYE)
-                .input('N', Items.NETHERITE_BOOTS)
-                .criterion("has_netherite_boots", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_BOOTS))
-                .offerTo(exporter);
+                .define('B', Items.BLACK_DYE)
+                .define('N', Items.NETHERITE_BOOTS)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
         // Dio's headband
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.DIO_HEADBAND.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIO_HEADBAND.get())
                 .pattern("GHG")
-                .input('G', Items.GREEN_DYE)
-                .input('H', Items.NETHERITE_HELMET)
-                .criterion("has_netherite_helmet", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_HELMET))
-                .offerTo(exporter);
+                .define('G', Items.GREEN_DYE)
+                .define('H', Items.NETHERITE_HELMET)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
         // Dio's jacket
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.DIO_JACKET.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIO_JACKET.get())
                 .pattern("Y Y")
                 .pattern("YCY")
                 .pattern("YBY")
-                .input('B', Items.BLACK_DYE)
-                .input('C', Items.NETHERITE_CHESTPLATE)
-                .input('Y', Items.YELLOW_DYE)
-                .criterion("has_netherite_chestplate", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_CHESTPLATE))
-                .offerTo(exporter);
+                .define('B', Items.BLACK_DYE)
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
         // Dio's cape
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.DIO_CAPE.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIO_CAPE.get())
                 .pattern("RLR")
                 .pattern("LCL")
                 .pattern("LLL")
-                .input('C', Items.NETHERITE_CHESTPLATE)
-                .input('L', Items.LEATHER)
-                .input('R', Items.RED_DYE)
-                .criterion("has_netherite_chestplate", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_CHESTPLATE))
-                .offerTo(exporter);
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('L', Items.LEATHER)
+                .define('R', Items.RED_DYE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
         // Dio's pants
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.DIO_PANTS.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIO_PANTS.get())
                 .pattern("GGG")
                 .pattern("YLY")
                 .pattern("Y Y")
-                .input('G', Items.GREEN_DYE)
-                .input('L', Items.NETHERITE_LEGGINGS)
-                .input('Y', Items.YELLOW_DYE)
-                .criterion("has_netherite_leggings", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_LEGGINGS))
-                .offerTo(exporter);
+                .define('G', Items.GREEN_DYE)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
         // Dio's boots
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.DIO_BOOTS.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIO_BOOTS.get())
                 .pattern("YBY")
                 .pattern("Y Y")
-                .input('B', Items.NETHERITE_BOOTS)
-                .input('Y', Items.YELLOW_DYE)
-                .criterion("has_netherite_boots", InventoryChangedCriterion.Conditions.items(Items.NETHERITE_BOOTS))
-                .offerTo(exporter);
+                .define('B', Items.NETHERITE_BOOTS)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
         // Dio's diary
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.DIOS_DIARY.get())
-                .input(Items.WAXED_OXIDIZED_COPPER)
-                .input(Items.GOLD_BLOCK)
-                .input(Items.NETHERITE_BLOCK)
-                .input(Items.EXPERIENCE_BOTTLE)
-                .input(Items.NETHER_STAR)
-                .input(Items.ELYTRA)
-                .input(Items.LINGERING_POTION)
-                .input(Items.WRITABLE_BOOK)
-                .input(Items.EMERALD_BLOCK)
-                .criterion("has_nether_star", InventoryChangedCriterion.Conditions.items(Items.NETHER_STAR))
-                .criterion("has_book", InventoryChangedCriterion.Conditions.items(Items.WRITABLE_BOOK))
-                .offerTo(exporter);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, JItemRegistry.DIOS_DIARY.get())
+                .requires(Items.WAXED_OXIDIZED_COPPER)
+                .requires(Items.GOLD_BLOCK)
+                .requires(Items.NETHERITE_BLOCK)
+                .requires(Items.EXPERIENCE_BOTTLE)
+                .requires(Items.NETHER_STAR)
+                .requires(Items.ELYTRA)
+                .requires(Items.LINGERING_POTION)
+                .requires(Items.WRITABLE_BOOK)
+                .requires(Items.EMERALD_BLOCK)
+                .unlockedBy("has_nether_star", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHER_STAR))
+                .unlockedBy("has_book", InventoryChangeTrigger.TriggerInstance.hasItems(Items.WRITABLE_BOOK))
+                .save(exporter);
         // hot sand
-        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.HOT_SAND_BLOCK.get(), 8)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.HOT_SAND_BLOCK.get(), 8)
                 .pattern("SSS")
                 .pattern("SMS")
                 .pattern("SSS")
-                .input('M', Items.MAGMA_BLOCK)
-                .input('S', Items.SAND)
-                .criterion("has_sand", InventoryChangedCriterion.Conditions.items(Items.SAND))
-                .criterion("has_magma_block", InventoryChangedCriterion.Conditions.items(Items.MAGMA_BLOCK))
-                .offerTo(exporter);
+                .define('M', Items.MAGMA_BLOCK)
+                .define('S', Items.SAND)
+                .unlockedBy("has_sand", InventoryChangeTrigger.TriggerInstance.hasItems(Items.SAND))
+                .unlockedBy("has_magma_block", InventoryChangeTrigger.TriggerInstance.hasItems(Items.MAGMA_BLOCK))
+                .save(exporter);
         // Anubis sheathed
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.ANUBIS_SHEATHED.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.ANUBIS_SHEATHED.get())
                 .pattern("LSI")
                 .pattern("SDS")
                 .pattern("GSL")
-                .input('D', Items.DIAMOND)
-                .input('G', Items.GOLD_BLOCK)
-                .input('L', Items.LEATHER)
-                .input('I', Items.IRON_BLOCK)
-                .input('S', JBlockRegistry.SOUL_BLOCK.get())
-                .criterion("has_diamond", InventoryChangedCriterion.Conditions.items(Items.DIAMOND))
-                .criterion("has_soul_block", InventoryChangedCriterion.Conditions.items(JBlockRegistry.SOUL_BLOCK.get()))
-                .offerTo(exporter);
+                .define('D', Items.DIAMOND)
+                .define('G', Items.GOLD_BLOCK)
+                .define('L', Items.LEATHER)
+                .define('I', Items.IRON_BLOCK)
+                .define('S', JBlockRegistry.SOUL_BLOCK.get())
+                .unlockedBy("has_diamond", InventoryChangeTrigger.TriggerInstance.hasItems(Items.DIAMOND))
+                .unlockedBy("has_soul_block", InventoryChangeTrigger.TriggerInstance.hasItems(JBlockRegistry.SOUL_BLOCK.get()))
+                .save(exporter);
         // boxing gloves
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.BOXING_GLOVES.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.BOXING_GLOVES.get())
                 .pattern("LLR")
                 .pattern("SLL")
                 .pattern(" SL")
-                .input('L', Items.LEATHER)
-                .input('R', Items.RED_DYE)
-                .input('S', Items.STRING)
-                .criterion("has_leather", InventoryChangedCriterion.Conditions.items(Items.LEATHER))
-                .offerTo(exporter);
+                .define('L', Items.LEATHER)
+                .define('R', Items.RED_DYE)
+                .define('S', Items.STRING)
+                .unlockedBy("has_leather", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER))
+                .save(exporter);
         // coin to nuggets
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, Items.GOLD_NUGGET, 2)
-                .input(JItemRegistry.KQ_COIN.get())
-                .criterion("has_coin", InventoryChangedCriterion.Conditions.items(JItemRegistry.KQ_COIN.get()))
-                .offerTo(exporter);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.GOLD_NUGGET, 2)
+                .requires(JItemRegistry.KQ_COIN.get())
+                .unlockedBy("has_coin", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KQ_COIN.get()))
+                .save(exporter);
         // nuggets to coin
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.KQ_COIN.get())
-                .input(Items.GOLD_NUGGET)
-                .input(Items.GOLD_NUGGET)
-                .criterion("has_nugget", InventoryChangedCriterion.Conditions.items(Items.GOLD_NUGGET))
-                .offerTo(exporter);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, JItemRegistry.KQ_COIN.get())
+                .requires(Items.GOLD_NUGGET)
+                .requires(Items.GOLD_NUGGET)
+                .unlockedBy("has_nugget", InventoryChangeTrigger.TriggerInstance.hasItems(Items.GOLD_NUGGET))
+                .save(exporter);
         // green baby
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, JItemRegistry.GREEN_BABY.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.GREEN_BABY.get())
                 .pattern("GBG")
                 .pattern("SMS")
                 .pattern("GBG")
-                .input('B', Items.BONE_BLOCK)
-                .input('G', Items.GREEN_DYE)
-                .input('M', Items.TOTEM_OF_UNDYING)
-                .input('S', JBlockRegistry.SOUL_BLOCK.get())
-                .criterion("has_totem", InventoryChangedCriterion.Conditions.items(Items.TOTEM_OF_UNDYING))
-                .offerTo(exporter);
+                .define('B', Items.BONE_BLOCK)
+                .define('G', Items.GREEN_DYE)
+                .define('M', Items.TOTEM_OF_UNDYING)
+                .define('S', JBlockRegistry.SOUL_BLOCK.get())
+                .unlockedBy("has_totem", InventoryChangeTrigger.TriggerInstance.hasItems(Items.TOTEM_OF_UNDYING))
+                .save(exporter);
         // knife
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.KNIFE.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KNIFE.get())
                 .pattern("  N")
                 .pattern(" I ")
                 .pattern("S  ")
-                .input('I', Items.IRON_INGOT)
-                .input('N', Items.IRON_NUGGET)
-                .input('S', Items.STICK)
-                .criterion("has_ingot", InventoryChangedCriterion.Conditions.items(Items.IRON_INGOT))
-                .offerTo(exporter);
+                .define('I', Items.IRON_INGOT)
+                .define('N', Items.IRON_NUGGET)
+                .define('S', Items.STICK)
+                .unlockedBy("has_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Items.IRON_INGOT))
+                .save(exporter);
         // knife bundle
-        ShapelessRecipeJsonBuilder.create(RecipeCategory.COMBAT, JItemRegistry.KNIFEBUNDLE.get())
-                .input(JItemRegistry.KNIFE.get())
-                .input(JItemRegistry.KNIFE.get())
-                .input(JItemRegistry.KNIFE.get())
-                .input(JItemRegistry.KNIFE.get())
-                .input(JItemRegistry.KNIFE.get())
-                .input(JItemRegistry.KNIFE.get())
-                .input(JItemRegistry.KNIFE.get())
-                .input(JItemRegistry.KNIFE.get())
-                .input(JItemRegistry.KNIFE.get())
-                .criterion("has_knife", InventoryChangedCriterion.Conditions.items(JItemRegistry.KNIFE.get()))
-                .offerTo(exporter);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, JItemRegistry.KNIFEBUNDLE.get())
+                .requires(JItemRegistry.KNIFE.get())
+                .requires(JItemRegistry.KNIFE.get())
+                .requires(JItemRegistry.KNIFE.get())
+                .requires(JItemRegistry.KNIFE.get())
+                .requires(JItemRegistry.KNIFE.get())
+                .requires(JItemRegistry.KNIFE.get())
+                .requires(JItemRegistry.KNIFE.get())
+                .requires(JItemRegistry.KNIFE.get())
+                .requires(JItemRegistry.KNIFE.get())
+                .unlockedBy("has_knife", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KNIFE.get()))
+                .save(exporter);
     }
 }

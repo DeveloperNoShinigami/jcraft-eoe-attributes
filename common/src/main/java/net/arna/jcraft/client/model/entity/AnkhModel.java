@@ -1,24 +1,25 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.resources.ResourceLocation;
+
 
 public class AnkhModel extends GeoModel<AnkhProjectile> {
     @Override
-    public Identifier getModelResource(AnkhProjectile object) {
+    public ResourceLocation getModelResource(AnkhProjectile object) {
 
         return JCraft.id("geo/ankh.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(AnkhProjectile object) {
+    public ResourceLocation getTextureResource(AnkhProjectile object) {
         return JCraft.id("textures/entity/projectiles/ankh.png");
     }
 
     @Override
-    public Identifier getAnimationResource(AnkhProjectile animatable) {
+    public ResourceLocation getAnimationResource(AnkhProjectile animatable) {
         return JCraft.id("animations/knife.animation.json");
     }
 

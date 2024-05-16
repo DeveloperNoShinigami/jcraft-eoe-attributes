@@ -8,11 +8,10 @@ import net.arna.jcraft.common.component.living.*;
 import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
-
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import java.util.Optional;
 
 /**
@@ -29,12 +28,12 @@ public class JComponentPlatformUtils {
     }
 
     @ExpectPlatform
-    public static CommonSpecComponent getSpecData(PlayerEntity player) {
+    public static CommonSpecComponent getSpecData(Player player) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static CommonPhComponent getPhData(PlayerEntity player) {
+    public static CommonPhComponent getPhData(Player player) {
         throw new AssertionError();
     }
 
@@ -79,7 +78,7 @@ public class JComponentPlatformUtils {
     }
 
     @ExpectPlatform
-    public static CommonShockwaveHandlerComponent getShockwaveHandler(World world) {
+    public static CommonShockwaveHandlerComponent getShockwaveHandler(Level world) {
         throw new AssertionError();
     }
 

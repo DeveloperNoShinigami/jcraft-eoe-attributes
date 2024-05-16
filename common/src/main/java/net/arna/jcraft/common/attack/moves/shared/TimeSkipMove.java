@@ -10,13 +10,12 @@ import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.MobilityType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.Set;
 
@@ -52,20 +51,20 @@ public class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends AbstractM
     }
 
     public static void doTimeSkip(IAttacker<?, ?> attacker, LivingEntity user, double distance, List<SoundEvent> sounds) {
-        boolean hasVehicle = user.hasVehicle();
+        boolean hasVehicle = user.isPassenger();
 
         if (hasVehicle) {
             distance /= 3;
         }
 
-        Vec3d eyePos = user.getEyePos();
-        HitResult hitResult = attacker.getEntityWorld().raycast(
-                new RaycastContext(
+        Vec3 eyePos = user.getEyePosition();
+        HitResult hitResult = attacker.getEntityWorld().clip(
+                new ClipContext(
                         eyePos,
-                        eyePos.add(user.getRotationVector().multiply(distance)),
-                        RaycastContext.ShapeType.COLLIDER,
-                        RaycastContext.FluidHandling.NONE, user));
-        Vec3d tpPos = hitResult.getPos();
+                        eyePos.add(user.getLookAngle().scale(distance)),
+                        ClipContext.Block.COLLIDER,
+                        ClipContext.Fluid.NONE, user));
+        Vec3 tpPos = hitResult.getLocation();
 
         // 3s minimum ult cooldown
         CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
@@ -74,13 +73,13 @@ public class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends AbstractM
         }
 
         if (hasVehicle) {
-            user.getRootVehicle().setPosition(tpPos.x, tpPos.y, tpPos.z);
+            user.getRootVehicle().setPos(tpPos.x, tpPos.y, tpPos.z);
         } else {
-            user.teleport(tpPos.x, tpPos.y, tpPos.z);
+            user.teleportToWithTicket(tpPos.x, tpPos.y, tpPos.z);
         }
 
         for (SoundEvent sound : sounds) {
-            attacker.getEntityWorld().playSound(null, tpPos.x, tpPos.y, tpPos.z, sound, SoundCategory.PLAYERS, 1f, 1f);
+            attacker.getEntityWorld().playSound(null, tpPos.x, tpPos.y, tpPos.z, sound, SoundSource.PLAYERS, 1f, 1f);
         }
     }
 

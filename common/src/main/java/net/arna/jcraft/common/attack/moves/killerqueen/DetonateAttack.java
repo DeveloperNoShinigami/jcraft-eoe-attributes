@@ -15,14 +15,13 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class DetonateAttack extends AbstractMove<DetonateAttack, AbstractKillerQueenEntity<?, ?>> {
@@ -35,7 +34,7 @@ public class DetonateAttack extends AbstractMove<DetonateAttack, AbstractKillerQ
         CommonBombTrackerComponent.BombData bombData = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
 
         Entity bombEntity = bombData.bombEntity;
-        Vec3d bombPos = bombData.getBombPos();
+        Vec3 bombPos = bombData.getBombPos();
 
         if (bombPos != null) {
             if (bombEntity instanceof ItemEntity || bombEntity instanceof BubbleProjectile) {
@@ -59,8 +58,8 @@ public class DetonateAttack extends AbstractMove<DetonateAttack, AbstractKillerQ
         return copyExtras(new DetonateAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
     }
 
-    public static void explode(AbstractKillerQueenEntity<?, ?> stand, Entity user, Vec3d pos) {
-        ServerWorld serverWorld = (ServerWorld) stand.getWorld();
+    public static void explode(AbstractKillerQueenEntity<?, ?> stand, Entity user, Vec3 pos) {
+        ServerLevel serverWorld = (ServerLevel) stand.level();
 
         JCraft.createParticle(serverWorld, pos.x, pos.y, pos.z, JParticleType.BOOM);
         JUtils.serverPlaySound(JSoundRegistry.KQ_EXPLODE.get(), serverWorld, pos, 96);
@@ -69,9 +68,9 @@ public class DetonateAttack extends AbstractMove<DetonateAttack, AbstractKillerQ
         Set<? extends LivingEntity> toExplode = AbstractSimpleAttack.findHits(stand, pos, 4.4, damageSource);
 
         for (LivingEntity living : toExplode) {
-            Vec3d kbVec = living.getEyePos().subtract(pos).normalize();
-            StandEntity.damageLogic(stand.getWorld(), living, kbVec, 2, 3, true, 11f, false, 4, damageSource, user, null);
-            living.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0, true, false));
+            Vec3 kbVec = living.getEyePosition().subtract(pos).normalize();
+            StandEntity.damageLogic(stand.level(), living, kbVec, 2, 3, true, 11f, false, 4, damageSource, user, null);
+            living.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0, true, false));
         }
     }
 }

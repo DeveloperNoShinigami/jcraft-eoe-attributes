@@ -7,8 +7,7 @@ import lombok.SneakyThrows;
 import lombok.Synchronized;
 import net.arna.jcraft.JCraft;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.WorldSavePath;
-
+import net.minecraft.world.level.storage.LevelResource;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -70,7 +69,7 @@ public class JServerConfig {
 
     @SneakyThrows
     public static void load(MinecraftServer server) {
-        Path path = server.getSavePath(WorldSavePath.ROOT).resolve("jcraft.json");
+        Path path = server.getWorldPath(LevelResource.ROOT).resolve("jcraft.json");
         if (!Files.exists(path)) {
             save(server);
             return;
@@ -92,7 +91,7 @@ public class JServerConfig {
     @Synchronized
     @SneakyThrows
     public static void save(MinecraftServer server) {
-        Path path = server.getSavePath(WorldSavePath.ROOT).resolve("jcraft.json");
+        Path path = server.getWorldPath(LevelResource.ROOT).resolve("jcraft.json");
 
         JsonObject data = new JsonObject();
         ConfigOption.getImmutableOptions().forEach((key, option) -> data.add(key, option.write()));

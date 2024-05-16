@@ -3,8 +3,7 @@ package net.arna.jcraft.common.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import lombok.Getter;
-import net.minecraft.network.PacketByteBuf;
-
+import net.minecraft.network.FriendlyByteBuf;
 import java.util.Arrays;
 
 @Getter
@@ -28,12 +27,12 @@ public class EnumOption<E extends Enum<?>> extends ConfigOption {
     }
 
     @Override
-    public void write(PacketByteBuf buf) {
+    public void write(FriendlyByteBuf buf) {
         buf.writeVarInt(value.ordinal());
     }
 
     @Override
-    public void read(PacketByteBuf buf) {
+    public void read(FriendlyByteBuf buf) {
         setValue(buf.readVarInt());
     }
 

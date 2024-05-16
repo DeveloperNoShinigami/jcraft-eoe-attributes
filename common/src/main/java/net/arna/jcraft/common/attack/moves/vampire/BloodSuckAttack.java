@@ -7,11 +7,10 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractSpecGrabAttack;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.SpecAnimationState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class BloodSuckAttack<A extends JSpec<A, S>, S extends Enum<S> & SpecAnimationState<A>> extends AbstractSpecGrabAttack<BloodSuckAttack<A, S>, A, S> {
@@ -33,7 +32,7 @@ public class BloodSuckAttack<A extends JSpec<A, S>, S extends Enum<S> & SpecAnim
     }
 
     @Override
-    public void performHook(A attacker, Set<LivingEntity> targets, Set<Box> boxes, DamageSource damageSource, Vec3d forwardPos, Vec3d rotationVector, MoveContext ctx) {
+    public void performHook(A attacker, Set<LivingEntity> targets, Set<AABB> boxes, DamageSource damageSource, Vec3 forwardPos, Vec3 rotationVector, MoveContext ctx) {
         super.performHook(attacker, targets, boxes, damageSource, forwardPos, rotationVector, ctx);
         if (!targets.isEmpty()) {
             ctx.set(TARGET, targets.stream().findFirst().get());

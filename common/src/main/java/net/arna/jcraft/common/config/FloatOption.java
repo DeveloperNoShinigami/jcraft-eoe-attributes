@@ -3,7 +3,7 @@ package net.arna.jcraft.common.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import lombok.Getter;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class FloatOption extends ConfigOption {
     @Getter
@@ -42,12 +42,12 @@ public class FloatOption extends ConfigOption {
     }
 
     @Override
-    public void write(PacketByteBuf buf) {
+    public void write(FriendlyByteBuf buf) {
         buf.writeFloat(value);
     }
 
     @Override
-    public void read(PacketByteBuf buf) {
+    public void read(FriendlyByteBuf buf) {
         value = buf.readFloat();
     }
 

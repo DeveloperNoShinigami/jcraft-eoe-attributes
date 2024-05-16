@@ -11,14 +11,14 @@ import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 public class NullificationAttack extends AbstractCounterAttack<NullificationAttack, GEREntity> {
     private static final int counterStopTime = 20; // Convenience
@@ -42,12 +42,12 @@ public class NullificationAttack extends AbstractCounterAttack<NullificationAtta
             return;
         }
 
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeShort(14);
         buf.writeInt(countered.getId());
         buf.writeInt(counterStopTime);
-        for (PlayerEntity sendPlayer : attacker.getWorld().getPlayers()) {
-            if (sendPlayer instanceof ServerPlayerEntity serverPlayerEntity) {
+        for (Player sendPlayer : attacker.level().players()) {
+            if (sendPlayer instanceof ServerPlayer serverPlayerEntity) {
                 ServerChannelFeedbackPacket.send(serverPlayerEntity, buf);
             }
         }
@@ -58,8 +58,8 @@ public class NullificationAttack extends AbstractCounterAttack<NullificationAtta
             JUtils.cancelMoves(living);
         }
 
-        Vec3d eP = attacker.getEyePos();
-        JCraft.createParticle((ServerWorld) attacker.getWorld(), eP.x, eP.y, eP.z, JParticleType.FLASH);
+        Vec3 eP = attacker.getEyePosition();
+        JCraft.createParticle((ServerLevel) attacker.level(), eP.x, eP.y, eP.z, JParticleType.FLASH);
     }
 
     @Override

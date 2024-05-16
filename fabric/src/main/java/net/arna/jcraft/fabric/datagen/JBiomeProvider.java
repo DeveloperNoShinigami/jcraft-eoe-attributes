@@ -2,36 +2,36 @@ package net.arna.jcraft.fabric.datagen;
 
 import net.arna.jcraft.registry.JBiomeRegistry;
 import net.arna.jcraft.registry.JPlacedFeatureRegistry;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeEffects;
-import net.minecraft.world.biome.GenerationSettings;
-import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.biome.BiomeSpecialEffects;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.GenerationStep;
 
 // see https://minecraft.fandom.com/wiki/Custom_biome
 public class JBiomeProvider {
 
-    public static void bootstrap(Registerable<Biome> context) {
+    public static void bootstrap(BootstapContext<Biome> context) {
         context.register(JBiomeRegistry.DEVILS_PALM, devilsPalm(context));
     }
 
-    private static Biome devilsPalm(Registerable<Biome> context) {
-        SpawnSettings.Builder spawnBuilder = new SpawnSettings.Builder();
+    private static Biome devilsPalm(BootstapContext<Biome> context) {
+        MobSpawnSettings.Builder spawnBuilder = new MobSpawnSettings.Builder();
 
-        GenerationSettings.LookupBackedBuilder generationBuilder =
-                new GenerationSettings.LookupBackedBuilder(context.getRegistryLookup(RegistryKeys.PLACED_FEATURE),
-                        context.getRegistryLookup(RegistryKeys.CONFIGURED_CARVER));
-        generationBuilder.feature(GenerationStep.Feature.UNDERGROUND_ORES, JPlacedFeatureRegistry.SAND_DISK);
+        BiomeGenerationSettings.Builder generationBuilder =
+                new BiomeGenerationSettings.Builder(context.lookup(Registries.PLACED_FEATURE),
+                        context.lookup(Registries.CONFIGURED_CARVER));
+        generationBuilder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, JPlacedFeatureRegistry.SAND_DISK);
 
-        return new Biome.Builder()
-                .precipitation(false)
+        return new Biome.BiomeBuilder()
+                .hasPrecipitation(false)
                 .downfall(0f)
                 .temperature(3f)
                 .generationSettings(generationBuilder.build())
-                .spawnSettings(spawnBuilder.build())
-                .effects((new BiomeEffects.Builder())
+                .mobSpawnSettings(spawnBuilder.build())
+                .specialEffects((new BiomeSpecialEffects.Builder())
                         .waterColor(10203353)
                         .waterFogColor(6645121)
                         .skyColor(14987035)

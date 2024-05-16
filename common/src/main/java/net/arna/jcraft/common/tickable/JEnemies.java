@@ -4,13 +4,14 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.CombatEntry;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
 import java.util.*;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.standUserAI;
@@ -19,15 +20,15 @@ import static net.arna.jcraft.common.entity.stand.StandEntity.standUserAI;
  * Stores and updates all MobEntities that use Stands.
  */
 public class JEnemies {
-    private static final HashMap<MobEntity, RegistryKey<World>> enemies = new HashMap<>();
+    private static final HashMap<Mob, ResourceKey<Level>> enemies = new HashMap<>();
     /**
      * A queue designed to prevent any ConcurrentModificationException.
      * Stores to-be JEnemies temporarily if they were attempted to be registered while {@link JEnemies#ticking} is true.
      */
-    private static final Queue<MobEntity> queuedEnemies = new LinkedList<>();
+    private static final Queue<Mob> queuedEnemies = new LinkedList<>();
     private static boolean ticking = false;
 
-    public static void add(MobEntity entity) {
+    public static void add(Mob entity) {
         if (enemies.containsKey(entity)) {
             return;
         }
@@ -35,11 +36,11 @@ public class JEnemies {
         if (ticking) {
             queuedEnemies.add(entity);
         } else {
-            add(entity, entity.getWorld().getRegistryKey());
+            add(entity, entity.level().dimension());
         }
     }
 
-    public static void add(MobEntity entity, RegistryKey<World> registryKey) {
+    public static void add(Mob entity, ResourceKey<Level> registryKey) {
         enemies.put(entity, registryKey);
     }
 
@@ -47,24 +48,24 @@ public class JEnemies {
         ticking = true;
 
         while (!queuedEnemies.isEmpty()) {
-            MobEntity queued = queuedEnemies.peek();
-            add(queued, queued.getWorld().getRegistryKey());
+            Mob queued = queuedEnemies.peek();
+            add(queued, queued.level().dimension());
             queuedEnemies.remove();
         }
 
-        Iterator<Map.Entry<MobEntity, RegistryKey<World>>> iter = enemies.entrySet().iterator();
+        Iterator<Map.Entry<Mob, ResourceKey<Level>>> iter = enemies.entrySet().iterator();
         while (iter.hasNext()) {
-            Map.Entry<MobEntity, RegistryKey<World>> enemyData = iter.next();
-            MobEntity enemy = enemyData.getKey();
+            Map.Entry<Mob, ResourceKey<Level>> enemyData = iter.next();
+            Mob enemy = enemyData.getKey();
 
             if (!enemy.isAlive()) {
                 iter.remove();
                 continue;
             }
 
-            ServerWorld world = server.getWorld(enemyData.getValue());
+            ServerLevel world = server.getLevel(enemyData.getValue());
 
-            if (enemy.isAiDisabled()) {
+            if (enemy.isNoAi()) {
                 continue;
             }
             CommonStandComponent standComponent = JComponentPlatformUtils.getStandData(enemy);
@@ -79,22 +80,22 @@ public class JEnemies {
                     } else {
                         // Targeting priority: top to bottom
                         LinkedList<LivingEntity> targets = new LinkedList<>();
-                        targets.add(enemy.getPrimeAdversary());
-                        var damageRec = enemy.getDamageTracker().getBiggestFall();
+                        targets.add(enemy.getKillCredit());
+                        var damageRec = enemy.getCombatTracker().getMostSignificantFall();
                         if (damageRec != null) {
-                            var targetEntity = damageRec.damageSource().getAttacker();
+                            var targetEntity = damageRec.source().getEntity();
                             if (targetEntity instanceof LivingEntity living) {
                                 targets.add(living);
                             }
                         }
 
-                        targets.add(enemy.getAttacker());
+                        targets.add(enemy.getLastHurtByMob());
                         // Shouldn't use canTarget because that applies a PlayerEntity only filter.
                         targets.stream()
                                 .filter(potentialTarget -> potentialTarget != null &&
                                         potentialTarget.isAlive() &&
-                                        enemy.canSee(potentialTarget) &&
-                                        potentialTarget.canTakeDamage())
+                                        enemy.hasLineOfSight(potentialTarget) &&
+                                        potentialTarget.canBeSeenAsEnemy())
                                 .findFirst()
                                 .ifPresent(
                                         selectedTarget -> {

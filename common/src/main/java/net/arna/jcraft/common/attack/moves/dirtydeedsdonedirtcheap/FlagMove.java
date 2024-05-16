@@ -6,10 +6,9 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.util.MobilityType;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class FlagMove extends AbstractMove<FlagMove, D4CEntity> {
@@ -22,17 +21,17 @@ public class FlagMove extends AbstractMove<FlagMove, D4CEntity> {
     public void onInitiate(D4CEntity attacker) {
         super.onInitiate(attacker);
 
-        attacker.getUserOrThrow().addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), getDuration(),
+        attacker.getUserOrThrow().addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), getDuration(),
                 0, true, false));
-        attacker.getUserOrThrow().addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, getDuration(),
+        attacker.getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, getDuration(),
                 0, true, false));
     }
 
     @Override
     public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
         int duration = getWindupPoint();
-        user.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, duration, 0, true, false));
-        user.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, duration, 2, true, false));
+        user.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, duration, 0, true, false));
+        user.addEffect(new MobEffectInstance(MobEffects.LEVITATION, duration, 2, true, false));
 
         return Set.of();
     }

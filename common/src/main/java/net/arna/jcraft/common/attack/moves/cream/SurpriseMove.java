@@ -6,8 +6,8 @@ import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.Set;
@@ -27,7 +27,7 @@ public class SurpriseMove extends AbstractMove<SurpriseMove, CreamEntity> {
         // OUT_POS are set in .withInitAction() in CreamEntity.java
 
         attacker.setFree(true);
-        attacker.setFreePos(attacker.getUserOrThrow().getPos().toVector3f());
+        attacker.setFreePos(attacker.getUserOrThrow().position().toVector3f());
     }
 
     @Override
@@ -38,7 +38,7 @@ public class SurpriseMove extends AbstractMove<SurpriseMove, CreamEntity> {
 
         ctx.get(OUT_POS).sub(ctx.get(OUT_DIR));
         var outPos = ctx.get(OUT_POS);
-        attacker.setPosition(new Vec3d(outPos.x(), outPos.y(), outPos.z()));
+        attacker.setPos(new Vec3(outPos.x(), outPos.y(), outPos.z()));
         attacker.setFreePos(outPos);
 
         attacker.setVoidTime(getWindupPoint());

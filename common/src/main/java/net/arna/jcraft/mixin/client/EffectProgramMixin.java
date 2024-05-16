@@ -1,13 +1,12 @@
 package net.arna.jcraft.mixin.client;
 
+import com.mojang.blaze3d.shaders.EffectProgram;
 import net.arna.jcraft.client.rendering.api.JGLImportProcessor;
-import net.minecraft.client.gl.EffectShaderStage;
-import net.minecraft.client.gl.GlImportProcessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(EffectShaderStage.class)
+@Mixin(EffectProgram.class)
 public class EffectProgramMixin {
 /*
     @ModifyArg(method = "createFromResource", at = @At(value = "INVOKE",

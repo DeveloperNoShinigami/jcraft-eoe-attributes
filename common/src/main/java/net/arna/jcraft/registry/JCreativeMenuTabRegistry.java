@@ -4,25 +4,25 @@ import dev.architectury.registry.CreativeTabRegistry;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.item.StandDiscItem;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public interface JCreativeMenuTabRegistry {
 
     static void init() {
         JCraft.CREATIVE_TAB_REGISTRY.register("general", JCreativeMenuTabRegistry::createJcraftItemGroup);
         // building blocks
-        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.BUILDING_BLOCKS.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+        CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.GOLD_BLOCK, JItemRegistry.STELLAR_IRON_BLOCK.get());
         });
         // natural blocks
-        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.NATURAL.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+        CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.NATURAL_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptAfter(Items.SANDSTONE, JItemRegistry.FOOLISH_SAND_BLOCK.get());
             output.acceptAfter(JItemRegistry.FOOLISH_SAND_BLOCK.get(), JItemRegistry.HOT_SAND_BLOCK.get());
             output.acceptBefore(Items.NETHER_GOLD_ORE, JItemRegistry.METEORITE_IRON_ORE_BLOCK.get());
@@ -30,16 +30,16 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(Items.SOUL_SOIL, JItemRegistry.SOUL_BLOCK.get());
         });
         // functional blocks
-        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.NATURAL.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+        CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.NATURAL_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.CANDLE, JItemRegistry.COFFIN_BLOCK.get());
         });
         // tools
-        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.TOOLS.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+        CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.TOOLS_AND_UTILITIES.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_ARROW.get());
             output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_DISC.get());
         });
         // combat
-        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.COMBAT.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+        CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.COMBAT.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.WOODEN_AXE, JItemRegistry.ANUBIS_SHEATHED.get());
             output.acceptBefore(Items.BOW, JItemRegistry.KNIFE.get());
             output.acceptBefore(Items.BOW, JItemRegistry.KNIFEBUNDLE.get());
@@ -60,7 +60,7 @@ public interface JCreativeMenuTabRegistry {
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.KARS_HEADWRAP.get());
         });
         // ingredients
-        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.INGREDIENTS.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+        CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.INGREDIENTS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.COPPER_INGOT, JItemRegistry.STELLAR_IRON_INGOT.get());
             output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.LIVING_ARROW.get());
             output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.REQUIEM_RUBY.get());
@@ -74,13 +74,13 @@ public interface JCreativeMenuTabRegistry {
             output.acceptBefore(Items.BOWL, JItemRegistry.KQ_COIN.get());
         });
         // foods & drinks
-        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.FOOD_AND_DRINK.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+        CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.FOOD_AND_DRINKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             final ItemStack bloodBottle = new ItemStack(JItemRegistry.BLOOD_BOTTLE.get());
-            bloodBottle.getOrCreateNbt().putFloat("Blood", 16f);
+            bloodBottle.getOrCreateTag().putFloat("Blood", 16f);
             output.acceptBefore(Items.HONEY_BOTTLE, bloodBottle);
         });
         // spawn eggs
-        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.get(ItemGroups.SPAWN_EGGS.getValue()), (flags, output, canUseGameMasterBlocks) -> {
+        CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.SPAWN_EGGS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptAfter(Items.AXOLOTL_SPAWN_EGG, JItemRegistry.AYA_TSUJI_SPAWN_EGG.get());
             output.acceptAfter(Items.CREEPER_SPAWN_EGG, JItemRegistry.DARBY_OLDER_SPAWN_EGG.get());
             output.acceptAfter(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get(), JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get());
@@ -88,72 +88,72 @@ public interface JCreativeMenuTabRegistry {
         });
     }
 
-    static ItemGroup createJcraftItemGroup() {
-        return ItemGroup.create(ItemGroup.Row.TOP, 0)
-                .displayName(Text.translatable("itemGroup.jcraft.main"))
-                .icon(() -> JItemRegistry.STAND_ARROW.get().getDefaultStack())
+    static CreativeModeTab createJcraftItemGroup() {
+        return CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
+                .title(Component.translatable("itemGroup.jcraft.main"))
+                .icon(() -> JItemRegistry.STAND_ARROW.get().getDefaultInstance())
                 // order of the creative tab
-                .entries((displayContext, entries) -> {
+                .displayItems((displayContext, entries) -> {
                     // everything up to arrows
-                    entries.add(JItemRegistry.METEORITE_BLOCK.get());
-                    entries.add(JItemRegistry.METEORITE_IRON_ORE_BLOCK.get());
-                    entries.add(JItemRegistry.STELLAR_IRON_INGOT.get());
-                    entries.add(JItemRegistry.STELLAR_IRON_BLOCK.get());
-                    entries.add(JItemRegistry.STAND_ARROWHEAD.get());
-                    entries.add(JItemRegistry.STAND_ARROW.get());
-                    entries.add(JItemRegistry.LIVING_ARROW.get());
-                    entries.add(JItemRegistry.REQUIEM_RUBY.get());
-                    entries.add(JItemRegistry.REQUIEM_ARROW.get());
+                    entries.accept(JItemRegistry.METEORITE_BLOCK.get());
+                    entries.accept(JItemRegistry.METEORITE_IRON_ORE_BLOCK.get());
+                    entries.accept(JItemRegistry.STELLAR_IRON_INGOT.get());
+                    entries.accept(JItemRegistry.STELLAR_IRON_BLOCK.get());
+                    entries.accept(JItemRegistry.STAND_ARROWHEAD.get());
+                    entries.accept(JItemRegistry.STAND_ARROW.get());
+                    entries.accept(JItemRegistry.LIVING_ARROW.get());
+                    entries.accept(JItemRegistry.REQUIEM_RUBY.get());
+                    entries.accept(JItemRegistry.REQUIEM_ARROW.get());
                     // other evolution items
-                    entries.add(JItemRegistry.GREEN_BABY.get());
-                    entries.add(JItemRegistry.DIOS_DIARY.get());
+                    entries.accept(JItemRegistry.GREEN_BABY.get());
+                    entries.accept(JItemRegistry.DIOS_DIARY.get());
                     // stand drops
-                    entries.add(JItemRegistry.FV_REVOLVER.get());
-                    entries.add(JItemRegistry.BULLET.get());
-                    entries.add(JItemRegistry.KQ_COIN.get());
-                    entries.add(JItemRegistry.FOOLISH_SAND_BLOCK.get());
+                    entries.accept(JItemRegistry.FV_REVOLVER.get());
+                    entries.accept(JItemRegistry.BULLET.get());
+                    entries.accept(JItemRegistry.KQ_COIN.get());
+                    entries.accept(JItemRegistry.FOOLISH_SAND_BLOCK.get());
                     // misc
-                    entries.add(JItemRegistry.HOT_SAND_BLOCK.get());
-                    entries.add(JItemRegistry.SINNERS_SOUL.get());
-                    entries.add(JItemRegistry.SOUL_BLOCK.get());
-                    entries.add(JItemRegistry.KNIFE.get());
-                    entries.add(JItemRegistry.KNIFEBUNDLE.get());
+                    entries.accept(JItemRegistry.HOT_SAND_BLOCK.get());
+                    entries.accept(JItemRegistry.SINNERS_SOUL.get());
+                    entries.accept(JItemRegistry.SOUL_BLOCK.get());
+                    entries.accept(JItemRegistry.KNIFE.get());
+                    entries.accept(JItemRegistry.KNIFEBUNDLE.get());
                     // spec items + related except blood bottles
-                    entries.add(JItemRegistry.ANUBIS_SHEATHED.get());
-                    entries.add(JItemRegistry.ANUBIS.get());
-                    entries.add(JItemRegistry.BOXING_GLOVES.get());
-                    entries.add(JItemRegistry.STONE_MASK.get());
-                    entries.add(JItemRegistry.RED_HAT.get());
-                    entries.add(JItemRegistry.KARS_HEADWRAP.get());
-                    entries.add(JItemRegistry.COFFIN_BLOCK.get());
+                    entries.accept(JItemRegistry.ANUBIS_SHEATHED.get());
+                    entries.accept(JItemRegistry.ANUBIS.get());
+                    entries.accept(JItemRegistry.BOXING_GLOVES.get());
+                    entries.accept(JItemRegistry.STONE_MASK.get());
+                    entries.accept(JItemRegistry.RED_HAT.get());
+                    entries.accept(JItemRegistry.KARS_HEADWRAP.get());
+                    entries.accept(JItemRegistry.COFFIN_BLOCK.get());
                     // cosplay
-                    entries.add(JItemRegistry.JOTARO_CAP.get());
-                    entries.add(JItemRegistry.JOTARO_JACKET.get());
-                    entries.add(JItemRegistry.JOTARO_PANTS.get());
-                    entries.add(JItemRegistry.JOTARO_BOOTS.get());
-                    entries.add(JItemRegistry.DIO_HEADBAND.get());
-                    entries.add(JItemRegistry.DIO_JACKET.get());
-                    entries.add(JItemRegistry.DIO_CAPE.get());
-                    entries.add(JItemRegistry.DIO_PANTS.get());
-                    entries.add(JItemRegistry.DIO_BOOTS.get());
+                    entries.accept(JItemRegistry.JOTARO_CAP.get());
+                    entries.accept(JItemRegistry.JOTARO_JACKET.get());
+                    entries.accept(JItemRegistry.JOTARO_PANTS.get());
+                    entries.accept(JItemRegistry.JOTARO_BOOTS.get());
+                    entries.accept(JItemRegistry.DIO_HEADBAND.get());
+                    entries.accept(JItemRegistry.DIO_JACKET.get());
+                    entries.accept(JItemRegistry.DIO_CAPE.get());
+                    entries.accept(JItemRegistry.DIO_PANTS.get());
+                    entries.accept(JItemRegistry.DIO_BOOTS.get());
                     // blood bottles
                     for (int i = 16; i >= 0; i--) {
                         final ItemStack stack = new ItemStack(JItemRegistry.BLOOD_BOTTLE.get());
-                        stack.getOrCreateNbt().putFloat("Blood", i);
-                        entries.add(stack);
+                        stack.getOrCreateTag().putFloat("Blood", i);
+                        entries.accept(stack);
                     }
                     // cinderella mask + enchantments
-                    entries.add(JItemRegistry.CINDERELLA_MASK.get());
+                    entries.accept(JItemRegistry.CINDERELLA_MASK.get());
                     for (int i = 1; i <= 3; i++) {
                         final ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
-                        final NbtCompound nbt = stack.getOrCreateNbt();
-                        final NbtList enchantments = new NbtList();
-                        final NbtCompound enchantment = new NbtCompound();
+                        final CompoundTag nbt = stack.getOrCreateTag();
+                        final ListTag enchantments = new ListTag();
+                        final CompoundTag enchantment = new CompoundTag();
                         enchantment.putString("id", "jcraft:cinderellas_kiss");
                         enchantment.putShort("lvl", (short)i);
                         enchantments.add(enchantment);
                         nbt.put("StoredEnchantments", enchantments);
-                        entries.add(stack);
+                        entries.accept(stack);
                     }
                     // stand discs
                     for (final StandType standType : StandType.values()) {
@@ -161,18 +161,18 @@ public interface JCreativeMenuTabRegistry {
                             continue;
                         }
                         for (int skin = 0; skin <= standType.getSkinCount(); skin++) {
-                            entries.add(StandDiscItem.createDiscStack(standType, skin));
+                            entries.accept(StandDiscItem.createDiscStack(standType, skin));
                         }
                     }
                     // spawn eggs season 3
-                    entries.add(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get());
-                    entries.add(JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get());
-                    entries.add(JItemRegistry.PETSHOP_SPAWN_EGG.get());
+                    entries.accept(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get());
+                    entries.accept(JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get());
+                    entries.accept(JItemRegistry.PETSHOP_SPAWN_EGG.get());
                     // spawn eggs season 4
-                    entries.add(JItemRegistry.AYA_TSUJI_SPAWN_EGG.get());
+                    entries.accept(JItemRegistry.AYA_TSUJI_SPAWN_EGG.get());
                     // weird items
                     if (JItemRegistry.DEBUG_WAND != null) {
-                        entries.add(JItemRegistry.DEBUG_WAND.get());
+                        entries.accept(JItemRegistry.DEBUG_WAND.get());
                     }
                 })
                 .build();

@@ -5,8 +5,8 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.Set;
@@ -54,14 +54,14 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
         tickChargeAttack(attacker, shouldPerform(attacker), getMoveDistance(), getWindupPoint());
     }
 
-    protected Vec3d advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
-        return attacker.getPos().add(getRotVec(attacker).multiply(moveDistance / windupPoint));
+    protected Vec3 advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
+        return attacker.position().add(getRotVec(attacker).scale(moveDistance / windupPoint));
     }
 
     protected void tickChargeAttack(StandEntity<?, ?> attacker, boolean shouldPerform, float moveDistance, int windupPoint) {
         if (shouldPerform) {
             //float t = 1f - (float) curMoveStun / (float) realInitTime;
-            Vec3d newPos = advanceChargePos(attacker, moveDistance, windupPoint);
+            Vec3 newPos = advanceChargePos(attacker, moveDistance, windupPoint);
             //stand.setDistanceOffset(1 + attackDist * t * t);
             attacker.setFreePos(new Vector3f((float) newPos.x, (float) newPos.y, (float) newPos.z));
             attacker.setFree(true);
@@ -71,14 +71,14 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
     }
 
     public static void prepDetachmentMove(StandEntity<?, ?> attacker, LivingEntity user) {
-        attacker.setPosition(user.getPos());
-        attacker.setHeadYaw(user.getHeadYaw());
-        attacker.setBodyYaw(user.getHeadYaw());
+        attacker.setPos(user.position());
+        attacker.setYHeadRot(user.getYHeadRot());
+        attacker.setYBodyRot(user.getYHeadRot());
         attacker.setRotationOffset(attacker.attackRotation);
     }
 
     @Override
-    protected Vec3d getOffsetForwardPos(A attacker, Vec3d offsetHeightPos, Vec3d upVec, Vec3d rotVec) {
+    protected Vec3 getOffsetForwardPos(A attacker, Vec3 offsetHeightPos, Vec3 upVec, Vec3 rotVec) {
         return offsetHeightPos.add(rotVec);
     }
 }

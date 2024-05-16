@@ -1,12 +1,16 @@
 package net.arna.jcraft.client.rendering.skybox;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Axis;
 import net.arna.jcraft.platform.JPlatformUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ShaderInstance;
 import org.joml.Matrix4f;
 
 import java.util.function.Supplier;
@@ -20,56 +24,56 @@ public class CrimsonSkyBox implements JSkyBox {
     }
 
     @Override
-    public void render(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        assert client.world != null;
+    public void render(PoseStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog) {
+        Minecraft client = Minecraft.getInstance();
+        assert client.level != null;
         this.alpha = 1;
 
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.depthMask(false);
-        Matrix4f mat = matrices.peek().getPositionMatrix();
+        Matrix4f mat = matrices.last().pose();
         Matrix4f invMat = new Matrix4f(mat);
         invMat.invert();
         var jShader =  JPlatformUtils.getTest();
-        jShader.getUniformOrDefault("InverseTransformMatrix").set(invMat);
-        jShader.getUniformOrDefault("Time").set((client.world.getTime() + tickDelta) / 20);
-        Supplier<ShaderProgram> shaderInstanceSupplier = () -> jShader;
+        jShader.safeGetUniform("InverseTransformMatrix").set(invMat);
+        jShader.safeGetUniform("Time").set((client.level.getGameTime() + tickDelta) / 20);
+        Supplier<ShaderInstance> shaderInstanceSupplier = () -> jShader;
         RenderSystem.setShader(shaderInstanceSupplier);
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuilder();
 
         for (int i = 0; i < 6; ++i) {
-            matrices.push();
+            matrices.pushPose();
             if (i == 1) {
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0F));
+                matrices.mulPose(Axis.XP.rotationDegrees(90.0F));
             }
 
             if (i == 2) {
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90.0F));
+                matrices.mulPose(Axis.XP.rotationDegrees(-90.0F));
             }
 
             if (i == 3) {
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180.0F));
+                matrices.mulPose(Axis.XP.rotationDegrees(180.0F));
             }
 
             if (i == 4) {
-                matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90.0F));
+                matrices.mulPose(Axis.ZP.rotationDegrees(90.0F));
             }
 
             if (i == 5) {
-                matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-90.0F));
+                matrices.mulPose(Axis.ZP.rotationDegrees(-90.0F));
             }
 
-            projectionMatrix = matrices.peek().getPositionMatrix();
-            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-            bufferBuilder.vertex(projectionMatrix, -110.0F, -110.0F, -110.0F).texture(0.0F, 0.0F).color(40, 40, 40, 255 * getAlpha()).next();
-            bufferBuilder.vertex(projectionMatrix, -110.0F, -110.0F, 110.0F).texture(0.0F, 16.0F).color(40, 40, 40, 255 * getAlpha()).next();
-            bufferBuilder.vertex(projectionMatrix, 110.0F, -110.0F, 110.0F).texture(16.0F, 16.0F).color(40, 40, 40, 255 * getAlpha()).next();
-            bufferBuilder.vertex(projectionMatrix, 110.0F, -110.0F, -110.0F).texture(16.0F, 0.0F).color(40, 40, 40, 255 * getAlpha()).next();
-            tessellator.draw();
-            matrices.pop();
+            projectionMatrix = matrices.last().pose();
+            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            bufferBuilder.vertex(projectionMatrix, -110.0F, -110.0F, -110.0F).uv(0.0F, 0.0F).color(40, 40, 40, 255 * getAlpha()).endVertex();
+            bufferBuilder.vertex(projectionMatrix, -110.0F, -110.0F, 110.0F).uv(0.0F, 16.0F).color(40, 40, 40, 255 * getAlpha()).endVertex();
+            bufferBuilder.vertex(projectionMatrix, 110.0F, -110.0F, 110.0F).uv(16.0F, 16.0F).color(40, 40, 40, 255 * getAlpha()).endVertex();
+            bufferBuilder.vertex(projectionMatrix, 110.0F, -110.0F, -110.0F).uv(16.0F, 0.0F).color(40, 40, 40, 255 * getAlpha()).endVertex();
+            tessellator.end();
+            matrices.popPose();
         }
 
         RenderSystem.depthMask(true);

@@ -2,9 +2,9 @@ package net.arna.jcraft.mixin.gravity;
 
 
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.control.LookControl;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.control.LookControl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -12,11 +12,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(LookControl.class)
 public abstract class LookControlMixin {
     @Redirect(
-            method = "getLookingHeightFor",
+            method = "getWantedY(Lnet/minecraft/world/entity/Entity;)D",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"
             )
     )
     private static double redirect_getLookingHeightForgetEyeY_0(Entity entity) {
@@ -25,15 +24,14 @@ public abstract class LookControlMixin {
             return entity.getEyeY();
         }
 
-        return entity.getEyePos().y;
+        return entity.getEyePosition().y;
     }
 
     @Redirect(
-            method = "lookAt(Lnet/minecraft/entity/Entity;)V",
+            method = "setLookAt(Lnet/minecraft/world/entity/Entity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D"
             )
     )
     private double redirect_lookAt_getX_0_0(Entity entity) {
@@ -42,15 +40,14 @@ public abstract class LookControlMixin {
             return entity.getX();
         }
 
-        return entity.getEyePos().x;
+        return entity.getEyePosition().x;
     }
 
     @Redirect(
-            method = "lookAt(Lnet/minecraft/entity/Entity;)V",
+            method = "setLookAt(Lnet/minecraft/world/entity/Entity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getZ()D"
             )
     )
     private double redirect_lookAt_getZ_0_0(Entity entity) {
@@ -59,15 +56,14 @@ public abstract class LookControlMixin {
             return entity.getZ();
         }
 
-        return entity.getEyePos().z;
+        return entity.getEyePosition().z;
     }
-
+/*TODO mojmap
     @Redirect(
-            method = "lookAt(Lnet/minecraft/entity/Entity;FF)V",
+            method = "setLookAt(Lnet/minecraft/world/entity/Entity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D"
             )
     )
     private double redirect_lookAt_getX_0_1(Entity entity) {
@@ -76,15 +72,14 @@ public abstract class LookControlMixin {
             return entity.getX();
         }
 
-        return entity.getEyePos().x;
+        return entity.getEyePosition().x;
     }
 
     @Redirect(
-            method = "lookAt(Lnet/minecraft/entity/Entity;FF)V",
+            method = "setLookAt(Lnet/minecraft/world/entity/Entity;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getZ()D"
             )
     )
     private double redirect_lookAt_getZ_0_1(Entity entity) {
@@ -93,6 +88,8 @@ public abstract class LookControlMixin {
             return entity.getZ();
         }
 
-        return entity.getEyePos().z;
+        return entity.getEyePosition().z;
     }
+
+ */
 }

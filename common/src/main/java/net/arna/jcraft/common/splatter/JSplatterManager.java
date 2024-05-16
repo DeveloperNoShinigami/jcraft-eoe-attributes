@@ -5,14 +5,14 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.Pair;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -21,10 +21,10 @@ import java.util.function.Consumer;
 import java.util.function.DoubleUnaryOperator;
 
 public class JSplatterManager {
-    private final World world;
+    private final Level world;
     private final Set<Splatter> splatters = ConcurrentHashMap.newKeySet();
 
-    public JSplatterManager(World world) {
+    public JSplatterManager(Level world) {
         this.world = world;
     }
 
@@ -34,7 +34,7 @@ public class JSplatterManager {
      * @param pos  The position of this splatter
      * @param type The type of this splatter
      */
-    public Splatter addSplatter(Vec3d pos, SplatterType type) {
+    public Splatter addSplatter(Vec3 pos, SplatterType type) {
         return addSplatter(pos, type, .5f, null);
     }
 
@@ -45,7 +45,7 @@ public class JSplatterManager {
      * @param type  The type of this splatter
      * @param range The range of this splatter in both directions
      */
-    public Splatter addSplatter(Vec3d pos, SplatterType type, float range, @Nullable Entity creator) {
+    public Splatter addSplatter(Vec3 pos, SplatterType type, float range, @Nullable Entity creator) {
         return addSplatter(pos, type, range, range, creator);
     }
 
@@ -57,79 +57,79 @@ public class JSplatterManager {
      * @param xRange The range of this splatter on the x-axis
      * @param zRange The range of this splatter on the z-axis
      */
-    public Splatter addSplatter(Vec3d pos, SplatterType type, float xRange, float zRange, @Nullable Entity creator) {
-        Pair<Vec3d, Direction> anchoredPos = anchorPos(pos);
+    public Splatter addSplatter(Vec3 pos, SplatterType type, float xRange, float zRange, @Nullable Entity creator) {
+        Pair<Vec3, Direction> anchoredPos = anchorPos(pos);
         pos = anchoredPos.left();
 
         Splatter splatter = new Splatter(world, pos, anchoredPos.right().getOpposite(), type, xRange, zRange, creator);
         splatters.add(splatter);
-        if (world.isClient) {
+        if (world.isClientSide) {
             return splatter;
         }
 
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         writeSplatter(splatter, buf);
 
         // We already confirmed this is a server-world.
-        for (ServerPlayerEntity player : JUtils.around((ServerWorld) world, pos, 64)) {
+        for (ServerPlayer player : JUtils.around((ServerLevel) world, pos, 64)) {
             NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_SPLATTER, buf);
         }
 
         return splatter;
     }
 
-    private Pair<Vec3d, Direction> anchorPos(Vec3d position) {
-        BlockPos bPos = BlockPos.ofFloored(position);
+    private Pair<Vec3, Direction> anchorPos(Vec3 position) {
+        BlockPos bPos = BlockPos.containing(position);
         // Find the direction with the closest anchor
         Direction direction = Direction.stream()
-                .filter(d -> SplatterSplitter.isValidAnchor(world, bPos.offset(d)))
+                .filter(d -> SplatterSplitter.isValidAnchor(world, bPos.relative(d)))
                 .min((d1, d2) -> Double.compare(getDistanceToAnchor(position, d1), getDistanceToAnchor(position, d2)))
                 .orElse(Direction.DOWN);
 
-        double x = position.getX();
-        double y = position.getY();
-        double z = position.getZ();
+        double x = position.x();
+        double y = position.y();
+        double z = position.z();
 
         // Anchor the position to the block in the found direction.
-        DoubleUnaryOperator modifier = direction.getDirection() == Direction.AxisDirection.POSITIVE ? Math::ceil : Math::floor;
+        DoubleUnaryOperator modifier = direction.getAxisDirection() == Direction.AxisDirection.POSITIVE ? Math::ceil : Math::floor;
         switch (direction.getAxis()) {
             case X -> x = modifier.applyAsDouble(x);
             case Y -> y = modifier.applyAsDouble(y);
             case Z -> z = modifier.applyAsDouble(z);
         }
 
-        return Pair.of(new Vec3d(x, y, z), direction);
+        return Pair.of(new Vec3(x, y, z), direction);
     }
 
-    private double getDistanceToAnchor(Vec3d position, Direction direction) {
-        DoubleUnaryOperator modifier = direction.getDirection() == Direction.AxisDirection.POSITIVE ? Math::ceil : Math::floor;
+    private double getDistanceToAnchor(Vec3 position, Direction direction) {
+        DoubleUnaryOperator modifier = direction.getAxisDirection() == Direction.AxisDirection.POSITIVE ? Math::ceil : Math::floor;
         return Math.abs(direction.getAxis().choose(
-                position.getX() - modifier.applyAsDouble(position.getX()),
-                position.getY() - modifier.applyAsDouble(position.getY()),
-                position.getZ() - modifier.applyAsDouble(position.getZ())));
+                position.x() - modifier.applyAsDouble(position.x()),
+                position.y() - modifier.applyAsDouble(position.y()),
+                position.z() - modifier.applyAsDouble(position.z())));
     }
 
-    public void writeSplatter(Splatter splatter, PacketByteBuf buf) {
-        Vec3d pos = splatter.getPos();
-        buf.writeDouble(pos.getX());
-        buf.writeDouble(pos.getY());
-        buf.writeDouble(pos.getZ());
-        buf.writeEnumConstant(splatter.getDirection());
-        buf.writeEnumConstant(splatter.getType());
+    public void writeSplatter(Splatter splatter, FriendlyByteBuf buf) {
+        Vec3 pos = splatter.getPos();
+        buf.writeDouble(pos.x());
+        buf.writeDouble(pos.y());
+        buf.writeDouble(pos.z());
+        buf.writeEnum(splatter.getDirection());
+        buf.writeEnum(splatter.getType());
         buf.writeFloat(splatter.getXRange());
         buf.writeFloat(splatter.getZRange());
     }
 
-    public Splatter readSplatter(PacketByteBuf buf) {
+    public Splatter readSplatter(FriendlyByteBuf buf) {
         double x = buf.readDouble();
         double y = buf.readDouble();
         double z = buf.readDouble();
-        Direction direction = buf.readEnumConstant(Direction.class);
-        SplatterType type = buf.readEnumConstant(SplatterType.class);
+        Direction direction = buf.readEnum(Direction.class);
+        SplatterType type = buf.readEnum(SplatterType.class);
         float xRange = buf.readFloat();
         float zRange = buf.readFloat();
 
-        Splatter splatter = new Splatter(world, new Vec3d(x, y, z), direction, type, xRange, zRange, null); // At the moment, clients do not need to know who made a splatter
+        Splatter splatter = new Splatter(world, new Vec3(x, y, z), direction, type, xRange, zRange, null); // At the moment, clients do not need to know who made a splatter
         splatters.add(splatter);
         return splatter;
     }

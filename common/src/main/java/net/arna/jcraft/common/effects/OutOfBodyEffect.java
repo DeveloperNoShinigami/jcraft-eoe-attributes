@@ -1,15 +1,15 @@
 package net.arna.jcraft.common.effects;
 
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
-public class OutOfBodyEffect extends StatusEffect {
+public class OutOfBodyEffect extends MobEffect {
     public OutOfBodyEffect() {
-        super(StatusEffectCategory.NEUTRAL, 0x5B6EE1);
+        super(MobEffectCategory.NEUTRAL, 0x5B6EE1);
     }
 
     @Override
-    public boolean canApplyUpdateEffect(int duration, int amplifier) {
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         return false;
     }
 }

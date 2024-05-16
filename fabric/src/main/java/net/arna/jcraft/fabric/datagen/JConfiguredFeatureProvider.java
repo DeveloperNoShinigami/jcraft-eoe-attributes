@@ -2,22 +2,22 @@ package net.arna.jcraft.fabric.datagen;
 
 import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JConfiguredFeatureRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.Registerable;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
-import net.minecraft.world.gen.blockpredicate.BlockPredicate;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.DiskFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.stateprovider.PredicatedStateProvider;
+import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.DiskConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.RuleBasedBlockStateProvider;
 
 // see https://minecraft.fandom.com/wiki/Custom_feature
 public class JConfiguredFeatureProvider {
 
-    public static void bootstrap(Registerable<ConfiguredFeature<?,?>> context) {
+    public static void bootstrap(BootstapContext<ConfiguredFeature<?,?>> context) {
         final Block hotSand = JBlockRegistry.HOT_SAND_BLOCK.get();
-        final var diskConfig = new DiskFeatureConfig(PredicatedStateProvider.of(Blocks.SAND), BlockPredicate.matchingBlocks(hotSand), UniformIntProvider.create(3, 6), 2);
+        final var diskConfig = new DiskConfiguration(RuleBasedBlockStateProvider.simple(Blocks.SAND), BlockPredicate.matchesBlocks(hotSand), UniformInt.of(3, 6), 2);
         context.register(JConfiguredFeatureRegistry.SAND_DISK, new ConfiguredFeature<>(Feature.DISK, diskConfig));
     }
 

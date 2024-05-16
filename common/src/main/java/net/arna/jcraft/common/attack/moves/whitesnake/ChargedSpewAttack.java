@@ -8,10 +8,9 @@ import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec2f;
-
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec2;
 import java.util.Set;
 
 public class ChargedSpewAttack extends AbstractSimpleAttack<ChargedSpewAttack, WhiteSnakeEntity> {
@@ -27,13 +26,13 @@ public class ChargedSpewAttack extends AbstractSimpleAttack<ChargedSpewAttack, W
 
         Direction gravity = GravityChangerAPI.getGravityDirection(user);
         for (int i = 0; i < 5; i++) {
-            WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.getWorld(), user);
+            WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.level(), user);
 
-            Vec2f corrected = RotationUtil.rotPlayerToWorld(user.getYaw() - 75F + i * 37.5F, user.getPitch(), gravity);
+            Vec2 corrected = RotationUtil.rotPlayerToWorld(user.getYRot() - 75F + i * 37.5F, user.getXRot(), gravity);
             JUtils.shoot(acidProjectile, user, corrected.y, corrected.x, 0, 0.66F, 0);
 
-            acidProjectile.setPosition(attacker.getEyePos());
-            attacker.getWorld().spawnEntity(acidProjectile);
+            acidProjectile.setPos(attacker.getEyePosition());
+            attacker.level().addFreshEntity(acidProjectile);
         }
 
         return targets;

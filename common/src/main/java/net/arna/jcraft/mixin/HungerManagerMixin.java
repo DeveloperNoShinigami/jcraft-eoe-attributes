@@ -2,8 +2,8 @@ package net.arna.jcraft.mixin;
 
 import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.player.HungerManager;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,14 +11,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(HungerManager.class)
+@Mixin(FoodData.class)
 public class HungerManagerMixin {
     @Unique
     private CommonVampireComponent vampireComponent;
     @Unique
     private boolean isVampire;
     @Unique
-    private PlayerEntity player;
+    private Player player;
 
     @Inject(method = "getFoodLevel", at = @At("HEAD"), cancellable = true)
     void jcraft$getBloodLevel(CallbackInfoReturnable<Integer> cir) {
@@ -34,8 +34,8 @@ public class HungerManagerMixin {
         }
     }
 
-    @Inject(method = "update", at = @At("HEAD"), cancellable = true)
-    void jcraft$updateVampirism(PlayerEntity player, CallbackInfo ci) {
+    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+    void jcraft$updateVampirism(Player player, CallbackInfo ci) {
         this.vampireComponent = JComponentPlatformUtils.getVampirism(player);
         this.isVampire = vampireComponent.isVampire();
         this.player = player;

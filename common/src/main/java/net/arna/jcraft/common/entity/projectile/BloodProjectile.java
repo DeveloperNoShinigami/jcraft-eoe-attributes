@@ -3,47 +3,52 @@ package net.arna.jcraft.common.entity.projectile;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.decoration.EndCrystalEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 
-public class BloodProjectile extends PersistentProjectileEntity implements GeoEntity {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class BloodProjectile extends AbstractArrow implements GeoEntity {
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
-    public BloodProjectile(EntityType<? extends BloodProjectile> entityType, World world) {
+    public BloodProjectile(EntityType<? extends BloodProjectile> entityType, Level world) {
         super(entityType, world);
-        this.pickupType = PickupPermission.DISALLOWED;
+        this.pickup = Pickup.DISALLOWED;
     }
 
-    public BloodProjectile(World world, LivingEntity owner) {
+    public BloodProjectile(Level world, LivingEntity owner) {
         super(JEntityTypeRegistry.BLOOD_PROJECTILE.get(), owner, world);
-        this.setSound(SoundEvents.BLOCK_SLIME_BLOCK_FALL);
+        this.setSoundEvent(SoundEvents.SLIME_BLOCK_FALL);
         this.setOwner(owner);
     }
 
     @Override
-    protected void age() {
+    protected void tickDespawn() {
         discard();
     } // Disappear instantly upon contact with the ground
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) {
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        if (level().isClientSide) {
             return;
         }
         Entity owner = getOwner();
@@ -60,26 +65,26 @@ public class BloodProjectile extends PersistentProjectileEntity implements GeoEn
             if (entity instanceof StandEntity<?, ?> stand && stand.hasUser()) {
                 target = stand.getUserOrThrow();
             }
-            damageLogic(getWorld(), target, Vec3d.ZERO, 10, 1, false, 2f,
-                    false, 6, getWorld().getDamageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 60, 0, false, true));
+            damageLogic(level(), target, Vec3.ZERO, 10, 1, false, 2f,
+                    false, 6, level().damageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
+            target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0, false, true));
             discard();
         }
 
-        if (entity instanceof EndCrystalEntity endCrystal) {
-            endCrystal.damage(getWorld().getDamageSources().thrown(this, owner), 2f);
+        if (entity instanceof EndCrystal endCrystal) {
+            endCrystal.hurt(level().damageSources().thrown(this, owner), 2f);
         }
 
-        playSound(SoundEvents.BLOCK_SLIME_BLOCK_FALL, 1, 0.5f);
+        playSound(SoundEvents.SLIME_BLOCK_FALL, 1, 0.5f);
     }
 
     @Override
-    public ItemStack asItemStack() {
+    public ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         return false;
     }
 

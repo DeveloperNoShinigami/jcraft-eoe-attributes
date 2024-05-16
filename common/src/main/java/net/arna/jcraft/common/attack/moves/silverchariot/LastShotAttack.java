@@ -5,8 +5,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.RapierProjectile;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
-import net.minecraft.entity.LivingEntity;
-
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class LastShotAttack extends AbstractMove<LastShotAttack, SilverChariotEntity> {
@@ -21,12 +20,12 @@ public class LastShotAttack extends AbstractMove<LastShotAttack, SilverChariotEn
             return Set.of();
         }
 
-        RapierProjectile rapier = new RapierProjectile(attacker.getWorld(), user, attacker);
-        rapier.setVelocity(attacker, user.getPitch(), user.getYaw(), 0, 2, 1);
+        RapierProjectile rapier = new RapierProjectile(attacker.level(), user, attacker);
+        rapier.shootFromRotation(attacker, user.getXRot(), user.getYRot(), 0, 2, 1);
         rapier.setSkin(attacker.getMode() != SilverChariotEntity.Mode.ARMORLESS ?
                 -attacker.getMode().ordinal() : // Armorless and possessed output -1 and -2
                 attacker.getSkin());
-        attacker.getWorld().spawnEntity(rapier);
+        attacker.level().addFreshEntity(rapier);
         attacker.setHasRapier(false);
 
         return Set.of();

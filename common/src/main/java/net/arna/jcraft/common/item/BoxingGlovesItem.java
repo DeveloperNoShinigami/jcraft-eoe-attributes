@@ -1,42 +1,42 @@
 package net.arna.jcraft.common.item;
 
 import net.arna.jcraft.common.spec.SpecType;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class BoxingGlovesItem extends SpecObtainmentItem {
-    public BoxingGlovesItem(Settings settings, SpecType spec) {
+    public BoxingGlovesItem(Properties settings, SpecType spec) {
         super(settings, spec);
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(Text.translatable("jcraft.boxinggloves.desc"));
-        super.appendTooltip(stack, world, tooltip, context);
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+        tooltip.add(Component.translatable("jcraft.boxinggloves.desc"));
+        super.appendHoverText(stack, world, tooltip, context);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        ItemStack itemStack = user.getItemInHand(hand);
 
-        if (!world.isClient) {
+        if (!world.isClientSide) {
             boolean specChanged = tryGetSpec(user);
             if (specChanged) {
                 if (!user.isCreative()) {
-                    itemStack.decrement(1);
+                    itemStack.shrink(1);
                 }
-                user.getItemCooldownManager().set(this, 20);
+                user.getCooldowns().addCooldown(this, 20);
             }
         }
 
-        return TypedActionResult.consume(itemStack);
+        return InteractionResultHolder.consume(itemStack);
     }
 }

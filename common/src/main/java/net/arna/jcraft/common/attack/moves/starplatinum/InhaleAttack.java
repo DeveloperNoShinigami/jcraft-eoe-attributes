@@ -9,22 +9,21 @@ import net.arna.jcraft.common.entity.stand.StarPlatinumEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 import static net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack.createBox;
 
 @Getter
 public class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumEntity> {
-    private final Random random = Random.create();
+    private final RandomSource random = RandomSource.create();
     private final int inhaleDuration;
 
     public InhaleAttack(int cooldown, int windup, int duration, float moveDistance, int inhaleDuration) {
@@ -44,19 +43,19 @@ public class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumEntity>
             return;
         }
 
-        Vec3d rotVec = attacker.isFree() ? getRotVec(attacker) : attacker.getUserOrThrow().getRotationVector();
-        Vec3d eyePos = attacker.isFree() ?
-                new Vec3d(attacker.getFreePos()).add(RotationUtil.vecPlayerToWorld(new Vec3d(0, attacker.getHeight(), 0), GravityChangerAPI.getGravityDirection(attacker)))
-                : attacker.getEyePos();
-        Vec3d fPos = eyePos.add(rotVec.multiply(1.75));
-        Vec3d ffPos = eyePos.add(rotVec.multiply(3.25));
+        Vec3 rotVec = attacker.isFree() ? getRotVec(attacker) : attacker.getUserOrThrow().getLookAngle();
+        Vec3 eyePos = attacker.isFree() ?
+                new Vec3(attacker.getFreePos()).add(RotationUtil.vecPlayerToWorld(new Vec3(0, attacker.getBbHeight(), 0), GravityChangerAPI.getGravityDirection(attacker)))
+                : attacker.getEyePosition();
+        Vec3 fPos = eyePos.add(rotVec.scale(1.75));
+        Vec3 ffPos = eyePos.add(rotVec.scale(3.25));
 
-        if (attacker.getWorld().isClient) {
+        if (attacker.level().isClientSide) {
             // Display particles for the two hitboxes
-            Vec3d addVel = rotVec.add(random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1);
-            Vec3d particlePos = fPos.add(addVel);
+            Vec3 addVel = rotVec.add(random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1);
+            Vec3 particlePos = fPos.add(addVel);
 
-            attacker.getWorld().addParticle(ParticleTypes.POOF,
+            attacker.level().addParticle(ParticleTypes.POOF,
                     particlePos.x,
                     particlePos.y,
                     particlePos.z,
@@ -65,7 +64,7 @@ public class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumEntity>
             addVel = rotVec.add(random.nextDouble() * 1.5 - 0.75, random.nextDouble() * 1.5 - 0.75, random.nextDouble() * 1.5 - 0.75);
             particlePos = ffPos.add(addVel);
 
-            attacker.getWorld().addParticle(ParticleTypes.POOF,
+            attacker.level().addParticle(ParticleTypes.POOF,
                     particlePos.x,
                     particlePos.y,
                     particlePos.z,
@@ -78,32 +77,32 @@ public class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumEntity>
             } else {
                 attacker.setRotationOffset(225);
             }
-            if (attacker.age % 2 != 0) {
+            if (attacker.tickCount % 2 != 0) {
                 return;
             }
 
-            Box fBox = createBox(fPos, 2);
-            Box ffBox = createBox(ffPos, 2);
+            AABB fBox = createBox(fPos, 2);
+            AABB ffBox = createBox(ffPos, 2);
 
-            JUtils.displayHitbox(attacker.getWorld(), fBox);
-            JUtils.displayHitbox(attacker.getWorld(), ffBox);
+            JUtils.displayHitbox(attacker.level(), fBox);
+            JUtils.displayHitbox(attacker.level(), ffBox);
             Set<Entity> hits = AbstractSimpleAttack.findHits(attacker, Set.of(fBox, ffBox), null, Entity.class);
 
             for (Entity entity : hits) {
-                double distance = entity.getPos().distanceTo(eyePos);
+                double distance = entity.position().distanceTo(eyePos);
                 if (distance > 3) // Falloff
                 {
                     distance -= distance * distance * 0.1;
                 }
 
-                entity.setVelocity(entity.getVelocity()
+                entity.setDeltaMovement(entity.getDeltaMovement()
                         .subtract(rotVec.x, 0, rotVec.z)
-                        .multiply(0.2 * distance));
+                        .scale(0.2 * distance));
 
-                entity.velocityModified = true;
+                entity.hurtMarked = true;
 
-                if (entity instanceof ServerPlayerEntity player) {
-                    player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(player));
+                if (entity instanceof ServerPlayer player) {
+                    player.connection.send(new ClientboundSetEntityMotionPacket(player));
                 }
             }
         }

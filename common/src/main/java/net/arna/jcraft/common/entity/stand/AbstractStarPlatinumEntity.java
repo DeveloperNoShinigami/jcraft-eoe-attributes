@@ -5,8 +5,8 @@ import net.arna.jcraft.common.attack.moves.starplatinum.BlockBreakingAttack;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 
 public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPlatinumEntity<E, S>, S extends Enum<S> & StandAnimationState<E>> extends StandEntity<E, S>
         permits StarPlatinumEntity, SPTWEntity {
@@ -20,8 +20,8 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
             .withHyperArmor()
             .withLaunch()
             .withInfo(
-                    Text.literal("Ground Breaker"),
-                    Text.literal("slow, uninterruptible launcher, breaks the ground")
+                    Component.literal("Ground Breaker"),
+                    Component.literal("slow, uninterruptible launcher, breaks the ground")
             );
     public static final SimpleAttack<AbstractStarPlatinumEntity<?, ?>> STAR_BREAKER = new SimpleAttack<AbstractStarPlatinumEntity<?, ?>>(
             200, 20, 30, 1f, 10f, 14, 2f, 1.5f, 0f)
@@ -34,11 +34,11 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
             .withLaunch()
             .withCrouchingVariant(GROUND_BREAKER)
             .withInfo(
-                    Text.literal("Star Breaker"),
-                    Text.literal("slow, uninterruptible launcher")
+                    Component.literal("Star Breaker"),
+                    Component.literal("slow, uninterruptible launcher")
             );
 
-    protected AbstractStarPlatinumEntity(StandType type, World worldIn) {
+    protected AbstractStarPlatinumEntity(StandType type, Level worldIn) {
         super(type, worldIn, JSoundRegistry.STAR_PLATINUM_SUMMON.get());
         idleRotation = 225f;
 

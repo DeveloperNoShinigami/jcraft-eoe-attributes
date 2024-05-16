@@ -4,7 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.arna.jcraft.client.rendering.api.MultiInstancePostProcessor;
 import net.arna.jcraft.client.rendering.post.TimestopShaderFX;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gl.ShaderProgram;
+import net.minecraft.client.renderer.ShaderInstance;
 
 public class JPlatformUtils {
 
@@ -14,18 +14,23 @@ public class JPlatformUtils {
     }
 
     @ExpectPlatform
-    public static ShaderProgram getTest() {
+    public static ShaderInstance getTest() {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @ExpectPlatform
-    public static ShaderProgram getRred() {
+    public static ShaderInstance getRred() {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
 
     @ExpectPlatform
     public static boolean isModLoaded(String name) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @ExpectPlatform
+    public static boolean isDevelopmentEnvironment() {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 }

@@ -3,47 +3,52 @@ package net.arna.jcraft.common.entity.projectile;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
-public class EmeraldProjectile extends PersistentProjectileEntity implements GeoEntity {
+public class EmeraldProjectile extends AbstractArrow implements GeoEntity {
     private int ticksInAir;
     private int bouncesLeft = 5;
     private boolean reflect = false;
 
-    public EmeraldProjectile(EntityType<? extends EmeraldProjectile> entityType, World world) {
+    public EmeraldProjectile(EntityType<? extends EmeraldProjectile> entityType, Level world) {
         super(entityType, world);
     }
 
-    public EmeraldProjectile(World world) {
+    public EmeraldProjectile(Level world) {
         super(JEntityTypeRegistry.EMERALD.get(), world);
     }
 
-    public EmeraldProjectile(World world, LivingEntity owner) {
+    public EmeraldProjectile(Level world, LivingEntity owner) {
         super(JEntityTypeRegistry.EMERALD.get(), owner, world);
         setNoGravity(true);
         setOwner(owner);
-        setSound(SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK);
+        setSoundEvent(SoundEvents.AMETHYST_BLOCK_BREAK);
     }
 
     public void withReflect() {
@@ -51,14 +56,14 @@ public class EmeraldProjectile extends PersistentProjectileEntity implements Geo
     }
 
     @Override
-    public ItemStack asItemStack() {
+    public ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
-    private static final BlockStateParticleEffect EMERALD_PARTICLE = new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.EMERALD_BLOCK.getDefaultState());
+    private static final BlockParticleOption EMERALD_PARTICLE = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.EMERALD_BLOCK.defaultBlockState());
 
     @Override
-    protected void age() {
+    protected void tickDespawn() {
         discard();
     }
 
@@ -70,24 +75,24 @@ public class EmeraldProjectile extends PersistentProjectileEntity implements Geo
         if (!inGround) {
             ++ticksInAir;
         } else {
-            if (getWorld().isClient) {
+            if (level().isClientSide) {
                 double x = getX();
                 double y = getY();
                 double z = getZ();
 
                 for (int i = 0; i < 8; i++) {
-                    getWorld().addParticle(EMERALD_PARTICLE, x, y, z,
+                    level().addParticle(EMERALD_PARTICLE, x, y, z,
                             random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
                 }
             }
         }
 
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             if (random.nextGaussian() < -0.002) {
                 double x = getX();
                 double y = getY();
                 double z = getZ();
-                getWorld().addParticle(ParticleTypes.HAPPY_VILLAGER, x, y, z,
+                level().addParticle(ParticleTypes.HAPPY_VILLAGER, x, y, z,
                         random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
             }
             return;
@@ -99,31 +104,31 @@ public class EmeraldProjectile extends PersistentProjectileEntity implements Geo
     }
 
     @Override
-    protected void onCollision(HitResult hitResult) {
+    protected void onHit(HitResult hitResult) {
         if (reflect) {
             HitResult.Type type = hitResult.getType();
             if (type == HitResult.Type.ENTITY) {
-                this.onEntityHit((EntityHitResult) hitResult);
-                this.getWorld().emitGameEvent(GameEvent.PROJECTILE_LAND, hitResult.getPos(), GameEvent.Emitter.of(this, null));
+                this.onHitEntity((EntityHitResult) hitResult);
+                this.level().gameEvent(GameEvent.PROJECTILE_LAND, hitResult.getLocation(), GameEvent.Context.of(this, null));
             } else if (type == HitResult.Type.BLOCK) {
                 BlockHitResult blockHitResult = (BlockHitResult) hitResult;
                 if (bouncesLeft-- > 0) {
-                    Vec3i normal = blockHitResult.getSide().getVector();
-                    setVelocity(getVelocity().add(Vec3d.of(normal)).normalize());
+                    Vec3i normal = blockHitResult.getDirection().getNormal();
+                    setDeltaMovement(getDeltaMovement().add(Vec3.atLowerCornerOf(normal)).normalize());
                 } else {
-                    this.onBlockHit(blockHitResult);
+                    this.onHitBlock(blockHitResult);
                     BlockPos blockPos = blockHitResult.getBlockPos();
-                    this.getWorld().emitGameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Emitter.of(this, this.getWorld().getBlockState(blockPos)));
+                    this.level().gameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Context.of(this, this.level().getBlockState(blockPos)));
                 }
             }
         } else {
-            super.onCollision(hitResult);
+            super.onHit(hitResult);
         }
     }
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) {
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        if (level().isClientSide) {
             return;
         }
         Entity entity = entityHitResult.getEntity();
@@ -137,37 +142,37 @@ public class EmeraldProjectile extends PersistentProjectileEntity implements Geo
         }
 
         if (isOnFire()) {
-            entity.setOnFireFor(5);
+            entity.setSecondsOnFire(5);
         }
 
         int blockstun = 4;
         int stunT = 10;
 
-        JUtils.projectileDamageLogic(this, getWorld(), entity, Vec3d.ZERO, stunT, 1, false, 1, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
-        playSound(SoundEvents.BLOCK_AMETHYST_BLOCK_BREAK, 1, 1);
+        JUtils.projectileDamageLogic(this, level(), entity, Vec3.ZERO, stunT, 1, false, 1, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
+        playSound(SoundEvents.AMETHYST_BLOCK_BREAK, 1, 1);
         discard();
     }
 
     @Override
-    protected float getDragInWater() {
+    protected float getWaterInertia() {
         // Not actually drag, just a multiplier
         return 0.8F;
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
         tag.putShort("life", (short) this.ticksInAir);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
 
     @Override

@@ -6,9 +6,8 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class TFComboAttack extends AbstractMultiHitAttack<TFComboAttack, TheFoolEntity> {
@@ -23,7 +22,7 @@ public class TFComboAttack extends AbstractMultiHitAttack<TFComboAttack, TheFool
 
         if (getBlow(attacker) == 2) {
             for (LivingEntity ent : targets) {
-                ent.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 20, 0, true, false));
+                ent.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 20, 0, true, false));
             }
         }
 

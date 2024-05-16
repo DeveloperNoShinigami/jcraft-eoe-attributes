@@ -13,23 +13,22 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.Set;
 
 public class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAttack, MagiciansRedEntity> {
     public static final IntMoveVariable HURRICANE_TIME = new IntMoveVariable();
-    public static final MoveVariable<Vec3d> HURRICANE_POS = new MoveVariable<>(Vec3d.class);
+    public static final MoveVariable<Vec3> HURRICANE_POS = new MoveVariable<>(Vec3.class);
 
     public CrossfireHurricaneAttack(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
@@ -38,7 +37,7 @@ public class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAtt
     @Override
     public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
         ctx.setInt(HURRICANE_TIME, 50);
-        ctx.set(HURRICANE_POS, attacker.getPos());
+        ctx.set(HURRICANE_POS, attacker.position());
         return Set.of();
     }
 
@@ -46,59 +45,59 @@ public class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAtt
         // Init variables
         MoveContext ctx = stand.getMoveContext();
         int hurricaneTime = ctx.getInt(HURRICANE_TIME);
-        Vec3d hurricanePos = ctx.get(HURRICANE_POS);
+        Vec3 hurricanePos = ctx.get(HURRICANE_POS);
         LivingEntity user = stand.getUserOrThrow();
         Entity vehicle = user.getVehicle();
-        World world = stand.getWorld();
+        Level world = stand.level();
 
         // Run every four ticks because the hurricane's meant to be slow, and it's convenient for CPU usage
-        if (stand.age % 4 != 0 || hurricaneTime <= 0) {
+        if (stand.tickCount % 4 != 0 || hurricaneTime <= 0) {
             return;
         }
         ctx.setInt(HURRICANE_TIME, --hurricaneTime);
 
         // Homing
-        List<LivingEntity> nearbyEnts = world.getEntitiesByClass(LivingEntity.class,
-                new Box(hurricanePos.add(32.0, 32.0, 32.0), hurricanePos.subtract(32.0, 32.0, 32.0)),
-                EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(e -> e != vehicle && e != stand && e != user));
+        List<LivingEntity> nearbyEnts = world.getEntitiesOfClass(LivingEntity.class,
+                new AABB(hurricanePos.add(32.0, 32.0, 32.0), hurricanePos.subtract(32.0, 32.0, 32.0)),
+                EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != vehicle && e != stand && e != user));
 
         if (!nearbyEnts.isEmpty()) {
-            Vec3d avgPos = Vec3d.ZERO;
+            Vec3 avgPos = Vec3.ZERO;
             for (LivingEntity livingEntity : nearbyEnts) {
-                avgPos = avgPos.add(livingEntity.getEyePos());
+                avgPos = avgPos.add(livingEntity.getEyePosition());
             }
-            avgPos = avgPos.multiply(1.0 / nearbyEnts.size());
+            avgPos = avgPos.scale(1.0 / nearbyEnts.size());
 
-            ctx.set(HURRICANE_POS, hurricanePos = hurricanePos.add(avgPos.subtract(hurricanePos).normalize().multiply(0.5)));
+            ctx.set(HURRICANE_POS, hurricanePos = hurricanePos.add(avgPos.subtract(hurricanePos).normalize().scale(0.5)));
         }
 
         // Damage
-        List<LivingEntity> toHurt = world.getEntitiesByClass(LivingEntity.class,
-                new Box(hurricanePos.add(2.5, 1, 2.5), hurricanePos.subtract(2.5, 1, 2.5)),
-                EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(e -> e != stand && e != user && e != vehicle));
+        List<LivingEntity> toHurt = world.getEntitiesOfClass(LivingEntity.class,
+                new AABB(hurricanePos.add(2.5, 1, 2.5), hurricanePos.subtract(2.5, 1, 2.5)),
+                EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != stand && e != user && e != vehicle));
 
         for (LivingEntity living : toHurt) {
             LivingEntity target = JUtils.getUserIfStand(living);
             if (hurricaneTime > 1) {
-                StandEntity.damageLogic(world, target, new Vec3d(Math.sin(stand.age / 10.0) * 3, 0.0, Math.cos(stand.age / 10.0) * 3),
+                StandEntity.damageLogic(world, target, new Vec3(Math.sin(stand.tickCount / 10.0) * 3, 0.0, Math.cos(stand.tickCount / 10.0) * 3),
                         10, 1, false, 0.5f, true, 5, JDamageSources.stand(stand), user, CommonHitPropertyComponent.HitAnimation.MID);
                 if (hurricaneTime > 15) {
                     ctx.setInt(HURRICANE_TIME, 15); // Allows for zoning up until it hits something
                 }
             } else {
-                target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 20, 0));
+                target.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 20, 0));
             }
         }
 
         // Particles
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeShort(10);
 
         buf.writeDouble(hurricanePos.x);
         buf.writeDouble(hurricanePos.y);
         buf.writeDouble(hurricanePos.z);
 
-        for (ServerPlayerEntity sendPlayer : ((ServerWorld) world).getPlayers()) {
+        for (ServerPlayer sendPlayer : ((ServerLevel) world).players()) {
             ServerChannelFeedbackPacket.send(sendPlayer, buf);
         }
     }

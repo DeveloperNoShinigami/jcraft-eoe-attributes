@@ -3,7 +3,7 @@ package net.arna.jcraft.common.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import lombok.Setter;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class BooleanOption extends ConfigOption {
     @Setter
@@ -25,12 +25,12 @@ public class BooleanOption extends ConfigOption {
     }
 
     @Override
-    public void write(PacketByteBuf buf) {
+    public void write(FriendlyByteBuf buf) {
         buf.writeBoolean(value);
     }
 
     @Override
-    public void read(PacketByteBuf buf) {
+    public void read(FriendlyByteBuf buf) {
         value = buf.readBoolean();
     }
 

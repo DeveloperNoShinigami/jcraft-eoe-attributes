@@ -1,22 +1,22 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
     private final StandType type;
-    private final Identifier model;
-    private final List<Identifier> skins;
-    private final Identifier animation;
+    private final ResourceLocation model;
+    private final List<ResourceLocation> skins;
+    private final ResourceLocation animation;
     private final float torsoPitchOffset, headPitchOffset, velInfluence;
 
     public StandEntityModel(StandType type) {
@@ -42,17 +42,17 @@ public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
     }
 
     @Override
-    public Identifier getModelResource(E entity) {
+    public ResourceLocation getModelResource(E entity) {
         return model;
     }
 
     @Override
-    public Identifier getTextureResource(E entity) {
-        return skins.get(MathHelper.clamp(entity.getSkin(), 0, type.getSkinCount()));
+    public ResourceLocation getTextureResource(E entity) {
+        return skins.get(Mth.clamp(entity.getSkin(), 0, type.getSkinCount()));
     }
 
     @Override
-    public Identifier getAnimationResource(E entity) {
+    public ResourceLocation getAnimationResource(E entity) {
         return animation;
     }
 

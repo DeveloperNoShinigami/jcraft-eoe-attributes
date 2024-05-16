@@ -9,13 +9,12 @@ import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack, TheWo
     }
 
     @Override
-    protected void processTarget(TheWorldOverHeavenEntity attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource) {
+    protected void processTarget(TheWorldOverHeavenEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         MoveContext ctx = attacker.getMoveContext();
@@ -43,18 +42,18 @@ public class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack, TheWo
                 overwriteTargets.add(target);
             }
             case 2 -> {
-                target.setOnFireFor(5);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 100, 0, false, true));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 100, 0, false, true));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 100, 0, false, true));
+                target.setSecondsOnFire(5);
+                target.addEffect(new MobEffectInstance(MobEffects.HUNGER, 100, 0, false, true));
+                target.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0, false, true));
+                target.addEffect(new MobEffectInstance(MobEffects.WITHER, 100, 0, false, true));
             }
             case 3 -> {
                 target.heal(4f);
 
-                if (!(target instanceof MobEntity)) {
+                if (!(target instanceof Mob)) {
                     return;
                 }
-                JComponentPlatformUtils.getMiscData(target).setSlavedTo(attacker.getUserOrThrow().getUuid());
+                JComponentPlatformUtils.getMiscData(target).setSlavedTo(attacker.getUserOrThrow().getUUID());
                 overwriteTimes.add(1048576);
                 overwriteTargets.add(target);
             }

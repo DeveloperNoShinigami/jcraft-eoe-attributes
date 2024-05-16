@@ -3,9 +3,9 @@ package net.arna.jcraft.common.attack.moves.kingcrimson;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class KCDonutAttack extends AbstractSimpleAttack<KCDonutAttack, KingCrimsonEntity> {
     public KCDonutAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
@@ -14,10 +14,10 @@ public class KCDonutAttack extends AbstractSimpleAttack<KCDonutAttack, KingCrims
     }
 
     @Override
-    protected void processTarget(KingCrimsonEntity attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource) {
+    protected void processTarget(KingCrimsonEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
-        Vec3d pos = attacker.getPos().add(attacker.getRotationVector().multiply(1.5));
-        target.teleport(pos.x, target.getY(), pos.z);
+        Vec3 pos = attacker.position().add(attacker.getLookAngle().scale(1.5));
+        target.teleportToWithTicket(pos.x, target.getY(), pos.z);
     }
 
     @Override

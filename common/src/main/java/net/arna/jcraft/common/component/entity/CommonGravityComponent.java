@@ -3,8 +3,7 @@ package net.arna.jcraft.common.component.entity;
 import net.arna.jcraft.common.gravity.RotationAnimation;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
 import net.arna.jcraft.common.gravity.util.Gravity;
-import net.minecraft.util.math.Direction;
-
+import net.minecraft.core.Direction;
 import java.util.List;
 
 public interface CommonGravityComponent {

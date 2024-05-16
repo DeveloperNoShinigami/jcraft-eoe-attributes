@@ -9,15 +9,14 @@ import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JBlockRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -45,12 +44,12 @@ public class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFo
         List<FallingBlockEntity> sands = ctx.get(SANDS);
 
         for (int i = 0; i < 8; i++) {
-            FallingBlockEntity sand = FallingBlockEntity.spawnFromBlock(attacker.getWorld(), superTarget.getBlockPos(),
-                    JBlockRegistry.FOOLISH_SAND_BLOCK.get().getDefaultState());
-            sand.timeFalling = -160;
-            sand.noClip = true;
+            FallingBlockEntity sand = FallingBlockEntity.fall(attacker.level(), superTarget.blockPosition(),
+                    JBlockRegistry.FOOLISH_SAND_BLOCK.get().defaultBlockState());
+            sand.time = -160;
+            sand.noPhysics = true;
             sand.dropItem = false;
-            sand.setBoundingBox(new Box(0, 0, 0, 0, 0, 0));
+            sand.setBoundingBox(new AABB(0, 0, 0, 0, 0, 0));
             sand.setNoGravity(true);
             sands.add(sand);
         }
@@ -78,17 +77,17 @@ public class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFo
             }
         }
 
-        superTarget.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 10, 0, true, false));
-        superTarget.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 0, true, false));
+        superTarget.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 0, true, false));
+        superTarget.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 0, true, false));
 
-        int age = attacker.age;
+        int age = attacker.tickCount;
         if (age % 20 == 0) {
             sands.get(0).discard();
             sands.remove(0);
         }
 
-        Random random = attacker.getRandom();
-        Vec3d targetPos = superTarget.getPos().add(0, superTarget.getHeight() / 2, 0);
+        RandomSource random = attacker.getRandom();
+        Vec3 targetPos = superTarget.position().add(0, superTarget.getBbHeight() / 2, 0);
 
         int i = 0;
         int j = 1;
@@ -99,19 +98,19 @@ public class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFo
             i++;
             j *= -1;
 
-            Vec3d newVel = sand.getVelocity().multiply(0.25).add( // Suppress current velocity
+            Vec3 newVel = sand.getDeltaMovement().scale(0.25).add( // Suppress current velocity
                     // And add tracking
                     targetPos.subtract(
                             // MathHelper.sin(t) * 2, (isEven ? MathHelper.sin(t) : MathHelper.cos(t)) * 2, MathHelper.cos(t) * 2
-                            sand.getPos().add(
+                            sand.position().add(
                                     random.nextDouble() - 0.5 + Math.sin(age * i / 10.0 * j),
                                     random.nextDouble() * 2 - 1,
                                     random.nextDouble() - 0.5 + Math.cos(age * i / 10.0 * j))
-                    ).normalize().multiply(0.5)
+                    ).normalize().scale(0.5)
             );
 
-            sand.setVelocity(newVel);
-            sand.velocityModified = true;
+            sand.setDeltaMovement(newVel);
+            sand.hurtMarked = true;
         }
     }
 

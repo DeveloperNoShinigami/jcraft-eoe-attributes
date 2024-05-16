@@ -13,17 +13,24 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -36,8 +43,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withExtraHitBox(1)
             .withInfo(
-                    Text.literal("Uppercut"),
-                    Text.literal("decent stun, launches up")
+                    Component.literal("Uppercut"),
+                    Component.literal("decent stun, launches up")
             );
     public static final SimpleAttack<WhiteSnakeEntity> LIGHT_FOLLOWUP = new SimpleAttack<WhiteSnakeEntity>(
             0, 7, 13, 0.75f, 6f, 10, 1.5f, 1f, 0.2f)
@@ -47,8 +54,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             .withBlockStun(4)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Finisher"),
-                    Text.literal("quick combo finisher")
+                    Component.literal("Finisher"),
+                    Component.literal("quick combo finisher")
             );
     public static final SimpleAttack<WhiteSnakeEntity> LIGHT = SimpleAttack.<WhiteSnakeEntity>lightAttack(
                     7, 11, 0.75f, 5f, 13, 0.2f, 0.2f)
@@ -56,8 +63,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             .withCrouchingVariant(UPPERCUT)
             .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withInfo(
-                    Text.literal("Punch"),
-                    Text.literal("quick combo starter")
+                    Component.literal("Punch"),
+                    Component.literal("quick combo starter")
             );
     public static final SimpleAttack<WhiteSnakeEntity> MEDIUM = new SimpleAttack<WhiteSnakeEntity>(
             60, 8, 13, 1, 7f, 16, 1.75f, 0.4f, 0)
@@ -66,16 +73,16 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
-                    Text.literal("Gut Punch"),
-                    Text.literal("combo starter/extender")
+                    Component.literal("Gut Punch"),
+                    Component.literal("combo starter/extender")
             );
     public static final MainBarrageAttack<WhiteSnakeEntity> BARRAGE = new MainBarrageAttack<WhiteSnakeEntity>(
-            240, 0, 40, 0.75f, 1, 20, 2, 0.25f, 0, 3, Blocks.OAK_PLANKS.getHardness())
+            240, 0, 40, 0.75f, 1, 20, 2, 0.25f, 0, 3, Blocks.OAK_PLANKS.defaultDestroyTime())
             .withSound(JSoundRegistry.WS_BARRAGE.get())
             .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withInfo(
-                    Text.literal("Barrage"),
-                    Text.literal("fast reliable combo starter/extender, medium stun")
+                    Component.literal("Barrage"),
+                    Component.literal("fast reliable combo starter/extender, medium stun")
             );
     public static final GiveStandAttack GIVE_STAND = new GiveStandAttack(400, 22, 34, 1, 1, 2, 0, 0)
             .withSound(JSoundRegistry.WS_STAND_DISC.get())
@@ -84,12 +91,12 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE)
             .withInfo(
-                    Text.literal("Give Stand Disk"),
-                    Text.literal("gives a single hit target a stand, provided they do not have one already, from a disk in the user's off hand")
+                    Component.literal("Give Stand Disk"),
+                    Component.literal("gives a single hit target a stand, provided they do not have one already, from a disk in the user's off hand")
             );
     public static final EffectInflictingAttack<WhiteSnakeEntity> STAND_DISC = new EffectInflictingAttack<WhiteSnakeEntity>(
             480, 22, 34, 1, 8f, 20, 2, 0.5f, 0,
-            List.of(new StatusEffectInstance(JStatusRegistry.STANDLESS.get(), 160, 0)))
+            List.of(new MobEffectInstance(JStatusRegistry.STANDLESS.get(), 160, 0)))
             .withSound(JSoundRegistry.WS_STAND_DISC.get())
             .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -98,8 +105,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withCrouchingVariant(GIVE_STAND)
             .withInfo(
-                    Text.literal("Take Stand Disk"),
-                    Text.literal("uninterruptible & unblockable, removes enemy stand for 8s")
+                    Component.literal("Take Stand Disk"),
+                    Component.literal("uninterruptible & unblockable, removes enemy stand for 8s")
             );
     public static final SimpleAttack<WhiteSnakeEntity> LEG_CRUSHER = new SimpleAttack<WhiteSnakeEntity>(
             240, 16, 22, 0.75f, 7, 32, 1.75f, 0.35f, 0.4f)
@@ -108,14 +115,14 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(
-                    Text.literal("Leg Crusher"),
-                    Text.literal("high stun, medium windup")
+                    Component.literal("Leg Crusher"),
+                    Component.literal("high stun, medium windup")
             );
     public static final EffectInflictingAttack<WhiteSnakeEntity> MEMORY_DISC = new EffectInflictingAttack<WhiteSnakeEntity>(
             280, 22, 34, 1, 7f, 20, 2, 0.5f, 0,
             List.of(
-                    new StatusEffectInstance(StatusEffects.WEAKNESS, 600, 0),
-                    new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 600, 0)
+                    new MobEffectInstance(MobEffects.WEAKNESS, 600, 0),
+                    new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 600, 0)
             ))
             .withSound(JSoundRegistry.WS_MEMORY_DISC.get())
             .withImpactSound(JSoundRegistry.IMPACT_2.get())
@@ -124,23 +131,23 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
-                    Text.literal("Take Memory Disk"),
-                    Text.literal("uninterruptible& unblockable, gives mining fatigue & weakness for 30s")
+                    Component.literal("Take Memory Disk"),
+                    Component.literal("uninterruptible& unblockable, gives mining fatigue & weakness for 30s")
             );
     public static final ChargedSpewAttack CHARGED_SPEW = new ChargedSpewAttack(
             200, 20, 26, 0.75f, 0f, 0, 2f, 0f, 0f)
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withInfo(
-                    Text.literal("Poison Spew"),
-                    Text.literal("fires a spread of 5 acid projectiles that slow enemies and persist on the surface they hits for 5s")
+                    Component.literal("Poison Spew"),
+                    Component.literal("fires a spread of 5 acid projectiles that slow enemies and persist on the surface they hits for 5s")
             );
     public static final PoisonSpewAttack POISON_SPEW = new PoisonSpewAttack(
             200, 10, 14, 0.75f, 0f, 0, 2f, 0f, 0f)
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withCrouchingVariant(CHARGED_SPEW)
             .withInfo(
-                    Text.literal("Poison Spew"),
-                    Text.literal("fires an acid projectile that slows enemies and persists on the surface it hits for 5s")
+                    Component.literal("Poison Spew"),
+                    Component.literal("fires an acid projectile that slows enemies and persists on the surface it hits for 5s")
             );
     public static final MeltYourHeartAttack MELT_YOUR_HEART = new MeltYourHeartAttack(
             800, 40, 50, 1f, 3f, 20, 2f, 1f, 0f)
@@ -150,16 +157,16 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withLaunch()
             .withInfo(
-                    Text.literal("Melt your Heart"),
-                    Text.literal("remote-only and armored, expels a sphere of poison")
+                    Component.literal("Melt your Heart"),
+                    Component.literal("remote-only and armored, expels a sphere of poison")
             );
     public static final PilotModeMove<WhiteSnakeEntity> PILOT_MODE = new PilotModeMove<WhiteSnakeEntity>(20)
             .withInfo(
-                    Text.literal("Pilot Mode"),
-                    Text.empty()
+                    Component.literal("Pilot Mode"),
+                    Component.empty()
             );
 
-    public WhiteSnakeEntity(World worldIn) {
+    public WhiteSnakeEntity(Level worldIn) {
         super(StandType.WHITE_SNAKE, worldIn, JSoundRegistry.WS_SUMMON.get());
         idleRotation = 220f;
 
@@ -230,7 +237,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             return;
         }
 
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             // Called for EVERYONE
             JCraft.getClientEntityHandler().whiteSnakeRemoteClientTick(this);
         } else {
@@ -242,16 +249,16 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
 
             if (getState() == State.IDLE) { // Replace idle anim
                 if (s > 0) {
-                    setStateNoReset(isOnGround() ? State.RIGHT : State.RIGHT_DASH);
+                    setStateNoReset(onGround() ? State.RIGHT : State.RIGHT_DASH);
                 }
                 if (s < 0) {
-                    setStateNoReset(isOnGround() ? State.LEFT : State.LEFT_DASH);
+                    setStateNoReset(onGround() ? State.LEFT : State.LEFT_DASH);
                 }
                 if (f < 0) {
-                    setStateNoReset(isOnGround() ? State.BACKWARD : State.BACKWARD_DASH);
+                    setStateNoReset(onGround() ? State.BACKWARD : State.BACKWARD_DASH);
                 }
                 if (f > 0) {
-                    setStateNoReset(isOnGround() ? State.FORWARD : State.FORWARD_DASH);
+                    setStateNoReset(onGround() ? State.FORWARD : State.FORWARD_DASH);
                 }
             }
         }
@@ -265,30 +272,30 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
      * @param jump Jump input
      */
     public void tickRemoteMovement(double f, double s, boolean jump) {
-        Vec3d pos = getPos();
+        Vec3 pos = position();
 
         // 1 tick of inertia, helping movement be fluid as well as dealing with packet drops
-        if (lastRemoteInputTime - age > 2) {
+        if (lastRemoteInputTime - tickCount > 2) {
             updateRemoteInputs(0, 0, false, false);
         }
-        Vec3d rotVec = new Vec3d(getRotationVector().x, 0, getRotationVector().z).normalize();
+        Vec3 rotVec = new Vec3(getLookAngle().x, 0, getLookAngle().z).normalize();
 
         double dragMult = getMoveStun() > 0 ? 0.2 : 0.4;
         double moveSpeed = 0.24;
-        boolean onGround = isOnGround();
-        boolean climbing = getBlockStateAtPos().streamTags().anyMatch(tag -> tag == BlockTags.CLIMBABLE);
-        boolean swimming = !getWorld().getFluidState(getBlockPos()).isEmpty();
+        boolean onGround = onGround();
+        boolean climbing = getFeetBlockState().getTags().anyMatch(tag -> tag == BlockTags.CLIMBABLE);
+        boolean swimming = !level().getFluidState(blockPosition()).isEmpty();
 
         if (climbing || swimming) {
             dragMult *= 0.5;
         }
 
         if ((climbing || swimming) && jump) { // Climb or Swim
-            addVelocity(0, 0.1, 0);
+            push(0, 0.1, 0);
         } else { // Jump
             if (onGround) {
                 if (jump) {
-                    addVelocity(0, 0.75, 0);
+                    push(0, 0.75, 0);
                     setRemoteJumpInput(false);
                 }
             } else {
@@ -299,19 +306,19 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
         }
 
         remoteSpeed = remoteSpeed
-                .add(rotVec.multiply(f * moveSpeed)) // Forward movement
-                .add(rotVec.rotateY(1.5707963f).multiply(s * moveSpeed)); // Side movement
+                .add(rotVec.scale(f * moveSpeed)) // Forward movement
+                .add(rotVec.yRot(1.5707963f).scale(s * moveSpeed)); // Side movement
 
-        remoteSpeed = remoteSpeed.multiply(dragMult);
+        remoteSpeed = remoteSpeed.scale(dragMult);
 
-        Vec3d userPos = getUserOrThrow().getPos();
-        if (pos.add(remoteSpeed).squaredDistanceTo(userPos) > 400) {
-            remoteSpeed = userPos.subtract(pos).multiply(0.025); // 1/40th so it scales with distance
+        Vec3 userPos = getUserOrThrow().position();
+        if (pos.add(remoteSpeed).distanceToSqr(userPos) > 400) {
+            remoteSpeed = userPos.subtract(pos).scale(0.025); // 1/40th so it scales with distance
         }
 
-        addVelocity(remoteSpeed.x, remoteSpeed.y, remoteSpeed.z);
-        velocityDirty = true;
-        velocityModified = true;
+        push(remoteSpeed.x, remoteSpeed.y, remoteSpeed.z);
+        hasImpulse = true;
+        hurtMarked = true;
     }
 
 

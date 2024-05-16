@@ -7,14 +7,16 @@ import net.arna.jcraft.client.renderer.entity.stands.*;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
 public interface JEntityRendererRegister {
     static void registerEntityRenderers() {
+
+
 
         EntityRendererRegistry.register(JEntityTypeRegistry.STAR_PLATINUM, StarPlatinumRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.SPTW, SPTWRenderer::new);
@@ -86,10 +88,10 @@ public interface JEntityRendererRegister {
         EntityRendererRegistry.register(JEntityTypeRegistry.DARBY_YOUNGER, DarbyYoungerRenderer::new);
     }
 
-    private static <T extends Entity> EntityRenderer<T> createEmpty(EntityRendererFactory.Context ctx) {
+    static <T extends Entity> EntityRenderer<T> createEmpty(EntityRendererProvider.Context ctx) {
         return new EntityRenderer<>(ctx) {
             @Override
-            public Identifier getTexture(T entity) {
+            public ResourceLocation getTextureLocation(T entity) {
                 return null;
             }
         };

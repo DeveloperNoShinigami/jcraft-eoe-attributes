@@ -1,9 +1,9 @@
 package net.arna.jcraft.common.component.living;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public interface CommonBombTrackerComponent {
@@ -22,20 +22,20 @@ public interface CommonBombTrackerComponent {
             dirty = true;
         }
 
-        public @Nullable Vec3d getBombPos() {
+        public @Nullable Vec3 getBombPos() {
             // Failsafe due to clientside bullshit
             if (bombEntity == null) {
                 isEntity = false;
             }
 
             if (isEntity) {
-                return bombEntity.getPos();
+                return bombEntity.position();
             }
             if (isBlock) {
-                return Vec3d.of(bombBlock);
+                return Vec3.atLowerCornerOf(bombBlock);
             }
-            if (isItem && bombItem.getHolder() != null) {
-                return bombItem.getHolder().getPos();
+            if (isItem && bombItem.getEntityRepresentation() != null) {
+                return bombItem.getEntityRepresentation().position();
             }
             return null;
         }

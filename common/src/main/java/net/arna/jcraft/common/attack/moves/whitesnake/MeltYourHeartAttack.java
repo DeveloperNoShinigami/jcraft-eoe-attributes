@@ -6,8 +6,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.WSAcidProjectile;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.entity.LivingEntity;
-
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class MeltYourHeartAttack extends AbstractSimpleAttack<MeltYourHeartAttack, WhiteSnakeEntity> {
@@ -23,11 +22,11 @@ public class MeltYourHeartAttack extends AbstractSimpleAttack<MeltYourHeartAttac
         for (int i = 0; i < 10; i++) {
             float yaw = i * 36F - 180F + i * 3.6F;
             for (int j = 0; j < 10; j++) {
-                WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.getWorld(), user);
+                WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.level(), user);
                 acidProjectile.markMeltYourHeart();
                 JUtils.shoot(acidProjectile, user, j * 36F - 180F, yaw, 0, 0.66F, 0);
-                acidProjectile.setPosition(attacker.getEyePos());
-                attacker.getWorld().spawnEntity(acidProjectile);
+                acidProjectile.setPos(attacker.getEyePosition());
+                attacker.level().addFreshEntity(acidProjectile);
             }
         }
 

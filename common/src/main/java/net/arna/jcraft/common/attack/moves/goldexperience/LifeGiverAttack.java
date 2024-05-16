@@ -10,11 +10,10 @@ import net.arna.jcraft.common.entity.GEFrogEntity;
 import net.arna.jcraft.common.entity.GESnakeEntity;
 import net.arna.jcraft.common.entity.stand.GoldExperienceEntity;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import java.util.Set;
 
 public class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienceEntity> {
@@ -27,9 +26,9 @@ public class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienc
 
     @Override
     public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
-        ItemStack item = user.getOffHandStack(); // Get offhand, or if unavailable main hand stack
+        ItemStack item = user.getOffhandItem(); // Get offhand, or if unavailable main hand stack
         if (item.isEmpty()) {
-            item = user.getMainHandStack();
+            item = user.getMainHandItem();
         }
         if (item.isEmpty()) {
             return Set.of();
@@ -40,28 +39,28 @@ public class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienc
         animalItem.setCount(1);
         switch (ctx.get(TYPE_TO_SUMMON)) {
             case SNAKE -> {
-                if (item.getMaxCount() <= 1) {
+                if (item.getMaxStackSize() <= 1) {
                     return Set.of();
                 }
 
-                GESnakeEntity snake = new GESnakeEntity(JEntityTypeRegistry.GE_SNAKE.get(), attacker.getWorld());
+                GESnakeEntity snake = new GESnakeEntity(JEntityTypeRegistry.GE_SNAKE.get(), attacker.level());
                 //todo: fix snake not working for mobs
-                if (user instanceof PlayerEntity playerEntity) {
-                    snake.setOwner(playerEntity);
+                if (user instanceof Player playerEntity) {
+                    snake.tame(playerEntity);
                 }
                 animal = snake;
             }
             case FROG -> {
-                if (item.getMaxCount() <= 1) {
+                if (item.getMaxStackSize() <= 1) {
                     return Set.of();
                 }
 
-                GEFrogEntity frog = new GEFrogEntity(JEntityTypeRegistry.GE_FROG.get(), attacker.getWorld());
+                GEFrogEntity frog = new GEFrogEntity(JEntityTypeRegistry.GE_FROG.get(), attacker.level());
                 frog.setMaster(user);
                 animal = frog;
             }
             case BUTTERFLY -> {
-                GEButterflyEntity butterfly = new GEButterflyEntity(JEntityTypeRegistry.GE_BUTTERFLY.get(), attacker.getWorld());
+                GEButterflyEntity butterfly = new GEButterflyEntity(JEntityTypeRegistry.GE_BUTTERFLY.get(), attacker.level());
                 butterfly.setMaster(user);
                 animal = butterfly;
             }
@@ -72,10 +71,10 @@ public class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienc
             JCraft.LOGGER.error("Failed to create animal of type " + ctx.get(TYPE_TO_SUMMON) + " from item " + animalItem);
             return Set.of();
         }
-        item.decrement(1);
-        animal.refreshPositionAndAngles(attacker.getX(), attacker.getY() + 0.5f, attacker.getZ(), attacker.getYaw(), attacker.getPitch());
-        animal.setStackInHand(Hand.MAIN_HAND, animalItem);
-        attacker.getWorld().spawnEntity(animal);
+        item.shrink(1);
+        animal.moveTo(attacker.getX(), attacker.getY() + 0.5f, attacker.getZ(), attacker.getYRot(), attacker.getXRot());
+        animal.setItemInHand(InteractionHand.MAIN_HAND, animalItem);
+        attacker.level().addFreshEntity(animal);
 
         return Set.of();
     }

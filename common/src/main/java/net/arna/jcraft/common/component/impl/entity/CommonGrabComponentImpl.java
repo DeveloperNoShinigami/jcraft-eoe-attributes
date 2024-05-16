@@ -5,13 +5,13 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.entity.CommonGrabComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
@@ -61,11 +61,11 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
         if (attacker != null) {
             if (attacker.isAlive() && duration-- > 0) {
                 Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
-                Vec3d newPos = attacker.getPos()
-                        .add(RotationUtil.vecPlayerToWorld(new Vec3d(0, verticalOffset, 0), gravity))
-                        .add(attacker.getRotationVector().multiply(distance));
-                if (!attacker.getWorld().isTopSolid(BlockPos.ofFloored(newPos), grabbed)) {
-                    grabbed.setPosition(newPos);
+                Vec3 newPos = attacker.position()
+                        .add(RotationUtil.vecPlayerToWorld(new Vec3(0, verticalOffset, 0), gravity))
+                        .add(attacker.getLookAngle().scale(distance));
+                if (!attacker.level().loadedAndEntityCanStandOn(BlockPos.containing(newPos), grabbed)) {
+                    grabbed.setPos(newPos);
                 }
             } else {
                 endGrab();
@@ -77,12 +77,12 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
         //JComponentPlatformUtils.GRAB.sync(grabbed);
     }
 
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
+    public boolean shouldSyncWith(ServerPlayer player) {
         // It'll be passively synced in a choppy way for those far away
-        return player.squaredDistanceTo(grabbed) <= 6400; // 5 chunks
+        return player.distanceToSqr(grabbed) <= 6400; // 5 chunks
     }
 
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
         boolean notGrabbing = attacker == null;
         buf.writeBoolean(notGrabbing);
         if (notGrabbing) {
@@ -94,19 +94,19 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
         buf.writeDouble(verticalOffset);
     }
 
-    public void applySyncPacket(PacketByteBuf buf) {
+    public void applySyncPacket(FriendlyByteBuf buf) {
         if (buf.readBoolean()) {
             return;
         }
-        attacker = grabbed.getWorld().getEntityById(buf.readVarInt());
+        attacker = grabbed.level().getEntity(buf.readVarInt());
         duration = buf.readVarInt();
         distance = buf.readDouble();
         verticalOffset = buf.readDouble();
     }
 
-    public void readFromNbt(@NotNull NbtCompound tag) {
+    public void readFromNbt(@NotNull CompoundTag tag) {
     }
 
-    public void writeToNbt(@NotNull NbtCompound tag) {
+    public void writeToNbt(@NotNull CompoundTag tag) {
     }
 }

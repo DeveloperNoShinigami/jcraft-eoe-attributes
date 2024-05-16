@@ -3,13 +3,13 @@ package net.arna.jcraft.common.tickable;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -22,12 +22,12 @@ public class Revivables {
         final EntityType<?> type;
         @NonNull
         @Getter
-        final Vec3d pos;
+        final Vec3 pos;
         @NonNull
-        final RegistryKey<World> worldKey;
+        final ResourceKey<Level> worldKey;
         public int timer = 20 * 60; // 1min
 
-        private ReviveData(@NotNull EntityType<?> type, @NotNull Vec3d pos, @NotNull RegistryKey<World> worldKey) {
+        private ReviveData(@NotNull EntityType<?> type, @NotNull Vec3 pos, @NotNull ResourceKey<Level> worldKey) {
             this.type = type;
             this.pos = pos;
             this.worldKey = worldKey;
@@ -36,7 +36,7 @@ public class Revivables {
 
     protected static final List<ReviveData> revivables = new ArrayList<>();
 
-    public static void addRevivable(EntityType<?> type, Vec3d pos, RegistryKey<World> worldKey) {
+    public static void addRevivable(EntityType<?> type, Vec3 pos, ResourceKey<Level> worldKey) {
         revivables.add(new ReviveData(type, pos, worldKey));
     }
 
@@ -45,7 +45,7 @@ public class Revivables {
     }
 
     public static void revive(@NonNull MinecraftServer server, @NonNull ReviveData revivable) {
-        ServerWorld serverWorld = server.getWorld(revivable.worldKey);
+        ServerLevel serverWorld = server.getLevel(revivable.worldKey);
         if (serverWorld == null) {
             JCraft.LOGGER.fatal("Tried to revive entity from invalid ServerWorld!");
             return;
@@ -55,12 +55,12 @@ public class Revivables {
             JCraft.LOGGER.warn("Failed to create entity from EntityType: " + revivable.type);
             return;
         }
-        entity.setPosition(revivable.pos);
-        serverWorld.spawnEntity(entity);
+        entity.setPos(revivable.pos);
+        serverWorld.addFreshEntity(entity);
         removeRevivable(revivable);
     }
 
-    public static boolean removeRevivableAt(Vec3d pos) {
+    public static boolean removeRevivableAt(Vec3 pos) {
         for (ReviveData revivable : revivables) {
             if (revivable.pos == pos) {
                 return revivables.remove(revivable);
@@ -70,10 +70,10 @@ public class Revivables {
     }
 
 
-    public static List<ReviveData> getAround(Vec3d pos, double distance) {
+    public static List<ReviveData> getAround(Vec3 pos, double distance) {
         List<ReviveData> out = new ArrayList<>();
         for (ReviveData revivable : revivables) {
-            if (revivable.pos.squaredDistanceTo(pos) <= distance * distance) {
+            if (revivable.pos.distanceToSqr(pos) <= distance * distance) {
                 out.add(revivable);
             }
         }

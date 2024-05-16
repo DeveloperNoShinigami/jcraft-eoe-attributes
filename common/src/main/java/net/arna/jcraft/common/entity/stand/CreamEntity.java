@@ -18,30 +18,43 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+
+import net.minecraft.world.damagesource.CombatEntry;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -53,14 +66,14 @@ import static net.arna.jcraft.common.attack.moves.cream.SurpriseMove.OUT_POS;
 public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     public static final EffectInflictingAttack<CreamEntity> BITE = new EffectInflictingAttack<CreamEntity>(20,
             7, 13, 0.75f, 6f, 20, 1.75f, 0.75f, 0.3f,
-            List.of(new StatusEffectInstance(StatusEffects.SLOWNESS, 40, 1)))
+            List.of(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 1)))
             .withAnim(State.BITE)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
-            .withSound(SoundEvents.ENTITY_EVOKER_FANGS_ATTACK)
+            .withSound(SoundEvents.EVOKER_FANGS_ATTACK)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Bite"),
-                    Text.literal("applies Slowness II (2s) on hit"));
+                    Component.literal("Bite"),
+                    Component.literal("applies Slowness II (2s) on hit"));
     public static final SimpleAttack<CreamEntity> LIGHT_FOLLOWUP = new SimpleAttack<CreamEntity>(
             0, 7, 14, 0.75f, 6f, 8, 1.75f, 1.1f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
@@ -70,16 +83,16 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             .withExtraHitBox(0, 0.25, 1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Chop"),
-                    Text.literal("quick combo finisher"));
+                    Component.literal("Chop"),
+                    Component.literal("quick combo finisher"));
     public static final SimpleAttack<CreamEntity> PUNCH = SimpleAttack.<CreamEntity>lightAttack(6, 14,
                     0.75f, 5f, 20, 0.3f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(BITE)
             .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withInfo(
-                    Text.literal("Backhand"),
-                    Text.literal("quick combo starter"));
+                    Component.literal("Backhand"),
+                    Component.literal("quick combo starter"));
     public static final SimpleAttack<CreamEntity> VERTICAL_CHOP = new SimpleAttack<CreamEntity>(200, 20,
             30, 1f, 8f, 40, 1.5f, 0.8f, 0f)
             .withSound(JSoundRegistry.CREAM_HEAVY.get())
@@ -88,51 +101,51 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             .withHyperArmor()
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
-                    Text.literal("Vertical Chop"),
-                    Text.literal("slow, uninterruptible combo starter"));
+                    Component.literal("Vertical Chop"),
+                    Component.literal("slow, uninterruptible combo starter"));
     public static final CreamComboAttack COMBO = new CreamComboAttack(280, 36, 0.75f,
             5f, 20, 2f, 0.2f, 0f, IntSet.of(10, 17, 25))
             .withSound(JSoundRegistry.CREAM_COMBO.get())
             .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Assault"),
-                    Text.literal("medium windup, good stun"));
+                    Component.literal("Assault"),
+                    Component.literal("medium windup, good stun"));
     public static final SimpleAttack<CreamEntity> GRAB_HIT = new SimpleAttack<CreamEntity>(0, 13, 20,
             1f, 6f, 5, 2f, 1.5f, 0f)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withLaunch()
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Grab (Hit)"),
-                    Text.empty());
+                    Component.literal("Grab (Hit)"),
+                    Component.empty());
     public static final GrabAttack<CreamEntity, State> GRAB = new GrabAttack<>(320, 8, 20,
             1f, 3f, 30, 1.5f, 0f, 0f, GRAB_HIT, State.GRAB_HIT)
             .withSound(JSoundRegistry.CREAM_GRAB.get())
             .withInfo(
-                    Text.literal("Grab"),
-                    Text.literal("unblockable, knocks back"));
+                    Component.literal("Grab"),
+                    Component.literal("unblockable, knocks back"));
     public static final SurpriseMove SURPRISE = new SurpriseMove(300, 14, 24, 1f)
             .withSound(JSoundRegistry.CREAM_SUMMON.get())
             .withInitAction((attacker, user, ctx) -> {
-                Vec3d rotVec = user.getRotationVector();
-                if (user.isSneaking()) {
-                    attacker.getMoveContext().set(OUT_POS, user.getPos().add(rotVec).toVector3f());
+                Vec3 rotVec = user.getLookAngle();
+                if (user.isShiftKeyDown()) {
+                    attacker.getMoveContext().set(OUT_POS, user.position().add(rotVec).toVector3f());
                 } else {
-                    Vec3d eyePos = user.getEyePos();
-                    HitResult hitResult = attacker.getWorld().raycast(new RaycastContext(eyePos, eyePos.add(rotVec.multiply(16)),
-                            RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, user));
-                    attacker.getMoveContext().set(OUT_POS, hitResult.getPos().toVector3f());
+                    Vec3 eyePos = user.getEyePosition();
+                    HitResult hitResult = attacker.level().clip(new ClipContext(eyePos, eyePos.add(rotVec.scale(16)),
+                            ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
+                    attacker.getMoveContext().set(OUT_POS, hitResult.getLocation().toVector3f());
                 }
             })
             .withAction((attacker, user, ctx, targets) -> {
-                var outDir = GravityChangerAPI.getGravityDirection(attacker).getUnitVector();
+                var outDir = GravityChangerAPI.getGravityDirection(attacker).step();
                 outDir.mul(-1f);
                 ctx.set(OUT_DIR, outDir);
             })
             .withInfo(
-                    Text.literal("Surprise"),
-                    Text.literal("""
+                    Component.literal("Surprise"),
+                    Component.literal("""
                             Cream disappears into the ground, then pops out in a nearby looked location.
                             If used while crouching, Cream appears in front of the user.
                             """));
@@ -140,8 +153,8 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             4f, 2f, 10, 1.5f, 0.5f, 0f, 3, false)
             .withAction(
                     ((attacker, user, ctx, targets) ->
-                            targets.forEach(target -> target.addStatusEffect(
-                                            new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 25, 0, true, false)
+                            targets.forEach(target -> target.addEffect(
+                                            new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 25, 0, true, false)
                                     )
                             )
                     )
@@ -150,8 +163,8 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             .withImpactSound(JSoundRegistry.IMPACT_5.get())
             .withBlockableType(BlockableType.NON_BLOCKABLE)
             .withInfo(
-                    Text.literal("Charge"),
-                    Text.literal("4 block range, unblockable knockdown"));
+                    Component.literal("Charge"),
+                    Component.literal("4 block range, unblockable knockdown"));
     public static final DestroyAttack DESTROY = new DestroyAttack(320, 21, 30, 1f,
             8f, 5, 2f, 1.25f, 0f)
             .withCrouchingVariant(CHARGE)
@@ -161,31 +174,31 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE)
             .withInfo(
-                    Text.literal("Destroy"),
-                    Text.literal("slow, uninterruptible, unblockable knockdown"));
+                    Component.literal("Destroy"),
+                    Component.literal("slow, uninterruptible, unblockable knockdown"));
     public static final ConsumeAttack CONSUME = new ConsumeAttack(640, 35, 40, 1f,
             2f, 0, 2f, 0f, 0f)
             .withSound(JSoundRegistry.CREAM_CONSUME.get())
             .withInfo(
-                    Text.literal("Void"),
-                    Text.literal("high windup, 6 seconds"));
+                    Component.literal("Void"),
+                    Component.literal("high windup, 6 seconds"));
     public static final BallModeMove ENTER = new BallModeMove(40, 10, 15, 0f, true)
             .withSound(JSoundRegistry.CREAM_ENTER.get())
             .withInfo(
-                    Text.literal("Enter Cream"),
-                    Text.literal("Cream consumes itself and the user halfway, increasing mobility and decreasing defense"));
+                    Component.literal("Enter Cream"),
+                    Component.literal("Cream consumes itself and the user halfway, increasing mobility and decreasing defense"));
     public static final BallModeMove EXIT = new BallModeMove(40, 5, 15, 0f, false)
             .withSound(JSoundRegistry.CREAM_EXIT.get())
             .withInfo(
-                    Text.literal("Exit Cream"),
-                    Text.literal("Cream and its user return from the void"));
+                    Component.literal("Exit Cream"),
+                    Component.literal("Cream and its user return from the void"));
     public static final SimpleAttack<CreamEntity> SWIPE = new SimpleAttack<CreamEntity>(20, 7,
             14, 0.5f, 5f, 20, 2f, 0.75f, 0.2f)
             .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
-                    Text.literal("Swipe"),
-                    Text.literal("quick air-to-ground poke"));
+                    Component.literal("Swipe"),
+                    Component.literal("quick air-to-ground poke"));
     public static final KnockdownAttack<CreamEntity> OVERHEAD_SMASH = new KnockdownAttack<CreamEntity>(160,
             14, 20, 0.5f, 9f, 15, 2f, 1.25f, 0.3f, 35)
             .withSound(JSoundRegistry.CREAM_SMASH.get())
@@ -194,53 +207,53 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             .withHyperArmor()
             .withLaunch()
             .withInfo(
-                    Text.literal("Overhead Smash"),
-                    Text.literal("slow, uninterruptible launcher"));
+                    Component.literal("Overhead Smash"),
+                    Component.literal("slow, uninterruptible launcher"));
     public static final SimpleMultiHitAttack<CreamEntity> BALL_COMBO = new SimpleMultiHitAttack<CreamEntity>(200,
             36, 0.5f, 7f, 15, 2f, 0.1f, 0.3f, IntSet.of(10, 17, 25))
             .withSound(JSoundRegistry.CREAM_COMBO.get())
             .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
-                    Text.literal("Aerial Assault"),
-                    Text.literal("less stun than grounded version"));
+                    Component.literal("Aerial Assault"),
+                    Component.literal("less stun than grounded version"));
     public static final BallChargeAttack BALL_CHARGE = new BallChargeAttack(300, 13, 28, 1f)
             .withSound(JSoundRegistry.CREAM_BALLDASH.get())
             .withInfo(
-                    Text.literal("Void Charge"),
-                    Text.literal("Cream quickly transforms into a black hole and charges in the pointed direction"));
+                    Component.literal("Void Charge"),
+                    Component.literal("Cream quickly transforms into a black hole and charges in the pointed direction"));
     public static final SurpriseMove DETACH_CHARGE = new SurpriseMove(300, 13, 28, 1f)
             .withSound(JSoundRegistry.CREAM_BALLDASH.get())
             .withInitAction((attacker, user, ctx) -> {
                 attacker.endHalfBall();
-                attacker.getMoveContext().set(OUT_POS, user.getPos().toVector3f());
-                ctx.set(OUT_DIR, user.getRotationVector().multiply(0.75).toVector3f());
+                attacker.getMoveContext().set(OUT_POS, user.position().toVector3f());
+                ctx.set(OUT_DIR, user.getLookAngle().scale(0.75).toVector3f());
             })
             .withInfo(
-                    Text.literal("Detaching Void Charge"),
-                    Text.literal("""
+                    Component.literal("Detaching Void Charge"),
+                    Component.literal("""
                             Cream quickly transforms into a black hole and charges in the pointed direction.
                             The user exits cream upon performing this move."""));
     public static final BallChargeAttack BALL_DESTROY = new BallChargeAttack(300, 13, 28, 1f)
             .withSound(JSoundRegistry.CREAM_BALLDASH.get())
             .withInfo(
-                    Text.literal("Destroy"),
-                    Text.literal("Cream quickly transforms into a black hole and charges in a downward curve"));
+                    Component.literal("Destroy"),
+                    Component.literal("Cream quickly transforms into a black hole and charges in a downward curve"));
 
-    private static final TrackedData<Integer> VOID_TIME;
-    private static final TrackedData<Boolean> HALF_BALL;
+    private static final EntityDataAccessor<Integer> VOID_TIME;
+    private static final EntityDataAccessor<Boolean> HALF_BALL;
     @Setter
-    private Vec3d chargeDir;
+    private Vec3 chargeDir;
     @Getter
     @Setter
     private boolean charging = false;
 
     static {
-        VOID_TIME = DataTracker.registerData(CreamEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        HALF_BALL = DataTracker.registerData(CreamEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        VOID_TIME = SynchedEntityData.defineId(CreamEntity.class, EntityDataSerializers.INT);
+        HALF_BALL = SynchedEntityData.defineId(CreamEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
-    public CreamEntity(World worldIn) {
+    public CreamEntity(Level worldIn) {
         super(StandType.CREAM, worldIn, JSoundRegistry.CREAM_SUMMON.get());
 
         idleRotation = 220f;
@@ -272,7 +285,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     }
 
     public void beginHalfBall() {
-        dataTracker.set(HALF_BALL, true);
+        entityData.set(HALF_BALL, true);
         idleDistance = 0f;
         blockDistance = 0f;
         maxStandGauge = 45f;
@@ -281,7 +294,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     }
 
     public void endHalfBall() {
-        dataTracker.set(HALF_BALL, false);
+        entityData.set(HALF_BALL, false);
         idleDistance = 1.25f;
         blockDistance = 0.75f;
         maxStandGauge = 90f;
@@ -290,15 +303,15 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     }
 
     public boolean isHalfBall() {
-        return dataTracker.get(HALF_BALL);
+        return entityData.get(HALF_BALL);
     }
 
     public int getVoidTime() {
-        return dataTracker.get(VOID_TIME);
+        return entityData.get(VOID_TIME);
     }
 
     public void setVoidTime(int vTime) {
-        dataTracker.set(VOID_TIME, vTime);
+        entityData.set(VOID_TIME, vTime);
         if (vTime == 0) {
             setReset(true);
         }
@@ -347,15 +360,15 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        getDataTracker().startTracking(VOID_TIME, 0);
-        getDataTracker().startTracking(HALF_BALL, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(VOID_TIME, 0);
+        getEntityData().define(HALF_BALL, false);
     }
 
     @Override
     public boolean canAttack() {
-        if (hasUser() && !(getUser() instanceof PlayerEntity) && getVoidTime() > 0) {
+        if (hasUser() && !(getUser() instanceof Player) && getVoidTime() > 0) {
             return false; // Prevents mobs from attacking while in void state and cancelling void early
         }
         return super.canAttack();
@@ -370,18 +383,18 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     }
 
     @Override
-    protected Box calculateBoundingBox() {
+    protected AABB makeBoundingBox() {
         double x = getX();
         double y = getY();
         double z = getZ();
 
         if (isHalfBall()) {
-            return new Box(x - 0.6, y + 0.0, z - 0.6, x + 0.6, y + 1.4, z + 0.6);
+            return new AABB(x - 0.6, y + 0.0, z - 0.6, x + 0.6, y + 1.4, z + 0.6);
         }
         if (getState() == State.SURPRISE) {
-            return new Box(x - 0.6, y + 0, z - 0.6, x + 0.6, y + 0.3, z + 0.6);
+            return new AABB(x - 0.6, y + 0, z - 0.6, x + 0.6, y + 0.3, z + 0.6);
         }
-        return super.calculateBoundingBox();
+        return super.makeBoundingBox();
     }
 
     @Override
@@ -407,7 +420,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     @Override
     public void tick() {
         super.tick();
-        boolean server = !getWorld().isClient();
+        boolean server = !level().isClientSide();
 
         if (!hasUser()) {
             return;
@@ -416,12 +429,12 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
         boolean isPlayer = false;
         boolean notCorS = false;
 
-        Vec3d pos = getEyePos();
+        Vec3 pos = getEyePosition();
         int voidTime = getVoidTime();
         boolean voiding = (voidTime > 0);
 
         // Players get creative flight, and mobs get gravity removed and y level equalization with target; see: handleAIVoid()
-        if (user instanceof PlayerEntity playerEntity) {
+        if (user instanceof Player playerEntity) {
             notCorS = (!playerEntity.isCreative() && !playerEntity.isSpectator());
             if (notCorS && !charging && !isFree()) {
                 playerEntity.getAbilities().flying = voiding;
@@ -444,23 +457,23 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
         if (voiding) {
             if (server) {
-                if (getWorld().getGameRules().getBoolean(JCraft.STAND_GRIEFING)) {
+                if (level().getGameRules().getBoolean(JCraft.STAND_GRIEFING)) {
                     // Unfun 3x4x3 void code
                     for (int x = -1; x < 2; x++) {
                         for (int y = -1; y < 3; y++) {
                             for (int z = -1; z < 2; z++) {
-                                BlockPos curPos = this.getBlockPos().add(x, y, z);
-                                if (getWorld().getBlockState(curPos).getBlock().getBlastResistance() > 100.1f) {
+                                BlockPos curPos = this.blockPosition().offset(x, y, z);
+                                if (level().getBlockState(curPos).getBlock().getExplosionResistance() > 100.1f) {
                                     continue;
                                 }
-                                getWorld().setBlockState(curPos, Block.getStateFromRawId(0));
+                                level().setBlockAndUpdate(curPos, Block.stateById(0));
                             }
                         }
                     }
                 }
 
                 if (notCorS && !isFree()) {
-                    user.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 25, 0, false, false));
+                    user.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 25, 0, false, false));
                 }
 
                 if (charging) {
@@ -472,16 +485,16 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                             setFree(false);
                         }
                     } else if (chargeDir != null) { // Void Charge move
-                        user.setVelocity(chargeDir);
-                        user.velocityModified = true;
-                        if (user instanceof ServerPlayerEntity player) {
-                            player.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(user));
+                        user.setDeltaMovement(chargeDir);
+                        user.hurtMarked = true;
+                        if (user instanceof ServerPlayer player) {
+                            player.connection.send(new ClientboundSetEntityMotionPacket(user));
                         }
 
                         if (curMove != null && curMove.getOriginalMove() == BALL_DESTROY) {
                             chargeDir = chargeDir.add(
-                                    new Vec3d(GravityChangerAPI.getGravityDirection(user).getUnitVector()).multiply(0.1)
-                            ).normalize().multiply(0.5);
+                                    new Vec3(GravityChangerAPI.getGravityDirection(user).step()).scale(0.1)
+                            ).normalize().scale(0.5);
                         }
                     }
                 } else { // Ultimate
@@ -492,10 +505,10 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                     }
                 }
 
-                Box damageBox = new Box(pos.add(1.5, 1.5, 1.5), pos.subtract(1.5, 1.5, 1.5));
-                List<Entity> toDamage = getWorld().getEntitiesByClass(Entity.class,
-                        damageBox, EntityPredicates.VALID_ENTITY);
-                JUtils.displayHitbox(getWorld(), damageBox);
+                AABB damageBox = new AABB(pos.add(1.5, 1.5, 1.5), pos.subtract(1.5, 1.5, 1.5));
+                List<Entity> toDamage = level().getEntitiesOfClass(Entity.class,
+                        damageBox, EntitySelector.ENTITY_STILL_ALIVE);
+                JUtils.displayHitbox(level(), damageBox);
 
                 toDamage.remove(user);
                 toDamage.remove(this);
@@ -508,7 +521,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                     stun = 4;
                     damage = 5.0f;
                 } else {
-                    hurt = age % 4 == 0;
+                    hurt = tickCount % 4 == 0;
 
                     setAlphaOverride(0);
                 }
@@ -524,7 +537,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                             JUtils.cancelMoves(livingEntity);
                         }
 
-                        livingEntity.damage(getWorld().getDamageSources().outOfWorld(), damage);
+                        livingEntity.hurt(level().damageSources().fellOutOfWorld(), damage);
                     }
                 }
 
@@ -536,7 +549,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                 setDistanceOffset(0);
             } else {
                 for (int i = 0; i < 16; i++) {
-                    getWorld().addParticle(ParticleTypes.MYCELIUM,
+                    level().addParticle(ParticleTypes.MYCELIUM,
                             pos.x + (random.nextFloat() - 0.5f) * 2f,
                             pos.y + (random.nextFloat() - 0.5f) * 2f,
                             pos.z + (random.nextFloat() - 0.5f) * 2f,
@@ -553,59 +566,59 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                 return;
             }
             setAlphaOverride(0.1f);
-            user.onLanding();
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 5, 9, true, false));
+            user.resetFallDistance();
+            user.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 5, 9, true, false));
 
             // Player Half-Ball controls
-            if (user instanceof ServerPlayerEntity serverPlayer) {
+            if (user instanceof ServerPlayer serverPlayer) {
                 if (serverPlayer.isFallFlying()) {
                     serverPlayer.stopFallFlying();
                 }
 
-                if (lastRemoteInputTime - age > 4) {
+                if (lastRemoteInputTime - tickCount > 4) {
                     updateRemoteInputs(0, 0, false, false);
                 }
 
-                Vec3d finalSpeed = Vec3d.ZERO;
-                if (!blocking && !user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
+                Vec3 finalSpeed = Vec3.ZERO;
+                if (!blocking && !user.hasEffect(JStatusRegistry.DAZED.get())) {
                     Direction gravity = GravityChangerAPI.getGravityDirection(this);
-                    Vec3d gravityVec = new Vec3d(gravity.getUnitVector());
+                    Vec3 gravityVec = new Vec3(gravity.step());
 
-                    Vec3d userVel = JUtils.deltaPos(user);
-                    Vec3d userPos = user.getPos();
-                    Vec3d groundPos = getWorld().raycast(
-                            new RaycastContext(
-                                    userPos, userPos.add(gravityVec.multiply(24)),
-                                    RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.SOURCE_ONLY, user)).getPos();
+                    Vec3 userVel = JUtils.deltaPos(user);
+                    Vec3 userPos = user.position();
+                    Vec3 groundPos = level().clip(
+                            new ClipContext(
+                                    userPos, userPos.add(gravityVec.scale(24)),
+                                    ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, user)).getLocation();
 
                     double groundDist = groundPos.distanceTo(pos);
                     if (groundDist < 2) {
                         groundDist = 2; // Prevents extremely high jumps
                     }
-                    Vec3d stabilization = userVel.multiply(gravityVec).multiply(10 / groundDist);
+                    Vec3 stabilization = userVel.multiply(gravityVec).scale(10 / groundDist);
 
                     if (getRemoteJumpInput()) {
-                        user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 10, 2, true, false));
+                        user.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 10, 2, true, false));
                         if (groundDist < 5) {
-                            GravityChangerAPI.addWorldVelocity(user, stabilization.subtract(gravityVec.multiply(0.25 / groundDist)));
+                            GravityChangerAPI.addWorldVelocity(user, stabilization.subtract(gravityVec.scale(0.25 / groundDist)));
                         }
                     }
 
-                    Vec3d rotVec = Vec3d.fromPolar(getPitch(), getYaw());
-                    Vec3d moveRotVec = Vec3d.ZERO;
+                    Vec3 rotVec = Vec3.directionFromRotation(getXRot(), getYRot());
+                    Vec3 moveRotVec = Vec3.ZERO;
                     float forward = (float) getRemoteForwardInput();
                     if (forward != 0) {
-                        moveRotVec = moveRotVec.add(rotVec.multiply(forward)); // Forward movement
+                        moveRotVec = moveRotVec.add(rotVec.scale(forward)); // Forward movement
                     }
                     float side = (float) getRemoteSideInput();
                     if (side != 0) {
-                        moveRotVec = moveRotVec.add(rotVec.rotateY(1.57079632679f * side)); // Side movement
+                        moveRotVec = moveRotVec.add(rotVec.yRot(1.57079632679f * side)); // Side movement
                     }
 
-                    finalSpeed = finalSpeed.add(moveRotVec.normalize().multiply(0.034));
+                    finalSpeed = finalSpeed.add(moveRotVec.normalize().scale(0.034));
 
-                    user.addVelocity(finalSpeed.x, finalSpeed.y, finalSpeed.z);
-                    user.velocityModified = true;
+                    user.push(finalSpeed.x, finalSpeed.y, finalSpeed.z);
+                    user.hurtMarked = true;
                 }
             } else {
                 resetAlphaOverride();
@@ -615,34 +628,34 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
     private void handleAIVoid(LivingEntity user, int voidTime) {
         double y = user.getY();
-        Vec3d vel = new Vec3d(user.getVelocity().x, 0.0, user.getVelocity().z);
+        Vec3 vel = new Vec3(user.getDeltaMovement().x, 0.0, user.getDeltaMovement().z);
 
         // Targeting priority
-        var damageRecord = user.getDamageTracker().getBiggestFall();
+        var damageRecord = user.getCombatTracker().getMostSignificantFall();
         Entity targetEntity = null;
         if (damageRecord != null) {
-            targetEntity = damageRecord.damageSource().getAttacker();
+            targetEntity = damageRecord.source().getEntity();
         }
-        if (targetEntity == null && user instanceof MobEntity mob) {
+        if (targetEntity == null && user instanceof Mob mob) {
             targetEntity = mob.getTarget();
         }
         if (targetEntity == null) {
-            targetEntity = user.getAttacker();
+            targetEntity = user.getLastHurtByMob();
         }
 
         // If target wasn't found, thrash around
-        Vec3d target = targetEntity != null ? targetEntity.getPos() : this.getPos().add(Math.sin(this.age * 0.2) * 2, Math.sin(this.age * 0.2) / 4, Math.cos(this.age * 0.2) * 2);
+        Vec3 target = targetEntity != null ? targetEntity.position() : this.position().add(Math.sin(this.tickCount * 0.2) * 2, Math.sin(this.tickCount * 0.2) / 4, Math.cos(this.tickCount * 0.2) * 2);
 
-        double dY = MathHelper.clamp(target.getY() - y, -1, 1);
+        double dY = Mth.clamp(target.y() - y, -1, 1);
         y += dY;
 
-        vel = vel.add(target.subtract(user.getPos().add(random.nextDouble() * 2, random.nextDouble() * 3, random.nextDouble() * 3)).normalize()).multiply(0.3);
+        vel = vel.add(target.subtract(user.position().add(random.nextDouble() * 2, random.nextDouble() * 3, random.nextDouble() * 3)).normalize()).scale(0.3);
 
-        user.setVelocity(vel);
-        user.setPos(user.getX(), y, user.getZ());
+        user.setDeltaMovement(vel);
+        user.setPosRaw(user.getX(), y, user.getZ());
 
         if (voidTime < 10) {
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 5, 1, true, false));
+            user.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 5, 1, true, false));
         }
     }
 

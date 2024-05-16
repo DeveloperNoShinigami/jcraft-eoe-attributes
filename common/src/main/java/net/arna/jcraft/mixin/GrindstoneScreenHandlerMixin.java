@@ -2,10 +2,10 @@ package net.arna.jcraft.mixin;
 
 import net.arna.jcraft.common.item.StandDiscItem;
 import net.arna.jcraft.registry.JItemRegistry;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.GrindstoneScreenHandler;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.GrindstoneMenu;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,16 +15,16 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(GrindstoneScreenHandler.class)
+@Mixin(GrindstoneMenu.class)
 public class GrindstoneScreenHandlerMixin {
     @Shadow
     @Final
-    Inventory input;
+    Container repairSlots;
 
-    @ModifyVariable(method = "updateResult", at = @At("STORE"), ordinal = 2)
+    @ModifyVariable(method = "createResult", at = @At("STORE"), ordinal = 2)
     private boolean allowStandDiscs(boolean value) {
-        ItemStack stack1 = input.getStack(0);
-        ItemStack stack2 = input.getStack(1);
+        ItemStack stack1 = repairSlots.getItem(0);
+        ItemStack stack2 = repairSlots.getItem(1);
 
         ItemStack stack = stack1.isEmpty() ? stack2 : stack1;
         if (stack.getItem() != JItemRegistry.STAND_DISC) {
@@ -34,7 +34,7 @@ public class GrindstoneScreenHandlerMixin {
         return StandDiscItem.isEmptyDisc(stack); // True means not allowed
     }
 
-    @Inject(method = "grind", at = @At("RETURN"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "removeNonCurses", at = @At("RETURN"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     private void grindStandDisc(ItemStack stack, int damage, int amount, CallbackInfoReturnable<ItemStack> cir, ItemStack copy) {
         if (copy.getItem() != JItemRegistry.STAND_DISC) {
             return;
@@ -45,7 +45,7 @@ public class GrindstoneScreenHandlerMixin {
             return;
         }
 
-        NbtCompound nbt = copy.getNbt();
+        CompoundTag nbt = copy.getTag();
         if (nbt == null) {
             return; // Should be impossible
         }

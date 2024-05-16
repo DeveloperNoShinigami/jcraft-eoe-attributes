@@ -1,28 +1,28 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.arna.jcraft.client.model.entity.MeteorModel;
 import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+
 
 
 public class MeteorRenderer extends GeoProjectileRenderer<MeteorProjectile> {
 
-    public MeteorRenderer(EntityRendererFactory.Context renderManagerIn) {
+    public MeteorRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new MeteorModel());
     }
 
     @Override
-    public RenderLayer getRenderType(MeteorProjectile animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
-        return RenderLayer.getEyes(texture);
+    public RenderType getRenderType(MeteorProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.eyes(texture);
     }
 
     @Override
-    public void render(MeteorProjectile animatable, float yaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
+    public void render(MeteorProjectile animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
     }
 }

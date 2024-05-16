@@ -5,25 +5,25 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lombok.AccessLevel;
 import lombok.Getter;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Function;
 
 public enum SpecType {
-    NONE(player -> null, Text.empty(), Text.empty()),
-    BRAWLER(BrawlerSpec::new, Text.literal("Close-range pressure and combo extension tool"), Text.literal(
+    NONE(player -> null, Component.empty(), Component.empty()),
+    BRAWLER(BrawlerSpec::new, Component.literal("Close-range pressure and combo extension tool"), Component.literal(
             """
                     Important hitconfirm: (any stand move)~stand.OFF>Combo>stand.ON+(any stand move)""")),
-    ANUBIS(AnubisSpec::new, Text.literal("Accelerating offense"), Text.literal(
+    ANUBIS(AnubisSpec::new, Component.literal("Accelerating offense"), Component.literal(
             """
                     PASSIVE: Bloodlust
                     Landing blows on opponents speeds up Anubis' attacks up to 2x, with +0.2x per hit.
                     Not hitting opponents reduces Bloodlust by one stack every 4 seconds.""")),
 
-    VAMPIRE(VampireSpec::new, Text.literal("Supernatural all-ranger"), Text.literal(
+    VAMPIRE(VampireSpec::new, Component.literal("Supernatural all-ranger"), Component.literal(
             """
                     PASSIVES: Burns in sunlight, Blood replaces hunger, Night vision
                     Excellent frametraps with Sweep or Axe Kick.
@@ -35,16 +35,16 @@ public enum SpecType {
     private static final Int2ObjectMap<SpecType> byId = getAllSpecTypes().stream()
             .collect(Int2ObjectOpenHashMap::new, (map, type) -> map.put(type.getId(), type), Int2ObjectMap::putAll);
 
-    private final Function<PlayerEntity, @Nullable JSpec<?, ?>> specCreator;
+    private final Function<Player, @Nullable JSpec<?, ?>> specCreator;
     @Getter
     private final String internalName;
     @Getter
-    private final Text translatableName, description, details;
+    private final Component translatableName, description, details;
 
 
-    SpecType(Function<PlayerEntity, @Nullable JSpec<?, ?>> specCreator, Text description, Text details) {
+    SpecType(Function<Player, @Nullable JSpec<?, ?>> specCreator, Component description, Component details) {
         internalName = name().toLowerCase();
-        translatableName = Text.translatable("spec.jcraft." + internalName);
+        translatableName = Component.translatable("spec.jcraft." + internalName);
         this.description = description;
         this.details = details;
         this.specCreator = specCreator;
@@ -54,7 +54,7 @@ public enum SpecType {
         return ordinal();
     }
 
-    public JSpec<?, ?> createNew(PlayerEntity player) {
+    public JSpec<?, ?> createNew(Player player) {
         return specCreator.apply(player);
     }
 

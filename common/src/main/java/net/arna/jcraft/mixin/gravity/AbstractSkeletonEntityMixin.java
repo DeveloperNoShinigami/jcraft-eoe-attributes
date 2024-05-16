@@ -2,21 +2,20 @@ package net.arna.jcraft.mixin.gravity;
 
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.AbstractSkeletonEntity;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(AbstractSkeletonEntity.class)
+@Mixin(AbstractSkeleton.class)
 public abstract class AbstractSkeletonEntityMixin {
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getX()D"
             )
     )
     private double redirect_attack_getX_0(LivingEntity target) {
@@ -25,32 +24,30 @@ public abstract class AbstractSkeletonEntityMixin {
             return target.getX();
         }
 
-        return target.getPos().add(RotationUtil.vecPlayerToWorld(0.0D, target.getHeight() * 0.3333333333333333D, 0.0D, gravityDirection)).x;
+        return target.position().add(RotationUtil.vecPlayerToWorld(0.0D, target.getBbHeight() * 0.3333333333333333D, 0.0D, gravityDirection)).x;
     }
 
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getBodyY(D)D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getY(D)D"
             )
     )
     private double redirect_attack_getBodyY_0(LivingEntity target, double heightScale) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
-            return target.getBodyY(heightScale);
+            return target.getY(heightScale);
         }
 
-        return target.getPos().add(RotationUtil.vecPlayerToWorld(0.0D, target.getHeight() * 0.3333333333333333D, 0.0D, gravityDirection)).y;
+        return target.position().add(RotationUtil.vecPlayerToWorld(0.0D, target.getBbHeight() * 0.3333333333333333D, 0.0D, gravityDirection)).y;
     }
 
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getZ()D"
             )
     )
     private double redirect_attack_getZ_0(LivingEntity target) {
@@ -59,11 +56,11 @@ public abstract class AbstractSkeletonEntityMixin {
             return target.getZ();
         }
 
-        return target.getPos().add(RotationUtil.vecPlayerToWorld(0.0D, target.getHeight() * 0.3333333333333333D, 0.0D, gravityDirection)).z;
+        return target.position().add(RotationUtil.vecPlayerToWorld(0.0D, target.getBbHeight() * 0.3333333333333333D, 0.0D, gravityDirection)).z;
     }
 
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/Math;sqrt(D)D"

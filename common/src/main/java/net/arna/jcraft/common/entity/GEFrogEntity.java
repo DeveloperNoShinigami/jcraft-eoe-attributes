@@ -3,33 +3,33 @@ package net.arna.jcraft.common.entity;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.ICustomDamageHandler;
 import net.arna.jcraft.common.util.IOwnable;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.FrogEntity;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.frog.Frog;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 
-public class GEFrogEntity extends FrogEntity implements IOwnable, ICustomDamageHandler {
-    public GEFrogEntity(EntityType<? extends AnimalEntity> entityType, World world) {
+public class GEFrogEntity extends Frog implements IOwnable, ICustomDamageHandler {
+    public GEFrogEntity(EntityType<? extends Animal> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
-        if (source.isOf(DamageTypes.OUT_OF_WORLD)) {
-            dropStack(getMainHandStack());
+    public boolean hurt(DamageSource source, float amount) {
+        if (source.is(DamageTypes.FELL_OUT_OF_WORLD)) {
+            spawnAtLocation(getMainHandItem());
             discard();
             return true;
         }
 
-        if (source.getAttacker() instanceof LivingEntity living) {
-            return living.damage(source, amount);
+        if (source.getEntity() instanceof LivingEntity living) {
+            return living.hurt(source, amount);
         }
         return false;
     }
@@ -50,14 +50,14 @@ public class GEFrogEntity extends FrogEntity implements IOwnable, ICustomDamageH
 
     @Override
     public void tick() {
-        boolean server = !getWorld().isClient;
+        boolean server = !level().isClientSide;
 
         if (server) {
             if (master == null) {
                 kill();
             } else {
                 // Go to master
-                getNavigation().startMovingTo(master, 3);
+                getNavigation().moveTo(master, 3);
             }
 
             if (--timeToLive == 0) {
@@ -74,9 +74,9 @@ public class GEFrogEntity extends FrogEntity implements IOwnable, ICustomDamageH
     }
 
     @Override
-    public boolean handleDamage(Vec3d kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
+    public boolean handleDamage(Vec3 kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
         if (attacker instanceof LivingEntity living) {
-            damageLogic(attacker.getWorld(), living, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, canBackstab, unblockable);
+            damageLogic(attacker.level(), living, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, canBackstab, unblockable);
         }
         return false;
     }

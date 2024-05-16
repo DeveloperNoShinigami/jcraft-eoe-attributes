@@ -1,31 +1,31 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.arna.jcraft.client.model.entity.RedBindModel;
 import net.arna.jcraft.common.entity.projectile.RedBindEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+
 
 public class RedBindRenderer extends GeoProjectileRenderer<RedBindEntity> {
-    public RedBindRenderer(EntityRendererFactory.Context renderManagerIn) {
+    public RedBindRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new RedBindModel());
     }
 
     @Override
-    public RenderLayer getRenderType(RedBindEntity animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
-        return RenderLayer.getEntityTranslucent(texture);
+    public RenderType getRenderType(RedBindEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucent(texture);
     }
 
     @Override
-    public void render(RedBindEntity animatable, float yaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
+    public void render(RedBindEntity animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         float xz = animatable.getBoundWidth();
 
-        poseStack.push();
+        poseStack.pushPose();
         poseStack.scale(xz, 1f, xz);
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
-        poseStack.pop();
+        poseStack.popPose();
     }
 }

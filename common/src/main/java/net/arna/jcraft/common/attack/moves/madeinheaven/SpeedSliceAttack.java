@@ -10,15 +10,14 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.MobilityType;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
-
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,44 +39,44 @@ public class SpeedSliceAttack extends AbstractMove<SpeedSliceAttack, MadeInHeave
 
     @Override
     public @NonNull Set<LivingEntity> perform(MadeInHeavenEntity attacker, LivingEntity user, MoveContext ctx) {
-        return doSpeedSlice(attacker, user.getEyePos(), user.getEyePos().add(user.getRotationVector().multiply(8)),
+        return doSpeedSlice(attacker, user.getEyePosition(), user.getEyePosition().add(user.getLookAngle().scale(8)),
                 getDamage(), getKnockback(), getHitboxSize(), 20, 1);
     }
 
-    public static Set<LivingEntity> doSpeedSlice(MadeInHeavenEntity attacker, Vec3d start, Vec3d end, float damage, float knockback, float size, int stunTicks, int stunType) {
-        World world = attacker.getWorld();
+    public static Set<LivingEntity> doSpeedSlice(MadeInHeavenEntity attacker, Vec3 start, Vec3 end, float damage, float knockback, float size, int stunTicks, int stunType) {
+        Level world = attacker.level();
         LivingEntity user = attacker.getUserOrThrow();
-        HitResult hitResult = world.raycast(new RaycastContext(start, end, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, user));
-        Vec3d pos1 = user.getPos();
-        Vec3d pos2 = hitResult.getPos();
-        Vec3d towardsVec = pos2.subtract(pos1);
+        HitResult hitResult = world.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
+        Vec3 pos1 = user.position();
+        Vec3 pos2 = hitResult.getLocation();
+        Vec3 towardsVec = pos2.subtract(pos1);
 
-        Vec3d kbVec = towardsVec.normalize();
+        Vec3 kbVec = towardsVec.normalize();
 
-        DamageSource playerSource = world.getDamageSources().mobAttack(user);
+        DamageSource playerSource = world.damageSources().mobAttack(user);
 
-        user.teleport(pos2.x, pos2.y, pos2.z);
+        user.teleportToWithTicket(pos2.x, pos2.y, pos2.z);
 
         Set<LivingEntity> targets = new HashSet<>();
         double count = Math.round(pos1.distanceTo(pos2));
 
         for (int i = 0; i < count; i++) {
-            Vec3d curPos = pos1.add(towardsVec.multiply(i / count));
+            Vec3 curPos = pos1.add(towardsVec.scale(i / count));
 
-            Vec3d vec1 = curPos.add(-size, -size, -size);
-            Vec3d vec2 = curPos.add(size, size, size);
+            Vec3 vec1 = curPos.add(-size, -size, -size);
+            Vec3 vec2 = curPos.add(size, size, size);
 
             JUtils.displayHitbox(world, vec1, vec2);
 
-            List<LivingEntity> hurt = world.getEntitiesByClass(LivingEntity.class, new Box(vec1, vec2),
-                    EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != user));
+            List<LivingEntity> hurt = world.getEntitiesOfClass(LivingEntity.class, new AABB(vec1, vec2),
+                    EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != user));
             hurt.removeIf(targets::contains);
             targets.addAll(hurt);
         }
 
         for (LivingEntity ent : targets) {
             LivingEntity target = JUtils.getUserIfStand(ent);
-            StandEntity.damageLogic(world, target, kbVec.multiply(knockback).add(0, knockback / 4, 0),
+            StandEntity.damageLogic(world, target, kbVec.scale(knockback).add(0, knockback / 4, 0),
                     stunTicks, stunType, false, damage, true, (int) (4 + damage), playerSource, user, CommonHitPropertyComponent.HitAnimation.MID);
         }
 

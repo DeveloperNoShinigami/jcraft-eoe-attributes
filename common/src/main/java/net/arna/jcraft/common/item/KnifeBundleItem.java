@@ -4,28 +4,28 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class KnifeBundleItem extends KnifeItem {
-    private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
+    private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
-    public KnifeBundleItem(Settings settings) {
+    public KnifeBundleItem(Properties settings) {
         super(settings);
 
-        ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", 6.0, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", -2.8, EntityAttributeModifier.Operation.ADDITION));
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 6.0, AttributeModifier.Operation.ADDITION));
+        builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2.8, AttributeModifier.Operation.ADDITION));
         this.attributeModifiers = builder.build();
     }
 
@@ -35,40 +35,40 @@ public class KnifeBundleItem extends KnifeItem {
     }
 
     @Override
-    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
+    public void releaseUsing(ItemStack stack, Level world, LivingEntity user, int remainingUseTicks) {
+        if (user.hasEffect(JStatusRegistry.DAZED.get())) {
             return;
         }
 
-        if (!world.isClient) {
+        if (!world.isClientSide) {
             float speedMult = getSpeedMult(stack, remainingUseTicks);
 
-            if (user instanceof ServerPlayerEntity serverPlayer) {
-                serverPlayer.getItemCooldownManager().set(this, 60);
-                serverPlayer.incrementStat(Stats.USED.getOrCreateStat(this));
-                if (!serverPlayer.getAbilities().creativeMode) {
-                    stack.decrement(1);
+            if (user instanceof ServerPlayer serverPlayer) {
+                serverPlayer.getCooldowns().addCooldown(this, 60);
+                serverPlayer.awardStat(Stats.ITEM_USED.get(this));
+                if (!serverPlayer.getAbilities().instabuild) {
+                    stack.shrink(1);
                 }
             }
 
-            Random random = Random.create();
+            RandomSource random = RandomSource.create();
             for (int i = 0; i < 9; i++) {
                 KnifeProjectile knife = new KnifeProjectile(world, user);
-                knife.setPosition(knife.getPos().add(
-                        random.nextTriangular(0, 0.5),
-                        random.nextTriangular(0, 0.5),
-                        random.nextTriangular(0, 0.5)
+                knife.setPos(knife.position().add(
+                        random.triangle(0, 0.5),
+                        random.triangle(0, 0.5),
+                        random.triangle(0, 0.5)
                 ));
-                knife.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F * speedMult, 5F);
-                world.spawnEntity(knife);
+                knife.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, 1.5F * speedMult, 5F);
+                world.addFreshEntity(knife);
             }
         } else {
-            world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_ENDER_PEARL_THROW, SoundCategory.NEUTRAL, 0.5F, 1F); // plays a globalSoundEvent
+            world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENDER_PEARL_THROW, SoundSource.NEUTRAL, 0.5F, 1F); // plays a globalSoundEvent
         }
     }
 
     @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-        return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);
+    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
+        return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getDefaultAttributeModifiers(slot);
     }
 }

@@ -1,13 +1,11 @@
 package net.arna.jcraft.forge.client;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.rendering.api.PostProcessHandler;
 import net.arna.jcraft.client.rendering.post.TimestopShaderPostProcessor;
-import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.resource.ResourceFactory;
-import net.minecraft.resource.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterShadersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,9 +20,9 @@ import java.util.function.Consumer;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = JCraft.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class JShaderRegistry {
     //Core
-    public static ShaderHolder TEST = new ShaderHolder(JCraft.id("space"), VertexFormats.POSITION_TEXTURE,"DiffuseSampler", "DepthSampler", "OutSize", "ViewPort");
+    public static ShaderHolder TEST = new ShaderHolder(JCraft.id("space"), DefaultVertexFormat.POSITION_TEX,"DiffuseSampler", "DepthSampler", "OutSize", "ViewPort");
 
-    public static ShaderHolder RREDE = new ShaderHolder( JCraft.id("rrede"), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL);
+    public static ShaderHolder RREDE = new ShaderHolder( JCraft.id("rrede"), DefaultVertexFormat.NEW_ENTITY);
 
     //Post Processed
     public static final TimestopShaderPostProcessor ZA_WARUDO = new TimestopShaderPostProcessor();

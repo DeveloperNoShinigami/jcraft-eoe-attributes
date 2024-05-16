@@ -1,38 +1,40 @@
 package net.arna.jcraft.common.entity;
 
 import net.arna.jcraft.common.util.IOwnable;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.control.FlightMoveControl;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.pathing.BirdNavigation;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.FlyingEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.FlyingMob;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+
 
 import java.util.Arrays;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
-public class GEButterflyEntity extends FlyingEntity implements GeoEntity, IOwnable {
-    public GEButterflyEntity(EntityType<? extends FlyingEntity> entityType, World world) {
+public class GEButterflyEntity extends FlyingMob implements GeoEntity, IOwnable {
+    public GEButterflyEntity(EntityType<? extends FlyingMob> entityType, Level world) {
         super(entityType, world);
-        this.moveControl = new FlightMoveControl(this, 10, false);
-        this.navigation = new BirdNavigation(this, world);
+        this.moveControl = new FlyingMoveControl(this, 10, false);
+        this.navigation = new FlyingPathNavigation(this, world);
         Arrays.fill(this.handDropChances, 2.0F);
     }
 
@@ -51,30 +53,30 @@ public class GEButterflyEntity extends FlyingEntity implements GeoEntity, IOwnab
     }
 
     @Override
-    protected void initGoals() {
-        goalSelector.add(0, new SwimGoal(this));
-        goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
+    protected void registerGoals() {
+        goalSelector.addGoal(0, new FloatGoal(this));
+        goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 8.0F));
     }
 
     @Override
-    public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
+    public InteractionResult interactAt(Player player, Vec3 hitPos, InteractionHand hand) {
         if (player == master) {
-            if (player.getStackInHand(hand).isEmpty()) {
-                player.setStackInHand(hand, getMainHandStack());
+            if (player.getItemInHand(hand).isEmpty()) {
+                player.setItemInHand(hand, getMainHandItem());
                 discard();
             } else {
-                return ActionResult.FAIL;
+                return InteractionResult.FAIL;
             }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResult.FAIL;
+        return InteractionResult.FAIL;
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (getWorld().isClient || !hasMaster) {
+        if (level().isClientSide || !hasMaster) {
             return;
         }
         if (master == null) {
@@ -82,39 +84,39 @@ public class GEButterflyEntity extends FlyingEntity implements GeoEntity, IOwnab
             return;
         }
 
-        if (squaredDistanceTo(master) > 16) {
-            navigation.startMovingTo(master, 1.0);
-        } else if (navigation.isFollowingPath()) {
+        if (distanceToSqr(master) > 16) {
+            navigation.moveTo(master, 1.0);
+        } else if (navigation.isInProgress()) {
             navigation.stop();
         }
     }
 
-    public static DefaultAttributeContainer.Builder createButterflyAttributes() {
-        return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_FLYING_SPEED, 1.0)
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0);
+    public static AttributeSupplier.Builder createButterflyAttributes() {
+        return Mob.createMobAttributes()
+                .add(Attributes.FLYING_SPEED, 1.0)
+                .add(Attributes.MAX_HEALTH, 10.0);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putBoolean("HasMaster", hasMaster);
-        if (master instanceof PlayerEntity player) {
-            nbt.putUuid("MasterUUID", player.getUuid());
+        if (master instanceof Player player) {
+            nbt.putUUID("MasterUUID", player.getUUID());
         }
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         hasMaster = nbt.getBoolean("HasMaster");
-        if (nbt.containsUuid("MasterUUID")) {
-            setMaster(getWorld().getPlayerByUuid(nbt.getUuid("MasterUUID")));
+        if (nbt.hasUUID("MasterUUID")) {
+            setMaster(level().getPlayerByUUID(nbt.getUUID("MasterUUID")));
         }
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {

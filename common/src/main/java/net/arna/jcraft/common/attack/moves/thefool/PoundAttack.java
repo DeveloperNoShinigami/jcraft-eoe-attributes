@@ -4,9 +4,8 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class PoundAttack extends AbstractSimpleAttack<PoundAttack, TheFoolEntity> {
@@ -20,9 +19,9 @@ public class PoundAttack extends AbstractSimpleAttack<PoundAttack, TheFoolEntity
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         for (LivingEntity target : targets) {
-            Vec3d vel = target.getVelocity();
-            target.setVelocity(vel.x, (attacker.getMoveStun() > 14) ? 0.5 : -1, vel.y);
-            target.velocityModified = true;
+            Vec3 vel = target.getDeltaMovement();
+            target.setDeltaMovement(vel.x, (attacker.getMoveStun() > 14) ? 0.5 : -1, vel.y);
+            target.hurtMarked = true;
         }
 
         return targets;

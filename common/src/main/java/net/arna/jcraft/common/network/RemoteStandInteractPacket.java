@@ -6,35 +6,35 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.FakePlayer;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class RemoteStandInteractPacket {
 
-    public static void handle(PacketByteBuf buf, NetworkManager.PacketContext context) {
-        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) context.getPlayer();
+    public static void handle(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
+        ServerPlayer serverPlayer = (ServerPlayer) context.getPlayer();
 
         StandEntity<?, ?> stand = JUtils.getStand(serverPlayer);
         if (stand == null || !stand.isRemote()) {
             return;
         }
-        ServerWorld world = (ServerWorld) serverPlayer.getWorld();
+        ServerLevel world = (ServerLevel) serverPlayer.level();
 
-        Vec3d eyePos = RotationUtil.vecPlayerToWorld(stand.getEyePos(), GravityChangerAPI.getGravityDirection(stand));
+        Vec3 eyePos = RotationUtil.vecPlayerToWorld(stand.getEyePosition(), GravityChangerAPI.getGravityDirection(stand));
 
-        BlockHitResult hitResult = world.raycast(
-                new RaycastContext(
+        BlockHitResult hitResult = world.clip(
+                new ClipContext(
                         eyePos,
-                        eyePos.add(serverPlayer.getRotationVector().multiply(5.0)),
-                        RaycastContext.ShapeType.OUTLINE,
-                        RaycastContext.FluidHandling.NONE,
+                        eyePos.add(serverPlayer.getLookAngle().scale(5.0)),
+                        ClipContext.Block.OUTLINE,
+                        ClipContext.Fluid.NONE,
                         stand
                 )
         );
@@ -43,6 +43,6 @@ public class RemoteStandInteractPacket {
             return;
         }
         BlockPos hitPos = hitResult.getBlockPos();
-        world.getBlockState(hitPos).onUse(world, new FakePlayer(world), Hand.MAIN_HAND, hitResult);
+        world.getBlockState(hitPos).use(world, new FakePlayer(world), InteractionHand.MAIN_HAND, hitResult);
     }
 }

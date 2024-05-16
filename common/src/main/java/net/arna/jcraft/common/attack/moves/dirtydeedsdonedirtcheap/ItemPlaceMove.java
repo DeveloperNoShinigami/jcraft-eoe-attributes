@@ -7,12 +7,11 @@ import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.item.MockItem;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import java.util.List;
 import java.util.Set;
 
@@ -20,11 +19,11 @@ public class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> {
     public static final BooleanMoveVariable PLACING_FIRST_STACK = new BooleanMoveVariable();
     public static final MoveVariable<ItemStack> PLACING = new MoveVariable<>(ItemStack.class);
     private static final List<ItemStack> placeableStacks = List.of(
-            Items.STICK.getDefaultStack(),
-            Items.COBBLESTONE.getDefaultStack(),
-            Items.DEAD_BUSH.getDefaultStack(),
-            Items.APPLE.getDefaultStack(),
-            Items.OAK_SAPLING.getDefaultStack()
+            Items.STICK.getDefaultInstance(),
+            Items.COBBLESTONE.getDefaultInstance(),
+            Items.DEAD_BUSH.getDefaultInstance(),
+            Items.APPLE.getDefaultInstance(),
+            Items.OAK_SAPLING.getDefaultInstance()
     );
 
     public ItemPlaceMove(int cooldown, int windup, int duration, float moveDistance) {
@@ -41,18 +40,18 @@ public class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> {
             ctx.set(PLACING, placeableStacks.get(attacker.getRandom().nextInt(placeableStacks.size())));
         }
 
-        attacker.equipStack(EquipmentSlot.OFFHAND, ctx.get(PLACING).copy());
+        attacker.setItemSlot(EquipmentSlot.OFFHAND, ctx.get(PLACING).copy());
         ctx.setBoolean(PLACING_FIRST_STACK, !placingFirstStack);
     }
 
     @Override
     public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        ItemStack offHandStack = attacker.getOffHandStack();
-        ItemEntity item = new ItemEntity(attacker.getWorld(), attacker.getX(), attacker.getY() + 0.2, attacker.getZ(),
+        ItemStack offHandStack = attacker.getOffhandItem();
+        ItemEntity item = new ItemEntity(attacker.level(), attacker.getX(), attacker.getY() + 0.2, attacker.getZ(),
                 MockItem.createMockStack(ctx.get(PLACING)), 0, 0, 0);
-        item.setPickupDelay(200);
-        attacker.getWorld().spawnEntity(item);
-        offHandStack.decrement(1);
+        item.setPickUpDelay(200);
+        attacker.level().addFreshEntity(item);
+        offHandStack.shrink(1);
 
         return Set.of();
     }

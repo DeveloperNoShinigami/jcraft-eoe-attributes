@@ -11,12 +11,19 @@ import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.function.Consumer;
 
@@ -30,25 +37,25 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
             .withHyperArmor()
             .withLaunch()
             .withInfo(
-                    Text.literal("Haymaker"),
-                    Text.literal("slow, uninterruptible launcher")
+                    Component.literal("Haymaker"),
+                    Component.literal("slow, uninterruptible launcher")
             );
     public static final SheerHeartAttackAttack SHEER_HEART_ATTACK = new SheerHeartAttackAttack(1000, 16, 20, 1f)
 //            .withSound(JSoundRegistry.KQ_SHA)
             .withInfo(
-                    Text.literal("Sheer Heart Attack"),
-                    Text.literal("creates an automatic, heat-seeking sub-stand that explodes on contact, reflects 25% damage back to owner")
+                    Component.literal("Sheer Heart Attack"),
+                    Component.literal("creates an automatic, heat-seeking sub-stand that explodes on contact, reflects 25% damage back to owner")
             );
     public static final KQGrabHitAttack GRAB_HIT = new KQGrabHitAttack(0, 13, 20, 1f, 8)
             .withInfo(
-                    Text.literal("Grab (hit)"),
-                    Text.empty()
+                    Component.literal("Grab (hit)"),
+                    Component.empty()
             );
     public static final KQGrabAttack GRAB = new KQGrabAttack(300, 12, 20, 0.75f,
             0f, 20, 1.75f, 0.1f, 0f, GRAB_HIT, State.GRAB_HIT)
             .withInfo(
-                    Text.literal("Grab"),
-                    Text.literal("grabs opponent by the face, then detonates them, launching them upwards")
+                    Component.literal("Grab"),
+                    Component.literal("grabs opponent by the face, then detonates them, launching them upwards")
             );
     public static final CoinTossAttack COIN_TOSS = new CoinTossAttack(240);
 
@@ -57,7 +64,7 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT_FOLLOWUP = AbstractKillerQueenEntity.LIGHT_FOLLOWUP.copy().withAnim(KQBTDEntity.State.LIGHT_FOLLOWUP).withFollowup(LOW);
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = AbstractKillerQueenEntity.LIGHT.copy().withFollowup(LIGHT_FOLLOWUP);
 
-    public KillerQueenEntity(World worldIn) {
+    public KillerQueenEntity(Level worldIn) {
         super(StandType.KILLER_QUEEN, worldIn, null);
 
         auraColors = new Vector3f[]{

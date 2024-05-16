@@ -6,10 +6,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -22,47 +22,47 @@ import java.util.stream.Collectors;
 public enum StandType {
     NONE(),
     STAR_PLATINUM(JEntityTypeRegistry.STAR_PLATINUM.get(), StarPlatinumEntity::new, "starplatinum",
-            Text.literal("Manga"), Text.literal("Arcade"), Text.literal("OVA")),
+            Component.literal("Manga"), Component.literal("Arcade"), Component.literal("OVA")),
     THE_WORLD(JEntityTypeRegistry.THE_WORLD.get(), TheWorldEntity::new, "theworld",
-            Text.literal("OVA"), Text.literal("Black"), Text.literal("Greatest High")),
+            Component.literal("OVA"), Component.literal("Black"), Component.literal("Greatest High")),
     KING_CRIMSON(JEntityTypeRegistry.KING_CRIMSON.get(), KingCrimsonEntity::new, "kingcrimson",
-            Text.literal("Royal"), Text.literal("Manga"), Text.literal("Nightshade")),
+            Component.literal("Royal"), Component.literal("Manga"), Component.literal("Nightshade")),
     D4C(JEntityTypeRegistry.D4C.get(), D4CEntity::new, "d4c",
-            Text.literal("Jojoveller"), Text.literal("Teaser"), Text.literal("Spangled")),
+            Component.literal("Jojoveller"), Component.literal("Teaser"), Component.literal("Spangled")),
     CREAM(JEntityTypeRegistry.CREAM.get(), CreamEntity::new, "cream",
-            Text.literal("Menace"), Text.literal("Eraser"), Text.literal("White Void")),
+            Component.literal("Menace"), Component.literal("Eraser"), Component.literal("White Void")),
     KILLER_QUEEN(JEntityTypeRegistry.KILLER_QUEEN.get(), KillerQueenEntity::new, "killerqueen",
-            Text.literal("Gunpowder"), Text.literal("Deadly"), Text.literal("1999")),
+            Component.literal("Gunpowder"), Component.literal("Deadly"), Component.literal("1999")),
     WHITE_SNAKE(JEntityTypeRegistry.WHITE_SNAKE.get(), WhiteSnakeEntity::new, "whitesnake",
-            Text.literal("Melting"), Text.literal("Mamba"), Text.literal("Redsnake")),
+            Component.literal("Melting"), Component.literal("Mamba"), Component.literal("Redsnake")),
     SILVER_CHARIOT(JEntityTypeRegistry.SILVER_CHARIOT.get(), SilverChariotEntity::new, "silverchariot",
-            Text.literal("Gold Chariot"), Text.literal("OVA"), Text.literal("Vento")),
+            Component.literal("Gold Chariot"), Component.literal("OVA"), Component.literal("Vento")),
     MAGICIANS_RED(JEntityTypeRegistry.MAGICIANS_RED.get(), MagiciansRedEntity::new, "mr",
-            Text.literal("Purple"), Text.literal("OVA"), Text.literal("Fried")),
+            Component.literal("Purple"), Component.literal("OVA"), Component.literal("Fried")),
     THE_FOOL(JEntityTypeRegistry.THE_FOOL.get(), TheFoolEntity::new, "thefool",
-            Text.literal("Chilled"), Text.literal("OVA"), Text.literal("Neon")),
+            Component.literal("Chilled"), Component.literal("OVA"), Component.literal("Neon")),
     GOLD_EXPERIENCE(JEntityTypeRegistry.GOLD_EXPERIENCE.get(), GoldExperienceEntity::new, "goldexperience",
-            Text.literal("Anime"), Text.literal("Spectre"), Text.literal("Burning Passion")),
+            Component.literal("Anime"), Component.literal("Spectre"), Component.literal("Burning Passion")),
     HIEROPHANT_GREEN(JEntityTypeRegistry.HIEROPHANT_GREEN.get(), HGEntity::new, "hierophantgreen",
-            Text.literal("Cold"), Text.literal("Burning"), Text.literal("Seaside")),
+            Component.literal("Cold"), Component.literal("Burning"), Component.literal("Seaside")),
     THE_SUN(JEntityTypeRegistry.THE_SUN.get(), TheSunEntity::new, "the_sun",
-            Text.literal(":D"), Text.literal("Neutron Star"), Text.literal("Dark")),
+            Component.literal(":D"), Component.literal("Neutron Star"), Component.literal("Dark")),
     PURPLE_HAZE(JEntityTypeRegistry.PURPLE_HAZE.get(), PurpleHazeEntity::new, "purple_haze",
-            Text.literal("Toxin"), Text.literal("Stopping Force"), Text.literal("Reversal")),
+            Component.literal("Toxin"), Component.literal("Stopping Force"), Component.literal("Reversal")),
     C_MOON(JEntityTypeRegistry.C_MOON.get(), CMoonEntity::new, "cmoon", true,
-            Text.literal("Inversion"), Text.literal("Gravity"), Text.literal("Rose")),
+            Component.literal("Inversion"), Component.literal("Gravity"), Component.literal("Rose")),
     MADE_IN_HEAVEN(JEntityTypeRegistry.MADE_IN_HEAVEN.get(), MadeInHeavenEntity::new, "mih", true,
-            Text.literal("Brick"), Text.literal("Daft"), Text.literal("Nightmare")),
+            Component.literal("Brick"), Component.literal("Daft"), Component.literal("Nightmare")),
     THE_WORLD_OVER_HEAVEN(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN.get(), TheWorldOverHeavenEntity::new, "twoh", true,
-            Text.literal("Shooting Star"), Text.literal("Above the Clouds"), Text.literal("Dirt to Divinity")),
+            Component.literal("Shooting Star"), Component.literal("Above the Clouds"), Component.literal("Dirt to Divinity")),
     KILLER_QUEEN_BITES_THE_DUST(JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST.get(), KQBTDEntity::new, "kqbtd", true,
-            Text.literal("Veiled"), Text.literal("Back from the Dead"), Text.literal("Garf")),
+            Component.literal("Veiled"), Component.literal("Back from the Dead"), Component.literal("Garf")),
     GOLD_EXPERIENCE_REQUIEM(JEntityTypeRegistry.GER.get(), GEREntity::new, "ger", true,
-            Text.literal("Silver"), Text.literal("Manga"), Text.literal("Cherry Blossom")),
+            Component.literal("Silver"), Component.literal("Manga"), Component.literal("Cherry Blossom")),
     STAR_PLATINUM_THE_WORLD(JEntityTypeRegistry.SPTW.get(), SPTWEntity::new, "sptw", true,
-            Text.literal("Judge, Jury, Executioner"), Text.literal("Diamond"), Text.literal("Over Heaven")),
+            Component.literal("Judge, Jury, Executioner"), Component.literal("Diamond"), Component.literal("Over Heaven")),
     PURPLE_HAZE_DISTORTION(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION.get(), PurpleHazeDistortionEntity::new, "purple_haze_distortion", true,
-            Text.literal("Black Knight"), Text.literal("Vintage"), Text.literal("Reversal")),
+            Component.literal("Black Knight"), Component.literal("Vintage"), Component.literal("Reversal")),
     HORUS(JEntityTypeRegistry.HORUS.get(), HorusEntity::new, "horus"),
     CINDERELLA(JEntityTypeRegistry.CINDERELLA.get(), CinderellaEntity::new, "cinderella", false, false),
     OSIRIS(JEntityTypeRegistry.OSIRIS.get(), OsirisEntity::new, "osiris", false, false),
@@ -123,27 +123,27 @@ public enum StandType {
     private final boolean evolution;
     @Getter
     private final boolean obtainable;
-    private final Function<World, StandEntity<?, ?>> ctor;
+    private final Function<Level, StandEntity<?, ?>> ctor;
     @Getter
     private final String nameKey;
     @Getter
-    private final Text nameText;
+    private final Component nameText;
     @Getter
-    private final List<Text> skinNames;
+    private final List<Component> skinNames;
 
-    StandType(EntityType<? extends StandEntity<?, ?>> entityType, Function<World, StandEntity<?, ?>> ctor, String nameKey, Text... skinNames) {
+    StandType(EntityType<? extends StandEntity<?, ?>> entityType, Function<Level, StandEntity<?, ?>> ctor, String nameKey, Component... skinNames) {
         this(entityType, ctor, nameKey, false, skinNames);
     }
 
-    StandType(EntityType<? extends StandEntity<?, ?>> entityType, Function<World, StandEntity<?, ?>> ctor, String nameKey, boolean evolution, Text... skinNames) {
+    StandType(EntityType<? extends StandEntity<?, ?>> entityType, Function<Level, StandEntity<?, ?>> ctor, String nameKey, boolean evolution, Component... skinNames) {
         this(entityType, ctor, nameKey, evolution, true, skinNames);
     }
 
-    StandType(EntityType<? extends StandEntity<?, ?>> entityType, Function<World, StandEntity<?, ?>> ctor, String nameKey, boolean evolution, boolean obtainable, Text... skinNames) {
+    StandType(EntityType<? extends StandEntity<?, ?>> entityType, Function<Level, StandEntity<?, ?>> ctor, String nameKey, boolean evolution, boolean obtainable, Component... skinNames) {
         this.entityType = entityType;
         this.ctor = ctor;
         this.nameKey = nameKey;
-        this.nameText = Text.translatable("entity.jcraft." + nameKey);
+        this.nameText = Component.translatable("entity.jcraft." + nameKey);
         this.evolution = evolution;
         this.obtainable = obtainable;
         this.skinNames = ImmutableList.copyOf(skinNames);
@@ -153,7 +153,7 @@ public enum StandType {
         this.entityType = null;
         this.ctor = null;
         this.nameKey = "nostand";
-        this.nameText = Text.translatable("entity.jcraft.nostand");
+        this.nameText = Component.translatable("entity.jcraft.nostand");
         this.obtainable = false;
         this.evolution = false;
         this.skinNames = List.of();
@@ -191,12 +191,12 @@ public enum StandType {
         return fromOrdinal(id);
     }
 
-    public static StandType getRandomRegular(Random random) {
+    public static StandType getRandomRegular(RandomSource random) {
         return getRegularStandTypes().get(random.nextInt(regularStandCount));
     }
 
     @NonNull
-    public StandEntity<?, ?> createNew(World world) {
+    public StandEntity<?, ?> createNew(Level world) {
         return ctor.apply(world);
     }
 

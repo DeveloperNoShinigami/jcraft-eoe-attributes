@@ -5,12 +5,11 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.common.util.JParticleType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class FuryChopAttack extends AbstractSimpleAttack<FuryChopAttack, MadeInHeavenEntity> {
@@ -25,17 +24,17 @@ public class FuryChopAttack extends AbstractSimpleAttack<FuryChopAttack, MadeInH
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         // Punish user with mining fatigue on miss, reward with haste on hit.
-        user.addStatusEffect(new StatusEffectInstance(targets.isEmpty() ? StatusEffects.MINING_FATIGUE : StatusEffects.HASTE,
+        user.addEffect(new MobEffectInstance(targets.isEmpty() ? MobEffects.DIG_SLOWDOWN : MobEffects.DIG_SPEED,
                 160, 0));
 
         return targets;
     }
 
     @Override
-    protected void processTarget(MadeInHeavenEntity attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource) {
+    protected void processTarget(MadeInHeavenEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
-        target.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 160, 0));
+        target.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 160, 0));
     }
 
     @Override

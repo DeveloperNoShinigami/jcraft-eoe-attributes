@@ -1,25 +1,25 @@
 package net.arna.jcraft.mixin;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(LivingEntity.class)
 public interface LivingEntityInvoker {
-    @Invoker("applyArmorToDamage")
+    @Invoker("getDamageAfterArmorAbsorb")
     float invokeApplyArmorToDamage(DamageSource source, float amount);
 
-    @Invoker("modifyAppliedDamage")
+    @Invoker("getDamageAfterMagicAbsorb")
     float invokeModifyAppliedDamage(DamageSource source, float amount);
 
-    @Accessor("lastDamageTaken")
+    @Accessor("lastHurt")
     void setLastDamageTaken(float lastDamageTaken);
 
     @Accessor("lastDamageSource")
     void setLastDamageSource(DamageSource damageSource);
 
-    @Accessor("lastDamageTime")
+    @Accessor("lastDamageStamp")
     void setLastDamageTime(long lastDamageTime);
 }

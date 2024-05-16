@@ -6,10 +6,9 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
 import net.arna.jcraft.common.util.MobilityType;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class GravitationalHopMove extends AbstractMove<GravitationalHopMove, CMoonEntity> {
@@ -25,17 +24,17 @@ public class GravitationalHopMove extends AbstractMove<GravitationalHopMove, CMo
 
     @Override
     public @NonNull Set<LivingEntity> perform(CMoonEntity attacker, LivingEntity user, MoveContext ctx) {
-        if (user.isOnGround()) {
-            if (user.hasStatusEffect(JStatusRegistry.WEIGHTLESS.get())) {
-                user.removeStatusEffect(JStatusRegistry.WEIGHTLESS.get());
+        if (user.onGround()) {
+            if (user.hasEffect(JStatusRegistry.WEIGHTLESS.get())) {
+                user.removeEffect(JStatusRegistry.WEIGHTLESS.get());
             }
-            user.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WEIGHTLESS.get(), 200, 1));
+            user.addEffect(new MobEffectInstance(JStatusRegistry.WEIGHTLESS.get(), 200, 1));
         } else {
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 60, 1));
-            user.addVelocity(0, 1.0, 0);
+            user.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 60, 1));
+            user.push(0, 1.0, 0);
         }
 
-        user.velocityModified = true;
+        user.hurtMarked = true;
         return Set.of();
     }
 

@@ -5,8 +5,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
-import net.minecraft.entity.LivingEntity;
-
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class CrossfireAttack extends AbstractMove<CrossfireAttack, MagiciansRedEntity> {
@@ -18,10 +17,10 @@ public class CrossfireAttack extends AbstractMove<CrossfireAttack, MagiciansRedE
     @Override
     public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
         for (int i = 0; i < 3; i++) {
-            AnkhProjectile ankh = new AnkhProjectile(attacker.getWorld(), user);
-            ankh.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1F, 5F);
-            ankh.setPosition(getOffsetHeightPos(attacker));
-            attacker.getWorld().spawnEntity(ankh);
+            AnkhProjectile ankh = new AnkhProjectile(attacker.level(), user);
+            ankh.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, 1F, 5F);
+            ankh.setPos(getOffsetHeightPos(attacker));
+            attacker.level().addFreshEntity(ankh);
         }
 
         return Set.of();

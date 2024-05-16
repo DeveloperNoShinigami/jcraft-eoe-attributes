@@ -1,23 +1,24 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.LaserProjectile;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.resources.ResourceLocation;
+
 
 public class LaserProjectileModel extends GeoModel<LaserProjectile> {
     @Override
-    public Identifier getModelResource(LaserProjectile object) {
+    public ResourceLocation getModelResource(LaserProjectile object) {
         return JCraft.id("geo/laser.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(LaserProjectile object) {
+    public ResourceLocation getTextureResource(LaserProjectile object) {
         return JCraft.id("textures/entity/projectiles/laser.png");
     }
 
     @Override
-    public Identifier getAnimationResource(LaserProjectile animatable) {
+    public ResourceLocation getAnimationResource(LaserProjectile animatable) {
         return JCraft.id("animations/knife.animation.json");
     }
 

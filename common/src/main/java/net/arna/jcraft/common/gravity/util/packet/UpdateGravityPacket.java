@@ -4,7 +4,7 @@ import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
 import net.arna.jcraft.common.gravity.util.Gravity;
 import net.arna.jcraft.common.gravity.util.NetworkUtil;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class UpdateGravityPacket extends GravityPacket {
     public final Gravity gravity;
@@ -15,7 +15,7 @@ public class UpdateGravityPacket extends GravityPacket {
         initialGravity = _initialGravity;
     }
 
-    public UpdateGravityPacket(PacketByteBuf buf) {
+    public UpdateGravityPacket(FriendlyByteBuf buf) {
         this(
                 NetworkUtil.readGravity(buf),
                 buf.readBoolean()
@@ -23,7 +23,7 @@ public class UpdateGravityPacket extends GravityPacket {
     }
 
     @Override
-    public void write(PacketByteBuf buf) {
+    public void write(FriendlyByteBuf buf) {
         NetworkUtil.writeGravity(buf, gravity);
         buf.writeBoolean(initialGravity);
     }

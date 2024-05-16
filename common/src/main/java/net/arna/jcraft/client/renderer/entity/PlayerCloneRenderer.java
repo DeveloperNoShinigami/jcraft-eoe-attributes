@@ -1,30 +1,29 @@
 package net.arna.jcraft.client.renderer.entity;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.arna.jcraft.client.rendering.CloneSkinTracker;
 import net.arna.jcraft.client.util.PlayerCloneClientPlayerEntity;
 import net.arna.jcraft.common.entity.PlayerCloneEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.BipedEntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.resources.ResourceLocation;
 import java.util.UUID;
 
-public class PlayerCloneRenderer extends BipedEntityRenderer<PlayerCloneEntity, BipedEntityModel<PlayerCloneEntity>> {
-    private final PlayerEntityRenderer parent;
+public class PlayerCloneRenderer extends HumanoidMobRenderer<PlayerCloneEntity, HumanoidModel<PlayerCloneEntity>> {
+    private final PlayerRenderer parent;
 
-    public PlayerCloneRenderer(EntityRendererFactory.Context ctx, boolean slim) {
-        super(ctx, new PlayerEntityModel<>(ctx.getPart(slim ? EntityModelLayers.PLAYER_SLIM : EntityModelLayers.PLAYER), slim), 0.5f);
-        parent = new PlayerEntityRenderer(ctx, slim);
+    public PlayerCloneRenderer(EntityRendererProvider.Context ctx, boolean slim) {
+        super(ctx, new PlayerModel<>(ctx.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5f);
+        parent = new PlayerRenderer(ctx, slim);
     }
 
     @Override
@@ -35,19 +34,19 @@ public class PlayerCloneRenderer extends BipedEntityRenderer<PlayerCloneEntity, 
             return s;
         }
 
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
             UUID masterId = clone.getMasterId();
             if (masterId == null) {
                 return s;
             }
-            return !masterId.equals(player.getUuid());
+            return !masterId.equals(player.getUUID());
         }
         return s;
     }
 
     @Override
-    public void render(PlayerCloneEntity clone, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+    public void render(PlayerCloneEntity clone, float f, float g, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i) {
         PlayerCloneClientPlayerEntity clonePlayer = CloneSkinTracker.toPlayer(clone);
         if (clonePlayer == null) {
             return;
@@ -56,7 +55,7 @@ public class PlayerCloneRenderer extends BipedEntityRenderer<PlayerCloneEntity, 
     }
 
     @Override
-    public Identifier getTexture(PlayerCloneEntity entity) {
+    public ResourceLocation getTextureLocation(PlayerCloneEntity entity) {
         return CloneSkinTracker.getSkinFor(entity, MinecraftProfileTexture.Type.SKIN);
     }
 }

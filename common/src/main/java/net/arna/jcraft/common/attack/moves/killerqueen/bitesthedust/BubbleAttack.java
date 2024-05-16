@@ -7,9 +7,8 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.BubbleProjectile;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import java.util.Set;
 
 public class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> {
@@ -22,11 +21,11 @@ public class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> {
 
     @Override
     public @NonNull Set<LivingEntity> perform(KQBTDEntity attacker, LivingEntity user, MoveContext ctx) {
-        BubbleProjectile bubbleProjectile = new BubbleProjectile(attacker.getWorld(), user);
-        bubbleProjectile.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
-        bubbleProjectile.setVelocity(user, user.getPitch(), user.getYaw(), 0, 0.5f, 0f);
-        bubbleProjectile.setPosition(attacker.getPos().add(0, 1.25, 0));
-        attacker.getWorld().spawnEntity(bubbleProjectile);
+        BubbleProjectile bubbleProjectile = new BubbleProjectile(attacker.level(), user);
+        bubbleProjectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+        bubbleProjectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, 0.5f, 0f);
+        bubbleProjectile.setPos(attacker.position().add(0, 1.25, 0));
+        attacker.level().addFreshEntity(bubbleProjectile);
         ctx.set(BUBBLE_PROJECTILE, bubbleProjectile);
 
         JComponentPlatformUtils.getBombTracker(user).getMainBomb().setBomb(bubbleProjectile);
@@ -37,8 +36,8 @@ public class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> {
     public void tickBubble(KQBTDEntity stand) {
         BubbleProjectile bubbleProjectile = stand.getMoveContext().get(BUBBLE_PROJECTILE);
         if (bubbleProjectile != null && !bubbleProjectile.isInGround() && stand.hasUser()) {
-            bubbleProjectile.setVelocity(stand.getUserOrThrow().getRotationVector().multiply(0.5));
-            bubbleProjectile.velocityModified = true;
+            bubbleProjectile.setDeltaMovement(stand.getUserOrThrow().getLookAngle().scale(0.5));
+            bubbleProjectile.hurtMarked = true;
         }
     }
 

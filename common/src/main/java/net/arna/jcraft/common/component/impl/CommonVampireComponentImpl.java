@@ -6,21 +6,21 @@ import net.arna.jcraft.common.item.SunProtectionItem;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.HungerManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
+import net.minecraft.world.level.Level;
 
 public abstract class CommonVampireComponentImpl implements CommonVampireComponent {
     private final LivingEntity entity;
-    private PlayerEntity player;
-    private HungerManager hungerManager = null;
+    private Player player;
+    private FoodData hungerManager = null;
     private boolean isVampire = false;
     @Getter
     private float blood = 20;
@@ -31,15 +31,15 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
 
     public CommonVampireComponentImpl(LivingEntity entity) {
         this.entity = entity;
-        if (entity instanceof PlayerEntity playerEntity) {
+        if (entity instanceof Player playerEntity) {
             this.player = playerEntity;
-            hungerManager = playerEntity.getHungerManager();
+            hungerManager = playerEntity.getFoodData();
         }
     }
 
     public void tick() {
-        World world = entity.getWorld();
-        if (world.isClient) {
+        Level world = entity.level();
+        if (world.isClientSide) {
             return;
         }
 
@@ -54,13 +54,13 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
             return;
         }
 
-        if (world.isDay() && !(entity.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof SunProtectionItem) && world.isSkyVisible(entity.getBlockPos())) {
-            entity.setOnFireFor(1);
+        if (world.isDay() && !(entity.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof SunProtectionItem) && world.canSeeSky(entity.blockPosition())) {
+            entity.setSecondsOnFire(1);
         }
 
         if (blood < 1 && --starveTick < 1) {
             // Starve
-            player.damage(world.getDamageSources().starve(), 1.0F);
+            player.hurt(world.damageSources().starve(), 1.0F);
             starveTick = 80;
         } else {
             // Regenerate
@@ -81,23 +81,23 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
         // Prevent the player's default hunger from doing anything
         if (hungerManager == null) {
             if (player != null) {
-                hungerManager = player.getHungerManager();
+                hungerManager = player.getFoodData();
             }
         } else {
             // Vampires get tired slower
-            if (hungerManager.getExhaustion() > 32.0F) {
+            if (hungerManager.getExhaustionLevel() > 32.0F) {
                 hungerManager.addExhaustion(-32.0F);
                 setBlood(blood - 1);
             }
 
             hungerManager.setFoodLevel(20);
-            hungerManager.setSaturationLevel(0f);
+            hungerManager.setSaturation(0f);
         }
     }
 
     @Override
     public void setBlood(float blood) {
-        this.blood = MathHelper.clamp(blood, 0, 20);
+        this.blood = Mth.clamp(blood, 0, 20);
         sync(entity);
     }
 
@@ -115,26 +115,26 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
     public void sync(Entity entity) {
     }
 
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
+    public boolean shouldSyncWith(ServerPlayer player) {
         return player == entity;
     }
 
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
         buf.writeFloat(blood);
         buf.writeBoolean(isVampire);
     }
 
-    public void applySyncPacket(PacketByteBuf buf) {
+    public void applySyncPacket(FriendlyByteBuf buf) {
         blood = buf.readFloat();
         isVampire = buf.readBoolean();
     }
 
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(CompoundTag tag) {
         blood = tag.getFloat("Blood");
         isVampire = tag.getBoolean("Vampire");
     }
 
-    public void writeToNbt(NbtCompound tag) {
+    public void writeToNbt(CompoundTag tag) {
         tag.putFloat("Blood", blood);
         tag.putBoolean("Vampire", isVampire);
     }

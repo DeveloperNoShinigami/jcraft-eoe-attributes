@@ -3,10 +3,10 @@ package net.arna.jcraft.common.network.s2c;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 public class ShaderActivationPacket {
@@ -20,18 +20,18 @@ public class ShaderActivationPacket {
      * @param duration           duration of the shader
      * @param type               which shader to use
      */
-    public static void send(ServerPlayerEntity serverPlayerEntity, @Nullable Entity sourceShader, int tickDelay, int duration, Type type) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+    public static void send(ServerPlayer serverPlayerEntity, @Nullable Entity sourceShader, int tickDelay, int duration, Type type) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeInt(tickDelay);
         buf.writeInt(duration);
-        buf.writeString(type.asString());
+        buf.writeUtf(type.getSerializedName());
         if (sourceShader != null) {
             buf.writeInt(sourceShader.getId());
         }
         NetworkManager.sendToPlayer(serverPlayerEntity, JPacketRegistry.S2C_SHADER_ACTIVATION, buf);
     }
 
-    public enum Type implements StringIdentifiable {
+    public enum Type implements StringRepresentable {
         NONE("none"),
         ZA_WARUDO("za_warudo"),
         CRIMSON("crimson");
@@ -43,7 +43,7 @@ public class ShaderActivationPacket {
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return name;
         }
 

@@ -2,30 +2,35 @@ package net.arna.jcraft.client.renderer.effects;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.arna.jcraft.common.splatter.JSplatterManager;
 import net.arna.jcraft.common.splatter.SplatterSection;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LightType;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 public class SplatterEffectRenderer {
 
 
-    public static void render(MatrixStack matrices, Vec3d camPos, ClientWorld world, float tickDelta) {
+    public static void render(PoseStack matrices, Vec3 camPos, ClientLevel world, float tickDelta) {
         JSplatterManager splatterManager = JUtils.getSplatterManager(world);
 
         RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.disableCull();
         RenderSystem.enableDepthTest();
         RenderSystem.depthMask(false);
-        RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapProgram);
+        RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader);
 
 
         splatterManager.iterateSplatters(splatter -> {
@@ -35,12 +40,12 @@ public class SplatterEffectRenderer {
 
             RenderSystem.setShaderTexture(0, splatter.getType().getTexture());
 
-            matrices.push();
+            matrices.pushPose();
             matrices.translate(-camPos.x, -camPos.y, -camPos.z);
 
-            Tessellator tess = Tessellator.getInstance();
-            BufferBuilder buf = tess.getBuffer();
-            buf.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT);
+            Tesselator tess = Tesselator.getInstance();
+            BufferBuilder buf = tess.getBuilder();
+            buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP);
             float alpha = splatter.getStrength(tickDelta);
 
             for (SplatterSection section : splatter.getSections()) {
@@ -49,8 +54,8 @@ public class SplatterEffectRenderer {
                 }
             }
 
-            tess.draw();
-            matrices.pop();
+            tess.end();
+            matrices.popPose();
         });
 
         RenderSystem.disableBlend();
@@ -59,21 +64,21 @@ public class SplatterEffectRenderer {
     }
 
     @SuppressWarnings("DuplicatedCode") // I do not care how similar the different directions' code are.
-    private static void renderSection(SplatterSection section, BufferBuilder buf, MatrixStack matrices, float alpha, float offset) {
-        matrices.push();
-        Vector3f offsetVec = section.getDirection().getUnitVector();
+    private static void renderSection(SplatterSection section, BufferBuilder buf, PoseStack matrices, float alpha, float offset) {
+        matrices.pushPose();
+        Vector3f offsetVec = section.getDirection().step();
         offsetVec.mul(offset, offset, offset); // Prevent z-fighting with anchor block and other splatters.
         matrices.translate(offsetVec.x(), offsetVec.y(), offsetVec.z());
-        Matrix4f m = matrices.peek().getPositionMatrix();
+        Matrix4f m = matrices.last().pose();
 
-        int blockLight = section.getWorld().getLightLevel(LightType.BLOCK, section.getBlockPos());
-        int skyLight = section.getWorld().getLightLevel(LightType.SKY, section.getBlockPos());
-        int light = LightmapTextureManager.pack(blockLight, skyLight);
+        int blockLight = section.getWorld().getBrightness(LightLayer.BLOCK, section.getBlockPos());
+        int skyLight = section.getWorld().getBrightness(LightLayer.SKY, section.getBlockPos());
+        int light = LightTexture.pack(blockLight, skyLight);
 
         Vector3f min = section.getMinPos();
         Vector3f max = section.getMaxPos();
-        Vec2f minUv = section.getMinUv();
-        Vec2f maxUv = section.getMaxUv();
+        Vec2 minUv = section.getMinUv();
+        Vec2 maxUv = section.getMaxUv();
 
         float minX = min.x();
         float minY = min.y();
@@ -121,15 +126,15 @@ public class SplatterEffectRenderer {
             }
         }
 
-        matrices.pop();
+        matrices.popPose();
     }
 
     private static void vertex(BufferBuilder buf, Matrix4f matrix, float x, float y, float z, float u, float v, float alpha, int light) {
         buf
                 .vertex(matrix, x, y, z)
                 .color(1f, 1f, 1f, alpha)
-                .texture(u, v)
-                .light(light)
-                .next();
+                .uv(u, v)
+                .uv2(light)
+                .endVertex();
     }
 }

@@ -4,8 +4,7 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
-import net.minecraft.entity.LivingEntity;
-
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class FlamethrowerAttack extends AbstractBarrageAttack<FlamethrowerAttack, MagiciansRedEntity> {
@@ -19,7 +18,7 @@ public class FlamethrowerAttack extends AbstractBarrageAttack<FlamethrowerAttack
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         for (LivingEntity target : targets) {
             if (!target.isOnFire()) {
-                target.setOnFireFor(getInterval());
+                target.setSecondsOnFire(getInterval());
             }
         }
         return targets;

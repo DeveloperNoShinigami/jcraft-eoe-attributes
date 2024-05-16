@@ -1,53 +1,54 @@
 package net.arna.jcraft.common.item;
 
+import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.constant.DataTickets;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.registry.JArmorRendererRegistry;
 import net.arna.jcraft.client.renderer.armor.StoneMaskRenderer;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoItem;
-import software.bernie.geckolib.constant.DataTickets;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class StoneMaskItem extends ArmorItem implements GeoItem {
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
-    public StoneMaskItem(ArmorMaterial materialIn, Type slot, Settings builder) {
+    public StoneMaskItem(ArmorMaterial materialIn, Type slot, Properties builder) {
         super(materialIn, slot, builder);
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        if (slot != EquipmentSlot.HEAD.getEntitySlotId()) {
+        if (slot != EquipmentSlot.HEAD.getIndex()) {
             return;
         }
 
-        if (entity instanceof PlayerEntity player && JCraft.wasRecentlyAttacked(player.getDamageTracker())) {
+        if (entity instanceof Player player && JCraft.wasRecentlyAttacked(player.getCombatTracker())) {
             CommonSpecComponent specComponent = JComponentPlatformUtils.getSpecData(player);
             if (specComponent.getType() != SpecType.VAMPIRE) {
                 specComponent.setType(SpecType.VAMPIRE);
@@ -56,9 +57,9 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(Text.translatable("jcraft.stonemask.desc"));
-        super.appendTooltip(stack, world, tooltip, context);
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+        tooltip.add(Component.translatable("jcraft.stonemask.desc"));
+        super.appendHoverText(stack, world, tooltip, context);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
     private PlayState predicate(AnimationState<StoneMaskItem> state) {
         Entity entity = (Entity) state.getData(DataTickets.ENTITY);
         if (entity instanceof LivingEntity livingEntity) {
-            state.getController().setAnimation(RawAnimation.begin().thenLoop(JCraft.wasRecentlyAttacked(livingEntity.getDamageTracker()) ? "animation.stone_mask.clench" : "animation.stone_mask.dormant"));
+            state.getController().setAnimation(RawAnimation.begin().thenLoop(JCraft.wasRecentlyAttacked(livingEntity.getCombatTracker()) ? "animation.stone_mask.clench" : "animation.stone_mask.dormant"));
 
         }
         return PlayState.CONTINUE;

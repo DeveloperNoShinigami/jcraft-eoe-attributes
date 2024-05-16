@@ -1,29 +1,29 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.HGNetEntity;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class HGNetModel extends GeoModel<HGNetEntity> {
-    private static final List<Identifier> skins = IntStream.range(0, 4).mapToObj(
+    private static final List<ResourceLocation> skins = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/hg_nets/" + i + ".png")).toList();
 
     @Override
-    public Identifier getModelResource(HGNetEntity object) {
+    public ResourceLocation getModelResource(HGNetEntity object) {
         return JCraft.id("geo/hg_nets.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(HGNetEntity object) {
+    public ResourceLocation getTextureResource(HGNetEntity object) {
         return skins.get(object.getSkin());
     }
 
     @Override
-    public Identifier getAnimationResource(HGNetEntity animatable) {
+    public ResourceLocation getAnimationResource(HGNetEntity animatable) {
         return JCraft.id("animations/hg_nets.animation.json");
     }
 

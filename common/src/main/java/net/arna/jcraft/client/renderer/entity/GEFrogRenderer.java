@@ -1,35 +1,35 @@
 package net.arna.jcraft.client.renderer.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.FrogEntityRenderer;
-import net.minecraft.client.render.item.HeldItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.passive.FrogEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.FrogRenderer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.animal.frog.Frog;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
-public class GEFrogRenderer extends FrogEntityRenderer {
-    private final HeldItemRenderer heldItemRenderer;
+public class GEFrogRenderer extends FrogRenderer {
+    private final ItemInHandRenderer heldItemRenderer;
 
-    public GEFrogRenderer(EntityRendererFactory.Context context) {
+    public GEFrogRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.heldItemRenderer = context.getHeldItemRenderer();
+        this.heldItemRenderer = context.getItemInHandRenderer();
     }
 
     @Override
-    public void render(FrogEntity frogEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        matrixStack.push();
+    public void render(Frog frogEntity, float f, float g, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i) {
+        matrixStack.pushPose();
         matrixStack.translate(0.0, 0.4, 0);
-        matrixStack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(frogEntity.getYaw()));
-        ItemStack itemStack = frogEntity.getEquippedStack(EquipmentSlot.MAINHAND);
-        this.heldItemRenderer.renderItem(frogEntity, itemStack, ModelTransformationMode.GROUND, false, matrixStack, vertexConsumerProvider, i);
-        matrixStack.pop();
+        matrixStack.mulPose(Axis.YN.rotationDegrees(frogEntity.getYRot()));
+        ItemStack itemStack = frogEntity.getItemBySlot(EquipmentSlot.MAINHAND);
+        this.heldItemRenderer.renderItem(frogEntity, itemStack, ItemDisplayContext.GROUND, false, matrixStack, vertexConsumerProvider, i);
+        matrixStack.popPose();
         super.render(frogEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }
 }

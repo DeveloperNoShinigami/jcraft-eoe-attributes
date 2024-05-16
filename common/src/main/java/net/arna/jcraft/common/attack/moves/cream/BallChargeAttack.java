@@ -5,8 +5,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.LivingEntity;
-
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class BallChargeAttack extends AbstractMove<BallChargeAttack, CreamEntity> {
@@ -18,7 +17,7 @@ public class BallChargeAttack extends AbstractMove<BallChargeAttack, CreamEntity
     public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user, MoveContext ctx) {
         attacker.playSound(JSoundRegistry.CREAM_CHARGE.get(), 1, 1);
         attacker.setCharging(true);
-        attacker.setChargeDir(user.getRotationVector().multiply(0.5));
+        attacker.setChargeDir(user.getLookAngle().scale(0.5));
         attacker.setVoidTime(15);
 
         return Set.of();

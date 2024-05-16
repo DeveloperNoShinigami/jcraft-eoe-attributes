@@ -3,10 +3,10 @@ package net.arna.jcraft.fabric.common.component.impl.living;
 import net.arna.jcraft.common.component.impl.living.CommonBombTrackerComponentImpl;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.living.BombTrackerComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public class BombTrackerComponentImpl extends CommonBombTrackerComponentImpl implements BombTrackerComponent {
@@ -29,28 +29,28 @@ public class BombTrackerComponentImpl extends CommonBombTrackerComponentImpl imp
     }
 
     @Override
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
+    public boolean shouldSyncWith(ServerPlayer player) {
         return player == entity;
     }
 
     @Override
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
         super.writeSyncPacket(buf, recipient);
     }
 
 
     @Override
-    public void applySyncPacket(PacketByteBuf buf) {
+    public void applySyncPacket(FriendlyByteBuf buf) {
         super.applySyncPacket(buf);
     }
 
     @Override
-    public void readFromNbt(@NotNull NbtCompound tag) {
+    public void readFromNbt(@NotNull CompoundTag tag) {
         super.readFromNbt(tag);
     }
 
     @Override
-    public void writeToNbt(@NotNull NbtCompound tag) {
+    public void writeToNbt(@NotNull CompoundTag tag) {
         super.writeToNbt(tag);
     }
 }

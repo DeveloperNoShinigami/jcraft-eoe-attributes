@@ -1,44 +1,44 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.StandEntityModel;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 public class CMoonRenderer extends StandEntityRenderer<CMoonEntity> {
     private int currentTick = -1;
     private static final int gravWindup = CMoonEntity.GRAV_PUNCH.getWindupPoint();
-    private static final ParticleEffect chargeParticle = new DustParticleEffect(new Vector3f(0.8f, 0.2f, 1.0f), 2.0f);
+    private static final ParticleOptions chargeParticle = new DustParticleOptions(new Vector3f(0.8f, 0.2f, 1.0f), 2.0f);
 
-    public CMoonRenderer(EntityRendererFactory.Context context) {
+    public CMoonRenderer(EntityRendererProvider.Context context) {
         super(context, new StandEntityModel<>(StandType.C_MOON));
     }
 
     @Override
-    public void actuallyRender(MatrixStack poseStack, CMoonEntity stand, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack poseStack, CMoonEntity stand, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
         if (stand.getState() == CMoonEntity.State.GRAV_PUNCH && stand.getMoveStun() > gravWindup) {
-            if (currentTick < 0 || currentTick != stand.age) {
-                this.currentTick = stand.age;
+            if (currentTick < 0 || currentTick != stand.tickCount) {
+                this.currentTick = stand.tickCount;
                 model.getBone("rightLower").ifPresent(bone -> {
-                    Random random = stand.getRandom();
+                    RandomSource random = stand.getRandom();
                     Vector3d worldPos = bone.getWorldPosition();
-                    Vec3d standVel = JUtils.deltaPos(stand);
+                    Vec3 standVel = JUtils.deltaPos(stand);
 
-                    stand.getEntityWorld().addParticle(chargeParticle,
+                    stand.getCommandSenderWorld().addParticle(chargeParticle,
                             worldPos.x, worldPos.y, worldPos.z,
                             standVel.x + random.nextGaussian() * 0.3,
                             standVel.y + random.nextGaussian() * 0.3,

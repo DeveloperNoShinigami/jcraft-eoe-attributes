@@ -1,10 +1,10 @@
 package net.arna.jcraft.registry;
 
 import net.arna.jcraft.JCraft;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
 
 public interface JBiomeRegistry {
-    RegistryKey<Biome> DEVILS_PALM = RegistryKey.of(RegistryKeys.BIOME, JCraft.id("devils_palm"));
+    ResourceKey<Biome> DEVILS_PALM = ResourceKey.create(Registries.BIOME, JCraft.id("devils_palm"));
 }

@@ -9,15 +9,14 @@ import net.arna.jcraft.common.entity.PlayerCloneEntity;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import java.util.Set;
 
 public class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity> {
@@ -49,30 +48,30 @@ public class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity> {
 
     @Override
     public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        ItemStack weapon = ctx.get(CLONE_TYPE).weapon.getDefaultStack();
-        if (weapon.isDamageable()) {
-            weapon.setDamage(weapon.getMaxDamage());
+        ItemStack weapon = ctx.get(CLONE_TYPE).weapon.getDefaultInstance();
+        if (weapon.isDamageableItem()) {
+            weapon.setDamageValue(weapon.getMaxDamage());
         }
 
-        if (user instanceof ServerPlayerEntity playerEntity) {
-            PlayerCloneEntity clone = new PlayerCloneEntity(attacker.getWorld());
-            clone.copyPositionAndRotation(playerEntity);
+        if (user instanceof ServerPlayer playerEntity) {
+            PlayerCloneEntity clone = new PlayerCloneEntity(attacker.level());
+            clone.copyPosition(playerEntity);
             clone.setMaster(playerEntity);
             clone.disableDrops();
 
-            attacker.getWorld().spawnEntity(clone);
-            clone.equipStack(EquipmentSlot.MAINHAND, weapon);
+            attacker.level().addFreshEntity(clone);
+            clone.setItemSlot(EquipmentSlot.MAINHAND, weapon);
             JComponentPlatformUtils.getStandData(clone).setType(StandType.NONE);
-        } else if (user instanceof MobEntity mob) { //Code sourced from MobEntity.class convertTo()
+        } else if (user instanceof Mob mob) { //Code sourced from MobEntity.class convertTo()
             EntityType<?> entityType = mob.getType();
-            MobEntity newMob = (MobEntity) entityType.create(attacker.getWorld());
+            Mob newMob = (Mob) entityType.create(attacker.level());
 
             if (newMob == null) {
-                JCraft.LOGGER.error("Failed to create D4C clone mob of type " + entityType + " in world " + attacker.getWorld());
+                JCraft.LOGGER.error("Failed to create D4C clone mob of type " + entityType + " in world " + attacker.level());
                 return Set.of();
             }
 
-            newMob.copyPositionAndRotation(mob);
+            newMob.copyPosition(mob);
             newMob.setBaby(mob.isBaby());
 
             if (mob.hasCustomName()) {
@@ -80,10 +79,10 @@ public class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity> {
                 newMob.setCustomNameVisible(mob.isCustomNameVisible());
             }
 
-            newMob.age = mob.age;
+            newMob.tickCount = mob.tickCount;
 
-            attacker.getWorld().spawnEntity(newMob);
-            newMob.equipStack(EquipmentSlot.MAINHAND, weapon);
+            attacker.level().addFreshEntity(newMob);
+            newMob.setItemSlot(EquipmentSlot.MAINHAND, weapon);
             JComponentPlatformUtils.getStandData(newMob).setType(StandType.NONE);
         }
 

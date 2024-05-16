@@ -7,11 +7,10 @@ import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class AerialDivineFinisherAttack extends AbstractSimpleAttack<AerialDivineFinisherAttack, TheWorldOverHeavenEntity> {
@@ -25,19 +24,19 @@ public class AerialDivineFinisherAttack extends AbstractSimpleAttack<AerialDivin
     public @NonNull Set<LivingEntity> perform(TheWorldOverHeavenEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        Vec3d heightOffset = RotationUtil.vecPlayerToWorld(new Vec3d(0, user.getHeight() / 2.0, 0), GravityChangerAPI.getGravityDirection(user));
+        Vec3 heightOffset = RotationUtil.vecPlayerToWorld(new Vec3(0, user.getBbHeight() / 2.0, 0), GravityChangerAPI.getGravityDirection(user));
 
-        Random random = attacker.getRandom();
+        RandomSource random = attacker.getRandom();
         for (int i = 0; i < 8; i++) {
-            KnifeProjectile knife = new KnifeProjectile(attacker.getWorld(), user);
+            KnifeProjectile knife = new KnifeProjectile(attacker.level(), user);
             knife.setLightning(true);
-            knife.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
-            knife.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 2F, 1F);
-            knife.setPosition(user.getPos().add(heightOffset).add(
-                    random.nextTriangular(0, 0.5),
-                    random.nextTriangular(0, 0.5),
-                    random.nextTriangular(0, 0.5)));
-            attacker.getWorld().spawnEntity(knife);
+            knife.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+            knife.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, 2F, 1F);
+            knife.setPos(user.position().add(heightOffset).add(
+                    random.triangle(0, 0.5),
+                    random.triangle(0, 0.5),
+                    random.triangle(0, 0.5)));
+            attacker.level().addFreshEntity(knife);
         }
 
         return targets;

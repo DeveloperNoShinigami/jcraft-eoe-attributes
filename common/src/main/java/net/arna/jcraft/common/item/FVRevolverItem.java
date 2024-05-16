@@ -6,84 +6,84 @@ import net.arna.jcraft.common.util.DimensionData;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.stat.Stats;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class FVRevolverItem extends Item {
 
-    public FVRevolverItem(Settings settings) {
+    public FVRevolverItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        NbtCompound itemData = stack.getNbt();
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+        CompoundTag itemData = stack.getTag();
 
         if (itemData != null && itemData.contains("Shots")) {
-            tooltip.add(Text.translatable("jcraft.revolver.shots").append(" §e" + itemData.get("Shots")));
+            tooltip.add(Component.translatable("jcraft.revolver.shots").append(" §e" + itemData.get("Shots")));
         }
 
-        super.appendTooltip(stack, world, tooltip, context);
+        super.appendHoverText(stack, world, tooltip, context);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
-            return TypedActionResult.fail(itemStack);
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        ItemStack itemStack = user.getItemInHand(hand);
+        if (user.hasEffect(JStatusRegistry.DAZED.get())) {
+            return InteractionResultHolder.fail(itemStack);
         }
-        NbtCompound data = itemStack.getOrCreateNbt();
+        CompoundTag data = itemStack.getOrCreateTag();
         int shots = data.getInt("Shots");
         if (shots < 1) {
-            return TypedActionResult.fail(itemStack);
+            return InteractionResultHolder.fail(itemStack);
         }
-        if (!world.isClient) {
-            user.getItemCooldownManager().set(JItemRegistry.FV_REVOLVER.get(), 4); // Unusable until fires
-            RevolverFire.enqueue(new DimensionData(user, world.getRegistryKey(), 3));
+        if (!world.isClientSide) {
+            user.getCooldowns().addCooldown(JItemRegistry.FV_REVOLVER.get(), 4); // Unusable until fires
+            RevolverFire.enqueue(new DimensionData(user, world.dimension(), 3));
         }
-        return TypedActionResult.success(itemStack);
+        return InteractionResultHolder.success(itemStack);
     }
 
-    public static void fire(ItemStack itemStack, World world, LivingEntity user) {
-        NbtCompound data = itemStack.getOrCreateNbt();
+    public static void fire(ItemStack itemStack, Level world, LivingEntity user) {
+        CompoundTag data = itemStack.getOrCreateTag();
         int shots = data.getInt("Shots");
         if (shots < 1) {
             return;
         }
 
         data.putInt("Shots", shots - 1);
-        world.playSound(null, user.getX(), user.getY(), user.getZ(), JSoundRegistry.REVOLVER_FIRE.get(), SoundCategory.PLAYERS, 1f, 1f);
+        world.playSound(null, user.getX(), user.getY(), user.getZ(), JSoundRegistry.REVOLVER_FIRE.get(), SoundSource.PLAYERS, 1f, 1f);
 
         BulletProjectile bullet = new BulletProjectile(world, user, 9f, 10f, 2, 5);
-        bullet.setVelocity(user, user.getPitch(), user.getYaw(), 0f, 10, 0F);
-        world.spawnEntity(bullet);
+        bullet.shootFromRotation(user, user.getXRot(), user.getYRot(), 0f, 10, 0F);
+        world.addFreshEntity(bullet);
 
-        if (user instanceof PlayerEntity player) {
-            player.getItemCooldownManager().set(JItemRegistry.FV_REVOLVER.get(), 11); // Refire time
-            player.incrementStat(Stats.USED.getOrCreateStat(JItemRegistry.FV_REVOLVER.get()));
+        if (user instanceof Player player) {
+            player.getCooldowns().addCooldown(JItemRegistry.FV_REVOLVER.get(), 11); // Refire time
+            player.awardStat(Stats.ITEM_USED.get(JItemRegistry.FV_REVOLVER.get()));
         }
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (!world.isClient()) {
-            stack.setDamage(stack.getDamage() + 1);
-            if ((stack.getMaxDamage() - stack.getDamage()) <= 0) {
-                stack.decrement(1);
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        if (!world.isClientSide()) {
+            stack.setDamageValue(stack.getDamageValue() + 1);
+            if ((stack.getMaxDamage() - stack.getDamageValue()) <= 0) {
+                stack.shrink(1);
             }
         }
 
@@ -91,9 +91,9 @@ public class FVRevolverItem extends Item {
     }
 
     @Override
-    public ItemStack getDefaultStack() {
+    public ItemStack getDefaultInstance() {
         ItemStack s = new ItemStack(this);
-        NbtCompound nbt = s.getOrCreateNbt();
+        CompoundTag nbt = s.getOrCreateTag();
         nbt.putInt("Shots", 6);
         return s;
     }

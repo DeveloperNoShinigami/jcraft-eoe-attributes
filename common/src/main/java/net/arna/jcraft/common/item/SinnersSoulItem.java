@@ -1,9 +1,9 @@
 package net.arna.jcraft.common.item;
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 public class SinnersSoulItem extends Item {
-    public SinnersSoulItem(Settings settings) {
+    public SinnersSoulItem(Properties settings) {
         super(settings);
     }
 }

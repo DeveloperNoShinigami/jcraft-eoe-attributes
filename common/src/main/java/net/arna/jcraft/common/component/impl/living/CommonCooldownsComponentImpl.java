@@ -9,14 +9,14 @@ import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
     public final Object2IntMap<CooldownType> cooldowns = new Object2IntRBTreeMap<>();
@@ -59,7 +59,7 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
             return;
         }
 
-        if (entity instanceof PlayerEntity player && player.isCreative()) {
+        if (entity instanceof Player player && player.isCreative()) {
             // Creative gets boring cooldown cancel.
             clear();
             return;
@@ -83,10 +83,10 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
 
         startCooldown(CooldownType.COOLDOWN_CANCEL);
 
-        Vec3d pPos = entity.getEyePos();
-        entity.getWorld().playSoundFromEntity(null, entity, JSoundRegistry.COOLDOWN_CANCEL.get(), SoundCategory.PLAYERS, 1, 1);
-        if (!entity.getWorld().isClient) {
-            JCraft.createParticle((ServerWorld) entity.getWorld(), pPos.x, pPos.y, pPos.z, JParticleType.COOLDOWN_CANCEL);
+        Vec3 pPos = entity.getEyePosition();
+        entity.level().playSound(null, entity, JSoundRegistry.COOLDOWN_CANCEL.get(), SoundSource.PLAYERS, 1, 1);
+        if (!entity.level().isClientSide) {
+            JCraft.createParticle((ServerLevel) entity.level(), pPos.x, pPos.y, pPos.z, JParticleType.COOLDOWN_CANCEL);
         }
 
         sync(entity);
@@ -115,7 +115,7 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
     }
 
     public void tick() {
-        boolean isClient = entity.getWorld().isClient;
+        boolean isClient = entity.level().isClientSide;
 
         // Decrement all cooldowns.
         boolean shouldSync = false;
@@ -137,14 +137,14 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
         }
     }
 
-    public void readFromNbt(@NonNull NbtCompound tag) {
+    public void readFromNbt(@NonNull CompoundTag tag) {
         readMap(cooldowns, tag.getCompound("Cooldowns"));
         readMap(initialDurations, tag.getCompound("InitialDurations"));
     }
 
-    private static void readMap(Object2IntMap<CooldownType> map, NbtCompound tag) {
+    private static void readMap(Object2IntMap<CooldownType> map, CompoundTag tag) {
         for (CooldownType type : CooldownType.values()) {
-            if (tag.contains(type.name(), NbtElement.INT_TYPE)) {
+            if (tag.contains(type.name(), Tag.TAG_INT)) {
                 map.put(type, tag.getInt(type.name()));
             } else {
                 map.removeInt(type);
@@ -152,13 +152,13 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
         }
     }
 
-    public void writeToNbt(@NonNull NbtCompound tag) {
+    public void writeToNbt(@NonNull CompoundTag tag) {
         tag.put("Cooldowns", writeMap(this.cooldowns));
         tag.put("InitialDurations", writeMap(this.initialDurations));
     }
 
-    private static NbtCompound writeMap(Object2IntMap<CooldownType> map) {
-        NbtCompound nbt = new NbtCompound();
+    private static CompoundTag writeMap(Object2IntMap<CooldownType> map) {
+        CompoundTag nbt = new CompoundTag();
         map.object2IntEntrySet().forEach(entry -> {
             if (entry.getIntValue() > 0) {
                 nbt.putInt(entry.getKey().name(), entry.getIntValue());
@@ -167,7 +167,7 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
         return nbt;
     }
 
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
+    public boolean shouldSyncWith(ServerPlayer player) {
         return player == entity; // Others don't need to know our cooldowns.
     }
 }

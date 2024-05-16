@@ -7,10 +7,10 @@ import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.Set;
@@ -51,18 +51,18 @@ public class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> extends Ab
         }
     }
 
-    protected Vec3d advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
+    protected Vec3 advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
         if (quadraticMovement) {
-            return attacker.getPos().add(getRotVec(attacker).multiply(
+            return attacker.position().add(getRotVec(attacker).scale(
                     (moveDistance * attacker.getMoveStun()) / (windupPoint * windupPoint)
             ));
         }
-        return attacker.getPos().add(getRotVec(attacker).multiply(moveDistance / windupPoint));
+        return attacker.position().add(getRotVec(attacker).scale(moveDistance / windupPoint));
     }
 
     protected void tickChargeBarrageAttack(StandEntity<?, ?> attacker, boolean shouldPerform, float moveDistance, int windupPoint) {
         if (shouldPerform) {
-            Vec3d newPos = advanceChargePos(attacker, moveDistance, windupPoint);
+            Vec3 newPos = advanceChargePos(attacker, moveDistance, windupPoint);
             attacker.setFreePos(new Vector3f((float) newPos.x, (float) newPos.y, (float) newPos.z));
             attacker.setFree(true);
         } else {
@@ -78,24 +78,24 @@ public class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> extends Ab
             return targets;
         }
 
-        Vec3d avgPos = Vec3d.ZERO;
+        Vec3 avgPos = Vec3.ZERO;
         float c = 0;
         for (LivingEntity target : targets) {
             if (target instanceof StandEntity<?, ?>) {
                 continue;
             }
-            avgPos = avgPos.add(target.getPos());
+            avgPos = avgPos.add(target.position());
             c += 1f;
         }
-        avgPos = avgPos.multiply(1f / c);
-        attackerEntity.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, avgPos);
-        withMoveDistance((float) avgPos.squaredDistanceTo(attackerEntity.getPos()) + 0.1f);
+        avgPos = avgPos.scale(1f / c);
+        attackerEntity.lookAt(EntityAnchorArgument.Anchor.EYES, avgPos);
+        withMoveDistance((float) avgPos.distanceToSqr(attackerEntity.position()) + 0.1f);
 
         return targets;
     }
 
     @Override
-    protected Vec3d getOffsetForwardPos(A attacker, Vec3d offsetHeightPos, Vec3d upVec, Vec3d rotVec) {
+    protected Vec3 getOffsetForwardPos(A attacker, Vec3 offsetHeightPos, Vec3 upVec, Vec3 rotVec) {
         return offsetHeightPos.add(rotVec);
     }
 

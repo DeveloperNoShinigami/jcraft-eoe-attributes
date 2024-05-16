@@ -1,19 +1,19 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.arna.jcraft.client.model.entity.AnkhModel;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
 
 public class AnkhRenderer extends GeoProjectileRenderer<AnkhProjectile> {
 
-    public AnkhRenderer(EntityRendererFactory.Context renderManagerIn) {
+    public AnkhRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new AnkhModel());
     }
 
@@ -22,12 +22,12 @@ public class AnkhRenderer extends GeoProjectileRenderer<AnkhProjectile> {
     }
 
     @Override
-    public RenderLayer getRenderType(AnkhProjectile animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
-        return RenderLayer.getEyes(getTextureLocation(animatable));
+    public RenderType getRenderType(AnkhProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.eyes(getTextureLocation(animatable));
     }
 
     @Override
-    public void render(AnkhProjectile animatable, float yaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
+    public void render(AnkhProjectile animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
     }
 }

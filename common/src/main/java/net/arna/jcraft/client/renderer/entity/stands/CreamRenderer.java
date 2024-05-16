@@ -2,21 +2,21 @@ package net.arna.jcraft.client.renderer.entity.stands;
 
 import net.arna.jcraft.client.model.entity.CreamModel;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public class CreamRenderer extends StandEntityRenderer<CreamEntity> {
 
-    public CreamRenderer(EntityRendererFactory.Context context) {
+    public CreamRenderer(EntityRendererProvider.Context context) {
         super(context, new CreamModel());
     }
 
     @Override
-    public RenderLayer getRenderType(CreamEntity animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
-        return animatable.getVoidTime() > 0 ? RenderLayer.getEntitySolid(texture) : super.getRenderType(animatable, texture, bufferSource, partialTick);
+    public RenderType getRenderType(CreamEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return animatable.getVoidTime() > 0 ? RenderType.entitySolid(texture) : super.getRenderType(animatable, texture, bufferSource, partialTick);
     }
 
     @Override

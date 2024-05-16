@@ -1,15 +1,15 @@
 package net.arna.jcraft.common.util;
 
 import lombok.Getter;
-import net.minecraft.item.Item;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.phys.Vec3;
 
 public class EntityInterest {
     @Getter
     private ItemInterestType type = ItemInterestType.NONE;
     @Getter
-    private Vec3d attractionPos;
+    private Vec3 attractionPos;
     @Getter
     private Item attractionItem;
     @Getter

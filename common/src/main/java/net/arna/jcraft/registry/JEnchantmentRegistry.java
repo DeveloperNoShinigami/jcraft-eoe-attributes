@@ -3,9 +3,7 @@ package net.arna.jcraft.registry;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.enchantments.CinderellasKissEnchantment;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.world.item.enchantment.Enchantment;
 
 import static net.arna.jcraft.JCraft.ENCHANTMENT;
 

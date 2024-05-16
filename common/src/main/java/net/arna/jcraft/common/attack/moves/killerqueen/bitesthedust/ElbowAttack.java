@@ -5,10 +5,9 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
 import net.arna.jcraft.common.util.JParticleType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class ElbowAttack extends AbstractSimpleAttack<ElbowAttack, KQBTDEntity> {
@@ -23,7 +22,7 @@ public class ElbowAttack extends AbstractSimpleAttack<ElbowAttack, KQBTDEntity> 
     public @NonNull Set<LivingEntity> perform(KQBTDEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         for (LivingEntity target : targets) {
-            target.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 5, 4, true, false));
+            target.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, 4, true, false));
         }
 
         return targets;

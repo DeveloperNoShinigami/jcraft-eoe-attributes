@@ -1,8 +1,8 @@
 package net.arna.jcraft.client.rendering.shader;
 
 
-import net.minecraft.client.gl.ShaderProgram;
+import net.minecraft.client.renderer.ShaderInstance;
 
 public interface ShaderUniformHandler {
-    void updateShaderData(ShaderProgram instance);
+    void updateShaderData(ShaderInstance instance);
 }

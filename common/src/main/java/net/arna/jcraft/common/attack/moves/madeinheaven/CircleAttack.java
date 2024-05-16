@@ -9,12 +9,11 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.MobilityType;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenEntity> {
@@ -33,7 +32,7 @@ public class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenEntity>
         super.onInitiate(attacker);
 
         LivingEntity user = attacker.getUserOrThrow();
-        LivingEntity target = AbstractSimpleAttack.findHits(attacker, user.getEyePos().add(attacker.getRotationVector()), 2d, null)
+        LivingEntity target = AbstractSimpleAttack.findHits(attacker, user.getEyePosition().add(attacker.getLookAngle()), 2d, null)
                 .stream()
                 .map(JUtils::getUserIfStand)
                 .findFirst()
@@ -42,7 +41,7 @@ public class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenEntity>
         MoveContext ctx = attacker.getMoveContext();
         attacker.setCirclingTarget(target);
         ctx.set(TARGET, target);
-        ctx.setFloat(ORBIT_PROG, user.getHeadYaw());
+        ctx.setFloat(ORBIT_PROG, user.getYHeadRot());
     }
 
     @Override
@@ -88,51 +87,51 @@ public class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenEntity>
             ctx.setFloat(ORBIT_PROG, orbitProg += 0.15f);
 
             boolean toExit = attacker.getCurrentMove() != null && attacker.getCurrentMove().getOriginalMove() != this;
-            Vec3d rotVec = user.getRotationVector();
-            Vec3d exitVel = Vec3d.ZERO;
+            Vec3 rotVec = user.getLookAngle();
+            Vec3 exitVel = Vec3.ZERO;
             double side = attacker.getRemoteSideInput();
             double forw = attacker.getRemoteForwardInput();
 
             // This isn't normalized and idc - based
             if (side != 0) {
-                exitVel = exitVel.add(rotVec.rotateY(1.5707963f).multiply(side));
+                exitVel = exitVel.add(rotVec.yRot(1.5707963f).scale(side));
                 toExit = true;
             }
             if (forw != 0) {
-                exitVel = exitVel.add(rotVec.multiply(forw));
+                exitVel = exitVel.add(rotVec.scale(forw));
                 toExit = true;
             }
 
-            Vec3d newVelocity;
+            Vec3 newVelocity;
             if (toExit) {
                 newVelocity = exitVel.add(0, 0.5, 0);
                 endCircle(attacker);
             } else {
-                Vec3d orbitPos = target.getEyePos().add(Math.sin(orbitProg) * 7, 0, Math.cos(orbitProg) * 7);
-                Vec3d towardsVel = orbitPos.subtract(user.getPos()).normalize();
-                double stabilization = user.getPos().distanceTo(orbitPos);
+                Vec3 orbitPos = target.getEyePosition().add(Math.sin(orbitProg) * 7, 0, Math.cos(orbitProg) * 7);
+                Vec3 towardsVel = orbitPos.subtract(user.position()).normalize();
+                double stabilization = user.position().distanceTo(orbitPos);
                 if (stabilization > 0.5) {
                     stabilization = 0.5;
                 }
-                newVelocity = user.getVelocity().multiply(stabilization).add(towardsVel);
+                newVelocity = user.getDeltaMovement().scale(stabilization).add(towardsVel);
             }
 
             JUtils.setVelocity(user, newVelocity.x, newVelocity.y, newVelocity.z);
         }
 
-        if (circlingTime == 1 || user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
+        if (circlingTime == 1 || user.hasEffect(JStatusRegistry.DAZED.get())) {
             endCircle(attacker);
         }
     }
 
     public static void createSpeedParticles(MadeInHeavenEntity attacker, Entity entity) {
-        Random random = attacker.getRandom();
-        Box box = entity.getBoundingBox();
-        for (int i = 0; i < box.getAverageSideLength(); i++) {
-            entity.getWorld().addParticle(JParticleTypeRegistry.SPEED_PARTICLE.get(),
-                    random.nextDouble() * box.getXLength() + box.minX,
-                    random.nextDouble() * box.getYLength() + box.minY,
-                    random.nextDouble() * box.getZLength() + box.minZ,
+        RandomSource random = attacker.getRandom();
+        AABB box = entity.getBoundingBox();
+        for (int i = 0; i < box.getSize(); i++) {
+            entity.level().addParticle(JParticleTypeRegistry.SPEED_PARTICLE.get(),
+                    random.nextDouble() * box.getXsize() + box.minX,
+                    random.nextDouble() * box.getYsize() + box.minY,
+                    random.nextDouble() * box.getZsize() + box.minZ,
                     0, 0, 0);
         }
     }

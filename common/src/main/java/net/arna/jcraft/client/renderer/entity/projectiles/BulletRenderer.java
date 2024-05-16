@@ -1,31 +1,31 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.arna.jcraft.client.model.entity.BulletModel;
 import net.arna.jcraft.common.entity.projectile.BulletProjectile;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+
 
 
 public class BulletRenderer extends GeoProjectileRenderer<BulletProjectile> {
-    public BulletRenderer(EntityRendererFactory.Context renderManagerIn) {
+    public BulletRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new BulletModel()); // 3x1x1 px cuboid model
     }
 
     @Override
-    public RenderLayer getRenderType(BulletProjectile animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
-        return RenderLayer.getEntitySolid(texture);
+    public RenderType getRenderType(BulletProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entitySolid(texture);
     }
 
     @Override
-    public void render(BulletProjectile animatable, float yaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
-        poseStack.push();
+    public void render(BulletProjectile animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        poseStack.pushPose();
         float scale = animatable.getCaliber() * 0.016f; // 62.5mm/px
         poseStack.scale(scale, scale, scale);
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
-        poseStack.pop();
+        poseStack.popPose();
     }
 }

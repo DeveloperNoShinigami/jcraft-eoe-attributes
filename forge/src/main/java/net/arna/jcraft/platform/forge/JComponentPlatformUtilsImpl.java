@@ -14,11 +14,10 @@ import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.player.PhCapability;
 import net.arna.jcraft.forge.capability.impl.player.SpecCapability;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
-
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import java.util.Optional;
 
 public class JComponentPlatformUtilsImpl {
@@ -27,12 +26,12 @@ public class JComponentPlatformUtilsImpl {
     }
 
 
-    public static CommonSpecComponent getSpecData(PlayerEntity player) {
+    public static CommonSpecComponent getSpecData(Player player) {
         return SpecCapability.getCapability(player);
     }
 
 
-    public static CommonPhComponent getPhData(PlayerEntity player) {
+    public static CommonPhComponent getPhData(Player player) {
         return PhCapability.getCapability(player);
     }
 
@@ -74,7 +73,7 @@ public class JComponentPlatformUtilsImpl {
         return null; //TODO
     }
 
-    public static CommonShockwaveHandlerComponent getShockwaveHandler(World world) {
+    public static CommonShockwaveHandlerComponent getShockwaveHandler(Level world) {
         return ShockwaveHandlerCapability.getCapability(world);
     }
 

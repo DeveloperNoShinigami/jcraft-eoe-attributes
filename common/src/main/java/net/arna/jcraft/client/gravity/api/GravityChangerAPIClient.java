@@ -12,18 +12,17 @@ import net.arna.jcraft.common.gravity.util.packet.UpdateGravityPacket;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import java.util.ArrayList;
 
 @Environment(EnvType.CLIENT)
 public class GravityChangerAPIClient {
 
-    public static void addGravityClient(ClientPlayerEntity entity, Gravity gravity, Identifier verifier, PacketByteBuf verifierInfo) {
+    public static void addGravityClient(LocalPlayer entity, Gravity gravity, ResourceLocation verifier, FriendlyByteBuf verifierInfo) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) {
             return;
         }
@@ -33,7 +32,7 @@ public class GravityChangerAPIClient {
         });
     }
 
-    public static void setGravityClient(ClientPlayerEntity entity, ArrayList<Gravity> gravity, Identifier verifier, PacketByteBuf verifierInfo) {
+    public static void setGravityClient(LocalPlayer entity, ArrayList<Gravity> gravity, ResourceLocation verifier, FriendlyByteBuf verifierInfo) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) {
             return;
         }
@@ -43,7 +42,7 @@ public class GravityChangerAPIClient {
         });
     }
 
-    public static void setIsInvertedClient(ClientPlayerEntity entity, boolean isInverted, RotationParameters rotationParameters, Identifier verifier, PacketByteBuf verifierInfo) {
+    public static void setIsInvertedClient(LocalPlayer entity, boolean isInverted, RotationParameters rotationParameters, ResourceLocation verifier, FriendlyByteBuf verifierInfo) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) {
             return;
         }
@@ -53,7 +52,7 @@ public class GravityChangerAPIClient {
         });
     }
 
-    public static void clearGravityClient(ClientPlayerEntity entity, RotationParameters rotationParameters, Identifier verifier, PacketByteBuf verifierInfo) {
+    public static void clearGravityClient(LocalPlayer entity, RotationParameters rotationParameters, ResourceLocation verifier, FriendlyByteBuf verifierInfo) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) {
             return;
         }
@@ -63,7 +62,7 @@ public class GravityChangerAPIClient {
         });
     }
 
-    public static void setDefaultGravityDirectionClient(ClientPlayerEntity entity, Direction gravityDirection, RotationParameters rotationParameters, Identifier verifier, PacketByteBuf verifierInfo) {
+    public static void setDefaultGravityDirectionClient(LocalPlayer entity, Direction gravityDirection, RotationParameters rotationParameters, ResourceLocation verifier, FriendlyByteBuf verifierInfo) {
         if (onWrongSide(entity) || !EntityTags.canChangeGravity(entity)) {
             return;
         }
@@ -74,7 +73,7 @@ public class GravityChangerAPIClient {
     }
 
     private static boolean onWrongSide(Entity entity) {
-        if (!entity.getWorld().isClient) {
+        if (!entity.level().isClientSide) {
             JCraft.LOGGER.error("GravityChangerAPI function cannot be called from the server, use dedicated server class. ", new Exception());
             return true;
         }

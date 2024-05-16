@@ -1,14 +1,14 @@
 package net.arna.jcraft.registry;
 
 import net.arna.jcraft.JCraft;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
 
 public interface JDimensionRegistry {
-    RegistryKey<World> AU_DIMENSION_KEY = RegistryKey.of(RegistryKeys.WORLD, JCraft.id("audim"));
-    RegistryKey<DimensionType> AU_TYPE_KEY = RegistryKey.of(RegistryKeys.DIMENSION_TYPE, AU_DIMENSION_KEY.getValue());
+    ResourceKey<Level> AU_DIMENSION_KEY = ResourceKey.create(Registries.DIMENSION, JCraft.id("audim"));
+    ResourceKey<DimensionType> AU_TYPE_KEY = ResourceKey.create(Registries.DIMENSION_TYPE, AU_DIMENSION_KEY.location());
 
     static void registerDimensions() {
 

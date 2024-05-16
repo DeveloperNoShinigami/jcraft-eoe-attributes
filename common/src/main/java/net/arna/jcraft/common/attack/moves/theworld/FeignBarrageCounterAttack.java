@@ -9,11 +9,11 @@ import net.arna.jcraft.common.entity.stand.TheWorldEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class FeignBarrageCounterAttack extends AbstractCounterAttack<FeignBarrageCounterAttack, TheWorldEntity> {
     private static final CounterMissMove<TheWorldEntity> missAttack = new CounterMissMove<>(10);
@@ -38,15 +38,15 @@ public class FeignBarrageCounterAttack extends AbstractCounterAttack<FeignBarrag
             return;
         }
         LivingEntity user = attacker.getUserOrThrow();
-        Vec3d behind = countered.getPos().subtract(countered.getRotationVector());
+        Vec3 behind = countered.position().subtract(countered.getLookAngle());
 
-        user.setVelocity(0, 0, 0);
-        user.velocityModified = true;
-        user.teleport(behind.x, behind.y, behind.z);
-        user.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, countered.getEyePos());
+        user.setDeltaMovement(0, 0, 0);
+        user.hurtMarked = true;
+        user.teleportToWithTicket(behind.x, behind.y, behind.z);
+        user.lookAt(EntityAnchorArgument.Anchor.EYES, countered.getEyePosition());
 
         if (countered instanceof LivingEntity livingEntity) {
-            livingEntity.removeStatusEffect(JStatusRegistry.DAZED.get());
+            livingEntity.removeEffect(JStatusRegistry.DAZED.get());
             StandEntity.stun(livingEntity, 20, 0);
 
             JUtils.cancelMoves(livingEntity);

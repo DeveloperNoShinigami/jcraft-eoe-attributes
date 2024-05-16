@@ -3,12 +3,12 @@ package net.arna.jcraft.common.network.s2c;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 
 public class ComboCounterPacket {
-    public static void send(ServerPlayerEntity player, int comboCount, float damageScaling) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+    public static void send(ServerPlayer player, int comboCount, float damageScaling) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 
         buf.writeInt(comboCount);
         buf.writeFloat(damageScaling);

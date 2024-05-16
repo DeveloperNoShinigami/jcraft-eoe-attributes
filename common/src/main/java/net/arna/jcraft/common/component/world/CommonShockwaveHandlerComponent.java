@@ -2,10 +2,9 @@ package net.arna.jcraft.common.component.world;
 
 import lombok.Data;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public interface CommonShockwaveHandlerComponent {
@@ -15,21 +14,21 @@ public interface CommonShockwaveHandlerComponent {
         addShockwave(x, y, z, pitch, yaw, 1.0f);
     }
 
-    default void addShockwave(Vec3d pos, float pitch, float yaw, float scale) {
+    default void addShockwave(Vec3 pos, float pitch, float yaw, float scale) {
         addShockwave(pos.x, pos.y, pos.z, pitch, yaw, scale);
     }
 
-    default void addShockwave(Vec3d pos, float pitch, float yaw) {
+    default void addShockwave(Vec3 pos, float pitch, float yaw) {
         addShockwave(pos.x, pos.y, pos.z, pitch, yaw);
     }
 
-    default void addShockwave(Vec3d pos, Vec3d rotation, float scale) {
-        Vec2f polarRot = JUtils.rotationVectorToPolar(rotation);
+    default void addShockwave(Vec3 pos, Vec3 rotation, float scale) {
+        Vec2 polarRot = JUtils.rotationVectorToPolar(rotation);
         addShockwave(pos.x, pos.y, pos.z, polarRot.x, polarRot.y, scale);
     }
 
-    default void addShockwave(Vec3d pos, Vec3d rotation) {
-        Vec2f polarRot = JUtils.rotationVectorToPolar(rotation);
+    default void addShockwave(Vec3 pos, Vec3 rotation) {
+        Vec2 polarRot = JUtils.rotationVectorToPolar(rotation);
         addShockwave(pos.x, pos.y, pos.z, polarRot.x, polarRot.y);
     }
 
@@ -47,7 +46,7 @@ public interface CommonShockwaveHandlerComponent {
             this.x = x;
             this.y = y;
             this.z = z;
-            this.blockPos = BlockPos.ofFloored(x, y, z);
+            this.blockPos = BlockPos.containing(x, y, z);
             this.pitch = pitch;
             this.yaw = yaw;
             this.scale = scale;

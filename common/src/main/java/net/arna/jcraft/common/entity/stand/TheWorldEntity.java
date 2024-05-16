@@ -14,14 +14,21 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.function.Consumer;
 
@@ -34,8 +41,8 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(
-                    Text.literal("Low Kick"),
-                    Text.literal("slower, higher stun, low hitbox")
+                    Component.literal("Low Kick"),
+                    Component.literal("slower, higher stun, low hitbox")
             );
     public static final SimpleAttack<TheWorldEntity> LIGHT_FOLLOWUP = new SimpleAttack<TheWorldEntity>(
             0, 7, 11, 0.75f, 6f, 8, 1.5f, 1f, 0)
@@ -46,8 +53,8 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withBlockStun(4)
             .withExtraHitBox(0, 0, 1)
             .withInfo(
-                    Text.literal("Punch"),
-                    Text.literal("quick combo finisher")
+                    Component.literal("Punch"),
+                    Component.literal("quick combo finisher")
             );
     public static final SimpleAttack<TheWorldEntity> LIGHT = SimpleAttack.<TheWorldEntity>lightAttack(
                     5, 7, 0.75f, 5, 10, 0.1f, -0.1f)
@@ -55,15 +62,15 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(LOW_KICK)
             .withInfo(
-                    Text.literal("Punch"),
-                    Text.literal("quick combo starter")
+                    Component.literal("Punch"),
+                    Component.literal("quick combo starter")
             );
     public static final MainBarrageAttack<TheWorldEntity> BARRAGE = new MainBarrageAttack<TheWorldEntity>(280,
-            0, 40, 0.75f, 1f, 30, 2, 0.25f, 0, 3, Blocks.OBSIDIAN.getHardness())
+            0, 40, 0.75f, 1f, 30, 2, 0.25f, 0, 3, Blocks.OBSIDIAN.defaultDestroyTime())
             .withSound(JSoundRegistry.TW_BARRAGE.get())
             .withInfo(
-                    Text.literal("Barrage"),
-                    Text.literal("fast reliable combo starter/extender, high stun")
+                    Component.literal("Barrage"),
+                    Component.literal("fast reliable combo starter/extender, high stun")
             );
     public static final SimpleAttack<TheWorldEntity> SWEEP = new SimpleAttack<TheWorldEntity>(40, 6, 16, 0.75f, 5f,
             16, 1.85f, 0.25f, 0.4f)
@@ -72,8 +79,8 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Sweep"),
-                    Text.literal("fast, decent stun")
+                    Component.literal("Sweep"),
+                    Component.literal("fast, decent stun")
             );
     public static final UppercutAttack<TheWorldEntity> ROUNDHOUSE = new UppercutAttack<TheWorldEntity>(20, 7, 13, 0.75f, 5f,
             10, 1.75f, 0.25f, -0.2f, 0.4f)
@@ -83,8 +90,8 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Roundhouse"),
-                    Text.literal("low stun")
+                    Component.literal("Roundhouse"),
+                    Component.literal("low stun")
             );
     public static final KnockdownAttack<TheWorldEntity> COUNTER_FOLLOWUP = new KnockdownAttack<TheWorldEntity>(0, 5, 9, 0.75f, 9f, 16, 1.75f, 0.7f, 0.1f, 35)
             .withSound(JSoundRegistry.TW_COUNTER.get())
@@ -93,15 +100,15 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withLaunch()
             .withHyperArmor()
             .withInfo(
-                    Text.literal("Counter (Hit)"),
-                    Text.literal("quick, armored knockdown")
+                    Component.literal("Counter (Hit)"),
+                    Component.literal("quick, armored knockdown")
             );
     public static final FeignBarrageCounterAttack FEIGN_BARRAGE = new FeignBarrageCounterAttack(400, 5,
             50, 0.75f, COUNTER_FOLLOWUP)
             .withSound(JSoundRegistry.TW_BARRAGE.get())
             .withInfo(
-                    Text.literal("Feign Barrage"),
-                    Text.literal("counter, 0.25s windup, 2.25s duration, teleports and knocks down on hit")
+                    Component.literal("Feign Barrage"),
+                    Component.literal("counter, 0.25s windup, 2.25s duration, teleports and knocks down on hit")
             );
     public static final TWDonutAttack DONUT = new TWDonutAttack(220, 20, 42, 1f,
             9f, 52, 2f, 1f, 0f)
@@ -111,14 +118,14 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withHyperArmor()
             .withLaunch()
             .withInfo(
-                    Text.literal("Donut"),
-                    Text.literal("slow, uninterruptible combo starter/extender, 1.5s stun on whiff")
+                    Component.literal("Donut"),
+                    Component.literal("slow, uninterruptible combo starter/extender, 1.5s stun on whiff")
             );
     public static final TimeSkipMove<TheWorldEntity> TIME_SKIP = new TimeSkipMove<TheWorldEntity>(300, 14)
             .withSound(JSoundRegistry.TIME_SKIP.get())
             .withInfo(
-                    Text.literal("Timeskip"),
-                    Text.literal("14m range")
+                    Component.literal("Timeskip"),
+                    Component.literal("14m range")
             );
     public static final SimpleAttack<TheWorldEntity> LUNGE = new SimpleAttack<TheWorldEntity>(160, 9, 14,
             1f, 5f, 12, 1.5f, 0.6f, 0.2f)
@@ -129,15 +136,15 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
-                    Text.literal("Lunge"),
-                    Text.literal("user & stand charge forward, launches")
+                    Component.literal("Lunge"),
+                    Component.literal("user & stand charge forward, launches")
             );
 
     private static void doCharge(TheWorldEntity attacker, LivingEntity user, MoveContext moveContext) {
         if (attacker.isFree()) {
             return;
         }
-        JUtils.addVelocity(user, attacker.getRotationVector().multiply(0.75));
+        JUtils.addVelocity(user, attacker.getLookAngle().scale(0.75));
     }
 
     public static final ChargeAttack<TheWorldEntity, State> CHARGE = new ChargeAttack<>(
@@ -149,18 +156,18 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withBlockStun(11)
             .withInfo(
-                    Text.literal("Forward Charge"),
-                    Text.literal("The World detaches from the user and lunges forward, combo starter")
+                    Component.literal("Forward Charge"),
+                    Component.literal("The World detaches from the user and lunges forward, combo starter")
             );
     public static final TimeStopMove<TheWorldEntity> TIME_STOP = new TimeStopMove<TheWorldEntity>(1400,
             45, 52, JServerConfig.TW_TIME_STOP_DURATION::getValue)
             .withSound(JSoundRegistry.TW_TS.get())
             .withInfo(
-                    Text.literal("Timestop"),
-                    Text.literal("4 seconds")
+                    Component.literal("Timestop"),
+                    Component.literal("4 seconds")
             );
 
-    public TheWorldEntity(World worldIn) {
+    public TheWorldEntity(Level worldIn) {
         super(StandType.THE_WORLD, worldIn, JSoundRegistry.TW_SUMMON.get());
         idleRotation = 225f;
 

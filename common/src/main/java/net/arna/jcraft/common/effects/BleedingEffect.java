@@ -1,17 +1,17 @@
 package net.arna.jcraft.common.effects;
 
 import net.arna.jcraft.common.entity.damage.JDamageSources;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
 
-public class BleedingEffect extends StatusEffect {
+public class BleedingEffect extends MobEffect {
     public BleedingEffect() {
-        super(StatusEffectCategory.HARMFUL, 0x6F1616);
+        super(MobEffectCategory.HARMFUL, 0x6F1616);
     }
 
     @Override
-    public boolean canApplyUpdateEffect(int duration, int amplifier) {
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         int i = 40 >> amplifier;
         if (i > 0) {
             return duration % i == 0;
@@ -21,7 +21,7 @@ public class BleedingEffect extends StatusEffect {
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        entity.damage(JDamageSources.bleeding(entity.getWorld()), 1);
+    public void applyEffectTick(LivingEntity entity, int amplifier) {
+        entity.hurt(JDamageSources.bleeding(entity.level()), 1);
     }
 }

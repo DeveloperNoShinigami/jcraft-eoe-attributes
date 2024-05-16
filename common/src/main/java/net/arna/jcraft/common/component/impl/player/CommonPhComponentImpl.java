@@ -2,16 +2,16 @@ package net.arna.jcraft.common.component.impl.player;
 
 import lombok.NonNull;
 import net.arna.jcraft.common.component.player.CommonPhComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 
 public class CommonPhComponentImpl implements CommonPhComponent {
-    private final PlayerEntity player;
+    private final Player player;
     private int level = 0;
 
-    public CommonPhComponentImpl(PlayerEntity player) {
+    public CommonPhComponentImpl(Player player) {
         this.player = player;
     }
 
@@ -33,15 +33,15 @@ public class CommonPhComponentImpl implements CommonPhComponent {
     public void sync(Entity entity) {
     }
 
-    public void readFromNbt(@NonNull NbtCompound tag) {
+    public void readFromNbt(@NonNull CompoundTag tag) {
         level = tag.getInt("level");
     }
 
-    public void writeToNbt(@NonNull NbtCompound tag) {
+    public void writeToNbt(@NonNull CompoundTag tag) {
         tag.putInt("level", level);
     }
 
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
+    public boolean shouldSyncWith(ServerPlayer player) {
         return player == this.player; // Only our player needs to know, I believe.
     }
 }

@@ -1,5 +1,6 @@
 package net.arna.jcraft.client.rendering.handler;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.event.events.client.ClientTickEvent;
 import ladysnake.satin.api.event.PostWorldRenderCallbackV2;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
@@ -7,15 +8,14 @@ import net.arna.jcraft.client.rendering.skybox.CrimsonSkyBoxCool;
 import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
 import net.arna.jcraft.common.util.BlockInfo;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -28,42 +28,42 @@ public class CrimsonShaderHandler extends StandShaderHandler {
     public List<BlockInfo> list = new ArrayList<>();
 
     @Override
-    public void onWorldRendered(@NotNull MatrixStack matrices, @NotNull Camera camera, float tickDelta, long nanoTime) {
+    public void onWorldRendered(@NotNull PoseStack matrices, @NotNull Camera camera, float tickDelta, long nanoTime) {
         if (renderingEffect) {
-            World world = camera.getFocusedEntity().getWorld();
+            Level world = camera.getEntity().level();
             if(list.isEmpty()){
-                list = JUtils.collectBlockInfo(world, camera.getBlockPos(), 8);
+                list = JUtils.collectBlockInfo(world, camera.getBlockPosition(), 8);
             }
-            BlockRenderManager manager = MinecraftClient.getInstance().getBlockRenderManager();
+            BlockRenderDispatcher manager = Minecraft.getInstance().getBlockRenderer();
 
 
-            VertexConsumerProvider.Immediate consumer = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+            MultiBufferSource.BufferSource consumer = Minecraft.getInstance().renderBuffers().bufferSource();
             for (BlockInfo info : list){
 
 
-                matrices.push();
-                matrices.translate(info.pos().getX() - camera.getPos().x, info.pos().getY() - camera.getPos().y, info.pos().getZ() - camera.getPos().z);
+                matrices.pushPose();
+                matrices.translate(info.pos().getX() - camera.getPosition().x, info.pos().getY() - camera.getPosition().y, info.pos().getZ() - camera.getPosition().z);
 
-                manager.getModelRenderer().render(
+                manager.getModelRenderer().tesselateBlock(
                         world,
-                        manager.getModel(info.state()),
+                        manager.getBlockModel(info.state()),
                         info.state(),
                         info.pos(),
                         matrices,
-                        consumer.getBuffer(RenderLayers.getBlockLayer(info.state())),
+                        consumer.getBuffer(ItemBlockRenderTypes.getChunkRenderType(info.state())),
                         true,
-                        Random.create(),
-                        info.state().getRenderingSeed(info.pos()),
-                        OverlayTexture.DEFAULT_UV
+                        RandomSource.create(),
+                        info.state().getSeed(info.pos()),
+                        OverlayTexture.NO_OVERLAY
                 );
-                matrices.pop();
+                matrices.popPose();
             }
 
         }
     }
 
     @Override
-    public void tick(MinecraftClient client) {
+    public void tick(Minecraft client) {
         SkyBoxManager skyboxManager = SkyBoxManager.getInstance();
 
         if (shouldRender) {

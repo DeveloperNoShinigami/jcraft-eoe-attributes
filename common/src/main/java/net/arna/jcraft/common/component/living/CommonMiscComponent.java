@@ -1,13 +1,12 @@
 package net.arna.jcraft.common.component.living;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
-
 import java.util.UUID;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public interface CommonMiscComponent {
     // General
-    Vec3d getDesiredVelocity();
+    Vec3 getDesiredVelocity();
 
     void updateRemoteInputs(int forward, int sideways, boolean jumping);
 

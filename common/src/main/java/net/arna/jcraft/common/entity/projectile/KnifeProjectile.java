@@ -1,66 +1,72 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
-public class KnifeProjectile extends PersistentProjectileEntity implements GeoEntity {
-    private static final TrackedData<Boolean> LIGHTNING;
+public class KnifeProjectile extends AbstractArrow implements GeoEntity {
+    private static final EntityDataAccessor<Boolean> LIGHTNING;
     private int ticksInAir;
     private boolean delayed = false;
     private boolean delayFired = false;
     private int delayTime;
 
     static {
-        LIGHTNING = DataTracker.registerData(KnifeProjectile.class, TrackedDataHandlerRegistry.BOOLEAN);
+        LIGHTNING = SynchedEntityData.defineId(KnifeProjectile.class, EntityDataSerializers.BOOLEAN);
     }
 
-    public KnifeProjectile(EntityType<? extends KnifeProjectile> entityType, World world) {
+    public KnifeProjectile(EntityType<? extends KnifeProjectile> entityType, Level world) {
         super(entityType, world);
     }
 
-    public KnifeProjectile(World world) {
+    public KnifeProjectile(Level world) {
         super(JEntityTypeRegistry.KNIFE.get(), world);
     }
 
-    public KnifeProjectile(World world, LivingEntity owner) {
+    public KnifeProjectile(Level world, LivingEntity owner) {
         super(JEntityTypeRegistry.KNIFE.get(), owner, world);
         this.setOwner(owner);
     }
 
     public Boolean getLightning() {
-        return this.dataTracker.get(LIGHTNING);
+        return this.entityData.get(LIGHTNING);
     }
 
     public void setLightning(Boolean li) {
-        this.dataTracker.set(LIGHTNING, li);
+        this.entityData.set(LIGHTNING, li);
     }
 
     public void setDelayedLightning(int dt) {
@@ -70,13 +76,13 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(LIGHTNING, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(LIGHTNING, false);
     }
 
     @Override
-    public ItemStack asItemStack() {
+    public ItemStack getPickupItem() {
         return new ItemStack(JItemRegistry.KNIFE.get());
     }
 
@@ -89,17 +95,17 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
         }
 
         if (!getLightning()) {
-            if (ticksInAir > 640 && !getWorld().isClient) {
+            if (ticksInAir > 640 && !level().isClientSide) {
                 discard();
             }
             return;
         }
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             double x = getX();
             double y = getY();
             double z = getZ();
-            getWorld().addParticle(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0, 0, 0);
-            getWorld().addParticle(ParticleTypes.ELECTRIC_SPARK, (x + prevX) / 2, (y + prevY) / 2, (z + prevZ) / 2, 0, 0, 0);
+            level().addParticle(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0, 0, 0);
+            level().addParticle(ParticleTypes.ELECTRIC_SPARK, (x + xo) / 2, (y + yo) / 2, (z + zo) / 2, 0, 0, 0);
             return;
         }
 
@@ -117,44 +123,44 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
         }
 
         if (delayTime >= 1) {
-            setVelocity(getVelocity().multiply(0.5));
+            setDeltaMovement(getDeltaMovement().scale(0.5));
             return;
         }
 
         if (delayFired) {
             return;
         }
-        Vec3d eP = owner.getEyePos();
-        Vec3d rangeMod = owner.getRotationVector().multiply(24);
+        Vec3 eP = owner.getEyePosition();
+        Vec3 rangeMod = owner.getLookAngle().scale(24);
 
-        EntityHitResult eHit = ProjectileUtil.raycast(owner, eP, eP.add(rangeMod),
-                owner.getBoundingBox().expand(24),
-                EntityPredicates.VALID_LIVING_ENTITY, // This is a hack, and will miss on stuff like End Crystals, but also makes it miss on other knives
+        EntityHitResult eHit = ProjectileUtil.getEntityHitResult(owner, eP, eP.add(rangeMod),
+                owner.getBoundingBox().inflate(24),
+                EntitySelector.LIVING_ENTITY_STILL_ALIVE, // This is a hack, and will miss on stuff like End Crystals, but also makes it miss on other knives
                 576 // Squared
         );
 
-        HitResult hitResult = getWorld().raycast(new RaycastContext(eP, eP.add(rangeMod), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, owner));
+        HitResult hitResult = level().clip(new ClipContext(eP, eP.add(rangeMod), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner));
 
         playSound(JSoundRegistry.TWOH_SHOOT.get(), 1, 1);
 
-        Vec3d hitPos = hitResult.getPos();
+        Vec3 hitPos = hitResult.getLocation();
         if (eHit != null) {
-            hitPos = eHit.getPos();
+            hitPos = eHit.getLocation();
         }
-        setVelocity(new Vec3d(hitPos.x - getX(), hitPos.y - getY(), hitPos.z - getZ()).normalize());
+        setDeltaMovement(new Vec3(hitPos.x - getX(), hitPos.y - getY(), hitPos.z - getZ()).normalize());
 
-        velocityDirty = true;
+        hasImpulse = true;
         delayFired = true;
     }
 
     @Override
-    public void onStruckByLightning(ServerWorld world, LightningEntity lightning) {
+    public void thunderHit(ServerLevel world, LightningBolt lightning) {
         this.setLightning(true);
     }
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) {
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        if (level().isClientSide) {
             return;
         }
         if (delayed && delayTime > 1) {
@@ -168,7 +174,7 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
         }
 
         if (isOnFire()) {
-            entity.setOnFireFor(5);
+            entity.setSecondsOnFire(5);
         }
 
         int blockstun = 4;
@@ -177,11 +183,11 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
             stunT = 20;
             blockstun = 6;
         } else {
-            dropStack(asItemStack(), 0.1F);
+            spawnAtLocation(getPickupItem(), 0.1F);
         }
 
-        JUtils.projectileDamageLogic(this, getWorld(), entity, Vec3d.ZERO, stunT, 1, false, 2, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
-        playSound(SoundEvents.ITEM_TRIDENT_HIT, 1, 1);
+        JUtils.projectileDamageLogic(this, level(), entity, Vec3.ZERO, stunT, 1, false, 2, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
+        playSound(SoundEvents.TRIDENT_HIT, 1, 1);
         if (entity instanceof LivingEntity living) {
             JComponentPlatformUtils.getMiscData(living).stab();
         }
@@ -189,21 +195,21 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
         tag.putShort("life", (short) this.ticksInAir);
         tag.putBoolean("lightning", getLightning());
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
         setLightning(tag.getBoolean("lightning"));
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
 
     @Override

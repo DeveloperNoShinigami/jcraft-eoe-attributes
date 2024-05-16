@@ -2,12 +2,12 @@ package net.arna.jcraft.common.component.impl.world;
 
 import lombok.Getter;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,9 +17,9 @@ import java.util.List;
 public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandlerComponent {
     @Getter
     private final List<Shockwave> shockwaves = new ArrayList<>();
-    private final World world;
+    private final Level world;
 
-    public CommonShockwaveHandlerComponentImpl(World world) {
+    public CommonShockwaveHandlerComponentImpl(Level world) {
         this.world = world;
     }
 
@@ -34,9 +34,9 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
         // JComponentPlatformUtils.SHOCKWAVE_HANDLER.sync(world, (buf, player) -> writeSyncPacket(buf, shockwave));
     }
 
-    public void readFromNbt(@NotNull NbtCompound tag) {
-        for (NbtElement element : tag.getList("shockwaves", NbtElement.COMPOUND_TYPE)) {
-            NbtCompound compound = (NbtCompound) element;
+    public void readFromNbt(@NotNull CompoundTag tag) {
+        for (Tag element : tag.getList("shockwaves", Tag.TAG_COMPOUND)) {
+            CompoundTag compound = (CompoundTag) element;
             shockwaves.add(new Shockwave(
                     compound.getDouble("x"),
                     compound.getDouble("y"),
@@ -49,10 +49,10 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
         }
     }
 
-    public void writeToNbt(@NotNull NbtCompound tag) {
-        NbtList list = new NbtList();
+    public void writeToNbt(@NotNull CompoundTag tag) {
+        ListTag list = new ListTag();
         for (Shockwave shockwave : shockwaves) {
-            NbtCompound compound = new NbtCompound();
+            CompoundTag compound = new CompoundTag();
             compound.putDouble("x", shockwave.getX());
             compound.putDouble("y", shockwave.getY());
             compound.putDouble("z", shockwave.getZ());
@@ -65,11 +65,11 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
         tag.put("shockwaves", list);
     }
 
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
         writeSyncPacket(buf, (Shockwave) null);
     }
 
-    public void writeSyncPacket(PacketByteBuf buf, @Nullable Shockwave shockwave) {
+    public void writeSyncPacket(FriendlyByteBuf buf, @Nullable Shockwave shockwave) {
         List<Shockwave> shockwaves = shockwave == null ? this.shockwaves : List.of(shockwave);
 
         buf.writeInt(shockwaves.size());
@@ -84,7 +84,7 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
         }
     }
 
-    public void applySyncPacket(PacketByteBuf buf) {
+    public void applySyncPacket(FriendlyByteBuf buf) {
         int count = buf.readInt();
         for (int i = 0; i < count; i++) {
             shockwaves.add(new Shockwave(

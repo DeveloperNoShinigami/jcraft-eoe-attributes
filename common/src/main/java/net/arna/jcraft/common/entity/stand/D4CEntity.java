@@ -20,15 +20,22 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JDimensionRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.function.Consumer;
 
@@ -36,8 +43,8 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     public static final ItemPlaceMove ITEM_PLACE = new ItemPlaceMove(JCraft.LIGHT_COOLDOWN, 8, 12, 0.75f)
             .withAnim(State.ITEM_PLACE)
             .withInfo(
-                    Text.literal("Item Place"),
-                    Text.literal("places an item from an alternate universe on the ground, attracts other such items"));
+                    Component.literal("Item Place"),
+                    Component.literal("places an item from an alternate universe on the ground, attracts other such items"));
     public static final SimpleAttack<D4CEntity> LIGHT_FOLLOWUP = new SimpleAttack<D4CEntity>(
             0, 9, 14, 0.75f, 7f, 8, 1.75f, 1.25f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
@@ -48,8 +55,8 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             .withExtraHitBox(0, 0, 1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Deadly Blow"),
-                    Text.literal("combo finisher, more blockstun than other light followups"));
+                    Component.literal("Deadly Blow"),
+                    Component.literal("combo finisher, more blockstun than other light followups"));
     public static final SimpleAttack<D4CEntity> CHOP = new SimpleAttack<D4CEntity>(JCraft.LIGHT_COOLDOWN,
             9, 15, 0.75f, 5f, 20, 1.5f, 0.25f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
@@ -57,15 +64,15 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
-                    Text.literal("Chop"),
-                    Text.literal("relatively quick combo starter"));
+                    Component.literal("Chop"),
+                    Component.literal("relatively quick combo starter"));
     public static final MainBarrageAttack<D4CEntity> BARRAGE = new MainBarrageAttack<D4CEntity>(240, 0,
-            40, 0.75f, 0.8f, 30, 2f, 0.25f, 0f, 3, Blocks.DEEPSLATE.getHardness())
+            40, 0.75f, 0.8f, 30, 2f, 0.25f, 0f, 3, Blocks.DEEPSLATE.defaultDestroyTime())
             .withSound(JSoundRegistry.D4C_BARRAGE.get())
             .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withInfo(
-                    Text.literal("Barrage"),
-                    Text.literal("fast reliable combo starter/extender, high stun"));
+                    Component.literal("Barrage"),
+                    Component.literal("fast reliable combo starter/extender, high stun"));
     public static final SimpleAttack<D4CEntity> CHARGE = new SimpleAttack<D4CEntity>(200, 14, 25,
             1f, 8f, 12, 2f, 1.5f, -0.2f)
             .withInitAction(D4CEntity::doCharge)
@@ -75,29 +82,29 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             .withHyperArmor()
             .withLaunch()
             .withInfo(
-                    Text.literal("Charge"),
-                    Text.literal("user & stand charge forward, uninterruptible launcher"));
+                    Component.literal("Charge"),
+                    Component.literal("user & stand charge forward, uninterruptible launcher"));
     public static final DimensionalHopMove DIM_HOP = new DimensionalHopMove(1200, 40, 60,
             1f, 0f, 0, 1.75f, 0f, 0f)
             .withSound(JSoundRegistry.D4C_DIMHOP.get())
             .withInfo(
-                    Text.literal("Dimensional Hop"),
-                    Text.literal("travels to a random dimension at exact coordinates, " +
+                    Component.literal("Dimensional Hop"),
+                    Component.literal("travels to a random dimension at exact coordinates, " +
                             "if user was hit in the last 30s, he is forced back, certified death button"));
     public static final GiveGunMove GIVE_GUN = new GiveGunMove(280, 10, 14, 0.75f)
             .withSound(JSoundRegistry.D4C_THROW.get())
             .withInitAction(D4CEntity::equipRevolver)
             .withInfo(
-                    Text.literal("Summon Gun"),
-                    Text.literal("gives the user a revolver"));
+                    Component.literal("Summon Gun"),
+                    Component.literal("gives the user a revolver"));
     public static final SimpleAttack<D4CEntity> GRAB_HIT_FINAL = new SimpleAttack<D4CEntity>(0, 26,
             34, 0.75f, 4f, 9, 2f, 1.2f, 0f)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
-                    Text.literal("Grab (Final Hit)"),
-                    Text.empty());
+                    Component.literal("Grab (Final Hit)"),
+                    Component.empty());
     public static final SimpleMultiHitAttack<D4CEntity> GRAB_HIT = new SimpleMultiHitAttack<D4CEntity>(0,
             34, 0.75f, 4f, 10, 2f, 0f, 0f, IntSet.of(11, 17, 26))
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
@@ -106,25 +113,25 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             .withStunType(StunType.UNBURSTABLE)
             .withFinisher(17, GRAB_HIT_FINAL)
             .withInfo(
-                    Text.literal("Grab (Final Hit)"),
-                    Text.empty());
+                    Component.literal("Grab (Final Hit)"),
+                    Component.empty());
     public static final D4CGrabAttack GRAB = new D4CGrabAttack(280, 12, 21, 0.75f,
             0f, 40, 1.5f, 0f, 0f, GRAB_HIT, State.THROW_HIT, 25, 1)
             .withCrouchingVariant(GIVE_GUN)
             .withSound(JSoundRegistry.D4C_THROW.get())
             .withInitAction(D4CEntity::equipRevolver)
             .withInfo(
-                    Text.literal("Grab"),
-                    Text.literal("unblockable, combo finisher"));
+                    Component.literal("Grab"),
+                    Component.literal("unblockable, combo finisher"));
     public static final D4CCounterAttack COUNTER = new D4CCounterAttack(400, 5, 35, 0.75f)
             .withInfo(
-                    Text.literal("Counter"),
-                    Text.literal("0.25s startup, 1.5s duration, high damage, knocks back when hit"));
+                    Component.literal("Counter"),
+                    Component.literal("0.25s startup, 1.5s duration, high damage, knocks back when hit"));
     public static final CloneSpawnMove CLONE_SPAWN = new CloneSpawnMove(400, 40, 50, 1f)
             .withSound(JSoundRegistry.D4C_DIMHOP.get())
             .withInfo(
-                    Text.literal("Dimensional Clone"),
-                    Text.literal("""
+                    Component.literal("Dimensional Clone"),
+                    Component.literal("""
                             summons an unlimited number of servants, crouch and interact to give/take items, press a special button to change their weapon
                             Servant types:
                             DEFAULT - Iron Sword
@@ -134,10 +141,10 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     public static final FlagMove FLAG = new FlagMove(280, 10, 60, 0f)
             .withSound(JSoundRegistry.D4C_UTILITY.get())
             .withInfo(
-                    Text.literal("Dimensional Phase"),
-                    Text.literal("hides in a flag in an un-stunnable, floating state"));
+                    Component.literal("Dimensional Phase"),
+                    Component.literal("hides in a flag in an un-stunnable, floating state"));
 
-    public D4CEntity(World worldIn) {
+    public D4CEntity(Level worldIn) {
         super(StandType.D4C, worldIn, JSoundRegistry.D4C_SUMMON.get(), true);
 
         idleRotation = -45f;
@@ -178,14 +185,14 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     }
 
     private static void doCharge(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        if (!user.isOnGround()) {
+        if (!user.onGround()) {
             return;
         }
-        JUtils.addVelocity(user, attacker.getRotationVector().multiply(0.75).add(0.0, 0.15, 0.0));
+        JUtils.addVelocity(user, attacker.getLookAngle().scale(0.75).add(0.0, 0.15, 0.0));
     }
 
     private static void equipRevolver(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        attacker.equipStack(EquipmentSlot.MAINHAND, JItemRegistry.FV_REVOLVER.get().getDefaultStack());
+        attacker.setItemSlot(EquipmentSlot.MAINHAND, JItemRegistry.FV_REVOLVER.get().getDefaultInstance());
     }
 
     @Override
@@ -200,7 +207,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                     curMove = null;
                 }
 
-                if (getWorld().getRegistryKey().equals(JDimensionRegistry.AU_DIMENSION_KEY)) {
+                if (level().dimension().equals(JDimensionRegistry.AU_DIMENSION_KEY)) {
                     setMove(DIM_HOP, State.DIM_HOP);
                     playSound(JSoundRegistry.D4C_DIMHOP.get(), 1, 1);
                     return true;
@@ -229,14 +236,14 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     }
 
     @Override
-    protected Box calculateBoundingBox() {
+    protected AABB makeBoundingBox() {
         if (getState() == State.FLAG) {
             double x = getX();
             double y = getY();
             double z = getZ();
-            return new Box(x + 0.5, y + 0.5, z + 0.5, x - 0.5, y, z - 0.5);
+            return new AABB(x + 0.5, y + 0.5, z + 0.5, x - 0.5, y, z - 0.5);
         }
-        return super.calculateBoundingBox();
+        return super.makeBoundingBox();
     }
 
     /* -- OLD GUN THROW CODE

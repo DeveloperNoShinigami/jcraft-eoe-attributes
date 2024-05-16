@@ -2,67 +2,66 @@ package net.arna.jcraft.fabric.client;
 
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceReloader;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Unit;
-import net.minecraft.util.profiler.Profiler;
-
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class BigItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer, IdentifiableResourceReloadListener {
-    private final Identifier id;
-    private final Identifier scytheId;
+    private final ResourceLocation id;
+    private final ResourceLocation scytheId;
     private ItemRenderer itemRenderer;
     private BakedModel inventoryScytheModel;
     private BakedModel worldScytheModel;
 
-    public BigItemRenderer(Identifier scytheId) {
-        this.id = new Identifier(scytheId.getNamespace(), scytheId.getPath() + "_renderer");
+    public BigItemRenderer(ResourceLocation scytheId) {
+        this.id = new ResourceLocation(scytheId.getNamespace(), scytheId.getPath() + "_renderer");
         this.scytheId = scytheId;
     }
 
     @Override
-    public Identifier getFabricId() {
+    public ResourceLocation getFabricId() {
         return this.id;
     }
 
     @Override
-    public CompletableFuture<Void> reload(ResourceReloader.Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
-        return synchronizer.whenPrepared(Unit.INSTANCE).thenRunAsync(() -> {
+    public CompletableFuture<Void> reload(PreparableReloadListener.PreparationBarrier synchronizer, ResourceManager manager, ProfilerFiller prepareProfiler, ProfilerFiller applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
+        return synchronizer.wait(Unit.INSTANCE).thenRunAsync(() -> {
             applyProfiler.startTick();
             applyProfiler.push("listener");
-            final MinecraftClient client = MinecraftClient.getInstance();
+            final Minecraft client = Minecraft.getInstance();
             this.itemRenderer = client.getItemRenderer();
-            this.inventoryScytheModel = client.getBakedModelManager().getModel(new ModelIdentifier(new Identifier(scytheId + "_gui"), "inventory"));
-            this.worldScytheModel = client.getBakedModelManager().getModel(new ModelIdentifier(new Identifier(scytheId + "_handheld"), "inventory"));
+            this.inventoryScytheModel = client.getModelManager().getModel(new ModelResourceLocation(new ResourceLocation(scytheId + "_gui"), "inventory"));
+            this.worldScytheModel = client.getModelManager().getModel(new ModelResourceLocation(new ResourceLocation(scytheId + "_handheld"), "inventory"));
             applyProfiler.pop();
             applyProfiler.endTick();
         }, applyExecutor);
     }
 
     @Override
-    public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        matrices.pop();
-        matrices.push();
-        if (mode != ModelTransformationMode.FIRST_PERSON_LEFT_HAND && mode != ModelTransformationMode.FIRST_PERSON_RIGHT_HAND && mode != ModelTransformationMode.THIRD_PERSON_LEFT_HAND && mode != ModelTransformationMode.THIRD_PERSON_RIGHT_HAND) {
-            itemRenderer.renderItem(stack, mode, false, matrices, vertexConsumers, light, overlay, this.inventoryScytheModel);
+    public void render(ItemStack stack, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+        matrices.popPose();
+        matrices.pushPose();
+        if (mode != ItemDisplayContext.FIRST_PERSON_LEFT_HAND && mode != ItemDisplayContext.FIRST_PERSON_RIGHT_HAND && mode != ItemDisplayContext.THIRD_PERSON_LEFT_HAND && mode != ItemDisplayContext.THIRD_PERSON_RIGHT_HAND) {
+            itemRenderer.render(stack, mode, false, matrices, vertexConsumers, light, overlay, this.inventoryScytheModel);
         } else {
             boolean leftHanded;
             switch (mode) {
                 case FIRST_PERSON_LEFT_HAND, THIRD_PERSON_LEFT_HAND -> leftHanded = true;
                 default -> leftHanded = false;
             }
-            itemRenderer.renderItem(stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, this.worldScytheModel);
+            itemRenderer.render(stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, this.worldScytheModel);
         }
     }
 }

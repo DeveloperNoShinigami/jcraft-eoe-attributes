@@ -20,25 +20,32 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -51,8 +58,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             .withBlockStun(6)
             .withExtraHitBox(1)
             .withInfo(
-                    Text.literal("Sweep"),
-                    Text.literal("quick combo finisher, knocks down")
+                    Component.literal("Sweep"),
+                    Component.literal("quick combo finisher, knocks down")
             );
     public static final SimpleMultiHitAttack<KingCrimsonEntity> DUAL_CHOP = new SimpleMultiHitAttack<KingCrimsonEntity>(
             40, 23, 0.85f, 4f, 21, 1.5f, 0.2f, -0.1f,
@@ -61,8 +68,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             .withCrouchingVariant(SWEEP)
             .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withInfo(
-                    Text.literal("Dual Chop"),
-                    Text.literal("quick combo starter")
+                    Component.literal("Dual Chop"),
+                    Component.literal("quick combo starter")
             );
     public static final BarrageAttack<KingCrimsonEntity> BARRAGE_FINISHER = new BarrageAttack<KingCrimsonEntity>(0,
             0, 50, 0.85f, 1f, 10, 1.5f, 1.1f, 0f, 3)
@@ -70,16 +77,16 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
-                    Text.literal("Barrage (Final Hit)"),
-                    Text.empty()
+                    Component.literal("Barrage (Final Hit)"),
+                    Component.empty()
             );
     public static final MainBarrageAttack<KingCrimsonEntity> BARRAGE = new MainBarrageAttack<KingCrimsonEntity>(280,
-            0, 40, 0.85f, 1f, 20, 1.5f, 0.1f, 0f, 3, Blocks.OBSIDIAN.getHardness())
+            0, 40, 0.85f, 1f, 20, 1.5f, 0.1f, 0f, 3, Blocks.OBSIDIAN.defaultDestroyTime())
             .withFinisher(36, BARRAGE_FINISHER)
             .withSound(JSoundRegistry.KC_BARRAGE.get())
             .withInfo(
-                    Text.literal("Barrage"),
-                    Text.literal("fast reliable combo starter/extender/finisher, medium stun, knocks back")
+                    Component.literal("Barrage"),
+                    Component.literal("fast reliable combo starter/extender/finisher, medium stun, knocks back")
             );
     public static final KnockdownAttack<KingCrimsonEntity> OVERHEAD_HOOK = new KnockdownAttack<KingCrimsonEntity>(160,
             22, 32, 0.85f, 9f, 11, 2f, 1.5f, 0f, 35)
@@ -89,8 +96,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             .withHyperArmor()
             .withLaunch()
             .withInfo(
-                    Text.literal("Overhead Hook"),
-                    Text.literal("long windup, knockdown")
+                    Component.literal("Overhead Hook"),
+                    Component.literal("long windup, knockdown")
             );
     public static final SimpleAttack<KingCrimsonEntity> VERTICAL_CHOP = new SimpleAttack<KingCrimsonEntity>(240,
             12, 19, 0.85f, 6f, 25, 1.5f, 0.6f, 0f)
@@ -101,17 +108,17 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Vertical Chop"),
-                    Text.literal("medium windup combo starter, has a true followup in the form of a slow, armored knockdown")
+                    Component.literal("Vertical Chop"),
+                    Component.literal("medium windup combo starter, has a true followup in the form of a slow, armored knockdown")
             );
     public static final BloodThrowAttack BLOOD_THROW = new BloodThrowAttack(260, 10, 15, 1f)
             .withInfo(
-                    Text.literal("Blood Throw"),
-                    Text.literal("throws a stunning, blinding blood projectile, crouch while it comes out for higher speed")
+                    Component.literal("Blood Throw"),
+                    Component.literal("throws a stunning, blinding blood projectile, crouch while it comes out for higher speed")
             );
     public static final EffectInflictingAttack<KingCrimsonEntity> EYE_CHOP = new EffectInflictingAttack<KingCrimsonEntity>(
             280, 20, 29, 1f, 9f, 27, 1.75f, 0.7f, -0.3f,
-            List.of(new StatusEffectInstance(StatusEffects.BLINDNESS, 200, 0)))
+            List.of(new MobEffectInstance(MobEffects.BLINDNESS, 200, 0)))
             .withCrouchingVariant(BLOOD_THROW)
             .withSound(JSoundRegistry.KC_EYE_CHOP.get())
             .withImpactSound(JSoundRegistry.IMPACT_9.get())
@@ -120,8 +127,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             .withBlockStun(4)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
-                    Text.literal("Eye Chop"),
-                    Text.literal("blindness on hit, combo starter, low blockstun")
+                    Component.literal("Eye Chop"),
+                    Component.literal("blindness on hit, combo starter, low blockstun")
             );
     public static final KCDonutAttack DONUT = new KCDonutAttack(260, 30, 48, 1f,
             14f, 10, 1.75f, 1.5f, 0.1f)
@@ -131,20 +138,20 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             .withHyperArmor()
             .withLaunch()
             .withInfo(
-                    Text.literal("Donut"),
-                    Text.literal("slow, uninterruptable, extremely damaging launcher")
+                    Component.literal("Donut"),
+                    Component.literal("slow, uninterruptable, extremely damaging launcher")
             );
     public static final EpitaphAttack EPITAPH = new EpitaphAttack(480, 4, 34, -1f)
             .withInfo(
-                    Text.literal("Epitaph"),
-                    Text.literal("0.2s windup, 1.5s counter, combo starter. Cannot be buffered.")
+                    Component.literal("Epitaph"),
+                    Component.literal("0.2s windup, 1.5s counter, combo starter. Cannot be buffered.")
             );
     public static final PredictionMove PREDICTION = new PredictionMove(600, 4, 104, -1f)
             .withCrouchingVariant(EPITAPH)
             .withSound(JSoundRegistry.KC_EPITAPH.get())
             .withInfo(
-                    Text.literal("Prediction/Move Cancel"),
-                    Text.literal("""
+                    Component.literal("Prediction/Move Cancel"),
+                    Component.literal("""
                             This move cannot be buffered.
                             Shows the projected future location of nearby entities, using Time Erase will force them to the projected locations. (20s TE cooldown)
                             While predicting, you are slowed down.
@@ -152,21 +159,21 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             );
     public static final TimeEraseMove TIME_ERASE = new TimeEraseMove(1000, 5, 15, 1f, 120)
             .withInfo(
-                    Text.literal("Time Erase"),
-                    Text.literal("6 seconds duration, cancellable by doing anything with King Crimson")
+                    Component.literal("Time Erase"),
+                    Component.literal("6 seconds duration, cancellable by doing anything with King Crimson")
             );
     public static final TimeSkipMove<KingCrimsonEntity> TIME_SKIP = new TimeSkipMove<KingCrimsonEntity>(300, 16)
             .withSound(JSoundRegistry.TE_TP.get())
             .withInitAction((attacker, user, ctx) -> attacker.spawnTimeSkipParticles())
             .withInfo(
-                    Text.literal("Timeskip"),
-                    Text.literal("16m range")
+                    Component.literal("Timeskip"),
+                    Component.literal("16m range")
             );
 
-    private static final TrackedData<Integer> TIME_ERASE_TIME;
+    private static final EntityDataAccessor<Integer> TIME_ERASE_TIME;
 
 
-    public KingCrimsonEntity(World worldIn) {
+    public KingCrimsonEntity(Level worldIn) {
         super(StandType.KING_CRIMSON, worldIn, JSoundRegistry.KC_SUMMON.get());
 
         idleDistance = 1f;
@@ -196,15 +203,15 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     }
 
     static {
-        TIME_ERASE_TIME = DataTracker.registerData(KingCrimsonEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        TIME_ERASE_TIME = SynchedEntityData.defineId(KingCrimsonEntity.class, EntityDataSerializers.INT);
     }
 
     public int getTETime() {
-        return dataTracker.get(TIME_ERASE_TIME);
+        return entityData.get(TIME_ERASE_TIME);
     }
 
     public void setTETime(int teTime) {
-        dataTracker.set(TIME_ERASE_TIME, teTime);
+        entityData.set(TIME_ERASE_TIME, teTime);
     }
 
     @Override
@@ -222,9 +229,9 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        getDataTracker().startTracking(TIME_ERASE_TIME, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(TIME_ERASE_TIME, 0);
     }
 
     @Override
@@ -283,23 +290,23 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 }
 
                 // Particle effects
-                Vec3d oPos = user.getPos();
-                Box bBox = user.getBoundingBox();
-                for (ServerPlayerEntity serverPlayer : ((ServerWorld) getWorld()).getPlayers()) {
-                    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                Vec3 oPos = user.position();
+                AABB bBox = user.getBoundingBox();
+                for (ServerPlayer serverPlayer : ((ServerLevel) level()).players()) {
+                    FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
                     buf.writeVarInt(2);
                     buf.writeDouble(oPos.x);
                     buf.writeDouble(oPos.y);
                     buf.writeDouble(oPos.z);
-                    buf.writeDouble(bBox.getXLength());
-                    buf.writeDouble(bBox.getYLength());
-                    buf.writeDouble(bBox.getZLength());
+                    buf.writeDouble(bBox.getXsize());
+                    buf.writeDouble(bBox.getYsize());
+                    buf.writeDouble(bBox.getZsize());
                     ServerChannelFeedbackPacket.send(serverPlayer, buf);
                 }
 
                 // Stop epitaph state
-                if (user instanceof ServerPlayerEntity player) {
-                    NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_EPITAPH_STATE, new PacketByteBuf(Unpooled.buffer().writeBoolean(false)));
+                if (user instanceof ServerPlayer player) {
+                    NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_EPITAPH_STATE, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
                 }
             }
             case UTILITY -> {
@@ -319,20 +326,20 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     private void spawnTimeSkipParticles() {
         LivingEntity user = getUserOrThrow();
 
-        Vec3d pos = user.getPos();
-        Box bBox = user.getBoundingBox();
+        Vec3 pos = user.position();
+        AABB bBox = user.getBoundingBox();
 
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeShort(2);
         buf.writeDouble(pos.x);
         buf.writeDouble(pos.y);
         buf.writeDouble(pos.z);
-        buf.writeDouble(bBox.getXLength());
-        buf.writeDouble(bBox.getYLength());
-        buf.writeDouble(bBox.getZLength());
+        buf.writeDouble(bBox.getXsize());
+        buf.writeDouble(bBox.getYsize());
+        buf.writeDouble(bBox.getZsize());
 
-        if (getWorld() instanceof ServerWorld serverWorld) {
-            serverWorld.getPlayers().forEach(serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf));
+        if (level() instanceof ServerLevel serverWorld) {
+            serverWorld.players().forEach(serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf));
         }
     }
 
@@ -357,14 +364,14 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     }
 
     @Override
-    protected Box calculateBoundingBox() {
+    protected AABB makeBoundingBox() {
         if (getTETime() > 0) {
             double x = getX();
             double y = getY();
             double z = getZ();
-            return new Box(x, y, z, x, y + 0.1, z);
+            return new AABB(x, y, z, x, y + 0.1, z);
         }
-        return super.calculateBoundingBox();
+        return super.makeBoundingBox();
     }
 
     public void cancelTE() {
@@ -373,12 +380,12 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) - getTETime() * 2);
 
         setTETime(0);
-        MobEntity doppelganger = moveContext.get(TimeEraseMove.DOPPELGANGER);
+        Mob doppelganger = moveContext.get(TimeEraseMove.DOPPELGANGER);
         if (doppelganger != null) {
             doppelganger.discard();
         }
 
-        if (user instanceof ServerPlayerEntity serverPlayer) {
+        if (user instanceof ServerPlayer serverPlayer) {
             ShaderDeactivationPacket.send(serverPlayer, ShaderActivationPacket.Type.CRIMSON);
         }
     }
@@ -391,7 +398,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         if (user == null) {
             return;
         }
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             return;
         }
         TIME_ERASE.tickTimeErase(this);

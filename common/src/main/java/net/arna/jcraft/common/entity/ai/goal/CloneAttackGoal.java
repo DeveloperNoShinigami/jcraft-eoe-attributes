@@ -1,19 +1,18 @@
 package net.arna.jcraft.common.entity.ai.goal;
 
 import net.arna.jcraft.common.entity.PlayerCloneEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.control.LookControl;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.pathing.EntityNavigation;
-import net.minecraft.entity.ai.pathing.Path;
-import net.minecraft.util.Hand;
-
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.control.LookControl;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.pathfinder.Path;
 import java.util.EnumSet;
 
 public class CloneAttackGoal extends Goal {
     private final PlayerCloneEntity clone;
     private final LookControl cloneLookControl;
-    private final EntityNavigation cloneNavigation;
+    private final PathNavigation cloneNavigation;
     private LivingEntity target;
     private final double speed;
     private long lastUpdateTime;
@@ -23,11 +22,11 @@ public class CloneAttackGoal extends Goal {
         cloneLookControl = mob.getLookControl();
         cloneNavigation = mob.getNavigation();
         this.speed = speed;
-        this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
-    public boolean canStart() {
-        long l = clone.getWorld().getTime();
+    public boolean canUse() {
+        long l = clone.level().getGameTime();
         if (l - this.lastUpdateTime < 10L) {
             return false;
         } else {
@@ -38,42 +37,42 @@ public class CloneAttackGoal extends Goal {
             } else if (!target.isAlive()) {
                 return false;
             } else {
-                Path path = cloneNavigation.findPathTo(target, 0);
+                Path path = cloneNavigation.createPath(target, 0);
                 if (path != null) {
                     return true;
                 } else {
-                    return this.getSquaredMaxAttackDistance(target) >= clone.squaredDistanceTo(target);
+                    return this.getSquaredMaxAttackDistance(target) >= clone.distanceToSqr(target);
                 }
             }
         }
     }
 
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         if (target == null) {
             return false;
         } else if (!target.isAlive() || target.isRemoved()) {
             return false;
-        } else if (clone.squaredDistanceTo(target) > 1024.0D) {
+        } else if (clone.distanceToSqr(target) > 1024.0D) {
             return false;
         } else if (target == clone.getMaster()) {
             return false;
         } else {
-            return !cloneNavigation.isIdle() || this.canStart();
+            return !cloneNavigation.isDone() || this.canUse();
         }
     }
 
     public void start() {
-        clone.setAttacking(true);
+        clone.setAggressive(true);
     }
 
     public void stop() {
         target = null;
         clone.setTarget(null);
-        clone.setAttacking(false);
+        clone.setAggressive(false);
         cloneNavigation.stop();
     }
 
-    public boolean shouldRunEveryTick() {
+    public boolean requiresUpdateEveryTick() {
         return true;
     }
 
@@ -82,17 +81,17 @@ public class CloneAttackGoal extends Goal {
             return;
         }
 
-        cloneNavigation.startMovingTo(target, speed);
-        cloneLookControl.lookAt(target, 30.0F, 30.0F);
+        cloneNavigation.moveTo(target, speed);
+        cloneLookControl.setLookAt(target, 30.0F, 30.0F);
         double d = this.getSquaredMaxAttackDistance(target);
-        if (target.squaredDistanceTo(clone) <= d && clone.getCooldown() <= 0) {
+        if (target.distanceToSqr(clone) <= d && clone.getCooldown() <= 0) {
             clone.startCooldown();
-            clone.swingHand(Hand.MAIN_HAND);
-            clone.tryAttack(target);
+            clone.swing(InteractionHand.MAIN_HAND);
+            clone.doHurtTarget(target);
         }
     }
 
     private double getSquaredMaxAttackDistance(LivingEntity entity) {
-        return 1.44F + entity.getWidth(); // 0.6^2 * 4 i.e. cloneWidth^2 * 2^2
+        return 1.44F + entity.getBbWidth(); // 0.6^2 * 4 i.e. cloneWidth^2 * 2^2
     }
 }

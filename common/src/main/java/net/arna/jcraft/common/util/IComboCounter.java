@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.util;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
 public interface IComboCounter {
     LivingEntity jcraft$getLastAttacked();

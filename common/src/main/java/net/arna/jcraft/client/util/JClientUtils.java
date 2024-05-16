@@ -1,5 +1,7 @@
 package net.arna.jcraft.client.util;
 
+import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
+import mod.azure.azurelib.core.animation.AnimationProcessor;
 import net.arna.jcraft.client.model.entity.StandEntityModel;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
@@ -7,17 +9,15 @@ import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.DimensionData;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.model.ModelTransform;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import software.bernie.geckolib.core.animation.AnimationProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +43,9 @@ public class JClientUtils {
         }
     }
 
-    public static boolean isInTSRange(Vec3d pos) {
+    public static boolean isInTSRange(Vec3 pos) {
         for (DimensionData timeStop : activeTimestops) {
-            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
+            if (timeStop != null && timeStop.pos.distanceToSqr(pos.x(), pos.y(), pos.z()) <= 65536) {
                 return true;
             }
         }
@@ -54,7 +54,7 @@ public class JClientUtils {
 
     public static boolean isInTSRange(BlockPos pos) {
         for (DimensionData timeStop : activeTimestops) {
-            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
+            if (timeStop != null && timeStop.pos.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return true;
             }
         }
@@ -63,7 +63,7 @@ public class JClientUtils {
 
     public static int getTicksIfInTSRange(BlockPos pos) {
         for (DimensionData timeStop : activeTimestops) {
-            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
+            if (timeStop != null && timeStop.pos.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return timeStop.timer;
             }
         }
@@ -89,11 +89,11 @@ public class JClientUtils {
         AnimationProcessor<?> animationProcessor = model.getAnimationProcessor();
 
         if (entity.getMoveStun() < 1) {
-            Vec3d playerVel = (entity.isRemote() && !entity.remoteControllable()) ? entity.getVelocity() : deltaPos(player);
-            overVel = MathHelper.clamp((float) playerVel.horizontalLength() - 0.05f, -1f, 1f);
+            Vec3 playerVel = (entity.isRemote() && !entity.remoteControllable()) ? entity.getDeltaMovement() : deltaPos(player);
+            overVel = Mth.clamp((float) playerVel.horizontalDistance() - 0.05f, -1f, 1f);
 
             // If going backwards
-            if (playerVel.normalize().add(entity.getRotationVector()).horizontalLengthSquared() < playerVel.normalize().horizontalLengthSquared())
+            if (playerVel.normalize().add(entity.getLookAngle()).horizontalDistanceSqr() < playerVel.normalize().horizontalDistanceSqr())
                 velInfluence *= -1;
 
             CoreGeoBone torso = animationProcessor.getBone("torso");
@@ -110,7 +110,7 @@ public class JClientUtils {
         if (entity.isBlocking() || entity.isIdle()) { // if in/going to idle, or blocking
             CoreGeoBone head = animationProcessor.getBone("head");
             if (head != null) {
-                float headPitch = (player.getPitch() - overVel * velInfluence) * 3.1415f / 180f;
+                float headPitch = (player.getXRot() - overVel * velInfluence) * 3.1415f / 180f;
                 if (flipHead) headPitch = -headPitch;
                 head.setRotX(headPitch + hPO);
             }
@@ -125,7 +125,7 @@ public class JClientUtils {
 
     public static boolean shouldForceRender(Entity entity) {
         if (entity instanceof D4CEntity d4c && d4c.getState() == D4CEntity.State.FLAG ||
-                entity instanceof KingCrimsonEntity kc && kc.getTETime() > 0 && kc.getUser() == MinecraftClient.getInstance().player) {
+                entity instanceof KingCrimsonEntity kc && kc.getTETime() > 0 && kc.getUser() == Minecraft.getInstance().player) {
             return true;
         }
         return entity instanceof CreamEntity cream && cream.isHalfBall();
@@ -139,25 +139,25 @@ public class JClientUtils {
     }
 
     public static void resetPartAngles(ModelPart part) {
-        ModelTransform defaultTransform = part.getDefaultTransform();
-        part.pitch = defaultTransform.pitch;
-        part.yaw = defaultTransform.yaw;
-        part.roll = defaultTransform.roll;
+        PartPose defaultTransform = part.getInitialPose();
+        part.xRot = defaultTransform.xRot;
+        part.yRot = defaultTransform.yRot;
+        part.zRot = defaultTransform.zRot;
     }
 
-    public static void animateHit(CommonHitPropertyComponent.HitAnimation hitAnimation, long endHitAnimTime, Vec3d randomRotation, ModelPart head, @Nullable ModelPart hat, ModelPart body, ModelPart rightArm, ModelPart leftArm, ModelPart rightLeg, ModelPart leftLeg) {
+    public static void animateHit(CommonHitPropertyComponent.HitAnimation hitAnimation, long endHitAnimTime, Vec3 randomRotation, ModelPart head, @Nullable ModelPart hat, ModelPart body, ModelPart rightArm, ModelPart leftArm, ModelPart rightLeg, ModelPart leftLeg) {
         if (endHitAnimTime > 20L) {
             endHitAnimTime = 20L;
         }
         float angDegrees = endHitAnimTime * RAD_TO_DEG;
 
         if (endHitAnimTime <= 1) {
-            leftLeg.resetTransform();
-            rightLeg.resetTransform();
+            leftLeg.resetPose();
+            rightLeg.resetPose();
             resetPartAngles(body);
         } else {
-            body.yaw = (float) (randomRotation.x * angDegrees * 0.35);
-            body.roll = (float) (randomRotation.z * angDegrees * 0.35);
+            body.yRot = (float) (randomRotation.x * angDegrees * 0.35);
+            body.zRot = (float) (randomRotation.z * angDegrees * 0.35);
         }
 
         if (endHitAnimTime == 0) // If dead
@@ -169,82 +169,82 @@ public class JClientUtils {
             case HIGH -> {
                 angDegrees *= 1.5F;
 
-                head.pitch += angDegrees;
+                head.xRot += angDegrees;
 
-                body.pitch -= angDegrees;
+                body.xRot -= angDegrees;
 
-                leftLeg.pivotZ -= endHitAnimTime * 0.25F;
-                rightLeg.pivotZ -= endHitAnimTime * 0.25F;
+                leftLeg.z -= endHitAnimTime * 0.25F;
+                rightLeg.z -= endHitAnimTime * 0.25F;
 
-                rightArm.roll += angDegrees;
-                leftArm.roll -= angDegrees;
+                rightArm.zRot += angDegrees;
+                leftArm.zRot -= angDegrees;
             }
             case MID -> {
                 angDegrees *= 1.5F;
 
-                head.pitch += angDegrees;
+                head.xRot += angDegrees;
 
-                body.pitch += angDegrees;
+                body.xRot += angDegrees;
 
-                leftLeg.pivotZ += endHitAnimTime * 0.25F;
-                rightLeg.pivotZ += endHitAnimTime * 0.25F;
-                leftLeg.pivotY -= endHitAnimTime * 0.175F;
-                rightLeg.pivotY -= endHitAnimTime * 0.175F;
+                leftLeg.z += endHitAnimTime * 0.25F;
+                rightLeg.z += endHitAnimTime * 0.25F;
+                leftLeg.y -= endHitAnimTime * 0.175F;
+                rightLeg.y -= endHitAnimTime * 0.175F;
 
-                rightLeg.pitch -= angDegrees;
-                leftLeg.pitch -= angDegrees;
+                rightLeg.xRot -= angDegrees;
+                leftLeg.xRot -= angDegrees;
             }
             case LOW -> {
                 angDegrees *= 1.5F;
 
-                head.pitch += angDegrees;
+                head.xRot += angDegrees;
 
-                body.pitch += angDegrees;
+                body.xRot += angDegrees;
 
-                leftLeg.pivotZ += endHitAnimTime * 0.175F;
-                rightLeg.pivotZ += endHitAnimTime * 0.175F;
-                leftLeg.pivotY -= endHitAnimTime * 0.0875F;
-                rightLeg.pivotY -= endHitAnimTime * 0.0875F;
+                leftLeg.z += endHitAnimTime * 0.175F;
+                rightLeg.z += endHitAnimTime * 0.175F;
+                leftLeg.y -= endHitAnimTime * 0.0875F;
+                rightLeg.y -= endHitAnimTime * 0.0875F;
 
-                rightLeg.pitch += angDegrees;
-                leftLeg.pitch += angDegrees;
+                rightLeg.xRot += angDegrees;
+                leftLeg.xRot += angDegrees;
 
-                rightArm.roll += angDegrees;
-                leftArm.roll -= angDegrees;
+                rightArm.zRot += angDegrees;
+                leftArm.zRot -= angDegrees;
             }
             case CRUSH -> {
-                body.pitch += angDegrees;
+                body.xRot += angDegrees;
 
-                leftLeg.pivotZ += endHitAnimTime * 0.25F;
-                rightLeg.pivotZ += endHitAnimTime * 0.25F;
-                leftLeg.pivotY -= endHitAnimTime * 0.175F;
-                rightLeg.pivotY -= endHitAnimTime * 0.175F;
+                leftLeg.z += endHitAnimTime * 0.25F;
+                rightLeg.z += endHitAnimTime * 0.25F;
+                leftLeg.y -= endHitAnimTime * 0.175F;
+                rightLeg.y -= endHitAnimTime * 0.175F;
 
                 angDegrees *= 1.75F;
 
-                head.pitch += MathHelper.sin(endHitAnimTime * 0.1F);
+                head.xRot += Mth.sin(endHitAnimTime * 0.1F);
 
-                rightArm.roll += angDegrees;
-                leftArm.roll -= angDegrees;
-                rightLeg.pitch -= angDegrees;
-                leftLeg.pitch -= angDegrees;
+                rightArm.zRot += angDegrees;
+                leftArm.zRot -= angDegrees;
+                rightLeg.xRot -= angDegrees;
+                leftLeg.xRot -= angDegrees;
             }
             case LAUNCH -> {
                 //angDegrees *= 4.0F;
 
-                head.pitch += angDegrees;
+                head.xRot += angDegrees;
 
-                body.pitch += angDegrees;
+                body.xRot += angDegrees;
 
-                leftLeg.pivotZ += endHitAnimTime * 0.125F;
-                rightLeg.pivotZ += endHitAnimTime * 0.125F;
-                leftLeg.pivotY -= endHitAnimTime * 0.125F;
-                rightLeg.pivotY -= endHitAnimTime * 0.125F;
+                leftLeg.z += endHitAnimTime * 0.125F;
+                rightLeg.z += endHitAnimTime * 0.125F;
+                leftLeg.y -= endHitAnimTime * 0.125F;
+                rightLeg.y -= endHitAnimTime * 0.125F;
 
-                rightArm.roll += angDegrees;
-                leftArm.roll -= angDegrees;
-                rightLeg.pitch -= angDegrees;
-                leftLeg.pitch -= angDegrees;
+                rightArm.zRot += angDegrees;
+                leftArm.zRot -= angDegrees;
+                rightLeg.xRot -= angDegrees;
+                leftLeg.xRot -= angDegrees;
             }
             case ROLL -> {
 

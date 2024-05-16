@@ -9,9 +9,9 @@ import net.arna.jcraft.common.gravity.util.packet.InvertGravityPacket;
 import net.arna.jcraft.common.gravity.util.packet.OverwriteGravityPacket;
 import net.arna.jcraft.common.gravity.util.packet.UpdateGravityPacket;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -179,20 +179,20 @@ public abstract class GravityChangerAPI {
      * Returns the world relative velocity for the given player
      * Using minecraft's methods to get the velocity of a the player will return player relative velocity
      */
-    public static Vec3d getWorldVelocity(Entity playerEntity) {
-        return RotationUtil.vecPlayerToWorld(playerEntity.getVelocity(), getGravityDirection(playerEntity));
+    public static Vec3 getWorldVelocity(Entity playerEntity) {
+        return RotationUtil.vecPlayerToWorld(playerEntity.getDeltaMovement(), getGravityDirection(playerEntity));
     }
 
     /**
      * Sets the world relative velocity for the given player
      * Using minecraft's methods to set the velocity of an entity will set player relative velocity
      */
-    public static void setWorldVelocity(Entity entity, Vec3d worldVelocity) {
-        entity.setVelocity(RotationUtil.vecWorldToPlayer(worldVelocity, getGravityDirection(entity)));
+    public static void setWorldVelocity(Entity entity, Vec3 worldVelocity) {
+        entity.setDeltaMovement(RotationUtil.vecWorldToPlayer(worldVelocity, getGravityDirection(entity)));
     }
 
     public static void setWorldVelocity(Entity entity, Vector3f worldVelocity) {
-        entity.setVelocity(RotationUtil.vecWorldToPlayer(new Vec3d(worldVelocity), getGravityDirection(entity)));
+        entity.setDeltaMovement(RotationUtil.vecWorldToPlayer(new Vec3(worldVelocity), getGravityDirection(entity)));
     }
 
     /**
@@ -200,24 +200,24 @@ public abstract class GravityChangerAPI {
      * Using minecraft's methods to add to the velocity of an entity will set player relative velocity
      */
     public static void addWorldVelocity(Entity entity, double x, double y, double z) {
-        Vec3d corrected = RotationUtil.vecWorldToPlayer(new Vec3d(x, y, z), getGravityDirection(entity));
-        entity.addVelocity(corrected.x, corrected.y, corrected.z);
+        Vec3 corrected = RotationUtil.vecWorldToPlayer(new Vec3(x, y, z), getGravityDirection(entity));
+        entity.push(corrected.x, corrected.y, corrected.z);
     }
 
-    public static void addWorldVelocity(Entity entity, Vec3d worldVelocity) {
-        Vec3d corrected = RotationUtil.vecWorldToPlayer(worldVelocity, getGravityDirection(entity));
-        entity.addVelocity(corrected.x, corrected.y, corrected.z);
+    public static void addWorldVelocity(Entity entity, Vec3 worldVelocity) {
+        Vec3 corrected = RotationUtil.vecWorldToPlayer(worldVelocity, getGravityDirection(entity));
+        entity.push(corrected.x, corrected.y, corrected.z);
     }
 
     /**
      * Returns eye position offset from feet position for the given entity
      */
-    public static Vec3d getEyeOffset(Entity entity) {
-        return RotationUtil.vecPlayerToWorld(0, (double) entity.getStandingEyeHeight(), 0, getGravityDirection(entity));
+    public static Vec3 getEyeOffset(Entity entity) {
+        return RotationUtil.vecPlayerToWorld(0, (double) entity.getEyeHeight(), 0, getGravityDirection(entity));
     }
 
     private static boolean onWrongSide(Entity entity) {
-        if (entity.getWorld().isClient) {
+        if (entity.level().isClientSide) {
             JCraft.LOGGER.error("GravityChangerAPI function cannot be called from the client, use dedicated client class. ", new Exception());
             return true;
         }

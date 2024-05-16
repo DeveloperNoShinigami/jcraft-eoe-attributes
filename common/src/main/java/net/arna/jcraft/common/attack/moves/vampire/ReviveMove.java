@@ -6,14 +6,13 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.tickable.Revivables;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class ReviveMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<ReviveMove<A>, A> {
@@ -25,14 +24,14 @@ public class ReviveMove<A extends IAttacker<? extends A, ?>> extends AbstractMov
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
         MinecraftServer server = user.getServer();
         assert server != null;
-        ServerWorld serverWorld = server.getWorld(user.getWorld().getRegistryKey());
+        ServerLevel serverWorld = server.getLevel(user.level().dimension());
         assert serverWorld != null;
 
-        for (Revivables.ReviveData revivable : Revivables.getAround(user.getPos(), getMoveDistance())) {
+        for (Revivables.ReviveData revivable : Revivables.getAround(user.position(), getMoveDistance())) {
             EntityType<?> entityType = revivable.getType();
 
             // Convert Testificates to zombie Testificates
-            if (entityType.isIn(EntityTypeTags.RAIDERS) || entityType.equals(EntityType.VILLAGER)) {
+            if (entityType.is(EntityTypeTags.RAIDERS) || entityType.equals(EntityType.VILLAGER)) {
                 entityType = EntityType.ZOMBIE_VILLAGER;
             }
             // Humans to zombies
@@ -42,14 +41,14 @@ public class ReviveMove<A extends IAttacker<? extends A, ?>> extends AbstractMov
 
             Entity entity = entityType.create(serverWorld);
             if (entity instanceof LivingEntity living) {
-                if (living.isUndead()) {
-                    entity.setPosition(revivable.getPos());
-                    entity.age = 1;
-                    if (user instanceof ServerPlayerEntity serverPlayer) {
-                        JComponentPlatformUtils.getMiscData(living).setSlavedTo(serverPlayer.getUuid());
+                if (living.isInvertedHealAndHarm()) {
+                    entity.setPos(revivable.getPos());
+                    entity.tickCount = 1;
+                    if (user instanceof ServerPlayer serverPlayer) {
+                        JComponentPlatformUtils.getMiscData(living).setSlavedTo(serverPlayer.getUUID());
                     }
                     if (!isBoss(living)) {
-                        serverWorld.spawnEntity(entity);
+                        serverWorld.addFreshEntity(entity);
                         Revivables.removeRevivable(revivable);
                     }
                 }

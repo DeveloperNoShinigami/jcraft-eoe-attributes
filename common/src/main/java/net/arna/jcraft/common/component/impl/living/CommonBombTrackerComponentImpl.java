@@ -2,11 +2,11 @@ package net.arna.jcraft.common.component.impl.living;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponent {
@@ -30,9 +30,9 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
     }
 
     public void tick() {
-        World world = entity.getWorld();
+        Level world = entity.level();
 
-        if (world.isClient) {
+        if (world.isClientSide) {
             JCraft.getClientEntityHandler().bombTrackerParticleTick(entity, main);
         } else {
             if (main.dirty) {
@@ -51,11 +51,11 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
         btd.dirty = false;
     }
 
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
+    public boolean shouldSyncWith(ServerPlayer player) {
         return player == entity;
     }
 
-    public void syncBombData(PacketByteBuf buf, BombData bombData) {
+    public void syncBombData(FriendlyByteBuf buf, BombData bombData) {
         buf.writeBoolean(bombData.isBlock);
         buf.writeBoolean(bombData.isEntity);
         buf.writeBoolean(bombData.isItem);
@@ -67,32 +67,32 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
         }
     }
 
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
         syncBombData(buf, main);
         //syncBombData(buf, btd);
     }
 
-    public void readBombData(PacketByteBuf buf, BombData bombData) {
+    public void readBombData(FriendlyByteBuf buf, BombData bombData) {
         bombData.isBlock = buf.readBoolean();
         bombData.isEntity = buf.readBoolean();
         bombData.isItem = buf.readBoolean();
         if (bombData.isEntity) {
-            bombData.bombEntity = entity.getWorld().getEntityById(buf.readVarInt());
+            bombData.bombEntity = entity.level().getEntity(buf.readVarInt());
         }
         if (bombData.isBlock) {
             bombData.bombBlock = buf.readBlockPos();
         }
     }
 
-    public void applySyncPacket(PacketByteBuf buf) {
+    public void applySyncPacket(FriendlyByteBuf buf) {
         readBombData(buf, main);
         //readBombData(buf, btd);
     }
 
 
-    public void readFromNbt(@NotNull NbtCompound tag) {
+    public void readFromNbt(@NotNull CompoundTag tag) {
     }
 
-    public void writeToNbt(@NotNull NbtCompound tag) {
+    public void writeToNbt(@NotNull CompoundTag tag) {
     }
 }

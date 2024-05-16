@@ -1,42 +1,43 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 
-public class AnkhProjectile extends PersistentProjectileEntity implements GeoEntity {
+
+public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     private int ticksInAir;
     private boolean variation = false;
     private double orbitRange = 3;
     private double orbitOffset = 0;
 
-    public AnkhProjectile(EntityType<? extends AnkhProjectile> entityType, World world) {
+    public AnkhProjectile(EntityType<? extends AnkhProjectile> entityType, Level world) {
         super(entityType, world);
     }
 
-    public AnkhProjectile(World world, LivingEntity owner) {
+    public AnkhProjectile(Level world, LivingEntity owner) {
         super(JEntityTypeRegistry.ANKH.get(), owner, world);
         this.setOwner(owner);
-        this.pickupType = PickupPermission.DISALLOWED;
+        this.pickup = Pickup.DISALLOWED;
     }
 
     public void setOrbitRange(double range) {
@@ -52,33 +53,33 @@ public class AnkhProjectile extends PersistentProjectileEntity implements GeoEnt
     }
 
     @Override
-    public ItemStack asItemStack() {
+    public ItemStack getPickupItem() {
         return new ItemStack(Items.AIR);
     }
 
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         return true;
     }
 
     @Override
-    protected boolean updateWaterState() {
+    protected boolean updateInWaterStateAndDoFluidPushing() {
         return false;
     }
 
     @Override
-    public boolean isNoClip() {
+    public boolean isNoPhysics() {
         return this.variation;
     }
 
     @Override
-    protected SoundEvent getHitSound() {
-        return SoundEvents.ITEM_FIRECHARGE_USE;
+    protected SoundEvent getDefaultHitGroundSoundEvent() {
+        return SoundEvents.FIRECHARGE_USE;
     }
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) {
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        if (level().isClientSide) {
             return;
         }
         Entity owner = getOwner();
@@ -90,27 +91,27 @@ public class AnkhProjectile extends PersistentProjectileEntity implements GeoEnt
             return;
         }
 
-        entity.setOnFireFor(3);
-        JUtils.projectileDamageLogic(this, getWorld(), entity, Vec3d.ZERO, 5, 1, false, 3.5f, 8, CommonHitPropertyComponent.HitAnimation.MID);
+        entity.setSecondsOnFire(3);
+        JUtils.projectileDamageLogic(this, level(), entity, Vec3.ZERO, 5, 1, false, 3.5f, 8, CommonHitPropertyComponent.HitAnimation.MID);
         discard();
     }
 
     @Override
-    protected void onBlockHit(BlockHitResult blockHitResult) {
-        MagiciansRedEntity.ignite(getWorld(), blockHitResult.getBlockPos());
-        super.onBlockHit(blockHitResult);
+    protected void onHitBlock(BlockHitResult blockHitResult) {
+        MagiciansRedEntity.ignite(level(), blockHitResult.getBlockPos());
+        super.onHitBlock(blockHitResult);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
         tag.putBoolean("variation", this.variation);
         tag.putShort("life", (short) this.ticksInAir);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
         this.variation = tag.getBoolean("variation");
     }
@@ -119,9 +120,9 @@ public class AnkhProjectile extends PersistentProjectileEntity implements GeoEnt
     public void tick() {
         super.tick();
 
-        if (getWorld().isClient()) {
-            Vec3d vel = getVelocity();
-            this.getWorld().addParticle(
+        if (level().isClientSide()) {
+            Vec3 vel = getDeltaMovement();
+            this.level().addParticle(
                     ParticleTypes.FLAME,
                     getX() + random.nextFloat() * 0.5f - 0.25f,
                     getY() + random.nextFloat() * 0.5f - 0.25f,
@@ -145,29 +146,29 @@ public class AnkhProjectile extends PersistentProjectileEntity implements GeoEnt
                         this.inGroundTime = 0;
 
                         // Orbiting logic
-                        double orbitProg = Math.toRadians(this.age * 3 + this.orbitOffset);
-                        Vec3d orbitPos = owner.getEyePos().add(
+                        double orbitProg = Math.toRadians(this.tickCount * 3 + this.orbitOffset);
+                        Vec3 orbitPos = owner.getEyePosition().add(
                                 Math.sin(orbitProg) * this.orbitRange,
                                 0.0,
                                 Math.cos(orbitProg) * this.orbitRange
                         );
 
-                        Vec3d towardsVel = orbitPos.subtract(this.getPos()).normalize().multiply(0.2);
-                        double stabilization = this.getPos().distanceTo(orbitPos);
+                        Vec3 towardsVel = orbitPos.subtract(this.position()).normalize().scale(0.2);
+                        double stabilization = this.position().distanceTo(orbitPos);
                         if (stabilization > 0.8) {
                             stabilization = 0.8;
                         }
-                        this.setVelocity(this.getVelocity().multiply(stabilization).add(towardsVel));
-                        this.velocityModified = true;
+                        this.setDeltaMovement(this.getDeltaMovement().scale(stabilization).add(towardsVel));
+                        this.hurtMarked = true;
 
                         // Entity hit logic, due to variations being noclipped
-                        Vec3d pos = this.getPos();
-                        Vec3d nextPos = pos.add(this.getVelocity());
+                        Vec3 pos = this.position();
+                        Vec3 nextPos = pos.add(this.getDeltaMovement());
                         //HitResult hitResult = this.world.raycast(new RaycastContext(pos, nextPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
                         //if (hitResult.getType() != HitResult.Type.MISS) nextPos = hitResult.getPos();
-                        EntityHitResult entityHitResult = this.getEntityCollision(pos, nextPos);
+                        EntityHitResult entityHitResult = this.findHitEntity(pos, nextPos);
                         if (entityHitResult != null) {
-                            this.onEntityHit(entityHitResult);
+                            this.onHitEntity(entityHitResult);
                         }
                     }
                 } else {
@@ -180,7 +181,7 @@ public class AnkhProjectile extends PersistentProjectileEntity implements GeoEnt
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
 
     @Override

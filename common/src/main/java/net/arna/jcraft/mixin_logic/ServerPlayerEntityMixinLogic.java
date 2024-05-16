@@ -7,12 +7,12 @@ import net.arna.jcraft.common.gravity.api.RotationParameters;
 import net.arna.jcraft.common.util.IJInputStateManagerHolder;
 import net.arna.jcraft.common.util.InputStateManager;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ServerPlayerEntityMixinLogic {
 
 
-    public static void inject_moveToWorld_sendPacket_1(ServerPlayerEntity serverPlayer) {
+    public static void inject_moveToWorld_sendPacket_1(ServerPlayer serverPlayer) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(serverPlayer);
         if (gravityDirection != GravityChangerAPI.getDefaultGravityDirection(serverPlayer) && JCraft.gravityConfig.resetGravityOnDimensionChange) {
             GravityChangerAPI.setDefaultGravityDirection(serverPlayer, Direction.DOWN, new RotationParameters().rotationTime(0));
@@ -30,7 +30,7 @@ public class ServerPlayerEntityMixinLogic {
         }
     }
 
-    public static void resummonStandAfterWorldMove(ServerPlayerEntity serverPlayer, boolean hadStand, ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
+    public static void resummonStandAfterWorldMove(ServerPlayer serverPlayer, boolean hadStand, ServerLevel destination, CallbackInfoReturnable<Entity> cir) {
         if (!hadStand) {
             return;
         }
@@ -40,7 +40,7 @@ public class ServerPlayerEntityMixinLogic {
         }
     }
 
-    public static void doNotPlayDesummonSoundWhenMovingWorld(ServerPlayerEntity serverPlayer, ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
+    public static void doNotPlayDesummonSoundWhenMovingWorld(ServerPlayer serverPlayer, ServerLevel destination, CallbackInfoReturnable<Entity> cir) {
         StandEntity<?, ?> stand = JUtils.getStand(serverPlayer);
         if (stand == null) {
             return;
@@ -51,7 +51,7 @@ public class ServerPlayerEntityMixinLogic {
 
 
 
-    public static void copyInputStateManagerUponCopy(InputStateManager thisManager, ServerPlayerEntity oldPlayer, boolean alive, CallbackInfo ci) {
+    public static void copyInputStateManagerUponCopy(InputStateManager thisManager, ServerPlayer oldPlayer, boolean alive, CallbackInfo ci) {
         if (!alive) {
             return;
         }
@@ -59,7 +59,7 @@ public class ServerPlayerEntityMixinLogic {
         thisManager.copyFrom(old);
     }
 
-    public static void jcraft$dropItem(ServerPlayerEntity serverPlayer, ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
+    public static void jcraft$dropItem(ServerPlayer serverPlayer, ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
         if (!JUtils.canAct(serverPlayer)) {
             cir.cancel();
         }

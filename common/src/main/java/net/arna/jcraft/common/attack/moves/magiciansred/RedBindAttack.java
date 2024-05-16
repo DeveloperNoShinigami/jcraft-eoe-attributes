@@ -9,8 +9,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class RedBindAttack extends AbstractSimpleAttack<RedBindAttack, MagiciansRedEntity> {
@@ -41,15 +40,15 @@ public class RedBindAttack extends AbstractSimpleAttack<RedBindAttack, Magicians
         }
 
         // Stun
-        boundEntity.removeStatusEffect(JStatusRegistry.DAZED.get());
+        boundEntity.removeEffect(JStatusRegistry.DAZED.get());
         StandEntity.stun(boundEntity, RedBindEntity.ticksToLive, 0);
 
         // Create and bind
-        RedBindEntity redBind = new RedBindEntity(JEntityTypeRegistry.RED_BIND.get(), attacker.getWorld());
-        redBind.setPosition(boundEntity.getPos());
+        RedBindEntity redBind = new RedBindEntity(JEntityTypeRegistry.RED_BIND.get(), attacker.level());
+        redBind.setPos(boundEntity.position());
         redBind.setMaster(user);
         redBind.setBoundEntity(boundEntity);
-        attacker.getWorld().spawnEntity(redBind);
+        attacker.level().addFreshEntity(redBind);
 
         return targets;
     }

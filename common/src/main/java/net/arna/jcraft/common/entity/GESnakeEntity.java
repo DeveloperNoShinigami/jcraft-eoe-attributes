@@ -1,75 +1,82 @@
 package net.arna.jcraft.common.entity;
 
 import net.arna.jcraft.common.entity.ai.goal.StunningMeleeAttackGoal;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.EntityView;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
+import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.level.EntityGetter;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+
 
 import java.util.Arrays;
-
-public class GESnakeEntity extends TameableEntity implements GeoEntity {
-    public GESnakeEntity(EntityType<? extends TameableEntity> entityType, World world) {
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+public class GESnakeEntity extends TamableAnimal implements GeoEntity {
+    public GESnakeEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
         Arrays.fill(this.handDropChances, 1F);
     }
 
     @Nullable
     @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         return null;
     }
 
     @Override
-    protected void initGoals() {
-        this.goalSelector.add(1, new SwimGoal(this));
-        this.goalSelector.add(4, new PounceAtTargetGoal(this, 0.4F));
-        this.goalSelector.add(5, new StunningMeleeAttackGoal(this, 1.0, true, 10));
-        this.goalSelector.add(10, new LookAtEntityGoal(this, LivingEntity.class, 32.0F));
-        this.goalSelector.add(10, new LookAroundGoal(this));
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
+        this.goalSelector.addGoal(5, new StunningMeleeAttackGoal(this, 1.0, true, 10));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, LivingEntity.class, 32.0F));
+        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
 
-        this.goalSelector.add(6, new FollowOwnerGoal(this, 1.0, 10.0F, 2.0F, false));
+        this.goalSelector.addGoal(6, new FollowOwnerGoal(this, 1.0, 10.0F, 2.0F, false));
 
-        this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
-        this.targetSelector.add(2, new AttackWithOwnerGoal(this));
+        this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (getWorld().isClient()) {
-            if (this.handSwinging) {
-                this.handSwingTicks += 1;
+        if (level().isClientSide()) {
+            if (this.swinging) {
+                this.swingTime += 1;
 
-                if (this.handSwingTicks > 10) {
-                    this.handSwinging = false;
-                    this.handSwingTicks = 0;
+                if (this.swingTime > 10) {
+                    this.swinging = false;
+                    this.swingTime = 0;
                 }
             }
-        } else if (this.age == 500) {
-            dropStack(getMainHandStack());
+        } else if (this.tickCount == 500) {
+            spawnAtLocation(getMainHandItem());
             kill();
-        } else if (this.isAlive() && this.age > 500) { // Edge case, mostly dealing with unloading
+        } else if (this.isAlive() && this.tickCount > 500) { // Edge case, mostly dealing with unloading
             discard();
         }
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
@@ -78,7 +85,7 @@ public class GESnakeEntity extends TameableEntity implements GeoEntity {
     }
 
     private PlayState attackPredicate(AnimationState<GESnakeEntity> state) {
-        if (!handSwinging) {
+        if (!swinging) {
             return PlayState.STOP;
         }
 
@@ -89,7 +96,7 @@ public class GESnakeEntity extends TameableEntity implements GeoEntity {
     private PlayState predicate(AnimationState<GESnakeEntity> state) {
         if (state.isMoving()) {
             state.setAnimation(RawAnimation.begin().thenLoop("animation.gesnake.move"));
-            state.getController().setAnimationSpeed(1 + this.getVelocity().length());
+            state.getController().setAnimationSpeed(1 + this.getDeltaMovement().length());
         } else {
             state.setAnimation(RawAnimation.begin().thenLoop("animation.gesnake.idle"));
         }
@@ -100,10 +107,5 @@ public class GESnakeEntity extends TameableEntity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
-
-    @Override
-    public EntityView method_48926() {
-        return null;
     }
 }

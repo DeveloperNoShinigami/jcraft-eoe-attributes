@@ -26,6 +26,8 @@ subprojects {
 
     repositories {
         mavenCentral()
+
+        maven { url 'https://libs.azuredoom.com:4443/mods' }
         maven {
             name = 'GeckoLib'
             url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
@@ -53,7 +55,7 @@ subprojects {
     dependencies {
         minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
         mappings loom.layered() {
-            mappings("net.fabricmc:yarn:${project.yarn_mappings}:v2")
+            officialMojangMappings()
             parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_mappings}@zip")
         }
         compileOnly "com.google.guava:guava:32.1.2-jre" // To make TypeToken not 'unstable' :)

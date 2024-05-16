@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.rendering.skybox;
 
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Camera;
 import org.joml.Matrix4f;
 
 public class SkyBoxManager {
@@ -27,7 +27,7 @@ public class SkyBoxManager {
         this.currentSkyBox = skyBox;
     }
 
-    public void renderSkyBox(MatrixStack matrices, Matrix4f matrix4f, float tickDelta, Camera camera, boolean thickFog) {
+    public void renderSkyBox(PoseStack matrices, Matrix4f matrix4f, float tickDelta, Camera camera, boolean thickFog) {
         currentSkyBox.render(matrices, matrix4f, tickDelta, camera, thickFog);
     }
 

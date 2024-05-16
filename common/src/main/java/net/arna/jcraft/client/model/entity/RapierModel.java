@@ -1,17 +1,18 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.RapierProjectile;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.resources.ResourceLocation;
+
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class RapierModel extends GeoModel<RapierProjectile> {
 
-    public static final Map<Integer, Identifier> skins = new HashMap<>(
+    public static final Map<Integer, ResourceLocation> skins = new HashMap<>(
             Map.ofEntries(
                     Map.entry(-1, RapierProjectile.ARMOR_OFF_TEXTURE),
                     Map.entry(-2, RapierProjectile.POSSESSED_TEXTURE)
@@ -25,12 +26,12 @@ public class RapierModel extends GeoModel<RapierProjectile> {
     }
 
     @Override
-    public Identifier getModelResource(RapierProjectile object) {
+    public ResourceLocation getModelResource(RapierProjectile object) {
         return JCraft.id("geo/rapier.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(RapierProjectile object) {
+    public ResourceLocation getTextureResource(RapierProjectile object) {
         int skin = object.getSkin();
         if (skins.containsKey(skin)) {
             return skins.get(skin);
@@ -40,7 +41,7 @@ public class RapierModel extends GeoModel<RapierProjectile> {
     }
 
     @Override
-    public Identifier getAnimationResource(RapierProjectile animatable) {
+    public ResourceLocation getAnimationResource(RapierProjectile animatable) {
         return JCraft.id("animations/knife.animation.json");
     }
 }

@@ -1,23 +1,23 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.DarbyOlderEntity;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.resources.ResourceLocation;
 
 public class DarbyOlderModel extends GeoModel<DarbyOlderEntity> {
     @Override
-    public Identifier getModelResource(DarbyOlderEntity animatable) {
+    public ResourceLocation getModelResource(DarbyOlderEntity animatable) {
         return JCraft.id("geo/darby_older.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(DarbyOlderEntity animatable) {
+    public ResourceLocation getTextureResource(DarbyOlderEntity animatable) {
         return JCraft.id("textures/entity/darby_older.png");
     }
 
     @Override
-    public Identifier getAnimationResource(DarbyOlderEntity animatable) {
+    public ResourceLocation getAnimationResource(DarbyOlderEntity animatable) {
         // TODO Arna
         return JCraft.id("darby_older");
     }

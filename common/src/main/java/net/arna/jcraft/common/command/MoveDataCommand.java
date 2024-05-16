@@ -11,20 +11,20 @@ import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 
 public class MoveDataCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(CommandManager.literal("movedata")
-                .then(CommandManager.literal("stand")
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("movedata")
+                .then(Commands.literal("stand")
                         .executes(
                                 context -> run(context.getSource(), true)
                         )
                 )
-                .then(CommandManager.literal("spec")
+                .then(Commands.literal("spec")
                         .executes(
                                 context -> run(context.getSource(), false)
                         )
@@ -32,8 +32,8 @@ public class MoveDataCommand {
         );
     }
 
-    public static int run(ServerCommandSource source, boolean stand) {
-        PlayerEntity player = source.getPlayer();
+    public static int run(CommandSourceStack source, boolean stand) {
+        Player player = source.getPlayer();
         if (player == null) {
             return 0;
         }
@@ -184,7 +184,7 @@ public class MoveDataCommand {
         mainFDMessage = mainFDMessage.concat(advOnHit);
         mainFDMessage = mainFDMessage.concat(advOnBlock);
 
-        player.sendMessage(Text.of(mainFDMessage), false);
+        player.displayClientMessage(Component.nullToEmpty(mainFDMessage), false);
         return 1;
     }
 }

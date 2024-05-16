@@ -14,19 +14,19 @@ import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.IClientEntityHandler;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Options;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
@@ -41,48 +41,48 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
 
     @Override
     public void bombTrackerParticleTick(Entity entity, CommonBombTrackerComponent.BombData bombData) {
-        Vec3d bombPos = bombData.getBombPos();
+        Vec3 bombPos = bombData.getBombPos();
         if (bombPos == null) {
             return;
         }
-        ClientWorld clientWorld = (ClientWorld) entity.getWorld();
+        ClientLevel clientWorld = (ClientLevel) entity.level();
 
-        DefaultParticleType particleType = ParticleTypes.WITCH; // Far particle
-        Vec3d v1 = bombPos.add(3, 3, 3);
-        Vec3d v2 = bombPos.add(-3, -3, -3);
-        List<LivingEntity> list = clientWorld.getEntitiesByClass(LivingEntity.class, new Box(v1, v2), EntityPredicates.VALID_LIVING_ENTITY);
+        SimpleParticleType particleType = ParticleTypes.WITCH; // Far particle
+        Vec3 v1 = bombPos.add(3, 3, 3);
+        Vec3 v2 = bombPos.add(-3, -3, -3);
+        List<LivingEntity> list = clientWorld.getEntitiesOfClass(LivingEntity.class, new AABB(v1, v2), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
 
         double xLength = 0, yLength = 0, zLength = 0;
         if (!bombData.isBlock) {
             Entity bombEntity = bombData.bombEntity;
             if (bombEntity == null) {
-                bombEntity = bombData.bombItem.getHolder();
+                bombEntity = bombData.bombItem.getEntityRepresentation();
             }
             if (bombEntity == null) {
                 return;
             }
             list.remove(bombEntity);
-            xLength = bombEntity.getBoundingBox().getXLength();
-            yLength = bombEntity.getBoundingBox().getYLength();
-            zLength = bombEntity.getBoundingBox().getZLength();
+            xLength = bombEntity.getBoundingBox().getXsize();
+            yLength = bombEntity.getBoundingBox().getYsize();
+            zLength = bombEntity.getBoundingBox().getZsize();
         }
 
         for (LivingEntity l : list) {
-            if (l.squaredDistanceTo(bombPos) < 9) {
+            if (l.distanceToSqr(bombPos) < 9) {
                 particleType = ParticleTypes.WAX_ON; // Near particle
                 break;
             }
         }
 
-        Random random = clientWorld.getRandom();
+        RandomSource random = clientWorld.getRandom();
 
         //TODO: fix bomb particle rendering in other gravities
         if (bombData.isEntity) {
             for (int h = 0; h < 16; ++h) {
                 clientWorld.addParticle(particleType,
-                        bombPos.x + random.nextTriangular(0, 1) * xLength,
-                        bombPos.y + random.nextTriangular(0, 1) * yLength,
-                        bombPos.z + random.nextTriangular(0, 1) * zLength,
+                        bombPos.x + random.triangle(0, 1) * xLength,
+                        bombPos.y + random.triangle(0, 1) * yLength,
+                        bombPos.z + random.triangle(0, 1) * zLength,
                         0, 0, 0);
             }
         }
@@ -105,22 +105,22 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
             return;
         }
 
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
 
         // Stand Auras
         if (JClientConfig.getInstance().isStandAuras()) {
-            if (stand.squaredDistanceTo(client.player) > 6400) {
+            if (stand.distanceToSqr(client.player) > 6400) {
                 return; // 5 chunk aura render distance
             }
             if (user.isInvisible()) {
                 return;
             }
 
-            boolean isFP = client.options.getPerspective().isFirstPerson();
+            boolean isFP = client.options.getCameraType().isFirstPerson();
             boolean isOwnerAndFP = user == client.player && isFP;
 
-            ClientWorld clientWorld = (ClientWorld) stand.getWorld();
-            Random random = clientWorld.getRandom();
+            ClientLevel clientWorld = (ClientLevel) stand.level();
+            RandomSource random = clientWorld.getRandom();
 
             Direction gravity = GravityChangerAPI.getGravityDirection(stand);
 
@@ -129,23 +129,23 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
             if ((!isOwnerAndFP || stand.isFree())
                     && !(stand.isRemoteAndControllable() && isFP)
                     && random.nextBoolean()) {
-                displayAuraParticles(clientWorld, random, stand, RotationUtil.vecPlayerToWorld(stand.getWidth(), stand.getHeight(), stand.getWidth(), gravity), gravity, auraColor);
+                displayAuraParticles(clientWorld, random, stand, RotationUtil.vecPlayerToWorld(stand.getBbWidth(), stand.getBbHeight(), stand.getBbWidth(), gravity), gravity, auraColor);
             }
             if (!isOwnerAndFP && random.nextBoolean() && !JClientUtils.shouldNotRender(user)) {
-                displayAuraParticles(clientWorld, random, user, RotationUtil.vecPlayerToWorld(user.getWidth(), user.getHeight(), user.getWidth(), gravity), gravity, auraColor);
+                displayAuraParticles(clientWorld, random, user, RotationUtil.vecPlayerToWorld(user.getBbWidth(), user.getBbHeight(), user.getBbWidth(), gravity), gravity, auraColor);
             }
         }
     }
 
     private static final double metersPerTickSquared = 9.81 / 400;
 
-    private void displayAuraParticles(ClientWorld clientWorld, Random random, Entity entity, Vector3f maxBox, Direction gravity, Vector3f color) {
+    private void displayAuraParticles(ClientLevel clientWorld, RandomSource random, Entity entity, Vector3f maxBox, Direction gravity, Vector3f color) {
         if (JClientUtils.shouldNotRender(entity)) {
             return;
         }
 
-        Vec3d pos = entity.getPos();
-        Vec3d vel = Vec3d.of(gravity.getVector()).multiply(-metersPerTickSquared);
+        Vec3 pos = entity.position();
+        Vec3 vel = Vec3.atLowerCornerOf(gravity.getNormal()).scale(-metersPerTickSquared);
         /*
         Vec3d vel = entity.getVelocity();
         if (entity instanceof ClientPlayerEntity)
@@ -160,38 +160,38 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
         AuraBlobParticle.Factory.color = color;
 
         clientWorld.addParticle(JParticleTypeRegistry.AURA_ARC.get(), false,
-                pos.x + maxBox.x() * random.nextTriangular(0, 1),
-                pos.y + maxBox.y() * random.nextTriangular(0.5, 0.5),
-                pos.z + maxBox.z() * random.nextTriangular(0, 1),
+                pos.x + maxBox.x() * random.triangle(0, 1),
+                pos.y + maxBox.y() * random.triangle(0.5, 0.5),
+                pos.z + maxBox.z() * random.triangle(0, 1),
                 vel.x, vel.y, vel.z);
 
         clientWorld.addParticle(JParticleTypeRegistry.AURA_BLOB.get(), false,
-                pos.x + maxBox.x() * random.nextTriangular(0, 1),
-                pos.y + maxBox.y() * random.nextTriangular(0.5, 0.5),
-                pos.z + maxBox.z() * random.nextTriangular(0, 1),
+                pos.x + maxBox.x() * random.triangle(0, 1),
+                pos.y + maxBox.y() * random.triangle(0.5, 0.5),
+                pos.z + maxBox.z() * random.triangle(0, 1),
                 vel.x, vel.y, vel.z);
     }
 
     @Override
     public void whiteSnakeRemoteClientTick(@NotNull WhiteSnakeEntity whiteSnakeEntity) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         if (JUtils.getStand(client.player) != whiteSnakeEntity) {
             return;
         }
 
-        GameOptions options = client.options;
+        Options options = client.options;
         float f = 0, s = 0;
-        boolean jump = options.jumpKey.isPressed();
-        if (options.forwardKey.isPressed()) {
+        boolean jump = options.keyJump.isDown();
+        if (options.keyUp.isDown()) {
             f += 1.0f;
         }
-        if (options.backKey.isPressed()) {
+        if (options.keyDown.isDown()) {
             f += 1.0f;
         }
-        if (options.leftKey.isPressed()) {
+        if (options.keyLeft.isDown()) {
             s -= 1.0f;
         }
-        if (options.rightKey.isPressed()) {
+        if (options.keyRight.isDown()) {
             s += 1.0f;
         }
 
@@ -201,24 +201,24 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
 
     @Override
     public void purpleHazeRemoteClientTick(@NotNull AbstractPurpleHazeEntity<?, ?> purpleHazeEntity) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         if (JUtils.getStand(client.player) != purpleHazeEntity) {
             return;
         }
 
-        GameOptions options = client.options;
+        Options options = client.options;
         float f = 0, s = 0;
-        boolean jump = options.jumpKey.isPressed();
-        if (options.forwardKey.isPressed()) {
+        boolean jump = options.keyJump.isDown();
+        if (options.keyUp.isDown()) {
             f += 1.0f;
         }
-        if (options.backKey.isPressed()) {
+        if (options.keyDown.isDown()) {
             f += 1.0f;
         }
-        if (options.leftKey.isPressed()) {
+        if (options.keyLeft.isDown()) {
             s -= 1.0f;
         }
-        if (options.rightKey.isPressed()) {
+        if (options.keyRight.isDown()) {
             s += 1.0f;
         }
 
@@ -228,25 +228,25 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
 
     @Override
     public void hierophantGreenRemoteClientTick(@NotNull HGEntity hgEntity) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         if (JUtils.getStand(client.player) != hgEntity) {
             return;
         }
 
-        GameOptions options = client.options;
+        Options options = client.options;
         float f = 0, s = 0;
-        boolean jump = options.jumpKey.isPressed();
-        boolean sneak = options.sneakKey.isPressed();
-        if (options.forwardKey.isPressed()) {
+        boolean jump = options.keyJump.isDown();
+        boolean sneak = options.keyShift.isDown();
+        if (options.keyUp.isDown()) {
             f += 1.0f;
         }
-        if (options.backKey.isPressed()) {
+        if (options.keyDown.isDown()) {
             f += 1.0f;
         }
-        if (options.leftKey.isPressed()) {
+        if (options.keyLeft.isDown()) {
             s -= 1.0f;
         }
-        if (options.rightKey.isPressed()) {
+        if (options.keyRight.isDown()) {
             s += 1.0f;
         }
 
@@ -255,13 +255,13 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
 
     @Override
     public void sheerHeartAttackEntityTick(SheerHeartAttackEntity sHAEntity) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         UUID ownerId = sHAEntity.getOwnerId();
         if (ownerId == null) {
             return;
         }
-        if (ownerId.equals(client.player.getUuid()) && sHAEntity.age <= 300) {
-            sHAEntity.setCustomName(Text.literal(15 - sHAEntity.age / 20 + "s"));
+        if (ownerId.equals(client.player.getUUID()) && sHAEntity.tickCount <= 300) {
+            sHAEntity.setCustomName(Component.literal(15 - sHAEntity.tickCount / 20 + "s"));
         }
     }
 }

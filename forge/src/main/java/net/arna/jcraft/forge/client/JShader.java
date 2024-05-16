@@ -2,16 +2,15 @@ package net.arna.jcraft.forge.client;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.shaders.AbstractUniform;
+import com.mojang.blaze3d.shaders.Uniform;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.arna.jcraft.client.rendering.IJShader;
-import net.minecraft.client.gl.GlUniform;
-import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.gl.Uniform;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.resource.ResourceFactory;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.InvalidHierarchicalFileException;
-import net.minecraft.util.JsonHelper;
-
+import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.ChainedJsonException;
+import net.minecraft.server.packs.resources.ResourceProvider;
+import net.minecraft.util.GsonHelper;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -22,24 +21,24 @@ import java.util.function.Consumer;
 /**
  * This class is for adding CORE shaders, not post processed
  */
-public abstract class JShader extends ShaderProgram implements IJShader {
+public abstract class JShader extends ShaderInstance implements IJShader {
 
-    protected Map<String, Consumer<Uniform>> defaultUniformData;
+    protected Map<String, Consumer<AbstractUniform>> defaultUniformData;
 
-    public JShader(ResourceFactory factory, Identifier name, VertexFormat format) throws IOException {
+    public JShader(ResourceProvider factory, ResourceLocation name, VertexFormat format) throws IOException {
         super(factory, name, format);
     }
 
     @Override
     public void setUniformDefaults() {
-        for (Map.Entry<String, Consumer<Uniform>> defaultDataEntry : getDefaultUniformData().entrySet()) {
-            final Uniform t = loadedUniforms.get(defaultDataEntry.getKey());
+        for (Map.Entry<String, Consumer<AbstractUniform>> defaultDataEntry : getDefaultUniformData().entrySet()) {
+            final AbstractUniform t = uniformMap.get(defaultDataEntry.getKey());
             defaultDataEntry.getValue().accept(t);
             float f = 0;
         }
     }
 
-    public Map<String, Consumer<Uniform>> getDefaultUniformData() {
+    public Map<String, Consumer<AbstractUniform>> getDefaultUniformData() {
         if (defaultUniformData == null) {
             defaultUniformData = new HashMap<>();
         }
@@ -49,17 +48,17 @@ public abstract class JShader extends ShaderProgram implements IJShader {
     public abstract ShaderHolder getHolder();
 
     @Override
-    public void addUniform(JsonElement pJson) throws InvalidHierarchicalFileException {
-        super.addUniform(pJson);
+    public void parseUniformNode(JsonElement pJson) throws ChainedJsonException {
+        super.parseUniformNode(pJson);
 
-        JsonObject jsonobject = JsonHelper.asObject(pJson, "uniform");
-        String uniformName = JsonHelper.getString(jsonobject, "name");
+        JsonObject jsonobject = GsonHelper.convertToJsonObject(pJson, "uniform");
+        String uniformName = GsonHelper.getAsString(jsonobject, "name");
         if (getHolder().uniformsToCache.contains(uniformName)) {
-            GlUniform uniform = uniforms.get(uniforms.size() - 1);
+            Uniform uniform = uniforms.get(uniforms.size() - 1);
 
-            Consumer<Uniform> consumer;
-            if (uniform.getDataType() <= 3) {
-                final IntBuffer buffer = uniform.getIntData();
+            Consumer<AbstractUniform> consumer;
+            if (uniform.getType() <= 3) {
+                final IntBuffer buffer = uniform.getIntBuffer();
                 buffer.position(0);
                 int[] array = new int[uniform.getCount()];
                 for (int i = 0; i < uniform.getCount(); i++) {
@@ -70,7 +69,7 @@ public abstract class JShader extends ShaderProgram implements IJShader {
                     buffer.put(array);
                 };
             } else {
-                final FloatBuffer buffer = uniform.getFloatData();
+                final FloatBuffer buffer = uniform.getFloatBuffer();
                 buffer.position(0);
                 float[] array = new float[uniform.getCount()];
                 for (int i = 0; i < uniform.getCount(); i++) {

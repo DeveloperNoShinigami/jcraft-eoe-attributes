@@ -8,9 +8,8 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.entity.projectile.EmeraldProjectile;
 import net.arna.jcraft.common.entity.stand.HGEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSplashAttack, HGEntity> {
@@ -34,18 +33,18 @@ public class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSplashAtt
         int emeraldCount = 3 + ctx.getInt(CHARGE_TIME) / 10;
 
         for (int i = 0; i < emeraldCount; i++) {
-            EmeraldProjectile emerald = new EmeraldProjectile(attacker.getWorld(), user);
-            emerald.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, speed, 5F);
+            EmeraldProjectile emerald = new EmeraldProjectile(attacker.level(), user);
+            emerald.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, speed, 5F);
 
-            Vec3d upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
-            Vec3d heightOffset = upVec.multiply(0.75);
-            emerald.setPosition(attacker.getBaseEntity().getPos().add(heightOffset));
+            Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
+            Vec3 heightOffset = upVec.scale(0.75);
+            emerald.setPos(attacker.getBaseEntity().position().add(heightOffset));
 
             if (reflect) {
                 emerald.withReflect();
             }
 
-            attacker.getWorld().spawnEntity(emerald);
+            attacker.level().addFreshEntity(emerald);
         }
 
         return Set.of();

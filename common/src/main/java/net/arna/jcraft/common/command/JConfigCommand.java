@@ -4,20 +4,20 @@ import com.mojang.brigadier.CommandDispatcher;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 
 public class JConfigCommand {
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(CommandManager.literal("jconfig")
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("jconfig")
                 .executes(ctx -> {
-                    ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
+                    ServerPlayer player = ctx.getSource().getPlayerOrException();
 
-                    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                    buf.writeBoolean(ctx.getSource().hasPermissionLevel(2)); // editable
+                    FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+                    buf.writeBoolean(ctx.getSource().hasPermission(2)); // editable
                     buf.writeBoolean(true); // show
                     // No need to write any options. Client should already have all of them.
 

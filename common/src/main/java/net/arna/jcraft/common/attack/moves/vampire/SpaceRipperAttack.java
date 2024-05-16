@@ -9,9 +9,8 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.spec.VampireSpec;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, VampireSpec> {
@@ -24,26 +23,26 @@ public class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, VampireSp
 
     @Override
     public @NonNull Set<LivingEntity> perform(VampireSpec attacker, LivingEntity user, MoveContext ctx) {
-        Vec3d rotVec = user.getRotationVector();
+        Vec3 rotVec = user.getLookAngle();
 
         int chargeTime = ctx.getInt(CHARGE_TIME);
 
         for (int i = -1; i < 3; i += 2) {
             LaserProjectile laser = new LaserProjectile(attacker.getEntityWorld(), user);
-            laser.setVelocity(getRotVec(attacker).multiply(2 + (chargeTime - 15) / 10.0));
+            laser.setDeltaMovement(getRotVec(attacker).scale(2 + (chargeTime - 15) / 10.0));
 
-            Vec3d sideOffset = rotVec.rotateY(1.57079632679f * i).multiply(0.125);
-            Vec3d offset = RotationUtil.vecPlayerToWorld(sideOffset.x, sideOffset.y + (double) user.getStandingEyeHeight(), sideOffset.z, GravityChangerAPI.getGravityDirection(user));
-            Vec3d offsetHeightPos = attacker.getBaseEntity().getPos().add(offset);
-            laser.setPosition(offsetHeightPos);
+            Vec3 sideOffset = rotVec.yRot(1.57079632679f * i).scale(0.125);
+            Vec3 offset = RotationUtil.vecPlayerToWorld(sideOffset.x, sideOffset.y + (double) user.getEyeHeight(), sideOffset.z, GravityChangerAPI.getGravityDirection(user));
+            Vec3 offsetHeightPos = attacker.getBaseEntity().position().add(offset);
+            laser.setPos(offsetHeightPos);
 
             if (chargeTime > 24) {
                 laser.setUnblockable(true);
             }
 
-            attacker.getEntityWorld().spawnEntity(laser);
+            attacker.getEntityWorld().addFreshEntity(laser);
 
-            JComponentPlatformUtils.getShockwaveHandler(user.getWorld()).addShockwave(offsetHeightPos, rotVec, 2);
+            JComponentPlatformUtils.getShockwaveHandler(user.level()).addShockwave(offsetHeightPos, rotVec, 2);
         }
 
         return Set.of();

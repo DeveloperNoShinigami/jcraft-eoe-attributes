@@ -4,19 +4,22 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
-import net.minecraft.client.texture.TextureManager;
-import net.minecraft.client.util.Window;
-import net.minecraft.resource.Resource;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec2f;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.world.phys.Vec2;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Comparator;
@@ -45,19 +48,19 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class HUDAnimation {
     private static final Pattern FILE_NAME_PATTERN = Pattern.compile("frame(\\d*)");
-    private final Identifier atlas;
+    private final ResourceLocation atlas;
     private final List<Frame> frames;
     @Getter(lazy = true)
     private final int frameCount = frames.size();
 
-    public static HUDAnimation create(Identifier atlas, Identifier atlasData) {
-        Optional<Resource> dataRes = MinecraftClient.getInstance().getResourceManager().getResource(atlasData);
+    public static HUDAnimation create(ResourceLocation atlas, ResourceLocation atlasData) {
+        Optional<Resource> dataRes = Minecraft.getInstance().getResourceManager().getResource(atlasData);
         if (dataRes.isEmpty()) {
             throw new IllegalArgumentException("Atlas data not found.");
         }
 
         JsonObject data;
-        try (BufferedReader reader = dataRes.get().getReader()) {
+        try (BufferedReader reader = dataRes.get().openAsReader()) {
             data = new Gson().fromJson(reader, JsonObject.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not read atlas data.");
@@ -102,7 +105,7 @@ public class HUDAnimation {
      * @param executor       The executor used to load the atlas.
      */
     public void preload(TextureManager textureManager, Executor executor) {
-        textureManager.loadTextureAsync(getAtlas(), executor);
+        textureManager.preload(getAtlas(), executor);
     }
 
     public Frame getFrame(int i) {
@@ -125,13 +128,13 @@ public class HUDAnimation {
     @Data
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Frame {
-        private final Identifier atlas;
+        private final ResourceLocation atlas;
         private final int index;
         private final int width, height;
         private final int xOffset, yOffset;
-        private final Vec2f uvMin, uvMax;
+        private final Vec2 uvMin, uvMax;
 
-        private static Frame parse(JsonObject frame, Identifier atlas, int atlasWidth, int atlasHeight) {
+        private static Frame parse(JsonObject frame, ResourceLocation atlas, int atlasWidth, int atlasHeight) {
             JsonObject frameData = frame.getAsJsonObject("frame");
 
             int index = Integer.parseInt(frame.get("filename").getAsString().substring(5));
@@ -144,41 +147,41 @@ public class HUDAnimation {
             float uMax = (float) (xOffset + width) / atlasWidth;
             float vMax = (float) (yOffset + height) / atlasHeight;
 
-            return new Frame(atlas, index, width, height, xOffset, yOffset, new Vec2f(uMin, vMin), new Vec2f(uMax, vMax));
+            return new Frame(atlas, index, width, height, xOffset, yOffset, new Vec2(uMin, vMin), new Vec2(uMax, vMax));
         }
 
         public void render() {
-            Window window = MinecraftClient.getInstance().getWindow();
+            Window window = Minecraft.getInstance().getWindow();
 
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);
             RenderSystem.defaultBlendFunc();
-            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             RenderSystem.setShaderTexture(0, getAtlas());
 
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder bufferBuilder = tessellator.getBuffer();
-            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+            Tesselator tessellator = Tesselator.getInstance();
+            BufferBuilder bufferBuilder = tessellator.getBuilder();
+            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
             bufferBuilder
-                    .vertex(0.0, window.getScaledHeight(), -90.0)
-                    .texture(getUvMin().x, getUvMax().y)
-                    .next();
+                    .vertex(0.0, window.getGuiScaledHeight(), -90.0)
+                    .uv(getUvMin().x, getUvMax().y)
+                    .endVertex();
             bufferBuilder
-                    .vertex(window.getScaledWidth(), window.getScaledHeight(), -90.0)
-                    .texture(getUvMax().x, getUvMax().y)
-                    .next();
+                    .vertex(window.getGuiScaledWidth(), window.getGuiScaledHeight(), -90.0)
+                    .uv(getUvMax().x, getUvMax().y)
+                    .endVertex();
             bufferBuilder
-                    .vertex(window.getScaledWidth(), 0.0, -90.0)
-                    .texture(getUvMax().x, getUvMin().y)
-                    .next();
+                    .vertex(window.getGuiScaledWidth(), 0.0, -90.0)
+                    .uv(getUvMax().x, getUvMin().y)
+                    .endVertex();
             bufferBuilder
                     .vertex(0.0, 0.0, -90.0)
-                    .texture(getUvMin().x, getUvMin().y)
-                    .next();
+                    .uv(getUvMin().x, getUvMin().y)
+                    .endVertex();
 
-            tessellator.draw();
+            tessellator.end();
             RenderSystem.depthMask(true);
             RenderSystem.enableDepthTest();
         }

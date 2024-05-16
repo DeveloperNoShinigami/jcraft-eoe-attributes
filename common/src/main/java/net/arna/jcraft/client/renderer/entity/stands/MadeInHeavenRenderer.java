@@ -1,25 +1,25 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.MadeInHeavenModel;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class MadeInHeavenRenderer extends StandEntityRenderer<MadeInHeavenEntity> {
 
-    public MadeInHeavenRenderer(EntityRendererFactory.Context context) {
+    public MadeInHeavenRenderer(EntityRendererProvider.Context context) {
         super(context, new MadeInHeavenModel());
     }
 
     @Override
-    public void actuallyRender(MatrixStack poseStack, MadeInHeavenEntity animatable, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack poseStack, MadeInHeavenEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 
         if (!animatable.getAfterimage()) {
@@ -31,31 +31,31 @@ public class MadeInHeavenRenderer extends StandEntityRenderer<MadeInHeavenEntity
             aa = 0;
         }
 
-        Vec3d baseVel = Vec3d.ZERO;
-        float bodyYaw = animatable.bodyYaw;
+        Vec3 baseVel = Vec3.ZERO;
+        float bodyYaw = animatable.yBodyRot;
         if (animatable.hasUser()) {
             LivingEntity user = animatable.getUserOrThrow();
-            baseVel = user.getVelocity();
-            bodyYaw = user.bodyYaw;
+            baseVel = user.getDeltaMovement();
+            bodyYaw = user.yBodyRot;
         }
 
         for (int i = 0; i <= 3; ++i) {
-            renderAfter(baseVel.multiply(i), bodyYaw, aa * (1f / i), model, animatable, partialTick,
-                    RenderLayer.getEntityNoOutline(getTextureLocation(animatable)), poseStack, bufferSource,
+            renderAfter(baseVel.scale(i), bodyYaw, aa * (1f / i), model, animatable, partialTick,
+                    RenderType.entityNoOutline(getTextureLocation(animatable)), poseStack, bufferSource,
                     buffer, packedLight, packedOverlay, red, green, blue, alpha);
         }
     }
 
-    private void renderAfter(Vec3d velocity, float bodyYaw, float aa, BakedGeoModel model, MadeInHeavenEntity animatable,
-                             float partialTicks, RenderLayer type, MatrixStack matrixStack,
-                             VertexConsumerProvider renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
+    private void renderAfter(Vec3 velocity, float bodyYaw, float aa, BakedGeoModel model, MadeInHeavenEntity animatable,
+                             float partialTicks, RenderType type, PoseStack matrixStack,
+                             MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
                              int packedOverlayIn, float red, float green, float blue, float alpha) {
-        matrixStack.push();
+        matrixStack.pushPose();
 
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(bodyYaw));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(bodyYaw));
         matrixStack.translate(velocity.x, -velocity.y, velocity.z);
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-bodyYaw));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-bodyYaw));
         super.actuallyRender(matrixStack, animatable, model, type, renderTypeBuffer, vertexBuilder, false, partialTicks, packedLightIn, packedOverlayIn, red, green, blue, aa);
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 }

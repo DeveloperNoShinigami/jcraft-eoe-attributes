@@ -3,7 +3,7 @@ package net.arna.jcraft.common.attack.moves.thefool;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
 public class AirBarrageAttack extends AbstractBarrageAttack<AirBarrageAttack, TheFoolEntity> {
     public AirBarrageAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
@@ -20,8 +20,8 @@ public class AirBarrageAttack extends AbstractBarrageAttack<AirBarrageAttack, Th
         }
 
         LivingEntity user = attacker.getUserOrThrow();
-        user.setVelocity(user.getVelocity().multiply(0.5).add(0, 0.01, 0));
-        user.velocityModified = true;
+        user.setDeltaMovement(user.getDeltaMovement().scale(0.5).add(0, 0.01, 0));
+        user.hurtMarked = true;
     }
 
     @Override

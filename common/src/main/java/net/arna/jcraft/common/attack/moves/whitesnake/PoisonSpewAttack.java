@@ -5,8 +5,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.WSAcidProjectile;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
-import net.minecraft.entity.LivingEntity;
-
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class PoisonSpewAttack extends AbstractSimpleAttack<PoisonSpewAttack, WhiteSnakeEntity> {
@@ -18,10 +17,10 @@ public class PoisonSpewAttack extends AbstractSimpleAttack<PoisonSpewAttack, Whi
 
     @Override
     public @NonNull Set<LivingEntity> perform(WhiteSnakeEntity attacker, LivingEntity user, MoveContext ctx) {
-        WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.getWorld(), user);
-        acidProjectile.setVelocity(user, user.getPitch(), user.getYaw(), 0, 1.33F, 0);
-        acidProjectile.setPosition(attacker.getEyePos());
-        attacker.getWorld().spawnEntity(acidProjectile);
+        WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.level(), user);
+        acidProjectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, 1.33F, 0);
+        acidProjectile.setPos(attacker.getEyePosition());
+        attacker.level().addFreshEntity(acidProjectile);
 
         return super.perform(attacker, user, ctx);
     }

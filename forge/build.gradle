@@ -7,6 +7,11 @@ loom {
     forge {
         mixinConfig "jcraft.mixins.json"
         mixinConfig "jcraft-forge.mixins.json"
+        convertAccessWideners.set(true)
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+    }
+    mixin {
+        defaultRefmapName = "jcraft-refmap.json"
     }
 }
 
@@ -46,8 +51,9 @@ dependencies {
     implementation(include("io.github.llamalad7:mixinextras-forge:0.3.5"))
 
     //Geckolib
-    implementation("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
-    implementation("com.eliotlash.mclib:mclib:20")
+    //implementation("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
+    //implementation("com.eliotlash.mclib:mclib:20")
+    implementation "mod.azure.azurelib:azurelib-forge-1.20.1:1.0.34"
 
     //Player Anim
     modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${player_anim_version}")

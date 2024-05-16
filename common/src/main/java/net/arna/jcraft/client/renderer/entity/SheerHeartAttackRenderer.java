@@ -1,22 +1,23 @@
 package net.arna.jcraft.client.renderer.entity;
 
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.arna.jcraft.client.model.entity.SheerHeartAttackModel;
 import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
 
 public class SheerHeartAttackRenderer extends GeoEntityRenderer<SheerHeartAttackEntity> {
 
-    public SheerHeartAttackRenderer(EntityRendererFactory.Context context) {
+    public SheerHeartAttackRenderer(EntityRendererProvider.Context context) {
         super(context, new SheerHeartAttackModel());
     }
 
     @Override
-    public RenderLayer getRenderType(SheerHeartAttackEntity animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
-        return RenderLayer.getEntityTranslucent(this.getTextureLocation(animatable));
+    public RenderType getRenderType(SheerHeartAttackEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucent(this.getTextureLocation(animatable));
     }
 }

@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.util.extensions;
 
 import lombok.experimental.UtilityClass;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 import org.joml.Vector3f;
 
 @UtilityClass

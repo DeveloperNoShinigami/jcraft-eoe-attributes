@@ -11,15 +11,14 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 /**
@@ -72,7 +71,7 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
 
         // Consider replacing the isRemote() with isFree()?
         if (attacker.hasUser() && inflictsSlowness && !attacker.isRemote()) {
-            attacker.getUserOrThrow().addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 10, 2, true, false));
+            attacker.getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 2, true, false));
         }
     }
 
@@ -85,32 +84,32 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
         // Barrage clashing logic.
         for (LivingEntity target : targets) {
             StandEntity<?, ?> targetStand = JUtils.getStand(target);
-            Vec3d forwardPos = stand.getRotationVector();
-            forwardPos = new Vec3d(stand.getX() + forwardPos.x, stand.getY() + forwardPos.y, stand.getZ() + forwardPos.z);
+            Vec3 forwardPos = stand.getLookAngle();
+            forwardPos = new Vec3(stand.getX() + forwardPos.x, stand.getY() + forwardPos.y, stand.getZ() + forwardPos.z);
             if (targetStand == null ||
                     targetStand == attacker ||
                     targetStand.curMove == null ||
                     !targetStand.curMove.isBarrage() ||
-                    targetStand.squaredDistanceTo(forwardPos) > 4) {
+                    targetStand.distanceToSqr(forwardPos) > 4) {
                 continue;
             }
             onClash(attacker.getUserOrThrow());
             onClash(target);
 
             // Override stun with high priority 0.5s stun, also stops all current sounds for cleaner audio cue
-            if (target instanceof ServerPlayerEntity serverPlayer) {
-                serverPlayer.networkHandler.sendPacket(new StopSoundS2CPacket(null, SoundCategory.PLAYERS));
+            if (target instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundStopSoundPacket(null, SoundSource.PLAYERS));
             }
-            if (attacker.getUserOrThrow() instanceof ServerPlayerEntity serverPlayer) {
-                serverPlayer.networkHandler.sendPacket(new StopSoundS2CPacket(null, SoundCategory.PLAYERS));
+            if (attacker.getUserOrThrow() instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundStopSoundPacket(null, SoundSource.PLAYERS));
             }
 
             // Cancels both barrages
             stand.cancelMove();
             targetStand.cancelMove();
-            Vec3d midPos = attacker.getBaseEntity().getPos().multiply(.5)
-                    .add(targetStand.getPos().multiply(.5));
-            attacker.getEntityWorld().playSound(null, midPos.x, midPos.y, midPos.z, JSoundRegistry.IMPACT_1.get(), SoundCategory.NEUTRAL, 1, 0.5f);
+            Vec3 midPos = attacker.getBaseEntity().position().scale(.5)
+                    .add(targetStand.position().scale(.5));
+            attacker.getEntityWorld().playSound(null, midPos.x, midPos.y, midPos.z, JSoundRegistry.IMPACT_1.get(), SoundSource.NEUTRAL, 1, 0.5f);
 
             return Set.of();
         }
@@ -119,8 +118,8 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
     }
 
     protected void onClash(LivingEntity entity) {
-        entity.removeStatusEffect(JStatusRegistry.DAZED.get());
-        entity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED.get(), 10, 3, true, false));
+        entity.removeEffect(JStatusRegistry.DAZED.get());
+        entity.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), 10, 3, true, false));
     }
 
     @Override
@@ -135,17 +134,17 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
                 return;
             }
             LivingEntity attackerEntity = attacker.getBaseEntity();
-            Random random = attackerEntity.getRandom();
-            Vec3d shockwavePos = attackerEntity.getPos().add(
+            RandomSource random = attackerEntity.getRandom();
+            Vec3 shockwavePos = attackerEntity.position().add(
                     random.nextGaussian() / 3.0,
                     random.nextGaussian() / 3.0,
                     random.nextGaussian() / 3.0
             );
-            Vec3d rotVec = user.getRotationVector();
+            Vec3 rotVec = user.getLookAngle();
             shockwavePos = shockwavePos.add(rotVec);
-            shockwavePos = shockwavePos.add(RotationUtil.vecPlayerToWorld(new Vec3d(0, attackerEntity.getHeight() / 1.8 - getOffset(), 0), GravityChangerAPI.getGravityDirection(user)));
+            shockwavePos = shockwavePos.add(RotationUtil.vecPlayerToWorld(new Vec3(0, attackerEntity.getBbHeight() / 1.8 - getOffset(), 0), GravityChangerAPI.getGravityDirection(user)));
             JComponentPlatformUtils.getShockwaveHandler(attacker.getEntityWorld())
-                    .addShockwave(shockwavePos, user.getRotationVector(), getDamage() / 1.5f);
+                    .addShockwave(shockwavePos, user.getLookAngle(), getDamage() / 1.5f);
         }));
     }
 

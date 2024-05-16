@@ -4,14 +4,14 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.util.DimensionData;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -36,19 +36,19 @@ public class Timestops {
             //JCraft.LOGGER.info("SERVER: Ticking timestop " + timestop + " with user " + user + " and duration " + timestop.timer);
 
             if (user != null && user.isAlive() && timestop.timer-- > 0) {
-                ServerWorld world = server.getWorld(timestop.worldKey);
+                ServerLevel world = server.getLevel(timestop.worldKey);
                 if (world == null) {
                     JCraft.LOGGER.fatal("World that timestop belongs to no longer exists! Key: " + timestop.worldKey + " Timestopper: " + user);
                     continue;
                 }
 
-                Vec3d pos = timestop.pos;
+                Vec3 pos = timestop.pos;
 
-                List<? extends Entity> toStop = world.getEntitiesByClass(Entity.class,
-                        new Box(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
+                List<? extends Entity> toStop = world.getEntitiesOfClass(Entity.class,
+                        new AABB(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
                 for (Entity entity : toStop) {
-                    if (!entity.hasVehicle() && entity != user && (!(entity instanceof LivingEntity living) || entity != JUtils.getStand(living)) &&
+                    if (!entity.isPassenger() && entity != user && (!(entity instanceof LivingEntity living) || entity != JUtils.getStand(living)) &&
                             entity != user.getVehicle()) {
                         JComponentPlatformUtils.getTimeStopData(entity).setTicks(2);
                     }
@@ -62,10 +62,10 @@ public class Timestops {
         timestops.addAll(newActiveTimestops);
     }
 
-    public static boolean isInTSRange(Vec3d pos) {
+    public static boolean isInTSRange(Vec3 pos) {
         for (DimensionData timeStop : timestops) {
             if (timeStop != null) {
-                if (timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
+                if (timeStop.pos.distanceToSqr(pos.x(), pos.y(), pos.z()) <= 65536) {
                     return true;
                 }
             }
@@ -76,7 +76,7 @@ public class Timestops {
 
     public static boolean isInTSRange(BlockPos pos) {
         for (DimensionData timeStop : timestops) {
-            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
+            if (timeStop != null && timeStop.pos.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return true;
             }
         }
@@ -86,7 +86,7 @@ public class Timestops {
 
     public static int getTicksIfInTSRange(BlockPos pos) {
         for (DimensionData timeStop : timestops) {
-            if (timeStop != null && timeStop.pos.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
+            if (timeStop != null && timeStop.pos.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return timeStop.timer;
             }
         }

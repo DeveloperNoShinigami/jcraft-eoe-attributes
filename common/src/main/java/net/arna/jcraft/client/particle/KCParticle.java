@@ -1,47 +1,47 @@
 package net.arna.jcraft.client.particle;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 
-public class KCParticle extends AbstractSlowingParticle {
-    private final SpriteProvider spriteProvider;
+public class KCParticle extends RisingParticle {
+    private final SpriteSet spriteProvider;
 
-    KCParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteProvider spriteProvider) {
+    KCParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
         this.spriteProvider = spriteProvider;
-        this.scale = 0.2f + random.nextFloat() * 0.2f;
-        this.maxAge = 4;
-        this.setSpriteForAge(spriteProvider);
+        this.quadSize = 0.2f + random.nextFloat() * 0.2f;
+        this.lifetime = 4;
+        this.setSpriteFromAge(spriteProvider);
     }
 
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     public void tick() {
         super.tick();
-        float c = 1f - (float) age / (float) maxAge;
+        float c = 1f - (float) age / (float) lifetime;
         this.setColor(c, c, c);
 
-        if (!this.dead) {
-            this.setSprite(spriteProvider.getSprite(random));
+        if (!this.removed) {
+            this.setSprite(spriteProvider.get(random));
         }
     }
 
     @Override
-    protected int getBrightness(float tint) {
+    protected int getLightColor(float tint) {
         return 255;
     }
 
-    public static class Factory implements ParticleFactory<DefaultParticleType> {
-        private final SpriteProvider spriteProvider;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteProvider;
 
-        public Factory(SpriteProvider spriteProvider) {
+        public Factory(SpriteSet spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
             return new KCParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
         }
     }

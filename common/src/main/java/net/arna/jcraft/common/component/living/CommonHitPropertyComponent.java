@@ -1,12 +1,12 @@
 package net.arna.jcraft.common.component.living;
 
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 
 public interface CommonHitPropertyComponent {
     // Hit Animation
     long endHitAnimTime();
 
-    Vec3d getRandomRotation();
+    Vec3 getRandomRotation();
 
     HitAnimation getHitAnimation();
 

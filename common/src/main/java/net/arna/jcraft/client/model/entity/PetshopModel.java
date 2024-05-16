@@ -1,23 +1,23 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.PetshopEntity;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.resources.ResourceLocation;
 
 public class PetshopModel extends GeoModel<PetshopEntity> {
     @Override
-    public Identifier getModelResource(PetshopEntity animatable) {
+    public ResourceLocation getModelResource(PetshopEntity animatable) {
         return JCraft.id("geo/petshop.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(PetshopEntity animatable) {
+    public ResourceLocation getTextureResource(PetshopEntity animatable) {
         return JCraft.id("textures/entity/petshop.png");
     }
 
     @Override
-    public Identifier getAnimationResource(PetshopEntity animatable) {
+    public ResourceLocation getAnimationResource(PetshopEntity animatable) {
         return JCraft.id("animations/petshop.animation.json");
     }
 }

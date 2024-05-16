@@ -5,9 +5,8 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.registry.JItemRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import java.util.Set;
 
 public class GiveGunMove extends AbstractMove<GiveGunMove, D4CEntity> {
@@ -17,9 +16,9 @@ public class GiveGunMove extends AbstractMove<GiveGunMove, D4CEntity> {
 
     @Override
     public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        if (user instanceof PlayerEntity playerEntity) {
-            playerEntity.giveItemStack(JItemRegistry.FV_REVOLVER.get().getDefaultStack());
-            attacker.getMainHandStack().decrement(1);
+        if (user instanceof Player playerEntity) {
+            playerEntity.addItem(JItemRegistry.FV_REVOLVER.get().getDefaultInstance());
+            attacker.getMainHandItem().shrink(1);
         }
 
         return Set.of();

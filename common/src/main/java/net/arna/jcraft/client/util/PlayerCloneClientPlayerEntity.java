@@ -5,20 +5,20 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.arna.jcraft.client.rendering.CloneSkinTracker;
 import net.arna.jcraft.common.entity.PlayerCloneEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Arm;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class PlayerCloneClientPlayerEntity extends AbstractClientPlayerEntity {
+public class PlayerCloneClientPlayerEntity extends AbstractClientPlayer {
     private static final Set<PlayerCloneClientPlayerEntity> entities = Collections.newSetFromMap(new WeakHashMap<>());
     private static final GameProfile CLONE_PROFILE = new GameProfile(UUID.nameUUIDFromBytes("jcraft$playerClone".getBytes()), null);
     private final PlayerCloneEntity clone;
@@ -29,14 +29,14 @@ public class PlayerCloneClientPlayerEntity extends AbstractClientPlayerEntity {
                 .filter(LivingEntity::isAlive)
                 .forEach(PlayerCloneClientPlayerEntity::tick));
         ClientTickEvent.CLIENT_POST.register(client -> {
-            if (client.world == null) {
+            if (client.level == null) {
                 entities.clear();
             }
         });
     }
 
     public PlayerCloneClientPlayerEntity(PlayerCloneEntity clone) {
-        super(Objects.requireNonNull(MinecraftClient.getInstance().world), CLONE_PROFILE);
+        super(Objects.requireNonNull(Minecraft.getInstance().level), CLONE_PROFILE);
         this.clone = clone;
         entities.add(this);
     }
@@ -53,49 +53,49 @@ public class PlayerCloneClientPlayerEntity extends AbstractClientPlayerEntity {
 
     @Nullable
     @Override
-    protected PlayerListEntry getPlayerListEntry() {
+    protected PlayerInfo getPlayerInfo() {
         return null;
     }
 
     @Override
-    public boolean hasSkinTexture() {
+    public boolean isSkinLoaded() {
         return CloneSkinTracker.getSkinFor(clone, MinecraftProfileTexture.Type.SKIN) != null;
     }
 
     @Override
-    public Identifier getSkinTexture() {
+    public ResourceLocation getSkinTextureLocation() {
         return CloneSkinTracker.getSkinFor(clone, MinecraftProfileTexture.Type.SKIN);
     }
 
     @Override
-    public boolean canRenderCapeTexture() {
+    public boolean isCapeLoaded() {
         return CloneSkinTracker.getSkinFor(clone, MinecraftProfileTexture.Type.CAPE) != null;
     }
 
     @Nullable
     @Override
-    public Identifier getCapeTexture() {
+    public ResourceLocation getCloakTextureLocation() {
         return CloneSkinTracker.getSkinFor(clone, MinecraftProfileTexture.Type.CAPE);
     }
 
     @Override
-    public boolean canRenderElytraTexture() {
+    public boolean isElytraLoaded() {
         return CloneSkinTracker.getSkinFor(clone, MinecraftProfileTexture.Type.ELYTRA) != null;
     }
 
     @Nullable
     @Override
-    public Identifier getElytraTexture() {
+    public ResourceLocation getElytraTextureLocation() {
         return CloneSkinTracker.getSkinFor(clone, MinecraftProfileTexture.Type.ELYTRA);
     }
 
     @Override
-    public String getModel() {
+    public String getModelName() {
         return CloneSkinTracker.getModelFor(clone);
     }
 
     @Override
-    public boolean shouldRenderName() {
+    public boolean shouldShowName() {
         // Unused because PlayerEntityRenderer extends LivingEntityRenderer which ignores this.
         // Actual implementation is found in LivingEntityRendererMixin.
         return false;
@@ -107,52 +107,52 @@ public class PlayerCloneClientPlayerEntity extends AbstractClientPlayerEntity {
         // Age is usually incremented by whatever ticked this entity, except we tick it
         // ourselves, so we have to manually increase the age.
         // Age is used for several animation-related values. (Such as the 'breathing' motion of the arms)
-        age++;
+        tickCount++;
 
-        setMainArm(clone.isLeftHanded() ? Arm.LEFT : Arm.RIGHT);
+        setMainArm(clone.isLeftHanded() ? HumanoidArm.LEFT : HumanoidArm.RIGHT);
 
-        dataTracker.set(PlayerEntity.PLAYER_MODEL_PARTS, clone.getPartMask());
+        entityData.set(Player.DATA_PLAYER_MODE_CUSTOMISATION, clone.getPartMask());
 
-        preferredHand = clone.preferredHand;
+        swingingArm = clone.swingingArm;
 
-        setStuckArrowCount(clone.getStuckArrowCount());
+        setArrowCount(clone.getArrowCount());
         setStingerCount(clone.getStingerCount());
 
         for (EquipmentSlot slot : EquipmentSlot.values()) {
-            equipStack(slot, clone.getEquippedStack(slot));
+            setItemSlot(slot, clone.getItemBySlot(slot));
         }
     }
 
     @Override
-    public boolean damage(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         return false;
     }
 
     public void updateData() {
-        prevX = clone.prevX;
-        prevY = clone.prevY;
-        prevZ = clone.prevZ;
+        xo = clone.xo;
+        yo = clone.yo;
+        zo = clone.zo;
 
-        setPos(clone.getX(), clone.getY(), clone.getZ());
+        setPosRaw(clone.getX(), clone.getY(), clone.getZ());
 
-        prevBodyYaw = clone.prevBodyYaw;
-        bodyYaw = clone.bodyYaw;
-        prevHeadYaw = clone.prevHeadYaw;
-        headYaw = clone.headYaw;
+        yBodyRotO = clone.yBodyRotO;
+        yBodyRot = clone.yBodyRot;
+        yHeadRotO = clone.yHeadRotO;
+        yHeadRot = clone.yHeadRot;
 
         hurtTime = clone.hurtTime;
-        maxHurtTime = clone.maxHurtTime;
+        hurtDuration = clone.hurtDuration;
 
         //TODO lastLimbDistance = clone.lastLimbDistance;
         //limbDistance = clone.limbDistance;
         //limbAngle = clone.limbAngle;
 
-        handSwinging = clone.handSwinging;
-        lastHandSwingProgress = clone.lastHandSwingProgress;
-        handSwingProgress = clone.handSwingProgress;
-        handSwingTicks = clone.handSwingTicks;
+        swinging = clone.swinging;
+        oAttackAnim = clone.oAttackAnim;
+        attackAnim = clone.attackAnim;
+        swingTime = clone.swingTime;
 
         deathTime = clone.deathTime;
-        dead = clone.isDead();
+        dead = clone.isDeadOrDying();
     }
 }

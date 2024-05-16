@@ -7,16 +7,13 @@ import net.arna.jcraft.common.component.impl.living.CommonStandComponentImpl;
 import net.arna.jcraft.forge.JCraftForge;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.arna.jcraft.forge.network.SyncStandPacket;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -31,8 +28,8 @@ import static net.arna.jcraft.JCraft.MOD_ID;
 
 public class StandCapability extends CommonStandComponentImpl implements JCapability {
 
-    public static Identifier STAND_S2C = new Identifier(MOD_ID, "standard_s2c");
-    public static Identifier STAND_C2S = new Identifier(MOD_ID, "standard_c2s");
+    public static ResourceLocation STAND_S2C = new ResourceLocation(MOD_ID, "standard_s2c");
+    public static ResourceLocation STAND_C2S = new ResourceLocation(MOD_ID, "standard_c2s");
 
     public static Capability<StandCapability> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
@@ -49,27 +46,28 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
 
     private static void syncEntityCapability(Entity entity) {
         if (entity instanceof LivingEntity living) {
+
             JNetworkingForge.sendPackets(living, STAND_S2C, STAND_C2S, getCapability(living));
         }
     }
 
     public static void syncEntityCapability(PlayerEvent.StartTracking event) {
         if (event.getTarget() instanceof LivingEntity livingEntity) {
-            if (livingEntity.getWorld() instanceof ServerWorld) {
+            if (livingEntity.level() instanceof ServerLevel) {
                 syncEntityCapability(livingEntity);
             }
         }
     }
 
     @Override
-    public NbtCompound serializeNBT() {
-        NbtCompound tag = new NbtCompound();
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
         super.writeToNbt(tag);
         return tag;
     }
 
     @Override
-    public void deserializeNBT(NbtCompound tag) {
+    public void deserializeNBT(CompoundTag tag) {
         super.readFromNbt(tag);
     }
 
@@ -83,11 +81,11 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, STAND_S2C, (buf, context) -> {
-            UUID uuid = buf.readUuid();
-            NbtCompound nbt = buf.readNbt();
-            PlayerEntity player = null;
-            if (MinecraftClient.getInstance().world != null) {
-                player = MinecraftClient.getInstance().world.getPlayerByUuid(uuid);
+            UUID uuid = buf.readUUID();
+            CompoundTag nbt = buf.readNbt();
+            Player player = null;
+            if (Minecraft.getInstance().level != null) {
+                player = Minecraft.getInstance().level.getPlayerByUUID(uuid);
             }
             if (player != null) {
                 StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
@@ -95,9 +93,10 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, STAND_C2S, (buf, context) -> {
-            PlayerEntity player = context.getPlayer();
-            NbtCompound nbt = buf.readNbt();
-            StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
+            //Player player = context.getPlayer();
+            UUID uuid = buf.readUUID();
+            CompoundTag nbt = buf.readNbt();
+            StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
         });
     }
 }

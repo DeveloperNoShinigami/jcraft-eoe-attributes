@@ -3,24 +3,25 @@ package net.arna.jcraft.mixin.gravity;
 
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-@Mixin(ServerPlayNetworkHandler.class)
+@Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerPlayNetworkHandlerMixin {
+    /*TODO maybe forge crash
     @Unique
     private static double onPlayerMove_playerMovementY;
 
     @Shadow
-    public ServerPlayerEntity player;
+    public ServerPlayer player;
 
     @Shadow
     private static double clampHorizontal(double d) {
@@ -33,77 +34,77 @@ public abstract class ServerPlayNetworkHandlerMixin {
     }
 
     @Shadow
-    private double updatedX;
+    private double lastGoodX;
 
     @Shadow
-    private double updatedY;
+    private double lastGoodY;
 
     @Shadow
-    private double updatedZ;
+    private double lastGoodZ;
 
     @Redirect(
-            method = "onPlayerMove",
+            method = "handleMovePlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;getY()D",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;getY()D",
                     ordinal = 3
             )
     )
-    private double redirect_onPlayerMove_getY_3(ServerPlayerEntity serverPlayerEntity) {
+    private double redirect_onPlayerMove_getY_3(ServerPlayer serverPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(serverPlayerEntity);
         if (gravityDirection == Direction.DOWN) {
             return serverPlayerEntity.getY();
         }
 
-        return RotationUtil.vecWorldToPlayer(serverPlayerEntity.getPos(), gravityDirection).y;
+        return RotationUtil.vecWorldToPlayer(serverPlayerEntity.position(), gravityDirection).y;
     }
 
     @Redirect(
-            method = "onPlayerMove",
+            method = "handleMovePlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;getY()D",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;getY()D",
                     ordinal = 7
             )
     )
-    private double redirect_onPlayerMove_getY_7(ServerPlayerEntity serverPlayerEntity) {
+    private double redirect_onPlayerMove_getY_7(ServerPlayer serverPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(serverPlayerEntity);
         if (gravityDirection == Direction.DOWN) {
             return serverPlayerEntity.getY();
         }
 
-        return RotationUtil.vecWorldToPlayer(serverPlayerEntity.getPos(), gravityDirection).y;
+        return RotationUtil.vecWorldToPlayer(serverPlayerEntity.position(), gravityDirection).y;
     }
 
     @ModifyVariable(
-            method = "onPlayerMove",
+            method = "handleMovePlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;isOnGround()Z",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;onGround()Z",
                     ordinal = 0
             ),
             ordinal = 0
     )
-    private boolean modify_onPlayerMove_boolean_0(boolean value, PlayerMoveC2SPacket packet) {
+    private boolean modify_onPlayerMove_boolean_0(boolean value, ServerboundMovePlayerPacket packet) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
         if (gravityDirection == Direction.DOWN) {
             return value;
         }
 
         onPlayerMove_playerMovementY = RotationUtil.vecWorldToPlayer(
-                clampHorizontal(packet.getX(this.player.getX())) - this.updatedX,
-                clampVertical(packet.getY(this.player.getY())) - this.updatedY,
-                clampHorizontal(packet.getZ(this.player.getZ())) - this.updatedZ,
+                clampHorizontal(packet.getX(this.player.getX())) - this.lastGoodX,
+                clampVertical(packet.getY(this.player.getY())) - this.lastGoodY,
+                clampHorizontal(packet.getZ(this.player.getZ())) - this.lastGoodZ,
                 gravityDirection
         ).y;
         return onPlayerMove_playerMovementY > 0.0D;
     }
 
     @ModifyVariable(
-            method = "onPlayerMove",
+            method = "handleMovePlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;getX()D",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;getX()D",
                     ordinal = 5
             ),
             ordinal = 10
@@ -118,15 +119,15 @@ public abstract class ServerPlayNetworkHandlerMixin {
     }
 
     @ModifyArg(
-            method = "onPlayerMove",
+            method = "handleMovePlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;move(Lnet/minecraft/entity/MovementType;Lnet/minecraft/util/math/Vec3d;)V",
+                    target = "Lnet/minecraft/server/level/ServerPlayer;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
                     ordinal = 0
             ),
             index = 1
     )
-    private Vec3d modify_onPlayerMove_move_0(Vec3d vec3d) {
+    private Vec3 modify_onPlayerMove_move_0(Vec3 vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
@@ -170,14 +171,14 @@ public abstract class ServerPlayNetworkHandlerMixin {
     //}
 
     @ModifyArg(
-            method = "onVehicleMove",
+            method = "handleMoveVehicle",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;move(Lnet/minecraft/entity/MovementType;Lnet/minecraft/util/math/Vec3d;)V"
+                    target = "Lnet/minecraft/world/entity/Entity;move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V"
             ),
             index = 1
     )
-    private Vec3d modify_onVehicleMove_move_0(Vec3d vec3d) {
+    private Vec3 modify_onVehicleMove_move_0(Vec3 vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
@@ -209,49 +210,51 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Unique private double zz;
 
     @ModifyArg(
-            method = "isEntityOnAir",
+            method = "noBlocksAround",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
+                    target = "Lnet/minecraft/world/phys/AABB;expandTowards(DDD)Lnet/minecraft/world/phys/AABB;"
             ),
             index = 0
     )
     private double modify_onVehicleMove_move_0(double x) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
         this.xx = x;
-        Vec3d argVec = new Vec3d(xx, yy, zz);
+        Vec3 argVec = new Vec3(xx, yy, zz);
         argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
         return argVec.x;
     }
 
     @ModifyArg(
-            method = "isEntityOnAir",
+            method = "noBlocksAround",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
+                    target = "Lnet/minecraft/world/phys/AABB;expandTowards(DDD)Lnet/minecraft/world/phys/AABB;"
             ),
             index = 0
     )
     private double modify_onVehicleMove_move_1(double y) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
         this.yy = y;
-        Vec3d argVec = new Vec3d(xx, yy, zz);
+        Vec3 argVec = new Vec3(xx, yy, zz);
         argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
         return argVec.y;
     }
     @ModifyArg(
-            method = "isEntityOnAir",
+            method = "noBlocksAround",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/math/Box;stretch(DDD)Lnet/minecraft/util/math/Box;"
+                    target = "Lnet/minecraft/world/phys/AABB;expandTowards(DDD)Lnet/minecraft/world/phys/AABB;"
             ),
             index = 0
     )
     private double modify_onVehicleMove_move_2(double z) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
         this.zz = z;
-        Vec3d argVec = new Vec3d(xx, yy, zz);
+        Vec3 argVec = new Vec3(xx, yy, zz);
         argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
         return argVec.z;
     }
+
+     */
 }

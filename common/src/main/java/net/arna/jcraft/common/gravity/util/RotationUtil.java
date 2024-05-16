@@ -1,6 +1,13 @@
 package net.arna.jcraft.common.gravity.util;
 
-import net.minecraft.util.math.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.util.Mth;
+
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -12,9 +19,9 @@ public abstract class RotationUtil {
     }
 
     public static boolean approximatelyEquals(Vector3f a, Vector3f b) {
-        return MathHelper.approximatelyEquals(a.x(), b.x()) &&
-                MathHelper.approximatelyEquals(a.y(), b.y()) &&
-                MathHelper.approximatelyEquals(a.z(), b.z());
+        return Mth.equal(a.x(), b.x()) &&
+                Mth.equal(a.y(), b.y()) &&
+                Mth.equal(a.z(), b.z());
     }
 
     private static final Vec3i[] ALL_TRANSFORMATIONS = {
@@ -43,11 +50,11 @@ public abstract class RotationUtil {
         return new Vector3f(a[position.getX()] * sign.getX(), a[position.getY()] * sign.getY(), a[position.getZ()] * sign.getZ());
     }
 
-    private static Vec3d transform(Vec3d v, VecTransform t) {
+    private static Vec3 transform(Vec3 v, VecTransform t) {
         Vec3i position = t.pos;
         Vec3i sign = t.sign;
-        double[] a = {v.getX(), v.getY(), v.getZ()};
-        return new Vec3d(a[position.getX()] * sign.getX(), a[position.getY()] * sign.getY(), a[position.getZ()] * sign.getZ());
+        double[] a = {v.x(), v.y(), v.z()};
+        return new Vec3(a[position.getX()] * sign.getX(), a[position.getY()] * sign.getY(), a[position.getZ()] * sign.getZ());
     }
 
     private static final List<VecTransform> VEC_WORLD_TO_PLAYER = new ArrayList<>();
@@ -81,52 +88,52 @@ public abstract class RotationUtil {
 
     static {
         for (Direction gravityDirection : Direction.values()) {
-            DIR_WORLD_TO_PLAYER[gravityDirection.getId()] = new Direction[6];
+            DIR_WORLD_TO_PLAYER[gravityDirection.get3DDataValue()] = new Direction[6];
             for (Direction direction : Direction.values()) {
-                Vec3d directionVector = Vec3d.of(direction.getVector());
+                Vec3 directionVector = Vec3.atLowerCornerOf(direction.getNormal());
                 directionVector = RotationUtil.vecWorldToPlayer(directionVector, gravityDirection);
-                var vec = BlockPos.ofFloored(directionVector);
-                DIR_WORLD_TO_PLAYER[gravityDirection.getId()][direction.getId()] = Direction.fromVector(vec.getX(), vec.getY(), vec.getZ());
+                var vec = BlockPos.containing(directionVector);
+                DIR_WORLD_TO_PLAYER[gravityDirection.get3DDataValue()][direction.get3DDataValue()] = Direction.fromDelta(vec.getX(), vec.getY(), vec.getZ());
             }
         }
     }
 
     public static Direction dirWorldToPlayer(Direction direction, Direction gravityDirection) {
-        return DIR_WORLD_TO_PLAYER[gravityDirection.getId()][direction.getId()];
+        return DIR_WORLD_TO_PLAYER[gravityDirection.get3DDataValue()][direction.get3DDataValue()];
     }
 
     private static final Direction[][] DIR_PLAYER_TO_WORLD = new Direction[6][];
 
     static {
         for (Direction gravityDirection : Direction.values()) {
-            DIR_PLAYER_TO_WORLD[gravityDirection.getId()] = new Direction[6];
+            DIR_PLAYER_TO_WORLD[gravityDirection.get3DDataValue()] = new Direction[6];
             for (Direction direction : Direction.values()) {
-                Vec3d directionVector = Vec3d.of(direction.getVector());
+                Vec3 directionVector = Vec3.atLowerCornerOf(direction.getNormal());
                 directionVector = RotationUtil.vecPlayerToWorld(directionVector, gravityDirection);
-                var vec = BlockPos.ofFloored(directionVector);
-                DIR_PLAYER_TO_WORLD[gravityDirection.getId()][direction.getId()] = Direction.fromVector(vec.getX(), vec.getY(), vec.getZ());
+                var vec = BlockPos.containing(directionVector);
+                DIR_PLAYER_TO_WORLD[gravityDirection.get3DDataValue()][direction.get3DDataValue()] = Direction.fromDelta(vec.getX(), vec.getY(), vec.getZ());
             }
         }
     }
 
     public static Direction dirPlayerToWorld(Direction direction, Direction gravityDirection) {
-        return DIR_PLAYER_TO_WORLD[gravityDirection.getId()][direction.getId()];
+        return DIR_PLAYER_TO_WORLD[gravityDirection.get3DDataValue()][direction.get3DDataValue()];
     }
 
-    public static Vec3d vecWorldToPlayer(double x, double y, double z, Direction gravityDirection) {
-        return vecWorldToPlayer(new Vec3d(x, y, z), gravityDirection);
+    public static Vec3 vecWorldToPlayer(double x, double y, double z, Direction gravityDirection) {
+        return vecWorldToPlayer(new Vec3(x, y, z), gravityDirection);
     }
 
-    public static Vec3d vecWorldToPlayer(Vec3d vec3d, Direction gravityDirection) {
-        return transform(vec3d, VEC_WORLD_TO_PLAYER.get(gravityDirection.getId()));
+    public static Vec3 vecWorldToPlayer(Vec3 vec3d, Direction gravityDirection) {
+        return transform(vec3d, VEC_WORLD_TO_PLAYER.get(gravityDirection.get3DDataValue()));
     }
 
-    public static Vec3d vecPlayerToWorld(double x, double y, double z, Direction gravityDirection) {
-        return vecPlayerToWorld(new Vec3d(x, y, z), gravityDirection);
+    public static Vec3 vecPlayerToWorld(double x, double y, double z, Direction gravityDirection) {
+        return vecPlayerToWorld(new Vec3(x, y, z), gravityDirection);
     }
 
-    public static Vec3d vecPlayerToWorld(Vec3d vec3d, Direction gravityDirection) {
-        return transform(vec3d, VEC_PLAYER_TO_WORLD.get(gravityDirection.getId()));
+    public static Vec3 vecPlayerToWorld(Vec3 vec3d, Direction gravityDirection) {
+        return transform(vec3d, VEC_PLAYER_TO_WORLD.get(gravityDirection.get3DDataValue()));
     }
 
     public static Vector3f vecWorldToPlayer(float x, float y, float z, Direction gravityDirection) {
@@ -134,7 +141,7 @@ public abstract class RotationUtil {
     }
 
     public static Vector3f vecWorldToPlayer(Vector3f vec3f, Direction gravityDirection) {
-        return transform(vec3f, VEC_WORLD_TO_PLAYER.get(gravityDirection.getId()));
+        return transform(vec3f, VEC_WORLD_TO_PLAYER.get(gravityDirection.get3DDataValue()));
     }
 
     public static Vector3f vecPlayerToWorld(float x, float y, float z, Direction gravityDirection) {
@@ -142,86 +149,86 @@ public abstract class RotationUtil {
     }
 
     public static Vector3f vecPlayerToWorld(Vector3f vec3f, Direction gravityDirection) {
-        return transform(vec3f, VEC_PLAYER_TO_WORLD.get(gravityDirection.getId()));
+        return transform(vec3f, VEC_PLAYER_TO_WORLD.get(gravityDirection.get3DDataValue()));
     }
 
-    public static Vec3d maskWorldToPlayer(double x, double y, double z, Direction gravityDirection) {
-        VecTransform vt = VEC_WORLD_TO_PLAYER.get(gravityDirection.getId());
+    public static Vec3 maskWorldToPlayer(double x, double y, double z, Direction gravityDirection) {
+        VecTransform vt = VEC_WORLD_TO_PLAYER.get(gravityDirection.get3DDataValue());
         vt = new VecTransform(vt.pos, new Vec3i(1, 1, 1));
-        return transform(new Vec3d(x, y, z), vt);
+        return transform(new Vec3(x, y, z), vt);
     }
 
-    public static Vec3d maskWorldToPlayer(Vec3d vec3d, Direction gravityDirection) {
+    public static Vec3 maskWorldToPlayer(Vec3 vec3d, Direction gravityDirection) {
         return maskWorldToPlayer(vec3d.x, vec3d.y, vec3d.z, gravityDirection);
     }
 
-    public static Vec3d maskPlayerToWorld(double x, double y, double z, Direction gravityDirection) {
-        VecTransform vt = VEC_PLAYER_TO_WORLD.get(gravityDirection.getId());
+    public static Vec3 maskPlayerToWorld(double x, double y, double z, Direction gravityDirection) {
+        VecTransform vt = VEC_PLAYER_TO_WORLD.get(gravityDirection.get3DDataValue());
         vt = new VecTransform(vt.pos, new Vec3i(1, 1, 1));
-        return transform(new Vec3d(x, y, z), vt);
+        return transform(new Vec3(x, y, z), vt);
     }
 
-    public static Vec3d maskPlayerToWorld(Vec3d vec3d, Direction gravityDirection) {
+    public static Vec3 maskPlayerToWorld(Vec3 vec3d, Direction gravityDirection) {
         return maskPlayerToWorld(vec3d.x, vec3d.y, vec3d.z, gravityDirection);
     }
 
-    public static Box boxWorldToPlayer(Box box, Direction gravityDirection) {
-        return new Box(
+    public static AABB boxWorldToPlayer(AABB box, Direction gravityDirection) {
+        return new AABB(
                 RotationUtil.vecWorldToPlayer(box.minX, box.minY, box.minZ, gravityDirection),
                 RotationUtil.vecWorldToPlayer(box.maxX, box.maxY, box.maxZ, gravityDirection)
         );
     }
 
-    public static Box boxPlayerToWorld(Box box, Direction gravityDirection) {
-        return new Box(
+    public static AABB boxPlayerToWorld(AABB box, Direction gravityDirection) {
+        return new AABB(
                 RotationUtil.vecPlayerToWorld(box.minX, box.minY, box.minZ, gravityDirection),
                 RotationUtil.vecPlayerToWorld(box.maxX, box.maxY, box.maxZ, gravityDirection)
         );
     }
 
-    public static Vec2f rotWorldToPlayer(float yaw, float pitch, Direction gravityDirection) {
-        Vec3d vec3d = RotationUtil.vecWorldToPlayer(rotToVec(yaw, pitch), gravityDirection);
+    public static Vec2 rotWorldToPlayer(float yaw, float pitch, Direction gravityDirection) {
+        Vec3 vec3d = RotationUtil.vecWorldToPlayer(rotToVec(yaw, pitch), gravityDirection);
         return vecToRot(vec3d.x, vec3d.y, vec3d.z);
     }
 
-    public static Vec2f rotWorldToPlayer(Vec2f vec2f, Direction gravityDirection) {
+    public static Vec2 rotWorldToPlayer(Vec2 vec2f, Direction gravityDirection) {
         return rotWorldToPlayer(vec2f.x, vec2f.y, gravityDirection);
     }
 
-    public static Vec2f rotPlayerToWorld(float yaw, float pitch, Direction gravityDirection) {
-        Vec3d vec3d = RotationUtil.vecPlayerToWorld(rotToVec(yaw, pitch), gravityDirection);
+    public static Vec2 rotPlayerToWorld(float yaw, float pitch, Direction gravityDirection) {
+        Vec3 vec3d = RotationUtil.vecPlayerToWorld(rotToVec(yaw, pitch), gravityDirection);
         return vecToRot(vec3d.x, vec3d.y, vec3d.z);
     }
 
-    public static Vec2f rotPlayerToWorld(Vec2f vec2f, Direction gravityDirection) {
+    public static Vec2 rotPlayerToWorld(Vec2 vec2f, Direction gravityDirection) {
         return rotPlayerToWorld(vec2f.x, vec2f.y, gravityDirection);
     }
 
-    public static Vec3d rotToVec(float yaw, float pitch) {
+    public static Vec3 rotToVec(float yaw, float pitch) {
         double radPitch = pitch * 0.017453292;
         double radNegYaw = -yaw * 0.017453292;
         double cosNegYaw = Math.cos(radNegYaw);
         double sinNegYaw = Math.sin(radNegYaw);
         double cosPitch = Math.cos(radPitch);
         double sinPitch = Math.sin(radPitch);
-        return new Vec3d(sinNegYaw * cosPitch, -sinPitch, cosNegYaw * cosPitch);
+        return new Vec3(sinNegYaw * cosPitch, -sinPitch, cosNegYaw * cosPitch);
     }
 
-    public static Vec2f vecToRot(double x, double y, double z) {
+    public static Vec2 vecToRot(double x, double y, double z) {
         double sinPitch = -y;
         double radPitch = Math.asin(sinPitch);
         double cosPitch = Math.cos(radPitch);
         double sinNegYaw = x / cosPitch;
-        double cosNegYaw = MathHelper.clamp(z / cosPitch, -1, 1);
+        double cosNegYaw = Mth.clamp(z / cosPitch, -1, 1);
         double radNegYaw = Math.acos(cosNegYaw);
         if (sinNegYaw < 0) {
             radNegYaw = Math.PI * 2 - radNegYaw;
         }
 
-        return new Vec2f(MathHelper.wrapDegrees((float) (-radNegYaw) / 0.017453292F), (float) (radPitch) / 0.017453292F);
+        return new Vec2(Mth.wrapDegrees((float) (-radNegYaw) / 0.017453292F), (float) (radPitch) / 0.017453292F);
     }
 
-    public static Vec2f vecToRot(Vec3d vec3d) {
+    public static Vec2 vecToRot(Vec3 vec3d) {
         return vecToRot(vec3d.x, vec3d.y, vec3d.z);
     }
 
@@ -234,8 +241,8 @@ public abstract class RotationUtil {
     }
 
     public static Quaternionf getRotationBetween(Direction d1, Direction d2) {
-        Vec3d start = new Vec3d(d1.getUnitVector());
-        Vec3d end = new Vec3d(d2.getUnitVector());
+        Vec3 start = new Vec3(d1.step());
+        Vec3 end = new Vec3(d2.step());
         if (d1.getOpposite() == d2) {
             return QuaternionUtil.quaternionf(new Vector3f(0f, 0f, -1f), 180.0f, true);
         } else {

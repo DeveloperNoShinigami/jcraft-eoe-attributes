@@ -3,25 +3,26 @@ package net.arna.jcraft.mixin.gravity;
 
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.WitchEntity;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Witch;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(WitchEntity.class)
+@Mixin(Witch.class)
 public abstract class WitchEntityMixin {
+    /*TODO mojmap
     @ModifyVariable(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE_ASSIGN",
-                    target = "Lnet/minecraft/entity/LivingEntity;getVelocity()Lnet/minecraft/util/math/Vec3d;"
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"
             )
     )
-    private Vec3d modify_attack_Vec3d_0(Vec3d value, LivingEntity target, float pullProgress) {
+    private Vec3 modify_attack_Vec3d_0(Vec3 value, LivingEntity target, float pullProgress) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
             return value;
@@ -30,12 +31,13 @@ public abstract class WitchEntityMixin {
         return RotationUtil.vecPlayerToWorld(value, gravityDirection);
     }
 
+     */
+
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getX()D"
             )
     )
     private double redirect_attack_getX_0(LivingEntity target) {
@@ -44,15 +46,14 @@ public abstract class WitchEntityMixin {
             return target.getX();
         }
 
-        return target.getPos().add(RotationUtil.vecPlayerToWorld(0.0D, target.getStandingEyeHeight() - 1.100000023841858D, 0.0D, gravityDirection)).x;
+        return target.position().add(RotationUtil.vecPlayerToWorld(0.0D, target.getEyeHeight() - 1.100000023841858D, 0.0D, gravityDirection)).x;
     }
-
+/*TODO mojmap
     @Redirect(
-            method = "attack",
+            method = "Lnet/minecraft/world/entity/monster/Witch;attackPlayersGoal:Lnet/minecraft/world/entity/ai/goal/target/NearestAttackableWitchTargetGoal;",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getEyeY()D"
             )
     )
     private double redirect_attack_getEyeY_0(LivingEntity target) {
@@ -61,15 +62,16 @@ public abstract class WitchEntityMixin {
             return target.getEyeY();
         }
 
-        return target.getPos().add(RotationUtil.vecPlayerToWorld(0.0D, target.getStandingEyeHeight() - 1.100000023841858D, 0.0D, gravityDirection)).y + 1.100000023841858D;
+        return target.position().add(RotationUtil.vecPlayerToWorld(0.0D, target.getEyeHeight() - 1.100000023841858D, 0.0D, gravityDirection)).y + 1.100000023841858D;
     }
 
+ */
+
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getZ()D"
             )
     )
     private double redirect_attack_getZ_0(LivingEntity target) {
@@ -78,11 +80,11 @@ public abstract class WitchEntityMixin {
             return target.getZ();
         }
 
-        return target.getPos().add(RotationUtil.vecPlayerToWorld(0.0D, target.getStandingEyeHeight() - 1.100000023841858D, 0.0D, gravityDirection)).z;
+        return target.position().add(RotationUtil.vecPlayerToWorld(0.0D, target.getEyeHeight() - 1.100000023841858D, 0.0D, gravityDirection)).z;
     }
 
     @Redirect(
-            method = "attack",
+            method = "performRangedAttack",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/Math;sqrt(D)D"

@@ -7,21 +7,28 @@ import it.unimi.dsi.fastutil.objects.ObjectBooleanPair;
 import lombok.experimental.ExtensionMethod;
 import lombok.experimental.UtilityClass;
 import net.arna.jcraft.common.util.extensions.VecExtensions;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.util.Mth;
+
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static net.minecraft.util.math.Direction.*;
+import static net.minecraft.core.Direction.*;
 
 @ExtensionMethod(VecExtensions.class)
 @UtilityClass
 class SplatterSplitter {
-    public static boolean isValidAnchor(World world, BlockPos pos) {
-        return world.getBlockState(pos).isFullCube(world, pos);
+    public static boolean isValidAnchor(Level world, BlockPos pos) {
+        return world.getBlockState(pos).isCollisionShapeFullBlock(world, pos);
     }
 
     public List<SplatterSection> splitAndWrap(Splatter splatter) {
@@ -38,9 +45,9 @@ class SplatterSplitter {
         // Min = 1, 1; max = 0, 0 is vertically and horizontally flipped (180 ° rotation)
         // Min = 1, 0; max = 0, 1 is horizontally flipped
 
-        boolean flipUvHorizontally = direction.getDirection() == AxisDirection.NEGATIVE;
-        Vec2f minUv = new Vec2f(flipUvHorizontally ? 1 : 0, 0);
-        Vec2f maxUv = new Vec2f(flipUvHorizontally ? 0 : 1, 1);
+        boolean flipUvHorizontally = direction.getAxisDirection() == AxisDirection.NEGATIVE;
+        Vec2 minUv = new Vec2(flipUvHorizontally ? 1 : 0, 0);
+        Vec2 maxUv = new Vec2(flipUvHorizontally ? 0 : 1, 1);
 
         Pair<Axis, Axis> axes = getAxesForDirection(direction);
         Axis a1 = axes.first(), a2 = axes.second();
@@ -48,44 +55,44 @@ class SplatterSplitter {
         float xRange = splatter.getXRange();
         float zRange = splatter.getZRange();
 
-        Vec3d center = splatter.getPos();
-        Vec3d min = add(add(center, a1, -xRange), a2, -zRange);
-        Vec3d max = add(add(center, a1, xRange), a2, zRange);
+        Vec3 center = splatter.getPos();
+        Vec3 min = add(add(center, a1, -xRange), a2, -zRange);
+        Vec3 max = add(add(center, a1, xRange), a2, zRange);
 
-        return Streams.stream(BlockPos.iterate(BlockPos.ofFloored(min), BlockPos.ofFloored(max))).map(pos -> {
-                    double c1 = center.getComponentAlongAxis(a1);
-                    double c2 = center.getComponentAlongAxis(a2);
-                    int p1 = pos.getComponentAlongAxis(a1);
-                    int p2 = pos.getComponentAlongAxis(a2);
+        return Streams.stream(BlockPos.betweenClosed(BlockPos.containing(min), BlockPos.containing(max))).map(pos -> {
+                    double c1 = center.get(a1);
+                    double c2 = center.get(a2);
+                    int p1 = pos.get(a1);
+                    int p2 = pos.get(a2);
 
-                    double min1 = 1 - MathHelper.clamp(p1 + 1 - (c1 - xRange), 0, 1);
-                    double max1 = MathHelper.clamp(c1 + xRange - p1, 0, 1);
-                    double min2 = 1 - MathHelper.clamp(p2 + 1 - (c2 - zRange), 0, 1);
-                    double max2 = MathHelper.clamp(c2 + zRange - p2, 0, 1);
+                    double min1 = 1 - Mth.clamp(p1 + 1 - (c1 - xRange), 0, 1);
+                    double max1 = Mth.clamp(c1 + xRange - p1, 0, 1);
+                    double min2 = 1 - Mth.clamp(p2 + 1 - (c2 - zRange), 0, 1);
+                    double max2 = Mth.clamp(c2 + zRange - p2, 0, 1);
 
                     // Ignore empty sections.
                     if (Math.abs(max1 - min1) < 0.001 || Math.abs(max2 - min2) < 0.001) {
                         return null;
                     }
 
-                    min1 += pos.getComponentAlongAxis(a1);
-                    max1 += pos.getComponentAlongAxis(a1);
-                    min2 += pos.getComponentAlongAxis(a2);
-                    max2 += pos.getComponentAlongAxis(a2);
+                    min1 += pos.get(a1);
+                    max1 += pos.get(a1);
+                    min2 += pos.get(a2);
+                    max2 += pos.get(a2);
 
                     float minU = calcUv(min1, c1, xRange, minUv.x, maxUv.x);
                     float maxU = calcUv(max1, c1, xRange, minUv.x, maxUv.x);
                     float minV = calcUv(min2, c2, zRange, minUv.y, maxUv.y);
                     float maxV = calcUv(max2, c2, zRange, minUv.y, maxUv.y);
 
-                    Pair<Vec2f, Vec2f> uv = packUv(minU, maxU, minV, maxV, direction);
+                    Pair<Vec2, Vec2> uv = packUv(minU, maxU, minV, maxV, direction);
                     return new SplatterSection(splatter.getWorld(), direction, pack((float) min1, (float) min2, a1, a2, center),
                             pack((float) max1, (float) max2, a1, a2, center), uv.left(), uv.right());
                 })
                 .filter(Objects::nonNull);
     }
 
-    private static Vec3d add(Vec3d vec, Axis axis, double value) {
+    private static Vec3 add(Vec3 vec, Axis axis, double value) {
         return vec.add(axis == Axis.X ? value : 0, axis == Axis.Y ? value : 0, axis == Axis.Z ? value : 0);
     }
 
@@ -93,7 +100,7 @@ class SplatterSplitter {
         vec.add(axis == Axis.X ? value : 0, axis == Axis.Y ? value : 0, axis == Axis.Z ? value : 0);
     }
 
-    private static Vector3f pack(float v1, float v2, Axis a1, Axis a2, Vec3d fallback) {
+    private static Vector3f pack(float v1, float v2, Axis a1, Axis a2, Vec3 fallback) {
         Vector3f res = new Vector3f();
         for (Axis axis : Axis.values()) {
             if (axis == a1) {
@@ -101,23 +108,23 @@ class SplatterSplitter {
             } else if (axis == a2) {
                 add(res, axis, v2);
             } else {
-                add(res, axis, (float) fallback.getComponentAlongAxis(axis));
+                add(res, axis, (float) fallback.get(axis));
             }
         }
         return res;
     }
 
-    private static Pair<Vec2f, Vec2f> packUv(float minU, float maxU, float minV, float maxV, Direction direction) {
+    private static Pair<Vec2, Vec2> packUv(float minU, float maxU, float minV, float maxV, Direction direction) {
         boolean flipU = direction == EAST;
         boolean flipV = direction == SOUTH;
 
-        Vec2f min = new Vec2f(flipU ? maxU : minU, flipV ? maxV : minV);
-        Vec2f max = new Vec2f(flipU ? minU : maxU, flipV ? minV : maxV);
+        Vec2 min = new Vec2(flipU ? maxU : minU, flipV ? maxV : minV);
+        Vec2 max = new Vec2(flipU ? minU : maxU, flipV ? minV : maxV);
         return Pair.of(min, max);
     }
 
     private static float calcUv(double sectionCoord, double centerCoord, float range, float min, float max) {
-        return MathHelper.lerp((float) ((sectionCoord - centerCoord + range) / (2 * range)), min, max);
+        return Mth.lerp((float) ((sectionCoord - centerCoord + range) / (2 * range)), min, max);
     }
 
     private static List<SplatterSection> wrap(Splatter splatter, Stream<SplatterSection> sections) {
@@ -333,7 +340,7 @@ class SplatterSplitter {
 
     private static List<ObjectBooleanPair<Direction>> findAnchors(Splatter splatter, SplatterSection section) {
         // If the block below is a valid anchor and this section is not inside one, just render this section facing normally.
-        BlockPos anchor = section.getBlockPos().offset(splatter.getDirection().getOpposite());
+        BlockPos anchor = section.getBlockPos().relative(splatter.getDirection().getOpposite());
         if (isValidAnchor(splatter.getWorld(), anchor) && !isValidAnchor(splatter.getWorld(), section.getBlockPos())) {
             return null; // Null indicates no special anchor. Meaning just render facing the same direction as the splatter.
         }
@@ -344,10 +351,10 @@ class SplatterSplitter {
         // These directions are the directions the section will be facing when wrapped downwards.
         // They are in turn also the directions in which an anchor should be were this section wrapped upwards.
         Vector3f sectionCenter = section.getCenter();
-        double dx = sectionCenter.getComponentAlongAxis(a1) - splatter.getPos().getComponentAlongAxis(a1);
-        double dz = sectionCenter.getComponentAlongAxis(a2) - splatter.getPos().getComponentAlongAxis(a2);
-        Direction horizontal = Direction.from(a1, dx >= 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE);
-        Direction vertical = Direction.from(a2, dz >= 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE);
+        double dx = sectionCenter.getComponentAlongAxis(a1) - splatter.getPos().get(a1);
+        double dz = sectionCenter.getComponentAlongAxis(a2) - splatter.getPos().get(a2);
+        Direction horizontal = Direction.fromAxisAndDirection(a1, dx >= 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE);
+        Direction vertical = Direction.fromAxisAndDirection(a2, dz >= 0 ? AxisDirection.POSITIVE : AxisDirection.NEGATIVE);
 
         return Stream.of(vertical, horizontal)
                 .map(direction -> {
@@ -357,7 +364,7 @@ class SplatterSplitter {
                     }
 
                     // Then, check if we can wrap downwards.
-                    if (isValidAnchor(splatter.getWorld(), anchor.offset(direction.getOpposite()))) {
+                    if (isValidAnchor(splatter.getWorld(), anchor.relative(direction.getOpposite()))) {
                         return ObjectBooleanPair.of(direction, false);
                     }
 

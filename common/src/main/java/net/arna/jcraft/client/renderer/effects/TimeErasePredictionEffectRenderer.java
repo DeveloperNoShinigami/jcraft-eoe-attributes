@@ -1,30 +1,38 @@
 package net.arna.jcraft.client.renderer.effects;
 
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.util.RenderUtils;
 import net.arna.jcraft.common.attack.moves.kingcrimson.PredictionMove;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.Framebuffer;
-import net.minecraft.client.gl.SimpleFramebuffer;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.Window;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LightType;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.phys.Vec3;
 import java.util.*;
 
 public class TimeErasePredictionEffectRenderer {
     private static int ticksLeft = 0;
-    private static final Map<Entity, Vec3d> predictions = new WeakHashMap<>();
-    private static Framebuffer predictionsBuffer = MinecraftClient.getInstance().getFramebuffer();
+    private static final Map<Entity, Vec3> predictions = new WeakHashMap<>();
+    private static RenderTarget predictionsBuffer = Minecraft.getInstance().getMainRenderTarget();
 
     public static void init() {
         ClientTickEvent.CLIENT_POST.register(client -> {
@@ -33,7 +41,7 @@ public class TimeErasePredictionEffectRenderer {
                 return;
             }
 
-            if (!MinecraftClient.getInstance().isPaused()) {
+            if (!Minecraft.getInstance().isPaused()) {
                 ticksLeft--;
             }
 
@@ -43,8 +51,8 @@ public class TimeErasePredictionEffectRenderer {
         });
 
         RenderSystem.recordRenderCall(() -> {
-            Window window = MinecraftClient.getInstance().getWindow();
-            predictionsBuffer = new SimpleFramebuffer(window.getFramebufferWidth(), window.getFramebufferHeight(), true, true);
+            Window window = Minecraft.getInstance().getWindow();
+            predictionsBuffer = new TextureTarget(window.getWidth(), window.getHeight(), true, true);
         });
     }
 
@@ -54,9 +62,9 @@ public class TimeErasePredictionEffectRenderer {
         }
         ticksLeft = length;
 
-        MinecraftClient client = MinecraftClient.getInstance();
-        for (Entity entity : PredictionMove.getEntitiesToCatch(client.world, JCraftClient.getStandEntity(), client.player)) {
-            predictions.put(entity, entity.getPos());
+        Minecraft client = Minecraft.getInstance();
+        for (Entity entity : PredictionMove.getEntitiesToCatch(client.level, JCraftClient.getStandEntity(), client.player)) {
+            predictions.put(entity, entity.position());
         }
     }
 
@@ -66,7 +74,7 @@ public class TimeErasePredictionEffectRenderer {
     }
 
     @SuppressWarnings("deprecation") // Minecraft does this too.
-    public static void render(MatrixStack stack, Vec3d camPos, ClientWorld world, float tickDelta, VertexConsumerProvider pConsumers) {
+    public static void render(PoseStack stack, Vec3 camPos, ClientLevel world, float tickDelta, MultiBufferSource pConsumers) {
         if (ticksLeft < 0) {
             if (ticksLeft == -1) {
                 predictionsBuffer.clear(false);
@@ -76,69 +84,69 @@ public class TimeErasePredictionEffectRenderer {
         }
 
         // Ensure these are drawn and empty
-        VertexConsumerProvider.Immediate consumers = (VertexConsumerProvider.Immediate) Objects.requireNonNull(pConsumers);
-        consumers.draw(TexturedRenderLayers.getEntitySolid());
-        consumers.draw(TexturedRenderLayers.getEntityCutout());
+        MultiBufferSource.BufferSource consumers = (MultiBufferSource.BufferSource) Objects.requireNonNull(pConsumers);
+        consumers.endBatch(Sheets.solidBlockSheet());
+        consumers.endBatch(Sheets.cutoutBlockSheet());
 
         // Acquire the predictions
-        Set<Map.Entry<Entity, Vec3d>> predictionsSet;
+        Set<Map.Entry<Entity, Vec3>> predictionsSet;
         synchronized (predictions) {
             predictionsSet = new HashSet<>(predictions.entrySet());
         }
 
         // Init frame-buffer
         predictionsBuffer.clear(false);
-        predictionsBuffer.beginWrite(true);
+        predictionsBuffer.bindWrite(true);
 
         // Render entities
-        EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
+        EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
 
-        for (Map.Entry<Entity, Vec3d> prediction : predictionsSet) {
+        for (Map.Entry<Entity, Vec3> prediction : predictionsSet) {
             Entity entity = prediction.getKey();
             if (entity == null || !entity.isAlive()) {
                 continue;
             }
 
-            Vec3d pos = prediction.getValue().subtract(camPos);
-            BlockPos bPos = BlockPos.ofFloored(prediction.getValue());
+            Vec3 pos = prediction.getValue().subtract(camPos);
+            BlockPos bPos = BlockPos.containing(prediction.getValue());
 
-            int blockLight = Math.max(entity.isOnFire() ? 15 : entity.getWorld().getLightLevel(LightType.BLOCK, bPos), 7);
-            int skyLight = Math.max(entity.getWorld().getLightLevel(LightType.SKY, bPos), 7);
-            entityRenderDispatcher.render(entity, pos.x, pos.y - 0.1, pos.z, entity.getYaw(), tickDelta, stack,
-                    consumers, LightmapTextureManager.pack(blockLight, skyLight));
+            int blockLight = Math.max(entity.isOnFire() ? 15 : entity.level().getBrightness(LightLayer.BLOCK, bPos), 7);
+            int skyLight = Math.max(entity.level().getBrightness(LightLayer.SKY, bPos), 7);
+            entityRenderDispatcher.render(entity, pos.x, pos.y - 0.1, pos.z, entity.getYRot(), tickDelta, stack,
+                    consumers, LightTexture.pack(blockLight, skyLight));
         }
 
         // Draw entities to predictions buffer
-        consumers.drawCurrentLayer();
-        consumers.draw(RenderLayer.getEntitySolid(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE));
-        consumers.draw(RenderLayer.getEntityCutout(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE));
-        consumers.draw(RenderLayer.getEntityCutoutNoCull(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE));
-        consumers.draw(RenderLayer.getEntitySmoothCutout(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE));
-        consumers.draw(TexturedRenderLayers.getEntitySolid());
-        consumers.draw(TexturedRenderLayers.getEntityCutout());
+        consumers.endLastBatch();
+        consumers.endBatch(RenderType.entitySolid(TextureAtlas.LOCATION_BLOCKS));
+        consumers.endBatch(RenderType.entityCutout(TextureAtlas.LOCATION_BLOCKS));
+        consumers.endBatch(RenderType.entityCutoutNoCull(TextureAtlas.LOCATION_BLOCKS));
+        consumers.endBatch(RenderType.entitySmoothCutout(TextureAtlas.LOCATION_BLOCKS));
+        consumers.endBatch(Sheets.solidBlockSheet());
+        consumers.endBatch(Sheets.cutoutBlockSheet());
 
         // Restore framebuffer
-        MinecraftClient.getInstance().getFramebuffer().beginWrite(true);
+        Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
 
         // Draw predictions buffer on top of main buffer
-        Window window = MinecraftClient.getInstance().getWindow();
+        Window window = Minecraft.getInstance().getWindow();
         RenderSystem.enableBlend();
         RenderSystem.disableCull();
         RenderSystem.disableDepthTest();
-        RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
-        RenderSystem.setShaderTexture(0, predictionsBuffer.getColorAttachment());
+        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+        RenderSystem.setShaderTexture(0, predictionsBuffer.getColorTextureId());
         RenderUtils.startOverlayRender();
 
-        Tessellator tess = Tessellator.getInstance();
-        BufferBuilder buffer = tess.getBuffer();
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
+        Tesselator tess = Tesselator.getInstance();
+        BufferBuilder buffer = tess.getBuilder();
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
         final float r = 1, g = 0, b = 0, a = 0.33f;
-        buffer.vertex(0, 0, 0).color(r, g, b, a).texture(0, 1).next();
-        buffer.vertex(window.getScaledWidth(), 0, 0).color(r, g, b, a).texture(1, 1).next();
-        buffer.vertex(window.getScaledWidth(), window.getScaledHeight(), 0).color(r, g, b, a).texture(1, 0).next();
-        buffer.vertex(0, window.getScaledHeight(), 0).color(r, g, b, a).texture(0, 0).next();
-        BufferRenderer.drawWithGlobalProgram(buffer.end());
+        buffer.vertex(0, 0, 0).color(r, g, b, a).uv(0, 1).endVertex();
+        buffer.vertex(window.getGuiScaledWidth(), 0, 0).color(r, g, b, a).uv(1, 1).endVertex();
+        buffer.vertex(window.getGuiScaledWidth(), window.getGuiScaledHeight(), 0).color(r, g, b, a).uv(1, 0).endVertex();
+        buffer.vertex(0, window.getGuiScaledHeight(), 0).color(r, g, b, a).uv(0, 0).endVertex();
+        BufferUploader.drawWithShader(buffer.end());
 
         RenderSystem.disableBlend();
         RenderSystem.enableDepthTest();
@@ -146,7 +154,7 @@ public class TimeErasePredictionEffectRenderer {
     }
 
     private static void updatePredictions() {
-        Set<Map.Entry<Entity, Vec3d>> predictionsSet;
+        Set<Map.Entry<Entity, Vec3>> predictionsSet;
         synchronized (predictions) {
             predictionsSet = new HashSet<>(predictions.entrySet());
         }

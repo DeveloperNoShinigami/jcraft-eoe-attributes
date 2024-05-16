@@ -1,23 +1,24 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.BulletProjectile;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.resources.ResourceLocation;
+
 
 public class BulletModel extends GeoModel<BulletProjectile> {
     @Override
-    public Identifier getModelResource(BulletProjectile object) {
+    public ResourceLocation getModelResource(BulletProjectile object) {
         return JCraft.id("geo/bullet.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(BulletProjectile object) {
+    public ResourceLocation getTextureResource(BulletProjectile object) {
         return JCraft.id("textures/entity/projectiles/bullet.png");
     }
 
     @Override
-    public Identifier getAnimationResource(BulletProjectile animatable) {
+    public ResourceLocation getAnimationResource(BulletProjectile animatable) {
         return JCraft.id("animations/knife.animation.json");
     }
 

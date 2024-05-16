@@ -5,8 +5,7 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.moves.base.AbstractEffectInflictingBarrageAttack;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.effect.StatusEffectInstance;
-
+import net.minecraft.world.effect.MobEffectInstance;
 import java.util.List;
 
 @Getter
@@ -16,7 +15,7 @@ public class KnockdownBarrageAttack<A extends IAttacker<? extends A, ?>> extends
     public KnockdownBarrageAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                                   float hitboxSize, float knockback, float offset, int interval, int knockdownDuration) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval,
-                List.of(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), knockdownDuration, 0, true, false)));
+                List.of(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), knockdownDuration, 0, true, false)));
         this.knockdownDuration = knockdownDuration;
     }
 

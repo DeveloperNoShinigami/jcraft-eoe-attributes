@@ -5,7 +5,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.util.JParticleType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
 public class CleaveAttack extends AbstractSimpleAttack<CleaveAttack, SilverChariotEntity> {
     public CleaveAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
@@ -20,7 +20,7 @@ public class CleaveAttack extends AbstractSimpleAttack<CleaveAttack, SilverChari
 
         LivingEntity user = attacker.getUserOrThrow();
         AbstractChargeAttack.prepDetachmentMove(attacker, user);
-        attacker.setFreePos((user.getPos().add(attacker.getUserOrThrow().getRotationVector().multiply(1.5)).toVector3f()));
+        attacker.setFreePos((user.position().add(attacker.getUserOrThrow().getLookAngle().scale(1.5)).toVector3f()));
         attacker.setFree(true);
     }
 

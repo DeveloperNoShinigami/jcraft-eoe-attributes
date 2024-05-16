@@ -6,9 +6,9 @@ import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class SingularityAttack extends AbstractSimpleAttack<SingularityAttack, TheWorldOverHeavenEntity> {
     private final boolean blockBypass;
@@ -20,11 +20,11 @@ public class SingularityAttack extends AbstractSimpleAttack<SingularityAttack, T
     }
 
     @Override
-    protected void processTarget(TheWorldOverHeavenEntity attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource) {
+    protected void processTarget(TheWorldOverHeavenEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         if (blockBypass) {
-            target.removeStatusEffect(JStatusRegistry.DAZED.get());
+            target.removeEffect(JStatusRegistry.DAZED.get());
             StandEntity.stun(target, getStun(), 0);
         }
 

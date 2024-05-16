@@ -4,8 +4,7 @@ import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
 import net.arna.jcraft.common.gravity.util.Gravity;
 import net.arna.jcraft.common.gravity.util.NetworkUtil;
-import net.minecraft.network.PacketByteBuf;
-
+import net.minecraft.network.FriendlyByteBuf;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -20,7 +19,7 @@ public class OverwriteGravityPacket extends GravityPacket {
         initialGravity = _initialGravity;
     }
 
-    public OverwriteGravityPacket(PacketByteBuf buf) {
+    public OverwriteGravityPacket(FriendlyByteBuf buf) {
         int listSize = buf.readInt();
         gravityList = new ArrayList<>();
         for (int i = 0; i < listSize; i++) {
@@ -30,7 +29,7 @@ public class OverwriteGravityPacket extends GravityPacket {
     }
 
     @Override
-    public void write(PacketByteBuf buf) {
+    public void write(FriendlyByteBuf buf) {
         buf.writeInt(gravityList.size());
         for (Gravity gravity : gravityList) {
             NetworkUtil.writeGravity(buf, gravity);

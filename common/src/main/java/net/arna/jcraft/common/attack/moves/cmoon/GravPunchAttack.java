@@ -11,13 +11,12 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.core.Direction;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack, CMoonEntity> {
@@ -30,22 +29,22 @@ public class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack, CMoon
     }
 
     @Override
-    protected void processTarget(CMoonEntity attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource) {
+    protected void processTarget(CMoonEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         Direction oppositeGravity = GravityChangerAPI.getGravityDirection(target).getOpposite();
         GravityChangerAPI.addGravity(target, new Gravity(oppositeGravity, 2, 60, GRAVITY_SOURCE));
-        target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WEIGHTLESS.get(), 60, 0, true, false));
+        target.addEffect(new MobEffectInstance(JStatusRegistry.WEIGHTLESS.get(), 60, 0, true, false));
         // Launches them up relative to their original gravity, to prevent ground clipping
-        JUtils.setVelocity(target, oppositeGravity.getOffsetX() * 0.2, oppositeGravity.getOffsetY() * 0.2, oppositeGravity.getOffsetZ() * 0.2);
+        JUtils.setVelocity(target, oppositeGravity.getStepX() * 0.2, oppositeGravity.getStepY() * 0.2, oppositeGravity.getStepZ() * 0.2);
     }
 
     @Override
-    public void performHook(CMoonEntity attacker, Set<LivingEntity> targets, Set<Box> boxes, DamageSource damageSource, Vec3d forwardPos, Vec3d rotationVector, MoveContext ctx) {
+    public void performHook(CMoonEntity attacker, Set<LivingEntity> targets, Set<AABB> boxes, DamageSource damageSource, Vec3 forwardPos, Vec3 rotationVector, MoveContext ctx) {
         if (targets.isEmpty()) {
             return;
         }
-        JComponentPlatformUtils.getShockwaveHandler(attacker.getWorld()).addShockwave(forwardPos, new Vec3d(GravityChangerAPI.getGravityDirection(attacker).getUnitVector()), 3.0f);
+        JComponentPlatformUtils.getShockwaveHandler(attacker.level()).addShockwave(forwardPos, new Vec3(GravityChangerAPI.getGravityDirection(attacker).step()), 3.0f);
     }
 
     @Override

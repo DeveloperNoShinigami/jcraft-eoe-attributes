@@ -5,7 +5,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class SCChargeAttack extends AbstractChargeAttack<SCChargeAttack, SilverChariotEntity, SilverChariotEntity.State> {
@@ -19,14 +19,14 @@ public class SCChargeAttack extends AbstractChargeAttack<SCChargeAttack, SilverC
     @Override
     public void onInitiate(SilverChariotEntity attacker) {
         super.onInitiate(attacker);
-        attacker.getMoveContext().setFloat(LOOK_DIR_Y, (float) attacker.getUserOrThrow().getRotationVector().y);
+        attacker.getMoveContext().setFloat(LOOK_DIR_Y, (float) attacker.getUserOrThrow().getLookAngle().y);
     }
 
     @Override
-    protected Vec3d advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
-        return attacker.getPos().add(
+    protected Vec3 advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
+        return attacker.position().add(
                 getRotVec(attacker).add(0, attacker.getMoveContext().getFloat(LOOK_DIR_Y), 0)
-                        .multiply(moveDistance / windupPoint)
+                        .scale(moveDistance / windupPoint)
         );
     }
 

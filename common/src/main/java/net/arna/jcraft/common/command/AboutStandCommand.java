@@ -8,87 +8,87 @@ import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
 
 //todo: replace with a Patchouli in-game wikipedia
 @Deprecated(forRemoval = true)
 public class AboutStandCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(CommandManager.literal("stand")
-                .then(CommandManager.literal("about").executes(AboutStandCommand::run)));
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("stand")
+                .then(Commands.literal("about").executes(AboutStandCommand::run)));
     }
 
-    public static int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+    public static int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        ServerPlayer player = context.getSource().getPlayerOrException();
         StandEntity<?, ?> stand = JUtils.getStand(player);
 
         if (stand == null) {
-            context.getSource().sendFeedback(() -> Text.translatable("jcraft.commands.error.nostand"), true);
+            context.getSource().sendSuccess(() -> Component.translatable("jcraft.commands.error.nostand"), true);
             return 0;
         }
 
-        MutableText resp = Text.empty();
+        MutableComponent resp = Component.empty();
 
         // Name
-        resp.append(Text.empty()
-                .append(Text.literal("Name: "))
-                .append(stand.getName().copy().formatted(Formatting.YELLOW))
-                .append(Text.literal("\n")));
+        resp.append(Component.empty()
+                .append(Component.literal("Name: "))
+                .append(stand.getName().copy().withStyle(ChatFormatting.YELLOW))
+                .append(Component.literal("\n")));
 
         // Description
-        resp.append(Text.translatable(String.format("entity.%s.%s%s.info.desc", JCraft.MOD_ID, stand.getStandType().getNameKey(), stand.getModeOrdinal() == 0 ? "" : Integer.toString(stand.getModeOrdinal())))
-                        .formatted(Formatting.GREEN))
-                .append(Text.literal("\n"));
+        resp.append(Component.translatable(String.format("entity.%s.%s%s.info.desc", JCraft.MOD_ID, stand.getStandType().getNameKey(), stand.getModeOrdinal() == 0 ? "" : Integer.toString(stand.getModeOrdinal())))
+                        .withStyle(ChatFormatting.GREEN))
+                .append(Component.literal("\n"));
 
         // Pros & Cons
-        MutableText pros = Text.empty()
-                .append(Text.literal("PROS:").formatted(Formatting.DARK_AQUA))
-                .append(Text.literal("\n"));
+        MutableComponent pros = Component.empty()
+                .append(Component.literal("PROS:").withStyle(ChatFormatting.DARK_AQUA))
+                .append(Component.literal("\n"));
         for (int p = 1; p <= stand.getProCount(); p++) {
             pros
-                    .append(Text.literal("● ").formatted(Formatting.DARK_AQUA))
-                    .append(Text.translatable(String.format("entity.%s.%s.info.pro%d", JCraft.MOD_ID, stand.getStandType().getNameKey(), p)))
-                    .append(Text.literal("\n"));
+                    .append(Component.literal("● ").withStyle(ChatFormatting.DARK_AQUA))
+                    .append(Component.translatable(String.format("entity.%s.%s.info.pro%d", JCraft.MOD_ID, stand.getStandType().getNameKey(), p)))
+                    .append(Component.literal("\n"));
         }
         resp.append(pros);
 
-        MutableText cons = Text.empty()
-                .append(Text.literal("CONS:").formatted(Formatting.DARK_RED))
-                .append(Text.literal("\n"));
+        MutableComponent cons = Component.empty()
+                .append(Component.literal("CONS:").withStyle(ChatFormatting.DARK_RED))
+                .append(Component.literal("\n"));
         for (int c = 1; c <= stand.getConCount(); c++) {
             cons
-                    .append(Text.literal("● ").formatted(Formatting.DARK_RED))
-                    .append(Text.translatable(String.format("entity.%s.%s.info.con%d", JCraft.MOD_ID, stand.getStandType().getNameKey(), c)))
-                    .append(Text.literal("\n"));
+                    .append(Component.literal("● ").withStyle(ChatFormatting.DARK_RED))
+                    .append(Component.translatable(String.format("entity.%s.%s.info.con%d", JCraft.MOD_ID, stand.getStandType().getNameKey(), c)))
+                    .append(Component.literal("\n"));
         }
         resp.append(cons);
 
-        resp.append(Text.literal("\n"));
+        resp.append(Component.literal("\n"));
 
         // Moves
-        MutableText moves = Text.empty()
-                .append(Text.literal("MOVES:").formatted(Formatting.DARK_GREEN))
-                .append(Text.literal("\n"));
+        MutableComponent moves = Component.empty()
+                .append(Component.literal("MOVES:").withStyle(ChatFormatting.DARK_GREEN))
+                .append(Component.literal("\n"));
 
         MoveMap<?, ?> moveMap = stand.getMoveMap();
         for (MoveType type : MoveType.values()) {
             for (MoveMap.Entry<?, ?> entry : moveMap.getEntries(type)) {
                 // Move itself
-                appendMove(entry, moves, Text.literal("● ").formatted(Formatting.GREEN), false);
+                appendMove(entry, moves, Component.literal("● ").withStyle(ChatFormatting.GREEN), false);
 
                 // Crouching variant
                 if (entry.getCrouchingVariant() != null) {
-                    appendMove(entry.getCrouchingVariant(), moves, Text.literal("  ● CROUCHING ").formatted(Formatting.DARK_AQUA), true);
+                    appendMove(entry.getCrouchingVariant(), moves, Component.literal("  ● CROUCHING ").withStyle(ChatFormatting.DARK_AQUA), true);
                 }
 
                 // Aerial variant
                 if (entry.getAerialVariant() != null) {
-                    appendMove(entry.getAerialVariant(), moves, Text.literal("  ● AERIAL ").formatted(Formatting.GOLD), true);
+                    appendMove(entry.getAerialVariant(), moves, Component.literal("  ● AERIAL ").withStyle(ChatFormatting.GOLD), true);
                 }
             }
         }
@@ -96,27 +96,27 @@ public class AboutStandCommand {
 
         // Free Space
         if (stand.freespace != null) {
-            resp.append(Text.literal("\n"));
-            resp.append(Text.literal(stand.freespace));
+            resp.append(Component.literal("\n"));
+            resp.append(Component.literal(stand.freespace));
         }
 
-        context.getSource().sendFeedback(() -> resp, false);
+        context.getSource().sendSuccess(() -> resp, false);
         return 1;
     }
 
-    public static void appendMove(MoveMap.Entry<?, ?> entry, MutableText moves, MutableText base, boolean isVariant) {
+    public static void appendMove(MoveMap.Entry<?, ?> entry, MutableComponent moves, MutableComponent base, boolean isVariant) {
         moves
                 .append(base
-                        .append(isVariant ? Text.empty() : Text.empty()
+                        .append(isVariant ? Component.empty() : Component.empty()
                                 .append(entry.getType().getFriendlyName())
-                                .append(Text.empty()
-                                        .append(Text.literal(" ("))
-                                        .append(entry.getType().getKey().copy().formatted(Formatting.AQUA))
-                                        .append(Text.literal(")")))))
-                .append(Text.literal(" - "))
-                .append(entry.getMove().getName().copy().formatted(Formatting.DARK_PURPLE))
-                .append(Text.literal(" - "))
+                                .append(Component.empty()
+                                        .append(Component.literal(" ("))
+                                        .append(entry.getType().getKey().copy().withStyle(ChatFormatting.AQUA))
+                                        .append(Component.literal(")")))))
+                .append(Component.literal(" - "))
+                .append(entry.getMove().getName().copy().withStyle(ChatFormatting.DARK_PURPLE))
+                .append(Component.literal(" - "))
                 .append(entry.getMove().getDescription())
-                .append(Text.literal("\n"));
+                .append(Component.literal("\n"));
     }
 }

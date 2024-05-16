@@ -16,25 +16,32 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.Comparator;
 import java.util.List;
@@ -60,8 +67,8 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
             .withLaunch()
             .allowHitUser()
             .withInfo(
-                    Text.literal("Grab (Final Hit)"),
-                    Text.empty()
+                    Component.literal("Grab (Final Hit)"),
+                    Component.empty()
             );
     public static final SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>> GRAB_HIT = new SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>>(0,
             34, 0.75f, 1f, 10, 2f, 0f, 0f, IntSet.of(6, 8, 10, 12, 14, 16, 18))
@@ -70,8 +77,8 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
             .withFinisher(19, GRAB_HIT_FINAL)
             .allowHitUser()
             .withInfo(
-                    Text.literal("Grab (Final Hit)"),
-                    Text.empty()
+                    Component.literal("Grab (Final Hit)"),
+                    Component.empty()
             );
     public static final GrabAttack<PurpleHazeEntity, State> GRAB = new GrabAttack<>(
             280, 12, 24, 0.75f, 0f, 45, 1.5f, 0f, 0f,
@@ -81,8 +88,8 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
             .withImpactSound(JSoundRegistry.PH_GRAB_HIT.get())
             .allowHitUser()
             .withInfo(
-                    Text.literal("Grab"),
-                    Text.literal("unblockable, combo finisher")
+                    Component.literal("Grab"),
+                    Component.literal("unblockable, combo finisher")
             );
 
     private static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> PLAY = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
@@ -92,13 +99,13 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                 attacker.setMoveStun(0);
                 attacker.desummon();
             })
-            .withInfo(Text.literal("Playing with flower"), Text.empty());
+            .withInfo(Component.literal("Playing with flower"), Component.empty());
 
     public static final int MAX_RAGE = 20 * 60;
     private int rage = 0;
     private boolean flowerable = false, hasFlower = false, toEvolve = false;
 
-    public PurpleHazeEntity(World worldIn) {
+    public PurpleHazeEntity(Level worldIn) {
         super(StandType.PURPLE_HAZE, worldIn);
 
         conCount = 2;
@@ -133,7 +140,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     public void desummon() {
         if (toEvolve && hasUser()) {
             JComponentPlatformUtils.getStandData(getUserOrThrow()).setType(StandType.PURPLE_HAZE_DISTORTION);
-            JCraft.summon(getWorld(), getUserOrThrow());
+            JCraft.summon(level(), getUserOrThrow());
         }
 
         super.desummon();
@@ -184,13 +191,13 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
 
         LivingEntity stateChecker = (isRemote() && !remoteControllable()) ? this : getUserOrThrow();
 
-        if (hasUser() && !stateChecker.isOnGround() && entry.getAerialVariant() != null) {
+        if (hasUser() && !stateChecker.onGround() && entry.getAerialVariant() != null) {
             entry = entry.getAerialVariant();
         }
-        if (hasUser() && stateChecker.isSneaking() && entry.getCrouchingVariant() != null) {
+        if (hasUser() && stateChecker.isShiftKeyDown() && entry.getCrouchingVariant() != null) {
             entry = entry.getCrouchingVariant();
         }
-        if (hasUser() && !stateChecker.isOnGround() && entry.getAerialVariant() != null) {
+        if (hasUser() && !stateChecker.onGround() && entry.getAerialVariant() != null) {
             entry = entry.getAerialVariant();
         }
 
@@ -214,20 +221,20 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
             return;
         }
         // Projectile deflection
-        List<ProjectileEntity> toDeflect = this.getWorld().getEntitiesByClass(ProjectileEntity.class, this.getBoundingBox().expand(0.75f), EntityPredicates.VALID_ENTITY);
+        List<Projectile> toDeflect = this.level().getEntitiesOfClass(Projectile.class, this.getBoundingBox().inflate(0.75f), EntitySelector.ENTITY_STILL_ALIVE);
 
-        for (ProjectileEntity projectile : toDeflect) {
+        for (Projectile projectile : toDeflect) {
             if (projectile.getOwner() == getUserOrThrow()) {
                 continue;
             }
-            projectile.setVelocity(projectile.getVelocity().multiply(-0.5).add(0, -0.1, 0));
-            projectile.velocityModified = true;
+            projectile.setDeltaMovement(projectile.getDeltaMovement().scale(-0.5).add(0, -0.1, 0));
+            projectile.hurtMarked = true;
         }
 
         if (!isRemote()) {
             stun(getUserOrThrow(), 2, 2);
         }
-        getUserOrThrow().addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 5, 3, false, false, true));
+        getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 5, 3, false, false, true));
     }
 
     @Override
@@ -237,7 +244,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
         if (hasFlower) {
             if (getMoveStun() > 0) {
                 rage = 0;
-                if (navigation.isFollowingPath()) {
+                if (navigation.isInProgress()) {
                     navigation.stop();
                 }
             } else {
@@ -253,7 +260,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
             }
             LivingEntity user = getUser();
 
-            if (!getWorld().isClient()) {
+            if (!level().isClientSide()) {
                 boolean isRemote = isRemote();
 
                 if (!remoteControllable()) {
@@ -267,10 +274,10 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                     }
 
                     if (target == null) {
-                        List<LivingEntity> potentialTargets = getWorld().getEntitiesByClass(
+                        List<LivingEntity> potentialTargets = level().getEntitiesOfClass(
                                 LivingEntity.class,
-                                getBoundingBox().expand(64.0),
-                                EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(EntityPredicates.VALID_LIVING_ENTITY));
+                                getBoundingBox().inflate(64.0),
+                                EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(EntitySelector.LIVING_ENTITY_STILL_ALIVE));
                         potentialTargets.remove(this);
 
                         Comparator<Entity> distanceComparator = (entity1, entity2) -> {
@@ -281,7 +288,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                         potentialTargets.sort(distanceComparator);
 
                         for (LivingEntity potentialTarget : potentialTargets) {
-                            if (!canSee(potentialTarget)) {
+                            if (!hasLineOfSight(potentialTarget)) {
                                 continue;
                             }
                             if (potentialTarget instanceof StandEntity<?, ?> standEntity && standEntity.hasUser()) {
@@ -289,7 +296,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                                 break;
                             }
                             if (potentialTarget == user) {
-                                if (age % 20 == 0 && random.nextDouble() * MAX_RAGE <= rage) {
+                                if (tickCount % 20 == 0 && random.nextDouble() * MAX_RAGE <= rage) {
                                     setTarget(user);
                                     break;
                                 }
@@ -299,14 +306,14 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                             break;
                         }
                     } else {
-                        double speed = getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+                        double speed = getAttributeValue(Attributes.MOVEMENT_SPEED);
                         // user is not null (see above)
-                        if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
-                            speed = user.getMovementSpeed();
+                        if (user.hasEffect(JStatusRegistry.DAZED.get())) {
+                            speed = user.getSpeed();
                         }
-                        if (age % 4 == 0) // Pathfinding is expensive
+                        if (tickCount % 4 == 0) // Pathfinding is expensive
                         {
-                            navigation.startMovingTo(target, speed);
+                            navigation.moveTo(target, speed);
                         }
 
                         standUserAI(this, target, this);
@@ -318,7 +325,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                 }
 
                 if (isRemote) {
-                    tickRemoteState(getMoveControl().getSpeed(), getMoveControl().sidewaysMovement, isOnGround());
+                    tickRemoteState(getMoveControl().getSpeedModifier(), getMoveControl().strafeRight, onGround());
                 }
             }
         }
@@ -362,19 +369,19 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        final ItemStack stack = player.getStackInHand(hand);
-        if (player == getUser() && stack.isIn(ItemTags.FLOWERS)) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        final ItemStack stack = player.getItemInHand(hand);
+        if (player == getUser() && stack.is(ItemTags.FLOWERS)) {
             if (!flowerable) {
-                return ActionResult.FAIL;
+                return InteractionResult.FAIL;
             }
 
-            setStackInHand(Hand.MAIN_HAND, stack.copy());
-            stack.decrement(1);
+            setItemInHand(InteractionHand.MAIN_HAND, stack.copy());
+            stack.shrink(1);
             flowerable = false;
             hasFlower = true;
 
-            if (!getWorld().isClient()) {
+            if (!level().isClientSide()) {
                 setMove(PLAY, State.PLAY);
 
                 final CommonPhComponent ph = JComponentPlatformUtils.getPhData(player);
@@ -384,9 +391,9 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                     toEvolve = true;
                 }
             }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     // Animation code

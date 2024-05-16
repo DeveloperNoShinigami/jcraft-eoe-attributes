@@ -1,5 +1,6 @@
 package net.arna.jcraft.client.rendering.handler;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.event.events.client.ClientTickEvent;
 import ladysnake.satin.api.event.PostWorldRenderCallbackV2;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
@@ -8,19 +9,18 @@ import ladysnake.satin.api.managed.ManagedShaderEffect;
 import ladysnake.satin.api.managed.ShaderEffectManager;
 import ladysnake.satin.api.util.GlMatrices;
 import net.arna.jcraft.JCraft;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ZaWarudoShaderHandler extends StandShaderHandler {
     public static ZaWarudoShaderHandler INSTANCE = new ZaWarudoShaderHandler();
-    public final Identifier SHADER_ID = JCraft.id("shaders/post/za_warudo.json");
+    public final ResourceLocation SHADER_ID = JCraft.id("shaders/post/za_warudo.json");
 
     public float prevRadius = 0f;
     public float radius = 0f;
@@ -31,23 +31,23 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
     private final ManagedShaderEffect SHADER = ShaderEffectManager.getInstance().manage(SHADER_ID, this::setup);
 
     private void setup(ManagedShaderEffect managedShaderEffect) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        SHADER.setSamplerUniform("DepthSampler", ((ReadableDepthFramebuffer) mc.getFramebuffer()).getStillDepthMap());
-        SHADER.setUniformValue("ViewPort", 0, 0, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight());
+        Minecraft mc = Minecraft.getInstance();
+        SHADER.setSamplerUniform("DepthSampler", ((ReadableDepthFramebuffer) mc.getMainRenderTarget()).getStillDepthMap());
+        SHADER.setUniformValue("ViewPort", 0, 0, mc.getWindow().getWidth(), mc.getWindow().getHeight());
     }
 
     @Override
-    public void onWorldRendered(@NotNull MatrixStack matrices, @NotNull Camera camera, float tickDelta, long nanoTime) {
+    public void onWorldRendered(@NotNull PoseStack matrices, @NotNull Camera camera, float tickDelta, long nanoTime) {
         if (renderingEffect) {
             SHADER.setUniformValue("InverseTransformMatrix", GlMatrices.getInverseTransformMatrix(projectionMatrix));
-            Vec3d cameraPos = camera.getPos();
+            Vec3 cameraPos = camera.getPosition();
             SHADER.setUniformValue("CameraPosition", (float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
             if (shaderSourceEntity != null) {
                 SHADER.setUniformValue(
                         "Center",
-                        lerp(shaderSourceEntity.getX(), shaderSourceEntity.prevX, tickDelta),
-                        lerp(shaderSourceEntity.getY() + shaderSourceEntity.getHeight() / 2, shaderSourceEntity.prevY + shaderSourceEntity.getHeight() / 2, tickDelta),
-                        lerp(shaderSourceEntity.getZ(), shaderSourceEntity.prevZ, tickDelta)
+                        lerp(shaderSourceEntity.getX(), shaderSourceEntity.xo, tickDelta),
+                        lerp(shaderSourceEntity.getY() + shaderSourceEntity.getBbHeight() / 2, shaderSourceEntity.yo + shaderSourceEntity.getBbHeight() / 2, tickDelta),
+                        lerp(shaderSourceEntity.getZ(), shaderSourceEntity.zo, tickDelta)
                 );
             }
             SHADER.setUniformValue("Radius", Math.max(0f, lerp(radius, prevRadius, tickDelta)));
@@ -56,7 +56,8 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void tick(MinecraftClient client) {
+    public void tick(Minecraft client) {
+
        if (shouldRender) {
             if (!renderingEffect) {
                 SHADER.setUniformValue("OuterSat", 1f);
@@ -85,7 +86,7 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
     }
 
     private float lerp(double n, double prevN, float tickDelta) {
-        return (float) MathHelper.lerp(tickDelta, prevN, n);
+        return (float) Mth.lerp(tickDelta, prevN, n);
     }
 
     private boolean hasFinishedAnimation() {

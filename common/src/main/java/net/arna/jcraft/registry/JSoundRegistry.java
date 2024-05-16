@@ -2,17 +2,15 @@ package net.arna.jcraft.registry;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
 
 import static net.arna.jcraft.JCraft.SOUNDS;
 
 public interface JSoundRegistry {
 
     static RegistrySupplier<SoundEvent> register(String name) {
-        var event = SoundEvent.of(JCraft.id(name));
-        return SOUNDS.register(event.getId().getPath(), () -> event);
+        var event = SoundEvent.createVariableRangeEvent(JCraft.id(name));
+        return SOUNDS.register(event.getLocation().getPath(), () -> event);
     }
     
 

@@ -2,11 +2,11 @@ package net.arna.jcraft.fabric.common.terrablender;
 
 import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.registry.JBiomeRegistry;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.util.MultiNoiseUtil;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Climate;
 import terrablender.api.Region;
 import terrablender.api.RegionType;
 import terrablender.api.VanillaParameterOverlayBuilder;
@@ -15,13 +15,13 @@ import terrablender.api.ParameterUtils.*;
 import java.util.function.Consumer;
 
 public class OverworldRegionFabric extends Region {
-    public OverworldRegionFabric(Identifier name, int weight) {
+    public OverworldRegionFabric(ResourceLocation name, int weight) {
         super(name, RegionType.OVERWORLD, weight);
     }
 
     // see https://minecraft.fandom.com/wiki/Biome#Overworld_3
     @Override
-    public void addBiomes(Registry<Biome> registry, Consumer<Pair<MultiNoiseUtil.NoiseHypercube, RegistryKey<Biome>>> mapper) {
+    public void addBiomes(Registry<Biome> registry, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> mapper) {
         VanillaParameterOverlayBuilder builder = new VanillaParameterOverlayBuilder();
         // Devil's Palm: The parameters for this biome are chosen to resemble the ones for the desert biome.
         new ParameterPointListBuilder()

@@ -10,9 +10,16 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import software.bernie.geckolib.animatable.GeoEntity;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 
 import java.util.Set;
 
@@ -43,7 +50,7 @@ public class RekkaAttack<A extends IAttacker<A, S> & GeoEntity, S extends Enum<S
         if (rekkaLevel == 3) {
             for (LivingEntity target : targets) {
                 if (!JUtils.isBlocking(target)) {
-                    target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 50, 0, true, false));
+                    target.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 50, 0, true, false));
                 }
             }
         }

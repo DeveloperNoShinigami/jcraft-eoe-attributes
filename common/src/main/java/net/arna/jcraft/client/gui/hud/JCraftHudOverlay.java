@@ -12,17 +12,17 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;
 
 @Environment(EnvType.CLIENT)
 public class JCraftHudOverlay {
-    private static final Identifier EMPTY_GAUGE = JCraft.id("textures/gui/empty_gauge.png");
-    private static final Identifier FULL_GAUGE = JCraft.id("textures/gui/full_gauge.png");
+    private static final ResourceLocation EMPTY_GAUGE = JCraft.id("textures/gui/empty_gauge.png");
+    private static final ResourceLocation FULL_GAUGE = JCraft.id("textures/gui/full_gauge.png");
     private static final int gaugeWidth = 42;
     private static int gaugeHeightOffset;
     private static final int gaugeHeightOffsetMax = -65;
@@ -31,18 +31,18 @@ public class JCraftHudOverlay {
     private static final Gauge TIME_ACCEL_GAUGE = new Gauge(1.0f, 0.8f, 0.0f, MadeInHeavenEntity.MAXIMUM_SPEEDOMETER);
     private static final Gauge BLOODLUST_GAUGE = new Gauge(0.8f, 0.1f, 0.2f, 5);
 
-    public static void render(DrawContext ctx) {
-        MinecraftClient client = MinecraftClient.getInstance();
+    public static void render(GuiGraphics ctx) {
+        Minecraft client = Minecraft.getInstance();
         if (client == null) {
             return;
         }
 
-        int width = client.getWindow().getScaledWidth();
-        int height = client.getWindow().getScaledHeight();
+        int width = client.getWindow().getGuiScaledWidth();
+        int height = client.getWindow().getGuiScaledHeight();
         int x = width / 2;
 
-        ClientPlayerEntity player = client.player;
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        LocalPlayer player = client.player;
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
         gaugeHeightOffset = gaugeHeightOffsetMax;
         int gaugeX = x - gaugeWidth / 2;
@@ -80,16 +80,16 @@ public class JCraftHudOverlay {
             this(color.x(), color.y(), color.z(), max);
         }
 
-        public void render(DrawContext ctx, int x, int y, int value) {
+        public void render(GuiGraphics ctx, int x, int y, int value) {
             render(ctx, red, green, blue, x, y, value);
         }
 
-        public void render(DrawContext ctx, float r, float g, float b, int x, int y, int value) {
+        public void render(GuiGraphics ctx, float r, float g, float b, int x, int y, int value) {
             RenderSystem.setShaderColor(r, g, b, 1);
             //RenderSystem.setShaderTexture(0, EMPTY_GAUGE);
-            ctx.drawTexture(EMPTY_GAUGE, x, y, 0, 0, gaugeWidth, 5, gaugeWidth, 5);
+            ctx.blit(EMPTY_GAUGE, x, y, 0, 0, gaugeWidth, 5, gaugeWidth, 5);
             //RenderSystem.setShaderTexture(0, FULL_GAUGE);
-            ctx.drawTexture(FULL_GAUGE, x, y, 0, 0, value * gaugeWidth / max, 5, gaugeWidth, 5);
+            ctx.blit(FULL_GAUGE, x, y, 0, 0, value * gaugeWidth / max, 5, gaugeWidth, 5);
             gaugeHeightOffset -= 6;
             RenderSystem.setShaderColor(1, 1, 1, 1f);
         }

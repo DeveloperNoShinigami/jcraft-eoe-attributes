@@ -1,5 +1,6 @@
 package net.arna.jcraft.client.rendering.handler;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.event.events.client.ClientTickEvent;
 import ladysnake.satin.api.event.PostWorldRenderCallbackV2;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
@@ -7,9 +8,8 @@ import ladysnake.satin.api.managed.ManagedShaderEffect;
 import ladysnake.satin.api.managed.ShaderEffectManager;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 
 public class EpitaphVignetteShaderHandler extends StandShaderHandler {
@@ -21,7 +21,7 @@ public class EpitaphVignetteShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void onWorldRendered(@NotNull MatrixStack matrices, @NotNull Camera camera, float tickDelta, long nanoTime) {
+    public void onWorldRendered(@NotNull PoseStack matrices, @NotNull Camera camera, float tickDelta, long nanoTime) {
         SHADER.setUniformValue("Intensity", EpitaphOverlay.getVignetteIntensity());
         SHADER.setUniformValue("Extend", EpitaphOverlay.getVignetteExtend());
     }
@@ -32,7 +32,7 @@ public class EpitaphVignetteShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void tick(MinecraftClient client) {}
+    public void tick(Minecraft client) {}
 
     public void init() {
         PostWorldRenderCallbackV2.EVENT.register(this);

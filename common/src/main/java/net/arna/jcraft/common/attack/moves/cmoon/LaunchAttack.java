@@ -8,11 +8,10 @@ import net.arna.jcraft.common.entity.stand.CMoonEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.Vec3i;
-
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.BlockState;
 import java.util.Set;
 
 public class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoonEntity> {
@@ -27,21 +26,21 @@ public class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoonEntity
     public @NonNull Set<LivingEntity> perform(CMoonEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        BlockProjectile block = new BlockProjectile(JEntityTypeRegistry.BLOCK_PROJECTILE.get(), attacker.getWorld());
-        BlockState steppingState = attacker.getSteppingBlockState();
-        if (steppingState.isAir() || !steppingState.isOpaque()) {
-            block.setBlockStack(Items.STONE.getDefaultStack());
+        BlockProjectile block = new BlockProjectile(JEntityTypeRegistry.BLOCK_PROJECTILE.get(), attacker.level());
+        BlockState steppingState = attacker.getBlockStateOn();
+        if (steppingState.isAir() || !steppingState.canOcclude()) {
+            block.setBlockStack(Items.STONE.getDefaultInstance());
         } else {
-            block.setBlockStack(steppingState.getBlock().asItem().getDefaultStack());
+            block.setBlockStack(steppingState.getBlock().asItem().getDefaultInstance());
         }
 
-        Vec3i hoverDir = GravityChangerAPI.getGravityDirection(user).getVector().multiply(-1);
+        Vec3i hoverDir = GravityChangerAPI.getGravityDirection(user).getNormal().multiply(-1);
 
         block.setMaster(user);
-        block.refreshPositionAndAngles(attacker.getX() + hoverDir.getX() * 1.5, attacker.getY() + hoverDir.getY() * 1.5,
-                attacker.getZ() + hoverDir.getZ() * 1.5, attacker.getYaw(), attacker.getPitch());
-        block.setVelocity(hoverDir.getX() * 0.4, hoverDir.getY() * 0.4, hoverDir.getZ() * 0.4);
-        attacker.getWorld().spawnEntity(block);
+        block.moveTo(attacker.getX() + hoverDir.getX() * 1.5, attacker.getY() + hoverDir.getY() * 1.5,
+                attacker.getZ() + hoverDir.getZ() * 1.5, attacker.getYRot(), attacker.getXRot());
+        block.setDeltaMovement(hoverDir.getX() * 0.4, hoverDir.getY() * 0.4, hoverDir.getZ() * 0.4);
+        attacker.level().addFreshEntity(block);
 
         return targets;
     }

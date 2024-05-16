@@ -16,20 +16,26 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -39,7 +45,7 @@ import static net.arna.jcraft.common.attack.moves.silverchariot.CircleSlashAttac
 public class SilverChariotEntity extends StandEntity<SilverChariotEntity, SilverChariotEntity.State> {
     public static final LastShotAttack LAST_SHOT = new LastShotAttack(140, 12, 15, 1f)
             .withAnim(State.LAST_SHOT)
-            .withInfo(Text.literal("Last Shot"), Text.literal("Silver Chariot fires his rapier, " +
+            .withInfo(Component.literal("Last Shot"), Component.literal("Silver Chariot fires his rapier, " +
                     "which can bounce 5 times off walls, nerfs all hitboxes and damage by 25% until returned"));
     public static final SimpleAttack<SilverChariotEntity> LIGHT_FOLLOWUP = new SimpleAttack<SilverChariotEntity>(
             0, 6, 14, 0.65f, 6f, 12, 1.5f, 1.2f, -0.1f)
@@ -49,8 +55,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             .withBlockStun(4)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Slash"),
-                    Text.literal("quick combo finisher")
+                    Component.literal("Slash"),
+                    Component.literal("quick combo finisher")
             );
     public static final SimpleAttack<SilverChariotEntity> LIGHT = SimpleAttack.<SilverChariotEntity>lightAttack(5, 9, 0.65f, 5f,
                     11, 0.15f, -0.1f)
@@ -58,15 +64,15 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             .withCrouchingVariant(LAST_SHOT)
             .withSound(JSoundRegistry.SC_POKE.get())
             .withInfo(
-                    Text.literal("Stab"),
-                    Text.literal("quick combo starter, links into Spinning Blade while armor is off")
+                    Component.literal("Stab"),
+                    Component.literal("quick combo starter, links into Spinning Blade while armor is off")
             );
     public static final MainBarrageAttack<SilverChariotEntity> BARRAGE = new MainBarrageAttack<SilverChariotEntity>(
             240, 0, 40, 0.65f, 0.9f, 25, 2.25f, 0.1f, 0f, 3, 1.25F)
             .withSound(JSoundRegistry.SC_BARRAGE.get())
             .withInfo(
-                    Text.literal("Barrage"),
-                    Text.literal("fast reliable combo starter/extender, high stun")
+                    Component.literal("Barrage"),
+                    Component.literal("fast reliable combo starter/extender, high stun")
             );
     public static final SimpleAttack<SilverChariotEntity> HEAVY = new SimpleAttack<SilverChariotEntity>(
             200, 20, 28, 0.65f, 8f, 10, 2f, 1.5f, 0f)
@@ -76,8 +82,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             .withHyperArmor()
             .withLaunch()
             .withInfo(
-                    Text.literal("Impaling Thrust"),
-                    Text.literal("slow, uninterruptible launcher")
+                    Component.literal("Impaling Thrust"),
+                    Component.literal("slow, uninterruptible launcher")
             );
 
     public static final SpinBarrageAttack ANUBIS_SPIN_BARRAGE = new SpinBarrageAttack(0, 7, 24,
@@ -85,26 +91,26 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             .withAnim(State.SPIN_2)
             .withSound(JSoundRegistry.SC_SPIN.get())
             .withInfo(
-                    Text.literal("Divine Blade"),
-                    Text.literal("fast reliable combo starter/extender, low stun")
+                    Component.literal("Divine Blade"),
+                    Component.literal("fast reliable combo starter/extender, low stun")
             );
     public static final BarrageAttack<SilverChariotEntity> SPIN_BARRAGE = new BarrageAttack<SilverChariotEntity>(240, 7, 24,
             0.65f, 1f, 10, 2f, 0.1f, -0.2f, 2)
             .withFollowup(ANUBIS_SPIN_BARRAGE)
             .withSound(JSoundRegistry.SC_SPIN.get())
             .withInfo(
-                    Text.literal("Spinning Blade"),
-                    Text.literal("fast reliable combo starter/extender, low stun")
+                    Component.literal("Spinning Blade"),
+                    Component.literal("fast reliable combo starter/extender, low stun")
             );
 
     public static final RayDartAttack RAY_DART_LOW = new RayDartAttack(100, 10, 18,
             0.65f, 6f, 20, 1.75f, 0.25f, 0.2f)
             .withSound(JSoundRegistry.SC_CHARGE.get())
-            .withSound(SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP)
+            .withSound(SoundEvents.PLAYER_ATTACK_SWEEP)
             .withBlockStun(9)
             .withInfo(
-                    Text.literal("Lacerate"),
-                    Text.literal("Anubis Chariot and the user charge forward, high stun, low blockstun.")
+                    Component.literal("Lacerate"),
+                    Component.literal("Anubis Chariot and the user charge forward, high stun, low blockstun.")
             );
     public static final RayDartAttack RAY_DART_HIGH = new RayDartAttack(100, 12, 20,
             0.65f, 6f, 15, 2.0f, 0.25f, 0.2f)
@@ -114,30 +120,30 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             .withBlockStun(16)
             .withExtraHitBox(1, 1, 1)
             .withInfo(
-                    Text.literal("Split"),
-                    Text.literal("Anubis Chariot and the user charge forward, low stun, high blockstun.")
+                    Component.literal("Split"),
+                    Component.literal("Anubis Chariot and the user charge forward, low stun, high blockstun.")
             );
     public static final CleaveAttack CLEAVE = new CleaveAttack(260, 12, 21, 0.75f, 9f,
             20, 2.5f, 0.8f, 0f)
             .withSound(JSoundRegistry.SC_CLEAVE.get())
-            .withImpactSound(SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP)
+            .withImpactSound(SoundEvents.PLAYER_ATTACK_SWEEP)
             .withHyperArmor()
             .withInfo(
-                    Text.literal("Cleave"),
-                    Text.literal("Silver Chariot detaches from the user, delivering an uninterruptible, combo-starting slice")
+                    Component.literal("Cleave"),
+                    Component.literal("Silver Chariot detaches from the user, delivering an uninterruptible, combo-starting slice")
             );
     public static final SCChargeAttack CHARGE = new SCChargeAttack(280, 5, 19, 8f,
             5f, 17, 1.5f, 0.25f, 0f, State.P_CHARGE_HIT)
             .withSound(JSoundRegistry.SC_SUMMON.get())
             .withBackstab(false)
             .withInfo(
-                    Text.literal("Shooting Star"),
-                    Text.literal("Silver Chariot detaches from the user and charges in the looked direction, combo starter/extender")
+                    Component.literal("Shooting Star"),
+                    Component.literal("Silver Chariot detaches from the user and charges in the looked direction, combo starter/extender")
             );
     public static final SCCounterAttack COUNTER = new SCCounterAttack(480, 4, 34, 0.5f)
             .withInfo(
-                    Text.literal("Counter"),
-                    Text.literal("0.2s windup, 1.5s duration, stuns when hit")
+                    Component.literal("Counter"),
+                    Component.literal("0.2s windup, 1.5s duration, stuns when hit")
             );
     public static final SimpleMultiHitAttack<SilverChariotEntity> GOD_OF_DEATH_FINAL = new SimpleMultiHitAttack<SilverChariotEntity>(
             0, 59, 0.65f, 6f, 20, 2.5f, 1.25f, 0f,
@@ -146,8 +152,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             .withLaunch()
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withInfo(
-                    Text.literal("God of Death (Final Hit)"),
-                    Text.empty()
+                    Component.literal("God of Death (Final Hit)"),
+                    Component.empty()
             );
     public static final GodOfDeathHitAttack GOD_OF_DEATH_HIT = new GodOfDeathHitAttack(0, 59, 0.65f,
             4.5f, 32, 2f, 0.25f, 0f, IntSet.of(13, 23))
@@ -155,24 +161,24 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withStunType(StunType.UNBURSTABLE)
             .withInfo(
-                    Text.literal("God of Death (Hit)"),
-                    Text.empty()
+                    Component.literal("God of Death (Hit)"),
+                    Component.empty()
             );
     public static final GodOfDeathAttack GOD_OF_DEATH = new GodOfDeathAttack(1000, 23, 28,
             0.65f, 4f, 40, 1.75f, 0f, 0f)
             .withFollowup(GOD_OF_DEATH_HIT)
             .withStunType(StunType.UNBURSTABLE)
             .withInfo(
-                    Text.literal("God of Death"),
-                    Text.literal("high-damage beatdown, 1.5s stun on whiff, cannot be combo broken")
+                    Component.literal("God of Death"),
+                    Component.literal("high-damage beatdown, 1.5s stun on whiff, cannot be combo broken")
             );
     public static final ArmorOffAttack ARMOR_OFF = new ArmorOffAttack(1200, 6, 15, 0.65f,
             4f, 7, 1.75f, 0.75f, 0f)
             .withSound(JSoundRegistry.SC_ARMOROFF.get())
             .withLaunch()
             .withInfo(
-                    Text.literal("Armor Off"),
-                    Text.literal("25s of faster moves")
+                    Component.literal("Armor Off"),
+                    Component.literal("25s of faster moves")
             );
     public static final CircleSlashAttack CIRCLE_SLASH = new CircleSlashAttack(0, 2, 20,
             0.65f, 5f, 20, 1.75f, 0f, 0f)
@@ -180,29 +186,29 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             .withLaunch()
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Circle Slash (Hit)"),
-                    Text.empty()
+                    Component.literal("Circle Slash (Hit)"),
+                    Component.empty()
             );
     public static final HoldableMove<SilverChariotEntity, State> CIRCLE_CHARGE = new HoldableMove<>(
             260, 101, 100, 0.65f, CIRCLE_SLASH, State.CIRCLE_SLASH, 15)
             .withInitAction((attacker, user, ctx) -> ctx.setInt(CHARGE_TIME, 0))
             .withArmor(2)
             .withInfo(
-                    Text.literal("Circle Slash"),
-                    Text.literal("""
+                    Component.literal("Circle Slash"),
+                    Component.literal("""
                             2 armor points
                             Can be held, and released 0.75s in.
                             Depending on how much you hold, the damage and launch height increase."""
                     ));
-    private static final TrackedData<Boolean> HAS_RAPIER;
-    private static final TrackedData<Integer> MODE;
+    private static final EntityDataAccessor<Boolean> HAS_RAPIER;
+    private static final EntityDataAccessor<Integer> MODE;
 
     static {
-        MODE = DataTracker.registerData(SilverChariotEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        HAS_RAPIER = DataTracker.registerData(SilverChariotEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        MODE = SynchedEntityData.defineId(SilverChariotEntity.class, EntityDataSerializers.INT);
+        HAS_RAPIER = SynchedEntityData.defineId(SilverChariotEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
-    public SilverChariotEntity(World worldIn) {
+    public SilverChariotEntity(Level worldIn) {
         super(StandType.SILVER_CHARIOT, worldIn, JSoundRegistry.SC_SUMMON.get());
         idleRotation = 225f;
 
@@ -285,26 +291,26 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     }
 
     public Mode getMode() {
-        return Mode.values()[dataTracker.get(MODE)];
+        return Mode.values()[entityData.get(MODE)];
     }
 
     public void setMode(Mode mode) {
-        dataTracker.set(MODE, mode.ordinal());
+        entityData.set(MODE, mode.ordinal());
     }
 
     public boolean hasRapier() {
-        return dataTracker.get(HAS_RAPIER);
+        return entityData.get(HAS_RAPIER);
     }
 
     public void setHasRapier(boolean hasRapier) {
-        dataTracker.set(HAS_RAPIER, hasRapier);
+        entityData.set(HAS_RAPIER, hasRapier);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(HAS_RAPIER, true);
-        dataTracker.startTracking(MODE, 1);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(HAS_RAPIER, true);
+        entityData.define(MODE, 1);
     }
 
     @Override
@@ -365,11 +371,11 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         LivingEntity user = getUserOrThrow();
         Mode mode = getMode();
 
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             // Possession particles
             if (mode == Mode.POSSESSED) {
                 for (int i = 0; i < 16; i++) {
-                    getWorld().addParticle(
+                    level().addParticle(
                             ParticleTypes.ASH,
                             getX() + random.nextDouble() - 0.5, getY() + random.nextDouble() * 0.25 + 0.5, getZ() + random.nextDouble() - 0.5,
                             0.0, 0.0, 0.0
@@ -381,14 +387,14 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         }
 
         // getOffHandStack() must be an AnubisItem
-        boolean hasAnubis = getOffHandStack().isOf(JItemRegistry.ANUBIS.get()) || user.getMainHandStack().getItem() == JItemRegistry.ANUBIS;
+        boolean hasAnubis = getOffhandItem().is(JItemRegistry.ANUBIS.get()) || user.getMainHandItem().getItem() == JItemRegistry.ANUBIS;
 
-        if (user instanceof PlayerEntity player) {
-            hasAnubis |= player.getInventory().contains(JItemRegistry.ANUBIS.get().getDefaultStack());
+        if (user instanceof Player player) {
+            hasAnubis |= player.getInventory().contains(JItemRegistry.ANUBIS.get().getDefaultInstance());
 
-            if (curMove == null && getOffHandStack() != null) {
-                player.giveItemStack(getOffHandStack());
-                getOffHandStack().decrement(1);
+            if (curMove == null && getOffhandItem() != null) {
+                player.addItem(getOffhandItem());
+                getOffhandItem().shrink(1);
             }
         }
 

@@ -7,9 +7,8 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.killerqueen.DetonateAttack;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class BTDGrabHitAttack extends AbstractMultiHitAttack<BTDGrabHitAttack, KQBTDEntity> {
@@ -24,10 +23,10 @@ public class BTDGrabHitAttack extends AbstractMultiHitAttack<BTDGrabHitAttack, K
         switch (getBlow(attacker)) {
             case 0 -> {
                 for (LivingEntity ent : targets) {
-                    ent.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 40, 0, true, false, true));
+                    ent.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 40, 0, true, false, true));
                 }
             }
-            case 2 -> DetonateAttack.explode(attacker, user, attacker.getPos().subtract(0, .5, 0));
+            case 2 -> DetonateAttack.explode(attacker, user, attacker.position().subtract(0, .5, 0));
         }
 
         return targets;

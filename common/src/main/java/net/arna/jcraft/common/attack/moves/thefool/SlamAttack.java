@@ -6,9 +6,8 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEntity> {
@@ -27,20 +26,20 @@ public class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEntity> 
 
         switch (ctx.getInt(VARIANT)) {
             case 2 -> {
-                Vec3d leftVec = user.getRotationVector().rotateY(1.75f);
+                Vec3 leftVec = user.getLookAngle().yRot(1.75f);
                 for (int i = 0; i < 8; i++) {
-                    leftVec = leftVec.rotateY(-3.141592f / 8).normalize();
-                    TheFoolEntity.createFoolishSand(attacker.getWorld(), attacker.getBlockPos(),
-                            new Vec3d(leftVec.x / 4, 0.25, leftVec.z / 4));
+                    leftVec = leftVec.yRot(-3.141592f / 8).normalize();
+                    TheFoolEntity.createFoolishSand(attacker.level(), attacker.blockPosition(),
+                            new Vec3(leftVec.x / 4, 0.25, leftVec.z / 4));
                 }
             }
             case 3 -> {
-                Vec3d rotVec = user.getRotationVector();
+                Vec3 rotVec = user.getLookAngle();
                 for (double i = 0; i < 7; i++) {
                     for (double y = 0; y < i; y++) {
                         double hDiv = 4.5 * (1 + y / i);
-                        TheFoolEntity.createFoolishSand(attacker.getWorld(), attacker.getBlockPos(),
-                                new Vec3d(rotVec.x * Math.sqrt(i) / hDiv, y / 4.3, rotVec.z * Math.sqrt(i) / hDiv));
+                        TheFoolEntity.createFoolishSand(attacker.level(), attacker.blockPosition(),
+                                new Vec3(rotVec.x * Math.sqrt(i) / hDiv, y / 4.3, rotVec.z * Math.sqrt(i) / hDiv));
                     }
                 }
             }

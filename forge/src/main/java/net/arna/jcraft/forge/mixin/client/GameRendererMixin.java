@@ -3,9 +3,7 @@ package net.arna.jcraft.forge.mixin.client;
 
 import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.forge.client.JShaderRegistry;
-import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.resource.ResourceFactory;
+import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

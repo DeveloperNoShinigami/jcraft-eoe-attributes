@@ -5,25 +5,25 @@ import net.arna.jcraft.common.enchantments.CinderellasKissEnchantment;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.item.StandDiscItem;
 import net.arna.jcraft.registry.JItemRegistry;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.SmithingRecipe;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SmithingRecipe;
+import net.minecraft.world.level.Level;
 
 public class StandSkinSmithingRecipe implements SmithingRecipe {
-    public static final Identifier ID = JCraft.id("stand_skin");
+    public static final ResourceLocation ID = JCraft.id("stand_skin");
     public static final StandSkinSmithingRecipe INSTANCE = new StandSkinSmithingRecipe();
 
     private StandSkinSmithingRecipe() {
     }
 
     @Override
-    public boolean matches(Inventory inventory, World world) {
-        ItemStack discStack = inventory.getStack(0);
-        ItemStack maskStack = inventory.getStack(1);
+    public boolean matches(Container inventory, Level world) {
+        ItemStack discStack = inventory.getItem(0);
+        ItemStack maskStack = inventory.getItem(1);
 
         StandType standType = StandDiscItem.getStandType(discStack);
         if (standType == null) {
@@ -36,9 +36,9 @@ public class StandSkinSmithingRecipe implements SmithingRecipe {
     }
 
     @Override
-    public ItemStack craft(Inventory inventory, DynamicRegistryManager registryManager) {
-        ItemStack discStack = inventory.getStack(0);
-        ItemStack maskStack = inventory.getStack(1);
+    public ItemStack assemble(Container inventory, RegistryAccess registryManager) {
+        ItemStack discStack = inventory.getItem(0);
+        ItemStack maskStack = inventory.getItem(1);
 
         ItemStack res = discStack.copy();
         res.setCount(1);
@@ -48,12 +48,12 @@ public class StandSkinSmithingRecipe implements SmithingRecipe {
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResultItem(RegistryAccess registryManager) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 
@@ -63,17 +63,17 @@ public class StandSkinSmithingRecipe implements SmithingRecipe {
     }
 
     @Override
-    public boolean testTemplate(ItemStack stack) {
+    public boolean isTemplateIngredient(ItemStack stack) {
         return false;
     }
 
     @Override
-    public boolean testBase(ItemStack stack) {
+    public boolean isBaseIngredient(ItemStack stack) {
         return false;
     }
 
     @Override
-    public boolean testAddition(ItemStack stack) {
+    public boolean isAdditionIngredient(ItemStack stack) {
         return false;
     }
 }

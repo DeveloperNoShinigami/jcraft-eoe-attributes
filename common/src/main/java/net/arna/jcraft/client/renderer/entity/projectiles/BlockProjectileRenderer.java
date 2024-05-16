@@ -1,42 +1,42 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.arna.jcraft.client.model.entity.BlockProjectileModel;
 import net.arna.jcraft.common.entity.projectile.BlockProjectile;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
+
 
 public class BlockProjectileRenderer extends GeoProjectileRenderer<BlockProjectile> {
     private final ItemRenderer itemRenderer;
 
-    public BlockProjectileRenderer(EntityRendererFactory.Context ctx) {
+    public BlockProjectileRenderer(EntityRendererProvider.Context ctx) {
         super(ctx, new BlockProjectileModel());
         this.itemRenderer = ctx.getItemRenderer();
     }
 
     @Override
-    public RenderLayer getRenderType(BlockProjectile animatable, Identifier texture, VertexConsumerProvider bufferSource, float partialTick) {
-        return RenderLayer.getEntityTranslucent(texture);
+    public RenderType getRenderType(BlockProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucent(texture);
     }
 
     @Override
-    public void render(BlockProjectile animatable, float yaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
-        poseStack.push();
+    public void render(BlockProjectile animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        poseStack.pushPose();
         //poseStack.multiply(Quaternion.fromEulerXyz(3.1415f, 3.1415f, 0));
-        itemRenderer.renderItem(
+        itemRenderer.renderStatic(
                 animatable,
-                animatable.getMainHandStack(),
-                ModelTransformationMode.HEAD,
+                animatable.getMainHandItem(),
+                ItemDisplayContext.HEAD,
                 false, poseStack, bufferSource, null, packedLight,
-                LivingEntityRenderer.getOverlay(animatable, 0),
+                LivingEntityRenderer.getOverlayCoords(animatable, 0),
                 animatable.getId());
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
-        poseStack.pop();
+        poseStack.popPose();
     }
 }

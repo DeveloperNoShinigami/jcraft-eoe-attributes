@@ -4,11 +4,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.item.FVRevolverItem;
 import net.arna.jcraft.common.util.DimensionData;
 import net.arna.jcraft.registry.JItemRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +31,13 @@ public class RevolverFire {
                 if (toFireData.timer-- > 0) {
                     newToFire.add(toFireData);
                 } else {
-                    ServerWorld world = server.getWorld(toFireData.worldKey);
+                    ServerLevel world = server.getLevel(toFireData.worldKey);
                     if (world == null) {
                         JCraft.LOGGER.fatal("World that toFireData belongs to no longer exists! Key: " + toFireData.worldKey + " user: " + user);
                         continue;
                     }
 
-                    ItemStack main = user.getMainHandStack();
+                    ItemStack main = user.getMainHandItem();
                     if (main.getItem() == JItemRegistry.FV_REVOLVER) {
                         FVRevolverItem.fire(main, world, user);
                     }

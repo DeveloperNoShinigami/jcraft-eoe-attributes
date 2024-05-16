@@ -9,13 +9,13 @@ import net.arna.jcraft.common.util.IComboCounter;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.stat.Stat;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stat;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -23,11 +23,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public abstract class PlayerEntityMixin implements IComboCounter {
 
     @Shadow
-    public abstract void increaseStat(Stat<?> stat, int amount);
+    public abstract void awardStat(Stat<?> stat, int amount);
 
     // Combo tracking
     @Unique
@@ -90,7 +90,7 @@ public abstract class PlayerEntityMixin implements IComboCounter {
 
     @Inject(at = @At("TAIL"), method = "tick")
     public void jcraft$playerTickTail(CallbackInfo info) {
-        PlayerEntity player = (PlayerEntity) (Object) this;
+        Player player = (Player) (Object) this;
         if (JUtils.isAffectedByTimeStop(player)) {
             return;
         }
@@ -104,24 +104,24 @@ public abstract class PlayerEntityMixin implements IComboCounter {
             return;
         }
 
-        LivingEntity attacker = lastAttacked.getAttacker();
+        LivingEntity attacker = lastAttacked.getLastHurtByMob();
         if (attacker == null || attacker == player) {
             return;
         }
         lastAttacked = null;
         comboCount = 0;
 
-        if (player instanceof ServerPlayerEntity serverPlayer) {
+        if (player instanceof ServerPlayer serverPlayer) {
             ComboCounterPacket.send(serverPlayer, 0, 1.00f);
         }
     }
 
     // KNOCKDOWN and poison preventing pose updating
-    @Inject(cancellable = true, at = @At("HEAD"), method = "updatePose")
+    @Inject(cancellable = true, at = @At("HEAD"), method = "updatePlayerPose")
     public void jcraft$updatePose(CallbackInfo info) {
         if (
-                ((PlayerEntity) (Object) this).hasStatusEffect(JStatusRegistry.KNOCKDOWN.get())
-                        || ((PlayerEntity) (Object) this).hasStatusEffect(JStatusRegistry.WSPOISON.get())
+                ((Player) (Object) this).hasEffect(JStatusRegistry.KNOCKDOWN.get())
+                        || ((Player) (Object) this).hasEffect(JStatusRegistry.WSPOISON.get())
         ) {
             info.cancel();
         }
@@ -130,13 +130,13 @@ public abstract class PlayerEntityMixin implements IComboCounter {
     // Can't M1/Light in TS or during spec moves, LivingEntity does not override this
     @Inject(cancellable = true, method = "attack", at = @At("HEAD"))
     public void jcraft$attack(Entity target, CallbackInfo info) {
-        PlayerEntity player = (PlayerEntity) (Object) this;
+        Player player = (Player) (Object) this;
         if (JUtils.isAffectedByTimeStop(player)) {
             info.cancel();
         }
 
         // Can't M1/Light without a weapon while stand ON
-        if (JUtils.getStand(player) != null && player.getMainHandStack().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()) {
+        if (JUtils.getStand(player) != null && player.getMainHandItem().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()) {
             info.cancel();
         }
 
@@ -147,9 +147,9 @@ public abstract class PlayerEntityMixin implements IComboCounter {
     }
 
     // Counter hook - player entity
-    @Inject(cancellable = true, at = @At("HEAD"), method = "applyDamage")
+    @Inject(cancellable = true, at = @At("HEAD"), method = "actuallyHurt")
     protected void jcraft$applyDamage(DamageSource source, float amount, CallbackInfo info) {
-        PlayerEntity player = ((PlayerEntity) (Object) this);
+        Player player = ((Player) (Object) this);
 
         if (player.getFirstPassenger() instanceof StandEntity<?, ?> stand) {
             AbstractMove<?, ?> attack = stand.curMove;
@@ -158,9 +158,9 @@ public abstract class PlayerEntityMixin implements IComboCounter {
             }
 
             //noinspection unchecked,rawtypes // Generic types can be annoying sometimes. This is fine.
-            ((AbstractCounterAttack) attack).counter(stand, source.getAttacker(), source);
+            ((AbstractCounterAttack) attack).counter(stand, source.getEntity(), source);
             //stand.counter(source.getAttacker(), source); // Initiate counter
-            player.removeStatusEffect(JStatusRegistry.DAZED.get());
+            player.removeEffect(JStatusRegistry.DAZED.get());
             info.cancel();
         }
     }

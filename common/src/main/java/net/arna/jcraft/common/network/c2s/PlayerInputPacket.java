@@ -16,12 +16,12 @@ import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -34,13 +34,13 @@ import static net.arna.jcraft.JCraft.SPEC_QUEUE_MOVESTUN_LIMIT;
 
 public class PlayerInputPacket {
     private static final int HOLD_TIMEOUT_TICKS = 3; // 0.15s
-    private static final Map<ServerPlayerEntity, Object2BooleanMap<MoveInputType>> successMap = new WeakHashMap<>();
+    private static final Map<ServerPlayer, Object2BooleanMap<MoveInputType>> successMap = new WeakHashMap<>();
     private static final int MOVEMENT_INPUT_TYPES;
 
     static {
         MOVEMENT_INPUT_TYPES = MovementInputType.values().length;
         TickEvent.SERVER_PRE.register(instance -> {
-            for (ServerPlayerEntity player : instance.getPlayerManager().getPlayerList()) {
+            for (ServerPlayer player : instance.getPlayerList().getPlayers()) {
                 InputStateManager sm = getInputStateManager(player);
 
                 // Handle held inputs
@@ -109,27 +109,27 @@ public class PlayerInputPacket {
         });
     }
 
-    public static PacketByteBuf write(Object2BooleanMap<MovementInputType> movementInput, Object2BooleanMap<MoveInputType> moveInput) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+    public static FriendlyByteBuf write(Object2BooleanMap<MovementInputType> movementInput, Object2BooleanMap<MoveInputType> moveInput) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         writeInput(buf, movementInput);
         writeInput(buf, moveInput);
         return buf;
     }
 
-    private static void writeInput(PacketByteBuf buf, @Nullable Object2BooleanMap<? extends Enum<?>> input) {
+    private static void writeInput(FriendlyByteBuf buf, @Nullable Object2BooleanMap<? extends Enum<?>> input) {
         if (input == null) {
             buf.writeVarInt(0);
             return;
         }
         buf.writeVarInt(input.size());
         for (Object2BooleanMap.Entry<? extends Enum<?>> entry : input.object2BooleanEntrySet()) {
-            buf.writeEnumConstant(entry.getKey());
+            buf.writeEnum(entry.getKey());
             buf.writeBoolean(entry.getBooleanValue());
         }
     }
 
-    public static void handle(PacketByteBuf buf, NetworkManager.PacketContext context) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+    public static void handle(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
+        ServerPlayer player = (ServerPlayer) context.getPlayer();
         MinecraftServer server = context.getPlayer().getServer();
 
         InputStateManager sm = getInputStateManager(player);
@@ -138,19 +138,19 @@ public class PlayerInputPacket {
     }
 
 
-    public static void handleHold(PacketByteBuf buf, NetworkManager.PacketContext context) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+    public static void handleHold(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
+        ServerPlayer player = (ServerPlayer) context.getPlayer();
         MinecraftServer server = context.getPlayer().getServer();
 
         buf.readVarInt(); // Throwaway Movement input data
         int count = buf.readVarInt();
         if (count > MoveInputType.types) {
-            player.networkHandler.disconnect(Text.of("Illegal input packet!"));
+            player.connection.disconnect(Component.nullToEmpty("Illegal input packet!"));
         }
 
         InputStateManager sm = getInputStateManager(player);
         for (int i = 0; i < count; i++) {
-            MoveInputType type = buf.readEnumConstant(MoveInputType.class);
+            MoveInputType type = buf.readEnum(MoveInputType.class);
             buf.readBoolean(); // Throwaway hold input data
             if (JUtils.canHoldMove(player, type)) {
                 sm.heldInputs.put(type, HOLD_TIMEOUT_TICKS);
@@ -158,14 +158,14 @@ public class PlayerInputPacket {
         }
     }
 
-    private static void handleMovementInput(MinecraftServer server, ServerPlayerEntity player, PacketByteBuf buf, InputStateManager sm) {
+    private static void handleMovementInput(MinecraftServer server, ServerPlayer player, FriendlyByteBuf buf, InputStateManager sm) {
         int count = buf.readVarInt();
         if (count > MOVEMENT_INPUT_TYPES) {
-            player.networkHandler.disconnect(Text.of("Illegal input packet!"));
+            player.connection.disconnect(Component.nullToEmpty("Illegal input packet!"));
         }
 
         for (int i = 0; i < count; i++) {
-            MovementInputType type = buf.readEnumConstant(MovementInputType.class);
+            MovementInputType type = buf.readEnum(MovementInputType.class);
             boolean pressed = buf.readBoolean();
 
             switch (type) {
@@ -197,15 +197,15 @@ public class PlayerInputPacket {
     }
 
 
-    private static void handleMoveInput(ServerPlayerEntity player, PacketByteBuf buf, InputStateManager sm) {
+    private static void handleMoveInput(ServerPlayer player, FriendlyByteBuf buf, InputStateManager sm) {
         int count = buf.readVarInt();
         if (count > MoveInputType.types) {
-            player.networkHandler.disconnect(Text.of("Illegal input packet!"));
+            player.connection.disconnect(Component.nullToEmpty("Illegal input packet!"));
         }
 
         MinecraftServer server = Objects.requireNonNull(player.getServer());
         for (int i = 0; i < count; i++) {
-            MoveInputType type = buf.readEnumConstant(MoveInputType.class);
+            MoveInputType type = buf.readEnum(MoveInputType.class);
             boolean pressed = buf.readBoolean();
 
             if (JUtils.canHoldMove(player, type)) {
@@ -264,13 +264,13 @@ public class PlayerInputPacket {
      * @param player that sent the input
      * @return
      */
-    private static CompletableFuture<Boolean> handleMoveInput(MinecraftServer server, ServerPlayerEntity player, MoveInputType type) {
+    private static CompletableFuture<Boolean> handleMoveInput(MinecraftServer server, ServerPlayer player, MoveInputType type) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
-        ServerWorld world = (ServerWorld) player.getWorld();
+        ServerLevel world = (ServerLevel) player.level();
         server.execute(() -> {
             switch (type) {
                 case STAND_SUMMON -> {
-                    PacketByteBuf buf2 = new PacketByteBuf(Unpooled.buffer());
+                    FriendlyByteBuf buf2 = new FriendlyByteBuf(Unpooled.buffer());
                     buf2.writeShort(6);
                     buf2.writeInt(0);
                     ServerChannelFeedbackPacket.send(player, buf2);
@@ -322,7 +322,7 @@ public class PlayerInputPacket {
         return future;
     }
 
-    private static boolean initStandOrSpecMove(ServerPlayerEntity player, MoveInputType type) {
+    private static boolean initStandOrSpecMove(ServerPlayer player, MoveInputType type) {
         StandEntity<?, ?> stand = JUtils.getStand(player);
         if (stand != null && stand.allowMoveHandling()) {
             return initStandMove(stand, type);
@@ -358,20 +358,20 @@ public class PlayerInputPacket {
         return false;
     }
 
-    private static void checkComboBreak(ServerPlayerEntity player) {
+    private static void checkComboBreak(ServerPlayer player) {
         // Combo break if stunned, jumping and crouching
         InputStateManager sm = getInputStateManager(player);
-        if (sm == null || !sm.jumping || !player.isSneaking() || JUtils.isBlocking(player)) {
+        if (sm == null || !sm.jumping || !player.isShiftKeyDown() || JUtils.isBlocking(player)) {
             return;
         }
 
-        StatusEffectInstance stun = player.getStatusEffect(JStatusRegistry.DAZED.get());
+        MobEffectInstance stun = player.getEffect(JStatusRegistry.DAZED.get());
         if (stun != null) {
-            JCraft.comboBreak((ServerWorld) player.getWorld(), player, stun);
+            JCraft.comboBreak((ServerLevel) player.level(), player, stun);
         }
     }
 
-    public static InputStateManager getInputStateManager(ServerPlayerEntity player) {
+    public static InputStateManager getInputStateManager(ServerPlayer player) {
         return ((IJInputStateManagerHolder) player).jcraft$getJInputStateManager();
     }
 }

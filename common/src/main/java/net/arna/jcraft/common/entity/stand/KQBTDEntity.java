@@ -16,14 +16,21 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.function.Consumer;
 
@@ -34,55 +41,55 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
             .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Elbow"),
-                    Text.literal("fast, short-range knockback")
+                    Component.literal("Elbow"),
+                    Component.literal("fast, short-range knockback")
             );
     public static final BarrageAttack<KQBTDEntity> BARRAGE = new BarrageAttack<KQBTDEntity>(240, 0,
             40, 0.75f, 1f, 20, 1.5f, 0.1f, 0, 3)
             .withSound(JSoundRegistry.KQ_BARRAGE.get())
             .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withInfo(
-                    Text.literal("Barrage"),
-                    Text.literal("fast reliable combo starter/extender, medium stun")
+                    Component.literal("Barrage"),
+                    Component.literal("fast reliable combo starter/extender, medium stun")
             );
     public static final BubbleCounterAttack BUBBLE_COUNTER = new BubbleCounterAttack(480, 5, 20, 1f)
             .withInfo(
-                    Text.literal("Stray Cat Counter"),
-                    Text.literal("0.25s windup counter, turns opponent into your primary bomb")
+                    Component.literal("Stray Cat Counter"),
+                    Component.literal("0.25s windup counter, turns opponent into your primary bomb")
             );
     public static final BubbleAttack BUBBLE = new BubbleAttack(220, 15, 18, 0.75f)
             .withCrouchingVariant(BUBBLE_COUNTER)
             .withSound(JSoundRegistry.KQ_UPPERCUT.get())
             .withInfo(
-                    Text.literal("Stray Cat Bubble"),
-                    Text.literal("launches an explosive bubble guided by your view rotation")
+                    Component.literal("Stray Cat Bubble"),
+                    Component.literal("launches an explosive bubble guided by your view rotation")
             );
     public static final BTDDetonateAttack BTD_DETONATE = new BTDDetonateAttack(20, 5, 6, 0.75f)
             .withSound(JSoundRegistry.KQ_DETONATE.get())
             .withInfo(
-                    Text.literal("Detonate"),
-                    Text.empty()
+                    Component.literal("Detonate"),
+                    Component.empty()
             );
     public static final BTDPlantAttack BTD_PLANT = new BTDPlantAttack(800, 14, 24, 1f, 10, 1.5f, 0f)
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withBlockStun(8)
             .withInfo(
-                    Text.literal("Bites the Dust Plant"),
-                    Text.literal("press the same button to detonate, sending the affected enemy back to their previous location")
+                    Component.literal("Bites the Dust Plant"),
+                    Component.literal("press the same button to detonate, sending the affected enemy back to their previous location")
             );
     public static final BTDGrabHitAttack GRAB_HIT = new BTDGrabHitAttack(0, 42, 0.75f,
             5f, 15, 2f, 0f, 0.5f, IntSet.of(8, 22, 32))
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withStunType(StunType.UNBURSTABLE)
             .withInfo(
-                    Text.literal("Takedown (hit)"),
-                    Text.empty()
+                    Component.literal("Takedown (hit)"),
+                    Component.empty()
             );
     public static final GrabAttack<KQBTDEntity, State> GRAB = new GrabAttack<>(220, 12, 28,
             0.75f, 0f, 20, 1.75f, 0.1f, 0f, GRAB_HIT, State.GRAB_HIT, 31, 1)
             .withInfo(
-                    Text.literal("Takedown"),
-                    Text.literal("high damage grab")
+                    Component.literal("Takedown"),
+                    Component.literal("high damage grab")
             );
 
     // Light chain implementation
@@ -90,7 +97,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT_FOLLOWUP = AbstractKillerQueenEntity.LIGHT_FOLLOWUP.copy().withAnim(State.LIGHT_FOLLOWUP).withFollowup(LOW);
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = AbstractKillerQueenEntity.LIGHT.copy().withFollowup(LIGHT_FOLLOWUP);
 
-    public KQBTDEntity(World worldIn) {
+    public KQBTDEntity(Level worldIn) {
         super(StandType.KILLER_QUEEN_BITES_THE_DUST, worldIn, JSoundRegistry.KQBTD_SUMMON.get());
 
         proCount = 4;
@@ -147,8 +154,8 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
             return MoveSelectionResult.STOP;
         }
 
-        Vec3d bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
-        if (attack == DETONATE && bombPos != null && target.squaredDistanceTo(bombPos) < 9.0D) {
+        Vec3 bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
+        if (attack == DETONATE && bombPos != null && target.distanceToSqr(bombPos) < 9.0D) {
             return MoveSelectionResult.USE;
         } else if (attack == BTD_PLANT && moveContext.get(BTDPlantAttack.BTD_ENTITY) != null) {
             return MoveSelectionResult.USE;
@@ -160,7 +167,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     public void tick() {
         super.tick();
 
-        if (!hasUser() || getWorld().isClient) {
+        if (!hasUser() || level().isClientSide) {
             return;
         }
 

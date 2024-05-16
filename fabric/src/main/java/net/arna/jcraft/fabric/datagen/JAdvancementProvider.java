@@ -5,12 +5,11 @@ import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementFrame;
-import net.minecraft.advancement.AdvancementRewards;
-import net.minecraft.advancement.criterion.InventoryChangedCriterion;
-import net.minecraft.text.Text;
-
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.FrameType;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.network.chat.Component;
 import java.util.function.Consumer;
 
 public class JAdvancementProvider extends FabricAdvancementProvider {
@@ -21,181 +20,181 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
     @Override
     public void generateAdvancement(Consumer<Advancement> consumer) {
         // obtain meteorite iron ore
-        final Advancement obtainMeteoriteIronOre = Advancement.Builder.create()
+        final Advancement obtainMeteoriteIronOre = Advancement.Builder.advancement()
                 .display(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get(),
-                        Text.literal("On the Precipice of Greatness"),
-                        Text.literal("Obtain Meteorite Iron Ore"),
+                        Component.literal("On the Precipice of Greatness"),
+                        Component.literal("Obtain Meteorite Iron Ore"),
                         JCraft.id("textures/block/foolish_sand_block.png"),
-                        AdvancementFrame.TASK,
+                        FrameType.TASK,
                         true,
                         false,
                         false)
-                .criterion("has_ore", InventoryChangedCriterion.Conditions.items(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()))
+                .addCriterion("has_ore", InventoryChangeTrigger.TriggerInstance.hasItems(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()))
                 .build(JCraft.id("obtain_meteorite_iron_ore"));
         consumer.accept(obtainMeteoriteIronOre);
         // obtain stand arrow
-        final Advancement obtainStandArrow = Advancement.Builder.create()
+        final Advancement obtainStandArrow = Advancement.Builder.advancement()
                 .display(JItemRegistry.STAND_ARROW.get(),
-                        Text.literal("Stand Proud"),
-                        Text.literal("Obtain a Stand Arrow"),
+                        Component.literal("Stand Proud"),
+                        Component.literal("Obtain a Stand Arrow"),
                         null,
-                        AdvancementFrame.TASK,
+                        FrameType.TASK,
                         true,
                         false,
                         false)
                 .parent(obtainMeteoriteIronOre)
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.STAND_ARROW.get()))
+                .addCriterion("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_ARROW.get()))
                 .build(JCraft.id("obtain_stand_arrow"));
         consumer.accept(obtainStandArrow);
         // obtain stand CD
-        final Advancement obtainStandDisc = Advancement.Builder.create()
+        final Advancement obtainStandDisc = Advancement.Builder.advancement()
                 .display(JItemRegistry.STAND_DISC.get(),
-                        Text.literal("Spin Me Right Round"),
-                        Text.literal("Obtain a Stand Disc"),
+                        Component.literal("Spin Me Right Round"),
+                        Component.literal("Obtain a Stand Disc"),
                         null,
-                        AdvancementFrame.TASK,
+                        FrameType.TASK,
                         true,
                         false,
                         false)
                 .parent(obtainStandArrow)
-                .criterion("has_disc", InventoryChangedCriterion.Conditions.items(JItemRegistry.STAND_DISC.get()))
+                .addCriterion("has_disc", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_DISC.get()))
                 .build(JCraft.id("obtain_stand_disc"));
         consumer.accept(obtainStandDisc);
         // obtain living arrow
-        final Advancement obtainLivingArrow = Advancement.Builder.create()
+        final Advancement obtainLivingArrow = Advancement.Builder.advancement()
                 .display(JItemRegistry.LIVING_ARROW.get(),
-                        Text.literal("It's Alive!"),
-                        Text.literal("Obtain a Living Arrow"),
+                        Component.literal("It's Alive!"),
+                        Component.literal("Obtain a Living Arrow"),
                         null,
-                        AdvancementFrame.GOAL,
+                        FrameType.GOAL,
                         true,
                         false,
                         false)
                 .parent(obtainStandArrow)
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.LIVING_ARROW.get()))
+                .addCriterion("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.LIVING_ARROW.get()))
                 .build(JCraft.id("obtain_living_arrow"));
         consumer.accept(obtainLivingArrow);
         // obtain requiem arrow
-        final Advancement obtainRequiemArrow = Advancement.Builder.create()
+        final Advancement obtainRequiemArrow = Advancement.Builder.advancement()
                 .display(JItemRegistry.REQUIEM_ARROW.get(),
-                        Text.literal("Requiem"),
-                        Text.literal("Obtain a Requiem Arrow"),
+                        Component.literal("Requiem"),
+                        Component.literal("Obtain a Requiem Arrow"),
                         null,
-                        AdvancementFrame.CHALLENGE,
+                        FrameType.CHALLENGE,
                         true,
                         false,
                         false)
                 .parent(obtainStandArrow)
-                .criterion("has_arrow", InventoryChangedCriterion.Conditions.items(JItemRegistry.REQUIEM_ARROW.get()))
+                .addCriterion("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.REQUIEM_ARROW.get()))
                 .build(JCraft.id("obtain_requiem_arrow"));
         consumer.accept(obtainRequiemArrow);
         // find stone mask
-        final Advancement findStoneMask = Advancement.Builder.create()
+        final Advancement findStoneMask = Advancement.Builder.advancement()
                 .display(JItemRegistry.STONE_MASK.get(),
-                        Text.literal("This is gonna hurt…"),
-                        Text.literal("Find a Stone Mask"),
+                        Component.literal("This is gonna hurt…"),
+                        Component.literal("Find a Stone Mask"),
                         null,
-                        AdvancementFrame.TASK,
+                        FrameType.TASK,
                         true,
                         false,
                         false)
                 .parent(obtainMeteoriteIronOre)
-                .criterion("has_mask", InventoryChangedCriterion.Conditions.items(JItemRegistry.STONE_MASK.get()))
+                .addCriterion("has_mask", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STONE_MASK.get()))
                 .build(JCraft.id("find_stone_mask"));
         consumer.accept(findStoneMask);
         // obtain coffin block
-        final Advancement obtainCoffin = Advancement.Builder.create()
+        final Advancement obtainCoffin = Advancement.Builder.advancement()
                 .display(JItemRegistry.COFFIN_BLOCK.get(),
-                        Text.literal("Sleepy Vampire"),
-                        Text.literal("Obtain a Coffin"),
+                        Component.literal("Sleepy Vampire"),
+                        Component.literal("Obtain a Coffin"),
                         null,
-                        AdvancementFrame.TASK,
+                        FrameType.TASK,
                         true,
                         false,
                         false)
                 .parent(findStoneMask)
-                .criterion("has_coffin", InventoryChangedCriterion.Conditions.items(JItemRegistry.COFFIN_BLOCK.get()))
+                .addCriterion("has_coffin", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.COFFIN_BLOCK.get()))
                 .build(JCraft.id("obtain_coffin"));
         consumer.accept(obtainCoffin);
         // obtain sun protections
-        final Advancement obtainSunProtection = Advancement.Builder.create()
+        final Advancement obtainSunProtection = Advancement.Builder.advancement()
                 .display(JItemRegistry.KARS_HEADWRAP.get(),
-                        Text.literal("Rise and Shine"),
-                        Text.literal("Obtain all sun protection items"),
+                        Component.literal("Rise and Shine"),
+                        Component.literal("Obtain all sun protection items"),
                         null,
-                        AdvancementFrame.GOAL,
+                        FrameType.GOAL,
                         true,
                         false,
                         false)
                 .parent(findStoneMask)
-                .criterion("has_kars_headwrap", InventoryChangedCriterion.Conditions.items(JItemRegistry.KARS_HEADWRAP.get()))
-                .criterion("has_red_hat", InventoryChangedCriterion.Conditions.items(JItemRegistry.RED_HAT.get()))
+                .addCriterion("has_kars_headwrap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KARS_HEADWRAP.get()))
+                .addCriterion("has_red_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.RED_HAT.get()))
                 .build(JCraft.id("obtain_sun_protection"));
         consumer.accept(obtainSunProtection);
         // obtain blood bottle
-        final Advancement obtainBloodBottle = Advancement.Builder.create()
+        final Advancement obtainBloodBottle = Advancement.Builder.advancement()
                 .display(JItemRegistry.BLOOD_BOTTLE.get(),
-                        Text.literal("Not Kool-Aid"),
-                        Text.literal("Obtain a blood bottle"),
+                        Component.literal("Not Kool-Aid"),
+                        Component.literal("Obtain a blood bottle"),
                         null,
-                        AdvancementFrame.TASK,
+                        FrameType.TASK,
                         true,
                         false,
                         false)
                 .parent(findStoneMask)
-                .criterion("has_bottle", InventoryChangedCriterion.Conditions.items(JItemRegistry.BLOOD_BOTTLE.get()))
+                .addCriterion("has_bottle", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.BLOOD_BOTTLE.get()))
                 .build(JCraft.id("obtain_blood_bottle"));
         consumer.accept(obtainBloodBottle);
         // obtain Jotaro outfit
-        final Advancement obtainJotaroOutfit = Advancement.Builder.create()
+        final Advancement obtainJotaroOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOTARO_CAP.get(),
-                        Text.literal("ORA ORA"),
-                        Text.literal("Obtain all of Jotaro's clothes"),
+                        Component.literal("ORA ORA"),
+                        Component.literal("Obtain all of Jotaro's clothes"),
                         null,
-                        AdvancementFrame.CHALLENGE,
+                        FrameType.CHALLENGE,
                         true,
                         false,
                         false)
                 .parent(obtainMeteoriteIronOre)
-                .criterion("has_jotaro_cap", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTARO_CAP.get()))
-                .criterion("has_jotaro_jacket", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTARO_JACKET.get()))
-                .criterion("has_jotaro_pants", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTARO_PANTS.get()))
-                .criterion("has_jotaro_boots", InventoryChangedCriterion.Conditions.items(JItemRegistry.JOTARO_BOOTS.get()))
+                .addCriterion("has_jotaro_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_CAP.get()))
+                .addCriterion("has_jotaro_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_JACKET.get()))
+                .addCriterion("has_jotaro_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_PANTS.get()))
+                .addCriterion("has_jotaro_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_BOOTS.get()))
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_jotaro_outfit"));
         consumer.accept(obtainJotaroOutfit);
         // obtain Dio outfit
-        final Advancement obtainDioOutfit = Advancement.Builder.create()
+        final Advancement obtainDioOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIO_HEADBAND.get(),
-                        Text.literal("MUDA MUDA"),
-                        Text.literal("Obtain all of Dio's clothes"),
+                        Component.literal("MUDA MUDA"),
+                        Component.literal("Obtain all of Dio's clothes"),
                         null,
-                        AdvancementFrame.CHALLENGE,
+                        FrameType.CHALLENGE,
                         true,
                         false,
                         false)
                 .parent(obtainMeteoriteIronOre)
-                .criterion("has_dio_headband", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIO_HEADBAND.get()))
-                .criterion("has_dio_jacket", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIO_JACKET.get()))
-                .criterion("has_dio_cape", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIO_CAPE.get()))
-                .criterion("has_dio_pants", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIO_PANTS.get()))
-                .criterion("has_dio_boots", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIO_BOOTS.get()))
+                .addCriterion("has_dio_headband", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_HEADBAND.get()))
+                .addCriterion("has_dio_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_JACKET.get()))
+                .addCriterion("has_dio_cape", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_CAPE.get()))
+                .addCriterion("has_dio_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_PANTS.get()))
+                .addCriterion("has_dio_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_BOOTS.get()))
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .rewards(AdvancementRewards.Builder.recipe(JCraft.id("dios_diary")))
                 .build(JCraft.id("obtain_dio_outfit"));
         consumer.accept(obtainDioOutfit);
         // obtain Dio's diary
-        final Advancement obtainDiosDiary = Advancement.Builder.create()
+        final Advancement obtainDiosDiary = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIOS_DIARY.get(),
-                        Text.literal("It was me, DIO!"),
-                        Text.literal("Obtain Dio's diary"),
+                        Component.literal("It was me, DIO!"),
+                        Component.literal("Obtain Dio's diary"),
                         null,
-                        AdvancementFrame.CHALLENGE,
+                        FrameType.CHALLENGE,
                         true,
                         false,
                         false)
                 .parent(obtainDioOutfit)
-                .criterion("has_diary", InventoryChangedCriterion.Conditions.items(JItemRegistry.DIOS_DIARY.get()))
+                .addCriterion("has_diary", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIOS_DIARY.get()))
                 .rewards(AdvancementRewards.Builder.experience(500))
                 .build(JCraft.id("obtain_dios_diary"));
         consumer.accept(obtainDiosDiary);

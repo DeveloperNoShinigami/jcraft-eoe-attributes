@@ -5,9 +5,9 @@ import io.netty.buffer.Unpooled;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.util.GravityVerifierRegistry;
 import net.arna.jcraft.common.gravity.util.packet.*;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 public class GravityChannelClient<P extends GravityPacket> {
     public static GravityChannelClient<OverwriteGravityPacket> OVERWRITE_GRAVITY = new GravityChannelClient<>(OverwriteGravityPacket::new, JCraft.id("g_overwrite_gravity_list"));
@@ -16,25 +16,25 @@ public class GravityChannelClient<P extends GravityPacket> {
     public static GravityChannelClient<InvertGravityPacket> INVERT_GRAVITY = new GravityChannelClient<>(InvertGravityPacket::new, JCraft.id("g_inverted"));
 
     private final Factory<P> packetFactory;
-    private final Identifier channel;
+    private final ResourceLocation channel;
     private final GravityVerifierRegistry<P> gravityVerifierRegistry;
 
-    GravityChannelClient(Factory<P> _packetFactory, Identifier _channel) {
+    GravityChannelClient(Factory<P> _packetFactory, ResourceLocation _channel) {
         packetFactory = _packetFactory;
         channel = _channel;
         gravityVerifierRegistry = new GravityVerifierRegistry<>();
     }
 
-    public void receiveFromServer(MinecraftClient client, PacketByteBuf buf) {
+    public void receiveFromServer(Minecraft client, FriendlyByteBuf buf) {
         int entityId = buf.readInt();
         P packet = packetFactory.read(buf);
         client.execute(() -> NetworkUtilClient.getGravityComponent(client, entityId).ifPresent(packet::run));
     }
 
-    public void sendToServer(P packet, Identifier verifier, PacketByteBuf verifierInfoBuf) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+    public void sendToServer(P packet, ResourceLocation verifier, FriendlyByteBuf verifierInfoBuf) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         packet.write(buf);
-        buf.writeIdentifier(verifier);
+        buf.writeResourceLocation(verifier);
         buf.writeByteArray(verifierInfoBuf.array());
         NetworkManager.sendToServer(channel, buf);
     }
@@ -44,7 +44,7 @@ public class GravityChannelClient<P extends GravityPacket> {
     }
 
     public void registerClientReceiver() {
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, channel, (buf, d) -> receiveFromServer(MinecraftClient.getInstance(), buf));
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, channel, (buf, d) -> receiveFromServer(Minecraft.getInstance(), buf));
     }
 
     public static void init() {
@@ -56,6 +56,6 @@ public class GravityChannelClient<P extends GravityPacket> {
 
     @FunctionalInterface
     interface Factory<T extends GravityPacket> {
-        T read(PacketByteBuf buf);
+        T read(FriendlyByteBuf buf);
     }
 }

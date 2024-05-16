@@ -10,10 +10,10 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -53,10 +53,10 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     }
 
     // Called serverside if the LivingEntity wasn't removed
-    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;tickMovement()V", shift = At.Shift.AFTER))
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;aiStep()V", shift = At.Shift.AFTER))
     public void jcraft$tick(CallbackInfo callbackInfo) {
         LivingEntity living = LivingEntity.class.cast(this);
-        if (hitCount > 0 && !living.hasStatusEffect(JStatusRegistry.DAZED.get())) {
+        if (hitCount > 0 && !living.hasEffect(JStatusRegistry.DAZED.get())) {
             ((IDamageScaler) this).jcraft$resetHitCount();
         }
     }
@@ -70,7 +70,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
 
  */
 
-    @Inject(cancellable = true, method = "onAttacking", at = @At("HEAD"))
+    @Inject(cancellable = true, method = "setLastHurtMob", at = @At("HEAD"))
     public void jcraft$onAttacking(Entity target, CallbackInfo info) {
         if (JUtils.isAffectedByTimeStop((LivingEntity) (Object) this)) {
             info.cancel();
@@ -78,13 +78,13 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     }
 
     // Inability to jump in specific circumstances
-    @Inject(cancellable = true, method = "getJumpBoostVelocityModifier", at = @At("HEAD"))
+    @Inject(cancellable = true, method = "getJumpBoostPower", at = @At("HEAD"))
     public void jcraft$getJumpBoostVelocityModifier(CallbackInfoReturnable<Float> cir) {
         LivingEntity entity = ((LivingEntity) (Object) this);
         StandEntity<?, ?> stand = JUtils.getStand(entity);
-        StatusEffectInstance stun = entity.getStatusEffect(JStatusRegistry.DAZED.get());
+        MobEffectInstance stun = entity.getEffect(JStatusRegistry.DAZED.get());
         if (
-                entity.hasStatusEffect(JStatusRegistry.KNOCKDOWN.get()) || // Knocked down
+                entity.hasEffect(JStatusRegistry.KNOCKDOWN.get()) || // Knocked down
                         (stun != null && stun.getAmplifier() != 2) || // Stunned (not blocking)
                         (stand != null && stand.isRemoteAndControllable()) // Stand ON in controllable remote mode
         ) {
@@ -98,7 +98,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     }
 
     // Counter hook - Living entity
-    @Inject(cancellable = true, at = @At("HEAD"), method = "applyDamage")
+    @Inject(cancellable = true, at = @At("HEAD"), method = "actuallyHurt")
     protected void jcraft$applyDamage(DamageSource source, float amount, CallbackInfo info) {
         LivingEntity player = ((LivingEntity) (Object) this);
 
@@ -111,27 +111,27 @@ public abstract class LivingEntityMixin implements IDamageScaler {
         }
 
         //noinspection unchecked,rawtypes // Generic types can be annoying sometimes. This is fine.
-        ((AbstractCounterAttack) attack).counter(stand, source.getAttacker(), source);
+        ((AbstractCounterAttack) attack).counter(stand, source.getEntity(), source);
 //        stand.counter(source.getAttacker(), source); // Initiate counter
-        player.removeStatusEffect(JStatusRegistry.DAZED.get());
+        player.removeEffect(JStatusRegistry.DAZED.get());
         info.cancel();
     }
 
     // Living entities can't attack while stunned/enslaved/time erased thanks to this and an attack attribute nullifier
-    @Inject(cancellable = true, method = "canSee(Lnet/minecraft/entity/Entity;)Z", at = @At("HEAD"))
+    @Inject(cancellable = true, method = "hasLineOfSight", at = @At("HEAD"))
     public void jcraft$canSee(Entity entity, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity livingEntity = (LivingEntity) (Object) this;
 
         doChecks(entity, cir, livingEntity);
     }
 
-    @Inject(cancellable = true, method = "canTarget(Lnet/minecraft/entity/LivingEntity;)Z", at = @At("HEAD"))
+    @Inject(cancellable = true, method = "canAttack(Lnet/minecraft/world/entity/LivingEntity;)Z", at = @At("HEAD"))
     public void jcraft$canTarget(LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
         doChecks(target, cir, (LivingEntity) (Object) this);
     }
 
     // This is actually an implementation for players (mobs have their effect ticking properly stopped in TS), but PlayerEntity doesn't override this
-    @Inject(cancellable = true, at = @At("HEAD"), method = "tickStatusEffects")
+    @Inject(cancellable = true, at = @At("HEAD"), method = "tickEffects")
     protected void jcraft$tickStatusEffects(CallbackInfo ci) {
         if (JComponentPlatformUtils.getTimeStopData((LivingEntity) (Object) this).getTicks() > 0) {
             ci.cancel();
@@ -140,9 +140,9 @@ public abstract class LivingEntityMixin implements IDamageScaler {
 
     private static @Unique void doChecks(Entity entity, CallbackInfoReturnable<Boolean> cir, LivingEntity livingEntity) {
         if (
-                ((livingEntity.hasStatusEffect(JStatusRegistry.DAZED.get()) && !JUtils.isBlocking(livingEntity))
-                        || livingEntity.hasStatusEffect(JStatusRegistry.KNOCKDOWN.get()))
-                        && (!livingEntity.getType().isIn(JTagRegistry.CANNOT_BE_STUNNED))
+                ((livingEntity.hasEffect(JStatusRegistry.DAZED.get()) && !JUtils.isBlocking(livingEntity))
+                        || livingEntity.hasEffect(JStatusRegistry.KNOCKDOWN.get()))
+                        && (!livingEntity.getType().is(JTagRegistry.CANNOT_BE_STUNNED))
         ) {
             cir.setReturnValue(false);
         }

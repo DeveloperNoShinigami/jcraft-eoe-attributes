@@ -1,10 +1,9 @@
 package net.arna.jcraft.client.rendering.api;
 
 import net.arna.jcraft.JCraft;
-import net.minecraft.client.gl.JsonEffectShaderProgram;
-import net.minecraft.client.util.math.MatrixStack;
-
+import net.minecraft.client.renderer.EffectInstance;
 import javax.annotation.Nullable;
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,10 +50,10 @@ public abstract class MultiInstancePostProcessor<I extends DynamicShaderFxInstan
     }
 
     @Override
-    public void beforeProcess(MatrixStack viewModelStack) {
+    public void beforeProcess(PoseStack viewModelStack) {
         for (int i = instances.size() - 1; i >= 0; i--) {
             DynamicShaderFxInstance instance = instances.get(i);
-            instance.update(MC.getLastFrameDuration());
+            instance.update(MC.getDeltaFrameTime());
             if (instance.isRemoved()) {
                 instances.remove(i);
             }
@@ -86,8 +85,8 @@ public abstract class MultiInstancePostProcessor<I extends DynamicShaderFxInstan
         dataBuffer.upload(data);
     }
 
-    protected void setDataBufferUniform(JsonEffectShaderProgram effectInstance, String bufferName, String countName) {
+    protected void setDataBufferUniform(EffectInstance effectInstance, String bufferName, String countName) {
         dataBuffer.apply(effectInstance, bufferName);
-        effectInstance.getUniformByName(countName).set(instances.size());
+        effectInstance.getUniform(countName).set(instances.size());
     }
 }

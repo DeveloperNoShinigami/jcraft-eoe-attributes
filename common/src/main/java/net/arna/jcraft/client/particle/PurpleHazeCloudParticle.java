@@ -1,44 +1,44 @@
 package net.arna.jcraft.client.particle;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 
-public class PurpleHazeCloudParticle extends AbstractSlowingParticle {
-    private final SpriteProvider spriteProvider;
+public class PurpleHazeCloudParticle extends RisingParticle {
+    private final SpriteSet spriteProvider;
     private final float decrement;
 
-    protected PurpleHazeCloudParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i, SpriteProvider spriteProvider) {
+    protected PurpleHazeCloudParticle(ClientLevel clientWorld, double d, double e, double f, double g, double h, double i, SpriteSet spriteProvider) {
         super(clientWorld, d, e, f, g, h, i);
         this.spriteProvider = spriteProvider;
-        this.maxAge = 16;
-        this.decrement = 0.5f / maxAge;
-        this.scale = 1.0f;
+        this.lifetime = 16;
+        this.decrement = 0.5f / lifetime;
+        this.quadSize = 1.0f;
         this.alpha = 1.0f;
-        this.setSpriteForAge(spriteProvider);
+        this.setSpriteFromAge(spriteProvider);
     }
 
     @Override
     public void tick() {
         super.tick();
-        this.setSpriteForAge(spriteProvider);
-        this.scale -= decrement;
+        this.setSpriteFromAge(spriteProvider);
+        this.quadSize -= decrement;
         this.alpha -= decrement;
     }
 
     @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    public static class Factory implements ParticleFactory<DefaultParticleType> {
-        private final SpriteProvider spriteProvider;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteProvider;
 
-        public Factory(SpriteProvider spriteProvider) {
+        public Factory(SpriteSet spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
             return new PurpleHazeCloudParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
         }
     }

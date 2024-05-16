@@ -2,21 +2,20 @@ package net.arna.jcraft.mixin.gravity;
 
 
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.EnderMan;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(
-        targets = "net/minecraft/entity/mob/EndermanEntity$ChasePlayerGoal"
-)
+@Mixin(EnderMan.EndermanFreezeWhenLookedAt.class)
 public abstract class EndermanEntity$ChasePlayerGoalMixin {
     @Redirect(
-            method = "Lnet/minecraft/entity/mob/EndermanEntity$ChasePlayerGoal;tick()V",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getEyeY()D",
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getEyeY()D",
                     ordinal = 0
             )
     )
@@ -26,14 +25,14 @@ public abstract class EndermanEntity$ChasePlayerGoalMixin {
             return livingEntity.getEyeY();
         }
 
-        return livingEntity.getEyePos().y;
+        return livingEntity.getEyePosition().y;
     }
 
     @Redirect(
-            method = "Lnet/minecraft/entity/mob/EndermanEntity$ChasePlayerGoal;tick()V",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getX()D",
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getX()D",
                     ordinal = 0
             )
     )
@@ -43,14 +42,14 @@ public abstract class EndermanEntity$ChasePlayerGoalMixin {
             return livingEntity.getX();
         }
 
-        return livingEntity.getEyePos().x;
+        return livingEntity.getEyePosition().x;
     }
 
     @Redirect(
-            method = "Lnet/minecraft/entity/mob/EndermanEntity$ChasePlayerGoal;tick()V",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/LivingEntity;getZ()D",
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getZ()D",
                     ordinal = 0
             )
     )
@@ -60,6 +59,6 @@ public abstract class EndermanEntity$ChasePlayerGoalMixin {
             return livingEntity.getZ();
         }
 
-        return livingEntity.getEyePos().z;
+        return livingEntity.getEyePosition().z;
     }
 }

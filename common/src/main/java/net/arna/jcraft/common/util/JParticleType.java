@@ -2,8 +2,8 @@ package net.arna.jcraft.common.util;
 
 import lombok.Getter;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.particle.ParticleTypes;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 
 @Getter
 public enum JParticleType {
@@ -23,9 +23,9 @@ public enum JParticleType {
     AURA_ARC(JParticleTypeRegistry.AURA_ARC.get()),
     AURA_BLOB(JParticleTypeRegistry.AURA_BLOB.get());
 
-    private final DefaultParticleType particleType;
+    private final SimpleParticleType particleType;
 
-    JParticleType(DefaultParticleType particleType) {
+    JParticleType(SimpleParticleType particleType) {
         this.particleType = particleType;
     }
 }

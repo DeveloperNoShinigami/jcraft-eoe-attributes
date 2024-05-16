@@ -1,38 +1,38 @@
 package net.arna.jcraft.client.particle;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
 // POC particle. Feel free to remove.
 // Any particle that renders with the JParticleTextureSheet.INVERSION_SHEET
 // will be rendered with an inverted effect.
 // For the time being, colors are ignored
-public class InversionParticle extends AbstractSlowingParticle {
+public class InversionParticle extends RisingParticle {
 
-    protected InversionParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i,
-                                SpriteProvider spriteProvider) {
+    protected InversionParticle(ClientLevel clientWorld, double d, double e, double f, double g, double h, double i,
+                                SpriteSet spriteProvider) {
         super(clientWorld, d, e, f, g, h, i);
-        scale *= 1f;
-        setSprite(spriteProvider);
+        quadSize *= 1f;
+        pickSprite(spriteProvider);
     }
 
     @Override
-    public ParticleTextureSheet getType() {
+    public ParticleRenderType getRenderType() {
         return JParticleTextureSheet.INVERSION_SHEET;
     }
 
-    public static class Factory implements ParticleFactory<DefaultParticleType> {
-        private final SpriteProvider spriteProvider;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet spriteProvider;
 
-        public Factory(SpriteProvider spriteProvider) {
+        public Factory(SpriteSet spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 
         @Nullable
         @Override
-        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             return new InversionParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider);
         }
     }

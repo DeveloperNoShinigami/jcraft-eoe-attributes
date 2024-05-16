@@ -1,13 +1,18 @@
 package net.arna.jcraft.client.rendering.skybox;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Axis;
 import net.arna.jcraft.JCraft;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -40,79 +45,79 @@ public class CrimsonSkyBoxCool implements JSkyBox {
     }
 
     @Override
-    public void render(MatrixStack matrices, Matrix4f matrix4f, float tickDelta, Camera camera, boolean thickFog) {
+    public void render(PoseStack matrices, Matrix4f matrix4f, float tickDelta, Camera camera, boolean thickFog) {
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
 
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.enableBlend();
         RenderSystem.depthMask(false);
 
-        ClientWorld world = Objects.requireNonNull(MinecraftClient.getInstance().world);
+        ClientLevel world = Objects.requireNonNull(Minecraft.getInstance().level);
 
         Vector3f rotationStatic = this.rotation.getStatic();
 
-        matrices.push();
-        double timeRotation = isShouldRotate() ? 360.0D * MathHelper.floorMod(world.getLunarTime() / (24000.D / this.rotation.getRotationSpeed()) + 0.75D, 1) : 0D;
+        matrices.pushPose();
+        double timeRotation = isShouldRotate() ? 360.0D * Mth.positiveModulo(world.dayTime() / (24000.D / this.rotation.getRotationSpeed()) + 0.75D, 1) : 0D;
         this.applyTimeRotation(matrices, (float) timeRotation);
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rotationStatic.x()));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotationStatic.y()));
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotationStatic.z()));
+        matrices.mulPose(Axis.XP.rotationDegrees(rotationStatic.x()));
+        matrices.mulPose(Axis.YP.rotationDegrees(rotationStatic.y()));
+        matrices.mulPose(Axis.ZP.rotationDegrees(rotationStatic.z()));
         this.renderSkybox(matrices, tickDelta);
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotationStatic.z()));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotationStatic.y()));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rotationStatic.x()));
-        matrices.pop();
+        matrices.mulPose(Axis.ZP.rotationDegrees(rotationStatic.z()));
+        matrices.mulPose(Axis.YP.rotationDegrees(rotationStatic.y()));
+        matrices.mulPose(Axis.XP.rotationDegrees(rotationStatic.x()));
+        matrices.popPose();
 
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    private void renderSkybox(MatrixStack matrices, float tickDelta) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
+    private void renderSkybox(PoseStack matrices, float tickDelta) {
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuilder();
 
         for (int i = 0; i < 6; ++i) {
             Textures.Texture tex = this.textures.byId(i);
-            matrices.push();
+            matrices.pushPose();
 
             RenderSystem.setShaderTexture(0, tex.getTextureId());
 
             if (i == 1) {
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0F));
+                matrices.mulPose(Axis.XP.rotationDegrees(90.0F));
             } else if (i == 2) {
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90.0F));
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
+                matrices.mulPose(Axis.XP.rotationDegrees(-90.0F));
+                matrices.mulPose(Axis.YP.rotationDegrees(180.0F));
             } else if (i == 3) {
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180.0F));
+                matrices.mulPose(Axis.XP.rotationDegrees(180.0F));
             } else if (i == 4) {
-                matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90.0F));
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0F));
+                matrices.mulPose(Axis.ZP.rotationDegrees(90.0F));
+                matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
             } else if (i == 5) {
-                matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-90.0F));
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0F));
+                matrices.mulPose(Axis.ZP.rotationDegrees(-90.0F));
+                matrices.mulPose(Axis.YP.rotationDegrees(90.0F));
             }
 
-            Matrix4f matrix4f = matrices.peek().getPositionMatrix();
-            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-            bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, -100.0F).texture(tex.getMinU(), tex.getMinV()).color(1f, 1f, 1f, alpha).next();
-            bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, 100.0F).texture(tex.getMinU(), tex.getMaxV()).color(1f, 1f, 1f, alpha).next();
-            bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, 100.0F).texture(tex.getMaxU(), tex.getMaxV()).color(1f, 1f, 1f, alpha).next();
-            bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, -100.0F).texture(tex.getMaxU(), tex.getMinV()).color(1f, 1f, 1f, alpha).next();
-            tessellator.draw();
-            matrices.pop();
+            Matrix4f matrix4f = matrices.last().pose();
+            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+            bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, -100.0F).uv(tex.getMinU(), tex.getMinV()).color(1f, 1f, 1f, alpha).endVertex();
+            bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, 100.0F).uv(tex.getMinU(), tex.getMaxV()).color(1f, 1f, 1f, alpha).endVertex();
+            bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, 100.0F).uv(tex.getMaxU(), tex.getMaxV()).color(1f, 1f, 1f, alpha).endVertex();
+            bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, -100.0F).uv(tex.getMaxU(), tex.getMinV()).color(1f, 1f, 1f, alpha).endVertex();
+            tessellator.end();
+            matrices.popPose();
         }
     }
 
-    private void applyTimeRotation(MatrixStack matrices, float timeRotation) {
+    private void applyTimeRotation(PoseStack matrices, float timeRotation) {
         Vector3f timeRotationAxis = this.rotation.getAxis();
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(timeRotationAxis.x()));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(timeRotationAxis.y()));
-        matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(timeRotationAxis.z()));
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(timeRotation));
-        matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(timeRotationAxis.z()));
-        matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(timeRotationAxis.y()));
-        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(timeRotationAxis.x()));
+        matrices.mulPose(Axis.XP.rotationDegrees(timeRotationAxis.x()));
+        matrices.mulPose(Axis.YP.rotationDegrees(timeRotationAxis.y()));
+        matrices.mulPose(Axis.ZP.rotationDegrees(timeRotationAxis.z()));
+        matrices.mulPose(Axis.YP.rotationDegrees(timeRotation));
+        matrices.mulPose(Axis.ZN.rotationDegrees(timeRotationAxis.z()));
+        matrices.mulPose(Axis.YN.rotationDegrees(timeRotationAxis.y()));
+        matrices.mulPose(Axis.XN.rotationDegrees(timeRotationAxis.x()));
     }
 }

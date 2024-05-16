@@ -4,11 +4,10 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.SPTWEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttack, SPTWEntity> {
@@ -21,14 +20,14 @@ public class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttack, SPT
     public @NonNull Set<LivingEntity> perform(SPTWEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        Vec3d pos = user.getPos();
+        Vec3 pos = user.position();
         for (LivingEntity target : targets) {
-            Vec3d launchVec = target.getPos().subtract(pos).normalize().multiply(1.3);
-            target.addVelocity(launchVec.x, launchVec.y + 0.4, launchVec.z);
+            Vec3 launchVec = target.position().subtract(pos).normalize().scale(1.3);
+            target.push(launchVec.x, launchVec.y + 0.4, launchVec.z);
 
-            target.velocityModified = true;
-            if (target instanceof ServerPlayerEntity serverPlayer) {
-                serverPlayer.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(serverPlayer));
+            target.hurtMarked = true;
+            if (target instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
             }
         }
 

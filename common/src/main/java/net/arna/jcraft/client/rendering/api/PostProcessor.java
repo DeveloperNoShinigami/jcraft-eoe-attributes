@@ -2,15 +2,19 @@ package net.arna.jcraft.client.rendering.api;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonParseException;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.JCraft;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.*;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.EffectInstance;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.PostChain;
+import net.minecraft.client.renderer.PostPass;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -23,15 +27,15 @@ import java.util.function.Consumer;
 import static com.mojang.blaze3d.platform.GlConst.GL_DRAW_FRAMEBUFFER;
 
 public abstract class PostProcessor {
-    protected static final MinecraftClient MC = MinecraftClient.getInstance();
+    protected static final Minecraft MC = Minecraft.getInstance();
 
-    public static final Collection<Pair<String, Consumer<GlUniform>>> COMMON_UNIFORMS = Lists.newArrayList(
-            Pair.of("cameraPos", u -> u.set(new Vector3f((float) MC.gameRenderer.getCamera().getPos().x, (float) MC.gameRenderer.getCamera().getPos().y, (float) MC.gameRenderer.getCamera().getPos().z))),
-            Pair.of("lookVector", u -> u.set(MC.gameRenderer.getCamera().getHorizontalPlane())),
-            Pair.of("upVector", u -> u.set(MC.gameRenderer.getCamera().getVerticalPlane())),
-            Pair.of("leftVector", u -> u.set(MC.gameRenderer.getCamera().getDiagonalPlane())),
+    public static final Collection<Pair<String, Consumer<Uniform>>> COMMON_UNIFORMS = Lists.newArrayList(
+            Pair.of("cameraPos", u -> u.set(new Vector3f((float) MC.gameRenderer.getMainCamera().getPosition().x, (float) MC.gameRenderer.getMainCamera().getPosition().y, (float) MC.gameRenderer.getMainCamera().getPosition().z))),
+            Pair.of("lookVector", u -> u.set(MC.gameRenderer.getMainCamera().getLookVector())),
+            Pair.of("upVector", u -> u.set(MC.gameRenderer.getMainCamera().getUpVector())),
+            Pair.of("leftVector", u -> u.set(MC.gameRenderer.getMainCamera().getLeftVector())),
             Pair.of("invViewMat", u -> {
-                Matrix4f invertedViewMatrix = new Matrix4f(PostProcessor.viewModelStack.peek().getPositionMatrix());
+                Matrix4f invertedViewMatrix = new Matrix4f(PostProcessor.viewModelStack.last().pose());
                 invertedViewMatrix.invert();
                 u.set(invertedViewMatrix);
             }),
@@ -40,22 +44,22 @@ public abstract class PostProcessor {
                 invertedProjectionMatrix.invert();
                 u.set(invertedProjectionMatrix);
             }),
-            Pair.of("nearPlaneDistance", u -> u.set(GameRenderer.CAMERA_DEPTH)),
+            Pair.of("nearPlaneDistance", u -> u.set(GameRenderer.PROJECTION_Z_NEAR)),
             //TODO Pair.of("farPlaneDistance", u -> u.set(MC.gameRenderer.getFarPlaneDistance())),
-            Pair.of("fov", u -> u.set((float) Math.toRadians(MC.gameRenderer.getFov(MC.gameRenderer.getCamera(), MC.getTickDelta(), true)))),
-            Pair.of("aspectRatio", u -> u.set((float) MC.getWindow().getWidth() / (float) MC.getWindow().getHeight()))
+            Pair.of("fov", u -> u.set((float) Math.toRadians(MC.gameRenderer.getFov(MC.gameRenderer.getMainCamera(), MC.getFrameTime(), true)))),
+            Pair.of("aspectRatio", u -> u.set((float) MC.getWindow().getScreenWidth() / (float) MC.getWindow().getScreenHeight()))
     );
 
     /**
      * Being updated every frame before calling applyPostProcess() by PostProcessHandler
      */
-    public static MatrixStack viewModelStack;
+    public static PoseStack viewModelStack;
 
     private boolean initialized = false;
-    protected PostEffectProcessor shaderEffect;
-    protected JsonEffectShaderProgram[] effects;
-    private Framebuffer tempDepthBuffer;
-    private Collection<Pair<GlUniform, Consumer<GlUniform>>> defaultUniforms;
+    protected PostChain shaderEffect;
+    protected EffectInstance[] effects;
+    private RenderTarget tempDepthBuffer;
+    private Collection<Pair<Uniform, Consumer<Uniform>>> defaultUniforms;
 
     private boolean isActive = true;
 
@@ -64,18 +68,18 @@ public abstract class PostProcessor {
     /**
      * Example: "jcraft:foo" points to jcraft:shaders/post/foo.json
      */
-    public abstract Identifier getShaderEffectId();
+    public abstract ResourceLocation getShaderEffectId();
 
     public void init() {
         loadPostChain();
 
         if (shaderEffect != null) {
-            tempDepthBuffer = shaderEffect.getSecondaryTarget("depthMain");
+            tempDepthBuffer = shaderEffect.getTempTarget("depthMain");
 
             defaultUniforms = new ArrayList<>();
-            for (JsonEffectShaderProgram e : effects) {
-                for (Pair<String, Consumer<GlUniform>> pair : COMMON_UNIFORMS) {
-                    GlUniform u = e.getUniformByName(pair.getFirst());
+            for (EffectInstance e : effects) {
+                for (Pair<String, Consumer<Uniform>> pair : COMMON_UNIFORMS) {
+                    Uniform u = e.getUniform(pair.getFirst());
                     if (u != null) {
                         defaultUniforms.add(Pair.of(u, pair.getSecond()));
                     }
@@ -96,16 +100,16 @@ public abstract class PostProcessor {
         }
 
         try {
-            Identifier file = getShaderEffectId();
-            file = new Identifier(file.getNamespace(), "shaders/post/" + file.getPath() + ".json");
-            shaderEffect = new PostEffectProcessor(
+            ResourceLocation file = getShaderEffectId();
+            file = new ResourceLocation(file.getNamespace(), "shaders/post/" + file.getPath() + ".json");
+            shaderEffect = new PostChain(
                     MC.getTextureManager(),
                     MC.getResourceManager(),
-                    MC.getFramebuffer(),
+                    MC.getMainRenderTarget(),
                     file
             );
-            shaderEffect.setupDimensions(MC.getWindow().getWidth(), MC.getWindow().getHeight());
-            effects = shaderEffect.passes.stream().map(PostEffectPass::getProgram).toArray(JsonEffectShaderProgram[]::new);
+            shaderEffect.resize(MC.getWindow().getScreenWidth(), MC.getWindow().getScreenHeight());
+            effects = shaderEffect.passes.stream().map(PostPass::getEffect).toArray(EffectInstance[]::new);
         } catch (IOException | JsonParseException e) {
             JCraft.LOGGER.error("Failed to load post-processing shader: ", e);
         }
@@ -117,24 +121,24 @@ public abstract class PostProcessor {
                 return;
             }
 
-            tempDepthBuffer.copyDepthFrom(MC.getFramebuffer());
+            tempDepthBuffer.copyDepthFrom(MC.getMainRenderTarget());
 
             // rebind the main framebuffer so that we don't mess up other things
-            GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, MC.getFramebuffer().fbo);
+            GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, MC.getMainRenderTarget().frameBufferId);
         }
     }
 
     public void resize(int width, int height) {
         if (shaderEffect != null) {
-            shaderEffect.setupDimensions(width, height);
+            shaderEffect.resize(width, height);
             if (tempDepthBuffer != null) {
-                tempDepthBuffer.resize(width, height, MinecraftClient.IS_SYSTEM_MAC);
+                tempDepthBuffer.resize(width, height, Minecraft.ON_OSX);
             }
         }
     }
 
     private void applyDefaultUniforms() {
-        Arrays.stream(effects).forEach(e -> e.getUniformByNameOrDummy("time").set((float) time));
+        Arrays.stream(effects).forEach(e -> e.safeGetUniform("time").set((float) time));
 
         defaultUniforms.forEach(pair -> pair.getSecond().accept(pair.getFirst()));
     }
@@ -146,7 +150,7 @@ public abstract class PostProcessor {
             }
 
             if (shaderEffect != null) {
-                time += MC.getLastFrameDuration() / 20.0;
+                time += MC.getDeltaFrameTime() / 20.0;
 
                 applyDefaultUniforms();
 
@@ -154,9 +158,9 @@ public abstract class PostProcessor {
                 if (!isActive) {
                     return;
                 }
-                shaderEffect.render(MC.getTickDelta());
+                shaderEffect.process(MC.getFrameTime());
 
-                GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, MC.getFramebuffer().fbo);
+                GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, MC.getMainRenderTarget().frameBufferId);
                 afterProcess();
             }
         }
@@ -165,7 +169,7 @@ public abstract class PostProcessor {
     /**
      * Set uniforms and bind textures here
      */
-    public abstract void beforeProcess(MatrixStack viewModelStack);
+    public abstract void beforeProcess(PoseStack viewModelStack);
 
     /**
      * Unbind textures

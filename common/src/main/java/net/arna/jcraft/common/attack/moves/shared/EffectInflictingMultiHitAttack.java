@@ -5,15 +5,14 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.moves.base.AbstractEffectInflictingMultiHitAttack;
-import net.minecraft.entity.effect.StatusEffectInstance;
-
+import net.minecraft.world.effect.MobEffectInstance;
 import java.util.List;
 
 @Getter
 public class EffectInflictingMultiHitAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingMultiHitAttack<EffectInflictingMultiHitAttack<A>, A> {
     public EffectInflictingMultiHitAttack(int cooldown, int duration, float attackDistance, float damage, int stun,
                                           float hitboxSize, float knockback, float offset,
-                                          @NonNull IntCollection hitMoments, @NonNull List<StatusEffectInstance> effects) {
+                                          @NonNull IntCollection hitMoments, @NonNull List<MobEffectInstance> effects) {
         super(cooldown, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMoments, effects);
     }
 

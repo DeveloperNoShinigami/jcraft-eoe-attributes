@@ -8,12 +8,11 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.block.Block;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.Block;
 import java.util.Set;
 
 /**
@@ -38,7 +37,7 @@ public class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extends Abst
 
     @Override
     public void onInitiate(A attacker) {
-        boolean breakBlocks = attacker.getUserOrThrow().isSneaking();
+        boolean breakBlocks = attacker.getUserOrThrow().isShiftKeyDown();
         withDuration(breakBlocks ? MINING_BARRAGE_TIME : baseDuration);
         super.onInitiate(attacker);
         attacker.getMoveContext().setBoolean(BREAK_BLOCKS, breakBlocks);
@@ -77,27 +76,27 @@ public class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extends Abst
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (ctx.getBoolean(BREAK_BLOCKS)) {
-            ServerWorld serverWorld = (ServerWorld) user.getWorld();
+            ServerLevel serverWorld = (ServerLevel) user.level();
             LivingEntity attackerEntity = attacker.getBaseEntity();
-            Vec3i lookDirection = JUtils.getLookDirection(user).getVector();
-            Vec3i localUp = GravityChangerAPI.getGravityDirection(user).getOpposite().getVector();
+            Vec3i lookDirection = JUtils.getLookDirection(user).getNormal();
+            Vec3i localUp = GravityChangerAPI.getGravityDirection(user).getOpposite().getNormal();
 
-            BlockPos userPos = lookDirection.getY() != 0 ? attackerEntity.getBlockPos() : user.getBlockPos();
+            BlockPos userPos = lookDirection.getY() != 0 ? attackerEntity.blockPosition() : user.blockPosition();
 
-            breakIfPossible(serverWorld, userPos.add(lookDirection), user);
-            breakIfPossible(serverWorld, userPos.add(lookDirection.add(localUp)), user);
+            breakIfPossible(serverWorld, userPos.offset(lookDirection), user);
+            breakIfPossible(serverWorld, userPos.offset(lookDirection.offset(localUp)), user);
         }
 
         return targets;
     }
 
-    private void breakIfPossible(ServerWorld world, BlockPos pos, LivingEntity user) {
+    private void breakIfPossible(ServerLevel world, BlockPos pos, LivingEntity user) {
         Block block = world.getBlockState(pos).getBlock();
-        if (block.getHardness() < 0) {
+        if (block.defaultDestroyTime() < 0) {
             return;
         }
-        if (block.getHardness() <= mineableHardness) {
-            world.breakBlock(pos, true, user);
+        if (block.defaultDestroyTime() <= mineableHardness) {
+            world.destroyBlock(pos, true, user);
         }
     }
 

@@ -9,11 +9,10 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExperienceEntity> {
@@ -27,15 +26,15 @@ public class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExperienceE
     public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        GETreeEntity tree = new GETreeEntity(JEntityTypeRegistry.GE_TREE.get(), attacker.getWorld(), user.getRotationVector().multiply(1.33));
+        GETreeEntity tree = new GETreeEntity(JEntityTypeRegistry.GE_TREE.get(), attacker.level(), user.getLookAngle().scale(1.33));
         tree.setMaster(user);
 
         Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
-        Vec3d midPos = RotationUtil.vecPlayerToWorld(0.0, attacker.getHeight() * 0.25, 0.0, gravity);
+        Vec3 midPos = RotationUtil.vecPlayerToWorld(0.0, attacker.getBbHeight() * 0.25, 0.0, gravity);
         GravityChangerAPI.setDefaultGravityDirection(tree, gravity);
-        Vec2f corrected = RotationUtil.rotWorldToPlayer(-attacker.getYaw(), -attacker.getPitch(), gravity);
-        tree.refreshPositionAndAngles(attacker.getX() + midPos.x, attacker.getY() + midPos.y, attacker.getZ() + midPos.z, corrected.x, corrected.y);
-        attacker.getWorld().spawnEntity(tree);
+        Vec2 corrected = RotationUtil.rotWorldToPlayer(-attacker.getYRot(), -attacker.getXRot(), gravity);
+        tree.moveTo(attacker.getX() + midPos.x, attacker.getY() + midPos.y, attacker.getZ() + midPos.z, corrected.x, corrected.y);
+        attacker.level().addFreshEntity(tree);
 
         return targets;
     }

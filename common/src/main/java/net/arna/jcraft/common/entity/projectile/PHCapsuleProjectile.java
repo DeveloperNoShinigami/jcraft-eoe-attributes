@@ -5,59 +5,64 @@ import net.arna.jcraft.common.entity.PurpleHazeCloudEntity;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.world.World;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
-public class PHCapsuleProjectile extends PersistentProjectileEntity implements GeoAnimatable {
+public class PHCapsuleProjectile extends AbstractArrow implements GeoAnimatable {
     private AbstractPurpleHazeEntity.PoisonType poisonType;
 
-    public PHCapsuleProjectile(World world) {
+    public PHCapsuleProjectile(Level world) {
         super(JEntityTypeRegistry.PH_CAPSULE.get(), world);
     }
 
-    public PHCapsuleProjectile(LivingEntity owner, World world, AbstractPurpleHazeEntity.PoisonType poisonType) {
+    public PHCapsuleProjectile(LivingEntity owner, Level world, AbstractPurpleHazeEntity.PoisonType poisonType) {
         super(JEntityTypeRegistry.PH_CAPSULE.get(), owner, world);
         this.poisonType = poisonType;
     }
 
     @Override
-    protected ItemStack asItemStack() {
+    protected ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
     @Override
-    protected void onCollision(HitResult hitResult) {
-        if (getWorld().isClient()) {
+    protected void onHit(HitResult hitResult) {
+        if (level().isClientSide()) {
             return;
         }
         if (hitResult.getType() == HitResult.Type.MISS) {
             return;
         }
         if (hitResult instanceof EntityHitResult entityHitResult) {
-            if (getOwner() != null && entityHitResult.getEntity().isConnectedThroughVehicle(getOwner())) {
+            if (getOwner() != null && entityHitResult.getEntity().isPassengerOfSameVehicle(getOwner())) {
                 return;
             }
 
-            JUtils.projectileDamageLogic(this, getWorld(), entityHitResult.getEntity(), getVelocity().multiply(0.1),
+            JUtils.projectileDamageLogic(this, level(), entityHitResult.getEntity(), getDeltaMovement().scale(0.1),
                     2, 1, false, 2f, 2, CommonHitPropertyComponent.HitAnimation.MID);
         }
 
         discard();
-        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(getWorld(), 2.0f, poisonType);
-        cloud.copyPositionAndRotation(this);
-        getWorld().spawnEntity(cloud);
+        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level(), 2.0f, poisonType);
+        cloud.copyPosition(this);
+        level().addFreshEntity(cloud);
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {

@@ -3,12 +3,12 @@ package net.arna.jcraft.mixin.gravity;
 
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,10 +19,10 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class FireworkRocketEntityMixin extends Entity {
 
     @Shadow
-    private @Nullable LivingEntity shooter;
+    private @Nullable LivingEntity attachedToEntity;
 
 
-    public FireworkRocketEntityMixin(EntityType<?> type, World world) {
+    public FireworkRocketEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
@@ -42,9 +42,9 @@ public abstract class FireworkRocketEntityMixin extends Entity {
             )
             , ordinal = 0
     )
-    public Vec3d tick(Vec3d value) {
-        if (shooter != null) {
-            value = RotationUtil.vecWorldToPlayer(value, GravityChangerAPI.getGravityDirection(shooter));
+    public Vec3 tick(Vec3 value) {
+        if (attachedToEntity != null) {
+            value = RotationUtil.vecWorldToPlayer(value, GravityChangerAPI.getGravityDirection(attachedToEntity));
         }
         return value;
     }

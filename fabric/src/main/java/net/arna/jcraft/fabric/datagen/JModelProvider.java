@@ -4,65 +4,64 @@ import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.Model;
-import net.minecraft.data.client.Models;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.data.models.ItemModelGenerators;
+import net.minecraft.data.models.model.ModelTemplate;
+import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.resources.ResourceLocation;
 import java.util.Optional;
 
 public class JModelProvider extends FabricModelProvider {
 
-    private static final Model SPAWN_EGG_MODEL = new Model(Optional.of(new Identifier("minecraft", "item/template_spawn_egg")), Optional.empty());
+    private static final ModelTemplate SPAWN_EGG_MODEL = new ModelTemplate(Optional.of(new ResourceLocation("minecraft", "item/template_spawn_egg")), Optional.empty());
 
     public JModelProvider(FabricDataOutput output) {
         super(output);
     }
 
     @Override
-    public void generateBlockStateModels(BlockStateModelGenerator generator) {
-        generator.registerSimpleCubeAll(JBlockRegistry.FOOLISH_SAND_BLOCK.get());
-        generator.registerSimpleCubeAll(JBlockRegistry.METEORITE_BLOCK.get());
-        generator.registerSimpleCubeAll(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get());
-        generator.registerSimpleCubeAll(JBlockRegistry.SOUL_BLOCK.get());
-        generator.registerRotatable(JBlockRegistry.HOT_SAND_BLOCK.get());
-        generator.registerSimpleCubeAll(JBlockRegistry.STELLAR_IRON_BLOCK.get());
+    public void generateBlockStateModels(BlockModelGenerators generator) {
+        generator.createTrivialCube(JBlockRegistry.FOOLISH_SAND_BLOCK.get());
+        generator.createTrivialCube(JBlockRegistry.METEORITE_BLOCK.get());
+        generator.createTrivialCube(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get());
+        generator.createTrivialCube(JBlockRegistry.SOUL_BLOCK.get());
+        generator.createRotatedVariantBlock(JBlockRegistry.HOT_SAND_BLOCK.get());
+        generator.createTrivialCube(JBlockRegistry.STELLAR_IRON_BLOCK.get());
     }
 
     @Override
-    public void generateItemModels(ItemModelGenerator generator) {
-        generator.register(JItemRegistry.BOXING_GLOVES.get(), Models.GENERATED);
-        generator.register(JItemRegistry.BULLET.get(), Models.GENERATED);
-        generator.register(JItemRegistry.CINDERELLA_MASK.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIO_BOOTS.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIO_CAPE.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIO_HEADBAND.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIO_JACKET.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIO_PANTS.get(), Models.GENERATED);
-        generator.register(JItemRegistry.DIOS_DIARY.get(), Models.GENERATED);
-        generator.register(JItemRegistry.GREEN_BABY.get(), Models.GENERATED);
-        generator.register(JItemRegistry.JOTARO_BOOTS.get(), Models.GENERATED);
-        generator.register(JItemRegistry.JOTARO_CAP.get(), Models.GENERATED);
-        generator.register(JItemRegistry.JOTARO_JACKET.get(), Models.GENERATED);
-        generator.register(JItemRegistry.JOTARO_PANTS.get(), Models.GENERATED);
-        generator.register(JItemRegistry.KARS_HEADWRAP.get(), Models.GENERATED);
-        generator.register(JItemRegistry.KNIFE.get(), Models.HANDHELD);
-        generator.register(JItemRegistry.KQ_COIN.get(), Models.GENERATED);
-        generator.register(JItemRegistry.LIVING_ARROW.get(), Models.HANDHELD);
-        generator.register(JItemRegistry.RED_HAT.get(), Models.GENERATED);
-        generator.register(JItemRegistry.REQUIEM_ARROW.get(), Models.GENERATED);
-        generator.register(JItemRegistry.REQUIEM_RUBY.get(), Models.HANDHELD);
-        generator.register(JItemRegistry.SINNERS_SOUL.get(), Models.GENERATED);
-        generator.register(JItemRegistry.STAND_ARROW.get(), Models.HANDHELD);
-        generator.register(JItemRegistry.STAND_ARROWHEAD.get(), Models.GENERATED);
-        generator.register(JItemRegistry.STAND_DISC.get(), Models.GENERATED);
-        generator.register(JItemRegistry.STELLAR_IRON_INGOT.get(), Models.GENERATED);
-        generator.register(JItemRegistry.STONE_MASK.get(), Models.GENERATED);
+    public void generateItemModels(ItemModelGenerators generator) {
+        generator.generateFlatItem(JItemRegistry.BOXING_GLOVES.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.BULLET.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.CINDERELLA_MASK.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DIO_BOOTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DIO_CAPE.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DIO_HEADBAND.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DIO_JACKET.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DIO_PANTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DIOS_DIARY.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.GREEN_BABY.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.JOTARO_BOOTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.JOTARO_CAP.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.JOTARO_JACKET.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.JOTARO_PANTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.KARS_HEADWRAP.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.KNIFE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(JItemRegistry.KQ_COIN.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.LIVING_ARROW.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(JItemRegistry.RED_HAT.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.REQUIEM_ARROW.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.REQUIEM_RUBY.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(JItemRegistry.SINNERS_SOUL.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.STAND_ARROW.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(JItemRegistry.STAND_ARROWHEAD.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.STAND_DISC.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.STELLAR_IRON_INGOT.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.STONE_MASK.get(), ModelTemplates.FLAT_ITEM);
 
-        generator.register(JItemRegistry.PETSHOP_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
-        generator.register(JItemRegistry.AYA_TSUJI_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
-        generator.register(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
-        generator.register(JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
+        generator.generateFlatItem(JItemRegistry.PETSHOP_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
+        generator.generateFlatItem(JItemRegistry.AYA_TSUJI_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
+        generator.generateFlatItem(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
+        generator.generateFlatItem(JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
     }
 }

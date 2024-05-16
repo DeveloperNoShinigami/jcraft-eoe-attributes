@@ -2,9 +2,9 @@ package net.arna.jcraft.mixin.gravity;
 
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -12,34 +12,34 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Item.class)
 public class ItemMixin {
     @Redirect(
-            method = "raycast",
+            method = "getPlayerPOVHitResult",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getYaw()F",
+                    target = "Lnet/minecraft/world/entity/player/Player;getYRot()F",
                     ordinal = 0
             )
     )
-    private static float redirect_raycast_getYaw(PlayerEntity player) {
+    private static float redirect_raycast_getYaw(Player player) {
         Direction direction = GravityChangerAPI.getGravityDirection(player);
         if (direction == Direction.DOWN) {
-            return player.getYaw();
+            return player.getYRot();
         }
-        return RotationUtil.rotPlayerToWorld(player.getYaw(), player.getPitch(), direction).x;
+        return RotationUtil.rotPlayerToWorld(player.getYRot(), player.getXRot(), direction).x;
     }
 
     @Redirect(
-            method = "raycast",
+            method = "getPlayerPOVHitResult",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getPitch()F",
+                    target = "Lnet/minecraft/world/entity/player/Player;getXRot()F",
                     ordinal = 0
             )
     )
-    private static float redirect_raycast_getPitch(PlayerEntity player) {
+    private static float redirect_raycast_getPitch(Player player) {
         Direction direction = GravityChangerAPI.getGravityDirection(player);
         if (direction == Direction.DOWN) {
-            return player.getPitch();
+            return player.getXRot();
         }
-        return RotationUtil.rotPlayerToWorld(player.getYaw(), player.getPitch(), direction).y;
+        return RotationUtil.rotPlayerToWorld(player.getYRot(), player.getXRot(), direction).y;
     }
 }

@@ -1,5 +1,6 @@
 package net.arna.jcraft.platform.fabric;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentContainer;
 import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import net.arna.jcraft.common.component.entity.CommonGrabComponent;
 import net.arna.jcraft.common.component.entity.CommonGravityComponent;
@@ -9,11 +10,10 @@ import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.arna.jcraft.fabric.common.component.JComponents;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
-
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import java.util.Optional;
 
 public class JComponentPlatformUtilsImpl {
@@ -23,12 +23,12 @@ public class JComponentPlatformUtilsImpl {
     }
 
 
-    public static CommonSpecComponent getSpecData(PlayerEntity player) {
+    public static CommonSpecComponent getSpecData(Player player) {
         return JComponents.SPEC.get(player);
     }
 
 
-    public static CommonPhComponent getPhData(PlayerEntity player) {
+    public static CommonPhComponent getPhData(Player player) {
         return JComponents.PH.get(player);
     }
 
@@ -77,7 +77,7 @@ public class JComponentPlatformUtilsImpl {
         return JComponents.GRAVITY_SHIFT.get(entity);
     }
 
-    public static CommonShockwaveHandlerComponent getShockwaveHandler(World world) {
+    public static CommonShockwaveHandlerComponent getShockwaveHandler(Level world) {
         return JComponents.SHOCKWAVE_HANDLER.get(world);
     }
 

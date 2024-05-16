@@ -1,23 +1,24 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.BloodProjectile;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.resources.ResourceLocation;
+
 
 public class BloodProjectileModel extends GeoModel<BloodProjectile> {
     @Override
-    public Identifier getModelResource(BloodProjectile object) {
+    public ResourceLocation getModelResource(BloodProjectile object) {
         return JCraft.id("geo/bloodprojectile.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(BloodProjectile object) {
+    public ResourceLocation getTextureResource(BloodProjectile object) {
         return JCraft.id("textures/entity/projectiles/bloodprojectile.png");
     }
 
     @Override
-    public Identifier getAnimationResource(BloodProjectile animatable) {
+    public ResourceLocation getAnimationResource(BloodProjectile animatable) {
         return JCraft.id("animations/knife.animation.json");
     }
 

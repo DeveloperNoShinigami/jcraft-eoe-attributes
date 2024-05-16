@@ -24,8 +24,8 @@ import net.arna.jcraft.fabric.common.component.living.*;
 import net.arna.jcraft.fabric.common.component.player.PhComponent;
 import net.arna.jcraft.fabric.common.component.player.SpecComponent;
 import net.arna.jcraft.fabric.common.component.world.ShockwaveHandlerComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 public class JComponents implements EntityComponentInitializer, WorldComponentInitializer {

@@ -2,26 +2,28 @@ package net.arna.jcraft.fabric.common.terrablender;
 
 import net.arna.jcraft.registry.JBiomeRegistry;
 import net.arna.jcraft.registry.JBlockRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.world.gen.surfacebuilder.MaterialRules;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraft.world.level.levelgen.SurfaceRules.ConditionSource;
+import net.minecraft.world.level.levelgen.SurfaceRules.RuleSource;
 
 public class MaterialRulesFabric {
 
-    private static final MaterialRules.MaterialRule SANDSTONE = makeStateRule(Blocks.SANDSTONE);
-    private static final MaterialRules.MaterialRule HOT_SAND = makeStateRule(JBlockRegistry.HOT_SAND_BLOCK.get());
+    private static final SurfaceRules.RuleSource SANDSTONE = makeStateRule(Blocks.SANDSTONE);
+    private static final SurfaceRules.RuleSource HOT_SAND = makeStateRule(JBlockRegistry.HOT_SAND_BLOCK.get());
 
-    public static MaterialRules.MaterialRule makeRules() {
-        final var devilsPalmCond = MaterialRules.biome(JBiomeRegistry.DEVILS_PALM);
-        final var replaceStoneWithSandstone = MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR_WITH_SURFACE_DEPTH_RANGE_6, SANDSTONE);
-        final var replaceStoneWithHotSand = MaterialRules.condition(MaterialRules.STONE_DEPTH_FLOOR, HOT_SAND);
-        return MaterialRules.sequence(
+    public static SurfaceRules.RuleSource makeRules() {
+        final var devilsPalmCond = SurfaceRules.isBiome(JBiomeRegistry.DEVILS_PALM);
+        final var replaceStoneWithSandstone = SurfaceRules.ifTrue(SurfaceRules.DEEP_UNDER_FLOOR, SANDSTONE);
+        final var replaceStoneWithHotSand = SurfaceRules.ifTrue(SurfaceRules.ON_FLOOR, HOT_SAND);
+        return SurfaceRules.sequence(
                 // order of the hot sand / sandstone is very important and correct as it is right now
-                MaterialRules.condition(devilsPalmCond, MaterialRules.sequence(replaceStoneWithHotSand, replaceStoneWithSandstone))
+                SurfaceRules.ifTrue(devilsPalmCond, SurfaceRules.sequence(replaceStoneWithHotSand, replaceStoneWithSandstone))
         );
     }
 
-    private static MaterialRules.MaterialRule makeStateRule(Block block) {
-        return MaterialRules.block(block.getDefaultState());
+    private static SurfaceRules.RuleSource makeStateRule(Block block) {
+        return SurfaceRules.state(block.defaultBlockState());
     }
 }

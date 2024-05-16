@@ -7,28 +7,20 @@ import net.arna.jcraft.common.entity.stand.TheSunEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,37 +29,46 @@ import java.util.Set;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
-public class SunBeamProjectile extends PersistentProjectileEntity implements GeoAnimatable {
+public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
     private final int stun = 10;
     private int length = 0;
     private int maxLength = 64;
     private TheSunEntity sun;
 
-    public static final TrackedData<Integer> SKIN;
+    public static final EntityDataAccessor<Integer> SKIN;
 
     static {
-        SKIN = DataTracker.registerData(SunBeamProjectile.class, TrackedDataHandlerRegistry.INTEGER);
+        SKIN = SynchedEntityData.defineId(SunBeamProjectile.class, EntityDataSerializers.INT);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(SKIN, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(SKIN, 0);
     }
 
     public int getSkin() {
-        return dataTracker.get(SKIN);
+        return entityData.get(SKIN);
     }
 
     public void setSkin(int skin) {
-        dataTracker.set(SKIN, skin);
+        entityData.set(SKIN, skin);
     }
 
-    public SunBeamProjectile(World world) {
+    public SunBeamProjectile(Level world) {
         super(JEntityTypeRegistry.SUN_BEAM.get(), world);
         this.setNoGravity(true);
-        ignoreCameraFrustum = true;
+        noCulling = true;
     }
 
     public void assignSun(TheSunEntity sunEntity) {
@@ -75,17 +76,17 @@ public class SunBeamProjectile extends PersistentProjectileEntity implements Geo
     }
 
     @Override
-    protected ItemStack asItemStack() {
+    protected ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
     // Scorpions aren't very heavy
     @Override
-    public void pushAwayFrom(Entity entity) {
+    public void push(Entity entity) {
     }
 
     @Override
-    public boolean collidesWith(Entity other) {
+    public boolean canCollideWith(Entity other) {
         return false;
     }
 
@@ -93,16 +94,16 @@ public class SunBeamProjectile extends PersistentProjectileEntity implements Geo
     public void tick() {
         super.tick();
 
-        Vec3d curPos = getPos();
+        Vec3 curPos = position();
 
-        if (age > 5 && age <= 10) {
+        if (tickCount > 5 && tickCount <= 10) {
             length += maxLength / 5;
         }
 
-        if (getWorld().isClient()) {
-            if (age <= 20) {
-                Vec3d velocity = getVelocity().multiply(random.nextDouble() * length * 10.0);
-                getWorld().addParticle(
+        if (level().isClientSide()) {
+            if (tickCount <= 20) {
+                Vec3 velocity = getDeltaMovement().scale(random.nextDouble() * length * 10.0);
+                level().addParticle(
                         getSkin() == 2 ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                         curPos.x + random.nextGaussian() * 0.25,
                         curPos.y + random.nextGaussian() * 0.25,
@@ -113,47 +114,47 @@ public class SunBeamProjectile extends PersistentProjectileEntity implements Geo
                 );
             }
         } else {
-            if (age <= 20) {
-                if (age % 3 == 0 && getOwner() instanceof LivingEntity owner) {
+            if (tickCount <= 20) {
+                if (tickCount % 3 == 0 && getOwner() instanceof LivingEntity owner) {
                     Set<Entity> filter = new HashSet<>();
                     filter.add(owner);
                     filter.add(sun);
                     filter.add(this);
-                    if (owner.hasPassengers()) {
-                        filter.addAll(owner.getPassengerList());
+                    if (owner.isVehicle()) {
+                        filter.addAll(owner.getPassengers());
                     }
 
-                    DamageSource damageSource = JDamageSources.create(getWorld(), DamageTypes.MOB_ATTACK, owner);
+                    DamageSource damageSource = JDamageSources.create(level(), DamageTypes.MOB_ATTACK, owner);
 
                     // Recursive hitbox check between current and previous position
-                    Vec3d towardsVec = getVelocity().normalize();
+                    Vec3 towardsVec = getDeltaMovement().normalize();
                     List<LivingEntity> hurtAll = new ArrayList<>();
                     double hitboxSize = 2.0;
                     for (double i = 0.0; i < length / hitboxSize; i++) {
-                        Vec3d laserPos = curPos.add(towardsVec.multiply(i * hitboxSize));
-                        Set<LivingEntity> targets = JUtils.generateHitbox(getWorld(), laserPos, hitboxSize, filter);
+                        Vec3 laserPos = curPos.add(towardsVec.scale(i * hitboxSize));
+                        Set<LivingEntity> targets = JUtils.generateHitbox(level(), laserPos, hitboxSize, filter);
                         targets.removeIf(hurtAll::contains);
                         hurtAll.addAll(targets);
-                        TheSunEntity.dryOut((ServerWorld) getWorld(), BlockPos.ofFloored(laserPos));
+                        TheSunEntity.dryOut((ServerLevel) level(), BlockPos.containing(laserPos));
                     }
                     hurtAll.removeIf(e -> !canDamage(damageSource, e));
 
                     if (!hurtAll.isEmpty()) {
                         for (LivingEntity l : hurtAll) {
                             LivingEntity target = JUtils.getUserIfStand(l);
-                            damageLogic(getWorld(), target, Vec3d.ZERO, stun, 1, false, 1f,
+                            damageLogic(level(), target, Vec3.ZERO, stun, 1, false, 1f,
                                     true, 2, damageSource, owner, CommonHitPropertyComponent.HitAnimation.values()[random.nextInt(3)]);
                         }
 
-                        Vec3d hitPos = hurtAll.get(0).getPos();
-                        JCraft.createParticle((ServerWorld) getWorld(),
+                        Vec3 hitPos = hurtAll.get(0).position();
+                        JCraft.createParticle((ServerLevel) level(),
                                 hitPos.x + random.nextGaussian() * 0.25,
                                 hitPos.y + random.nextGaussian() * 0.25,
                                 hitPos.z + random.nextGaussian() * 0.25,
                                 JParticleType.HIT_SPARK_1);
                     }
                 }
-            } else if (age >= 24) {
+            } else if (tickCount >= 24) {
                 kill();
             }
         }
@@ -164,7 +165,7 @@ public class SunBeamProjectile extends PersistentProjectileEntity implements Geo
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
@@ -183,6 +184,6 @@ public class SunBeamProjectile extends PersistentProjectileEntity implements Geo
 
     @Override
     public double getTick(Object object) {
-        return age;
+        return tickCount;
     }
 }

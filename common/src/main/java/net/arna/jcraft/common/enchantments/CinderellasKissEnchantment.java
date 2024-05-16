@@ -1,17 +1,17 @@
 package net.arna.jcraft.common.enchantments;
 
 import net.arna.jcraft.registry.JItemRegistry;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnchantmentTarget;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 public class CinderellasKissEnchantment extends Enchantment {
     public static final CinderellasKissEnchantment INSTANCE = new CinderellasKissEnchantment();
 
     private CinderellasKissEnchantment() {
-        super(Rarity.RARE, EnchantmentTarget.WEARABLE, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
+        super(Rarity.RARE, EnchantmentCategory.WEARABLE, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
     }
 
     @Override
@@ -20,11 +20,11 @@ public class CinderellasKissEnchantment extends Enchantment {
     }
 
     @Override
-    public boolean isAcceptableItem(ItemStack stack) {
+    public boolean canEnchant(ItemStack stack) {
         return stack.getItem() == JItemRegistry.CINDERELLA_MASK;
     }
 
     public static int getCKLevel(ItemStack stack) {
-        return EnchantmentHelper.getLevel(INSTANCE, stack);
+        return EnchantmentHelper.getItemEnchantmentLevel(INSTANCE, stack);
     }
 }

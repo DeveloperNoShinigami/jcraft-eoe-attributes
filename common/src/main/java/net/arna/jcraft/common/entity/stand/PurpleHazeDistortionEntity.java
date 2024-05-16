@@ -11,13 +11,20 @@ import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.text.Text;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -34,16 +41,16 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
 
     public static final PilotModeMove<PurpleHazeDistortionEntity> PILOT_MODE = new PilotModeMove<PurpleHazeDistortionEntity>(20)
             .withInfo(
-                    Text.literal("Pilot Mode"),
-                    Text.literal("5m range")
+                    Component.literal("Pilot Mode"),
+                    Component.literal("5m range")
             );
 
     public static final NoOpMove<PurpleHazeDistortionEntity> DISTORTION = new NoOpMove<PurpleHazeDistortionEntity>(20, 0, 0)
             .withInitAction((attacker, user, ctx) -> attacker.nextPoisonType())
             .withCrouchingVariant(PILOT_MODE)
             .withInfo(
-                    Text.literal("Distortion"),
-                    Text.literal("""
+                    Component.literal("Distortion"),
+                    Component.literal("""
                             Toggles virus effects between:
                             Harming - standard effect, deals damage over time
                             Nullifying - removes status effects
@@ -56,8 +63,8 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
-                    Text.literal("Grab (Final Hit)"),
-                    Text.empty()
+                    Component.literal("Grab (Final Hit)"),
+                    Component.empty()
             );
     public static final SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>> GRAB_HIT = new SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>>(0,
             34, 0.75f, 1f, 10, 2f, 0f, 0f, IntSet.of(6, 8, 10, 12, 14, 16, 18))
@@ -65,8 +72,8 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
             .withStunType(StunType.UNBURSTABLE)
             .withFinisher(19, GRAB_HIT_FINAL)
             .withInfo(
-                    Text.literal("Grab (Final Hit)"),
-                    Text.empty()
+                    Component.literal("Grab (Final Hit)"),
+                    Component.empty()
             );
     public static final GrabAttack<PurpleHazeDistortionEntity, State> GRAB = new GrabAttack<>(
             280, 12, 24, 0.75f, 0f, 45, 1.5f, 0f, 0f,
@@ -75,15 +82,15 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
             .withSound(JSoundRegistry.D4C_THROW.get())
             .withImpactSound(JSoundRegistry.PH_GRAB_HIT.get())
             .withInfo(
-                    Text.literal("Grab"),
-                    Text.literal("unblockable, combo finisher")
+                    Component.literal("Grab"),
+                    Component.literal("unblockable, combo finisher")
             );
 
-    public PurpleHazeDistortionEntity(EntityType type, World worldIn) {
+    public PurpleHazeDistortionEntity(EntityType type, Level worldIn) {
         this(worldIn);
     }
 
-    public PurpleHazeDistortionEntity(World worldIn) {
+    public PurpleHazeDistortionEntity(Level worldIn) {
         super(StandType.PURPLE_HAZE_DISTORTION, worldIn);
 
         freespace += """

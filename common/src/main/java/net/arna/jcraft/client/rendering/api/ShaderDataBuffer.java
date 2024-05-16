@@ -1,8 +1,8 @@
 package net.arna.jcraft.client.rendering.api;
 
-import net.minecraft.client.gl.JsonEffectShaderProgram;
-
 import static org.lwjgl.opengl.GL31.*;
+
+import net.minecraft.client.renderer.EffectInstance;
 
 public class ShaderDataBuffer {
     private int tbo = 0;
@@ -43,13 +43,13 @@ public class ShaderDataBuffer {
         glBindBuffer(GL_TEXTURE_BUFFER, 0);
     }
 
-    public void apply(JsonEffectShaderProgram effect, String uniform) {
+    public void apply(EffectInstance effect, String uniform) {
         glBindBuffer(GL_TEXTURE_BUFFER, tbo);
-        int unit = effect.samplerBinds.size();
+        int unit = effect.samplerMap.size();
         glActiveTexture(GL_TEXTURE0 + unit);
         glBindTexture(GL_TEXTURE_BUFFER, tex);
 
-        effect.getUniformByName(uniform).set(unit);
+        effect.getUniform(uniform).set(unit);
         glActiveTexture(GL_TEXTURE0);
     }
 }

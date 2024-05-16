@@ -1,19 +1,19 @@
 package net.arna.jcraft.common.item;
 
 import net.arna.jcraft.registry.JItemRegistry;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class MockItem extends Item {
     private static final ItemStack FALLBACK = new ItemStack(Items.DIRT);
 
     public MockItem() {
-        super(new Settings());
+        super(new Properties());
     }
 
     public static boolean isMockItem(ItemStack stack) {
@@ -21,18 +21,18 @@ public class MockItem extends Item {
     }
 
     public static ItemStack getMockedStack(ItemStack mockItemStack) {
-        NbtCompound nbt = mockItemStack.getNbt();
-        if (nbt == null || !nbt.contains("MockItem", NbtElement.STRING_TYPE)) {
+        CompoundTag nbt = mockItemStack.getTag();
+        if (nbt == null || !nbt.contains("MockItem", Tag.TAG_STRING)) {
             return FALLBACK;
         }
 
         String mockItemId = nbt.getString("MockItem");
-        Item mockItem = Registries.ITEM.get(new Identifier(mockItemId));
+        Item mockItem = BuiltInRegistries.ITEM.get(new ResourceLocation(mockItemId));
 
-        NbtCompound mockData = nbt.contains("MockData", NbtElement.COMPOUND_TYPE) ? nbt.getCompound("MockData") : null;
+        CompoundTag mockData = nbt.contains("MockData", Tag.TAG_COMPOUND) ? nbt.getCompound("MockData") : null;
 
         ItemStack mockedStack = new ItemStack(mockItem, mockItemStack.getCount());
-        mockedStack.setNbt(mockData);
+        mockedStack.setTag(mockData);
 
         return mockedStack;
     }
@@ -44,18 +44,18 @@ public class MockItem extends Item {
         }
 
         ItemStack mockStack = new ItemStack(JItemRegistry.MOCK_ITEM.get(), stack.getCount());
-        NbtCompound nbt = mockStack.getOrCreateNbt();
+        CompoundTag nbt = mockStack.getOrCreateTag();
         // Register which item it's mocking and copy all relevant NBT data
-        nbt.putString("MockItem", Registries.ITEM.getId(stack.getItem()).toString());
-        if (stack.getNbt() != null) {
-            nbt.put("MockData", stack.getNbt());
+        nbt.putString("MockItem", BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
+        if (stack.getTag() != null) {
+            nbt.put("MockData", stack.getTag());
         }
 
         return mockStack;
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack) {
-        return getMockedStack(stack).getTranslationKey();
+    public String getDescriptionId(ItemStack stack) {
+        return getMockedStack(stack).getDescriptionId();
     }
 }

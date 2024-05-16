@@ -10,6 +10,6 @@ public interface ServerEntityTickEvent<T> {
 
     void tick(T instance);
 
-    interface Entity extends TickEvent<net.minecraft.entity.Entity> {
+    interface Entity extends TickEvent<net.minecraft.world.entity.Entity> {
     }
 }

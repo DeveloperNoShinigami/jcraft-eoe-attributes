@@ -1,23 +1,27 @@
 package net.arna.jcraft.client.rendering;
 
+import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.arna.jcraft.client.rendering.shader.ShaderUniformHandler;
 import net.arna.jcraft.client.util.RenderUtils;
 import net.arna.jcraft.platform.JPlatformUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import org.joml.Matrix4f;
 
 import java.util.HashMap;
 
 public class RenderHandler {
-    public static HashMap<RenderLayer, BufferBuilder> BUFFERS = new HashMap<>();
+    public static HashMap<RenderType, BufferBuilder> BUFFERS = new HashMap<>();
     public static boolean LARGER_BUFFER_SOURCES = JPlatformUtils.isModLoaded("sodium");
 
-    public static HashMap<RenderLayer, ShaderUniformHandler> UNIFORM_HANDLERS = new HashMap<>();
-    public static VertexConsumerProvider.Immediate DELAYED_RENDER;
+    public static HashMap<RenderType, ShaderUniformHandler> UNIFORM_HANDLERS = new HashMap<>();
+    public static MultiBufferSource.BufferSource DELAYED_RENDER;
 
     public static Matrix4f MATRIX4F;
 
@@ -28,7 +32,7 @@ public class RenderHandler {
 
     public static void init() {
         int size = LARGER_BUFFER_SOURCES ? 262144 : 256;
-        DELAYED_RENDER = VertexConsumerProvider.immediate(BUFFERS, new BufferBuilder(size));
+        DELAYED_RENDER = MultiBufferSource.immediateWithBuffers(BUFFERS, new BufferBuilder(size));
     }
 
     public static void cacheFogData(float near, float far, FogShape shape) {
@@ -43,10 +47,10 @@ public class RenderHandler {
         FOG_BLUE = b;
     }
 
-    public static void beginBufferedRendering(MatrixStack matrixStack) {
-        matrixStack.push();
-        LightmapTextureManager lightTexture = MinecraftClient.getInstance().gameRenderer.getLightmapTextureManager();
-        lightTexture.enable();
+    public static void beginBufferedRendering(PoseStack matrixStack) {
+        matrixStack.pushPose();
+        LightTexture lightTexture = Minecraft.getInstance().gameRenderer.lightTexture();
+        lightTexture.turnOnLightLayer();
         RenderSystem.activeTexture(org.lwjgl.opengl.GL13.GL_TEXTURE2);
         RenderSystem.enableCull();
         RenderSystem.enableDepthTest();
@@ -73,42 +77,42 @@ public class RenderHandler {
         FOG_SHAPE = shaderFogShape;
     }
 
-    public static void renderBufferedBatches(MatrixStack matrixStack) {
+    public static void renderBufferedBatches(PoseStack matrixStack) {
         draw(DELAYED_RENDER, BUFFERS);
     }
 
-    public static void endBufferedRendering(MatrixStack poseStack) {
-        LightmapTextureManager lightTexture = MinecraftClient.getInstance().gameRenderer.getLightmapTextureManager();
+    public static void endBufferedRendering(PoseStack poseStack) {
+        LightTexture lightTexture = Minecraft.getInstance().gameRenderer.lightTexture();
         RenderSystem.setShaderFogStart(FOG_NEAR);
         RenderSystem.setShaderFogEnd(FOG_FAR);
         RenderSystem.setShaderFogShape(FOG_SHAPE);
         RenderSystem.setShaderFogColor(FOG_RED, FOG_GREEN, FOG_BLUE);
 
-        poseStack.pop();
-        lightTexture.disable();
+        poseStack.popPose();
+        lightTexture.turnOffLightLayer();
         RenderSystem.disableCull();
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(true);
     }
 
-    public static void draw(VertexConsumerProvider.Immediate source, HashMap<RenderLayer, BufferBuilder> buffers) {
-        for (RenderLayer type : buffers.keySet()) {
-            ShaderProgram instance = RenderUtils.getShader(type);
+    public static void draw(MultiBufferSource.BufferSource source, HashMap<RenderType, BufferBuilder> buffers) {
+        for (RenderType type : buffers.keySet()) {
+            ShaderInstance instance = RenderUtils.getShader(type);
             if (UNIFORM_HANDLERS.containsKey(type)) {
                 ShaderUniformHandler handler = UNIFORM_HANDLERS.get(type);
                 handler.updateShaderData(instance);
             }
-            source.draw(type);
+            source.endBatch(type);
             if (instance instanceof IJShader jShader) {
                 jShader.setUniformDefaults();
             }
         }
-        source.draw();
+        source.endBatch();
     }
 
-    public static void addRenderLayer(RenderLayer type) {
-        int size = LARGER_BUFFER_SOURCES ? 262144 : type.getExpectedBufferSize();
-        HashMap<RenderLayer, BufferBuilder> buffers = BUFFERS;
+    public static void addRenderLayer(RenderType type) {
+        int size = LARGER_BUFFER_SOURCES ? 262144 : type.bufferSize();
+        HashMap<RenderType, BufferBuilder> buffers = BUFFERS;
         buffers.put(type, new BufferBuilder(size));
     }
 }

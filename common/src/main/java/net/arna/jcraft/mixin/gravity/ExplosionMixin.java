@@ -3,10 +3,10 @@ package net.arna.jcraft.mixin.gravity;
 
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.explosion.Explosion;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -14,11 +14,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Explosion.class)
 public abstract class ExplosionMixin {
     @Redirect(
-            method = "collectBlocksAndDamageEntities",
+            method = "explode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getEyeY()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getEyeY()D"
             )
     )
     private double redirect_collectBlocksAndDamageEntities_getEyeY_0(Entity entity) {
@@ -27,15 +26,14 @@ public abstract class ExplosionMixin {
             return entity.getEyeY();
         }
 
-        return entity.getEyePos().y;
+        return entity.getEyePosition().y;
     }
 
     @Redirect(
-            method = "collectBlocksAndDamageEntities",
+            method = "explode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getX()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getX()D"
             )
     )
     private double redirect_collectBlocksAndDamageEntities_getX_0(Entity entity) {
@@ -44,15 +42,14 @@ public abstract class ExplosionMixin {
             return entity.getX();
         }
 
-        return entity.getEyePos().x;
+        return entity.getEyePosition().x;
     }
 
     @Redirect(
-            method = "collectBlocksAndDamageEntities",
+            method = "explode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getZ()D",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getZ()D"
             )
     )
     private double redirect_collectBlocksAndDamageEntities_getZ_0(Entity entity) {
@@ -61,41 +58,39 @@ public abstract class ExplosionMixin {
             return entity.getZ();
         }
 
-        return entity.getEyePos().z;
+        return entity.getEyePosition().z;
     }
 
     @Redirect(
-            method = "collectBlocksAndDamageEntities",
+            method = "explode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;getVelocity()Lnet/minecraft/util/math/Vec3d;",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"
             )
     )
-    private Vec3d redirect_collectBlocksAndDamageEntities_getVelocity_0(Entity entity) {
+    private Vec3 redirect_collectBlocksAndDamageEntities_getVelocity_0(Entity entity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
-            return entity.getVelocity();
+            return entity.getDeltaMovement();
         }
 
-        return RotationUtil.vecPlayerToWorld(entity.getVelocity(), gravityDirection);
+        return RotationUtil.vecPlayerToWorld(entity.getDeltaMovement(), gravityDirection);
     }
 
     @Redirect(
-            method = "collectBlocksAndDamageEntities",
+            method = "explode",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;setVelocity(Lnet/minecraft/util/math/Vec3d;)V",
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V"
             )
     )
-    private void redirect_collectBlocksAndDamageEntities_setVelocity_0(Entity entity, Vec3d vec3d) {
+    private void redirect_collectBlocksAndDamageEntities_setVelocity_0(Entity entity, Vec3 vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
-            entity.setVelocity(vec3d);
+            entity.setDeltaMovement(vec3d);
             return;
         }
 
-        entity.setVelocity(RotationUtil.vecWorldToPlayer(vec3d, gravityDirection));
+        entity.setDeltaMovement(RotationUtil.vecWorldToPlayer(vec3d, gravityDirection));
     }
 }

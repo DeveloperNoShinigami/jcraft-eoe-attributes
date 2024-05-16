@@ -5,82 +5,82 @@ import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class SheathedAnubisItem extends SpecObtainmentItem {
-    public SheathedAnubisItem(Settings settings, SpecType spec) {
+    public SheathedAnubisItem(Properties settings, SpecType spec) {
         super(settings, spec);
     }
 
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.BLOCK;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.BLOCK;
     }
 
-    public int getMaxUseTime(ItemStack stack) {
+    public int getUseDuration(ItemStack stack) {
         return 72000;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(Text.translatable("jcraft.anubis.namedesc"));
-        tooltip.add(Text.translatable("jcraft.anubis.bloodthirstdesc"));
-        tooltip.add(Text.translatable("jcraft.anubis.removaldesc"));
-        tooltip.add(Text.translatable("jcraft.sheathedanubis.blockdesc"));
-        tooltip.add(Text.translatable("jcraft.sheathedanubis.desc"));
-        super.appendTooltip(stack, world, tooltip, context); // Doubles the previous Anubis description
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+        tooltip.add(Component.translatable("jcraft.anubis.namedesc"));
+        tooltip.add(Component.translatable("jcraft.anubis.bloodthirstdesc"));
+        tooltip.add(Component.translatable("jcraft.anubis.removaldesc"));
+        tooltip.add(Component.translatable("jcraft.sheathedanubis.blockdesc"));
+        tooltip.add(Component.translatable("jcraft.sheathedanubis.desc"));
+        super.appendHoverText(stack, world, tooltip, context); // Doubles the previous Anubis description
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        ItemStack itemStack = user.getItemInHand(hand);
 
-        if (user.isSneaking()) { // Block
-            user.setCurrentHand(hand);
+        if (user.isShiftKeyDown()) { // Block
+            user.startUsingItem(hand);
         } else { // Unsheathe
-            if (world.isClient) {
-                return TypedActionResult.fail(itemStack);
+            if (world.isClientSide) {
+                return InteractionResultHolder.fail(itemStack);
             }
             StandEntity<?, ?> stand = JUtils.getStand(user);
             if (stand != null && stand.blocking) {
-                return TypedActionResult.fail(itemStack);
+                return InteractionResultHolder.fail(itemStack);
             }
-            ServerWorld serverWorld = (ServerWorld) world;
+            ServerLevel serverWorld = (ServerLevel) world;
 
             boolean specChanged = tryGetSpec(user);
             if (specChanged) {
-                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE.get(), serverWorld, user.getPos());
-                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_SPECCHANGE.get(), serverWorld, user.getPos());
-                user.setStackInHand(hand, new ItemStack(JItemRegistry.ANUBIS.get()));
+                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE.get(), serverWorld, user.position());
+                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_SPECCHANGE.get(), serverWorld, user.position());
+                user.setItemInHand(hand, new ItemStack(JItemRegistry.ANUBIS.get()));
             } else if (!warned) {
-                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE.get(), serverWorld, user.getPos());
-                user.setStackInHand(hand, new ItemStack(JItemRegistry.ANUBIS.get()));
+                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE.get(), serverWorld, user.position());
+                user.setItemInHand(hand, new ItemStack(JItemRegistry.ANUBIS.get()));
             }
         }
 
-        return TypedActionResult.consume(itemStack);
+        return InteractionResultHolder.consume(itemStack);
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-        if (world.isClient) {
+        if (world.isClientSide) {
             return;
         }
-        if (entity instanceof PlayerEntity player) // Bloodlust
+        if (entity instanceof Player player) // Bloodlust
         {
-            AnubisItem.handleAnubisEffects(player.getLastAttackTime() - player.age, player);
+            AnubisItem.handleAnubisEffects(player.getLastHurtMobTimestamp() - player.tickCount, player);
         }
     }
 }

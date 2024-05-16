@@ -7,19 +7,18 @@ import net.arna.jcraft.registry.JItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.LootFunction;
-import net.minecraft.loot.function.SetCountLootFunction;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.loot.provider.number.UniformLootNumberProvider;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -34,20 +33,20 @@ public class JLootTableProviders {
 
         @Override
         public void generate() {
-            addDrop(JBlockRegistry.METEORITE_BLOCK.get());
-            addDrop(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get());
-            addDrop(JBlockRegistry.SOUL_BLOCK.get());
-            addDrop(JBlockRegistry.HOT_SAND_BLOCK.get());
-            addDrop(JBlockRegistry.STELLAR_IRON_BLOCK.get());
+            dropSelf(JBlockRegistry.METEORITE_BLOCK.get());
+            dropSelf(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get());
+            dropSelf(JBlockRegistry.SOUL_BLOCK.get());
+            dropSelf(JBlockRegistry.HOT_SAND_BLOCK.get());
+            dropSelf(JBlockRegistry.STELLAR_IRON_BLOCK.get());
         }
     }
 
     public static class EntityLoot extends SimpleFabricLootTableProvider {
 
-        private final Map<Identifier, LootTable.Builder> loot = Maps.newHashMap();
+        private final Map<ResourceLocation, LootTable.Builder> loot = Maps.newHashMap();
 
         public EntityLoot(FabricDataOutput output) {
-            super(output, LootContextTypes.ENTITY);
+            super(output, LootContextParamSets.ENTITY);
         }
 
         // add new entries here
@@ -59,51 +58,51 @@ public class JLootTableProviders {
 
         // loot builder for Petshop
         private LootTable.Builder petshopLoot(EntityType<?> type) {
-            return LootTable.builder()
-                    .pool(constantPool(1f).with(ItemEntry.builder(Items.FEATHER).apply(uniformAmount(1f, 2f))))
-                    .pool(constantPool(1f).with(ItemEntry.builder(Items.CHAIN).apply(constantAmount(1f))));
+            return LootTable.lootTable()
+                    .withPool(constantPool(1f).add(LootItem.lootTableItem(Items.FEATHER).apply(uniformAmount(1f, 2f))))
+                    .withPool(constantPool(1f).add(LootItem.lootTableItem(Items.CHAIN).apply(constantAmount(1f))));
         }
 
         // loot builder for Aya Tsuji
         private LootTable.Builder ayaTsujiLoot(EntityType<?> type) {
-            return LootTable.builder()
-                    .pool(constantPool(1f)
-                            .with(ItemEntry.builder(Items.AIR).weight(3).apply(constantAmount(1f)))
-                            .with(ItemEntry.builder(JItemRegistry.CINDERELLA_MASK.get()).weight(1).apply(constantAmount(1f))));
+            return LootTable.lootTable()
+                    .withPool(constantPool(1f)
+                            .add(LootItem.lootTableItem(Items.AIR).setWeight(3).apply(constantAmount(1f)))
+                            .add(LootItem.lootTableItem(JItemRegistry.CINDERELLA_MASK.get()).setWeight(1).apply(constantAmount(1f))));
         }
 
         // loot builder for D'Arby Older
         private LootTable.Builder darbyOlderLoot(EntityType<?> type) {
-            return LootTable.builder()
-                    .pool(constantPool(1f).with(ItemEntry.builder(Items.FEATHER).apply(uniformAmount(2f, 5f))));
+            return LootTable.lootTable()
+                    .withPool(constantPool(1f).add(LootItem.lootTableItem(Items.FEATHER).apply(uniformAmount(2f, 5f))));
         }
 
         public <T extends Entity> void addDrop(EntityType<T> type, Function<EntityType<T>, LootTable.Builder> function) {
-            loot.put(type.getLootTableId(), function.apply(type));
+            loot.put(type.getDefaultLootTable(), function.apply(type));
         }
 
         @Override
-        public void accept(BiConsumer<Identifier, LootTable.Builder> consumer) {
+        public void generate(BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
             this.generateLoot();
-            for (Map.Entry<Identifier, LootTable.Builder> entry : loot.entrySet()) {
+            for (Map.Entry<ResourceLocation, LootTable.Builder> entry : loot.entrySet()) {
                 consumer.accept(entry.getKey(), entry.getValue());
             }
         }
     }
 
     private static LootPool.Builder constantPool(final float rolls) {
-        return LootPool.builder().rolls(ConstantLootNumberProvider.create(rolls));
+        return LootPool.lootPool().setRolls(ConstantValue.exactly(rolls));
     }
 
     private static LootPool.Builder uniformPool(final float min, final float max) {
-        return LootPool.builder().rolls(UniformLootNumberProvider.create(min, max));
+        return LootPool.lootPool().setRolls(UniformGenerator.between(min, max));
     }
 
-    private static LootFunction.Builder constantAmount(final float amount) {
-        return SetCountLootFunction.builder(ConstantLootNumberProvider.create(amount));
+    private static LootItemFunction.Builder constantAmount(final float amount) {
+        return SetItemCountFunction.setCount(ConstantValue.exactly(amount));
     }
 
-    private static LootFunction.Builder uniformAmount(final float min, final float max) {
-        return SetCountLootFunction.builder(UniformLootNumberProvider.create(min, max));
+    private static LootItemFunction.Builder uniformAmount(final float min, final float max) {
+        return SetItemCountFunction.setCount(UniformGenerator.between(min, max));
     }
 }

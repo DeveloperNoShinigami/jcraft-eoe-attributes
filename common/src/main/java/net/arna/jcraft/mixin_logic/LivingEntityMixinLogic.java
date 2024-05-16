@@ -2,11 +2,11 @@ package net.arna.jcraft.mixin_logic;
 
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class LivingEntityMixinLogic {
 
@@ -16,10 +16,10 @@ public class LivingEntityMixinLogic {
             return livingEntity.getY();
         }
 
-        return RotationUtil.vecWorldToPlayer(livingEntity.getPos(), gravityDirection).y;
+        return RotationUtil.vecWorldToPlayer(livingEntity.position(), gravityDirection).y;
     }
 
-    public static Vec3d modify_travel_Vec3d_2(Entity entity, Vec3d vec3d) {
+    public static Vec3 modify_travel_Vec3d_2(Entity entity, Vec3 vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return vec3d;
@@ -28,19 +28,19 @@ public class LivingEntityMixinLogic {
         return RotationUtil.vecWorldToPlayer(vec3d, gravityDirection);
     }
 
-    public static BlockPos modify_playBlockFallSound_getBlockState_0(Entity entity, BlockPos blockPos, Vec3d thisVec3d) {
+    public static BlockPos modify_playBlockFallSound_getBlockState_0(Entity entity, BlockPos blockPos, Vec3 thisVec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return blockPos;
         }
 
-        return BlockPos.ofFloored(thisVec3d.add(RotationUtil.vecPlayerToWorld(0, -0.20000000298023224D, 0, gravityDirection)));
+        return BlockPos.containing(thisVec3d.add(RotationUtil.vecPlayerToWorld(0, -0.20000000298023224D, 0, gravityDirection)));
     }
 
-    public static Vec3d redirect_canSee_new_0(Entity entity, double x, double y, double z, Vec3d eyePos) {
+    public static Vec3 redirect_canSee_new_0(Entity entity, double x, double y, double z, Vec3 eyePos) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
-            return new Vec3d(x, y, z);
+            return new Vec3(x, y, z);
         }
 
         return eyePos;

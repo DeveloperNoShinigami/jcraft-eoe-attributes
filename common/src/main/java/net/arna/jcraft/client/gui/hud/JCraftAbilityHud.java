@@ -2,6 +2,7 @@ package net.arna.jcraft.client.gui.hud;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import lombok.experimental.UtilityClass;
 import net.arna.jcraft.JCraft;
@@ -12,21 +13,20 @@ import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.Mth;
 import java.util.Map;
 
 @UtilityClass
 public class JCraftAbilityHud {
     /// ICON HUD
-    public static final Identifier GUI_ICONS_TEXTURE = new Identifier("textures/gui/icons.png");
-    private static final Identifier BORDER = JCraft.id("textures/gui/ability_icons/border.png");
-    private static final Identifier OVERLAY = JCraft.id("textures/gui/ability_icons/overlay.png");
+    public static final ResourceLocation GUI_ICONS_TEXTURE = new ResourceLocation("textures/gui/icons.png");
+    private static final ResourceLocation BORDER = JCraft.id("textures/gui/ability_icons/border.png");
+    private static final ResourceLocation OVERLAY = JCraft.id("textures/gui/ability_icons/overlay.png");
 
     final IconPos ICON = new IconPos("icon", 10, 18 * 3 + 18);
 
@@ -107,9 +107,9 @@ public class JCraftAbilityHud {
         ClientGuiEvent.RENDER_HUD.register((ctx, tickDelta) -> render(ctx));
     }
 
-    public static void render(DrawContext ctx) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
+    public static void render(GuiGraphics ctx) {
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.player;
         if (player == null) {
             return;
         }
@@ -119,7 +119,7 @@ public class JCraftAbilityHud {
         StandEntity<?, ?> stand = JUtils.getStand(player);
 
         if (useIcons) {
-            int selectedX = getHudX(client.getWindow().getScaledWidth(), 48);
+            int selectedX = getHudX(client.getWindow().getGuiScaledWidth(), 48);
             int selectedY = isMid ? iconSpacing * 11 : 0;
 
             JSpec<?, ?> spec = JUtils.getSpec(player);
@@ -131,7 +131,7 @@ public class JCraftAbilityHud {
                 }
             } else {
                 // Render cooldown HUD for stands
-                renderIcons(ctx, isMid ? STAND_ICONS_MID : STAND_ICONS, selectedX, selectedY, stand.getType().getUntranslatedName());
+                renderIcons(ctx, isMid ? STAND_ICONS_MID : STAND_ICONS, selectedX, selectedY, stand.getType().toShortString());
             }
 
             renderIcons(ctx, UNIVERSAL_ICONS, selectedX, selectedY, "universal");
@@ -146,7 +146,7 @@ public class JCraftAbilityHud {
      * @param selectedY y offset (in pixels) accounting for player's config choice
      * @param type      decides which resource folder is loaded when rendering icons
      */
-    private static void renderIcons(DrawContext ctx, Map<CooldownType, IconPos> icons, int selectedX, int selectedY, String type) {
+    private static void renderIcons(GuiGraphics ctx, Map<CooldownType, IconPos> icons, int selectedX, int selectedY, String type) {
         icons.forEach((cooldownType, iconPos) -> {
             int iconX = iconPos.x() + selectedX;
             int iconY = iconPos.y() + selectedY;
@@ -163,14 +163,14 @@ public class JCraftAbilityHud {
         });
     }
 
-    public static void renderIcon(DrawContext ctx, int x, int y, String type, String icon) {
-        Identifier texture = JCraft.id("textures/gui/ability_icons/" + type + "/" + icon + ".png");
+    public static void renderIcon(GuiGraphics ctx, int x, int y, String type, String icon) {
+        ResourceLocation texture = JCraft.id("textures/gui/ability_icons/" + type + "/" + icon + ".png");
         renderIcon(ctx, x, y, texture, icon);
     }
 
-    public static void renderIcon(DrawContext ctx, int x, int y, Identifier texture, String fallback) {
-        var matrices = ctx.getMatrices();
-        matrices.push();
+    public static void renderIcon(GuiGraphics ctx, int x, int y, ResourceLocation texture, String fallback) {
+        var matrices = ctx.pose();
+        matrices.pushPose();
 
         if (!isTextureAvailable(texture)) {
             texture = JCraft.id("textures/gui/ability_icons/fallback/" + fallback + ".png");
@@ -178,27 +178,27 @@ public class JCraftAbilityHud {
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.enableBlend();
-        ctx.drawTexture(texture, x + 2, y + 2, 0, 0, 18, 18, 18, 18);
+        ctx.blit(texture, x + 2, y + 2, 0, 0, 18, 18, 18, 18);
 
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
-        matrices.pop();
+        matrices.popPose();
     }
 
-    public static void renderBorder(DrawContext ctx, int x, int y) {
-        var matrices = ctx.getMatrices();
-        matrices.push();
+    public static void renderBorder(GuiGraphics ctx, int x, int y) {
+        var matrices = ctx.pose();
+        matrices.pushPose();
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.enableBlend();
-        ctx.drawTexture(BORDER, x, y, 0, 0, 22, 22, 22, 22);
+        ctx.blit(BORDER, x, y, 0, 0, 22, 22, 22, 22);
         RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
-        matrices.pop();
+        matrices.popPose();
     }
 
-    private static boolean isTextureAvailable(Identifier textureLocation) {
-        ResourceManager resourceManager = MinecraftClient.getInstance().getResourceManager();
+    private static boolean isTextureAvailable(ResourceLocation textureLocation) {
+        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
         try {
             return resourceManager.getResource(textureLocation).isPresent();
         } catch (Exception e) {
@@ -211,24 +211,24 @@ public class JCraftAbilityHud {
      * @return Progress value of cooldown between zero and one if it is present, otherwise defaults to -1
      */
     private static double getCooldownProgress(CooldownType type) {
-        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(MinecraftClient.getInstance().player);
+        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(Minecraft.getInstance().player);
         int cooldown = cooldowns.getCooldown(type);
         int initialDuration = cooldowns.getInitialDuration(type);
 
         return cooldown > 0 && initialDuration != 0 ? normalize(cooldown, 0, initialDuration) : -1;
     }
 
-    public static void renderCooldown(DrawContext ctx, double cd, int x, int y) {
-        var matrices = ctx.getMatrices();
-        matrices.push();
+    public static void renderCooldown(GuiGraphics ctx, double cd, int x, int y) {
+        var matrices = ctx.pose();
+        matrices.pushPose();
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.enableBlend();
-        ctx.drawTexture(OVERLAY, x, y + MathHelper.floor(22.0 * (1.0 - cd)), 0, (float) Math.floor((1.0 - cd) * 22),
-                22, MathHelper.ceil(22.0 * cd), 22, 22);
+        ctx.blit(OVERLAY, x, y + Mth.floor(22.0 * (1.0 - cd)), 0, (float) Math.floor((1.0 - cd) * 22),
+                22, Mth.ceil(22.0 * cd), 22, 22);
         RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
         RenderSystem.depthMask(true);
         RenderSystem.disableBlend();
-        matrices.pop();
+        matrices.popPose();
     }
 
     private static double normalize(double value, double min, double max) {

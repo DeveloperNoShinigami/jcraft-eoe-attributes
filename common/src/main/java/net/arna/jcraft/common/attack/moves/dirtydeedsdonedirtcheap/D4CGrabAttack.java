@@ -5,8 +5,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractGrabAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
-import net.minecraft.entity.LivingEntity;
-
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class D4CGrabAttack extends AbstractGrabAttack<D4CGrabAttack, D4CEntity, D4CEntity.State> {
@@ -20,7 +19,7 @@ public class D4CGrabAttack extends AbstractGrabAttack<D4CGrabAttack, D4CEntity, 
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (targets.isEmpty()) {
-            attacker.getMainHandStack().decrement(1);
+            attacker.getMainHandItem().shrink(1);
         }
 
         return targets;

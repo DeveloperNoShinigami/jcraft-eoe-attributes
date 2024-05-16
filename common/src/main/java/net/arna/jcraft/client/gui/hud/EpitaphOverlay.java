@@ -7,10 +7,10 @@ import net.arna.jcraft.client.rendering.FrameCounter;
 import net.arna.jcraft.client.rendering.HUDAnimation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.Perspective;
-import net.minecraft.client.texture.TextureManager;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.CameraType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -43,7 +43,7 @@ public class EpitaphOverlay {
     }
 
     public static void preload() {
-        TextureManager texMan = MinecraftClient.getInstance().getTextureManager();
+        TextureManager texMan = Minecraft.getInstance().getTextureManager();
         ExecutorService executor = Executors.newCachedThreadPool();
         for (State state : State.values()) {
             state.preload(texMan, executor);
@@ -69,7 +69,7 @@ public class EpitaphOverlay {
         if (!shouldRender() || frameCounter == null || state.getAnimation() == null) {
             return;
         }
-        if (MinecraftClient.getInstance().isPaused()) {
+        if (Minecraft.getInstance().isPaused()) {
             frameCounter.pause();
         } else {
             frameCounter.unpause();
@@ -94,7 +94,7 @@ public class EpitaphOverlay {
     }
 
     public static boolean shouldRender() {
-        return state != State.NONE && MinecraftClient.getInstance().options.getPerspective() == Perspective.FIRST_PERSON;
+        return state != State.NONE && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
     }
 
     public static boolean shouldRenderVignette() {
@@ -102,14 +102,14 @@ public class EpitaphOverlay {
     }
 
     public static float getVignetteIntensity() {
-        return state == State.INTRO ? MathHelper.lerp(getIntroProgress(), 0f, VIGNETTE_INTENSITY) :
-                state == State.OUTRO ? MathHelper.lerp(getOutroProgress(), VIGNETTE_INTENSITY, 150f) :
+        return state == State.INTRO ? Mth.lerp(getIntroProgress(), 0f, VIGNETTE_INTENSITY) :
+                state == State.OUTRO ? Mth.lerp(getOutroProgress(), VIGNETTE_INTENSITY, 150f) :
                         VIGNETTE_INTENSITY;
     }
 
     public static float getVignetteExtend() {
-        return state == State.INTRO ? MathHelper.lerp(getIntroProgress(), 0f, VIGNETTE_EXTEND) :
-                state == State.OUTRO ? MathHelper.lerp(getOutroProgress(), VIGNETTE_EXTEND, 0f) :
+        return state == State.INTRO ? Mth.lerp(getIntroProgress(), 0f, VIGNETTE_EXTEND) :
+                state == State.OUTRO ? Mth.lerp(getOutroProgress(), VIGNETTE_EXTEND, 0f) :
                         VIGNETTE_EXTEND;
     }
 

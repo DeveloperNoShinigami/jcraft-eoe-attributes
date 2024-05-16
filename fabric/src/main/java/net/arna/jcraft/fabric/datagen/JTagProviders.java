@@ -5,81 +5,80 @@ import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.ItemTags;
-
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.EntityType;
 import java.util.concurrent.CompletableFuture;
 
 public class JTagProviders {
     public static class JBlockTags extends FabricTagProvider.BlockTagProvider {
 
-        public JBlockTags(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        public JBlockTags(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
             super(output, registriesFuture);
         }
 
         @Override
-        protected void configure(RegistryWrapper.WrapperLookup arg) {
-            getTagBuilder(BlockTags.PICKAXE_MINEABLE).add(JBlockRegistry.METEORITE_BLOCK.getId());
-            getTagBuilder(BlockTags.PICKAXE_MINEABLE).add(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.getId());
-            getTagBuilder(BlockTags.PICKAXE_MINEABLE).add(JBlockRegistry.STELLAR_IRON_BLOCK.getId());
-            getTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL).add(JBlockRegistry.METEORITE_BLOCK.getId());
-            getTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL).add(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.getId());
-            getTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(JBlockRegistry.STELLAR_IRON_BLOCK.getId());
-            getTagBuilder(BlockTags.SHOVEL_MINEABLE).add(JBlockRegistry.HOT_SAND_BLOCK.getId());
+        protected void addTags(HolderLookup.Provider arg) {
+            getOrCreateRawBuilder(BlockTags.MINEABLE_WITH_PICKAXE).addElement(JBlockRegistry.METEORITE_BLOCK.getId());
+            getOrCreateRawBuilder(BlockTags.MINEABLE_WITH_PICKAXE).addElement(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.getId());
+            getOrCreateRawBuilder(BlockTags.MINEABLE_WITH_PICKAXE).addElement(JBlockRegistry.STELLAR_IRON_BLOCK.getId());
+            getOrCreateRawBuilder(BlockTags.NEEDS_DIAMOND_TOOL).addElement(JBlockRegistry.METEORITE_BLOCK.getId());
+            getOrCreateRawBuilder(BlockTags.NEEDS_DIAMOND_TOOL).addElement(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.getId());
+            getOrCreateRawBuilder(BlockTags.NEEDS_IRON_TOOL).addElement(JBlockRegistry.STELLAR_IRON_BLOCK.getId());
+            getOrCreateRawBuilder(BlockTags.MINEABLE_WITH_SHOVEL).addElement(JBlockRegistry.HOT_SAND_BLOCK.getId());
 
-            getTagBuilder(BlockTags.SOUL_SPEED_BLOCKS).add(JBlockRegistry.SOUL_BLOCK.getId());
-            getTagBuilder(BlockTags.SOUL_FIRE_BASE_BLOCKS).add(JBlockRegistry.SOUL_BLOCK.getId());
-            getTagBuilder(BlockTags.BEACON_BASE_BLOCKS).add(JBlockRegistry.STELLAR_IRON_BLOCK.getId());
+            getOrCreateRawBuilder(BlockTags.SOUL_SPEED_BLOCKS).addElement(JBlockRegistry.SOUL_BLOCK.getId());
+            getOrCreateRawBuilder(BlockTags.SOUL_FIRE_BASE_BLOCKS).addElement(JBlockRegistry.SOUL_BLOCK.getId());
+            getOrCreateRawBuilder(BlockTags.BEACON_BASE_BLOCKS).addElement(JBlockRegistry.STELLAR_IRON_BLOCK.getId());
             // we do not want bamboo on hot sand, hence we do not add hot sand to the sand tag
-            getTagBuilder(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON).add(JBlockRegistry.HOT_SAND_BLOCK.getId());
+            getOrCreateRawBuilder(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON).addElement(JBlockRegistry.HOT_SAND_BLOCK.getId());
         }
     }
 
     public static class JItemTags extends FabricTagProvider.ItemTagProvider {
 
-        public JItemTags(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        public JItemTags(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
             super(output, registriesFuture);
         }
 
         @Override
-        protected void configure(RegistryWrapper.WrapperLookup arg) {
-            getTagBuilder(ItemTags.TRIM_MATERIALS).add(JItemRegistry.STELLAR_IRON_INGOT.getId());
+        protected void addTags(HolderLookup.Provider arg) {
+            getOrCreateRawBuilder(ItemTags.TRIM_MATERIALS).addElement(JItemRegistry.STELLAR_IRON_INGOT.getId());
 
-            getTagBuilder(ItemTags.SAND).add(JItemRegistry.HOT_SAND_BLOCK.getId());
-            getTagBuilder(ItemTags.SMELTS_TO_GLASS).add(JItemRegistry.HOT_SAND_BLOCK.getId());
+            getOrCreateRawBuilder(ItemTags.SAND).addElement(JItemRegistry.HOT_SAND_BLOCK.getId());
+            getOrCreateRawBuilder(ItemTags.SMELTS_TO_GLASS).addElement(JItemRegistry.HOT_SAND_BLOCK.getId());
 
-            getTagBuilder(ItemTags.BEACON_PAYMENT_ITEMS).add(JItemRegistry.STELLAR_IRON_INGOT.getId());
-            getTagBuilder(ItemTags.BOOKSHELF_BOOKS).add(JItemRegistry.DIOS_DIARY.getId());
+            getOrCreateRawBuilder(ItemTags.BEACON_PAYMENT_ITEMS).addElement(JItemRegistry.STELLAR_IRON_INGOT.getId());
+            getOrCreateRawBuilder(ItemTags.BOOKSHELF_BOOKS).addElement(JItemRegistry.DIOS_DIARY.getId());
         }
     }
 
     public static class JEntityTypeTags extends FabricTagProvider.EntityTypeTagProvider {
 
-        public JEntityTypeTags(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+        public JEntityTypeTags(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
             super(output, registriesFuture);
         }
 
         @Override
-        protected void configure(RegistryWrapper.WrapperLookup arg) {
+        protected void addTags(HolderLookup.Provider arg) {
             // possible mob stand users
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.ZOMBIE));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.ZOMBIE_VILLAGER));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.SKELETON));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.WITHER_SKELETON));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.STRAY));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.PIGLIN));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.ZOMBIFIED_PIGLIN));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.VINDICATOR));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.EVOKER));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.PILLAGER));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.WITCH));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.VILLAGER));
-            getTagBuilder(JTagRegistry.CAN_HAVE_STAND).add(Registries.ENTITY_TYPE.getId(EntityType.ENDERMAN));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE_VILLAGER));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.SKELETON));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WITHER_SKELETON));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.STRAY));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PIGLIN));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIFIED_PIGLIN));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VINDICATOR));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.EVOKER));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PILLAGER));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WITCH));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VILLAGER));
+            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ENDERMAN));
             // impossible to stun
-            getTagBuilder(JTagRegistry.CANNOT_BE_STUNNED).add(Registries.ENTITY_TYPE.getId(EntityType.WARDEN));
+            getOrCreateRawBuilder(JTagRegistry.CANNOT_BE_STUNNED).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WARDEN));
         }
     }
 

@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.gravity.util;
 
 import net.arna.jcraft.common.gravity.api.RotationParameters;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 
 public class Gravity {
     private final Direction direction;

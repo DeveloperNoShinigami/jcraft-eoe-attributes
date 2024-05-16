@@ -7,12 +7,12 @@ import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, KingCrimsonEntity> {
     private final CounterMissMove<KingCrimsonEntity> counterMiss = new CounterMissMove<>(20);
@@ -36,22 +36,22 @@ public class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, KingCrim
             return;
         }
         LivingEntity user = attacker.getUserOrThrow();
-        Vec3d ePos = countered.getPos();
-        if (!countered.isInsideWall()) {
-            Vec3d uPos = user.getPos();
+        Vec3 ePos = countered.position();
+        if (!countered.isInWall()) {
+            Vec3 uPos = user.position();
 
-            countered.teleport(uPos.x, uPos.y, uPos.z);
-            user.teleport(ePos.x, ePos.y, ePos.z);
+            countered.teleportToWithTicket(uPos.x, uPos.y, uPos.z);
+            user.teleportToWithTicket(ePos.x, ePos.y, ePos.z);
         }
 
-        user.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, countered.getEyePos());
+        user.lookAt(EntityAnchorArgument.Anchor.EYES, countered.getEyePosition());
 
         if (countered instanceof LivingEntity livingEntity) {
             StandEntity.stun(livingEntity, 20, 0);
             JUtils.cancelMoves(livingEntity);
         }
 
-        attacker.getWorld().playSound(null, ePos.x, ePos.y, ePos.z, JSoundRegistry.TE_TP.get(), SoundCategory.PLAYERS, 1f, 1f);
+        attacker.level().playSound(null, ePos.x, ePos.y, ePos.z, JSoundRegistry.TE_TP.get(), SoundSource.PLAYERS, 1f, 1f);
     }
 
     @Override

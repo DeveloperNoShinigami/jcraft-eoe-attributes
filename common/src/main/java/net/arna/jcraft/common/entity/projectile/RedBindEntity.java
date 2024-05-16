@@ -3,81 +3,82 @@ package net.arna.jcraft.common.entity.projectile;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 public class RedBindEntity extends JAttackEntity implements GeoEntity {
     private LivingEntity boundEntity;
     private float boundHealth;
     public static final int ticksToLive = 60;
     private int timeLeft = ticksToLive;
-    private static final TrackedData<Boolean> EXPLODED;
-    private static final TrackedData<Float> WIDTH;
+    private static final EntityDataAccessor<Boolean> EXPLODED;
+    private static final EntityDataAccessor<Float> WIDTH;
 
     static {
-        EXPLODED = DataTracker.registerData(RedBindEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-        WIDTH = DataTracker.registerData(RedBindEntity.class, TrackedDataHandlerRegistry.FLOAT);
+        EXPLODED = SynchedEntityData.defineId(RedBindEntity.class, EntityDataSerializers.BOOLEAN);
+        WIDTH = SynchedEntityData.defineId(RedBindEntity.class, EntityDataSerializers.FLOAT);
     }
 
     public boolean hasExploded() {
-        return this.dataTracker.get(EXPLODED);
+        return this.entityData.get(EXPLODED);
     }
 
     public float getBoundWidth() {
-        return dataTracker.get(WIDTH);
+        return entityData.get(WIDTH);
     }
 
     public void setBoundEntity(@NotNull LivingEntity boundEntity) {
         this.boundEntity = boundEntity;
         this.boundHealth = boundEntity.getHealth();
-        this.dataTracker.set(WIDTH, (float) boundEntity.getBoundingBox().getAverageSideLength());
+        this.entityData.set(WIDTH, (float) boundEntity.getBoundingBox().getSize());
         this.startRiding(boundEntity, true);
-        boundEntity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.STANDLESS.get(), timeLeft, 0, true, false));
+        boundEntity.addEffect(new MobEffectInstance(JStatusRegistry.STANDLESS.get(), timeLeft, 0, true, false));
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(EXPLODED, false);
-        dataTracker.startTracking(WIDTH, 1f);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(EXPLODED, false);
+        entityData.define(WIDTH, 1f);
     }
 
-    public RedBindEntity(EntityType<? extends LivingEntity> entityType, World world) {
+    public RedBindEntity(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    public double getMountedHeightOffset() {
+    public double getPassengersRidingOffset() {
         return -1.0;
     }
 
     @Override
     public void tick() {
-        if (!getWorld().isClient) {
+        if (!level().isClientSide) {
             if (boundEntity == null) { // If boundEntity data was wiped, attempt to recover
                 if (getVehicle() instanceof LivingEntity living) {
                     setBoundEntity(living);
                 }
-            } else if (!hasVehicle() && !hasExploded()) { // If detached
+            } else if (!isPassenger() && !hasExploded()) { // If detached
                 detonate();
             }
 
@@ -89,8 +90,8 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
 
             // In practice, redbind lasts slightly longer than the duration, so to account for this,
             // we add two ticks of standless until we're actually done.
-            if (boundEntity != null && boundEntity.getStatusEffect(JStatusRegistry.STANDLESS.get()) == null) {
-                boundEntity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.STANDLESS.get(), 2, 0, true, false));
+            if (boundEntity != null && boundEntity.getEffect(JStatusRegistry.STANDLESS.get()) == null) {
+                boundEntity.addEffect(new MobEffectInstance(JStatusRegistry.STANDLESS.get(), 2, 0, true, false));
             }
         }
 
@@ -99,40 +100,40 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
 
     private void detonate() {
         if (master != null) {
-            Vec3d vel = boundEntity.getPos().add(0, 0.5, 0).subtract(master.getPos());
-            Vec3d launch = vel.normalize().multiply(1.25);
-            StandEntity.damageLogic(boundEntity.getWorld(), boundEntity, launch, 20, 3, true,
-                    6, false, 4, getWorld().getDamageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false, true);
+            Vec3 vel = boundEntity.position().add(0, 0.5, 0).subtract(master.position());
+            Vec3 launch = vel.normalize().scale(1.25);
+            StandEntity.damageLogic(boundEntity.level(), boundEntity, launch, 20, 3, true,
+                    6, false, 4, level().damageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false, true);
         }
 
-        dataTracker.set(EXPLODED, true);
+        entityData.set(EXPLODED, true);
         kill();
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         return true;
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.BLOCK_LAVA_EXTINGUISH;
+        return SoundEvents.LAVA_EXTINGUISH;
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.BLOCK_LAVA_EXTINGUISH;
+        return SoundEvents.LAVA_EXTINGUISH;
     }
 
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         return true;
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

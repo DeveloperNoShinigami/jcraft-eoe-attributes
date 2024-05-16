@@ -6,70 +6,78 @@ import net.arna.jcraft.common.splatter.SplatterType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.decoration.EndCrystalEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 
-public class WSAcidProjectile extends PersistentProjectileEntity implements GeoEntity {
-    private static final TrackedData<Boolean> MYH; // Melt your Heart variant
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
+    private static final EntityDataAccessor<Boolean> MYH; // Melt your Heart variant
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     static {
-        MYH = DataTracker.registerData(WSAcidProjectile.class, TrackedDataHandlerRegistry.BOOLEAN);
+        MYH = SynchedEntityData.defineId(WSAcidProjectile.class, EntityDataSerializers.BOOLEAN);
     }
 
-    public WSAcidProjectile(World world) {
+    public WSAcidProjectile(Level world) {
         super(JEntityTypeRegistry.WS_ACID_PROJECTILE.get(), world);
     }
 
-    public WSAcidProjectile(World world, LivingEntity owner) {
+    public WSAcidProjectile(Level world, LivingEntity owner) {
         super(JEntityTypeRegistry.WS_ACID_PROJECTILE.get(), owner, world);
-        setSound(SoundEvents.BLOCK_SLIME_BLOCK_FALL);
+        setSoundEvent(SoundEvents.SLIME_BLOCK_FALL);
         setOwner(owner);
-        pickupType = PickupPermission.DISALLOWED;
-        ignoreCameraFrustum = true;
+        pickup = Pickup.DISALLOWED;
+        noCulling = true;
     }
 
     public void markMeltYourHeart() {
-        dataTracker.set(MYH, true);
+        entityData.set(MYH, true);
     }
 
     private void splat() {
-        JUtils.getSplatterManager(getWorld()).addSplatter(getPos(), SplatterType.ACID, 1, getOwner());
+        JUtils.getSplatterManager(level()).addSplatter(position(), SplatterType.ACID, 1, getOwner());
         discard();
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(MYH, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(MYH, false);
     }
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
-        if (getWorld().isClient) {
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        if (level().isClientSide) {
             return;
         }
 
@@ -78,7 +86,7 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
             return;
         }
 
-        if (dataTracker.get(MYH)) {
+        if (entityData.get(MYH)) {
             return; // Melt your Heart variants of this phase through entities
         }
 
@@ -92,25 +100,25 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
             if (entity instanceof StandEntity<?, ?> stand && stand.hasUser()) {
                 target = stand.getUserOrThrow();
             }
-            damageLogic(getWorld(), target, Vec3d.ZERO, 10, 1, false, 5f, false, 6,
-                    getWorld().getDamageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
-            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WSPOISON.get(), 60, 0, false, true));
+            damageLogic(level(), target, Vec3.ZERO, 10, 1, false, 5f, false, 6,
+                    level().damageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
+            target.addEffect(new MobEffectInstance(JStatusRegistry.WSPOISON.get(), 60, 0, false, true));
             discard();
         }
 
-        if (entity instanceof EndCrystalEntity endCrystal) {
-            endCrystal.damage(getWorld().getDamageSources().thrown(this, owner), 2f);
+        if (entity instanceof EndCrystal endCrystal) {
+            endCrystal.hurt(level().damageSources().thrown(this, owner), 2f);
         }
 
-        playSound(SoundEvents.ITEM_BUCKET_EMPTY, 1, 0.5f);
+        playSound(SoundEvents.BUCKET_EMPTY, 1, 0.5f);
     }
 
     private int timeOnSurface = 0;
 
     @Override
-    protected void age() {
-        super.age();
-        if (getWorld().isClient) {
+    protected void tickDespawn() {
+        super.tickDespawn();
+        if (level().isClientSide) {
             return;
         }
         if (timeOnSurface++ >= 100) {
@@ -123,14 +131,14 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
     public void tick() {
         Entity owner = getOwner();
         if (owner == null) {
-            if (!getWorld().isClient) {
+            if (!level().isClientSide) {
                 discard();
             }
             return;
         }
 
         // Display spit effects
-        if (firstUpdate) {
+        if (firstTick) {
             double x = getX();
             double y = getY();
             double z = getZ();
@@ -138,9 +146,9 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
                 double pX = x + random.nextDouble() * 2 - 1;
                 double pY = y + random.nextDouble() * 2 - 1;
                 double pZ = z + random.nextDouble() * 2 - 1;
-                Vec3d awayVector = getRotationVecClient().multiply(0.3);
+                Vec3 awayVector = getForward().scale(0.3);
 
-                getWorld().addParticle(
+                level().addParticle(
                         ParticleTypes.SPIT,
                         pX, pY, pZ,
                         -awayVector.x, -awayVector.y, awayVector.z);
@@ -150,8 +158,8 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
         super.tick();
 
         if (!inGround) {
-            Vec3d vel = getVelocity();
-            getWorld().addParticle(
+            Vec3 vel = getDeltaMovement();
+            level().addParticle(
                     ParticleTypes.SPIT,
                     getX(), getY(), getZ(),
                     vel.x, vel.y, vel.z);
@@ -159,12 +167,12 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
     }
 
     @Override
-    public ItemStack asItemStack() {
+    public ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         return false;
     }
 
@@ -176,7 +184,7 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
     }
 
     private PlayState predicate(AnimationState<GeoAnimatable> state) {
-        return state.setAndContinue(RawAnimation.begin().thenLoop(dataTracker.get(MYH) ? "animation.wsacid.meltidle" : "animation.wsacid.idle"));
+        return state.setAndContinue(RawAnimation.begin().thenLoop(entityData.get(MYH) ? "animation.wsacid.meltidle" : "animation.wsacid.idle"));
     }
 
     @Override

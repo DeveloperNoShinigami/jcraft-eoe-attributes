@@ -1,26 +1,26 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.cache.object.GeoBone;
+import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
 import net.arna.jcraft.client.model.entity.StandEntityModel;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShieldItem;
-import net.minecraft.util.math.RotationAxis;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
-
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import javax.annotation.Nullable;
+
 
 public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
 
-    public D4CRenderer(EntityRendererFactory.Context context) {
+    public D4CRenderer(EntityRendererProvider.Context context) {
         super(context, new StandEntityModel<>(StandType.D4C));
 
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
@@ -39,37 +39,37 @@ public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
             }
 
             @Override
-            protected ModelTransformationMode getTransformTypeForStack(GeoBone bone, ItemStack stack, D4CEntity animatable) {
+            protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, D4CEntity animatable) {
                 // Apply the camera transform for the given hand
                 return switch (bone.getName()) {
-                    case LEFT_HAND, RIGHT_HAND -> ModelTransformationMode.THIRD_PERSON_RIGHT_HAND;
-                    default -> ModelTransformationMode.NONE;
+                    case LEFT_HAND, RIGHT_HAND -> ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
+                    default -> ItemDisplayContext.NONE;
                 };
             }
 
             // Do some quick render modifications depending on what the item is
             @Override
-            protected void renderStackForBone(MatrixStack poseStack, GeoBone bone, ItemStack stack, D4CEntity animatable,
-                                              VertexConsumerProvider bufferSource, float partialTick, int packedLight, int packedOverlay) {
+            protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, D4CEntity animatable,
+                                              MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
                 float ang = -90f;
                 D4CEntity.State state = animatable.getState();
                 if (state == D4CEntity.State.THROW || state == D4CEntity.State.GIVE_GUN) {
                     ang += (animatable.getMoveStun() + 1f - partialTick) * 65f;
                 }
-                poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(ang));
+                poseStack.mulPose(Axis.XP.rotationDegrees(ang));
 
                 if (stack == D4CRenderer.this.mainHandItem) {
-                    poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
+                    poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
 
                     if (stack.getItem() instanceof ShieldItem) {
                         poseStack.translate(0, 0.125, -0.25);
                     }
                 } else if (stack == D4CRenderer.this.offHandItem) {
-                    poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
+                    poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
 
                     if (stack.getItem() instanceof ShieldItem) {
                         poseStack.translate(0, 0.125, 0.25);
-                        poseStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+                        poseStack.mulPose(Axis.YP.rotationDegrees(180));
                     }
                 }
 
@@ -79,7 +79,7 @@ public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
     }
 
     @Override
-    public void actuallyRender(MatrixStack poseStack, D4CEntity animatable, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack poseStack, D4CEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         float a = StandEntityRenderer.getAlpha(animatable, partialTick);
         float gR = 1.0f - a;
 

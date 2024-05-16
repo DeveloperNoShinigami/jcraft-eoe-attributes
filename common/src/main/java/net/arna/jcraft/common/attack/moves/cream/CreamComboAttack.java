@@ -5,9 +5,8 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class CreamComboAttack extends AbstractMultiHitAttack<CreamComboAttack, CreamEntity> {
@@ -22,11 +21,11 @@ public class CreamComboAttack extends AbstractMultiHitAttack<CreamComboAttack, C
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (getBlow(attacker) == 2) {
-            Vec3d rV = getRotVec(attacker);
+            Vec3 rV = getRotVec(attacker);
 
             for (LivingEntity target : targets) {
-                target.takeKnockback(1, rV.x, rV.z);
-                target.velocityModified = true;
+                target.knockback(1, rV.x, rV.z);
+                target.hurtMarked = true;
             }
         }
 

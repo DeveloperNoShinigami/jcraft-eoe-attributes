@@ -16,22 +16,21 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.Box;
-
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.phys.AABB;
 import java.util.Set;
 
 @Getter
 public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity> {
-    public static final MoveVariable<MobEntity> DOPPELGANGER = new WeakMoveVariable<>(MobEntity.class);
+    public static final MoveVariable<Mob> DOPPELGANGER = new WeakMoveVariable<>(Mob.class);
     private final int erasureDuration;
 
     public TimeEraseMove(int cooldown, int windup, int duration, float moveDistance, int erasureDuration) {
@@ -43,8 +42,8 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
     public void onInitiate(KingCrimsonEntity attacker) {
         super.onInitiate(attacker);
 
-        if (attacker.getUser() instanceof ServerPlayerEntity player) {
-            player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.TIME_ERASE.get()), SoundCategory.PLAYERS,
+        if (attacker.getUser() instanceof ServerPlayer player) {
+            player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(JSoundRegistry.TIME_ERASE.get()), SoundSource.PLAYERS,
                     attacker.getX(), attacker.getY(), attacker.getZ(), 1, 1, 0));
         }
     }
@@ -54,13 +53,13 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
         attacker.setTETime(erasureDuration);
 
         attacker.curMove = null;
-        MobEntity doppelganger = null;
+        Mob doppelganger = null;
 
-        if (user instanceof ServerPlayerEntity player) {
+        if (user instanceof ServerPlayer player) {
             // Shader handling
             ShaderActivationPacket.send(player, attacker, 0, 120, ShaderActivationPacket.Type.CRIMSON);
 
-            PlayerCloneEntity clone = new PlayerCloneEntity(attacker.getWorld());
+            PlayerCloneEntity clone = new PlayerCloneEntity(attacker.level());
             clone.setShouldRenderForMaster(false);
             clone.disableDrops();
             clone.disableItemExchange();
@@ -69,7 +68,7 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
             clone.setMaster(player);
 
             doppelganger = clone;
-        } else if (user instanceof MobEntity mob) {
+        } else if (user instanceof Mob mob) {
             doppelganger = JUtils.mobCloneOf(mob);
         }
 
@@ -79,39 +78,39 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
         }
 
         // Copy rotation
-        doppelganger.copyPositionAndRotation(user);
-        doppelganger.setHeadYaw(user.getHeadYaw());
-        doppelganger.setBodyYaw(user.getBodyYaw());
+        doppelganger.copyPosition(user);
+        doppelganger.setYHeadRot(user.getYHeadRot());
+        doppelganger.setYBodyRot(user.getVisualRotationYInDegrees());
 
         // Copy equipment
-        doppelganger.equipStack(EquipmentSlot.MAINHAND, user.getMainHandStack().copy());
-        doppelganger.equipStack(EquipmentSlot.OFFHAND, user.getOffHandStack().copy());
-        doppelganger.equipStack(EquipmentSlot.HEAD, user.getEquippedStack(EquipmentSlot.HEAD).copy());
-        doppelganger.equipStack(EquipmentSlot.CHEST, user.getEquippedStack(EquipmentSlot.CHEST).copy());
-        doppelganger.equipStack(EquipmentSlot.LEGS, user.getEquippedStack(EquipmentSlot.LEGS).copy());
-        doppelganger.equipStack(EquipmentSlot.FEET, user.getEquippedStack(EquipmentSlot.FEET).copy());
+        doppelganger.setItemSlot(EquipmentSlot.MAINHAND, user.getMainHandItem().copy());
+        doppelganger.setItemSlot(EquipmentSlot.OFFHAND, user.getOffhandItem().copy());
+        doppelganger.setItemSlot(EquipmentSlot.HEAD, user.getItemBySlot(EquipmentSlot.HEAD).copy());
+        doppelganger.setItemSlot(EquipmentSlot.CHEST, user.getItemBySlot(EquipmentSlot.CHEST).copy());
+        doppelganger.setItemSlot(EquipmentSlot.LEGS, user.getItemBySlot(EquipmentSlot.LEGS).copy());
+        doppelganger.setItemSlot(EquipmentSlot.FEET, user.getItemBySlot(EquipmentSlot.FEET).copy());
 
         // Copy health and make immortal
         doppelganger.setHealth(user.getHealth());
-        doppelganger.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 32767, 9, true, false));
+        doppelganger.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 32767, 9, true, false));
 
         // Set and summon King Crimson replica, make it block forever
         summonFakeKC(attacker);
 
         // Look at enemy
-        doppelganger.setTarget(user.getAttacker());
+        doppelganger.setTarget(user.getLastHurtByMob());
 
-        attacker.getWorld().spawnEntity(doppelganger);
+        attacker.level().addFreshEntity(doppelganger);
 
         return Set.of();
     }
 
     private void summonFakeKC(KingCrimsonEntity attacker) {
-        MobEntity doppelganger = attacker.getMoveContext().get(DOPPELGANGER);
+        Mob doppelganger = attacker.getMoveContext().get(DOPPELGANGER);
         CommonStandComponent standData = JComponentPlatformUtils.getStandData(doppelganger);
         standData.setTypeAndSkin(attacker.getStandType(), attacker.getSkin());
 
-        StandEntity<?, ?> clone = JCraft.summon(attacker.getWorld(), doppelganger);
+        StandEntity<?, ?> clone = JCraft.summon(attacker.level(), doppelganger);
         if (clone == null) {
             return;
         }
@@ -136,20 +135,20 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
             }
 
             // Invulnerability and invisibility
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 10, 9, true, false));
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 10, 0, true, false));
+            user.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 10, 9, true, false));
+            user.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 10, 0, true, false));
             // Inability to be stunned
-            user.removeStatusEffect(JStatusRegistry.DAZED.get());
+            user.removeEffect(JStatusRegistry.DAZED.get());
             // Inability to be hit (by projectiles)
-            Box noBox = new Box(0, 0, 0, 0, 0, 0);
+            AABB noBox = new AABB(0, 0, 0, 0, 0, 0);
             user.setBoundingBox(noBox);
-            user.noClip = true;
+            user.noPhysics = true;
 
             if (teTime <= 0) {
                 // Play exit noise
-                if (user instanceof ServerPlayerEntity player) {
-                    player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.TIME_ERASE_EXIT.get()),
-                            SoundCategory.PLAYERS, attacker.getX(), attacker.getY(), attacker.getZ(), 1, 1, 0));
+                if (user instanceof ServerPlayer player) {
+                    player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(JSoundRegistry.TIME_ERASE_EXIT.get()),
+                            SoundSource.PLAYERS, attacker.getX(), attacker.getY(), attacker.getZ(), 1, 1, 0));
                 }
 
                 /* Return targets to position
@@ -161,7 +160,7 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
             }
         }
 
-        MobEntity doppelganger = attacker.getMoveContext().get(TimeEraseMove.DOPPELGANGER);
+        Mob doppelganger = attacker.getMoveContext().get(TimeEraseMove.DOPPELGANGER);
         if (teTime <= 0 && doppelganger != null) // Doppelgänger disappears at the end of Time Erase
         {
             doppelganger.discard();

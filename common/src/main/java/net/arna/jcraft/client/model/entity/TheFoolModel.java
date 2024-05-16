@@ -3,10 +3,10 @@ package net.arna.jcraft.client.model.entity;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class TheFoolModel extends StandEntityModel<TheFoolEntity> {
-    private static final Identifier SAND_TEXTURE = JCraft.id("textures/entity/stands/the_fool/sand.png");
+    private static final ResourceLocation SAND_TEXTURE = JCraft.id("textures/entity/stands/the_fool/sand.png");
     //EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
 
     public TheFoolModel() {
@@ -14,7 +14,7 @@ public class TheFoolModel extends StandEntityModel<TheFoolEntity> {
     }
 
     @Override
-    public Identifier getTextureResource(TheFoolEntity entity) {
+    public ResourceLocation getTextureResource(TheFoolEntity entity) {
         return entity.isSand() ? SAND_TEXTURE : super.getTextureResource(entity);
     }
 }

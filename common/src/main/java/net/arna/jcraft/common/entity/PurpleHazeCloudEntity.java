@@ -5,73 +5,72 @@ import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity.PoisonType;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.World;
-
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import java.util.Stack;
 
 public class PurpleHazeCloudEntity extends Entity {
     public static int MAX_AGE = 100;
-    private static final TrackedData<Float> RADIUS;
-    private static final TrackedData<Integer> POISON_TYPE;
+    private static final EntityDataAccessor<Float> RADIUS;
+    private static final EntityDataAccessor<Integer> POISON_TYPE;
 
     static {
-        RADIUS = DataTracker.registerData(PurpleHazeCloudEntity.class, TrackedDataHandlerRegistry.FLOAT);
-        POISON_TYPE = DataTracker.registerData(PurpleHazeCloudEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        RADIUS = SynchedEntityData.defineId(PurpleHazeCloudEntity.class, EntityDataSerializers.FLOAT);
+        POISON_TYPE = SynchedEntityData.defineId(PurpleHazeCloudEntity.class, EntityDataSerializers.INT);
     }
 
-    public PurpleHazeCloudEntity(World world, float radius, PoisonType poisonType) {
+    public PurpleHazeCloudEntity(Level world, float radius, PoisonType poisonType) {
         this(world);
         setRadius(radius);
         if (poisonType != null) {
-            dataTracker.set(POISON_TYPE, poisonType.ordinal());
+            entityData.set(POISON_TYPE, poisonType.ordinal());
         }
     }
 
     public float getRadius() {
-        return dataTracker.get(RADIUS);
+        return entityData.get(RADIUS);
     }
 
     public PoisonType getPoisonType() {
-        return PoisonType.values()[dataTracker.get(POISON_TYPE)];
+        return PoisonType.values()[entityData.get(POISON_TYPE)];
     }
 
     public void setRadius(float radius) {
-        dataTracker.set(RADIUS, radius);
+        entityData.set(RADIUS, radius);
     }
 
-    public PurpleHazeCloudEntity(World world) {
+    public PurpleHazeCloudEntity(Level world) {
         super(JEntityTypeRegistry.PURPLE_HAZE_CLOUD.get(), world);
     }
 
     @Override
-    protected void initDataTracker() {
-        dataTracker.startTracking(RADIUS, 1.0f);
-        dataTracker.startTracking(POISON_TYPE, 0);
+    protected void defineSynchedData() {
+        entityData.define(RADIUS, 1.0f);
+        entityData.define(POISON_TYPE, 0);
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
-        age = nbt.getInt("Age");
+    protected void readAdditionalSaveData(CompoundTag nbt) {
+        tickCount = nbt.getInt("Age");
         setRadius(nbt.getFloat("Radius"));
-        dataTracker.set(POISON_TYPE, nbt.getInt("PoisonType"));
+        entityData.set(POISON_TYPE, nbt.getInt("PoisonType"));
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
-        nbt.putInt("Age", age);
+    protected void addAdditionalSaveData(CompoundTag nbt) {
+        nbt.putInt("Age", tickCount);
         nbt.putFloat("Radius", getRadius());
-        nbt.putInt("PoisonType", dataTracker.get(POISON_TYPE));
+        nbt.putInt("PoisonType", entityData.get(POISON_TYPE));
     }
 
     @Override
@@ -81,9 +80,9 @@ public class PurpleHazeCloudEntity extends Entity {
         float radius = getRadius();
         PoisonType poisonType = getPoisonType();
 
-        if (getWorld().isClient()) {
+        if (level().isClientSide()) {
             for (int i = 0; i < radius; i++) {
-                getWorld().addParticle(
+                level().addParticle(
                         JParticleTypeRegistry.PURPLE_HAZE_CLOUD.get(), false,
                         getX() + random.nextGaussian() * radius / 2,
                         getY() + random.nextGaussian() * radius / 2,
@@ -91,7 +90,7 @@ public class PurpleHazeCloudEntity extends Entity {
                         0, 0, 0
                 );
 
-                getWorld().addParticle(
+                level().addParticle(
                         switch (poisonType) {
                             case HARMING -> JParticleTypeRegistry.PURPLE_HAZE_PARTICLE.get();
                             case NULLIFYING -> ParticleTypes.POOF;
@@ -108,35 +107,35 @@ public class PurpleHazeCloudEntity extends Entity {
             // -0.5 radius per second
             setRadius(radius - 0.025f);
 
-            if (getRadius() <= 0 || age >= MAX_AGE) {
+            if (getRadius() <= 0 || tickCount >= MAX_AGE) {
                 discard();
                 return;
             }
 
-            getWorld().getOtherEntities(this, getBoundingBox(),
-                    EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(EntityPredicates.VALID_ENTITY)).forEach(
+            level().getEntities(this, getBoundingBox(),
+                    EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(EntitySelector.ENTITY_STILL_ALIVE)).forEach(
                     entity -> {
                         if (entity instanceof LivingEntity living) {
                             switch (poisonType) {
                                 case HARMING -> AbstractPurpleHazeEntity.infect(living, 4);
                                 case DEBILITATING -> {
-                                    AbstractPurpleHazeEntity.infect(living, 3, StatusEffects.BLINDNESS);
-                                    AbstractPurpleHazeEntity.infect(living, 3, StatusEffects.SLOWNESS);
-                                    AbstractPurpleHazeEntity.infect(living, 3, StatusEffects.WEAKNESS);
+                                    AbstractPurpleHazeEntity.infect(living, 3, MobEffects.BLINDNESS);
+                                    AbstractPurpleHazeEntity.infect(living, 3, MobEffects.MOVEMENT_SLOWDOWN);
+                                    AbstractPurpleHazeEntity.infect(living, 3, MobEffects.WEAKNESS);
                                 }
                                 case NULLIFYING -> {
-                                    Stack<StatusEffect> toRemove = new Stack<>();
+                                    Stack<MobEffect> toRemove = new Stack<>();
 
-                                    living.getStatusEffects().forEach(
+                                    living.getActiveEffects().forEach(
                                             statusEffectInstance -> {
-                                                StatusEffect effectType = statusEffectInstance.getEffectType();
+                                                MobEffect effectType = statusEffectInstance.getEffect();
                                                 if (effectType != JStatusRegistry.DAZED && effectType != JStatusRegistry.KNOCKDOWN) {
                                                     toRemove.add(effectType);
                                                 }
                                             }
                                     );
 
-                                    toRemove.forEach(living::removeStatusEffect);
+                                    toRemove.forEach(living::removeEffect);
                                 }
                             }
                         }
@@ -146,19 +145,19 @@ public class PurpleHazeCloudEntity extends Entity {
     }
 
     @Override
-    public void onTrackedDataSet(TrackedData<?> data) {
+    public void onSyncedDataUpdated(EntityDataAccessor<?> data) {
         if (RADIUS.equals(data)) {
-            this.calculateDimensions();
+            this.refreshDimensions();
         }
 
-        super.onTrackedDataSet(data);
+        super.onSyncedDataUpdated(data);
     }
 
     @Override
-    protected Box calculateBoundingBox() {
+    protected AABB makeBoundingBox() {
         float radius = getRadius();
         double x = getX(), y = getY(), z = getZ();
-        return new Box(
+        return new AABB(
                 x - radius, y - radius, z - radius,
                 x + radius, y + radius, z + radius
         );

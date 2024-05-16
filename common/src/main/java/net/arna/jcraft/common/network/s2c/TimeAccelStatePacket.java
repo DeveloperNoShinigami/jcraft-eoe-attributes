@@ -9,12 +9,11 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import lombok.Data;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.util.Util;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-
+import net.minecraft.Util;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 import java.util.Map;
 
 // TODO: fix time sync between server and client so it doesn't jump at the end
@@ -46,22 +45,22 @@ public class TimeAccelStatePacket {
 
         // Handle acceleration on server.
         TickEvent.SERVER_LEVEL_POST.register(world -> {
-            if (!world.getGameRules().getBoolean(GameRules.DO_DAYLIGHT_CYCLE)) {
+            if (!world.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)) {
                 return;
             }
 
             double acceleration = getAcceleration(world);
-            world.setTimeOfDay((long) (world.getTimeOfDay() + acceleration * 0.05));
+            world.setDayTime((long) (world.getDayTime() + acceleration * 0.05));
         });
     }
 
-    public static void sendStart(PlayerManager playerManager, MadeInHeavenEntity mih, int duration) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+    public static void sendStart(PlayerList playerManager, MadeInHeavenEntity mih, int duration) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeVarInt(State.START.ordinal());
         buf.writeVarInt(mih.getId());
         buf.writeVarInt(duration);
 
-        playerManager.getPlayerList().forEach(player -> {
+        playerManager.getPlayers().forEach(player -> {
             NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
         });
 
@@ -70,12 +69,12 @@ public class TimeAccelStatePacket {
         }
     }
 
-    public static void sendStop(PlayerManager playerManager, MadeInHeavenEntity mih) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+    public static void sendStop(PlayerList playerManager, MadeInHeavenEntity mih) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeVarInt(State.STOP.ordinal());
         buf.writeVarInt(mih.getId());
 
-        playerManager.getPlayerList().forEach(player -> {
+        playerManager.getPlayers().forEach(player -> {
             NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
         });
 
@@ -88,13 +87,13 @@ public class TimeAccelStatePacket {
         return Math.sqrt(1 - Math.pow(2 * x * x - 1, 2));
     }
 
-    public static double getAcceleration(World world) {
+    public static double getAcceleration(Level world) {
         synchronized (lock) {
             return accelerations.int2ObjectEntrySet().stream()
                     // Ensure entity exists in this world
                     .filter(e -> e.getValue().isValid(world))
                     .map(Map.Entry::getValue)
-                    .mapToDouble(a -> someBsArnaPutTogetherInDesmos((Util.getMeasuringTimeMs() - a.getStartTime()) /
+                    .mapToDouble(a -> someBsArnaPutTogetherInDesmos((Util.getMillis() - a.getStartTime()) /
                             (a.getInitialDuration() * 50d)))
                     .sum() * 24000;
         }
@@ -109,7 +108,7 @@ public class TimeAccelStatePacket {
         private int duration;
         private double lastAcceleration;
         private final int initialDuration;
-        private final long startTime = Util.getMeasuringTimeMs();
+        private final long startTime = Util.getMillis();
         private final int entityId;
 
         public TimeAcceleration(int duration, int entityId) {
@@ -117,8 +116,8 @@ public class TimeAccelStatePacket {
             this.entityId = entityId;
         }
 
-        public boolean isValid(World world) {
-            return duration > 0 && world.getEntityById(entityId) instanceof MadeInHeavenEntity;
+        public boolean isValid(Level world) {
+            return duration > 0 && world.getEntity(entityId) instanceof MadeInHeavenEntity;
         }
 
         public void decrementDuration() {

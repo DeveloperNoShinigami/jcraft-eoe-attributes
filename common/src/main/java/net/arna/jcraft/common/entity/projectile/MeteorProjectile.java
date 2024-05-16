@@ -6,37 +6,30 @@ import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,22 +38,31 @@ import java.util.Set;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
-public class MeteorProjectile extends PersistentProjectileEntity implements GeoAnimatable {
-    public static final TrackedData<Integer> SKIN;
+public class MeteorProjectile extends AbstractArrow implements GeoAnimatable {
+    public static final EntityDataAccessor<Integer> SKIN;
     private int ticksInAir = 0;
     private int ticksInGround = 0;
     private TheSunEntity sun;
     boolean explosive = false;
 
     static {
-        SKIN = DataTracker.registerData(MeteorProjectile.class, TrackedDataHandlerRegistry.INTEGER);
+        SKIN = SynchedEntityData.defineId(MeteorProjectile.class, EntityDataSerializers.INT);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(SKIN, 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(SKIN, 0);
     }
 
     public void assignSun(TheSunEntity sunEntity) {
@@ -68,36 +70,36 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
     }
 
     public int getSkin() {
-        return dataTracker.get(SKIN);
+        return entityData.get(SKIN);
     }
 
     public void setSkin(int skin) {
-        dataTracker.set(SKIN, skin);
+        entityData.set(SKIN, skin);
     }
 
-    public MeteorProjectile(EntityType<? extends MeteorProjectile> entityType, World world) {
+    public MeteorProjectile(EntityType<? extends MeteorProjectile> entityType, Level world) {
         super(entityType, world);
     }
 
-    public MeteorProjectile(World world, LivingEntity owner) {
+    public MeteorProjectile(Level world, LivingEntity owner) {
         super(JEntityTypeRegistry.METEOR.get(), owner, world);
         this.setOwner(owner);
-        this.pickupType = PickupPermission.DISALLOWED;
+        this.pickup = Pickup.DISALLOWED;
     }
 
     @Override
-    public ItemStack asItemStack() {
+    public ItemStack getPickupItem() {
         return new ItemStack(Items.AIR);
     }
 
     @Override
-    protected boolean updateWaterState() {
+    protected boolean updateInWaterStateAndDoFluidPushing() {
         return false;
     }
 
     @Override
-    protected SoundEvent getHitSound() {
-        return SoundEvents.ITEM_FIRECHARGE_USE;
+    protected SoundEvent getDefaultHitGroundSoundEvent() {
+        return SoundEvents.FIRECHARGE_USE;
     }
 
     public void setExplosive(boolean explosive) {
@@ -105,7 +107,7 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
     }
 
     @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
+    protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity owner = getOwner();
         if (owner == null) {
             return;
@@ -115,18 +117,18 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
             return;
         }
 
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             // Hack that displays explosion without needing sync
             inGround = true;
             return;
         }
 
-        entity.setOnFireFor(3);
-        JUtils.projectileDamageLogic(this, getWorld(), entity, getVelocity(), 20, 1, false,
+        entity.setSecondsOnFire(3);
+        JUtils.projectileDamageLogic(this, level(), entity, getDeltaMovement(), 20, 1, false,
                 6f, 10, CommonHitPropertyComponent.HitAnimation.HIGH);
         if (explosive && ticksInGround < 1) {
             explode();
-            playSound(getSound(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
+            playSound(getHitGroundSoundEvent(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
             // Hack that prevents another explosion
             ticksInGround = 1;
         } else {
@@ -135,29 +137,29 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
     }
 
     @Override
-    protected void onBlockHit(BlockHitResult blockHitResult) {
-        if (!getWorld().isClient()) {
-            Direction movementDirection = getMovementDirection();
-            BlockPos blockPos2 = getBlockPos(); //.offset(movementDirection);
-            if (AbstractFireBlock.canPlaceAt(getWorld(), blockPos2, movementDirection)) {
+    protected void onHitBlock(BlockHitResult blockHitResult) {
+        if (!level().isClientSide()) {
+            Direction movementDirection = getMotionDirection();
+            BlockPos blockPos2 = blockPosition(); //.offset(movementDirection);
+            if (BaseFireBlock.canBePlacedAt(level(), blockPos2, movementDirection)) {
                 //world.playSound(null, blockPos2, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, world.getRandom().nextFloat() * 0.4F + 0.8F);
-                BlockState blockState2 = AbstractFireBlock.getState(getWorld(), blockPos2);
-                getWorld().setBlockState(blockPos2, blockState2, 11);
+                BlockState blockState2 = BaseFireBlock.getState(level(), blockPos2);
+                level().setBlock(blockPos2, blockState2, 11);
             }
-            MagiciansRedEntity.ignite(getWorld(), blockHitResult.getBlockPos());
+            MagiciansRedEntity.ignite(level(), blockHitResult.getBlockPos());
         }
-        super.onBlockHit(blockHitResult);
+        super.onHitBlock(blockHitResult);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
         tag.putShort("life", (short) this.ticksInAir);
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
     }
 
@@ -165,9 +167,9 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
     public void tick() {
         super.tick();
 
-        if (getWorld().isClient()) {
-            Vec3d vel = getVelocity();
-            this.getWorld().addParticle(
+        if (level().isClientSide()) {
+            Vec3 vel = getDeltaMovement();
+            this.level().addParticle(
                     getSkin() == 2 ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                     getX() + random.nextFloat() * 0.5f - 0.25f,
                     getY() + random.nextFloat() * 0.5f - 0.25f,
@@ -197,7 +199,7 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
                 return;
             }
 
-            TheSunEntity.dryOut((ServerWorld) getWorld(), getBlockPos());
+            TheSunEntity.dryOut((ServerLevel) level(), blockPosition());
         }
     }
 
@@ -207,25 +209,25 @@ public class MeteorProjectile extends PersistentProjectileEntity implements GeoA
         filter.add(owner);
         filter.add(this);
 
-        List<LivingEntity> hurtAll = new ArrayList<>(JUtils.generateHitbox(getWorld(), getPos(), 2, filter));
-        hurtAll.removeIf(e -> !canDamage(JDamageSources.create(getWorld(), DamageTypes.ON_FIRE), e));
+        List<LivingEntity> hurtAll = new ArrayList<>(JUtils.generateHitbox(level(), position(), 2, filter));
+        hurtAll.removeIf(e -> !canDamage(JDamageSources.create(level(), DamageTypes.ON_FIRE), e));
 
         if (!hurtAll.isEmpty()) {
             for (LivingEntity l : hurtAll) {
                 LivingEntity target = JUtils.getUserIfStand(l);
-                damageLogic(getWorld(), target, l.getPos().subtract(getPos()).normalize(), 20, 3, false, 5f,
-                        false, 10, JDamageSources.create(getWorld(), DamageTypes.ON_FIRE), owner, CommonHitPropertyComponent.HitAnimation.LAUNCH);
+                damageLogic(level(), target, l.position().subtract(position()).normalize(), 20, 3, false, 5f,
+                        false, 10, JDamageSources.create(level(), DamageTypes.ON_FIRE), owner, CommonHitPropertyComponent.HitAnimation.LAUNCH);
             }
         }
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         return true;
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {

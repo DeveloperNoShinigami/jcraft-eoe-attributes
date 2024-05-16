@@ -1,18 +1,18 @@
 package net.arna.jcraft.common.util;
 
+import dev.kosmx.playerAnim.core.util.Vec3d;
 import lombok.Builder;
 import lombok.Data;
 import lombok.With;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.explosion.Explosion;
-
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.phys.Vec3;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -21,29 +21,29 @@ import java.util.function.Function;
 @Builder(builderClassName = "Builder")
 public class JExplosionModifier {
     private final Boolean createFire; // Has to be nullable to indicate no change.
-    private final Explosion.DestructionType destructionType;
-    private final DefaultParticleType particle;
-    private final Vec3d particleVelocity;
+    private final Explosion.BlockInteraction destructionType;
+    private final SimpleParticleType particle;
+    private final Vec3 particleVelocity;
     private final SoundEvent sound;
-    private final SoundCategory soundCategory;
-    private final Function<Random, Float> volumeGetter, pitchGetter;
+    private final SoundSource soundCategory;
+    private final Function<RandomSource, Float> volumeGetter, pitchGetter;
 
-    public void write(PacketByteBuf buf, Random random) {
-        write(createFire, buf, PacketByteBuf::writeBoolean);
+    public void write(FriendlyByteBuf buf, RandomSource random) {
+        write(createFire, buf, FriendlyByteBuf::writeBoolean);
         write(destructionType, buf, (b, dt) -> b.writeVarInt(dt.ordinal()));
-        write(particle, buf, (b, p) -> b.writeRegistryKey(Registries.PARTICLE_TYPE.getKey(p).orElseThrow()));
+        write(particle, buf, (b, p) -> b.writeResourceKey(BuiltInRegistries.PARTICLE_TYPE.getResourceKey(p).orElseThrow()));
         write(particleVelocity, buf, (b, v) -> {
             b.writeDouble(v.x);
             b.writeDouble(v.y);
             b.writeDouble(v.z);
         });
-        write(sound, buf, (b, s) -> b.writeRegistryKey(Registries.SOUND_EVENT.getKey(sound).orElseThrow()));
+        write(sound, buf, (b, s) -> b.writeResourceKey(BuiltInRegistries.SOUND_EVENT.getResourceKey(sound).orElseThrow()));
         write(soundCategory, buf, (b, c) -> b.writeVarInt(c.ordinal()));
         write(volumeGetter, buf, (b, v) -> b.writeFloat(v.apply(random)));
         write(pitchGetter, buf, (b, p) -> b.writeFloat(p.apply(random)));
     }
 
-    private <T> void write(T t, PacketByteBuf buf, BiConsumer<PacketByteBuf, T> writer) {
+    private <T> void write(T t, FriendlyByteBuf buf, BiConsumer<FriendlyByteBuf, T> writer) {
         boolean nonNull = t != null;
         buf.writeBoolean(nonNull);
         if (nonNull) {
@@ -51,14 +51,14 @@ public class JExplosionModifier {
         }
     }
 
-    public static JExplosionModifier read(PacketByteBuf buf) {
-        Builder builder = JExplosionModifier.builder()
-                .createFire(read(buf, PacketByteBuf::readBoolean))
-                .destructionType(read(buf, b -> Explosion.DestructionType.values()[b.readVarInt()]))
-                .particle(read(buf, b -> (DefaultParticleType) Registries.PARTICLE_TYPE.get(b.readRegistryKey(RegistryKeys.PARTICLE_TYPE))))
-                .particleVelocity(read(buf, b -> new Vec3d(b.readDouble(), b.readDouble(), b.readDouble())))
-                .sound(read(buf, b -> Registries.SOUND_EVENT.get(b.readRegistryKey(RegistryKeys.SOUND_EVENT))))
-                .soundCategory(read(buf, b -> SoundCategory.values()[b.readVarInt()]));
+    public static JExplosionModifier read(FriendlyByteBuf buf) {
+        net.arna.jcraft.common.util.JExplosionModifier.Builder builder = JExplosionModifier.builder()
+                .createFire(read(buf, FriendlyByteBuf::readBoolean))
+                .destructionType(read(buf, b -> Explosion.BlockInteraction.values()[b.readVarInt()]))
+                .particle(read(buf, b -> (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(b.readResourceKey(Registries.PARTICLE_TYPE))))
+                .particleVelocity(read(buf, b -> new Vec3(b.readDouble(), b.readDouble(), b.readDouble())))
+                .sound(read(buf, b -> BuiltInRegistries.SOUND_EVENT.get(b.readResourceKey(Registries.SOUND_EVENT))))
+                .soundCategory(read(buf, b -> SoundSource.values()[b.readVarInt()]));
         if (buf.readBoolean()) {
             builder.volume(buf.readFloat());
         }
@@ -69,19 +69,19 @@ public class JExplosionModifier {
         return builder.build();
     }
 
-    private static <T> T read(PacketByteBuf buf, Function<PacketByteBuf, T> reader) {
+    private static <T> T read(FriendlyByteBuf buf, Function<FriendlyByteBuf, T> reader) {
         boolean nonNull = buf.readBoolean();
         return nonNull ? reader.apply(buf) : null;
     }
 
     public static class Builder {
 
-        public Builder volume(float volume) {
+        public net.arna.jcraft.common.util.JExplosionModifier.Builder volume(float volume) {
             volumeGetter(random -> volume);
             return this;
         }
 
-        public Builder pitch(float pitch) {
+        public net.arna.jcraft.common.util.JExplosionModifier.Builder pitch(float pitch) {
             pitchGetter(random -> pitch);
             return this;
         }

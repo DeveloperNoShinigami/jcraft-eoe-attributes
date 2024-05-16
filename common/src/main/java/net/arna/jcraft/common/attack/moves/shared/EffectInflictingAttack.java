@@ -4,14 +4,13 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.moves.base.AbstractEffectInflictingAttack;
-import net.minecraft.entity.effect.StatusEffectInstance;
-
+import net.minecraft.world.effect.MobEffectInstance;
 import java.util.List;
 
 @Getter
 public class EffectInflictingAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingAttack<EffectInflictingAttack<A>, A> {
     public EffectInflictingAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                                  float hitboxSize, float knockback, float offset, @NonNull List<StatusEffectInstance> effects) {
+                                  float hitboxSize, float knockback, float offset, @NonNull List<MobEffectInstance> effects) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, effects);
     }
 

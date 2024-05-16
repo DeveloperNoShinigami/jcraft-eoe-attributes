@@ -8,11 +8,10 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.impl.builders.*;
 import net.arna.jcraft.common.config.*;
 import net.arna.jcraft.common.network.c2s.ConfigUpdatePacket;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,8 +21,8 @@ public class ServerConfigUI {
         Set<ConfigOption> changedOptions = new HashSet<>();
 
         for (ConfigOption option : ConfigOption.getImmutableOptions().values()) {
-            ConfigCategory category = builder.getOrCreateCategory(Text.translatable("jcraft.serverconfig.category." + option.getCategory()));
-            MutableText optionText = Text.translatable("jcraft.serverconfig.option." + option.getKey());
+            ConfigCategory category = builder.getOrCreateCategory(Component.translatable("jcraft.serverconfig.category." + option.getCategory()));
+            MutableComponent optionText = Component.translatable("jcraft.serverconfig.option." + option.getKey());
 
             AbstractConfigListEntry<?> entry = switch (option.getType()) {
                 case INTEGER -> {
@@ -114,7 +113,7 @@ public class ServerConfigUI {
 
         builder.setEditable(editable);
         builder.setSavingRunnable(() -> NetworkManager.sendToServer(ConfigUpdatePacket.ID, ConfigOption.writeOptions(
-                new PacketByteBuf(Unpooled.buffer()), changedOptions)));
-        MinecraftClient.getInstance().setScreen(builder.build());
+                new FriendlyByteBuf(Unpooled.buffer()), changedOptions)));
+        Minecraft.getInstance().setScreen(builder.build());
     }
 }

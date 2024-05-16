@@ -2,7 +2,7 @@ package net.arna.jcraft.common.attack.core;
 
 import lombok.Getter;
 import net.arna.jcraft.common.util.CooldownType;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 @Getter
 public enum MoveType {
@@ -15,8 +15,8 @@ public enum MoveType {
     ULTIMATE(CooldownType.STAND_ULTIMATE),
     UTILITY(CooldownType.UTILITY);
 
-    private final Text friendlyName;
-    private final Text key;
+    private final Component friendlyName;
+    private final Component key;
     private final CooldownType defaultCooldownType;
 
     MoveType(CooldownType defaultCooldownType) {
@@ -24,8 +24,8 @@ public enum MoveType {
     }
 
     MoveType(CooldownType defaultCooldownType, String key) {
-        friendlyName = Text.translatable("jcraft.movetype." + name().toLowerCase());
-        this.key = Text.keybind(key == null ? "key.jcraft." + name().toLowerCase() : key);
+        friendlyName = Component.translatable("jcraft.movetype." + name().toLowerCase());
+        this.key = Component.keybind(key == null ? "key.jcraft." + name().toLowerCase() : key);
         this.defaultCooldownType = defaultCooldownType;
     }
 }

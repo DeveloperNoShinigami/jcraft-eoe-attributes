@@ -4,63 +4,62 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import net.arna.jcraft.common.enchantments.CinderellasKissEnchantment;
 import net.arna.jcraft.registry.JItemRegistry;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.condition.RandomChanceLootCondition;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.SetEnchantmentsLootFunction;
-import net.minecraft.loot.provider.number.BinomialLootNumberProvider;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.SetEnchantmentsFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
+import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import java.util.function.Consumer;
 
 public class JLootTableHelper {
-    public static final Multimap<Identifier, Consumer<LootTable.Builder>> modifications = MultimapBuilder.hashKeys().linkedHashSetValues().build();
+    public static final Multimap<ResourceLocation, Consumer<LootTable.Builder>> modifications = MultimapBuilder.hashKeys().linkedHashSetValues().build();
 
     public static void init() {
         registerModification(JLootTableHelper::addMaskPool,
-                new Identifier("chests/abandoned_mineshaft"),
-                new Identifier("chests/buried_treasure"),
-                new Identifier("chests/end_city_treasure"),
-                new Identifier("chests/pillager_outpost"),
-                new Identifier("chests/simple_dungeon"),
-                new Identifier("chests/spawn_bonus_chest"),
-                new Identifier("chests/stronghold_library"),
-                new Identifier("chests/woodland_mansion")
+                new ResourceLocation("chests/abandoned_mineshaft"),
+                new ResourceLocation("chests/buried_treasure"),
+                new ResourceLocation("chests/end_city_treasure"),
+                new ResourceLocation("chests/pillager_outpost"),
+                new ResourceLocation("chests/simple_dungeon"),
+                new ResourceLocation("chests/spawn_bonus_chest"),
+                new ResourceLocation("chests/stronghold_library"),
+                new ResourceLocation("chests/woodland_mansion")
         );
     }
 
-    public static void registerModification(Consumer<LootTable.Builder> modifier, Identifier... lootTables) {
-        for (Identifier lootTable : lootTables) {
+    public static void registerModification(Consumer<LootTable.Builder> modifier, ResourceLocation... lootTables) {
+        for (ResourceLocation lootTable : lootTables) {
             modifications.put(lootTable, modifier);
         }
     }
 
     private static void addMaskPool(LootTable.Builder builder) {
-        builder.pool(LootPool.builder()
-                .with(ItemEntry.builder(JItemRegistry.CINDERELLA_MASK.get())
-                        .weight(1) // 33% chance
-                        .apply(new SetEnchantmentsLootFunction.Builder()
+        builder.withPool(LootPool.lootPool()
+                .add(LootItem.lootTableItem(JItemRegistry.CINDERELLA_MASK.get())
+                        .setWeight(1) // 33% chance
+                        .apply(new SetEnchantmentsFunction.Builder()
                                 // Binomial distribution with n = 3, p = 0.4, plotter here:
                                 // https://homepage.divms.uiowa.edu/~mbognar/applets/bin.html
                                 // P(0) = 21.6%; P(1) = 43.2%; P(2) = 28.8%; P(3) = 6.4%
-                                .enchantment(CinderellasKissEnchantment.INSTANCE, BinomialLootNumberProvider.create(3, 0.4f))))
-                .with(ItemEntry.builder(Items.BOOK)
-                        .weight(2) // 67% chance
-                        .apply(new SetEnchantmentsLootFunction.Builder()
+                                .withEnchantment(CinderellasKissEnchantment.INSTANCE, BinomialDistributionGenerator.binomial(3, 0.4f))))
+                .add(LootItem.lootTableItem(Items.BOOK)
+                        .setWeight(2) // 67% chance
+                        .apply(new SetEnchantmentsFunction.Builder()
                                 // Enchant with at least level 1
-                                .enchantment(CinderellasKissEnchantment.INSTANCE, ConstantLootNumberProvider.create(1)))
-                        .apply(new SetEnchantmentsLootFunction.Builder(true)
+                                .withEnchantment(CinderellasKissEnchantment.INSTANCE, ConstantValue.exactly(1)))
+                        .apply(new SetEnchantmentsFunction.Builder(true)
                                 // Add up to 2 levels to the kiss enchantment
                                 // n = 2, p = 0.25
                                 // P(0) = 56.25%; P(1) = 37.5%; P(2) = 6.25%
-                                .enchantment(CinderellasKissEnchantment.INSTANCE, BinomialLootNumberProvider.create(2, 0.25f))))
-                .conditionally(RandomChanceLootCondition.builder(0.08f)));
+                                .withEnchantment(CinderellasKissEnchantment.INSTANCE, BinomialDistributionGenerator.binomial(2, 0.25f))))
+                .when(LootItemRandomChanceCondition.randomChance(0.08f)));
 
-        builder.pool(LootPool.builder()
-                .with(ItemEntry.builder(JItemRegistry.STONE_MASK.get()))
-                .conditionally(RandomChanceLootCondition.builder(0.04f)));
+        builder.withPool(LootPool.lootPool()
+                .add(LootItem.lootTableItem(JItemRegistry.STONE_MASK.get()))
+                .when(LootItemRandomChanceCondition.randomChance(0.04f)));
     }
 }

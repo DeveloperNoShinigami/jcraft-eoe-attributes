@@ -1,6 +1,6 @@
 package net.arna.jcraft.mixin;
 
-import net.minecraft.block.EndPortalBlock;
+import net.minecraft.world.level.block.EndPortalBlock;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(EndPortalBlock.class)

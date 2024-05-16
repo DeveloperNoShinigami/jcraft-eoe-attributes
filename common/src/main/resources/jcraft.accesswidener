@@ -1,42 +1,25 @@
 accessWidener v2 named
 
-accessible method net/minecraft/entity/damage/DamageTracker getBiggestFall ()Lnet/minecraft/entity/damage/DamageRecord;
-accessible field net/minecraft/block/entity/AbstractFurnaceBlockEntity burnTime I
-accessible field net/minecraft/server/world/ServerWorld sleepManager Lnet/minecraft/server/world/SleepManager;
-
-
-accessible field net/minecraft/client/render/RenderLayer$MultiPhase phases Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
-accessible method net/minecraft/client/gl/ShaderProgram addUniform (Lcom/google/gson/JsonElement;)V
-accessible field net/minecraft/client/gl/ShaderProgram uniforms Ljava/util/List;
-accessible method net/minecraft/client/render/GameRenderer getFov (Lnet/minecraft/client/render/Camera;FZ)D
-accessible field net/minecraft/client/gl/PostEffectProcessor passes Ljava/util/List;
-accessible class net/minecraft/client/render/RenderPhase$ShaderProgram
-accessible class net/minecraft/client/render/BackgroundRenderer$FogData
-accessible field net/minecraft/client/render/BackgroundRenderer$FogData fogStart F
-accessible field net/minecraft/client/render/BackgroundRenderer$FogData fogEnd F
-accessible field net/minecraft/client/render/BackgroundRenderer$FogData fogShape Lnet/minecraft/client/render/FogShape;
-accessible class net/minecraft/client/render/RenderLayer$MultiPhaseParameters
-accessible class net/minecraft/client/render/RenderLayer$MultiPhase
-
-accessible method net/minecraft/block/IceBlock melt (Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V
-accessible field net/minecraft/entity/ai/control/MoveControl sidewaysMovement F
-
-accessible method net/minecraft/command/argument/ArgumentTypes register (Lnet/minecraft/registry/Registry;Ljava/lang/String;Ljava/lang/Class;Lnet/minecraft/command/argument/serialize/ArgumentSerializer;)Lnet/minecraft/command/argument/serialize/ArgumentSerializer;
-accessible method net/minecraft/particle/DefaultParticleType <init> (Z)V
-accessible method net/minecraft/world/GameRules$Visitor visitInt (Lnet/minecraft/world/GameRules$Key;Lnet/minecraft/world/GameRules$Type;)V
-accessible field net/minecraft/entity/damage/DamageTracker recentlyAttacked Z
-
-accessible class net/minecraft/util/InvalidHierarchicalFileException
-
-accessible class net/minecraft/client/render/RenderPhase$ShaderProgram
-accessible field net/minecraft/client/render/RenderLayer$MultiPhaseParameters program Lnet/minecraft/client/render/RenderPhase$ShaderProgram;
-accessible field net/minecraft/client/render/RenderPhase$ShaderProgram supplier Ljava/util/Optional;
-extendable method net/minecraft/client/gl/ShaderProgram addUniform (Lcom/google/gson/JsonElement;)V
-
-accessible field net/minecraft/client/gl/ShaderProgram loadedUniforms Ljava/util/Map;
-accessible field net/minecraft/client/gl/JsonEffectShaderProgram samplerBinds Ljava/util/Map;
-accessible field net/minecraft/client/render/GameRenderer buffers Lnet/minecraft/client/render/BufferBuilderStorage;
-
-accessible method net/minecraft/world/gen/feature/OrePlacedFeatures modifiers (Lnet/minecraft/world/gen/placementmodifier/PlacementModifier;Lnet/minecraft/world/gen/placementmodifier/PlacementModifier;)Ljava/util/List;
-accessible method net/minecraft/world/gen/feature/OrePlacedFeatures modifiersWithCount (ILnet/minecraft/world/gen/placementmodifier/PlacementModifier;)Ljava/util/List;
-accessible method net/minecraft/world/gen/feature/OrePlacedFeatures modifiersWithRarity (ILnet/minecraft/world/gen/placementmodifier/PlacementModifier;)Ljava/util/List;
+accessible field net/minecraft/world/damagesource/CombatTracker inCombat Z
+accessible class net/minecraft/client/renderer/FogRenderer$FogData
+accessible class net/minecraft/world/entity/monster/EnderMan$EndermanFreezeWhenLookedAt
+accessible method net/minecraft/client/renderer/GameRenderer getFov (Lnet/minecraft/client/Camera;FZ)D
+accessible field net/minecraft/client/renderer/PostChain passes Ljava/util/List;
+accessible field net/minecraft/client/renderer/RenderType$CompositeRenderType state Lnet/minecraft/client/renderer/RenderType$CompositeState;
+accessible field net/minecraft/client/renderer/RenderType$CompositeState shaderState Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
+accessible method net/minecraft/core/particles/SimpleParticleType <init> (Z)V
+accessible field net/minecraft/world/entity/ai/control/MoveControl strafeRight F
+accessible method net/minecraft/world/damagesource/CombatTracker getMostSignificantFall ()Lnet/minecraft/world/damagesource/CombatEntry;
+accessible field net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity litTime I
+accessible method net/minecraft/world/level/block/IceBlock melt (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V
+accessible field net/minecraft/client/renderer/EffectInstance samplerMap Ljava/util/Map;
+accessible field net/minecraft/server/level/ServerLevel sleepStatus Lnet/minecraft/server/players/SleepStatus;
+accessible field net/minecraft/client/renderer/RenderStateShard$ShaderStateShard shader Ljava/util/Optional;
+accessible method net/minecraft/data/worldgen/placement/OrePlacements commonOrePlacement (ILnet/minecraft/world/level/levelgen/placement/PlacementModifier;)Ljava/util/List;
+accessible field net/minecraft/client/renderer/ShaderInstance samplerMap Ljava/util/Map;
+accessible method net/minecraft/client/renderer/ShaderInstance parseUniformNode (Lcom/google/gson/JsonElement;)V
+extendable method net/minecraft/client/renderer/ShaderInstance parseUniformNode (Lcom/google/gson/JsonElement;)V
+accessible field net/minecraft/client/renderer/ShaderInstance uniformMap Ljava/util/Map;
+accessible field net/minecraft/client/renderer/ShaderInstance uniforms Ljava/util/List;
+accessible field net/minecraft/world/entity/monster/Witch attackPlayersGoal Lnet/minecraft/world/entity/ai/goal/target/NearestAttackableWitchTargetGoal;
+accessible method net/minecraft/client/renderer/item/ItemProperties register (Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/item/ClampedItemPropertyFunction;)V

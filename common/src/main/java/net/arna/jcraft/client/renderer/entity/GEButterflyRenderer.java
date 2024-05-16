@@ -1,33 +1,34 @@
 package net.arna.jcraft.client.renderer.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.cache.object.GeoBone;
+import mod.azure.azurelib.renderer.DynamicGeoEntityRenderer;
+import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
 import net.arna.jcraft.client.model.entity.GEButterflyModel;
 import net.arna.jcraft.common.entity.GEButterflyEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShieldItem;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
-import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
+
 
 public class GEButterflyRenderer extends DynamicGeoEntityRenderer<GEButterflyEntity> {
     protected ItemStack mainHandItem;
 
     @Override
-    public RenderLayer getRenderType(GEButterflyEntity animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
-        return RenderLayer.getEntityTranslucent(texture);
+    public RenderType getRenderType(GEButterflyEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucent(texture);
     }
 
-    public GEButterflyRenderer(EntityRendererFactory.Context renderManager) {
+    public GEButterflyRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new GEButterflyModel());
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
 
@@ -42,19 +43,19 @@ public class GEButterflyRenderer extends DynamicGeoEntityRenderer<GEButterflyEnt
             }
 
             @Override
-            protected ModelTransformationMode getTransformTypeForStack(GeoBone bone, ItemStack stack, GEButterflyEntity animatable) {
+            protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, GEButterflyEntity animatable) {
                 // Apply the camera transform for the given hand
-                return ModelTransformationMode.NONE;
+                return ItemDisplayContext.NONE;
             }
 
             // Do some quick render modifications depending on what the item is
             @Override
-            protected void renderStackForBone(MatrixStack poseStack, GeoBone bone, ItemStack stack, GEButterflyEntity animatable,
-                                              VertexConsumerProvider bufferSource, float partialTick, int packedLight, int packedOverlay) {
+            protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, GEButterflyEntity animatable,
+                                              MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
 
                 if (stack == GEButterflyRenderer.this.mainHandItem) {
                     poseStack.scale(0.33f, 0.33f, 0.33f);
-                    poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90f));
+                    poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
 
                     if (stack.getItem() instanceof ShieldItem) {
                         poseStack.translate(0, 0.125, -0.25);
@@ -67,8 +68,8 @@ public class GEButterflyRenderer extends DynamicGeoEntityRenderer<GEButterflyEnt
     }
 
     @Override
-    public void preRender(MatrixStack poseStack, GEButterflyEntity animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, GEButterflyEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-        this.mainHandItem = animatable.getEquippedStack(EquipmentSlot.MAINHAND);
+        this.mainHandItem = animatable.getItemBySlot(EquipmentSlot.MAINHAND);
     }
 }

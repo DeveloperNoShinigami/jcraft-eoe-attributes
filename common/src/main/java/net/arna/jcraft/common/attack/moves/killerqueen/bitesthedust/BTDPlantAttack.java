@@ -8,20 +8,19 @@ import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.Set;
 
 public class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEntity> {
     public static final MoveVariable<LivingEntity> BTD_ENTITY = new MoveVariable<>(LivingEntity.class);
-    public static final MoveVariable<Vec3d> BTD_POS = new MoveVariable<>(Vec3d.class);
+    public static final MoveVariable<Vec3> BTD_POS = new MoveVariable<>(Vec3.class);
 
     public BTDPlantAttack(int cooldown, int windup, int duration, float attackDistance, int stun, float hitboxSize, float offset) {
         super(cooldown, windup, duration, attackDistance, 0f, stun, hitboxSize, 0f, offset);
@@ -37,20 +36,20 @@ public class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEn
         Entity btdEntity = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
         if (btdEntity instanceof LivingEntity living) {
             ctx.set(BTD_ENTITY, living);
-            ctx.set(BTD_POS, btdEntity.getPos());
+            ctx.set(BTD_POS, btdEntity.position());
         }
         return targets;
     }
 
     public void tickBomb(KQBTDEntity stand) {
-        if (stand.getUser() instanceof ServerPlayerEntity player) {
+        if (stand.getUser() instanceof ServerPlayer player) {
             displayBTDParticles(stand, player);
         }
     }
 
-    private void displayBTDParticles(KQBTDEntity stand, ServerPlayerEntity playerEntity) {
+    private void displayBTDParticles(KQBTDEntity stand, ServerPlayer playerEntity) {
         Entity bombEntity = stand.getMoveContext().get(BTD_ENTITY);
-        Vec3d bombPos = stand.getMoveContext().get(BTD_POS);
+        Vec3 bombPos = stand.getMoveContext().get(BTD_POS);
         boolean bombExists = bombEntity != null;
 
         double dX1 = 0;
@@ -60,7 +59,7 @@ public class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEn
         double dY2 = 0;
         double dZ2 = 0;
 
-        Box bBox = null;
+        AABB bBox = null;
 
         if (bombEntity != null) { // If the bomb isn't a block
             dX1 = bombEntity.getX();
@@ -69,15 +68,15 @@ public class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEn
 
             bBox = bombEntity.getBoundingBox();
 
-            dX2 = bBox.getXLength();
-            dY2 = bBox.getYLength();
-            dZ2 = bBox.getZLength();
+            dX2 = bBox.getXsize();
+            dY2 = bBox.getYsize();
+            dZ2 = bBox.getZsize();
         }
 
         if (!bombExists) {
             return;
         }
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeShort(9);
 
         buf.writeDouble(dX1);
@@ -92,13 +91,13 @@ public class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEn
         buf.writeDouble(bombPos.z);
 
         boolean anyInRange = false;
-        Vec3d pos = bombEntity.getPos();
-        Vec3d v1 = pos.add(3, 3, 3);
-        Vec3d v2 = pos.add(-3, -3, -3);
-        List<LivingEntity> list = stand.getWorld().getEntitiesByClass(LivingEntity.class, new Box(v1, v2),
-                EntityPredicates.VALID_LIVING_ENTITY.and(e -> e != bombEntity));
+        Vec3 pos = bombEntity.position();
+        Vec3 v1 = pos.add(3, 3, 3);
+        Vec3 v2 = pos.add(-3, -3, -3);
+        List<LivingEntity> list = stand.level().getEntitiesOfClass(LivingEntity.class, new AABB(v1, v2),
+                EntitySelector.LIVING_ENTITY_STILL_ALIVE.and(e -> e != bombEntity));
         for (LivingEntity l : list) {
-            if (l.squaredDistanceTo(pos) < 9) {
+            if (l.distanceToSqr(pos) < 9) {
                 anyInRange = true;
                 break;
             }
@@ -106,7 +105,7 @@ public class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEn
 
         buf.writeBoolean(anyInRange);
 
-        if (bBox.getAverageSideLength() > 0) {
+        if (bBox.getSize() > 0) {
             ServerChannelFeedbackPacket.send(playerEntity, buf);
         }
     }

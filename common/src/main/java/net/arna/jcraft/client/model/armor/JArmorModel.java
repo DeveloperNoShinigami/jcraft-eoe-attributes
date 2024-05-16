@@ -1,9 +1,9 @@
 package net.arna.jcraft.client.model.armor;
 
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.resources.ResourceLocation;
 
 public class JArmorModel<T extends GeoAnimatable> extends GeoModel<T> {//<T extends ArmorItem & IAnimatable> extends AnimatedGeoModel<T> {
     protected final String name;
@@ -13,17 +13,17 @@ public class JArmorModel<T extends GeoAnimatable> extends GeoModel<T> {//<T exte
     }
 
     @Override
-    public Identifier getModelResource(T object) {
+    public ResourceLocation getModelResource(T object) {
         return JCraft.id("geo/" + name + ".geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(T object) {
+    public ResourceLocation getTextureResource(T object) {
         return JCraft.id("textures/armor/" + name + ".png");
     }
 
     @Override
-    public Identifier getAnimationResource(T animatable) {
+    public ResourceLocation getAnimationResource(T animatable) {
         return JCraft.id("animations/" + name + ".animation.json");
     }
 }

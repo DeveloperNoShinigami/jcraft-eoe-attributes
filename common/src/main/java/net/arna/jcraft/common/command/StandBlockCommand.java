@@ -6,21 +6,20 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Collection;
 
 public class StandBlockCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(CommandManager.literal("stand")
-                .then(CommandManager.literal("block")
-                        .requires(source -> source.hasPermissionLevel(2) || "Arna57".equals(source.getName()) || "MrSterner".equals(source.getName()))
-                        .then(CommandManager.argument("targets", EntityArgumentType.entities())
-                                .then(CommandManager.argument("block", BoolArgumentType.bool())
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("stand")
+                .then(Commands.literal("block")
+                        .requires(source -> source.hasPermission(2) || "Arna57".equals(source.getTextName()) || "MrSterner".equals(source.getTextName()))
+                        .then(Commands.argument("targets", EntityArgument.entities())
+                                .then(Commands.argument("block", BoolArgumentType.bool())
                                         .executes(ctx -> run(ctx, ctx.getArgument("block", Boolean.class)))
                                 )
                         )
@@ -28,8 +27,8 @@ public class StandBlockCommand {
         );
     }
 
-    public static int run(CommandContext<ServerCommandSource> ctx, boolean block) throws CommandSyntaxException {
-        Collection<? extends Entity> targets = EntityArgumentType.getEntities(ctx, "targets");
+    public static int run(CommandContext<CommandSourceStack> ctx, boolean block) throws CommandSyntaxException {
+        Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
         if (targets.isEmpty()) {
             return 0;
         }

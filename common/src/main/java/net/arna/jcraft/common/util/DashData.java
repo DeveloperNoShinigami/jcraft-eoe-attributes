@@ -6,25 +6,25 @@ import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class DashData {
-    public final Vec3d dashVector;
+    public final Vec3 dashVector;
     public final LivingEntity entity;
     public boolean finished = false;
     private int duration = 10;
 
-    public DashData(Vec3d dashVector, LivingEntity entity) {
+    public DashData(Vec3 dashVector, LivingEntity entity) {
         this.dashVector = dashVector;
         this.entity = entity;
     }
 
     public void tickDash() {
         duration--;
-        if (entity.hasStatusEffect(JStatusRegistry.DAZED.get())) { // Being stunned stops dashes
+        if (entity.hasEffect(JStatusRegistry.DAZED.get())) { // Being stunned stops dashes
             finished = true;
             return;
         }
@@ -34,8 +34,8 @@ public class DashData {
             }
             return;
         }
-        entity.setVelocity(entity.getVelocity().add(dashVector).multiply(0.5));
-        entity.velocityModified = true;
+        entity.setDeltaMovement(entity.getDeltaMovement().add(dashVector).scale(0.5));
+        entity.hurtMarked = true;
     }
 
     public static boolean isDashing(LivingEntity entity) {
@@ -48,34 +48,34 @@ public class DashData {
 
     public static void tryDash(int forward, int side, LivingEntity entity) {
         CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(entity);
-        if (cooldowns.getCooldown(CooldownType.DASH) > 0 || !entity.isOnGround() || entity.hasStatusEffect(JStatusRegistry.DAZED.get()) || entity.hasStatusEffect(JStatusRegistry.KNOCKDOWN.get())) {
+        if (cooldowns.getCooldown(CooldownType.DASH) > 0 || !entity.onGround() || entity.hasEffect(JStatusRegistry.DAZED.get()) || entity.hasEffect(JStatusRegistry.KNOCKDOWN.get())) {
             return;
         }
         cooldowns.setCooldown(CooldownType.DASH, JCraft.dashCooldown);
 
         double dashSpeed = 0.75;
-        Vec3d rotVec = Vec3d.fromPolar(entity.getPitch(), entity.getYaw());
-        rotVec = rotVec.rotateY(1.57079632679f * side); // L/R
+        Vec3 rotVec = Vec3.directionFromRotation(entity.getXRot(), entity.getYRot());
+        rotVec = rotVec.yRot(1.57079632679f * side); // L/R
 
         if (side != 0) {
             dashSpeed *= 0.75; // Sideways speed nerf
             if (forward == 1) {
-                rotVec = rotVec.rotateY(-0.785398163397f * side); // Forward diagonals
+                rotVec = rotVec.yRot(-0.785398163397f * side); // Forward diagonals
             }
         }
         if (forward == -1) {
-            rotVec = rotVec.rotateY(side == 0 ? 3.14159265359f : 0.785398163397f * side); // Back diagonals
+            rotVec = rotVec.yRot(side == 0 ? 3.14159265359f : 0.785398163397f * side); // Back diagonals
             dashSpeed *= 0.75; // Backwards speed nerf
         }
 
-        JCraft.dashes.put(entity, new DashData(rotVec.normalize().multiply(dashSpeed), entity));
+        JCraft.dashes.put(entity, new DashData(rotVec.normalize().scale(dashSpeed), entity));
 
         // Syncs dash anim (unless already attacking with a spec) with every player in the vicinity
-        if (entity instanceof ServerPlayerEntity player) {
+        if (entity instanceof ServerPlayer player) {
             JSpec<?, ?> spec = JUtils.getSpec(player);
 
             if (spec == null || spec.moveStun < 1) {
-                JUtils.around((ServerWorld) entity.getWorld(), entity.getPos(), 96).forEach(
+                JUtils.around((ServerLevel) entity.level(), entity.position(), 96).forEach(
                         serverPlayer -> PlayerAnimPacket.send(player, serverPlayer, "dash"));
             }
         }

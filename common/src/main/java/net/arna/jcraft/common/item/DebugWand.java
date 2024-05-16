@@ -4,51 +4,51 @@ import net.arna.jcraft.client.rendering.post.TimestopShaderPostProcessor;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 
 public class DebugWand extends Item {
-    public DebugWand(Settings settings) {
+    public DebugWand(Properties settings) {
         super(settings);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (world.isClient) {
-            return TypedActionResult.pass(user.getStackInHand(hand));
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        if (world.isClientSide) {
+            return InteractionResultHolder.pass(user.getItemInHand(hand));
         }
 
-        if (user.isSneaking()) {
-            world.playSound(null, user.getBlockPos(), JSoundRegistry.TW_TS_CLEAN.get(), SoundCategory.PLAYERS, 1.2f, 1);
-            ShaderActivationPacket.send((ServerPlayerEntity) user, user, 0, 20 * 6, ShaderActivationPacket.Type.ZA_WARUDO);
+        if (user.isShiftKeyDown()) {
+            world.playSound(null, user.blockPosition(), JSoundRegistry.TW_TS_CLEAN.get(), SoundSource.PLAYERS, 1.2f, 1);
+            ShaderActivationPacket.send((ServerPlayer) user, user, 0, 20 * 6, ShaderActivationPacket.Type.ZA_WARUDO);
         }
         return super.use(world, user, hand);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        PlayerEntity player = context.getPlayer();
-        if (player == null || context.getWorld().isClient) {
-            return ActionResult.PASS;
+    public InteractionResult useOn(UseOnContext context) {
+        Player player = context.getPlayer();
+        if (player == null || context.getLevel().isClientSide) {
+            return InteractionResult.PASS;
         }
 
         // Feel free to remove or modify these to debug other components/features.
-        if (player.isSneaking()) {
+        if (player.isShiftKeyDown()) {
             System.out.println("ShaderTest?");
             //TimestopShaderPostProcessor.playEffect(player.getPos().toVector3f());
-            ShaderActivationPacket.send((ServerPlayerEntity) player, player, 0, 20 * 6, ShaderActivationPacket.Type.ZA_WARUDO);
+            ShaderActivationPacket.send((ServerPlayer) player, player, 0, 20 * 6, ShaderActivationPacket.Type.ZA_WARUDO);
         } else {
-            JComponentPlatformUtils.getShockwaveHandler(context.getWorld()).addShockwave(context.getHitPos(), player.getRotationVector());
+            JComponentPlatformUtils.getShockwaveHandler(context.getLevel()).addShockwave(context.getClickLocation(), player.getLookAngle());
         }
 
-        return super.useOnBlock(context);
+        return super.useOn(context);
     }
 }

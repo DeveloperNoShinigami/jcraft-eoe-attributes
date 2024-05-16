@@ -17,30 +17,37 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.FallingBlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -54,8 +61,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withExtraHitBox(1.75, -0.1, 0.75)
             .withInfo(
-                    Text.literal("Drill"),
-                    Text.literal("fast, multi-hitting combo starter, low stun and blockstun")
+                    Component.literal("Drill"),
+                    Component.literal("fast, multi-hitting combo starter, low stun and blockstun")
             );
     public static final SimpleAttack<TheFoolEntity> LIGHT_FOLLOWUP = new SimpleAttack<TheFoolEntity>(
             0, 9, 16, 1.5f, 6f, 9, 2f, 1.5f, 0)
@@ -66,8 +73,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withExtraHitBox(0, 0.25, 1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Swipe"),
-                    Text.literal("quick combo finisher")
+                    Component.literal("Swipe"),
+                    Component.literal("quick combo finisher")
             );
     public static final SimpleAttack<TheFoolEntity> LIGHT = new SimpleAttack<TheFoolEntity>(30, 7,
             14, 1.5f, 6, 15, 2, 0.5f, -0.1f)
@@ -76,15 +83,15 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(DRILL)
             .withInfo(
-                    Text.literal("Swipe"),
-                    Text.literal("slow, long-reaching poke")
+                    Component.literal("Swipe"),
+                    Component.literal("slow, long-reaching poke")
             );
     public static final AirBarrageAttack AIR_BARRAGE = new AirBarrageAttack(240, 0, 30,
             1f, 1f, 10, 2f, 0.1f, 0f, 3)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
-                    Text.literal("Burn Rubber"),
-                    Text.literal("slows down all movement, combo starter/extender")
+                    Component.literal("Burn Rubber"),
+                    Component.literal("slows down all movement, combo starter/extender")
             );
     public static final TFComboAttack COMBO = new TFComboAttack(200, 29, 1.5f, 4.5f,
             20, 1.75f, 0.1f, -0.1f, IntSet.of(6, 14, 18, 19))
@@ -93,10 +100,10 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withExtraHitBox(0.5, 0, 1.25)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("3-hit Combo"), Text.literal("fast knockdown provider"));
+                    Component.literal("3-hit Combo"), Component.literal("fast knockdown provider"));
     public static final EffectInflictingAttack<TheFoolEntity> LAUNCH = new EffectInflictingAttack<TheFoolEntity>(240,
             16, 20, 1.25f, 8f, 25, 2f, 0.5f, -0.3f,
-            List.of(new StatusEffectInstance(StatusEffects.LEVITATION, 5, 19, true, false)))
+            List.of(new MobEffectInstance(MobEffects.LEVITATION, 5, 19, true, false)))
             .withSound(JSoundRegistry.FOOL_LAUNCH.get())
             .withInitAction((attacker, user, ctx) -> attacker.setSand(true))
             .withExtraHitBox(1.5)
@@ -104,8 +111,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withHyperArmor()
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
-                    Text.literal("Launch"),
-                    Text.literal("uninterruptible, slow, vertically launching uppercut")
+                    Component.literal("Launch"),
+                    Component.literal("uninterruptible, slow, vertically launching uppercut")
             );
     public static final SlamAttack SLAM = new SlamAttack(0, 4, 10, 1.25f, 4f,
             24, 2f, 0.2f, 0.1f)
@@ -115,8 +122,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Slam"),
-                    Text.literal("")
+                    Component.literal("Slam"),
+                    Component.literal("")
             );
     public static final PoundAttack POUND = new PoundAttack(220, 7, 22, 1.25f,
             4f, 25, 1.5f, 0.1f, -0.1f)
@@ -126,36 +133,36 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withLift(false)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
-            .withInfo(Text.literal("Pound"), Text.literal("""
+            .withInfo(Component.literal("Pound"), Component.literal("""
                     has followups which create different sand patterns based on which key was pressed:
                     SPECIAL 1 - no sand
                     SPECIAL 2 - semicircle
                     SPECIAL 3 - diagonal pattern (influenced by where the user is looking)"""));
     public static final SandCloneMove SAND_CLONE = new SandCloneMove(300, 7, 11, 1f)
-            .withSound(SoundEvents.BLOCK_SAND_PLACE)
+            .withSound(SoundEvents.SAND_PLACE)
             .withInfo(
-                    Text.literal("Sand Manipulation"),
-                    Text.literal("creates a blinding sand cloud, then a clone or (if crouching) circles of sand")
+                    Component.literal("Sand Manipulation"),
+                    Component.literal("creates a blinding sand cloud, then a clone or (if crouching) circles of sand")
             );
     public static final GlideMove GLIDE = new GlideMove(300, 5, 125, 0f)
             .withSound(JSoundRegistry.FOOL_GLIDE.get())
             .withInfo(
-                    Text.literal("Glider"),
-                    Text.literal("turns The Fool into a glider for 6s")
+                    Component.literal("Glider"),
+                    Component.literal("turns The Fool into a glider for 6s")
             );
     public static final SandWaveAttack SAND_WAVE = new SandWaveAttack(340, 0, 80, 0f,
             1f, 0, 2f, 0.1f, 0f, 3)
             .withAerialVariant(GLIDE)
             .withBackstab(false)
             .withInfo(
-                    Text.literal("Sandwave"),
-                    Text.literal("The Fool turns into a quick sandwave that knocks anything it touches down")
+                    Component.literal("Sandwave"),
+                    Component.literal("The Fool turns into a quick sandwave that knocks anything it touches down")
             );
     public static final SandTornadoMove SAND_TORNADO = new SandTornadoMove(280, 12, 13, 1f)
             .withSound(JSoundRegistry.FOOL_LAUNCH.get())
             .withInfo(
-                    Text.literal("Sand Tornado"),
-                    Text.literal("summons a slow, stunning sand tornado")
+                    Component.literal("Sand Tornado"),
+                    Component.literal("summons a slow, stunning sand tornado")
             );
     public static final TFChargeAttack CHARGE = new TFChargeAttack(220, 5, 20, 7f,
             6f, 10, 1.5f, 1.2f, 0f, State.CHARGE_HIT)
@@ -166,8 +173,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withBackstab(false)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Charge"),
-                    Text.literal("The Fool detaches from the user and charges forward, launches on hit")
+                    Component.literal("Charge"),
+                    Component.literal("The Fool detaches from the user and charges forward, launches on hit")
             );
     public static final SandstormAttack SANDSTORM = new SandstormAttack(800, 28, 41, 1.5f,
             7f, 20, 2f, 0.1f, 0f)
@@ -178,19 +185,19 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
-                    Text.literal("Suffocating Sandstorm"),
-                    Text.literal("very slow, traps the opponent in a cloud of blinding and slowing sand")
+                    Component.literal("Suffocating Sandstorm"),
+                    Component.literal("very slow, traps the opponent in a cloud of blinding and slowing sand")
             );
-    private static final BlockState sandState = Blocks.SAND.getDefaultState();
-    private static final TrackedData<Boolean> IS_SAND;
-    private static final TrackedData<Boolean> IS_WAVE;
+    private static final BlockState sandState = Blocks.SAND.defaultBlockState();
+    private static final EntityDataAccessor<Boolean> IS_SAND;
+    private static final EntityDataAccessor<Boolean> IS_WAVE;
 
     static {
-        IS_SAND = DataTracker.registerData(TheFoolEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-        IS_WAVE = DataTracker.registerData(TheFoolEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        IS_SAND = SynchedEntityData.defineId(TheFoolEntity.class, EntityDataSerializers.BOOLEAN);
+        IS_WAVE = SynchedEntityData.defineId(TheFoolEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
-    public TheFoolEntity(World worldIn) {
+    public TheFoolEntity(Level worldIn) {
         super(StandType.THE_FOOL, worldIn);
         idleRotation = 225f;
         idleDistance = 2f;
@@ -256,7 +263,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                 }
 
                 boolean s = super.initMove(type);
-                if (type == MoveType.SPECIAL2 && !getUserOrThrow().isOnGround() || type == MoveType.SPECIAL3) {
+                if (type == MoveType.SPECIAL2 && !getUserOrThrow().onGround() || type == MoveType.SPECIAL3) {
                     setSand(true);
                 }
 
@@ -287,27 +294,27 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     }
 
     public boolean isSand() {
-        return this.dataTracker.get(IS_SAND);
+        return this.entityData.get(IS_SAND);
     }
 
     public void setSand(boolean b) {
-        this.dataTracker.set(IS_SAND, b);
+        this.entityData.set(IS_SAND, b);
     }
 
     public boolean isWave() {
-        return this.dataTracker.get(IS_WAVE);
+        return this.entityData.get(IS_WAVE);
     }
 
     public void setWave(boolean b) {
         setAlphaOverride(b ? 1.0F : -1.0F);
-        this.dataTracker.set(IS_WAVE, b);
+        this.entityData.set(IS_WAVE, b);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        getDataTracker().startTracking(IS_SAND, false);
-        getDataTracker().startTracking(IS_WAVE, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(IS_SAND, false);
+        getEntityData().define(IS_WAVE, false);
     }
 
     @Override
@@ -323,26 +330,26 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         }
 
         // The Fool does a special block depending on your height
-        boolean sand = user.getHeight() < 1.8f;
+        boolean sand = user.getBbHeight() < 1.8f;
         setSand(sand);
         if (sand) {
             this.setDistanceOffset(0);
         }
 
         // Projectile deflection
-        List<ProjectileEntity> toDeflect = getWorld().getEntitiesByClass(ProjectileEntity.class, getBoundingBox().expand(0.75f), EntityPredicates.VALID_ENTITY);
+        List<Projectile> toDeflect = level().getEntitiesOfClass(Projectile.class, getBoundingBox().inflate(0.75f), EntitySelector.ENTITY_STILL_ALIVE);
 
-        for (ProjectileEntity projectile : toDeflect) {
+        for (Projectile projectile : toDeflect) {
             if (projectile.getOwner() == user) {
                 continue;
             }
-            projectile.setVelocity(projectile.getVelocity().multiply(-0.5).add(0, -0.1, 0));
-            projectile.velocityModified = true;
+            projectile.setDeltaMovement(projectile.getDeltaMovement().scale(-0.5).add(0, -0.1, 0));
+            projectile.hurtMarked = true;
         }
 
-        user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 2, 9, false, false, true));
+        user.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 9, false, false, true));
         stun(user, 2, 2);
-        user.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 5, 4, false, false, true));
+        user.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 5, 4, false, false, true));
     }
 
     @Override
@@ -357,7 +364,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public boolean canAttack() {
         if (hasUser()) {
             LivingEntity user = getUserOrThrow();
-            if (JUtils.isAffectedByTimeStop(user) || user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
+            if (JUtils.isAffectedByTimeStop(user) || user.hasEffect(JStatusRegistry.DAZED.get())) {
                 return false;
             }
             if (curMove != null && curMove.getOriginalMove() == GLIDE) {
@@ -370,7 +377,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
 
     @Override
     public void setMove(AbstractMove<?, ? super TheFoolEntity> move, @Nullable State animState) {
-        if (getUser() != null && getUser().isSneaking()) {
+        if (getUser() != null && getUser().isShiftKeyDown()) {
             setSand(true);
             super.setMove(move.copy().withMoveDistance(move.getMoveDistance() / 2f), animState);
         } else {
@@ -386,19 +393,19 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         super.desummon();
     }
 
-    public static void createFoolishSand(World world, BlockPos pos, Vec3d vel) {
-        BlockPos midBlockPos = pos.add(0, 1, 0);
-        if (world.getBlockState(midBlockPos).isOpaque()) {
+    public static void createFoolishSand(Level world, BlockPos pos, Vec3 vel) {
+        BlockPos midBlockPos = pos.offset(0, 1, 0);
+        if (world.getBlockState(midBlockPos).canOcclude()) {
             return;
         }
-        FallingBlockEntity sand = FallingBlockEntity.spawnFromBlock(world, midBlockPos, JBlockRegistry.FOOLISH_SAND_BLOCK.get().getDefaultState());
-        sand.setHurtEntities(5f, 5);
-        sand.setVelocity(vel);
-        sand.velocityModified = true;
-        sand.velocityDirty = true;
-        sand.intersectionChecked = false;
+        FallingBlockEntity sand = FallingBlockEntity.fall(world, midBlockPos, JBlockRegistry.FOOLISH_SAND_BLOCK.get().defaultBlockState());
+        sand.setHurtsEntities(5f, 5);
+        sand.setDeltaMovement(vel);
+        sand.hurtMarked = true;
+        sand.hasImpulse = true;
+        sand.blocksBuilding = false;
         sand.dropItem = false;
-        world.spawnEntity(sand);
+        world.addFreshEntity(sand);
     }
 
     @Override
@@ -409,24 +416,24 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             return;
         }
 
-        if (getWorld().isClient) {
-            if (age % 2 != 0) {
+        if (level().isClientSide) {
+            if (tickCount % 2 != 0) {
                 return;
             }
-            Vec3d pos = getPos();
+            Vec3 pos = position();
             // If the fool is using any morphing attack, the amount of sand multiplies, and the stand itself changes color
-            int particleNum = isWave() ? 32 : 1 + MathHelper.clamp(getMoveStun() / 2, 0, 5) * (isSand() ? 2 : 1);
+            int particleNum = isWave() ? 32 : 1 + Mth.clamp(getMoveStun() / 2, 0, 5) * (isSand() ? 2 : 1);
             int height = isWave() || blocking ? 1 : 2;
 
             for (int i = 0; i < particleNum; i++) {
-                ParticleEffect effect = (isWave() && random.nextFloat() * 0.5f > 0) ?
-                        new BlockStateParticleEffect(ParticleTypes.BLOCK, sandState) :
-                        new BlockStateParticleEffect(ParticleTypes.FALLING_DUST, sandState);
-                getWorld().addParticle(
+                ParticleOptions effect = (isWave() && random.nextFloat() * 0.5f > 0) ?
+                        new BlockParticleOption(ParticleTypes.BLOCK, sandState) :
+                        new BlockParticleOption(ParticleTypes.FALLING_DUST, sandState);
+                level().addParticle(
                         effect,
-                        pos.x + random.nextTriangular(0, 1),
-                        pos.y + random.nextTriangular(height / 2f, height / 2f),
-                        pos.z + random.nextTriangular(0, 1),
+                        pos.x + random.triangle(0, 1),
+                        pos.y + random.triangle(height / 2f, height / 2f),
+                        pos.z + random.triangle(0, 1),
                         0, 0, 0);
             }
 
@@ -434,7 +441,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         }
 
         AbstractMove<?, ? super TheFoolEntity> move = curMove;
-        if (lastRemoteInputTime - age > 4) {
+        if (lastRemoteInputTime - tickCount > 4) {
             updateRemoteInputs(0, 0, false, false);
         }
         if (move != null) {

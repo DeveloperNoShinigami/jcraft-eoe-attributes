@@ -4,10 +4,10 @@ import lombok.NonNull;
 import net.arna.jcraft.common.component.impl.living.CommonMiscComponentImpl;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.living.MiscComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 
 public class MiscComponentImpl extends CommonMiscComponentImpl implements MiscComponent {
     private final Entity entity;
@@ -28,29 +28,29 @@ public class MiscComponentImpl extends CommonMiscComponentImpl implements MiscCo
     }
 
     @Override
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
+    public boolean shouldSyncWith(ServerPlayer player) {
         return super.shouldSyncWith(player);
     }
 
     @Override
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
         MiscComponent.super.writeSyncPacket(buf, recipient);
         super.writeSyncPacket(buf, recipient);
     }
 
     @Override
-    public void applySyncPacket(PacketByteBuf buf) {
+    public void applySyncPacket(FriendlyByteBuf buf) {
         MiscComponent.super.applySyncPacket(buf);
         super.applySyncPacket(buf);
     }
 
     @Override
-    public void readFromNbt(@NonNull NbtCompound tag) {
+    public void readFromNbt(@NonNull CompoundTag tag) {
         super.readFromNbt(tag);
     }
 
     @Override
-    public void writeToNbt(@NonNull NbtCompound tag) {
+    public void writeToNbt(@NonNull CompoundTag tag) {
         super.writeToNbt(tag);
     }
 }

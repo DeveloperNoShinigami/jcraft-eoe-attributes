@@ -9,10 +9,9 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class OverclockAttack extends AbstractSimpleAttack<OverclockAttack, GoldExperienceEntity> {
@@ -28,11 +27,11 @@ public class OverclockAttack extends AbstractSimpleAttack<OverclockAttack, GoldE
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         for (LivingEntity target : targets) {
-            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED.get(), 60, 3, true, false));
-            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.OUTOFBODY.get(), 60, 0, false, true));
+            target.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), 60, 3, true, false));
+            target.addEffect(new MobEffectInstance(JStatusRegistry.OUTOFBODY.get(), 60, 0, false, true));
 
-            Vec3d upDir = new Vec3d(GravityChangerAPI.getGravityDirection(user).getUnitVector());
-            JUtils.setVelocity(target, upDir.multiply(-0.8));
+            Vec3 upDir = new Vec3(GravityChangerAPI.getGravityDirection(user).step());
+            JUtils.setVelocity(target, upDir.scale(-0.8));
         }
 
         return targets;

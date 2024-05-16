@@ -1,7 +1,7 @@
 package net.arna.jcraft.forge.capability.api;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class JCapabilityProvider<C extends INBTSerializable<NbtCompound>> implements ICapabilityProvider, INBTSerializable<NbtCompound> {
+public class JCapabilityProvider<C extends INBTSerializable<CompoundTag>> implements ICapabilityProvider, INBTSerializable<CompoundTag> {
     private final C instance;
     private final LazyOptional<C> capOptional;
 
@@ -30,12 +30,12 @@ public class JCapabilityProvider<C extends INBTSerializable<NbtCompound>> implem
     }
 
     @Override
-    public NbtCompound serializeNBT() {
+    public CompoundTag serializeNBT() {
         return this.instance.serializeNBT();
     }
 
     @Override
-    public void deserializeNBT(NbtCompound nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         this.instance.deserializeNBT(nbt);
     }
 }

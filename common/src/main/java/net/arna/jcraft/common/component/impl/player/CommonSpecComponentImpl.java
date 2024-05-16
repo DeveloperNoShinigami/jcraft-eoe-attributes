@@ -4,18 +4,18 @@ import lombok.NonNull;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.SpecType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
-    private final PlayerEntity player;
+    private final Player player;
     private SpecType type = SpecType.NONE;
     private JSpec<?, ?> spec;
 
-    public CommonSpecComponentImpl(PlayerEntity player) {
+    public CommonSpecComponentImpl(Player player) {
         this.player = player;
     }
 
@@ -44,15 +44,15 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     public void sync(Entity entity) {
     }
 
-    public void readFromNbt(@NonNull NbtCompound tag) {
+    public void readFromNbt(@NonNull CompoundTag tag) {
         setTypeRaw(SpecType.fromId(tag.getInt("Type")));
     }
 
-    public void writeToNbt(@NonNull NbtCompound tag) {
+    public void writeToNbt(@NonNull CompoundTag tag) {
         tag.putInt("Type", type.getId());
     }
 
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
+    public boolean shouldSyncWith(ServerPlayer player) {
         return player == this.player; // Only our player needs to know, I believe.
     }
 }

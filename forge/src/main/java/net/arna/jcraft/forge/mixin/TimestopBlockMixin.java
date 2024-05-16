@@ -1,14 +1,13 @@
 package net.arna.jcraft.forge.mixin;
 
 import net.arna.jcraft.common.tickable.Timestops;
-import net.minecraft.block.Block;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.tick.OrderedTick;
-import net.minecraft.world.tick.QueryableTickScheduler;
-import net.minecraft.world.tick.TickPriority;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.ticks.LevelTickAccess;
+import net.minecraft.world.ticks.ScheduledTick;
+import net.minecraft.world.ticks.TickPriority;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,35 +15,36 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(WorldAccess.class)
+@Mixin(value = LevelAccessor.class, remap = false)
 public interface TimestopBlockMixin {
 
-    @Shadow QueryableTickScheduler<Block> getBlockTickScheduler();
 
-    @Shadow <T> OrderedTick<T> createOrderedTick(BlockPos pos, T type, int delay, TickPriority priority);
+    @Shadow LevelTickAccess<Block> getBlockTicks();
 
-    @Shadow <T> OrderedTick<T> createOrderedTick(BlockPos pos, T type, int delay);
+    @Shadow <T> ScheduledTick<T> createTick(BlockPos pos, T type, int delay, TickPriority priority);
 
-    @Shadow QueryableTickScheduler<Fluid> getFluidTickScheduler();
+    @Shadow <T> ScheduledTick<T> createTick(BlockPos pos, T type, int delay);
+
+    @Shadow LevelTickAccess<Fluid> getFluidTicks();
 
     /**
      * @author mrsterner
      * @reason interface inject
      */
     @Overwrite
-    default void scheduleBlockTick(BlockPos pos, Block block, int delay, TickPriority priority) {
+    default void scheduleTick(BlockPos pos, Block block, int delay, TickPriority priority) {
 
         int ticks = Timestops.getTicksIfInTSRange(pos);
 
         if (ticks > 0) {
-            WorldAccess worldAccess = (WorldAccess) this;
-            worldAccess.getBlockTickScheduler().scheduleTick(
-                    new OrderedTick<>(block, pos, worldAccess.getLevelProperties().getTime() + (long) ticks + delay, priority, worldAccess.getTickOrder())
+            LevelAccessor worldAccess = (LevelAccessor) this;
+            worldAccess.getBlockTicks().schedule(
+                    new ScheduledTick<>(block, pos, worldAccess.getLevelData().getGameTime() + (long) ticks + delay, priority, worldAccess.nextSubTickCount())
             );
             return;
         }
 
-        this.getBlockTickScheduler().scheduleTick(this.createOrderedTick(pos, block, delay, priority));
+        this.getBlockTicks().schedule(this.createTick(pos, block, delay, priority));
     }
 
     /**
@@ -52,20 +52,20 @@ public interface TimestopBlockMixin {
      * @reason interface inject
      */
     @Overwrite
-    default void scheduleBlockTick(BlockPos pos, Block block, int delay) {
+    default void scheduleTick(BlockPos pos, Block block, int delay) {
 
         int ticks = Timestops.getTicksIfInTSRange(pos);
 
         if (ticks > 0) {
-            WorldAccess worldAccess = (WorldAccess) this;
-            worldAccess.getBlockTickScheduler().scheduleTick(
-                    new OrderedTick<>(block, pos, worldAccess.getLevelProperties().getTime() + (long) ticks + delay, worldAccess.getTickOrder())
+            LevelAccessor worldAccess = (LevelAccessor) this;
+            worldAccess.getBlockTicks().schedule(
+                    new ScheduledTick<>(block, pos, worldAccess.getLevelData().getGameTime() + (long) ticks + delay, worldAccess.nextSubTickCount())
             );
 
             return;
         }
 
-        this.getBlockTickScheduler().scheduleTick(this.createOrderedTick(pos, block, delay));
+        this.getBlockTicks().schedule(this.createTick(pos, block, delay));
     }
 
     /**
@@ -73,19 +73,19 @@ public interface TimestopBlockMixin {
      * @reason interface inject
      */
     @Overwrite
-    default void scheduleFluidTick(BlockPos pos, Fluid fluid, int delay, TickPriority priority) {
+    default void scheduleTick(BlockPos pos, Fluid fluid, int delay, TickPriority priority) {
 
         int ticks = Timestops.getTicksIfInTSRange(pos);
 
         if (ticks > 0) {
-            WorldAccess worldAccess = (WorldAccess) this;
-            worldAccess.getFluidTickScheduler().scheduleTick(
-                    new OrderedTick<>(fluid, pos, worldAccess.getLevelProperties().getTime() + (long) ticks + delay, priority, worldAccess.getTickOrder())
+            LevelAccessor worldAccess = (LevelAccessor) this;
+            worldAccess.getFluidTicks().schedule(
+                    new ScheduledTick<>(fluid, pos, worldAccess.getLevelData().getGameTime() + (long) ticks + delay, priority, worldAccess.nextSubTickCount())
             );
             return;
         }
 
-        this.getFluidTickScheduler().scheduleTick(this.createOrderedTick(pos, fluid, delay, priority));
+        this.getFluidTicks().schedule(this.createTick(pos, fluid, delay, priority));
     }
 
     /**
@@ -93,18 +93,18 @@ public interface TimestopBlockMixin {
      * @reason interface inject
      */
     @Overwrite
-    default void scheduleFluidTick(BlockPos pos, Fluid fluid, int delay) {
+    default void scheduleTick(BlockPos pos, Fluid fluid, int delay) {
 
         int ticks = Timestops.getTicksIfInTSRange(pos);
 
         if (ticks > 0) {
-            WorldAccess worldAccess = (WorldAccess) this;
-            worldAccess.getFluidTickScheduler().scheduleTick(
-                    new OrderedTick<>(fluid, pos, worldAccess.getLevelProperties().getTime() + (long) ticks + delay, worldAccess.getTickOrder())
+            LevelAccessor worldAccess = (LevelAccessor) this;
+            worldAccess.getFluidTicks().schedule(
+                    new ScheduledTick<>(fluid, pos, worldAccess.getLevelData().getGameTime() + (long) ticks + delay, worldAccess.nextSubTickCount())
             );
             return;
         }
 
-        this.getFluidTickScheduler().scheduleTick(this.createOrderedTick(pos, fluid, delay));
+        this.getFluidTicks().schedule(this.createTick(pos, fluid, delay));
     }
 }

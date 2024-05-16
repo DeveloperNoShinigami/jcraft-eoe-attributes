@@ -8,9 +8,8 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.GERScorpionEntity;
 import net.arna.jcraft.common.entity.stand.GEREntity;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 @Getter
@@ -24,15 +23,15 @@ public class LifeBeamAttack extends AbstractMove<LifeBeamAttack, GEREntity> {
 
     @Override
     public @NonNull Set<LivingEntity> perform(GEREntity attacker, LivingEntity user, MoveContext ctx) {
-        GERScorpionEntity scorpion = new GERScorpionEntity(JEntityTypeRegistry.GER_SCORPION.get(), attacker.getWorld());
+        GERScorpionEntity scorpion = new GERScorpionEntity(JEntityTypeRegistry.GER_SCORPION.get(), attacker.level());
         if (ctx.getInt(CHARGE_TIME) >= 18) {
             scorpion.charge();
         }
-        scorpion.setInitialVel(user.getRotationVector().multiply(2));
-        Vec3d ePos = attacker.getEyePos();
-        scorpion.refreshPositionAndAngles(ePos.x, ePos.y, ePos.z, -user.getYaw() - 90f, attacker.getPitch());
+        scorpion.setInitialVel(user.getLookAngle().scale(2));
+        Vec3 ePos = attacker.getEyePosition();
+        scorpion.moveTo(ePos.x, ePos.y, ePos.z, -user.getYRot() - 90f, attacker.getXRot());
         scorpion.setMaster(user);
-        attacker.getWorld().spawnEntity(scorpion);
+        attacker.level().addFreshEntity(scorpion);
 
         return Set.of();
     }

@@ -8,36 +8,35 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
-
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import java.util.Collection;
 
 public class InduceAttackCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(CommandManager.literal("attack")
-                .requires(source -> source.hasPermissionLevel(2) || "Arna57".equals(source.getName()) || "MrSterner".equals(source.getName()))
-                .then(CommandManager.argument("ents", EntityArgumentType.entities())
-                        .then(CommandManager.literal("stand")
-                                .then(CommandManager.argument("attack", AttackArgumentType.attack()).executes(
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("attack")
+                .requires(source -> source.hasPermission(2) || "Arna57".equals(source.getTextName()) || "MrSterner".equals(source.getTextName()))
+                .then(Commands.argument("ents", EntityArgument.entities())
+                        .then(Commands.literal("stand")
+                                .then(Commands.argument("attack", AttackArgumentType.attack()).executes(
                                         context -> runAttack(
                                                 context.getSource(),
-                                                EntityArgumentType.getEntities(context, "ents"),
+                                                EntityArgument.getEntities(context, "ents"),
                                                 true,
                                                 context.getArgument("attack", MoveType.class)
                                         )
                                 ))
                         )
-                        .then(CommandManager.literal("spec")
-                                .then(CommandManager.argument("attack", AttackArgumentType.attack()).executes(
+                        .then(Commands.literal("spec")
+                                .then(Commands.argument("attack", AttackArgumentType.attack()).executes(
                                         context -> runAttack(
                                                 context.getSource(),
-                                                EntityArgumentType.getEntities(context, "ents"),
+                                                EntityArgument.getEntities(context, "ents"),
                                                 false,
                                                 context.getArgument("attack", MoveType.class)
                                         )
@@ -47,7 +46,7 @@ public class InduceAttackCommand {
         );
     }
 
-    public static int runAttack(ServerCommandSource source, Collection<? extends Entity> targets, boolean stand, MoveType type) {
+    public static int runAttack(CommandSourceStack source, Collection<? extends Entity> targets, boolean stand, MoveType type) {
         int flag = 0;
         String typeName = type.toString();
 
@@ -59,9 +58,9 @@ public class InduceAttackCommand {
 
                     if (standEntity != null) {
                         if (standEntity.initMove(type)) {
-                            source.sendFeedback(() -> Text.literal("Initiating stand attack " + typeName + " for " + living.getName().getString()), true);
+                            source.sendSuccess(() -> Component.literal("Initiating stand attack " + typeName + " for " + living.getName().getString()), true);
                         } else {
-                            source.sendFeedback(() -> Text.literal("Queueing stand attack " + typeName + " for " + living.getName().getString()), true);
+                            source.sendSuccess(() -> Component.literal("Queueing stand attack " + typeName + " for " + living.getName().getString()), true);
                             standEntity.queueMove(MoveInputType.fromMoveType(type));
                         }
 
@@ -71,7 +70,7 @@ public class InduceAttackCommand {
             }
         } else {
             for (Entity entity : targets) {
-                if (!(entity instanceof PlayerEntity player)) {
+                if (!(entity instanceof Player player)) {
                     continue;
                 }
                 JComponentPlatformUtils.getCooldowns(player).clear();
@@ -79,9 +78,9 @@ public class InduceAttackCommand {
 
                 if (spec != null) {
                     if (spec.initMove(type)) {
-                        source.sendFeedback(() -> Text.literal("Initiating spec attack " + typeName + " for " + entity.getName().getString()), true);
+                        source.sendSuccess(() -> Component.literal("Initiating spec attack " + typeName + " for " + entity.getName().getString()), true);
                     } else {
-                        source.sendFeedback(() -> Text.literal("Queueing spec attack " + typeName + " for " + entity.getName().getString()), true);
+                        source.sendSuccess(() -> Component.literal("Queueing spec attack " + typeName + " for " + entity.getName().getString()), true);
                         spec.queuedMove = MoveInputType.fromMoveType(type);
                     }
 

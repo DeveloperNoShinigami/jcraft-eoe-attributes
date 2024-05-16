@@ -12,23 +12,22 @@ import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
-    public static final MoveVariable<MobEntity> SAND_CLONE = new MoveVariable<>(MobEntity.class);
+    public static final MoveVariable<Mob> SAND_CLONE = new MoveVariable<>(Mob.class);
 
     public SandCloneMove(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
@@ -37,10 +36,10 @@ public class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
 
     @Override
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
-        Vec3d pos = user.getEyePos();
+        Vec3 pos = user.getEyePosition();
 
         // Display sand effect
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 
         buf.writeShort(11);
         buf.writeDouble(pos.x);
@@ -48,18 +47,18 @@ public class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
         buf.writeDouble(pos.z);
         buf.writeDouble(2);
 
-        for (ServerPlayerEntity sendPlayer : ((ServerWorld) attacker.getWorld()).getPlayers()) {
+        for (ServerPlayer sendPlayer : ((ServerLevel) attacker.level()).players()) {
             ServerChannelFeedbackPacket.send(sendPlayer, buf);
             if (sendPlayer == user) {
                 continue;
             }
-            if (sendPlayer.isInRange(user, 4)) // Blind players caught in the cloud
+            if (sendPlayer.closerThan(user, 4)) // Blind players caught in the cloud
             {
-                sendPlayer.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 40, 0, true, false));
+                sendPlayer.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 0, true, false));
             }
         }
 
-        if (user.isSneaking()) {
+        if (user.isShiftKeyDown()) {
             for (int i = 0; i < 32; i++) {
                 double y = 0.4;
                 double h = i * 3.1415 / 8;
@@ -68,51 +67,51 @@ public class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
                     y = 0.8;
                     hDiv = 9.5;
                 }
-                TheFoolEntity.createFoolishSand(attacker.getWorld(), attacker.getBlockPos(),
-                        new Vec3d(Math.sin(h) / hDiv, y, Math.cos(h) / hDiv));
+                TheFoolEntity.createFoolishSand(attacker.level(), attacker.blockPosition(),
+                        new Vec3(Math.sin(h) / hDiv, y, Math.cos(h) / hDiv));
             }
             return Set.of();
         }
 
         // Summon clone
-        if (user instanceof ServerPlayerEntity player) {
-            PlayerCloneEntity playerCloneEntity = new PlayerCloneEntity(attacker.getWorld());
-            playerCloneEntity.copyPositionAndRotation(player);
+        if (user instanceof ServerPlayer player) {
+            PlayerCloneEntity playerCloneEntity = new PlayerCloneEntity(attacker.level());
+            playerCloneEntity.copyPosition(player);
             playerCloneEntity.setMaster(player);
             playerCloneEntity.markSand();
             playerCloneEntity.disableDrops();
 
-            playerCloneEntity.equipStack(EquipmentSlot.HEAD, user.getEquippedStack(EquipmentSlot.HEAD).copy());
-            playerCloneEntity.equipStack(EquipmentSlot.CHEST, user.getEquippedStack(EquipmentSlot.CHEST).copy());
-            playerCloneEntity.equipStack(EquipmentSlot.LEGS, user.getEquippedStack(EquipmentSlot.LEGS).copy());
-            playerCloneEntity.equipStack(EquipmentSlot.FEET, user.getEquippedStack(EquipmentSlot.FEET).copy());
+            playerCloneEntity.setItemSlot(EquipmentSlot.HEAD, user.getItemBySlot(EquipmentSlot.HEAD).copy());
+            playerCloneEntity.setItemSlot(EquipmentSlot.CHEST, user.getItemBySlot(EquipmentSlot.CHEST).copy());
+            playerCloneEntity.setItemSlot(EquipmentSlot.LEGS, user.getItemBySlot(EquipmentSlot.LEGS).copy());
+            playerCloneEntity.setItemSlot(EquipmentSlot.FEET, user.getItemBySlot(EquipmentSlot.FEET).copy());
 
             setSandClone(ctx, playerCloneEntity);
-        } else if (user instanceof MobEntity mob) {
-            MobEntity newMob = JUtils.mobCloneOf(mob);
+        } else if (user instanceof Mob mob) {
+            Mob newMob = JUtils.mobCloneOf(mob);
             setSandClone(ctx, newMob);
         }
 
-        attacker.getWorld().spawnEntity(ctx.get(SAND_CLONE));
+        attacker.level().addFreshEntity(ctx.get(SAND_CLONE));
         return Set.of();
     }
 
     public void tickClone(TheFoolEntity attacker) {
-        MobEntity sandClone = attacker.getMoveContext().get(SAND_CLONE);
-        if (sandClone != null && sandClone.age > 200) {
+        Mob sandClone = attacker.getMoveContext().get(SAND_CLONE);
+        if (sandClone != null && sandClone.tickCount > 200) {
             setSandClone(attacker.getMoveContext(), null);
         }
     }
 
     public void discardClone(TheFoolEntity attacker) {
-        MobEntity sandClone = attacker.getMoveContext().get(SAND_CLONE);
+        Mob sandClone = attacker.getMoveContext().get(SAND_CLONE);
         if (sandClone != null) {
             sandClone.discard();
         }
     }
 
-    private void setSandClone(MoveContext ctx, MobEntity clone) {
-        MobEntity sandClone = ctx.get(SAND_CLONE);
+    private void setSandClone(MoveContext ctx, Mob clone) {
+        Mob sandClone = ctx.get(SAND_CLONE);
         if (sandClone != null) {
             sandClone.kill();
         }
@@ -129,14 +128,14 @@ public class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
             JCraft.LOGGER.error("Tried to apply sand clone attribute modifiers to invalid entity!");
             return;
         }
-        EntityAttributeInstance maxHealthAttribute = entity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+        AttributeInstance maxHealthAttribute = entity.getAttribute(Attributes.MAX_HEALTH);
         if (maxHealthAttribute == null) {
             JCraft.LOGGER.error("Tried to apply sand clone attribute modifiers to entity with no max health attribute!");
             return;
         }
 
-        maxHealthAttribute.addPersistentModifier(
-                new EntityAttributeModifier("Sand Clone Max Health Modifier", -1.0, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
+        maxHealthAttribute.addPermanentModifier(
+                new AttributeModifier("Sand Clone Max Health Modifier", -1.0, AttributeModifier.Operation.MULTIPLY_TOTAL)
         );
     }
 

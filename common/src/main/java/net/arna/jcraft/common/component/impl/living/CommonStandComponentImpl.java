@@ -5,12 +5,11 @@ import lombok.NonNull;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 public class CommonStandComponentImpl implements CommonStandComponent {
@@ -38,7 +37,7 @@ public class CommonStandComponentImpl implements CommonStandComponent {
             return;
         }
 
-        this.skin = MathHelper.clamp(skin, 0, type.getSkinCount());
+        this.skin = Mth.clamp(skin, 0, type.getSkinCount());
         sync(entity);
     }
 
@@ -65,26 +64,26 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     public void sync(Entity entity) {
     }
 
-    public void readFromNbt(@NonNull NbtCompound tag) {
+    public void readFromNbt(@NonNull CompoundTag tag) {
         int rawType = tag.getInt("Type");
         type = rawType == 0 ? null : StandType.fromIdOrOrdinal(rawType);
         skin = tag.getInt("Skin");
     }
 
-    public void writeToNbt(@NonNull NbtCompound tag) {
+    public void writeToNbt(@NonNull CompoundTag tag) {
         tag.putInt("Type", type == null ? 0 : type.ordinal());
         tag.putInt("Skin", skin);
     }
 
-    public void applySyncPacket(PacketByteBuf buf) {
+    public void applySyncPacket(FriendlyByteBuf buf) {
 
-        Entity entity = buf.readBoolean() ? this.entity.getWorld().getEntityById(buf.readVarInt()) : null;
+        Entity entity = buf.readBoolean() ? this.entity.level().getEntity(buf.readVarInt()) : null;
         if (entity == null || entity instanceof StandEntity<?, ?>) {
             stand = (StandEntity<?, ?>) entity;
         }
     }
 
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
 
         buf.writeBoolean(stand != null);
         if (stand != null) {

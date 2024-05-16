@@ -1,19 +1,18 @@
 package net.arna.jcraft.common.entity.ai.goal;
 
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.pathing.Path;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.util.Hand;
-
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.pathfinder.Path;
 import java.util.EnumSet;
 
 public class StunningMeleeAttackGoal extends Goal {
-    protected final PathAwareEntity mob;
+    protected final PathfinderMob mob;
     private final double speed;
     private final boolean pauseWhenMobIdle;
     private final int stunT;
@@ -25,16 +24,16 @@ public class StunningMeleeAttackGoal extends Goal {
     private int cooldown;
     private long lastUpdateTime;
 
-    public StunningMeleeAttackGoal(PathAwareEntity mob, double speed, boolean pauseWhenMobIdle, int stunT) {
+    public StunningMeleeAttackGoal(PathfinderMob mob, double speed, boolean pauseWhenMobIdle, int stunT) {
         this.mob = mob;
         this.speed = speed;
         this.pauseWhenMobIdle = pauseWhenMobIdle;
         this.stunT = stunT;
-        this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
-    public boolean canStart() {
-        long l = this.mob.getWorld().getTime();
+    public boolean canUse() {
+        long l = this.mob.level().getGameTime();
         if (l - this.lastUpdateTime < 20L) {
             return false;
         }
@@ -48,16 +47,16 @@ public class StunningMeleeAttackGoal extends Goal {
             return false;
         }
 
-        path = mob.getNavigation().findPathTo(livingEntity, 0);
+        path = mob.getNavigation().createPath(livingEntity, 0);
         if (path != null) {
             return true;
         }
 
         return this.getSquaredMaxAttackDistance(livingEntity) >=
-                mob.squaredDistanceTo(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
+                mob.distanceToSqr(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
     }
 
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         LivingEntity livingEntity = mob.getTarget();
         if (livingEntity == null) {
             return false;
@@ -66,33 +65,33 @@ public class StunningMeleeAttackGoal extends Goal {
             return false;
         }
         if (!pauseWhenMobIdle) {
-            return !mob.getNavigation().isIdle();
+            return !mob.getNavigation().isDone();
         }
-        if (!mob.isInWalkTargetRange(livingEntity.getBlockPos())) {
+        if (!mob.isWithinRestriction(livingEntity.blockPosition())) {
             return false;
         }
 
-        return !(livingEntity instanceof PlayerEntity) || !livingEntity.isSpectator() && !((PlayerEntity) livingEntity).isCreative();
+        return !(livingEntity instanceof Player) || !livingEntity.isSpectator() && !((Player) livingEntity).isCreative();
     }
 
     public void start() {
-        mob.getNavigation().startMovingAlong(path, speed);
-        mob.setAttacking(true);
+        mob.getNavigation().moveTo(path, speed);
+        mob.setAggressive(true);
         updateCountdownTicks = 0;
         cooldown = 0;
     }
 
     public void stop() {
         LivingEntity livingEntity = mob.getTarget();
-        if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(livingEntity)) {
+        if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity)) {
             mob.setTarget(null);
         }
 
-        mob.setAttacking(false);
+        mob.setAggressive(false);
         mob.getNavigation().stop();
     }
 
-    public boolean shouldRunEveryTick() {
+    public boolean requiresUpdateEveryTick() {
         return true;
     }
 
@@ -102,23 +101,23 @@ public class StunningMeleeAttackGoal extends Goal {
             return;
         }
 
-        mob.getLookControl().lookAt(target, 30.0F, 30.0F);
-        double d = mob.squaredDistanceTo(target.getX(), target.getY(), target.getZ());
+        mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
+        double d = mob.distanceToSqr(target.getX(), target.getY(), target.getZ());
         updateCountdownTicks = Math.max(updateCountdownTicks - 1, 0);
-        if ((pauseWhenMobIdle || mob.getVisibilityCache().canSee(target)) && updateCountdownTicks <= 0 &&
+        if ((pauseWhenMobIdle || mob.getSensing().hasLineOfSight(target)) && updateCountdownTicks <= 0 &&
                 (targetX == 0.0 && targetY == 0.0 && targetZ == 0.0 ||
-                        target.squaredDistanceTo(targetX, targetY, targetZ) >= 1.0 ||
+                        target.distanceToSqr(targetX, targetY, targetZ) >= 1.0 ||
                         mob.getRandom().nextFloat() < 0.05F)) {
             targetX = target.getX();
             targetY = target.getY();
             targetZ = target.getZ();
             updateCountdownTicks = 4 + mob.getRandom().nextInt(7) + (d > 256 ? d > 1024 ? 10 : 5 : 0);
 
-            if (!mob.getNavigation().startMovingTo(target, speed)) {
+            if (!mob.getNavigation().moveTo(target, speed)) {
                 updateCountdownTicks += 15;
             }
 
-            updateCountdownTicks = getTickCount(updateCountdownTicks);
+            updateCountdownTicks = adjustedTickDelay(updateCountdownTicks);
         }
 
         cooldown = Math.max(cooldown - 1, 0);
@@ -132,14 +131,14 @@ public class StunningMeleeAttackGoal extends Goal {
         }
 
         resetCooldown();
-        mob.swingHand(Hand.MAIN_HAND);
-        if (mob.tryAttack(target)) {
-            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED.get(), this.stunT, 1, true, false));
+        mob.swing(InteractionHand.MAIN_HAND);
+        if (mob.doHurtTarget(target)) {
+            target.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), this.stunT, 1, true, false));
         }
     }
 
     protected void resetCooldown() {
-        this.cooldown = this.getTickCount(20);
+        this.cooldown = this.adjustedTickDelay(20);
     }
 
     protected boolean isCooledDown() {
@@ -151,10 +150,10 @@ public class StunningMeleeAttackGoal extends Goal {
     }
 
     protected int getMaxCooldown() {
-        return this.getTickCount(20);
+        return this.adjustedTickDelay(20);
     }
 
     protected double getSquaredMaxAttackDistance(LivingEntity entity) {
-        return (this.mob.getWidth() * 2.0F * this.mob.getWidth() * 2.0F + entity.getWidth());
+        return (this.mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + entity.getBbWidth());
     }
 }

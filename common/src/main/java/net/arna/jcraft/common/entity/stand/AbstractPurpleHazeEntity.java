@@ -16,17 +16,16 @@ import net.arna.jcraft.common.util.MobilityType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 import static net.arna.jcraft.registry.JStatusRegistry.PHPOISON;
@@ -52,8 +51,8 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Hammerfist"),
-                    Text.literal("1s knockdown")
+                    Component.literal("Hammerfist"),
+                    Component.literal("1s knockdown")
             );
     public static final UppercutAttack<AbstractPurpleHazeEntity<?, ?>> BACKHAND = new UppercutAttack<AbstractPurpleHazeEntity<?, ?>>(20,
             6, 14, 0.75f, 6f, 20, 1.5f, 0.25f, -0.6f, 0.5f)
@@ -68,8 +67,8 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
-                    Text.literal("Backhand"),
-                    Text.literal("launches vertically, infects (3s) on hit")
+                    Component.literal("Backhand"),
+                    Component.literal("launches vertically, infects (3s) on hit")
             );
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> LIGHT_FOLLOWUP = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
@@ -78,8 +77,8 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
-                    Text.literal("Kick"),
-                    Text.literal("fast combo finisher")
+                    Component.literal("Kick"),
+                    Component.literal("fast combo finisher")
             );
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> LIGHT = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
@@ -88,8 +87,8 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(BACKHAND)
             .withInfo(
-                    Text.literal("Punch"),
-                    Text.literal("fast combo starter")
+                    Component.literal("Punch"),
+                    Component.literal("fast combo starter")
             );
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> HEAVY = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
@@ -97,16 +96,16 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withLaunch()
             .withInfo(
-                    Text.literal("Uppercut"),
-                    Text.literal("launcher")
+                    Component.literal("Uppercut"),
+                    Component.literal("launcher")
             );
 
     public static final MainBarrageAttack<AbstractPurpleHazeEntity<?, ?>> BARRAGE = new MainBarrageAttack<AbstractPurpleHazeEntity<?, ?>>(280,
-            0, 40, 0.75f, 1f, 30, 2f, 0.25f, 0f, 3, Blocks.DEEPSLATE.getHardness())
+            0, 40, 0.75f, 1f, 30, 2f, 0.25f, 0f, 3, Blocks.DEEPSLATE.defaultDestroyTime())
             .withSound(JSoundRegistry.PH_BARRAGE.get())
             .withInfo(
-                    Text.literal("Barrage"),
-                    Text.literal("fast reliable combo starter/extender, high stun")
+                    Component.literal("Barrage"),
+                    Component.literal("fast reliable combo starter/extender, high stun")
             );
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> LAUNCH_CAPSULES = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
@@ -118,13 +117,13 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
                         LivingEntity shooter = (attacker.isRemote() && !attacker.remoteControllable()) ? attacker : user;
                         Direction gravity = GravityChangerAPI.getGravityDirection(shooter);
                         for (int i = 0; i < 3; i++) {
-                            launchCapsule(attacker, shooter, gravity, 0.4F, shooter.getYaw() - 45F + i * 45F);
+                            launchCapsule(attacker, shooter, gravity, 0.4F, shooter.getYRot() - 45F + i * 45F);
                         }
                     }
             )
             .withInfo(
-                    Text.literal("Triple Capsule Launch"),
-                    Text.literal("launches 3 capsules close by")
+                    Component.literal("Triple Capsule Launch"),
+                    Component.literal("launches 3 capsules close by")
             );
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> LAUNCH_CAPSULE = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
@@ -135,12 +134,12 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withAction(
                     (attacker, user, ctx, targets) -> {
                         LivingEntity shooter = (attacker.isRemote() && !attacker.remoteControllable()) ? attacker : user;
-                        launchCapsule(attacker, shooter, GravityChangerAPI.getGravityDirection(shooter), 0.8F, shooter.getYaw());
+                        launchCapsule(attacker, shooter, GravityChangerAPI.getGravityDirection(shooter), 0.8F, shooter.getYRot());
                     }
             )
             .withInfo(
-                    Text.literal("Capsule Launch"),
-                    Text.literal("launches a single, fast capsule at the aimed location")
+                    Component.literal("Capsule Launch"),
+                    Component.literal("launches a single, fast capsule at the aimed location")
             );
 
     public static final SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>> FULL_RELEASE = new SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>>(
@@ -151,8 +150,8 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withAction(AbstractPurpleHazeEntity::performUlt)
             .withHyperArmor()
             .withInfo(
-                    Text.literal("Full Release"),
-                    Text.literal("launches 2 sets of 3 capsules in a hexagonal pattern, uninterruptable")
+                    Component.literal("Full Release"),
+                    Component.literal("launches 2 sets of 3 capsules in a hexagonal pattern, uninterruptable")
             );
 
 
@@ -164,8 +163,8 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withBlockStun(8)
             .withInfo(
-                    Text.literal("Rekka (Final Hit)"),
-                    Text.literal("knockdown, low blockstun")
+                    Component.literal("Rekka (Final Hit)"),
+                    Component.literal("knockdown, low blockstun")
             );
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> REKKA2 = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>
             (0, 9, 18, 1f, 4f, 16, 1.75f, 0.5f, 0f)
@@ -174,8 +173,8 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             // .withFollowup(REKKA3)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
-                    Text.literal("Rekka (2nd Hit)"),
-                    Text.literal("links into Light")
+                    Component.literal("Rekka (2nd Hit)"),
+                    Component.literal("links into Light")
             );
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> REKKA1 = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>
             (160, 7, 14, 1f, 4f, 15, 1.5f, 0.5f, 0f)
@@ -187,8 +186,8 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withInitAction(AbstractPurpleHazeEntity::lunge)
             .withMobilityType(MobilityType.DASH)
             .withInfo(
-                    Text.literal("Rekka Series"),
-                    Text.literal("""
+                    Component.literal("Rekka Series"),
+                    Component.literal("""
                             A set of three attacks, which cancel into each other during recovery.
                             Last hit knocks down for 2.5s""")
             );
@@ -200,11 +199,11 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withAction(AbstractPurpleHazeEntity::groundSlam)
             .withInfo(
-                    Text.literal("Ground Slam"),
-                    Text.literal("places down a Purple Haze cloud")
+                    Component.literal("Ground Slam"),
+                    Component.literal("places down a Purple Haze cloud")
             );
 
-    protected AbstractPurpleHazeEntity(StandType type, World worldIn) {
+    protected AbstractPurpleHazeEntity(StandType type, Level worldIn) {
         super(type, worldIn, JSoundRegistry.PH_SUMMON.get());
         idleRotation = 225f;
 
@@ -225,7 +224,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
     public boolean initMove(MoveType type) {
         if (type == MoveType.SPECIAL2) {
             LivingEntity user = getUserOrThrow();
-            if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
+            if (user.hasEffect(JStatusRegistry.DAZED.get())) {
                 return false;
             }
             boolean idling = this.getMoveStun() <= 0;
@@ -251,7 +250,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             return;
         }
 
-        if (getWorld().isClient()) {
+        if (level().isClientSide()) {
             JCraft.getClientEntityHandler().purpleHazeRemoteClientTick(this);
         } else {
             double f = getRemoteForwardInput();
@@ -259,7 +258,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             boolean jump = getRemoteJumpInput();
 
             tickRemoteMovement(f, s, jump);
-            tickRemoteState(f, s, isOnGround());
+            tickRemoteState(f, s, onGround());
         }
     }
 
@@ -273,30 +272,30 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
      * @param jump Jump input
      */
     public void tickRemoteMovement(double f, double s, boolean jump) {
-        Vec3d pos = getPos();
+        Vec3 pos = position();
 
         // 1 tick of inertia, helping movement be fluid as well as dealing with packet drops
-        if (lastRemoteInputTime - age > 2) {
+        if (lastRemoteInputTime - tickCount > 2) {
             updateRemoteInputs(0, 0, false, false);
         }
-        Vec3d rotVec = new Vec3d(getRotationVector().x, 0, getRotationVector().z).normalize();
+        Vec3 rotVec = new Vec3(getLookAngle().x, 0, getLookAngle().z).normalize();
 
         double dragMult = getMoveStun() > 0 ? 0.2 : 0.4;
         double moveSpeed = 0.24;
-        boolean onGround = isOnGround();
-        boolean climbing = getBlockStateAtPos().streamTags().anyMatch(tag -> tag == BlockTags.CLIMBABLE);
-        boolean swimming = !getWorld().getFluidState(getBlockPos()).isEmpty();
+        boolean onGround = onGround();
+        boolean climbing = getFeetBlockState().getTags().anyMatch(tag -> tag == BlockTags.CLIMBABLE);
+        boolean swimming = !level().getFluidState(blockPosition()).isEmpty();
 
         if (climbing || swimming) {
             dragMult *= 0.5;
         }
 
         if ((climbing || swimming) && jump) { // Climb or Swim
-            addVelocity(0, 0.1, 0);
+            push(0, 0.1, 0);
         } else { // Jump
             if (onGround) {
                 if (jump) {
-                    addVelocity(0, 0.75, 0);
+                    push(0, 0.75, 0);
                     setRemoteJumpInput(false);
                 }
             } else {
@@ -306,31 +305,31 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
         }
 
         remoteSpeed = remoteSpeed
-                .add(rotVec.multiply(f * moveSpeed)) // Forward movement
-                .add(rotVec.rotateY(1.5707963f).multiply(s * moveSpeed)); // Side movement
+                .add(rotVec.scale(f * moveSpeed)) // Forward movement
+                .add(rotVec.yRot(1.5707963f).scale(s * moveSpeed)); // Side movement
 
-        remoteSpeed = remoteSpeed.multiply(dragMult);
+        remoteSpeed = remoteSpeed.scale(dragMult);
 
-        Vec3d userPos = getUserOrThrow().getPos();
-        if (pos.add(remoteSpeed).squaredDistanceTo(userPos) > 25) {
-            remoteSpeed = userPos.subtract(pos).multiply(0.05); // 1/20th so it scales with distance
+        Vec3 userPos = getUserOrThrow().position();
+        if (pos.add(remoteSpeed).distanceToSqr(userPos) > 25) {
+            remoteSpeed = userPos.subtract(pos).scale(0.05); // 1/20th so it scales with distance
         }
 
-        addVelocity(remoteSpeed.x, remoteSpeed.y, remoteSpeed.z);
-        velocityDirty = true;
-        velocityModified = true;
+        push(remoteSpeed.x, remoteSpeed.y, remoteSpeed.z);
+        hasImpulse = true;
+        hurtMarked = true;
     }
 
     public static void infect(LivingEntity target, int ticks) {
         infect(target, ticks, PHPOISON.get());
     }
 
-    public static void infect(LivingEntity target, int ticks, StatusEffect effect) {
-        StatusEffectInstance instance = target.getStatusEffect(effect);
+    public static void infect(LivingEntity target, int ticks, MobEffect effect) {
+        MobEffectInstance instance = target.getEffect(effect);
         if (instance != null) {
-            target.addStatusEffect(new StatusEffectInstance(effect, instance.getDuration() + ticks, 2));
+            target.addEffect(new MobEffectInstance(effect, instance.getDuration() + ticks, 2));
         } else {
-            target.addStatusEffect(new StatusEffectInstance(effect, ticks, 2));
+            target.addEffect(new MobEffectInstance(effect, ticks, 2));
         }
     }
 
@@ -339,11 +338,11 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
         if (attacker.isRemote()) {
             return;
         }
-        JUtils.addVelocity(user, attacker.getRotationVector().multiply(0.6));
+        JUtils.addVelocity(user, attacker.getLookAngle().scale(0.6));
     }
 
     private static void performUlt(AbstractPurpleHazeEntity<?, ?> attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
-        float baseYaw = user.getYaw();
+        float baseYaw = user.getYRot();
         Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
 
         if (attacker.getMoveStun() == 6) {
@@ -356,22 +355,22 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
     }
 
     private static void launchCapsule(AbstractPurpleHazeEntity<?, ?> attacker, LivingEntity user, Direction gravity, float speed, float yaw) {
-        PHCapsuleProjectile capsule = new PHCapsuleProjectile(user, attacker.getWorld(), attacker.poisonType);
+        PHCapsuleProjectile capsule = new PHCapsuleProjectile(user, attacker.level(), attacker.poisonType);
 
-        Vec2f corrected = RotationUtil.rotPlayerToWorld(yaw, user.getPitch(), gravity);
+        Vec2 corrected = RotationUtil.rotPlayerToWorld(yaw, user.getXRot(), gravity);
         // Y,P to P,Y,R
         JUtils.shoot(capsule, user, corrected.y, corrected.x, 0.0F, speed, 0.1F);
 
-        Vec3d upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
-        Vec3d heightOffset = upVec.multiply(0.5);
-        capsule.setPosition(attacker.getBaseEntity().getPos().add(heightOffset));
+        Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
+        Vec3 heightOffset = upVec.scale(0.5);
+        capsule.setPos(attacker.getBaseEntity().position().add(heightOffset));
 
-        attacker.getWorld().spawnEntity(capsule);
+        attacker.level().addFreshEntity(capsule);
     }
 
     private static void groundSlam(AbstractPurpleHazeEntity<?, ?> attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
-        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(attacker.getWorld(), 3.0f, attacker.poisonType);
-        cloud.copyPositionAndRotation(attacker);
-        attacker.getWorld().spawnEntity(cloud);
+        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(attacker.level(), 3.0f, attacker.poisonType);
+        cloud.copyPosition(attacker);
+        attacker.level().addFreshEntity(cloud);
     }
 }

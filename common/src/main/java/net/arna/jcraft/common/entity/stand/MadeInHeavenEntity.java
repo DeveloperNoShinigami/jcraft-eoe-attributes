@@ -21,25 +21,32 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.List;
 import java.util.Set;
@@ -48,14 +55,14 @@ import java.util.function.Consumer;
 public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHeavenEntity.State> {
     public static final EffectInflictingAttack<MadeInHeavenEntity> SPEED_CHOP = new EffectInflictingAttack<MadeInHeavenEntity>(
             JCraft.LIGHT_COOLDOWN, 6, 11, 0.75f, 3f, 8, 1.5f, 0.5f, -0.1f,
-            List.of(new StatusEffectInstance(JStatusRegistry.BLEEDING.get(), 80, 1, true, false, true)))
+            List.of(new MobEffectInstance(JStatusRegistry.BLEEDING.get(), 80, 1, true, false, true)))
             .withAnim(State.SPEED_CHOP)
-            .withImpactSound(SoundEvents.ITEM_TRIDENT_HIT)
+            .withImpactSound(SoundEvents.TRIDENT_HIT)
             .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
-                    Text.literal("Speed Chop"),
-                    Text.literal("tiny stun, procs bleed")
+                    Component.literal("Speed Chop"),
+                    Component.literal("tiny stun, procs bleed")
             );
     public static final SimpleAttack<MadeInHeavenEntity> LIGHT_FOLLOWUP = new SimpleAttack<MadeInHeavenEntity>(
             0, 6, 12, 0.75f, 5, 8, 1.5f, 1f, -0.1f)
@@ -66,18 +73,18 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withExtraHitBox(0, 0.25, 1)
             .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withInfo(
-                    Text.literal("Kick"),
-                    Text.literal("quick combo finisher")
+                    Component.literal("Kick"),
+                    Component.literal("quick combo finisher")
             );
     public static final SimpleAttack<MadeInHeavenEntity> SLICE = new SimpleAttack<MadeInHeavenEntity>(JCraft.LIGHT_COOLDOWN,
             5, 8, 0.75f, 4f, 10, 1.5f, 0.15f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(SPEED_CHOP)
-            .withImpactSound(SoundEvents.ITEM_TRIDENT_HIT)
+            .withImpactSound(SoundEvents.TRIDENT_HIT)
             .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withInfo(
-                    Text.literal("Slice"),
-                    Text.literal("quick combo starter")
+                    Component.literal("Slice"),
+                    Component.literal("quick combo starter")
             );
     public static final SimpleAttack<MadeInHeavenEntity> BARRAGE_FINISHER = new SimpleAttack<MadeInHeavenEntity>(0,
             6, 9, 0.85f, 1f, 10, 1.5f, 1.1f, 0f)
@@ -85,26 +92,26 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
-                    Text.literal("Barrage (Final Hit)"),
-                    Text.empty()
+                    Component.literal("Barrage (Final Hit)"),
+                    Component.empty()
             );
     public static final MainBarrageAttack<MadeInHeavenEntity> BARRAGE = new MainBarrageAttack<MadeInHeavenEntity>(200,
-            0, 32, 0.85f, 1.5f, 10, 2f, 0.1f, 0f, 3, Blocks.OAK_PLANKS.getHardness())
+            0, 32, 0.85f, 1.5f, 10, 2f, 0.1f, 0f, 3, Blocks.OAK_PLANKS.defaultDestroyTime())
             .withFinisher(23, BARRAGE_FINISHER)
             .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withSound(JSoundRegistry.MIH_BARRAGE.get())
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withInfo(
-                    Text.literal("Barrage"),
-                    Text.literal("short, knocks back")
+                    Component.literal("Barrage"),
+                    Component.literal("short, knocks back")
             );
     public static final SpeedSliceAttack SPEED_SLICE = new SpeedSliceAttack(300, 10, 11,
             1.25f, 6f, 1.5f, 1f)
             .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withSound(JSoundRegistry.MIH_SPEEDSLICE.get())
             .withInfo(
-                    Text.literal("Speed Slice"),
-                    Text.literal("short windup, harming teleport with hitstun and light knockback")
+                    Component.literal("Speed Slice"),
+                    Component.literal("short windup, harming teleport with hitstun and light knockback")
             );
     public static final KnockdownAttack<MadeInHeavenEntity> LEG_CRUSHER = new KnockdownAttack<MadeInHeavenEntity>(
             80, 9, 19, 0.85f, 7f, 22, 1.5f, 0.35f, 0.2f, 45)
@@ -115,8 +122,8 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Leg Crusher"),
-                    Text.literal("knocks down (2s)")
+                    Component.literal("Leg Crusher"),
+                    Component.literal("knocks down (2s)")
             );
     public static final SimpleAttack<MadeInHeavenEntity> LOW_KICK = new SimpleAttack<MadeInHeavenEntity>(80,
             8, 17, 0.85f, 6f, 26, 1.5f, 0.25f, 0.2f)
@@ -128,8 +135,8 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Low Kick"),
-                    Text.literal("combo starter/extender, mih hoofs the enemies legs in a quick, stunning attack")
+                    Component.literal("Low Kick"),
+                    Component.literal("combo starter/extender, mih hoofs the enemies legs in a quick, stunning attack")
             );
     public static final FuryChopAttack FURY_CHOP = new FuryChopAttack(200, 15, 24, 0.85f,
             7f, 20, 1.6f, 0.25f, 0.2f)
@@ -139,8 +146,8 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Fury Chop"),
-                    Text.literal("combo extender, on hit gives haste(8s) to user and mining fatigue(8s) to victim, on whiff the fatigue goes to user")
+                    Component.literal("Fury Chop"),
+                    Component.literal("combo extender, on hit gives haste(8s) to user and mining fatigue(8s) to victim, on whiff the fatigue goes to user")
             );
     public static final SimpleAttack<MadeInHeavenEntity> DONUT = new SimpleAttack<MadeInHeavenEntity>(200,
             26, 32, 0.75f, 8.5f, 40, 2f, -0.2f, 0.2f)
@@ -152,16 +159,16 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
-                    Text.literal("Roundabout Donut"),
-                    Text.literal("feigns stand desummon, uninterruptible combo starter")
+                    Component.literal("Roundabout Donut"),
+                    Component.literal("feigns stand desummon, uninterruptible combo starter")
             );
     public static final TimeAccelerationMove TIME_ACCELERATION = new TimeAccelerationMove(1400, 20,
             40, 1f, JServerConfig.MIH_TIME_ACCELERATION_DURATION::getValue)
             .withSound(JSoundRegistry.MIH_TACCEL.get())
             .withAction((attacker, user, ctx, targets) -> attacker.speedometer = 0) // Clear speedometer
             .withInfo(
-                    Text.literal("Time Acceleration"),
-                    Text.literal("""
+                    Component.literal("Time Acceleration"),
+                    Component.literal("""
                             allows charging the speedometer for 30s
                             it is charged by landing hits
                             the speedometer impacts the level of speed and haste granted by Time Acceleration
@@ -170,8 +177,8 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withSound(JSoundRegistry.MIH_CIRCLE.get())
             .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withInfo(
-                    Text.literal("Heaven's Judgement"),
-                    Text.literal("rapidly circles a looked-at target within 4m at a radius of 7m")
+                    Component.literal("Heaven's Judgement"),
+                    Component.literal("rapidly circles a looked-at target within 4m at a radius of 7m")
             );
 
     public static final JudgementAttack JUDGEMENT = new JudgementAttack(300, 20, 60, 1.25f, 2)
@@ -179,26 +186,26 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withSound(JSoundRegistry.MIH_JUDGEMENT.get())
             .withInfo(
-                    Text.literal("Divine Severance"),
-                    Text.literal("Made in Heaven rapidly speed slices an area, then finishes with a large, launching slice")
+                    Component.literal("Divine Severance"),
+                    Component.literal("Made in Heaven rapidly speed slices an area, then finishes with a large, launching slice")
             );
-    private static final TrackedData<Integer> ACCEL_TIME;
-    private static final TrackedData<Integer> SPEEDOMETER;
-    private static final TrackedData<Boolean> AFTER_IMAGE;
-    private static final TrackedData<Integer> CIRCLING_TARGET;
+    private static final EntityDataAccessor<Integer> ACCEL_TIME;
+    private static final EntityDataAccessor<Integer> SPEEDOMETER;
+    private static final EntityDataAccessor<Boolean> AFTER_IMAGE;
+    private static final EntityDataAccessor<Integer> CIRCLING_TARGET;
 
     public static final int MAXIMUM_SPEEDOMETER = 30;
 
     private int speedometer = 0;
 
     static {
-        ACCEL_TIME = DataTracker.registerData(MadeInHeavenEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        SPEEDOMETER = DataTracker.registerData(MadeInHeavenEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        AFTER_IMAGE = DataTracker.registerData(MadeInHeavenEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-        CIRCLING_TARGET = DataTracker.registerData(MadeInHeavenEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        ACCEL_TIME = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.INT);
+        SPEEDOMETER = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.INT);
+        AFTER_IMAGE = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.BOOLEAN);
+        CIRCLING_TARGET = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.INT);
     }
 
-    public MadeInHeavenEntity(World worldIn) {
+    public MadeInHeavenEntity(Level worldIn) {
         super(StandType.MADE_IN_HEAVEN, worldIn, JSoundRegistry.MIH_SUMMON.get());
         idleRotation = -45f;
 
@@ -253,15 +260,15 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     }
 
     public int getAccelTime() {
-        return dataTracker.get(ACCEL_TIME);
+        return entityData.get(ACCEL_TIME);
     }
 
     public void setAccelTime(int aTime) {
-        dataTracker.set(ACCEL_TIME, aTime);
+        entityData.set(ACCEL_TIME, aTime);
     }
 
     public int getSpeedometer() {
-        return dataTracker.get(SPEEDOMETER);
+        return entityData.get(SPEEDOMETER);
     }
 
     public void incrementSpeedometer() {
@@ -277,32 +284,32 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
      * Tracks the speedometer value every tick, for actual addition see incrementSpeedometer()
      */
     public void setSpeedometer(int speedometer) {
-        dataTracker.set(SPEEDOMETER, speedometer);
+        entityData.set(SPEEDOMETER, speedometer);
     }
 
     public boolean getAfterimage() {
-        return dataTracker.get(AFTER_IMAGE);
+        return entityData.get(AFTER_IMAGE);
     }
 
     public void setAfterimage(boolean a) {
-        dataTracker.set(AFTER_IMAGE, a);
+        entityData.set(AFTER_IMAGE, a);
     }
 
     public LivingEntity getCircleTarget() {
-        return getWorld().getEntityById(dataTracker.get(CIRCLING_TARGET)) instanceof LivingEntity entity ? entity : null;
+        return level().getEntity(entityData.get(CIRCLING_TARGET)) instanceof LivingEntity entity ? entity : null;
     }
 
     public void setCirclingTarget(LivingEntity target) {
-        dataTracker.set(CIRCLING_TARGET, target == null ? -1 : target.getId());
+        entityData.set(CIRCLING_TARGET, target == null ? -1 : target.getId());
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        getDataTracker().startTracking(ACCEL_TIME, 0);
-        getDataTracker().startTracking(SPEEDOMETER, 0);
-        getDataTracker().startTracking(AFTER_IMAGE, false);
-        getDataTracker().startTracking(CIRCLING_TARGET, -1);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(ACCEL_TIME, 0);
+        getEntityData().define(SPEEDOMETER, 0);
+        getEntityData().define(AFTER_IMAGE, false);
+        getEntityData().define(CIRCLING_TARGET, -1);
     }
 
     @Override
@@ -334,8 +341,8 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
 
     @Override
     public void desummon() {
-        if (!getWorld().isClient() && getAccelTime() > 0) {
-            TimeAccelStatePacket.sendStop(getServer().getPlayerManager(), this);
+        if (!level().isClientSide() && getAccelTime() > 0) {
+            TimeAccelStatePacket.sendStop(getServer().getPlayerList(), this);
         }
         super.desummon();
     }
@@ -356,33 +363,33 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         // Time Accel handling
         TIME_ACCELERATION.tickTimeAcceleration(this);
 
-        if (!user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
+        if (!user.hasEffect(JStatusRegistry.DAZED.get())) {
             if (aTime > 0) {
                 int amplifier = speedometer / 3;
-                user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 20, amplifier, true, false));
-                user.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 20, amplifier, true, false));
+                user.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20, amplifier, true, false));
+                user.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 20, amplifier, true, false));
             } else {
-                user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 40, 0, true, false));
+                user.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 40, 0, true, false));
             }
         }
 
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             Entity clientCircleTarget = getCircleTarget();
             if (clientCircleTarget != null) {
-                lookAtWithoutReset(user, EntityAnchorArgumentType.EntityAnchor.EYES, clientCircleTarget.getEyePos());
+                lookAtWithoutReset(user, EntityAnchorArgument.Anchor.EYES, clientCircleTarget.getEyePosition());
             }
 
             if (getAccelTime() > 1) { // Updating on the client, to make sure all is smooth
                 CircleAttack.createSpeedParticles(this, this);
 
-                List<Entity> toCatch = getWorld().getEntitiesByClass(Entity.class, // Lower range by 32 to reduce lag
-                        getBoundingBox().expand(96), EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
+                List<Entity> toCatch = level().getEntitiesOfClass(Entity.class, // Lower range by 32 to reduce lag
+                        getBoundingBox().inflate(96), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
                 for (Entity entity : toCatch) {
                     if (entity instanceof LivingEntity) {
                         continue;
                     }
-                    if (entity.getPos().squaredDistanceTo(new Vec3d(entity.prevX, entity.prevY, entity.prevZ)) > 0) {
+                    if (entity.position().distanceToSqr(new Vec3(entity.xo, entity.yo, entity.zo)) > 0) {
                         CircleAttack.createSpeedParticles(this, entity);
                     }
                     entity.tick();
@@ -397,20 +404,20 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     }
 
     // Copied from Entity#lookAt(EntityAnchor, Vec3d), but doesn't set prevYaw, prevPitch and prevHeadYaw to get rid of jitter.
-    private static void lookAtWithoutReset(LivingEntity entity, EntityAnchorArgumentType.EntityAnchor anchorPoint, Vec3d target) {
-        entity.prevYaw = entity.getYaw();
-        entity.prevBodyYaw = entity.getBodyYaw();
-        entity.prevHeadYaw = entity.getHeadYaw();
-        entity.prevPitch = entity.getPitch();
+    private static void lookAtWithoutReset(LivingEntity entity, EntityAnchorArgument.Anchor anchorPoint, Vec3 target) {
+        entity.yRotO = entity.getYRot();
+        entity.yBodyRotO = entity.getVisualRotationYInDegrees();
+        entity.yHeadRotO = entity.getYHeadRot();
+        entity.xRotO = entity.getXRot();
 
-        Vec3d vec3d = anchorPoint.positionAt(entity);
+        Vec3 vec3d = anchorPoint.apply(entity);
         double d = target.x - vec3d.x;
         double e = target.y - vec3d.y;
         double f = target.z - vec3d.z;
         double g = Math.sqrt(d * d + f * f);
-        entity.setPitch(MathHelper.wrapDegrees((float) (-(MathHelper.atan2(e, g) * 57.2957763671875))));
-        entity.setYaw(MathHelper.wrapDegrees((float) (MathHelper.atan2(f, d) * 57.2957763671875) - 90.0f));
-        entity.setHeadYaw(entity.getYaw());
+        entity.setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(e, g) * 57.2957763671875))));
+        entity.setYRot(Mth.wrapDegrees((float) (Mth.atan2(f, d) * 57.2957763671875) - 90.0f));
+        entity.setYHeadRot(entity.getYRot());
     }
 
     @Override

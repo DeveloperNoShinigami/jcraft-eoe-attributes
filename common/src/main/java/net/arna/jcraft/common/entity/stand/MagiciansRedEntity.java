@@ -12,37 +12,44 @@ import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.IceBlock;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.IceBlock;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+
 
 import java.util.Collection;
 import java.util.function.Consumer;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 
 public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, MagiciansRedEntity.State> {
     public static final RedirectAttack REDIRECT = new RedirectAttack(0, 7, 10, 0.75f)
             .withAnim(State.REDIRECT)
             .withSound(JSoundRegistry.MR_REDIRECT.get())
             .withInfo(
-                    Text.literal("Redirect"),
-                    Text.literal("redirects all the users ankhs to where they're looking")
+                    Component.literal("Redirect"),
+                    Component.literal("redirects all the users ankhs to where they're looking")
             );
     public static final SimpleAttack<MagiciansRedEntity> LIGHT_FOLLOWUP = new SimpleAttack<MagiciansRedEntity>(
             0, 6, 14, 0.65f, 6f, 12, 1.5f, 1.2f, -0.1f)
@@ -52,8 +59,8 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
             .withBlockStun(4)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Punch"),
-                    Text.literal("quick combo finisher")
+                    Component.literal("Punch"),
+                    Component.literal("quick combo finisher")
             );
     public static final SimpleAttack<MagiciansRedEntity> LIGHT = new SimpleAttack<MagiciansRedEntity>(JCraft.LIGHT_COOLDOWN,
             5, 8, 0.75f, 5f, 16, 1.5f, 0.2f, -0.1f)
@@ -61,8 +68,8 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
             .withCrouchingVariant(REDIRECT)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withInfo(
-                    Text.literal("Punch"),
-                    Text.literal("quick combo starter")
+                    Component.literal("Punch"),
+                    Component.literal("quick combo starter")
             );
     public static final KnockdownAttack<MagiciansRedEntity> HEAVY = new KnockdownAttack<MagiciansRedEntity>(100,
             12, 22, 1f, 7f, 10, 1.75f, 0.5f, 0.6f, 40)
@@ -70,17 +77,17 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
             .withSound(JSoundRegistry.MR_HEAVY.get())
             .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
             .withInfo(
-                    Text.literal("Low Kick"),
-                    Text.literal("medium windup knockdown")
+                    Component.literal("Low Kick"),
+                    Component.literal("medium windup knockdown")
             );
     public static final SimpleAttack<MagiciansRedEntity> HAMMERFIST_FLARE = new SimpleAttack<MagiciansRedEntity>(0,
             1, 5, 1f, 6f, 10, 1.75f, 1.5f, -0.2f)
             .withLaunch()
-            .withAction((attacker, user, ctx, targets) -> attacker.playSound(SoundEvents.ITEM_FIRECHARGE_USE, 1.0f, 1.0f))
+            .withAction((attacker, user, ctx, targets) -> attacker.playSound(SoundEvents.FIRECHARGE_USE, 1.0f, 1.0f))
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withInfo(
-                    Text.literal("Hammerfist Flare"),
-                    Text.literal("launcher")
+                    Component.literal("Hammerfist Flare"),
+                    Component.literal("launcher")
             );
     public static final SimpleAttack<MagiciansRedEntity> HAMMERFIST = new SimpleAttack<MagiciansRedEntity>(100,
             10, 20, 1f, 3f, 13, 1.75f, 0.2f, 0)
@@ -90,50 +97,50 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
-                    Text.literal("Hammerfist"),
-                    Text.literal("two-hit launcher")
+                    Component.literal("Hammerfist"),
+                    Component.literal("two-hit launcher")
             );
     public static final FlamethrowerAttack FLAMETHROWER = new FlamethrowerAttack(300, 0,
             40, 0.75f, 0.4f, 0, 2, 0.25f, 0, 3)
             .withArmor(1)
             .withSound(JSoundRegistry.MR_BARRAGE.get())
             .withInfo(
-                    Text.literal("Flamethrower"),
-                    Text.literal("fast reliable damage cash-out tool, no stun, burns for 3 seconds")
+                    Component.literal("Flamethrower"),
+                    Component.literal("fast reliable damage cash-out tool, no stun, burns for 3 seconds")
             );
     public static final CrossfireAttack CROSSFIRE = new CrossfireAttack(240, 8, 10, 0.75f)
             .withSound(JSoundRegistry.MR_CROSSFIRE.get())
             .withInfo(
-                    Text.literal("Crossfire"),
-                    Text.literal("fires 3 stunning ankhs")
+                    Component.literal("Crossfire"),
+                    Component.literal("fires 3 stunning ankhs")
             );
     public static final CrossfireVariationAttack CROSSFIRE_VARIATION = new CrossfireVariationAttack(600, 12, 17, 0.75f)
             .withSound(JSoundRegistry.MR_CROSSFIRE.get())
             .withInfo(
-                    Text.literal("Crossfire Variation"),
-                    Text.literal("summons 6 ankhs that orbit around the user, crouch as they come out to increase orbit distance")
+                    Component.literal("Crossfire Variation"),
+                    Component.literal("summons 6 ankhs that orbit around the user, crouch as they come out to increase orbit distance")
             );
     public static final CrossfireHurricaneAttack CROSSFIRE_HURRICANE = new CrossfireHurricaneAttack(800, 18, 22, 0.75f)
             .withSound(JSoundRegistry.MR_ULT.get())
             .withInfo(
-                    Text.literal("Crossfire Hurricane"),
-                    Text.literal("summons slow, homing fire hurricane that knocks down, lasts for 3 seconds after hitting anything")
+                    Component.literal("Crossfire Hurricane"),
+                    Component.literal("summons slow, homing fire hurricane that knocks down, lasts for 3 seconds after hitting anything")
             );
     public static final RedBindAttack RED_BIND = new RedBindAttack(300, 12, 22, 0.75f, 3, 15, 1.5f, 0, 0)
             .withSound(JSoundRegistry.MR_REDBIND.get())
             .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withInfo(
-                    Text.literal("Red Bind"),
-                    Text.literal("on hit, wraps opponent in fiery rings that launch them in the direction they are hit")
+                    Component.literal("Red Bind"),
+                    Component.literal("on hit, wraps opponent in fiery rings that launch them in the direction they are hit")
             );
     public static final LifeDetectorAttack LIFE_DETECTOR = new LifeDetectorAttack(280, 13, 20, 0.75f)
             .withSound(JSoundRegistry.MR_DETECTOR.get())
             .withInfo(
-                    Text.literal("Life Detector"),
-                    Text.literal("tracks down nearby life, lasts 15s")
+                    Component.literal("Life Detector"),
+                    Component.literal("tracks down nearby life, lasts 15s")
             );
 
-    public MagiciansRedEntity(World worldIn) {
+    public MagiciansRedEntity(Level worldIn) {
         super(StandType.MAGICIANS_RED, worldIn, JSoundRegistry.MR_SUMMON.get());
         idleRotation = 225f;
 
@@ -193,14 +200,14 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
         return true;
     }
 
-    public static void ignite(World world, BlockPos blockPos) {
+    public static void ignite(Level world, BlockPos blockPos) {
         BlockState state = world.getBlockState(blockPos);
         Block block = state.getBlock();
         Collection<Property<?>> properties = state.getProperties();
 
         boolean cantIgnite = false;
-        if (properties.contains(Properties.WATERLOGGED)) {
-            cantIgnite = state.get(Properties.WATERLOGGED);
+        if (properties.contains(BlockStateProperties.WATERLOGGED)) {
+            cantIgnite = state.getValue(BlockStateProperties.WATERLOGGED);
         }
         if (block == Blocks.REDSTONE_LAMP) {
             return;
@@ -209,16 +216,16 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
             return;
         }
 
-        if (properties.contains(Properties.LIT)) {
-            world.setBlockState(blockPos, state.with(Properties.LIT, true));
+        if (properties.contains(BlockStateProperties.LIT)) {
+            world.setBlockAndUpdate(blockPos, state.setValue(BlockStateProperties.LIT, true));
         }
         if (block == Blocks.WET_SPONGE) { // WetSpongeBlock has no drying function to call
-            world.setBlockState(blockPos, Blocks.SPONGE.getDefaultState(), 3);
-            world.syncWorldEvent(2009, blockPos, 0);
-            world.playSound(null, blockPos, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, (1.0F + world.getRandom().nextFloat() * 0.2F) * 0.7F);
+            world.setBlock(blockPos, Blocks.SPONGE.defaultBlockState(), 3);
+            world.levelEvent(2009, blockPos, 0);
+            world.playSound(null, blockPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, (1.0F + world.getRandom().nextFloat() * 0.2F) * 0.7F);
         }
         if (world.getBlockEntity(blockPos) instanceof AbstractFurnaceBlockEntity furnaceBlock) {
-            furnaceBlock.burnTime = 220;
+            furnaceBlock.litTime = 220;
         }
         if (block instanceof IceBlock iceBlock) {
             iceBlock.melt(state, world, blockPos);
@@ -233,18 +240,18 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
             return;
         }
 
-        if (getWorld().isClient && getState() == State.BARRAGE && FLAMETHROWER.hasWindupPassed(this)) {
-            Vec3d rotVec = getRotationVector();
-            Vec3d mouthPos = getEyePos().add(rotVec);
+        if (level().isClientSide && getState() == State.BARRAGE && FLAMETHROWER.hasWindupPassed(this)) {
+            Vec3 rotVec = getLookAngle();
+            Vec3 mouthPos = getEyePosition().add(rotVec);
             for (int i = 0; i < 16; i++) {
-                Vec3d vel = getUserOrThrow().getVelocity().add(
+                Vec3 vel = getUserOrThrow().getDeltaMovement().add(
                         rotVec
-                                .rotateX(random.nextFloat() - 0.5f)
-                                .rotateY(random.nextFloat() - 0.5f)
-                                .rotateZ(random.nextFloat() - 0.5f)
-                                .multiply(0.2)
+                                .xRot(random.nextFloat() - 0.5f)
+                                .yRot(random.nextFloat() - 0.5f)
+                                .zRot(random.nextFloat() - 0.5f)
+                                .scale(0.2)
                 );
-                getWorld().addParticle(
+                level().addParticle(
                         random.nextInt(6) == 5 ? ParticleTypes.LAVA : ParticleTypes.FLAME,
                         mouthPos.x, mouthPos.y, mouthPos.z,
                         vel.x, vel.y, vel.z
@@ -252,7 +259,7 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
             }
         }
 
-        getUserOrThrow().addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 20, 0, true, false));
+        getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20, 0, true, false));
         CROSSFIRE_HURRICANE.tickHurricane(this);
     }
 

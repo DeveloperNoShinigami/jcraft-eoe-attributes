@@ -12,21 +12,20 @@ import net.arna.jcraft.mixin.ChunkLightProviderAccessor;
 import net.arna.jcraft.mixin.LightStorageAccessor;
 import net.arna.jcraft.mixin.LightingProviderAccessor;
 import net.arna.jcraft.registry.JDimensionRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.chunk.ChunkNibbleArray;
-import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.chunk.ChunkToNibbleArrayMap;
-import net.minecraft.world.chunk.WorldChunk;
-import net.minecraft.world.chunk.light.LightingProvider;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.DataLayer;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.world.level.lighting.DataLayerStorageMap;
+import net.minecraft.world.level.lighting.LevelLightEngine;
+import net.minecraft.world.phys.Vec3;
 import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -47,23 +46,23 @@ public class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove,
     public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        ServerWorld world = (ServerWorld) attacker.getWorld();
+        ServerLevel world = (ServerLevel) attacker.level();
 
-        if (world.getRegistryKey().equals(JDimensionRegistry.AU_DIMENSION_KEY)) {
+        if (world.dimension().equals(JDimensionRegistry.AU_DIMENSION_KEY)) {
             // Logic for cancelling dimhop early, and generating failsafe data
-            if (!(user instanceof ServerPlayerEntity serverPlayer)) {
+            if (!(user instanceof ServerPlayer serverPlayer)) {
                 return Set.of();
             }
 
             boolean isStored = PastDimensions.tryExit(user, targets); // Should always be true
 
             if (!isStored) { // If not stored, force your way back
-                BlockPos spawnPos = serverPlayer.getSpawnPointPosition(); // Prioritize spawn point
+                BlockPos spawnPos = serverPlayer.getRespawnPosition(); // Prioritize spawn point
                 // Use current position if all else fails
                 if (spawnPos == null) {
-                    spawnPos = serverPlayer.getBlockPos();
+                    spawnPos = serverPlayer.blockPosition();
                 }
-                PastDimensions.enqueue(new DimensionData(user, new Vec3d(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ()), serverPlayer.getSpawnPointDimension()));
+                PastDimensions.enqueue(new DimensionData(user, new Vec3(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ()), serverPlayer.getRespawnDimension()));
             }
 
             return Set.of();
@@ -89,14 +88,14 @@ public class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove,
 
     //todo: fix fixLightInAU() crashing the server repeatedly (its currently not called)
     @SuppressWarnings("DataFlowIssue") // There is no issue
-    private static void fixLightInAU(D4CEntity attacker, ServerWorld world, ServerWorld auWorld) {
-        ChunkPos origin = attacker.getChunkPos();
+    private static void fixLightInAU(D4CEntity attacker, ServerLevel world, ServerLevel auWorld) {
+        ChunkPos origin = attacker.chunkPosition();
 
         // Lighting providers are too complicated, man. Wth
         // We got 2 providers, every provider has 2 storages and every storage has 2 storages.
 
         boolean someModMessedUpLight = true;
-        ChunkToNibbleArrayMap<?>
+        DataLayerStorageMap<?>
                 ogBlockLightStorage = null,
                 ogUncachedBlockLightStorage = null,
                 auBlockLightStorage = null,
@@ -107,40 +106,40 @@ public class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove,
                 auUncachedSkyLightStorage = null;
 
         if (enableLightingFix) {
-            LightingProvider ogLightingProvider = world.getLightingProvider();
-            LightingProvider auLightingProvider = auWorld.getLightingProvider();
+            LevelLightEngine ogLightingProvider = world.getLightEngine();
+            LevelLightEngine auLightingProvider = auWorld.getLightEngine();
 
             ChunkLightProviderAccessor ogBlockLightProvider = (ChunkLightProviderAccessor)
-                    ((LightingProviderAccessor) ogLightingProvider).getBlockLightProvider();
+                    ((LightingProviderAccessor) ogLightingProvider).getBlockEngine();
             ChunkLightProviderAccessor auBlockLightProvider = (ChunkLightProviderAccessor)
-                    ((LightingProviderAccessor) auLightingProvider).getBlockLightProvider();
+                    ((LightingProviderAccessor) auLightingProvider).getBlockEngine();
             ChunkLightProviderAccessor ogSkyLightProvider = (ChunkLightProviderAccessor)
-                    ((LightingProviderAccessor) ogLightingProvider).getSkyLightProvider();
+                    ((LightingProviderAccessor) ogLightingProvider).getSkyEngine();
             ChunkLightProviderAccessor auSkyLightProvider = (ChunkLightProviderAccessor)
-                    ((LightingProviderAccessor) auLightingProvider).getSkyLightProvider();
+                    ((LightingProviderAccessor) auLightingProvider).getSkyEngine();
 
             LightStorageAccessor ogBlockLightStorage0 = ogBlockLightProvider == null ? null :
-                    (LightStorageAccessor) ogBlockLightProvider.getLightStorage();
+                    (LightStorageAccessor) ogBlockLightProvider.getStorage();
             LightStorageAccessor auBlockLightStorage0 = auBlockLightProvider == null ? null :
-                    (LightStorageAccessor) auBlockLightProvider.getLightStorage();
+                    (LightStorageAccessor) auBlockLightProvider.getStorage();
             LightStorageAccessor ogSkyLightStorage0 = ogSkyLightProvider == null ? null :
-                    (LightStorageAccessor) ogSkyLightProvider.getLightStorage();
+                    (LightStorageAccessor) ogSkyLightProvider.getStorage();
             LightStorageAccessor auSkyLightStorage0 = auSkyLightProvider == null ? null :
-                    (LightStorageAccessor) auSkyLightProvider.getLightStorage();
+                    (LightStorageAccessor) auSkyLightProvider.getStorage();
 
             // Whether some mod (like Starlight or Phosphor) overwrote the lighting system.
             // If so, our method of copying light data is not going to work.
             someModMessedUpLight = Stream.of(ogBlockLightStorage0, auBlockLightStorage0, ogSkyLightStorage0, auSkyLightStorage0)
                     .anyMatch(Objects::isNull);
 
-            ogBlockLightStorage = someModMessedUpLight ? null : ogBlockLightStorage0.getStorage();
-            ogUncachedBlockLightStorage = someModMessedUpLight ? null : ogBlockLightStorage0.getUncachedStorage();
-            auBlockLightStorage = someModMessedUpLight ? null : auBlockLightStorage0.getStorage();
-            auUncachedBlockLightStorage = someModMessedUpLight ? null : auBlockLightStorage0.getUncachedStorage();
-            ogSkyLightStorage = someModMessedUpLight ? null : ogSkyLightStorage0.getStorage();
-            ogUncachedSkyLightStorage = someModMessedUpLight ? null : ogSkyLightStorage0.getUncachedStorage();
-            auSkyLightStorage = someModMessedUpLight ? null : auSkyLightStorage0.getStorage();
-            auUncachedSkyLightStorage = someModMessedUpLight ? null : auSkyLightStorage0.getUncachedStorage();
+            ogBlockLightStorage = someModMessedUpLight ? null : ogBlockLightStorage0.getUpdatingSectionData();
+            ogUncachedBlockLightStorage = someModMessedUpLight ? null : ogBlockLightStorage0.getVisibleSectionData();
+            auBlockLightStorage = someModMessedUpLight ? null : auBlockLightStorage0.getUpdatingSectionData();
+            auUncachedBlockLightStorage = someModMessedUpLight ? null : auBlockLightStorage0.getVisibleSectionData();
+            ogSkyLightStorage = someModMessedUpLight ? null : ogSkyLightStorage0.getUpdatingSectionData();
+            ogUncachedSkyLightStorage = someModMessedUpLight ? null : ogSkyLightStorage0.getVisibleSectionData();
+            auSkyLightStorage = someModMessedUpLight ? null : auSkyLightStorage0.getUpdatingSectionData();
+            auUncachedSkyLightStorage = someModMessedUpLight ? null : auSkyLightStorage0.getVisibleSectionData();
 
             someModMessedUpLight |= Stream.of(ogBlockLightStorage, ogUncachedBlockLightStorage, auBlockLightStorage, auUncachedBlockLightStorage,
                             ogSkyLightStorage, ogUncachedSkyLightStorage, auSkyLightStorage, auUncachedBlockLightStorage)
@@ -153,46 +152,46 @@ public class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove,
                 int cZ = origin.z + z;
                 JCraft.preloadChunk(auWorld, cX, cZ);
 
-                WorldChunk ogChunk = world.getChunk(cX, cZ);
-                WorldChunk auChunk = auWorld.getChunk(cX, cZ);
+                LevelChunk ogChunk = world.getChunk(cX, cZ);
+                LevelChunk auChunk = auWorld.getChunk(cX, cZ);
 
-                ChunkSection[] sections = ogChunk.getSectionArray();
-                ChunkSection[] copies = IntStream.range(0, sections.length)
+                LevelChunkSection[] sections = ogChunk.getSections();
+                LevelChunkSection[] copies = IntStream.range(0, sections.length)
                         .mapToObj(i -> {
-                            ChunkSection copy = new ChunkSection(world.getRegistryManager().get(RegistryKeys.BIOME));
-                            PacketByteBuf serialized = new PacketByteBuf(Unpooled.buffer());
-                            sections[i].toPacket(serialized);
-                            copy.readDataPacket(serialized);
+                            LevelChunkSection copy = new LevelChunkSection(world.registryAccess().registryOrThrow(Registries.BIOME));
+                            FriendlyByteBuf serialized = new FriendlyByteBuf(Unpooled.buffer());
+                            sections[i].write(serialized);
+                            copy.read(serialized);
                             return copy;
                         })
-                        .toArray(ChunkSection[]::new);
+                        .toArray(LevelChunkSection[]::new);
 
-                ChunkSection[] auSec = auChunk.getSectionArray();
+                LevelChunkSection[] auSec = auChunk.getSections();
                 System.arraycopy(copies, 0, auSec, 0, Math.min(copies.length, auSec.length));
 
                 // Copy light for every section.
                 if (!someModMessedUpLight) {
-                    for (int y = auWorld.getBottomY(); y < auWorld.getTopY(); y += 16) {
-                        long cPos = ChunkSectionPos.toLong(new BlockPos(cX * 16, y, cZ * 16));
-                        ChunkNibbleArray a;
-                        a = ogBlockLightStorage.get(cPos);
+                    for (int y = auWorld.getMinBuildHeight(); y < auWorld.getMaxBuildHeight(); y += 16) {
+                        long cPos = SectionPos.asLong(new BlockPos(cX * 16, y, cZ * 16));
+                        DataLayer a;
+                        a = ogBlockLightStorage.getLayer(cPos);
                         if (a != null) {
-                            auBlockLightStorage.put(cPos, a);
+                            auBlockLightStorage.setLayer(cPos, a);
                         }
 
-                        a = ogUncachedBlockLightStorage.get(cPos);
+                        a = ogUncachedBlockLightStorage.getLayer(cPos);
                         if (a != null) {
-                            auUncachedBlockLightStorage.put(cPos, a);
+                            auUncachedBlockLightStorage.setLayer(cPos, a);
                         }
 
-                        a = ogSkyLightStorage.get(cPos);
+                        a = ogSkyLightStorage.getLayer(cPos);
                         if (a != null) {
-                            auSkyLightStorage.put(cPos, a);
+                            auSkyLightStorage.setLayer(cPos, a);
                         }
 
-                        a = ogUncachedSkyLightStorage.get(cPos);
+                        a = ogUncachedSkyLightStorage.getLayer(cPos);
                         if (a != null) {
-                            auUncachedSkyLightStorage.put(cPos, a);
+                            auUncachedSkyLightStorage.setLayer(cPos, a);
                         }
                     }
                 }
@@ -200,8 +199,8 @@ public class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove,
         }
 
         // todo: use auWorld.getLightingProvider().doLightUpdates()?
-        for (BlockPos pos : BlockPos.iterate(new BlockPos(origin.getStartX() - 3 * 16, world.getBottomY(), origin.getStartZ() - 3 * 16),
-                new BlockPos(origin.getEndX() + 3 * 16, world.getTopY(), origin.getEndZ() + 3 * 16))) {
+        for (BlockPos pos : BlockPos.betweenClosed(new BlockPos(origin.getMinBlockX() - 3 * 16, world.getMinBuildHeight(), origin.getMinBlockZ() - 3 * 16),
+                new BlockPos(origin.getMaxBlockX() + 3 * 16, world.getMaxBuildHeight(), origin.getMaxBlockZ() + 3 * 16))) {
             auWorld.removeBlockEntity(pos); // Ensure the old one is gone.
             auWorld.getBlockEntity(pos); // Creates the BE if it does not yet exist while there should be one.
 
@@ -209,7 +208,7 @@ public class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove,
             // they have probably improved the efficiency of this method.
             // Thus, it should theoretically be fine to call this for every block.
             if (enableLightingFix && someModMessedUpLight) {
-                auWorld.getLightingProvider().checkBlock(pos);
+                auWorld.getLightEngine().checkBlock(pos);
             }
         }
     }

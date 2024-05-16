@@ -8,11 +8,10 @@ import net.arna.jcraft.common.entity.stand.KillerQueenEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class CoinTossAttack extends AbstractMove<CoinTossAttack, KillerQueenEntity> {
@@ -26,15 +25,15 @@ public class CoinTossAttack extends AbstractMove<CoinTossAttack, KillerQueenEnti
     @Override
     public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
         ItemEntity coin = ctx.get(COIN);
-        Vec3d lookVec = user.getRotationVector().multiply(0.75);
+        Vec3 lookVec = user.getLookAngle().scale(0.75);
         if (coin != null) {
             coin.discard();
         }
-        coin = new ItemEntity(attacker.getWorld(), user.getX(), user.getY() + user.getHeight() * 2 / 3, user.getZ(),
+        coin = new ItemEntity(attacker.level(), user.getX(), user.getY() + user.getBbHeight() * 2 / 3, user.getZ(),
                 new ItemStack(JItemRegistry.KQ_COIN.get(), 1), lookVec.x, lookVec.y, lookVec.z);
-        coin.setPickupDelayInfinite();
+        coin.setNeverPickUp();
 
-        attacker.getWorld().spawnEntity(coin);
+        attacker.level().addFreshEntity(coin);
 
         JComponentPlatformUtils.getBombTracker(user).getMainBomb().setBomb(coin);
 

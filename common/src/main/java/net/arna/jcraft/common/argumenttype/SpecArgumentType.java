@@ -12,15 +12,14 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.arna.jcraft.common.spec.SpecType;
-import net.minecraft.text.Text;
-
+import net.minecraft.network.chat.Component;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @NoArgsConstructor(staticName = "spec")
 public class SpecArgumentType implements ArgumentType<SpecType> {
-    private static final SimpleCommandExceptionType NOT_FOUND = new SimpleCommandExceptionType(Text.literal("That stand was not found"));
+    private static final SimpleCommandExceptionType NOT_FOUND = new SimpleCommandExceptionType(Component.literal("That stand was not found"));
     private static final Map<String, SpecType> suggestions = SpecType.getAllSpecTypes().stream()
             .collect(ImmutableMap.toImmutableMap(type -> type.getInternalName().replaceAll("_", ""), type -> type));
     @Getter // implements ArgumentType#getExamples()

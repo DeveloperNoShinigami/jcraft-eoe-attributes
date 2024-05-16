@@ -1,48 +1,53 @@
 package net.arna.jcraft.registry;
 
+import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.block.FoolishSandBlock;
 import net.arna.jcraft.common.block.HotSandBlock;
 import net.arna.jcraft.common.block.SoulBlock;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
-import static net.arna.jcraft.JCraft.BLOCK_REGISTRY;
 
 public interface JBlockRegistry {
 
+
+    DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.BLOCK);
+
     //Block
-    RegistrySupplier<Block> FOOLISH_SAND_BLOCK = BLOCK_REGISTRY.register("foolish_sand_block", () -> new FoolishSandBlock(AbstractBlock.Settings.create()
+    RegistrySupplier<Block> FOOLISH_SAND_BLOCK = BLOCK_REGISTRY.register("foolish_sand_block", () -> new FoolishSandBlock(BlockBehaviour.Properties.of()
             .strength(0.5f)
-            .sounds(BlockSoundGroup.SAND)
+            .sound(SoundType.SAND)
     ));
-    RegistrySupplier<Block> SOUL_BLOCK = BLOCK_REGISTRY.register("soul_block", () -> new SoulBlock(AbstractBlock.Settings.create()
+    RegistrySupplier<Block> SOUL_BLOCK = BLOCK_REGISTRY.register("soul_block", () -> new SoulBlock(BlockBehaviour.Properties.of()
             .strength(4.0f)
-            .sounds(BlockSoundGroup.SOUL_SOIL)
+            .sound(SoundType.SOUL_SOIL)
     ));
-    RegistrySupplier<Block> METEORITE_BLOCK = BLOCK_REGISTRY.register("meteorite_block", () -> new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)
-            .requiresTool()
+    RegistrySupplier<Block> METEORITE_BLOCK = BLOCK_REGISTRY.register("meteorite_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            .requiresCorrectToolForDrops()
             .strength(6.0f, 1200f)
-            .sounds(BlockSoundGroup.ANCIENT_DEBRIS)
+            .sound(SoundType.ANCIENT_DEBRIS)
     ));
-    RegistrySupplier<Block> METEORITE_IRON_ORE_BLOCK = BLOCK_REGISTRY.register("meteorite_iron_ore_block", () -> new Block(AbstractBlock.Settings.copy(Blocks.IRON_ORE)
-            .requiresTool()
+    RegistrySupplier<Block> METEORITE_IRON_ORE_BLOCK = BLOCK_REGISTRY.register("meteorite_iron_ore_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_ORE)
+            .requiresCorrectToolForDrops()
             .strength(9.0f, 1200f)
-            .sounds(BlockSoundGroup.ANCIENT_DEBRIS)
+            .sound(SoundType.ANCIENT_DEBRIS)
     ));
-    RegistrySupplier<Block> STELLAR_IRON_BLOCK = BLOCK_REGISTRY.register("stellar_iron_block", () -> new Block(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)
-            .requiresTool()
+    RegistrySupplier<Block> STELLAR_IRON_BLOCK = BLOCK_REGISTRY.register("stellar_iron_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            .requiresCorrectToolForDrops()
             .strength(7.5f, 1000f)
-            .sounds(BlockSoundGroup.NETHERITE)
+            .sound(SoundType.NETHERITE_BLOCK)
     ));
-    RegistrySupplier<Block> HOT_SAND_BLOCK = BLOCK_REGISTRY.register("hot_sand_block", () -> new HotSandBlock(AbstractBlock.Settings.create()
+    RegistrySupplier<Block> HOT_SAND_BLOCK = BLOCK_REGISTRY.register("hot_sand_block", () -> new HotSandBlock(BlockBehaviour.Properties.of()
             .strength(0.5f)
-            .sounds(BlockSoundGroup.SAND)
+            .sound(SoundType.SAND)
     ));
-    RegistrySupplier<Block> COFFIN_BLOCK = BLOCK_REGISTRY.register("coffin", () -> new CoffinBlock(AbstractBlock.Settings.create().sounds(BlockSoundGroup.WOOD).nonOpaque()));
+    RegistrySupplier<Block> COFFIN_BLOCK = BLOCK_REGISTRY.register("coffin", () -> new CoffinBlock(BlockBehaviour.Properties.of().sound(SoundType.WOOD).noOcclusion()));
 
 
     static void init() {

@@ -10,12 +10,13 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.MobilityType;
+import net.arna.jcraft.platform.JPlatformUtils;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +41,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     @Getter
     private Enum<?> animation;
     @NonNull
-    private Text name = Text.empty(), description = Text.empty();
+    private Component name = Component.empty(), description = Component.empty();
     /**
      * The move this move was copied from.
      * Defaults to {@code this}.
@@ -139,7 +140,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param description The description of this move
      * @return This move
      */
-    public T withInfo(@NonNull Text name, @NonNull Text description) {
+    public T withInfo(@NonNull Component name, @NonNull Component description) {
         this.name = name;
         this.description = description;
         return getThis();
@@ -404,7 +405,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
         // TODO convert these to actual tests
         // THATS TOO BAD!
-        if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
+        if (!JPlatformUtils.isDevelopmentEnvironment()) {
             return;
         }
         testCopy();
@@ -545,10 +546,10 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to get the rotation vector for
      * @return The rotation vector for the given attacker
      */
-    public static Vec3d getRotVec(IAttacker<?, ?> attacker) {
-        Vec3d rotVec = attacker.getBaseEntity().getRotationVector();
+    public static Vec3 getRotVec(IAttacker<?, ?> attacker) {
+        Vec3 rotVec = attacker.getBaseEntity().getLookAngle();
         if (GravityChangerAPI.getGravityDirection(attacker.getUserOrThrow()) == Direction.UP) {
-            rotVec = new Vec3d(rotVec.x, -rotVec.y, rotVec.z);
+            rotVec = new Vec3(rotVec.x, -rotVec.y, rotVec.z);
         }
 
         return rotVec;
@@ -560,10 +561,10 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to get the eye position for
      * @return The eye position of the given attacker
      */
-    protected Vec3d getOffsetHeightPos(A attacker) {
-        Vec3d upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
-        Vec3d heightOffset = upVec.multiply(0.5);
-        return attacker.getBaseEntity().getPos().add(heightOffset);
+    protected Vec3 getOffsetHeightPos(A attacker) {
+        Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
+        Vec3 heightOffset = upVec.scale(0.5);
+        return attacker.getBaseEntity().position().add(heightOffset);
     }
 
     /**

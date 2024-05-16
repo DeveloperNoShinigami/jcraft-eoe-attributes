@@ -4,17 +4,16 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.GoldExperienceEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SweetBerryBushBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import java.util.Set;
 
 public class BerryBushAttack extends AbstractSimpleAttack<BerryBushAttack, GoldExperienceEntity> {
-    private static final BlockState berryBush = Blocks.SWEET_BERRY_BUSH.getDefaultState().with(SweetBerryBushBlock.AGE, 1);
+    private static final BlockState berryBush = Blocks.SWEET_BERRY_BUSH.defaultBlockState().setValue(SweetBerryBushBlock.AGE, 1);
 
     public BerryBushAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
                            float hitboxSize, float knockback, float offset) {
@@ -23,10 +22,10 @@ public class BerryBushAttack extends AbstractSimpleAttack<BerryBushAttack, GoldE
 
     @Override
     public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
-        World world = attacker.getWorld();
-        BlockPos blockPos = attacker.getBlockPos();
-        if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.down()).isOpaque()) {
-            world.setBlockState(blockPos, berryBush);
+        Level world = attacker.level();
+        BlockPos blockPos = attacker.blockPosition();
+        if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.below()).canOcclude()) {
+            world.setBlockAndUpdate(blockPos, berryBush);
         }
 
         return super.perform(attacker, user, ctx);

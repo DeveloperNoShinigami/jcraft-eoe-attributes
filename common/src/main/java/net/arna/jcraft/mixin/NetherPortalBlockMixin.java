@@ -1,6 +1,6 @@
 package net.arna.jcraft.mixin;
 
-import net.minecraft.block.NetherPortalBlock;
+import net.minecraft.world.level.block.NetherPortalBlock;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(NetherPortalBlock.class)

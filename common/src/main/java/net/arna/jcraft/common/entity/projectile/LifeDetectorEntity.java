@@ -1,100 +1,100 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.util.GeckoLibUtil;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 
 import java.util.List;
 import java.util.Set;
 
 public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
-    private static final TrackedData<Boolean> EXPLODED;
+    private static final EntityDataAccessor<Boolean> EXPLODED;
     public LivingEntity target;
 
     static {
-        EXPLODED = DataTracker.registerData(LifeDetectorEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        EXPLODED = SynchedEntityData.defineId(LifeDetectorEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
     public boolean hasExploded() {
-        return this.dataTracker.get(EXPLODED);
+        return this.entityData.get(EXPLODED);
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        dataTracker.startTracking(EXPLODED, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(EXPLODED, false);
     }
 
-    public LifeDetectorEntity(EntityType<? extends LivingEntity> entityType, World world) {
+    public LifeDetectorEntity(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    public boolean canTarget(LivingEntity target) {
+    public boolean canAttack(LivingEntity target) {
         if (target == null || master == null) {
             return false;
         }
         if (target == this || target == master) {
             return false;
         }
-        if (target.isConnectedThroughVehicle(master)) {
+        if (target.isPassengerOfSameVehicle(master)) {
             return false;
         }
         if (target instanceof IOwnable ownable && ownable.getMaster() == master) {
             return false;
         }
-        return target.canTakeDamage() && target.isAlive() && JUtils.canDamage(getWorld().getDamageSources().mobAttack(master), target);
+        return target.canBeSeenAsEnemy() && target.isAlive() && JUtils.canDamage(level().damageSources().mobAttack(master), target);
     }
 
     private void Explode() {
-        setVelocity(0, 0, 0);
-        velocityModified = true;
+        setDeltaMovement(0, 0, 0);
+        hurtMarked = true;
 
-        Vec3d pos = getPos();
-        Set<LivingEntity> hurt = JUtils.generateHitbox(getWorld(), pos, 2.25, e -> true);
+        Vec3 pos = position();
+        Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos, 2.25, e -> true);
         for (LivingEntity living : hurt) {
-            if (!canTarget(living)) {
+            if (!canAttack(living)) {
                 continue;
             }
             LivingEntity target = JUtils.getUserIfStand(living);
-            Vec3d kbVec = target.getPos().subtract(pos).normalize();
-            StandEntity.damageLogic(getWorld(), target, kbVec, 10, 1, false, 5f, true, 9,
-                    getWorld().getDamageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false);
+            Vec3 kbVec = target.position().subtract(pos).normalize();
+            StandEntity.damageLogic(level(), target, kbVec, 10, 1, false, 5f, true, 9,
+                    level().damageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false);
         }
 
-        dataTracker.set(EXPLODED, true);
+        entityData.set(EXPLODED, true);
 
-        playSound(SoundEvents.ITEM_FIRECHARGE_USE, 1f, 1f);
+        playSound(SoundEvents.FIRECHARGE_USE, 1f, 1f);
 
         kill();
     }
@@ -109,8 +109,8 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
             return;
         }
 
-        if (getWorld().isClient) {
-            getWorld().addParticle(
+        if (level().isClientSide) {
+            level().addParticle(
                     ParticleTypes.FLAME,
                     this.getX() + random.nextFloat() - 0.5f,
                     this.getY() + random.nextFloat() - 0.5f,
@@ -118,13 +118,13 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
                     0.0, 0.0, 0.0);
         } else {
             if (target == null) {
-                if (this.age % 2 == 0) {
+                if (this.tickCount % 2 == 0) {
                     LivingEntity finalTarget = null;
-                    List<LivingEntity> targets = getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(32f), EntityPredicates.VALID_ENTITY);
+                    List<LivingEntity> targets = level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(32f), EntitySelector.ENTITY_STILL_ALIVE);
 
                     for (LivingEntity t :
                             targets) {
-                        if (!canTarget(t)) {
+                        if (!canAttack(t)) {
                             continue;
                         }
                         if (finalTarget == null) {
@@ -132,7 +132,7 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
                             continue;
                         }
                         // Prioritise nearest
-                        if (t.getPos().squaredDistanceTo(getPos()) < finalTarget.getPos().squaredDistanceTo(getPos())) {
+                        if (t.position().distanceToSqr(position()) < finalTarget.position().distanceToSqr(position())) {
                             finalTarget = t;
                         }
                     }
@@ -140,46 +140,46 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
                     target = finalTarget;
                 }
             } else if (target.isAlive()) {
-                Vec3d eyePos = target.getEyePos();
-                lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, eyePos);
-                if (this.squaredDistanceTo(eyePos) < 2.5) {
+                Vec3 eyePos = target.getEyePosition();
+                lookAt(EntityAnchorArgument.Anchor.EYES, eyePos);
+                if (this.distanceToSqr(eyePos) < 2.5) {
                     Explode(); //If closer than 1.58m
                 }
             } else {
                 target = null;
             }
 
-            if (!hasExploded() && (this.age >= 300 || getHealth() <= 0f)) {
+            if (!hasExploded() && (this.tickCount >= 300 || getHealth() <= 0f)) {
                 Explode();
             }
 
             // Lerp velocity to simulate inertia
-            this.setVelocity(
-                    getVelocity().add(getRotationVector().multiply(0.5)).multiply(0.25)
+            this.setDeltaMovement(
+                    getDeltaMovement().add(getLookAngle().scale(0.5)).scale(0.25)
             );
-            this.velocityModified = true;
+            this.hurtMarked = true;
         }
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         return true;
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.BLOCK_LAVA_EXTINGUISH;
+        return SoundEvents.LAVA_EXTINGUISH;
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.BLOCK_LAVA_EXTINGUISH;
+        return SoundEvents.LAVA_EXTINGUISH;
     }
 
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         return true;
     }
 
@@ -188,52 +188,52 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
         return false;
     }
 
-    public static DefaultAttributeContainer.Builder createDetectorAttributes() {
+    public static AttributeSupplier.Builder createDetectorAttributes() {
         return createLivingAttributes() // This must be used instead of DefaultAttributeContainer.builder() due to compatibility with step-height-entity-attribute
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 10)
-                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED)
-                .add(EntityAttributes.GENERIC_ARMOR)
-                .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS);
+                .add(Attributes.MAX_HEALTH, 10)
+                .add(Attributes.KNOCKBACK_RESISTANCE)
+                .add(Attributes.MOVEMENT_SPEED)
+                .add(Attributes.ARMOR)
+                .add(Attributes.ARMOR_TOUGHNESS);
     }
 
     @Override
-    protected Box calculateBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
+    protected AABB makeBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
         double x = getX();
         double y = getY();
         double z = getZ();
         double s = hasExploded() ? 0.1 : 0.5;
-        return new Box(x + s, y + s, z + s, x - s, y - s, z - s);
+        return new AABB(x + s, y + s, z + s, x - s, y - s, z - s);
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
         if (master == null) {
             return;
         }
-        boolean ownerIsPlayer = master instanceof PlayerEntity;
+        boolean ownerIsPlayer = master instanceof Player;
         tag.putBoolean("playerOwner", ownerIsPlayer);
         if (ownerIsPlayer) {
-            tag.putUuid("ownerUUID", master.getUuid());
+            tag.putUUID("ownerUUID", master.getUUID());
         } else {
             tag.putInt("ownerID", master.getId());
         }
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
+    public void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
         boolean ownerIsPlayer = tag.getBoolean("playerOwner");
         if (ownerIsPlayer) {
-            master = getWorld().getPlayerByUuid(tag.getUuid("ownerUUID"));
+            master = level().getPlayerByUUID(tag.getUUID("ownerUUID"));
         } else {
-            master = (LivingEntity) getWorld().getEntityById(tag.getInt("ownerID")); // Always is living
+            master = (LivingEntity) level().getEntity(tag.getInt("ownerID")); // Always is living
         }
     }
 
     // Animations
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {

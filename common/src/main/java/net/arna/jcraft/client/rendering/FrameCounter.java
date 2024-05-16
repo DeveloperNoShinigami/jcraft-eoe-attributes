@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.rendering;
 
 import lombok.Getter;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
 
 /**
  * Keeps track of the current frame of an animation based on the difference
@@ -40,7 +40,7 @@ public class FrameCounter {
      * Updates the start time and resets other variables.
      */
     public void start() {
-        start = Util.getMeasuringTimeNano();
+        start = Util.getNanos();
         offset = 0;
         paused = false;
     }
@@ -52,7 +52,7 @@ public class FrameCounter {
         if (paused) {
             return;
         }
-        offset += Util.getMeasuringTimeNano() - start;
+        offset += Util.getNanos() - start;
         paused = true;
     }
 
@@ -63,7 +63,7 @@ public class FrameCounter {
         if (!paused) {
             return;
         }
-        start = Util.getMeasuringTimeNano();
+        start = Util.getNanos();
         paused = false;
     }
 
@@ -75,7 +75,7 @@ public class FrameCounter {
      * @return Either the current frame or {@code -1}
      */
     public int getCurrentFrame() {
-        long d = (paused ? 0 : Util.getMeasuringTimeNano() - start) + offset;
+        long d = (paused ? 0 : Util.getNanos() - start) + offset;
         int frame = (int) (d / singleFrameTime);
 
         return !shouldLoop && frame >= frameCount ? -1 : frame % frameCount;

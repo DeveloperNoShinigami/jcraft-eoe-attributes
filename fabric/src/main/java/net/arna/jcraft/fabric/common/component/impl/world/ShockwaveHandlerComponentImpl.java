@@ -3,17 +3,17 @@ package net.arna.jcraft.fabric.common.component.impl.world;
 import net.arna.jcraft.common.component.impl.world.CommonShockwaveHandlerComponentImpl;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.world.ShockwaveHandlerComponent;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class ShockwaveHandlerComponentImpl extends CommonShockwaveHandlerComponentImpl implements ShockwaveHandlerComponent {
 
-    private final World world;
+    private final Level world;
 
-    public ShockwaveHandlerComponentImpl(World world) {
+    public ShockwaveHandlerComponentImpl(Level world) {
         super(world);
         this.world = world;
     }
@@ -25,22 +25,22 @@ public class ShockwaveHandlerComponentImpl extends CommonShockwaveHandlerCompone
     }
 
     @Override
-    public void readFromNbt(@NotNull NbtCompound tag) {
+    public void readFromNbt(@NotNull CompoundTag tag) {
         super.readFromNbt(tag);
     }
 
     @Override
-    public void writeToNbt(@NotNull NbtCompound tag) {
+    public void writeToNbt(@NotNull CompoundTag tag) {
         super.writeToNbt(tag);
     }
 
     @Override
-    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
         super.writeSyncPacket(buf, recipient);
     }
 
     @Override
-    public void applySyncPacket(PacketByteBuf buf) {
+    public void applySyncPacket(FriendlyByteBuf buf) {
         super.applySyncPacket(buf);
     }
 

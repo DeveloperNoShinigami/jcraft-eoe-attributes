@@ -6,40 +6,39 @@ import net.arna.jcraft.common.gravity.util.Gravity;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectCategory;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
-
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import java.util.Random;
 
 import static net.arna.jcraft.common.gravity.api.GravityChangerAPI.getGravityDirection;
 
-public class WeightlessStatusEffect extends StatusEffect {
+public class WeightlessStatusEffect extends MobEffect {
     private static final Random random = new Random();
 
     public WeightlessStatusEffect() {
-        super(StatusEffectCategory.NEUTRAL, 0x000011);
+        super(MobEffectCategory.NEUTRAL, 0x000011);
     }
 
     @Override
-    public boolean canApplyUpdateEffect(int duration, int amplifier) {
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         return amplifier == 1;
     }
 
     @Override
-    public void applyUpdateEffect(LivingEntity entity, int amplifier) {
-        World world = entity.getWorld();
+    public void applyEffectTick(LivingEntity entity, int amplifier) {
+        Level world = entity.level();
 
-        Vec3d pos = entity.getPos();
-        Vec3d downPos = pos.add(RotationUtil.vecPlayerToWorld(0.0, -5.0, 0.0, getGravityDirection(entity)));
-        if (entity.getWorld().isClient) {
+        Vec3 pos = entity.position();
+        Vec3 downPos = pos.add(RotationUtil.vecPlayerToWorld(0.0, -5.0, 0.0, getGravityDirection(entity)));
+        if (entity.level().isClientSide) {
             world.addParticle(
                     ParticleTypes.REVERSE_PORTAL,
                     pos.x + random.nextDouble() - 0.5,
@@ -51,16 +50,16 @@ public class WeightlessStatusEffect extends StatusEffect {
             CommonMiscComponent misc = JComponentPlatformUtils.getMiscData(entity);
 
             if (!entity.isAlive()) {
-                entity.removeStatusEffect(this);
+                entity.removeEffect(this);
                 return;
             }
 
-            HitResult hitResult = world.raycast(
-                    new RaycastContext(
+            HitResult hitResult = world.clip(
+                    new ClipContext(
                             pos,
                             downPos,
-                            RaycastContext.ShapeType.COLLIDER,
-                            RaycastContext.FluidHandling.NONE,
+                            ClipContext.Block.COLLIDER,
+                            ClipContext.Fluid.NONE,
                             entity
                     )
             );
@@ -72,25 +71,25 @@ public class WeightlessStatusEffect extends StatusEffect {
                 misc.setHoverTime(newHoverTime);
                 if (newHoverTime > 10) // If not near ground for half a second
                 {
-                    entity.removeStatusEffect(this);
+                    entity.removeEffect(this);
                 }
             }
         }
     }
 
     @Override
-    public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        super.onApplied(entity, attributes, amplifier);
+    public void addAttributeModifiers(LivingEntity entity, AttributeMap attributes, int amplifier) {
+        super.addAttributeModifiers(entity, attributes, amplifier);
 
-        if (entity.getWorld().isClient) {
+        if (entity.level().isClientSide) {
             return;
         }
 
         CommonMiscComponent misc = JComponentPlatformUtils.getMiscData(entity);
-        misc.setPrevNoGrav(entity.hasNoGravity());
+        misc.setPrevNoGrav(entity.isNoGravity());
         misc.setHoverTime(0);
 
-        if (entity.isDead()) {
+        if (entity.isDeadOrDying()) {
             return; // Don't screw with the gravity of dead entities, it will persist on players
         }
 
@@ -105,10 +104,10 @@ public class WeightlessStatusEffect extends StatusEffect {
     }
 
     @Override
-    public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-        super.onRemoved(entity, attributes, amplifier);
+    public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributes, int amplifier) {
+        super.removeAttributeModifiers(entity, attributes, amplifier);
 
-        if (entity.getWorld().isClient) {
+        if (entity.level().isClientSide) {
             return;
         }
         GravityChangerAPI.clearGravity(entity);

@@ -1,23 +1,23 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.AyaTsujiEntity;
-import net.minecraft.util.Identifier;
-import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.resources.ResourceLocation;
 
 public class AyaTsujiModel extends GeoModel<AyaTsujiEntity> {
     @Override
-    public Identifier getModelResource(AyaTsujiEntity animatable) {
+    public ResourceLocation getModelResource(AyaTsujiEntity animatable) {
         return JCraft.id("geo/aya_tsuji.geo.json");
     }
 
     @Override
-    public Identifier getTextureResource(AyaTsujiEntity animatable) {
+    public ResourceLocation getTextureResource(AyaTsujiEntity animatable) {
         return JCraft.id("textures/entity/aya_tsuji.png");
     }
 
     @Override
-    public Identifier getAnimationResource(AyaTsujiEntity animatable) {
+    public ResourceLocation getAnimationResource(AyaTsujiEntity animatable) {
         // TODO Arna
         return JCraft.id("aya_tsuji");
     }

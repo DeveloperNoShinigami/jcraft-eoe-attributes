@@ -5,11 +5,10 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.registry.JItemRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Hand;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import java.util.Set;
 
 public class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAttack, SilverChariotEntity> {
@@ -22,15 +21,15 @@ public class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAttack, 
     public void onInitiate(SilverChariotEntity attacker) {
         LivingEntity user = attacker.getUser();
         if (user != null) {
-            ItemStack mainHand = user.getMainHandStack(), offHand = user.getOffHandStack();
-            if (mainHand.isOf(JItemRegistry.ANUBIS.get())) {
-                attacker.setStackInHand(Hand.OFF_HAND, mainHand.copy());
-                mainHand.decrement(1);
+            ItemStack mainHand = user.getMainHandItem(), offHand = user.getOffhandItem();
+            if (mainHand.is(JItemRegistry.ANUBIS.get())) {
+                attacker.setItemInHand(InteractionHand.OFF_HAND, mainHand.copy());
+                mainHand.shrink(1);
                 return;
             }
-            if (offHand.isOf(JItemRegistry.ANUBIS.get())) {
-                attacker.setStackInHand(Hand.OFF_HAND, offHand.copy());
-                offHand.decrement(1);
+            if (offHand.is(JItemRegistry.ANUBIS.get())) {
+                attacker.setItemInHand(InteractionHand.OFF_HAND, offHand.copy());
+                offHand.shrink(1);
                 return;
             }
         }
@@ -53,14 +52,14 @@ public class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAttack, 
 
     private void giveBack(SilverChariotEntity attacker) {
         LivingEntity user = attacker.getUser();
-        ItemStack itemStack = attacker.getOffHandStack();
+        ItemStack itemStack = attacker.getOffhandItem();
         if (user != null && itemStack != null && !itemStack.isEmpty()) {
-            if (user instanceof ServerPlayerEntity serverPlayer) {
-                serverPlayer.giveItemStack(itemStack);
+            if (user instanceof ServerPlayer serverPlayer) {
+                serverPlayer.addItem(itemStack);
             } else {
-                user.setStackInHand(Hand.MAIN_HAND, itemStack);
+                user.setItemInHand(InteractionHand.MAIN_HAND, itemStack);
             }
-            itemStack.decrement(1);
+            itemStack.shrink(1);
         }
     }
 

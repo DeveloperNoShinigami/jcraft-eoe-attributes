@@ -1,6 +1,7 @@
 package net.arna.jcraft.client.events;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
@@ -20,20 +21,19 @@ import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
 import java.util.Iterator;
@@ -46,11 +46,11 @@ import static net.arna.jcraft.client.util.JClientUtils.activeTimestops;
 @Environment(EnvType.CLIENT)
 public class JClientEvents {
 
-    public static void onLast(MatrixStack matrixStack, Vec3d cameraPos, WorldRenderer worldRenderer) {
-        matrixStack.push();
+    public static void onLast(PoseStack matrixStack, Vec3 cameraPos, LevelRenderer worldRenderer) {
+        matrixStack.pushPose();
         matrixStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-        if (worldRenderer.getTranslucentFramebuffer() != null) {
-            MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+        if (worldRenderer.getTranslucentTarget() != null) {
+            Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
         }
         RenderHandler.beginBufferedRendering(matrixStack);
 
@@ -59,20 +59,20 @@ public class JClientEvents {
         }
         RenderHandler.renderBufferedBatches(matrixStack);
         RenderHandler.endBufferedRendering(matrixStack);
-        if (worldRenderer.getTranslucentFramebuffer() != null) {
-            worldRenderer.getCloudsFramebuffer().beginWrite(false);
+        if (worldRenderer.getTranslucentTarget() != null) {
+            worldRenderer.getCloudsTarget().bindWrite(false);
         }
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
-    public static void afterTranslucent(MatrixStack matrixStack, Vec3d cameraPos, WorldRenderer worldRenderer) {
-        matrixStack.push();
+    public static void afterTranslucent(PoseStack matrixStack, Vec3 cameraPos, LevelRenderer worldRenderer) {
+        matrixStack.pushPose();
         matrixStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
         RenderHandler.MATRIX4F = new Matrix4f(RenderSystem.getModelViewMatrix());
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
-    public static void clientPlayerJoin(ClientPlayerEntity clientPlayerEntity) {
+    public static void clientPlayerJoin(LocalPlayer clientPlayerEntity) {
         if (clientPlayerEntity == null) {
             JCraft.LOGGER.fatal("onPlayReady was called with invalid client player!");
             return;
@@ -83,9 +83,9 @@ public class JClientEvents {
                 PredictionTriggerPacket.write(JClientConfig.getInstance().isClientsidePrediction()));
     }
 
-    public static void renderHud(DrawContext ctx, float tickDelta) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayerEntity player = client.player;
+    public static void renderHud(GuiGraphics ctx, float tickDelta) {
+        Minecraft client = Minecraft.getInstance();
+        LocalPlayer player = client.player;
         if (player == null) {
             JCraft.LOGGER.fatal("Attempted to render hud with no player!");
             return;
@@ -97,10 +97,10 @@ public class JClientEvents {
         boolean useIcons = JClientConfig.getInstance().isIconHud();
         StandEntity<?, ?> stand = JUtils.getStand(player);
 
-        TextRenderer textRenderer = client.inGameHud.getTextRenderer();
+        Font textRenderer = client.gui.getFont();
 
-        int selectedX = getHudX(client.getWindow().getScaledWidth(), 128);
-        int selectedY = client.getWindow().getScaledHeight();
+        int selectedX = getHudX(client.getWindow().getGuiScaledWidth(), 128);
+        int selectedY = client.getWindow().getGuiScaledHeight();
 
         switch (JClientConfig.getInstance().getUiPosition()) {
             case LEFT -> selectedY /= 20;
@@ -145,7 +145,7 @@ public class JClientEvents {
                 float defaultAlpha = 0.65f;
                 int xOffset = 0;
 
-                String finalText = keyBindText + " - " + JCraftClient.decimalFormat.get().format(MathHelper.clamp(cooldown, 0.0, 9999.0)) + "s";
+                String finalText = keyBindText + " - " + JCraftClient.decimalFormat.get().format(Mth.clamp(cooldown, 0.0, 9999.0)) + "s";
 
                 if (category == CooldownType.Category.STAND || isSpec) {
                     if (!isSpec) {
@@ -166,7 +166,7 @@ public class JClientEvents {
                 }
                 float offsetY = selectedY * 1.25f + 9f * offsetIndex;
 
-                ctx.drawTextWithShadow(
+                ctx.drawString(
                         textRenderer,
                         finalText,
                         selectedX + xOffset,
@@ -178,7 +178,7 @@ public class JClientEvents {
         }
 
         // Draw Combo Counter
-        if (comboCounter > 0 && player.getWorld().getGameRules().getBoolean(JCraft.COMBO_COUNTER) && framesSinceCounted <= 180) {
+        if (comboCounter > 0 && player.level().getGameRules().getBoolean(JCraft.COMBO_COUNTER) && framesSinceCounted <= 180) {
             String remark = "epic tod free download";
             if (comboCounter < JCraftClient.comboRemarks.size() * 7) {
                 remark = comboRemarks.get(Math.floorDiv(comboCounter, 7));
@@ -186,13 +186,13 @@ public class JClientEvents {
 
             boolean recentHit = framesSinceCounted < 5;
 
-            Random random = player.getRandom();
+            RandomSource random = player.getRandom();
 
             if (comboStarted && ++framesSinceComboStarted > 59) {
                 comboStarted = false;
             }
 
-            ctx.drawTextWithShadow(
+            ctx.drawString(
                     textRenderer,
                     comboCounter + " - (" + Math.round(damageScaling * 100f) + "%) - " + remark,
                     (int) (selectedX + (isMid && useIcons ? 54f : 0) + (recentHit ? tickDelta * random.nextFloat() * 5f : 0)),
@@ -202,8 +202,8 @@ public class JClientEvents {
         }
     }
 
-    public static void tickClient(MinecraftClient client) {
-        ClientPlayerEntity player = client.player;
+    public static void tickClient(Minecraft client) {
+        LocalPlayer player = client.player;
         if (player == null) {
             return;
         }
@@ -238,16 +238,16 @@ public class JClientEvents {
             boolean pressed = getTrackedUseKey().isPressedThisTick();
             NetworkManager.sendToServer(JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket.write(pressed));
             if (stand != null && stand.isRemoteAndControllable() && pressed) {
-                NetworkManager.sendToServer(JPacketRegistry.C2S_REMOTE_STAND_INTERACT, new PacketByteBuf(Unpooled.buffer()));
+                NetworkManager.sendToServer(JPacketRegistry.C2S_REMOTE_STAND_INTERACT, new FriendlyByteBuf(Unpooled.buffer()));
             }
         }
 
         // Cooldown Cancel
         if (cooldownCancel.isPressedThisTick()) {
-            NetworkManager.sendToServer(JPacketRegistry.C2S_COOLDOWN_CANCEL, new PacketByteBuf(Unpooled.buffer()));
+            NetworkManager.sendToServer(JPacketRegistry.C2S_COOLDOWN_CANCEL, new FriendlyByteBuf(Unpooled.buffer()));
         }
 
-        if (client.isPaused() && client.isInSingleplayer()) {
+        if (client.isPaused() && client.isLocalServer()) {
             return;
         }
 
@@ -263,13 +263,13 @@ public class JClientEvents {
                 continue;
             }
 
-            Vec3d pos = timestop.pos;
+            Vec3 pos = timestop.pos;
 
-            List<? extends Entity> toStop = user.getWorld().getEntitiesByClass(Entity.class,
-                    new Box(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
+            List<? extends Entity> toStop = user.level().getEntitiesOfClass(Entity.class,
+                    new AABB(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
             for (Entity entity : toStop) {
-                if (!entity.hasVehicle() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle()) {
+                if (!entity.isPassenger() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle()) {
                     JComponentPlatformUtils.getTimeStopData(entity).setTicks(2);
                 }
             }

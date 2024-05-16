@@ -16,19 +16,26 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +50,8 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withTargetProcessor(CMoonEntity::addInversionPunchInversion)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
-                    Text.literal("Inversion Punch"),
-                    Text.literal("very low stun, delayed slowness")
+                    Component.literal("Inversion Punch"),
+                    Component.literal("very low stun, delayed slowness")
             );
     public static final SimpleAttack<CMoonEntity> LIGHT_FOLLOWUP = new SimpleAttack<CMoonEntity>(
             0, 6, 12, 0.75f, 6, 7, 1.5f, 1f, -0.1f)
@@ -56,8 +63,8 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withTargetProcessor(CMoonEntity::addInversion)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Text.literal("Punch"),
-                    Text.literal("quick combo finisher")
+                    Component.literal("Punch"),
+                    Component.literal("quick combo finisher")
             );
     public static final SimpleAttack<CMoonEntity> PUNCH = SimpleAttack.<CMoonEntity>lightAttack(5, 7,
                     0.75f, 5f, 10, 0.2f, -0.1f)
@@ -66,17 +73,17 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withTargetProcessor(CMoonEntity::addInversion)
             .withInfo(
-                    Text.literal("Punch"),
-                    Text.literal("quick combo starter")
+                    Component.literal("Punch"),
+                    Component.literal("quick combo starter")
             );
     public static final MainBarrageAttack<CMoonEntity> BARRAGE = new MainBarrageAttack<CMoonEntity>(280, 0,
-            40, 0.75f, 0.75f, 20, 2f, 0.25f, 0f, 4, Blocks.OBSIDIAN.getHardness())
+            40, 0.75f, 0.75f, 20, 2f, 0.25f, 0f, 4, Blocks.OBSIDIAN.defaultDestroyTime())
             .withSound(JSoundRegistry.CMOON_BARRAGE.get())
             .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withTargetProcessor(CMoonEntity::addBarrageInversion)
             .withInfo(
-                    Text.literal("Barrage"),
-                    Text.literal("fast reliable combo starter/extender, medium stun")
+                    Component.literal("Barrage"),
+                    Component.literal("fast reliable combo starter/extender, medium stun")
             );
     public static final SimpleAttack<CMoonEntity> GUT_PUNCH = new SimpleAttack<CMoonEntity>(200, 19, 30,
             1f, 8f, 10, 2f, 1.5f, 0f)
@@ -88,8 +95,8 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withLaunch()
             .withExtraHitBox(0, 0.25, 1.25)
             .withInfo(
-                    Text.literal("Gut Punch"),
-                    Text.literal("slow, uninterruptible combo finisher")
+                    Component.literal("Gut Punch"),
+                    Component.literal("slow, uninterruptible combo finisher")
             );
     public static final LaunchAttack LAUNCH = new LaunchAttack(260, 14, 21, 0.75f,
             5f, 19, 1.75f, 0.9f, 0.3f)
@@ -98,8 +105,8 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withTargetProcessor(CMoonEntity::addInversion)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(
-                    Text.literal("Block Launch"),
-                    Text.literal("lifts a block from the ground and launches it at a delay/crouching and using this button resets the delay on nearby blocks")
+                    Component.literal("Block Launch"),
+                    Component.literal("lifts a block from the ground and launches it at a delay/crouching and using this button resets the delay on nearby blocks")
             );
     public static final GravPunchAttack GRAV_PUNCH = new GravPunchAttack(300, 20, 32, 1f,
             8f, 45, 1.75f, 0.35f, -0.3f)
@@ -110,8 +117,8 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withExtraHitBox(1d)
             .withInfo(
-                    Text.literal("Only One Punch"),
-                    Text.literal("inverts enemy gravity and floats on hit (3s), high stun")
+                    Component.literal("Only One Punch"),
+                    Component.literal("inverts enemy gravity and floats on hit (3s), high stun")
             );
     public static final GroundSlamAttack GROUND_SLAM = new GroundSlamAttack(240, 10, 18,
             1f, 7f, 17, 3f, 0.2f, 1.4f)
@@ -122,14 +129,14 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withStaticY()
             .withInfo(
-                    Text.literal("Ground Slam"),
-                    Text.literal("launches downwards, combo starter/extender, knocks down if it hits while user is crouching")
+                    Component.literal("Ground Slam"),
+                    Component.literal("launches downwards, combo starter/extender, knocks down if it hits while user is crouching")
             );
     public static final GravityShiftMove GRAV_SHIFT = new GravityShiftMove(1400, 20, 32, 1f)
             .withSound(JSoundRegistry.CMOON_GRAVSHIFT.get())
             .withInfo(
-                    Text.literal("Gravity Shift Radial"),
-                    Text.literal("""
+                    Component.literal("Gravity Shift Radial"),
+                    Component.literal("""
                             repulses or attracts entities within 64m
                             lasts 10 seconds
                             swap between attraction/repulsion by pressing ultimate again""")
@@ -138,8 +145,8 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withCrouchingVariant(GRAV_SHIFT)
             .withSound(JSoundRegistry.CMOON_GRAVSHIFT_DIRECTIONAL.get())
             .withInfo(
-                    Text.literal("Gravity Shift Directional"),
-                    Text.literal("""
+                    Component.literal("Gravity Shift Directional"),
+                    Component.literal("""
                             changes the gravitational direction of entities within 16m to the direction the user is looking in
                             lasts 30 seconds
                             all affected entities cannot take fall damage
@@ -148,12 +155,12 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             );
     public static final GravitationalHopMove GRAVITATIONAL_HOP = new GravitationalHopMove(340)
             .withInfo(
-                    Text.literal("Gravitational Hop/Local Gravity Change"),
-                    Text.literal("if used mid air, jumps up and grants 2s slow falling/otherwise changes your gravitational direction")
+                    Component.literal("Gravitational Hop/Local Gravity Change"),
+                    Component.literal("if used mid air, jumps up and grants 2s slow falling/otherwise changes your gravitational direction")
             );
     private final List<Inversion> inversions = new ArrayList<>();
 
-    public CMoonEntity(World worldIn) {
+    public CMoonEntity(Level worldIn) {
         super(StandType.C_MOON, worldIn, JSoundRegistry.CMOON_SUMMON.get());
         idleRotation = 220f;
 
@@ -177,15 +184,15 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
         };
     }
 
-    private static void addInversion(CMoonEntity attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource, boolean blocking) {
+    private static void addInversion(CMoonEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource, boolean blocking) {
         attacker.inversions.add(new Inversion(40, 0.5f, target));
     }
 
-    private static void addBarrageInversion(CMoonEntity attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource, boolean blocking) {
+    private static void addBarrageInversion(CMoonEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource, boolean blocking) {
         attacker.inversions.add(new Inversion(40, 0.25f, target));
     }
 
-    private static void addInversionPunchInversion(CMoonEntity attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource, boolean blocking) {
+    private static void addInversionPunchInversion(CMoonEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource, boolean blocking) {
         attacker.inversions.add(new Inversion(70, 0.5f, target, true));
     }
 
@@ -217,9 +224,9 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     public boolean initMove(MoveType type) {
         switch (type) {
             case SPECIAL2 -> {
-                if (hasUser() && getUserOrThrow().isSneaking()) {
-                    getWorld().getEntitiesByClass(BlockProjectile.class,
-                                    getBoundingBox().expand(16), p -> p.isAlive() && p.getMaster() == getUser())
+                if (hasUser() && getUserOrThrow().isShiftKeyDown()) {
+                    level().getEntitiesOfClass(BlockProjectile.class,
+                                    getBoundingBox().inflate(16), p -> p.isAlive() && p.getMaster() == getUser())
                             .forEach(BlockProjectile::markRefresh);
                 } else {
                     return super.initMove(type);
@@ -259,18 +266,18 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             return;
         }
         // Projectile deflection
-        List<ProjectileEntity> toDeflect = getWorld().getEntitiesByClass(ProjectileEntity.class, getBoundingBox().expand(0.75f), EntityPredicates.VALID_ENTITY);
+        List<Projectile> toDeflect = level().getEntitiesOfClass(Projectile.class, getBoundingBox().inflate(0.75f), EntitySelector.ENTITY_STILL_ALIVE);
 
-        for (ProjectileEntity projectile : toDeflect) {
+        for (Projectile projectile : toDeflect) {
             if (projectile.getOwner() == user) {
                 continue;
             }
-            projectile.setVelocity(projectile.getPos().subtract(getPos()).normalize());
-            projectile.velocityModified = true;
+            projectile.setDeltaMovement(projectile.position().subtract(position()).normalize());
+            projectile.hurtMarked = true;
         }
 
         stun(user, 2, 2);
-        user.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 10, 2, false, false));
+        user.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 10, 2, false, false));
     }
 
     @Override
@@ -282,7 +289,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
         }
         LivingEntity user = getUserOrThrow();
 
-        if (getWorld().isClient) {
+        if (level().isClientSide) {
             return;
         }
 
@@ -293,11 +300,11 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
 
             if (time < 1) {
                 LivingEntity entity = inversion.getEntity();
-                damage(inversion.getDamage(), getWorld().getDamageSources().mobAttack(user), entity);
+                damage(inversion.getDamage(), level().damageSources().mobAttack(user), entity);
                 inversions.remove(i);
 
                 if (inversion.doSlow) {
-                    entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 1, true, false));
+                    entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, true, false));
                 }
                 i--;
             }

@@ -6,8 +6,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
 import net.arna.jcraft.common.entity.stand.KillerQueenEntity;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.entity.LivingEntity;
-
+import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class SheerHeartAttackAttack extends AbstractMove<SheerHeartAttackAttack, KillerQueenEntity> {
@@ -18,10 +17,10 @@ public class SheerHeartAttackAttack extends AbstractMove<SheerHeartAttackAttack,
 
     @Override
     public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
-        SheerHeartAttackEntity sha = new SheerHeartAttackEntity(JEntityTypeRegistry.SHEER_HEART_ATTACK.get(), attacker.getWorld());
+        SheerHeartAttackEntity sha = new SheerHeartAttackEntity(JEntityTypeRegistry.SHEER_HEART_ATTACK.get(), attacker.level());
         sha.setMaster(user);
-        sha.refreshPositionAndAngles(attacker.getX(), attacker.getY() + 0.5, attacker.getZ(), attacker.getYaw(), attacker.getPitch());
-        attacker.getWorld().spawnEntity(sha);
+        sha.moveTo(attacker.getX(), attacker.getY() + 0.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());
+        attacker.level().addFreshEntity(sha);
 
         return Set.of();
     }

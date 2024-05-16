@@ -5,8 +5,7 @@ import com.google.gson.JsonElement;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.minecraft.network.PacketByteBuf;
-
+import net.minecraft.network.FriendlyByteBuf;
 import java.util.*;
 
 public abstract class ConfigOption {
@@ -32,9 +31,9 @@ public abstract class ConfigOption {
     }
 
     @NonNull
-    public static PacketByteBuf writeOptions(@NonNull PacketByteBuf buf, Collection<ConfigOption> options) {
+    public static FriendlyByteBuf writeOptions(@NonNull FriendlyByteBuf buf, Collection<ConfigOption> options) {
         for (ConfigOption option : options) {
-            buf.writeString(option.getKey());
+            buf.writeUtf(option.getKey());
             option.write(buf);
         }
 
@@ -42,10 +41,10 @@ public abstract class ConfigOption {
     }
 
     @NonNull
-    public static Set<ConfigOption> readOptions(PacketByteBuf buf) {
+    public static Set<ConfigOption> readOptions(FriendlyByteBuf buf) {
         Set<ConfigOption> changedOptions = new HashSet<>();
         while (buf.readableBytes() > 0) {
-            String key = buf.readString();
+            String key = buf.readUtf();
             ConfigOption option = getImmutableOptions().get(key);
             if (option == null) {
                 JCraft.LOGGER.warn("Could not find option {}. Rest of the data ({} bytes) will be ignored.",
@@ -61,9 +60,9 @@ public abstract class ConfigOption {
         return changedOptions;
     }
 
-    public abstract void write(PacketByteBuf buf);
+    public abstract void write(FriendlyByteBuf buf);
 
-    public abstract void read(PacketByteBuf buf);
+    public abstract void read(FriendlyByteBuf buf);
 
     public abstract JsonElement write();
 

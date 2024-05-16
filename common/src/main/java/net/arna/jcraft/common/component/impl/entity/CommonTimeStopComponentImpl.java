@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.common.component.entity.CommonTimeStopComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.arna.jcraft.common.util.JUtils.addVelocity;
@@ -18,7 +18,7 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
     private final Entity entity;
     private int ticks;
     // Launch buildup implementation, because players are special snowflakes and don't build it in timestop like enemies do
-    private Vec3d totalVelocity = Vec3d.ZERO;
+    private Vec3 totalVelocity = Vec3.ZERO;
 
     public CommonTimeStopComponentImpl(Entity entity) {
         this.entity = entity;
@@ -28,7 +28,7 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
     public void setTicks(int ticks) {
         if (this.ticks <= 0) // If just beginning a new Timestop
         {
-            totalVelocity = Vec3d.ZERO;
+            totalVelocity = Vec3.ZERO;
         }
         this.ticks = ticks;
         sync(entity);
@@ -39,7 +39,7 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
     }
 
     @Override
-    public void addTotalVelocity(Vec3d vel) {
+    public void addTotalVelocity(Vec3 vel) {
         totalVelocity = totalVelocity.add(vel);
     }
 
@@ -50,18 +50,18 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
         }
 
         stopTick(entity);
-        for (Entity passenger : entity.getPassengerList()) {
+        for (Entity passenger : entity.getPassengers()) {
             stopTick(passenger);
         }
         ticks--;
 
-        if (ticks == 0 && totalVelocity.lengthSquared() > 0.01) {
+        if (ticks == 0 && totalVelocity.lengthSqr() > 0.01) {
             // Lift off ground to stop friction from cutting the launch short
-            Vec3i localUp = GravityChangerAPI.getGravityDirection(entity).getOpposite().getVector();
+            Vec3i localUp = GravityChangerAPI.getGravityDirection(entity).getOpposite().getNormal();
             double upX = entity.getX() + localUp.getX() * 0.1;
             double upY = entity.getY() + localUp.getY() * 0.1;
             double upZ = entity.getZ() + localUp.getZ() * 0.1;
-            entity.teleport(upX, upY, upZ);
+            entity.teleportToWithTicket(upX, upY, upZ);
             entity.setOnGround(false);
 
             addVelocity(entity, totalVelocity.x, totalVelocity.y, totalVelocity.z);
@@ -70,10 +70,10 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
         ci.cancel();
     }
 
-    public void readFromNbt(@NonNull NbtCompound tag) {
+    public void readFromNbt(@NonNull CompoundTag tag) {
     }
 
-    public void writeToNbt(@NonNull NbtCompound tag) {
+    public void writeToNbt(@NonNull CompoundTag tag) {
 
     }
 }

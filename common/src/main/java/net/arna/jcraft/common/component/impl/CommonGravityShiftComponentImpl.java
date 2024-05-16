@@ -8,17 +8,17 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.Gravity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -55,15 +55,15 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
     protected static final int RANGE_SQR = 10000;
 
     private final LivingEntity user;
-    private final Random random;
+    private final RandomSource random;
     private final List<Entity> shiftedEntities = new ArrayList<>();
     private int time = 0;
-    private Vec3d particleDirection = Vec3d.ZERO; // Only for ShiftType.DIRECTIONAL
+    private Vec3 particleDirection = Vec3.ZERO; // Only for ShiftType.DIRECTIONAL
     private ShiftType type = ShiftType.NONE;
 
     public CommonGravityShiftComponentImpl(LivingEntity user) {
         this.user = user;
-        this.random = Random.create();
+        this.random = RandomSource.create();
     }
 
     public void tick() {
@@ -72,18 +72,18 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
         }
         time--;
 
-        World world = user.getWorld();
-        Vec3d pos = user.getPos();
+        Level world = user.level();
+        Vec3 pos = user.position();
 
-        if (world.isClient) {
+        if (world.isClientSide) {
             for (int h = 0; h < 256; ++h) {
-                Vec3d vel = Vec3d.ZERO;
-                double x = pos.x + random.nextTriangular(0, 100);
-                double y = pos.y + random.nextTriangular(0, 10);
-                double z = pos.z + random.nextTriangular(0, 100);
+                Vec3 vel = Vec3.ZERO;
+                double x = pos.x + random.triangle(0, 100);
+                double y = pos.y + random.triangle(0, 10);
+                double z = pos.z + random.triangle(0, 100);
                 switch (type) {
                     case DIRECTIONAL -> vel = particleDirection;
-                    case RADIAL_ATTRACT -> vel = new Vec3d(x, y, z).subtract(pos);
+                    case RADIAL_ATTRACT -> vel = new Vec3(x, y, z).subtract(pos);
                     case RADIAL_REPULSE -> vel = pos.subtract(x, y, z);
                 }
                 world.addParticle(
@@ -97,23 +97,23 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
                     shiftedEntities.clear();
                 } else {
                     for (Entity entity : shiftedEntities) {
-                        if (entity.squaredDistanceTo(user) > RANGE_SQR) {
+                        if (entity.distanceToSqr(user) > RANGE_SQR) {
                             GravityChangerAPI.setGravity(entity, GravityChangerAPI.getGravityList(entity).stream()
                                     .filter(g -> !GRAVITY_SOURCE.equals(g.source()))
                                     .toList());
                         }
-                        entity.onLanding(); // No fall damage
+                        entity.resetFallDistance(); // No fall damage
                     }
                 }
             } else {
-                if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
+                if (user.hasEffect(JStatusRegistry.DAZED.get())) {
                     return;
                 }
 
-                List<Entity> toCatch = world.getEntitiesByClass(Entity.class, user.getBoundingBox().expand(64), EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR);
+                List<Entity> toCatch = world.getEntitiesOfClass(Entity.class, user.getBoundingBox().inflate(64), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
                 for (Entity entity : toCatch) {
-                    if (entity.isConnectedThroughVehicle(user)) {
+                    if (entity.isPassengerOfSameVehicle(user)) {
                         continue;
                     }
                     if (entity instanceof BlockProjectile block && block.getMaster() == user) {
@@ -121,19 +121,19 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
                     }
 
                     if (type == ShiftType.RADIAL_ATTRACT) {
-                        entity.setVelocity(
-                                entity.getVelocity().add(entity.getPos().subtract(pos).normalize().multiply(0.1))
+                        entity.setDeltaMovement(
+                                entity.getDeltaMovement().add(entity.position().subtract(pos).normalize().scale(0.1))
                         );
                     } else {
-                        entity.setVelocity(
-                                entity.getVelocity().add(pos.subtract(entity.getPos()).normalize().multiply(0.1))
+                        entity.setDeltaMovement(
+                                entity.getDeltaMovement().add(pos.subtract(entity.position()).normalize().scale(0.1))
                         );
                     }
 
-                    if (entity instanceof ServerPlayerEntity serverPlayerEntity) {
-                        serverPlayerEntity.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(serverPlayerEntity));
+                    if (entity instanceof ServerPlayer serverPlayerEntity) {
+                        serverPlayerEntity.connection.send(new ClientboundSetEntityMotionPacket(serverPlayerEntity));
                     }
-                    entity.velocityModified = true;
+                    entity.hurtMarked = true;
                 }
             }
         }
@@ -153,8 +153,8 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
         type = ShiftType.DIRECTIONAL;
 
         Direction lookDir = JUtils.getLookDirection(user);
-        List<Entity> toCatch = user.getWorld().getEntitiesByClass(Entity.class, user.getBoundingBox().expand(16),
-                EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(e -> !e.isConnectedThroughVehicle(user)));
+        List<Entity> toCatch = user.level().getEntitiesOfClass(Entity.class, user.getBoundingBox().inflate(16),
+                EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> !e.isPassengerOfSameVehicle(user)));
 
         Gravity gravity = new Gravity(lookDir, 3, GRAVITY_CHANGE_DURATION, GRAVITY_SOURCE);
         shiftedEntities.clear();
@@ -164,7 +164,7 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
             GravityChangerAPI.addGravity(entity, gravity);
         }
 
-        particleDirection = new Vec3d(lookDir.getUnitVector());
+        particleDirection = new Vec3(lookDir.step());
         sync();
     }
 
@@ -198,24 +198,24 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
 
     }
 
-    public boolean shouldSyncWith(ServerPlayerEntity player) {
-        if (player.squaredDistanceTo(user) > RANGE_SQR) {
+    public boolean shouldSyncWith(ServerPlayer player) {
+        if (player.distanceToSqr(user) > RANGE_SQR) {
             return false;
         }
         return true;
     }
 
-    private static Vec3d vecFromArray(int[] arr) {
-        return new Vec3d(arr[0], arr[1], arr[2]);
+    private static Vec3 vecFromArray(int[] arr) {
+        return new Vec3(arr[0], arr[1], arr[2]);
     }
 
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(CompoundTag tag) {
         this.time = tag.getInt("Time");
         this.type = ShiftType.fromId(tag.getInt("Type"));
         this.particleDirection = vecFromArray(tag.getIntArray("Direction"));
     }
 
-    public void writeToNbt(NbtCompound tag) {
+    public void writeToNbt(CompoundTag tag) {
         tag.putInt("Time", time);
         tag.putInt("Type", type.ordinal());
 
