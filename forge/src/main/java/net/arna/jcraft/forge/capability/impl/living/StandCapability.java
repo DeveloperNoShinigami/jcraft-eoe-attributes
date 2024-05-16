@@ -7,6 +7,7 @@ import net.arna.jcraft.common.component.impl.living.CommonStandComponentImpl;
 import net.arna.jcraft.forge.JCraftForge;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
+import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -81,22 +82,15 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, STAND_S2C, (buf, context) -> {
-            UUID uuid = buf.readUUID();
-            CompoundTag nbt = buf.readNbt();
-            Player player = null;
-            if (Minecraft.getInstance().level != null) {
-                player = Minecraft.getInstance().level.getPlayerByUUID(uuid);
-            }
-            if (player != null) {
-                StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
-            }
+
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, STAND_C2S, (buf, context) -> {
-            //Player player = context.getPlayer();
-            UUID uuid = buf.readUUID();
+            int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
-            StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
+            if (Minecraft.getInstance().level != null) {
+                StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getEntity(id)).ifPresent(c -> c.deserializeNBT(nbt));
+            }
         });
     }
 }

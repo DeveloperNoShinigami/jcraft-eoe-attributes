@@ -36,9 +36,12 @@ public class WorldRendererMixin {
             index = 5
     )
     private float jcraft$deltaTick(float yaw) {
-        if (JComponentPlatformUtils.getTimeStopData(entity).getTicks() > 0) {
-            return 0;
-        } // Args 0 = ent, 5 = deltatick
+        if (JComponentPlatformUtils.getTimeStopData(entity).isPresent()) {
+            if (JComponentPlatformUtils.getTimeStopData(entity).get().getTicks() > 0) {
+                return 0;
+            } // Args 0 = ent, 5 = deltatick
+        }
+
         return yaw;
     }
 

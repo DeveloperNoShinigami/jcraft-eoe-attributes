@@ -45,7 +45,7 @@ public class SpecCapability extends CommonSpecComponentImpl implements JCapabili
 
     public static void syncEntityCapability(Entity entity) {
         if (entity instanceof Player living) {
-            JNetworkingForge.sendPackets(living, SPEC_S2C, SPEC_C2S, getCapability(living));
+            JNetworkingForge.sendPlayerPackets(living, SPEC_S2C, SPEC_C2S, getCapability(living));
         }
     }
 
@@ -80,21 +80,13 @@ public class SpecCapability extends CommonSpecComponentImpl implements JCapabili
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, SPEC_S2C, (buf, context) -> {
-            UUID uuid = buf.readUUID();
-            CompoundTag nbt = buf.readNbt();
-            Player player = null;
-            if (Minecraft.getInstance().level != null) {
-                player = Minecraft.getInstance().level.getPlayerByUUID(uuid);
-            }
-            if (player != null) {
-                StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
-            }
+
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SPEC_C2S, (buf, context) -> {
             UUID uuid = buf.readUUID();
             CompoundTag nbt = buf.readNbt();
-            StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
+            SpecCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
         });
     }
 }

@@ -1,11 +1,9 @@
 package net.arna.jcraft.forge.capability.impl.entity;
 
 import dev.architectury.networking.NetworkManager;
-import net.arna.jcraft.common.component.impl.entity.CommonGrabComponentImpl;
 import net.arna.jcraft.common.component.impl.entity.CommonTimeStopComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.arna.jcraft.forge.capability.impl.living.StandCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -16,9 +14,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static net.arna.jcraft.JCraft.MOD_ID;
@@ -37,11 +35,9 @@ public class TimeStopCapability extends CommonTimeStopComponentImpl implements J
 
     @Override
     public void sync(Entity entity) {
-        super.sync(entity);
         if (entity != null) {
             TimeStopCapability.syncEntityCapability(entity);
         }
-
     }
 
     private static void syncEntityCapability(Entity entity) {
@@ -70,8 +66,8 @@ public class TimeStopCapability extends CommonTimeStopComponentImpl implements J
         super.readFromNbt(tag);
     }
 
-    public static LazyOptional<TimeStopCapability> getCapabilityOptional(Entity entity) {
-        return entity.getCapability(CAPABILITY);
+    public static Optional<TimeStopCapability> getCapabilityOptional(Entity entity) {
+        return entity.getCapability(CAPABILITY).resolve();
     }
 
     public static TimeStopCapability getCapability(Entity entity) {
@@ -80,21 +76,15 @@ public class TimeStopCapability extends CommonTimeStopComponentImpl implements J
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, TIME_S2C, (buf, context) -> {
-            UUID uuid = buf.readUUID();
-            CompoundTag nbt = buf.readNbt();
-            Player player = null;
-            if (Minecraft.getInstance().level != null) {
-                player = Minecraft.getInstance().level.getPlayerByUUID(uuid);
-            }
-            if (player != null) {
-                StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
-            }
+//TODO
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, TIME_C2S, (buf, context) -> {
-            UUID uuid = buf.readUUID();
+            int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
-            StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
+            if (Minecraft.getInstance().level != null) {
+                TimeStopCapability.getCapabilityOptional(Minecraft.getInstance().level.getEntity(id)).ifPresent(c -> c.deserializeNBT(nbt));
+            }
         });
     }
 }

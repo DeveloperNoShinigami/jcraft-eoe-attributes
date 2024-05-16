@@ -3,7 +3,6 @@ package net.arna.jcraft.platform.forge;
 
 import net.arna.jcraft.common.component.entity.CommonGrabComponent;
 import net.arna.jcraft.common.component.entity.CommonGravityComponent;
-import net.arna.jcraft.common.component.entity.CommonTimeStopComponent;
 import net.arna.jcraft.common.component.living.*;
 import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
@@ -41,8 +40,8 @@ public class JComponentPlatformUtilsImpl {
     }
 
 
-    public static CommonTimeStopComponent getTimeStopData(Entity entity) {
-        return TimeStopCapability.getCapability(entity);
+    public static Optional<TimeStopCapability> getTimeStopData(Entity entity) {
+        return TimeStopCapability.getCapabilityOptional(entity);
     }
 
 

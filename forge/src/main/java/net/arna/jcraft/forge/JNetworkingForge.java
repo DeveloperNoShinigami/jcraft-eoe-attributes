@@ -13,6 +13,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.stringtemplate.v4.misc.Misc;
 
 public class JNetworkingForge {
@@ -34,6 +35,20 @@ public class JNetworkingForge {
     }
 
     public static <T extends JCapability> void sendPackets(Entity entity, ResourceLocation s2c, ResourceLocation c2s, T cap) {
+        if (entity instanceof ServerPlayer serverPlayer) {
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            buf.writeInt(entity.getId());
+            buf.writeNbt(cap.serializeNBT());
+            NetworkManager.sendToPlayer(serverPlayer, s2c, buf);
+        } else if (entity.level() != null && entity.level().isClientSide) {
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            buf.writeInt(entity.getId());
+            buf.writeNbt(cap.serializeNBT());
+            NetworkManager.sendToServer(c2s, buf);
+        }
+    }
+
+    public static <T extends JCapability> void sendPlayerPackets(Entity entity, ResourceLocation s2c, ResourceLocation c2s, T cap) {
         if (entity instanceof ServerPlayer serverPlayer) {
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeUUID(entity.getUUID());

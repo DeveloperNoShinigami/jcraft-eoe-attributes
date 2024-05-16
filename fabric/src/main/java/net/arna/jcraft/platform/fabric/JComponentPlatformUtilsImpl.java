@@ -10,6 +10,7 @@ import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.arna.jcraft.fabric.common.component.JComponents;
+import net.arna.jcraft.fabric.common.component.entity.TimeStopComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -38,8 +39,8 @@ public class JComponentPlatformUtilsImpl {
     }
 
 
-    public static CommonTimeStopComponent getTimeStopData(Entity entity) {
-        return JComponents.TIME_STOP.get(entity);
+    public static Optional<TimeStopComponent> getTimeStopData(Entity entity) {
+        return JComponents.TIME_STOP.maybeGet(entity);
     }
 
 

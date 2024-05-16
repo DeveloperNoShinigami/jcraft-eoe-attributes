@@ -22,7 +22,9 @@ public abstract class ClientWorldMixin implements IJSplatterManagerHolder {
     // Clientside timestop handling
     @Inject(cancellable = true, at = @At("HEAD"), method = "tickNonPassenger")
     private void timestopTick(Entity entity, CallbackInfo ci) {
-        JComponentPlatformUtils.getTimeStopData(entity).tick(ci);
+        if (JComponentPlatformUtils.getTimeStopData(entity).isPresent()) {
+            JComponentPlatformUtils.getTimeStopData(entity).get().tick(ci);
+        }
     }
 
     // Cream void deafness

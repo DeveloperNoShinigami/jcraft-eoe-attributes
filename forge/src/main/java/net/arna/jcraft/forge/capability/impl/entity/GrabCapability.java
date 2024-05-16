@@ -2,11 +2,8 @@ package net.arna.jcraft.forge.capability.impl.entity;
 
 import dev.architectury.networking.NetworkManager;
 import net.arna.jcraft.common.component.impl.entity.CommonGrabComponentImpl;
-import net.arna.jcraft.common.component.impl.living.CommonBombTrackerComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.arna.jcraft.forge.capability.impl.living.BombTrackerCapability;
-import net.arna.jcraft.forge.capability.impl.living.StandCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -78,21 +75,15 @@ public class GrabCapability extends CommonGrabComponentImpl implements JCapabili
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, GRAB_S2C, (buf, context) -> {
-            UUID uuid = buf.readUUID();
-            CompoundTag nbt = buf.readNbt();
-            Player player = null;
-            if (Minecraft.getInstance().level != null) {
-                player = Minecraft.getInstance().level.getPlayerByUUID(uuid);
-            }
-            if (player != null) {
-                StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
-            }
+
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, GRAB_C2S, (buf, context) -> {
-            UUID uuid = buf.readUUID();
+            int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
-            StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
+            if (Minecraft.getInstance().level != null) {
+                GrabCapability.getCapabilityOptional(Minecraft.getInstance().level.getEntity(id)).ifPresent(c -> c.deserializeNBT(nbt));
+            }
         });
     }
 }

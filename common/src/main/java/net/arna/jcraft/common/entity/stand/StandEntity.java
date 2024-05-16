@@ -1335,7 +1335,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         if (tsHit) {
-            JComponentPlatformUtils.getTimeStopData(ent).addTotalVelocity(kbVec);
+            JComponentPlatformUtils.getTimeStopData(ent).get().addTotalVelocity(kbVec);
         } else {
             JUtils.syncVelocityUpdate(ent);
         }
@@ -1608,7 +1608,9 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             // Overestimating stun up to 1/4 of a second for longer combos and frametraps
             int stunTicks = stun != null ? stun.getDuration() + stand.random.nextInt(5) : 0;
             stunTicks += blockPlusTicks;
-            stunTicks += JComponentPlatformUtils.getTimeStopData(target).getTicks();
+            if (JComponentPlatformUtils.getTimeStopData(target).isPresent()) {
+                stunTicks += JComponentPlatformUtils.getTimeStopData(target).get().getTicks();
+            }
 
             // Only select or buffer attacks when necessary
             if (stand.getMoveStun() <= 1) {
