@@ -11,14 +11,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ServerPlayer.class)
+@Mixin(value = ServerPlayer.class, remap = false)
 public abstract class ServerPlayerEntityMixin {
 
     @Inject(
             method = "changeDimension",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
+                    target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;send(Lnet/minecraft/network/protocol/Packet;)V",
                     ordinal = 1,
                     shift = At.Shift.AFTER
             )
@@ -28,10 +28,10 @@ public abstract class ServerPlayerEntityMixin {
     }
 
     @Inject(
-            method = "teleport(Lnet/minecraft/server/world/ServerWorld;DDDFF)V",
+            method = "teleportTo(Lnet/minecraft/server/level/ServerLevel;DDDFF)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V",
+                    target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;send(Lnet/minecraft/network/protocol/Packet;)V",
                     ordinal = 0,
                     shift = At.Shift.AFTER
             )
@@ -41,7 +41,7 @@ public abstract class ServerPlayerEntityMixin {
     }
 
     @Inject(
-            method = "copyFrom",
+            method = "restoreFrom",
             at = @At("TAIL")
     )
     private void inject_copyFrom(ServerPlayer oldPlayer, boolean alive, CallbackInfo ci) {

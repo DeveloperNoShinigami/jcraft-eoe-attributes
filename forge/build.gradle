@@ -7,6 +7,11 @@ loom {
     forge {
         mixinConfig "jcraft.mixins.json"
         mixinConfig "jcraft-forge.mixins.json"
+        convertAccessWideners.set(true)
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+    }
+    mixin {
+        defaultRefmapName = "jcraft-refmap.json"
     }
 }
 

@@ -15,23 +15,24 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(LevelAccessor.class)
+@Mixin(value = LevelAccessor.class, remap = false)
 public interface TimestopBlockMixin {
 
-    @Shadow LevelTickAccess<Block> getBlockTickScheduler();
 
-    @Shadow <T> ScheduledTick<T> createOrderedTick(BlockPos pos, T type, int delay, TickPriority priority);
+    @Shadow LevelTickAccess<Block> getBlockTicks();
 
-    @Shadow <T> ScheduledTick<T> createOrderedTick(BlockPos pos, T type, int delay);
+    @Shadow <T> ScheduledTick<T> createTick(BlockPos pos, T type, int delay, TickPriority priority);
 
-    @Shadow LevelTickAccess<Fluid> getFluidTickScheduler();
+    @Shadow <T> ScheduledTick<T> createTick(BlockPos pos, T type, int delay);
+
+    @Shadow LevelTickAccess<Fluid> getFluidTicks();
 
     /**
      * @author mrsterner
      * @reason interface inject
      */
     @Overwrite
-    default void scheduleBlockTick(BlockPos pos, Block block, int delay, TickPriority priority) {
+    default void scheduleTick(BlockPos pos, Block block, int delay, TickPriority priority) {
 
         int ticks = Timestops.getTicksIfInTSRange(pos);
 
@@ -43,7 +44,7 @@ public interface TimestopBlockMixin {
             return;
         }
 
-        this.getBlockTickScheduler().schedule(this.createOrderedTick(pos, block, delay, priority));
+        this.getBlockTicks().schedule(this.createTick(pos, block, delay, priority));
     }
 
     /**
@@ -51,7 +52,7 @@ public interface TimestopBlockMixin {
      * @reason interface inject
      */
     @Overwrite
-    default void scheduleBlockTick(BlockPos pos, Block block, int delay) {
+    default void scheduleTick(BlockPos pos, Block block, int delay) {
 
         int ticks = Timestops.getTicksIfInTSRange(pos);
 
@@ -64,7 +65,7 @@ public interface TimestopBlockMixin {
             return;
         }
 
-        this.getBlockTickScheduler().schedule(this.createOrderedTick(pos, block, delay));
+        this.getBlockTicks().schedule(this.createTick(pos, block, delay));
     }
 
     /**
@@ -72,7 +73,7 @@ public interface TimestopBlockMixin {
      * @reason interface inject
      */
     @Overwrite
-    default void scheduleFluidTick(BlockPos pos, Fluid fluid, int delay, TickPriority priority) {
+    default void scheduleTick(BlockPos pos, Fluid fluid, int delay, TickPriority priority) {
 
         int ticks = Timestops.getTicksIfInTSRange(pos);
 
@@ -84,7 +85,7 @@ public interface TimestopBlockMixin {
             return;
         }
 
-        this.getFluidTickScheduler().schedule(this.createOrderedTick(pos, fluid, delay, priority));
+        this.getFluidTicks().schedule(this.createTick(pos, fluid, delay, priority));
     }
 
     /**
@@ -92,7 +93,7 @@ public interface TimestopBlockMixin {
      * @reason interface inject
      */
     @Overwrite
-    default void scheduleFluidTick(BlockPos pos, Fluid fluid, int delay) {
+    default void scheduleTick(BlockPos pos, Fluid fluid, int delay) {
 
         int ticks = Timestops.getTicksIfInTSRange(pos);
 
@@ -104,6 +105,6 @@ public interface TimestopBlockMixin {
             return;
         }
 
-        this.getFluidTickScheduler().schedule(this.createOrderedTick(pos, fluid, delay));
+        this.getFluidTicks().schedule(this.createTick(pos, fluid, delay));
     }
 }

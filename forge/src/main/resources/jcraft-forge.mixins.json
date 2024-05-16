@@ -7,6 +7,7 @@
     "ExplosionMixin",
     "ServerPlayerEntityMixin",
     "TimestopBlockMixin",
+    "gravity.EntityMixin",
     "gravity.LivingEntityMixin",
     "gravity.ServerPlayerEntityMixin"
   ],
