@@ -1,18 +1,23 @@
 package net.arna.jcraft.registry;
 
+import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.block.FoolishSandBlock;
 import net.arna.jcraft.common.block.HotSandBlock;
 import net.arna.jcraft.common.block.SoulBlock;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
-import static net.arna.jcraft.JCraft.BLOCK_REGISTRY;
 
 public interface JBlockRegistry {
+
+
+    DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.BLOCK);
 
     //Block
     RegistrySupplier<Block> FOOLISH_SAND_BLOCK = BLOCK_REGISTRY.register("foolish_sand_block", () -> new FoolishSandBlock(BlockBehaviour.Properties.of()

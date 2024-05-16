@@ -13,7 +13,7 @@ public class GreenBabyItem extends StandObtainmentItem {
     public GreenBabyItem(Properties settings) {
         super(settings);
 
-        standIOMap.put(StandType.WHITE_SNAKE, StandType.C_MOON);
+
     }
 
     @Override

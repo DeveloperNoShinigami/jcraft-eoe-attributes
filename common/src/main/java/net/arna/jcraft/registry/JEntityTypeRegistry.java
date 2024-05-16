@@ -1,12 +1,14 @@
 package net.arna.jcraft.registry;
 
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
+import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.*;
 import net.arna.jcraft.common.entity.projectile.*;
 import net.arna.jcraft.common.entity.stand.*;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -14,9 +16,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import java.util.function.Function;
 
-import static net.arna.jcraft.JCraft.ENTITY_TYPE_REGISTRY;
 
 public interface JEntityTypeRegistry {
+
+    DeferredRegister<EntityType<?>> ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.ENTITY_TYPE);
 
     RegistrySupplier<EntityType<StarPlatinumEntity>> STAR_PLATINUM = ENTITY_TYPE_REGISTRY.register(JCraft.id("starplatinum"),
             () -> EntityType.Builder.of(

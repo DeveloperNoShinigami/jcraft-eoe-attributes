@@ -13,8 +13,6 @@ public class DIOsDiaryItem extends StandObtainmentItem {
     public DIOsDiaryItem(Properties settings) {
         super(settings);
 
-        standIOMap.put(StandType.C_MOON, StandType.MADE_IN_HEAVEN);
-        standIOMap.put(StandType.THE_WORLD, StandType.THE_WORLD_OVER_HEAVEN);
     }
 
     @Override

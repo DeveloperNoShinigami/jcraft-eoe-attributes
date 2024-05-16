@@ -59,6 +59,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
@@ -69,6 +70,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.stun;
+import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
+import static net.arna.jcraft.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
+import static net.arna.jcraft.registry.JItemRegistry.ITEM_REGISTRY;
 import static net.arna.jcraft.registry.JItemRegistry.KNIFE;
 
 public final class JCraft {
@@ -85,15 +89,15 @@ public final class JCraft {
     public static final GravityChangerConfig gravityConfig = new GravityChangerConfig(); // TODO incorporate this into our own config
 
     //Obligatory lazy Registry
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.ENTITY_TYPE);
-    public static final DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.ITEM);
-    public static final DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.BLOCK);
+
+
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.BLOCK_ENTITY_TYPE);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TAB_REGISTRY = DeferredRegister.create(MOD_ID, Registries.CREATIVE_MODE_TAB);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(MOD_ID, Registries.PARTICLE_TYPE);
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(MOD_ID, Registries.MOB_EFFECT);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(MOD_ID, Registries.SOUND_EVENT);
     public static final DeferredRegister<Enchantment> ENCHANTMENT = DeferredRegister.create(MOD_ID, Registries.ENCHANTMENT);
+    public static final DeferredRegister<PlacedFeature> PLACED_FEATURE = DeferredRegister.create(MOD_ID, Registries.PLACED_FEATURE);
 
     // Gamerules
     //public static final GameRules.Key<GameRules.BooleanRule> KINGCRIMSON_TELEPORT_EFFECT = GameRuleRegistry.register("kingCrimsonTeleportEffect", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
@@ -129,6 +133,7 @@ public final class JCraft {
     @Setter
     private static IClientEntityHandler clientEntityHandler = DummyClientEntityHandler.INSTANCE;
 
+
     public static void init() {
         GravityChannel.init();
 
@@ -137,13 +142,9 @@ public final class JCraft {
         PARTICLES.register();
 
         // Registration
-        JEntityTypeRegistry.init();
         ENTITY_TYPE_REGISTRY.register();
-        JBlockRegistry.init();
         BLOCK_REGISTRY.register();
-        JItemRegistry.init();
         ITEM_REGISTRY.register();
-        JBlockEntityTypeRegistry.init();
         BLOCK_ENTITY_TYPE_REGISTRY.register();
         JTagRegistry.init();
         JCreativeMenuTabRegistry.init();

@@ -12,7 +12,6 @@ import java.util.List;
 public class RequiemArrowItem extends StandObtainmentItem {
     public RequiemArrowItem(Properties settings) {
         super(settings);
-        standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
     }
 
     @Override

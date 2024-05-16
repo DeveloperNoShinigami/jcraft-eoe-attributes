@@ -24,7 +24,7 @@ public abstract class StandObtainmentItem extends Item {
      * Key - input
      * Value - output
      */
-    protected final Map<StandType, StandType> standIOMap = new HashMap<>();
+    public final Map<StandType, StandType> standIOMap = new HashMap<>();
 
     protected boolean canEvolve(Level world, Player user) {
         return true;

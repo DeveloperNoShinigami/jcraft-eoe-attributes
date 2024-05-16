@@ -12,9 +12,6 @@ import java.util.List;
 public class LivingArrowItem extends StandObtainmentItem {
     public LivingArrowItem(Properties settings) {
         super(settings);
-
-        standIOMap.put(StandType.KILLER_QUEEN, StandType.KILLER_QUEEN_BITES_THE_DUST);
-        standIOMap.put(StandType.STAR_PLATINUM, StandType.STAR_PLATINUM_THE_WORLD);
     }
 
     @Override
