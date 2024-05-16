@@ -1,21 +1,26 @@
 package net.arna.jcraft.forge.capability.impl.living;
 
+import dev.architectury.networking.NetworkManager;
 import net.arna.jcraft.common.component.impl.CommonVampireComponentImpl;
 import net.arna.jcraft.common.component.impl.player.CommonPhComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
 import net.arna.jcraft.forge.capability.impl.player.PhCapability;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.network.PacketDistributor;
+
+import java.util.UUID;
 
 import static net.arna.jcraft.JCraft.MOD_ID;
 
@@ -70,5 +75,25 @@ public class VampireCapability extends CommonVampireComponentImpl implements JCa
 
     public static VampireCapability getCapability(LivingEntity entity) {
         return entity.getCapability(CAPABILITY).orElse(new VampireCapability(entity));
+    }
+
+    public static void initNetwork(){
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, VAMP_S2C, (buf, context) -> {
+            UUID uuid = buf.readUUID();
+            CompoundTag nbt = buf.readNbt();
+            Player player = null;
+            if (Minecraft.getInstance().level != null) {
+                player = Minecraft.getInstance().level.getPlayerByUUID(uuid);
+            }
+            if (player != null) {
+                StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
+            }
+        });
+
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, VAMP_C2S, (buf, context) -> {
+            UUID uuid = buf.readUUID();
+            CompoundTag nbt = buf.readNbt();
+            StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
+        });
     }
 }

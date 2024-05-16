@@ -18,6 +18,7 @@ import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
+import net.arna.jcraft.forge.events.ClientSetupEvents;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
@@ -55,9 +56,9 @@ public final class JCraftForge {
 
         modBus.addListener(this::onInitializeCommon);
         modBus.addListener(this::onInitializeClient);
+        modBus.addListener(ClientSetupEvents::onInitializeClient);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> JCraftClient::init);
-
         JNetworkingForge.init();
 
         ServerEntityTickEvent.ENTITY_POST.register(this::tickEntityCaps);

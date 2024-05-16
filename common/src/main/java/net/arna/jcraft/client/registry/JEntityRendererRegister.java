@@ -88,7 +88,7 @@ public interface JEntityRendererRegister {
         EntityRendererRegistry.register(JEntityTypeRegistry.DARBY_YOUNGER, DarbyYoungerRenderer::new);
     }
 
-    private static <T extends Entity> EntityRenderer<T> createEmpty(EntityRendererProvider.Context ctx) {
+    static <T extends Entity> EntityRenderer<T> createEmpty(EntityRendererProvider.Context ctx) {
         return new EntityRenderer<>(ctx) {
             @Override
             public ResourceLocation getTextureLocation(T entity) {

@@ -55,6 +55,7 @@ public class RuntimeEvents {
             PhCapability.syncEntityCapability(serverPlayer);
             SpecCapability.syncEntityCapability(serverPlayer);
         }
+        TimeStopCapability.getCapability(event.getEntity());
     }
 
     @SubscribeEvent

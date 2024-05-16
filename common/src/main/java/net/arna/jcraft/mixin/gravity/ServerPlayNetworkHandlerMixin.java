@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerPlayNetworkHandlerMixin {
+    /*TODO maybe forge crash
     @Unique
     private static double onPlayerMove_playerMovementY;
 
@@ -254,4 +255,6 @@ public abstract class ServerPlayNetworkHandlerMixin {
         argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
         return argVec.z;
     }
+
+     */
 }

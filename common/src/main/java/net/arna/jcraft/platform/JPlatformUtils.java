@@ -28,4 +28,9 @@ public class JPlatformUtils {
     public static boolean isModLoaded(String name) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
+
+    @ExpectPlatform
+    public static boolean isDevelopmentEnvironment() {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
 }

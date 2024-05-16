@@ -23,4 +23,7 @@ public class JPlatformUtilsImpl {
         return FabricLoader.getInstance().isModLoaded("name");
     }
 
+    public static boolean isDevelopmentEnvironment() {
+        return FabricLoader.getInstance().isDevelopmentEnvironment();
+    }
 }

@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerList.class)
 public abstract class PlayerManagerMixin {
-
+/*TODO maybe forge crash
     @Inject(
             method = "placeNewPlayer",
             at = @At(
@@ -40,4 +40,6 @@ public abstract class PlayerManagerMixin {
         //Not need because (I think) player gravity is synced when nbt is loaded
         //((ServerPlayerEntityAccessor) player).gravitychanger$sendGravityPacket(GravityChangerAPI.getGravityDirection(player), false);
     }
+
+ */
 }

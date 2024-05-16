@@ -288,7 +288,6 @@ public final class JCraft {
         if (user.hasEffect(JStatusRegistry.STANDLESS.get())) {
             return null;
         }
-
         CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
         StandType type = standData.getType();
         if (type == StandType.NONE) {
@@ -314,9 +313,7 @@ public final class JCraft {
         } else if (user instanceof Mob mob) {
             JEnemies.add(mob);
         }
-
         world.addFreshEntity(stand);
-
         standData.setStand(stand);
         return stand;
     }

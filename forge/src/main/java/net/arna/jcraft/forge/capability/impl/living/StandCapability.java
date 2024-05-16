@@ -7,7 +7,6 @@ import net.arna.jcraft.common.component.impl.living.CommonStandComponentImpl;
 import net.arna.jcraft.forge.JCraftForge;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.arna.jcraft.forge.network.SyncStandPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -47,6 +46,7 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
 
     private static void syncEntityCapability(Entity entity) {
         if (entity instanceof LivingEntity living) {
+
             JNetworkingForge.sendPackets(living, STAND_S2C, STAND_C2S, getCapability(living));
         }
     }
@@ -93,9 +93,10 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, STAND_C2S, (buf, context) -> {
-            Player player = context.getPlayer();
+            //Player player = context.getPlayer();
+            UUID uuid = buf.readUUID();
             CompoundTag nbt = buf.readNbt();
-            StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
+            StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
         });
     }
 }

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = ServerPlayer.class, remap = false)
 public abstract class ServerPlayerEntityMixin {
-
+/* TODO potential forge crash
     @Inject(
             method = "changeDimension",
             at = @At(
@@ -50,4 +50,6 @@ public abstract class ServerPlayerEntityMixin {
             GravityChangerAPI.setDefaultGravityDirection((ServerPlayer) (Object) this, GravityChangerAPI.getDefaultGravityDirection(oldPlayer), new RotationParameters().rotationTime(0));
         }
     }
+
+ */
 }
