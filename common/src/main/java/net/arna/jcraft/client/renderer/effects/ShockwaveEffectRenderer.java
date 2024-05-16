@@ -1,68 +1,74 @@
 package net.arna.jcraft.client.renderer.effects;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Axis;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LightType;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class ShockwaveEffectRenderer {
-    private static final List<Identifier> TEXTURES = IntStream.range(0, CommonShockwaveHandlerComponent.Shockwave.MAX_AGE)
+    private static final List<ResourceLocation> TEXTURES = IntStream.range(0, CommonShockwaveHandlerComponent.Shockwave.MAX_AGE)
             .mapToObj(i -> JCraft.id("textures/effect/shockwave/shockwave_" + i + ".png"))
             .toList();
 
-    public static void render(MatrixStack stack, Vec3d camPos, ClientWorld world, VertexConsumerProvider consumerProvider) {
+    public static void render(PoseStack stack, Vec3 camPos, ClientLevel world, MultiBufferSource consumerProvider) {
 
         CommonShockwaveHandlerComponent shockwaveHandler = JComponentPlatformUtils.getShockwaveHandler(world);
 
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
         RenderSystem.disableCull();
-        RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapProgram);
+        RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader);
 
         for (CommonShockwaveHandlerComponent.Shockwave shockwave : shockwaveHandler.getShockwaves()) {
-            stack.push();
+            stack.pushPose();
 
             // Calculate matrix
             stack.translate(shockwave.getX() - camPos.x, shockwave.getY() - camPos.y, shockwave.getZ() - camPos.z);
-            stack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-shockwave.getYaw()));
-            stack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(shockwave.getPitch()));
-            Matrix4f mat = stack.peek().getPositionMatrix();
+            stack.mulPose(Axis.YP.rotationDegrees(-shockwave.getYaw()));
+            stack.mulPose(Axis.XP.rotationDegrees(shockwave.getPitch()));
+            Matrix4f mat = stack.last().pose();
 
             // Calculate light
-            int blockLight = world.getLightLevel(LightType.BLOCK, shockwave.getBlockPos());
-            int skyLight = world.getLightLevel(LightType.SKY, shockwave.getBlockPos());
-            int light = LightmapTextureManager.pack(blockLight, skyLight);
+            int blockLight = world.getBrightness(LightLayer.BLOCK, shockwave.getBlockPos());
+            int skyLight = world.getBrightness(LightLayer.SKY, shockwave.getBlockPos());
+            int light = LightTexture.pack(blockLight, skyLight);
 
             // Set texture
             RenderSystem.setShaderTexture(0, TEXTURES.get(shockwave.getFrame()));
 
             // Setup buffer
-            Tessellator tess = Tessellator.getInstance();
-            BufferBuilder buff = tess.getBuffer();
-            buff.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE_LIGHT);
+            Tesselator tess = Tesselator.getInstance();
+            BufferBuilder buff = tess.getBuilder();
+            buff.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP);
 
             // Fill buffer
             float min = -0.5f * shockwave.getScale();
             float max = 0.5f * shockwave.getScale();
-            buff.vertex(mat, min, min, 0).color(255, 255, 255, 255).texture(0, 0).light(light).next();
-            buff.vertex(mat, max, min, 0).color(255, 255, 255, 255).texture(0, 1).light(light).next();
-            buff.vertex(mat, max, max, 0).color(255, 255, 255, 255).texture(1, 1).light(light).next();
-            buff.vertex(mat, min, max, 0).color(255, 255, 255, 255).texture(1, 0).light(light).next();
+            buff.vertex(mat, min, min, 0).color(255, 255, 255, 255).uv(0, 0).uv2(light).endVertex();
+            buff.vertex(mat, max, min, 0).color(255, 255, 255, 255).uv(0, 1).uv2(light).endVertex();
+            buff.vertex(mat, max, max, 0).color(255, 255, 255, 255).uv(1, 1).uv2(light).endVertex();
+            buff.vertex(mat, min, max, 0).color(255, 255, 255, 255).uv(1, 0).uv2(light).endVertex();
 
             // Finish up
-            tess.draw();
-            stack.pop();
+            tess.end();
+            stack.popPose();
         }
     }
 }

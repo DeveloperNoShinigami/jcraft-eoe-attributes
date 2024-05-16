@@ -6,54 +6,54 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JItemRegistry;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class StandDiscItem extends Item {
     private static final TextColor[] SKIN_LEVEL_COLORS = {
-            TextColor.fromFormatting(Formatting.GRAY),
-            TextColor.fromFormatting(Formatting.RED),
-            TextColor.fromFormatting(Formatting.BLUE),
-            TextColor.fromFormatting(Formatting.LIGHT_PURPLE)
+            TextColor.fromLegacyFormat(ChatFormatting.GRAY),
+            TextColor.fromLegacyFormat(ChatFormatting.RED),
+            TextColor.fromLegacyFormat(ChatFormatting.BLUE),
+            TextColor.fromLegacyFormat(ChatFormatting.LIGHT_PURPLE)
     };
-    private static final Text DEFAULT_SKIN = Text.literal("Default");
+    private static final Component DEFAULT_SKIN = Component.literal("Default");
 
-    public StandDiscItem(Settings settings) {
+    public StandDiscItem(Properties settings) {
         super(settings);
     }
 
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.EAT;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.EAT;
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        if (world.isClient) {
-            return TypedActionResult.pass(itemStack);
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        ItemStack itemStack = user.getItemInHand(hand);
+        if (world.isClientSide) {
+            return InteractionResultHolder.pass(itemStack);
         }
 
-        if (JCraft.wasRecentlyAttacked(user.getDamageTracker())) {
-            user.sendMessage(Text.translatable("jcraft.disc.error"));
-            return TypedActionResult.fail(itemStack);
+        if (JCraft.wasRecentlyAttacked(user.getCombatTracker())) {
+            user.sendSystemMessage(Component.translatable("jcraft.disc.error"));
+            return InteractionResultHolder.fail(itemStack);
         }
 
         // 1s usage cooldown to prevent overuse
-        user.getItemCooldownManager().set(this, 20);
+        user.getCooldowns().addCooldown(this, 20);
 
         // Get NBT and swap stands
         StandType itemStand = null;
@@ -61,15 +61,15 @@ public class StandDiscItem extends Item {
         StandType userStand = null;
         int userSkin = 0;
 
-        NbtCompound data = itemStack.getOrCreateNbt();
+        CompoundTag data = itemStack.getOrCreateTag();
         CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
 
         userStand = standData.getType();
         userSkin = standData.getSkin();
-        if (data.contains("StandID", NbtElement.INT_TYPE)) {
+        if (data.contains("StandID", Tag.TAG_INT)) {
             itemStand = StandType.fromIdOrOrdinal(data.getInt("StandID"));
         }
-        if (data.contains("Skin", NbtElement.INT_TYPE)) {
+        if (data.contains("Skin", Tag.TAG_INT)) {
             itemSkin = data.getInt("Skin");
         }
 
@@ -83,22 +83,22 @@ public class StandDiscItem extends Item {
         }
         JCraft.summon(world, user);
 
-        return TypedActionResult.success(itemStack);
+        return InteractionResultHolder.success(itemStack);
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         StandType type = getStandType(stack);
         if (type == null) {
-            tooltip.add(Text.literal("Empty").styled(s -> s.withFormatting(Formatting.GRAY)));
+            tooltip.add(Component.literal("Empty").withStyle(s -> s.applyFormat(ChatFormatting.GRAY)));
             return;
         }
 
-        tooltip.add(type.getNameText().copy().styled(s -> s.withColor(type.isEvolution() ? Formatting.LIGHT_PURPLE : Formatting.GRAY)));
+        tooltip.add(type.getNameText().copy().withStyle(s -> s.withColor(type.isEvolution() ? ChatFormatting.LIGHT_PURPLE : ChatFormatting.GRAY)));
 
         int skin = getSkin(stack);
         tooltip.add((skin == 0 || skin > type.getSkinCount() ? DEFAULT_SKIN : type.getSkinNames().get(skin - 1)).copy()
-                .styled(s -> s.withColor(SKIN_LEVEL_COLORS[skin])));
+                .withStyle(s -> s.withColor(SKIN_LEVEL_COLORS[skin])));
     }
 
     public static ItemStack createDiscStack(StandType type, int skin) {
@@ -107,7 +107,7 @@ public class StandDiscItem extends Item {
         }
 
         ItemStack stack = new ItemStack(JItemRegistry.STAND_DISC.get());
-        NbtCompound nbt = stack.getOrCreateNbt();
+        CompoundTag nbt = stack.getOrCreateTag();
         nbt.putInt("StandID", type.ordinal());
         nbt.putInt("Skin", skin);
 
@@ -115,33 +115,33 @@ public class StandDiscItem extends Item {
     }
 
     public static boolean isEmptyDisc(ItemStack stack) {
-        return stack.getNbt() == null || !stack.getNbt().contains("StandID", NbtElement.INT_TYPE);
+        return stack.getTag() == null || !stack.getTag().contains("StandID", Tag.TAG_INT);
     }
 
     public static StandType getStandType(ItemStack stack) {
-        if (!stack.isOf(JItemRegistry.STAND_DISC.get())) {
+        if (!stack.is(JItemRegistry.STAND_DISC.get())) {
             return null;
         }
 
-        NbtCompound nbt = stack.getNbt();
-        return nbt == null || !nbt.contains("StandID", NbtElement.INT_TYPE) ? null : StandType.fromIdOrOrdinal(nbt.getInt("StandID"));
+        CompoundTag nbt = stack.getTag();
+        return nbt == null || !nbt.contains("StandID", Tag.TAG_INT) ? null : StandType.fromIdOrOrdinal(nbt.getInt("StandID"));
     }
 
     public static void setSkin(ItemStack stack, int skin) {
-        if (!stack.isOf(JItemRegistry.STAND_DISC.get())) {
+        if (!stack.is(JItemRegistry.STAND_DISC.get())) {
             return;
         }
 
-        NbtCompound nbt = stack.getOrCreateNbt();
+        CompoundTag nbt = stack.getOrCreateTag();
         nbt.putInt("Skin", skin);
     }
 
     public static int getSkin(ItemStack stack) {
-        if (!stack.isOf(JItemRegistry.STAND_DISC.get())) {
+        if (!stack.is(JItemRegistry.STAND_DISC.get())) {
             return 0;
         }
 
-        NbtCompound nbt = stack.getNbt();
-        return nbt == null || !nbt.contains("Skin", NbtElement.INT_TYPE) ? 0 : nbt.getInt("Skin");
+        CompoundTag nbt = stack.getTag();
+        return nbt == null || !nbt.contains("Skin", Tag.TAG_INT) ? 0 : nbt.getInt("Skin");
     }
 }

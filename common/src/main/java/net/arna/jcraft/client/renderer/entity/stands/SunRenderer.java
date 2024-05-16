@@ -1,82 +1,83 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexMultiConsumer;
 import net.arna.jcraft.client.model.entity.TheSunModel;
 import net.arna.jcraft.client.renderer.entity.layer.SunGlowLayer;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexConsumers;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Pose;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.object.Color;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
-    public SunRenderer(EntityRendererFactory.Context renderManager) {
+    public SunRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new TheSunModel());
         addRenderLayer(new SunGlowLayer(this));
     }
 
     @Override
-    protected int getBlockLight(TheSunEntity entity, BlockPos pos) {
+    protected int getBlockLightLevel(TheSunEntity entity, BlockPos pos) {
         return 15;
     }
 
     @Override
-    protected int getSkyLight(TheSunEntity entity, BlockPos pos) {
+    protected int getSkyLightLevel(TheSunEntity entity, BlockPos pos) {
         return 15;
     }
 
     //TODO: translucent layer that isn't layered over and has no shading
 
     @Override
-    public RenderLayer getRenderType(TheSunEntity animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
-        return RenderLayer.getEntityAlpha(texture);
+    public RenderType getRenderType(TheSunEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.dragonExplosionAlpha(texture);
     }
 
     // Not inlined for sake of debugging
     private static float lerpScale(TheSunEntity animatable, float partialTick) {
-        float scale = MathHelper.lerp(partialTick, animatable.prevScale, animatable.getScale());
+        float scale = Mth.lerp(partialTick, animatable.prevScale, animatable.getScale());
         return scale;
     }
 
     @Override
-    public void actuallyRender(MatrixStack poseStack, TheSunEntity animatable, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack poseStack, TheSunEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         packedLight = 255;
 
-        poseStack.push();
+        poseStack.pushPose();
 
         float scale = lerpScale(animatable, partialTick);
         poseStack.scale(scale, scale, scale);
 
-        this.modelRenderTranslations = new Matrix4f(poseStack.peek().getPositionMatrix());
+        this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
 
-        float lerpBodyRot = MathHelper.lerpAngleDegrees(partialTick, animatable.prevBodyYaw, animatable.bodyYaw);
-        float lerpHeadRot = MathHelper.lerpAngleDegrees(partialTick, animatable.prevHeadYaw, animatable.headYaw);
+        float lerpBodyRot = Mth.rotLerp(partialTick, animatable.yBodyRotO, animatable.yBodyRot);
+        float lerpHeadRot = Mth.rotLerp(partialTick, animatable.yHeadRotO, animatable.yHeadRot);
         float netHeadYaw = lerpHeadRot - lerpBodyRot;
 
-        if (animatable.getPose() == EntityPose.SLEEPING) {
-            Direction bedDirection = animatable.getSleepingDirection();
+        if (animatable.getPose() == Pose.SLEEPING) {
+            Direction bedDirection = animatable.getBedOrientation();
 
             if (bedDirection != null) {
-                float eyePosOffset = animatable.getEyeHeight(EntityPose.STANDING) - 0.1F;
+                float eyePosOffset = animatable.getEyeHeight(Pose.STANDING) - 0.1F;
 
-                poseStack.translate(-bedDirection.getOffsetX() * eyePosOffset, 0, -bedDirection.getOffsetZ() * eyePosOffset);
+                poseStack.translate(-bedDirection.getStepX() * eyePosOffset, 0, -bedDirection.getStepZ() * eyePosOffset);
             }
         }
 
-        float ageInTicks = animatable.age + partialTick;
+        float ageInTicks = animatable.tickCount + partialTick;
         float limbSwingAmount = 0;
         float limbSwing = 0;
 
@@ -93,10 +94,10 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
         var renderColor = getRenderColor(animatable, partialTick, packedLight);
 
 
-        if (!animatable.isInvisibleTo(MinecraftClient.getInstance().player)) {
-            VertexConsumer glintBuffer = bufferSource.getBuffer(RenderLayer.getDirectEntityGlint());
+        if (!animatable.isInvisibleTo(Minecraft.getInstance().player)) {
+            VertexConsumer glintBuffer = bufferSource.getBuffer(RenderType.entityGlintDirect());
             VertexConsumer translucentBuffer = bufferSource
-                    .getBuffer(RenderLayer.getEntityTranslucentCull(getTextureLocation(animatable)));
+                    .getBuffer(RenderType.entityTranslucentCull(getTextureLocation(animatable)));
 
             super.actuallyRender(
                     poseStack,
@@ -104,7 +105,7 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
                     model,
                     renderType,
                     bufferSource,
-                    glintBuffer != translucentBuffer ? VertexConsumers.union(glintBuffer, translucentBuffer) : null,
+                    glintBuffer != translucentBuffer ? VertexMultiConsumer.create(glintBuffer, translucentBuffer) : null,
                     isReRender,
                     partialTick,
                     packedLight,
@@ -114,7 +115,7 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
             );
         }
 
-        poseStack.pop();
+        poseStack.popPose();
 
     }
 }

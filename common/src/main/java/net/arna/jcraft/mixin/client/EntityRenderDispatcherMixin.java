@@ -4,12 +4,12 @@ import net.arna.jcraft.client.renderer.entity.PlayerCloneRenderer;
 import net.arna.jcraft.client.rendering.CloneSkinTracker;
 import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.entity.PlayerCloneEntity;
-import net.minecraft.client.render.Frustum;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.entity.Entity;
-import net.minecraft.resource.ResourceManager;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -64,8 +64,8 @@ public abstract class EntityRenderDispatcherMixin {
                 cloneRenderers.get("default")));
     }
 
-    @Inject(method = "reload", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void reloadCloneRenderers(ResourceManager manager, CallbackInfo ci, EntityRendererFactory.Context context) {
+    @Inject(method = "onResourceManagerReload", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    private void reloadCloneRenderers(ResourceManager manager, CallbackInfo ci, EntityRendererProvider.Context context) {
         cloneRenderers.clear();
         cloneRenderers.put("default", new PlayerCloneRenderer(context, false));
         cloneRenderers.put("slim", new PlayerCloneRenderer(context, true));

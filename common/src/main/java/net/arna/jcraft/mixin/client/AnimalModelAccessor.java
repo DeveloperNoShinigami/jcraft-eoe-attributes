@@ -1,15 +1,15 @@
 package net.arna.jcraft.mixin.client;
 
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.AnimalModel;
+import net.minecraft.client.model.AgeableListModel;
+import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(AnimalModel.class)
+@Mixin(AgeableListModel.class)
 public interface AnimalModelAccessor {
     @Invoker
-    Iterable<ModelPart> callGetHeadParts();
+    Iterable<ModelPart> callHeadParts();
 
     @Invoker
-    Iterable<ModelPart> callGetBodyParts();
+    Iterable<ModelPart> callBodyParts();
 }

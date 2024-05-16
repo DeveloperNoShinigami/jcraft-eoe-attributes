@@ -1,15 +1,15 @@
 package net.arna.jcraft.mixin;
 
-import net.minecraft.world.chunk.ChunkToNibbleArrayMap;
-import net.minecraft.world.chunk.light.LightStorage;
+import net.minecraft.world.level.lighting.DataLayerStorageMap;
+import net.minecraft.world.level.lighting.LayerLightSectionStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(LightStorage.class)
+@Mixin(LayerLightSectionStorage.class)
 public interface LightStorageAccessor {
     @Accessor
-    ChunkToNibbleArrayMap<?> getStorage();
+    DataLayerStorageMap<?> getUpdatingSectionData();
 
     @Accessor
-    ChunkToNibbleArrayMap<?> getUncachedStorage();
+    DataLayerStorageMap<?> getVisibleSectionData();
 }

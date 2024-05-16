@@ -4,11 +4,13 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.item.*;
 import net.arna.jcraft.common.spec.SpecType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.*;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Rarity;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.SpawnEggItem;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -17,15 +19,15 @@ import static net.arna.jcraft.JCraft.*;
 
 public interface JItemRegistry {
 
-    Map<RegistrySupplier<Item>, Identifier> ITEMS = new LinkedHashMap<>();
+    Map<RegistrySupplier<Item>, ResourceLocation> ITEMS = new LinkedHashMap<>();
 
     RegistrySupplier<Item> DEBUG_WAND = register("debug_wand", () -> new DebugWand(settings()));
 
-    RegistrySupplier<Item> STAND_ARROW = register("stand_arrow", () -> new StandArrowItem(settings().rarity(Rarity.RARE).fireproof()));
+    RegistrySupplier<Item> STAND_ARROW = register("stand_arrow", () -> new StandArrowItem(settings().rarity(Rarity.RARE).fireResistant()));
 
-    RegistrySupplier<Item> STAND_DISC = register("stand_disc", () -> new StandDiscItem(settings().rarity(Rarity.RARE).fireproof().maxCount(1)));
+    RegistrySupplier<Item> STAND_DISC = register("stand_disc", () -> new StandDiscItem(settings().rarity(Rarity.RARE).fireResistant().stacksTo(1)));
 
-    RegistrySupplier<Item> FV_REVOLVER = register("fv_revolver", () -> new FVRevolverItem(settings().rarity(Rarity.UNCOMMON).maxDamage(1200)));
+    RegistrySupplier<Item> FV_REVOLVER = register("fv_revolver", () -> new FVRevolverItem(settings().rarity(Rarity.UNCOMMON).durability(1200)));
 
     RegistrySupplier<Item> BULLET = register("bullet", () -> new BulletItem(settings()));
 
@@ -33,28 +35,28 @@ public interface JItemRegistry {
 
     RegistrySupplier<Item> GREEN_BABY = register("green_baby", () -> new GreenBabyItem(settings().rarity(Rarity.RARE)));
 
-    RegistrySupplier<Item> DIOS_DIARY = register("dios_diary", () -> new DIOsDiaryItem(settings().rarity(Rarity.EPIC).fireproof()));
+    RegistrySupplier<Item> DIOS_DIARY = register("dios_diary", () -> new DIOsDiaryItem(settings().rarity(Rarity.EPIC).fireResistant()));
 
 
     RegistrySupplier<Item> SINNERS_SOUL = register("sinners_soul", () -> new SinnersSoulItem(settings()));
 
     RegistrySupplier<Item> KNIFE = register("knife", () -> new KnifeItem(settings()));
 
-    RegistrySupplier<Item> KNIFEBUNDLE = register("knife_bundle", () -> new KnifeBundleItem(settings().maxCount(1)));
+    RegistrySupplier<Item> KNIFEBUNDLE = register("knife_bundle", () -> new KnifeBundleItem(settings().stacksTo(1)));
 
-    RegistrySupplier<Item> ANUBIS = register("anubis", () -> new AnubisItem(settings().rarity(Rarity.RARE).maxCount(1)));
+    RegistrySupplier<Item> ANUBIS = register("anubis", () -> new AnubisItem(settings().rarity(Rarity.RARE).stacksTo(1)));
 
     // Spec Obtainment Items
-    RegistrySupplier<Item> ANUBIS_SHEATHED = register("anubis_sheathed", () -> new SheathedAnubisItem(settings().rarity(Rarity.RARE).maxCount(1), SpecType.ANUBIS));
+    RegistrySupplier<Item> ANUBIS_SHEATHED = register("anubis_sheathed", () -> new SheathedAnubisItem(settings().rarity(Rarity.RARE).stacksTo(1), SpecType.ANUBIS));
 
-    RegistrySupplier<Item> BOXING_GLOVES = register("boxing_gloves", () -> new BoxingGlovesItem(settings().maxCount(1), SpecType.BRAWLER));
+    RegistrySupplier<Item> BOXING_GLOVES = register("boxing_gloves", () -> new BoxingGlovesItem(settings().stacksTo(1), SpecType.BRAWLER));
 
 
-    RegistrySupplier<Item> REQUIEM_RUBY = register("requiem_ruby", () -> new Item(settings().rarity(Rarity.EPIC).fireproof()));
+    RegistrySupplier<Item> REQUIEM_RUBY = register("requiem_ruby", () -> new Item(settings().rarity(Rarity.EPIC).fireResistant()));
 
-    RegistrySupplier<Item> REQUIEM_ARROW = register("requiem_arrow", () -> new RequiemArrowItem(settings().rarity(Rarity.EPIC).fireproof()));
+    RegistrySupplier<Item> REQUIEM_ARROW = register("requiem_arrow", () -> new RequiemArrowItem(settings().rarity(Rarity.EPIC).fireResistant()));
 
-    RegistrySupplier<Item> LIVING_ARROW = register("living_arrow", () -> new LivingArrowItem(settings().rarity(Rarity.RARE).fireproof()));
+    RegistrySupplier<Item> LIVING_ARROW = register("living_arrow", () -> new LivingArrowItem(settings().rarity(Rarity.RARE).fireResistant()));
 
     RegistrySupplier<Item> DIO_HEADBAND = register("dio_headband", () -> new DIOArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> DIO_JACKET = register("dio_jacket", () -> new DIOArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
@@ -76,7 +78,7 @@ public interface JItemRegistry {
 
     RegistrySupplier<Item> CINDERELLA_MASK = register("cinderella_mask", CinderellaMaskItem::new);
 
-    RegistrySupplier<Item> BLOOD_BOTTLE = register("blood_bottle", () -> new BloodBottleItem(settings().maxCount(1)));
+    RegistrySupplier<Item> BLOOD_BOTTLE = register("blood_bottle", () -> new BloodBottleItem(settings().stacksTo(1)));
 
     RegistrySupplier<Item> STELLAR_IRON_INGOT = register("stellar_iron_ingot", () -> new Item(settings()));
     RegistrySupplier<Item> STAND_ARROWHEAD = register("stand_arrowhead", () -> new Item(settings()));
@@ -118,8 +120,8 @@ public interface JItemRegistry {
         return item;
     }
 
-    static Item.Settings settings() {
-        return new Item.Settings();
+    static Item.Properties settings() {
+        return new Item.Properties();
     }
 
     static void init() {

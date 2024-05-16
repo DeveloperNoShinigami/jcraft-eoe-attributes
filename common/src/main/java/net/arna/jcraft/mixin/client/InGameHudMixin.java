@@ -6,11 +6,11 @@ import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.gui.hud.JCraftHudOverlay;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,123 +23,123 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.arna.jcraft.client.gui.hud.JCraftAbilityHud.GUI_ICONS_TEXTURE;
 
-@Mixin(InGameHud.class)
+@Mixin(Gui.class)
 public abstract class InGameHudMixin {
     @Shadow
     @Final
-    private MinecraftClient client;
+    private Minecraft minecraft;
 
     @Unique
-    private static final Identifier EMPTY_BLOOD_ICON = JCraft.id("textures/gui/blood_empty.png");
+    private static final ResourceLocation EMPTY_BLOOD_ICON = JCraft.id("textures/gui/blood_empty.png");
     @Unique
-    private static final Identifier HALF_BLOOD_ICON = JCraft.id("textures/gui/blood_half.png");
+    private static final ResourceLocation HALF_BLOOD_ICON = JCraft.id("textures/gui/blood_half.png");
     @Unique
-    private static final Identifier FULL_BLOOD_ICON = JCraft.id("textures/gui/blood_full.png");
+    private static final ResourceLocation FULL_BLOOD_ICON = JCraft.id("textures/gui/blood_full.png");
 
     @Redirect(
-            method = "renderStatusBars",
+            method = "renderPlayerHealth",
             slice = @Slice(
                     from = @At(
                             value = "INVOKE_ASSIGN",
-                            target = "Lnet/minecraft/client/gui/hud/InGameHud;getHeartCount(Lnet/minecraft/entity/LivingEntity;)I"
+                            target = "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"
                     ),
                     to = @At(
                             value = "INVOKE",
-                            target = "Lnet/minecraft/entity/player/PlayerEntity;getAir()I"
+                            target = "Lnet/minecraft/world/entity/player/Player;getAirSupply()I"
                     )
             ),
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"
             )
     )
-    void showVampireBloodIcons(DrawContext instance, Identifier texture, int x, int y, int u, int v, int width, int height) {
-        PlayerEntity player = client.player;
+    void showVampireBloodIcons(GuiGraphics instance, ResourceLocation texture, int x, int y, int u, int v, int width, int height) {
+        Player player = minecraft.player;
         if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
-            instance.drawTexture(texture, x, y, 0, 0, width, height, 9, 9);
+            instance.blit(texture, x, y, 0, 0, width, height, 9, 9);
             RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
         } else {
-            instance.drawTexture(texture, x, y, u, v, width, height);
+            instance.blit(texture, x, y, u, v, width, height);
         }
     }
 
     @Inject(
-            method = "renderStatusBars",
+            method = "renderPlayerHealth",
             slice = @Slice(
                     from = @At(
                             value = "INVOKE_ASSIGN",
-                            target = "Lnet/minecraft/client/gui/hud/InGameHud;getHeartCount(Lnet/minecraft/entity/LivingEntity;)I"
+                            target = "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"
                     ),
                     to = @At(
                             value = "INVOKE",
-                            target = "Lnet/minecraft/entity/player/PlayerEntity;getAir()I"
+                            target = "Lnet/minecraft/world/entity/player/Player;getAirSupply()I"
                     )
             ),
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V",
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V",
                     ordinal = 0
             )
     )
-    void switchToEmptyBloodIcon(DrawContext context, CallbackInfo ci) {
-        PlayerEntity player = client.player;
+    void switchToEmptyBloodIcon(GuiGraphics context, CallbackInfo ci) {
+        Player player = minecraft.player;
         if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
             RenderSystem.setShaderTexture(0, EMPTY_BLOOD_ICON);
         }
     }
 
     @Inject(
-            method = "renderStatusBars",
+            method = "renderPlayerHealth",
             slice = @Slice(
                     from = @At(
                             value = "INVOKE_ASSIGN",
-                            target = "Lnet/minecraft/client/gui/hud/InGameHud;getHeartCount(Lnet/minecraft/entity/LivingEntity;)I"
+                            target = "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"
                     ),
                     to = @At(
                             value = "INVOKE",
-                            target = "Lnet/minecraft/entity/player/PlayerEntity;getAir()I"
+                            target = "Lnet/minecraft/world/entity/player/Player;getAirSupply()I"
                     )
             ),
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V",
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V",
                     ordinal = 2
             )
     )
-    void switchToHalfBloodIcon(DrawContext context, CallbackInfo ci) {
-        PlayerEntity player = client.player;
+    void switchToHalfBloodIcon(GuiGraphics context, CallbackInfo ci) {
+        Player player = minecraft.player;
         if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
             RenderSystem.setShaderTexture(0, HALF_BLOOD_ICON);
         }
     }
 
     @Inject(
-            method = "renderStatusBars",
+            method = "renderPlayerHealth",
             slice = @Slice(
                     from = @At(
                             value = "INVOKE_ASSIGN",
-                            target = "Lnet/minecraft/client/gui/hud/InGameHud;getHeartCount(Lnet/minecraft/entity/LivingEntity;)I"
+                            target = "Lnet/minecraft/client/gui/Gui;getVehicleMaxHearts(Lnet/minecraft/world/entity/LivingEntity;)I"
                     ),
                     to = @At(
                             value = "INVOKE",
-                            target = "Lnet/minecraft/entity/player/PlayerEntity;getAir()I"
+                            target = "Lnet/minecraft/world/entity/player/Player;getAirSupply()I"
                     )
             ),
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V",
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V",
                     ordinal = 1
             )
     )
-    void switchToFullBloodIcon(DrawContext context, CallbackInfo ci) {
-        PlayerEntity player = client.player;
+    void switchToFullBloodIcon(GuiGraphics context, CallbackInfo ci) {
+        Player player = minecraft.player;
         if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
             RenderSystem.setShaderTexture(0, FULL_BLOOD_ICON);
         }
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getFrozenTicks()I"))
-    private void renderEpitaph(DrawContext context, float tickDelta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getTicksFrozen()I"))
+    private void renderEpitaph(GuiGraphics context, float tickDelta, CallbackInfo ci) {
         if (JClientConfig.getInstance().isEpitaphOverlay()) {
             EpitaphOverlay.render();
         }
@@ -147,8 +147,8 @@ public abstract class InGameHudMixin {
 
     // Rendered using this mixin rather than HudRenderCallback, so it's behind chat.
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableBlend()V"),
-            slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/scoreboard/Scoreboard;getPlayerTeam(Ljava/lang/String;)Lnet/minecraft/scoreboard/Team;")))
-    private void renderHud(DrawContext context, float tickDelta, CallbackInfo ci) {
+            slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/world/scores/Scoreboard;getPlayersTeam(Ljava/lang/String;)Lnet/minecraft/world/scores/PlayerTeam;")))
+    private void renderHud(GuiGraphics context, float tickDelta, CallbackInfo ci) {
         JCraftHudOverlay.render(context);
     }
 }

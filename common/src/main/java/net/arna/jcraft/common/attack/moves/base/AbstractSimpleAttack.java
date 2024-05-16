@@ -15,16 +15,16 @@ import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -288,11 +288,11 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
                 return;
             }
             LivingEntity attackerEntity = attacker.getBaseEntity();
-            Vec3d shockwavePos = attackerEntity.getPos();
-            shockwavePos = shockwavePos.add(attackerEntity.getRotationVector());
-            shockwavePos = shockwavePos.add(RotationUtil.vecPlayerToWorld(new Vec3d(0, attackerEntity.getHeight() / 2.0 - offset, 0), GravityChangerAPI.getGravityDirection(user)));
+            Vec3 shockwavePos = attackerEntity.position();
+            shockwavePos = shockwavePos.add(attackerEntity.getLookAngle());
+            shockwavePos = shockwavePos.add(RotationUtil.vecPlayerToWorld(new Vec3(0, attackerEntity.getBbHeight() / 2.0 - offset, 0), GravityChangerAPI.getGravityDirection(user)));
             JComponentPlatformUtils.getShockwaveHandler(attacker.getEntityWorld())
-                    .addShockwave(shockwavePos, attackerEntity.getRotationVector(), damage / 2.5f);
+                    .addShockwave(shockwavePos, attackerEntity.getLookAngle(), damage / 2.5f);
         }));
         return getThis();
     }
@@ -342,17 +342,17 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     }
 
     // Utility methods
-    public static Box createBox(Vec3d center, double size) {
+    public static AABB createBox(Vec3 center, double size) {
         double axisSize = size / 2;
 
-        Vec3d min = center.subtract(axisSize, axisSize, axisSize);
-        Vec3d max = center.add(axisSize, axisSize, axisSize);
-        return new Box(min, max);
+        Vec3 min = center.subtract(axisSize, axisSize, axisSize);
+        Vec3 max = center.add(axisSize, axisSize, axisSize);
+        return new AABB(min, max);
     }
 
-    public static Box createBox(Vec3d offsetHeightPos, Vec3d rotVec, Vec3d upVec, HitBoxData data) {
-        return createBox(offsetHeightPos.add(rotVec.multiply(data.forwardOffset()))
-                .add(upVec.multiply(data.verticalOffset())), data.size());
+    public static AABB createBox(Vec3 offsetHeightPos, Vec3 rotVec, Vec3 upVec, HitBoxData data) {
+        return createBox(offsetHeightPos.add(rotVec.scale(data.forwardOffset()))
+                .add(upVec.scale(data.verticalOffset())), data.size());
     }
 
     /**
@@ -366,7 +366,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param damageSource The damage source to check for
      * @return All found valid targets
      */
-    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, Vec3d boxCenter, double boxSize, @Nullable DamageSource damageSource) {
+    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, Vec3 boxCenter, double boxSize, @Nullable DamageSource damageSource) {
         return findHits(attacker, createBox(boxCenter, boxSize), damageSource);
     }
 
@@ -380,7 +380,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param damageSource The damage source to check for
      * @return All found valid targets
      */
-    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, Box box, @Nullable DamageSource damageSource) {
+    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, AABB box, @Nullable DamageSource damageSource) {
         return findHits(attacker, Set.of(box), damageSource);
     }
 
@@ -394,7 +394,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param damageSource The damage source to check for
      * @return All found valid targets
      */
-    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, Set<Box> boxes, @Nullable DamageSource damageSource) {
+    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, Set<AABB> boxes, @Nullable DamageSource damageSource) {
         return findHits(attacker, boxes, damageSource, LivingEntity.class);
     }
 
@@ -409,7 +409,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param mayHitUser   Whether the user of the attacker can be hit
      * @return All found valid targets
      */
-    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, Set<Box> boxes, @Nullable DamageSource damageSource,
+    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, Set<AABB> boxes, @Nullable DamageSource damageSource,
                                              boolean mayHitUser) {
         return findHits(attacker, boxes, damageSource, LivingEntity.class, mayHitUser);
     }
@@ -426,7 +426,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param type         The type of entities to look for
      * @return All found valid targets
      */
-    public static <T extends Entity> @NonNull Set<T> findHits(IAttacker<?, ?> attacker, @NonNull Set<Box> boxes,
+    public static <T extends Entity> @NonNull Set<T> findHits(IAttacker<?, ?> attacker, @NonNull Set<AABB> boxes,
                                                               @Nullable DamageSource damageSource, Class<T> type) {
         return findHits(attacker, boxes, damageSource, type, false);
     }
@@ -443,11 +443,11 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param mayHitUser   Whether the user of the attacker can be hit
      * @return All found valid targets
      */
-    public static <T extends Entity> @NonNull Set<T> findHits(IAttacker<?, ?> attacker, @NonNull Set<Box> boxes,
+    public static <T extends Entity> @NonNull Set<T> findHits(IAttacker<?, ?> attacker, @NonNull Set<AABB> boxes,
                                                               @Nullable DamageSource damageSource, Class<T> type, boolean mayHitUser) {
         LivingEntity user = attacker.getUser();
         return boxes.stream()
-                .flatMap(box -> attacker.getEntityWorld().getEntitiesByClass(type, box, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.and(e ->
+                .flatMap(box -> attacker.getEntityWorld().getEntitiesOfClass(type, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e ->
                                 e != attacker
                                         && (mayHitUser || e != user
                                         && e != user.getVehicle()
@@ -465,23 +465,23 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     // Logic methods
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
-        Vec3d userRotVec = user.getRotationVector();
+        Vec3 userRotVec = user.getLookAngle();
         Direction gravDir = GravityChangerAPI.getGravityDirection(user);
         if (gravDir == Direction.UP) {
-            userRotVec = new Vec3d(userRotVec.x, -userRotVec.y, userRotVec.z);
+            userRotVec = new Vec3(userRotVec.x, -userRotVec.y, userRotVec.z);
         }
 
-        Vec3d hPos = getOffsetHeightPos(attacker);
-        Vec3d rotVec = (staticY || attacker.isRemote()) ? getRotVec(attacker) : userRotVec;
-        Vec3d upVec = new Vec3d(gravDir.getUnitVector()).multiply(-1.0);
+        Vec3 hPos = getOffsetHeightPos(attacker);
+        Vec3 rotVec = (staticY || attacker.isRemote()) ? getRotVec(attacker) : userRotVec;
+        Vec3 upVec = new Vec3(gravDir.step()).scale(-1.0);
 
         if (staticY) {
-            rotVec = rotVec.withAxis(gravDir.getAxis(), 0);
+            rotVec = rotVec.with(gravDir.getAxis(), 0);
         }
 
-        Vec3d fPos = getOffsetForwardPos(attacker, hPos, upVec, rotVec);
+        Vec3 fPos = getOffsetForwardPos(attacker, hPos, upVec, rotVec);
 
-        Set<Box> boxes = calculateBoxes(attacker, user, rotVec, upVec, hPos, fPos);
+        Set<AABB> boxes = calculateBoxes(attacker, user, rotVec, upVec, hPos, fPos);
         DamageSource damageSource = attacker.getDamageSource();
         Set<LivingEntity> targets = attackBoxes(attacker, boxes, damageSource, fPos);
         performHook(attacker, targets, boxes, damageSource, fPos, rotVec, ctx);
@@ -498,7 +498,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param rotationVector The attacker's rotation unit vector
      * @param ctx            The attacker's MoveContext instance
      */
-    public void performHook(A attacker, Set<LivingEntity> targets, Set<Box> boxes, DamageSource damageSource, Vec3d forwardPos, Vec3d rotationVector, MoveContext ctx) {
+    public void performHook(A attacker, Set<LivingEntity> targets, Set<AABB> boxes, DamageSource damageSource, Vec3 forwardPos, Vec3 rotationVector, MoveContext ctx) {
     }
 
     /**
@@ -513,12 +513,12 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param fPos     The offset forward position
      * @return All boxes that should be attacked
      */
-    protected Set<Box> calculateBoxes(A attacker, LivingEntity user, Vec3d rotVec, Vec3d upVec, Vec3d hPos, Vec3d fPos) {
+    protected Set<AABB> calculateBoxes(A attacker, LivingEntity user, Vec3 rotVec, Vec3 upVec, Vec3 hPos, Vec3 fPos) {
         if (hitboxSize <= 0 && extraHitBoxes.isEmpty()) {
             return Set.of();
         }
 
-        Set<Box> boxes = new HashSet<>();
+        Set<AABB> boxes = new HashSet<>();
         boxes.add(createBox(fPos, hitboxSize));
         extraHitBoxes.forEach(hitBox -> boxes.add(createBox(hPos, rotVec, upVec, hitBox)));
 
@@ -534,7 +534,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param center       The center of this attack. This is where the particle will be spawned at.
      * @return A set of all affected targets.
      */
-    protected final Set<LivingEntity> attackBoxes(A attacker, Set<Box> boxes, DamageSource damageSource, Vec3d center) {
+    protected final Set<LivingEntity> attackBoxes(A attacker, Set<AABB> boxes, DamageSource damageSource, Vec3 center) {
         JUtils.displayHitboxes(attacker.getEntityWorld(), boxes);
 
         Set<LivingEntity> targets = findHits(attacker, boxes, damageSource, mayHitUser);
@@ -542,22 +542,22 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
             return Set.of();
         }
 
-        ServerWorld serverWorld = (ServerWorld) attacker.getEntityWorld();
+        ServerLevel serverWorld = (ServerLevel) attacker.getEntityWorld();
 
         // Particles
-        Random random = Random.create();
+        RandomSource random = RandomSource.create();
         boolean anyHit = false;
 
         // Process targets
-        Vec3d rotVec = getRotVec(attacker);
-        Vec3d kbVec = rotVec.multiply(knockback).add(new Vec3d(0.0, Math.abs(knockback) / 4, 0.0));
+        Vec3 rotVec = getRotVec(attacker);
+        Vec3 kbVec = rotVec.scale(knockback).add(new Vec3(0.0, Math.abs(knockback) / 4, 0.0));
         for (LivingEntity target : validateTargets(attacker, targets)) {
-            Vec3d pos = target.getPos().add(GravityChangerAPI.getEyeOffset(target).multiply(0.65)).subtract(rotVec.multiply(0.65));
+            Vec3 pos = target.position().add(GravityChangerAPI.getEyeOffset(target).scale(0.65)).subtract(rotVec.scale(0.65));
             boolean blocking = JUtils.isBlocking(target);
             if (blocking) {
-                JCraft.createHitsparks(serverWorld, pos.getX(), pos.getY(), pos.getZ(), JParticleType.BLOCK_SPARK, 3, 0);
+                JCraft.createHitsparks(serverWorld, pos.x(), pos.y(), pos.z(), JParticleType.BLOCK_SPARK, 3, 0);
             } else {
-                JCraft.createHitsparks(serverWorld, pos.getX(), pos.getY(), pos.getZ(), JParticleType.PIXEL, 2 + (int) damage * 2, 0.5);
+                JCraft.createHitsparks(serverWorld, pos.x(), pos.y(), pos.z(), JParticleType.PIXEL, 2 + (int) damage * 2, 0.5);
 
                 JCraft.createParticle(serverWorld,
                         pos.x + random.nextGaussian() * 0.25,
@@ -583,15 +583,15 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     }
 
     /**
-     * Gets called for every target hit by {@link #attackBoxes(IAttacker, Set, DamageSource, Vec3d)}.
+     * Gets called for every target hit by {@link #attackBoxes(IAttacker, Set, DamageSource, Vec3)}.
      *
      * @param attacker     The attacker that performed this
      * @param target       The target to process
-     * @param kbVec        The knockback vector to pass to {@link StandEntity#damageLogic(World, LivingEntity, Vec3d, int, int,
+     * @param kbVec        The knockback vector to pass to {@link StandEntity#damageLogic(Level, LivingEntity, Vec3, int, int,
      *                     boolean, float, boolean, int, DamageSource, Entity, CommonHitPropertyComponent.HitAnimation, boolean, boolean)}
      * @param damageSource The damage source to apply damage with
      */
-    protected void processTarget(A attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource) {
+    protected void processTarget(A attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
         StandEntity.damageLogic(attacker.getEntityWorld(), target, kbVec, stun, stunType.ordinal(), overrideStun,
                 damage, lift, getBlockStun(), damageSource, attacker.getUserOrThrow(), hitAnimation, canBackstab, blockableType.isNonBlockable());
     }
@@ -601,8 +601,8 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
         return targets;
     }
 
-    protected Vec3d getOffsetForwardPos(A attacker, Vec3d offsetHeightPos, Vec3d upVec, Vec3d rotVec) {
-        return offsetHeightPos.add(rotVec.multiply(getMoveDistance())).add(upVec.multiply(-offset));
+    protected Vec3 getOffsetForwardPos(A attacker, Vec3 offsetHeightPos, Vec3 upVec, Vec3 rotVec) {
+        return offsetHeightPos.add(rotVec.scale(getMoveDistance())).add(upVec.scale(-offset));
     }
 
     @Override
@@ -625,6 +625,6 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     @FunctionalInterface
     public interface TargetProcessor<A extends IAttacker<? extends A, ?>> {
-        void processTarget(A attacker, LivingEntity target, Vec3d kbVec, DamageSource damageSource, boolean blocking);
+        void processTarget(A attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource, boolean blocking);
     }
 }

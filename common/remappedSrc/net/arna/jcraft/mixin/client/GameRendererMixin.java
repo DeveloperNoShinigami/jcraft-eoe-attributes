@@ -1,0 +1,46 @@
+package net.arna.jcraft.mixin.client;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Pair;
+import net.arna.jcraft.client.rendering.api.PostProcessHandler;
+import net.arna.jcraft.common.entity.stand.CreamEntity;
+import net.arna.jcraft.common.util.JUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.function.Consumer;
+
+@Mixin(GameRenderer.class)
+public class GameRendererMixin {
+
+    @Inject(method = "renderWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;render(Lnet/minecraft/client/util/math/MatrixStack;FJZLnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/GameRenderer;Lnet/minecraft/client/render/LightmapTextureManager;Lorg/joml/Matrix4f;)V", shift = At.Shift.AFTER))
+    private void jcraft$renderWorldLast(float tickDelta, long limitTime, PoseStack matrix, CallbackInfo ci) {
+        Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+        matrix.pushPose();
+        matrix.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
+        PostProcessHandler.renderLast(matrix);
+        matrix.popPose();
+    }
+
+    @Inject(method = "onResized", at = @At(value = "HEAD"))
+    public void jcraft$injectionResizeListener(int width, int height, CallbackInfo ci) {
+        PostProcessHandler.resize(width, height);
+    }
+
+    @Inject(method = "method_18144", at = @At("HEAD"), cancellable = true)
+    private static void preventUserHittingCreamWhenInBall(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+        if (entity instanceof CreamEntity cream && cream.isHalfBall() && JUtils.getStand(Minecraft.getInstance().player) == cream) {
+            cir.setReturnValue(false);
+        }
+    }
+}

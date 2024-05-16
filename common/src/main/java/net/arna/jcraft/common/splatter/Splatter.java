@@ -5,12 +5,16 @@ import lombok.Getter;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -20,8 +24,8 @@ import java.util.function.BiFunction;
 @Data
 public class Splatter {
     public static final int MAX_AGE = 80;
-    private final World world;
-    private final Vec3d pos;
+    private final Level world;
+    private final Vec3 pos;
     private final Direction direction;
     private final SplatterType type;
     @Nullable
@@ -30,13 +34,13 @@ public class Splatter {
     private final float xRange, zRange;
     private final List<SplatterSection> sections;
     @Getter(lazy = true)
-    private final BlockPos anchor = BlockPos.ofFloored(pos).down();
+    private final BlockPos anchor = BlockPos.containing(pos).below();
     private final float offset = (float) (Math.random() * 0.0019 + 0.0001); // To prevent z-fighting with anchor block and other splatters
-    private final Box mainBox;
+    private final AABB mainBox;
     private int age;
     private boolean removed;
 
-    Splatter(World world, Vec3d pos, Direction direction, SplatterType type, float xRange, float zRange, @Nullable Entity creator) {
+    Splatter(Level world, Vec3 pos, Direction direction, SplatterType type, float xRange, float zRange, @Nullable Entity creator) {
         this.world = world;
         this.pos = pos;
         this.direction = direction;
@@ -48,7 +52,7 @@ public class Splatter {
 
         Vector3f min = findEdge(sections, false);
         Vector3f max = findEdge(sections, true);
-        mainBox = new Box(new Vec3d(min), new Vec3d(max)).expand(.1);
+        mainBox = new AABB(new Vec3(min), new Vec3(max)).inflate(.1);
     }
 
     private static Vector3f findEdge(List<SplatterSection> sections, boolean max) {
@@ -70,11 +74,11 @@ public class Splatter {
         if (tickDelta <= 0.001) {
             return getStrength(type.getMaxAge(), age);
         }
-        return MathHelper.lerp(tickDelta, getStrength(type.getMaxAge(), age - 1), getStrength(type.getMaxAge(), age));
+        return Mth.lerpInt(tickDelta, (int) getStrength(type.getMaxAge(), age - 1), (int) getStrength(type.getMaxAge(), age));
     }
 
     private static float getStrength(int maxAge, int age) {
-        return MathHelper.clamp((maxAge - age) / 20f, 0f, 1f);
+        return Mth.clamp((maxAge - age) / 20f, 0f, 1f);
     }
 
     public void tick() {
@@ -87,15 +91,15 @@ public class Splatter {
             return;
         }
 
-        if (!world.isClient) {
+        if (!world.isClientSide) {
             if (type == SplatterType.ACID && age % 4 == 0) {
-                for (LivingEntity hit : world.getEntitiesByClass(LivingEntity.class, mainBox, EntityPredicates.VALID_LIVING_ENTITY)) {
+                for (LivingEntity hit : world.getEntitiesOfClass(LivingEntity.class, mainBox, EntitySelector.LIVING_ENTITY_STILL_ALIVE)) {
                     if (intersects(hit.getBoundingBox())) {
-                        if (hit.isConnectedThroughVehicle(creator) || (hit instanceof StandEntity<?, ?> stand && stand.getUser() == creator)) {
+                        if (hit.isPassengerOfSameVehicle(creator) || (hit instanceof StandEntity<?, ?> stand && stand.getUser() == creator)) {
                             continue;
                         }
-                        hit.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WSPOISON.get(), 20, 0, true, false));
-                        hit.damage(JDamageSources.whitesnakePoison(creator), 2f);
+                        hit.addEffect(new MobEffectInstance(JStatusRegistry.WSPOISON.get(), 20, 0, true, false));
+                        hit.hurt(JDamageSources.whitesnakePoison(creator), 2f);
                     }
                 }
             }
@@ -107,7 +111,7 @@ public class Splatter {
                 .allMatch(SplatterSection::isRemoved);
     }
 
-    public boolean intersects(Box box) {
+    public boolean intersects(AABB box) {
         if (box == null || !mainBox.intersects(box)) {
             return false;
         }

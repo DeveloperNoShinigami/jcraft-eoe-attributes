@@ -1,19 +1,23 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.*;
-import net.minecraft.world.LightType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -34,7 +38,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     protected static final String LEFT_HAND = "bipedHandLeft";
     protected static final String RIGHT_HAND = "bipedHandRight";
 
-    protected StandEntityRenderer(EntityRendererFactory.Context renderManager, GeoModel<T> modelProvider) {
+    protected StandEntityRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> modelProvider) {
         super(renderManager, modelProvider);
     }
 
@@ -49,22 +53,22 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     SmoothCutout - Cutout
     Solid - no transparency
      */
-    public static RenderLayer renderTypeOf(StandEntity<?, ?> stand, Identifier textureLocation) {
-        MinecraftClient mcClient = MinecraftClient.getInstance();
-        return mcClient.options.getPerspective().isFirstPerson() && mcClient.player != null && JUtils.getStand(mcClient.player) == stand ?
-                RenderLayer.getEntityNoOutline(textureLocation) : RenderLayer.getEntityTranslucent(textureLocation);
+    public static RenderType renderTypeOf(StandEntity<?, ?> stand, ResourceLocation textureLocation) {
+        Minecraft mcClient = Minecraft.getInstance();
+        return mcClient.options.getCameraType().isFirstPerson() && mcClient.player != null && JUtils.getStand(mcClient.player) == stand ?
+                RenderType.entityNoOutline(textureLocation) : RenderType.entityTranslucent(textureLocation);
     }
 
     @Override
-    public RenderLayer getRenderType(T animatable, Identifier texture, @Nullable VertexConsumerProvider bufferSource, float partialTick) {
-        MinecraftClient mcClient = MinecraftClient.getInstance();
-        return mcClient.options.getPerspective().isFirstPerson() && mcClient.player != null && JUtils.getStand(mcClient.player) == animatable ?
-                RenderLayer.getEntityNoOutline(texture) : RenderLayer.getEntityTranslucent(texture);
+    public RenderType getRenderType(T animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+        Minecraft mcClient = Minecraft.getInstance();
+        return mcClient.options.getCameraType().isFirstPerson() && mcClient.player != null && JUtils.getStand(mcClient.player) == animatable ?
+                RenderType.entityNoOutline(texture) : RenderType.entityTranslucent(texture);
     }
 
     // Adds the ability to change render alpha
     @Override
-    public void preRender(MatrixStack poseStack, T stand, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, T stand, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         float a = getAlpha(stand, partialTick);
         a *= alpha;
@@ -79,18 +83,18 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
 
 
     @Override
-    public void actuallyRender(MatrixStack poseStack, T animatable, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        poseStack.push();
+    public void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        poseStack.pushPose();
 
-        boolean shouldSit = animatable.hasVehicle() && (animatable.getVehicle() != null);
-        float lerpBodyRot = MathHelper.lerpAngleDegrees(partialTick, animatable.prevBodyYaw, animatable.bodyYaw);
-        float lerpHeadRot = MathHelper.lerpAngleDegrees(partialTick, animatable.prevHeadYaw, animatable.headYaw);
+        boolean shouldSit = animatable.isPassenger() && (animatable.getVehicle() != null);
+        float lerpBodyRot = Mth.rotLerp(partialTick, animatable.yBodyRotO, animatable.yBodyRot);
+        float lerpHeadRot = Mth.rotLerp(partialTick, animatable.yHeadRotO, animatable.yHeadRot);
         float netHeadYaw = lerpHeadRot - lerpBodyRot;
 
         if (shouldSit && !animatable.isFree() && animatable.getVehicle() instanceof LivingEntity livingentity) {
-            lerpBodyRot = MathHelper.lerpAngleDegrees(partialTick, livingentity.prevHeadYaw, livingentity.headYaw);
+            lerpBodyRot = Mth.rotLerp(partialTick, livingentity.yHeadRotO, livingentity.yHeadRot);
             netHeadYaw = lerpHeadRot - lerpBodyRot;
-            float clampedHeadYaw = MathHelper.clamp(MathHelper.wrapDegrees(netHeadYaw), -85, 85);
+            float clampedHeadYaw = Mth.clamp(Mth.wrapDegrees(netHeadYaw), -85, 85);
             lerpBodyRot = lerpHeadRot - clampedHeadYaw;
 
             if (clampedHeadYaw * clampedHeadYaw > 2500f)
@@ -99,25 +103,25 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             netHeadYaw = lerpHeadRot - lerpBodyRot;
         }
 
-        if (animatable.getPose() == EntityPose.SLEEPING) {
-            Direction bedDirection = animatable.getSleepingDirection();
+        if (animatable.getPose() == Pose.SLEEPING) {
+            Direction bedDirection = animatable.getBedOrientation();
 
             if (bedDirection != null) {
-                float eyePosOffset = animatable.getEyeHeight(EntityPose.STANDING) - 0.1F;
+                float eyePosOffset = animatable.getEyeHeight(Pose.STANDING) - 0.1F;
 
-                poseStack.translate(-bedDirection.getOffsetX() * eyePosOffset, 0, -bedDirection.getOffsetZ() * eyePosOffset);
+                poseStack.translate(-bedDirection.getStepX() * eyePosOffset, 0, -bedDirection.getStepZ() * eyePosOffset);
             }
         }
 
-        float ageInTicks = animatable.age + partialTick;
+        float ageInTicks = animatable.tickCount + partialTick;
         float limbSwingAmount = 0;
         float limbSwing = 0;
 
         applyRotations(animatable, poseStack, ageInTicks, lerpBodyRot, partialTick);
 
         if (!shouldSit && animatable.isAlive()) {
-            limbSwingAmount = animatable.limbAnimator.getSpeed(partialTick);
-            limbSwing = animatable.limbAnimator.getPos(partialTick);
+            limbSwingAmount = animatable.walkAnimation.speed(partialTick);
+            limbSwing = animatable.walkAnimation.position(partialTick);
 
             if (animatable.isBaby())
                 limbSwing *= 3f;
@@ -127,9 +131,9 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
         }
 
         if (!isReRender) {
-            float headPitch = MathHelper.lerp(partialTick, animatable.prevPitch, animatable.getPitch());
+            float headPitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
             float motionThreshold = getMotionAnimThreshold(animatable);
-            Vec3d velocity = animatable.getVelocity();
+            Vec3 velocity = animatable.getDeltaMovement();
             float avgVelocity = (float)(Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
             EntityModelData data = new EntityModelData(shouldSit, animatable.isBaby(), -netHeadYaw, -headPitch);
             AnimationState<T> animationState = new AnimationState<T>(animatable, limbSwing, limbSwingAmount, partialTick, avgVelocity >= motionThreshold && limbSwingAmount != 0);
@@ -144,11 +148,11 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
 
         poseStack.translate(0, 0.01f, 0);
 
-        this.modelRenderTranslations = new Matrix4f(poseStack.peek().getPositionMatrix());
+        this.modelRenderTranslations = new Matrix4f(poseStack.last().pose());
 
-        if (animatable.isInvisibleTo(MinecraftClient.getInstance().player)) {
-            if (MinecraftClient.getInstance().hasOutline(animatable)) {
-                buffer = bufferSource.getBuffer(renderType = RenderLayer.getOutline(getTexture(animatable)));
+        if (animatable.isInvisibleTo(Minecraft.getInstance().player)) {
+            if (Minecraft.getInstance().shouldEntityAppearGlowing(animatable)) {
+                buffer = bufferSource.getBuffer(renderType = RenderType.outline(getTextureLocation(animatable)));
             }
             else {
                 renderType = null;
@@ -171,30 +175,30 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             }
         }
 
-        poseStack.pop();
+        poseStack.popPose();
     }
 
     @Override
-    protected int getBlockLight(T stand, BlockPos pos) {
+    protected int getBlockLightLevel(T stand, BlockPos pos) {
         if (!stand.hasUser()) {
-            return super.getBlockLight(stand, pos);
+            return super.getBlockLightLevel(stand, pos);
         }
 
         if (stand.isOnFire() || stand.getUserOrThrow().isOnFire()) {
             return 15;
         }
-        return stand.getWorld().getLightLevel(LightType.BLOCK, stand.getUserOrThrow().getBlockPos());
+        return stand.level().getBrightness(LightLayer.BLOCK, stand.getUserOrThrow().blockPosition());
     }
 
     @Override
-    protected int getSkyLight(T stand, BlockPos pos) {
-        return stand.hasUser() ? stand.getWorld().getLightLevel(LightType.SKY, stand.getUserOrThrow().getBlockPos()) :
-                super.getSkyLight(stand, pos);
+    protected int getSkyLightLevel(T stand, BlockPos pos) {
+        return stand.hasUser() ? stand.level().getBrightness(LightLayer.SKY, stand.getUserOrThrow().blockPosition()) :
+                super.getSkyLightLevel(stand, pos);
     }
 
     public static boolean shouldApplyAlpha(StandEntity<?, ?> stand) {
-        MinecraftClient mcClient = MinecraftClient.getInstance();
-        return mcClient.player != null && mcClient.options.getPerspective().isFirstPerson() && JUtils.getStand(mcClient.player) == stand;
+        Minecraft mcClient = Minecraft.getInstance();
+        return mcClient.player != null && mcClient.options.getCameraType().isFirstPerson() && JUtils.getStand(mcClient.player) == stand;
     }
 
     public static float getAlpha(StandEntity<?, ?> stand, float tickDelta) {
@@ -207,13 +211,13 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             return stand.getAlphaOverride();
         }
 
-        float a = MathHelper.clamp((float) stand.squaredDistanceTo(MinecraftClient.getInstance().player) / 2f, 0, 1);
+        float a = Mth.clamp((float) stand.distanceToSqr(Minecraft.getInstance().player) / 2f, 0, 1);
         if (!stand.hasAlphaOverride()) {
             return a; // If we don't have an override, use this alpha value.
         }
 
         // If we do have an override, but didn't last tick, lerp between the previous alpha and the override.
-        return MathHelper.lerp(tickDelta, a, stand.getAlphaOverride());
+        return Mth.lerp(tickDelta, a, stand.getAlphaOverride());
     }
 
     protected float getRed(T stand, float red, float alpha) {

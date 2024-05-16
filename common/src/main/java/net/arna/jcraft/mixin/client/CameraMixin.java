@@ -3,14 +3,14 @@ package net.arna.jcraft.mixin.client;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.client.render.Camera;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.RaycastContext;
+import net.minecraft.client.Camera;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,20 +22,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Camera.class)
 public abstract class CameraMixin {
     @Shadow
-    private BlockView area;
+    private BlockGetter level;
     @Shadow
-    private Vec3d pos;
+    private Vec3 position;
     @Final
     @Shadow
-    private Vector3f verticalPlane;
+    private Vector3f up;
     @Shadow
-    private Entity focusedEntity;
+    private Entity entity;
     @Shadow
-    private boolean thirdPerson;
+    private boolean detached;
     @Shadow
-    private float lastCameraY;
+    private float eyeHeightOld;
     @Shadow
-    private float cameraY;
+    private float eyeHeight;
 
     private double clipToSpaceVertical(double desiredCameraDistance) {
         for (int i = 0; i < 8; ++i) {
@@ -45,11 +45,11 @@ public abstract class CameraMixin {
             f *= 0.1F;
             g *= 0.1F;
             h *= 0.1F;
-            Vec3d vec3d = pos.add(f, g, h);
-            Vec3d vec3d2 = new Vec3d(pos.x - (double) verticalPlane.x() * desiredCameraDistance + (double) f + (double) h, pos.y - (double) verticalPlane.y() * desiredCameraDistance + (double) g, pos.z - (double) verticalPlane.z() * desiredCameraDistance + (double) h);
-            HitResult hitResult = area.raycast(new RaycastContext(vec3d, vec3d2, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, this.focusedEntity));
+            Vec3 vec3d = position.add(f, g, h);
+            Vec3 vec3d2 = new Vec3(position.x - (double) up.x() * desiredCameraDistance + (double) f + (double) h, position.y - (double) up.y() * desiredCameraDistance + (double) g, position.z - (double) up.z() * desiredCameraDistance + (double) h);
+            HitResult hitResult = level.clip(new ClipContext(vec3d, vec3d2, ClipContext.Block.VISUAL, ClipContext.Fluid.NONE, this.entity));
             if (hitResult.getType() != HitResult.Type.MISS) {
-                double d = hitResult.getPos().distanceTo(this.pos);
+                double d = hitResult.getLocation().distanceTo(this.position);
                 if (d < desiredCameraDistance) {
                     desiredCameraDistance = d;
                 }
@@ -59,29 +59,29 @@ public abstract class CameraMixin {
         return desiredCameraDistance;
     }
 
-    @Inject(method = "update", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Camera;setPos(DDD)V", shift = At.Shift.BEFORE))
-    public void jcraft$prevSetPosUpdate(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo info) {
+    @Inject(method = "setup", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setPosition(DDD)V", shift = At.Shift.BEFORE))
+    public void jcraft$prevSetPosUpdate(BlockGetter area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo info) {
         if (focusedEntity instanceof LivingEntity living) {
-            if (living.hasStatusEffect(JStatusRegistry.OUTOFBODY.get())) {
-                this.thirdPerson = true;
+            if (living.hasEffect(JStatusRegistry.OUTOFBODY.get())) {
+                this.detached = true;
                 info.cancel();
             }
         }
     }
 
-    @Inject(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Camera;setPos(DDD)V", shift = At.Shift.AFTER))
-    public void jcraft$afterSetPosUpdate(BlockView area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo info) {
+    @Inject(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setPosition(DDD)V", shift = At.Shift.AFTER))
+    public void jcraft$afterSetPosUpdate(BlockGetter area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo info) {
         StandEntity<?, ?> stand = focusedEntity instanceof LivingEntity living ? JUtils.getStand(living) : null;
         if (stand != null && stand.isRemoteAndControllable()) {
             CameraInvoker cameraInvoker = (CameraInvoker) this;
             cameraInvoker.invokeSetPos(
-                    new Vec3d(
-                            MathHelper.lerp(tickDelta, stand.prevX, stand.getX()),
-                            MathHelper.lerp(tickDelta, stand.prevY, stand.getY()) + (double) MathHelper.lerp(tickDelta, this.lastCameraY, this.cameraY),
-                            MathHelper.lerp(tickDelta, stand.prevZ, stand.getZ())
+                    new Vec3(
+                            Mth.lerp(tickDelta, stand.xo, stand.getX()),
+                            Mth.lerp(tickDelta, stand.yo, stand.getY()) + (double) Mth.lerp(tickDelta, this.eyeHeightOld, this.eyeHeight),
+                            Mth.lerp(tickDelta, stand.zo, stand.getZ())
                     )
             );
-            this.thirdPerson = true;
+            this.detached = true;
         }
 
         /*

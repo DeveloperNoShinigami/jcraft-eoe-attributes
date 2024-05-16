@@ -3,23 +3,27 @@ package net.arna.jcraft.common.splatter;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 @Data
 public class SplatterSection {
-    private final World world;
+    private final Level world;
     private final Direction direction;
     private final @NonNull Vector3f minPos, maxPos;
     private final Vector3f center;
     private final BlockPos blockPos;
-    private final Vec2f minUv, maxUv;
-    private final Box hitBox;
+    private final Vec2 minUv, maxUv;
+    private final AABB hitBox;
     private boolean removed;
 
-    public SplatterSection(World world, Direction direction, @NotNull Vector3f minPos, @NotNull Vector3f maxPos, Vec2f minUv, Vec2f maxUv) {
+    public SplatterSection(Level world, Direction direction, @NotNull Vector3f minPos, @NotNull Vector3f maxPos, Vec2 minUv, Vec2 maxUv) {
         this.world = world;
         this.direction = direction;
         this.minPos = minPos;
@@ -28,12 +32,12 @@ public class SplatterSection {
         blockPos = getAnchor(center, direction);
         this.minUv = minUv;
         this.maxUv = maxUv;
-        this.hitBox = new Box(new Vec3d(minPos), new Vec3d(maxPos))
-                .stretch(new Vec3d(direction.getUnitVector()).multiply(0.1));
+        this.hitBox = new AABB(new Vec3(minPos), new Vec3(maxPos))
+                .expandTowards(new Vec3(direction.step()).scale(0.1));
     }
 
     public static BlockPos getAnchor(Vector3f center, Direction facing) {
-        return BlockPos.ofFloored(new Vec3d(center).add(new Vec3d(facing.getUnitVector()).multiply(0.05)));
+        return BlockPos.containing(new Vec3(center).add(new Vec3(facing.step()).scale(0.05)));
     }
 
     public static Vector3f calcCenter(Vector3f min, Vector3f max) {
@@ -71,37 +75,37 @@ public class SplatterSection {
      */
     @SuppressWarnings("SuspiciousNameCombination") // Yes, that's the idea.
     public SplatterSection wrapped(Direction direction, Vector3f min, Vector3f max, UvModification uvModification) {
-        Vec2f minUv = this.minUv;
-        Vec2f maxUv = this.maxUv;
+        Vec2 minUv = this.minUv;
+        Vec2 maxUv = this.maxUv;
 
         if (uvModification.isFlip()) {
-            minUv = new Vec2f(minUv.y, minUv.x);
-            maxUv = new Vec2f(maxUv.y, maxUv.x);
+            minUv = new Vec2(minUv.y, minUv.x);
+            maxUv = new Vec2(maxUv.y, maxUv.x);
         }
 
         if (uvModification.isSwap()) {
-            Vec2f intermediary = minUv;
+            Vec2 intermediary = minUv;
             minUv = maxUv;
             maxUv = intermediary;
         }
 
         if (uvModification.isUFlip()) {
             float intermediary = minUv.x;
-            minUv = new Vec2f(maxUv.x, minUv.y);
-            maxUv = new Vec2f(intermediary, maxUv.y);
+            minUv = new Vec2(maxUv.x, minUv.y);
+            maxUv = new Vec2(intermediary, maxUv.y);
         }
 
         if (uvModification.isVFlip()) {
             float intermediary = minUv.y;
-            minUv = new Vec2f(minUv.x, maxUv.y);
-            maxUv = new Vec2f(maxUv.x, intermediary);
+            minUv = new Vec2(minUv.x, maxUv.y);
+            maxUv = new Vec2(maxUv.x, intermediary);
         }
 
         return new SplatterSection(world, direction, new Vector3f(min), new Vector3f(max), minUv, maxUv);
     }
 
     public boolean hasValidAnchor() {
-        BlockPos pos = blockPos.offset(direction.getOpposite());
+        BlockPos pos = blockPos.relative(direction.getOpposite());
         return SplatterSplitter.isValidAnchor(world, pos);
     }
 

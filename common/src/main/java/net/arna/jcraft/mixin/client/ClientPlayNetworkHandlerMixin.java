@@ -1,14 +1,14 @@
 package net.arna.jcraft.mixin.client;
 
 import net.arna.jcraft.client.JClientConfig;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(ClientPlayNetworkHandler.class)
+@Mixin(ClientPacketListener.class)
 public class ClientPlayNetworkHandlerMixin {
-    @ModifyArg(method = "onEntityPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;updateTrackedPositionAndAngles(DDDFFIZ)V"), index = 5)
+    @ModifyArg(method = "handleTeleportEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;lerpTo(DDDFFIZ)V"), index = 5)
     private int modifyInterpolationSteps(int original) {
         if (JClientConfig.getInstance().isClientsidePrediction()) {
             return 2; // 3 -> 2

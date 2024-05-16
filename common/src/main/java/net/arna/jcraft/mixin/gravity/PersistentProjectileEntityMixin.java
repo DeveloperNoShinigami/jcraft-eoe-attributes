@@ -4,14 +4,13 @@ package net.arna.jcraft.mixin.gravity;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.thrown.ThrownEntity;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -19,10 +18,10 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-@Mixin(PersistentProjectileEntity.class)
+@Mixin(AbstractArrow.class)
 public abstract class PersistentProjectileEntityMixin extends Entity {
 
-    public PersistentProjectileEntityMixin(EntityType<?> type, World world) {
+    public PersistentProjectileEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
@@ -34,19 +33,19 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
             )
             , ordinal = 0
     )
-    public Vec3d tick(Vec3d modify) {
-        modify = new Vec3d(modify.x, modify.y + 0.05, modify.z);
+    public Vec3 tick(Vec3 modify) {
+        modify = new Vec3(modify.x, modify.y + 0.05, modify.z);
         modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPI.getGravityDirection(this));
-        modify = new Vec3d(modify.x, modify.y - 0.05, modify.z);
+        modify = new Vec3(modify.x, modify.y - 0.05, modify.z);
         modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPI.getGravityDirection(this));
         return modify;
     }
 
     @ModifyArg(
-            method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",
+            method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;<init>(Lnet/minecraft/entity/EntityType;DDDLnet/minecraft/world/World;)V"
+                    target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;<init>(Lnet/minecraft/world/entity/EntityType;DDDLnet/minecraft/world/level/Level;)V"
             ),
             index = 1
     )
@@ -56,17 +55,17 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
             return x;
         }
 
-        Vec3d pos = owner.getEyePos().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
+        Vec3 pos = owner.getEyePosition().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
         return pos.x;
     }
 
     @ModifyArg(
-            method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",
+            method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;<init>(Lnet/minecraft/entity/EntityType;DDDLnet/minecraft/world/World;)V"
+                    target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;<init>(Lnet/minecraft/world/entity/EntityType;DDDLnet/minecraft/world/level/Level;)V"
             ),
-            index = 1
+            index = 2
     )
     private static double modifyargs_init_init_1(double y, @Local LivingEntity owner) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
@@ -74,17 +73,17 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
             return y;
         }
 
-        Vec3d pos = owner.getEyePos().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
+        Vec3 pos = owner.getEyePosition().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
         return pos.y;
     }
 
     @ModifyArg(
-            method = "<init>(Lnet/minecraft/entity/EntityType;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/world/World;)V",
+            method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;<init>(Lnet/minecraft/entity/EntityType;DDDLnet/minecraft/world/World;)V"
+                    target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;<init>(Lnet/minecraft/world/entity/EntityType;DDDLnet/minecraft/world/level/Level;)V"
             ),
-            index = 1
+            index = 3
     )
     private static double modifyargs_init_init_2(double z, @Local LivingEntity owner) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(owner);
@@ -92,7 +91,7 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
             return z;
         }
 
-        Vec3d pos = owner.getEyePos().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
+        Vec3 pos = owner.getEyePosition().subtract(RotationUtil.vecPlayerToWorld(0.0D, 0.10000000149011612D, 0.0D, gravityDirection));
         return pos.z;
     }
 }

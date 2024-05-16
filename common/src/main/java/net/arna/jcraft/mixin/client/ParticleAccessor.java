@@ -6,13 +6,13 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Particle.class)
 public interface ParticleAccessor {
-    @Accessor("prevPosX")
+    @Accessor("xo")
     void setPrevX(double value);
 
-    @Accessor("prevPosY")
+    @Accessor("yo")
     void setPrevY(double value);
 
-    @Accessor("prevPosZ")
+    @Accessor("zo")
     void setPrevZ(double value);
 
     @Accessor("x")
