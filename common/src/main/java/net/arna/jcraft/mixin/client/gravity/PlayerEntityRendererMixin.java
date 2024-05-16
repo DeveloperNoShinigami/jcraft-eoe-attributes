@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(PlayerRenderer.class)
 public abstract class PlayerEntityRendererMixin {
+    /*TODO mojmap
     @ModifyVariable(
             method = "setupRotations(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V",
             at = @At(
@@ -28,4 +29,6 @@ public abstract class PlayerEntityRendererMixin {
 
         return RotationUtil.vecWorldToPlayer(vec3d, gravityDirection);
     }
+
+     */
 }

@@ -15,7 +15,8 @@ public abstract class BiomeEffectSoundPlayerMixin {
             method = "method_26271",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/player/LocalPlayer;getEyeY()D"
+                    target = "Lnet/minecraft/client/player/LocalPlayer;getEyeY()D",
+                    ordinal = 0
             )
     )
     private double redirect_method_26271_getEyeY_0(LocalPlayer clientPlayerEntity) {
@@ -31,7 +32,8 @@ public abstract class BiomeEffectSoundPlayerMixin {
             method = "method_26271",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/player/LocalPlayer;getX()D"
+                    target = "Lnet/minecraft/client/player/LocalPlayer;getX()D",
+                    ordinal = 0
             )
     )
     private double redirect_method_26271_getX_0(LocalPlayer clientPlayerEntity) {
@@ -47,7 +49,8 @@ public abstract class BiomeEffectSoundPlayerMixin {
             method = "method_26271",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/player/LocalPlayer;getZ()D"
+                    target = "Lnet/minecraft/client/player/LocalPlayer;getZ()D",
+                    ordinal = 0
             )
     )
     private double redirect_method_26271_getZ_0(LocalPlayer clientPlayerEntity) {

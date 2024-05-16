@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Witch.class)
 public abstract class WitchEntityMixin {
+    /*TODO mojmap
     @ModifyVariable(
             method = "performRangedAttack",
             at = @At(
@@ -30,6 +31,8 @@ public abstract class WitchEntityMixin {
         return RotationUtil.vecPlayerToWorld(value, gravityDirection);
     }
 
+     */
+
     @Redirect(
             method = "performRangedAttack",
             at = @At(
@@ -45,7 +48,7 @@ public abstract class WitchEntityMixin {
 
         return target.position().add(RotationUtil.vecPlayerToWorld(0.0D, target.getEyeHeight() - 1.100000023841858D, 0.0D, gravityDirection)).x;
     }
-
+/*TODO mojmap
     @Redirect(
             method = "Lnet/minecraft/world/entity/monster/Witch;attackPlayersGoal:Lnet/minecraft/world/entity/ai/goal/target/NearestAttackableWitchTargetGoal;",
             at = @At(
@@ -61,6 +64,8 @@ public abstract class WitchEntityMixin {
 
         return target.position().add(RotationUtil.vecPlayerToWorld(0.0D, target.getEyeHeight() - 1.100000023841858D, 0.0D, gravityDirection)).y + 1.100000023841858D;
     }
+
+ */
 
     @Redirect(
             method = "performRangedAttack",

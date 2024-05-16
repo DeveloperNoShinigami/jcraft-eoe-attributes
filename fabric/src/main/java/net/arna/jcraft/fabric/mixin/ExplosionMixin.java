@@ -20,13 +20,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class ExplosionMixin implements IJExplosion {
     @Shadow
     @Final
-    private boolean createFire;
+    private boolean fire;
     @Shadow
     @Final
-    private Explosion.BlockInteraction destructionType;
+    private Explosion.BlockInteraction blockInteraction;
     @Shadow
     @Final
-    private Level world;
+    private Level level;
     private @Unique JExplosionModifier modifier;
 
     // Interface implementation
@@ -40,12 +40,12 @@ public class ExplosionMixin implements IJExplosion {
             target = "Lnet/minecraft/world/level/Explosion;blockInteraction:Lnet/minecraft/world/level/Explosion$BlockInteraction;")
             , require = 2)
     private Explosion.BlockInteraction overrideDestructionType(Explosion thiz) {
-        return modifier == null || modifier.getDestructionType() == null ? destructionType : modifier.getDestructionType();
+        return modifier == null || modifier.getDestructionType() == null ? blockInteraction : modifier.getDestructionType();
     }
 
     @Redirect(method = "finalizeExplosion", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/Explosion;fire:Z"))
     private boolean overrideCreateFire(Explosion thiz) {
-        return modifier == null || modifier.getCreateFire() == null ? createFire : modifier.getCreateFire();
+        return modifier == null || modifier.getCreateFire() == null ? fire : modifier.getCreateFire();
     }
 
     @ModifyVariable(method = "finalizeExplosion", at = @At("HEAD"), argsOnly = true)
@@ -88,11 +88,11 @@ public class ExplosionMixin implements IJExplosion {
 
     @ModifyArg(method = "finalizeExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;playLocalSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V"), index = 5)
     private float overrideVolume(float volume) {
-        return modifier == null || modifier.getVolumeGetter() == null ? volume : modifier.getVolumeGetter().apply(world.random);
+        return modifier == null || modifier.getVolumeGetter() == null ? volume : modifier.getVolumeGetter().apply(level.random);
     }
 
     @ModifyArg(method = "finalizeExplosion", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;playLocalSound(DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FFZ)V"), index = 6)
     private float overridePitch(float pitch) {
-        return modifier == null || modifier.getPitchGetter() == null ? pitch : modifier.getPitchGetter().apply(world.random);
+        return modifier == null || modifier.getPitchGetter() == null ? pitch : modifier.getPitchGetter().apply(level.random);
     }
 }

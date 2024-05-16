@@ -134,6 +134,7 @@ public final class JCraft {
 
         // Particle registration (serverside)
         JParticleTypeRegistry.initParticleTypes();
+        PARTICLES.register();
 
         // Registration
         JEntityTypeRegistry.init();
