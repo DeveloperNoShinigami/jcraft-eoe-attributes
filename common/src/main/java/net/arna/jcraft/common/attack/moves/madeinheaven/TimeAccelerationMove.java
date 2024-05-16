@@ -57,7 +57,7 @@ public class TimeAccelerationMove extends AbstractMove<TimeAccelerationMove, Mad
 
                 for (LivingEntity entity : toCatch) // 15s of Standless to any victims of Universe Reset
                 {
-                    entity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.STANDLESS, 300, 0, true, false));
+                    entity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.STANDLESS.get(), 300, 0, true, false));
                 }
             }
 

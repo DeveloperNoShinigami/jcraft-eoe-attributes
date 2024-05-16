@@ -19,7 +19,7 @@ public interface JItemRegistry {
 
     Map<RegistrySupplier<Item>, Identifier> ITEMS = new LinkedHashMap<>();
 
-    RegistrySupplier<Item> DEBUG_WAND = FabricLoader.getInstance().isDevelopmentEnvironment() ? register("debug_wand", () -> new DebugWand(settings())) : null;
+    RegistrySupplier<Item> DEBUG_WAND = register("debug_wand", () -> new DebugWand(settings()));
 
     RegistrySupplier<Item> STAND_ARROW = register("stand_arrow", () -> new StandArrowItem(settings().rarity(Rarity.RARE).fireproof()));
 

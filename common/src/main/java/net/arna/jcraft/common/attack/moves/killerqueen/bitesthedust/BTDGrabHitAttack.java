@@ -24,7 +24,7 @@ public class BTDGrabHitAttack extends AbstractMultiHitAttack<BTDGrabHitAttack, K
         switch (getBlow(attacker)) {
             case 0 -> {
                 for (LivingEntity ent : targets) {
-                    ent.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 40, 0, true, false, true));
+                    ent.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 40, 0, true, false, true));
                 }
             }
             case 2 -> DetonateAttack.explode(attacker, user, attacker.getPos().subtract(0, .5, 0));

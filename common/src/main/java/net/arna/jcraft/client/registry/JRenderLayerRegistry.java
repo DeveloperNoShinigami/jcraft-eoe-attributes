@@ -6,7 +6,6 @@ import net.arna.jcraft.client.rendering.RenderHandler;
 import net.arna.jcraft.platform.JPlatformUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexFormat;
@@ -70,8 +69,8 @@ public class JRenderLayerRegistry extends RenderPhase {
      * Creates a custom render layer and creates a buffer builder for it.
      */
     public static RenderLayer createGenericRenderLayer(String name, VertexFormat format, VertexFormat.DrawMode mode, ShaderProgram shader, Transparency transparency, TextureBase texture) {
-        RenderLayer type = RenderLayer.of(
-                name, format, mode, FabricLoader.getInstance().isModLoaded("sodium") ? 262144 : 256, false, false, RenderLayer.MultiPhaseParameters.builder()
+        RenderLayer type = RenderLayer.of(//TODO add rubidium etc?
+                name, format, mode, JPlatformUtils.isModLoaded("sodium") ? 262144 : 256, false, false, RenderLayer.MultiPhaseParameters.builder()
                         .program(shader)
                         .transparency(transparency)
                         .texture(texture)

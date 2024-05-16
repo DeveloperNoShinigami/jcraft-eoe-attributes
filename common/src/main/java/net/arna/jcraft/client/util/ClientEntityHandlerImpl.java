@@ -159,13 +159,13 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
         AuraBlobParticle.Factory.parent = entity;
         AuraBlobParticle.Factory.color = color;
 
-        clientWorld.addParticle(JParticleTypeRegistry.AURA_ARC, false,
+        clientWorld.addParticle(JParticleTypeRegistry.AURA_ARC.get(), false,
                 pos.x + maxBox.x() * random.nextTriangular(0, 1),
                 pos.y + maxBox.y() * random.nextTriangular(0.5, 0.5),
                 pos.z + maxBox.z() * random.nextTriangular(0, 1),
                 vel.x, vel.y, vel.z);
 
-        clientWorld.addParticle(JParticleTypeRegistry.AURA_BLOB, false,
+        clientWorld.addParticle(JParticleTypeRegistry.AURA_BLOB.get(), false,
                 pos.x + maxBox.x() * random.nextTriangular(0, 1),
                 pos.y + maxBox.y() * random.nextTriangular(0.5, 0.5),
                 pos.z + maxBox.z() * random.nextTriangular(0, 1),

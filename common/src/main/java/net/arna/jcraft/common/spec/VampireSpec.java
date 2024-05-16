@@ -27,7 +27,7 @@ import net.minecraft.text.Text;
 public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
     public static final UppercutAttack<VampireSpec> AIR_KICK = new UppercutAttack<VampireSpec>(30, 6,
             12, 1f, 5f, 14, 1.5f, 0.2f, 0.5f, -0.5f)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withStaticY()
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
@@ -35,7 +35,7 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
 
     public static final UppercutAttack<VampireSpec> SWEEP = new UppercutAttack<VampireSpec>(30, 6,
             12, 1f, 5f, 12, 1.5f, 0.2f, 0.5f, 0.5f)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withStaticY()
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(Text.literal("Sweep Kick"), Text.literal("fast launcher"));
@@ -44,14 +44,14 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
             15, 1f, 6f, 19, 1.5f, 1.5f, 0f)
             .withCrouchingVariant(SWEEP)
             .withAerialVariant(AIR_KICK)
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT)
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(Text.literal("Wheel Kick"), Text.literal("fast launcher"));
 
     public static final SimpleMultiHitAttack<VampireSpec> COMBO = new SimpleMultiHitAttack<VampireSpec>(240,
             23, 1f, 2.5f, 12, 1.5f, 0.2f, -0.1f, IntSet.of(5, 8, 12, 16, 20))
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withBlockStun(5)
             .withInfo(Text.literal("Beatdown"), Text.literal("hits 5 times, combo starter/extender"));
 
@@ -64,24 +64,24 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
                     return;
                 }
                 attacker.vampireComponent.setBlood(attacker.vampireComponent.getBlood() + 2 * bloodMult);
-                JUtils.serverPlaySound(JSoundRegistry.VAMPIRE_SUCK, (ServerWorld) user.getWorld(), user.getPos(), 32);
+                JUtils.serverPlaySound(JSoundRegistry.VAMPIRE_SUCK.get(), (ServerWorld) user.getWorld(), user.getPos(), 32);
             })
             .withStunType(StunType.LAUNCH)
             .withInfo(Text.literal("Blood Suck (Hit)"), Text.empty());
     public static final BloodSuckAttack<VampireSpec, State> BLOODSUCK = new BloodSuckAttack<>(240, 10, 18,
             1f, 1f, BLOODSUCK_HITS.getDuration(), 1.5f, 0f, 0f, BLOODSUCK_HITS, State.BLOODSUCK_HIT, BLOODSUCK_HITS.getDuration(), 2f)
-            .withSound(JSoundRegistry.VAMPIRE_GRAB_HIT)
-            .withImpactSound(JSoundRegistry.IMPACT_9)
+            .withSound(JSoundRegistry.VAMPIRE_GRAB_HIT.get())
+            .withImpactSound(JSoundRegistry.IMPACT_9.get())
             .withHitSpark(JParticleType.BACK_STAB) // todo: bloodsuck particles
             .withInfo(Text.literal("Blood Suck"), Text.literal("blockable grab"));
 
     public static final SpaceRipperAttack SPACE_RIPPER_ATTACK = new SpaceRipperAttack(300, 1, 10, 1f)
-            .withAction((attacker, user, ctx, targets) -> JUtils.serverPlaySound(JSoundRegistry.VAMPIRE_LASER_FIRE, (ServerWorld) user.getWorld(), user.getPos(), 96))
+            .withAction((attacker, user, ctx, targets) -> JUtils.serverPlaySound(JSoundRegistry.VAMPIRE_LASER_FIRE.get(), (ServerWorld) user.getWorld(), user.getPos(), 96))
             .withInfo(Text.literal("Space Ripper Stingy Eyes (Fire)"), Text.empty());
     public static final HoldableMove<VampireSpec, State> SPACE_RIPPER_CHARGE = new HoldableMove<>(
             300, 0, 32, 1f, SPACE_RIPPER_ATTACK, State.SPACE_RIPPERS, 14)
             .withInitAction(((attacker, user, ctx) -> ctx.setInt(SpaceRipperAttack.CHARGE_TIME, 0)))
-            .withSound(JSoundRegistry.VAMPIRE_LASER)
+            .withSound(JSoundRegistry.VAMPIRE_LASER.get())
             .shouldSetMoveStun()
             .withInfo(Text.literal("Space Ripper Stingy Eyes"), Text.literal("""
                     Chargable laser beam attack.
@@ -95,7 +95,7 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
 
     public static final ReviveMove<VampireSpec> REVIVE_MOVE = new ReviveMove<VampireSpec>(300, 16, 20, 5)
             .withCrouchingVariant(TOGGLE_NV)
-            .withSound(JSoundRegistry.VAMPIRE_REANIMATE)
+            .withSound(JSoundRegistry.VAMPIRE_REANIMATE.get())
             .withInfo(Text.literal("Resurrection"), Text.literal("revives humanoid/undead enemies within 5 meters, that died within the last 1 minute"));
 
     private final CommonVampireComponent vampireComponent;

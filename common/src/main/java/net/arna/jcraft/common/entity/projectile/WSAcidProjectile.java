@@ -94,7 +94,7 @@ public class WSAcidProjectile extends PersistentProjectileEntity implements GeoE
             }
             damageLogic(getWorld(), target, Vec3d.ZERO, 10, 1, false, 5f, false, 6,
                     getWorld().getDamageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
-            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WSPOISON, 60, 0, false, true));
+            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WSPOISON.get(), 60, 0, false, true));
             discard();
         }
 

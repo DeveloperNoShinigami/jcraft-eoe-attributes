@@ -23,7 +23,7 @@ public class TFComboAttack extends AbstractMultiHitAttack<TFComboAttack, TheFool
 
         if (getBlow(attacker) == 2) {
             for (LivingEntity ent : targets) {
-                ent.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 20, 0, true, false));
+                ent.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 20, 0, true, false));
             }
         }
 

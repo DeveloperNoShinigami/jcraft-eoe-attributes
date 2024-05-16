@@ -49,7 +49,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
 
     public static final KnockdownAttack<AbstractPurpleHazeEntity<?, ?>> BACKHAND_FOLLOWUP = new KnockdownAttack<AbstractPurpleHazeEntity<?, ?>>(
             0, 13, 20, 0.75f, 6f, 13, 1.75f, 0.5f, 0.35f, 25)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("Hammerfist"),
@@ -63,7 +63,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
                 }
             })
             .withFollowup(BACKHAND_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_4)
+            .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withExtraHitBox(0, 0.35, 1.25)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
@@ -74,7 +74,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> LIGHT_FOLLOWUP = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
             0, 9, 20, 0.75f, 6f, 13, 1.6f, 1.25f, -0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
@@ -84,7 +84,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> LIGHT = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
             30, 6, 9, 0.75f, 5f, 11, 1.5f, 0.25f, 0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(BACKHAND)
             .withInfo(
@@ -94,7 +94,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> HEAVY = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
             20 * 5, 10, 20, 0.75f, 7f, 14, 2.0f, 1.25f, -0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withLaunch()
             .withInfo(
                     Text.literal("Uppercut"),
@@ -103,7 +103,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
 
     public static final MainBarrageAttack<AbstractPurpleHazeEntity<?, ?>> BARRAGE = new MainBarrageAttack<AbstractPurpleHazeEntity<?, ?>>(280,
             0, 40, 0.75f, 1f, 30, 2f, 0.25f, 0f, 3, Blocks.DEEPSLATE.getHardness())
-            .withSound(JSoundRegistry.PH_BARRAGE)
+            .withSound(JSoundRegistry.PH_BARRAGE.get())
             .withInfo(
                     Text.literal("Barrage"),
                     Text.literal("fast reliable combo starter/extender, high stun")
@@ -111,7 +111,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> LAUNCH_CAPSULES = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
             8 * 20, 9, 18, 0.75f, 0, 0, 0, 0, 0)
-            .withSound(JSoundRegistry.PH_CAPSULE2)
+            .withSound(JSoundRegistry.PH_CAPSULE2.get())
             .markRanged()
             .withAction(
                     (attacker, user, ctx, targets) -> {
@@ -129,7 +129,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> LAUNCH_CAPSULE = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
             8 * 20, 7, 14, 0.75f, 0, 0, 0, 0, 0)
-            .withSound(JSoundRegistry.PH_CAPSULE1)
+            .withSound(JSoundRegistry.PH_CAPSULE1.get())
             .withCrouchingVariant(LAUNCH_CAPSULES)
             .markRanged()
             .withAction(
@@ -145,7 +145,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
 
     public static final SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>> FULL_RELEASE = new SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>>(
             30 * 20, 30, 0.75f, 3f, 11, 1.75f, 0.45f, 0.2f, IntSet.of(14, 24))
-            .withSound(JSoundRegistry.PH_ULTIMATE)
+            .withSound(JSoundRegistry.PH_ULTIMATE.get())
             .withHitSpark(JParticleType.HIT_SPARK_1)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withAction(AbstractPurpleHazeEntity::performUlt)
@@ -159,9 +159,9 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
     // .withFollowup() and .withAnim() must be implemented inside inheritors
     public static final KnockdownAttack<AbstractPurpleHazeEntity<?, ?>> REKKA3 = new KnockdownAttack<AbstractPurpleHazeEntity<?, ?>>
             (0, 10, 20, 1f, 5f, 15, 2f, 0.75f, 0.3f, 55)
-            .withSound(JSoundRegistry.PH_REKKA3)
+            .withSound(JSoundRegistry.PH_REKKA3.get())
             .withLaunch()
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withBlockStun(8)
             .withInfo(
                     Text.literal("Rekka (Final Hit)"),
@@ -169,8 +169,8 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             );
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> REKKA2 = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>
             (0, 9, 18, 1f, 4f, 16, 1.75f, 0.5f, 0f)
-            .withSound(JSoundRegistry.PH_REKKA2)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withSound(JSoundRegistry.PH_REKKA2.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             // .withFollowup(REKKA3)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
@@ -179,8 +179,8 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             );
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> REKKA1 = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>
             (160, 7, 14, 1f, 4f, 15, 1.5f, 0.5f, 0f)
-            .withSound(JSoundRegistry.PH_REKKA1)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withSound(JSoundRegistry.PH_REKKA1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             // .withFollowup(REKKA2)
             .withExtraHitBox(1.5)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
@@ -194,8 +194,8 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             );
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> GROUND_SLAM = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
             7 * 20, 10, 18, 0.75f, 6f, 10, 1.75f, 0.3f, 0.3f)
-            .withSound(JSoundRegistry.PH_GROUNDSLAM)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withSound(JSoundRegistry.PH_GROUNDSLAM.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withAction(AbstractPurpleHazeEntity::groundSlam)
@@ -205,7 +205,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             );
 
     protected AbstractPurpleHazeEntity(StandType type, World worldIn) {
-        super(type, worldIn, JSoundRegistry.PH_SUMMON);
+        super(type, worldIn, JSoundRegistry.PH_SUMMON.get());
         idleRotation = 225f;
 
         proCount = 3;
@@ -225,7 +225,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
     public boolean initMove(MoveType type) {
         if (type == MoveType.SPECIAL2) {
             LivingEntity user = getUserOrThrow();
-            if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
+            if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
                 return false;
             }
             boolean idling = this.getMoveStun() <= 0;
@@ -322,7 +322,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
     }
 
     public static void infect(LivingEntity target, int ticks) {
-        infect(target, ticks, PHPOISON);
+        infect(target, ticks, PHPOISON.get());
     }
 
     public static void infect(LivingEntity target, int ticks, StatusEffect effect) {

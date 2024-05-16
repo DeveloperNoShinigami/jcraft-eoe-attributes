@@ -107,7 +107,7 @@ public final class JUtils {
     }
 
     public static boolean canAct(LivingEntity living) {
-        StatusEffectInstance stun = living.getStatusEffect(JStatusRegistry.DAZED);
+        StatusEffectInstance stun = living.getStatusEffect(JStatusRegistry.DAZED.get());
         return stun == null || stun.getAmplifier() == 2;
     }
 

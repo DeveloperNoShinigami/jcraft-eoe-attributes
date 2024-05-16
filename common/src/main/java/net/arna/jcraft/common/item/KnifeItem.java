@@ -53,7 +53,7 @@ public class KnifeItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
+        if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
             return TypedActionResult.fail(stack);
         }
 
@@ -82,7 +82,7 @@ public class KnifeItem extends Item {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
+        if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
             return;
         }
 

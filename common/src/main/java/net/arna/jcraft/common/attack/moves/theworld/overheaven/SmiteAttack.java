@@ -76,7 +76,7 @@ public class SmiteAttack extends AbstractEffectInflictingAttack<SmiteAttack, The
         attacker.getWorld().spawnEntity(effectCloud);
 
         attacker.getWorld().playSound(null, lightningPos.x, lightningPos.y, lightningPos.z,
-                JSoundRegistry.TWOH_CHARGE, SoundCategory.PLAYERS, 1, 1);
+                JSoundRegistry.TWOH_CHARGE.get(), SoundCategory.PLAYERS, 1, 1);
     }
 
     @Override

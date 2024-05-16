@@ -109,7 +109,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                     fireMeteor(attacker, user, attacker.randomPos(), JUtils.randUnitVec(attacker.random), 1.25f, 0f);
                 }
             })
-            .withSound(JSoundRegistry.SUN_SHOWER)
+            .withSound(JSoundRegistry.SUN_SHOWER.get())
             .withoutSlowness()
             .markRanged()
             .withInfo(
@@ -199,7 +199,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
 
         attacker.getWorld().spawnEntity(meteor);
         if (!attacker.getCurrentMove().isBarrage()) {
-            attacker.playSound(JSoundRegistry.SUN_METEOR_FIRE, 1f, 1f);
+            attacker.playSound(JSoundRegistry.SUN_METEOR_FIRE.get(), 1f, 1f);
         }
 
         return meteor;
@@ -218,7 +218,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         sunBeam.setVelocity(lookVec.x, lookVec.y, lookVec.z, 0.01f, divergence);
 
         attacker.getWorld().spawnEntity(sunBeam);
-        attacker.playSound(JSoundRegistry.SUN_BEAM_RAY, 1f, 1f);
+        attacker.playSound(JSoundRegistry.SUN_BEAM_RAY.get(), 1f, 1f);
     }
 
     private static void fireMeteors1(TheSunEntity attacker, LivingEntity user) {
@@ -234,7 +234,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     public TheSunEntity(World worldIn) {
-        super(StandType.THE_SUN, worldIn, JSoundRegistry.SUN_SUMMON);
+        super(StandType.THE_SUN, worldIn, JSoundRegistry.SUN_SUMMON.get());
 
         idleRotation = 0;
 
@@ -357,7 +357,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         }
 
         if (user instanceof ServerPlayerEntity serverPlayer) {
-            serverPlayer.networkHandler.sendPacket(new ParticleS2CPacket(JParticleTypeRegistry.SUN_LOCK_ON, true,
+            serverPlayer.networkHandler.sendPacket(new ParticleS2CPacket(JParticleTypeRegistry.SUN_LOCK_ON.get(), true,
                     targetPosition.x, targetPosition.y, targetPosition.z, 0, 0, 0, 0, 1));
         }
     }
@@ -512,7 +512,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
 
             if (age > 20) {
                 if (age % 40 == 0 && random.nextDouble() >= 0.5) {
-                    playSound(JSoundRegistry.SUN_IDLE, 1f, random.nextFloat());
+                    playSound(JSoundRegistry.SUN_IDLE.get(), 1f, random.nextFloat());
                 }
 
                 if (heatFieldSize > 0) {

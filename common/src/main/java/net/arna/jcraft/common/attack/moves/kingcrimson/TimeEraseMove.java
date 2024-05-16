@@ -44,7 +44,7 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
         super.onInitiate(attacker);
 
         if (attacker.getUser() instanceof ServerPlayerEntity player) {
-            player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.TIME_ERASE), SoundCategory.PLAYERS,
+            player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.TIME_ERASE.get()), SoundCategory.PLAYERS,
                     attacker.getX(), attacker.getY(), attacker.getZ(), 1, 1, 0));
         }
     }
@@ -139,7 +139,7 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
             user.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 10, 9, true, false));
             user.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 10, 0, true, false));
             // Inability to be stunned
-            user.removeStatusEffect(JStatusRegistry.DAZED);
+            user.removeStatusEffect(JStatusRegistry.DAZED.get());
             // Inability to be hit (by projectiles)
             Box noBox = new Box(0, 0, 0, 0, 0, 0);
             user.setBoundingBox(noBox);
@@ -148,7 +148,7 @@ public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity
             if (teTime <= 0) {
                 // Play exit noise
                 if (user instanceof ServerPlayerEntity player) {
-                    player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.TIME_ERASE_EXIT),
+                    player.networkHandler.sendPacket(new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.TIME_ERASE_EXIT.get()),
                             SoundCategory.PLAYERS, attacker.getX(), attacker.getY(), attacker.getZ(), 1, 1, 0));
                 }
 

@@ -60,7 +60,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public static final SimpleAttack<TheFoolEntity> LIGHT_FOLLOWUP = new SimpleAttack<TheFoolEntity>(
             0, 9, 16, 1.5f, 6f, 9, 2f, 1.5f, 0)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withLaunch()
             .withBlockStun(4)
             .withExtraHitBox(0, 0.25, 1)
@@ -71,7 +71,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             );
     public static final SimpleAttack<TheFoolEntity> LIGHT = new SimpleAttack<TheFoolEntity>(30, 7,
             14, 1.5f, 6, 15, 2, 0.5f, -0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withExtraHitBox(0, 0.25, 1)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(DRILL)
@@ -89,7 +89,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public static final TFComboAttack COMBO = new TFComboAttack(200, 29, 1.5f, 4.5f,
             20, 1.75f, 0.1f, -0.1f, IntSet.of(6, 14, 18, 19))
             .withAerialVariant(AIR_BARRAGE)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withExtraHitBox(0.5, 0, 1.25)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -97,7 +97,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public static final EffectInflictingAttack<TheFoolEntity> LAUNCH = new EffectInflictingAttack<TheFoolEntity>(240,
             16, 20, 1.25f, 8f, 25, 2f, 0.5f, -0.3f,
             List.of(new StatusEffectInstance(StatusEffects.LEVITATION, 5, 19, true, false)))
-            .withSound(JSoundRegistry.FOOL_LAUNCH)
+            .withSound(JSoundRegistry.FOOL_LAUNCH.get())
             .withInitAction((attacker, user, ctx) -> attacker.setSand(true))
             .withExtraHitBox(1.5)
             .withHitSpark(JParticleType.HIT_SPARK_3)
@@ -110,8 +110,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public static final SlamAttack SLAM = new SlamAttack(0, 4, 10, 1.25f, 4f,
             24, 2f, 0.2f, 0.1f)
             .withBlockStun(5)
-            .withSound(JSoundRegistry.FOOL_BARK1)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withSound(JSoundRegistry.FOOL_BARK1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -121,8 +121,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public static final PoundAttack POUND = new PoundAttack(220, 7, 22, 1.25f,
             4f, 25, 1.5f, 0.1f, -0.1f)
             .withFollowup(SLAM)
-            .withSound(JSoundRegistry.FOOL_BARK2)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withSound(JSoundRegistry.FOOL_BARK2.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withLift(false)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -138,7 +138,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Text.literal("creates a blinding sand cloud, then a clone or (if crouching) circles of sand")
             );
     public static final GlideMove GLIDE = new GlideMove(300, 5, 125, 0f)
-            .withSound(JSoundRegistry.FOOL_GLIDE)
+            .withSound(JSoundRegistry.FOOL_GLIDE.get())
             .withInfo(
                     Text.literal("Glider"),
                     Text.literal("turns The Fool into a glider for 6s")
@@ -152,15 +152,15 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Text.literal("The Fool turns into a quick sandwave that knocks anything it touches down")
             );
     public static final SandTornadoMove SAND_TORNADO = new SandTornadoMove(280, 12, 13, 1f)
-            .withSound(JSoundRegistry.FOOL_LAUNCH)
+            .withSound(JSoundRegistry.FOOL_LAUNCH.get())
             .withInfo(
                     Text.literal("Sand Tornado"),
                     Text.literal("summons a slow, stunning sand tornado")
             );
     public static final TFChargeAttack CHARGE = new TFChargeAttack(220, 5, 20, 7f,
             6f, 10, 1.5f, 1.2f, 0f, State.CHARGE_HIT)
-            .withSound(JSoundRegistry.FOOL_CHARGE)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withSound(JSoundRegistry.FOOL_CHARGE.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withAerialVariant(SAND_TORNADO)
             .withLaunch()
             .withBackstab(false)
@@ -171,8 +171,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             );
     public static final SandstormAttack SANDSTORM = new SandstormAttack(800, 28, 41, 1.5f,
             7f, 20, 2f, 0.1f, 0f)
-            .withSound(JSoundRegistry.FOOL_ULT)
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT)
+            .withSound(JSoundRegistry.FOOL_ULT.get())
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
             .withExtraHitBox(1.5)
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
@@ -283,7 +283,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     private void initSlam(int type) {
         getMoveContext().setInt(SlamAttack.VARIANT, type);
         setMove(SLAM, State.POUND_DOWN);
-        playSound(JSoundRegistry.FOOL_BARK1, 1, 1);
+        playSound(JSoundRegistry.FOOL_BARK1.get(), 1, 1);
     }
 
     public boolean isSand() {
@@ -357,7 +357,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public boolean canAttack() {
         if (hasUser()) {
             LivingEntity user = getUserOrThrow();
-            if (JUtils.isAffectedByTimeStop(user) || user.hasStatusEffect(JStatusRegistry.DAZED)) {
+            if (JUtils.isAffectedByTimeStop(user) || user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
                 return false;
             }
             if (curMove != null && curMove.getOriginalMove() == GLIDE) {

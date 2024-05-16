@@ -86,7 +86,7 @@ public class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAtt
                     ctx.setInt(HURRICANE_TIME, 15); // Allows for zoning up until it hits something
                 }
             } else {
-                target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 20, 0));
+                target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 20, 0));
             }
         }
 

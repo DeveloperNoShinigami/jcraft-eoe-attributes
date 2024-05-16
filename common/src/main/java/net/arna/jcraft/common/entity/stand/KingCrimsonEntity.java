@@ -47,7 +47,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     public static final KnockdownAttack<KingCrimsonEntity> SWEEP = new KnockdownAttack<KingCrimsonEntity>(40,
             10, 20, 0.85f, 5f, 20, 1.5f, 0.4f, 0.3f, 35)
             .withAnim(State.SWEEP)
-            .withImpactSound(JSoundRegistry.IMPACT_4)
+            .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withBlockStun(6)
             .withExtraHitBox(1)
             .withInfo(
@@ -57,16 +57,16 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     public static final SimpleMultiHitAttack<KingCrimsonEntity> DUAL_CHOP = new SimpleMultiHitAttack<KingCrimsonEntity>(
             40, 23, 0.85f, 4f, 21, 1.5f, 0.2f, -0.1f,
             IntSet.of(10, 16))
-            .withSound(JSoundRegistry.KC_DUAL_CHOP)
+            .withSound(JSoundRegistry.KC_DUAL_CHOP.get())
             .withCrouchingVariant(SWEEP)
-            .withImpactSound(JSoundRegistry.IMPACT_4)
+            .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withInfo(
                     Text.literal("Dual Chop"),
                     Text.literal("quick combo starter")
             );
     public static final BarrageAttack<KingCrimsonEntity> BARRAGE_FINISHER = new BarrageAttack<KingCrimsonEntity>(0,
             0, 50, 0.85f, 1f, 10, 1.5f, 1.1f, 0f, 3)
-            .withImpactSound(JSoundRegistry.IMPACT_6)
+            .withImpactSound(JSoundRegistry.IMPACT_6.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
@@ -76,14 +76,14 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     public static final MainBarrageAttack<KingCrimsonEntity> BARRAGE = new MainBarrageAttack<KingCrimsonEntity>(280,
             0, 40, 0.85f, 1f, 20, 1.5f, 0.1f, 0f, 3, Blocks.OBSIDIAN.getHardness())
             .withFinisher(36, BARRAGE_FINISHER)
-            .withSound(JSoundRegistry.KC_BARRAGE)
+            .withSound(JSoundRegistry.KC_BARRAGE.get())
             .withInfo(
                     Text.literal("Barrage"),
                     Text.literal("fast reliable combo starter/extender/finisher, medium stun, knocks back")
             );
     public static final KnockdownAttack<KingCrimsonEntity> OVERHEAD_HOOK = new KnockdownAttack<KingCrimsonEntity>(160,
             22, 32, 0.85f, 9f, 11, 2f, 1.5f, 0f, 35)
-            .withSound(JSoundRegistry.KC_HEAVY2)
+            .withSound(JSoundRegistry.KC_HEAVY2.get())
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withBlockStun(10)
             .withHyperArmor()
@@ -95,8 +95,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     public static final SimpleAttack<KingCrimsonEntity> VERTICAL_CHOP = new SimpleAttack<KingCrimsonEntity>(240,
             12, 19, 0.85f, 6f, 25, 1.5f, 0.6f, 0f)
             .withFollowup(OVERHEAD_HOOK)
-            .withSound(JSoundRegistry.KC_HEAVY)
-            .withImpactSound(JSoundRegistry.IMPACT_9)
+            .withSound(JSoundRegistry.KC_HEAVY.get())
+            .withImpactSound(JSoundRegistry.IMPACT_9.get())
             .withExtraHitBox(0, 0.5, 1)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -113,8 +113,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             280, 20, 29, 1f, 9f, 27, 1.75f, 0.7f, -0.3f,
             List.of(new StatusEffectInstance(StatusEffects.BLINDNESS, 200, 0)))
             .withCrouchingVariant(BLOOD_THROW)
-            .withSound(JSoundRegistry.KC_EYE_CHOP)
-            .withImpactSound(JSoundRegistry.IMPACT_9)
+            .withSound(JSoundRegistry.KC_EYE_CHOP.get())
+            .withImpactSound(JSoundRegistry.IMPACT_9.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withExtraHitBox(0, 0.5, 1)
             .withBlockStun(4)
@@ -125,8 +125,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             );
     public static final KCDonutAttack DONUT = new KCDonutAttack(260, 30, 48, 1f,
             14f, 10, 1.75f, 1.5f, 0.1f)
-            .withSound(JSoundRegistry.KC_DONUT)
-            .withImpactSound(JSoundRegistry.IMPACT_7)
+            .withSound(JSoundRegistry.KC_DONUT.get())
+            .withImpactSound(JSoundRegistry.IMPACT_7.get())
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHyperArmor()
             .withLaunch()
@@ -141,7 +141,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             );
     public static final PredictionMove PREDICTION = new PredictionMove(600, 4, 104, -1f)
             .withCrouchingVariant(EPITAPH)
-            .withSound(JSoundRegistry.KC_EPITAPH)
+            .withSound(JSoundRegistry.KC_EPITAPH.get())
             .withInfo(
                     Text.literal("Prediction/Move Cancel"),
                     Text.literal("""
@@ -156,7 +156,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                     Text.literal("6 seconds duration, cancellable by doing anything with King Crimson")
             );
     public static final TimeSkipMove<KingCrimsonEntity> TIME_SKIP = new TimeSkipMove<KingCrimsonEntity>(300, 16)
-            .withSound(JSoundRegistry.TE_TP)
+            .withSound(JSoundRegistry.TE_TP.get())
             .withInitAction((attacker, user, ctx) -> attacker.spawnTimeSkipParticles())
             .withInfo(
                     Text.literal("Timeskip"),
@@ -167,7 +167,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
 
     public KingCrimsonEntity(World worldIn) {
-        super(StandType.KING_CRIMSON, worldIn, JSoundRegistry.KC_SUMMON);
+        super(StandType.KING_CRIMSON, worldIn, JSoundRegistry.KC_SUMMON.get());
 
         idleDistance = 1f;
         idleRotation = -65f;

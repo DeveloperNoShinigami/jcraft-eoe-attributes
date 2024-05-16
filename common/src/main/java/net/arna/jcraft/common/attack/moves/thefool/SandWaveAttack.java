@@ -15,7 +15,7 @@ public class SandWaveAttack extends AbstractEffectInflictingBarrageAttack<SandWa
     public SandWaveAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                           float hitboxSize, float knockback, float offset, int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval,
-                List.of(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 15, 0, true, false)));
+                List.of(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 15, 0, true, false)));
         mobilityType = MobilityType.DASH;
         ranged = true;
     }

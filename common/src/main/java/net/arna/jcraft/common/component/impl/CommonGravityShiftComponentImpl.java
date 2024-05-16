@@ -106,7 +106,7 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
                     }
                 }
             } else {
-                if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
+                if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
                     return;
                 }
 

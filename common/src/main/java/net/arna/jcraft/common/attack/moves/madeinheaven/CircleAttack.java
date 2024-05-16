@@ -120,7 +120,7 @@ public class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenEntity>
             JUtils.setVelocity(user, newVelocity.x, newVelocity.y, newVelocity.z);
         }
 
-        if (circlingTime == 1 || user.hasStatusEffect(JStatusRegistry.DAZED)) {
+        if (circlingTime == 1 || user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
             endCircle(attacker);
         }
     }
@@ -129,7 +129,7 @@ public class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenEntity>
         Random random = attacker.getRandom();
         Box box = entity.getBoundingBox();
         for (int i = 0; i < box.getAverageSideLength(); i++) {
-            entity.getWorld().addParticle(JParticleTypeRegistry.SPEED_PARTICLE,
+            entity.getWorld().addParticle(JParticleTypeRegistry.SPEED_PARTICLE.get(),
                     random.nextDouble() * box.getXLength() + box.minX,
                     random.nextDouble() * box.getYLength() + box.minY,
                     random.nextDouble() * box.getZLength() + box.minZ,

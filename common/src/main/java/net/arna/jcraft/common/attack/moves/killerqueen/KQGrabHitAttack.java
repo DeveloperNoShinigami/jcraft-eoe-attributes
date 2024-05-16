@@ -33,7 +33,7 @@ public class KQGrabHitAttack extends AbstractMove<KQGrabHitAttack, KillerQueenEn
 
     @Override
     public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
-        attacker.playSound(JSoundRegistry.KQ_DETONATE, 1, 1);
+        attacker.playSound(JSoundRegistry.KQ_DETONATE.get(), 1, 1);
 
         CommonBombTrackerComponent.BombData bombData = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
 
@@ -42,13 +42,13 @@ public class KQGrabHitAttack extends AbstractMove<KQGrabHitAttack, KillerQueenEn
 
             Vec3d pos = livingEntity.getPos();
             JCraft.createParticle(world, pos.x, pos.y, pos.z, JParticleType.BOOM);
-            JUtils.serverPlaySound(JSoundRegistry.KQ_EXPLODE, world, pos, 96);
+            JUtils.serverPlaySound(JSoundRegistry.KQ_EXPLODE.get(), world, pos, 96);
 
             DamageSource damageSource = JDamageSources.stand(attacker);
 
             StandEntity.damageLogic(world, livingEntity, new Vec3d(0, 1, 0), stun, 3, true,
                     11f, false, 4, damageSource, user, null);
-            livingEntity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 35, 0, true, false));
+            livingEntity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0, true, false));
         }
 
         bombData.reset();

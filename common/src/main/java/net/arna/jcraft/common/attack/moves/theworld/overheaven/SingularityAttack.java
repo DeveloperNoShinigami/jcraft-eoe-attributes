@@ -24,7 +24,7 @@ public class SingularityAttack extends AbstractSimpleAttack<SingularityAttack, T
         super.processTarget(attacker, target, kbVec, damageSource);
 
         if (blockBypass) {
-            target.removeStatusEffect(JStatusRegistry.DAZED);
+            target.removeStatusEffect(JStatusRegistry.DAZED.get());
             StandEntity.stun(target, getStun(), 0);
         }
 

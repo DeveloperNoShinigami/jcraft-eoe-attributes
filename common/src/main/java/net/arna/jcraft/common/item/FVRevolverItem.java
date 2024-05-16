@@ -43,7 +43,7 @@ public class FVRevolverItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
+        if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
             return TypedActionResult.fail(itemStack);
         }
         NbtCompound data = itemStack.getOrCreateNbt();
@@ -66,7 +66,7 @@ public class FVRevolverItem extends Item {
         }
 
         data.putInt("Shots", shots - 1);
-        world.playSound(null, user.getX(), user.getY(), user.getZ(), JSoundRegistry.REVOLVER_FIRE, SoundCategory.PLAYERS, 1f, 1f);
+        world.playSound(null, user.getX(), user.getY(), user.getZ(), JSoundRegistry.REVOLVER_FIRE.get(), SoundCategory.PLAYERS, 1f, 1f);
 
         BulletProjectile bullet = new BulletProjectile(world, user, 9f, 10f, 2, 5);
         bullet.setVelocity(user, user.getPitch(), user.getYaw(), 0f, 10, 0F);

@@ -51,7 +51,7 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
         this.boundHealth = boundEntity.getHealth();
         this.dataTracker.set(WIDTH, (float) boundEntity.getBoundingBox().getAverageSideLength());
         this.startRiding(boundEntity, true);
-        boundEntity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.STANDLESS, timeLeft, 0, true, false));
+        boundEntity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.STANDLESS.get(), timeLeft, 0, true, false));
     }
 
     @Override
@@ -89,8 +89,8 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
 
             // In practice, redbind lasts slightly longer than the duration, so to account for this,
             // we add two ticks of standless until we're actually done.
-            if (boundEntity != null && boundEntity.getStatusEffect(JStatusRegistry.STANDLESS) == null) {
-                boundEntity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.STANDLESS, 2, 0, true, false));
+            if (boundEntity != null && boundEntity.getStatusEffect(JStatusRegistry.STANDLESS.get()) == null) {
+                boundEntity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.STANDLESS.get(), 2, 0, true, false));
             }
         }
 

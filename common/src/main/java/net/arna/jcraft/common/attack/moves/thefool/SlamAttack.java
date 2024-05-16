@@ -23,7 +23,7 @@ public class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEntity> 
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        attacker.playSound(JSoundRegistry.IMPACT_11, 1, 1);
+        attacker.playSound(JSoundRegistry.IMPACT_11.get(), 1, 1);
 
         switch (ctx.getInt(VARIANT)) {
             case 2 -> {

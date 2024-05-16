@@ -2,6 +2,7 @@ package net.arna.jcraft.common.effects;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.mob.MobEntity;
@@ -16,6 +17,26 @@ public class DazedStatusEffect extends StatusEffect {
 
     public DazedStatusEffect() {
         super(StatusEffectCategory.NEUTRAL, 0x444444);
+        this.addAttributeModifier(
+                EntityAttributes.GENERIC_ATTACK_DAMAGE,
+                "FE04CA6A-A3D1-E22B-CB00-EDA6A853F90E",
+                -1.0,
+                EntityAttributeModifier.Operation.MULTIPLY_TOTAL
+        ).addAttributeModifier(
+                EntityAttributes.GENERIC_ATTACK_SPEED,
+                "CB402E34-0AAC-383B-B26B-B253430DEEEA",
+                -1.0,
+                EntityAttributeModifier.Operation.MULTIPLY_TOTAL
+        ).addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED,
+                "778B48FC-485B-5BA7-58C7-E0D755CE354D",
+                0,
+                EntityAttributeModifier.Operation.MULTIPLY_TOTAL
+        ).addAttributeModifier(
+                EntityAttributes.GENERIC_FLYING_SPEED,
+                "516B532C-D1D9-C3A0-8970-A2C0A38CC452",
+                0,
+                EntityAttributeModifier.Operation.MULTIPLY_TOTAL
+        );
     }
 
     // Should the status effect be applied and under what condition?

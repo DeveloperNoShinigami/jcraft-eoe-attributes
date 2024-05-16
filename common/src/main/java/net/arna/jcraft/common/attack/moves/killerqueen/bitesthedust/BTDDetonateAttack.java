@@ -32,7 +32,7 @@ public class BTDDetonateAttack extends AbstractMove<BTDDetonateAttack, AbstractK
         }
 
         attacker.getWorld().createExplosion(user, btdEntity.getX(), btdEntity.getY() + btdEntity.getHeight() / 2, btdEntity.getZ(), 2f, World.ExplosionSourceType.NONE);
-        btdEntity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 35, 0, true, false));
+        btdEntity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0, true, false));
 
         Vec3d pos = btdEntity.getPos();
         JCraft.createParticle((ServerWorld) attacker.getWorld(), pos.x, pos.y + 5, pos.z, JParticleType.BITES_THE_DUST);

@@ -79,7 +79,7 @@ public class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREntity> 
         entityData.clear();
         returnInfo.clear();
 
-        attacker.playSound(JSoundRegistry.GER_RTZ, 1, 1);
+        attacker.playSound(JSoundRegistry.GER_RTZ.get(), 1, 1);
     }
 
     public void tickReturnInfo(GEREntity attacker) {

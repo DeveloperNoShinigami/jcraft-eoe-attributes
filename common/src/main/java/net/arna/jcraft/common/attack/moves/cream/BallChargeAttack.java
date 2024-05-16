@@ -16,7 +16,7 @@ public class BallChargeAttack extends AbstractMove<BallChargeAttack, CreamEntity
 
     @Override
     public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user, MoveContext ctx) {
-        attacker.playSound(JSoundRegistry.CREAM_CHARGE, 1, 1);
+        attacker.playSound(JSoundRegistry.CREAM_CHARGE.get(), 1, 1);
         attacker.setCharging(true);
         attacker.setChargeDir(user.getRotationVector().multiply(0.5));
         attacker.setVoidTime(15);

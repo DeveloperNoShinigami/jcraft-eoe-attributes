@@ -52,7 +52,7 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> GRAB_HIT_FINAL = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(0, 27,
             34, 0.75f, 4f, 8, 2f, 1.25f, 0f)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
@@ -61,7 +61,7 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
             );
     public static final SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>> GRAB_HIT = new SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>>(0,
             34, 0.75f, 1f, 10, 2f, 0f, 0f, IntSet.of(6, 8, 10, 12, 14, 16, 18))
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withStunType(StunType.UNBURSTABLE)
             .withFinisher(19, GRAB_HIT_FINAL)
             .withInfo(
@@ -72,8 +72,8 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
             280, 12, 24, 0.75f, 0f, 45, 1.5f, 0f, 0f,
             GRAB_HIT, State.GRAB_HIT, 25, 1)
             .withCrouchingVariant(GROUND_SLAM)
-            .withSound(JSoundRegistry.D4C_THROW)
-            .withImpactSound(JSoundRegistry.PH_GRAB_HIT)
+            .withSound(JSoundRegistry.D4C_THROW.get())
+            .withImpactSound(JSoundRegistry.PH_GRAB_HIT.get())
             .withInfo(
                     Text.literal("Grab"),
                     Text.literal("unblockable, combo finisher")

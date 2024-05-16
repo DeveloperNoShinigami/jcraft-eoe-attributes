@@ -152,7 +152,7 @@ public class JServerEvents {
                 continue;
             }
 
-            player.removeStatusEffect(JStatusRegistry.DAZED);
+            player.removeStatusEffect(JStatusRegistry.DAZED.get());
             stun(player, 10, 1);
 
             Vec3d pPos = player.getEyePos();
@@ -293,7 +293,7 @@ public class JServerEvents {
         for (LivingEntity ent : toDamage) {
             ent.damage(explosion.getDamageSource(), 7);
             StandEntity.stun(ent, 10, 3);
-            ent.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 35, 0));
+            ent.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0));
         }
     }
 
@@ -495,7 +495,7 @@ public class JServerEvents {
     public static EventResult hurt(LivingEntity entity, DamageSource source, float v) {
         boolean toLaunch = false;
         Entity attacker = source.getAttacker();
-        StatusEffectInstance stun = entity.getStatusEffect(JStatusRegistry.DAZED);
+        StatusEffectInstance stun = entity.getStatusEffect(JStatusRegistry.DAZED.get());
 
         if (stun != null && stun.getAmplifier() != 2) {
             // Only apply stun nerfs if hit with a weapon or a projectile
@@ -514,7 +514,7 @@ public class JServerEvents {
             if (toLaunch) {
                 int duration = stun.getDuration() / 3;
 
-                entity.removeStatusEffect(JStatusRegistry.DAZED);
+                entity.removeStatusEffect(JStatusRegistry.DAZED.get());
                 StandEntity.stun(entity, duration, 3);
 
                 Vec3i upVec = GravityChangerAPI.getGravityDirection(entity).getVector();

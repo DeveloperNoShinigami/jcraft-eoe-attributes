@@ -31,14 +31,14 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
         permits KillerQueenEntity, KQBTDEntity {
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LOW = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
             0, 8, 13, 0.85f, 4f, 10, 1.5f, 0.25f, 0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withInfo(
                     Text.literal("Low Punch"),
                     Text.literal("frametrap tool, low stun")
             );
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT_FOLLOWUP = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
             0, 6, 13, 0.8f, 3f, 20, 1.5f, 0.5f, 0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             // implemented in class: .withFollowup(LOW)
             .withInfo(
@@ -52,7 +52,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             );
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
             30, 6, 10, 0.75f, 3f, 10, 1.5f, 0.25f, 0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_6)
+            .withImpactSound(JSoundRegistry.IMPACT_6.get())
             .withCrouchingVariant(DETONATE)
             // implemented in class: .withFollowup(LIGHT_FOLLOWUP)
             .withInfo(
@@ -61,8 +61,8 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             );
     public static final MainBarrageAttack<AbstractKillerQueenEntity<?, ?>> BARRAGE = new MainBarrageAttack<AbstractKillerQueenEntity<?, ?>>(
             240, 0, 40, 0.75f, 1f, 20, 2f, 0.1f, 0, 3, Blocks.DEEPSLATE.getHardness())
-            .withSound(JSoundRegistry.KQ_BARRAGE)
-            .withImpactSound(JSoundRegistry.IMPACT_4)
+            .withSound(JSoundRegistry.KQ_BARRAGE.get())
+            .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withInfo(
                     Text.literal("Barrage"),
                     Text.literal("fast reliable combo starter/extender, medium stun")
@@ -105,7 +105,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
 
     protected void detonate() {
         setMove(DETONATE, getDetonateState());
-        playSound(JSoundRegistry.KQ_DETONATE, 1, 1);
+        playSound(JSoundRegistry.KQ_DETONATE.get(), 1, 1);
     }
 
     // Moveset
@@ -116,7 +116,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
         }
 
         LivingEntity user = getUserOrThrow();
-        if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
+        if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
             return false;
         }
 

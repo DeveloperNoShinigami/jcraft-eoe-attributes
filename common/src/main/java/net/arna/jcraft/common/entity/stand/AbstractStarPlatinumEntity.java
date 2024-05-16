@@ -12,8 +12,8 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
         permits StarPlatinumEntity, SPTWEntity {
     public static final BlockBreakingAttack GROUND_BREAKER = new BlockBreakingAttack(
             200, 20, 30, 1f, 10f, 12, 2f, 1.5f, 0.5f)
-            .withSound(JSoundRegistry.STAR_BREAKER)
-            .withImpactSound(JSoundRegistry.IMPACT_8)
+            .withSound(JSoundRegistry.STAR_BREAKER.get())
+            .withImpactSound(JSoundRegistry.IMPACT_8.get())
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withExtraHitBox(1.5)
             .withBlockStun(9)
@@ -25,8 +25,8 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
             );
     public static final SimpleAttack<AbstractStarPlatinumEntity<?, ?>> STAR_BREAKER = new SimpleAttack<AbstractStarPlatinumEntity<?, ?>>(
             200, 20, 30, 1f, 10f, 14, 2f, 1.5f, 0f)
-            .withSound(JSoundRegistry.STAR_BREAKER)
-            .withImpactSound(JSoundRegistry.IMPACT_8)
+            .withSound(JSoundRegistry.STAR_BREAKER.get())
+            .withImpactSound(JSoundRegistry.IMPACT_8.get())
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withExtraHitBox(1.5)
             .withBlockStun(9)
@@ -39,7 +39,7 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
             );
 
     protected AbstractStarPlatinumEntity(StandType type, World worldIn) {
-        super(type, worldIn, JSoundRegistry.STAR_PLATINUM_SUMMON);
+        super(type, worldIn, JSoundRegistry.STAR_PLATINUM_SUMMON.get());
         idleRotation = 225f;
 
         proCount = 3;

@@ -110,7 +110,7 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
             targetStand.cancelMove();
             Vec3d midPos = attacker.getBaseEntity().getPos().multiply(.5)
                     .add(targetStand.getPos().multiply(.5));
-            attacker.getEntityWorld().playSound(null, midPos.x, midPos.y, midPos.z, JSoundRegistry.IMPACT_1, SoundCategory.NEUTRAL, 1, 0.5f);
+            attacker.getEntityWorld().playSound(null, midPos.x, midPos.y, midPos.z, JSoundRegistry.IMPACT_1.get(), SoundCategory.NEUTRAL, 1, 0.5f);
 
             return Set.of();
         }
@@ -119,8 +119,8 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
     }
 
     protected void onClash(LivingEntity entity) {
-        entity.removeStatusEffect(JStatusRegistry.DAZED);
-        entity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED, 10, 3, true, false));
+        entity.removeStatusEffect(JStatusRegistry.DAZED.get());
+        entity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED.get(), 10, 3, true, false));
     }
 
     @Override

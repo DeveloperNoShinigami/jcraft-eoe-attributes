@@ -68,7 +68,7 @@ public class BulletProjectile extends PersistentProjectileEntity implements GeoE
 
         this.mass = (length * caliber * caliber * MathHelper.PI) * 0.000000013f; // Volume of a cylinder (mm^3) * Density of lead (kg/mm^3)
 
-        setSound(JSoundRegistry.BULLET_RICOCHET);
+        setSound(JSoundRegistry.BULLET_RICOCHET.get());
     }
 
     @Override
@@ -115,12 +115,12 @@ public class BulletProjectile extends PersistentProjectileEntity implements GeoE
                     this.getWorld().emitGameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Emitter.of(this, blockState));
                     discard();
                 } else if (!getWorld().isClient) {
-                    JUtils.serverPlaySound(JSoundRegistry.BULLET_PENETRATE, (ServerWorld) getWorld(), getPos(), 32);
+                    JUtils.serverPlaySound(JSoundRegistry.BULLET_PENETRATE.get(), (ServerWorld) getWorld(), getPos(), 32);
                 }
             } else { // Ricochet
                 setVelocity(impactVec.add(normal).multiply(0.5 / hardness));
                 if (!getWorld().isClient) {
-                    JUtils.serverPlaySound(JSoundRegistry.BULLET_RICOCHET, (ServerWorld) getWorld(), getPos(), 32);
+                    JUtils.serverPlaySound(JSoundRegistry.BULLET_RICOCHET.get(), (ServerWorld) getWorld(), getPos(), 32);
                 }
             }
         }
@@ -141,7 +141,7 @@ public class BulletProjectile extends PersistentProjectileEntity implements GeoE
                 LivingEntity target = JUtils.getUserIfStand(living);
                 StandEntity.damageLogic(getWorld(), target, getVelocity().normalize(), stunTicks, 1,
                         false, damage, true, 4 + damage, getWorld().getDamageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
-                JUtils.serverPlaySound(JSoundRegistry.BULLET_PENETRATE, (ServerWorld) getWorld(), getPos(), 32);
+                JUtils.serverPlaySound(JSoundRegistry.BULLET_PENETRATE.get(), (ServerWorld) getWorld(), getPos(), 32);
                 discard();
             }
         } else {

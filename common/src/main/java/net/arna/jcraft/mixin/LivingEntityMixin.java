@@ -56,7 +56,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;tickMovement()V", shift = At.Shift.AFTER))
     public void jcraft$tick(CallbackInfo callbackInfo) {
         LivingEntity living = LivingEntity.class.cast(this);
-        if (hitCount > 0 && !living.hasStatusEffect(JStatusRegistry.DAZED)) {
+        if (hitCount > 0 && !living.hasStatusEffect(JStatusRegistry.DAZED.get())) {
             ((IDamageScaler) this).jcraft$resetHitCount();
         }
     }
@@ -82,9 +82,9 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     public void jcraft$getJumpBoostVelocityModifier(CallbackInfoReturnable<Float> cir) {
         LivingEntity entity = ((LivingEntity) (Object) this);
         StandEntity<?, ?> stand = JUtils.getStand(entity);
-        StatusEffectInstance stun = entity.getStatusEffect(JStatusRegistry.DAZED);
+        StatusEffectInstance stun = entity.getStatusEffect(JStatusRegistry.DAZED.get());
         if (
-                entity.hasStatusEffect(JStatusRegistry.KNOCKDOWN) || // Knocked down
+                entity.hasStatusEffect(JStatusRegistry.KNOCKDOWN.get()) || // Knocked down
                         (stun != null && stun.getAmplifier() != 2) || // Stunned (not blocking)
                         (stand != null && stand.isRemoteAndControllable()) // Stand ON in controllable remote mode
         ) {
@@ -113,7 +113,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
         //noinspection unchecked,rawtypes // Generic types can be annoying sometimes. This is fine.
         ((AbstractCounterAttack) attack).counter(stand, source.getAttacker(), source);
 //        stand.counter(source.getAttacker(), source); // Initiate counter
-        player.removeStatusEffect(JStatusRegistry.DAZED);
+        player.removeStatusEffect(JStatusRegistry.DAZED.get());
         info.cancel();
     }
 
@@ -140,8 +140,8 @@ public abstract class LivingEntityMixin implements IDamageScaler {
 
     private static @Unique void doChecks(Entity entity, CallbackInfoReturnable<Boolean> cir, LivingEntity livingEntity) {
         if (
-                ((livingEntity.hasStatusEffect(JStatusRegistry.DAZED) && !JUtils.isBlocking(livingEntity))
-                        || livingEntity.hasStatusEffect(JStatusRegistry.KNOCKDOWN))
+                ((livingEntity.hasStatusEffect(JStatusRegistry.DAZED.get()) && !JUtils.isBlocking(livingEntity))
+                        || livingEntity.hasStatusEffect(JStatusRegistry.KNOCKDOWN.get()))
                         && (!livingEntity.getType().isIn(JTagRegistry.CANNOT_BE_STUNNED))
         ) {
             cir.setReturnValue(false);

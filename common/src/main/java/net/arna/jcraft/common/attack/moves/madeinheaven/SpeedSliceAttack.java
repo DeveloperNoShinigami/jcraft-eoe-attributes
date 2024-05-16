@@ -85,7 +85,7 @@ public class SpeedSliceAttack extends AbstractMove<SpeedSliceAttack, MadeInHeave
             attacker.incrementSpeedometer();
         }
 
-        attacker.playSound(JSoundRegistry.MIH_ZOOM, 1f, 1f);
+        attacker.playSound(JSoundRegistry.MIH_ZOOM.get(), 1f, 1f);
 
         return targets;
     }

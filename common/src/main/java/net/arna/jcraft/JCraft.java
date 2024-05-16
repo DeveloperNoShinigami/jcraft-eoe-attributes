@@ -34,10 +34,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageTracker;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
@@ -47,6 +49,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.particle.ParticleType;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
@@ -55,6 +58,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
@@ -91,6 +95,10 @@ public final class JCraft {
     public static final DeferredRegister<Block> BLOCK_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, RegistryKeys.BLOCK_ENTITY_TYPE);
     public static final DeferredRegister<ItemGroup> CREATIVE_TAB_REGISTRY = DeferredRegister.create(MOD_ID, RegistryKeys.ITEM_GROUP);
+    public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(MOD_ID, RegistryKeys.PARTICLE_TYPE);
+    public static final DeferredRegister<StatusEffect> EFFECTS = DeferredRegister.create(MOD_ID, RegistryKeys.STATUS_EFFECT);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(MOD_ID, RegistryKeys.SOUND_EVENT);
+    public static final DeferredRegister<Enchantment> ENCHANTMENT = DeferredRegister.create(MOD_ID, RegistryKeys.ENCHANTMENT);
 
     // Gamerules
     //public static final GameRules.Key<GameRules.BooleanRule> KINGCRIMSON_TELEPORT_EFFECT = GameRuleRegistry.register("kingCrimsonTeleportEffect", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
@@ -148,12 +156,15 @@ public final class JCraft {
 
         CommandRegistrationEvent.EVENT.register(JCommandRegistry::registerCommands);
         JEventsRegistry.registerEvents();
-        JStatusRegistry.registerStatuses();
+        JStatusRegistry.init();
+        EFFECTS.register();
         JSoundRegistry.registerSounds();
+        SOUNDS.register();
         JEntityTypeRegistry.registerAttributes();
         JDimensionRegistry.registerDimensions();
         JArgumentTypeRegistry.registerArgumentTypes();
         JEnchantmentRegistry.init();
+        ENCHANTMENT.register();
         JLootTableHelper.init();
         JServerConfig.init();
         JStatRegistry.init();
@@ -167,6 +178,7 @@ public final class JCraft {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket::handle);
 
 
+        /*TODO move
         DispenserBlock.registerBehavior(KNIFE.get(), new ProjectileDispenserBehavior() {
             @Override
             protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
@@ -175,6 +187,8 @@ public final class JCraft {
                 return knife;
             }
         });
+
+         */
     }
 
     public static void markItemOfInterest(@NotNull Entity entity, @NotNull EntityInterest interest) {
@@ -274,7 +288,7 @@ public final class JCraft {
     }
 
     public static StandEntity<?, ?> summon(World world, LivingEntity user) {
-        if (user.hasStatusEffect(JStatusRegistry.STANDLESS)) {
+        if (user.hasStatusEffect(JStatusRegistry.STANDLESS.get())) {
             return null;
         }
 
@@ -362,7 +376,7 @@ public final class JCraft {
 
             stun(player, 5, 2); // Player is slowed down considerably pre-burst
 
-            world.playSoundFromEntity(null, player, JSoundRegistry.COMBO_BREAK, SoundCategory.PLAYERS, 1, 1);
+            world.playSoundFromEntity(null, player, JSoundRegistry.COMBO_BREAK.get(), SoundCategory.PLAYERS, 1, 1);
 
             Vec3d pPos = player.getEyePos();
             burstTimers.put(player, 4);
@@ -406,7 +420,7 @@ public final class JCraft {
         if (entity instanceof ServerPlayerEntity player) {
             player.teleport(au, pos.x, pos.y - heightOffset, pos.z, entity.getYaw(), entity.getPitch());
             player.networkHandler.sendPacket(
-                    new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.D4C_ALT_UNIVERSE_AMBIENCE), SoundCategory.MUSIC, pos.x, pos.y - heightOffset, pos.z, 1.0F, 1.0F, 0)
+                    new PlaySoundS2CPacket(Registries.SOUND_EVENT.getEntry(JSoundRegistry.D4C_ALT_UNIVERSE_AMBIENCE.get()), SoundCategory.MUSIC, pos.x, pos.y - heightOffset, pos.z, 1.0F, 1.0F, 0)
             );
         } else {
             finalEnt = teleportToWorld(entity, au, entity.getX(), entity.getY() - heightOffset, entity.getZ());

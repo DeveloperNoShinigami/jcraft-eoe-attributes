@@ -84,7 +84,7 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
         startCooldown(CooldownType.COOLDOWN_CANCEL);
 
         Vec3d pPos = entity.getEyePos();
-        entity.getWorld().playSoundFromEntity(null, entity, JSoundRegistry.COOLDOWN_CANCEL, SoundCategory.PLAYERS, 1, 1);
+        entity.getWorld().playSoundFromEntity(null, entity, JSoundRegistry.COOLDOWN_CANCEL.get(), SoundCategory.PLAYERS, 1, 1);
         if (!entity.getWorld().isClient) {
             JCraft.createParticle((ServerWorld) entity.getWorld(), pPos.x, pPos.y, pPos.z, JParticleType.COOLDOWN_CANCEL);
         }

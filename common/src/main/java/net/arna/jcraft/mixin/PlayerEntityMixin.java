@@ -120,8 +120,8 @@ public abstract class PlayerEntityMixin implements IComboCounter {
     @Inject(cancellable = true, at = @At("HEAD"), method = "updatePose")
     public void jcraft$updatePose(CallbackInfo info) {
         if (
-                ((PlayerEntity) (Object) this).hasStatusEffect(JStatusRegistry.KNOCKDOWN)
-                        || ((PlayerEntity) (Object) this).hasStatusEffect(JStatusRegistry.WSPOISON)
+                ((PlayerEntity) (Object) this).hasStatusEffect(JStatusRegistry.KNOCKDOWN.get())
+                        || ((PlayerEntity) (Object) this).hasStatusEffect(JStatusRegistry.WSPOISON.get())
         ) {
             info.cancel();
         }
@@ -160,7 +160,7 @@ public abstract class PlayerEntityMixin implements IComboCounter {
             //noinspection unchecked,rawtypes // Generic types can be annoying sometimes. This is fine.
             ((AbstractCounterAttack) attack).counter(stand, source.getAttacker(), source);
             //stand.counter(source.getAttacker(), source); // Initiate counter
-            player.removeStatusEffect(JStatusRegistry.DAZED);
+            player.removeStatusEffect(JStatusRegistry.DAZED.get());
             info.cancel();
         }
     }

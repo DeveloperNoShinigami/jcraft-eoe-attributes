@@ -35,7 +35,7 @@ public class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack, CMoon
 
         Direction oppositeGravity = GravityChangerAPI.getGravityDirection(target).getOpposite();
         GravityChangerAPI.addGravity(target, new Gravity(oppositeGravity, 2, 60, GRAVITY_SOURCE));
-        target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WEIGHTLESS, 60, 0, true, false));
+        target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WEIGHTLESS.get(), 60, 0, true, false));
         // Launches them up relative to their original gravity, to prevent ground clipping
         JUtils.setVelocity(target, oppositeGravity.getOffsetX() * 0.2, oppositeGravity.getOffsetY() * 0.2, oppositeGravity.getOffsetZ() * 0.2);
     }

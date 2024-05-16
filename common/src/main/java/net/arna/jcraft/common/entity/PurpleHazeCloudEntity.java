@@ -84,7 +84,7 @@ public class PurpleHazeCloudEntity extends Entity {
         if (getWorld().isClient()) {
             for (int i = 0; i < radius; i++) {
                 getWorld().addParticle(
-                        JParticleTypeRegistry.PURPLE_HAZE_CLOUD, false,
+                        JParticleTypeRegistry.PURPLE_HAZE_CLOUD.get(), false,
                         getX() + random.nextGaussian() * radius / 2,
                         getY() + random.nextGaussian() * radius / 2,
                         getZ() + random.nextGaussian() * radius / 2,
@@ -93,7 +93,7 @@ public class PurpleHazeCloudEntity extends Entity {
 
                 getWorld().addParticle(
                         switch (poisonType) {
-                            case HARMING -> JParticleTypeRegistry.PURPLE_HAZE_PARTICLE;
+                            case HARMING -> JParticleTypeRegistry.PURPLE_HAZE_PARTICLE.get();
                             case NULLIFYING -> ParticleTypes.POOF;
                             case DEBILITATING -> ParticleTypes.SQUID_INK;
                         },

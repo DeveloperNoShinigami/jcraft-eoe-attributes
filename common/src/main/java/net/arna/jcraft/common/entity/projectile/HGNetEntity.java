@@ -103,7 +103,7 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
 
     public void tryFireAt(Vec3d target, boolean finalAttack) {
         if (isCharged() && JUtils.canAct(this) && getState() != 2) {
-            playSound(JSoundRegistry.HG_SPLASH, 1, 1);
+            playSound(JSoundRegistry.HG_SPLASH.get(), 1, 1);
             this.target = target;
             fireCooldown = FIRE_COOLDOWN;
             setCharged(false);

@@ -44,7 +44,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     public static final SimpleAttack<SilverChariotEntity> LIGHT_FOLLOWUP = new SimpleAttack<SilverChariotEntity>(
             0, 6, 14, 0.65f, 6f, 12, 1.5f, 1.2f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withLaunch()
             .withBlockStun(4)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -56,14 +56,14 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     11, 0.15f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(LAST_SHOT)
-            .withSound(JSoundRegistry.SC_POKE)
+            .withSound(JSoundRegistry.SC_POKE.get())
             .withInfo(
                     Text.literal("Stab"),
                     Text.literal("quick combo starter, links into Spinning Blade while armor is off")
             );
     public static final MainBarrageAttack<SilverChariotEntity> BARRAGE = new MainBarrageAttack<SilverChariotEntity>(
             240, 0, 40, 0.65f, 0.9f, 25, 2.25f, 0.1f, 0f, 3, 1.25F)
-            .withSound(JSoundRegistry.SC_BARRAGE)
+            .withSound(JSoundRegistry.SC_BARRAGE.get())
             .withInfo(
                     Text.literal("Barrage"),
                     Text.literal("fast reliable combo starter/extender, high stun")
@@ -71,7 +71,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     public static final SimpleAttack<SilverChariotEntity> HEAVY = new SimpleAttack<SilverChariotEntity>(
             200, 20, 28, 0.65f, 8f, 10, 2f, 1.5f, 0f)
             .withExtraHitBox(2, 0.1, 1)
-            .withSound(JSoundRegistry.SC_HEAVY)
+            .withSound(JSoundRegistry.SC_HEAVY.get())
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHyperArmor()
             .withLaunch()
@@ -83,7 +83,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     public static final SpinBarrageAttack ANUBIS_SPIN_BARRAGE = new SpinBarrageAttack(0, 7, 24,
             0.65f, 1f, 10, 2f, 0.1f, -0.2f, 2)
             .withAnim(State.SPIN_2)
-            .withSound(JSoundRegistry.SC_SPIN)
+            .withSound(JSoundRegistry.SC_SPIN.get())
             .withInfo(
                     Text.literal("Divine Blade"),
                     Text.literal("fast reliable combo starter/extender, low stun")
@@ -91,7 +91,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     public static final BarrageAttack<SilverChariotEntity> SPIN_BARRAGE = new BarrageAttack<SilverChariotEntity>(240, 7, 24,
             0.65f, 1f, 10, 2f, 0.1f, -0.2f, 2)
             .withFollowup(ANUBIS_SPIN_BARRAGE)
-            .withSound(JSoundRegistry.SC_SPIN)
+            .withSound(JSoundRegistry.SC_SPIN.get())
             .withInfo(
                     Text.literal("Spinning Blade"),
                     Text.literal("fast reliable combo starter/extender, low stun")
@@ -99,7 +99,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
 
     public static final RayDartAttack RAY_DART_LOW = new RayDartAttack(100, 10, 18,
             0.65f, 6f, 20, 1.75f, 0.25f, 0.2f)
-            .withSound(JSoundRegistry.SC_CHARGE)
+            .withSound(JSoundRegistry.SC_CHARGE.get())
             .withSound(SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP)
             .withBlockStun(9)
             .withInfo(
@@ -109,8 +109,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     public static final RayDartAttack RAY_DART_HIGH = new RayDartAttack(100, 12, 20,
             0.65f, 6f, 15, 2.0f, 0.25f, 0.2f)
             .withCrouchingVariant(RAY_DART_LOW)
-            .withSound(JSoundRegistry.SC_CHARGE)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withSound(JSoundRegistry.SC_CHARGE.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withBlockStun(16)
             .withExtraHitBox(1, 1, 1)
             .withInfo(
@@ -119,7 +119,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             );
     public static final CleaveAttack CLEAVE = new CleaveAttack(260, 12, 21, 0.75f, 9f,
             20, 2.5f, 0.8f, 0f)
-            .withSound(JSoundRegistry.SC_CLEAVE)
+            .withSound(JSoundRegistry.SC_CLEAVE.get())
             .withImpactSound(SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP)
             .withHyperArmor()
             .withInfo(
@@ -128,7 +128,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             );
     public static final SCChargeAttack CHARGE = new SCChargeAttack(280, 5, 19, 8f,
             5f, 17, 1.5f, 0.25f, 0f, State.P_CHARGE_HIT)
-            .withSound(JSoundRegistry.SC_SUMMON)
+            .withSound(JSoundRegistry.SC_SUMMON.get())
             .withBackstab(false)
             .withInfo(
                     Text.literal("Shooting Star"),
@@ -142,7 +142,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     public static final SimpleMultiHitAttack<SilverChariotEntity> GOD_OF_DEATH_FINAL = new SimpleMultiHitAttack<SilverChariotEntity>(
             0, 59, 0.65f, 6f, 20, 2.5f, 1.25f, 0f,
             IntSet.of(54))
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT)
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
             .withLaunch()
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withInfo(
@@ -152,7 +152,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     public static final GodOfDeathHitAttack GOD_OF_DEATH_HIT = new GodOfDeathHitAttack(0, 59, 0.65f,
             4.5f, 32, 2f, 0.25f, 0f, IntSet.of(13, 23))
             .withFollowup(GOD_OF_DEATH_FINAL)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withStunType(StunType.UNBURSTABLE)
             .withInfo(
                     Text.literal("God of Death (Hit)"),
@@ -168,7 +168,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             );
     public static final ArmorOffAttack ARMOR_OFF = new ArmorOffAttack(1200, 6, 15, 0.65f,
             4f, 7, 1.75f, 0.75f, 0f)
-            .withSound(JSoundRegistry.SC_ARMOROFF)
+            .withSound(JSoundRegistry.SC_ARMOROFF.get())
             .withLaunch()
             .withInfo(
                     Text.literal("Armor Off"),
@@ -203,7 +203,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     }
 
     public SilverChariotEntity(World worldIn) {
-        super(StandType.SILVER_CHARIOT, worldIn, JSoundRegistry.SC_SUMMON);
+        super(StandType.SILVER_CHARIOT, worldIn, JSoundRegistry.SC_SUMMON.get());
         idleRotation = 225f;
 
         proCount = 4;

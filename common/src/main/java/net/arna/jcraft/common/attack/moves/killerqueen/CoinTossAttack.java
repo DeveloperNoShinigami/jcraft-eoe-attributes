@@ -38,7 +38,7 @@ public class CoinTossAttack extends AbstractMove<CoinTossAttack, KillerQueenEnti
 
         JComponentPlatformUtils.getBombTracker(user).getMainBomb().setBomb(coin);
 
-        attacker.playSound(JSoundRegistry.COIN_TOSS, 1, 1);
+        attacker.playSound(JSoundRegistry.COIN_TOSS.get(), 1, 1);
 
         return Set.of();
     }

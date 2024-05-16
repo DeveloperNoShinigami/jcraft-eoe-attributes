@@ -144,7 +144,7 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
                     toRefresh = false;
                     setVelocity(0, 0, 0);
                     setEffect(2);
-                    playSound(JSoundRegistry.CMOON_BLOCKHALT, 1, 1);
+                    playSound(JSoundRegistry.CMOON_BLOCKHALT.get(), 1, 1);
                 } else if (!launched) {
                     Vec3d targetPos;
                     Vec3d eP = master.getEyePos();
@@ -165,7 +165,7 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
 
                     setVelocity(targetPos.subtract(getPos()).normalize()); //.multiply(1)
 
-                    playSound(JSoundRegistry.CMOON_BLOCKLAUNCH, 1, 1);
+                    playSound(JSoundRegistry.CMOON_BLOCKLAUNCH.get(), 1, 1);
                     launched = true;
                     setNoDrag(true);
                 }

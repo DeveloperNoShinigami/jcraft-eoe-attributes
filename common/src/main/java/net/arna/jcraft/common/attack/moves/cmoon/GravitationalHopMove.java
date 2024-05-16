@@ -26,10 +26,10 @@ public class GravitationalHopMove extends AbstractMove<GravitationalHopMove, CMo
     @Override
     public @NonNull Set<LivingEntity> perform(CMoonEntity attacker, LivingEntity user, MoveContext ctx) {
         if (user.isOnGround()) {
-            if (user.hasStatusEffect(JStatusRegistry.WEIGHTLESS)) {
-                user.removeStatusEffect(JStatusRegistry.WEIGHTLESS);
+            if (user.hasStatusEffect(JStatusRegistry.WEIGHTLESS.get())) {
+                user.removeStatusEffect(JStatusRegistry.WEIGHTLESS.get());
             }
-            user.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WEIGHTLESS, 200, 1));
+            user.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WEIGHTLESS.get(), 200, 1));
         } else {
             user.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 60, 1));
             user.addVelocity(0, 1.0, 0);

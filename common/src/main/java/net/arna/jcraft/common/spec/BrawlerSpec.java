@@ -18,37 +18,37 @@ import net.minecraft.text.Text;
 public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
     public static final UppercutAttack<BrawlerSpec> HEAVY = new UppercutAttack<BrawlerSpec>(30, 10,
             21, 1f, 6f, 15, 1.5f, 0.3f, 0f, 0.3f)
-            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(Text.literal("Uppercut"), Text.literal("medium speed"));
     public static final SimpleAttack<BrawlerSpec> TORNADO = new SimpleAttack<BrawlerSpec>(280, 12,
             20, 1f, 7f, 20, 1.6f, 0.4f, -0.1f)
             .withCrouchingVariant(HEAVY)
-            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withArmor(3)
             .withInfo(Text.literal("Tornado Kick"), Text.literal("3 points of armor, high stun"));
     public static final SimpleMultiHitAttack<BrawlerSpec> COMBO = new SimpleMultiHitAttack<BrawlerSpec>(360,
             26, 1f, 4, 15, 1.5f, 0.2f, -0.1f, IntSet.of(5, 10, 19))
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withBlockStun(5)
             .withInfo(Text.literal("Combo"), Text.literal("hits 3 times, combo starter/extender"));
     public static final SimpleAttack<BrawlerSpec> GUT = new SimpleAttack<BrawlerSpec>(120, 11, 18,
             1f, 6f, 16, 1.5f, 0.4f, 0f)
-            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(Text.literal("Gut Punch"), Text.literal("good stun"));
     public static final KnockdownAttack<BrawlerSpec> SWEEP = new KnockdownAttack<BrawlerSpec>(30, 11, 18,
             1f, 5f, 16, 1.5f, 0.6f, 0.85f, 25)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withStaticY()
             .withInfo(Text.literal("SWEEP"), Text.literal("knocks down"));
     public static final SimpleAttack<BrawlerSpec> LOW_KICK = new SimpleAttack<BrawlerSpec>(30, 6, 11,
             1f, 4f, 10, 1.25f, 0.15f, 0.35f)
             .withCrouchingVariant(SWEEP)
-            .withImpactSound(JSoundRegistry.IMPACT_6)
+            .withImpactSound(JSoundRegistry.IMPACT_6.get())
             .withExtraHitBox(0.25, 0, 1)
             .withStaticY()
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)

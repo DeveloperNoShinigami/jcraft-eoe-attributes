@@ -38,16 +38,16 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
     public static final UppercutAttack<HGEntity> AIR_LIGHT = new UppercutAttack<HGEntity>(
             JCraft.LIGHT_COOLDOWN, 7, 14, 0.75f, 5f, 15, 1.5f, 0.4f, -0.3f, 0.4f)
             .withAnim(State.AIR_LIGHT)
-            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withInfo(
                     Text.literal("Backward Flip Kick"),
                     Text.literal("launches up")
             );
     public static final KnockdownAttack<HGEntity> CROUCHING_LIGHT_FOLLOWUP = new KnockdownAttack<HGEntity>(
             0, 9, 16, 0.75f, 6f, 13, 1.75f, 0.75f, 0.4f, 35)
-            .withSound(JSoundRegistry.HG_CROUCH_LIGHT)
+            .withSound(JSoundRegistry.HG_CROUCH_LIGHT.get())
             .withAnim(State.CROUCHING_LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Text.literal("Sweep"),
@@ -57,7 +57,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     7, 11, 0.75f, 5f, 12, 0.15f, 0.3f)
             .withAnim(State.CROUCHING_LIGHT)
             .withFollowup(CROUCHING_LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_4)
+            .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withInfo(
                     Text.literal("Low Punch"),
                     Text.literal("quick combo starter")
@@ -65,9 +65,9 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
     public static final UppercutAttack<HGEntity> LIGHT_FOLLOWUP = new UppercutAttack<HGEntity>(
             0, 10, 15, 0.75f, 6f, 13, 1.75f, 0.5f, -0.2f, 0.4f)
-            .withSound(JSoundRegistry.HG_LIGHT_FOLLOWUP)
+            .withSound(JSoundRegistry.HG_LIGHT_FOLLOWUP.get())
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withBlockStun(4)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -79,15 +79,15 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(CROUCHING_LIGHT)
             .withAerialVariant(AIR_LIGHT)
-            .withImpactSound(JSoundRegistry.IMPACT_4)
+            .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withInfo(
                     Text.literal("Punch"),
                     Text.literal("quick combo starter")
             );
     public static final SimpleAttack<HGEntity> SENDOFF = new SimpleAttack<HGEntity>(
             180, 11, 20, 1, 8f, 16, 2f, 1.5f, 0)
-            .withSound(JSoundRegistry.WS_DONUT)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withSound(JSoundRegistry.WS_DONUT.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withLaunch()
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
@@ -99,8 +99,8 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
     public static final SimpleMultiHitAttack<HGEntity> BARRAGE = new SimpleMultiHitAttack<HGEntity>(
             200, 28, 1, 2f, 20, 2f, 0.3f, 0.25f,
             IntSet.of(3, 9, 15, 17, 25))
-            .withSound(JSoundRegistry.HG_BARRAGE)
-            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withSound(JSoundRegistry.HG_BARRAGE.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withInfo(
                     Text.literal("Barrage"),
                     Text.literal("fast reliable combo starter/extender, medium stun")
@@ -118,7 +118,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
     public static final SimpleAttack<HGEntity> EXTEND_FORWARD = new SimpleAttack<HGEntity>(
             100, 10, 21, 1f, 5, 15, 1.5f, 0.7f, 0.2f)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
-            .withSound(JSoundRegistry.HG_EXTEND)
+            .withSound(JSoundRegistry.HG_EXTEND.get())
             .withExtraHitBox(2, -0.1, 1.5)
             .withFinisher(12, EXTEND_FORWARD_SECOND)
             .withInfo(
@@ -139,7 +139,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             100, 10, 21, 1f, 5, 15, 1.5f, 0.7f, -0.2f)
             .withCrouchingVariant(EXTEND_FORWARD)
 
-            .withSound(JSoundRegistry.HG_EXTEND)
+            .withSound(JSoundRegistry.HG_EXTEND.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withExtraHitBox(2, 0.1, 1.5)
             .withFinisher(12, EXTEND_UP_SECOND)
@@ -150,7 +150,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
     public static final EmeraldSplashAttack EMERALD_SPLASH = new EmeraldSplashAttack(0, 12, 1, 0, 0, 0, 0,
             IntSet.of(1, 3, 5), 1.5f)
-            .withSound(JSoundRegistry.HG_SPLASH)
+            .withSound(JSoundRegistry.HG_SPLASH.get())
             .withInfo(
                     Text.literal("Emerald Splash (Fire)"),
                     Text.empty()
@@ -167,7 +167,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                             Bursts contain 3-6 emeralds depending on how long you hold."""));
 
     public static final NetSetMove NET_SET = new NetSetMove(200, 9, 15, 1f)
-            .withSound(JSoundRegistry.HG_NET_SET)
+            .withSound(JSoundRegistry.HG_NET_SET.get())
             .withInfo(
                     Text.literal("Tentacle Place"),
                     Text.literal("""
@@ -204,7 +204,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     }
             )
             .withReflect()
-            .withSound(JSoundRegistry.HG_SPLASH)
+            .withSound(JSoundRegistry.HG_SPLASH.get())
             .withInfo(
                     Text.literal("All-Consuming Emerald Splash"),
                     Text.literal("""
@@ -214,7 +214,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                             """));
 
     public HGEntity(World worldIn) {
-        super(StandType.HIEROPHANT_GREEN, worldIn, JSoundRegistry.HG_SUMMON);
+        super(StandType.HIEROPHANT_GREEN, worldIn, JSoundRegistry.HG_SUMMON.get());
         idleRotation = 220f;
 
         proCount = 3;

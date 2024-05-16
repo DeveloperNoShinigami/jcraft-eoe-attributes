@@ -136,7 +136,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     public boolean canAttack() {
-        return moveStun <= 0 && !JUtils.isAffectedByTimeStop(player) && !player.hasStatusEffect(JStatusRegistry.DAZED);
+        return moveStun <= 0 && !JUtils.isAffectedByTimeStop(player) && !player.hasStatusEffect(JStatusRegistry.DAZED.get());
     }
 
     public boolean handleMove(MoveType type) {

@@ -22,7 +22,7 @@ public class FlagMove extends AbstractMove<FlagMove, D4CEntity> {
     public void onInitiate(D4CEntity attacker) {
         super.onInitiate(attacker);
 
-        attacker.getUserOrThrow().addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, getDuration(),
+        attacker.getUserOrThrow().addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), getDuration(),
                 0, true, false));
         attacker.getUserOrThrow().addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, getDuration(),
                 0, true, false));

@@ -16,7 +16,7 @@ public class KnockdownBarrageAttack<A extends IAttacker<? extends A, ?>> extends
     public KnockdownBarrageAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                                   float hitboxSize, float knockback, float offset, int interval, int knockdownDuration) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval,
-                List.of(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, knockdownDuration, 0, true, false)));
+                List.of(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), knockdownDuration, 0, true, false)));
         this.knockdownDuration = knockdownDuration;
     }
 

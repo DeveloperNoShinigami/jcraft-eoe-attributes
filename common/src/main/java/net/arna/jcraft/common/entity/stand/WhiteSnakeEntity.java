@@ -33,7 +33,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
     public static final UppercutAttack<WhiteSnakeEntity> UPPERCUT = new UppercutAttack<WhiteSnakeEntity>(
             20, 8, 14, 1, 6f, 16, 1.25f, 0.5f, -0.5f, 0.5f)
             .withAnim(State.UPPERCUT)
-            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withExtraHitBox(1)
             .withInfo(
                     Text.literal("Uppercut"),
@@ -42,7 +42,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
     public static final SimpleAttack<WhiteSnakeEntity> LIGHT_FOLLOWUP = new SimpleAttack<WhiteSnakeEntity>(
             0, 7, 13, 0.75f, 6f, 10, 1.5f, 1f, 0.2f)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withLaunch()
             .withBlockStun(4)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -54,15 +54,15 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                     7, 11, 0.75f, 5f, 13, 0.2f, 0.2f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(UPPERCUT)
-            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withInfo(
                     Text.literal("Punch"),
                     Text.literal("quick combo starter")
             );
     public static final SimpleAttack<WhiteSnakeEntity> MEDIUM = new SimpleAttack<WhiteSnakeEntity>(
             60, 8, 13, 1, 7f, 16, 1.75f, 0.4f, 0)
-            .withSound(JSoundRegistry.WS_DONUT)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withSound(JSoundRegistry.WS_DONUT.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
@@ -71,15 +71,15 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             );
     public static final MainBarrageAttack<WhiteSnakeEntity> BARRAGE = new MainBarrageAttack<WhiteSnakeEntity>(
             240, 0, 40, 0.75f, 1, 20, 2, 0.25f, 0, 3, Blocks.OAK_PLANKS.getHardness())
-            .withSound(JSoundRegistry.WS_BARRAGE)
-            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withSound(JSoundRegistry.WS_BARRAGE.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withInfo(
                     Text.literal("Barrage"),
                     Text.literal("fast reliable combo starter/extender, medium stun")
             );
     public static final GiveStandAttack GIVE_STAND = new GiveStandAttack(400, 22, 34, 1, 1, 2, 0, 0)
-            .withSound(JSoundRegistry.WS_STAND_DISC)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withSound(JSoundRegistry.WS_STAND_DISC.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withHitSpark(null)
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE)
@@ -89,9 +89,9 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             );
     public static final EffectInflictingAttack<WhiteSnakeEntity> STAND_DISC = new EffectInflictingAttack<WhiteSnakeEntity>(
             480, 22, 34, 1, 8f, 20, 2, 0.5f, 0,
-            List.of(new StatusEffectInstance(JStatusRegistry.STANDLESS, 160, 0)))
-            .withSound(JSoundRegistry.WS_STAND_DISC)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            List.of(new StatusEffectInstance(JStatusRegistry.STANDLESS.get(), 160, 0)))
+            .withSound(JSoundRegistry.WS_STAND_DISC.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
@@ -103,8 +103,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             );
     public static final SimpleAttack<WhiteSnakeEntity> LEG_CRUSHER = new SimpleAttack<WhiteSnakeEntity>(
             240, 16, 22, 0.75f, 7, 32, 1.75f, 0.35f, 0.4f)
-            .withSound(JSoundRegistry.WS_LEGCRUSH)
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT)
+            .withSound(JSoundRegistry.WS_LEGCRUSH.get())
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(
@@ -117,8 +117,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                     new StatusEffectInstance(StatusEffects.WEAKNESS, 600, 0),
                     new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 600, 0)
             ))
-            .withSound(JSoundRegistry.WS_MEMORY_DISC)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withSound(JSoundRegistry.WS_MEMORY_DISC.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
@@ -144,8 +144,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             );
     public static final MeltYourHeartAttack MELT_YOUR_HEART = new MeltYourHeartAttack(
             800, 40, 50, 1f, 3f, 20, 2f, 1f, 0f)
-            .withSound(JSoundRegistry.WS_MYH)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withSound(JSoundRegistry.WS_MYH.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withLaunch()
@@ -160,7 +160,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             );
 
     public WhiteSnakeEntity(World worldIn) {
-        super(StandType.WHITE_SNAKE, worldIn, JSoundRegistry.WS_SUMMON);
+        super(StandType.WHITE_SNAKE, worldIn, JSoundRegistry.WS_SUMMON.get());
         idleRotation = 220f;
 
         proCount = 3;

@@ -1,270 +1,273 @@
 package net.arna.jcraft.registry;
 
+import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 
+import static net.arna.jcraft.JCraft.SOUNDS;
+
 public interface JSoundRegistry {
 
-    static SoundEvent registerSound(String id) {
-        //JCraft.LOGGER.info("Registering sound: " + id); // Probably unnecessary
-        SoundEvent event = SoundEvent.of(JCraft.id(id));
-        Registry.register(Registries.SOUND_EVENT, event.getId(), event);
-        return event;
+    static RegistrySupplier<SoundEvent> register(String name) {
+        var event = SoundEvent.of(JCraft.id(name));
+        return SOUNDS.register(event.getId().getPath(), () -> event);
     }
+    
 
     // Generic
-    SoundEvent STAND_SUMMON = registerSound("standsummon");
-    SoundEvent STAND_DESUMMON = registerSound("desummon");
-    SoundEvent STAND_BLOCK = registerSound("standblock");
-    SoundEvent BACKSTAB = registerSound("backstab");
-    SoundEvent ARMORED_HIT = registerSound("armoredhit");
-    SoundEvent COMBO_BREAK = registerSound("combobreak");
-    SoundEvent COOLDOWN_CANCEL = registerSound("cooldowncancel");
-    SoundEvent IMPACT_1 = registerSound("impact1");
-    SoundEvent IMPACT_2 = registerSound("impact2");
-    SoundEvent IMPACT_3 = registerSound("impact3");
-    SoundEvent IMPACT_4 = registerSound("impact4");
-    SoundEvent IMPACT_5 = registerSound("impact5");
-    SoundEvent IMPACT_6 = registerSound("impact6");
-    SoundEvent IMPACT_7 = registerSound("impact7");
-    SoundEvent IMPACT_8 = registerSound("impact8");
-    SoundEvent IMPACT_9 = registerSound("impact9");
-    SoundEvent IMPACT_10 = registerSound("impact10");
-    SoundEvent IMPACT_11 = registerSound("impact11");
-    SoundEvent IMPACT_12 = registerSound("impact12");
-    SoundEvent TIME_SKIP = registerSound("timeskip");
-    SoundEvent COIN_TOSS = registerSound("cointoss");
+
+    RegistrySupplier<SoundEvent> STAND_SUMMON = register("standsummon");
+    RegistrySupplier<SoundEvent> STAND_DESUMMON = register("desummon");
+    RegistrySupplier<SoundEvent> STAND_BLOCK = register("standblock");
+    RegistrySupplier<SoundEvent> BACKSTAB = register("backstab");
+    RegistrySupplier<SoundEvent> ARMORED_HIT = register("armoredhit");
+    RegistrySupplier<SoundEvent> COMBO_BREAK = register("combobreak");
+    RegistrySupplier<SoundEvent> COOLDOWN_CANCEL = register("cooldowncancel");
+    RegistrySupplier<SoundEvent> IMPACT_1 = register("impact1");
+    RegistrySupplier<SoundEvent> IMPACT_2 = register("impact2");
+    RegistrySupplier<SoundEvent> IMPACT_3 = register("impact3");
+    RegistrySupplier<SoundEvent> IMPACT_4 = register("impact4");
+    RegistrySupplier<SoundEvent> IMPACT_5 = register("impact5");
+    RegistrySupplier<SoundEvent> IMPACT_6 = register("impact6");
+    RegistrySupplier<SoundEvent> IMPACT_7 = register("impact7");
+    RegistrySupplier<SoundEvent> IMPACT_8 = register("impact8");
+    RegistrySupplier<SoundEvent> IMPACT_9 = register("impact9");
+    RegistrySupplier<SoundEvent> IMPACT_10 = register("impact10");
+    RegistrySupplier<SoundEvent> IMPACT_11 = register("impact11");
+    RegistrySupplier<SoundEvent> IMPACT_12 = register("impact12");
+    RegistrySupplier<SoundEvent> TIME_SKIP = register("timeskip");
+    RegistrySupplier<SoundEvent> COIN_TOSS = register("cointoss");
 
     // Star Platinum
-    SoundEvent STAR_PLATINUM_SUMMON = registerSound("spsummon");
-    SoundEvent STAR_PLATINUM_TIMESKIP = registerSound("sptimeskip");
-    SoundEvent STAR_PLATINUM_BARRAGE = registerSound("spbarrage");
-    SoundEvent STAR_PLATINUM_ADVANCING_BARRAGE = registerSound("spadvbarrage");
-    SoundEvent STAR_PLATINUM_LUNGING_BARRAGE = registerSound("spadvbarrageshort");
-    SoundEvent STAR_PLATINUM_THE_WORLD = registerSound("sptw");
-    SoundEvent STAR_PLATINUM_KNEE = registerSound("spknee");
-    SoundEvent STAR_BREAKER = registerSound("starbreaker");
-    SoundEvent STAR_FINGER = registerSound("starfinger");
+    RegistrySupplier<SoundEvent> STAR_PLATINUM_SUMMON = register("spsummon");
+    RegistrySupplier<SoundEvent> STAR_PLATINUM_TIMESKIP = register("sptimeskip");
+    RegistrySupplier<SoundEvent> STAR_PLATINUM_BARRAGE = register("spbarrage");
+    RegistrySupplier<SoundEvent> STAR_PLATINUM_ADVANCING_BARRAGE = register("spadvbarrage");
+    RegistrySupplier<SoundEvent> STAR_PLATINUM_LUNGING_BARRAGE = register("spadvbarrageshort");
+    RegistrySupplier<SoundEvent> STAR_PLATINUM_THE_WORLD = register("sptw");
+    RegistrySupplier<SoundEvent> STAR_PLATINUM_KNEE = register("spknee");
+    RegistrySupplier<SoundEvent> STAR_BREAKER = register("starbreaker");
+    RegistrySupplier<SoundEvent> STAR_FINGER = register("starfinger");
 
     //King Crimson
-    SoundEvent KC_SUMMON = registerSound("kcsummon");
-    SoundEvent KC_DUAL_CHOP = registerSound("kcdualchop");
-    SoundEvent KC_DONUT = registerSound("kcdonut");
-    SoundEvent KC_BARRAGE = registerSound("kcbarrage");
-    SoundEvent KC_HEAVY = registerSound("kcheavy");
-    SoundEvent KC_HEAVY2 = registerSound("kcheavy2");
-    SoundEvent KC_EYE_CHOP = registerSound("kceyechop");
-    SoundEvent KC_EPITAPH = registerSound("kcepitaph");
-    SoundEvent KC_RAGE = registerSound("kcrage");
-    SoundEvent TE_TP = registerSound("tetp");
-    SoundEvent TIME_ERASE = registerSound("timeerase");
-    SoundEvent TIME_ERASE_EXIT = registerSound("kcteexit");
+    RegistrySupplier<SoundEvent> KC_SUMMON = register("kcsummon");
+    RegistrySupplier<SoundEvent> KC_DUAL_CHOP = register("kcdualchop");
+    RegistrySupplier<SoundEvent> KC_DONUT = register("kcdonut");
+    RegistrySupplier<SoundEvent> KC_BARRAGE = register("kcbarrage");
+    RegistrySupplier<SoundEvent> KC_HEAVY = register("kcheavy");
+    RegistrySupplier<SoundEvent> KC_HEAVY2 = register("kcheavy2");
+    RegistrySupplier<SoundEvent> KC_EYE_CHOP = register("kceyechop");
+    RegistrySupplier<SoundEvent> KC_EPITAPH = register("kcepitaph");
+    RegistrySupplier<SoundEvent> KC_RAGE = register("kcrage");
+    RegistrySupplier<SoundEvent> TE_TP = register("tetp");
+    RegistrySupplier<SoundEvent> TIME_ERASE = register("timeerase");
+    RegistrySupplier<SoundEvent> TIME_ERASE_EXIT = register("kcteexit");
 
     //The World
-    SoundEvent TW_SUMMON = registerSound("twsummon");
-    SoundEvent TW_BARRAGE = registerSound("twbarrage");
-    SoundEvent TW_TS = registerSound("twtimestop");
-    SoundEvent TW_TS_CLEAN = registerSound("twtimestop_clean");
-    SoundEvent TW_CHARGE = registerSound("twcharge");
-    SoundEvent TW_CHARGE_HIT = registerSound("twchargehit");
-    SoundEvent TW_DONUT = registerSound("twdonut");
-    SoundEvent TW_DONUT_HIT = registerSound("twdonuthit");
-    SoundEvent TW_KICK = registerSound("twkick");
-    SoundEvent TW_KICK_HIT = registerSound("twkickhit");
-    SoundEvent TW_COUNTER = registerSound("twcounter");
-    SoundEvent MUDA_DA = registerSound("mudada");
+    RegistrySupplier<SoundEvent> TW_SUMMON = register("twsummon");
+    RegistrySupplier<SoundEvent> TW_BARRAGE = register("twbarrage");
+    RegistrySupplier<SoundEvent> TW_TS = register("twtimestop");
+    RegistrySupplier<SoundEvent> TW_TS_CLEAN = register("twtimestop_clean");
+    RegistrySupplier<SoundEvent> TW_CHARGE = register("twcharge");
+    RegistrySupplier<SoundEvent> TW_CHARGE_HIT = register("twchargehit");
+    RegistrySupplier<SoundEvent> TW_DONUT = register("twdonut");
+    RegistrySupplier<SoundEvent> TW_DONUT_HIT = register("twdonuthit");
+    RegistrySupplier<SoundEvent> TW_KICK = register("twkick");
+    RegistrySupplier<SoundEvent> TW_KICK_HIT = register("twkickhit");
+    RegistrySupplier<SoundEvent> TW_COUNTER = register("twcounter");
+    RegistrySupplier<SoundEvent> MUDA_DA = register("mudada");
 
     //Dirty Deeds Done Dirt Cheap
-    SoundEvent D4C_SUMMON = registerSound("d4csummon");
-    SoundEvent D4C_LIGHT = registerSound("d4clight");
-    SoundEvent D4C_HEAVY = registerSound("d4cheavy");
-    SoundEvent D4C_BARRAGE = registerSound("d4cbarrage");
-    SoundEvent D4C_DIMHOP = registerSound("d4cdimhop");
-    SoundEvent REVOLVER_FIRE = registerSound("revolverfire");
-    SoundEvent D4C_THROW = registerSound("d4cthrow");
-    SoundEvent D4C_COUNTER = registerSound("d4ccounter");
-    SoundEvent D4C_UTILITY = registerSound("d4cutility");
-    SoundEvent D4C_ALT_UNIVERSE_AMBIENCE = registerSound("altuniverseambience");
+    RegistrySupplier<SoundEvent> D4C_SUMMON = register("d4csummon");
+    RegistrySupplier<SoundEvent> D4C_LIGHT = register("d4clight");
+    RegistrySupplier<SoundEvent> D4C_HEAVY = register("d4cheavy");
+    RegistrySupplier<SoundEvent> D4C_BARRAGE = register("d4cbarrage");
+    RegistrySupplier<SoundEvent> D4C_DIMHOP = register("d4cdimhop");
+    RegistrySupplier<SoundEvent> REVOLVER_FIRE = register("revolverfire");
+    RegistrySupplier<SoundEvent> D4C_THROW = register("d4cthrow");
+    RegistrySupplier<SoundEvent> D4C_COUNTER = register("d4ccounter");
+    RegistrySupplier<SoundEvent> D4C_UTILITY = register("d4cutility");
+    RegistrySupplier<SoundEvent> D4C_ALT_UNIVERSE_AMBIENCE = register("altuniverseambience");
 
     //Cream
-    SoundEvent CREAM_SUMMON = registerSound("creamsummon");
-    SoundEvent CREAM_CONSUME = registerSound("creamconsume");
-    SoundEvent CREAM_CHARGE = registerSound("creamcharge");
-    SoundEvent CREAM_COMBO = registerSound("creamcombo");
-    SoundEvent CREAM_HEAVY = registerSound("creamheavy");
-    SoundEvent CREAM_GRAB = registerSound("creamgrab");
-    SoundEvent CREAM_SMASH = registerSound("creamsmash");
-    SoundEvent CREAM_ENTER = registerSound("creamenter");
-    SoundEvent CREAM_EXIT = registerSound("creamexit");
-    SoundEvent CREAM_OVERHEAD = registerSound("creamoverhead");
-    SoundEvent CREAM_BALLDASH = registerSound("creamballdash");
+    RegistrySupplier<SoundEvent> CREAM_SUMMON = register("creamsummon");
+    RegistrySupplier<SoundEvent> CREAM_CONSUME = register("creamconsume");
+    RegistrySupplier<SoundEvent> CREAM_CHARGE = register("creamcharge");
+    RegistrySupplier<SoundEvent> CREAM_COMBO = register("creamcombo");
+    RegistrySupplier<SoundEvent> CREAM_HEAVY = register("creamheavy");
+    RegistrySupplier<SoundEvent> CREAM_GRAB = register("creamgrab");
+    RegistrySupplier<SoundEvent> CREAM_SMASH = register("creamsmash");
+    RegistrySupplier<SoundEvent> CREAM_ENTER = register("creamenter");
+    RegistrySupplier<SoundEvent> CREAM_EXIT = register("creamexit");
+    RegistrySupplier<SoundEvent> CREAM_OVERHEAD = register("creamoverhead");
+    RegistrySupplier<SoundEvent> CREAM_BALLDASH = register("creamballdash");
 
     //Killer Queen
-    SoundEvent KQ_HEAVY = registerSound("kqheavy");
-    SoundEvent KQ_BARRAGE = registerSound("kqbarrage");
-    SoundEvent KQ_DETONATE = registerSound("kqdetonate");
-    SoundEvent KQ_UPPERCUT = registerSound("kquppercut");
-    SoundEvent KQ_EXPLODE = registerSound("kqexplode");
-    SoundEvent SHA_TREAD = registerSound("shatread");
+    RegistrySupplier<SoundEvent> KQ_HEAVY = register("kqheavy");
+    RegistrySupplier<SoundEvent> KQ_BARRAGE = register("kqbarrage");
+    RegistrySupplier<SoundEvent> KQ_DETONATE = register("kqdetonate");
+    RegistrySupplier<SoundEvent> KQ_UPPERCUT = register("kquppercut");
+    RegistrySupplier<SoundEvent> KQ_EXPLODE = register("kqexplode");
+    RegistrySupplier<SoundEvent> SHA_TREAD = register("shatread");
 
     //Killer Queen: Bites The Dust
-    SoundEvent KQBTD_ELBOW = registerSound("kqbtdelbow");
-    SoundEvent KQBTD_SUMMON = registerSound("kqbtdsummon");
+    RegistrySupplier<SoundEvent> KQBTD_ELBOW = register("kqbtdelbow");
+    RegistrySupplier<SoundEvent> KQBTD_SUMMON = register("kqbtdsummon");
 
     //Whitesnake
-    SoundEvent WS_SUMMON = registerSound("wssummon");
-    SoundEvent WS_BARRAGE = registerSound("wsbarrage");
-    SoundEvent WS_LEGCRUSH = registerSound("wslegcrush");
-    SoundEvent WS_DONUT = registerSound("wsdonut");
-    SoundEvent WS_MEMORY_DISC = registerSound("wsmemorydisc");
-    SoundEvent WS_STAND_DISC = registerSound("wsstanddisc");
-    SoundEvent WS_GUN = registerSound("wsgun");
-    SoundEvent WS_MYH = registerSound("wsmeltyourheart");
+    RegistrySupplier<SoundEvent> WS_SUMMON = register("wssummon");
+    RegistrySupplier<SoundEvent> WS_BARRAGE = register("wsbarrage");
+    RegistrySupplier<SoundEvent> WS_LEGCRUSH = register("wslegcrush");
+    RegistrySupplier<SoundEvent> WS_DONUT = register("wsdonut");
+    RegistrySupplier<SoundEvent> WS_MEMORY_DISC = register("wsmemorydisc");
+    RegistrySupplier<SoundEvent> WS_STAND_DISC = register("wsstanddisc");
+    RegistrySupplier<SoundEvent> WS_GUN = register("wsgun");
+    RegistrySupplier<SoundEvent> WS_MYH = register("wsmeltyourheart");
 
     //Magician's Red
-    SoundEvent MR_SUMMON = registerSound("mrsummon");
-    SoundEvent MR_BARRAGE = registerSound("mrbarrage");
-    SoundEvent MR_CROSSFIRE = registerSound("mrcrossfire");
-    SoundEvent MR_DETECTOR = registerSound("mrdetector");
-    SoundEvent MR_HEAVY = registerSound("mrheavy");
-    SoundEvent MR_REDIRECT = registerSound("mrredirect");
-    SoundEvent MR_ULT = registerSound("mrult");
-    SoundEvent MR_REDBIND = registerSound("mrredbind");
+    RegistrySupplier<SoundEvent> MR_SUMMON = register("mrsummon");
+    RegistrySupplier<SoundEvent> MR_BARRAGE = register("mrbarrage");
+    RegistrySupplier<SoundEvent> MR_CROSSFIRE = register("mrcrossfire");
+    RegistrySupplier<SoundEvent> MR_DETECTOR = register("mrdetector");
+    RegistrySupplier<SoundEvent> MR_HEAVY = register("mrheavy");
+    RegistrySupplier<SoundEvent> MR_REDIRECT = register("mrredirect");
+    RegistrySupplier<SoundEvent> MR_ULT = register("mrult");
+    RegistrySupplier<SoundEvent> MR_REDBIND = register("mrredbind");
 
     //Silver Chariot
-    SoundEvent SC_SUMMON = registerSound("scsummon");
-    SoundEvent SC_BARRAGE = registerSound("scbarrage");
-    SoundEvent SC_CHARGE = registerSound("sccharge");
-    SoundEvent SC_HEAVY = registerSound("scheavy");
-    SoundEvent SC_SPIN = registerSound("scspin");
-    SoundEvent SC_CLEAVE = registerSound("sccleave");
-    SoundEvent SC_ARMOROFF = registerSound("scarmoroff");
-    SoundEvent SC_POKE = registerSound("scpoke");
+    RegistrySupplier<SoundEvent> SC_SUMMON = register("scsummon");
+    RegistrySupplier<SoundEvent> SC_BARRAGE = register("scbarrage");
+    RegistrySupplier<SoundEvent> SC_CHARGE = register("sccharge");
+    RegistrySupplier<SoundEvent> SC_HEAVY = register("scheavy");
+    RegistrySupplier<SoundEvent> SC_SPIN = register("scspin");
+    RegistrySupplier<SoundEvent> SC_CLEAVE = register("sccleave");
+    RegistrySupplier<SoundEvent> SC_ARMOROFF = register("scarmoroff");
+    RegistrySupplier<SoundEvent> SC_POKE = register("scpoke");
 
     //Golden Experience
-    SoundEvent GE_SUMMON = registerSound("gesummon");
-    SoundEvent GE_BARRAGE = registerSound("gebarrage");
-    SoundEvent GE_HEAL = registerSound("geheal");
-    SoundEvent GE_TREE = registerSound("getree");
-    SoundEvent GE_REKKA1 = registerSound("gerekka1");
-    SoundEvent GE_REKKA2 = registerSound("gerekka2");
-    SoundEvent GE_REKKA3 = registerSound("gerekka3");
+    RegistrySupplier<SoundEvent> GE_SUMMON = register("gesummon");
+    RegistrySupplier<SoundEvent> GE_BARRAGE = register("gebarrage");
+    RegistrySupplier<SoundEvent> GE_HEAL = register("geheal");
+    RegistrySupplier<SoundEvent> GE_TREE = register("getree");
+    RegistrySupplier<SoundEvent> GE_REKKA1 = register("gerekka1");
+    RegistrySupplier<SoundEvent> GE_REKKA2 = register("gerekka2");
+    RegistrySupplier<SoundEvent> GE_REKKA3 = register("gerekka3");
 
     //Hierophant Green
-    SoundEvent HG_SUMMON = registerSound("hgsummon");
-    SoundEvent HG_BARRAGE = registerSound("hgbarrage");
-    SoundEvent HG_CROUCH_LIGHT = registerSound("hgcrouchlight");
-    SoundEvent HG_LIGHT_FOLLOWUP = registerSound("hglightfollowup");
-    SoundEvent HG_SPLASH = registerSound("hgsplash");
-    SoundEvent HG_EXTEND = registerSound("hgextend");
-    SoundEvent HG_NET_SET = registerSound("hgnetset");
+    RegistrySupplier<SoundEvent> HG_SUMMON = register("hgsummon");
+    RegistrySupplier<SoundEvent> HG_BARRAGE = register("hgbarrage");
+    RegistrySupplier<SoundEvent> HG_CROUCH_LIGHT = register("hgcrouchlight");
+    RegistrySupplier<SoundEvent> HG_LIGHT_FOLLOWUP = register("hglightfollowup");
+    RegistrySupplier<SoundEvent> HG_SPLASH = register("hgsplash");
+    RegistrySupplier<SoundEvent> HG_EXTEND = register("hgextend");
+    RegistrySupplier<SoundEvent> HG_NET_SET = register("hgnetset");
 
     //Golden Experience: Requiem
-    SoundEvent GER_SUMMON = registerSound("gersummon");
-    SoundEvent GER_HEAVY = registerSound("gerheavy");
-    SoundEvent GER_LASER = registerSound("gerlaser");
-    SoundEvent GER_LASER_FIRE = registerSound("gerlaserfire");
-    SoundEvent GER_KICKBARRAGE = registerSound("gerkickbarrage");
-    SoundEvent GER_SETUP = registerSound("gersetup");
-    SoundEvent GER_FLY = registerSound("gerfly");
-    SoundEvent GER_RTZ = registerSound("gerrtz");
+    RegistrySupplier<SoundEvent> GER_SUMMON = register("gersummon");
+    RegistrySupplier<SoundEvent> GER_HEAVY = register("gerheavy");
+    RegistrySupplier<SoundEvent> GER_LASER = register("gerlaser");
+    RegistrySupplier<SoundEvent> GER_LASER_FIRE = register("gerlaserfire");
+    RegistrySupplier<SoundEvent> GER_KICKBARRAGE = register("gerkickbarrage");
+    RegistrySupplier<SoundEvent> GER_SETUP = register("gersetup");
+    RegistrySupplier<SoundEvent> GER_FLY = register("gerfly");
+    RegistrySupplier<SoundEvent> GER_RTZ = register("gerrtz");
 
     //The Fool
-    SoundEvent FOOL_BARK1 = registerSound("foolbark1");
-    SoundEvent FOOL_BARK2 = registerSound("foolbark2");
-    SoundEvent FOOL_LAUNCH = registerSound("foollaunch");
-    SoundEvent FOOL_CHARGE = registerSound("foolcharge");
-    SoundEvent FOOL_ULT = registerSound("foolultimate");
-    SoundEvent FOOL_GLIDE = registerSound("foolglide");
+    RegistrySupplier<SoundEvent> FOOL_BARK1 = register("foolbark1");
+    RegistrySupplier<SoundEvent> FOOL_BARK2 = register("foolbark2");
+    RegistrySupplier<SoundEvent> FOOL_LAUNCH = register("foollaunch");
+    RegistrySupplier<SoundEvent> FOOL_CHARGE = register("foolcharge");
+    RegistrySupplier<SoundEvent> FOOL_ULT = register("foolultimate");
+    RegistrySupplier<SoundEvent> FOOL_GLIDE = register("foolglide");
 
     //C-Moon
-    SoundEvent CMOON_SUMMON = registerSound("cmoonsummon");
-    SoundEvent CMOON_BARRAGE = registerSound("cmoonbarrage");
-    SoundEvent CMOON_GRAV_PUNCH = registerSound("cmoongravpunch");
-    SoundEvent CMOON_GRAV_PUNCH_HIT = registerSound("cmoongravpunchhit");
-    SoundEvent CMOON_GROUNDSLAM = registerSound("cmoongroundslam");
-    SoundEvent CMOON_GRAVSHIFT = registerSound("cmoongravshift");
-    SoundEvent CMOON_GRAVSHIFT_DIRECTIONAL = registerSound("cmoondirectionalshift");
-    SoundEvent CMOON_DONUT = registerSound("cmoondonut");
-    SoundEvent CMOON_GROUNDSHOOT = registerSound("cmoongroundshoot");
-    SoundEvent CMOON_BLOCKLAUNCH = registerSound("blocklaunch");
-    SoundEvent CMOON_BLOCKHALT = registerSound("blockhalt");
+    RegistrySupplier<SoundEvent> CMOON_SUMMON = register("cmoonsummon");
+    RegistrySupplier<SoundEvent> CMOON_BARRAGE = register("cmoonbarrage");
+    RegistrySupplier<SoundEvent> CMOON_GRAV_PUNCH = register("cmoongravpunch");
+    RegistrySupplier<SoundEvent> CMOON_GRAV_PUNCH_HIT = register("cmoongravpunchhit");
+    RegistrySupplier<SoundEvent> CMOON_GROUNDSLAM = register("cmoongroundslam");
+    RegistrySupplier<SoundEvent> CMOON_GRAVSHIFT = register("cmoongravshift");
+    RegistrySupplier<SoundEvent> CMOON_GRAVSHIFT_DIRECTIONAL = register("cmoondirectionalshift");
+    RegistrySupplier<SoundEvent> CMOON_DONUT = register("cmoondonut");
+    RegistrySupplier<SoundEvent> CMOON_GROUNDSHOOT = register("cmoongroundshoot");
+    RegistrySupplier<SoundEvent> CMOON_BLOCKLAUNCH = register("blocklaunch");
+    RegistrySupplier<SoundEvent> CMOON_BLOCKHALT = register("blockhalt");
 
     //Made in Heaven
-    SoundEvent MIH_SUMMON = registerSound("mihsummon");
-    SoundEvent MIH_BARRAGE = registerSound("mihbarrage");
-    SoundEvent MIH_ZOOM = registerSound("mihzoom");
-    SoundEvent MIH_JUDGEMENT = registerSound("mihjudgement");
-    SoundEvent MIH_TACCEL = registerSound("mihtaccel");
-    SoundEvent MIH_FURYCHOP = registerSound("mihfurychop");
-    SoundEvent MIH_SPEEDSLICE = registerSound("mihspeedslice");
-    SoundEvent MIH_LEGCRUSHER = registerSound("mihlegcrusher");
-    SoundEvent MIH_CIRCLE = registerSound("mihcircle");
+    RegistrySupplier<SoundEvent> MIH_SUMMON = register("mihsummon");
+    RegistrySupplier<SoundEvent> MIH_BARRAGE = register("mihbarrage");
+    RegistrySupplier<SoundEvent> MIH_ZOOM = register("mihzoom");
+    RegistrySupplier<SoundEvent> MIH_JUDGEMENT = register("mihjudgement");
+    RegistrySupplier<SoundEvent> MIH_TACCEL = register("mihtaccel");
+    RegistrySupplier<SoundEvent> MIH_FURYCHOP = register("mihfurychop");
+    RegistrySupplier<SoundEvent> MIH_SPEEDSLICE = register("mihspeedslice");
+    RegistrySupplier<SoundEvent> MIH_LEGCRUSHER = register("mihlegcrusher");
+    RegistrySupplier<SoundEvent> MIH_CIRCLE = register("mihcircle");
 
     //The World: Over Heaven
-    SoundEvent TWOH_SUMMON = registerSound("twohsummon");
-    SoundEvent TWOH_BARRAGE = registerSound("twohbarrage");
-    SoundEvent TWOH_SHOOT = registerSound("twohshoot");
-    SoundEvent TWOH_TIMESKIP = registerSound("twohtimeskip");
-    SoundEvent TWOH_TS = registerSound("twohtimestop");
-    SoundEvent TWOH_HEAVY = registerSound("twohheavy");
-    SoundEvent TWOH_SINGULARITY = registerSound("twohsingularity");
-    SoundEvent TWOH_SMITE = registerSound("twohsmite");
-    SoundEvent TWOH_CHARGE_OVERWRITE = registerSound("twohchargeoverwrite");
-    SoundEvent TWOH_CHARGE = registerSound("twohcharge");
-    SoundEvent TWOH_OVERWRITE = registerSound("twohoverwrite");
-    SoundEvent TWOH_KNIFETHROW = registerSound("twohowarida");
-    SoundEvent TWOH_AIRKNIVES = registerSound("twohairknives");
+    RegistrySupplier<SoundEvent> TWOH_SUMMON = register("twohsummon");
+    RegistrySupplier<SoundEvent> TWOH_BARRAGE = register("twohbarrage");
+    RegistrySupplier<SoundEvent> TWOH_SHOOT = register("twohshoot");
+    RegistrySupplier<SoundEvent> TWOH_TIMESKIP = register("twohtimeskip");
+    RegistrySupplier<SoundEvent> TWOH_TS = register("twohtimestop");
+    RegistrySupplier<SoundEvent> TWOH_HEAVY = register("twohheavy");
+    RegistrySupplier<SoundEvent> TWOH_SINGULARITY = register("twohsingularity");
+    RegistrySupplier<SoundEvent> TWOH_SMITE = register("twohsmite");
+    RegistrySupplier<SoundEvent> TWOH_CHARGE_OVERWRITE = register("twohchargeoverwrite");
+    RegistrySupplier<SoundEvent> TWOH_CHARGE = register("twohcharge");
+    RegistrySupplier<SoundEvent> TWOH_OVERWRITE = register("twohoverwrite");
+    RegistrySupplier<SoundEvent> TWOH_KNIFETHROW = register("twohowarida");
+    RegistrySupplier<SoundEvent> TWOH_AIRKNIVES = register("twohairknives");
 
     // Star Platinum: The World
-    SoundEvent SPTW_GRAB = registerSound("sptwgrab");
-    SoundEvent SPTW_GRABHIT = registerSound("sptwgrabhit");
-    SoundEvent SPTW_UPPERCUT = registerSound("sptwuppercut");
-    SoundEvent SPTW_BACKHAND = registerSound("sptwbackhand");
+    RegistrySupplier<SoundEvent> SPTW_GRAB = register("sptwgrab");
+    RegistrySupplier<SoundEvent> SPTW_GRABHIT = register("sptwgrabhit");
+    RegistrySupplier<SoundEvent> SPTW_UPPERCUT = register("sptwuppercut");
+    RegistrySupplier<SoundEvent> SPTW_BACKHAND = register("sptwbackhand");
 
     // Purple Haze
-    SoundEvent PH_SUMMON = registerSound("phsummon");
-    SoundEvent PH_BARRAGE = registerSound("phbarrage");
-    SoundEvent PH_GRAB_HIT = registerSound("phgrabhit");
-    SoundEvent PH_REKKA1 = registerSound("phrekka1");
-    SoundEvent PH_REKKA2 = registerSound("phrekka2");
-    SoundEvent PH_REKKA3 = registerSound("phrekka3");
-    SoundEvent PH_CAPSULE1 = registerSound("phcapsule1");
-    SoundEvent PH_CAPSULE2 = registerSound("phcapsule2");
-    SoundEvent PH_GROUNDSLAM = registerSound("phgroundslam");
-    SoundEvent PH_ULTIMATE = registerSound("phultimate");
+    RegistrySupplier<SoundEvent> PH_SUMMON = register("phsummon");
+    RegistrySupplier<SoundEvent> PH_BARRAGE = register("phbarrage");
+    RegistrySupplier<SoundEvent> PH_GRAB_HIT = register("phgrabhit");
+    RegistrySupplier<SoundEvent> PH_REKKA1 = register("phrekka1");
+    RegistrySupplier<SoundEvent> PH_REKKA2 = register("phrekka2");
+    RegistrySupplier<SoundEvent> PH_REKKA3 = register("phrekka3");
+    RegistrySupplier<SoundEvent> PH_CAPSULE1 = register("phcapsule1");
+    RegistrySupplier<SoundEvent> PH_CAPSULE2 = register("phcapsule2");
+    RegistrySupplier<SoundEvent> PH_GROUNDSLAM = register("phgroundslam");
+    RegistrySupplier<SoundEvent> PH_ULTIMATE = register("phultimate");
 
     // The Sun
-    SoundEvent SUN_SUMMON = registerSound("sunsummon");
-    SoundEvent SUN_SHOWER = registerSound("sunshower");
-    SoundEvent SUN_BEAM_RAY = registerSound("sunbeamray");
-    SoundEvent SUN_METEOR_FIRE = registerSound("sunmeteorfire");
-    SoundEvent SUN_IDLE = registerSound("sunidle");
+    RegistrySupplier<SoundEvent> SUN_SUMMON = register("sunsummon");
+    RegistrySupplier<SoundEvent> SUN_SHOWER = register("sunshower");
+    RegistrySupplier<SoundEvent> SUN_BEAM_RAY = register("sunbeamray");
+    RegistrySupplier<SoundEvent> SUN_METEOR_FIRE = register("sunmeteorfire");
+    RegistrySupplier<SoundEvent> SUN_IDLE = register("sunidle");
 
     //// SPECS
     // Brawler
 
     // Anubis
-    SoundEvent ANUBIS_SLASH = registerSound("anubisslash");
-    SoundEvent ANUBIS_POMMEL = registerSound("anubispommel");
-    SoundEvent ANUBIS_SHEATHE = registerSound("anubissheathe");
-    SoundEvent ANUBIS_UNSHEATHE = registerSound("anubisunsheathe");
-    SoundEvent ANUBIS_SPECCHANGE = registerSound("anubisspecchange");
-    SoundEvent ANUBIS_REKKA2 = registerSound("anubisrekka2");
-    SoundEvent ANUBIS_REKKA3 = registerSound("anubisrekka3"); //todo: 3 hit rekka sound for anubis
+    RegistrySupplier<SoundEvent> ANUBIS_SLASH = register("anubisslash");
+    RegistrySupplier<SoundEvent> ANUBIS_POMMEL = register("anubispommel");
+    RegistrySupplier<SoundEvent> ANUBIS_SHEATHE = register("anubissheathe");
+    RegistrySupplier<SoundEvent> ANUBIS_UNSHEATHE = register("anubisunsheathe");
+    RegistrySupplier<SoundEvent> ANUBIS_SPECCHANGE = register("anubisspecchange");
+    RegistrySupplier<SoundEvent> ANUBIS_REKKA2 = register("anubisrekka2");
+    RegistrySupplier<SoundEvent> ANUBIS_REKKA3 = register("anubisrekka3"); //todo: 3 hit rekka sound for anubis
 
     // Vampire
-    SoundEvent VAMPIRE_LASER = registerSound("vampirelaser");
-    SoundEvent VAMPIRE_LASER_FIRE = registerSound("vampirelaserfire");
-    SoundEvent VAMPIRE_GRAB_HIT = registerSound("vampiregrabhit");
-    SoundEvent VAMPIRE_SUCK = registerSound("vampiresuck");
-    SoundEvent VAMPIRE_REANIMATE = registerSound("vampirereanimate");
+    RegistrySupplier<SoundEvent> VAMPIRE_LASER = register("vampirelaser");
+    RegistrySupplier<SoundEvent> VAMPIRE_LASER_FIRE = register("vampirelaserfire");
+    RegistrySupplier<SoundEvent> VAMPIRE_GRAB_HIT = register("vampiregrabhit");
+    RegistrySupplier<SoundEvent> VAMPIRE_SUCK = register("vampiresuck");
+    RegistrySupplier<SoundEvent> VAMPIRE_REANIMATE = register("vampirereanimate");
 
     //// OTHER
-    SoundEvent BULLET_RICOCHET = registerSound("bulletricochet");
-    SoundEvent BULLET_PENETRATE = registerSound("bulletpenetrate");
+    RegistrySupplier<SoundEvent> BULLET_RICOCHET = register("bulletricochet");
+    RegistrySupplier<SoundEvent> BULLET_PENETRATE = register("bulletpenetrate");
 
     static void registerSounds() {
 

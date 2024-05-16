@@ -25,7 +25,7 @@ public class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, KingCrim
     public void whiff(@NonNull KingCrimsonEntity attacker, @NonNull LivingEntity user) {
         attacker.setMove(counterMiss, KingCrimsonEntity.State.COUNTER_MISS);
         StandEntity.stun(user, counterMiss.getDuration(), 0);
-        attacker.playSound(JSoundRegistry.KC_RAGE, 1, 1);
+        attacker.playSound(JSoundRegistry.KC_RAGE.get(), 1, 1);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, KingCrim
             JUtils.cancelMoves(livingEntity);
         }
 
-        attacker.getWorld().playSound(null, ePos.x, ePos.y, ePos.z, JSoundRegistry.TE_TP, SoundCategory.PLAYERS, 1f, 1f);
+        attacker.getWorld().playSound(null, ePos.x, ePos.y, ePos.z, JSoundRegistry.TE_TP.get(), SoundCategory.PLAYERS, 1f, 1f);
     }
 
     @Override

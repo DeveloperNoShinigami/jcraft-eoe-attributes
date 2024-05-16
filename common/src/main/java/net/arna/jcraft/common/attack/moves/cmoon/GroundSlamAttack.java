@@ -32,7 +32,7 @@ public class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttack, CMo
         GravityChangerAPI.setWorldVelocity(target, GravityChangerAPI.getGravityDirection(user).getUnitVector());
         target.velocityModified = true;
         if (user.isSneaking()) {
-            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 30, 0, true, false));
+            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 30, 0, true, false));
         }
     }
 

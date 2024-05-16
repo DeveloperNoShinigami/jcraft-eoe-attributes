@@ -17,7 +17,7 @@ public class KnockdownMultiHitAttack<A extends IAttacker<? extends A, ?>> extend
     public KnockdownMultiHitAttack(int cooldown, int duration, float attackDistance, float damage, int stun, float hitboxSize,
                                    float knockback, float offset, @NonNull IntCollection hitMoments, int knockdownDuration) {
         super(cooldown, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMoments,
-                List.of(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, knockdownDuration, 0, true, false)));
+                List.of(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), knockdownDuration, 0, true, false)));
         this.knockdownDuration = knockdownDuration;
     }
 

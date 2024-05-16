@@ -63,7 +63,7 @@ public class DetonateAttack extends AbstractMove<DetonateAttack, AbstractKillerQ
         ServerWorld serverWorld = (ServerWorld) stand.getWorld();
 
         JCraft.createParticle(serverWorld, pos.x, pos.y, pos.z, JParticleType.BOOM);
-        JUtils.serverPlaySound(JSoundRegistry.KQ_EXPLODE, serverWorld, pos, 96);
+        JUtils.serverPlaySound(JSoundRegistry.KQ_EXPLODE.get(), serverWorld, pos, 96);
 
         DamageSource damageSource = JDamageSources.stand(stand);
         Set<? extends LivingEntity> toExplode = AbstractSimpleAttack.findHits(stand, pos, 4.4, damageSource);
@@ -71,7 +71,7 @@ public class DetonateAttack extends AbstractMove<DetonateAttack, AbstractKillerQ
         for (LivingEntity living : toExplode) {
             Vec3d kbVec = living.getEyePos().subtract(pos).normalize();
             StandEntity.damageLogic(stand.getWorld(), living, kbVec, 2, 3, true, 11f, false, 4, damageSource, user, null);
-            living.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 35, 0, true, false));
+            living.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0, true, false));
         }
     }
 }

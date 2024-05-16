@@ -27,7 +27,7 @@ public class DebugWand extends Item {
         }
 
         if (user.isSneaking()) {
-            world.playSound(null, user.getBlockPos(), JSoundRegistry.TW_TS_CLEAN, SoundCategory.PLAYERS, 1.2f, 1);
+            world.playSound(null, user.getBlockPos(), JSoundRegistry.TW_TS_CLEAN.get(), SoundCategory.PLAYERS, 1.2f, 1);
             ShaderActivationPacket.send((ServerPlayerEntity) user, user, 0, 20 * 6, ShaderActivationPacket.Type.ZA_WARUDO);
         }
         return super.use(world, user, hand);

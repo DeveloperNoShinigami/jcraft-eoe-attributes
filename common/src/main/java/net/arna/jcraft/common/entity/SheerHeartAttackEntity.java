@@ -143,7 +143,7 @@ public class SheerHeartAttackEntity extends MobEntity implements GeoEntity, IOwn
             }
         } else {
             if (age % 19 == 0 && isOnGround() && getVelocity().lengthSquared() > 0.005) {
-                playSound(JSoundRegistry.SHA_TREAD, 0.5f, 1.0f);
+                playSound(JSoundRegistry.SHA_TREAD.get(), 0.5f, 1.0f);
             }
 
             //50s is the cooldown period
@@ -206,7 +206,7 @@ public class SheerHeartAttackEntity extends MobEntity implements GeoEntity, IOwn
 
     public void Explode() {
         JUtils.explode(getWorld(), this, getX(), getY(), getZ(), 1.8f,
-                JExplosionModifier.builder().particle(JParticleTypeRegistry.BOOM_1)
+                JExplosionModifier.builder().particle(JParticleTypeRegistry.BOOM_1.get())
                         .destructionType(
                                 getWorld().getGameRules().getBoolean(JCraft.STAND_GRIEFING) ? Explosion.DestructionType.DESTROY : Explosion.DestructionType.KEEP)
                         .particleVelocity(Vec3d.ZERO)

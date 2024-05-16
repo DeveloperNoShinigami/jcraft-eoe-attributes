@@ -94,7 +94,7 @@ public class Splatter {
                         if (hit.isConnectedThroughVehicle(creator) || (hit instanceof StandEntity<?, ?> stand && stand.getUser() == creator)) {
                             continue;
                         }
-                        hit.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WSPOISON, 20, 0, true, false));
+                        hit.addStatusEffect(new StatusEffectInstance(JStatusRegistry.WSPOISON.get(), 20, 0, true, false));
                         hit.damage(JDamageSources.whitesnakePoison(creator), 2f);
                     }
                 }

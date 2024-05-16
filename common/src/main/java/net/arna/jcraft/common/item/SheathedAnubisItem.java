@@ -60,11 +60,11 @@ public class SheathedAnubisItem extends SpecObtainmentItem {
 
             boolean specChanged = tryGetSpec(user);
             if (specChanged) {
-                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE, serverWorld, user.getPos());
-                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_SPECCHANGE, serverWorld, user.getPos());
+                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE.get(), serverWorld, user.getPos());
+                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_SPECCHANGE.get(), serverWorld, user.getPos());
                 user.setStackInHand(hand, new ItemStack(JItemRegistry.ANUBIS.get()));
             } else if (!warned) {
-                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE, serverWorld, user.getPos());
+                JUtils.serverPlaySound(JSoundRegistry.ANUBIS_UNSHEATHE.get(), serverWorld, user.getPos());
                 user.setStackInHand(hand, new ItemStack(JItemRegistry.ANUBIS.get()));
             }
         }

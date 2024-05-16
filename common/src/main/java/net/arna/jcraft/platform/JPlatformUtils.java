@@ -24,5 +24,8 @@ public class JPlatformUtils {
     }
 
 
-
+    @ExpectPlatform
+    public static boolean isModLoaded(String name) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
 }

@@ -51,7 +51,7 @@ public class D4CCounterAttack extends AbstractCounterAttack<D4CCounterAttack, D4
 
         attacker.getWorld().playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(),
                 SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 1f, 1f);
-        attacker.playSound(JSoundRegistry.D4C_COUNTER, 1, 1);
+        attacker.playSound(JSoundRegistry.D4C_COUNTER.get(), 1, 1);
     }
 
     @Override

@@ -100,7 +100,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
 
     @Override
     public void displayArmoredHit() {
-        entity.playSound(JSoundRegistry.ARMORED_HIT, 1.0F, 1.0F);
+        entity.playSound(JSoundRegistry.ARMORED_HIT.get(), 1.0F, 1.0F);
         armoredHitTicks = 10;
         sync(entity);
     }

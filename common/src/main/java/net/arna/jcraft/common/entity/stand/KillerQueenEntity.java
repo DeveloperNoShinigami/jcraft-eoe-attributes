@@ -24,9 +24,9 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
     public static final SimpleAttack<KillerQueenEntity> HEAVY = new SimpleAttack<KillerQueenEntity>(
             200, 16, 24, 0.75f, 9f, 10, 2f, 1.75f, 0f)
             .withHitSpark(JParticleType.HIT_SPARK_3)
-            .withSound(JSoundRegistry.KQ_UPPERCUT)
-            .withSound(JSoundRegistry.KQ_HEAVY)
-            .withImpactSound(JSoundRegistry.IMPACT_4)
+            .withSound(JSoundRegistry.KQ_UPPERCUT.get())
+            .withSound(JSoundRegistry.KQ_HEAVY.get())
+            .withImpactSound(JSoundRegistry.IMPACT_4.get())
             .withHyperArmor()
             .withLaunch()
             .withInfo(

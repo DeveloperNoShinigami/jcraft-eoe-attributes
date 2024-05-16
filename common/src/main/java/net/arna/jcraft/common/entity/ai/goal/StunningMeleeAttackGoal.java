@@ -134,7 +134,7 @@ public class StunningMeleeAttackGoal extends Goal {
         resetCooldown();
         mob.swingHand(Hand.MAIN_HAND);
         if (mob.tryAttack(target)) {
-            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED, this.stunT, 1, true, false));
+            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED.get(), this.stunT, 1, true, false));
         }
     }
 

@@ -28,8 +28,8 @@ public class OverclockAttack extends AbstractSimpleAttack<OverclockAttack, GoldE
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         for (LivingEntity target : targets) {
-            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED, 60, 3, true, false));
-            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.OUTOFBODY, 60, 0, false, true));
+            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED.get(), 60, 3, true, false));
+            target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.OUTOFBODY.get(), 60, 0, false, true));
 
             Vec3d upDir = new Vec3d(GravityChangerAPI.getGravityDirection(user).getUnitVector());
             JUtils.setVelocity(target, upDir.multiply(-0.8));

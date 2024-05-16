@@ -239,7 +239,7 @@ public class ClientPacketHandler {
 
                     for (int h = 0; h < 8; ++h) {
                         client.world.addParticle(
-                                JParticleTypeRegistry.KCPARTICLE,
+                                JParticleTypeRegistry.KCPARTICLE.get(),
                                 posX + random.nextDouble(sizeX) - sizeX / 2,
                                 posY + random.nextDouble(sizeY),
                                 posZ + random.nextDouble(sizeZ) - sizeZ / 2,

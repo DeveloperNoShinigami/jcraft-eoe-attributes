@@ -563,10 +563,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * @return whether the stand should be able to attack
      */
     public boolean canAttack() {
-        if (isRemote() && hasStatusEffect(JStatusRegistry.DAZED)) {
+        if (isRemote() && hasStatusEffect(JStatusRegistry.DAZED.get())) {
             return false;
         }
-        return hasUser() && getMoveStun() <= 0 && !JUtils.isAffectedByTimeStop(user) && !getUserOrThrow().hasStatusEffect(JStatusRegistry.DAZED);
+        return hasUser() && getMoveStun() <= 0 && !JUtils.isAffectedByTimeStop(user) && !getUserOrThrow().hasStatusEffect(JStatusRegistry.DAZED.get());
     }
 
     /**
@@ -666,7 +666,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (entity == null || !entity.isAlive() || duration == 0) {
             return;
         }
-        entity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED, duration, amplifier, false, false, true));
+        entity.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED.get(), duration, amplifier, false, false, true));
         //JCraft.LOGGER.info("Stunned: " + entity.getEntityName() + " for: " + duration + " with stunType: " + amplifier);
     }
 
@@ -950,7 +950,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
             // Block break check
             if (getStandGauge() < 1) {
-                user.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED, 40, 2));
+                user.addStatusEffect(new StatusEffectInstance(JStatusRegistry.DAZED.get(), 40, 2));
                 playSound(SoundEvents.ITEM_TOTEM_USE, 1, 0.5f);
                 blocking = false;
                 kill();
@@ -1172,7 +1172,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (comboCounter.jcraft$getLastAttacked() != victim) {
             comboCounter.jcraft$setComboCount(1);
         } else {
-            StatusEffectInstance stun = comboCounter.jcraft$getLastAttacked().getStatusEffect(JStatusRegistry.DAZED);
+            StatusEffectInstance stun = comboCounter.jcraft$getLastAttacked().getStatusEffect(JStatusRegistry.DAZED.get());
             if (stun != null && stun.getAmplifier() != 2) {
                 comboCounter.jcraft$incrementComboCount();
             } else {
@@ -1220,7 +1220,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 if (!tsHit && standAttack.isCounter() && stand.getMoveStun() < standAttack.getWindupPoint()) {
                     //noinspection unchecked
                     ((AbstractCounterAttack<?, StandEntity<?, ?>>) standAttack).counter(stand, attacker, source);
-                    ent.removeStatusEffect(JStatusRegistry.DAZED);
+                    ent.removeStatusEffect(JStatusRegistry.DAZED.get());
                     return;
                 }
 
@@ -1237,7 +1237,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                     double delta = Math.abs((ent.headYaw + 90.0f) % 360.0f - (attacker.getHeadYaw() + 90.0f) % 360.0f);
                     if (canBackstab && (360.0 - delta % 360.0 < 45 || delta % 360.0 < 45) && ent.squaredDistanceTo(attacker.getPos()) >= 1.5625) { // Backstab logic
                         JCraft.createParticle((ServerWorld) attacker.getWorld(), ent.getX(), attacker.getEyeY(), ent.getZ(), JParticleType.BACK_STAB);
-                        stand.playSound(JSoundRegistry.BACKSTAB, 1, 1);
+                        stand.playSound(JSoundRegistry.BACKSTAB.get(), 1, 1);
                         stand.blocking = false;
                         overrideStun = true;
                         backstabbed = true;
@@ -1248,7 +1248,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                     //JCraft.LOGGER.info("Enemy blocked attack, setting blockstun to: " + blockstun);
                     stand.setMoveStun(blockstun);
                     stand.setStandGauge(stand.getStandGauge() - 2 * damage);
-                    stand.playSound(JSoundRegistry.STAND_BLOCK, 1, 1);
+                    stand.playSound(JSoundRegistry.STAND_BLOCK.get(), 1, 1);
                     hit = false;
                     overrideStun = false;
                 } else {
@@ -1276,10 +1276,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (hit) {
             damageScaler.jcraft$increaseHitCount();
 
-            StatusEffectInstance stun = ent.getStatusEffect(JStatusRegistry.DAZED);
+            StatusEffectInstance stun = ent.getStatusEffect(JStatusRegistry.DAZED.get());
             if (stun != null) {
                 if (overrideStun) {
-                    ent.removeStatusEffect(JStatusRegistry.DAZED);
+                    ent.removeStatusEffect(JStatusRegistry.DAZED.get());
                 }
             }
 
@@ -1351,7 +1351,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             playSound(summonSound, 1f, 1f);
         }
         if (summonSound == null || playGenericSummonSound) {
-            playSound(JSoundRegistry.STAND_SUMMON, 1f, 1f);
+            playSound(JSoundRegistry.STAND_SUMMON.get(), 1f, 1f);
         }
     }
 
@@ -1367,7 +1367,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         if (playDesummonSound) {
-            playSound(JSoundRegistry.STAND_DESUMMON, 1, 1);
+            playSound(JSoundRegistry.STAND_DESUMMON.get(), 1, 1);
         }
         discard();
     }
@@ -1582,7 +1582,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             stand.blocking = false;
         }
 
-        StatusEffectInstance mobStun = mob.getStatusEffect(JStatusRegistry.DAZED);
+        StatusEffectInstance mobStun = mob.getStatusEffect(JStatusRegistry.DAZED.get());
         // If stunned, and about to get hit by another move, combo break sometimes
         if (mobStun != null) {
             if (!stand.blocking && enemyAttack != null && enemyMoveStun > enemyAttack.getWindup() && stand.random.nextFloat() < 0.1f) {
@@ -1601,7 +1601,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         if (!stand.blocking) {
-            StatusEffectInstance stun = target.getStatusEffect(JStatusRegistry.DAZED);
+            StatusEffectInstance stun = target.getStatusEffect(JStatusRegistry.DAZED.get());
             // Overestimating stun up to 1/4 of a second for longer combos and frametraps
             int stunTicks = stun != null ? stun.getDuration() + stand.random.nextInt(5) : 0;
             stunTicks += blockPlusTicks;
@@ -1940,7 +1940,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                         double delta = Math.abs((headYaw + 90.0f) % 360.0f - (attacker.getHeadYaw() + 90.0f) % 360.0f);
                         if (canBackstab && (360.0 - delta % 360.0 < 45 || delta % 360.0 < 45) && squaredDistanceTo(attacker.getPos()) >= 1.5625) { // Backstab logic
                             JCraft.createParticle((ServerWorld) attacker.getWorld(), getX(), attacker.getEyeY(), getZ(), JParticleType.BACK_STAB);
-                            playSound(JSoundRegistry.BACKSTAB, 1, 1);
+                            playSound(JSoundRegistry.BACKSTAB.get(), 1, 1);
                             blocking = false;
                             overrideStun = true;
                             backstabbed = true;
@@ -1950,7 +1950,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                     if (!backstabbed && !unblockable) { // Didn't backstab, not unblockable
                         setMoveStun(blockstun);
                         setStandGauge(getStandGauge() - 2 * damage);
-                        playSound(JSoundRegistry.STAND_BLOCK, 1, 1);
+                        playSound(JSoundRegistry.STAND_BLOCK.get(), 1, 1);
                         hit = false;
                         overrideStun = false;
                     } else {

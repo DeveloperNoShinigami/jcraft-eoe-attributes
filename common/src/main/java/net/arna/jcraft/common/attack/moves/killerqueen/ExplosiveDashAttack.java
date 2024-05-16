@@ -29,7 +29,7 @@ public class ExplosiveDashAttack extends AbstractMove<ExplosiveDashAttack, Abstr
         user.setVelocity(user.getVelocity().add(lookVec));
         user.velocityModified = true;
 
-        attacker.playSound(JSoundRegistry.KQ_DETONATE, 1, 1);
+        attacker.playSound(JSoundRegistry.KQ_DETONATE.get(), 1, 1);
 
         return Set.of();
     }

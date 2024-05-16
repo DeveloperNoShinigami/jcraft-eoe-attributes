@@ -36,7 +36,7 @@ public class KnifeBundleItem extends KnifeItem {
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (user.hasStatusEffect(JStatusRegistry.DAZED)) {
+        if (user.hasStatusEffect(JStatusRegistry.DAZED.get())) {
             return;
         }
 

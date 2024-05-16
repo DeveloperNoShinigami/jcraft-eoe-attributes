@@ -41,7 +41,7 @@ public class RedBindAttack extends AbstractSimpleAttack<RedBindAttack, Magicians
         }
 
         // Stun
-        boundEntity.removeStatusEffect(JStatusRegistry.DAZED);
+        boundEntity.removeStatusEffect(JStatusRegistry.DAZED.get());
         StandEntity.stun(boundEntity, RedBindEntity.ticksToLive, 0);
 
         // Create and bind

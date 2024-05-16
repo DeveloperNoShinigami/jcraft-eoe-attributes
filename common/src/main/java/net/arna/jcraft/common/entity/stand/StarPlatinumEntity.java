@@ -29,7 +29,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
     public static final UppercutAttack<StarPlatinumEntity> UPPERCUT = new UppercutAttack<StarPlatinumEntity>(20,
             8, 14, 0.75f, 6f, 20, 1.5f, 0.25f, -0.6f, 0.75f)
             .withAnim(State.UPPERCUT)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withExtraHitBox(0, 0.35, 1.25)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -39,7 +39,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
     public static final SimpleAttack<StarPlatinumEntity> LIGHT_FOLLOWUP = new SimpleAttack<StarPlatinumEntity>(
             0, 6, 10, 0.75f, 6f, 8, 1.5f, 1f, -0.25f)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withLaunch()
             .withBlockStun(4)
             .withExtraHitBox(0, 0, 1)
@@ -52,22 +52,22 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     5, 7, 0.75f, 5f, 10, 0.2f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(UPPERCUT)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withInfo(
                     Text.literal("Punch"),
                     Text.literal("quick combo starter")
             );
     public static final MainBarrageAttack<StarPlatinumEntity> BARRAGE = new MainBarrageAttack<StarPlatinumEntity>(280,
             0, 40, 0.75f, 1f, 30, 2f, 0.25f, 0f, 3, Blocks.OBSIDIAN.getHardness())
-            .withSound(JSoundRegistry.STAR_PLATINUM_BARRAGE)
+            .withSound(JSoundRegistry.STAR_PLATINUM_BARRAGE.get())
             .withInfo(
                     Text.literal("Barrage"),
                     Text.literal("fast reliable combo starter/extender, high stun")
             );
     public static final KnockdownAttack<StarPlatinumEntity> GRAB_HIT = new KnockdownAttack<StarPlatinumEntity>(0,
             10, 20, 1f, 6f, 15, 1.75f, 0.4f, 0f, 35)
-            .withSound(JSoundRegistry.SPTW_UPPERCUT)
-            .withImpactSound(JSoundRegistry.IMPACT_6)
+            .withSound(JSoundRegistry.SPTW_UPPERCUT.get())
+            .withImpactSound(JSoundRegistry.IMPACT_6.get())
             .withHyperArmor()
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -76,8 +76,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             );
     public static final GrabAttack<StarPlatinumEntity, State> GRAB = new GrabAttack<>(280, 8, 20,
             1f, 2f, 20, 1.5f, 0.1f, 0f, GRAB_HIT, State.GRAB_HIT, 11, 0.8)
-            .withSound(JSoundRegistry.SPTW_GRAB)
-            .withImpactSound(JSoundRegistry.SPTW_GRABHIT)
+            .withSound(JSoundRegistry.SPTW_GRAB.get())
+            .withImpactSound(JSoundRegistry.SPTW_GRABHIT.get())
             .withHitAnimation(null)
             .withBlockableType(BlockableType.BLOCKABLE)
             .withInfo(
@@ -87,7 +87,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
     public static final SimpleAttack<StarPlatinumEntity> STAR_FINGER = new SimpleAttack<StarPlatinumEntity>(200,
             12, 20, 0.75f, 5f, 30, 1.75f, -0.4f, -0.25f)
             .withCrouchingVariant(GRAB)
-            .withSound(JSoundRegistry.STAR_FINGER)
+            .withSound(JSoundRegistry.STAR_FINGER.get())
             .withBlockStun(5)
             .withExtraHitBox(2, 0.1, 1)
             .withInfo(
@@ -96,8 +96,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             );
     public static final UppercutAttack<StarPlatinumEntity> KNEE_UP = new UppercutAttack<StarPlatinumEntity>(30,
             8, 14, 0.75f, 4f, 13, 1.6f, 0.2f, -0.4f, 0.5f)
-            .withSound(JSoundRegistry.STAR_PLATINUM_KNEE)
-            .withImpactSound(JSoundRegistry.IMPACT_6)
+            .withSound(JSoundRegistry.STAR_PLATINUM_KNEE.get())
+            .withImpactSound(JSoundRegistry.IMPACT_6.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Text.literal("Upward Knee"),
@@ -106,8 +106,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
     public static final SimpleAttack<StarPlatinumEntity> KNEE = new SimpleAttack<StarPlatinumEntity>(20,
             7, 12, 0.9f, 6f, 9, 1.5f, 0.3f, 0f)
             .withAerialVariant(KNEE_UP)
-            .withSound(JSoundRegistry.STAR_PLATINUM_KNEE)
-            .withImpactSound(JSoundRegistry.IMPACT_6)
+            .withSound(JSoundRegistry.STAR_PLATINUM_KNEE.get())
+            .withImpactSound(JSoundRegistry.IMPACT_6.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
                     Text.literal("Knee"),
@@ -115,7 +115,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             );
     public static final ChargeBarrageAttack<StarPlatinumEntity> SHORT_CHARGE_BARRAGE = new ChargeBarrageAttack<StarPlatinumEntity>(280, 5, 25,
             6f, 0.6f, 15, 1.5f, 0.1f, 0f, 3, true)
-            .withSound(JSoundRegistry.STAR_PLATINUM_LUNGING_BARRAGE)
+            .withSound(JSoundRegistry.STAR_PLATINUM_LUNGING_BARRAGE.get())
             .withBarrageShockwaves()
             .withBackstab(false)
             .withInfo(
@@ -124,7 +124,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             );
     public static final ChargeBarrageAttack<StarPlatinumEntity> CHARGE_BARRAGE = new ChargeBarrageAttack<StarPlatinumEntity>(280, 5, 55,
             7f, 0.6f, 15, 1.5f, 0.1f, 0f, 3, false)
-            .withSound(JSoundRegistry.STAR_PLATINUM_ADVANCING_BARRAGE)
+            .withSound(JSoundRegistry.STAR_PLATINUM_ADVANCING_BARRAGE.get())
             .withBarrageShockwaves()
             .withBackstab(false)
             .withCrouchingVariant(SHORT_CHARGE_BARRAGE)

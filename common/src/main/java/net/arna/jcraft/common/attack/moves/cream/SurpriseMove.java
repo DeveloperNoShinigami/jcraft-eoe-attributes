@@ -43,7 +43,7 @@ public class SurpriseMove extends AbstractMove<SurpriseMove, CreamEntity> {
 
         attacker.setVoidTime(getWindupPoint());
 
-        attacker.playSound(JSoundRegistry.IMPACT_5, 1, 0.75f);
+        attacker.playSound(JSoundRegistry.IMPACT_5.get(), 1, 0.75f);
 
         return Set.of();
     }

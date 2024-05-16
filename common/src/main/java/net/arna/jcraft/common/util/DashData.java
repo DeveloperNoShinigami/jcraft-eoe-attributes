@@ -24,7 +24,7 @@ public class DashData {
 
     public void tickDash() {
         duration--;
-        if (entity.hasStatusEffect(JStatusRegistry.DAZED)) { // Being stunned stops dashes
+        if (entity.hasStatusEffect(JStatusRegistry.DAZED.get())) { // Being stunned stops dashes
             finished = true;
             return;
         }
@@ -48,7 +48,7 @@ public class DashData {
 
     public static void tryDash(int forward, int side, LivingEntity entity) {
         CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(entity);
-        if (cooldowns.getCooldown(CooldownType.DASH) > 0 || !entity.isOnGround() || entity.hasStatusEffect(JStatusRegistry.DAZED) || entity.hasStatusEffect(JStatusRegistry.KNOCKDOWN)) {
+        if (cooldowns.getCooldown(CooldownType.DASH) > 0 || !entity.isOnGround() || entity.hasStatusEffect(JStatusRegistry.DAZED.get()) || entity.hasStatusEffect(JStatusRegistry.KNOCKDOWN.get())) {
             return;
         }
         cooldowns.setCooldown(CooldownType.DASH, JCraft.dashCooldown);

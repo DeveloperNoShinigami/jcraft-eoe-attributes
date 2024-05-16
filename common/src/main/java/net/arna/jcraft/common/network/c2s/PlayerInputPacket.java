@@ -365,7 +365,7 @@ public class PlayerInputPacket {
             return;
         }
 
-        StatusEffectInstance stun = player.getStatusEffect(JStatusRegistry.DAZED);
+        StatusEffectInstance stun = player.getStatusEffect(JStatusRegistry.DAZED.get());
         if (stun != null) {
             JCraft.comboBreak((ServerWorld) player.getWorld(), player, stun);
         }

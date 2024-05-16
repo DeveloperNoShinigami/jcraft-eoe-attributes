@@ -135,7 +135,7 @@ public class KnifeProjectile extends PersistentProjectileEntity implements GeoEn
 
         HitResult hitResult = getWorld().raycast(new RaycastContext(eP, eP.add(rangeMod), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, owner));
 
-        playSound(JSoundRegistry.TWOH_SHOOT, 1, 1);
+        playSound(JSoundRegistry.TWOH_SHOOT.get(), 1, 1);
 
         Vec3d hitPos = hitResult.getPos();
         if (eHit != null) {

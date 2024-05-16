@@ -46,14 +46,14 @@ public class FeignBarrageCounterAttack extends AbstractCounterAttack<FeignBarrag
         user.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, countered.getEyePos());
 
         if (countered instanceof LivingEntity livingEntity) {
-            livingEntity.removeStatusEffect(JStatusRegistry.DAZED);
+            livingEntity.removeStatusEffect(JStatusRegistry.DAZED.get());
             StandEntity.stun(livingEntity, 20, 0);
 
             JUtils.cancelMoves(livingEntity);
         }
 
         attacker.setMove(hitMove, TheWorldEntity.State.COUNTER_HIT);
-        attacker.playSound(JSoundRegistry.TIME_SKIP, 1, 1);
+        attacker.playSound(JSoundRegistry.TIME_SKIP.get(), 1, 1);
     }
 
     @Override

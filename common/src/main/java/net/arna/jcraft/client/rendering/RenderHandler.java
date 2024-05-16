@@ -3,7 +3,7 @@ package net.arna.jcraft.client.rendering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.arna.jcraft.client.rendering.shader.ShaderUniformHandler;
 import net.arna.jcraft.client.util.RenderUtils;
-import net.fabricmc.loader.api.FabricLoader;
+import net.arna.jcraft.platform.JPlatformUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.*;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 public class RenderHandler {
     public static HashMap<RenderLayer, BufferBuilder> BUFFERS = new HashMap<>();
-    public static boolean LARGER_BUFFER_SOURCES = FabricLoader.getInstance().isModLoaded("sodium");
+    public static boolean LARGER_BUFFER_SOURCES = JPlatformUtils.isModLoaded("sodium");
 
     public static HashMap<RenderLayer, ShaderUniformHandler> UNIFORM_HANDLERS = new HashMap<>();
     public static VertexConsumerProvider.Immediate DELAYED_RENDER;

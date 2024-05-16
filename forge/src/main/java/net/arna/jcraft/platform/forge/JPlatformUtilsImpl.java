@@ -4,6 +4,7 @@ import net.arna.jcraft.client.rendering.api.MultiInstancePostProcessor;
 import net.arna.jcraft.client.rendering.post.TimestopShaderFX;
 import net.arna.jcraft.forge.client.JShaderRegistry;
 import net.minecraft.client.gl.ShaderProgram;
+import net.minecraftforge.fml.ModList;
 
 public class JPlatformUtilsImpl {
 
@@ -17,5 +18,9 @@ public class JPlatformUtilsImpl {
 
     public static ShaderProgram getRred() {
         return JShaderRegistry.RREDE.getInstance().get();
+    }
+
+    public static boolean isModLoaded(String name) {
+        return ModList.get().isLoaded("name");
     }
 }

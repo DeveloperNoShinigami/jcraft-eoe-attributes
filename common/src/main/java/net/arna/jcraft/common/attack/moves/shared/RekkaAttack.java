@@ -43,7 +43,7 @@ public class RekkaAttack<A extends IAttacker<A, S> & GeoEntity, S extends Enum<S
         if (rekkaLevel == 3) {
             for (LivingEntity target : targets) {
                 if (!JUtils.isBlocking(target)) {
-                    target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN, 50, 0, true, false));
+                    target.addStatusEffect(new StatusEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 50, 0, true, false));
                 }
             }
         }

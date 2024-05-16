@@ -36,7 +36,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public static final SimpleAttack<GEREntity> LIGHT_FOLLOWUP = new SimpleAttack<GEREntity>(
             0, 6, 13, 0.75f, 6f, 8, 1.5f, 1f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withLaunch()
             .withBlockStun(4)
             .withExtraHitBox(0, 0.25, 1)
@@ -49,7 +49,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
             5, 12, 0.75f, 4f, 20, 1.25f, 0.4f, 0.33f)
             .withAnim(State.AIR_LIGHT)
             .withFollowup(LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withExtraHitBox(0, -1, 1)
             .withHitAnimation(HIGH)
             .withInfo(
@@ -58,8 +58,8 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
             );
     public static final OverheadKickAttack OVERHEAD_KICK = new OverheadKickAttack(140, 14, 24,
             1f, 9f, 40, 1.5f, 0.8f, 0.25f)
-            .withSound(JSoundRegistry.GER_HEAVY)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withSound(JSoundRegistry.GER_HEAVY.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withExtraHitBox(0, -1, 1)
             .withHitAnimation(CRUSH)
             .withInfo(
@@ -68,7 +68,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
             );
     public static final SimpleAttack<GEREntity> KICK_BARRAGE_FINISHER = new SimpleAttack<GEREntity>(0,
             6, 9, 1f, 1f, 10, 1.75f, 1.1f, 0f)
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT)
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunchNoShockwave()
             .withInfo(
@@ -78,7 +78,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public static final BarrageAttack<GEREntity> KICK_BARRAGE = new BarrageAttack<GEREntity>(280, 0, 48,
             1f, 1f, 20, 1.5f, 0.3f, 0f, 3)
             .withFinisher(37, KICK_BARRAGE_FINISHER)
-            .withSound(JSoundRegistry.GER_KICKBARRAGE)
+            .withSound(JSoundRegistry.GER_KICKBARRAGE.get())
             .withInfo(
                     Text.literal("Kick Barrage"),
                     Text.literal("fast combo finisher, knocks back")
@@ -87,7 +87,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public static final SimpleAttack<GEREntity> PUNCH = new SimpleAttack<GEREntity>(JCraft.LIGHT_COOLDOWN / 2,
             5, 9, 0.75f, 5f, 8, 1.5f, 0.2f, -0.1f)
             .withAerialVariant(DOWNWARD_KICK)
-            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withInfo(
                     Text.literal("Punch"),
                     Text.literal("quick combo starter")
@@ -95,8 +95,8 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public static final KnockdownAttack<GEREntity> OVERHEAD_SMASH = new KnockdownAttack<GEREntity>(220, 10, 19,
             1f, 9f, 10, 1.5f, 1.1f, 0f, 30)
             .withAerialVariant(OVERHEAD_KICK)
-            .withSound(JSoundRegistry.GER_HEAVY)
-            .withImpactSound(JSoundRegistry.IMPACT_2)
+            .withSound(JSoundRegistry.GER_HEAVY.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHyperArmor()
             .withLaunch()
@@ -108,14 +108,14 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public static final MainBarrageAttack<GEREntity> BARRAGE = new MainBarrageAttack<GEREntity>(280, 0, 30,
             0.75f, 1f, 20, 2f, 0.25f, 0f, 3, Blocks.DEEPSLATE.getHardness())
             .withAerialVariant(KICK_BARRAGE)
-            .withSound(JSoundRegistry.GE_BARRAGE)
+            .withSound(JSoundRegistry.GE_BARRAGE.get())
             .withInfo(
                     Text.literal("Barrage"),
                     Text.literal("fast reliable combo starter/extender, high stun")
             );
     public static final HealMove<GEREntity> HEAL = new HealMove<GEREntity>(520, 10, 16,
             1f, 1.25f, 0f, 6f, HealMove.HealTarget.TARGETS, GEREntity::pacifyMobs)
-            .withSound(JSoundRegistry.GE_HEAL)
+            .withSound(JSoundRegistry.GE_HEAL.get())
             .withInfo(
                     Text.literal("Healing Hand (Others)"),
                     Text.empty()
@@ -123,13 +123,13 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public static final HealMove<GEREntity> HEAL_SELF = new HealMove<GEREntity>(520, 10, 14,
             1f, 0f, 0f, 4f, HealMove.HealTarget.USER)
             .withCrouchingVariant(HEAL)
-            .withSound(JSoundRegistry.GE_HEAL)
+            .withSound(JSoundRegistry.GE_HEAL.get())
             .withInfo(
                     Text.literal("Healing Hand"),
                     Text.literal("standing: heals user for 2 hearts, crouching: heals others for 3 hearts, pacifies angered mobs")
             );
     public static final LifeBeamAttack LIFE_BEAM = new LifeBeamAttack(0, 1, 10, 1.1f)
-            .withSound(JSoundRegistry.GER_LASER_FIRE)
+            .withSound(JSoundRegistry.GER_LASER_FIRE.get())
             .withInfo(
                     Text.literal("Life Beam"),
                     Text.literal("")
@@ -137,7 +137,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public static final HoldableMove<GEREntity, State> LIFE_BEAM_CHARGE = new HoldableMove<>(280,
             0, 40, 1.1f, LIFE_BEAM, State.LASER_FIRE, 9)
             .withInitAction((attacker, user, ctx) -> ctx.setInt(CHARGE_TIME, 0))
-            .withSound(JSoundRegistry.GER_LASER)
+            .withSound(JSoundRegistry.GER_LASER.get())
             .withInfo(
                     Text.literal("Life Beam"),
                     Text.literal("""
@@ -145,20 +145,20 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                             If charged for a minimum of 0.9 seconds, the scorpion inflicts poison and deals more stun.""")
             );
     public static final NullificationAttack NULLIFICATION = new NullificationAttack(480, 5, 35, 1f)
-            .withSound(JSoundRegistry.GE_HEAL)
+            .withSound(JSoundRegistry.GE_HEAL.get())
             .withInfo(
                     Text.literal("Nullification"),
                     Text.literal("0.25s windup, 1.5s counter, stuns on hit")
             );
     public static final ReturnToZeroMove RETURN_TO_ZERO = new ReturnToZeroMove(1200, 30, 32, 1f)
-            .withSound(JSoundRegistry.GER_SETUP)
+            .withSound(JSoundRegistry.GER_SETUP.get())
             .withInfo(
                     Text.literal("Return to Zero"),
                     Text.literal("initial press: saves the state of " +
                             "every entity in a 4 chunk radius, second press: reverts all states except users\nDoesn't affect player inventories")
             );
     public static final FlightMove FLIGHT = new FlightMove(320, 1, 0, 0f)
-            .withSound(JSoundRegistry.GER_FLY)
+            .withSound(JSoundRegistry.GER_FLY.get())
             .withInfo(
                     Text.literal("Flight"),
                     Text.literal("1 second of flight")
@@ -263,7 +263,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     @Override
     public void tick() {
         if (age == 1) {
-            playSound(JSoundRegistry.GER_SUMMON, 1f, 1f);
+            playSound(JSoundRegistry.GER_SUMMON.get(), 1f, 1f);
         }
         super.tick();
 
