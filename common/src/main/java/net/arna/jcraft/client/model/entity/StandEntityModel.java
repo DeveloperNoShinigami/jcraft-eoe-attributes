@@ -1,13 +1,13 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.model.GeoModel;
 
 import java.util.List;
 import java.util.stream.IntStream;

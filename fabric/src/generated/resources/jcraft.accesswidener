@@ -22,3 +22,4 @@ extendable method net/minecraft/client/renderer/ShaderInstance parseUniformNode 
 accessible field net/minecraft/client/renderer/ShaderInstance uniformMap Ljava/util/Map;
 accessible field net/minecraft/client/renderer/ShaderInstance uniforms Ljava/util/List;
 accessible field net/minecraft/world/entity/monster/Witch attackPlayersGoal Lnet/minecraft/world/entity/ai/goal/target/NearestAttackableWitchTargetGoal;
+accessible method net/minecraft/client/renderer/item/ItemProperties register (Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/item/ClampedItemPropertyFunction;)V

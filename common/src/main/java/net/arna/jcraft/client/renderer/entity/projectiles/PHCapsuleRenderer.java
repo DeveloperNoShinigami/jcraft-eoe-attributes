@@ -5,7 +5,7 @@ import net.arna.jcraft.client.model.entity.PHCapsuleModel;
 import net.arna.jcraft.common.entity.projectile.PHCapsuleProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
 
 public class PHCapsuleRenderer extends GeoProjectileRenderer<PHCapsuleProjectile> {
 

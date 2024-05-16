@@ -1,11 +1,12 @@
 package net.arna.jcraft.common.attack.moves.shared;
 
 import lombok.NonNull;
+import mod.azure.azurelib.animatable.GeoEntity;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.moves.base.AbstractGrabAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.util.StandAnimationState;
-import software.bernie.geckolib.animatable.GeoEntity;
+
 
 public class GrabAttack<A extends IAttacker<A, S> & GeoEntity, S extends Enum<S> & StandAnimationState<A>>
         extends AbstractGrabAttack<GrabAttack<A, S>, A, S> {

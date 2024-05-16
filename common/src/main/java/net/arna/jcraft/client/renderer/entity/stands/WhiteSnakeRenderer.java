@@ -3,6 +3,9 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.cache.object.GeoBone;
+import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
 import net.arna.jcraft.client.model.entity.WhiteSnakeModel;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -13,9 +16,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
 
 public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
     public WhiteSnakeRenderer(EntityRendererProvider.Context context) {

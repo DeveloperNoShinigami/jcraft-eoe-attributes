@@ -2,6 +2,7 @@ package net.arna.jcraft.client.renderer.entity.stands;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.GoldenExperienceModel;
 import net.arna.jcraft.common.entity.stand.GoldExperienceEntity;
 import net.arna.jcraft.common.util.JUtils;
@@ -13,7 +14,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 public class GoldExperienceRenderer extends StandEntityRenderer<GoldExperienceEntity> {
     private int currentTick = -1;

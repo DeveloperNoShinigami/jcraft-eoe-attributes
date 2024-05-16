@@ -3,6 +3,7 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.SilverChariotModel;
 import net.arna.jcraft.client.renderer.entity.layer.SCRapierLayer;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
@@ -12,7 +13,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEntity> {
 

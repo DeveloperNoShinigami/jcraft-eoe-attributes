@@ -24,8 +24,9 @@ dependencies {
     modImplementation "dev.architectury:architectury:$rootProject.architectury_api_version"
 
     //Geckolib
-    modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
-    implementation("com.eliotlash.mclib:mclib:20")
+    //modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
+    //implementation("com.eliotlash.mclib:mclib:20")
+    compileOnly "mod.azure.azurelib:azurelib-common-1.20.1:${azurelib_version}"
 
     //Player Anim
     modImplementation "dev.kosmx.player-anim:player-animation-lib:${rootProject.player_anim_version}"

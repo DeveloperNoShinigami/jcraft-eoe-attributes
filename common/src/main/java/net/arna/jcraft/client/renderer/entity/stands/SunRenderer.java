@@ -4,6 +4,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexMultiConsumer;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.arna.jcraft.client.model.entity.TheSunModel;
 import net.arna.jcraft.client.renderer.entity.layer.SunGlowLayer;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
@@ -18,10 +21,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Pose;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.object.Color;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
     public SunRenderer(EntityRendererProvider.Context renderManager) {

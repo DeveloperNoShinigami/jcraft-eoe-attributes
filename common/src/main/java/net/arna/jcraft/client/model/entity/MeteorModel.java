@@ -1,9 +1,10 @@
 package net.arna.jcraft.client.model.entity;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.model.GeoModel;
+
 
 public class MeteorModel extends GeoModel<MeteorProjectile> {
     @Override

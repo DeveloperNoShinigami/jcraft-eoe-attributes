@@ -1,5 +1,9 @@
 package net.arna.jcraft.client.renderer.entity;
 
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.cache.object.GeoBone;
+import mod.azure.azurelib.renderer.DynamicGeoEntityRenderer;
+import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
 import net.arna.jcraft.client.model.entity.GESnakeModel;
 import net.arna.jcraft.common.entity.GESnakeEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -8,10 +12,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
-import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
 
 public class BlockProjectileRenderer extends GeoProjectileRenderer<BlockProjectile> {
     private final ItemRenderer itemRenderer;

@@ -13,6 +13,7 @@ import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -28,6 +29,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.network.PacketDistributor;
 import org.stringtemplate.v4.misc.Misc;
 
+import static net.arna.jcraft.JCraft.ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.JCraft.MOD_ID;
 
 @Mod(MOD_ID)

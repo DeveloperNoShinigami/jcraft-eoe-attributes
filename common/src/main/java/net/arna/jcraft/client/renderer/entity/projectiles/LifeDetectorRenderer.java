@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Quaternionf;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
 
 
 public class LifeDetectorRenderer extends GeoProjectileRenderer<LifeDetectorEntity> {

@@ -3,16 +3,16 @@ package net.arna.jcraft.client.renderer.entity.projectiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.util.RenderUtils;
+
 
 public class GeoProjectileRenderer<T extends Entity& GeoAnimatable> extends GeoEntityRenderer<T> {
     public GeoProjectileRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> model) {

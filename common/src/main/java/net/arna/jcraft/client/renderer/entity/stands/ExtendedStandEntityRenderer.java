@@ -2,6 +2,9 @@ package net.arna.jcraft.client.renderer.entity.stands;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.renderer.DynamicGeoEntityRenderer;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -11,9 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.renderer.DynamicGeoEntityRenderer;
+
 
 @Deprecated(forRemoval = true)
 public class ExtendedStandEntityRenderer<T extends StandEntity<?, ?>> extends DynamicGeoEntityRenderer<T> {

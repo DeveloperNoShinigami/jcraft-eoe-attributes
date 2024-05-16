@@ -1,5 +1,8 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.cache.object.GeoBone;
+import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
 import net.arna.jcraft.client.model.entity.StandEntityModel;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
@@ -9,13 +12,11 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.renderer.layer.BlockAndItemGeoLayer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import javax.annotation.Nullable;
+
 
 public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
 

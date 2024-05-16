@@ -16,6 +16,8 @@ import net.minecraft.world.entity.Entity;
 public interface JEntityRendererRegister {
     static void registerEntityRenderers() {
 
+
+
         EntityRendererRegistry.register(JEntityTypeRegistry.STAR_PLATINUM, StarPlatinumRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.SPTW, SPTWRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.KING_CRIMSON, KingCrimsonRenderer::new);

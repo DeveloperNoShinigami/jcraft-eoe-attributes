@@ -54,7 +54,7 @@
 ## Adding an Entity (Type)
 1. Create the class `MyEntity` (replacing `My` with its name of course), subclassing `Entity` or one of its subclasses (like `PathAwareEntity`).
 2. Add the interface `GeoEntity` to `MyEntity`.
-3. Add the line `private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);` to `MyEntity` and implement the interface getter accordingly.
+3. Add the line `private final AnimatableInstanceCache geoCache = AzureLibUtil.createInstanceCache(this);` to `MyEntity` and implement the interface getter accordingly.
 4. Add the method `public static DefaultAttributeContainer.Builder createMyAttributes()` to `MyEntity` and return the stats for your entity, e.g. use `MobEntity.createMobAttributes()`.
 5. Add a constructor that only takes a `World` as a parameter. Ignore the missing type for the `super` call right now.
 6. Add the type of the entity to `JEntityTypeRegistry`. The dimension parameter is the hitbox of the entity in blocks.

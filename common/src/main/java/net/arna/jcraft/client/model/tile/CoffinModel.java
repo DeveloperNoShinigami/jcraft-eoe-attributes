@@ -1,9 +1,10 @@
 package net.arna.jcraft.client.model.tile;
 
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.block.tile.CoffinTileEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.model.GeoModel;
+
 
 public class CoffinModel extends GeoModel<CoffinTileEntity> {
     @Override

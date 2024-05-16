@@ -1,11 +1,12 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.core.animation.AnimationState;
+
 
 public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEntity.State> {
 

@@ -1,9 +1,9 @@
 package net.arna.jcraft.client.model.armor;
 
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.core.animatable.GeoAnimatable;
-import software.bernie.geckolib.model.GeoModel;
 
 public class JArmorModel<T extends GeoAnimatable> extends GeoModel<T> {//<T extends ArmorItem & IAnimatable> extends AnimatedGeoModel<T> {
     protected final String name;

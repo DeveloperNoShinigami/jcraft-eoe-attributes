@@ -1,15 +1,14 @@
 package net.arna.jcraft.client.renderer.entity.layer;
 
+import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.renderer.GeoRenderer;
+import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.renderer.GeoRenderer;
-import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -19,6 +18,7 @@ import static net.arna.jcraft.common.entity.projectile.RapierProjectile.POSSESSE
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.resources.ResourceLocation;
 
 public class SCRapierLayer extends GeoRenderLayer<SilverChariotEntity> {
     private static final ResourceLocation MODEL = JCraft.id("geo/silver_chariot.geo.json");
