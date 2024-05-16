@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_froglight": {
+    "has_bamboo": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:verdant_froglight"
+              "minecraft:bamboo"
             ]
           }
         ]
@@ -15,20 +15,20 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "jcraft:cinderella_green_from_smelting"
+        "recipe": "jcraft:cinderella_green_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "has_froglight",
+      "has_bamboo",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "jcraft:cinderella_green_from_smelting"
+      "jcraft:cinderella_green_block"
     ]
   },
   "sends_telemetry_event": false
