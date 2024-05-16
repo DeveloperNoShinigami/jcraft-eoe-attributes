@@ -43,7 +43,7 @@ public class JComponentPlatformUtils {
     }
 
     @ExpectPlatform
-    public static CommonTimeStopComponent getTimeStopData(Entity entity) {
+    public static Optional<CommonTimeStopComponent> getTimeStopData(Entity entity) {
         throw new AssertionError();
     }
 

@@ -51,7 +51,9 @@ public class NullificationAttack extends AbstractCounterAttack<NullificationAtta
                 ServerChannelFeedbackPacket.send(serverPlayerEntity, buf);
             }
         }
-        JComponentPlatformUtils.getTimeStopData(countered).setTicks(counterStopTime);
+        if (JComponentPlatformUtils.getTimeStopData(countered).isPresent()) {
+            JComponentPlatformUtils.getTimeStopData(countered).get().setTicks(counterStopTime);
+        }
 
         if (countered instanceof LivingEntity living) {
             StandEntity.stun(living, 10, 0);

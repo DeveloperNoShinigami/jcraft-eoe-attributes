@@ -17,6 +17,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import org.stringtemplate.v4.misc.Misc;
 
 import java.util.UUID;
 
@@ -83,14 +84,14 @@ public class MiscCapability extends CommonMiscComponentImpl implements JCapabili
                 player = Minecraft.getInstance().level.getPlayerByUUID(uuid);
             }
             if (player != null) {
-                StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
+                MiscCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
             }
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, MISC_C2S, (buf, context) -> {
             UUID uuid = buf.readUUID();
             CompoundTag nbt = buf.readNbt();
-            StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
+            MiscCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
         });
     }
 }

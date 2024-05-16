@@ -93,7 +93,6 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, STAND_C2S, (buf, context) -> {
-            //Player player = context.getPlayer();
             UUID uuid = buf.readUUID();
             CompoundTag nbt = buf.readNbt();
             StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));

@@ -459,7 +459,10 @@ public final class JUtils {
     }
 
     public static boolean isAffectedByTimeStop(Entity entity) {
-        return JComponentPlatformUtils.getTimeStopData(entity).getTicks() > 0;
+        if (JComponentPlatformUtils.getTimeStopData(entity).isPresent()) {
+            return JComponentPlatformUtils.getTimeStopData(entity).get().getTicks() > 0;
+        }
+         return false;
     }
 
     public static boolean canDamage(DamageSource damageSource, Entity ent) {

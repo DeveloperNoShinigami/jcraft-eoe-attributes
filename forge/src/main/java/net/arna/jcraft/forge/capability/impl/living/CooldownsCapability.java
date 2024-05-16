@@ -83,14 +83,14 @@ public class CooldownsCapability extends CommonCooldownsComponentImpl implements
                 player = Minecraft.getInstance().level.getPlayerByUUID(uuid);
             }
             if (player != null) {
-                StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
+                CooldownsCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
             }
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, CD_C2S, (buf, context) -> {
             UUID uuid = buf.readUUID();
             CompoundTag nbt = buf.readNbt();
-            StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
+            CooldownsCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
         });
     }
 }

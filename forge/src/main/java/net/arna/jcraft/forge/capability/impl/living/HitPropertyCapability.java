@@ -83,14 +83,14 @@ public class HitPropertyCapability extends CommonHitPropertyComponentImpl implem
                 player = Minecraft.getInstance().level.getPlayerByUUID(uuid);
             }
             if (player != null) {
-                StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
+                HitPropertyCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
             }
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, HIT_C2S, (buf, context) -> {
             UUID uuid = buf.readUUID();
             CompoundTag nbt = buf.readNbt();
-            StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
+            HitPropertyCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(uuid)).ifPresent(c -> c.deserializeNBT(nbt));
         });
     }
 }
