@@ -46,7 +46,6 @@
     "EndPortalBlockMixin",
     "EntityTrackerAccessor",
     "EntityTypeMixin",
-    "ExplosionMixin",
     "GrindstoneScreenHandlerAnon2and3Mixin",
     "GrindstoneScreenHandlerMixin",
     "HungerManagerMixin",

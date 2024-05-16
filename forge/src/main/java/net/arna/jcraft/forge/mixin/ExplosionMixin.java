@@ -1,5 +1,7 @@
-package net.arna.jcraft.mixin;
+package net.arna.jcraft.forge.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.arna.jcraft.common.util.IJExplosion;
 import net.arna.jcraft.common.util.JExplosionModifier;
 import net.minecraft.particle.ParticleEffect;
@@ -36,10 +38,13 @@ public class ExplosionMixin implements IJExplosion {
     }
 
     // Functionality
-    @Redirect(method = "affectWorld", at = @At(value = "FIELD", target = "Lnet/minecraft/world/explosion/Explosion;destructionType:Lnet/minecraft/world/explosion/Explosion$DestructionType;"), require = 2)
-    private Explosion.DestructionType overrideDestructionType(Explosion thiz) {
-        return modifier == null || modifier.getDestructionType() == null ? destructionType : modifier.getDestructionType();
+    /* TODO
+    @WrapOperation(method = "affectWorld", at = @At(value = "FIELD", target = "Lnet/minecraft/world/explosion/Explosion;destructionType:Lnet/minecraft/world/explosion/Explosion$DestructionType;"), require = 2)
+    private Explosion.DestructionType overrideDestructionType(Explosion instance, Operation<Explosion.DestructionType> original) {
+        return modifier == null || modifier.getDestructionType() == null ? original.call(instance) : modifier.getDestructionType();
     }
+
+     */
 
     @Redirect(method = "affectWorld", at = @At(value = "FIELD", target = "Lnet/minecraft/world/explosion/Explosion;createFire:Z"))
     private boolean overrideCreateFire(Explosion thiz) {

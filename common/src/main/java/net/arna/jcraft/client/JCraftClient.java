@@ -96,7 +96,6 @@ public class JCraftClient {
         JRenderLayerRegistry.init();
         RenderHandler.init();
         JClientEventsRegistry.registerClientEvents();
-        JModelPredicateProviderRegistry.register();
         JCraftAbilityHud.init();
 
         InversionShaderHandler.INSTANCE.init();
@@ -127,9 +126,7 @@ public class JCraftClient {
         ParticleProviderRegistry.register(JParticleTypeRegistry.PURPLE_HAZE_PARTICLE, PurpleHazeErraticParticle.Factory::new);
 
         // Renderer registration
-        JEntityRendererRegister.registerEntityRenderers();
         JArmorRendererRegistry.registerArmorRenderers();
-        BlockEntityRendererFactories.register(JBlockEntityTypeRegistry.COFFIN_TILE.get(), CoffinTileRenderer::new);
 
         // Keybinding registration
         standSummon = TrackedKeyBinding.createAndRegister("key.jcraft.standsummon", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_N, "key.category.jcraft");
@@ -149,12 +146,7 @@ public class JCraftClient {
         AttackHitboxEffectRenderer.init();
         TimeErasePredictionEffectRenderer.init();
 
-        // Run when the MinecraftClient instance is fully initialized.
-        MinecraftClient.getInstance().send(EpitaphOverlay::preload);
 
-        if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            return;
-        }
     }
 
     /// TEXT HUD

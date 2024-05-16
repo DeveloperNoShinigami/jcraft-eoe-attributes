@@ -3,19 +3,28 @@ package net.arna.jcraft.forge;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.forge.EventBuses;
 import net.arna.jcraft.client.JCraftClient;
+import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
+import net.arna.jcraft.client.registry.JEntityRendererRegister;
+import net.arna.jcraft.client.registry.JModelPredicateProviderRegistry;
+import net.arna.jcraft.client.renderer.block.CoffinTileRenderer;
 import net.arna.jcraft.common.events.ServerEntityTickEvent;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
+import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 
 import net.arna.jcraft.JCraft;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.network.PacketDistributor;
 import org.stringtemplate.v4.misc.Misc;
 
@@ -39,6 +48,17 @@ public final class JCraftForge {
 
         ServerEntityTickEvent.ENTITY_POST.register(this::tickEntityCaps);
         TickEvent.ServerLevelTick.SERVER_LEVEL_POST.register(this::tickWorldCaps);
+    }
+
+
+
+    @SubscribeEvent
+    public static void onInitializeClient(final FMLClientSetupEvent event) {
+        JModelPredicateProviderRegistry.register();
+        JEntityRendererRegister.registerEntityRenderers();
+        //TODO BlockEntityRendererFactories.register(JBlockEntityTypeRegistry.COFFIN_TILE.get(), CoffinTileRenderer::new);
+        // Run when the MinecraftClient instance is fully initialized.
+        MinecraftClient.getInstance().send(EpitaphOverlay::preload);
     }
 
     private void tickWorldCaps(ServerWorld serverWorld) {
