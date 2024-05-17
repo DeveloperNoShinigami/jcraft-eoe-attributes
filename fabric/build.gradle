@@ -80,6 +80,8 @@ dependencies {
 
     //Satin
     modImplementation "org.ladysnake:satin-fabric-${satin_version}"
+
+    //modImplementation "com.fusionflux:gravity_api-fabric-${gravity_api_version}"
 }
 
 File generatedResourcesDir = file("src/generated/resources")

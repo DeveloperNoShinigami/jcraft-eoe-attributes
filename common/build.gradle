@@ -38,4 +38,6 @@ dependencies {
 
     //Satin
     modImplementation "org.ladysnake:satin-common-${satin_version}"
+
+    //modImplementation "com.fusionflux:gravity_api-common-${gravity_api_version}"
 }
