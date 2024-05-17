@@ -1,20 +1,15 @@
 package net.arna.jcraft.forge.client;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.rendering.api.PostProcessHandler;
 import net.arna.jcraft.client.rendering.post.TimestopShaderPostProcessor;
-import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterShadersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = JCraft.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)

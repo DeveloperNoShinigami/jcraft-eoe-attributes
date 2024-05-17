@@ -1,10 +1,7 @@
 package net.arna.jcraft.mixin.client;
 
 import com.mojang.blaze3d.shaders.EffectProgram;
-import net.arna.jcraft.client.rendering.api.JGLImportProcessor;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(EffectProgram.class)
 public class EffectProgramMixin {

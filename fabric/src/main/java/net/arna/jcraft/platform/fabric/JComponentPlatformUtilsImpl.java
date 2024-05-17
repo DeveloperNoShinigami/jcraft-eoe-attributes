@@ -1,10 +1,8 @@
 package net.arna.jcraft.platform.fabric;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentContainer;
 import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import net.arna.jcraft.common.component.entity.CommonGrabComponent;
 import net.arna.jcraft.common.component.entity.CommonGravityComponent;
-import net.arna.jcraft.common.component.entity.CommonTimeStopComponent;
 import net.arna.jcraft.common.component.living.*;
 import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;

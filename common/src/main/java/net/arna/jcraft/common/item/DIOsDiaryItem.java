@@ -1,6 +1,5 @@
 package net.arna.jcraft.common.item;
 
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;

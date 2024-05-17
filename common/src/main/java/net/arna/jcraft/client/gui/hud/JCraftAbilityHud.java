@@ -2,7 +2,6 @@ package net.arna.jcraft.client.gui.hud;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import lombok.experimental.UtilityClass;
 import net.arna.jcraft.JCraft;

@@ -2,7 +2,6 @@ package net.arna.jcraft.common.item;
 
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
-import net.arna.jcraft.client.rendering.post.TimestopShaderPostProcessor;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;

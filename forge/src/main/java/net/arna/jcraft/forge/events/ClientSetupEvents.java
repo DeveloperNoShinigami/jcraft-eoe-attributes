@@ -1,19 +1,15 @@
 package net.arna.jcraft.forge.events;
 
 
-import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
-import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.registry.JEntityRendererRegister;
 import net.arna.jcraft.client.renderer.entity.*;
 import net.arna.jcraft.client.renderer.entity.projectiles.*;
 import net.arna.jcraft.client.renderer.entity.stands.*;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetupEvents {

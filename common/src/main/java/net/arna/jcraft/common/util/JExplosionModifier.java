@@ -1,6 +1,5 @@
 package net.arna.jcraft.common.util;
 
-import dev.kosmx.playerAnim.core.util.Vec3d;
 import lombok.Builder;
 import lombok.Data;
 import lombok.With;

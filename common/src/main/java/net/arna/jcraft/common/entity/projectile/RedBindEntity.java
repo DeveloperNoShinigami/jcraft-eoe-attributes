@@ -24,7 +24,6 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 public class RedBindEntity extends JAttackEntity implements GeoEntity {
     private LivingEntity boundEntity;

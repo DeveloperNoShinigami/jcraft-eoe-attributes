@@ -7,7 +7,6 @@ import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
-import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;

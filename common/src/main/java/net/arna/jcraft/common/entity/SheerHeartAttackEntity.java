@@ -41,7 +41,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
+
 public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
     private static final EntityDataAccessor<Optional<UUID>> OWNER_ID = SynchedEntityData.defineId(SheerHeartAttackEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);

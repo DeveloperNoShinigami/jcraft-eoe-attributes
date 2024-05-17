@@ -29,7 +29,7 @@ import java.util.Set;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
-import mod.azure.azurelib.animatable.GeoEntity;
+
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;

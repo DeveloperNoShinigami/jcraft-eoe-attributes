@@ -39,7 +39,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
+
 public class GERScorpionEntity extends Mob implements GeoEntity, IOwnable {
     private static final EntityDataAccessor<Optional<UUID>> OWNERUUID;
     private static final EntityDataAccessor<Boolean> ISROCK;

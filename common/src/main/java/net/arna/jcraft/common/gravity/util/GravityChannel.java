@@ -4,7 +4,6 @@ import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
-import net.arna.jcraft.common.gravity.util.NetworkUtil.PacketMode;
 import net.arna.jcraft.common.gravity.util.packet.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

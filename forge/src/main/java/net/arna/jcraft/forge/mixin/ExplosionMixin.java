@@ -1,7 +1,5 @@
 package net.arna.jcraft.forge.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.arna.jcraft.common.util.IJExplosion;
 import net.arna.jcraft.common.util.JExplosionModifier;
 import net.minecraft.core.particles.ParticleOptions;

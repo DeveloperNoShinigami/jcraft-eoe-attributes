@@ -1,6 +1,5 @@
 package net.arna.jcraft.fabric;
 
-import dev.architectury.registry.menu.ExtendedMenuProvider;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.argumenttype.AttackArgumentType;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;

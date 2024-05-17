@@ -1,7 +1,6 @@
 package net.arna.jcraft.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.client.rendering.api.PostProcessHandler;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.arna.jcraft.common.util.JUtils;
@@ -14,11 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.function.Consumer;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {

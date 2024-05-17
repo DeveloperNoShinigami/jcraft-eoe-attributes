@@ -1,7 +1,6 @@
 package net.arna.jcraft.forge.events;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.forge.JCraftForge;
 import net.arna.jcraft.forge.capability.api.JCapabilityProvider;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;

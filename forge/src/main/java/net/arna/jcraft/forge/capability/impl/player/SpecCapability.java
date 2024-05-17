@@ -1,12 +1,9 @@
 package net.arna.jcraft.forge.capability.impl.player;
 
 import dev.architectury.networking.NetworkManager;
-import net.arna.jcraft.common.component.impl.player.CommonPhComponentImpl;
 import net.arna.jcraft.common.component.impl.player.CommonSpecComponentImpl;
-import net.arna.jcraft.forge.JCraftForge;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.arna.jcraft.forge.capability.impl.living.StandCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +16,6 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.UUID;
 

@@ -4,9 +4,7 @@ import net.arna.jcraft.client.rendering.api.MultiInstancePostProcessor;
 import net.arna.jcraft.client.rendering.post.TimestopShaderFX;
 import net.arna.jcraft.forge.client.JShaderRegistry;
 import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
 
 public class JPlatformUtilsImpl {
 

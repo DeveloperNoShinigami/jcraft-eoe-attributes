@@ -3,7 +3,6 @@ package net.arna.jcraft.platform;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.arna.jcraft.client.rendering.api.MultiInstancePostProcessor;
 import net.arna.jcraft.client.rendering.post.TimestopShaderFX;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.renderer.ShaderInstance;
 
 public class JPlatformUtils {

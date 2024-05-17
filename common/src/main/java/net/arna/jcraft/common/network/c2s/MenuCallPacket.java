@@ -1,10 +1,8 @@
 package net.arna.jcraft.common.network.c2s;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.registry.menu.ExtendedMenuProvider;
 import dev.architectury.registry.menu.MenuRegistry;
 import net.arna.jcraft.common.menu.MainMenu;
-import net.arna.jcraft.registry.JMenuRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

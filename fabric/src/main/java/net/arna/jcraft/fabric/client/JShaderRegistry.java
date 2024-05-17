@@ -5,8 +5,6 @@ import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.rendering.api.PostProcessHandler;
 import net.arna.jcraft.client.rendering.post.TimestopShaderPostProcessor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import java.io.IOException;

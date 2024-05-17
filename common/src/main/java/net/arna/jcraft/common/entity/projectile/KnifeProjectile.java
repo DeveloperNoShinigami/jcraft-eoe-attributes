@@ -1,6 +1,5 @@
 package net.arna.jcraft.common.entity.projectile;
 
-import mod.azure.azurelib.animatable.GeoEntity;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -30,12 +29,7 @@ import net.minecraft.world.phys.Vec3;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 public class KnifeProjectile extends AbstractArrow implements GeoEntity {
     private static final EntityDataAccessor<Boolean> LIGHTNING;

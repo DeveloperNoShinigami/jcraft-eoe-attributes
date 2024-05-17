@@ -1,8 +1,6 @@
 package net.arna.jcraft.registry;
 
-import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
-import net.arna.jcraft.JCraft;
 import net.minecraft.core.particles.SimpleParticleType;
 
 import static net.arna.jcraft.JCraft.PARTICLES;

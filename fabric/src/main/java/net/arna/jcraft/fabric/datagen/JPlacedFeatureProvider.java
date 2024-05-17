@@ -2,8 +2,6 @@ package net.arna.jcraft.fabric.datagen;
 
 import net.arna.jcraft.registry.JConfiguredFeatureRegistry;
 import net.arna.jcraft.registry.JPlacedFeatureRegistry;
-import net.minecraft.core.Holder.Reference;
-import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.placement.OrePlacements;

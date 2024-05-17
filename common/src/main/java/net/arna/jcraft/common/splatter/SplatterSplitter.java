@@ -9,8 +9,6 @@ import lombok.experimental.UtilityClass;
 import net.arna.jcraft.common.util.extensions.VecExtensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.util.Mth;
 
 import net.minecraft.world.level.Level;

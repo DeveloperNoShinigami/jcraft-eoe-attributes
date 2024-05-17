@@ -1,7 +1,5 @@
 package net.arna.jcraft.fabric.mixin;
 
-import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.IJInputStateManagerHolder;
 import net.arna.jcraft.common.util.InputStateManager;
 import net.arna.jcraft.common.util.JUtils;
