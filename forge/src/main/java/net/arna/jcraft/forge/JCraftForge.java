@@ -46,10 +46,9 @@ public final class JCraftForge {
         JCraft.init();
 
         modBus.addListener(this::onInitializeCommon);
-        modBus.addListener(this::onInitializeClient);
         modBus.addListener(ClientSetupEvents::onInitializeClient);
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> JCraftClient::init);
+        //DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> JCraftClient::init);
         JNetworkingForge.init();
 
         ServerEntityTickEvent.ENTITY_POST.register(this::tickEntityCaps);
@@ -74,15 +73,6 @@ public final class JCraftForge {
         ((RequiemArrowItem)JItemRegistry.REQUIEM_ARROW.get()).standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
 
 
-    }
-
-    @SubscribeEvent
-    public void onInitializeClient(final FMLClientSetupEvent event) {
-        //JModelPredicateProviderRegistry.register();
-        JEntityRendererRegister.registerEntityRenderers();
-        //TODO BlockEntityRendererFactories.register(JBlockEntityTypeRegistry.COFFIN_TILE.get(), CoffinTileRenderer::new);
-        // Run when the MinecraftClient instance is fully initialized.
-        Minecraft.getInstance().tell(EpitaphOverlay::preload);
     }
 
     private void tickWorldCaps(ServerLevel serverWorld) {

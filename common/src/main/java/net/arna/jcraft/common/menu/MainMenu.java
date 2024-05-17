@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.menu;
 
 import net.arna.jcraft.registry.JMenuRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +19,6 @@ public class MainMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return false;
+        return true;
     }
 }
