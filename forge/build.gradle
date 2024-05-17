@@ -68,7 +68,7 @@ dependencies {
     modApi "me.shedaniel.cloth:cloth-config-forge:11.1.118"
 
     //Satin
-    modImplementation "org.ladysnake:satin-forge-${satin_version}"
+    include modImplementation("org.ladysnake:satin-forge-${satin_version}")
 
     //modImplementation("com.fusionflux:gravity_api-forge-${gravity_api_version}"){ transitive = false }
 }
