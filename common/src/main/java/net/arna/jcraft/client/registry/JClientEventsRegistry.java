@@ -1,7 +1,6 @@
 package net.arna.jcraft.client.registry;
 
 import dev.architectury.event.events.client.ClientGuiEvent;
-import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.menu.MenuRegistry;
@@ -23,6 +22,6 @@ public interface JClientEventsRegistry {
 
         ClientGuiEvent.RENDER_HUD.register(JClientEvents::renderHud);
 
-        ClientLifecycleEvent.CLIENT_SETUP.register((minecraft) -> MenuRegistry.registerScreenFactory(JMenuRegistry.MAIN_MENU_TYPE.get(), MainMenuScreen::new));
+        MenuRegistry.registerScreenFactory(JMenuRegistry.MAIN_MENU_TYPE.get(), MainMenuScreen::new);
     }
 }

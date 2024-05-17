@@ -12,7 +12,6 @@ import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.effects.DazedStatusEffect;
-import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
@@ -48,17 +47,18 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -73,7 +73,6 @@ import static net.arna.jcraft.common.entity.stand.StandEntity.stun;
 import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
 import static net.arna.jcraft.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JItemRegistry.ITEM_REGISTRY;
-import static net.arna.jcraft.registry.JItemRegistry.KNIFE;
 
 public final class JCraft {
     // Unchanging mod values

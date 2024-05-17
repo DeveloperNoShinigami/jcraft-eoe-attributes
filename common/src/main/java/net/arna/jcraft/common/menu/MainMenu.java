@@ -8,8 +8,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 
 public class MainMenu extends AbstractContainerMenu {
-    public MainMenu(int containerId, Inventory inventory, FriendlyByteBuf buf) {
-        super(JMenuRegistry.MAIN_MENU_TYPE.get(), containerId);
+
+    public MainMenu(final int id, final Player player) {
+        super(JMenuRegistry.MAIN_MENU_TYPE.get(), id);
     }
 
     @Override
