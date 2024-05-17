@@ -51,6 +51,7 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -59,7 +60,6 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
@@ -97,7 +97,7 @@ public final class JCraft {
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(MOD_ID, Registries.MOB_EFFECT);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(MOD_ID, Registries.SOUND_EVENT);
     public static final DeferredRegister<Enchantment> ENCHANTMENT = DeferredRegister.create(MOD_ID, Registries.ENCHANTMENT);
-    public static final DeferredRegister<PlacedFeature> PLACED_FEATURE = DeferredRegister.create(MOD_ID, Registries.PLACED_FEATURE);
+    public static final DeferredRegister<MenuType<?>> MENU_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.MENU);
 
     // Gamerules
     //public static final GameRules.Key<GameRules.BooleanRule> KINGCRIMSON_TELEPORT_EFFECT = GameRuleRegistry.register("kingCrimsonTeleportEffect", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
@@ -149,7 +149,8 @@ public final class JCraft {
         JTagRegistry.init();
         JCreativeMenuTabRegistry.init();
         CREATIVE_TAB_REGISTRY.register();
-
+        JMenuRegistry.init();
+        MENU_REGISTRY.register();
 
         CommandRegistrationEvent.EVENT.register(JCommandRegistry::registerCommands);
         JEventsRegistry.registerEvents();
