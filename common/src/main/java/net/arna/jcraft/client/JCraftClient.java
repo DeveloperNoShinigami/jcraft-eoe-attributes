@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.registry.ReloadListenerRegistry;
+import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import dev.architectury.registry.client.particle.ParticleProviderRegistry;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
@@ -12,12 +13,10 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.gravity.util.GravityChannelClient;
-import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.gui.hud.JCraftAbilityHud;
 import net.arna.jcraft.client.net.ClientPacketHandler;
 import net.arna.jcraft.client.particle.*;
 import net.arna.jcraft.client.registry.*;
-import net.arna.jcraft.client.renderer.block.CoffinTileRenderer;
 import net.arna.jcraft.client.renderer.effects.AttackHitboxEffectRenderer;
 import net.arna.jcraft.client.renderer.effects.TimeErasePredictionEffectRenderer;
 import net.arna.jcraft.client.rendering.RenderHandler;
@@ -27,11 +26,9 @@ import net.arna.jcraft.client.util.TrackedKeyBinding;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.MovementInputType;
-import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -78,6 +75,7 @@ public class JCraftClient {
     @Getter(lazy = true)
     private static final TrackedKeyBinding trackedUseKey = TrackedKeyBinding.wrap(Minecraft.getInstance().options.keyUse);
     public static Supplier<DecimalFormat> decimalFormat = Suppliers.memoize(JCraftClient::createDecimalFormat);
+    public static KeyMapping menuKey;
     public static boolean comboStarted = false;
     public static int framesSinceComboStarted = 0;
 
@@ -140,12 +138,13 @@ public class JCraftClient {
         utility = TrackedKeyBinding.createAndRegister("key.jcraft.utility", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_5, "key.category.jcraft");
         dash = TrackedKeyBinding.createAndRegister("key.jcraft.dash", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_4, "key.category.jcraft");
 
+        menuKey = new KeyMapping("key.jcraft.menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_KP_DIVIDE, "key.category.jcraft");
+        KeyMappingRegistry.register(menuKey);
+
         ClientPacketHandler.init();
 
         AttackHitboxEffectRenderer.init();
         TimeErasePredictionEffectRenderer.init();
-
-
     }
 
     /// TEXT HUD
