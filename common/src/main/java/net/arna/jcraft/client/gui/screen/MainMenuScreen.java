@@ -28,14 +28,29 @@ public class MainMenuScreen extends AbstractContainerScreen<MainMenu> {
     }
 
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        drawText(guiGraphics, this.title, 0, 0);
+        int row = 0;
+        drawText(guiGraphics, this.title, row++, 0);
         if (stand == null || stand.getStandType() == StandType.NONE) {
-            drawText(guiGraphics, StandType.NONE.getNameText(), 1, 0);
+            drawText(guiGraphics, StandType.NONE.getNameText(), row++, 0);
         }
         else {
-            drawText(guiGraphics, stand.getStandType().getNameText(), 1, 0);
+            drawText(guiGraphics, stand.getStandType().getNameText(), row++, 0);
             final String desc = String.format("entity.%s.%s%s.info.desc", JCraft.MOD_ID, stand.getStandType().getNameKey(), stand.getModeOrdinal() == 0 ? "" : Integer.toString(stand.getModeOrdinal()));
-            drawText(guiGraphics, Component.translatable(desc), 2, 0);
+            drawText(guiGraphics, Component.translatable(desc), row++, 0);
+            drawText(guiGraphics, Component.literal("PROS"), row++, 0);
+            final int pros = stand.getProCount();
+            final String proFormatted = "entity.%s.%s.info.pro%d";
+            for (int p = 1; p <= pros; p++) {
+                final Component pro = Component.literal("● ").append(Component.translatable(String.format(proFormatted, JCraft.MOD_ID, stand.getStandType().getNameKey(), p)));
+                drawText(guiGraphics, pro, row++, 0);
+            }
+            drawText(guiGraphics, Component.literal("CONS"), row++, 0);
+            final int cons = stand.getConCount();
+            final String conFormatted = "entity.%s.%s.info.con%d";
+            for (int c = 1; c <= cons; c++) {
+                final Component pro = Component.literal("● ").append(Component.translatable(String.format(conFormatted, JCraft.MOD_ID, stand.getStandType().getNameKey(), c)));
+                drawText(guiGraphics, pro, row++, 0);
+            }
         }
     }
 
