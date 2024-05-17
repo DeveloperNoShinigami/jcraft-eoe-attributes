@@ -27,7 +27,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -210,7 +209,6 @@ public class JClientEvents {
         }
 
         if (menuKey.consumeClick()) {
-            client.player.sendSystemMessage(Component.literal("Menu key was pressed!"));
             NetworkManager.sendToServer(JPacketRegistry.C2S_MENU_CALL, new FriendlyByteBuf(Unpooled.buffer()));
             return;
         }

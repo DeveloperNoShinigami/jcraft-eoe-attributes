@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 public class MenuCallPacket {
 
     public static void handle(final FriendlyByteBuf buf, final NetworkManager.PacketContext context) {
-        context.getPlayer().displayClientMessage(Component.literal("Menu Call Packet was perceived."), false);
         MenuRegistry.openExtendedMenu((ServerPlayer)context.getPlayer(), new MenuProvider() {
             @NotNull
             @Override
