@@ -20,7 +20,7 @@ public final class TexasHoldEm {
     /**
      * Compares poker ranks from highest to lowest.
      */
-    public static final Comparator<Card> RANK_COMPARATOR = Rank.getComparator(true).reversed();
+    public static final Comparator<Card> RANK_COMPARATOR = Rank.createComparator(true).reversed();
 
     /**
      * Evaluates a collection of (7) cards to a specified value with a list of relevant ranks in descending order

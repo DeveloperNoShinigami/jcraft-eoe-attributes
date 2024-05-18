@@ -33,7 +33,7 @@ public enum Rank {
      *
      * @param asHighest If {@link #AS} is to be seen as the highest card.
      */
-    public static Comparator<Card> getComparator(final boolean asHighest) {
+    public static Comparator<Card> createComparator(final boolean asHighest) {
         if (!asHighest) {
             return Comparator.comparing(Card::rank);
         }
