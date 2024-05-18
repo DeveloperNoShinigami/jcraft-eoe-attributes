@@ -7,6 +7,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Tests {@link TexasHoldEm}.
+ */
 public class TestTexasHoldEm {
 
     private static final Collection<Card> STRAIGHT_FLUSH_1 = List.of(
@@ -109,6 +112,9 @@ public class TestTexasHoldEm {
             new Card(Suit.HEARTS, Rank.SEVEN)
     );
 
+    /**
+     * Tests {@link TexasHoldEm.HandEvaluator}.
+     */
     @Test
     public void testHandEvaluator() {
         // test with a high card
@@ -213,6 +219,9 @@ public class TestTexasHoldEm {
         Assertions.assertEquals(List.of(Rank.TEN), TexasHoldEm.HandEvaluator.STRAIGHT_FLUSH.apply(STRAIGHT_FLUSH_2).get());
     }
 
+    /**
+     * Tests {@link TexasHoldEm#HAND_COMPARATOR}.
+     */
     @Test
     public void testHandComparator() {
         // cmp. straight flush 1
