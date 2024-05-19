@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,11 @@ import java.util.Objects;
  * Wrapper for things that can be used as wagers in bets, games etc.
  */
 public class Wager {
+
+    private final static Comparator<ItemStack> STACK_COMPARATOR = Comparator.comparing(ItemStack::getCount).reversed();
+    private final static Comparator<ItemStack> ITEM_COMPARATOR = Comparator.comparing(stack -> stack.getDisplayName().getString());
+    private final static Comparator<ItemStack> ITEM_STACK_COMPARATOR = ITEM_COMPARATOR.thenComparing(STACK_COMPARATOR);
+
 
     private final List<ItemStack> items = new LinkedList<>();
 
@@ -35,6 +41,10 @@ public class Wager {
      */
     public @NotNull List<ItemStack> getItemWager() {
         return Collections.unmodifiableList(items);
+    }
+
+    public void sort() {
+        items.sort(ITEM_STACK_COMPARATOR);
     }
 
     public void readFromNbt(@NotNull CompoundTag tag) {

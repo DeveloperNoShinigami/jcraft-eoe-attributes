@@ -1,16 +1,21 @@
 package net.arna.jcraft.common.minigame.card;
 
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.minigame.Wager;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
@@ -410,11 +415,27 @@ public final class TexasHoldEm {
         return 0;
     };
 
+    private final Level world;
+
     private final List<LivingEntity> players;
 
-    public TexasHoldEm(@NotNull List<LivingEntity> players) {
-        this.players = new ArrayList<>(players);
+    private final Map<LivingEntity, Wager> wagers = new HashMap<>();
 
+    private Wager pot = new Wager();
+
+    public TexasHoldEm(@NotNull final Level world, @NotNull final List<LivingEntity> players) {
+        this.world = Objects.requireNonNull(world);
+        this.players = new ArrayList<>(players);
+    }
+
+    public void calculatePot() {
+        pot = new Wager();
+        for (final Wager wager : wagers.values()) {
+            for (final ItemStack stack : wager.getItemWager()) {
+                pot.increaseWager(stack);
+            }
+        }
+        pot.sort();
     }
 
 }
