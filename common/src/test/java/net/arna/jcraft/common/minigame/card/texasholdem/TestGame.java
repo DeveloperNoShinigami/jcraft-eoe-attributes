@@ -5,6 +5,7 @@ import net.arna.jcraft.common.minigame.ImmutableWager;
 import net.arna.jcraft.common.minigame.card.Card;
 import net.arna.jcraft.common.minigame.card.Rank;
 import net.arna.jcraft.common.minigame.card.Suit;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -376,6 +377,10 @@ public class TestGame {
 
     /**
      * Tests dealing cards.
+     * @see Game#dealPockets()
+     * @see Game#dealFlop()
+     * @see Game#dealTurn()
+     * @see Game#dealRiver()
      */
     @Test
     public void testDealing() {
@@ -388,6 +393,7 @@ public class TestGame {
     }
 
     private void testDealing(@NotNull final Game game) {
+        Assertions.assertEquals(0, game.viewCommunity().size());
         Assertions.assertTrue(game.setBigBlind(1, ImmutableWager.EMPTY));
         game.dealPockets();
         Assertions.assertEquals(0, game.viewCommunity().size());
@@ -397,6 +403,23 @@ public class TestGame {
         Assertions.assertEquals(4, game.viewCommunity().size());
         game.dealRiver();
         Assertions.assertEquals(5, game.viewCommunity().size());
+    }
+
+    /**
+     * Tests {@link Game#writeToNbt(CompoundTag)} and {@link Game#readFromNbt(CompoundTag)}.
+     */
+    @Test
+    // this test could be improved
+    public void testNbt() {
+        final Game saveGame = new Game(3);
+        saveGame.setBigBlind(1, ImmutableWager.EMPTY);
+        saveGame.dealPockets();
+        saveGame.dealFlop();
+        final CompoundTag tag = new CompoundTag();
+        saveGame.writeToNbt(tag);
+        final Game loadedGame = new Game(3);
+        loadedGame.readFromNbt(tag);
+        Assertions.assertEquals(3, loadedGame.viewCommunity().size());
     }
 
 }

@@ -1,7 +1,6 @@
 package net.arna.jcraft.common.minigame;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -40,19 +39,10 @@ public class Wager extends AbstractWager {
     }
 
     public void readFromNbt(@NotNull CompoundTag tag) {
-        for (final Tag itemNbt : tag.getList("wager_items", Tag.TAG_COMPOUND)) {
-            items.add(ItemStack.of((CompoundTag)itemNbt));
+        items.clear();
+        for (final Tag itemTag : tag.getList("wager_items", Tag.TAG_COMPOUND)) {
+            items.add(ItemStack.of((CompoundTag)itemTag));
         }
-    }
-
-    public void writeToNbt(@NotNull CompoundTag tag) {
-        final ListTag itemsNbt = new ListTag();
-        for (final ItemStack stack : items) {
-            final CompoundTag itemNbt = new CompoundTag();
-            stack.save(itemNbt);
-            itemsNbt.add(itemNbt);
-        }
-        tag.put("wager_items", itemsNbt);
     }
 
     public static Wager sum(@NotNull final Collection<? extends AbstractWager> coll) {
@@ -67,5 +57,22 @@ public class Wager extends AbstractWager {
 
     public static Wager sum(@NotNull final AbstractWager wager1, @NotNull final  AbstractWager wager2) {
         return sum(List.of(wager1, wager2));
+    }
+
+    /**
+     * Splits the specified wager into equal parts. Some of the initial wager may get lost due to rounding down.
+     */
+    public static ImmutableWager split(@NotNull final AbstractWager wager, final int divisor) {
+        if (divisor <= 0) {
+            throw new IllegalArgumentException("Divisor must be positive!");
+        }
+        if (divisor == 1) {
+            return new ImmutableWager(wager);
+        }
+        final Wager split = new Wager();
+        for (final ItemStack stack : wager.items) {
+            split.increaseWager(stack.copyWithCount(stack.getCount() / divisor));
+        }
+        return new ImmutableWager(split);
     }
 }

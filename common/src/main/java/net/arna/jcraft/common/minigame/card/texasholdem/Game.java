@@ -8,6 +8,10 @@ import net.arna.jcraft.common.minigame.Wager;
 import net.arna.jcraft.common.minigame.card.Card;
 import net.arna.jcraft.common.minigame.card.Rank;
 import net.arna.jcraft.common.minigame.card.Suit;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
@@ -623,4 +628,115 @@ public final class Game {
         phase = Phase.PRE_END;
     }
 
+    public void readFromNbt(@NotNull CompoundTag tag) {
+        final ListIterator<Wager> wagersIt = wagers.listIterator();
+        for (final Tag wagerTag : tag.getList("wagers", Tag.TAG_COMPOUND)) {
+            wagersIt.next().readFromNbt((CompoundTag)wagerTag);
+        }
+        final ListIterator<ImmutableWager> currentRaisesIt = currentRaises.listIterator();
+        for (final Tag currentRaiseTag : tag.getList("current_raises", Tag.TAG_COMPOUND)) {
+            final Wager currentRaise = new Wager();
+            currentRaise.readFromNbt((CompoundTag)currentRaiseTag);
+            currentRaisesIt.next();
+            currentRaisesIt.set(new ImmutableWager(currentRaise));
+        }
+        potChanged = true;
+        final CompoundTag bigBlindTag = tag.getCompound("big_blind");
+        final Wager bigBlind = new Wager();
+        bigBlind.readFromNbt(bigBlindTag);
+        this.bigBlind = new ImmutableWager(bigBlind);
+        bigBlindPlayer = tag.getInt("big_blind_player");
+        final CompoundTag currentRaiseTag = tag.getCompound("current_raise");
+        final Wager currentRaise = new Wager();
+        currentRaise.readFromNbt(currentRaiseTag);
+        this.currentRaise = new ImmutableWager(currentRaise);
+        resetPockets();
+        final Iterator<List<Card>> pocketsIt = pockets.iterator();
+        for (final Tag pocketTag : tag.getList("pockets", Tag.TAG_LIST)) {
+            final List<Card> pocket = pocketsIt.next();
+            for (Tag card : (ListTag)pocketTag) {
+                pocket.add(Card.decode(((IntTag)card).getAsInt()));
+            }
+        }
+        for (final Tag burnCardTag : tag.getList("burn", Tag.TAG_INT)) {
+            burn.add(Card.decode(((IntTag)burnCardTag).getAsInt()));
+        }
+        for (final Tag communityCardTag : tag.getList("community", Tag.TAG_INT)) {
+            community.add(Card.decode(((IntTag)communityCardTag).getAsInt()));
+        }
+        for (final Tag deckCardTag : tag.getList("deck", Tag.TAG_INT)) {
+            deck.add(Card.decode(((IntTag)deckCardTag).getAsInt()));
+        }
+        phase = Phase.values()[tag.getInt("phase")];
+    }
+
+    public void writeToNbt(@NotNull CompoundTag tag) {
+        // we assume the player count to be known at this point
+        final ListTag wagersTag = new ListTag();
+        for (final Wager wager : wagers) {
+            final CompoundTag wagerTag = new CompoundTag();
+            wager.writeToNbt(wagerTag);
+            wagersTag.add(wagerTag);
+        }
+        tag.put("wagers", wagersTag);
+        final ListTag currentRaisesTag = new ListTag();
+        for (final ImmutableWager currentRaise : currentRaises) {
+            final CompoundTag currentRaiseTag = new CompoundTag();
+            currentRaise.writeToNbt(currentRaiseTag);
+            currentRaisesTag.add(currentRaiseTag);
+        }
+        tag.put("current_raises", currentRaisesTag);
+        final CompoundTag bigBlindTag = new CompoundTag();
+        bigBlind.writeToNbt(bigBlindTag);
+        tag.put("big_blind", bigBlindTag);
+        tag.put("big_blind_player", IntTag.valueOf(bigBlindPlayer));
+        final CompoundTag currentRaiseTag = new CompoundTag();
+        currentRaise.writeToNbt(currentRaiseTag);
+        tag.put("current_raise", currentRaiseTag);
+        final ListTag pocketsTag = new ListTag();
+        for (final List<Card> pocket : pockets) {
+            final ListTag pocketTag = new ListTag();
+            for (final Card card : pocket) {
+                pocketTag.add(IntTag.valueOf(card.encode()));
+            }
+            pocketsTag.add(pocketTag);
+        }
+        tag.put("pockets", pocketsTag);
+        final ListTag burnTag = new ListTag();
+        for (final Card card : burn) {
+            burnTag.add(IntTag.valueOf(card.encode()));
+        }
+        tag.put("burn", burnTag);
+        final ListTag communityTag = new ListTag();
+        for (final Card card : community) {
+            communityTag.add(IntTag.valueOf(card.encode()));
+        }
+        tag.put("community", communityTag);
+        final ListTag deckTag = new ListTag();
+        for (final Card card : deck) {
+            deckTag.add(IntTag.valueOf(card.encode()));
+        }
+        tag.put("deck", deckTag);
+        tag.put("phase", IntTag.valueOf(phase.ordinal()));
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder(getClass().getSimpleName());
+        sb.append("{playerCount=").append(playerCount);
+        sb.append(", wagers=").append(wagers);
+        sb.append(", currentRaises=").append(currentRaises);
+        sb.append(", pockets=").append(pockets);
+        sb.append(", pot=").append(pot);
+        sb.append(", potChanged=").append(potChanged);
+        sb.append(", phase=").append(phase);
+        sb.append(", bigBlindPlayer=").append(bigBlindPlayer);
+        sb.append(", bigBlind=").append(bigBlind);
+        sb.append(", currentRaise=").append(currentRaise);
+        sb.append(", deck=").append(deck);
+        sb.append(", burn=").append(burn);
+        sb.append(", community=").append(community);
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -1,5 +1,7 @@
 package net.arna.jcraft.common.minigame;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +40,16 @@ public abstract class AbstractWager {
             }
         }
         return true;
+    }
+
+    public void writeToNbt(@NotNull CompoundTag tag) {
+        final ListTag itemsTag = new ListTag();
+        for (final ItemStack stack : items) {
+            final CompoundTag itemNbt = new CompoundTag();
+            stack.save(itemNbt);
+            itemsTag.add(itemNbt);
+        }
+        tag.put("wager_items", itemsTag);
     }
 
     @Override
