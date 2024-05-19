@@ -26,7 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class Game {
+public final class Engine {
 
     /**
      * Compares poker ranks from highest to lowest.
@@ -442,7 +442,7 @@ public final class Game {
     /**
      * @throws IllegalArgumentException If there are less than 2 or more than 22 players.
      */
-    public Game(final int playerCount) {
+    public Engine(final int playerCount) {
         if (playerCount < 2) { // not enough players
             throw new IllegalArgumentException(String.format("At least 2 players are needed, %d is too few!", playerCount));
         }

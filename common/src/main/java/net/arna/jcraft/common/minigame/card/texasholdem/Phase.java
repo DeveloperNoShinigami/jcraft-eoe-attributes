@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.minigame.card.texasholdem;
 
 /**
- * Phases of the {@link Game}. Pre phases are for betting (only big and small blind in case of {@link #PRE_POCKET})
+ * Phases of the {@link Engine}. Pre phases are for betting (only big and small blind in case of {@link #PRE_POCKET})
  * and to ensure proper serialization.
  */
 public enum Phase {
