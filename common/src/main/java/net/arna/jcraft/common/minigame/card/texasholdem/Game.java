@@ -7,24 +7,20 @@ import net.arna.jcraft.common.minigame.Wager;
 import net.arna.jcraft.common.minigame.card.Card;
 import net.arna.jcraft.common.minigame.card.Rank;
 import net.arna.jcraft.common.minigame.card.Suit;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
-public final class TexasHoldEm {
+public final class Game {
 
     /**
      * Compares poker ranks from highest to lowest.
@@ -419,12 +415,10 @@ public final class TexasHoldEm {
         return 0;
     };
 
-    private final Level world;
-
-    private final List<LivingEntity> players;
-    private final Map<LivingEntity, Wager> wagers = new HashMap<>();
-    private final Map<LivingEntity, ImmutableWager> currentRaises = new HashMap<>();
-    private final Map<LivingEntity, List<Card>> pockets = new HashMap<>();
+    private final int playerCount;
+    private final List<Wager> wagers;
+    private final List<ImmutableWager> currentRaises;
+    private final List<List<Card>> pockets;
 
     private Wager pot = new Wager();
     private boolean potChanged; // initialized with false
@@ -440,48 +434,49 @@ public final class TexasHoldEm {
     /**
      * @throws IllegalArgumentException If there are less than 2 or more than 22 players.
      */
-    public TexasHoldEm(@NotNull final Level world, @NotNull final List<LivingEntity> players) {
-        if (players.size() < 2) { // not enough players
-            throw new IllegalArgumentException(String.format("At least 2 players are needed, %d is too few!", players.size()));
+    public Game(final int playerCount) {
+        if (playerCount < 2) { // not enough players
+            throw new IllegalArgumentException(String.format("At least 2 players are needed, %d is too few!", playerCount));
         }
-        if (players.size() > 22) { // we would run out of cards
-            throw new IllegalArgumentException(String.format("%d is too many players!", players.size()));
+        if (playerCount > 22) { // we would run out of cards
+            throw new IllegalArgumentException(String.format("%d is too many players!", playerCount));
         }
-        this.world = Objects.requireNonNull(world);
-        this.players = new ArrayList<>(players);
+        this.playerCount = playerCount;
+        wagers = new ArrayList<>(playerCount);
         resetPlayerWagers();
+        pockets = new ArrayList<>(playerCount);
         resetPockets();
+        currentRaises = new ArrayList<>(playerCount);
         resetPlayerCurrentRaises();
     }
 
-    public int countPlayers() {
-        return players.size();
+    public int playerCount() {
+        return playerCount;
     }
 
     public void resetPlayerWagers() {
         wagers.clear();
-        for (final LivingEntity player : players) {
-            wagers.put(player, new Wager());
+        for (int player = 0; player < playerCount; player++) {
+            wagers.add(new Wager());
         }
     }
 
     /**
      * Returns a deep, immutable copy of the wager of the specified player.
      * @throws IndexOutOfBoundsException If the specified player is smaller than 0 or greater than or equal to the player count
-     * @see #countPlayers()
+     * @see #playerCount()
      *
      * @implNote The immutable wagers are not cached, but they shouldn't get so big for it to matter.
      */
     @NotNull
     public ImmutableWager getWager(final int player) {
-        final Wager wager = wagers.get(players.get(player));
-        return new ImmutableWager(wager);
+        return new ImmutableWager(wagers.get(player));
     }
 
     public void resetPlayerCurrentRaises() {
         currentRaises.clear();
-        for (final LivingEntity player : players) {
-            currentRaises.put(player, ImmutableWager.EMPTY);
+        for (int player = 0; player < playerCount; player++) {
+            currentRaises.add(ImmutableWager.EMPTY);
         }
     }
 
@@ -489,15 +484,14 @@ public final class TexasHoldEm {
      * Increases the wager of the specified player, as well as the current raise, if it was increased.
      * @throws IndexOutOfBoundsException If the specified player is smaller than 0 or greater than or equal to the player count
      * @throws IllegalArgumentException If the raise is not an expansion of the current raise.
-     * @see #countPlayers()
+     * @see #playerCount()
      * @see Wager#expands(AbstractWager)
      */
     public void raise(final int player, @NotNull final ImmutableWager raise) {
         if (!raise.expands(currentRaise)) {
             throw new IllegalArgumentException(String.format("%s is not an expansion of %s!", raise, currentRaise));
         }
-        final LivingEntity playerEntity = players.get(player);
-        currentRaises.put(playerEntity, raise);
+        currentRaises.set(player, raise);
         currentRaise = raise;
         potChanged = true;
     }
@@ -507,8 +501,8 @@ public final class TexasHoldEm {
      * It takes care of finally putting the player raises into the pot.
      */
     public void raiseCallFoldFinished() {
-        for (final LivingEntity player : players) {
-            wagers.put(player, Wager.sum(wagers.get(player), currentRaises.get(player)));
+        for (int player = 0; player < playerCount; player++) {
+            wagers.set(player, Wager.sum(wagers.get(player), currentRaises.get(player)));
         }
         resetPlayerCurrentRaises();
         // this doesn't change the pot
@@ -516,13 +510,13 @@ public final class TexasHoldEm {
 
     public void resetPockets() {
         pockets.clear();
-        for (final LivingEntity player : players) {
-            pockets.put(player, new ArrayList<>(2));
+        for (int player = 0; player < playerCount; player++) {
+            pockets.add(new ArrayList<>(2));
         }
     }
 
     public void calculatePot() {
-        pot = Wager.sum(Wager.sum(wagers.values()), Wager.sum(currentRaises.values()));
+        pot = Wager.sum(Wager.sum(wagers), Wager.sum(currentRaises));
         pot.sort();
     }
 
@@ -553,7 +547,7 @@ public final class TexasHoldEm {
     /**
      * Sets the big blind by the specified player. Can only be set once; then returns <code>true</code>, otherwise <code>false</code>.
      * @throws IndexOutOfBoundsException If the specified player is smaller than 0 or greater than or equal to the player count
-     * @see #countPlayers()
+     * @see #playerCount()
      */
     public boolean setBigBlind(final int player, @NotNull final AbstractWager bigBlind) {
         if (bigBlind != null) {
@@ -574,11 +568,11 @@ public final class TexasHoldEm {
             throw new IllegalStateException("Big Blind wasn't set!");
         }
         Collections.shuffle(deck);
-        final int smallBlindPlayer = bigBlindPlayer == 0 ? players.size()-1 : bigBlindPlayer-1;
+        final int smallBlindPlayer = bigBlindPlayer == 0 ? playerCount-1 : bigBlindPlayer-1;
         // deal each player 2 cards in the correct order (even though it doesn't matter)
-        for (int i = 0; i < 2*players.size(); i++) {
+        for (int i = 0; i < 2*playerCount; i++) {
             // we remove the last card of the deck instead of the first for slight performance increase (doesn't really matter)
-            pockets.get(players.get((smallBlindPlayer + i) % players.size())).add(deck.remove(deck.size()-1));
+            pockets.get((smallBlindPlayer + i) % playerCount).add(deck.remove(deck.size()-1));
         }
     }
 
