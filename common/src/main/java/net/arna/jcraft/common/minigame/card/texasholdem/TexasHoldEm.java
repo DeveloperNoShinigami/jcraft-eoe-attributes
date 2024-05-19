@@ -52,7 +52,7 @@ public final class TexasHoldEm {
          */
         PAIR(cards -> {
             final List<Card> sorted = new ArrayList<>(cards);
-            Collections.sort(sorted, RANK_COMPARATOR);
+            sorted.sort(RANK_COMPARATOR);
             final LinkedList<Rank> ranks = new LinkedList<>();
             final Iterator<Card> it = sorted.iterator();
             Card latest = it.next(); // never throws because we have 7 cards
@@ -118,7 +118,7 @@ public final class TexasHoldEm {
                 // that means we need to check the cases like AKQ7(22) and AKQ7(72)
                 // the combined case is AKQ7(77) which we ignore for two pair
                 final List<Card> sorted = new ArrayList<>(cards);
-                Collections.sort(sorted, RANK_COMPARATOR);
+                sorted.sort(RANK_COMPARATOR);
                 // both cases
                 if (sorted.get(4).rank() == sorted.get(5).rank() || sorted.get(5).rank() == sorted.get(6).rank()) {
                     // it is a coincidence that both cases have the same logic here
@@ -139,7 +139,7 @@ public final class TexasHoldEm {
          */
         THREE_OF_A_KIND(cards -> {
             final List<Card> sorted = new ArrayList<>(cards);
-            Collections.sort(sorted, RANK_COMPARATOR);
+            sorted.sort(RANK_COMPARATOR);
             final LinkedList<Rank> ranks = new LinkedList<>();
             final Iterator<Card> it = sorted.iterator();
             Card secondToLatest = it.next();
@@ -177,7 +177,7 @@ public final class TexasHoldEm {
          */
         STRAIGHT(cards -> {
             final List<Card> sorted = new ArrayList<>(cards);
-            Collections.sort(sorted, RANK_COMPARATOR);
+            sorted.sort(RANK_COMPARATOR);
             final boolean[] ranks = new boolean[13]; // initialized with false
             // find all ranks once
             for (final Card card : sorted) {
@@ -212,7 +212,7 @@ public final class TexasHoldEm {
          */
         FLUSH(cards -> {
             final List<Card> sorted = new ArrayList<>(cards);
-            Collections.sort(sorted, RANK_COMPARATOR);
+            sorted.sort(RANK_COMPARATOR);
             final int[] counts = new int[4]; // initialized with 0
             for (final Card card : sorted) {
                 counts[card.suit().ordinal()]++;
@@ -258,7 +258,7 @@ public final class TexasHoldEm {
                 // the combined case is A77(72) or A77(77) which we ignore since we can only use 5 cards
                 // another special case: (III) J9777(75) gets recognized as three of a kind: 7J9(75)
                 final List<Card> sorted = new ArrayList<>(cards);
-                Collections.sort(sorted, RANK_COMPARATOR);
+                sorted.sort(RANK_COMPARATOR);
                 if ((sorted.get(4).rank() == sorted.get(5).rank() && sorted.get(3).rank() != sorted.get(4).rank()) || sorted.get(5).rank() == sorted.get(6).rank()) {
                     // it is a coincidence that cases (I) and (II) have the same logic here
                     ranks = threeOfAKind.get();
@@ -277,7 +277,7 @@ public final class TexasHoldEm {
          */
         FOUR_OF_A_KIND(cards -> {
             final List<Card> sorted = new ArrayList<>(cards);
-            Collections.sort(sorted, RANK_COMPARATOR);
+            sorted.sort(RANK_COMPARATOR);
             Rank fourKind = sorted.get(3).rank(); // this one must always be in the four of a kind combination
             Rank highest = sorted.get(0).rank() == fourKind ? sorted.get(4).rank() : sorted.get(0).rank();
             int count = 0;
@@ -300,7 +300,7 @@ public final class TexasHoldEm {
          */
         STRAIGHT_FLUSH(cards -> {
             final List<Card> sorted = new ArrayList<>(cards);
-            Collections.sort(sorted, RANK_COMPARATOR);
+            sorted.sort(RANK_COMPARATOR);
             final boolean[] ranks = new boolean[13]; // initialized with false
             // find all ranks once
             for (final Card card : sorted) {
@@ -387,7 +387,7 @@ public final class TexasHoldEm {
             if (hand1Val.isPresent() && hand2Val.isEmpty()) {
                 return -1;
             }
-            if (hand1Val.isEmpty() && hand2Val.isEmpty()) {
+            if (hand1Val.isEmpty()) { // && hand2Val.isEmpty()
                 continue;
             }
             // both hands have something on this level
@@ -433,9 +433,9 @@ public final class TexasHoldEm {
     private ImmutableWager bigBlind;
     private ImmutableWager currentRaise;
 
-    private List<Card> deck = Card.createPokerDeck();
-    private List<Card> burn = new ArrayList<>(3);
-    private List<Card> community = new ArrayList<>(5);
+    private final List<Card> deck = Card.createPokerDeck();
+    private final List<Card> burn = new ArrayList<>(3);
+    private final List<Card> community = new ArrayList<>(5);
 
     /**
      * @throws IllegalArgumentException If there are less than 2 or more than 22 players.
