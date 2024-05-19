@@ -1,9 +1,13 @@
-package net.arna.jcraft.common.minigame.card;
+package net.arna.jcraft.common.minigame.card.texasholdem;
 
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.minigame.AbstractWager;
+import net.arna.jcraft.common.minigame.ImmutableWager;
 import net.arna.jcraft.common.minigame.Wager;
+import net.arna.jcraft.common.minigame.card.Card;
+import net.arna.jcraft.common.minigame.card.Rank;
+import net.arna.jcraft.common.minigame.card.Suit;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -421,21 +425,133 @@ public final class TexasHoldEm {
 
     private final Map<LivingEntity, Wager> wagers = new HashMap<>();
 
+    private final Map<LivingEntity, ImmutableWager> currentRaises = new HashMap<>();
+
+    private final Map<LivingEntity, List<Card>> hands = new HashMap<>();
+
     private Wager pot = new Wager();
+
+    private boolean potChanged; // initialized with false
+
+    private ImmutableWager bigBlind;
+
+    private ImmutableWager currentRaise;
 
     public TexasHoldEm(@NotNull final Level world, @NotNull final List<LivingEntity> players) {
         this.world = Objects.requireNonNull(world);
         this.players = new ArrayList<>(players);
+        resetPlayerWagers();
+        resetPlayerHands();
+        resetPlayerCurrentRaises();
+    }
+
+    public int countPlayers() {
+        return players.size();
+    }
+
+    public void resetPlayerWagers() {
+        wagers.clear();
+        for (final LivingEntity player : players) {
+            wagers.put(player, new Wager());
+        }
+    }
+
+    /**
+     * Returns a deep, immutable copy of the wager of the specified player.
+     * @throws IndexOutOfBoundsException If the specified player is smaller than 0 or greater than or equal to the player count
+     * @see #countPlayers()
+     *
+     * @implNote The immutable wagers are not cached, but they shouldn't get so big for it to matter.
+     */
+    @NotNull
+    public ImmutableWager getWager(final int player) {
+        final Wager wager = wagers.get(players.get(player));
+        return new ImmutableWager(wager);
+    }
+
+    public void resetPlayerCurrentRaises() {
+        currentRaises.clear();
+        for (final LivingEntity player : players) {
+            currentRaises.put(player, ImmutableWager.EMPTY);
+        }
+    }
+
+    /**
+     * Increases the wager of the specified player, as well as the current raise, if it was increased.
+     * @throws IndexOutOfBoundsException If the specified player is smaller than 0 or greater than or equal to the player count
+     * @throws IllegalArgumentException If the raise is not an expansion of the current raise.
+     * @see #countPlayers()
+     * @see Wager#expands(AbstractWager)
+     */
+    public void raise(final int player, @NotNull final ImmutableWager raise) {
+        if (!raise.expands(currentRaise)) {
+            throw new IllegalArgumentException(String.format("%s is not an expansion of %s!", raise, currentRaise));
+        }
+        final LivingEntity playerEntity = players.get(player);
+        currentRaises.put(playerEntity, raise);
+        currentRaise = raise;
+        potChanged = true;
+    }
+
+    /**
+     * This method is called after the players have finished raising/calling/folding for the turn.
+     * It takes care of finally putting the player raises into the pot.
+     */
+    public void raiseCallFoldFinished() {
+        for (final LivingEntity player : players) {
+            wagers.put(player, Wager.sum(wagers.get(player), currentRaises.get(player)));
+        }
+        resetPlayerCurrentRaises();
+        // this doesn't change the pot
+    }
+
+    public void resetPlayerHands() {
+        hands.clear();
+        for (final LivingEntity player : players) {
+            hands.put(player, new ArrayList<>(2));
+        }
     }
 
     public void calculatePot() {
-        pot = new Wager();
-        for (final Wager wager : wagers.values()) {
-            for (final ItemStack stack : wager.getItemWager()) {
-                pot.increaseWager(stack);
-            }
-        }
+        pot = Wager.sum(Wager.sum(wagers.values()), Wager.sum(currentRaises.values()));
         pot.sort();
     }
 
+    /**
+     * Returns a deep, immutable copy of the current pot.
+     */
+    // this only works well in single-threading
+    @NotNull
+    public ImmutableWager getPot() {
+        if (potChanged) {
+            calculatePot();
+            potChanged = false;
+        }
+        return new ImmutableWager(pot);
+    }
+
+    /**
+     * Returns the big blind if it was set already, otherwise an empty {@link Optional}.
+     */
+    @NotNull
+    public Optional<ImmutableWager> getBigBlind() {
+        if (bigBlind == null) {
+            return Optional.empty();
+        }
+        return Optional.of(bigBlind);
+    }
+
+    /**
+     * Sets the big blind by the specified player. Can only be set once; then returns <code>true</code>, otherwise <code>false</code>.
+     * @throws IndexOutOfBoundsException If the specified player is smaller than 0 or greater than or equal to the player count
+     * @see #countPlayers()
+     */
+    public boolean setBigBlind(final int player, @NotNull final AbstractWager bigBlind) {
+        if (bigBlind != null) {
+            return false;
+        }
+        this.bigBlind = new ImmutableWager(bigBlind);
+        currentRaise = this.bigBlind;
+        return true;
+    }
 }

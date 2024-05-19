@@ -6,27 +6,26 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * Wrapper for things that can be used as wagers in bets, games etc.
  */
-public class Wager {
-
-    private final static Comparator<ItemStack> STACK_COMPARATOR = Comparator.comparing(ItemStack::getCount).reversed();
-    private final static Comparator<ItemStack> ITEM_COMPARATOR = Comparator.comparing(stack -> stack.getDisplayName().getString());
-    private final static Comparator<ItemStack> ITEM_STACK_COMPARATOR = ITEM_COMPARATOR.thenComparing(STACK_COMPARATOR);
-
-
-    private final List<ItemStack> items = new LinkedList<>();
+public class Wager extends AbstractWager {
 
     public Wager() {
         // empty constructor
+    }
+
+    /**
+     * (Deep) copy constructor.
+     */
+    public Wager(@NotNull final AbstractWager wager) {
+        for (final ItemStack stack : wager.items) {
+            items.add(stack.copy());
+        }
     }
 
     /**
@@ -34,13 +33,6 @@ public class Wager {
      */
     public void increaseWager(@NotNull final ItemStack increase) {
         items.add(Objects.requireNonNull(increase));
-    }
-
-    /**
-     * Returns an immutable view of the item stacks wagered.
-     */
-    public @NotNull List<ItemStack> getItemWager() {
-        return Collections.unmodifiableList(items);
     }
 
     public void sort() {
@@ -63,36 +55,17 @@ public class Wager {
         tag.put("wager_items", itemsNbt);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Wager wager)) return false;
-        if (items.size() != wager.items.size()) return false;
-        final Iterator<ItemStack> it1 = items.iterator();
-        final Iterator<ItemStack> it2 = wager.items.iterator();
-        while (it1.hasNext()) {
-            if (!ItemStack.isSameItemSameTags(it1.next(), it2.next())) {
-                return false;
+    public static Wager sum(@NotNull final Collection<? extends AbstractWager> coll) {
+        final Wager result = new Wager();
+        for (final AbstractWager wager : coll) {
+            for (final ItemStack stack : wager.items) {
+                result.increaseWager(stack);
             }
         }
-        return true;
+        return result;
     }
 
-    // this hash ignores the item tags, but that is fine
-    @Override
-    public int hashCode() {
-        int hash = 43 + items.size();
-        for (final ItemStack stack : items) {
-            hash = 43 * hash + stack.getCount() * stack.getItem().hashCode();
-        }
-        return Objects.hash(items);
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Wager{");
-        sb.append("items=").append(items);
-        sb.append('}');
-        return sb.toString();
+    public static Wager sum(@NotNull final AbstractWager wager1, @NotNull final  AbstractWager wager2) {
+        return sum(List.of(wager1, wager2));
     }
 }

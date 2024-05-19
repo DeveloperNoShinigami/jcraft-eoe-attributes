@@ -1,5 +1,8 @@
-package net.arna.jcraft.common.minigame.card;
+package net.arna.jcraft.common.minigame.card.texasholdem;
 
+import net.arna.jcraft.common.minigame.card.Card;
+import net.arna.jcraft.common.minigame.card.Rank;
+import net.arna.jcraft.common.minigame.card.Suit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
