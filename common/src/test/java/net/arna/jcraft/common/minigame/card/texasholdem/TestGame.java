@@ -1,8 +1,11 @@
 package net.arna.jcraft.common.minigame.card.texasholdem;
 
+import net.arna.jcraft.common.minigame.AbstractWager;
+import net.arna.jcraft.common.minigame.ImmutableWager;
 import net.arna.jcraft.common.minigame.card.Card;
 import net.arna.jcraft.common.minigame.card.Rank;
 import net.arna.jcraft.common.minigame.card.Suit;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -337,6 +340,63 @@ public class TestGame {
         Assertions.assertTrue(0 < Game.HAND_COMPARATOR.compare(HIGH_CARD, TWO_PAIRS));
         Assertions.assertTrue(0 < Game.HAND_COMPARATOR.compare(HIGH_CARD, PAIR));
         Assertions.assertEquals(0, Game.HAND_COMPARATOR.compare(HIGH_CARD, HIGH_CARD));
+    }
+
+    /**
+     * Tests {@link Game#Game(int)}.
+     */
+    @Test
+    public void testConstructor() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Game(Integer.MIN_VALUE));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Game(-5));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Game(-1));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Game(0));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Game(1));
+        Assertions.assertDoesNotThrow(() -> new Game(2));
+        Assertions.assertDoesNotThrow(() -> new Game(3));
+        Assertions.assertDoesNotThrow(() -> new Game(4));
+        Assertions.assertDoesNotThrow(() -> new Game(20));
+        Assertions.assertDoesNotThrow(() -> new Game(21));
+        Assertions.assertDoesNotThrow(() -> new Game(22));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Game(23));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Game(24));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Game(25));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Game(Integer.MAX_VALUE));
+    }
+
+    /**
+     * Tests that {@link Game#dealFlop()} fails if big blind wasn't set.
+     * @see Game#setBigBlind(int, AbstractWager)
+     */
+    @Test
+    public void testPocketsWithoutBigBlind() {
+        final Game game = new Game(4);
+        Assertions.assertThrows(IllegalStateException.class, () -> game.dealPockets());
+    }
+
+    /**
+     * Tests dealing cards.
+     */
+    @Test
+    public void testDealing() {
+        testDealing(new Game(2));
+        testDealing(new Game(3));
+        testDealing(new Game(4));
+        testDealing(new Game(20));
+        testDealing(new Game(21));
+        testDealing(new Game(22));
+    }
+
+    private void testDealing(@NotNull final Game game) {
+        Assertions.assertTrue(game.setBigBlind(1, ImmutableWager.EMPTY));
+        game.dealPockets();
+        Assertions.assertEquals(0, game.viewCommunity().size());
+        game.dealFlop();
+        Assertions.assertEquals(3, game.viewCommunity().size());
+        game.dealTurn();
+        Assertions.assertEquals(4, game.viewCommunity().size());
+        game.dealRiver();
+        Assertions.assertEquals(5, game.viewCommunity().size());
     }
 
 }
