@@ -422,26 +422,35 @@ public final class TexasHoldEm {
     private final Level world;
 
     private final List<LivingEntity> players;
-
     private final Map<LivingEntity, Wager> wagers = new HashMap<>();
-
     private final Map<LivingEntity, ImmutableWager> currentRaises = new HashMap<>();
-
-    private final Map<LivingEntity, List<Card>> hands = new HashMap<>();
+    private final Map<LivingEntity, List<Card>> pockets = new HashMap<>();
 
     private Wager pot = new Wager();
-
     private boolean potChanged; // initialized with false
 
+    private Integer bigBlindPlayer; // initialized with null
     private ImmutableWager bigBlind;
-
     private ImmutableWager currentRaise;
 
+    private List<Card> deck = Card.createPokerDeck();
+    private List<Card> burn = new ArrayList<>(3);
+    private List<Card> community = new ArrayList<>(5);
+
+    /**
+     * @throws IllegalArgumentException If there are less than 2 or more than 22 players.
+     */
     public TexasHoldEm(@NotNull final Level world, @NotNull final List<LivingEntity> players) {
+        if (players.size() < 2) { // not enough players
+            throw new IllegalArgumentException(String.format("At least 2 players are needed, %d is too few!", players.size()));
+        }
+        if (players.size() > 22) { // we would run out of cards
+            throw new IllegalArgumentException(String.format("%d is too many players!", players.size()));
+        }
         this.world = Objects.requireNonNull(world);
         this.players = new ArrayList<>(players);
         resetPlayerWagers();
-        resetPlayerHands();
+        resetPockets();
         resetPlayerCurrentRaises();
     }
 
@@ -505,10 +514,10 @@ public final class TexasHoldEm {
         // this doesn't change the pot
     }
 
-    public void resetPlayerHands() {
-        hands.clear();
+    public void resetPockets() {
+        pockets.clear();
         for (final LivingEntity player : players) {
-            hands.put(player, new ArrayList<>(2));
+            pockets.put(player, new ArrayList<>(2));
         }
     }
 
@@ -551,7 +560,50 @@ public final class TexasHoldEm {
             return false;
         }
         this.bigBlind = new ImmutableWager(bigBlind);
-        currentRaise = this.bigBlind;
+        bigBlindPlayer = player;
+        raise(bigBlindPlayer, this.bigBlind);
         return true;
     }
+
+    /**
+     * Big blind must be set before calling this method!
+     * @throws IllegalStateException If big blind isn't set.
+     */
+    public void dealPockets() {
+        if (bigBlindPlayer == null) {
+            throw new IllegalStateException("Big Blind wasn't set!");
+        }
+        Collections.shuffle(deck);
+        final int smallBlindPlayer = bigBlindPlayer == 0 ? players.size()-1 : bigBlindPlayer-1;
+        // deal each player 2 cards in the correct order (even though it doesn't matter)
+        for (int i = 0; i < 2*players.size(); i++) {
+            // we remove the last card of the deck instead of the first for slight performance increase (doesn't really matter)
+            pockets.get(players.get((smallBlindPlayer + i) % players.size())).add(deck.remove(deck.size()-1));
+        }
+    }
+
+    /**
+     * Returns an immutable view of the community cards in the order they were dealt.
+     */
+    public List<Card> viewCommunity() {
+        return Collections.unmodifiableList(community);
+    }
+
+    public void dealFlop() {
+        burn.add(deck.remove(deck.size()-1));
+        for (int i = 0; i < 3; i++) {
+            community.add(deck.remove(deck.size()-1));
+        }
+    }
+
+    public void dealTurn() {
+        burn.add(deck.remove(deck.size()-1));
+        community.add(deck.remove(deck.size()-1));
+    }
+
+    public void dealRiver() {
+        burn.add(deck.remove(deck.size()-1));
+        community.add(deck.remove(deck.size()-1));
+    }
+
 }
