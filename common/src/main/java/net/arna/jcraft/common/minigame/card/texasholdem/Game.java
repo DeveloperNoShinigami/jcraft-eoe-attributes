@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.minigame.card.texasholdem;
 
+import lombok.Getter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.minigame.AbstractWager;
 import net.arna.jcraft.common.minigame.ImmutableWager;
@@ -423,9 +424,11 @@ public final class Game {
     private Wager pot = new Wager();
     private boolean potChanged; // initialized with false
 
+    @Getter
+    private Phase phase = Phase.PRE_POCKET;
     private Integer bigBlindPlayer; // initialized with null
     private ImmutableWager bigBlind;
-    private ImmutableWager currentRaise;
+    private ImmutableWager currentRaise = ImmutableWager.EMPTY;
 
     private final List<Card> deck = Card.createPokerDeck();
     private final List<Card> burn = new ArrayList<>(3);
@@ -550,7 +553,7 @@ public final class Game {
      * @see #playerCount()
      */
     public boolean setBigBlind(final int player, @NotNull final AbstractWager bigBlind) {
-        if (bigBlind != null) {
+        if (this.bigBlind != null) {
             return false;
         }
         this.bigBlind = new ImmutableWager(bigBlind);
@@ -567,6 +570,10 @@ public final class Game {
         if (bigBlindPlayer == null) {
             throw new IllegalStateException("Big Blind wasn't set!");
         }
+        if (phase != Phase.PRE_POCKET) {
+            throw new IllegalStateException("Wrong phase " + phase.name() + " to deal pockets!");
+        }
+        phase = Phase.POCKET;
         Collections.shuffle(deck);
         final int smallBlindPlayer = bigBlindPlayer == 0 ? playerCount-1 : bigBlindPlayer-1;
         // deal each player 2 cards in the correct order (even though it doesn't matter)
@@ -574,6 +581,7 @@ public final class Game {
             // we remove the last card of the deck instead of the first for slight performance increase (doesn't really matter)
             pockets.get((smallBlindPlayer + i) % playerCount).add(deck.remove(deck.size()-1));
         }
+        phase = Phase.PRE_FLOP;
     }
 
     /**
@@ -584,20 +592,35 @@ public final class Game {
     }
 
     public void dealFlop() {
+        if (phase != Phase.PRE_FLOP) {
+            throw new IllegalStateException("Wrong phase " + phase.name() + " to deal flop!");
+        }
+        phase = Phase.FLOP;
         burn.add(deck.remove(deck.size()-1));
         for (int i = 0; i < 3; i++) {
             community.add(deck.remove(deck.size()-1));
         }
+        phase = Phase.PRE_TURN;
     }
 
     public void dealTurn() {
+        if (phase != Phase.PRE_TURN) {
+            throw new IllegalStateException("Wrong phase " + phase.name() + " to deal turn!");
+        }
+        phase = Phase.TURN;
         burn.add(deck.remove(deck.size()-1));
         community.add(deck.remove(deck.size()-1));
+        phase = Phase.PRE_RIVER;
     }
 
     public void dealRiver() {
+        if (phase != Phase.PRE_RIVER) {
+            throw new IllegalStateException("Wrong phase " + phase.name() + " to deal river!");
+        }
+        phase = Phase.RIVER;
         burn.add(deck.remove(deck.size()-1));
         community.add(deck.remove(deck.size()-1));
+        phase = Phase.PRE_END;
     }
 
 }
