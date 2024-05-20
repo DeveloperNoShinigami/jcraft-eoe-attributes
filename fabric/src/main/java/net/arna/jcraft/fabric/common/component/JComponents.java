@@ -20,10 +20,12 @@ import net.arna.jcraft.fabric.common.component.impl.living.*;
 import net.arna.jcraft.fabric.common.component.impl.player.PhComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.player.SpecComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.world.ShockwaveHandlerComponentImpl;
+import net.arna.jcraft.fabric.common.component.impl.world.TexasHoldEmComponentImpl;
 import net.arna.jcraft.fabric.common.component.living.*;
 import net.arna.jcraft.fabric.common.component.player.PhComponent;
 import net.arna.jcraft.fabric.common.component.player.SpecComponent;
 import net.arna.jcraft.fabric.common.component.world.ShockwaveHandlerComponent;
+import net.arna.jcraft.fabric.common.component.world.TexasHoldEmComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -54,6 +56,8 @@ public class JComponents implements EntityComponentInitializer, WorldComponentIn
             ComponentRegistry.getOrCreate(JCraft.id("gravity_shift"), GravityShiftComponent.class);
     public static final ComponentKey<ShockwaveHandlerComponent> SHOCKWAVE_HANDLER =
             ComponentRegistry.getOrCreate(JCraft.id("shockwave_handler"), ShockwaveHandlerComponent.class);
+    public static final ComponentKey<TexasHoldEmComponent> TEXAS_HOLD_EM =
+            ComponentRegistry.getOrCreate(JCraft.id("texas_hold_em"), TexasHoldEmComponent.class);
     public static final ComponentKey<VampireComponent> VAMPIRE =
             ComponentRegistry.getOrCreate(JCraft.id("vampire"), VampireComponent.class);
 
@@ -100,6 +104,7 @@ public class JComponents implements EntityComponentInitializer, WorldComponentIn
     @Override
     public void registerWorldComponentFactories(@NotNull WorldComponentFactoryRegistry registry) {
         registry.register(SHOCKWAVE_HANDLER, ShockwaveHandlerComponentImpl::new);
+        registry.register(TEXAS_HOLD_EM, TexasHoldEmComponentImpl::new);
     }
 
 

@@ -8,6 +8,7 @@ import net.arna.jcraft.common.component.living.*;
 import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
+import net.arna.jcraft.common.component.world.CommonTexasHoldEmComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -79,6 +80,11 @@ public class JComponentPlatformUtils {
 
     @ExpectPlatform
     public static CommonShockwaveHandlerComponent getShockwaveHandler(Level world) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static CommonTexasHoldEmComponent getTexasHoldEmComponent(Level world) {
         throw new AssertionError();
     }
 
