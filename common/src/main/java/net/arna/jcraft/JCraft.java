@@ -66,6 +66,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.stun;
+import static net.arna.jcraft.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
 import static net.arna.jcraft.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JItemRegistry.ITEM_REGISTRY;
@@ -86,7 +87,6 @@ public final class JCraft {
     //Obligatory lazy Registry
 
 
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.BLOCK_ENTITY_TYPE);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TAB_REGISTRY = DeferredRegister.create(MOD_ID, Registries.CREATIVE_MODE_TAB);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(MOD_ID, Registries.PARTICLE_TYPE);
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(MOD_ID, Registries.MOB_EFFECT);

@@ -3,6 +3,8 @@ package net.arna.jcraft.mixin.client;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.arna.jcraft.common.util.IJSplatterManagerHolder;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -16,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.BooleanSupplier;
 
+@Environment(EnvType.CLIENT)
 @Mixin(ClientLevel.class)
 public abstract class ClientWorldMixin implements IJSplatterManagerHolder {
 
