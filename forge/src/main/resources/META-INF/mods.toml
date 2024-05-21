@@ -7,7 +7,7 @@ license = "Insert License Here"
 modId = "jcraft"
 version = "${version}"
 displayName = "Jcraft"
-authors = "Me!"
+authors = "jcraft"
 description = '''
 This is an example description! Tell everyone what your mod is about!
 '''

@@ -3,7 +3,7 @@ package net.arna.jcraft.forge.mixin.gravity;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(value = ServerPlayer.class, remap = false)
+@Mixin(value = ServerPlayer.class)
 public abstract class ServerPlayerEntityMixin {
 /* TODO potential forge crash
     @Inject(

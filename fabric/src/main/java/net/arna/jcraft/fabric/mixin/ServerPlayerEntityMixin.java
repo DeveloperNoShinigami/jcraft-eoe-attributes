@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayer.class)
-public class ServerPlayerEntityMixin implements IJInputStateManagerHolder {
+public class ServerPlayerEntityMixin {
 
     private @Unique boolean hadStand = false;
     private final @Unique InputStateManager inputStateManager = new InputStateManager();
@@ -36,20 +36,5 @@ public class ServerPlayerEntityMixin implements IJInputStateManagerHolder {
     @Inject(method = "changeDimension", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;removePlayerImmediately(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/entity/Entity$RemovalReason;)V"))
     private void doNotPlayDesummonSoundWhenMovingWorld(ServerLevel destination, CallbackInfoReturnable<Entity> cir) {
         ServerPlayerEntityMixinLogic.doNotPlayDesummonSoundWhenMovingWorld((ServerPlayer) (Object) this, destination, cir);
-    }
-
-    @Override
-    public InputStateManager jcraft$getJInputStateManager() {
-        return inputStateManager;
-    }
-
-    @Inject(at = @At("TAIL"), method = "restoreFrom")
-    private void copyInputStateManagerUponCopy(ServerPlayer oldPlayer, boolean alive, CallbackInfo ci) {
-        ServerPlayerEntityMixinLogic.copyInputStateManagerUponCopy(inputStateManager, oldPlayer, alive, ci);
-    }
-
-    @Inject(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At(value = "HEAD"), cancellable = true)
-    private void jcraft$dropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
-        ServerPlayerEntityMixinLogic.jcraft$dropItem((ServerPlayer) (Object) this, stack, throwRandomly, retainOwnership, cir);
     }
 }

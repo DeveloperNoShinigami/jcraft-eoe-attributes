@@ -1,4 +1,4 @@
-package net.arna.jcraft.fabric.mixin.gravity;
+package net.arna.jcraft.mixin.gravity;
 
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -9,11 +9,7 @@ import net.arna.jcraft.mixin_logic.LivingEntityMixinLogic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -22,9 +18,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-@Mixin(LivingEntity.class)
+@Mixin(value = LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
     @Shadow
     public abstract void readAdditionalSaveData(CompoundTag nbt);
@@ -381,16 +376,16 @@ public abstract class LivingEntityMixin extends Entity {
             method = "baseTick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/core/BlockPos;containing(DDD)Lnet/minecraft/core/BlockPos;"
+                    target = "Lnet/minecraft/world/entity/LivingEntity;blockPosition()Lnet/minecraft/core/BlockPos;"
             )
     )
-    private BlockPos redirect_baseTick_new_0(double x, double y, double z, Operation<BlockPos> original) {
+    private BlockPos redirect_baseTick_new_0(LivingEntity instance, Operation<BlockPos> original) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
-            return BlockPos.containing(x, y, z);
+            return BlockPos.containing(instance.getX(), instance.getY(), instance.getZ());
         }
 
-        return original.call(x, y, z);
+        return original.call(instance);
     }
 
 
@@ -430,44 +425,121 @@ public abstract class LivingEntityMixin extends Entity {
         return RotationUtil.vecPlayerToWorld(vec3d, gravityDirection);
     }
 
-    @ModifyArgs(
+    @ModifyArg(
             method = "tickEffects",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V",
                     ordinal = 0
-            )
+            ),
+            index = 1
     )
-    private void modify_tickStatusEffects_addParticle_0(Args args) {
+    private double modify_tickStatusEffects_addParticle_0(double x) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
-            return;
+            return x;
         }
 
-        Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(args.get(1), args.get(2), args.get(3)), gravityDirection));
-        args.set(1, vec3d.x);
-        args.set(2, vec3d.y);
-        args.set(3, vec3d.z);
+        Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(x, 0, 0), gravityDirection));
+
+        return vec3d.x;
     }
 
-    @ModifyArgs(
+    @ModifyArg(
+            method = "tickEffects",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V",
+                    ordinal = 0
+            ),
+            index = 2
+    )
+    private double modify_tickStatusEffects_addParticle_1(double y) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
+        if (gravityDirection == Direction.DOWN) {
+            return y;
+        }
+
+        Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(0, y, 0), gravityDirection));
+
+        return vec3d.y;
+    }
+
+    @ModifyArg(
+            method = "tickEffects",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V",
+                    ordinal = 0
+            ),
+            index = 3
+    )
+    private double modify_tickStatusEffects_addParticle_2(double z) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
+        if (gravityDirection == Direction.DOWN) {
+            return z;
+        }
+
+        Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(0, 0, z), gravityDirection));
+
+        return vec3d.z;
+    }
+
+    @ModifyArg(
             method = "makePoofParticles",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V",
                     ordinal = 0
-            )
+            ),
+            index = 1
     )
-    private void modify_addDeathParticless_addParticle_0(Args args) {
+    private double modify_addDeathParticless_addParticle_0(double x) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
         if (gravityDirection == Direction.DOWN) {
-            return;
+            return x;
         }
 
-        Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(args.get(1), args.get(2), args.get(3)), gravityDirection));
-        args.set(1, vec3d.x);
-        args.set(2, vec3d.y);
-        args.set(3, vec3d.z);
+        Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(x, 0, 0), gravityDirection));
+        return vec3d.x;
+    }
+
+    @ModifyArg(
+            method = "makePoofParticles",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V",
+                    ordinal = 0
+            ),
+            index = 2
+    )
+    private double modify_addDeathParticless_addParticle_1(double y) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
+        if (gravityDirection == Direction.DOWN) {
+            return y;
+        }
+
+        Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(0, y, 0), gravityDirection));
+        return vec3d.y;
+    }
+
+    @ModifyArg(
+            method = "makePoofParticles",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V",
+                    ordinal = 0
+            ),
+            index = 3
+    )
+    private double modify_addDeathParticless_addParticle_2(double z) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) this);
+        if (gravityDirection == Direction.DOWN) {
+            return z;
+        }
+
+        Vec3 vec3d = this.position().subtract(RotationUtil.vecPlayerToWorld(this.position().subtract(0, 0, z), gravityDirection));
+        return vec3d.z;
     }
 
     @ModifyVariable(

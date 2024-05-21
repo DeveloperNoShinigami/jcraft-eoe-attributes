@@ -4,11 +4,9 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "EntityMixin",
-    "ExplosionMixin",
     "ServerPlayerEntityMixin",
     "TimestopBlockMixin",
     "gravity.EntityMixin",
-    "gravity.LivingEntityMixin",
     "gravity.ServerPlayerEntityMixin"
   ],
   "client": [

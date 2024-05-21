@@ -4,14 +4,13 @@ plugins {
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
+
     forge {
-        mixinConfig "jcraft.mixins.json"
-        mixinConfig "jcraft-forge.mixins.json"
         convertAccessWideners.set(true)
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-    }
-    mixin {
-        defaultRefmapName = "jcraft-refmap.json"
+
+        mixinConfig "jcraft.mixins.json"
+        mixinConfig "jcraft-forge.mixins.json"
     }
 }
 
@@ -45,7 +44,7 @@ dependencies {
     modImplementation "dev.architectury:architectury-forge:$architectury_api_version"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
-    shadowBundle project(path: ':common', configuration: 'transformProductionForge')
+    shadowBundle(project(path: ':common', configuration: 'transformProductionForge')){ transitive = false }
 
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.5"))
     implementation(include("io.github.llamalad7:mixinextras-forge:0.3.5"))
@@ -59,16 +58,16 @@ dependencies {
     modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${player_anim_version}")
 
     // Terrablender
-    modImplementation("com.github.glitchfiend:TerraBlender-forge:${minecraft_version}-${terrablender_version}")
+    //modImplementation("com.github.glitchfiend:TerraBlender-forge:${minecraft_version}-${terrablender_version}")
 
     // Trimmed
-    include modImplementation("maven.modrinth:trimmed:${minecraft_version}-${trimmed_version}+forge")
+    //include modImplementation("maven.modrinth:trimmed:${minecraft_version}-${trimmed_version}+forge")
 
     //Cloth
-    modApi "me.shedaniel.cloth:cloth-config-forge:11.1.118"
+    modApi("me.shedaniel.cloth:cloth-config-forge:11.1.118"){ transitive = false }
 
     //Satin
-    include modImplementation("org.ladysnake:satin-forge-${satin_version}")
+    include modImplementation("org.ladysnake:satin-forge-${satin_version}"){ transitive = false }
 
     //modImplementation("com.fusionflux:gravity_api-forge-${gravity_api_version}"){ transitive = false }
 }
@@ -82,6 +81,9 @@ processResources {
 }
 
 shadowJar {
+    exclude "fabric.mod.json"
+    exclude "architectury.common.json"
+
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = 'dev-shadow'
 }

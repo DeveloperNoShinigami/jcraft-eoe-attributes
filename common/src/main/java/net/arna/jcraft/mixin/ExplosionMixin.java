@@ -1,4 +1,4 @@
-package net.arna.jcraft.fabric.mixin;
+package net.arna.jcraft.mixin;
 
 import net.arna.jcraft.common.util.IJExplosion;
 import net.arna.jcraft.common.util.JExplosionModifier;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(Explosion.class)
+@Mixin(value = Explosion.class)
 public class ExplosionMixin implements IJExplosion {
     @Shadow
     @Final
@@ -36,12 +36,13 @@ public class ExplosionMixin implements IJExplosion {
     }
 
     // Functionality
-    @Redirect(method = "finalizeExplosion", at = @At(value = "FIELD",
-            target = "Lnet/minecraft/world/level/Explosion;blockInteraction:Lnet/minecraft/world/level/Explosion$BlockInteraction;")
-            , require = 2)
-    private Explosion.BlockInteraction overrideDestructionType(Explosion thiz) {
-        return modifier == null || modifier.getDestructionType() == null ? blockInteraction : modifier.getDestructionType();
+    /* TODO
+    @WrapOperation(method = "affectWorld", at = @At(value = "FIELD", target = "Lnet/minecraft/world/explosion/Explosion;destructionType:Lnet/minecraft/world/explosion/Explosion$DestructionType;"), require = 2)
+    private Explosion.DestructionType overrideDestructionType(Explosion instance, Operation<Explosion.DestructionType> original) {
+        return modifier == null || modifier.getDestructionType() == null ? original.call(instance) : modifier.getDestructionType();
     }
+
+     */
 
     @Redirect(method = "finalizeExplosion", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/Explosion;fire:Z"))
     private boolean overrideCreateFire(Explosion thiz) {
