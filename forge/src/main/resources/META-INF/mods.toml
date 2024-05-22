@@ -33,3 +33,32 @@ mandatory = true
 versionRange = "[9.2.14,)"
 ordering = "AFTER"
 side = "BOTH"
+
+[[dependencies.jcraft]]
+modId = "satin"
+mandatory = true
+versionRange = "[1.18.5,)"
+ordering = "AFTER"
+side = "BOTH"
+
+
+[[dependencies.jcraft]]
+modId = "azurelib"
+mandatory = true
+versionRange = "[1.0.34,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.jcraft]]
+modId = "playeranimator"
+mandatory = true
+versionRange = "[1.0.2-rc1+1.20,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.jcraft]]
+modId = "cloth_config"
+mandatory = true
+versionRange = "[11.1.118,)"
+ordering = "AFTER"
+side = "BOTH"

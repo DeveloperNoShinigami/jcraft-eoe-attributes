@@ -51,7 +51,9 @@
     "cardinal-components-base": "*",
     "cardinal-components-entity": "*",
     "cardinal-components-world": "*",
-    "azurelib": "*"
+    "azurelib": "*",
+    "satin": ">=1.18.5",
+    "cloth-config": "*"
   },
   "custom": {
     "cardinal-components": [

@@ -157,8 +157,6 @@ public class JCraftAbilityHud {
                 return;
             }
 
-            System.out.println("Cooldown: " + cd);
-
             renderBorder(ctx, iconX, iconY);
             renderIcon(ctx, iconX, iconY, type, iconPos.name());
             renderCooldown(ctx, cd, iconX, iconY);
@@ -180,7 +178,6 @@ public class JCraftAbilityHud {
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.enableBlend();
-        System.out.println("Renderpls");
         ctx.blit(texture, x + 2, y + 2, 0, 0, 18, 18, 18, 18);
 
         RenderSystem.depthMask(true);
