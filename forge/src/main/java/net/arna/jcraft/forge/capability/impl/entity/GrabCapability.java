@@ -82,7 +82,7 @@ public class GrabCapability extends CommonGrabComponentImpl implements JCapabili
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
 
-            if (Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
+            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
                 GrabCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
             }
 
@@ -92,8 +92,9 @@ public class GrabCapability extends CommonGrabComponentImpl implements JCapabili
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
 
-            if (context.getPlayer().level() != null) {
-                GrabCapability.getCapabilityOptional(context.getPlayer().level().getEntity(id)).ifPresent(c -> c.deserializeNBT(nbt));
+            Entity entity = context.getPlayer().level().getEntity(id);
+            if (entity != null) {
+                GrabCapability.getCapabilityOptional(entity).ifPresent(c -> c.deserializeNBT(nbt));
             }
         });
     }

@@ -87,15 +87,13 @@ public class SpecCapability extends CommonSpecComponentImpl implements JCapabili
             if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof LocalPlayer player) {
                 SpecCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
             }
-
-
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SPEC_C2S, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
 
-            if (context.getPlayer().level() != null && context.getPlayer().level().getEntity(id) instanceof Player player) {
+            if (context.getPlayer().level().getEntity(id) instanceof Player player) {
                 SpecCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
             }
         });

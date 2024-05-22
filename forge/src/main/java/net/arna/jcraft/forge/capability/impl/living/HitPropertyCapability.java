@@ -83,7 +83,7 @@ public class HitPropertyCapability extends CommonHitPropertyComponentImpl implem
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
 
-            if (Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
+            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
                 HitPropertyCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
             }
 
@@ -93,8 +93,8 @@ public class HitPropertyCapability extends CommonHitPropertyComponentImpl implem
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
 
-            if (context.getPlayer().level() != null) {
-                HitPropertyCapability.getCapabilityOptional(context.getPlayer().level().getEntity(id)).ifPresent(c -> c.deserializeNBT(nbt));
+            if (context.getPlayer().level().getEntity(id) instanceof LivingEntity livingEntity) {
+                HitPropertyCapability.getCapabilityOptional(livingEntity).ifPresent(c -> c.deserializeNBT(nbt));
             }
         });
     }
