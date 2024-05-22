@@ -113,6 +113,7 @@ public class JCraftAbilityHud {
             return;
         }
 
+
         boolean isMid = JClientConfig.getInstance().getUiPosition() == JClientConfig.UIPos.MIDDLE;
         boolean useIcons = JClientConfig.getInstance().isIconHud();
         StandEntity<?, ?> stand = JUtils.getStand(player);
@@ -122,10 +123,11 @@ public class JCraftAbilityHud {
             int selectedY = isMid ? iconSpacing * 11 : 0;
 
             JSpec<?, ?> spec = JUtils.getSpec(player);
-
+            //System.out.println("Spec: " + spec);
             if (stand == null) {
                 // Render cooldown HUD for specs
                 if (spec != null) {
+
                     renderIcons(ctx, SPEC_ICONS, selectedX, selectedY, spec.getType().getInternalName().toLowerCase());
                 }
             } else {
@@ -155,6 +157,7 @@ public class JCraftAbilityHud {
                 return;
             }
 
+            System.out.println("Cooldown: " + cd);
 
             renderBorder(ctx, iconX, iconY);
             renderIcon(ctx, iconX, iconY, type, iconPos.name());
@@ -177,6 +180,7 @@ public class JCraftAbilityHud {
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.enableBlend();
+        System.out.println("Renderpls");
         ctx.blit(texture, x + 2, y + 2, 0, 0, 18, 18, 18, 18);
 
         RenderSystem.depthMask(true);

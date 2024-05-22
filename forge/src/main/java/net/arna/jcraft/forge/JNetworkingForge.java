@@ -48,11 +48,14 @@ public class JNetworkingForge {
 
     public static <T extends JCapability> void sendPlayerPackets(Entity entity, ResourceLocation s2c, ResourceLocation c2s, T cap) {
         if (entity instanceof ServerPlayer serverPlayer) {
+
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeUUID(entity.getUUID());
             buf.writeNbt(cap.serializeNBT());
             NetworkManager.sendToPlayer(serverPlayer, s2c, buf);
-        } else if (entity.level() != null && entity.level().isClientSide) {
+
+        } else if (entity.level().isClientSide) {
+
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeUUID(entity.getUUID());
             buf.writeNbt(cap.serializeNBT());

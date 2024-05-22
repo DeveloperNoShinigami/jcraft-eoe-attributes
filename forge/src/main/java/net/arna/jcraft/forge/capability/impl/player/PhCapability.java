@@ -4,6 +4,7 @@ import dev.architectury.networking.NetworkManager;
 import net.arna.jcraft.common.component.impl.player.CommonPhComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
+import net.arna.jcraft.forge.capability.impl.living.CooldownsCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -38,7 +39,9 @@ public class PhCapability extends CommonPhComponentImpl implements JCapability {
     @Override
     public void sync(Entity entity) {
         super.sync(entity);
-        PhCapability.syncEntityCapability(entity);
+        if (entity != null) {
+            PhCapability.syncEntityCapability(entity);
+        }
     }
 
     public static void syncEntityCapability(Entity entity) {
@@ -48,9 +51,9 @@ public class PhCapability extends CommonPhComponentImpl implements JCapability {
     }
 
     public static void syncEntityCapability(PlayerEvent.StartTracking event) {
-        if (event.getTarget() instanceof LivingEntity livingEntity) {
-            if (livingEntity.level() instanceof ServerLevel) {
-                syncEntityCapability(livingEntity);
+        if (event.getEntity() instanceof Player) {
+            if (event.getEntity().level() instanceof ServerLevel) {
+                syncEntityCapability(event.getEntity());
             }
         }
     }
@@ -76,14 +79,21 @@ public class PhCapability extends CommonPhComponentImpl implements JCapability {
     }
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, PH_S2C, (buf, context) -> {
+            int id = buf.readInt();
+            CompoundTag nbt = buf.readNbt();
+
+            if (Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
+                PhCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
+            }
 
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, PH_C2S, (buf, context) -> {
-            UUID id = buf.readUUID();
+            int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
-            if (Minecraft.getInstance().level != null) {
-                PhCapability.getCapabilityOptional(Minecraft.getInstance().level.getPlayerByUUID(id)).ifPresent(c -> c.deserializeNBT(nbt));
+
+            if (context.getPlayer().level() != null && context.getPlayer().level().getEntity(id) instanceof Player player) {
+                PhCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
             }
         });
     }

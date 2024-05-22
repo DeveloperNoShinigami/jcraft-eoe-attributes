@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -33,7 +34,9 @@ public class MiscCapability extends CommonMiscComponentImpl implements JCapabili
     @Override
     public void sync(Entity entity) {
         super.sync(entity);
-        MiscCapability.syncEntityCapability(entity);
+        if (entity != null) {
+            MiscCapability.syncEntityCapability(entity);
+        }
     }
 
     private static void syncEntityCapability(Entity entity) {
@@ -46,6 +49,11 @@ public class MiscCapability extends CommonMiscComponentImpl implements JCapabili
         if (event.getTarget() instanceof LivingEntity livingEntity) {
             if (livingEntity.level() instanceof ServerLevel) {
                 syncEntityCapability(livingEntity);
+            }
+        }
+        if (event.getEntity() instanceof Player) {
+            if (event.getEntity().level() instanceof ServerLevel) {
+                syncEntityCapability(event.getEntity());
             }
         }
     }
@@ -72,14 +80,21 @@ public class MiscCapability extends CommonMiscComponentImpl implements JCapabili
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, MISC_S2C, (buf, context) -> {
+            int id = buf.readInt();
+            CompoundTag nbt = buf.readNbt();
+
+            if (Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
+                MiscCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
+            }
 
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, MISC_C2S, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
-            if (Minecraft.getInstance().level != null) {
-                MiscCapability.getCapabilityOptional(Minecraft.getInstance().level.getEntity(id)).ifPresent(c -> c.deserializeNBT(nbt));
+
+            if (context.getPlayer().level() != null) {
+                MiscCapability.getCapabilityOptional(context.getPlayer().level().getEntity(id)).ifPresent(c -> c.deserializeNBT(nbt));
             }
         });
     }

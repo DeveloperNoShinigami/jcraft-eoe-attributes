@@ -116,7 +116,6 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
 
     public void tick() {
         boolean isClient = entity.level().isClientSide;
-
         // Decrement all cooldowns.
         boolean shouldSync = false;
         for (Object2IntMap.Entry<CooldownType> entry : cooldowns.object2IntEntrySet()) {

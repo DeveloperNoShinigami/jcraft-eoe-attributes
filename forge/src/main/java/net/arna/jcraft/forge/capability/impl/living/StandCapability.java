@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -33,12 +34,13 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
     @Override
     public void sync(Entity entity) {
         super.sync(entity);
-        StandCapability.syncEntityCapability(entity);
+        if (entity != null) {
+            StandCapability.syncEntityCapability(entity);
+        }
     }
 
     private static void syncEntityCapability(Entity entity) {
         if (entity instanceof LivingEntity living) {
-
             JNetworkingForge.sendPackets(living, STAND_S2C, STAND_C2S, getCapability(living));
         }
     }
@@ -47,6 +49,11 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
         if (event.getTarget() instanceof LivingEntity livingEntity) {
             if (livingEntity.level() instanceof ServerLevel) {
                 syncEntityCapability(livingEntity);
+            }
+        }
+        if (event.getEntity() instanceof Player) {
+            if (event.getEntity().level() instanceof ServerLevel) {
+                syncEntityCapability(event.getEntity());
             }
         }
     }
@@ -73,14 +80,21 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, STAND_S2C, (buf, context) -> {
+            int id = buf.readInt();
+            CompoundTag nbt = buf.readNbt();
+
+            if (Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
+                StandCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
+            }
 
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, STAND_C2S, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
-            if (Minecraft.getInstance().level != null) {
-                StandCapability.getCapabilityOptional(Minecraft.getInstance().level.getEntity(id)).ifPresent(c -> c.deserializeNBT(nbt));
+
+            if (context.getPlayer().level() != null) {
+                StandCapability.getCapabilityOptional(context.getPlayer().level().getEntity(id)).ifPresent(c -> c.deserializeNBT(nbt));
             }
         });
     }

@@ -59,28 +59,17 @@ public class RuntimeEvents {
 
     @SubscribeEvent
     public static void syncEntityCapability(PlayerEvent.StartTracking event) {
-        if (event.getTarget().level() instanceof ServerLevel) {
-            Entity entity = event.getTarget();
-            if (entity != null) {
-                GrabCapability.syncEntityCapability(event);
-                TimeStopCapability.syncEntityCapability(event);
+        GrabCapability.syncEntityCapability(event);
+        TimeStopCapability.syncEntityCapability(event);
 
-                if (entity instanceof LivingEntity) {
-                    BombTrackerCapability.syncEntityCapability(event);
-                    CooldownsCapability.syncEntityCapability(event);
-                    HitPropertyCapability.syncEntityCapability(event);
-                    MiscCapability.syncEntityCapability(event);
-                    StandCapability.syncEntityCapability(event);
-                    VampireCapability.syncEntityCapability(event);
-                }
-                if (entity instanceof Player) {
-                    PhCapability.syncEntityCapability(event);
-                    SpecCapability.syncEntityCapability(event);
-                }
-            }
-
-
-        }
+        BombTrackerCapability.syncEntityCapability(event);
+        CooldownsCapability.syncEntityCapability(event);
+        HitPropertyCapability.syncEntityCapability(event);
+        MiscCapability.syncEntityCapability(event);
+        StandCapability.syncEntityCapability(event);
+        VampireCapability.syncEntityCapability(event);
+        PhCapability.syncEntityCapability(event);
+        SpecCapability.syncEntityCapability(event);
     }
 
     @SubscribeEvent

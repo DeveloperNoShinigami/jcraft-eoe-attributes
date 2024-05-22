@@ -87,7 +87,7 @@ public class CoffinBlock extends BedBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState()
-                .setValue(FACING, context.getNearestLookingDirection())
+                .setValue(FACING, context.getNearestLookingVerticalDirection())
                 .setValue(OCCUPIED, false);
     }
 
