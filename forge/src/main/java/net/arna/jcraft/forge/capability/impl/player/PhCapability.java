@@ -6,6 +6,7 @@ import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
 import net.arna.jcraft.forge.capability.impl.living.CooldownsCapability;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -46,7 +47,7 @@ public class PhCapability extends CommonPhComponentImpl implements JCapability {
 
     public static void syncEntityCapability(Entity entity) {
         if (entity instanceof Player living) {
-            JNetworkingForge.sendPlayerPackets(living, PH_S2C, PH_C2S, getCapability(living));
+            JNetworkingForge.sendPackets(living, PH_S2C, PH_C2S, getCapability(living));
         }
     }
 
@@ -79,20 +80,20 @@ public class PhCapability extends CommonPhComponentImpl implements JCapability {
     }
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, PH_S2C, (buf, context) -> {
+
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
 
-            if (Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
+            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof LocalPlayer player) {
                 PhCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
             }
-
         });
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, PH_C2S, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
 
-            if (context.getPlayer().level() != null && context.getPlayer().level().getEntity(id) instanceof Player player) {
+            if (context.getPlayer().level().getEntity(id) instanceof Player player) {
                 PhCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
             }
         });
