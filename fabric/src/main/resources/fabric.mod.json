@@ -67,7 +67,8 @@
       "jcraft:hit_property",
       "jcraft:shockwave_handler",
       "jcraft:gravity_shift",
-      "jcraft:vampire"
+      "jcraft:vampire",
+      "jcraft:texas_hold_em"
     ]
   }
 }

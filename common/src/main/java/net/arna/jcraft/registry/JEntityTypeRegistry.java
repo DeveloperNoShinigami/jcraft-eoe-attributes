@@ -421,7 +421,7 @@ public interface JEntityTypeRegistry {
     RegistrySupplier<EntityType<PetshopEntity>> PETSHOP = ENTITY_TYPE_REGISTRY.register(JCraft.id("petshop"),
             () -> EntityType.Builder.of(
                             (EntityType<PetshopEntity> entityType, Level world) -> new PetshopEntity(world),
-                            MobCategory.MISC
+                            MobCategory.CREATURE
                     ).sized(0.4f, 0.75f)
                     .build("petshop")
     );
@@ -429,7 +429,7 @@ public interface JEntityTypeRegistry {
     RegistrySupplier<EntityType<AyaTsujiEntity>> AYA_TSUJI = ENTITY_TYPE_REGISTRY.register(JCraft.id("aya_tsuji"),
             () -> EntityType.Builder.of(
                             (EntityType<AyaTsujiEntity> entityType, Level world) -> new AyaTsujiEntity(world),
-                            MobCategory.MISC
+                            MobCategory.CREATURE
                     ).sized(1f, 2f)
                     .build("aya_tsuji")
     );
@@ -444,7 +444,7 @@ public interface JEntityTypeRegistry {
     RegistrySupplier<EntityType<DarbyOlderEntity>> DARBY_OLDER = ENTITY_TYPE_REGISTRY.register(JCraft.id("darby_older"),
             () -> EntityType.Builder.of(
                             (EntityType<DarbyOlderEntity> entityType, Level world) -> new DarbyOlderEntity(world),
-                            MobCategory.MISC
+                            MobCategory.CREATURE
                     ).sized(1f, 2f)
                     .build("darby_older")
     );
@@ -459,7 +459,7 @@ public interface JEntityTypeRegistry {
     RegistrySupplier<EntityType<DarbyYoungerEntity>> DARBY_YOUNGER = ENTITY_TYPE_REGISTRY.register(JCraft.id("darby_younger"),
             () -> EntityType.Builder.of(
                             (EntityType<DarbyYoungerEntity> entityType, Level world) -> new DarbyYoungerEntity(world),
-                            MobCategory.MISC
+                            MobCategory.CREATURE
                     ).sized(1f, 2f)
                     .build("darby_younger")
     );
