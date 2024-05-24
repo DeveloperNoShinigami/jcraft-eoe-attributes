@@ -90,3 +90,16 @@
 5. Add the feature to biomes in `JBiomeProvider`.
 6. Run datagen.
 7. Test your addition.
+
+## Persisting something in the world
+1. Add `CommonMyComponent` (replacing `My` with whatever is appropriate of course) interface to `net.arna.jcraft.common.component.world` and add the method signatures you need.
+2. Add `CommonMyComponentImpl` class to `net.arna.jcraft.common.component.impl.world` and implement the methods.
+3. Add a constructor with a `Level world` parameter to `CommonMyComponentImpl`.
+4. Add methods `public void readFromNbt(CompoundTag tag)` and `public void writeToNbt(CompoundTag tag)` to `CommonMyComponentImpl` and implement them.
+5. Add a method `@ExpectPlatform public static CommonMyComponent getMyComponent(Level world)` like the others in `JComponentPlatformUtils`. This is common done.
+6. Add `MyComponent` interface to `net.arna.jcraft.fabric.common.component.world`, inheriting from `CommonMyComponent`, `dev.onyxstudios.cca.api.v3.component.Component` and others if needed.
+7. Add `MyComponentImpl` to `net.arna.jcraft.fabric.common.component.impl.world`, inheriting from `CommonMyComponentImpl` and implementing `MyComponent`.
+8. Register the component in `JComponents` and in `fabric.mod.json`. 
+9. Add the component to `net.arna.jcraft.platform.fabric.JComponentPlatformUtilsImpl`. This is Fabric done.
+10. Add `MyCapability` to `net.arna.jcraft.forge.capability.impl.world`, inheriting from `CommonMyComponentImpl` and implementing `JCapability`.
+11. Add the component to `net.arna.jcraft.platform.forge.JComponentPlatformUtilsImpl`. This is Forge done.
