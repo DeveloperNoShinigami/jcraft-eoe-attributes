@@ -6,6 +6,7 @@ import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import net.arna.jcraft.client.renderer.armor.KarsArmorRenderer;
 import net.arna.jcraft.client.renderer.armor.RedHatRenderer;
 import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -29,12 +30,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class SunProtectionItem extends ArmorItem implements GeoItem {
+public class HatItem extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
-    public SunProtectionItem(ArmorMaterial materialIn, Type slot, Properties builder) {
-        super(materialIn, slot, builder);
+    public HatItem(ArmorMaterial materialIn, Properties builder) {
+        super(materialIn, Type.HELMET, builder);
     }
 
     @Override
@@ -47,7 +48,9 @@ public class SunProtectionItem extends ArmorItem implements GeoItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
-        tooltip.add(Component.translatable("jcraft.sunprotection.desc"));
+        if (getDefaultInstance().is(JTagRegistry.PROTECTS_FROM_SUN)) {
+            tooltip.add(Component.translatable("jcraft.sunprotection.desc"));
+        }
         super.appendHoverText(stack, world, tooltip, context);
     }
 

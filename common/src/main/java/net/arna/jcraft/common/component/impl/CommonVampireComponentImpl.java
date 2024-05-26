@@ -2,10 +2,10 @@ package net.arna.jcraft.common.component.impl;
 
 import lombok.Getter;
 import net.arna.jcraft.common.component.living.CommonVampireComponent;
-import net.arna.jcraft.common.item.SunProtectionItem;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -54,7 +54,7 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
             return;
         }
 
-        if (world.isDay() && !(entity.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof SunProtectionItem) && world.canSeeSky(entity.blockPosition())) {
+        if (world.isDay() && !(entity.getItemBySlot(EquipmentSlot.HEAD).is(JTagRegistry.PROTECTS_FROM_SUN)) && world.canSeeSky(entity.blockPosition())) {
             entity.setSecondsOnFire(1);
         }
 
