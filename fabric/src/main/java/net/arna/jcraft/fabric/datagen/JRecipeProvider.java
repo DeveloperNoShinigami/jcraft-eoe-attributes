@@ -195,6 +195,16 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('R', Items.RED_DYE)
                 .unlockedBy("has_leather_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER_HELMET))
                 .save(exporter);
+        // pucci's hat
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.PUCCIS_HAT.get())
+                .pattern("BNB")
+                .pattern("LCL")
+                .define('B', Items.BLACK_DYE)
+                .define('C', Items.LEATHER_HELMET)
+                .define('L', Items.LEATHER)
+                .define('N', Items.GOLD_NUGGET)
+                .unlockedBy("has_leather_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER_HELMET))
+                .save(exporter);
         // blood bottle
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.BLOOD_BOTTLE.get())
                 .pattern(" B ")

@@ -4,6 +4,7 @@ import mod.azure.azurelib.animatable.GeoItem;
 import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import net.arna.jcraft.client.renderer.armor.KarsArmorRenderer;
+import net.arna.jcraft.client.renderer.armor.PuccisHatRenderer;
 import net.arna.jcraft.client.renderer.armor.RedHatRenderer;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
@@ -83,6 +84,9 @@ public class HatItem extends ArmorItem implements GeoItem {
                     }
                     if (itemStack.is(JItemRegistry.RED_HAT.get())) {
                         this.renderer = new RedHatRenderer();
+                    }
+                    if (itemStack.is(JItemRegistry.PUCCIS_HAT.get())) {
+                        this.renderer = new PuccisHatRenderer();
                     }
                 }
 

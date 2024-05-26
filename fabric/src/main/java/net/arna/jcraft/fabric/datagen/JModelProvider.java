@@ -51,6 +51,7 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.KQ_COIN.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.LIVING_ARROW.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(JItemRegistry.RED_HAT.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.PUCCIS_HAT.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.REQUIEM_ARROW.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.REQUIEM_RUBY.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(JItemRegistry.SINNERS_SOUL.get(), ModelTemplates.FLAT_ITEM);

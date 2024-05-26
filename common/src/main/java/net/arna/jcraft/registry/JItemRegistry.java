@@ -67,8 +67,8 @@ public interface JItemRegistry {
     RegistrySupplier<Item> DIO_CAPE = register("dio_cape", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
 
     RegistrySupplier<Item> KARS_HEADWRAP = register("kars_headwrap", () -> new HatItem(ArmorMaterials.IRON, settings()));
-
     RegistrySupplier<Item> RED_HAT = register("red_hat", () -> new HatItem(ArmorMaterials.IRON, settings()));
+    RegistrySupplier<Item> PUCCIS_HAT = register("puccis_hat", () -> new HatItem(ArmorMaterials.IRON, settings()));
 
     RegistrySupplier<Item> STONE_MASK = register("stone_mask", () -> new StoneMaskItem(ArmorMaterials.CHAIN, ArmorItem.Type.HELMET, settings()));
 

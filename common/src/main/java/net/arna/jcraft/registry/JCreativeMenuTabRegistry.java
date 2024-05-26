@@ -59,6 +59,7 @@ public interface JCreativeMenuTabRegistry {
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.STONE_MASK.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.RED_HAT.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.KARS_HEADWRAP.get());
+            output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.PUCCIS_HAT.get());
         });
         // ingredients
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.INGREDIENTS.location()), (flags, output, canUseGameMasterBlocks) -> {
@@ -127,6 +128,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.STONE_MASK.get());
                     entries.accept(JItemRegistry.RED_HAT.get());
                     entries.accept(JItemRegistry.KARS_HEADWRAP.get());
+                    entries.accept(JItemRegistry.PUCCIS_HAT.get());
                     entries.accept(JItemRegistry.COFFIN_BLOCK.get());
                     // cosplay
                     entries.accept(JItemRegistry.JOTARO_CAP.get());
