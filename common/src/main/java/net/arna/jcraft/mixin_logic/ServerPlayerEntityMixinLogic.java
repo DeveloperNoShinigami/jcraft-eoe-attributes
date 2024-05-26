@@ -58,7 +58,7 @@ public class ServerPlayerEntityMixinLogic {
     }
 
     public static void jcraft$dropItem(ServerPlayer serverPlayer, ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
-        if (!JUtils.canAct(serverPlayer)) {
+        if (!JUtils.canAct(serverPlayer) && serverPlayer.isAlive()) {
             cir.cancel();
         }
     }
