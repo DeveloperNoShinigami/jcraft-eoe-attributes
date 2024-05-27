@@ -55,7 +55,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
@@ -103,7 +102,7 @@ public final class JCraft {
     public static final GameRules.Key<GameRules.BooleanValue> KEEP_STAND = GameRules.register("keepStand", GameRules.Category.MISC, GameRules.BooleanValue.create(true));
     public static final GameRules.Key<GameRules.BooleanValue> KEEP_SPEC = GameRules.register("keepSpec", GameRules.Category.MISC, GameRules.BooleanValue.create(true));
     //public static GameRules.Key<GameRules.IntRule> DAMAGE_MULT = GameRuleRegistry.register("jcraftDamageMult", GameRules.Category.MISC, GameRuleFactory.createIntRule(0, 0, 100));
-
+    public static final GameRules.Key<GameRules.IntegerValue> STAND_ARROW_BASE_DAMAGE = GameRules.register("standArrowBaseDamage", GameRules.Category.MISC, GameRules.IntegerValue.create(2));
 
     // Dimensional travel bullshit
     /**
