@@ -110,6 +110,8 @@ public interface JItemRegistry {
             () -> new BlockItem(JBlockRegistry.HOT_SAND_BLOCK.get(), settings()));
     RegistrySupplier<Item> CINDERELLA_GREEN_BLOCK = register("cinderella_green_block",
             () -> new BlockItem(JBlockRegistry.CINDERELLA_GREEN_BLOCK.get(), settings()));
+    RegistrySupplier<Item> SOUL_WOOD_BLOCK = register("soul_wood_block",
+            () -> new BlockItem(JBlockRegistry.SOUL_WOOD_BLOCK.get(), settings()));
     RegistrySupplier<Item> COFFIN_BLOCK = register("coffin",
             () -> new BlockItem(JBlockRegistry.COFFIN_BLOCK.get(), settings()));
 

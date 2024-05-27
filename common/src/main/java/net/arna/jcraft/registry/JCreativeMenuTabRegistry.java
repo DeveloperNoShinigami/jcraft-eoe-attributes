@@ -21,11 +21,13 @@ public interface JCreativeMenuTabRegistry {
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.GOLD_BLOCK, JItemRegistry.STELLAR_IRON_BLOCK.get());
             output.acceptBefore(Items.SEA_LANTERN, JItemRegistry.CINDERELLA_GREEN_BLOCK.get());
+            output.acceptBefore(Items.CRIMSON_STEM, JItemRegistry.SOUL_WOOD_BLOCK.get());
         });
         // natural blocks
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.NATURAL_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptAfter(Items.SANDSTONE, JItemRegistry.FOOLISH_SAND_BLOCK.get());
             output.acceptAfter(JItemRegistry.FOOLISH_SAND_BLOCK.get(), JItemRegistry.HOT_SAND_BLOCK.get());
+            output.acceptBefore(Items.MUSHROOM_STEM, JItemRegistry.SOUL_WOOD_BLOCK.get());
             output.acceptBefore(Items.NETHER_GOLD_ORE, JItemRegistry.METEORITE_IRON_ORE_BLOCK.get());
             output.acceptBefore(Items.OBSIDIAN, JItemRegistry.METEORITE_BLOCK.get());
             output.acceptAfter(Items.SOUL_SOIL, JItemRegistry.SOUL_BLOCK.get());
@@ -119,6 +121,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.CINDERELLA_GREEN_BLOCK.get());
                     entries.accept(JItemRegistry.SINNERS_SOUL.get());
                     entries.accept(JItemRegistry.SOUL_BLOCK.get());
+                    entries.accept(JItemRegistry.SOUL_WOOD_BLOCK.get());
                     entries.accept(JItemRegistry.KNIFE.get());
                     entries.accept(JItemRegistry.KNIFEBUNDLE.get());
                     // spec items + related except blood bottles

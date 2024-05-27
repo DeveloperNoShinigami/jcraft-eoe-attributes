@@ -10,6 +10,7 @@ import net.arna.jcraft.common.block.SoulBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -47,6 +48,8 @@ public interface JBlockRegistry {
             .sound(SoundType.SAND)
     ));
     RegistrySupplier<Block> CINDERELLA_GREEN_BLOCK = BLOCK_REGISTRY.register("cinderella_green_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.GREEN_TERRACOTTA)
+    ));
+    RegistrySupplier<Block> SOUL_WOOD_BLOCK = BLOCK_REGISTRY.register("soul_wood_block", () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WOOD)
     ));
     RegistrySupplier<Block> COFFIN_BLOCK = BLOCK_REGISTRY.register("coffin", () -> new CoffinBlock(BlockBehaviour.Properties.of().sound(SoundType.WOOD).noOcclusion()));
 
