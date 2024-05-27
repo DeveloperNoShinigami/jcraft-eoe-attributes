@@ -23,3 +23,6 @@ accessible field net/minecraft/client/renderer/ShaderInstance uniformMap Ljava/u
 accessible field net/minecraft/client/renderer/ShaderInstance uniforms Ljava/util/List;
 accessible field net/minecraft/world/entity/monster/Witch attackPlayersGoal Lnet/minecraft/world/entity/ai/goal/target/NearestAttackableWitchTargetGoal;
 accessible method net/minecraft/client/renderer/item/ItemProperties register (Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/item/ClampedItemPropertyFunction;)V
+accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
+accessible field net/minecraft/server/level/ChunkMap$TrackedEntity seenBy Ljava/util/Set;
+accessible field net/minecraft/server/level/ChunkMap entityMap Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;

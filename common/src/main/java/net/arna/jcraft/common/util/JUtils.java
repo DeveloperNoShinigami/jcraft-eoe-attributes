@@ -14,8 +14,6 @@ import net.arna.jcraft.common.network.s2c.JExplosionPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.splatter.JSplatterManager;
-import net.arna.jcraft.mixin.EntityTrackerAccessor;
-import net.arna.jcraft.mixin.ThreadedAnvilChunkStorageAccessor;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
@@ -646,11 +644,11 @@ public final class JUtils {
 
         if (manager instanceof ServerChunkCache) {
             ChunkMap storage = ((ServerChunkCache) manager).chunkMap;
-            EntityTrackerAccessor tracker = ((ThreadedAnvilChunkStorageAccessor) storage).getEntityMap().get(entity.getId());
+            ChunkMap.TrackedEntity tracker = storage.entityMap.get(entity.getId());
 
             // return an immutable collection to guard against accidental removals.
             if (tracker != null) {
-                return Collections.unmodifiableCollection(tracker.getPlayerMap()
+                return Collections.unmodifiableCollection(tracker.seenBy
                         .stream().map(ServerPlayerConnection::getPlayer).collect(Collectors.toSet()));
             }
 
