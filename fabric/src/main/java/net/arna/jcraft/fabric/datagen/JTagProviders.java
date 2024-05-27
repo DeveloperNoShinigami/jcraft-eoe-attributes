@@ -59,6 +59,7 @@ public class JTagProviders {
 
             getOrCreateRawBuilder(ItemTags.BEACON_PAYMENT_ITEMS).addElement(JItemRegistry.STELLAR_IRON_INGOT.getId());
             getOrCreateRawBuilder(ItemTags.BOOKSHELF_BOOKS).addElement(JItemRegistry.DIOS_DIARY.getId());
+            getOrCreateRawBuilder(ItemTags.SOUL_FIRE_BASE_BLOCKS).addElement(JItemRegistry.SOUL_BLOCK.getId());
 
             getOrCreateRawBuilder(JTagRegistry.SOUL_LOG_ITEMS).addElement(JItemRegistry.SOUL_WOOD_BLOCK.getId());
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.KARS_HEADWRAP.getId());
