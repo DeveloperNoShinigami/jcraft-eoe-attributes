@@ -471,6 +471,13 @@ public interface JEntityTypeRegistry {
             ).sized(0.6f, 1.8f).build("atum")
     );
 
+    RegistrySupplier<EntityType<ChariotRequiemEntity>> CHARIOT_REQUIEM = ENTITY_TYPE_REGISTRY.register(JCraft.id("chariot_requiem"),
+            () -> EntityType.Builder.of(
+                    WorldOnlyEntityFactory.from(ChariotRequiemEntity::new),
+                    MobCategory.CREATURE
+            ).sized(0.6f, 1.8f).build("chariot_requiem")
+    );
+
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
         EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
@@ -498,6 +505,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(CINDERELLA, CinderellaEntity::createMobAttributes);
         EntityAttributeRegistry.register(OSIRIS, OsirisEntity::createMobAttributes);
         EntityAttributeRegistry.register(ATUM, AtumEntity::createMobAttributes);
+        EntityAttributeRegistry.register(CHARIOT_REQUIEM, ChariotRequiemEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(PURPLE_HAZE, () -> AbstractPurpleHazeEntity.createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.55));

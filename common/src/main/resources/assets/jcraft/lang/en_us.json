@@ -255,6 +255,8 @@
   "entity.jcraft.twoh.info.con2": "unsafe pressure",
   "entity.jcraft.twoh.info.con3": "committal",
   "entity.jcraft.twoh.info.con4": "extremely expensive timestop setup",
+  "entity.jcraft.chariot_requiem": "Silver Chariot Requiem",
+  "entity.jcraft.chariot_requiem.info.desc": "Undescribed",
   "entity.jcraft.playerclone": "Clone",
   "entity.jcraft.playerclone_slim": "Clone",
   "entity.jcraft.knife": "Knife",
