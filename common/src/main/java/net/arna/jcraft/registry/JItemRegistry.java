@@ -83,6 +83,8 @@ public interface JItemRegistry {
 
     RegistrySupplier<Item> STELLAR_IRON_INGOT = register("stellar_iron_ingot", () -> new Item(settings()));
     RegistrySupplier<Item> STAND_ARROWHEAD = register("stand_arrowhead", () -> new Item(settings()));
+    RegistrySupplier<Item> PRISON_KEY = register("prison_key", () -> new Item(settings()));
+    RegistrySupplier<Item> PLANKTON_VIAL = register("plankton_vial", () -> new Item(settings()));
 
     int BASE_COLOR = 0xdfa244;
     int SEASON_3_COLOR = 0x8325c3;

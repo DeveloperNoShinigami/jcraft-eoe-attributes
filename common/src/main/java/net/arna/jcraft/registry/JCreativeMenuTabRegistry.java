@@ -74,6 +74,7 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(Items.GLASS_BOTTLE, JItemRegistry.BLOOD_BOTTLE.get());
             output.acceptBefore(Items.WHITE_DYE, JItemRegistry.SINNERS_SOUL.get());
             output.acceptBefore(Items.WHITE_DYE, JItemRegistry.STAND_ARROWHEAD.get());
+            output.acceptBefore(Items.WHITE_DYE, JItemRegistry.PRISON_KEY.get());
             output.acceptBefore(Items.WHITE_DYE, JItemRegistry.CINDERELLA_MASK.get());
             output.acceptBefore(Items.BOWL, JItemRegistry.KQ_COIN.get());
         });
@@ -82,6 +83,7 @@ public interface JCreativeMenuTabRegistry {
             final ItemStack bloodBottle = new ItemStack(JItemRegistry.BLOOD_BOTTLE.get());
             bloodBottle.getOrCreateTag().putFloat("Blood", 16f);
             output.acceptBefore(Items.HONEY_BOTTLE, bloodBottle);
+            output.acceptBefore(Items.HONEY_BOTTLE, JItemRegistry.PLANKTON_VIAL.get());
         });
         // spawn eggs
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.SPAWN_EGGS.location()), (flags, output, canUseGameMasterBlocks) -> {
@@ -124,6 +126,8 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.SOUL_WOOD_BLOCK.get());
                     entries.accept(JItemRegistry.KNIFE.get());
                     entries.accept(JItemRegistry.KNIFEBUNDLE.get());
+                    entries.accept(JItemRegistry.PRISON_KEY.get());
+                    entries.accept(JItemRegistry.PLANKTON_VIAL.get());
                     // spec items + related except blood bottles
                     entries.accept(JItemRegistry.ANUBIS_SHEATHED.get());
                     entries.accept(JItemRegistry.ANUBIS.get());
