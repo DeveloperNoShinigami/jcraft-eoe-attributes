@@ -33,6 +33,11 @@ public interface JBlockRegistry {
             .strength(6.0f, 1200f)
             .sound(SoundType.ANCIENT_DEBRIS)
     ));
+    RegistrySupplier<Block> POLISHED_METEORITE_BLOCK = BLOCK_REGISTRY.register("polished_meteorite_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
+            .requiresCorrectToolForDrops()
+            .strength(6.0f, 1200f)
+            .sound(SoundType.ANCIENT_DEBRIS)
+    ));
     RegistrySupplier<Block> METEORITE_IRON_ORE_BLOCK = BLOCK_REGISTRY.register("meteorite_iron_ore_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_ORE)
             .requiresCorrectToolForDrops()
             .strength(9.0f, 1200f)

@@ -24,6 +24,13 @@ public class JRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(Consumer<FinishedRecipe> exporter) {
+        // polished meteorite block
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JItemRegistry.POLISHED_METEORITE_BLOCK.get(), 4)
+                .pattern("BB")
+                .pattern("BB")
+                .define('B', JItemRegistry.METEORITE_BLOCK.get())
+                .unlockedBy("has_block", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.POLISHED_METEORITE_BLOCK.get()))
+                .save(exporter);
         // stellar iron ingot from smelting
         SimpleCookingRecipeBuilder.smelting(
                         Ingredient.of(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()),

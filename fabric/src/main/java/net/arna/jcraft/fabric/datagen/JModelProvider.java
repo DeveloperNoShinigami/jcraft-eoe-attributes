@@ -23,6 +23,7 @@ public class JModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockModelGenerators generator) {
         generator.createTrivialCube(JBlockRegistry.FOOLISH_SAND_BLOCK.get());
         generator.createTrivialCube(JBlockRegistry.METEORITE_BLOCK.get());
+        generator.createTrivialCube(JBlockRegistry.POLISHED_METEORITE_BLOCK.get());
         generator.createTrivialCube(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get());
         generator.createTrivialCube(JBlockRegistry.SOUL_BLOCK.get());
         generator.createRotatedVariantBlock(JBlockRegistry.HOT_SAND_BLOCK.get());

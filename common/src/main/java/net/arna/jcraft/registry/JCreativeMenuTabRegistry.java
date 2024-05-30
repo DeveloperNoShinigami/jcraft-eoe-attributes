@@ -19,6 +19,8 @@ public interface JCreativeMenuTabRegistry {
         JCraft.CREATIVE_TAB_REGISTRY.register("general", JCreativeMenuTabRegistry::createJcraftItemGroup);
         // building blocks
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptBefore(Items.BRICKS, JItemRegistry.METEORITE_BLOCK.get());
+            output.acceptBefore(Items.BRICKS, JItemRegistry.POLISHED_METEORITE_BLOCK.get());
             output.acceptBefore(Items.GOLD_BLOCK, JItemRegistry.STELLAR_IRON_BLOCK.get());
             output.acceptBefore(Items.SEA_LANTERN, JItemRegistry.CINDERELLA_GREEN_BLOCK.get());
             output.acceptBefore(Items.CRIMSON_STEM, JItemRegistry.SOUL_WOOD_BLOCK.get());
@@ -102,6 +104,7 @@ public interface JCreativeMenuTabRegistry {
                 .displayItems((displayContext, entries) -> {
                     // everything up to arrows
                     entries.accept(JItemRegistry.METEORITE_BLOCK.get());
+                    entries.accept(JItemRegistry.POLISHED_METEORITE_BLOCK.get());
                     entries.accept(JItemRegistry.METEORITE_IRON_ORE_BLOCK.get());
                     entries.accept(JItemRegistry.STELLAR_IRON_INGOT.get());
                     entries.accept(JItemRegistry.STELLAR_IRON_BLOCK.get());

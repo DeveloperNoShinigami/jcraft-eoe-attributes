@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "jcraft:meteorite_block",
+    "jcraft:polished_meteorite_block",
     "jcraft:meteorite_iron_ore_block"
   ]
 }

@@ -34,6 +34,7 @@ public class JLootTableProviders {
         @Override
         public void generate() {
             dropSelf(JBlockRegistry.METEORITE_BLOCK.get());
+            dropSelf(JBlockRegistry.POLISHED_METEORITE_BLOCK.get());
             dropSelf(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get());
             dropSelf(JBlockRegistry.SOUL_BLOCK.get());
             dropSelf(JBlockRegistry.HOT_SAND_BLOCK.get());

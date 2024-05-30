@@ -10,6 +10,7 @@
 * added Trimmed as included (i.e. you don't need to download it) to support custom armor trims
 ### General Changes
 #### Blocks & Items
+* added Polished Meteorite Block
 * added Hot Sand (like Sand and Magma combined)
 * added Stellar Iron Block (crafted from Stellar Iron Ingot)
 * added Green Cindarella Block (based on Green Terracotta)
