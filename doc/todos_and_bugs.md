@@ -31,6 +31,10 @@ Modify the hitboxes to match the models of:
 ### Translations
 * move the move names from literals to translatables
 
+### Misc
+* `display` of Shiv
+* attack and speed modifier of Shiv must be balanced
+
 ### Arch port
 https://trello.com/b/GFOQk6nR/arch-port-1201
 

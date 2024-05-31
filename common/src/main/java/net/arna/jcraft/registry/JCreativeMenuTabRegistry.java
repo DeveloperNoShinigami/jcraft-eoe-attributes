@@ -45,6 +45,7 @@ public interface JCreativeMenuTabRegistry {
         });
         // combat
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.COMBAT.location()), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptBefore(Items.WOODEN_SWORD, JItemRegistry.SHIV.get());
             output.acceptBefore(Items.WOODEN_AXE, JItemRegistry.ANUBIS_SHEATHED.get());
             output.acceptBefore(Items.BOW, JItemRegistry.KNIFE.get());
             output.acceptBefore(Items.BOW, JItemRegistry.KNIFEBUNDLE.get());
@@ -131,6 +132,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.KNIFEBUNDLE.get());
                     entries.accept(JItemRegistry.PRISON_KEY.get());
                     entries.accept(JItemRegistry.PLANKTON_VIAL.get());
+                    entries.accept(JItemRegistry.SHIV.get());
                     // spec items + related except blood bottles
                     entries.accept(JItemRegistry.ANUBIS_SHEATHED.get());
                     entries.accept(JItemRegistry.ANUBIS.get());

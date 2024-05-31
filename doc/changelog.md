@@ -16,7 +16,7 @@
 * added Green Cindarella Block (based on Green Terracotta)
 * added Soul Wood (currently unobtainable)
 * added Pucci's hat (protects from the sun)
-* added Prison Key and Plankton Vial (currently unobtainable)
+* added Prison Key, Plankton Vial, Shiv (currently unobtainable)
 * Sinner's Block can now be crafted back into Sinner's Souls
 * Sinner's Block now activates Soul Speed and supports Soul Fire
 * Stellar Iron Ingot can now be used as beacon payment
@@ -50,5 +50,6 @@
 ### Known Bugs
 #### General
 * Horus is not fully implemented
+* Shiv is displayed incorrectly
 #### Forge
 * setting your stand to CHARIOT_REQUIEM crashes the game
