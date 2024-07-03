@@ -25,11 +25,11 @@ public class CoffinTileEntity extends BlockEntity implements GeoBlockEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController(this, "controller", 30, this::predicate));
+        controllers.add(new AnimationController<>(this, "controller", 30, this::predicate));
     }
 
-    private PlayState predicate(AnimationState animationState) {
-        if (!level.getBlockState(getBlockPos()).is(JBlockRegistry.COFFIN_BLOCK.get())) {
+    private PlayState predicate(AnimationState<?> animationState) {
+        if (level == null || !level.getBlockState(getBlockPos()).is(JBlockRegistry.COFFIN_BLOCK.get())) {
             return PlayState.STOP;
         }
 

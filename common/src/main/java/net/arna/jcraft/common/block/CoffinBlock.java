@@ -28,17 +28,19 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+// Actual sleep logic is handled in JServerEvents
 public class CoffinBlock extends BedBlock {
     public CoffinBlock(Properties settings) {
         super(DyeColor.RED, settings);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public @NotNull InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (world.isClientSide) {
             return InteractionResult.CONSUME;
         } else {
@@ -56,19 +58,26 @@ public class CoffinBlock extends BedBlock {
                 }
 
                 Vec3 vec3d = pos.getCenter();
-                world.explode(null, world.damageSources().badRespawnPointExplosion(vec3d), null, (double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5, 5.0F, true, Level.ExplosionInteraction.BLOCK);
+                world.explode(null, world.damageSources().badRespawnPointExplosion(vec3d), null,
+                        (double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5, 5.0F, true, Level.ExplosionInteraction.BLOCK);
             } else if (state.getValue(OCCUPIED)) {
                 if (!kickVillagerOutOfBed(world, pos)) {
                     player.displayClientMessage(Component.translatable("block.minecraft.bed.occupied"), true);
                 }
             } else {
                 Either<Player.BedSleepingProblem, Unit> sleep = player.startSleepInBed(pos);
-                if (sleep.right().isPresent()) {
+                sleep.ifRight(unit -> {
                     Vec3 bedPos = player.position().add(0, -0.2, 0).add(
                             Vec3.atLowerCornerOf(facing.getNormal()).scale(1.1)
                     );
                     player.teleportTo(bedPos.x, bedPos.y, bedPos.z);
-                }
+                });
+
+                sleep.ifLeft(problem -> {
+                    if (problem.getMessage() != null) {
+                        player.displayClientMessage(problem.getMessage(), true);
+                    }
+                });
             }
 
             return InteractionResult.SUCCESS;
@@ -97,12 +106,12 @@ public class CoffinBlock extends BedBlock {
      */
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return JBlockEntityTypeRegistry.COFFIN_TILE.get().create(pos, state);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return switch (state.getValue(FACING)) {
             case NORTH -> Block.box(0, 0, -16, 16, 1, 16);
             case SOUTH -> Block.box(0, 0, 0, 16, 1, 32);
@@ -113,7 +122,7 @@ public class CoffinBlock extends BedBlock {
 
     // Simplified from Block#onBreak
     @Override
-    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+    public void playerWillDestroy(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
         spawnDestroyParticles(world, player, pos, state);
         world.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
         if (!player.getAbilities().instabuild) {
@@ -122,12 +131,13 @@ public class CoffinBlock extends BedBlock {
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void setPlacedBy(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity placer, @NotNull ItemStack itemStack) {
     }
 
     // Block#getStateForNeighborUpdate
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public @NotNull BlockState updateShape(@NotNull BlockState state, @NotNull Direction direction, @NotNull BlockState neighborState,
+                                           @NotNull LevelAccessor world, @NotNull BlockPos pos, @NotNull BlockPos neighborPos) {
         return state;
     }
 }

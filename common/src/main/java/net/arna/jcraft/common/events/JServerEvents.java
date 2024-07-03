@@ -579,7 +579,7 @@ public class JServerEvents {
             if (state.is(JBlockRegistry.COFFIN_BLOCK.get())) {
                 if (serverWorld.sleepStatus.areEnoughSleeping(serverWorld.getGameRules().getInt(GameRules.RULE_PLAYERS_SLEEPING_PERCENTAGE))
                         && serverWorld.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)) {
-                    serverWorld.setDayTime(13000);
+                    serverWorld.setDayTime(serverWorld.getDayTime() / 24000 * 24000 + 13000); // round up to nearest day and set to night
                 }
                 serverWorld.setBlockAndUpdate(sleepingPos, state.setValue(CoffinBlock.OCCUPIED, false));
             }
