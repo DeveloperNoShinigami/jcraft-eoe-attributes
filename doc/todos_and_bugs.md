@@ -10,6 +10,7 @@
 * Atum
 * Chariot Requiem
 * Diver Down
+* Dragon's Dream
 
 ### Hitboxes
 Modify the hitboxes to match the models of:
@@ -21,6 +22,7 @@ Modify the hitboxes to match the models of:
 * Atum
 * Chariot Requiem
 * Diver Down
+* Dragon's Dream
 
 ### Descriptions
 * C-Moon
@@ -30,6 +32,7 @@ Modify the hitboxes to match the models of:
 * Atum
 * Chariot Requiem
 * Diver Down
+* Dragon's Dream
 
 ### Translations
 * move the move names from literals to translatables
@@ -37,6 +40,7 @@ Modify the hitboxes to match the models of:
 ### Misc
 * `display` of Shiv
 * attack and speed modifier of Shiv must be balanced
+* Dragon's Dream's head is weird
 
 ### Arch port
 https://trello.com/b/GFOQk6nR/arch-port-1201

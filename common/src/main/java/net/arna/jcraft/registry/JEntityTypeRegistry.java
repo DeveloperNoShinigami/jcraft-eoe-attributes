@@ -485,6 +485,13 @@ public interface JEntityTypeRegistry {
             ).sized(0.6f, 1.8f).build("diver_down")
     );
 
+    RegistrySupplier<EntityType<DragonsDreamEntity>> DRAGONS_DREAM = ENTITY_TYPE_REGISTRY.register(JCraft.id("dragons_dream"),
+            () -> EntityType.Builder.of(
+                    WorldOnlyEntityFactory.from(DragonsDreamEntity::new),
+                    MobCategory.CREATURE
+            ).sized(0.6f, 1.8f).build("dragons_dream")
+    );
+
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
         EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
@@ -514,6 +521,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(ATUM, AtumEntity::createMobAttributes);
         EntityAttributeRegistry.register(DIVER_DOWN, DiverDownEntity::createMobAttributes);
         EntityAttributeRegistry.register(CHARIOT_REQUIEM, ChariotRequiemEntity::createMobAttributes);
+        EntityAttributeRegistry.register(DRAGONS_DREAM, DragonsDreamEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(PURPLE_HAZE, () -> AbstractPurpleHazeEntity.createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.55));

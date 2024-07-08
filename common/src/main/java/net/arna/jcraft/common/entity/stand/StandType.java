@@ -69,6 +69,7 @@ public enum StandType {
     ATUM(JEntityTypeRegistry.ATUM.get(), AtumEntity::new, "atum", false, false),
     CHARIOT_REQUIEM(JEntityTypeRegistry.CHARIOT_REQUIEM.get(), ChariotRequiemEntity::new, "chariot_requiem", false, false),
     DIVER_DOWN(JEntityTypeRegistry.DIVER_DOWN.get(), DiverDownEntity::new, "diver_down", false, false),
+    DRAGONS_DREAM(JEntityTypeRegistry.DRAGONS_DREAM.get(), DragonsDreamEntity::new, "dragons_dream", false, false),
     ;
 
     /**
