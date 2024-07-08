@@ -64,6 +64,7 @@ public interface JEntityRendererRegister {
         EntityRendererRegistry.register(JEntityTypeRegistry.CINDERELLA, CinderellaRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.OSIRIS, OsirisRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.ATUM, AtumRenderer::new);
+        EntityRendererRegistry.register(JEntityTypeRegistry.DIVER_DOWN, DiverDownRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.CHARIOT_REQUIEM, ChariotRequiemRenderer::new);
 
         EntityRendererRegistry.register(JEntityTypeRegistry.LASER_PROJECTILE, LaserProjectileRenderer::new);

@@ -9,6 +9,7 @@
 * Darby Younger
 * Atum
 * Chariot Requiem
+* Diver Down
 
 ### Hitboxes
 Modify the hitboxes to match the models of:
@@ -19,6 +20,7 @@ Modify the hitboxes to match the models of:
 * Darby Younger
 * Atum
 * Chariot Requiem
+* Diver Down
 
 ### Descriptions
 * C-Moon
@@ -27,6 +29,7 @@ Modify the hitboxes to match the models of:
 * Osiris
 * Atum
 * Chariot Requiem
+* Diver Down
 
 ### Translations
 * move the move names from literals to translatables

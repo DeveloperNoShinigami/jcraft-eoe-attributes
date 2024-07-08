@@ -68,6 +68,7 @@ public enum StandType {
     OSIRIS(JEntityTypeRegistry.OSIRIS.get(), OsirisEntity::new, "osiris", false, false),
     ATUM(JEntityTypeRegistry.ATUM.get(), AtumEntity::new, "atum", false, false),
     CHARIOT_REQUIEM(JEntityTypeRegistry.CHARIOT_REQUIEM.get(), ChariotRequiemEntity::new, "chariot_requiem", false, false),
+    DIVER_DOWN(JEntityTypeRegistry.DIVER_DOWN.get(), DiverDownEntity::new, "diver_down", false, false),
     ;
 
     /**

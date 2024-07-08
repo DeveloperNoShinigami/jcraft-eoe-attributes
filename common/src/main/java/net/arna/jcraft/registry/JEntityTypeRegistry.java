@@ -478,6 +478,13 @@ public interface JEntityTypeRegistry {
             ).sized(0.6f, 1.8f).build("chariot_requiem")
     );
 
+    RegistrySupplier<EntityType<DiverDownEntity>> DIVER_DOWN = ENTITY_TYPE_REGISTRY.register(JCraft.id("diver_down"),
+            () -> EntityType.Builder.of(
+                    WorldOnlyEntityFactory.from(DiverDownEntity::new),
+                    MobCategory.CREATURE
+            ).sized(0.6f, 1.8f).build("diver_down")
+    );
+
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
         EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
@@ -505,6 +512,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(CINDERELLA, CinderellaEntity::createMobAttributes);
         EntityAttributeRegistry.register(OSIRIS, OsirisEntity::createMobAttributes);
         EntityAttributeRegistry.register(ATUM, AtumEntity::createMobAttributes);
+        EntityAttributeRegistry.register(DIVER_DOWN, DiverDownEntity::createMobAttributes);
         EntityAttributeRegistry.register(CHARIOT_REQUIEM, ChariotRequiemEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(PURPLE_HAZE, () -> AbstractPurpleHazeEntity.createMobAttributes()
