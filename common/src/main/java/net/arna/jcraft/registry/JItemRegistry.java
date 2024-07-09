@@ -126,10 +126,6 @@ public interface JItemRegistry {
     RegistrySupplier<Item> COFFIN_BLOCK = register("coffin",
             () -> new BlockItem(JBlockRegistry.COFFIN_BLOCK.get(), settings()));
 
-    private void register() {
-
-    }
-
     static RegistrySupplier<Item> register(String id, Supplier<Item> supplier) {
         var item = ITEM_REGISTRY.register(id, supplier);
         ITEMS.put(item, JCraft.id(id));
@@ -140,7 +136,5 @@ public interface JItemRegistry {
         return new Item.Properties();
     }
 
-    static void init() {
-
-    }
+    static void init() {}
 }

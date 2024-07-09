@@ -1,6 +1,8 @@
 package net.arna.jcraft.fabric;
 
+import dev.architectury.platform.Platform;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.client.registry.JItemPropertiesRegistry;
 import net.arna.jcraft.common.argumenttype.AttackArgumentType;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
@@ -12,6 +14,7 @@ import net.arna.jcraft.common.item.LivingArrowItem;
 import net.arna.jcraft.common.item.RequiemArrowItem;
 import net.arna.jcraft.fabric.common.terrablender.JTerraFabric;
 import net.arna.jcraft.registry.JItemRegistry;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
@@ -52,5 +55,10 @@ public final class JCraftFabric implements ModInitializer {
 
 
         ((RequiemArrowItem)JItemRegistry.REQUIEM_ARROW.get()).standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
+
+
+
+        if (Platform.getEnv() != EnvType.CLIENT) return;
+        JItemPropertiesRegistry.registerItemProperties();
     }
 }

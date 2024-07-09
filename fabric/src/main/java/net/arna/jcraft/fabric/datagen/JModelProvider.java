@@ -1,9 +1,14 @@
 package net.arna.jcraft.fabric.datagen;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.data.models.model.ModelTemplate;
@@ -58,7 +63,9 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.SINNERS_SOUL.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.STAND_ARROW.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(JItemRegistry.STAND_ARROWHEAD.get(), ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(JItemRegistry.STAND_DISC.get(), ModelTemplates.FLAT_ITEM);
+
+        generateStandDiscModel(generator);
+
         generator.generateFlatItem(JItemRegistry.STELLAR_IRON_INGOT.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.STONE_MASK.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.PLANKTON_VIAL.get(), ModelTemplates.FLAT_ITEM);
@@ -68,5 +75,40 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.AYA_TSUJI_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
         generator.generateFlatItem(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
         generator.generateFlatItem(JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
+    }
+
+    private void generateStandDiscModel(ItemModelGenerators generator) {
+        // Generate a model for each stand and each skin.
+        for (StandType type : StandType.getAllStandTypes()) {
+            for (int skin = 0; skin < type.getSkinCount(); skin++) {
+                generator.generateLayeredItem(JCraft.id("item/stand_disc_" + type.getNameKey() + "_" + skin),
+                        JCraft.id("item/stand_disc"), JCraft.id("item/stands/" + type.getNameKey() + "_" + skin));
+            }
+        }
+
+        // Generate the disc model including overrides
+        // Done manually since Fabric datagen provides no way to generate overrides.
+        JsonObject model = new JsonObject();
+        model.addProperty("parent", "item/generated");
+
+        JsonObject textures = new JsonObject();
+        textures.addProperty("layer0", JCraft.id("item/stand_disc").toString());
+        model.add("textures", textures);
+
+        JsonArray overrides = new JsonArray();
+        for (StandType type : StandType.getAllStandTypes()) {
+            for (int skin = 0; skin < type.getSkinCount(); skin++) {
+                JsonObject override = new JsonObject();
+                JsonObject predicate = new JsonObject();
+                predicate.addProperty("jcraft:stand_id", type.ordinal() / (float) StandType.values().length);
+                predicate.addProperty("jcraft:stand_skin", skin / 3f);
+                override.add("predicate", predicate);
+                override.addProperty("model", JCraft.id("item/stand_disc_" + type.getNameKey() + "_" + skin).toString());
+                overrides.add(override);
+            }
+        }
+        model.add("overrides", overrides);
+
+        generator.output.accept(JCraft.id("item/stand_disc"), () -> model);
     }
 }
