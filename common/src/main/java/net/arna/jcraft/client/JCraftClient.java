@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.architectury.registry.ReloadListenerRegistry;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
-import dev.architectury.registry.client.particle.ParticleProviderRegistry;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import lombok.Getter;
@@ -15,7 +14,6 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.gravity.util.GravityChannelClient;
 import net.arna.jcraft.client.gui.hud.JCraftAbilityHud;
 import net.arna.jcraft.client.net.ClientPacketHandler;
-import net.arna.jcraft.client.particle.*;
 import net.arna.jcraft.client.registry.*;
 import net.arna.jcraft.client.renderer.effects.AttackHitboxEffectRenderer;
 import net.arna.jcraft.client.renderer.effects.TimeErasePredictionEffectRenderer;
@@ -26,7 +24,6 @@ import net.arna.jcraft.client.util.TrackedKeyBinding;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.MovementInputType;
-import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;
@@ -50,6 +47,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
@@ -103,26 +101,40 @@ public class JCraftClient {
         // Renderer registration
         JArmorRendererRegistry.registerArmorRenderers();
 
-        // Keybinding registration
-        standSummon = TrackedKeyBinding.createAndRegister("key.jcraft.standsummon", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, "key.category.jcraft");
-        heavyKey = TrackedKeyBinding.createAndRegister("key.jcraft.heavy", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, "key.category.jcraft");
-        barrageKey = TrackedKeyBinding.createAndRegister("key.jcraft.barrage", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_B, "key.category.jcraft");
-        ultKey = TrackedKeyBinding.createAndRegister("key.jcraft.ultimate", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_H, "key.category.jcraft");
-        special1Key = TrackedKeyBinding.createAndRegister("key.jcraft.special1", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.category.jcraft");
-        special2Key = TrackedKeyBinding.createAndRegister("key.jcraft.special2", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, "key.category.jcraft");
-        special3Key = TrackedKeyBinding.createAndRegister("key.jcraft.special3", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_M, "key.category.jcraft");
-        //comboBreaker = TrackingKeyBinding.createAndRegister("key.jcraft.combobreaker", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "key.category.jcraft");
-        cooldownCancel = TrackedKeyBinding.createAndRegister("key.jcraft.cooldowncancel", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_ALT, "key.category.jcraft");
-        utility = TrackedKeyBinding.createAndRegister("key.jcraft.utility", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_5, "key.category.jcraft");
-        dash = TrackedKeyBinding.createAndRegister("key.jcraft.dash", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_4, "key.category.jcraft");
-
-        menuKey = new KeyMapping("key.jcraft.menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_KP_DIVIDE, "key.category.jcraft");
-        KeyMappingRegistry.register(menuKey);
-
         ClientPacketHandler.init();
 
         AttackHitboxEffectRenderer.init();
         TimeErasePredictionEffectRenderer.init();
+    }
+
+    public static void registerKeyBindings(@Nullable Consumer<KeyMapping> register) {
+        if (register == null) register = KeyMappingRegistry::register;
+
+        // Keybinding registration
+        standSummon = TrackedKeyBinding.createAndRegister("key.jcraft.standsummon", InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_N, "key.category.jcraft", register);
+        heavyKey = TrackedKeyBinding.createAndRegister("key.jcraft.heavy", InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_R, "key.category.jcraft", register);
+        barrageKey = TrackedKeyBinding.createAndRegister("key.jcraft.barrage", InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_B, "key.category.jcraft", register);
+        ultKey = TrackedKeyBinding.createAndRegister("key.jcraft.ultimate", InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_H, "key.category.jcraft", register);
+        special1Key = TrackedKeyBinding.createAndRegister("key.jcraft.special1", InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_V, "key.category.jcraft", register);
+        special2Key = TrackedKeyBinding.createAndRegister("key.jcraft.special2", InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_G, "key.category.jcraft", register);
+        special3Key = TrackedKeyBinding.createAndRegister("key.jcraft.special3", InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_M, "key.category.jcraft", register);
+        //comboBreaker = TrackingKeyBinding.createAndRegister("key.jcraft.combobreaker", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, "key.category.jcraft");
+        cooldownCancel = TrackedKeyBinding.createAndRegister("key.jcraft.cooldowncancel", InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_RIGHT_ALT, "key.category.jcraft", register);
+        utility = TrackedKeyBinding.createAndRegister("key.jcraft.utility", InputConstants.Type.MOUSE,
+                GLFW.GLFW_MOUSE_BUTTON_5, "key.category.jcraft", register);
+        dash = TrackedKeyBinding.createAndRegister("key.jcraft.dash", InputConstants.Type.MOUSE,
+                GLFW.GLFW_MOUSE_BUTTON_4, "key.category.jcraft", register);
+
+        menuKey = new KeyMapping("key.jcraft.menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_KP_DIVIDE, "key.category.jcraft");
+        register.accept(menuKey);
     }
 
     /// TEXT HUD

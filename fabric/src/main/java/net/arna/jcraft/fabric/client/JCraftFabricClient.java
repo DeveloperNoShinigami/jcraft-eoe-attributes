@@ -6,6 +6,7 @@ import net.arna.jcraft.client.events.JClientEvents;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.particle.*;
 import net.arna.jcraft.client.registry.JEntityRendererRegister;
+import net.arna.jcraft.client.registry.JItemPropertiesRegistry;
 import net.arna.jcraft.client.registry.JModelPredicateProviderRegistry;
 import net.arna.jcraft.client.renderer.block.CoffinTileRenderer;
 import net.arna.jcraft.client.renderer.effects.*;
@@ -92,6 +93,9 @@ public final class JCraftFabricClient implements ClientModInitializer {
             out.accept(new ModelResourceLocation(new ResourceLocation(itemId + "_gui"), "inventory"));
             out.accept(new ModelResourceLocation(new ResourceLocation(itemId + "_handheld"), "inventory"));
         });
+
+        JItemPropertiesRegistry.registerItemProperties();
+        JCraftClient.registerKeyBindings(null);
 
         // Run when the MinecraftClient instance is fully initialized.
         Minecraft.getInstance().tell(EpitaphOverlay::preload);

@@ -55,10 +55,5 @@ public final class JCraftFabric implements ModInitializer {
 
 
         ((RequiemArrowItem)JItemRegistry.REQUIEM_ARROW.get()).standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
-
-
-
-        if (Platform.getEnv() != EnvType.CLIENT) return;
-        JItemPropertiesRegistry.registerItemProperties();
     }
 }

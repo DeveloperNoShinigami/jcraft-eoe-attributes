@@ -2,6 +2,7 @@ package net.arna.jcraft.forge.events;
 
 import dev.architectury.platform.Platform;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.registry.JItemPropertiesRegistry;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
@@ -11,6 +12,7 @@ import net.arna.jcraft.forge.capability.impl.player.SpecCapability;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -51,5 +53,10 @@ public class SetupEvents {
         if (Platform.getEnv() == Dist.CLIENT) {
             JItemPropertiesRegistry.registerItemProperties();
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH) // run before Arch's event
+    public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+        JCraftClient.registerKeyBindings(event::register);
     }
 }

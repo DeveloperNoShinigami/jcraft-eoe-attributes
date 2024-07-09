@@ -7,6 +7,7 @@ import lombok.Getter;
 import net.minecraft.client.KeyMapping;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * A KeyBinding that can tell you whether it was pressed this tick.
@@ -38,8 +39,13 @@ public class TrackedKeyBinding {
     }
 
     public static TrackedKeyBinding createAndRegister(String translationKey, InputConstants.Type type, int code, String category) {
+        return createAndRegister(translationKey, type, code, category, KeyMappingRegistry::register);
+    }
+
+    public static TrackedKeyBinding createAndRegister(String translationKey, InputConstants.Type type, int code, String category,
+                                                      Consumer<KeyMapping> register) {
         KeyMapping keyBinding = new KeyMapping(translationKey, type, code, category);
-        KeyMappingRegistry.register(keyBinding);
+        register.accept(keyBinding);
 
         return wrap(keyBinding);
     }
