@@ -11,6 +11,7 @@
 * Chariot Requiem
 * Diver Down
 * Dragon's Dream
+* Foo Fighters
 
 ### Hitboxes
 Modify the hitboxes to match the models of:
@@ -23,6 +24,7 @@ Modify the hitboxes to match the models of:
 * Chariot Requiem
 * Diver Down
 * Dragon's Dream
+* Foo Fighters
 
 ### Descriptions
 * C-Moon
@@ -33,6 +35,7 @@ Modify the hitboxes to match the models of:
 * Chariot Requiem
 * Diver Down
 * Dragon's Dream
+* Foo Fighters
 
 ### Translations
 * move the move names from literals to translatables
