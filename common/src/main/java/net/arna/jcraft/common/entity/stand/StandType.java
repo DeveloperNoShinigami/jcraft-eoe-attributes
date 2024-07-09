@@ -71,6 +71,7 @@ public enum StandType {
     DIVER_DOWN(JEntityTypeRegistry.DIVER_DOWN.get(), DiverDownEntity::new, "diver_down", false, false),
     DRAGONS_DREAM(JEntityTypeRegistry.DRAGONS_DREAM.get(), DragonsDreamEntity::new, "dragons_dream", false, false),
     FOO_FIGHTERS(JEntityTypeRegistry.FOO_FIGHTERS.get(), FooFightersEntity::new, "foo_fighters", false, false),
+    GOO_GOO_DOLLS(JEntityTypeRegistry.GOO_GOO_DOLLS.get(), GooGooDollsEntity::new, "goo_goo_dolls", false, false),
     ;
 
     /**

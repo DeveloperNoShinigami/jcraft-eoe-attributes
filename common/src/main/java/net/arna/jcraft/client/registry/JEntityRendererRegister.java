@@ -68,6 +68,7 @@ public interface JEntityRendererRegister {
         EntityRendererRegistry.register(JEntityTypeRegistry.CHARIOT_REQUIEM, ChariotRequiemRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.DRAGONS_DREAM, DragonsDreamRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.FOO_FIGHTERS, FooFightersRenderer::new);
+        EntityRendererRegistry.register(JEntityTypeRegistry.GOO_GOO_DOLLS, GooGooDollsRenderer::new);
 
         EntityRendererRegistry.register(JEntityTypeRegistry.LASER_PROJECTILE, LaserProjectileRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.BLOOD_PROJECTILE, BloodProjectileRenderer::new);

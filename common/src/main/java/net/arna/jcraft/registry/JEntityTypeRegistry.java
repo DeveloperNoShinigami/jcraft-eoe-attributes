@@ -499,6 +499,13 @@ public interface JEntityTypeRegistry {
             ).sized(0.6f, 1.8f).build("foo_fighters")
     );
 
+    RegistrySupplier<EntityType<GooGooDollsEntity>> GOO_GOO_DOLLS = ENTITY_TYPE_REGISTRY.register(JCraft.id("goo_goo_dolls"),
+            () -> EntityType.Builder.of(
+                    WorldOnlyEntityFactory.from(GooGooDollsEntity::new),
+                    MobCategory.CREATURE
+            ).sized(0.6f, 1.8f).build("goo_goo_dolls")
+    );
+
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
         EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
@@ -530,6 +537,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(CHARIOT_REQUIEM, ChariotRequiemEntity::createMobAttributes);
         EntityAttributeRegistry.register(DRAGONS_DREAM, DragonsDreamEntity::createMobAttributes);
         EntityAttributeRegistry.register(FOO_FIGHTERS, FooFightersEntity::createMobAttributes);
+        EntityAttributeRegistry.register(GOO_GOO_DOLLS, GooGooDollsEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(PURPLE_HAZE, () -> AbstractPurpleHazeEntity.createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.55));

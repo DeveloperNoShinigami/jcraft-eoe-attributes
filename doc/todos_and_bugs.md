@@ -12,6 +12,7 @@
 * Diver Down
 * Dragon's Dream
 * Foo Fighters
+* Goo Goo Dolls
 
 ### Hitboxes
 Modify the hitboxes to match the models of:
@@ -25,6 +26,7 @@ Modify the hitboxes to match the models of:
 * Diver Down
 * Dragon's Dream
 * Foo Fighters
+* Goo Goo Dolls
 
 ### Descriptions
 * C-Moon
@@ -36,6 +38,7 @@ Modify the hitboxes to match the models of:
 * Diver Down
 * Dragon's Dream
 * Foo Fighters
+* Goo Goo Dolls
 
 ### Translations
 * move the move names from literals to translatables
