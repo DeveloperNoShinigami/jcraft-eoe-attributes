@@ -206,6 +206,6 @@ public enum StandType {
     }
 
     public int getSkinCount() {
-        return skinNames.size();
+        return skinNames.size() + 1;
     }
 }

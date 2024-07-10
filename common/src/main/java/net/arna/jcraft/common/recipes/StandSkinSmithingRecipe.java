@@ -32,7 +32,7 @@ public class StandSkinSmithingRecipe implements SmithingRecipe {
 
         return discStack.getItem() == JItemRegistry.STAND_DISC &&
                 maskStack.getItem() == JItemRegistry.CINDERELLA_MASK &&
-                CinderellasKissEnchantment.getCKLevel(maskStack) <= standType.getSkinCount();
+                CinderellasKissEnchantment.getCKLevel(maskStack) <= standType.getSkinCount() - 1;
     }
 
     @Override

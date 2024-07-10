@@ -37,7 +37,7 @@ public class CommonStandComponentImpl implements CommonStandComponent {
             return;
         }
 
-        this.skin = Mth.clamp(skin, 0, type.getSkinCount());
+        this.skin = Mth.clamp(skin, 0, type.getSkinCount() - 1);
         sync(entity);
     }
 

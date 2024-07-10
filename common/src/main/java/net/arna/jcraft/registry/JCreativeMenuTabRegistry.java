@@ -173,12 +173,12 @@ public interface JCreativeMenuTabRegistry {
                     }
                     // stand discs
                     for (final StandType standType : StandType.getRegularStandTypes()) {
-                        for (int skin = 0; skin <= standType.getSkinCount(); skin++) {
+                        for (int skin = 0; skin < standType.getSkinCount(); skin++) {
                             entries.accept(StandDiscItem.createDiscStack(standType, skin));
                         }
                     }
                     for (final StandType standType : StandType.getEvoStandTypes()) {
-                        for (int skin = 0; skin <= standType.getSkinCount(); skin++) {
+                        for (int skin = 0; skin < standType.getSkinCount(); skin++) {
                             entries.accept(StandDiscItem.createDiscStack(standType, skin));
                         }
                     }

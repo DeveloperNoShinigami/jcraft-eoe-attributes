@@ -46,7 +46,7 @@ public class StandSkinCommand {
                 }
 
                 StandType type = stand.getStandType();
-                if (skin <= type.getSkinCount()) {
+                if (skin < type.getSkinCount()) {
                     standData.setSkin(skin);
                 }
 

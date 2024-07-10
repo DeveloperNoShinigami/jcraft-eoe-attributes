@@ -41,7 +41,7 @@ public class SetStandCommand {
         }
 
         StandType type = ctx.getArgument("stand", StandType.class);
-        if (skin > type.getSkinCount()) {
+        if (skin >= type.getSkinCount()) {
             throw INVALID_SKIN.create(type.getSkinCount());
         }
 

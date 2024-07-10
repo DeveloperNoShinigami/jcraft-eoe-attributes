@@ -310,7 +310,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     public void setSkin(int skin) {
-        if (skin < 0 || skin > getStandType().getSkinCount()) {
+        if (skin < 0 || skin >= getStandType().getSkinCount()) {
             skin = 0;
         }
         entityData.set(SKIN, skin);

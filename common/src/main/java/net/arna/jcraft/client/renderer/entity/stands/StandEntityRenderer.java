@@ -59,14 +59,13 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
 
     @Override
     public RenderType getRenderType(T animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        Minecraft mcClient = Minecraft.getInstance();
-        return mcClient.options.getCameraType().isFirstPerson() && mcClient.player != null && JUtils.getStand(mcClient.player) == animatable ?
-                RenderType.entityNoOutline(texture) : RenderType.entityTranslucent(texture);
+        return renderTypeOf(animatable, texture);
     }
 
     // Adds the ability to change render alpha
     @Override
-    public void preRender(PoseStack poseStack, T stand, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, T stand, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer,
+                          boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         float a = getAlpha(stand, partialTick);
         a *= alpha;
@@ -81,7 +80,8 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
 
 
     @Override
-    public void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource,
+                               VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.pushPose();
 
         boolean shouldSit = animatable.isPassenger() && (animatable.getVehicle() != null);

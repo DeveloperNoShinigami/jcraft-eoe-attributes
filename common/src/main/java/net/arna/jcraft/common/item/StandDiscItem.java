@@ -97,12 +97,12 @@ public class StandDiscItem extends Item {
         tooltip.add(type.getNameText().copy().withStyle(s -> s.withColor(type.isEvolution() ? ChatFormatting.LIGHT_PURPLE : ChatFormatting.GRAY)));
 
         int skin = getSkin(stack);
-        tooltip.add((skin == 0 || skin > type.getSkinCount() ? DEFAULT_SKIN : type.getSkinNames().get(skin - 1)).copy()
+        tooltip.add((skin == 0 || skin >= type.getSkinCount() ? DEFAULT_SKIN : type.getSkinNames().get(skin - 1)).copy()
                 .withStyle(s -> s.withColor(SKIN_LEVEL_COLORS[skin])));
     }
 
     public static ItemStack createDiscStack(StandType type, int skin) {
-        if (skin < 0 || skin > type.getSkinCount()) {
+        if (skin < 0 || skin >= type.getSkinCount()) {
             throw new IndexOutOfBoundsException("Skin out of bounds");
         }
 
