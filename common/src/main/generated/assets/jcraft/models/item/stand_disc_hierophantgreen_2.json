@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "jcraft:item/stand_disc",
-    "layer1": "jcraft:item/stands/hierophantgreen_2"
-  }
-}

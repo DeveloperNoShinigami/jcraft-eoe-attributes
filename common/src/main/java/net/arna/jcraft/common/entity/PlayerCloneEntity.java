@@ -41,6 +41,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
@@ -93,6 +95,15 @@ public class PlayerCloneEntity extends Monster implements RangedAttackMob, IOwna
         maxCooldown = 10;
     }
 
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(MASTER, Optional.empty());
+        entityData.define(MASTER_NAME, "");
+        entityData.define(SAND, false);
+        entityData.define(RENDER_FOR_MASTER, true);
+        entityData.define(PART_MASK, (byte) 0);
+    }
+
     public void disableDrops() {
         Arrays.fill(armorDropChances, 0.0F);
         Arrays.fill(handDropChances, 0.0F);
@@ -110,7 +121,7 @@ public class PlayerCloneEntity extends Monster implements RangedAttackMob, IOwna
     public GameProfile getGameProfile() {
         if ((gameProfile == null || gameProfile.getId() == null || gameProfile.getName() == null ||
                 !gameProfile.getId().equals(getMasterId()) || !gameProfile.getName().equals(getMasterName())) &&
-                getMasterId() != null && getMasterName() != null) {
+                getMasterId() != null) {
             gameProfile = new GameProfile(getMasterId(), getMasterName());
         }
 
@@ -143,7 +154,7 @@ public class PlayerCloneEntity extends Monster implements RangedAttackMob, IOwna
         return entityData.get(MASTER).orElse(null);
     }
 
-    public String getMasterName() {
+    public @NotNull String getMasterName() {
         return entityData.get(MASTER_NAME);
     }
 
@@ -167,15 +178,6 @@ public class PlayerCloneEntity extends Monster implements RangedAttackMob, IOwna
         return entityData.get(PART_MASK);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(MASTER, Optional.empty());
-        entityData.define(MASTER_NAME, null);
-        entityData.define(SAND, false);
-        entityData.define(RENDER_FOR_MASTER, true);
-        entityData.define(PART_MASK, (byte) 0);
-    }
-
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
@@ -197,20 +199,24 @@ public class PlayerCloneEntity extends Monster implements RangedAttackMob, IOwna
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putUUID("Master", getMasterId());
-        nbt.putString("MasterName", getMasterName());
-        nbt.putInt("DisabledSlots", disabledSlots);
-        nbt.putByte("PartMask", getPartMask());
+        if (getMasterId() != null) {
+            nbt.putUUID("Master", getMasterId());
+            nbt.putString("MasterName", getMasterName());
+            nbt.putByte("PartMask", getPartMask());
+
+            disabledSlots = nbt.getInt("DisabledSlots");
+        }
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         if (nbt.hasUUID("Master")) { // If one is here, then the rest should be too (unless the player manually modified NBT)
-            entityData.set(MASTER, Optional.ofNullable(nbt.getUUID("Master")));
+            entityData.set(MASTER, Optional.of(nbt.getUUID("Master")));
             entityData.set(MASTER_NAME, nbt.getString("MasterName"));
-            disabledSlots = nbt.getInt("DisabledSlots");
             entityData.set(PART_MASK, nbt.getByte("PartMask"));
+
+            disabledSlots = nbt.getInt("DisabledSlots");
         }
         updateAttackType();
     }

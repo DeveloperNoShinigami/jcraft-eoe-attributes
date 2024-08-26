@@ -63,6 +63,7 @@ public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
             return;
         }
 
+        // Note: KingCrimsonEntity overrides this due to some inversions, we should probably change the model later and standardize him.
         JClientUtils.animateGenericHumanoid(this, animatable, animatable.getUser(), animationState.getPartialTick(),
                 true, true, torsoPitchOffset, headPitchOffset, velInfluence);
     }

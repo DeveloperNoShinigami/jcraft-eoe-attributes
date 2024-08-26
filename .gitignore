@@ -47,3 +47,5 @@ run/
 # Datagen
 /common/src/main/generated/.cache/*
 /common/logs/latest.log
+
+/common/src/main/generated/data/*
