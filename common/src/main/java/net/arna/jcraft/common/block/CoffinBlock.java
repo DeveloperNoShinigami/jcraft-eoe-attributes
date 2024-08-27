@@ -18,6 +18,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -39,6 +40,17 @@ import java.util.List;
 public class CoffinBlock extends BedBlock {
     public CoffinBlock(Properties settings) {
         super(DyeColor.RED, settings);
+    }
+
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        return switch (state.getValue(FACING)) {
+            case NORTH -> level.getBlockState(pos.south()).isAir();
+            case EAST -> level.getBlockState(pos.west()).isAir();
+            case SOUTH -> level.getBlockState(pos.north()).isAir();
+            case WEST -> level.getBlockState(pos.east()).isAir();
+            default -> false;
+        };
     }
 
     @Override
