@@ -232,6 +232,11 @@
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
@@ -456,6 +461,11 @@
 					}
 				},
 				"torso": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"base": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
@@ -697,6 +707,11 @@
 					}
 				},
 				"head": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"torso": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
@@ -983,6 +998,11 @@
 					"position": {
 						"vector": [0.4, 0, 0]
 					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
@@ -1246,6 +1266,11 @@
 					}
 				},
 				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"torso": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
@@ -2636,6 +2661,11 @@
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
+				},
+				"torso": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
@@ -2995,6 +3025,11 @@
 					}
 				},
 				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"torso": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
@@ -3389,6 +3424,11 @@
 					}
 				},
 				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"torso": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
@@ -3907,6 +3947,9 @@
 			"animation_length": 1.28,
 			"bones": {
 				"torso": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
 					"position": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -4165,6 +4208,9 @@
 			"animation_length": 1.2,
 			"bones": {
 				"torso": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
 					"position": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -4605,6 +4651,11 @@
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
+				},
+				"torso": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
@@ -4960,6 +5011,11 @@
 					}
 				},
 				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"torso": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}

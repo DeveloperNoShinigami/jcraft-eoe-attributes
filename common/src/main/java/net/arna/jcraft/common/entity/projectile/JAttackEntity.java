@@ -42,6 +42,11 @@ public class JAttackEntity extends LivingEntity implements IOwnable {
     }
 
     @Override
+    public boolean shouldShowName() {
+        return false;
+    }
+
+    @Override
     public HumanoidArm getMainArm() {
         return null;
     }

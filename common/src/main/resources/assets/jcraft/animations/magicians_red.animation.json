@@ -240,6 +240,16 @@
 							"easing": "easeOutBack"
 						}
 					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
@@ -433,6 +443,9 @@
 					}
 				},
 				"torso": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
 					"position": {
 						"0.0": {
 							"vector": [0, 0.5, 0]
@@ -449,6 +462,16 @@
 				},
 				"redbind": {
 					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
 						"vector": [0, 0, 0]
 					}
 				}
@@ -640,6 +663,9 @@
 					}
 				},
 				"torso": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
 					"position": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -656,6 +682,16 @@
 				},
 				"redbind": {
 					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
 						"vector": [0, 0, 0]
 					}
 				}
@@ -862,6 +898,16 @@
 				},
 				"redbind": {
 					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
 						"vector": [0, 0, 0]
 					}
 				}
@@ -1089,6 +1135,11 @@
 				},
 				"redbind": {
 					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"base": {
+					"rotation": {
 						"vector": [0, 0, 0]
 					}
 				}
@@ -1343,6 +1394,16 @@
 							"easing": "easeOutSine"
 						}
 					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
@@ -1529,6 +1590,16 @@
 				},
 				"redbind": {
 					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
 						"vector": [0, 0, 0]
 					}
 				}
@@ -1772,8 +1843,7 @@
 				},
 				"kneeR": {
 					"rotation": {
-						"vector": [60, 0, 0],
-						"easing": "easeOutSine"
+						"vector": ["easeOutSine", "easeOutSine", "easeOutSine"]
 					}
 				},
 				"headthing1": {
@@ -1830,6 +1900,16 @@
 							"vector": [0.5, 1, 1],
 							"easing": "easeOutSine"
 						}
+					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
+						"vector": [0, 0, 0]
 					}
 				}
 			}
@@ -2084,6 +2164,16 @@
 					"scale": {
 						"vector": [0, 0, 0]
 					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
@@ -2331,6 +2421,16 @@
 					"scale": {
 						"vector": [0, 0, 0]
 					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
@@ -2539,6 +2639,16 @@
 				},
 				"redbind": {
 					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
 						"vector": [0, 0, 0]
 					}
 				}
@@ -2758,6 +2868,16 @@
 				},
 				"redbind": {
 					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
 						"vector": [0, 0, 0]
 					}
 				}
@@ -3090,12 +3210,22 @@
 							"easing": "easeOutSine"
 						}
 					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
 		"animation.mr.hammer": {
 			"loop": "hold_on_last_frame",
-			"animation_length": 1.29167,
+			"animation_length": 1.2917,
 			"bones": {
 				"torso": {
 					"rotation": {
@@ -3424,9 +3554,6 @@
 				},
 				"magicians_red": {
 					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
 						"0.3333": {
 							"vector": [-10, 0, 0],
 							"easing": "easeOutSine"
@@ -3435,6 +3562,11 @@
 							"vector": [7.5, 0, 0],
 							"easing": "easeOutSine"
 						}
+					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
 					}
 				}
 			}
@@ -3523,6 +3655,16 @@
 				"kneeL": {
 					"rotation": {
 						"vector": [7.5, 0, 0]
+					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"magicians_red": {
+					"rotation": {
+						"vector": [0, 0, 0]
 					}
 				}
 			}
