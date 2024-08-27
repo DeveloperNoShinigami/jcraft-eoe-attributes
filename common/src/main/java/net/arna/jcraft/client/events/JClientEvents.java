@@ -218,7 +218,6 @@ public class JClientEvents {
         // Regular input (all moves, regular Minecraft movement (WASD and jumping) and dashing)
         if (player.isAlive()) {
             Object2BooleanMap<MovementInputType> movementInput = getChangedInputs(getMovementBindings());
-            final boolean anyMoveChange = getBindings().keySet().stream().anyMatch(TrackedKeyBinding::isChangedThisTick);
             Object2BooleanMap<MoveInputType> moveInput = getChangedInputs(getBindings());
 
             if (!movementInput.isEmpty() || !moveInput.isEmpty()) {
