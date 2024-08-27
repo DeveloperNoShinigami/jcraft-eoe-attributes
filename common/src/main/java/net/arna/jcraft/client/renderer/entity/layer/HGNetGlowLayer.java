@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class HGNetGlowLayer extends GeoRenderLayer<HGNetEntity> {
-    private static final ResourceLocation MODEL = new ResourceLocation(JCraft.MOD_ID, "geo/hg_nets.geo.json");
     private static final List<ResourceLocation> skins = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/hg_nets/glow_" + i + ".png")).toList();
 
@@ -25,14 +24,13 @@ public class HGNetGlowLayer extends GeoRenderLayer<HGNetEntity> {
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, HGNetEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTicks, int packedLightIn, int packedOverlay) {
+    public void render(PoseStack poseStack, HGNetEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
+                       MultiBufferSource bufferSource, VertexConsumer buffer, float partialTicks, int packedLight, int packedOverlay) {
         if (animatable.isCharged()) {
             RenderType cameo = RenderType.eyes(skins.get(animatable.getSkin()));
 
-            matrixStackIn.pushPose();
-            getRenderer().reRender(getDefaultBakedModel(animatable), matrixStackIn, bufferSource, animatable, cameo,
-                    bufferSource.getBuffer(cameo), partialTicks, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);
-            matrixStackIn.popPose();
+            getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
+                    bufferSource.getBuffer(cameo), partialTicks, 15728640, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);
         }
     }
 }

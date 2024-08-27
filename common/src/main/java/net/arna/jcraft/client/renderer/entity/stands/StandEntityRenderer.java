@@ -6,10 +6,9 @@ import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.constant.DataTickets;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.object.Color;
-import mod.azure.azurelib.model.GeoModel;
 import mod.azure.azurelib.model.data.EntityModelData;
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import net.arna.jcraft.client.model.entity.StandEntityModel;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.client.Minecraft;
@@ -20,7 +19,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +34,8 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     protected static final String LEFT_HAND = "bipedHandLeft";
     protected static final String RIGHT_HAND = "bipedHandRight";
 
-    protected StandEntityRenderer(EntityRendererProvider.Context renderManager, GeoModel<T> modelProvider) {
+    //private final StandEntityModel<T> standEntityModel;
+    protected StandEntityRenderer(EntityRendererProvider.Context renderManager, StandEntityModel<T> modelProvider) {
         super(renderManager, modelProvider);
     }
 
@@ -77,8 +76,6 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     }
 
     // Better than a mixin, makes stands look towards the users HEAD rotation as opposed to body
-
-
     @Override
     public void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource,
                                VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
@@ -118,7 +115,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
         applyRotations(animatable, poseStack, ageInTicks, lerpBodyRot, partialTick);
 
         if (!shouldSit && animatable.isAlive()) {
-            limbSwingAmount = animatable.walkAnimation.speed(partialTick);
+            limbSwingAmount = animatable.walkAnimation.speed(partialTick); // FIRST NOTABLE DIFF FROM super.actuallyRender();
             limbSwing = animatable.walkAnimation.position(partialTick);
 
             if (animatable.isBaby())
@@ -133,12 +130,13 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             float motionThreshold = getMotionAnimThreshold(animatable);
             Vec3 velocity = animatable.getDeltaMovement();
             float avgVelocity = (float)(Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
-            EntityModelData data = new EntityModelData(shouldSit, animatable.isBaby(), -netHeadYaw, -headPitch);
-            AnimationState<T> animationState = new AnimationState<T>(animatable, limbSwing, limbSwingAmount, partialTick, avgVelocity >= motionThreshold && limbSwingAmount != 0);
+            AnimationState<T> animationState = new AnimationState<T>(animatable, limbSwing, limbSwingAmount,
+                    partialTick, avgVelocity >= motionThreshold && limbSwingAmount != 0);
             long instanceId = getInstanceId(animatable);
 
             animationState.setData(DataTickets.TICK, animatable.getTick(animatable));
             animationState.setData(DataTickets.ENTITY, animatable);
+            EntityModelData data = new EntityModelData(shouldSit, animatable.isBaby(), -netHeadYaw, -headPitch);
             animationState.setData(DataTickets.ENTITY_MODEL_DATA, data);
             this.model.addAdditionalStateData(animatable, instanceId, animationState::setData);
             this.model.handleAnimations(animatable, instanceId, animationState);
@@ -160,20 +158,32 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
         if (renderType != null) {
             updateAnimatedTextureFrame(animatable);
 
-            Color renderColor = getRenderColor(animatable, partialTick, packedLight);
+            // Color renderColor = getRenderColor(animatable, partialTick, packedLight);
 
             for (GeoBone group : model.topLevelBones()) {
                 renderRecursively(poseStack, animatable, group, renderType, bufferSource, buffer, isReRender, partialTick, packedLight,
                         packedOverlay,
-                        renderColor.getRed() / 255f,
-                        renderColor.getGreen() / 255f,
-                        renderColor.getBlue() / 255f,
-                        renderColor.getAlpha() / 255f
+                        red,
+                        green,
+                        blue,
+                        alpha
                 );
             }
         }
 
         poseStack.popPose();
+
+        // Clear rotation modifications - SUPER hacky, please find a better way :)
+        // better way found - just zero out all the anims at the start (THANKS GECKO!(irony))
+        /*
+        AnimationProcessor<?> animationProcessor = this.standEntityModel.getAnimationProcessor();
+        CoreGeoBone torso = animationProcessor.getBone("torso");
+        if (torso != null) torso.setRotX(standEntityModel.prevTorsoPitch);
+        CoreGeoBone head = animationProcessor.getBone("head");
+        if (head != null) head.setRotX(standEntityModel.prevHeadPitch);
+        CoreGeoBone base = animationProcessor.getBone("base");
+        if (base != null) base.setRotX(standEntityModel.prevBasePitch);
+         */
     }
 
     @Override

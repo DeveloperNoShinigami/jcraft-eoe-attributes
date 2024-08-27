@@ -1,5 +1,7 @@
 package net.arna.jcraft.client.renderer.entity.layer;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
@@ -11,13 +13,10 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.Map;
 
 public class TWOHEyesLayer extends GeoRenderLayer<TheWorldOverHeavenEntity> {
     private static final ResourceLocation LAYER = new ResourceLocation(JCraft.MOD_ID, "textures/entity/stands/the_world_over_heaven/eyes.png");
-    private static final ResourceLocation MODEL = new ResourceLocation(JCraft.MOD_ID, "geo/the_world_over_heaven.geo.json");
     private static final Map<Integer, Vector3f> overwriteColors =
             Map.ofEntries(
                     Map.entry(0, new Vector3f(1f, 1f, 1f)), // Default, WHITE
@@ -34,14 +33,12 @@ public class TWOHEyesLayer extends GeoRenderLayer<TheWorldOverHeavenEntity> {
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, TheWorldOverHeavenEntity twoh, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer bufferIn, float partialTick, int packedLightIn, int packedOverlay) {
-
-        Vector3f color = overwriteColors.get(twoh.getOverwriteType());
+    public void render(PoseStack poseStack, TheWorldOverHeavenEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
+                       MultiBufferSource bufferSource, VertexConsumer bufferIn, float partialTick, int packedLight, int packedOverlay) {
+        Vector3f color = overwriteColors.get(animatable.getOverwriteType());
         RenderType cameo = RenderType.eyes(LAYER);
 
-        matrixStackIn.pushPose();
-        getRenderer().reRender(getDefaultBakedModel(twoh), matrixStackIn, bufferSource, twoh, cameo,
-                bufferSource.getBuffer(cameo), partialTick, packedLightIn, OverlayTexture.NO_OVERLAY, color.x(), color.y(), color.z(), 1f);
-        matrixStackIn.popPose();
+        getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
+                bufferSource.getBuffer(cameo), partialTick, 15728640, OverlayTexture.NO_OVERLAY, color.x(), color.y(), color.z(), 1f);
     }
 }

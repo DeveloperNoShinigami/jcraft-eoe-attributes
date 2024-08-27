@@ -20,13 +20,14 @@ public class MadeInHeavenRenderer extends StandEntityRenderer<MadeInHeavenEntity
 
     @Override
     public void actuallyRender(PoseStack poseStack, MadeInHeavenEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        float a = getAlpha(animatable, partialTick);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);
 
         if (!animatable.getAfterimage()) {
             return;
         }
 
-        float aa = getAlpha(animatable, partialTick) - 0.5f;
+        float aa = a - 0.5f;
         if (aa < 0) {
             aa = 0;
         }
@@ -40,13 +41,13 @@ public class MadeInHeavenRenderer extends StandEntityRenderer<MadeInHeavenEntity
         }
 
         for (int i = 0; i <= 3; ++i) {
-            renderAfter(baseVel.scale(i), bodyYaw, aa * (1f / i), model, animatable, partialTick,
+            renderAfterImage(baseVel.scale(i), bodyYaw, aa * (1f / i), model, animatable, partialTick,
                     RenderType.entityNoOutline(getTextureLocation(animatable)), poseStack, bufferSource,
                     buffer, packedLight, packedOverlay, red, green, blue, alpha);
         }
     }
 
-    private void renderAfter(Vec3 velocity, float bodyYaw, float aa, BakedGeoModel model, MadeInHeavenEntity animatable,
+    private void renderAfterImage(Vec3 velocity, float bodyYaw, float aa, BakedGeoModel model, MadeInHeavenEntity animatable,
                              float partialTicks, RenderType type, PoseStack matrixStack,
                              MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
                              int packedOverlayIn, float red, float green, float blue, float alpha) {

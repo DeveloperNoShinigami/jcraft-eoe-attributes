@@ -83,6 +83,7 @@ public class JClientUtils {
         animateGenericHumanoid(model, entity, player, partialTick, flipBody, flipHead, tPO, hPO, 90f);
     }
 
+    // basically, unless the animation specifies every rotation, said rotations will persist through each model.
     public static void animateGenericHumanoid(StandEntityModel<?> model, StandEntity<?, ?> entity, LivingEntity player, float partialTick, boolean flipBody, boolean flipHead, float tPO, float hPO, float velInfluence) {
         float overVel = 0;
 
@@ -96,8 +97,10 @@ public class JClientUtils {
             if (playerVel.normalize().add(entity.getLookAngle()).horizontalDistanceSqr() < playerVel.normalize().horizontalDistanceSqr())
                 velInfluence *= -1;
 
+            // Tilt torso relative to speed
             CoreGeoBone torso = animationProcessor.getBone("torso");
             if (torso != null) {
+                //model.prevTorsoPitch = torso.getRotX();
                 float pitch = (180f + overVel * velInfluence) * 3.1415f / 180f;
                 if (flipBody) {
                     pitch += 3.1415f;
@@ -107,18 +110,22 @@ public class JClientUtils {
             }
         }
 
-        if (entity.isBlocking() || entity.isIdle()) { // if in/going to idle, or blocking
+        if (entity.isBlocking() || entity.isIdle()) {
+            // Look up/down, same as the stand user
             CoreGeoBone head = animationProcessor.getBone("head");
             if (head != null) {
+                //model.prevHeadPitch = head.getRotX();
                 float headPitch = (player.getXRot() - overVel * velInfluence) * 3.1415f / 180f;
                 if (flipHead) headPitch = -headPitch;
                 head.setRotX(headPitch + hPO);
             }
-        } else if (entity.getMoveStun() > 0) {
-            CoreGeoBone torso = animationProcessor.getBone("base");
-            if (torso != null) {
-                //float torsoPitch = (player.getPitch() * 0.9f) * 3.1415f / 180f;
-                //torso.setRotX(torso.getRotX() - torsoPitch);
+        } else if (entity.getMoveStun() > 0) { // if doing something
+            // Turn entire stand up/down
+            CoreGeoBone base = animationProcessor.getBone("base");
+            if (base != null) {
+                //model.prevBasePitch = base.getRotX();
+                float torsoPitch = (player.getXRot() * 0.9f) * 3.1415f / 180f;
+                base.setRotX(base.getRotX() - torsoPitch);
             }
         }
     }

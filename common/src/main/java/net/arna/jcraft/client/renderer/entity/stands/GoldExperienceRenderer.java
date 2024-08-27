@@ -26,7 +26,7 @@ public class GoldExperienceRenderer extends StandEntityRenderer<GoldExperienceEn
 
     @Override
     public void actuallyRender(PoseStack poseStack, GoldExperienceEntity stand, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, getAlpha(animatable, partialTick));
 
         if (stand.getState() == GoldExperienceEntity.State.OVERCLOCK && stand.getMoveStun() > overclockWindupPoint) {
             if (currentTick < 0 || currentTick != stand.tickCount) {

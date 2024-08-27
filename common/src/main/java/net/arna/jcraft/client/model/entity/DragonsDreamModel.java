@@ -6,7 +6,7 @@ import net.arna.jcraft.common.entity.stand.StandType;
 public class DragonsDreamModel extends StandEntityModel<DragonsDreamEntity> {
 
     public DragonsDreamModel() {
-        super(StandType.DRAGONS_DREAM);
+        super(StandType.DRAGONS_DREAM, 0.0f, 1.5707f);
     }
 
 }

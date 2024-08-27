@@ -19,7 +19,6 @@ import javax.annotation.Nullable;
 
 
 public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
-
     public D4CRenderer(EntityRendererProvider.Context context) {
         super(context, new StandEntityModel<>(StandType.D4C));
 

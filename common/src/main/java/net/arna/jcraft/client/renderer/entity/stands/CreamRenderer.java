@@ -1,5 +1,8 @@
 package net.arna.jcraft.client.renderer.entity.stands;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.CreamModel;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -9,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public class CreamRenderer extends StandEntityRenderer<CreamEntity> {
-
     public CreamRenderer(EntityRendererProvider.Context context) {
         super(context, new CreamModel());
     }
@@ -27,5 +29,11 @@ public class CreamRenderer extends StandEntityRenderer<CreamEntity> {
     @Override
     protected float getGreen(CreamEntity stand, float green, float alpha) {
         return green - (1f - alpha) / 2f;
+    }
+
+    @Override
+    public void actuallyRender(PoseStack poseStack, CreamEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        float a = StandEntityRenderer.getAlpha(animatable, partialTick);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);
     }
 }

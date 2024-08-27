@@ -27,7 +27,7 @@ public class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, White
         if (!attacker.hasUser()) {
             return false;
         }
-        return super.canBeInitiated(attacker) && attacker.getUserOrThrow().getOffhandItem().getItem() == JItemRegistry.STAND_DISC;
+        return super.canBeInitiated(attacker) && attacker.getUserOrThrow().getOffhandItem().getItem() == JItemRegistry.STAND_DISC.get();
     }
 
     @Override
@@ -43,6 +43,9 @@ public class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, White
 
         super.perform(attacker, user, ctx).stream().findFirst().ifPresent(
                 (target) -> {
+                    //todo: a wider approach to disabling stands or certain entity types from having stands?
+                    if (target instanceof StandEntity<?,?>) return;
+
                     StandType itemStand = null;
                     int itemSkin = 0;
 

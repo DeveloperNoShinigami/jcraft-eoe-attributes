@@ -10,14 +10,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-
 public class AnkhRenderer extends GeoProjectileRenderer<AnkhProjectile> {
 
     public AnkhRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new AnkhModel());
     }
 
-    protected int getBlockLight(AnkhProjectile entityIn, BlockPos partialTicks) {
+    @Override
+    protected int getBlockLightLevel(AnkhProjectile entity, BlockPos pos) {
         return 15;
     }
 

@@ -88,6 +88,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
             5, 9, 0.75f, 5f, 8, 1.5f, 0.2f, -0.1f)
             .withAerialVariant(DOWNWARD_KICK)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withBlockStun(4)
             .withInfo(
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")

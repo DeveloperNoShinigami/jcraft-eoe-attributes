@@ -12,6 +12,6 @@ public class AnvilScreenHandlerMixin {
 
     @Redirect(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isDamageableItem()Z", ordinal = 1))
     private boolean allowMasks(ItemStack stack) {
-        return stack.getItem() == JItemRegistry.CINDERELLA_MASK || stack.isDamageableItem();
+        return stack.getItem() == JItemRegistry.CINDERELLA_MASK.get() || stack.isDamageableItem();
     }
 }

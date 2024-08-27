@@ -26,18 +26,19 @@ public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEnti
 
     @Override
     public void actuallyRender(PoseStack poseStack, SilverChariotEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        float a = StandEntityRenderer.getAlpha(animatable, partialTick);
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);
         if (animatable.getMode() == SilverChariotEntity.Mode.ARMORLESS && animatable.hasUser()) {
             for (double i = 0; i < 3; i++) {
-                renderAfter(animatable.getUserOrThrow(), JUtils.deltaPos(animatable).scale(i * 2.0), 1f,
+                renderAfterImage(animatable.getUserOrThrow(), JUtils.deltaPos(animatable).scale(i * 2.0), 1f,
                         model, animatable, partialTick, RenderType.entityNoOutline(getTextureLocation(animatable)),
                         poseStack, bufferSource, buffer, packedLight, packedOverlay, red, green, blue,
-                        alpha);
+                        a);
             }
         }
     }
 
-    private void renderAfter(LivingEntity user, Vec3 velocity, float a, BakedGeoModel model, SilverChariotEntity animatable,
+    private void renderAfterImage(LivingEntity user, Vec3 velocity, float a, BakedGeoModel model, SilverChariotEntity animatable,
                              float partialTicks, RenderType type, PoseStack matrixStack, MultiBufferSource renderTypeBuffer,
                              VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         matrixStack.pushPose();

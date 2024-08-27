@@ -18,6 +18,7 @@ public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
     private final List<ResourceLocation> skins;
     private final ResourceLocation animation;
     private final float torsoPitchOffset, headPitchOffset, velInfluence;
+    // public float prevTorsoPitch, prevHeadPitch, prevBasePitch = 0.0f;
 
     public StandEntityModel(StandType type) {
         this(type, 0f, 0f);

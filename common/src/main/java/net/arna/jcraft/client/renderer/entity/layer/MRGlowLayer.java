@@ -15,20 +15,17 @@ import net.minecraft.resources.ResourceLocation;
 
 public class MRGlowLayer extends GeoRenderLayer<MagiciansRedEntity> {
     private static final ResourceLocation LAYER = new ResourceLocation(JCraft.MOD_ID, "textures/entity/stands/magicians_red/glow.png");
-    private static final ResourceLocation MODEL = new ResourceLocation(JCraft.MOD_ID, "geo/magicians_red.geo.json");
 
     public MRGlowLayer(GeoRenderer<MagiciansRedEntity> entityRendererIn) {
         super(entityRendererIn);
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, MagiciansRedEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer bufferIn, float partialTicks, int packedLightIn, int packedOverlay) {
+    public void render(PoseStack poseStack, MagiciansRedEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
+                       MultiBufferSource bufferSource, VertexConsumer bufferIn, float partialTick, int packedLight, int packedOverlay) {
         RenderType cameo = RenderType.eyes(LAYER);
-        matrixStackIn.pushPose();
-        //new Identifier("minecraft", "textures/block/fire_1.png")
 
-        getRenderer().reRender(getDefaultBakedModel(animatable), matrixStackIn, bufferSource, animatable, cameo,
-                bufferSource.getBuffer(cameo), partialTicks, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);
-        matrixStackIn.popPose();
+        getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
+                bufferSource.getBuffer(cameo), partialTick, 15728640, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);
     }
 }

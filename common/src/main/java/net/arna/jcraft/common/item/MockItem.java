@@ -17,7 +17,9 @@ public class MockItem extends Item {
     }
 
     public static boolean isMockItem(ItemStack stack) {
-        return stack.getItem() == JItemRegistry.MOCK_ITEM;
+        // Crashes on startup due to FireBlock.bootStrap(), requiring this
+        if (!JItemRegistry.MOCK_ITEM.isPresent()) return false;
+        return stack.getItem() == JItemRegistry.MOCK_ITEM.get();
     }
 
     public static ItemStack getMockedStack(ItemStack mockItemStack) {

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "jcraft",
   "version": "${version}",
-  "name": "Jcraft",
-  "description": "so yeah i wanted to add jojo stands to mc",
+  "name": "JCraft",
+  "description": "so yeah we wanted to add jojo stands to mc",
   "authors": [
     "Arna",
     "MrSterner",
@@ -13,7 +13,7 @@
     "homepage": "https://fabricmc.net/",
     "sources": "https://github.com/Arna577/jcraft-eoe/"
   },
-  "license": "CC0-1.0",
+  "license": "All Rights Reserved",
   "icon": "assets/jcraft/icon.png",
   "environment": "*",
   "entrypoints": {

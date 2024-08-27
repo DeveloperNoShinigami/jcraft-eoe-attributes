@@ -1,5 +1,7 @@
 package net.arna.jcraft.client.renderer.entity.layer;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
@@ -9,6 +11,7 @@ import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -16,12 +19,7 @@ import java.util.stream.IntStream;
 import static net.arna.jcraft.common.entity.projectile.RapierProjectile.ARMOR_OFF_TEXTURE;
 import static net.arna.jcraft.common.entity.projectile.RapierProjectile.POSSESSED_TEXTURE;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.resources.ResourceLocation;
-
 public class SCRapierLayer extends GeoRenderLayer<SilverChariotEntity> {
-    private static final ResourceLocation MODEL = JCraft.id("geo/silver_chariot.geo.json");
     private static List<ResourceLocation> skins;
 
     public SCRapierLayer(GeoRenderer<SilverChariotEntity> entityRendererIn) {
@@ -33,7 +31,8 @@ public class SCRapierLayer extends GeoRenderLayer<SilverChariotEntity> {
     }
 
     @Override
-    public void render(PoseStack matrixStackIn, SilverChariotEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferIn, VertexConsumer buffer, float partialTicks, int packedLightIn, int packedOverlay) {
+    public void render(PoseStack poseStack, SilverChariotEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
+                       MultiBufferSource bufferIn, VertexConsumer buffer, float partialTicks, int packedLight, int packedOverlay) {
         if (animatable.hasRapier()) {
             SilverChariotEntity.Mode mode = animatable.getMode();
 
@@ -43,10 +42,8 @@ public class SCRapierLayer extends GeoRenderLayer<SilverChariotEntity> {
                                     skins.get(animatable.getSkin())
             );
 
-            matrixStackIn.pushPose();
-            getRenderer().reRender(getDefaultBakedModel(animatable), matrixStackIn, bufferIn, animatable, cameo,
-                    bufferIn.getBuffer(cameo), partialTicks, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);
-            matrixStackIn.popPose();
+            getRenderer().reRender(bakedModel, poseStack, bufferIn, animatable, cameo,
+                    bufferIn.getBuffer(cameo), partialTicks, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);
         }
     }
 }

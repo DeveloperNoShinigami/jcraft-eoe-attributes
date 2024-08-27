@@ -57,11 +57,14 @@ public class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends AbstractM
             distance /= 3;
         }
 
+        Vec3 rotVec = user.getLookAngle();
+        //todo: find length of line with direction rotVec, from the center of the stand users bounding box to the edge
+        //      then subtract that from the position. this should prevent any TP clipping bullshit
         Vec3 eyePos = user.getEyePosition();
         HitResult hitResult = attacker.getEntityWorld().clip(
                 new ClipContext(
                         eyePos,
-                        eyePos.add(user.getLookAngle().scale(distance)),
+                        eyePos.add(rotVec.scale(distance)),
                         ClipContext.Block.COLLIDER,
                         ClipContext.Fluid.NONE, user));
         Vec3 tpPos = hitResult.getLocation();

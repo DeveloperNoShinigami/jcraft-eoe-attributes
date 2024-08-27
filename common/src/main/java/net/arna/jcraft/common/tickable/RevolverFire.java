@@ -38,7 +38,7 @@ public class RevolverFire {
                     }
 
                     ItemStack main = user.getMainHandItem();
-                    if (main.getItem() == JItemRegistry.FV_REVOLVER) {
+                    if (main.getItem() == JItemRegistry.FV_REVOLVER.get()) {
                         FVRevolverItem.fire(main, world, user);
                     }
                 }

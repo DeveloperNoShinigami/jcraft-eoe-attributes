@@ -4,6 +4,8 @@ import lombok.Getter;
 import net.arna.jcraft.common.util.CooldownType;
 import net.minecraft.network.chat.Component;
 
+import java.util.Random;
+
 @Getter
 public enum MoveType {
     LIGHT(CooldownType.STAND_LIGHT, "key.attack"),
@@ -27,5 +29,10 @@ public enum MoveType {
         friendlyName = Component.translatable("jcraft.movetype." + name().toLowerCase());
         this.key = Component.keybind(key == null ? "key.jcraft." + name().toLowerCase() : key);
         this.defaultCooldownType = defaultCooldownType;
+    }
+
+    private static final Random random = new Random();
+    public static MoveType randomMoveType() {
+        return MoveType.values()[random.nextInt(MoveType.values().length)];
     }
 }

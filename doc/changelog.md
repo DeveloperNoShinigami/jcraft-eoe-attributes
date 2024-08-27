@@ -49,7 +49,13 @@
 * Bug: Inventory disappeared instead of dropped when killed while being stunned
 ### Known Bugs
 #### General
+* Setting graphics to "Fabulous" prevents your player hands from rendering in first-person.
+* Water transparency seemingly changes when the player hovers over a block
+* Projectiles render with inverted Pitch
+* Vampire hunger bar doesn't render properly
 * Horus is not fully implemented
-* Shiv is displayed incorrectly
+
+* KC still yells in english when he fucks up his counter :)
 #### Forge
+* Cannot do any JCraft actions besides M1
 * setting your stand to CHARIOT_REQUIEM crashes the game

@@ -21,7 +21,7 @@ public class CinderellasKissEnchantment extends Enchantment {
 
     @Override
     public boolean canEnchant(ItemStack stack) {
-        return stack.getItem() == JItemRegistry.CINDERELLA_MASK;
+        return stack.getItem() == JItemRegistry.CINDERELLA_MASK.get();
     }
 
     public static int getCKLevel(ItemStack stack) {
