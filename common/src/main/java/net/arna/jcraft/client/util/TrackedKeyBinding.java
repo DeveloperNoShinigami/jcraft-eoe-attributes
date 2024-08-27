@@ -19,11 +19,9 @@ public class TrackedKeyBinding {
     private final KeyMapping parent;
     private boolean changedThisTick, pressedThisTick, releasedThisTick;
 
-    static {
-        // Reset values
-        ClientTickEvent.CLIENT_POST.register(client -> {
+    public static void resetValues(boolean clientScreenAssigned) {
             bindings.values().forEach(TrackedKeyBinding::reset);
-            if (client.screen != null) {
+            if (clientScreenAssigned) {
                 bindings.values().stream()
                         .filter(TrackedKeyBinding::isDown)
                         .forEach(TrackedKeyBinding::markReleased);
@@ -31,7 +29,6 @@ public class TrackedKeyBinding {
             } else {
                 resetForScreen = false;
             }
-        });
     }
 
     private TrackedKeyBinding(KeyMapping parent) {

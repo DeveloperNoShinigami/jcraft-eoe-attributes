@@ -10,6 +10,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.rendering.RenderHandler;
+import net.arna.jcraft.client.util.TrackedKeyBinding;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -217,6 +218,7 @@ public class JClientEvents {
         // Regular input (all moves, regular Minecraft movement (WASD and jumping) and dashing)
         if (player.isAlive()) {
             Object2BooleanMap<MovementInputType> movementInput = getChangedInputs(getMovementBindings());
+            final boolean anyMoveChange = getBindings().keySet().stream().anyMatch(TrackedKeyBinding::isChangedThisTick);
             Object2BooleanMap<MoveInputType> moveInput = getChangedInputs(getBindings());
 
             if (!movementInput.isEmpty() || !moveInput.isEmpty()) {
@@ -281,5 +283,6 @@ public class JClientEvents {
                 }
             }
         }
+        TrackedKeyBinding.resetValues(client.screen != null);
     }
 }
