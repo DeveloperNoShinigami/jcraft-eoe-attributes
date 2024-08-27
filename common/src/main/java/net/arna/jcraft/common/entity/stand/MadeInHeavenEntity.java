@@ -434,7 +434,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         CIRCLE_STARTUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.circlestartup"))),
         SPEED_CHOP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.speedchop"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.light_followup"))),
-        LOW_KICK(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.lowkick")));
+        LOW_KICK(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.legcrusher")));
 
         private final Consumer<AnimationState> animator;
 

@@ -33,6 +33,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+//todo: fix being able to place blocks on the tail of the coffin
+
 // Actual sleep logic is handled in JServerEvents
 public class CoffinBlock extends BedBlock {
     public CoffinBlock(Properties settings) {
@@ -94,10 +96,10 @@ public class CoffinBlock extends BedBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState()
-                .setValue(FACING, context.getNearestLookingVerticalDirection())
-                .setValue(OCCUPIED, false);
+    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
+        BlockState state = super.getStateForPlacement(context);
+        if (state != null) state.setValue(OCCUPIED, false);
+        return state;
     }
 
     /*
