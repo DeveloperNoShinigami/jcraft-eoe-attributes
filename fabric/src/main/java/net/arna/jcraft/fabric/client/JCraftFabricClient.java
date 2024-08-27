@@ -31,7 +31,6 @@ public final class JCraftFabricClient implements ClientModInitializer {
         JModelPredicateProviderRegistry.register();
         JEntityRendererRegister.registerEntityRenderers();
         BlockEntityRenderers.register(JBlockEntityTypeRegistry.COFFIN_TILE.get(), CoffinTileRenderer::new);
-        // This entrypoint is suitable for setting up client-specific logic, such as rendering.
 
         // Particle registration
         ParticleProviderRegistry.register(JParticleTypeRegistry.COMBO_BREAK, ComboBreakerParticle.Factory::new);

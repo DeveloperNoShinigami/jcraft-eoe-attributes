@@ -35,6 +35,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL30;
 
 import java.util.Iterator;
 import java.util.List;
@@ -49,9 +51,7 @@ public class JClientEvents {
     public static void onLast(PoseStack matrixStack, Vec3 cameraPos, LevelRenderer worldRenderer) {
         matrixStack.pushPose();
         matrixStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
-        if (worldRenderer.getTranslucentTarget() != null) {
-            Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
-        }
+        Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
         RenderHandler.beginBufferedRendering(matrixStack);
 
         if (RenderHandler.MATRIX4F != null) {
@@ -59,9 +59,7 @@ public class JClientEvents {
         }
         RenderHandler.renderBufferedBatches(matrixStack);
         RenderHandler.endBufferedRendering(matrixStack);
-        if (worldRenderer.getTranslucentTarget() != null) {
-            worldRenderer.getCloudsTarget().bindWrite(false);
-        }
+
         matrixStack.popPose();
     }
 
