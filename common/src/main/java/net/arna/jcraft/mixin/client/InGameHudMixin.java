@@ -35,6 +35,8 @@ public abstract class InGameHudMixin {
     private static final ResourceLocation HALF_BLOOD_ICON = JCraft.id("textures/gui/blood_half.png");
     @Unique
     private static final ResourceLocation FULL_BLOOD_ICON = JCraft.id("textures/gui/blood_full.png");
+    @Unique
+    private ResourceLocation currentBloodIcon = EMPTY_BLOOD_ICON;
 
     @Redirect(
             method = "renderPlayerHealth",
@@ -51,13 +53,13 @@ public abstract class InGameHudMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"
-            )
+            ),
+            require = 3
     )
     void showVampireBloodIcons(GuiGraphics instance, ResourceLocation texture, int x, int y, int u, int v, int width, int height) {
         Player player = minecraft.player;
         if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
-            instance.blit(texture, x, y, 0, 0, width, height, 9, 9);
-            RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
+            instance.blit(currentBloodIcon, x, y, 0, 0, width, height, 9, 9);
         } else {
             instance.blit(texture, x, y, u, v, width, height);
         }
@@ -82,10 +84,7 @@ public abstract class InGameHudMixin {
             )
     )
     void switchToEmptyBloodIcon(GuiGraphics context, CallbackInfo ci) {
-        Player player = minecraft.player;
-        if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
-            RenderSystem.setShaderTexture(0, EMPTY_BLOOD_ICON);
-        }
+        currentBloodIcon = EMPTY_BLOOD_ICON;
     }
 
     @Inject(
@@ -107,10 +106,7 @@ public abstract class InGameHudMixin {
             )
     )
     void switchToHalfBloodIcon(GuiGraphics context, CallbackInfo ci) {
-        Player player = minecraft.player;
-        if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
-            RenderSystem.setShaderTexture(0, HALF_BLOOD_ICON);
-        }
+        currentBloodIcon = HALF_BLOOD_ICON;
     }
 
     @Inject(
@@ -132,10 +128,7 @@ public abstract class InGameHudMixin {
             )
     )
     void switchToFullBloodIcon(GuiGraphics context, CallbackInfo ci) {
-        Player player = minecraft.player;
-        if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
-            RenderSystem.setShaderTexture(0, FULL_BLOOD_ICON);
-        }
+        currentBloodIcon = FULL_BLOOD_ICON;
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getTicksFrozen()I"))
