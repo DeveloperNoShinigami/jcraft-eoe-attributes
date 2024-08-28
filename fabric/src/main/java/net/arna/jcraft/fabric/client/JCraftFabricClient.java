@@ -14,7 +14,7 @@ import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -88,10 +88,9 @@ public final class JCraftFabricClient implements ClientModInitializer {
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(itemRenderer);
         BuiltinItemRendererRegistry.INSTANCE.register(JItemRegistry.DEBUG_WAND.get(), itemRenderer);
 
-        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
-            out.accept(new ModelResourceLocation(new ResourceLocation(itemId + "_gui"), "inventory"));
-            out.accept(new ModelResourceLocation(new ResourceLocation(itemId + "_handheld"), "inventory"));
-        });
+        ModelLoadingPlugin.register(ctx -> ctx.addModels(
+                new ModelResourceLocation(new ResourceLocation(itemId + "_gui"), "inventory"),
+                new ModelResourceLocation(new ResourceLocation(itemId + "_handheld"), "inventory")));
 
         JItemPropertiesRegistry.registerItemProperties();
         JCraftClient.registerKeyBindings(null);
