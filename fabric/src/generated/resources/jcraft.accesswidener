@@ -26,3 +26,4 @@ accessible method net/minecraft/client/renderer/item/ItemProperties register (Ln
 accessible class net/minecraft/server/level/ChunkMap$TrackedEntity
 accessible field net/minecraft/server/level/ChunkMap$TrackedEntity seenBy Ljava/util/Set;
 accessible field net/minecraft/server/level/ChunkMap entityMap Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+accessible method net/minecraft/world/level/block/BedBlock kickVillagerOutOfBed (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z
