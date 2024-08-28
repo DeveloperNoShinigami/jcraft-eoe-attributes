@@ -12,4 +12,9 @@ public class HGNetRenderer extends GeoEntityRenderer<HGNetEntity> {
         addRenderLayer(new HGNetGlowLayer(this));
         shadowRadius = 1.25f;
     }
+
+    @Override
+    public boolean shouldShowName(HGNetEntity animatable) {
+        return false;
+    }
 }

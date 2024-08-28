@@ -1,5 +1,13 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
@@ -29,15 +37,6 @@ import java.util.Set;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
-
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
     private final int stun = 10;
@@ -172,9 +171,9 @@ public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
+    private static final RawAnimation fire = RawAnimation.begin().thenLoop("animation.sunbeam.fire");
     private PlayState predicate(AnimationState<SunBeamProjectile> state) {
-        state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.sunbeam.fire"));
-        return PlayState.CONTINUE;
+        return state.setAndContinue(fire);
     }
 
     @Override
@@ -184,6 +183,6 @@ public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
 
     @Override
     public double getTick(Object object) {
-        return tickCount;
+        return this.tickCount;
     }
 }

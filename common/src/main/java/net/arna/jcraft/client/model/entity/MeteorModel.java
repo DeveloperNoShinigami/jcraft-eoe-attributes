@@ -5,7 +5,6 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
 import net.minecraft.resources.ResourceLocation;
 
-
 public class MeteorModel extends GeoModel<MeteorProjectile> {
     @Override
     public ResourceLocation getModelResource(MeteorProjectile object) {

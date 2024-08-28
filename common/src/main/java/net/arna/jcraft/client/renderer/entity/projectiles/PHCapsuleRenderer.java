@@ -6,9 +6,7 @@ import net.arna.jcraft.common.entity.projectile.PHCapsuleProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
-
 public class PHCapsuleRenderer extends GeoProjectileRenderer<PHCapsuleProjectile> {
-
     public PHCapsuleRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new PHCapsuleModel());
     }

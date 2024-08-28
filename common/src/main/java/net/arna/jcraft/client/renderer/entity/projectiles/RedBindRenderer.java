@@ -16,7 +16,7 @@ public class RedBindRenderer extends GeoProjectileRenderer<RedBindEntity> {
 
     @Override
     public RenderType getRenderType(RedBindEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(texture);
+        return RenderType.eyes(texture);
     }
 
     @Override

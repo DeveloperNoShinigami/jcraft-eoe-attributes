@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public class AnkhRenderer extends GeoProjectileRenderer<AnkhProjectile> {
-
     public AnkhRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new AnkhModel());
     }
@@ -23,7 +22,7 @@ public class AnkhRenderer extends GeoProjectileRenderer<AnkhProjectile> {
 
     @Override
     public RenderType getRenderType(AnkhProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.eyes(getTextureLocation(animatable));
+        return RenderType.eyes(texture);
     }
 
     @Override

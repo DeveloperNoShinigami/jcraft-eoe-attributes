@@ -21,11 +21,6 @@ public class BlockProjectileRenderer extends GeoProjectileRenderer<BlockProjecti
     }
 
     @Override
-    public boolean shouldShowName(BlockProjectile animatable) {
-        return false;
-    }
-
-    @Override
     public RenderType getRenderType(BlockProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.eyes(texture);
     }

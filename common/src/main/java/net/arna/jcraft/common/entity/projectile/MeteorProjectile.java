@@ -1,5 +1,13 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
@@ -30,7 +38,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -38,15 +45,6 @@ import java.util.Set;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
-
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
 public class MeteorProjectile extends AbstractArrow implements GeoAnimatable {
     public static final EntityDataAccessor<Integer> SKIN;
@@ -148,6 +146,7 @@ public class MeteorProjectile extends AbstractArrow implements GeoAnimatable {
             }
             MagiciansRedEntity.ignite(level(), blockHitResult.getBlockPos());
         }
+        inGround = true;
         super.onHitBlock(blockHitResult);
     }
 
@@ -169,13 +168,14 @@ public class MeteorProjectile extends AbstractArrow implements GeoAnimatable {
 
         if (level().isClientSide()) {
             Vec3 vel = getDeltaMovement();
-            this.level().addParticle(
+            level().addParticle(
                     getSkin() == 2 ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
                     getX() + random.nextFloat() * 0.5f - 0.25f,
                     getY() + random.nextFloat() * 0.5f - 0.25f,
                     getZ() + random.nextFloat() * 0.5f - 0.25f,
                     vel.x / 2, vel.y / 2, vel.z / 2
             );
+            if (inGround) ticksInGround++;
         } else {
             if (this.inGround) {
                 if (explosive && ticksInGround == 0) {
@@ -231,15 +231,21 @@ public class MeteorProjectile extends AbstractArrow implements GeoAnimatable {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<>(this, "controller", 1, this::predicate));
     }
 
+    private static final RawAnimation explode = RawAnimation.begin().thenPlayAndHold("animation.meteor.explode");
+    private static final RawAnimation idle = RawAnimation.begin()
+            .thenPlay("animation.meteor.spawn")
+            .thenLoop("animation.meteor.idle");
     private PlayState predicate(AnimationState<GeoAnimatable> state) {
         if (inGround) {
-            state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.meteor.explode"));
-        } else {
-            state.getController().setAnimation(RawAnimation.begin().thenPlay("animation.meteor.spawn")
-                    .thenLoop("animation.meteor.idle"));
+            if (ticksInGround == 1) {
+                state.getController().setAnimation(explode);
+                state.getController().forceAnimationReset();
+            }
+        } else if (ticksInAir == 0) {
+            state.getController().setAnimation(idle);
         }
         return PlayState.CONTINUE;
     }
@@ -251,6 +257,6 @@ public class MeteorProjectile extends AbstractArrow implements GeoAnimatable {
 
     @Override
     public double getTick(Object object) {
-        return 0;
+        return this.tickCount;
     }
 }

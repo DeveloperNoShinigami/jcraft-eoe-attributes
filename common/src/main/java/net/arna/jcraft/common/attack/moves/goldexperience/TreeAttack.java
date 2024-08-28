@@ -11,8 +11,8 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.Set;
 
 public class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExperienceEntity> {
@@ -32,8 +32,11 @@ public class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExperienceE
         Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
         Vec3 midPos = RotationUtil.vecPlayerToWorld(0.0, attacker.getBbHeight() * 0.25, 0.0, gravity);
         GravityChangerAPI.setDefaultGravityDirection(tree, gravity);
-        Vec2 corrected = RotationUtil.rotWorldToPlayer(-attacker.getYRot(), -attacker.getXRot(), gravity);
-        tree.moveTo(attacker.getX() + midPos.x, attacker.getY() + midPos.y, attacker.getZ() + midPos.z, corrected.x, corrected.y);
+        //todo: fix tree rotation
+        // Vec2 corrected = RotationUtil.rotWorldToPlayer(-attacker.getYRot(), -attacker.getXRot(), gravity);
+        // tree.moveTo(attacker.getX() + midPos.x, attacker.getY() + midPos.y, attacker.getZ() + midPos.z, corrected.x, corrected.y);
+        tree.setPos(attacker.position().add(midPos));
+        tree.setDeltaMovement(user.getLookAngle().scale(0.1));
         attacker.level().addFreshEntity(tree);
 
         return targets;

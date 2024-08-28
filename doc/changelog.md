@@ -54,6 +54,8 @@
 * Horus is not fully implemented
 
 * KC still yells in english when he fucks up his counter :)
+* Unable to find animation: animation.kqbtd.bubble for KQBTDEntity
+* Jittery animations for projectiles like SunBeamProjectile and MeteorProjectile
 #### Forge
 * blood bar (InGameHudMixin) & stand bars dont render
 

@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 public class PetshopRenderer extends GeoEntityRenderer<PetshopEntity> {
-
     public PetshopRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new PetshopModel());
     }

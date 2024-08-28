@@ -15,7 +15,8 @@ public class SunBeamRenderer extends GeoProjectileRenderer<SunBeamProjectile> {
         super(renderManagerIn, new SunBeamModel());
     }
 
-    protected int getBlockLight(SunBeamProjectile entityIn, BlockPos partialTicks) {
+    @Override
+    protected int getBlockLightLevel(SunBeamProjectile entity, BlockPos pos) {
         return 15;
     }
 

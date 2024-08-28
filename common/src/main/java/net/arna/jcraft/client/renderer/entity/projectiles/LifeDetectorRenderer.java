@@ -10,14 +10,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Quaternionf;
 
-
-
 public class LifeDetectorRenderer extends GeoProjectileRenderer<LifeDetectorEntity> {
     public LifeDetectorRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new LifeDetectorModel());
     }
 
-    protected int getBlockLight(LifeDetectorEntity entityIn, BlockPos partialTicks) {
+    @Override
+    protected int getBlockLightLevel(LifeDetectorEntity entity, BlockPos pos) {
         return 15;
     }
 

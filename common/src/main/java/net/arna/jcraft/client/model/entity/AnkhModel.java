@@ -5,11 +5,9 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
 import net.minecraft.resources.ResourceLocation;
 
-
 public class AnkhModel extends GeoModel<AnkhProjectile> {
     @Override
     public ResourceLocation getModelResource(AnkhProjectile object) {
-
         return JCraft.id("geo/ankh.geo.json");
     }
 

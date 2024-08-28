@@ -6,14 +6,17 @@ import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 
-
-
 public class MeteorRenderer extends GeoProjectileRenderer<MeteorProjectile> {
-
     public MeteorRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new MeteorModel());
+    }
+
+    @Override
+    protected int getBlockLightLevel(MeteorProjectile entity, BlockPos pos) {
+        return 15;
     }
 
     @Override
