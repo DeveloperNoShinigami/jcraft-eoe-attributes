@@ -1,12 +1,24 @@
 package net.arna.jcraft.client.renderer.block;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import mod.azure.azurelib.renderer.GeoBlockRenderer;
 import net.arna.jcraft.client.model.tile.CoffinModel;
 import net.arna.jcraft.common.block.tile.CoffinTileEntity;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.state.properties.BedPart;
 
 public class CoffinTileRenderer extends GeoBlockRenderer<CoffinTileEntity> {
     public CoffinTileRenderer(BlockEntityRendererProvider.Context context) {
         super(new CoffinModel());
+    }
+
+    @Override
+    public void render(CoffinTileEntity animatable, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        if (BedPart.HEAD == animatable.getBlockState().getValue(BedBlock.PART)) {
+            return;
+        }
+        super.render(animatable, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
     }
 }
