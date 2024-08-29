@@ -106,10 +106,4 @@
 * MiH is missing a leg crusher anim (NOT LOW KICK - THERE IS A DIFFERENCE)
 
 
-* none of the capabilities save to NBT properly
-* any sort of player reload clears your stand & spec
-* this is because the type of stand and spec aren't properly stored in the NBT, see:
-/data get entity Dev ForgeCaps
-
-
 * Pet Shop rapidly resummons stand constantly
