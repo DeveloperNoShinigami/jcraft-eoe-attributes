@@ -54,6 +54,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             .withAnim(State.LOW_KICK)
             .withFollowup(LUNGE)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withBlockStun(7)
             .withInfo(
                     Component.literal("Low Kick"),
                     Component.literal("quick combo starter")

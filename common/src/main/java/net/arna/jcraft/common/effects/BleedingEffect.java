@@ -22,6 +22,6 @@ public class BleedingEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
-        entity.hurt(JDamageSources.bleeding(entity.level()), 1);
+        entity.hurt(JDamageSources.bleeding(entity.level()), 1.0f);
     }
 }

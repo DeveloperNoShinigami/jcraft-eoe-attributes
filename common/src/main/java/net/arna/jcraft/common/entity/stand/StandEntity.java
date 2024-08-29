@@ -948,7 +948,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 discard();
             }
 
-            // Block break check
+            // Block break / Guard crush check
             if (getStandGauge() < 1) {
                 user.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), 40, 2));
                 playSound(SoundEvents.TOTEM_USE, 1, 0.5f);
@@ -1405,7 +1405,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             amount /= 2.0F;
         }
 
-        if (getStandGauge() <= 0.0F || source.is(DamageTypes.FELL_OUT_OF_WORLD)) {
+        if (getStandGauge() <= 0.0F || source.is(DamageTypes.FELL_OUT_OF_WORLD) || source.is(DamageTypes.GENERIC_KILL)) {
             return super.hurt(source, amount);
         }
         return user.hurt(source, amount);
@@ -1458,7 +1458,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
         // Non-remote stands redirect damage within the AbstractSimpleAttack targetting filters.
         // Remote stands take normal damage, then redirect it within this classes damage() method.
-        return !isRemote() && !damageSource.is(DamageTypes.FELL_OUT_OF_WORLD);
+        return !isRemote() && !damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) && !damageSource.is(DamageTypes.GENERIC_KILL);
     }
 
     @Override

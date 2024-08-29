@@ -19,7 +19,7 @@ public interface JStatusRegistry {
     RegistrySupplier<MobEffect> STANDLESS = EFFECTS.register("standless", StandlessEffect::new);
     RegistrySupplier<MobEffect> OUTOFBODY = EFFECTS.register("outofbody", OutOfBodyEffect::new);
     RegistrySupplier<MobEffect> WEIGHTLESS = EFFECTS.register("weightless", WeightlessStatusEffect::new);
-    RegistrySupplier<MobEffect> BLEEDING = EFFECTS.register("bleeding", BleedingEffect::new);
+    RegistrySupplier<MobEffect> BLEEDING = EFFECTS.register("jbleeding", BleedingEffect::new);
     RegistrySupplier<MobEffect> PHPOISON = EFFECTS.register("phpoison", PurpleInfectionEffect::new);
 
 }

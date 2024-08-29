@@ -76,14 +76,14 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
 
     private void disappear() {
         entityData.set(DISAPPEARED, true);
-        die(damageSources().genericKill());
+        kill();
     }
 
     @Override
     public void tick() {
         super.tick();
         if (hasDisappeared()) {
-            if (deathTime > 20) discard();
+            if (deathTime > 26 || tickCount > 526) discard();
             return;
         }
 
@@ -135,7 +135,7 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
     // Physical properties
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
-        return !damageSource.is(DamageTypes.FELL_OUT_OF_WORLD);
+        return !damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) && !damageSource.is(DamageTypes.GENERIC_KILL);
     }
 
     @Override

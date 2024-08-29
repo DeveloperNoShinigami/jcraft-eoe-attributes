@@ -22,7 +22,7 @@ public class GEFrogEntity extends Frog implements IOwnable, ICustomDamageHandler
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.is(DamageTypes.FELL_OUT_OF_WORLD)) {
+        if (source.is(DamageTypes.FELL_OUT_OF_WORLD) || source.is(DamageTypes.GENERIC_KILL)) {
             spawnAtLocation(getMainHandItem());
             discard();
             return true;
@@ -60,7 +60,7 @@ public class GEFrogEntity extends Frog implements IOwnable, ICustomDamageHandler
                 getNavigation().moveTo(master, 3);
             }
 
-            if (--timeToLive == 0) {
+            if (--timeToLive < 1) {
                 kill();
             }
         }

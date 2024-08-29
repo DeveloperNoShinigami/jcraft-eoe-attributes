@@ -1,5 +1,13 @@
 package net.arna.jcraft.common.entity;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.util.IOwnable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -18,16 +26,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-
 import java.util.Arrays;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
+
+//todo: possibly merging multiple of these into a bird? it would be essentially another one of these but with more storage
 
 public class GEButterflyEntity extends FlyingMob implements GeoEntity, IOwnable {
     public GEButterflyEntity(EntityType<? extends FlyingMob> entityType, Level world) {

@@ -51,11 +51,30 @@
 #### General
 * Water transparency seemingly changes when the player hovers over a block
 
-* Horus is not fully implemented
 
 * KC still yells in english when he fucks up his counter :)
-* Unable to find animation: animation.kqbtd.bubble for KQBTDEntity
+* KC epitaph has fucked rendering
+
+
+* SheerHeartAttackEntity explosions cause ghost blocks - JCraft.explode() is broken?
+
+
+* Splatters dont render, but their hitboxes work
+
+
+* GETreeEntity is not properly rotated (Gold Experience's Utility)
+, it should point its treetop in the direction it launches you in
+
+
+* GravityLib rendering is fucked - F3 camera, particles, base-game animations, all broken in different gravities
+  * MR's Red Bind particles dont render in the right orientation when under different gravities
+* Similarly, C-Moon's Gravity Shift Pulse (standing Ult) doesn't seem to wear off on victims
+
+
 * Jittery animations for projectiles like SunBeamProjectile and MeteorProjectile
+
+
+* Horus is not fully implemented
 #### Forge
 * blood bar (InGameHudMixin) & stand bars dont render
 
