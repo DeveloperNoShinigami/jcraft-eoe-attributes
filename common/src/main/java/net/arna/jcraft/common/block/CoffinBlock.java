@@ -2,30 +2,22 @@ package net.arna.jcraft.common.block;
 
 import com.mojang.datafixers.util.Either;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
-import net.arna.jcraft.registry.JBlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -34,7 +26,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+//todo: make coffin drop itself
 
 // Actual sleep logic is handled in JServerEvents
 public class CoffinBlock extends BedBlock {
@@ -80,9 +72,9 @@ public class CoffinBlock extends BedBlock {
         } else {
             Either<Player.BedSleepingProblem, Unit> sleep = player.startSleepInBed(pos);
             sleep.ifRight(unit -> {
-                Vec3 bedPos = player.position().add(0, -0.2, 0).add(
-                        Vec3.atLowerCornerOf(facing.getNormal()).scale(1.1)
-                );
+                Vec3 bedPos = player.position().add(0, -0.2, 0)
+                        // .add( Vec3.atLowerCornerOf(facing.getNormal()).scale(1.1) )
+                        ;
                 player.teleportTo(bedPos.x, bedPos.y, bedPos.z);
             });
 

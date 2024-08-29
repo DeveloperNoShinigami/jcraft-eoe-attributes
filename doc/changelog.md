@@ -50,7 +50,7 @@
 ### Known Bugs
 #### General
 * Water transparency seemingly changes when the player hovers over a block
-* Projectiles render with inverted Pitch
+
 * Horus is not fully implemented
 
 * KC still yells in english when he fucks up his counter :)
@@ -65,4 +65,5 @@
 * cant sleep in coffin during day
 
 * any sort of player reload clears your stand & spec
-* setting your stand to CHARIOT_REQUIEM crashes the game
+* this is because the type of stand and spec aren't properly stored in the NBT, see:
+/data get entity Dev ForgeCaps

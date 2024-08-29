@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.MagiciansRedModel;
-import net.arna.jcraft.client.renderer.entity.layer.MRGlowLayer;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,7 +15,8 @@ import org.joml.Vector3d;
 public class MagiciansRedRenderer extends StandEntityRenderer<MagiciansRedEntity> {
     public MagiciansRedRenderer(EntityRendererProvider.Context context) {
         super(context, new MagiciansRedModel());
-        addRenderLayer(new MRGlowLayer(this));
+        //todo: animated glow layer for mr fire + whip
+        // addRenderLayer(new MRGlowLayer(this));
     }
 
     @Override

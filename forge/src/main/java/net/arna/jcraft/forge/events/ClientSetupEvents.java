@@ -16,7 +16,6 @@ public class ClientSetupEvents {
 
     @SubscribeEvent
     public static void onInitializeClient(final EntityRenderersEvent.RegisterRenderers event) {
-
         event.registerEntityRenderer(JEntityTypeRegistry.STAR_PLATINUM.get(), StarPlatinumRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.SPTW.get(), SPTWRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.KING_CRIMSON.get(), KingCrimsonRenderer::new);
@@ -60,6 +59,7 @@ public class ClientSetupEvents {
 
         event.registerEntityRenderer(JEntityTypeRegistry.HORUS.get(), HorusRenderer::new);
 
+        event.registerEntityRenderer(JEntityTypeRegistry.CHARIOT_REQUIEM.get(), ChariotRequiemRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.CINDERELLA.get(), CinderellaRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.OSIRIS.get(), OsirisRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.ATUM.get(), AtumRenderer::new);
