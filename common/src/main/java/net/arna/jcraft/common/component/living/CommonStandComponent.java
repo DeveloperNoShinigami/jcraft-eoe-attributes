@@ -1,10 +1,11 @@
 package net.arna.jcraft.common.component.living;
 
+import net.arna.jcraft.common.component.JComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import org.jetbrains.annotations.Nullable;
 
-public interface CommonStandComponent {
+public interface CommonStandComponent extends JComponent {
     @Nullable
     StandType getType();
 

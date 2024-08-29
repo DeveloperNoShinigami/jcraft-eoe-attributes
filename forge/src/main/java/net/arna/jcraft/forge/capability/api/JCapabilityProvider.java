@@ -20,7 +20,7 @@ public class JCapabilityProvider<C extends INBTSerializable<CompoundTag>> implem
     public JCapabilityProvider(Capability<C> capability, NonNullSupplier<C> capInstance) {
         this.capability = capability;
         this.instance = capInstance.get();
-        this.capOptional = LazyOptional.of(capInstance);
+        this.capOptional = LazyOptional.of(() -> this.instance);
     }
 
     @Nonnull

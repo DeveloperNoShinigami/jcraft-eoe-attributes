@@ -2,6 +2,7 @@ package net.arna.jcraft.forge.events;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.block.tile.CoffinTileEntity;
+import net.arna.jcraft.common.component.JComponent;
 import net.arna.jcraft.forge.capability.api.JCapabilityProvider;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
@@ -10,6 +11,7 @@ import net.arna.jcraft.forge.capability.impl.player.PhCapability;
 import net.arna.jcraft.forge.capability.impl.player.SpecCapability;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -32,10 +35,12 @@ public class RuntimeEvents {
 
     @SubscribeEvent
     public static void attachEntityCapability(AttachCapabilitiesEvent<Entity> event) {
+        // When adding a new capability, make sure to add it to the syncEntityCapability and playerClone methods.
         if (event.getObject() instanceof Player player) {
             event.addCapability(JCraft.id("ph_capability"), new JCapabilityProvider<>(PhCapability.CAPABILITY, () -> new PhCapability(player)));
             event.addCapability(JCraft.id("spec_capability"), new JCapabilityProvider<>(SpecCapability.CAPABILITY, () -> new SpecCapability(player)));
         }
+
         if (event.getObject() instanceof LivingEntity living) {
             event.addCapability(JCraft.id("bomb_capability"), new JCapabilityProvider<>(BombTrackerCapability.CAPABILITY, () -> new BombTrackerCapability(living)));
             event.addCapability(JCraft.id("cd_capability"), new JCapabilityProvider<>(CooldownsCapability.CAPABILITY, () -> new CooldownsCapability(living)));
@@ -86,8 +91,26 @@ public class RuntimeEvents {
 
     @SubscribeEvent
     public static void playerClone(PlayerEvent.Clone event) {
-        PhCapability.getCapabilityOptional(event.getOriginal()).ifPresent(o -> PhCapability.getCapabilityOptional(event.getEntity()).ifPresent(c -> c.deserializeNBT(o.serializeNBT())));
-        SpecCapability.getCapabilityOptional(event.getOriginal()).ifPresent(o -> SpecCapability.getCapabilityOptional(event.getEntity()).ifPresent(c -> c.deserializeNBT(o.serializeNBT())));
+        event.getOriginal().reviveCaps();
+        copyCapability(PhCapability.CAPABILITY, event.getOriginal(), event.getEntity());
+        copyCapability(SpecCapability.CAPABILITY, event.getOriginal(), event.getEntity());
+        copyCapability(BombTrackerCapability.CAPABILITY, event.getOriginal(), event.getEntity());
+        copyCapability(CooldownsCapability.CAPABILITY, event.getOriginal(), event.getEntity());
+        copyCapability(HitPropertyCapability.CAPABILITY, event.getOriginal(), event.getEntity());
+        copyCapability(MiscCapability.CAPABILITY, event.getOriginal(), event.getEntity());
+        copyCapability(StandCapability.CAPABILITY, event.getOriginal(), event.getEntity());
+        copyCapability(VampireCapability.CAPABILITY, event.getOriginal(), event.getEntity());
+        copyCapability(GrabCapability.CAPABILITY, event.getOriginal(), event.getEntity());
+        copyCapability(TimeStopCapability.CAPABILITY, event.getOriginal(), event.getEntity());
+        event.getOriginal().invalidateCaps();
+    }
+
+    private static <C extends JComponent> void copyCapability(Capability<C> cap, Entity from, Entity to) {
+        from.getCapability(cap).ifPresent(c -> to.getCapability(cap).ifPresent(c2 -> {
+            CompoundTag tag = new CompoundTag();
+            c.writeToNbt(tag);
+            c2.readFromNbt(tag);
+        }));
     }
 
     @SubscribeEvent

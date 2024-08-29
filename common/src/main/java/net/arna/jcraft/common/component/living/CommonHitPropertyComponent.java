@@ -1,8 +1,9 @@
 package net.arna.jcraft.common.component.living;
 
+import net.arna.jcraft.common.component.JComponent;
 import net.minecraft.world.phys.Vec3;
 
-public interface CommonHitPropertyComponent {
+public interface CommonHitPropertyComponent extends JComponent {
     // Hit Animation
     long endHitAnimTime();
 

@@ -1,8 +1,9 @@
 package net.arna.jcraft.common.component.living;
 
+import net.arna.jcraft.common.component.JComponent;
 import net.arna.jcraft.common.util.CooldownType;
 
-public interface CommonCooldownsComponent {
+public interface CommonCooldownsComponent extends JComponent {
     /**
      * Gets the current cooldown in ticks for the given type.
      *

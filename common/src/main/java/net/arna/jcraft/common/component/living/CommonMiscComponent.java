@@ -1,10 +1,12 @@
 package net.arna.jcraft.common.component.living;
 
-import java.util.UUID;
+import net.arna.jcraft.common.component.JComponent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
-public interface CommonMiscComponent {
+import java.util.UUID;
+
+public interface CommonMiscComponent extends JComponent {
     // General
     Vec3 getDesiredVelocity();
 

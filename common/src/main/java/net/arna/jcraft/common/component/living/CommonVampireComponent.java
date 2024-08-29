@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.component.living;
 
-public interface CommonVampireComponent {
+import net.arna.jcraft.common.component.JComponent;
+
+public interface CommonVampireComponent extends JComponent {
     float getBlood();
 
     void setBlood(float blood);

@@ -1,12 +1,13 @@
 package net.arna.jcraft.common.component.living;
 
+import net.arna.jcraft.common.component.JComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public interface CommonBombTrackerComponent {
+public interface CommonBombTrackerComponent extends JComponent {
     class BombData {
         public boolean dirty = false;
         public boolean isEntity = false, isBlock = false, isItem = false;
