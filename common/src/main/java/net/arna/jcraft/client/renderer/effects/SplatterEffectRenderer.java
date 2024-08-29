@@ -2,11 +2,7 @@ package net.arna.jcraft.client.renderer.effects;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import net.arna.jcraft.common.splatter.JSplatterManager;
 import net.arna.jcraft.common.splatter.SplatterSection;
 import net.arna.jcraft.common.util.JUtils;
@@ -54,7 +50,7 @@ public class SplatterEffectRenderer {
                 }
             }
 
-            tess.end();
+            BufferUploader.drawWithShader(buf.end());
             matrices.popPose();
         });
 

@@ -11,7 +11,8 @@
   ],
   "client": [
     "client.GameRendererMixin",
-    "client.KeyBindingMixin"
+    "client.KeyBindingMixin",
+    "client.LevelRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

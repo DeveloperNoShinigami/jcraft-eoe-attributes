@@ -36,8 +36,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL30;
 
 import java.util.Iterator;
 import java.util.List;
@@ -49,7 +47,7 @@ import static net.arna.jcraft.client.util.JClientUtils.activeTimestops;
 @Environment(EnvType.CLIENT)
 public class JClientEvents {
 
-    public static void onLast(PoseStack matrixStack, Vec3 cameraPos, LevelRenderer worldRenderer) {
+    public static void onLast(PoseStack matrixStack, Vec3 cameraPos) {
         matrixStack.pushPose();
         matrixStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
         Minecraft.getInstance().getMainRenderTarget().bindWrite(false);

@@ -58,7 +58,7 @@ public final class JCraftFabricClient implements ClientModInitializer {
         });
 
         WorldRenderEvents.LAST.register(context -> {
-            JClientEvents.onLast(context.matrixStack(), context.camera().getPosition(), context.worldRenderer());
+            JClientEvents.onLast(context.matrixStack(), context.camera().getPosition());
         });
 
         WorldRenderEvents.AFTER_ENTITIES.register(context -> {
@@ -70,10 +70,10 @@ public final class JCraftFabricClient implements ClientModInitializer {
         });
 
         WorldRenderEvents.START.register(context -> {
-            TimeAccelerationEffectRenderer.render(context.matrixStack(), context.camera().getPosition(), context.world(), context.tickDelta());
+            TimeAccelerationEffectRenderer.render(context.world());
         });
 
-        WorldRenderEvents.START.register(context -> {
+        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
             SplatterEffectRenderer.render(context.matrixStack(), context.camera().getPosition(), context.world(), context.tickDelta());
         });
 

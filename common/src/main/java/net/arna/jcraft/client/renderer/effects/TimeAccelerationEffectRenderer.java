@@ -1,18 +1,16 @@
 package net.arna.jcraft.client.renderer.effects;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.experimental.UtilityClass;
 import net.arna.jcraft.common.network.s2c.TimeAccelStatePacket;
 import net.minecraft.Util;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.phys.Vec3;
 
 @UtilityClass
 public class TimeAccelerationEffectRenderer {
 
 
-    public static void render(PoseStack stack, Vec3 camPos, ClientLevel world, float tickDelta) {
+    public static void render(ClientLevel world) {
         if (!world.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)) {
             return;
         }
