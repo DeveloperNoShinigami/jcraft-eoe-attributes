@@ -24,6 +24,7 @@
 * using the stand arrow now damages the user based on difficulty level (damage amount is a Game Rule)
 * improved texture and recipe for Green Baby
 * DIO's Diary can now be put into chiseled bookshelves
+* Skins now transfer between evolutions
 #### Generation
 * meteorites can now also be found in Ice Spikes Biome
 * added Devil's Palm Biome
@@ -49,17 +50,21 @@
 * Bug: Inventory disappeared instead of dropped when killed while being stunned
 ### Known Bugs
 #### General
+* Timestop doesnt stop animated textures
+
+
 * Water transparency seemingly changes when the player hovers over a block
 
 
-* KC still yells in english when he fucks up his counter :)
 * KC epitaph has fucked rendering
 
 
+* Enemies can attack through dimensions (hit something -> D4C ult -> attacked by invisible ent)
+* To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
+* Also, there should be a semi-active check for people inside the D4C dimension that arent logged in PastDimensions
+
+
 * SheerHeartAttackEntity explosions cause ghost blocks - JCraft.explode() is broken?
-
-
-* Splatters dont render, but their hitboxes work
 
 
 * GETreeEntity is not properly rotated (Gold Experience's Utility)
@@ -68,21 +73,43 @@
 
 * GravityLib rendering is fucked - F3 camera, particles, base-game animations, all broken in different gravities
   * MR's Red Bind particles dont render in the right orientation when under different gravities
-* Similarly, C-Moon's Gravity Shift Pulse (standing Ult) doesn't seem to wear off on victims
 
 
 * Jittery animations for projectiles like SunBeamProjectile and MeteorProjectile
 
 
 * Horus is not fully implemented
+
+
+* Getting stand skins is no longer possible due to Smithing Table rework
 #### Forge
-* blood bar (InGameHudMixin) & stand bars dont render
+* MISSING GRAVITY COMPONENT IMPL
 
-* changing the velocity of a projectile doesnt mark it as dirty which causes teleports for shit like Magician's Special 1 into crouching m1 (redirect)
-* Magician's Red has a missing glow layer (ez)
 
-* cant sleep in coffin during day
+* Shockwaves are not rendered
 
+
+* blood bar (InGameHudMixin) & stand bars don't render
+
+
+* KC epitaph doesn't render
+`  [16:27:24] [Netty Local Client IO #0/ERROR] [de.ar.ne.fo.NetworkManagerImpl/]: Unknown message ID: jcraft:epth`
+* KC Time Erase renders better than fabric, though it doesn't play the exit noise
+
+
+* KQ doesnt have particles when bomb is placed
+
+
+* changing the velocity of a projectile doesn't mark it as dirty which causes teleports for shit like Magician's Special 1 into crouching m1 (redirect)
+
+
+* MiH is missing a leg crusher anim (NOT LOW KICK - THERE IS A DIFFERENCE)
+
+
+* none of the capabilities save to NBT properly
 * any sort of player reload clears your stand & spec
 * this is because the type of stand and spec aren't properly stored in the NBT, see:
 /data get entity Dev ForgeCaps
+
+
+* Pet Shop rapidly resummons stand constantly

@@ -46,7 +46,7 @@ public abstract class StandObtainmentItem extends Item {
                 itemStack.shrink(1);
             }
 
-            standData.setType(standIOMap.get(type));
+            standData.setTypeAndSkin(standIOMap.get(type), standData.getSkin());
 
             // Re-summon users stand
             StandEntity<?, ?> stand = standData.getStand();

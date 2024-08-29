@@ -380,6 +380,9 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
         if (gravityList.removeIf(g -> g.duration() == 0)) {
             if (highestBefore != null) {
                 updateGravity(highestBefore.rotationParameters(), false);
+            } else {
+                // Added this here because mobs would not reset gravity after it ran out.
+                updateGravity(new RotationParameters(false, false, false, 0), true);
             }
         }
         for (Gravity temp : gravityList) {
