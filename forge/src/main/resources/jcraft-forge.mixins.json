@@ -10,6 +10,7 @@
     "gravity.ServerPlayerEntityMixin"
   ],
   "client": [
+    "client.ForgeGuiMixin",
     "client.GameRendererMixin",
     "client.KeyBindingMixin",
     "client.LevelRendererAccessor"

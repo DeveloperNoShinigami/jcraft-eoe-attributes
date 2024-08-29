@@ -1,6 +1,7 @@
 package net.arna.jcraft.forge.events;
 
 
+import net.arna.jcraft.client.gui.hud.JCraftHudOverlay;
 import net.arna.jcraft.client.registry.JEntityRendererRegister;
 import net.arna.jcraft.client.renderer.entity.*;
 import net.arna.jcraft.client.renderer.entity.projectiles.*;
@@ -8,6 +9,8 @@ import net.arna.jcraft.client.renderer.entity.stands.*;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -85,5 +88,11 @@ public class ClientSetupEvents {
         event.registerEntityRenderer(JEntityTypeRegistry.AYA_TSUJI.get(), AyaTsujiRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.DARBY_OLDER.get(), DarbyOlderRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.DARBY_YOUNGER.get(), DarbyYoungerRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerBelow(VanillaGuiOverlay.CHAT_PANEL.id(), "hud", (gui, guiGraphics, partialTick, screenWidth, screenHeight) ->
+                JCraftHudOverlay.render(guiGraphics));
     }
 }
