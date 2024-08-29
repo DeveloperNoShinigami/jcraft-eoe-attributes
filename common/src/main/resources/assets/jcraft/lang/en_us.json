@@ -383,6 +383,7 @@
   "commands.gravity.set.self": "Set own gravity to %s",
   "commands.gravity.set.other": "Set %s's gravity to %s",
   "text.autoconfig.jcraft.option.uiPosition": "UI Position",
+  "text.autoconfig.jcraft.option.clientsidePrediction": "Client-side Prediction",
   "text.autoconfig.jcraft.option.iconHud": "Icon HUD",
   "text.autoconfig.jcraft.option.standAuras": "Stand Auras",
   "text.autoconfig.jcraft.option.timeEraseShader": "Time Erase Shader",
