@@ -1,6 +1,8 @@
 package net.arna.jcraft.forge.client;
 
+import me.shedaniel.autoconfig.AutoConfig;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.particle.*;
@@ -13,8 +15,10 @@ import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -25,6 +29,9 @@ public class JCraftForgeClient {
     public static void handleClientSetup(final FMLClientSetupEvent ignoredEvent) {
         JCraftClient.init();
         //JModelPredicateProviderRegistry.register();
+
+        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory(
+                (minecraft, screen) -> AutoConfig.getConfigScreen(JClientConfig.class, screen).get()));
 
         ignoredEvent.enqueueWork(() -> {
             JModelPredicateProviderRegistry.register();
