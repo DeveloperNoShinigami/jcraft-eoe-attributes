@@ -5,13 +5,14 @@ license = "All Rights Reserved"
 
 [[mods]]
 modId = "jcraft"
+logoFile= "assets/jcraft/icon.png"
+logoBlur=false
 version = "${version}"
 displayName = "JCraft"
 authors = "jcraft"
 description = '''
 so yeah we wanted to add jojo stands to mc
 '''
-#logoFile = ""
 
 [[dependencies.jcraft]]
 modId = "forge"
