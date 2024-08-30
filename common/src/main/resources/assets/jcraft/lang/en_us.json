@@ -382,6 +382,7 @@
   "commands.gravity.get.other": "%s's gravity is %s",
   "commands.gravity.set.self": "Set own gravity to %s",
   "commands.gravity.set.other": "Set %s's gravity to %s",
+  "text.autoconfig.jcraft.title": "JCraft Config",
   "text.autoconfig.jcraft.option.uiPosition": "UI Position",
   "text.autoconfig.jcraft.option.clientsidePrediction": "Client-side Prediction",
   "text.autoconfig.jcraft.option.iconHud": "Icon HUD",
