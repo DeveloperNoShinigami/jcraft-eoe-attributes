@@ -20,6 +20,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -45,7 +47,7 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
         livingOwner = null;
     }
 
-    public LargeIcicleProjectile(Level world, LivingEntity owner) {
+    public LargeIcicleProjectile(Level world, @NotNull LivingEntity owner) {
         super(JEntityTypeRegistry.LARGE_ICICLE.get(), owner, world);
         // setNoGravity(true);
         setNoPhysics(true);
@@ -108,10 +110,60 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
                             pos.z + direction.z * 2.5 + random.nextGaussian() * 0.25,
                             JParticleType.HIT_SPARK_2);
                 }
-                playSound(SoundEvents.GLASS_BREAK, 1, 1);
+                playSound(SoundEvents.TRIDENT_THROW, 1, 1);
             }
         } else if (ticksInAir > 50) {
             discard();
+        }
+    }
+
+    public void detonate() {
+        Vec3 direction = getDeltaMovement().normalize();
+        double x = getX();
+        double y = getY();
+        double z = getZ();
+        float pitch = -getXRot();
+        float yaw = -getYRot() + 180;
+        for (int set = 0; set < 3; set++) {
+            for (int i = 0; i < 3; i++) {
+                IcicleProjectile icicle = new IcicleProjectile(level(), livingOwner);
+                float yawOffset = 10f * (i - 1);
+                float pitchOffset = (i == 1) ? 10f : -10f;
+                if (set % 2 == 0) pitchOffset = -pitchOffset;
+                icicle.moveTo(x, y, z, yaw, pitch);
+                JUtils.shoot(
+                        icicle,
+                        null,
+                        (pitch + pitchOffset),
+                        (yaw + yawOffset),
+                        0,
+                        0.5F + 0.5F / (set + 1), 0.0F
+                );
+                level().addFreshEntity(icicle);
+            }
+            x += direction.x;
+            y += direction.y;
+            z += direction.z;
+        }
+
+        kill();
+        level().playSound(null, x, y, z, SoundEvents.GLASS_BREAK, SoundSource.NEUTRAL, 1, 0.8f);
+    }
+
+    @Override
+    public void onClientRemoval() {
+        super.onClientRemoval();
+        double x = getX();
+        double y = getY();
+        double z = getZ();
+        Vec3 velocity = getDeltaMovement().normalize();
+
+        for (int i = 0; i < 32; i++) {
+            level().addParticle(random.nextBoolean() ? ICE_PARTICLE : ParticleTypes.SNOWFLAKE, x, y, z,
+                    (velocity.x + random.nextGaussian()) * 0.5,
+                    (velocity.y + random.nextGaussian()) * 0.5,
+                    (velocity.z + random.nextGaussian()) * 0.5
+            );
         }
     }
 

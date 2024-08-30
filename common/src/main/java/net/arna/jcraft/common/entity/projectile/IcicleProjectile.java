@@ -29,6 +29,7 @@ import net.minecraft.world.phys.Vec3;
 public class IcicleProjectile extends AbstractArrow implements GeoEntity {
     private int ticksInAir;
     private int bouncesLeft = 5;
+    private float damage = 1f;
     private boolean reflect = false;
 
     public IcicleProjectile(EntityType<? extends IcicleProjectile> entityType, Level world) {
@@ -100,6 +101,10 @@ public class IcicleProjectile extends AbstractArrow implements GeoEntity {
         }
     }
 
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
     @Override
     protected void onHit(HitResult hitResult) {
         if (reflect) {
@@ -116,6 +121,7 @@ public class IcicleProjectile extends AbstractArrow implements GeoEntity {
                     this.onHitBlock(blockHitResult);
                     BlockPos blockPos = blockHitResult.getBlockPos();
                     this.level().gameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Context.of(this, this.level().getBlockState(blockPos)));
+
                 }
             }
         } else {
@@ -141,7 +147,8 @@ public class IcicleProjectile extends AbstractArrow implements GeoEntity {
         int blockstun = 4;
         int stunT = 10;
 
-        JUtils.projectileDamageLogic(this, level(), entity, Vec3.ZERO, stunT, 1, false, 1, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
+        JUtils.projectileDamageLogic(this, level(), entity, getDeltaMovement().normalize().scale(0.3),
+                stunT, 1, false, damage, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
         playSound(SoundEvents.GLASS_BREAK, 1, 1);
         discard();
     }

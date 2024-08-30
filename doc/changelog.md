@@ -59,6 +59,9 @@
 * KC epitaph models have fucked rendering
 
 
+* Mobs dont flash red when hit by stands
+
+
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by invisible ent)
 * To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
 * Also, there should be a semi-active check for people inside the D4C dimension that arent logged in PastDimensions
@@ -89,12 +92,15 @@
 * Shockwaves are not rendered
 
 
+* HitAnimations arent shown
+
+
 * KC epitaph overlay doesn't render
 `  [16:27:24] [Netty Local Client IO #0/ERROR] [de.ar.ne.fo.NetworkManagerImpl/]: Unknown message ID: jcraft:epth`
 * KC Time Erase renders better than fabric, though it doesn't play the exit noise
 
 
-* KQ doesnt have particles when bomb is placed
+* KQ doesn't have particles when bomb is placed
 
 
 * changing the velocity of a projectile doesn't mark it as dirty which causes teleports for shit like Magician's Special 1 into crouching m1 (redirect)

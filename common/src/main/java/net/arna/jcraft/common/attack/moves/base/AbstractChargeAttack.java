@@ -14,7 +14,7 @@ import java.util.Set;
 @Getter
 public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, S>, A extends StandEntity<A, S>, S extends Enum<S> & StandAnimationState<A>>
         extends AbstractSimpleAttack<T, A> {
-    private final S hitAnimState;
+    protected final S hitAnimState;
 
     protected AbstractChargeAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                                    float hitboxSize, float knockback, float offset, S hitAnimState) {
@@ -37,14 +37,14 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-
-        if (!targets.isEmpty()) {
-            attacker.setCurrentMove(null);
-            attacker.setMoveStun(10);
-            attacker.setState(hitAnimState);
-        }
-
+        if (!targets.isEmpty()) endCharge(attacker);
         return targets;
+    }
+
+    protected void endCharge(A attacker) {
+        attacker.setCurrentMove(null);
+        attacker.setMoveStun(10);
+        attacker.setState(hitAnimState);
     }
 
     @Override
@@ -58,7 +58,7 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
         return attacker.position().add(getRotVec(attacker).scale(moveDistance / windupPoint));
     }
 
-    protected void tickChargeAttack(StandEntity<?, ?> attacker, boolean shouldPerform, float moveDistance, int windupPoint) {
+    protected void tickChargeAttack(StandEntity<A, S> attacker, boolean shouldPerform, float moveDistance, int windupPoint) {
         if (shouldPerform) {
             //float t = 1f - (float) curMoveStun / (float) realInitTime;
             Vec3 newPos = advanceChargePos(attacker, moveDistance, windupPoint);
