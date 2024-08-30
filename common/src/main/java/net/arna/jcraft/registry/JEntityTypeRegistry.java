@@ -272,6 +272,26 @@ public interface JEntityTypeRegistry {
                     .build("emerald")
     );
 
+    RegistrySupplier<EntityType<IcicleProjectile>> ICICLE = ENTITY_TYPE_REGISTRY.register(JCraft.id("icicle"),
+            () -> EntityType.Builder.of(
+                            (EntityType<IcicleProjectile> entityType, Level world) -> new IcicleProjectile(world),
+                            MobCategory.MISC
+                    ).sized(0.5f, 0.5f)
+                    .clientTrackingRange(6)
+                    .updateInterval(15)
+                    .build("icicle")
+    );
+
+    RegistrySupplier<EntityType<LargeIcicleProjectile>> LARGE_ICICLE = ENTITY_TYPE_REGISTRY.register(JCraft.id("large_icicle"),
+            () -> EntityType.Builder.of(
+                            (EntityType<LargeIcicleProjectile> entityType, Level world) -> new LargeIcicleProjectile(world),
+                            MobCategory.MISC
+                    ).sized(1.0f, 1.0f)
+                    .clientTrackingRange(6)
+                    .updateInterval(1)
+                    .build("large_icicle")
+    );
+
     RegistrySupplier<EntityType<BulletProjectile>> BULLET = ENTITY_TYPE_REGISTRY.register(JCraft.id("bullet"),
             () -> EntityType.Builder.of(
                             (EntityType<BulletProjectile> entityType, Level world) -> new BulletProjectile(entityType, world),

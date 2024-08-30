@@ -7,13 +7,13 @@
 				"texture_width": 64,
 				"texture_height": 64,
 				"visible_bounds_width": 4,
-				"visible_bounds_height": 4.5,
-				"visible_bounds_offset": [0, 1.75, 0]
+				"visible_bounds_height": 5.5,
+				"visible_bounds_offset": [0, 2.25, 0]
 			},
 			"bones": [
 				{
 					"name": "base",
-					"pivot": [0, 4, -1]
+					"pivot": [0, 19.25, -1]
 				},
 				{
 					"name": "horus",
@@ -244,7 +244,9 @@
 						{"origin": [-3, 34, -4], "size": [6, 5, 7], "uv": [0, 15]},
 						{"origin": [-1, 39, -1], "size": [2, 2, 9], "uv": [18, 18]},
 						{"origin": [0, 33, 3], "size": [0, 8, 9], "uv": [0, 18]},
-						{"origin": [-2.5, 33, -3], "size": [5, 7, 8], "inflate": -0.001, "uv": [0, 0]}
+						{"origin": [-2.5, 33, -3], "size": [5, 7, 8], "inflate": -0.001, "uv": [0, 0]},
+						{"origin": [1.24358, 36, -4.2019], "size": [2, 2, 3], "pivot": [2.24358, 37, -2.7019], "rotation": [-0.65426, 4.95712, -7.52832], "uv": [0, 52]},
+						{"origin": [-3.24358, 36, -4.2019], "size": [2, 2, 3], "pivot": [-2.24358, 37, -2.7019], "rotation": [-0.65426, -4.95712, 7.52832], "uv": [0, 52], "mirror": true}
 					]
 				},
 				{
@@ -254,7 +256,7 @@
 					"rotation": [2.5, 0, 0],
 					"cubes": [
 						{"origin": [-2.5, 34, -7.9], "size": [5, 3, 4], "uv": [18, 29]},
-						{"origin": [-1.5, 34, -10.9], "size": [3, 3, 3], "uv": [40, 39]},
+						{"origin": [-1.5, 34, -10.9], "size": [3, 2, 3], "uv": [40, 39]},
 						{"origin": [0, 33.01956, -15.05851], "size": [0, 3, 5], "pivot": [0.5, 34.76956, -11.05851], "rotation": [22.5, 0, 0], "uv": [16, 37]}
 					]
 				},

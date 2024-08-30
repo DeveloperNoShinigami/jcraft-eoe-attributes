@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.HorusModel;
+import net.arna.jcraft.client.renderer.entity.layer.HorusEyesLayer;
 import net.arna.jcraft.common.entity.stand.HorusEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 public class HorusRenderer extends StandEntityRenderer<HorusEntity> {
     public HorusRenderer(EntityRendererProvider.Context context) {
         super(context, new HorusModel());
+        addRenderLayer(new HorusEyesLayer(this));
     }
 
     @Override

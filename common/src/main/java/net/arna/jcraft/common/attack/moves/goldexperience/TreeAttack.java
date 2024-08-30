@@ -10,6 +10,7 @@ import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -26,17 +27,24 @@ public class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExperienceE
     public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        GETreeEntity tree = new GETreeEntity(JEntityTypeRegistry.GE_TREE.get(), attacker.level(), user.getLookAngle().scale(1.33));
+        Vec3 direction = user.getLookAngle();
+
+        GETreeEntity tree = new GETreeEntity(JEntityTypeRegistry.GE_TREE.get(), attacker.level(), direction.scale(1.33));
         tree.setMaster(user);
 
         Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
-        Vec3 midPos = RotationUtil.vecPlayerToWorld(0.0, attacker.getBbHeight() * 0.25, 0.0, gravity);
         GravityChangerAPI.setDefaultGravityDirection(tree, gravity);
-        //todo: fix tree rotation
-        // Vec2 corrected = RotationUtil.rotWorldToPlayer(-attacker.getYRot(), -attacker.getXRot(), gravity);
-        // tree.moveTo(attacker.getX() + midPos.x, attacker.getY() + midPos.y, attacker.getZ() + midPos.z, corrected.x, corrected.y);
-        tree.setPos(attacker.position().add(midPos));
-        tree.setDeltaMovement(user.getLookAngle().scale(0.1));
+
+        Vec3 midPos = RotationUtil.vecPlayerToWorld(0.0, attacker.getBbHeight() * 0.25, 0.0, gravity);
+        double e = direction.x;
+        double f = direction.y;
+        double g = direction.z;
+        double l = direction.horizontalDistance();
+        tree.moveTo(attacker.getX() + midPos.x, attacker.getY() + midPos.y, attacker.getZ() + midPos.z,
+                (float) (Mth.atan2(e, g) * 57.2957763671875),
+                (float) (Mth.atan2(f, l) * 57.2957763671875)
+        );
+
         attacker.level().addFreshEntity(tree);
 
         return targets;

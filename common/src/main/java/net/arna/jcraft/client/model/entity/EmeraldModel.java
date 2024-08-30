@@ -5,7 +5,6 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.EmeraldProjectile;
 import net.minecraft.resources.ResourceLocation;
 
-
 public class EmeraldModel extends GeoModel<EmeraldProjectile> {
     @Override
     public ResourceLocation getModelResource(EmeraldProjectile object) {

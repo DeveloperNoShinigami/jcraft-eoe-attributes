@@ -56,7 +56,7 @@
 * Water transparency seemingly changes when the player hovers over a block
 
 
-* KC epitaph has fucked rendering
+* KC epitaph models have fucked rendering
 
 
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by invisible ent)
@@ -89,10 +89,7 @@
 * Shockwaves are not rendered
 
 
-* blood bar (InGameHudMixin) & stand bars don't render
-
-
-* KC epitaph doesn't render
+* KC epitaph overlay doesn't render
 `  [16:27:24] [Netty Local Client IO #0/ERROR] [de.ar.ne.fo.NetworkManagerImpl/]: Unknown message ID: jcraft:epth`
 * KC Time Erase renders better than fabric, though it doesn't play the exit noise
 
@@ -107,3 +104,7 @@
 
 
 * Pet Shop rapidly resummons stand constantly
+
+#### todo :)
+* Internationalization
+* Make all non-abstract Attack classes final
