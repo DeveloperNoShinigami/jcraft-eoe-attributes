@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.util;
 
+import com.google.common.base.MoreObjects;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import net.arna.jcraft.JCraft;
@@ -422,7 +423,8 @@ public final class JUtils {
             return;
         }
 
-        Explosion explosion = new Explosion(world, entity, x, y, z, power, false, Explosion.BlockInteraction.KEEP);
+        Explosion explosion = new Explosion(world, entity, x, y, z, power,
+                MoreObjects.firstNonNull(modifier.getCreateFire(), false), modifier.getDestructionType());
         ((IJExplosion) explosion).jcraft$setModifier(modifier);
         explosion.explode();
         explosion.finalizeExplosion(true);

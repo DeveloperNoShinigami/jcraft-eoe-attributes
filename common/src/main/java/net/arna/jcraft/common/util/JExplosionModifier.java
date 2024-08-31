@@ -75,12 +75,12 @@ public class JExplosionModifier {
 
     public static class Builder {
 
-        public net.arna.jcraft.common.util.JExplosionModifier.Builder volume(float volume) {
+        public JExplosionModifier.Builder volume(float volume) {
             volumeGetter(random -> volume);
             return this;
         }
 
-        public net.arna.jcraft.common.util.JExplosionModifier.Builder pitch(float pitch) {
+        public JExplosionModifier.Builder pitch(float pitch) {
             pitchGetter(random -> pitch);
             return this;
         }

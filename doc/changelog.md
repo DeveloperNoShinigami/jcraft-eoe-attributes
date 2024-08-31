@@ -66,10 +66,6 @@
 * To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
 * Also, there should be a semi-active check for people inside the D4C dimension that arent logged in PastDimensions
 
-
-* SheerHeartAttackEntity explosions cause ghost blocks - JCraft.explode() is broken?
-
-
 * GETreeEntity is not properly rotated (Gold Experience's Utility)
 , it should point its treetop in the direction it launches you in
 
@@ -113,4 +109,3 @@
 
 #### todo :)
 * Internationalization
-* Make all non-abstract Attack classes final
