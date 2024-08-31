@@ -719,6 +719,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             world.broadcastEntityEvent(ent, (byte) 2);
         }
 
+        ent.level().broadcastDamageEvent(ent, damageSource);
+        invoker.callPlayHurtSound(damageSource);
         invoker.setLastDamageTaken(damage);
         invoker.setLastDamageSource(damageSource);
         invoker.setLastDamageTime(world.getGameTime());

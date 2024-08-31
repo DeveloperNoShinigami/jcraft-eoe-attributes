@@ -53,13 +53,10 @@
 * Timestop doesnt stop animated textures
 
 
-* Water transparency seemingly changes when the player hovers over a block
+* Water transparency seemingly changes when the player hovers over a block (appears to have disappeared)
 
 
 * KC epitaph models have fucked rendering
-
-
-* Mobs dont flash red when hit by stands
 
 
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by invisible ent)
