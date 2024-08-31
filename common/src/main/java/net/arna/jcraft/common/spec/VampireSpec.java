@@ -111,7 +111,6 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
     public VampireSpec(Player player) {
         super(SpecType.VAMPIRE, player);
         vampireComponent = JComponentPlatformUtils.getVampirism(player);
-        vampireComponent.setVampire(true);
     }
 
     @Override

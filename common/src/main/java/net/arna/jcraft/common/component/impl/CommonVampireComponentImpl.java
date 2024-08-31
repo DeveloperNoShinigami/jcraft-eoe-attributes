@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.SpecType;
+import net.arna.jcraft.common.spec.VampireSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.Level;
 
 public abstract class CommonVampireComponentImpl implements CommonVampireComponent {
     private final LivingEntity entity;
-    private Player player;
+    private final Player player;
     private FoodData hungerManager = null;
     private boolean isVampire = false;
     @Getter
@@ -34,7 +35,7 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
         if (entity instanceof Player playerEntity) {
             this.player = playerEntity;
             hungerManager = playerEntity.getFoodData();
-        }
+        } else this.player = null;
     }
 
     public void tick() {
@@ -103,11 +104,12 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
 
     @Override
     public boolean isVampire() {
-        return isVampire;
+        return isVampire || player != null && JUtils.getSpec(player) instanceof VampireSpec;
     }
 
     @Override
     public void setVampire(boolean b) {
+        if (b == this.isVampire) return;
         this.isVampire = b;
         sync(entity);
     }
