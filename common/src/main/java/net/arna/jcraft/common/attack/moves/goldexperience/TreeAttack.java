@@ -16,7 +16,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
-public class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExperienceEntity> {
+public final class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExperienceEntity> {
     public TreeAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize,
                       float knockback, float offset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);

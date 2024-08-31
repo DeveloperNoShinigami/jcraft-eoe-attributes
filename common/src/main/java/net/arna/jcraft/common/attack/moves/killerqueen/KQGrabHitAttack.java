@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 @Getter
-public class KQGrabHitAttack extends AbstractMove<KQGrabHitAttack, KillerQueenEntity> {
+public final class KQGrabHitAttack extends AbstractMove<KQGrabHitAttack, KillerQueenEntity> {
     private final int stun;
 
     public KQGrabHitAttack(int cooldown, int windup, int duration, float moveDistance, int stun) {

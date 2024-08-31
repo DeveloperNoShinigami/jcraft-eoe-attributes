@@ -11,7 +11,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 // This being a barrage is really just for the interval-based performing logic.
-public class JudgementAttack extends AbstractBarrageAttack<JudgementAttack, MadeInHeavenEntity> {
+public final class JudgementAttack extends AbstractBarrageAttack<JudgementAttack, MadeInHeavenEntity> {
     public static final MoveVariable<Vec3> INIT_POS = new MoveVariable<>(Vec3.class),
             INIT_ROT = new MoveVariable<>(Vec3.class);
 

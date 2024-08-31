@@ -8,7 +8,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class HoldableMove<A extends IAttacker<A, S>, S extends Enum<S>> extends AbstractHoldableMove<HoldableMove<A, S>, A, S> {
+public final class HoldableMove<A extends IAttacker<A, S>, S extends Enum<S>> extends AbstractHoldableMove<HoldableMove<A, S>, A, S> {
     public HoldableMove(int cooldown, int windup, int duration, float attackDistance, AbstractMove<?, ? super A> followupMove, S followupState, int minimumCharge) {
         super(cooldown, windup, duration, attackDistance, followupMove, followupState, minimumCharge);
         withFollowup(followupMove);

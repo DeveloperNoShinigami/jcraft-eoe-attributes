@@ -8,7 +8,7 @@ import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, SilverChariotEntity> {
+public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, SilverChariotEntity> {
     public static final IntMoveVariable ARMOR_TIME = new IntMoveVariable();
 
     public ArmorOffAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback, float offset) {

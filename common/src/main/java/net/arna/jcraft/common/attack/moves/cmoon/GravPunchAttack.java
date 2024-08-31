@@ -19,7 +19,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack, CMoonEntity> {
+public final class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack, CMoonEntity> {
     public static final String GRAVITY_SOURCE = JCraft.MOD_ID + "$" + GravPunchAttack.class.getSimpleName();
 
     public GravPunchAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,

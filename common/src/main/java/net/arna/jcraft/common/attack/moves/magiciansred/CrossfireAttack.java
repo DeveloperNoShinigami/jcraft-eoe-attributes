@@ -8,7 +8,7 @@ import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class CrossfireAttack extends AbstractMove<CrossfireAttack, MagiciansRedEntity> {
+public final class CrossfireAttack extends AbstractMove<CrossfireAttack, MagiciansRedEntity> {
     public CrossfireAttack(int cooldown, int windup, int duration, float attackDistance) {
         super(cooldown, windup, duration, attackDistance);
         ranged = true;

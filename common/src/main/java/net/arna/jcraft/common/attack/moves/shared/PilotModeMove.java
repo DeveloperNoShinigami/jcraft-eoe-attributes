@@ -7,7 +7,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class PilotModeMove<A extends StandEntity<? extends A, ?>> extends AbstractMove<PilotModeMove<A>, A> {
+public final class PilotModeMove<A extends StandEntity<? extends A, ?>> extends AbstractMove<PilotModeMove<A>, A> {
     public PilotModeMove(int cooldown) {
         super(cooldown, 0, 0, 0);
     }

@@ -13,7 +13,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class BloodSuckAttack<A extends JSpec<A, S>, S extends Enum<S> & SpecAnimationState<A>> extends AbstractSpecGrabAttack<BloodSuckAttack<A, S>, A, S> {
+public final class BloodSuckAttack<A extends JSpec<A, S>, S extends Enum<S> & SpecAnimationState<A>> extends AbstractSpecGrabAttack<BloodSuckAttack<A, S>, A, S> {
     public static final MoveVariable<LivingEntity> TARGET = new MoveVariable<>(LivingEntity.class);
 
     public BloodSuckAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,

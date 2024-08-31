@@ -8,7 +8,7 @@ import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class BallChargeAttack extends AbstractMove<BallChargeAttack, CreamEntity> {
+public final class BallChargeAttack extends AbstractMove<BallChargeAttack, CreamEntity> {
     public BallChargeAttack(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }

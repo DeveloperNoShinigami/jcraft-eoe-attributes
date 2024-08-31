@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.Set;
 
-public class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAttack, MagiciansRedEntity> {
+public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAttack, MagiciansRedEntity> {
     public static final IntMoveVariable HURRICANE_TIME = new IntMoveVariable();
     public static final MoveVariable<Vec3> HURRICANE_POS = new MoveVariable<>(Vec3.class);
 

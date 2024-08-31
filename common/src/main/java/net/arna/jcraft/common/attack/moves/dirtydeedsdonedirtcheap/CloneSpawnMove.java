@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import java.util.Set;
 
-public class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity> {
+public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity> {
     public enum CloneType {
         SWORD(Items.IRON_SWORD),
         AXE(Items.WOODEN_AXE),

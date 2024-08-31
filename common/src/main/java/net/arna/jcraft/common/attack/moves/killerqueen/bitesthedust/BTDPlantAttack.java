@@ -18,7 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.Set;
 
-public class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEntity> {
+public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEntity> {
     public static final MoveVariable<LivingEntity> BTD_ENTITY = new MoveVariable<>(LivingEntity.class);
     public static final MoveVariable<Vec3> BTD_POS = new MoveVariable<>(Vec3.class);
 

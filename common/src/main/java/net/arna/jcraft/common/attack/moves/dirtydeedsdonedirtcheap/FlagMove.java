@@ -11,7 +11,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class FlagMove extends AbstractMove<FlagMove, D4CEntity> {
+public final class FlagMove extends AbstractMove<FlagMove, D4CEntity> {
     public FlagMove(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         mobilityType = MobilityType.HIGHJUMP;

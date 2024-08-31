@@ -8,7 +8,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import java.util.List;
 
 @Getter
-public class EffectInflictingAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingAttack<EffectInflictingAttack<A>, A> {
+public final class EffectInflictingAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingAttack<EffectInflictingAttack<A>, A> {
     public EffectInflictingAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                                   float hitboxSize, float knockback, float offset, @NonNull List<MobEffectInstance> effects) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, effects);

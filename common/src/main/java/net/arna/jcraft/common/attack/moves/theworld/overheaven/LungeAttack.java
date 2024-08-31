@@ -4,7 +4,7 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
 
-public class LungeAttack extends AbstractSimpleAttack<LungeAttack, TheWorldOverHeavenEntity> {
+public final class LungeAttack extends AbstractSimpleAttack<LungeAttack, TheWorldOverHeavenEntity> {
     private final float originalMoveDistance;
 
     public LungeAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,

@@ -14,7 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class OverclockAttack extends AbstractSimpleAttack<OverclockAttack, GoldExperienceEntity> {
+public final class OverclockAttack extends AbstractSimpleAttack<OverclockAttack, GoldExperienceEntity> {
     public OverclockAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
                            float hitboxSize, float knockback, float offset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);

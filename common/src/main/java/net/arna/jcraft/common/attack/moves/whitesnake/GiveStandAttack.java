@@ -17,7 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import java.util.Set;
 
-public class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, WhiteSnakeEntity> {
+public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, WhiteSnakeEntity> {
     public GiveStandAttack(int cooldown, int windup, int duration, float moveDistance, int stun, float hitboxSize, float knockback, float offset) {
         super(cooldown, windup, duration, moveDistance, 0, stun, hitboxSize, knockback, offset);
     }

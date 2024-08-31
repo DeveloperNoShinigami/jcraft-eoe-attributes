@@ -5,7 +5,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 
-public class SimpleAttack<A extends IAttacker<? extends A, ?>> extends AbstractSimpleAttack<SimpleAttack<A>, A> {
+public final class SimpleAttack<A extends IAttacker<? extends A, ?>> extends AbstractSimpleAttack<SimpleAttack<A>, A> {
     /**
      * Creates a new simple attack with a single hitbox.
      *

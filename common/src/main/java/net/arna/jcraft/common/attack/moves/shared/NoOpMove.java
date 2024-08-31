@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @param <A>
  */
-public class NoOpMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<NoOpMove<A>, A> {
+public final class NoOpMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<NoOpMove<A>, A> {
     public NoOpMove() {
         this(0, 0, 0f);
     }

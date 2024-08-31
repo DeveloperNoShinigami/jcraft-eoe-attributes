@@ -17,7 +17,7 @@ import mod.azure.azurelib.animatable.GeoEntity;
 import java.util.Set;
 
 @Getter
-public class RekkaAttack<A extends IAttacker<A, S> & GeoEntity, S extends Enum<S> & StandAnimationState<A>>
+public final class RekkaAttack<A extends IAttacker<A, S> & GeoEntity, S extends Enum<S> & StandAnimationState<A>>
         extends AbstractSimpleAttack<RekkaAttack<A, S>, A> {
     private final int rekkaLevel;
     private final RekkaAttack<A, S> next;

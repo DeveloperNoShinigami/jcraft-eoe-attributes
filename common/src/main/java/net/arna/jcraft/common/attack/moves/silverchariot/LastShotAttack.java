@@ -8,7 +8,7 @@ import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class LastShotAttack extends AbstractMove<LastShotAttack, SilverChariotEntity> {
+public final class LastShotAttack extends AbstractMove<LastShotAttack, SilverChariotEntity> {
     public LastShotAttack(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;

@@ -10,7 +10,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class TFComboAttack extends AbstractMultiHitAttack<TFComboAttack, TheFoolEntity> {
+public final class TFComboAttack extends AbstractMultiHitAttack<TFComboAttack, TheFoolEntity> {
     public TFComboAttack(int cooldown, int duration, float moveDistance, float damage, int stun, float hitboxSize,
                          float knockback, float offset, @NonNull IntCollection hitMoments) {
         super(cooldown, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);

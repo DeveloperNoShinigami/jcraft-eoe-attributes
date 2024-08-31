@@ -9,7 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import java.util.Set;
 
-public class BloodThrowAttack extends AbstractMove<BloodThrowAttack, KingCrimsonEntity> {
+public final class BloodThrowAttack extends AbstractMove<BloodThrowAttack, KingCrimsonEntity> {
     public BloodThrowAttack(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;

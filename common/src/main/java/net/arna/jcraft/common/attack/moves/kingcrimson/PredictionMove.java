@@ -28,7 +28,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEntity> {
+public final class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEntity> {
     public static final MoveVariable<Map<Entity, Vec3>> PREDICTION_INFO = new MoveVariable<>(new TypeToken<>() {
     });
 

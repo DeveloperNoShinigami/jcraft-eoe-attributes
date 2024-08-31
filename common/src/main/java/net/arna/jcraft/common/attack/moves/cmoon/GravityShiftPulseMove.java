@@ -8,7 +8,7 @@ import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class GravityShiftPulseMove extends AbstractMove<GravityShiftPulseMove, CMoonEntity> {
+public final class GravityShiftPulseMove extends AbstractMove<GravityShiftPulseMove, CMoonEntity> {
     public GravityShiftPulseMove(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }

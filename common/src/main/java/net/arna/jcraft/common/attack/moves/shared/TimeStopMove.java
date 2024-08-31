@@ -8,7 +8,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import java.util.function.IntSupplier;
 
 @Getter
-public class TimeStopMove<A extends StandEntity<? extends A, ?>> extends AbstractTimeStopMove<TimeStopMove<A>, A> {
+public final class TimeStopMove<A extends StandEntity<? extends A, ?>> extends AbstractTimeStopMove<TimeStopMove<A>, A> {
     public TimeStopMove(int cooldown, int windup, int duration, IntSupplier timeStopDuration) {
         super(cooldown, windup, duration, 1f, timeStopDuration);
     }

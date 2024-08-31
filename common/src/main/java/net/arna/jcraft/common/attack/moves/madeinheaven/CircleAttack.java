@@ -16,7 +16,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenEntity> {
+public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenEntity> {
     public static final IntMoveVariable CIRCLING_TIME = new IntMoveVariable();
     public static final FloatMoveVariable ORBIT_PROG = new FloatMoveVariable();
     public static final MoveVariable<LivingEntity> TARGET = new WeakMoveVariable<>(LivingEntity.class);

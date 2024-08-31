@@ -9,7 +9,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import java.util.List;
 
 @Getter
-public class EffectInflictingMultiHitAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingMultiHitAttack<EffectInflictingMultiHitAttack<A>, A> {
+public final class EffectInflictingMultiHitAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingMultiHitAttack<EffectInflictingMultiHitAttack<A>, A> {
     public EffectInflictingMultiHitAttack(int cooldown, int duration, float attackDistance, float damage, int stun,
                                           float hitboxSize, float knockback, float offset,
                                           @NonNull IntCollection hitMoments, @NonNull List<MobEffectInstance> effects) {

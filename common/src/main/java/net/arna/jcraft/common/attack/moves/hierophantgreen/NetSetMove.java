@@ -12,7 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class NetSetMove extends AbstractMove<NetSetMove, HGEntity> {
+public final class NetSetMove extends AbstractMove<NetSetMove, HGEntity> {
     public NetSetMove(int cooldown, int windup, int duration, float attackDistance) {
         super(cooldown, windup, duration, attackDistance);
     }

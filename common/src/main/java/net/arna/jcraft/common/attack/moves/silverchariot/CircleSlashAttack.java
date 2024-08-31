@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class CircleSlashAttack extends AbstractSimpleAttack<CircleSlashAttack, SilverChariotEntity> {
+public final class CircleSlashAttack extends AbstractSimpleAttack<CircleSlashAttack, SilverChariotEntity> {
     public static final IntMoveVariable CHARGE_TIME = new IntMoveVariable(); // in half seconds
     private final float originalDamage;
 

@@ -9,7 +9,7 @@ import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class SandTornadoMove extends AbstractMove<SandTornadoMove, TheFoolEntity> {
+public final class SandTornadoMove extends AbstractMove<SandTornadoMove, TheFoolEntity> {
     public SandTornadoMove(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;

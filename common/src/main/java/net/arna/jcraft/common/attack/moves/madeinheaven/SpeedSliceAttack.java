@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
-public class SpeedSliceAttack extends AbstractMove<SpeedSliceAttack, MadeInHeavenEntity> {
+public final class SpeedSliceAttack extends AbstractMove<SpeedSliceAttack, MadeInHeavenEntity> {
     private final float damage, hitboxSize, knockback;
 
     public SpeedSliceAttack(int cooldown, int windup, int duration, float moveDistance, float damage, float hitboxSize,

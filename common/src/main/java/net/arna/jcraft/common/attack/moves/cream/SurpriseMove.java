@@ -12,7 +12,7 @@ import org.joml.Vector3f;
 
 import java.util.Set;
 
-public class SurpriseMove extends AbstractMove<SurpriseMove, CreamEntity> {
+public final class SurpriseMove extends AbstractMove<SurpriseMove, CreamEntity> {
     public static final MoveVariable<Vector3f> OUT_POS = new MoveVariable<>(Vector3f.class);
     public static final MoveVariable<Vector3f> OUT_DIR = new MoveVariable<>(Vector3f.class);
 

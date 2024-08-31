@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 @Getter
-public class SmiteAttack extends AbstractEffectInflictingAttack<SmiteAttack, TheWorldOverHeavenEntity> {
+public final class SmiteAttack extends AbstractEffectInflictingAttack<SmiteAttack, TheWorldOverHeavenEntity> {
     public static final MoveVariable<Vec3> LIGHTNING_POS = new MoveVariable<>(Vec3.class);
     private static final MoveVariable<LightningBolt> BOLT = new MoveVariable<>(LightningBolt.class);
     private final boolean aerial;

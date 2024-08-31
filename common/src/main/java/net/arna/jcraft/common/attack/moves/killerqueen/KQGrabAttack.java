@@ -9,7 +9,7 @@ import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class KQGrabAttack extends AbstractGrabAttack<KQGrabAttack, KillerQueenEntity, KillerQueenEntity.State> {
+public final class KQGrabAttack extends AbstractGrabAttack<KQGrabAttack, KillerQueenEntity, KillerQueenEntity.State> {
     public KQGrabAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize,
                         float knockback, float offset, AbstractMove<?, ? super KillerQueenEntity> hitMove, KillerQueenEntity.State hitState) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMove, hitState);

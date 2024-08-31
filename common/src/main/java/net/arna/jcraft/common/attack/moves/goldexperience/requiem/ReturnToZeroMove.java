@@ -22,7 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import java.util.*;
 
-public class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREntity> {
+public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREntity> {
     public static final MoveVariable<Map<Entity, CompoundTag>> ENTITY_DATA = new MoveVariable<>(new TypeToken<>() {
     });
     public static final MoveVariable<List<ReturnData>> RETURN_INFO = new MoveVariable<>(new TypeToken<>() {

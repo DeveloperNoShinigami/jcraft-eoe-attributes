@@ -15,7 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
-public class FeignBarrageCounterAttack extends AbstractCounterAttack<FeignBarrageCounterAttack, TheWorldEntity> {
+public final class FeignBarrageCounterAttack extends AbstractCounterAttack<FeignBarrageCounterAttack, TheWorldEntity> {
     private static final CounterMissMove<TheWorldEntity> missAttack = new CounterMissMove<>(10);
     private final AbstractMove<?, ? super TheWorldEntity> hitMove;
 

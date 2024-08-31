@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import java.util.Set;
 
-public class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> {
+public final class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> {
     public static final MoveVariable<BubbleProjectile> BUBBLE_PROJECTILE = new MoveVariable<>(BubbleProjectile.class);
 
     public BubbleAttack(int cooldown, int windup, int duration, float moveDistance) {

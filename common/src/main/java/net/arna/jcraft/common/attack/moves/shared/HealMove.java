@@ -23,7 +23,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 @Getter
-public class HealMove<A extends IAttacker<? extends A, ?>> extends AbstractSimpleAttack<HealMove<A>, A> {
+public final class HealMove<A extends IAttacker<? extends A, ?>> extends AbstractSimpleAttack<HealMove<A>, A> {
     private final float health;
     private final HealTarget target;
     private final Consumer<LivingEntity> consumer;

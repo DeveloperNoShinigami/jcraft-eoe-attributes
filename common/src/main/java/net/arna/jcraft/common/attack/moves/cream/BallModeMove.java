@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 @Getter
-public class BallModeMove extends AbstractMove<BallModeMove, CreamEntity> {
+public final class BallModeMove extends AbstractMove<BallModeMove, CreamEntity> {
     private final boolean enter;
 
     public BallModeMove(int cooldown, int windup, int duration, float moveDistance, boolean enter) {

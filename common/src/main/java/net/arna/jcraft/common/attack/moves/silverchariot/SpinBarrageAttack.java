@@ -11,7 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import java.util.Set;
 
-public class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAttack, SilverChariotEntity> {
+public final class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAttack, SilverChariotEntity> {
     public SpinBarrageAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                              float hitboxSize, float knockback, float offset, int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval);

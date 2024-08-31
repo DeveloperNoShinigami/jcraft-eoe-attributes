@@ -14,7 +14,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.Set;
 
-public class RedirectAttack extends AbstractMove<RedirectAttack, MagiciansRedEntity> {
+public final class RedirectAttack extends AbstractMove<RedirectAttack, MagiciansRedEntity> {
     public RedirectAttack(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         mobilityType = MobilityType.TELEPORT; // this is a LIE, it just tells the AI to use it at a range of >3m

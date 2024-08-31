@@ -9,7 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class CreamComboAttack extends AbstractMultiHitAttack<CreamComboAttack, CreamEntity> {
+public final class CreamComboAttack extends AbstractMultiHitAttack<CreamComboAttack, CreamEntity> {
     public CreamComboAttack(int cooldown, int duration, float moveDistance, float damage, int stun,
                             float hitboxSize, float knockback, float offset,
                             @NonNull IntCollection hitMoments) {

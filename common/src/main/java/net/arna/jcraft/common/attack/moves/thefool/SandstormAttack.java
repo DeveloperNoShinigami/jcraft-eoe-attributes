@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFoolEntity> {
+public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFoolEntity> {
     public static final MoveVariable<LivingEntity> SUPER_TARGET = new MoveVariable<>(LivingEntity.class);
     public static final MoveVariable<List<FallingBlockEntity>> SANDS = new MoveVariable<>(new TypeToken<>() {
     });

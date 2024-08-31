@@ -9,7 +9,7 @@ import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class SheerHeartAttackAttack extends AbstractMove<SheerHeartAttackAttack, KillerQueenEntity> {
+public final class SheerHeartAttackAttack extends AbstractMove<SheerHeartAttackAttack, KillerQueenEntity> {
     public SheerHeartAttackAttack(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;

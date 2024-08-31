@@ -11,7 +11,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
  *
  * @param <A>
  */
-public class SimpleMultiHitAttack<A extends IAttacker<? extends A, ?>> extends AbstractMultiHitAttack<SimpleMultiHitAttack<A>, A> {
+public final class SimpleMultiHitAttack<A extends IAttacker<? extends A, ?>> extends AbstractMultiHitAttack<SimpleMultiHitAttack<A>, A> {
     public SimpleMultiHitAttack(int cooldown, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback,
                                 float offset, IntCollection hitMoments) {
         super(cooldown, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);

@@ -8,7 +8,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.util.StandAnimationState;
 
 
-public class GrabAttack<A extends IAttacker<A, S> & GeoEntity, S extends Enum<S> & StandAnimationState<A>>
+public final class GrabAttack<A extends IAttacker<A, S> & GeoEntity, S extends Enum<S> & StandAnimationState<A>>
         extends AbstractGrabAttack<GrabAttack<A, S>, A, S> {
 
     public GrabAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,

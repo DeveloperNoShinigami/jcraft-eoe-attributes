@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import java.util.Set;
 
-public class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienceEntity> {
+public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienceEntity> {
     public static final MoveVariable<LifeGiverType> TYPE_TO_SUMMON = new MoveVariable<>(LifeGiverType.class);
 
     public LifeGiverAttack(int cooldown, int windup, int duration, float moveDistance) {

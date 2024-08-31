@@ -17,7 +17,7 @@ import java.util.Set;
 
 import static net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack.prepDetachmentMove;
 
-public class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> extends AbstractBarrageAttack<ChargeBarrageAttack<A>, A> {
+public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> extends AbstractBarrageAttack<ChargeBarrageAttack<A>, A> {
     private final float originalMoveDistance;
     private final boolean quadraticMovement;
 

@@ -14,7 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
-public class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, KingCrimsonEntity> {
+public final class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, KingCrimsonEntity> {
     private final CounterMissMove<KingCrimsonEntity> counterMiss = new CounterMissMove<>(20);
 
     public EpitaphAttack(int cooldown, int windup, int duration, float moveDistance) {

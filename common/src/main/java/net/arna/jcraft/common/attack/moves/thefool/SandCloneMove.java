@@ -26,7 +26,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
+public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
     public static final MoveVariable<Mob> SAND_CLONE = new MoveVariable<>(Mob.class);
 
     public SandCloneMove(int cooldown, int windup, int duration, float moveDistance) {

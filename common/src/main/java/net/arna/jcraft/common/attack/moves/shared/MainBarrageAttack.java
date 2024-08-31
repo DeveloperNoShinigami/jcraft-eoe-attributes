@@ -19,7 +19,7 @@ import java.util.Set;
  * A simple attack that performs at a set interval.
  * The user may crouch to break blocks.
  */
-public class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extends AbstractBarrageAttack<MainBarrageAttack<A>, A> {
+public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extends AbstractBarrageAttack<MainBarrageAttack<A>, A> {
     public static final BooleanMoveVariable BREAK_BLOCKS = new BooleanMoveVariable();
     private final float mineableHardness;
     private final int baseStun, baseDuration;

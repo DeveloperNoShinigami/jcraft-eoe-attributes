@@ -22,7 +22,7 @@ import java.util.Set;
 import static net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack.createBox;
 
 @Getter
-public class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumEntity> {
+public final class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumEntity> {
     private final RandomSource random = RandomSource.create();
     private final int inhaleDuration;
 

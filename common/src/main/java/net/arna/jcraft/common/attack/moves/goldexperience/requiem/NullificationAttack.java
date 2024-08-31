@@ -20,7 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
-public class NullificationAttack extends AbstractCounterAttack<NullificationAttack, GEREntity> {
+public final class NullificationAttack extends AbstractCounterAttack<NullificationAttack, GEREntity> {
     private static final int counterStopTime = 20; // Convenience
     private final CounterMissMove<GEREntity> counterMiss = new CounterMissMove<>(20);
 

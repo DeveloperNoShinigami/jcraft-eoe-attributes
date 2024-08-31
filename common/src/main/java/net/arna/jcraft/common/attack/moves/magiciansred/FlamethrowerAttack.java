@@ -7,7 +7,7 @@ import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class FlamethrowerAttack extends AbstractBarrageAttack<FlamethrowerAttack, MagiciansRedEntity> {
+public final class FlamethrowerAttack extends AbstractBarrageAttack<FlamethrowerAttack, MagiciansRedEntity> {
     public FlamethrowerAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback,
                               float offset, int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval);

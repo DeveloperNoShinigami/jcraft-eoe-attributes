@@ -12,7 +12,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-public class BubbleCounterAttack extends AbstractCounterAttack<BubbleCounterAttack, KQBTDEntity> {
+public final class BubbleCounterAttack extends AbstractCounterAttack<BubbleCounterAttack, KQBTDEntity> {
     private static final CounterMissMove<KQBTDEntity> missAttack = new CounterMissMove<>(15);
 
     public BubbleCounterAttack(int cooldown, int windup, int duration, float moveDistance) {

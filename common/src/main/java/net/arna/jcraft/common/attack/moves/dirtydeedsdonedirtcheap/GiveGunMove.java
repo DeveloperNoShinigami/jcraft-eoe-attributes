@@ -9,7 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import java.util.Set;
 
-public class GiveGunMove extends AbstractMove<GiveGunMove, D4CEntity> {
+public final class GiveGunMove extends AbstractMove<GiveGunMove, D4CEntity> {
     public GiveGunMove(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }

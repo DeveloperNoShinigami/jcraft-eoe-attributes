@@ -9,7 +9,7 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class TWDonutAttack extends AbstractSimpleAttack<TWDonutAttack, TheWorldEntity> {
+public final class TWDonutAttack extends AbstractSimpleAttack<TWDonutAttack, TheWorldEntity> {
     public TWDonutAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                          float hitboxSize, float knockback, float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);

@@ -8,7 +8,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-public class SCChargeAttack extends AbstractChargeAttack<SCChargeAttack, SilverChariotEntity, SilverChariotEntity.State> {
+public final class SCChargeAttack extends AbstractChargeAttack<SCChargeAttack, SilverChariotEntity, SilverChariotEntity.State> {
     public static final MoveVariable<Vec3> LOOK_DIR = new MoveVariable<>(Vec3.class);
     public SCChargeAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                           float hitboxSize, float knockback, float offset, SilverChariotEntity.State hitAnimState) {

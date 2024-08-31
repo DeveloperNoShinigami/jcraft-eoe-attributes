@@ -11,7 +11,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class GravitationalHopMove extends AbstractMove<GravitationalHopMove, CMoonEntity> {
+public final class GravitationalHopMove extends AbstractMove<GravitationalHopMove, CMoonEntity> {
     public GravitationalHopMove(int cooldown) {
         super(cooldown, 0, 0, 0f);
         mobilityType = MobilityType.HIGHJUMP;

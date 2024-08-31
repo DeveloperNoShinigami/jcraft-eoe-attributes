@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove, D4CEntity> {
+public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove, D4CEntity> {
     public DimensionalHopMove(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback, float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }

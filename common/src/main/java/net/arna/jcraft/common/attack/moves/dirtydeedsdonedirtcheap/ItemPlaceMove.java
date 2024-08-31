@@ -15,7 +15,7 @@ import net.minecraft.world.item.Items;
 import java.util.List;
 import java.util.Set;
 
-public class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> {
+public final class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> {
     public static final BooleanMoveVariable PLACING_FIRST_STACK = new BooleanMoveVariable();
     public static final MoveVariable<ItemStack> PLACING = new MoveVariable<>(ItemStack.class);
     private static final List<ItemStack> placeableStacks = List.of(

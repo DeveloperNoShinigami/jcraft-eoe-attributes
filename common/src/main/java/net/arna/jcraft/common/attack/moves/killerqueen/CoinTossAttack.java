@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class CoinTossAttack extends AbstractMove<CoinTossAttack, KillerQueenEntity> {
+public final class CoinTossAttack extends AbstractMove<CoinTossAttack, KillerQueenEntity> {
     public static final MoveVariable<ItemEntity> COIN = new MoveVariable<>(ItemEntity.class);
 
     public CoinTossAttack(int cooldown) {

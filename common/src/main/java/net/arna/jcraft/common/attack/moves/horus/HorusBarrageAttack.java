@@ -5,7 +5,7 @@ import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.entity.stand.HorusEntity;
 
-public class HorusBarrageAttack extends AbstractBarrageAttack<HorusBarrageAttack, HorusEntity> {
+public final class HorusBarrageAttack extends AbstractBarrageAttack<HorusBarrageAttack, HorusEntity> {
 
     public HorusBarrageAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize, float knockback, float offset, int interval) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, interval);

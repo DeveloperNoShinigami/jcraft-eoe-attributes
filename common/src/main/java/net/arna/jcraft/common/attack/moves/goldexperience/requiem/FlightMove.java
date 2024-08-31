@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class FlightMove extends AbstractMove<FlightMove, GEREntity> {
+public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
     public FlightMove(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         mobilityType = MobilityType.FLIGHT;

@@ -29,7 +29,7 @@ import net.minecraft.world.phys.AABB;
 import java.util.Set;
 
 @Getter
-public class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity> {
+public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity> {
     public static final MoveVariable<Mob> DOPPELGANGER = new WeakMoveVariable<>(Mob.class);
     private final int erasureDuration;
 

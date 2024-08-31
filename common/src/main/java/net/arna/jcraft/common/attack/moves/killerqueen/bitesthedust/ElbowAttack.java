@@ -10,7 +10,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class ElbowAttack extends AbstractSimpleAttack<ElbowAttack, KQBTDEntity> {
+public final class ElbowAttack extends AbstractSimpleAttack<ElbowAttack, KQBTDEntity> {
     public ElbowAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
                        float hitboxSize, float knockback, float offset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);

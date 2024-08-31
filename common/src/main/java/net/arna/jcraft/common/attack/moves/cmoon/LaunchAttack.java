@@ -14,7 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import java.util.Set;
 
-public class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoonEntity> {
+public final class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoonEntity> {
     public LaunchAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                         float hitboxSize, float knockback, float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);

@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEntity> {
+public final class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEntity> {
     public static final IntMoveVariable VARIANT = new IntMoveVariable();
 
     public SlamAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,

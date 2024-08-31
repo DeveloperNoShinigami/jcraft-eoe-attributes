@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
-public class SandWaveAttack extends AbstractEffectInflictingBarrageAttack<SandWaveAttack, TheFoolEntity> {
+public final class SandWaveAttack extends AbstractEffectInflictingBarrageAttack<SandWaveAttack, TheFoolEntity> {
     public SandWaveAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                           float hitboxSize, float knockback, float offset, int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval,

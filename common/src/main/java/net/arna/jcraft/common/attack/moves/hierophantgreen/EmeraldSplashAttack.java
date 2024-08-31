@@ -12,7 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSplashAttack, HGEntity> {
+public final class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSplashAttack, HGEntity> {
     public static final IntMoveVariable CHARGE_TIME = new IntMoveVariable();
     private final float speed;
     private boolean reflect = false;

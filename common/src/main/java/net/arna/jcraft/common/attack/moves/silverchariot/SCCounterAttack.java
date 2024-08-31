@@ -10,7 +10,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
-public class SCCounterAttack extends AbstractCounterAttack<SCCounterAttack, SilverChariotEntity> {
+public final class SCCounterAttack extends AbstractCounterAttack<SCCounterAttack, SilverChariotEntity> {
     private final CounterMissMove<SilverChariotEntity> counterMiss = new CounterMissMove<>(20);
 
     public SCCounterAttack(int cooldown, int windup, int duration, float moveDistance) {

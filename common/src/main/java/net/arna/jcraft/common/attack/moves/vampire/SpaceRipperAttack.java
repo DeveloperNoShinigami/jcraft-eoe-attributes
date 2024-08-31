@@ -13,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, VampireSpec> {
+public final class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, VampireSpec> {
     public static final IntMoveVariable CHARGE_TIME = new IntMoveVariable();
 
     public SpaceRipperAttack(int cooldown, int windup, int duration, float attackDistance) {

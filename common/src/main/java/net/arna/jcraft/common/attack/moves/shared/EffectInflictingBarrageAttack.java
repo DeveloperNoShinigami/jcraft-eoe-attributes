@@ -8,7 +8,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import java.util.List;
 
 @Getter
-public class EffectInflictingBarrageAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingBarrageAttack<EffectInflictingBarrageAttack<A>, A> {
+public final class EffectInflictingBarrageAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingBarrageAttack<EffectInflictingBarrageAttack<A>, A> {
     public EffectInflictingBarrageAttack(int cooldown, int windup, int duration, float attackDistance, float damage,
                                          int stun, float hitboxSize, float knockback, float offset, int interval,
                                          @NonNull List<MobEffectInstance> effects) {

@@ -8,7 +8,7 @@ import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class CrossfireVariationAttack extends AbstractMove<CrossfireVariationAttack, MagiciansRedEntity> {
+public final class CrossfireVariationAttack extends AbstractMove<CrossfireVariationAttack, MagiciansRedEntity> {
     private static final int variationAnkhs = 6;
 
     public CrossfireVariationAttack(int cooldown, int windup, int moveStunTicks, float moveDistance) {

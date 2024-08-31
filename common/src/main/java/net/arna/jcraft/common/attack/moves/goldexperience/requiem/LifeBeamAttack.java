@@ -13,7 +13,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 @Getter
-public class LifeBeamAttack extends AbstractMove<LifeBeamAttack, GEREntity> {
+public final class LifeBeamAttack extends AbstractMove<LifeBeamAttack, GEREntity> {
     public static final IntMoveVariable CHARGE_TIME = new IntMoveVariable();
 
     public LifeBeamAttack(int cooldown, int windup, int duration, float moveDistance) {

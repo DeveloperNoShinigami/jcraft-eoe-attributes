@@ -12,7 +12,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 @Getter
-public class UppercutAttack<A extends IAttacker<? extends A, ?>> extends AbstractSimpleAttack<UppercutAttack<A>, A> {
+public final class UppercutAttack<A extends IAttacker<? extends A, ?>> extends AbstractSimpleAttack<UppercutAttack<A>, A> {
     private final float strength;
 
     public UppercutAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,

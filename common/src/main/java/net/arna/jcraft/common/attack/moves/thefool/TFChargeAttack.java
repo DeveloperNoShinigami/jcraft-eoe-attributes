@@ -14,7 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
-public class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, TheFoolEntity, TheFoolEntity.State> {
+public final class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, TheFoolEntity, TheFoolEntity.State> {
     public TFChargeAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
                           float hitboxSize, float knockback, float offset, TheFoolEntity.State hitAnimState) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitAnimState);

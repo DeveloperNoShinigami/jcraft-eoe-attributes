@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.function.IntSupplier;
 
 @Getter
-public class TimeAccelerationMove extends AbstractMove<TimeAccelerationMove, MadeInHeavenEntity> {
+public final class TimeAccelerationMove extends AbstractMove<TimeAccelerationMove, MadeInHeavenEntity> {
     private final IntSupplier accelerationDuration;
 
     public TimeAccelerationMove(int cooldown, int windup, int duration, float moveDistance, IntSupplier accelerationDuration) {

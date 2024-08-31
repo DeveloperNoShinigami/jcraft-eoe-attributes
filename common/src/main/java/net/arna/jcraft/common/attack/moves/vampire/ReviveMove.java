@@ -15,7 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
-public class ReviveMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<ReviveMove<A>, A> {
+public final class ReviveMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<ReviveMove<A>, A> {
     public ReviveMove(int cooldown, int windup, int duration, float reviveDistance) {
         super(cooldown, windup, duration, reviveDistance);
     }
