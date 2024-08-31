@@ -6,9 +6,11 @@ import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
 import net.arna.jcraft.common.entity.stand.HorusEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekickAttack, HorusEntity, HorusEntity.State> {
@@ -17,18 +19,26 @@ public class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekickAttac
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitAnimState);
     }
 
-    private static final MobEffectInstance LEVITATE = new MobEffectInstance(MobEffects.LEVITATION, 9, 2, true, false);
+    private static final MobEffectInstance LEVITATE = new MobEffectInstance(MobEffects.SLOW_FALLING, 9, 2, true, false);
     @Override
     public void onInitiate(HorusEntity attacker) {
         super.onInitiate(attacker);
-        attacker.getMoveContext().set(LOOK_DIR, attacker.getUserOrThrow().getLookAngle().scale(1.5));
-        attacker.getUserOrThrow().addEffect(LEVITATE);
+        LivingEntity user = attacker.getUserOrThrow();
+        if (attacker.isFree()) attacker.setFree(false);
+
+        attacker.getMoveContext().set(LOOK_DIR, user.getLookAngle().scale(0.65));
+
+        int duration = 20 + (int)user.getXRot();
+        if (duration < getWindup()) duration = getWindup();
+        withDuration(duration);
+
+        user.addEffect(LEVITATE);
     }
 
     @Override
     protected Vec3 advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
         return attacker.position().add(
-                attacker.getMoveContext().get(LOOK_DIR).scale(moveDistance / windupPoint)
+                attacker.getMoveContext().get(LOOK_DIR)
         );
     }
 
@@ -36,18 +46,15 @@ public class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekickAttac
     protected void tickChargeAttack(StandEntity<HorusEntity, HorusEntity.State> attacker, boolean shouldPerform, float moveDistance, int windupPoint) {
         super.tickChargeAttack(attacker, shouldPerform, moveDistance, windupPoint);
         if (attacker.getMoveStun() < windupPoint) {
-            JUtils.setVelocity(
-                    attacker.getUserOrThrow(),
-                    attacker.getMoveContext().get(LOOK_DIR).scale(moveDistance / windupPoint)
-            );
-            if (attacker.getBlockStateOn().canOcclude()) endCharge((HorusEntity) attacker);
+            if (attacker.getBlockStateOn().canOcclude()) {
+                endCharge((HorusEntity) attacker);
+            } else {
+                LivingEntity user = attacker.getUserOrThrow();
+                GravityChangerAPI.setWorldVelocity(user, attacker.getMoveContext().get(LOOK_DIR));
+                JUtils.syncVelocityUpdate(user);
+                user.resetFallDistance();
+            }
         }
-    }
-
-    @Override
-    protected void endCharge(HorusEntity attacker) {
-        super.endCharge(attacker);
-        if (attacker.getUser() != null) attacker.getUserOrThrow().addEffect(LEVITATE);
     }
 
     @Override

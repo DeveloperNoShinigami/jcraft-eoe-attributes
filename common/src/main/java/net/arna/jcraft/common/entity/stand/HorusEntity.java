@@ -106,8 +106,11 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Component.literal("Divekick"),
-                    Component.literal("name")
+                    Component.literal("Beak Dive"),
+                    Component.literal("""
+                            Lasts longer the lower you aim while starting the move.
+                            Stalls the user in the air when starting.
+                            Removes fall damage.""")
             );
     public static final SimpleAttack<HorusEntity> SCATTER = new SimpleAttack<HorusEntity>(
             200, 16, 20, 0.75f, 0, 0, 0, 0, 0)
@@ -176,10 +179,17 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
 
     private static void scatter(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
         for (int batch = 0; batch < 2; batch++) {
-            float offset = batch == 0 ? 20.0F : -20.0F;
-            for (int i = 0; i < 3; i++) {
+            float offset = batch == 0 ? 10.0F : -10.0F;
+            for (int i = 1; i < 4; i++) {
                 IcicleProjectile icicle = new IcicleProjectile(attacker.level(), user);
-                Vec2 rotVec = RotationUtil.rotPlayerToWorld(-user.getXRot(), user.getYRot() + i * offset, GravityChangerAPI.getGravityDirection(user));
+                float pitch = user.getXRot();
+                float yaw = user.getYRot() + i * offset;
+                if (yaw < -90 || yaw > 90) { // why the fuck do i have to do this??
+                    // IT DOESNT EVEN WORK IN DIFFERENT GRAVITIES GOD DAMN IT
+                    yaw = -yaw;
+                    pitch = -pitch;
+                }
+                Vec2 rotVec = RotationUtil.rotPlayerToWorld(pitch, yaw, GravityChangerAPI.getGravityDirection(user));
                 icicle.shootFromRotation(user, rotVec.x, rotVec.y, 0.0F, 1.75F, 0.1F);
 
                 Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
