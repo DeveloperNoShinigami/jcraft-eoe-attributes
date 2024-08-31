@@ -19,7 +19,7 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitAnimState);
     }
 
-    private static final MobEffectInstance LEVITATE = new MobEffectInstance(MobEffects.SLOW_FALLING, 9, 2, true, false);
+    private static final MobEffectInstance LEVITATE = new MobEffectInstance(MobEffects.SLOW_FALLING, 9, 4, true, false);
     @Override
     public void onInitiate(HorusEntity attacker) {
         super.onInitiate(attacker);

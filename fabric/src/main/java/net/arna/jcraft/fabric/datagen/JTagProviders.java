@@ -7,9 +7,13 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagBuilder;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.raid.Raids;
+
 import java.util.concurrent.CompletableFuture;
 
 public class JTagProviders {
@@ -79,19 +83,31 @@ public class JTagProviders {
         @Override
         protected void addTags(HolderLookup.Provider arg) {
             // possible mob stand users
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE_VILLAGER));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.SKELETON));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WITHER_SKELETON));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.STRAY));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PIGLIN));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIFIED_PIGLIN));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VINDICATOR));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.EVOKER));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PILLAGER));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WITCH));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VILLAGER));
-            getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ENDERMAN));
+            TagBuilder canHaveStandBuilder = getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND);
+
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VILLAGER));
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WANDERING_TRADER));
+
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ENDERMAN));
+
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PIGLIN));
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PIGLIN_BRUTE));
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIFIED_PIGLIN));
+
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE));
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE_VILLAGER));
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.HUSK));
+
+            //todo: replace with single append of #minecraft:skeletons
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.SKELETON));
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WITHER_SKELETON));
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.STRAY));
+
+            //todo: replace with single append of #minecraft:raiders
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VINDICATOR));
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.EVOKER));
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PILLAGER));
+            canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WITCH));
             // impossible to stun
             getOrCreateRawBuilder(JTagRegistry.CANNOT_BE_STUNNED).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WARDEN));
         }

@@ -62,13 +62,22 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             .withImpactSound(JSoundRegistry.IMPACT_9.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(
-                    Component.literal("Claw"),
+                    Component.literal("Low Claw"),
                     Component.literal("faster and further hitting than standing, but doesn't combo into anything")
+            );
+    public static final SimpleAttack<HorusEntity> LIGHT_AIR = SimpleAttack.<HorusEntity>lightAttack(
+                    6, 11, 0.75f, 5f, 12, 0.25f, 0.5f)
+            //.withFollowup(LIGHT_FOLLOWUP)
+            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withInfo(
+                    Component.literal("Downward Claw"),
+                    Component.literal("quick combo starter, meant for air-to-ground")
             );
     public static final SimpleAttack<HorusEntity> LIGHT = SimpleAttack.<HorusEntity>lightAttack(
                     6, 11, 0.75f, 5f, 12, 0.2f, 0f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(LIGHT_LOW)
+            .withAerialVariant(LIGHT_AIR)
             .withImpactSound(JSoundRegistry.IMPACT_3.get())
             .withInfo(
                     Component.literal("Slash"),
@@ -147,6 +156,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         MoveMap.Entry<HorusEntity, State> light = moves.register(MoveType.LIGHT, LIGHT, State.LIGHT);
         light.withFollowUp(State.LIGHT_FOLLOWUP).withCrouchingVariant(State.IMPALE);
         light.withCrouchingVariant(State.LIGHT_LOW);
+        light.withAerialVariant(State.LIGHT_AIR);
 
         moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
         moves.register(MoveType.HEAVY, STOMP, State.STOMP);
@@ -258,6 +268,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.light"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.light_followup"))),
         LIGHT_LOW(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.light_low"))),
+        LIGHT_AIR(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.light_air"))),
         IMPALE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.impale"))),
         BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.barrage"))),
         STOMP(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.stomp"))),
