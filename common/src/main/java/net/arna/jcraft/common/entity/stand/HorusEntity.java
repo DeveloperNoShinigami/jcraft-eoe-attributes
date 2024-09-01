@@ -127,11 +127,14 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             );
     // Special 1
     public static final SimpleAttack<HorusEntity> SCATTER = new SimpleAttack<HorusEntity>(
-            200, 16, 20, 0.75f, 0, 0, 0, 0, 0)
+            60, 16, 20, 0.75f, 0, 0, 0, 0, 0)
             .withInfo(
                     Component.literal("Scatter"),
-                    Component.empty()
+                    Component.literal("""
+                                    Relatively slow, very low cooldown.
+                                    Fires 6 icicles that bounce off walls,""")
             )
+            .markRanged()
             .withAction(HorusEntity::scatter);
     // Special 2
     private int icicleChargeTime = 0;
@@ -161,11 +164,12 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("Chasing Freeze"),
                     Component.empty()
             )
+            .markRanged()
             .withAction(HorusEntity::placeIceBranch);
 
     private static void placeIceBranch(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
         IceBranchProjectile iceBranchProjectile = new IceBranchProjectile(attacker.level(), user, 0);
-        iceBranchProjectile.moveTo(attacker.getX(), attacker.getY(), attacker.getZ(), attacker.getYRot(), attacker.getXRot());
+        iceBranchProjectile.moveTo(attacker.getX(), attacker.getY(), attacker.getZ(), -attacker.getYRot() + 180, -attacker.getXRot());
         attacker.level().addFreshEntity(iceBranchProjectile);
     }
 
@@ -294,6 +298,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                 (float) (Mth.atan2(f, l) * 57.2957763671875)
         );
         attacker.lastLargeIcicle.setDeltaMovement(velocity);
+        attacker.lastLargeIcicle.lock();
 
         attacker.level().addFreshEntity(attacker.lastLargeIcicle);
     }
@@ -321,6 +326,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                 (float) (Mth.atan2(f, l) * 57.2957763671875)
         );
         instantIcicle.setDeltaMovement(velocity);
+        instantIcicle.lock();
 
         attacker.level().addFreshEntity(instantIcicle);
     }

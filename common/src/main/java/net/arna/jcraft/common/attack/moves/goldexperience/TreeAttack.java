@@ -8,7 +8,6 @@ import net.arna.jcraft.common.entity.stand.GoldExperienceEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JParticleType;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,8 +28,7 @@ public final class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExper
 
         Vec3 direction = user.getLookAngle();
 
-        GETreeEntity tree = new GETreeEntity(JEntityTypeRegistry.GE_TREE.get(), attacker.level(), direction.scale(1.33));
-        tree.setMaster(user);
+        GETreeEntity tree = new GETreeEntity(attacker.level(), user, direction.scale(1.33));
 
         Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
         GravityChangerAPI.setDefaultGravityDirection(tree, gravity);

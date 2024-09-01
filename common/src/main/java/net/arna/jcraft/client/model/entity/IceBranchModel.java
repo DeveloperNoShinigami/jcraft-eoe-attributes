@@ -5,7 +5,16 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.IceBranchProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class IceBranchModel extends GeoModel<IceBranchProjectile> {
+    public static final Map<Integer, ResourceLocation> skins = new HashMap<>();
+    static {
+        for (int i = 0; i < 3; i++) {
+            skins.put(i, JCraft.id("textures/entity/ice_branch/ice_branch_" + i + ".png"));
+        }
+    }
     @Override
     public ResourceLocation getModelResource(IceBranchProjectile object) {
         return JCraft.id("geo/ice_branch.geo.json");
@@ -13,7 +22,7 @@ public class IceBranchModel extends GeoModel<IceBranchProjectile> {
 
     @Override
     public ResourceLocation getTextureResource(IceBranchProjectile object) {
-        return JCraft.id("textures/entity/projectiles/ice_branch.png");
+        return skins.get(object.getId() % 3);
     }
 
     @Override

@@ -39,6 +39,10 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     private int ticksInAir;
     private LivingEntity livingOwner;
     private boolean instant = false;
+    private boolean lockVelocity = false;
+    public void lock() {
+        lockVelocity = true;
+    }
 
     private static final EntityDataAccessor<Float> SCALE;
     private static final EntityDataAccessor<Boolean> IS_INSTANT;
@@ -78,6 +82,12 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     public void setInstant(boolean instant) {
         this.instant = instant;
         entityData.set(IS_INSTANT, instant);
+    }
+
+    @Override
+    public void setDeltaMovement(Vec3 deltaMovement) {
+        if (lockVelocity) return;
+        super.setDeltaMovement(deltaMovement);
     }
 
     public static final BlockParticleOption ICE_PARTICLE = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.ICE.defaultBlockState());

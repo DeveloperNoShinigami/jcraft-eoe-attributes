@@ -63,11 +63,15 @@
 * To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
 * Also, there should be a semi-active check for people inside the D4C dimension that arent logged in PastDimensions
 
+
+* Stand User Enemies dont walk towards you (movement attributeMod or .strafeTo issue, probably)
+
+
 * GETreeEntity is not properly rotated (Gold Experience's Utility)
 , it should point its treetop in the direction it launches you in
 
 
-* GravityLib rendering is fucked - F3 camera, particles, base-game animations, all broken in different gravities
+* GravityLib rendering breaks base-game animations
   * MR's Red Bind particles dont render in the right orientation when under different gravities
 
 
@@ -80,6 +84,9 @@
 * Getting stand skins is no longer possible due to Smithing Table rework
 #### Forge
 * MISSING GRAVITY COMPONENT IMPL
+
+
+* Stand users rapidly resummon, constantly
 
 
 * Shockwaves are not rendered
@@ -97,12 +104,6 @@
 
 
 * changing the velocity of a projectile doesn't mark it as dirty which causes teleports for shit like Magician's Special 1 into crouching m1 (redirect)
-
-
-* MiH is missing a leg crusher anim (NOT LOW KICK - THERE IS A DIFFERENCE)
-
-
-* Pet Shop rapidly resummons stand constantly
 
 #### todo :)
 * Internationalization

@@ -33,7 +33,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
-    private static final int MAX_CHAIN_LENGTH = 16;
+    private static final int MAX_CHAIN_LENGTH = 10;
     private final int chainIndex;
 
     private IceBranchProjectile next;
@@ -41,6 +41,7 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
 
     private boolean grown = false;
     private boolean lockRotation = false;
+    private boolean lockVelocity = true;
 
     public IceBranchProjectile(Level level) {
         super(JEntityTypeRegistry.ICE_BRANCH.get(), level);
@@ -68,27 +69,44 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
         super.setYRot(yRot);
     }
 
+    @Override
+    public void setDeltaMovement(Vec3 deltaMovement) {
+        if (lockVelocity) return;
+        super.setDeltaMovement(deltaMovement);
+    }
+
     private final Comparator<Entity> distanceComparator = (entity1, entity2) -> {
         double distance1 = this.distanceToSqr(entity1);
         double distance2 = this.distanceToSqr(entity2);
         return Double.compare(distance1, distance2);
     };
 
-    //todo: variants + less noclip
     public static final double LENGTH = 1;
+    public static final int DEATH_TICK = 100;
     @Override
     public void tick() {
         lockRotation = true;
         super.tick();
         lockRotation = false;
+
         if (level().isClientSide()) {
             if (tickCount == 1) {
+                Vec3 rotVec = calculateViewVector(getXRot(), -getYRot());
                 for (int i = 0; i < 6; i++) {
                     level().addParticle(random.nextBoolean() ? LargeIcicleProjectile.ICE_PARTICLE : ParticleTypes.SNOWFLAKE,
                             getX(), getY(), getZ(),
-                            random.nextGaussian() * 0.25,
-                            random.nextGaussian() * 0.25,
-                            random.nextGaussian() * 0.25
+                            (random.nextGaussian() - rotVec.x) * 0.1,
+                            (random.nextGaussian() - rotVec.y) * 0.1,
+                            (random.nextGaussian() - rotVec.z) * 0.1
+                    );
+                }
+            } else if (tickCount == DEATH_TICK) {
+                for (int i = 0; i < 6; i++) {
+                    level().addParticle(LargeIcicleProjectile.ICE_PARTICLE,
+                            getX(), getY(), getZ(),
+                            random.nextGaussian(),
+                            random.nextGaussian(),
+                            random.nextGaussian()
                     );
                 }
             } else if (random.nextFloat() < 0.1f) {
@@ -106,7 +124,7 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
             return;
         }
         if (tickCount == 1) {
-            Vec3 rotVec = calculateViewVector(getXRot(), -getYRot()); // Noclipping projectiles have inverted yaw
+            Vec3 rotVec = calculateViewVector(getXRot(), -getYRot()); // No-clipping projectiles have inverted yaw
             Vec3 pos = position();
             Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos.add(rotVec.scale(-0.25)), 1.25, e -> true);
             boolean hit = false;
@@ -117,25 +135,32 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
                 LivingEntity target = JUtils.getUserIfStand(living);
 
                 StandEntity.damageLogic(level(), target, Vec3.ZERO,
-                        30, 0, false, 3f, true,
+                        30 - 10 * chainIndex / MAX_CHAIN_LENGTH, 0, false, 3f, true,
                         10, level().damageSources().mobAttack(livingOwner), livingOwner,
                         CommonHitPropertyComponent.HitAnimation.MID);
             }
             if (hit) {
                 Vec3 frontPos = pos.add(rotVec.scale(-0.5));
-                JCraft.createParticle((ServerLevel) level(),
+                playSound(SoundEvents.PLAYER_HURT_FREEZE, 1, 1);
+
+                ServerLevel serverWorld = (ServerLevel) level();
+                JCraft.createParticle(serverWorld,
                         frontPos.x + random.nextGaussian() * 0.25,
                         frontPos.y + random.nextGaussian() * 0.25,
                         frontPos.z + random.nextGaussian() * 0.25,
                         JParticleType.HIT_SPARK_1);
-                playSound(SoundEvents.PLAYER_HURT_FREEZE, 1, 1);
+
+                JUtils.around(serverWorld, frontPos, 128).forEach(
+                        serverPlayer -> (serverWorld).sendParticles(serverPlayer,
+                                LargeIcicleProjectile.ICE_PARTICLE, false, frontPos.x - 0.25, frontPos.y - 0.25, frontPos.z - 0.25,
+                                10, 0.5, 0.5, 0.5, 0.1)
+                );
 
                 grown = true; // Stop growth
             }
-        } else if (chainIndex < MAX_CHAIN_LENGTH && !grown && tickCount == 15) {
+        } else if (chainIndex < MAX_CHAIN_LENGTH && !grown && tickCount == 10) {
             ServerLevel serverWorld = (ServerLevel) level();
             Vec3 rotVec = calculateViewVector(getXRot(), -getYRot()); // Noclipping projectiles have inverted yaw
-            next = new IceBranchProjectile(level(), livingOwner, chainIndex + 1);
             Vec3 initialPos = position().add(rotVec.scale(-LENGTH));
 
             Optional<LivingEntity> target = serverWorld.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(32.0), EntitySelector.NO_CREATIVE_OR_SPECTATOR)
@@ -143,33 +168,43 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
                     .filter(livingEntity -> livingEntity != livingOwner && !livingEntity.isPassengerOfSameVehicle(livingOwner))
                     .min(distanceComparator);
 
-            if (target.isPresent()) {
-                LivingEntity nearestTarget = target.get();
-                Vec3 toTarget = nearestTarget.position()
-                        .subtract(initialPos)
-                        .add(
-                                random.nextGaussian() * 0.3,
-                                random.nextGaussian() * 0.3,
-                                random.nextGaussian() * 0.3
-                        ).normalize();
-                double e = toTarget.x;
-                double f = toTarget.y;
-                double g = toTarget.z;
-                double l = toTarget.horizontalDistance();
-                next.setYRot((float) (Mth.atan2(-e, -g) * 57.2957763671875));
-                next.setXRot((float) (Mth.atan2(f, l) * 57.2957763671875));
-                next.setPos(initialPos.add(toTarget.scale(LENGTH)));
-            } else {
-                next.setXRot(getXRot() + random.nextFloat() * 30);
-                next.setYRot(getXRot() + random.nextFloat() * 30);
-                next.setPos(initialPos.add(next.getLookAngle().scale(LENGTH)));
-            }
+            boolean shouldSplit = chainIndex % 4 == 2;
+            double inaccuracy = shouldSplit ? 10 : 1;
+            for (int i = 0; i < (shouldSplit ? 2 : 1); i++) {
+                next = new IceBranchProjectile(level(), livingOwner, chainIndex + 1);
 
-            next.xRotO = next.getXRot();
-            next.yRotO = next.getYRot();
-            level().addFreshEntity(next);
+                if (target.isPresent()) {
+                    LivingEntity nearestTarget = target.get();
+                    Vec3 toTarget = nearestTarget.position()
+                            .subtract(initialPos)
+                            .add(
+                                    random.nextGaussian() * inaccuracy,
+                                    random.nextGaussian() * inaccuracy,
+                                    random.nextGaussian() * inaccuracy
+                            ).normalize();
+                    double e = toTarget.x;
+                    double f = toTarget.y;
+                    double g = toTarget.z;
+                    double l = toTarget.horizontalDistance();
+                    next.setYRot((float) (Mth.atan2(-e, -g) * 57.2957763671875));
+                    next.setXRot((float) (Mth.atan2(f, l) * 57.2957763671875));
+                    next.setPos(initialPos.add(toTarget.scale(LENGTH)));
+                } else {
+                    next.setXRot(getXRot() + random.nextFloat() * 60.0F - 30.0F);
+                    next.setYRot(getYRot() + random.nextFloat() * 60.0F - 30.0F);
+                    next.setPos(initialPos.add(rotVec.scale(-LENGTH)));
+                }
+
+                next.xRotO = next.getXRot();
+                next.yRotO = next.getYRot();
+                level().addFreshEntity(next);
+            }
             grown = true;
-        } else if (tickCount == 100) {
+        } else if (tickCount == DEATH_TICK - 10) {
+            lockVelocity = false;
+            setNoGravity(false);
+            setNoPhysics(false);
+        } else if (tickCount == DEATH_TICK) {
             discard();
         }
     }

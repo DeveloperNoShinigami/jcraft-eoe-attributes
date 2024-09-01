@@ -3,7 +3,7 @@
 	"animations": {
 		"animation.ice_branch.spawn": {
 			"loop": "hold_on_last_frame",
-			"animation_length": 0.24,
+			"animation_length": 5.08,
 			"bones": {
 				"base": {
 					"rotation": {
@@ -21,6 +21,13 @@
 						"0.24": {
 							"vector": [1, 1, 1],
 							"easing": "easeOutBack"
+						},
+						"4.8": {
+							"vector": [1, 1, 1]
+						},
+						"5.04": {
+							"vector": [1, 0, 0],
+							"easing": "easeOutBounce"
 						}
 					}
 				},
@@ -37,6 +44,24 @@
 				"head": {
 					"rotation": {
 						"vector": [45, 45, 45]
+					}
+				},
+				"frays": {
+					"scale": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.16": {
+							"vector": [1, 1, 1],
+							"easing": "easeOutBack"
+						},
+						"4.56": {
+							"vector": [1, 1, 1]
+						},
+						"5.04": {
+							"vector": [1, 0, 0],
+							"easing": "easeOutBounce"
+						}
 					}
 				}
 			}

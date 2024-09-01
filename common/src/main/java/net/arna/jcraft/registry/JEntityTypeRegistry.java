@@ -169,7 +169,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<GETreeEntity>> GE_TREE = ENTITY_TYPE_REGISTRY.register(JCraft.id("getree"),
             () -> EntityType.Builder.of(
-                    ((EntityType<GETreeEntity> type, Level world) -> new GETreeEntity(type, world)),
+                    ((EntityType<GETreeEntity> type, Level world) -> new GETreeEntity(world)),
                     MobCategory.CREATURE
             ).sized(0.6f, 0.8f).build("goldexperience")
     );
@@ -574,7 +574,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(PURPLE_HAZE_DISTORTION, AbstractPurpleHazeEntity::createMobAttributes);
         EntityAttributeRegistry.register(GOLD_EXPERIENCE, GoldExperienceEntity::createMobAttributes);
         EntityAttributeRegistry.register(GER, GEREntity::createMobAttributes);
-        EntityAttributeRegistry.register(GE_TREE, GETreeEntity::createLivingAttributes);
+        //EntityAttributeRegistry.register(GE_TREE, GETreeEntity::createLivingAttributes);
         EntityAttributeRegistry.register(GE_FROG, GEFrogEntity::createAttributes);
         EntityAttributeRegistry.register(GE_BUTTERFLY, GEButterflyEntity::createButterflyAttributes);
         EntityAttributeRegistry.register(GE_SNAKE, () -> GESnakeEntity.createMobAttributes()
