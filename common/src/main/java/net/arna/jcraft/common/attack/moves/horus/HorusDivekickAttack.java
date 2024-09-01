@@ -8,15 +8,18 @@ import net.arna.jcraft.common.entity.stand.HorusEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.common.util.MobilityType;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekickAttack, HorusEntity, HorusEntity.State> {
     public static final MoveVariable<Vec3> LOOK_DIR = new MoveVariable<>(Vec3.class);
     public HorusDivekickAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback, float offset, HorusEntity.State hitAnimState) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitAnimState);
+        withMobilityType(MobilityType.FLIGHT);
     }
 
     private static final MobEffectInstance LEVITATE = new MobEffectInstance(MobEffects.SLOW_FALLING, 9, 4, true, false);
@@ -33,6 +36,13 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
         withDuration(duration);
 
         user.addEffect(LEVITATE);
+    }
+
+    @Override
+    protected void endCharge(HorusEntity attacker) {
+        super.endCharge(attacker);
+        Vec3 newPos = advanceChargePos(attacker, getMoveDistance(), getWindupPoint());
+        attacker.setFreePos(new Vector3f((float) newPos.x, (float) newPos.y, (float) newPos.z));
     }
 
     @Override

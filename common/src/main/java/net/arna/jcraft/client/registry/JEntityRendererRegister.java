@@ -59,6 +59,7 @@ public interface JEntityRendererRegister {
         EntityRendererRegistry.register(JEntityTypeRegistry.HORUS, HorusRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.ICICLE, IcicleRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.LARGE_ICICLE, LargeIcicleRenderer::new);
+        EntityRendererRegistry.register(JEntityTypeRegistry.ICE_BRANCH, IceBranchRenderer::new);
 
         EntityRendererRegistry.register(JEntityTypeRegistry.CINDERELLA, CinderellaRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.OSIRIS, OsirisRenderer::new);

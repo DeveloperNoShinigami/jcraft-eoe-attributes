@@ -63,6 +63,7 @@ public class ClientSetupEvents {
         event.registerEntityRenderer(JEntityTypeRegistry.HORUS.get(), HorusRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.ICICLE.get(), IcicleRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.LARGE_ICICLE.get(), LargeIcicleRenderer::new);
+        event.registerEntityRenderer(JEntityTypeRegistry.ICE_BRANCH.get(), IceBranchRenderer::new);
 
         event.registerEntityRenderer(JEntityTypeRegistry.CHARIOT_REQUIEM.get(), ChariotRequiemRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.CINDERELLA.get(), CinderellaRenderer::new);

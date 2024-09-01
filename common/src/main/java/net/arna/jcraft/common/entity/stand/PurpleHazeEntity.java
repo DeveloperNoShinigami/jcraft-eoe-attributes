@@ -274,8 +274,8 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                         potentialTargets.remove(this);
 
                         Comparator<Entity> distanceComparator = (entity1, entity2) -> {
-                            double distance1 = this.distanceTo(entity1);
-                            double distance2 = this.distanceTo(entity2);
+                            double distance1 = this.distanceToSqr(entity1);
+                            double distance2 = this.distanceToSqr(entity2);
                             return Double.compare(distance1, distance2);
                         };
                         potentialTargets.sort(distanceComparator);

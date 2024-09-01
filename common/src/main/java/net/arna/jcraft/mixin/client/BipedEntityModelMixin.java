@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.arna.jcraft.common.util.JUtils.RAD_TO_DEG;
+import static net.arna.jcraft.common.util.JUtils.DEG_TO_RAD;
 
 @Mixin(HumanoidModel.class)
 public abstract class BipedEntityModelMixin<T extends LivingEntity> {
@@ -76,12 +76,12 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
                         // RAD_TO_DEG = pi/180
                         if (leftArmPose == HumanoidModel.ArmPose.EMPTY) {
                             leftArm.xRot = 0;
-                            leftArm.yRot = -15 * RAD_TO_DEG;
-                            leftArm.zRot = 5 * RAD_TO_DEG;
+                            leftArm.yRot = -15 * DEG_TO_RAD;
+                            leftArm.zRot = 5 * DEG_TO_RAD;
                         }
 
                         if (rightArmPose == HumanoidModel.ArmPose.EMPTY) {
-                            rightArm.zRot = 15 * RAD_TO_DEG;
+                            rightArm.zRot = 15 * DEG_TO_RAD;
                             rightArm.xRot *= 0.5F;
                         }
                     }
@@ -89,19 +89,19 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
                     case THE_WORLD -> {
                         // Arms near hips, the DIO pose in HFTF
                         if (leftArmPose == HumanoidModel.ArmPose.EMPTY) {
-                            leftArm.yRot = 15 * RAD_TO_DEG;
-                            leftArm.zRot = 2 * RAD_TO_DEG;
+                            leftArm.yRot = 15 * DEG_TO_RAD;
+                            leftArm.zRot = 2 * DEG_TO_RAD;
                         }
 
                         if (rightArmPose == HumanoidModel.ArmPose.EMPTY) {
-                            rightArm.yRot = -15 * RAD_TO_DEG;
-                            rightArm.zRot = -2 * RAD_TO_DEG;
+                            rightArm.yRot = -15 * DEG_TO_RAD;
+                            rightArm.zRot = -2 * DEG_TO_RAD;
                         }
 
                         if (!livingEntity.isSprinting()) {
-                            leftArm.xRot -= 10F * RAD_TO_DEG;
-                            rightArm.xRot -= 10F * RAD_TO_DEG;
-                            body.xRot -= 10F * RAD_TO_DEG;
+                            leftArm.xRot -= 10F * DEG_TO_RAD;
+                            rightArm.xRot -= 10F * DEG_TO_RAD;
+                            body.xRot -= 10F * DEG_TO_RAD;
 
                             leftLeg.z -= 2F;
                             rightLeg.z -= 2F;
@@ -115,41 +115,41 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
 
                     case KING_CRIMSON -> { // Back towards KC
                         if (JUtils.deltaPos(livingEntity).horizontalDistanceSqr() <= 0) {
-                            body.yRot += 30 * RAD_TO_DEG;
+                            body.yRot += 30 * DEG_TO_RAD;
 
                             if (leftArmPose == HumanoidModel.ArmPose.EMPTY) {
-                                leftArm.yRot += 30 * RAD_TO_DEG;
+                                leftArm.yRot += 30 * DEG_TO_RAD;
                                 leftArm.z -= 2.1F;
                             }
 
                             if (rightArmPose == HumanoidModel.ArmPose.EMPTY || rightArmPose == HumanoidModel.ArmPose.ITEM) {
-                                rightArm.yRot += 30 * RAD_TO_DEG;
+                                rightArm.yRot += 30 * DEG_TO_RAD;
                                 rightArm.z += 2.1F;
                             }
 
                             leftLeg.z -= 1F;
                             rightLeg.z += 1.5F;
 
-                            rightLeg.yRot += 45 * RAD_TO_DEG;
+                            rightLeg.yRot += 45 * DEG_TO_RAD;
                         }
                     }
 
                     case KILLER_QUEEN, KILLER_QUEEN_BITES_THE_DUST -> {
                         if (JUtils.deltaPos(livingEntity).horizontalDistanceSqr() <= 0) {
                             if (leftArmPose == HumanoidModel.ArmPose.EMPTY) {
-                                leftArm.yRot += 15 * RAD_TO_DEG;
-                                leftArm.xRot -= 15 * RAD_TO_DEG;
-                                leftArm.zRot += 45 * RAD_TO_DEG;
+                                leftArm.yRot += 15 * DEG_TO_RAD;
+                                leftArm.xRot -= 15 * DEG_TO_RAD;
+                                leftArm.zRot += 45 * DEG_TO_RAD;
                             }
 
                             if (rightArmPose == HumanoidModel.ArmPose.EMPTY) {
-                                rightArm.yRot -= 15 * RAD_TO_DEG;
-                                rightArm.xRot -= 15 * RAD_TO_DEG;
-                                rightArm.zRot -= 45 * RAD_TO_DEG;
+                                rightArm.yRot -= 15 * DEG_TO_RAD;
+                                rightArm.xRot -= 15 * DEG_TO_RAD;
+                                rightArm.zRot -= 45 * DEG_TO_RAD;
                             }
                         }
 
-                        body.xRot -= 5F * RAD_TO_DEG;
+                        body.xRot -= 5F * DEG_TO_RAD;
                         leftLeg.z -= 1F;
                         rightLeg.z -= 1F;
                     }
@@ -164,7 +164,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
                         rightArm.y -= heightOffset;
 
                         // Leaning while moving
-                        float speedInfluence = (float) JUtils.deltaPos(livingEntity).horizontalDistance() * 45f * RAD_TO_DEG;
+                        float speedInfluence = (float) JUtils.deltaPos(livingEntity).horizontalDistance() * 45f * DEG_TO_RAD;
 
                         body.xRot += speedInfluence;
 
@@ -174,14 +174,14 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
                         rightLeg.z += Mth.sin(speedInfluence) * 12f;
 
                         rightLeg.xRot = speedInfluence;
-                        leftLeg.xRot = 15 * RAD_TO_DEG + speedInfluence;
+                        leftLeg.xRot = 15 * DEG_TO_RAD + speedInfluence;
 
                         leftArm.xRot *= 0.25f;
                         rightArm.xRot *= 0.25f;
 
                         // One arm stretched out
                         if (leftArmPose == HumanoidModel.ArmPose.EMPTY) {
-                            leftArm.zRot = -45 * RAD_TO_DEG + Mth.sin(h / 10) / 8f;
+                            leftArm.zRot = -45 * DEG_TO_RAD + Mth.sin(h / 10) / 8f;
                             leftArm.xRot = speedInfluence;
                         }
 

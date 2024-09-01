@@ -18,10 +18,12 @@ import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -35,16 +37,18 @@ import java.util.Set;
 
 public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     private int ticksInAir;
-    private final LivingEntity livingOwner;
+    private LivingEntity livingOwner;
+    private boolean instant = false;
 
-    public LargeIcicleProjectile(EntityType<? extends LargeIcicleProjectile> entityType, Level world) {
-        super(entityType, world);
-        livingOwner = null;
+    private static final EntityDataAccessor<Float> SCALE;
+    private static final EntityDataAccessor<Boolean> IS_INSTANT;
+    static {
+        SCALE = SynchedEntityData.defineId(LargeIcicleProjectile.class, EntityDataSerializers.FLOAT);
+        IS_INSTANT = SynchedEntityData.defineId(LargeIcicleProjectile.class, EntityDataSerializers.BOOLEAN);
     }
 
     public LargeIcicleProjectile(Level world) {
         super(JEntityTypeRegistry.LARGE_ICICLE.get(), world);
-        livingOwner = null;
     }
 
     public LargeIcicleProjectile(Level world, @NotNull LivingEntity owner) {
@@ -58,63 +62,112 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public ItemStack getPickupItem() {
-        return ItemStack.EMPTY;
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(SCALE, 1.0f);
+        entityData.define(IS_INSTANT, false);
     }
 
-    private static final BlockParticleOption ICE_PARTICLE = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.ICE.defaultBlockState());
+    public void setScale(float scale) {
+        entityData.set(SCALE, scale);
+    }
+    public float getScale() {
+        return entityData.get(SCALE);
+    }
+
+    public void setInstant(boolean instant) {
+        this.instant = instant;
+        entityData.set(IS_INSTANT, instant);
+    }
+
+    public static final BlockParticleOption ICE_PARTICLE = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.ICE.defaultBlockState());
 
     @Override
     public void tick() {
         super.tick();
+        if (livingOwner == null) {
+            if (getOwner() instanceof LivingEntity living) {
+                livingOwner = living;
+            } else {
+                discard();
+                return;
+            }
+        }
 
-        if (ticksInAir++ == 0 && level().isClientSide) {
-            double x = getX();
-            double y = getY();
-            double z = getZ();
-            Vec3 velocity = getDeltaMovement().normalize();
+        ticksInAir++;
 
-            for (int i = 0; i < 24; i++) {
-                level().addParticle(random.nextBoolean() ? ICE_PARTICLE : ParticleTypes.SNOWFLAKE, x, y, z,
-                        (velocity.x + random.nextGaussian()) * 0.25,
-                        (velocity.y + random.nextGaussian()) * 0.25,
-                        (velocity.z + random.nextGaussian()) * 0.25
-                );
+        if (level().isClientSide) {
+            if (ticksInAir == 1) {
+                double x = getX();
+                double y = getY();
+                double z = getZ();
+                Vec3 velocity = getDeltaMovement().normalize();
+
+                for (int i = 0; i < 24; i++) {
+                    level().addParticle(random.nextBoolean() ? ICE_PARTICLE : ParticleTypes.SNOWFLAKE, x, y, z,
+                            (velocity.x + random.nextGaussian()) * 0.25,
+                            (velocity.y + random.nextGaussian()) * 0.25,
+                            (velocity.z + random.nextGaussian()) * 0.25
+                    );
+                }
             }
             return;
         }
 
-        if (ticksInAir < 10) {
-            setDeltaMovement(getDeltaMovement().scale(0.9));
-        } else if (ticksInAir == 10) {
-            if (livingOwner != null) {
-                Vec3 pos = position();
-                Vec3 direction = getDeltaMovement().normalize();
-                Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos.add(direction.scale(1.25)), 1.75, e -> true);
-                hurt.addAll(JUtils.generateHitbox(level(), pos.add(direction.scale(2.25)), 1.25, e -> true));
-                boolean hit = false;
-                for (LivingEntity living : hurt) {
-                    if (!canAttack(living)) {
-                        continue;
-                    }
-                    hit = true;
-                    LivingEntity target = JUtils.getUserIfStand(living);
-                    Vec3 kbVec = direction.scale(0.75);
-                    StandEntity.damageLogic(level(), target, kbVec, 15, 3, false, 7f, true, 13,
-                            level().damageSources().mobAttack(livingOwner), livingOwner, CommonHitPropertyComponent.HitAnimation.CRUSH, false);
-                }
-                if (hit) {
-                    JCraft.createParticle((ServerLevel) level(),
-                            pos.x + direction.x * 2.5 + random.nextGaussian() * 0.25,
-                            pos.y + direction.y * 2.5 + random.nextGaussian() * 0.25,
-                            pos.z + direction.z * 2.5 + random.nextGaussian() * 0.25,
-                            JParticleType.HIT_SPARK_2);
-                }
-                playSound(SoundEvents.TRIDENT_THROW, 1, 1);
+        if (instant) {
+            if (ticksInAir == 1) {
+                attack();
+            } else if (ticksInAir > 10) {
+                discard();
             }
-        } else if (ticksInAir > 50) {
-            discard();
+        } else {
+            if (ticksInAir < 10) {
+                setDeltaMovement(getDeltaMovement().scale(0.9));
+            } else if (ticksInAir == 10) {
+                attack();
+            } else if (ticksInAir > 50) {
+                discard();
+            }
         }
+    }
+
+    private void attack() {
+        float scale = entityData.get(SCALE);
+        boolean perfect = scale == 1 && instant; // Fully charged instant largecicle
+
+        Vec3 pos = position();
+        Vec3 direction = getDeltaMovement().normalize();
+        Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos.add(direction.scale(1.25 * scale)), 1.75 * scale, e -> true);
+        hurt.addAll(JUtils.generateHitbox(level(), pos.add(direction.scale(2.25 * scale)), 1.25 * scale, e -> true));
+        boolean hit = false;
+        for (LivingEntity living : hurt) {
+            if (!canAttack(living)) continue;
+            hit = !JUtils.isBlocking(living);
+
+            LivingEntity target = JUtils.getUserIfStand(living);
+
+            Vec3 kbVec = direction.scale(0.75 * scale + (perfect ? 1 : 0));
+
+            int stun = (int) (15 * scale);
+            if (instant) stun += 9;
+
+            StandEntity.damageLogic(level(), target, kbVec,
+                    stun, 3, false, 7f * scale + (perfect ? 3f : 0), true,
+                    (int) (13.0f * scale), level().damageSources().mobAttack(livingOwner), livingOwner,
+                    CommonHitPropertyComponent.HitAnimation.CRUSH, false, perfect);
+        }
+        if (hit) {
+            Vec3 frontPos = pos.add(direction.scale(2.5));
+            JCraft.createParticle((ServerLevel) level(),
+                    frontPos.x + random.nextGaussian() * 0.25 * scale,
+                    frontPos.y + random.nextGaussian() * 0.25 * scale,
+                    frontPos.z + random.nextGaussian() * 0.25 * scale,
+                    JParticleType.HIT_SPARK_2);
+            if (perfect) {
+                JComponentPlatformUtils.getShockwaveHandler(level()).addShockwave(frontPos, direction, 2.0f);
+            }
+        }
+        playSound(SoundEvents.TRIDENT_THROW, 1, 1);
     }
 
     public void detonate() {
@@ -153,6 +206,7 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     @Override
     public void onClientRemoval() {
         super.onClientRemoval();
+        if (entityData.get(IS_INSTANT)) return;
         double x = getX();
         double y = getY();
         double z = getZ();
@@ -165,6 +219,11 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
                     (velocity.z + random.nextGaussian()) * 0.5
             );
         }
+    }
+
+    @Override
+    public ItemStack getPickupItem() {
+        return ItemStack.EMPTY;
     }
 
     private boolean canAttack(LivingEntity living) {
@@ -203,8 +262,9 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     private static final RawAnimation FIRE = RawAnimation.begin().thenPlayAndHold("animation.large_icicle.spawn");
+    private static final RawAnimation FIRE_INSTANT = RawAnimation.begin().thenPlayAndHold("animation.large_icicle.spawn_instant");
     private PlayState predicate(AnimationState<LargeIcicleProjectile> state) {
-        return state.setAndContinue(FIRE);
+        return state.setAndContinue(entityData.get(IS_INSTANT) ? FIRE_INSTANT : FIRE);
     }
 
     @Override

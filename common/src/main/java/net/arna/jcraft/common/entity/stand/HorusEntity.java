@@ -10,8 +10,10 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.horus.HorusBarrageAttack;
 import net.arna.jcraft.common.attack.moves.horus.HorusDivekickAttack;
+import net.arna.jcraft.common.attack.moves.shared.HoldableMove;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.common.entity.projectile.IceBranchProjectile;
 import net.arna.jcraft.common.entity.projectile.IcicleProjectile;
 import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -20,6 +22,7 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -109,6 +112,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("Stomp"),
                     Component.literal("summons a large icicle, press Heavy again to detonate it")
             ).withAction(HorusEntity::heavyIcicle);
+    // Utility
     public static final HorusDivekickAttack DIVEKICK = new HorusDivekickAttack(
             280, 8, 25, 8, 6f, 19, 1.5f, 0.23f, 0.3f, State.DIVEKICK_HIT)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
@@ -121,6 +125,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             Stalls the user in the air when starting.
                             Removes fall damage.""")
             );
+    // Special 1
     public static final SimpleAttack<HorusEntity> SCATTER = new SimpleAttack<HorusEntity>(
             200, 16, 20, 0.75f, 0, 0, 0, 0, 0)
             .withInfo(
@@ -128,6 +133,41 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.empty()
             )
             .withAction(HorusEntity::scatter);
+    // Special 2
+    private int icicleChargeTime = 0;
+    public static final SimpleAttack<HorusEntity> CHARGE_FIRE = new SimpleAttack<HorusEntity>(
+            0, 0, 10, 0.75f, 0, 0, 0, 0, 0)
+            .withInfo(
+                    Component.literal("Icicle Fire"),
+                    Component.empty()
+            )
+            .withInitAction(HorusEntity::fireChargedIcicle);
+    public static int MAX_ICICLE_CHARGE_TIME = 30;
+    public static final HoldableMove<HorusEntity, State> CHARGE_ICICLE = new HoldableMove<>(
+            100, MAX_ICICLE_CHARGE_TIME + 1, MAX_ICICLE_CHARGE_TIME, 0.75f, CHARGE_FIRE, State.CHARGE_FIRE, 9)
+            .withInitAction((attacker, user, ctx) -> attacker.icicleChargeTime = 0)
+            .withArmor(1)
+            .withInfo(
+                    Component.literal("Icicle Charge"),
+                    Component.literal("""
+                            1 armor point
+                            Can be held, and released 0.45s in.
+                            If charged fully, attack becomes unblockable and launches far."""
+                    ));
+    // Special 3
+    public static final SimpleAttack<HorusEntity> PLACE = new SimpleAttack<HorusEntity>(
+            200, 8, 14, 0.75f, 0, 0, 0, 0, 0)
+            .withInfo(
+                    Component.literal("Chasing Freeze"),
+                    Component.empty()
+            )
+            .withAction(HorusEntity::placeIceBranch);
+
+    private static void placeIceBranch(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
+        IceBranchProjectile iceBranchProjectile = new IceBranchProjectile(attacker.level(), user, 0);
+        iceBranchProjectile.moveTo(attacker.getX(), attacker.getY(), attacker.getZ(), attacker.getYRot(), attacker.getXRot());
+        attacker.level().addFreshEntity(iceBranchProjectile);
+    }
 
     public HorusEntity(Level world) {
         super(StandType.HORUS, world);
@@ -162,7 +202,10 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         moves.register(MoveType.HEAVY, STOMP, State.STOMP);
 
         moves.register(MoveType.SPECIAL1, SCATTER, State.SCATTER);
-        moves.register(MoveType.SPECIAL2, DIVEKICK, State.DIVEKICK);
+        moves.register(MoveType.SPECIAL2, CHARGE_ICICLE, State.CHARGE_ICICLE);
+        moves.register(MoveType.SPECIAL3, PLACE, State.PLACE);
+
+        moves.register(MoveType.UTILITY, DIVEKICK, State.DIVEKICK);
     }
 
     @Override
@@ -195,7 +238,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                 float pitch = user.getXRot();
                 float yaw = user.getYRot() + i * offset;
                 if (yaw < -90 || yaw > 90) { // why the fuck do i have to do this??
-                    // IT DOESNT EVEN WORK IN DIFFERENT GRAVITIES GOD DAMN IT
+                    // IT DOESN'T EVEN WORK IN DIFFERENT GRAVITIES GOD DAMN IT
                     yaw = -yaw;
                     pitch = -pitch;
                 }
@@ -255,6 +298,70 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         attacker.level().addFreshEntity(attacker.lastLargeIcicle);
     }
 
+    private static void fireChargedIcicle(HorusEntity attacker, LivingEntity user, MoveContext context) {
+        LargeIcicleProjectile instantIcicle = new LargeIcicleProjectile(attacker.level(), user);
+        float scale = attacker.icicleChargeTime / (MAX_ICICLE_CHARGE_TIME - 2.0f);
+        if (scale < 0.1f) scale = 0.1f;
+        if (scale > 1.0f) scale = 1.0f;
+        instantIcicle.setScale(scale);
+        instantIcicle.setInstant(true);
+
+        Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
+        Vec3 heightOffset = upVec.scale(0.75);
+
+        Vec3 velocity = attacker.isFree() || !user.onGround() ?
+                attacker.getLookAngle().scale(0.01) : user.getLookAngle().scale(0.01);
+        double e = velocity.x;
+        double f = velocity.y;
+        double g = velocity.z;
+        double l = velocity.horizontalDistance();
+
+        instantIcicle.moveTo(attacker.getX() + heightOffset.x, attacker.getY() + heightOffset.y, attacker.getZ() + heightOffset.z,
+                (float) (Mth.atan2(-e, -g) * 57.2957763671875),
+                (float) (Mth.atan2(f, l) * 57.2957763671875)
+        );
+        instantIcicle.setDeltaMovement(velocity);
+
+        attacker.level().addFreshEntity(instantIcicle);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        int moveStun = getMoveStun();
+        if (moveStun <= MAX_ICICLE_CHARGE_TIME + 1) {
+            if (level().isClientSide()) {
+                if (getState() == State.CHARGE_ICICLE) {
+                    double completion = moveStun / (MAX_ICICLE_CHARGE_TIME + 1.0);
+                    Vec3 direction = getLookAngle().add(GravityChangerAPI.getEyeOffset(this).scale(0.75));
+                    if (random.nextDouble() >= completion) { // More often the more complete
+                        Vec3 offset = new Vec3( // Closer in the more complete
+                                random.nextGaussian() * completion,
+                                random.nextGaussian() * completion,
+                                random.nextGaussian() * completion
+                        );
+                        level().addParticle(ParticleTypes.SNOWFLAKE,
+                                getX() + direction.x + offset.x,
+                                getY() + direction.y + offset.y,
+                                getZ() + direction.z + offset.z,
+                                -offset.x / 6,
+                                -offset.y / 6,
+                                -offset.z / 6
+                        );
+                    }
+                    level().addParticle(random.nextBoolean() ? ParticleTypes.SPIT : LargeIcicleProjectile.ICE_PARTICLE,
+                            getX() + direction.x,
+                            getY() + direction.y,
+                            getZ() + direction.z,
+                            0, 0, 0
+                    );
+                }
+            } else if (curMove != null) {
+                if (curMove.getOriginalMove() == CHARGE_ICICLE) icicleChargeTime++;
+            }
+        }
+    }
+
     @Override
     public @NonNull HorusEntity getThis() {
         return this;
@@ -262,7 +369,6 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<HorusEntity> {
-
         IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.horus.idle"))),
         BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.horus.block"))),
         LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.light"))),
@@ -276,6 +382,9 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         DIVEKICK(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.divekick"))),
         DIVEKICK_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.divekick_hit"))),
         SCATTER(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.scatter"))),
+        CHARGE_ICICLE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.charge_icicle"))),
+        CHARGE_FIRE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.charge_fire"))),
+        PLACE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.place"))),
         ;
 
         private final Consumer<AnimationState> animator;
