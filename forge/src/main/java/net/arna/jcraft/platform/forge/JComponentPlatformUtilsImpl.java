@@ -2,13 +2,13 @@ package net.arna.jcraft.platform.forge;
 
 
 import net.arna.jcraft.common.component.entity.CommonGrabComponent;
-import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.component.living.*;
 import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.arna.jcraft.common.component.world.CommonTexasHoldEmComponent;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
+import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;
 import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.player.PhCapability;
@@ -19,6 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+
 import java.util.Optional;
 
 public class JComponentPlatformUtilsImpl {
@@ -66,12 +67,12 @@ public class JComponentPlatformUtilsImpl {
         return HitPropertyCapability.getCapability(livingEntity);
     }
 
-    public static Optional<CommonGravityComponent> getGravity(Entity entity) {
-        return Optional.empty(); //TODO
+    //todo: properly implement gravity caps
+    public static Optional<GravityCapability> getGravity(Entity entity) {
+        return GravityCapability.getCapabilityOptional(entity);
     }
-
-    public static CommonGravityShiftComponent getGravityShift(Entity entity) {
-        return null; //TODO
+    public static CommonGravityShiftComponent getGravityShift(LivingEntity entity) {
+        return GravityShiftCapability.getCapability(entity);
     }
 
     public static CommonShockwaveHandlerComponent getShockwaveHandler(Level world) {

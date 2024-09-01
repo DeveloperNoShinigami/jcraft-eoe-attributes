@@ -144,7 +144,7 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
         time = 200;
         type = ShiftType.RADIAL_ATTRACT;
 
-        sync();
+        sync(user);
     }
 
     @Override
@@ -165,7 +165,7 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
         }
 
         particleDirection = new Vec3(lookDir.step());
-        sync();
+        sync(user);
     }
 
     @Override
@@ -184,17 +184,17 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
             type = ShiftType.RADIAL_ATTRACT;
         }
 
-        sync();
+        sync(user);
     }
 
     @Override
     public void stop() {
         time = 0;
         type = null;
-        sync();
+        sync(user);
     }
 
-    public void sync() {
+    public void sync(Entity entity) {
 
     }
 

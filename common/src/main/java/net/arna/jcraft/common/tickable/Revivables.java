@@ -13,7 +13,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class Revivables {
     public static class ReviveData {
@@ -35,13 +37,25 @@ public class Revivables {
     }
 
     protected static final List<ReviveData> revivables = new ArrayList<>();
+    private static final Queue<ReviveData> queuedAdditions = new LinkedList<>();
+    private static final Queue<ReviveData> queuedRemovals = new LinkedList<>();
+    private static boolean ticking = false;
 
     public static void addRevivable(EntityType<?> type, Vec3 pos, ResourceKey<Level> worldKey) {
-        revivables.add(new ReviveData(type, pos, worldKey));
+        ReviveData newReviveData = new ReviveData(type, pos, worldKey);
+        if (ticking) {
+            queuedAdditions.add(newReviveData);
+        } else {
+            revivables.add(newReviveData);
+        }
     }
 
     public static void removeRevivable(ReviveData reviveData) {
-        revivables.remove(reviveData);
+        if (ticking) {
+            queuedRemovals.add(reviveData);
+        } else {
+            revivables.remove(reviveData);
+        }
     }
 
     public static void revive(@NonNull MinecraftServer server, @NonNull ReviveData revivable) {
@@ -81,13 +95,27 @@ public class Revivables {
     }
 
     public static void tick(MinecraftServer server) {
+        if (ticking) {
+            JCraft.LOGGER.error("Tried to tick Revivables while already ticking!");
+            return;
+        }
+        ticking = true;
+
+        revivables.addAll(queuedAdditions);
+        revivables.removeAll(queuedRemovals);
+        queuedAdditions.clear();
+        queuedRemovals.clear();
+
         List<ReviveData> newRevivables = new ArrayList<>();
         for (ReviveData revivable : revivables) {
             if (--revivable.timer > 1) {
                 newRevivables.add(revivable);
             }
         }
+
         revivables.clear();
         revivables.addAll(newRevivables);
+
+        ticking = false;
     }
 }

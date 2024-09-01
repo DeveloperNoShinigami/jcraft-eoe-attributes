@@ -67,10 +67,6 @@
 * Stand User Enemies dont walk towards you (movement attributeMod or .strafeTo issue, probably)
 
 
-* GETreeEntity is not properly rotated (Gold Experience's Utility)
-, it should point its treetop in the direction it launches you in
-
-
 * GravityLib rendering breaks base-game animations
   * MR's Red Bind particles dont render in the right orientation when under different gravities
 

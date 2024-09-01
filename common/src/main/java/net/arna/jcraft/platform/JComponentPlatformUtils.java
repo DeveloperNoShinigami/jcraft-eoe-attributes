@@ -74,7 +74,7 @@ public class JComponentPlatformUtils {
     }
 
     @ExpectPlatform
-    public static CommonGravityShiftComponent getGravityShift(Entity entity) {
+    public static CommonGravityShiftComponent getGravityShift(LivingEntity entity) {
         throw new AssertionError();
     }
 

@@ -4,6 +4,8 @@ import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import net.arna.jcraft.forge.capability.api.JCapability;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
+import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;
+import net.arna.jcraft.forge.capability.impl.living.GravityShiftCapability;
 import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.player.PhCapability;
@@ -15,8 +17,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 public class JNetworkingForge {
-
-
     public static void init() {
         GrabCapability.initNetwork();
         TimeStopCapability.initNetwork();
@@ -30,6 +30,8 @@ public class JNetworkingForge {
         PhCapability.initNetwork();
         SpecCapability.initNetwork();
         ShockwaveHandlerCapability.initNetwork();
+        GravityShiftCapability.initNetwork();
+        GravityCapability.initNetwork();
     }
 
     public static <T extends JCapability> void sendPackets(Entity entity, ResourceLocation s2c, ResourceLocation c2s, T cap) {

@@ -34,9 +34,10 @@ public class GETreeEntity extends AbstractArrow implements GeoEntity {
     public GETreeEntity(Level world, LivingEntity owner, Vec3 launchVec) {
         super(JEntityTypeRegistry.GE_TREE.get(), world);
         this.setOwner(owner);
+        this.setInvulnerable(true);
+        this.setSilent(true);
         this.livingOwner = owner;
         this.pickup = Pickup.DISALLOWED;
-        this.setInvulnerable(true);
         this.launchVec = launchVec;
     }
 

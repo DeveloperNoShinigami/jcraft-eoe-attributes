@@ -43,6 +43,10 @@ public class JEnemies {
     }
 
     public static void tick(MinecraftServer server) {
+        if (ticking) {
+            JCraft.LOGGER.error("Tried to tick JEnemies while already ticking!");
+            return;
+        }
         ticking = true;
 
         while (!queuedEnemies.isEmpty()) {

@@ -314,8 +314,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
         Vec3 heightOffset = upVec.scale(0.75);
 
-        Vec3 velocity = attacker.isFree() || !user.onGround() ?
-                attacker.getLookAngle().scale(0.01) : user.getLookAngle().scale(0.01);
+        Vec3 velocity = user.getLookAngle().scale(0.01);
         double e = velocity.x;
         double f = velocity.y;
         double g = velocity.z;

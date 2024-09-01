@@ -5,6 +5,7 @@ import net.arna.jcraft.common.block.tile.CoffinTileEntity;
 import net.arna.jcraft.common.component.JComponent;
 import net.arna.jcraft.forge.capability.api.JCapabilityProvider;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
+import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;
 import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.player.PhCapability;
@@ -35,23 +36,27 @@ public class RuntimeEvents {
 
     @SubscribeEvent
     public static void attachEntityCapability(AttachCapabilitiesEvent<Entity> event) {
+        Entity object = event.getObject();
         // When adding a new capability, make sure to add it to the syncEntityCapability and playerClone methods.
-        if (event.getObject() instanceof Player player) {
+        if (object instanceof Player player) {
             event.addCapability(JCraft.id("ph_capability"), new JCapabilityProvider<>(PhCapability.CAPABILITY, () -> new PhCapability(player)));
             event.addCapability(JCraft.id("spec_capability"), new JCapabilityProvider<>(SpecCapability.CAPABILITY, () -> new SpecCapability(player)));
         }
 
-        if (event.getObject() instanceof LivingEntity living) {
+        if (object instanceof LivingEntity living) {
             event.addCapability(JCraft.id("bomb_capability"), new JCapabilityProvider<>(BombTrackerCapability.CAPABILITY, () -> new BombTrackerCapability(living)));
             event.addCapability(JCraft.id("cd_capability"), new JCapabilityProvider<>(CooldownsCapability.CAPABILITY, () -> new CooldownsCapability(living)));
             event.addCapability(JCraft.id("hit_capability"), new JCapabilityProvider<>(HitPropertyCapability.CAPABILITY, () -> new HitPropertyCapability(living)));
             event.addCapability(JCraft.id("misc_capability"), new JCapabilityProvider<>(MiscCapability.CAPABILITY, () -> new MiscCapability(living)));
             event.addCapability(JCraft.id("stand_capability"), new JCapabilityProvider<>(StandCapability.CAPABILITY, () -> new StandCapability(living)));
             event.addCapability(JCraft.id("vampire_capability"), new JCapabilityProvider<>(VampireCapability.CAPABILITY, () -> new VampireCapability(living)));
+
+            event.addCapability(JCraft.id("gravity_shift_capability"), new JCapabilityProvider<>(GravityShiftCapability.CAPABILITY, () -> new GravityShiftCapability(living)));
         }
 
-        event.addCapability(JCraft.id("grab_capability"), new JCapabilityProvider<>(GrabCapability.CAPABILITY, () -> new GrabCapability(event.getObject())));
-        event.addCapability(JCraft.id("time_capability"), new JCapabilityProvider<>(TimeStopCapability.CAPABILITY, () -> new TimeStopCapability(event.getObject())));
+        event.addCapability(JCraft.id("gravity_capability"), new JCapabilityProvider<>(GravityCapability.CAPABILITY, () -> new GravityCapability(object)));
+        event.addCapability(JCraft.id("grab_capability"), new JCapabilityProvider<>(GrabCapability.CAPABILITY, () -> new GrabCapability(object)));
+        event.addCapability(JCraft.id("time_capability"), new JCapabilityProvider<>(TimeStopCapability.CAPABILITY, () -> new TimeStopCapability(object)));
     }
 
     @SubscribeEvent
@@ -81,6 +86,8 @@ public class RuntimeEvents {
         VampireCapability.syncEntityCapability(event);
         PhCapability.syncEntityCapability(event);
         SpecCapability.syncEntityCapability(event);
+        GravityCapability.syncEntityCapability(event);
+        GravityShiftCapability.syncEntityCapability(event);
     }
 
     @SubscribeEvent

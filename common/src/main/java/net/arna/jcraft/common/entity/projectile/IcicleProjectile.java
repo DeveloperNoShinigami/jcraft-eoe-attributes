@@ -116,7 +116,12 @@ public class IcicleProjectile extends AbstractArrow implements GeoEntity {
                 BlockHitResult blockHitResult = (BlockHitResult) hitResult;
                 if (bouncesLeft-- > 0) {
                     Vec3i normal = blockHitResult.getDirection().getNormal();
-                    setDeltaMovement(getDeltaMovement().add(Vec3.atLowerCornerOf(normal)).normalize());
+                    double currentVelocity = getDeltaMovement().length();
+                    setDeltaMovement(
+                            getDeltaMovement().add(Vec3.atLowerCornerOf(normal))
+                                    .normalize()
+                                    .scale(currentVelocity * 0.75)
+                    );
                 } else {
                     this.onHitBlock(blockHitResult);
                     BlockPos blockPos = blockHitResult.getBlockPos();
