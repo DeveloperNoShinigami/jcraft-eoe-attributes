@@ -33,6 +33,13 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
         Level world = entity.level();
 
         if (world.isClientSide) {
+            int id = getMainBomb().bombEntityID;
+            if (getMainBomb().bombEntity == null && id != -1) {
+                Entity entity = world.getEntity(id);
+                // Direct assignment due to other values having been set before
+                // All other cases should use .setBomb(Entity entity)
+                if (entity != null) getMainBomb().bombEntity = entity;
+            }
             JCraft.getClientEntityHandler().bombTrackerParticleTick(entity, main);
         } else {
             if (main.dirty) {
@@ -77,7 +84,9 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
         bombData.isEntity = buf.readBoolean();
         bombData.isItem = buf.readBoolean();
         if (bombData.isEntity) {
-            bombData.bombEntity = entity.level().getEntity(buf.readVarInt());
+            int id = buf.readVarInt();
+            bombData.bombEntityID = id;
+            bombData.bombEntity = entity.level().getEntity(id);
         }
         if (bombData.isBlock) {
             bombData.bombBlock = buf.readBlockPos();

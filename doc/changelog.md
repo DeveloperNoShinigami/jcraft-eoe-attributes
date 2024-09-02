@@ -66,7 +66,7 @@
 * Also, there should be a semi-active check for people inside the D4C dimension that arent logged in PastDimensions
 
 
-* Stand User Enemies dont walk towards you (movement attributeMod or .strafeTo issue, probably)
+* Stand User Enemies dont walk towards you (due to being ridden by stands?)
 
 
 * GravityLib rendering breaks base-game animations
@@ -79,23 +79,14 @@
 * Getting stand skins is no longer possible due to Smithing Table rework
 
 
-* EntityMixin.java - ln 43 - entity tick event labeled ENTITY_POST is called BEFORE tick.
-
-
 * Sound Keyframe found for SilverChariotEntity -> controller, but no keyframe handler registered
   Particle Keyframe found for TheWorldEntity -> controller, but no keyframe handler registered
 #### Forge
 * Camera is fucked in custom gravity
 
 
-* Vampires do not rapidly regenerate
-
-
 * Stand users rapidly resummon, OCCASIONALLY
-* Stand users can have their stand replaced when reloaded
-
-
-* KQ doesn't have particles when bomb is placed (no client tick + bad sync)
+* Stand users have their stand type set to null sometimes (bandaid fix added but cause should be found)
 
 
 * KC epitaph overlay doesn't render

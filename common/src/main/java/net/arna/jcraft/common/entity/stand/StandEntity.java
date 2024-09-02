@@ -1600,6 +1600,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                         distance < enemyAttack.getMoveDistance() + simpleEnemyAttack.getHitboxSize() * 1.5)
         ) {
             entityNavigation.setSpeedModifier(-0.25);
+        } else {
+            entityNavigation.setSpeedModifier(1.0);
         }
 
         if (!stand.blocking) {

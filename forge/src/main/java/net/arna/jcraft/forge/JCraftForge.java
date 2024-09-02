@@ -8,7 +8,7 @@ import net.arna.jcraft.common.argumenttype.AttackArgumentType;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.arna.jcraft.common.events.ServerEntityTickEvent;
+import net.arna.jcraft.common.events.EntityTickEvent;
 import net.arna.jcraft.common.item.DIOsDiaryItem;
 import net.arna.jcraft.common.item.GreenBabyItem;
 import net.arna.jcraft.common.item.LivingArrowItem;
@@ -48,7 +48,7 @@ public final class JCraftForge {
         //DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> JCraftClient::init);
         JNetworkingForge.init();
 
-        ServerEntityTickEvent.ENTITY_POST.register(this::tickEntityCaps);
+        EntityTickEvent.ENTITY_PRE.register(this::tickEntityCaps);
         TickEvent.ServerLevelTick.SERVER_LEVEL_POST.register(this::tickWorldCaps);
         ClientTickEvent.ClientLevel.CLIENT_LEVEL_POST.register(this::tickWorldCaps);
         ArgumentTypeInfos.registerByClass(StandArgumentType.class,  SingletonArgumentInfo.contextFree(StandArgumentType::stand));

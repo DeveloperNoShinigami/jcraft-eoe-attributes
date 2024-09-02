@@ -468,35 +468,37 @@ public class JServerEvents {
     }
 
     public static EventResult death(LivingEntity living, DamageSource source) {
-        if (living instanceof ServerPlayer serverPlayer) {
-            GameRules gameRules = living.level().getGameRules();
-            if (!gameRules.getBoolean(JCraft.KEEP_STAND)) {
-                JComponentPlatformUtils.getStandData(living).setTypeAndSkin(StandType.NONE, 0);
-            }
-            if (!gameRules.getBoolean(JCraft.KEEP_SPEC)) {
-                JComponentPlatformUtils.getSpecData(serverPlayer).setType(SpecType.NONE);
-            }
+        if (living.level() instanceof ServerLevel serverWorld) {
+            if (living instanceof ServerPlayer serverPlayer) {
+                GameRules gameRules = serverWorld.getGameRules();
+                if (!gameRules.getBoolean(JCraft.KEEP_STAND)) {
+                    JComponentPlatformUtils.getStandData(living).setTypeAndSkin(StandType.NONE, 0);
+                }
+                if (!gameRules.getBoolean(JCraft.KEEP_SPEC)) {
+                    JComponentPlatformUtils.getSpecData(serverPlayer).setType(SpecType.NONE);
+                }
 
-            if (source.getEntity() instanceof LivingEntity killer) {
-                JComponentPlatformUtils.getCooldowns(killer).clear(CooldownType.COMBO_BREAKER);
+                if (source.getEntity() instanceof LivingEntity killer) {
+                    JComponentPlatformUtils.getCooldowns(killer).clear(CooldownType.COMBO_BREAKER);
 
-                boolean killVampirism = JServerConfig.KILL_VAMPIRISM.getValue();
-                if (killer instanceof ServerPlayer killerPlayer) {
-                    if (killVampirism) {
-                        killerPlayer.getFoodData().eat(20, 20f);
-                        CommonVampireComponent vampireComponent = JComponentPlatformUtils.getVampirism(killerPlayer);
-                        if (vampireComponent.isVampire()) {
-                            vampireComponent.setBlood(20.0f);
+                    boolean killVampirism = JServerConfig.KILL_VAMPIRISM.getValue();
+                    if (killer instanceof ServerPlayer killerPlayer) {
+                        if (killVampirism) {
+                            killerPlayer.getFoodData().eat(20, 20f);
+                            CommonVampireComponent vampireComponent = JComponentPlatformUtils.getVampirism(killerPlayer);
+                            if (vampireComponent.isVampire()) {
+                                vampireComponent.setBlood(20.0f);
+                            }
                         }
                     }
-                }
-                if (killVampirism) {
-                    killer.setHealth(killer.getMaxHealth());
+                    if (killVampirism) {
+                        killer.setHealth(killer.getMaxHealth());
+                    }
                 }
             }
-        }
 
-        Revivables.addRevivable(living.getType(), living.position(), living.level().dimension());
+            Revivables.addRevivable(living.getType(), living.position(), serverWorld.dimension());
+        }
         return EventResult.pass();
     }
 

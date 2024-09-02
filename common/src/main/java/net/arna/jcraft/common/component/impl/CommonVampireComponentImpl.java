@@ -46,9 +46,8 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
 
         if (player != null) {
             JSpec<?, ?> spec = JUtils.getSpec(player);
-            if (spec == null || !spec.getType().equals(SpecType.VAMPIRE)) {
-                setVampire(false);
-            }
+            // FOR NOW, these are intrinsically tied.
+            setVampire(spec != null && spec.getType().equals(SpecType.VAMPIRE));
         }
 
         if (!isVampire) {

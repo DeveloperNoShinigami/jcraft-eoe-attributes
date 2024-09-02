@@ -2,6 +2,7 @@ package net.arna.jcraft.common.component.impl.living;
 
 import lombok.Getter;
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
@@ -15,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 public class CommonStandComponentImpl implements CommonStandComponent {
     private final Entity entity;
     private StandEntity<?, ?> stand;
-    @Getter
     private StandType type;
     @Getter
     private int skin;
@@ -45,6 +45,16 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     public void setStand(@Nullable StandEntity<?, ?> stand) {
         this.stand = stand;
         sync(entity);
+    }
+
+    @Nullable
+    @Override
+    public StandType getType() {
+        if (type == null && stand != null) {
+            this.type = stand.getStandType();
+            JCraft.LOGGER.error("StandType was null despite non-null stand!");
+        }
+        return this.type;
     }
 
     @Nullable

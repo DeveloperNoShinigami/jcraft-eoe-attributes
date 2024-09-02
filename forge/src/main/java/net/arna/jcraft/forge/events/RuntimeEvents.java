@@ -75,15 +75,15 @@ public class RuntimeEvents {
 
     @SubscribeEvent
     public static void syncEntityCapability(PlayerEvent.StartTracking event) {
-        GrabCapability.syncEntityCapability(event);
+        // GrabCapability.syncEntityCapability(event);
         TimeStopCapability.syncEntityCapability(event);
 
-        BombTrackerCapability.syncEntityCapability(event);
+        // BombTrackerCapability.syncEntityCapability(event);
         CooldownsCapability.syncEntityCapability(event);
         // HitPropertyCapability.syncEntityCapability(event);
         MiscCapability.syncEntityCapability(event);
         StandCapability.syncEntityCapability(event);
-        VampireCapability.syncEntityCapability(event);
+        // VampireCapability.syncEntityCapability(event);
         PhCapability.syncEntityCapability(event);
         SpecCapability.syncEntityCapability(event);
         GravityCapability.syncEntityCapability(event);

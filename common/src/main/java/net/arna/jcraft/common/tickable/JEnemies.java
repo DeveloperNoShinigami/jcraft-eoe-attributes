@@ -96,7 +96,7 @@ public class JEnemies {
                         targets.stream()
                                 .filter(potentialTarget -> potentialTarget != null &&
                                         potentialTarget.isAlive() &&
-                                        enemy.hasLineOfSight(potentialTarget) &&
+                                        // enemy.hasLineOfSight(potentialTarget) &&
                                         potentialTarget.canBeSeenAsEnemy())
                                 .findFirst()
                                 .ifPresent(

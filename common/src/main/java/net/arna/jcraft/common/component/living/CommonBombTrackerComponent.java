@@ -14,10 +14,15 @@ public interface CommonBombTrackerComponent extends JComponent {
         public Entity bombEntity;
         public BlockPos bombBlock;
         public ItemStack bombItem;
+        /**
+         * For recognizing the bombEntity in case the client world hadn't loaded it yet.
+         */
+        public int bombEntityID = -1;
 
         public void reset() {
             isEntity = isBlock = isItem = false;
             bombEntity = null;
+            bombEntityID = -1;
             bombBlock = null;
             bombItem = null;
             dirty = true;
@@ -45,6 +50,7 @@ public interface CommonBombTrackerComponent extends JComponent {
             isEntity = isBlock = isItem = false;
             if (entity != null) {
                 isEntity = true;
+                bombEntityID = entity.getId();
                 bombEntity = entity;
             }
 
@@ -55,6 +61,7 @@ public interface CommonBombTrackerComponent extends JComponent {
             isEntity = isItem = false;
             isBlock = true;
             bombBlock = blockPos;
+            bombEntityID = -1;
 
             dirty = true;
         }
@@ -65,6 +72,7 @@ public interface CommonBombTrackerComponent extends JComponent {
                 isItem = true;
                 bombItem = itemStack;
             }
+            bombEntityID = -1;
 
             dirty = true;
         }

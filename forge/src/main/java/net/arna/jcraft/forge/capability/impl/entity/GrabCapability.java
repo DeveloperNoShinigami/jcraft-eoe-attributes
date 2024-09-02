@@ -1,29 +1,26 @@
 package net.arna.jcraft.forge.capability.impl.entity;
 
 import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import net.arna.jcraft.common.component.impl.entity.CommonGrabComponentImpl;
-import net.arna.jcraft.forge.JNetworkingForge;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.arna.jcraft.forge.capability.impl.living.CooldownsCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import static net.arna.jcraft.JCraft.MOD_ID;
 
 public class GrabCapability extends CommonGrabComponentImpl implements JCapability {
 
     public static ResourceLocation GRAB_S2C = new ResourceLocation(MOD_ID, "grab_s2c");
-    public static ResourceLocation GRAB_C2S = new ResourceLocation(MOD_ID, "grab_c2s");
 
     public static Capability<GrabCapability> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
@@ -35,25 +32,13 @@ public class GrabCapability extends CommonGrabComponentImpl implements JCapabili
     @Override
     public void sync(Entity entity) {
         super.sync(entity);
-        GrabCapability.syncEntityCapability(entity);
-    }
-
-    private static void syncEntityCapability(Entity entity) {
-        if (entity != null) {
-            JNetworkingForge.sendPackets(entity, GRAB_S2C, GRAB_C2S, getCapability(entity));
-        }
-    }
-
-    public static void syncEntityCapability(PlayerEvent.StartTracking event) {
-        if (event.getTarget() instanceof LivingEntity livingEntity) {
-            if (livingEntity.level() instanceof ServerLevel) {
-                syncEntityCapability(livingEntity);
-            }
-        }
-        if (event.getEntity() instanceof Player) {
-            if (event.getEntity().level() instanceof ServerLevel) {
-                syncEntityCapability(event.getEntity());
-            }
+        if (entity.level() instanceof ServerLevel serverWorld) {
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            buf.writeVarInt(entity.getId());
+            writeSyncPacket(buf, null);
+            JUtils.around(serverWorld, entity.position(), 128).forEach(
+                    recipient -> NetworkManager.sendToPlayer(recipient, GRAB_S2C, buf)
+            );
         }
     }
 
@@ -63,7 +48,6 @@ public class GrabCapability extends CommonGrabComponentImpl implements JCapabili
         super.writeToNbt(tag);
         return tag;
     }
-
     @Override
     public void deserializeNBT(CompoundTag tag) {
         super.readFromNbt(tag);
@@ -72,29 +56,17 @@ public class GrabCapability extends CommonGrabComponentImpl implements JCapabili
     public static LazyOptional<GrabCapability> getCapabilityOptional(Entity entity) {
         return entity.getCapability(CAPABILITY);
     }
-
     public static GrabCapability getCapability(Entity entity) {
         return entity.getCapability(CAPABILITY).orElse(new GrabCapability(entity));
     }
 
     public static void initNetwork(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, GRAB_S2C, (buf, context) -> {
-            int id = buf.readInt();
-            CompoundTag nbt = buf.readNbt();
-
-            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
-                GrabCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
-            }
-
-        });
-
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, GRAB_C2S, (buf, context) -> {
-            int id = buf.readInt();
-            CompoundTag nbt = buf.readNbt();
-
-            Entity entity = context.getPlayer().level().getEntity(id);
-            if (entity != null) {
-                GrabCapability.getCapabilityOptional(entity).ifPresent(c -> c.deserializeNBT(nbt));
+            int id = buf.readVarInt();
+            if (Minecraft.getInstance().level != null) {
+                Entity entity = Minecraft.getInstance().level.getEntity(id);
+                if (entity == null) return;
+                GrabCapability.getCapabilityOptional(entity).ifPresent(c -> c.applySyncPacket(buf));
             }
         });
     }
