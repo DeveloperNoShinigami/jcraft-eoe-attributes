@@ -8,6 +8,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.util.RenderUtils;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
@@ -242,9 +243,8 @@ public class MeteorProjectile extends AbstractArrow implements GeoAnimatable {
         if (inGround) {
             if (ticksInGround == 1) {
                 state.getController().setAnimation(explode);
-                state.getController().forceAnimationReset();
             }
-        } else if (ticksInAir == 0) {
+        } else {
             state.getController().setAnimation(idle);
         }
         return PlayState.CONTINUE;
@@ -257,6 +257,6 @@ public class MeteorProjectile extends AbstractArrow implements GeoAnimatable {
 
     @Override
     public double getTick(Object object) {
-        return this.tickCount;
+        return RenderUtils.getCurrentTick();
     }
 }

@@ -32,6 +32,8 @@
 * added Petshop, Aya Tsuji and the D'Arby brothers as NPCs (currently unobtainable except via spawn eggs) and added their stands (Horus, Cinderella, Osiris and Atum) as well, with only Horus being obtainable
 * added Silver Chariot Requiem (unobtainable)
 * added custom icons for Hierophant Green and Purple Haze
+##### Magician's Red
+* Crossfire cooldown lowered (12 -> 5s)
 #### Miscellaneous
 * reordered Creative Inventory Tab
 * additionally sorted JCraft items into Vanilla Creative Inventory Tabs
@@ -71,32 +73,34 @@
   * MR's Red Bind particles dont render in the right orientation when under different gravities
 
 
-* Jittery animations for projectiles like SunBeamProjectile and MeteorProjectile
-
-
 * Horus is not fully implemented
 
 
 * Getting stand skins is no longer possible due to Smithing Table rework
+
+
+* EntityMixin.java - ln 43 - entity tick event labeled ENTITY_POST is called BEFORE tick.
+
+
+* Sound Keyframe found for SilverChariotEntity -> controller, but no keyframe handler registered
+  Particle Keyframe found for TheWorldEntity -> controller, but no keyframe handler registered
 #### Forge
-* MISSING GRAVITY COMPONENT IMPL
+* Camera is fucked in custom gravity
 
 
-* Stand users rapidly resummon, constantly
+* Vampires do not rapidly regenerate
 
 
-* Shockwaves are not rendered
+* Stand users rapidly resummon, OCCASIONALLY
+* Stand users can have their stand replaced when reloaded
 
 
-* HitAnimations arent shown
+* KQ doesn't have particles when bomb is placed (no client tick + bad sync)
 
 
 * KC epitaph overlay doesn't render
 `  [16:27:24] [Netty Local Client IO #0/ERROR] [de.ar.ne.fo.NetworkManagerImpl/]: Unknown message ID: jcraft:epth`
 * KC Time Erase renders better than fabric, though it doesn't play the exit noise
-
-
-* KQ doesn't have particles when bomb is placed
 
 
 * changing the velocity of a projectile doesn't mark it as dirty which causes teleports for shit like Magician's Special 1 into crouching m1 (redirect)

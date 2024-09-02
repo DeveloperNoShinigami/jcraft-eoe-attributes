@@ -80,7 +80,7 @@ public class RuntimeEvents {
 
         BombTrackerCapability.syncEntityCapability(event);
         CooldownsCapability.syncEntityCapability(event);
-        HitPropertyCapability.syncEntityCapability(event);
+        // HitPropertyCapability.syncEntityCapability(event);
         MiscCapability.syncEntityCapability(event);
         StandCapability.syncEntityCapability(event);
         VampireCapability.syncEntityCapability(event);

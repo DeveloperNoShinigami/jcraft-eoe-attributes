@@ -8,6 +8,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.util.RenderUtils;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
@@ -182,7 +183,7 @@ public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
     }
 
     @Override
-    public double getTick(Object object) {
-        return this.tickCount;
+    public double getTick(Object entity) {
+        return RenderUtils.getCurrentTick();
     }
 }

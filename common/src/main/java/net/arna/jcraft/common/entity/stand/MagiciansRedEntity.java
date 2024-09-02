@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
@@ -31,12 +33,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-
 import java.util.Collection;
 import java.util.function.Consumer;
-
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, MagiciansRedEntity.State> {
     public static final RedirectAttack REDIRECT = new RedirectAttack(0, 7, 10, 0.75f)
@@ -103,7 +101,7 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
                     Component.literal("Flamethrower"),
                     Component.literal("fast reliable damage cash-out tool, no stun, burns for 3 seconds")
             );
-    public static final CrossfireAttack CROSSFIRE = new CrossfireAttack(240, 8, 10, 0.75f)
+    public static final CrossfireAttack CROSSFIRE = new CrossfireAttack(100, 8, 10, 0.75f)
             .withSound(JSoundRegistry.MR_CROSSFIRE.get())
             .withInfo(
                     Component.literal("Crossfire"),

@@ -19,6 +19,7 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -27,6 +28,7 @@ public class ShockwaveEffectRenderer {
             .mapToObj(i -> JCraft.id("textures/effect/shockwave/shockwave_" + i + ".png"))
             .toList();
 
+    private static final List<CommonShockwaveHandlerComponent.Shockwave> toRender = new ArrayList<>();
     public static void render(PoseStack stack, Vec3 camPos, ClientLevel world, MultiBufferSource consumerProvider) {
 
         CommonShockwaveHandlerComponent shockwaveHandler = JComponentPlatformUtils.getShockwaveHandler(world);
@@ -36,7 +38,10 @@ public class ShockwaveEffectRenderer {
         RenderSystem.disableCull();
         RenderSystem.setShader(GameRenderer::getPositionColorTexLightmapShader);
 
-        for (CommonShockwaveHandlerComponent.Shockwave shockwave : shockwaveHandler.getShockwaves()) {
+        // java.util.ConcurrentModificationException prevention
+        toRender.clear();
+        toRender.addAll(shockwaveHandler.getShockwaves());
+        for (CommonShockwaveHandlerComponent.Shockwave shockwave : toRender) {
             stack.pushPose();
 
             // Calculate matrix

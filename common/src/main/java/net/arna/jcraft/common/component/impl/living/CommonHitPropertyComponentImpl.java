@@ -5,20 +5,23 @@ import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Random;
+
 public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponent {
-    private final Entity entity;
+    protected final Entity entity;
     protected long endHitAnimTime = 0;
     @Getter
     protected CommonHitPropertyComponent.HitAnimation hitAnimation = null;
     @Getter
     protected Vec3 randomRotation = Vec3.ZERO;
+    protected final Random random;
 
     public CommonHitPropertyComponentImpl(Entity entity) {
         this.entity = entity;
+        this.random = new Random();
     }
 
     @Override
@@ -37,7 +40,6 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
     }
 
     public void sync(Entity entity) {
-
     }
 
     public boolean shouldSyncWith(ServerPlayer player) {
@@ -57,7 +59,6 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
             hitAnimation = CommonHitPropertyComponent.HitAnimation.values()[buf.readVarInt()];
         }
 
-        RandomSource random = entity.level().getRandom();
         randomRotation = new Vec3(
                 random.nextGaussian(),
                 random.nextGaussian(),
@@ -66,8 +67,14 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
     }
 
     public void readFromNbt(CompoundTag tag) {
+        if (tag.isEmpty()) return;
+        endHitAnimTime = tag.getLong("EndTime");
+        hitAnimation = CommonHitPropertyComponent.HitAnimation.values()[tag.getInt("AnimIndex")];
     }
 
     public void writeToNbt(CompoundTag tag) {
+        if (hitAnimation == null) return;
+        tag.putLong("EndTime", endHitAnimTime);
+        tag.putInt("AnimIndex", hitAnimation.ordinal());
     }
 }

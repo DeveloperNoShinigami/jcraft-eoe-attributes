@@ -17,7 +17,7 @@ import java.util.List;
 public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandlerComponent {
     @Getter
     private final List<Shockwave> shockwaves = new ArrayList<>();
-    private final Level world;
+    protected final Level world;
 
     public CommonShockwaveHandlerComponentImpl(Level world) {
         this.world = world;
@@ -100,6 +100,7 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
     }
 
     public void tick() {
+        //todo: client ticking of shockwaves
         for (int i = 0; i < shockwaves.size(); i++) {
             Shockwave shockwave = shockwaves.get(i);
             shockwave.tick();

@@ -5,6 +5,7 @@ import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.living.GravityShiftComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
 public class GravityShiftComponentImpl extends CommonGravityShiftComponentImpl implements GravityShiftComponent {
@@ -22,7 +23,7 @@ public class GravityShiftComponentImpl extends CommonGravityShiftComponentImpl i
     }
 
     @Override
-    public void sync() {
+    public void sync(Entity entity) {
         JComponents.GRAVITY_SHIFT.sync(user);
     }
 
