@@ -32,6 +32,7 @@
 * added Petshop, Aya Tsuji and the D'Arby brothers as NPCs (currently unobtainable except via spawn eggs) and added their stands (Horus, Cinderella, Osiris and Atum) as well, with only Horus being obtainable
 * added Silver Chariot Requiem (unobtainable)
 * added custom icons for Hierophant Green and Purple Haze
+* Updated models for Whitesnake, C-Moon, Made in Heaven, Cream
 ##### Magician's Red
 * Crossfire cooldown lowered (12 -> 5s)
 #### Miscellaneous
@@ -77,6 +78,9 @@
 
 
 * Getting stand skins is no longer possible due to Smithing Table rework
+
+
+* Cream Half-Ball state renders as black in FPS mode
 
 
 * Sound Keyframe found for SilverChariotEntity -> controller, but no keyframe handler registered

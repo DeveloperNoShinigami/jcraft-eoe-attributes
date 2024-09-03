@@ -4,7 +4,7 @@
 		"animation.cream.bite": {
 			"animation_length": 0.8,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -259,7 +259,7 @@
 			"loop": true,
 			"animation_length": 0.36,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -314,7 +314,7 @@
 		"animation.cream.light": {
 			"animation_length": 0.8,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -574,7 +574,7 @@
 		"animation.cream.summon": {
 			"animation_length": 1,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
@@ -903,7 +903,7 @@
 						}
 					}
 				},
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, -10, 0]
 					},
@@ -1095,7 +1095,7 @@
 						}
 					}
 				},
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -1363,7 +1363,7 @@
 						"vector": [0, 0, 0]
 					}
 				},
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -1478,7 +1478,7 @@
 						}
 					}
 				},
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"0.25": {
 							"vector": [0, 0, 0]
@@ -1544,7 +1544,7 @@
 		"animation.cream.heavy": {
 			"animation_length": 1.52,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -1872,7 +1872,7 @@
 						}
 					}
 				},
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"0.5833": {
 							"vector": [0, 0, 0]
@@ -1953,7 +1953,7 @@
 			"loop": true,
 			"animation_length": 3.12,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -2222,7 +2222,7 @@
 						}
 					}
 				},
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -2281,7 +2281,7 @@
 		"animation.cream.combo": {
 			"animation_length": 1.8,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -2646,7 +2646,7 @@
 						}
 					}
 				},
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -2942,7 +2942,7 @@
 		"animation.cream.consume": {
 			"animation_length": 2.08,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -3260,7 +3260,7 @@
 		"animation.cream.ballconsume": {
 			"animation_length": 1.44,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -3540,7 +3540,7 @@
 		"animation.cream.grab": {
 			"animation_length": 1.04,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -3683,7 +3683,7 @@
 		"animation.cream.grab_hit": {
 			"animation_length": 1.04,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -3909,7 +3909,7 @@
 		"animation.cream.destroy": {
 			"animation_length": 1.5,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -3957,6 +3957,9 @@
 							"vector": [30, 0, 0],
 							"easing": "easeInOutSine"
 						}
+					},
+					"position": {
+						"vector": [0, 0, 0]
 					},
 					"scale": {
 						"0.4583": {
@@ -4263,6 +4266,9 @@
 				"base": {
 					"rotation": {
 						"vector": [0, 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
 					}
 				}
 			}
@@ -4271,7 +4277,7 @@
 			"loop": "hold_on_last_frame",
 			"animation_length": 1,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, -10, 0]
 					},
@@ -4533,7 +4539,7 @@
 			"loop": "hold_on_last_frame",
 			"animation_length": 1.48,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, -10, 0]
 					},
@@ -4822,7 +4828,7 @@
 		"animation.cream.surprise": {
 			"animation_length": 2.08,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
@@ -5012,7 +5018,7 @@
 		"animation.cream.charge": {
 			"animation_length": 2.4,
 			"bones": {
-				"Cream": {
+				"cream": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					},
