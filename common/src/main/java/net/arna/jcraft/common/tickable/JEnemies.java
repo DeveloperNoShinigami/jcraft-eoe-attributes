@@ -12,7 +12,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import java.util.*;
 
-import static net.arna.jcraft.common.entity.stand.StandEntity.standUserAI;
+import static net.arna.jcraft.common.entity.stand.StandEntity.standUserCombatAI;
 
 /**
  * Stores and updates all MobEntities that use Stands.
@@ -77,8 +77,10 @@ public class JEnemies {
                     JCraft.summon(world, enemy);
                 } else {
                     LivingEntity target = enemy.getTarget();
+
+                    // Combat AI
                     if (target != null && target.isAlive()) {
-                        standUserAI(enemy, target, stand);
+                        standUserCombatAI(enemy, target, stand);
                     } else {
                         // Targeting priority: top to bottom
                         LinkedList<LivingEntity> targets = new LinkedList<>();
@@ -99,11 +101,12 @@ public class JEnemies {
                                         // enemy.hasLineOfSight(potentialTarget) &&
                                         potentialTarget.canBeSeenAsEnemy())
                                 .findFirst()
-                                .ifPresent(
+                                .ifPresentOrElse(
                                         selectedTarget -> {
                                             enemy.setTarget(selectedTarget);
-                                            standUserAI(enemy, selectedTarget, stand);
-                                        }
+                                            standUserCombatAI(enemy, selectedTarget, stand);
+                                        },
+                                        stand::standUserPassiveAI
                                 );
                     }
                 }

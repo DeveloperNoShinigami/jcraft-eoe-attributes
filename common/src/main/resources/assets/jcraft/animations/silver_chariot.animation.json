@@ -8145,7 +8145,7 @@
 						"vector": [18.73354, 52.44446, 43.67944]
 					},
 					"position": {
-						"vector": ["easeInSine", "easeInSine", "easeInSine"]
+						"vector": [-12, -11, 0]
 					},
 					"scale": {
 						"0.2083": {
@@ -8736,11 +8736,6 @@
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
-				}
-			},
-			"sound_effects": {
-				"0.2917": {
-					"effect": "armoroff"
 				}
 			}
 		},

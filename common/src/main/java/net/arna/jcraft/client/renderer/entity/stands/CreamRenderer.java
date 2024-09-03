@@ -36,6 +36,7 @@ public class CreamRenderer extends StandEntityRenderer<CreamEntity> {
     @Override
     public void actuallyRender(PoseStack poseStack, CreamEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         float a = StandEntityRenderer.getAlpha(animatable, partialTick);
+        if (a < 0.01f) return;
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);
     }
 }

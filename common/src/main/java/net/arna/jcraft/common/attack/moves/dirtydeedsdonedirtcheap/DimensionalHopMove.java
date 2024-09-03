@@ -7,7 +7,6 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.tickable.PastDimensions;
-import net.arna.jcraft.common.util.DimensionData;
 import net.arna.jcraft.mixin.ChunkLightProviderAccessor;
 import net.arna.jcraft.mixin.LightStorageAccessor;
 import net.arna.jcraft.mixin.LightingProviderAccessor;
@@ -18,6 +17,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.DataLayer;
@@ -25,8 +25,10 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.lighting.DataLayerStorageMap;
 import net.minecraft.world.level.lighting.LevelLightEngine;
-import net.minecraft.world.phys.Vec3;
-import java.util.*;
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -39,7 +41,10 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
     public void onInitiate(D4CEntity attacker) {
         super.onInitiate(attacker);
 
-        JCraft.preloadLockTicks = getWindup();
+        if (attacker.level() != JCraft.auWorld) {
+            JCraft.auWorld.getChunkSource().addRegionTicket(TicketType.PORTAL, attacker.chunkPosition(), -5, attacker.blockPosition());
+            JCraft.preloadLockTicks = getWindup();
+        }
     }
 
     @Override
@@ -55,14 +60,8 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
             }
 
             boolean isStored = PastDimensions.tryExit(user, targets); // Should always be true
-
             if (!isStored) { // If not stored, force your way back
-                BlockPos spawnPos = serverPlayer.getRespawnPosition(); // Prioritize spawn point
-                // Use current position if all else fails
-                if (spawnPos == null) {
-                    spawnPos = serverPlayer.blockPosition();
-                }
-                PastDimensions.enqueue(new DimensionData(user, new Vec3(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ()), serverPlayer.getRespawnDimension()));
+                PastDimensions.safeReturn(serverPlayer);
             }
 
             return Set.of();

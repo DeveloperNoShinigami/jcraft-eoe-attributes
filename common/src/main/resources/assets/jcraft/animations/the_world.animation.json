@@ -4549,12 +4549,6 @@
 						"vector": [0, 0, 0]
 					}
 				}
-			},
-			"particle_effects": {
-				"1.32": {
-					"effect": "snowstorm:fire",
-					"locator": "locator "
-				}
 			}
 		}
 	},

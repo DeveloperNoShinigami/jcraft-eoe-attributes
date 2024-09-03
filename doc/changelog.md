@@ -56,9 +56,6 @@
 * Timestop doesnt stop animated textures
 
 
-* Water transparency seemingly changes when the player hovers over a block (appears to have disappeared)
-
-
 * KC epitaph models have fucked rendering
 
 
@@ -67,7 +64,7 @@
 * Also, there should be a semi-active check for people inside the D4C dimension that arent logged in PastDimensions
 
 
-* Stand User Enemies dont walk towards you (due to being ridden by stands?)
+* Stand User Enemies dont use their AI fully (due to being ridden by stands - they work fine when the stand is remote)
 
 
 * GravityLib rendering breaks base-game animations
@@ -77,19 +74,18 @@
 * Horus is not fully implemented
 
 
+* Stand Type is not properly serialized for Mobs
+
+
 * Getting stand skins is no longer possible due to Smithing Table rework
 
 
-* Cream Half-Ball state renders as black in FPS mode
-
-
-* Sound Keyframe found for SilverChariotEntity -> controller, but no keyframe handler registered
-  Particle Keyframe found for TheWorldEntity -> controller, but no keyframe handler registered
+* Water transparency seemingly changes when the player hovers over a block (SEEMINGLY FIXED)
 #### Forge
 * Camera is fucked in custom gravity
 
 
-* Stand users rapidly resummon, OCCASIONALLY
+* Stand users rapidly resummon (SEEMINGLY FIXED)
 * Stand users have their stand type set to null sometimes (bandaid fix added but cause should be found)
 
 
@@ -100,5 +96,7 @@
 
 * changing the velocity of a projectile doesn't mark it as dirty which causes teleports for shit like Magician's Special 1 into crouching m1 (redirect)
 
+
 #### todo :)
 * Internationalization
+* Actually use effect keyframes in animations

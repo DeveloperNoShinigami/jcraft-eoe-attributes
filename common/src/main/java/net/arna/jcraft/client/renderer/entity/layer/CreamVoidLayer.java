@@ -26,7 +26,7 @@ public class CreamVoidLayer extends GeoRenderLayer<CreamEntity> {
     @Override
     public void render(PoseStack poseStack, CreamEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
                        MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        if (animatable.tickCount < 2) return; // Prevents summoning anim flashing players screen
+        if (animatable.tickCount == 0) return; // Prevents summoning anim flashing players screen
         RenderType cameo = RenderType.dragonExplosionAlpha(skins.get(animatable.getSkin()));
 
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,

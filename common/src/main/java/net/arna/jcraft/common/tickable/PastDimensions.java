@@ -2,12 +2,14 @@ package net.arna.jcraft.common.tickable;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.util.DimensionData;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +26,17 @@ public class PastDimensions {
     }
 
     public static void tick(MinecraftServer server) {
+        for (ServerPlayer serverPlayer : JCraft.auWorld.players()) {
+            boolean contained = false;
+            for (DimensionData dimensionData : dimensions) {
+                if (dimensionData.user == serverPlayer) {
+                    contained = true;
+                    break;
+                }
+            }
+            if (!contained) safeReturn(serverPlayer);
+        }
+
         List<DimensionData> newDimensions = new ArrayList<>();
 
         for (DimensionData dimensionData : dimensions) {
@@ -57,6 +70,19 @@ public class PastDimensions {
 
         dimensions.clear();
         dimensions.addAll(newDimensions);
+    }
+
+    /**
+     * Returns a player to their respawn point.
+     * Used when PastDimensions does not have a return DimensionData specified for a player in the jcraft:audim
+     */
+    public static void safeReturn(ServerPlayer serverPlayer) {
+        //todo: implement NBT saving for PastDimensions!
+        JCraft.LOGGER.warn("PastDimensions.safeReturn called on " + serverPlayer);
+        BlockPos spawnPos = serverPlayer.getRespawnPosition(); // Prioritize spawn point
+        // Use current position if all else fails
+        if (spawnPos == null) spawnPos = serverPlayer.blockPosition();
+        PastDimensions.enqueue(new DimensionData(serverPlayer, new Vec3(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ()), serverPlayer.getRespawnDimension()));
     }
 
     public static boolean tryExit(LivingEntity user, Set<? extends Entity> targets) {

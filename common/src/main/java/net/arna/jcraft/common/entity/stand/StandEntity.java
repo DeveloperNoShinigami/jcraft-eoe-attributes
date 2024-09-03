@@ -1468,12 +1468,24 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return true;
     }
 
-    /**
-     * Handles AI for mob stand users
-     */
-    private static final double sideswitchDistance = 1.25;
+    public void standUserPassiveAI() {
+        // Guaranteed cast due to being called in JEnemies, which only handles MobEntities
+        Mob user = (Mob) getUser();
+        if (user == null) {
+            JCraft.LOGGER.error("standUserPassiveAI called with no Stand user for: " + this);
+            return;
+        }
 
-    public static void standUserAI(Mob mob, LivingEntity target, StandEntity<?, ?> stand) {
+        boolean wantToBlock = false;
+        if (user.fallDistance > 3) wantToBlock = true;
+        if (user.getNavigation().isInProgress()) DashData.tryDash(1, 0, user);
+        this.wantToBlock = wantToBlock;
+    }
+    private static final double sideswitchDistance = 1.25;
+    /**
+     * Handles movement, stand control, system mechanic control for Stand user mobs while they have a target.
+     */
+    public static void standUserCombatAI(Mob mob, LivingEntity target, StandEntity<?, ?> stand) {
         if (mob == target || !JUtils.canDamage(JDamageSources.stand(stand), target)) {
             return;
         }
@@ -1570,9 +1582,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             }
         }
 
-        if (mob.fallDistance > 3) {
-            wantToBlock = true;
-        }
+        if (mob.fallDistance > 3) wantToBlock = true; // Block fall damage
 
         //JCraft.LOGGER.info("Want to block: " + wantToBlock);
         stand.wantToBlock = wantToBlock;
@@ -1585,15 +1595,17 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         MobEffectInstance mobStun = mob.getEffect(JStatusRegistry.DAZED.get());
-        // If stunned, and about to get hit by another move, combo break sometimes
+        // If stunned, and about to get hit by another move, Combo Break occasionally
         if (mobStun != null) {
             if (!stand.blocking && enemyAttack != null && enemyMoveStun > enemyAttack.getWindup() && stand.random.nextFloat() < 0.1f) {
                 comboBreak((ServerLevel) stand.level(), mob, mobStun);
             }
         }
 
-
+        // Movement towards/away from target
         PathNavigation entityNavigation = mob.getNavigation();
+        if (entityNavigation.isDone() || distance < 2)
+            entityNavigation.moveTo(target, 1.0);
         boolean evade = enemyAttack != null;
         if ( // in range (to get hit)
                 (enemyAttack instanceof AbstractSimpleAttack<?, ?> simpleEnemyAttack && !enemyAttack.isRanged() &&
@@ -1664,9 +1676,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 }
             }
 
-            // Dash to targeted location/evasion
+            // Dash to target
             BlockPos targetPos = entityNavigation.getTargetPos();
-            if (targetPos != null && mob.onGround() && targetPos.distToCenterSqr(target.position()) > 2.25) {
+            if (targetPos != null && mob.onGround() && distance > 1.5) {
+                // todo: an out-of-combat version of this that dashes towards the targetted location
                 DashData.tryDash(evade ? -1 : 1, evade ? stand.random.nextInt(2) - 1 : 0, mob);
             }
 
