@@ -120,12 +120,14 @@ public class JClientUtils {
                 head.setRotX(headPitch + hPO);
             }
         } else if (entity.getMoveStun() > 0) { // if doing something
-            // Turn entire stand up/down
-            CoreGeoBone base = animationProcessor.getBone("base");
-            if (base != null) {
-                //model.prevBasePitch = base.getRotX();
-                float torsoPitch = (player.getXRot() * 0.9f) * 3.1415f / 180f;
-                base.setRotX(base.getRotX() - torsoPitch);
+            if (entity.shouldOffsetHeight()) {
+                // Turn entire stand up/down
+                CoreGeoBone base = animationProcessor.getBone("base");
+                if (base != null) {
+                    //model.prevBasePitch = base.getRotX();
+                    float torsoPitch = (player.getXRot() * 0.9f) * 3.1415f / 180f;
+                    base.setRotX(base.getRotX() - torsoPitch);
+                }
             }
         }
     }

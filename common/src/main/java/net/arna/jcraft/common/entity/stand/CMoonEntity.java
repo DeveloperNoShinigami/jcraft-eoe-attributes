@@ -207,7 +207,8 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     @Override
     public boolean shouldOffsetHeight() {
         // Ground slam forces no height offset
-        if (curMove != null && curMove.getMoveType() == MoveType.SPECIAL3) {
+        State state = getState();
+        if (state == State.GROUND_SLAM || state == State.GROUND_SHOOT) {
             return false;
         }
         return super.shouldOffsetHeight();

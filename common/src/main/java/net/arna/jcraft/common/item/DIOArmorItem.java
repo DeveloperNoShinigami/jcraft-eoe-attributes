@@ -1,16 +1,16 @@
 package net.arna.jcraft.common.item;
 
 import mod.azure.azurelib.animatable.GeoItem;
-import net.arna.jcraft.client.registry.JArmorRendererRegistry;
-import net.arna.jcraft.client.renderer.armor.DIOArmorRenderer;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
+import net.arna.jcraft.client.registry.JArmorRendererRegistry;
+import net.arna.jcraft.client.renderer.armor.DIOArmorRenderer;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

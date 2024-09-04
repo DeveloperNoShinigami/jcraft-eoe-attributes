@@ -89,7 +89,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                     Component.empty()
             );
     public static final MainBarrageAttack<MadeInHeavenEntity> BARRAGE = new MainBarrageAttack<MadeInHeavenEntity>(200,
-            0, 32, 0.85f, 1.5f, 10, 2f, 0.1f, 0f, 3, Blocks.OAK_PLANKS.defaultDestroyTime())
+            0, 32, 0.85f, 1f, 10, 2f, 0.1f, 0f, 2, Blocks.OAK_PLANKS.defaultDestroyTime())
             .withFinisher(23, BARRAGE_FINISHER)
             .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withSound(JSoundRegistry.MIH_BARRAGE.get())

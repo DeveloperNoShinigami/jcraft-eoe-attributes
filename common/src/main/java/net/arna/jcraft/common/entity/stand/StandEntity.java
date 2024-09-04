@@ -570,8 +570,9 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     /**
-     * @return whether the stand should change its height depending on the user's look pitch
-     * As a general rule, low-hitbox moves should modify this to false, since otherwise players may move the hitbox into the ground
+     * As a general rule, low-hitbox moves should modify this to false, since otherwise players may move the hitbox into the ground.
+     * This should also usually use client-visible values to prevent desync.
+     * @return whether the stand should change its height depending on the user's look pitch.
      */
     public boolean shouldOffsetHeight() {
         return getState().ordinal() > 0;

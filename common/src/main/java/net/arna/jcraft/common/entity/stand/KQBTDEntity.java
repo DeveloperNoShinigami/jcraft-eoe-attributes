@@ -2,6 +2,9 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.util.RenderUtils;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
@@ -22,8 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.function.Consumer;
 
@@ -110,6 +111,12 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
                 new Vector3f(0.8f, 0.2f, 0.2f),
                 new Vector3f(0.8f, 0.6f, 0.2f)
         };
+    }
+
+    @Override
+    public Vector3f getAuraColor() {
+        float deltaTick = (float) RenderUtils.getCurrentTick() * 50 % 2.0f;
+        return new Vector3f(auraColors[getSkin()]).mul(deltaTick, 1.0f, 1.0f);
     }
 
     @Override

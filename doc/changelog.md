@@ -52,7 +52,7 @@
 ### Bug Fixes
 * Bug: Inventory disappeared instead of dropped when killed while being stunned
 ### Known Bugs
-#### General
+#### Common
 * Timestop doesnt stop animated textures
 
 
@@ -81,6 +81,11 @@
 
 
 * Water transparency seemingly changes when the player hovers over a block (SEEMINGLY FIXED)
+#### Fabric
+* Server cannot start
+
+Caused by: java.lang.RuntimeException: Cannot load class net.minecraft.client.model.HumanoidModel in environment type SERVER
+... at net.arna.jcraft.registry.JItemRegistry.lambda$static$17(JItemRegistry.java:64) ~[main/:?]
 #### Forge
 * Camera is fucked in custom gravity
 

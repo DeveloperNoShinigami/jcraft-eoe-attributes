@@ -12,10 +12,15 @@ import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.effects.DazedStatusEffect;
+import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
 import net.arna.jcraft.common.gravity.util.GravityChannel;
+import net.arna.jcraft.common.item.DIOsDiaryItem;
+import net.arna.jcraft.common.item.GreenBabyItem;
+import net.arna.jcraft.common.item.LivingArrowItem;
+import net.arna.jcraft.common.item.RequiemArrowItem;
 import net.arna.jcraft.common.loot.JLootTableHelper;
 import net.arna.jcraft.common.network.RemoteStandInteractPacket;
 import net.arna.jcraft.common.network.c2s.*;
@@ -29,6 +34,8 @@ import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.*;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -49,12 +56,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
@@ -129,8 +140,6 @@ public final class JCraft {
 
 
     public static void init() {
-        GravityChannel.init();
-
         // Particle registration (serverside)
         JParticleTypeRegistry.initParticleTypes();
         PARTICLES.register();
@@ -161,6 +170,7 @@ public final class JCraft {
         JServerConfig.init();
         JStatRegistry.init();
 
+        GravityChannel.init();
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, ConfigUpdatePacket.ID, ConfigUpdatePacket::handle);
@@ -169,19 +179,18 @@ public final class JCraft {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_REMOTE_STAND_INTERACT, RemoteStandInteractPacket::handle);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket::handle);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_MENU_CALL, MenuCallPacket::handle);
+    }
 
-
-        /*TODO move
-        DispenserBlock.registerBehavior(KNIFE.get(), new ProjectileDispenserBehavior() {
+    public static void initDispenserBehaviors() {
+        DispenserBlock.registerBehavior(JItemRegistry.KNIFE.get(), new AbstractProjectileDispenseBehavior() {
             @Override
-            protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
+            protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
                 KnifeProjectile knife = new KnifeProjectile(world);
-                knife.setPosition(position.getX(), position.getY(), position.getZ());
+                knife.pickup = AbstractArrow.Pickup.ALLOWED;
+                knife.setPos(position.x(), position.y(), position.z());
                 return knife;
             }
         });
-
-         */
     }
 
     public static void markItemOfInterest(@NotNull Entity entity, @NotNull EntityInterest interest) {
@@ -432,5 +441,16 @@ public final class JCraft {
 
     public static ResourceLocation id(String name) {
         return new ResourceLocation(MOD_ID, name);
+    }
+
+    public static void initStandIOMaps() {
+        ((GreenBabyItem)JItemRegistry.GREEN_BABY.get()).standIOMap.put(StandType.WHITE_SNAKE, StandType.C_MOON);
+        ((DIOsDiaryItem)JItemRegistry.DIOS_DIARY.get()).standIOMap.put(StandType.C_MOON, StandType.MADE_IN_HEAVEN);
+        ((DIOsDiaryItem)JItemRegistry.DIOS_DIARY.get()).standIOMap.put(StandType.THE_WORLD, StandType.THE_WORLD_OVER_HEAVEN);
+
+        ((LivingArrowItem)JItemRegistry.LIVING_ARROW.get()).standIOMap.put(StandType.KILLER_QUEEN, StandType.KILLER_QUEEN_BITES_THE_DUST);
+        ((LivingArrowItem)JItemRegistry.LIVING_ARROW.get()).standIOMap.put(StandType.STAR_PLATINUM, StandType.STAR_PLATINUM_THE_WORLD);
+
+        ((RequiemArrowItem)JItemRegistry.REQUIEM_ARROW.get()).standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
     }
 }

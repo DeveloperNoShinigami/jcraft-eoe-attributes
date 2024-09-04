@@ -170,7 +170,7 @@ public interface JEntityTypeRegistry {
     RegistrySupplier<EntityType<GETreeEntity>> GE_TREE = ENTITY_TYPE_REGISTRY.register(JCraft.id("getree"),
             () -> EntityType.Builder.of(
                     ((EntityType<GETreeEntity> type, Level world) -> new GETreeEntity(world)),
-                    MobCategory.CREATURE
+                    MobCategory.MISC
             ).sized(0.6f, 0.8f).build("goldexperience")
     );
 

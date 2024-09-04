@@ -7,18 +7,12 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.argumenttype.AttackArgumentType;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.events.EntityTickEvent;
-import net.arna.jcraft.common.item.DIOsDiaryItem;
-import net.arna.jcraft.common.item.GreenBabyItem;
-import net.arna.jcraft.common.item.LivingArrowItem;
-import net.arna.jcraft.common.item.RequiemArrowItem;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.arna.jcraft.forge.events.ClientSetupEvents;
-import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.world.entity.Entity;
@@ -58,16 +52,8 @@ public final class JCraftForge {
 
     @SubscribeEvent
     public void onInitializeCommon(final FMLCommonSetupEvent event) {
-        ((GreenBabyItem)JItemRegistry.GREEN_BABY.get()).standIOMap.put(StandType.WHITE_SNAKE, StandType.C_MOON);
-        ((DIOsDiaryItem)JItemRegistry.DIOS_DIARY.get()).standIOMap.put(StandType.C_MOON, StandType.MADE_IN_HEAVEN);
-        ((DIOsDiaryItem)JItemRegistry.DIOS_DIARY.get()).standIOMap.put(StandType.THE_WORLD, StandType.THE_WORLD_OVER_HEAVEN);
-
-
-        ((LivingArrowItem)JItemRegistry.LIVING_ARROW.get()).standIOMap.put(StandType.KILLER_QUEEN, StandType.KILLER_QUEEN_BITES_THE_DUST);
-        ((LivingArrowItem)JItemRegistry.LIVING_ARROW.get()).standIOMap.put(StandType.STAR_PLATINUM, StandType.STAR_PLATINUM_THE_WORLD);
-
-
-        ((RequiemArrowItem)JItemRegistry.REQUIEM_ARROW.get()).standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
+        JCraft.initStandIOMaps();
+        JCraft.initDispenserBehaviors();
     }
 
     private void tickWorldCaps(Level world) {

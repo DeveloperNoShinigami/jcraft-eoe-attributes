@@ -1,26 +1,18 @@
 package net.arna.jcraft.fabric;
 
-import dev.architectury.platform.Platform;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.client.registry.JItemPropertiesRegistry;
 import net.arna.jcraft.common.argumenttype.AttackArgumentType;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.events.JServerEvents;
-import net.arna.jcraft.common.item.DIOsDiaryItem;
-import net.arna.jcraft.common.item.GreenBabyItem;
-import net.arna.jcraft.common.item.LivingArrowItem;
-import net.arna.jcraft.common.item.RequiemArrowItem;
 import net.arna.jcraft.fabric.common.terrablender.JTerraFabric;
-import net.arna.jcraft.registry.JItemRegistry;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.world.level.storage.loot.LootTable;
+
 import java.util.function.Consumer;
 
 import static net.arna.jcraft.common.loot.JLootTableHelper.modifications;
@@ -45,15 +37,7 @@ public final class JCraftFabric implements ModInitializer {
         ArgumentTypeRegistry.registerArgumentType(JCraft.id("spec"), SpecArgumentType.class, SingletonArgumentInfo.contextFree(SpecArgumentType::spec));
         ArgumentTypeRegistry.registerArgumentType(JCraft.id("attack"), AttackArgumentType.class, SingletonArgumentInfo.contextFree(AttackArgumentType::attack));
 
-        ((GreenBabyItem) JItemRegistry.GREEN_BABY.get()).standIOMap.put(StandType.WHITE_SNAKE, StandType.C_MOON);
-        ((DIOsDiaryItem)JItemRegistry.DIOS_DIARY.get()).standIOMap.put(StandType.C_MOON, StandType.MADE_IN_HEAVEN);
-        ((DIOsDiaryItem)JItemRegistry.DIOS_DIARY.get()).standIOMap.put(StandType.THE_WORLD, StandType.THE_WORLD_OVER_HEAVEN);
-
-
-        ((LivingArrowItem)JItemRegistry.LIVING_ARROW.get()).standIOMap.put(StandType.KILLER_QUEEN, StandType.KILLER_QUEEN_BITES_THE_DUST);
-        ((LivingArrowItem)JItemRegistry.LIVING_ARROW.get()).standIOMap.put(StandType.STAR_PLATINUM, StandType.STAR_PLATINUM_THE_WORLD);
-
-
-        ((RequiemArrowItem)JItemRegistry.REQUIEM_ARROW.get()).standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
+        JCraft.initStandIOMaps();
+        JCraft.initDispenserBehaviors();
     }
 }
