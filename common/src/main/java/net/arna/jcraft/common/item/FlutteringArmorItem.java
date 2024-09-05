@@ -3,7 +3,14 @@ package net.arna.jcraft.common.item;
 import mod.azure.azurelib.animatable.GeoItem;
 import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.constant.DataTickets;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.renderer.GeoArmorRenderer;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.client.renderer.armor.DIOCapeRenderer;
 import net.arna.jcraft.client.renderer.armor.JotaroArmorRenderer;
 import net.arna.jcraft.common.util.JUtils;
@@ -18,13 +25,6 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -62,9 +62,8 @@ public class FlutteringArmorItem extends ArmorItem implements GeoItem {
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
             private GeoArmorRenderer<?> renderer;
-
-            @Override
-            public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
+            @Override public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
+                    LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
                 if (this.renderer == null) {
                     if (itemStack.is(JItemRegistry.DIO_CAPE.get())) {
                         this.renderer = new DIOCapeRenderer();
@@ -72,12 +71,9 @@ public class FlutteringArmorItem extends ArmorItem implements GeoItem {
                         this.renderer = new JotaroArmorRenderer();
                     }
                 }
-
-                this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
-
-                return this.renderer;
-            }
-        });
+                renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
+                return renderer;
+            }});
     }
 
     @Override

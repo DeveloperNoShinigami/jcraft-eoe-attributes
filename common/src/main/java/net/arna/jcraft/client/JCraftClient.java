@@ -99,7 +99,7 @@ public class JCraftClient {
         EpitaphVignetteShaderHandler.INSTANCE.init();
 
         // Renderer registration
-        JArmorRendererRegistry.registerArmorRenderers();
+        // JArmorRendererRegistry.registerArmorRenderers();
 
         ClientPacketHandler.init();
 

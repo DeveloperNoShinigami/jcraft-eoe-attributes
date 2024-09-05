@@ -1,13 +1,22 @@
 package net.arna.jcraft.common.item;
 
 import mod.azure.azurelib.animatable.GeoItem;
+import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.constant.DataTickets;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.renderer.GeoArmorRenderer;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.client.registry.JArmorRendererRegistry;
 import net.arna.jcraft.client.renderer.armor.StoneMaskRenderer;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -18,14 +27,8 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -82,7 +85,14 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
 
     @Override
     public void createRenderer(Consumer<Object> consumer) {
-        JArmorRendererRegistry.createRenderer(consumer, new StoneMaskRenderer());
+        consumer.accept(new RenderProvider() {
+            private static GeoArmorRenderer<?> renderer;
+            @Override public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
+                    LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
+                if (renderer == null) renderer = new StoneMaskRenderer();
+                renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
+                return renderer;
+            }});
     }
 
     @Override

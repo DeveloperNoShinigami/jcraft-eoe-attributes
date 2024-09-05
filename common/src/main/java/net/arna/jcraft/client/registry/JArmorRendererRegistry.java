@@ -13,12 +13,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
+@Deprecated(forRemoval = true)
 public class JArmorRendererRegistry {
-
-    public static void registerArmorRenderers() {
-
-    }
-
+    /**
+     * Idk why the fuck AzureLib was made this way, but the boilerplate cannot be compressed into this method.
+     * Creating a class that implements RenderProvider also does not work.
+     * Any known attempt to reduce boilerplate causes specifically Fabric Serverside to tweak out over trying to load HumanoidModel.
+     */
+    @Deprecated(forRemoval = true)
     public static void createRenderer(Consumer<Object> consumer, GeoArmorRenderer<?> pRenderer) {
         consumer.accept(new RenderProvider() {
             private GeoArmorRenderer<?> renderer;

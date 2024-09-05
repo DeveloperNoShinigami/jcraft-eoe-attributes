@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.gravity.util;
 
 import dev.architectury.networking.NetworkManager;
+import dev.architectury.platform.Platform;
+import dev.architectury.utils.Env;
 import io.netty.buffer.Unpooled;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
@@ -64,7 +66,10 @@ public class GravityChannel<P extends GravityPacket> {
         return gravityVerifierRegistry;
     }
 
+    //todo: figure out why this is called this way.
+    //      its really confusing given S2C means its CLIENTside
     public void registerServerReceiver() {
+        if (Platform.getEnvironment() == Env.SERVER) return;
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, channel, (buf, context) -> {
             receiveFromClient(buf, context.getPlayer().getServer(), (ServerPlayer) context.getPlayer());
         });

@@ -39,7 +39,8 @@ Because **on Forge, it's the visual effects that break.**
 * the camera thus retains an incorrect position,
 * player animations are messed up (same as Fabric).
 
-## Testing will be done with C-Moon's Utility facing +X (east)
+## Testing will be done with C-Moon's Utility facing +X (east), at the world origin
+/tp @p 0.0 0.0 0.0 -90.0 0.0
 
 The player receives the packet and the processing for it is defined in
 GravityChannelClient, ln. 28-32
@@ -97,4 +98,45 @@ animation.getCurrentGravityRotation(gravityDirection, timeMs).conjugate();
 
 Entities in different gravities are rendered in the proper orientation, albeit with fucked limb animations like Fabric.
 
-This leads me to believe that the issue is the Forge rendering pipeline, again.
+# This leads me to believe that the issue is the Forge rendering pipeline, again.
+
+In GameRenderer.class on Forge, there are extra hook lines that may impact the outcome.
+Right after Camera.setup(), which eventually goes into inject_setRotation()
+```java
+this.resetProjectionMatrix(matrix4f);
+camera.setup(this.minecraft.level, (Entity)(this.minecraft.getCameraEntity() == null ? this.minecraft.player : this.minecraft.getCameraEntity()), !this.minecraft.options.getCameraType().isFirstPerson(), this.minecraft.options.getCameraType().isMirrored(), partialTicks);
+// Hook 1
+ViewportEvent.ComputeCameraAngles cameraSetup = ForgeHooksClient.onCameraSetup(this, camera, partialTicks);
+camera.setAnglesInternal(cameraSetup.getYaw(), cameraSetup.getPitch());
+poseStack.mulPose(Axis.ZP.rotationDegrees(cameraSetup.getRoll()));
+poseStack.mulPose(Axis.XP.rotationDegrees(camera.getXRot()));
+poseStack.mulPose(Axis.YP.rotationDegrees(camera.getYRot() + 180.0F));
+Matrix3f matrix3f = (new Matrix3f(poseStack.last().normal())).invert();
+RenderSystem.setInverseViewRotationMatrix(matrix3f);
+this.minecraft.levelRenderer.prepareCullFrustum(poseStack, camera.getPosition(), this.getProjectionMatrix(Math.max(d0, (double)(Integer)this.minecraft.options.fov().get())));
+this.minecraft.levelRenderer.renderLevel(poseStack, partialTicks, finishTimeNano, flag, camera, this, this.lightTexture, matrix4f);
+this.minecraft.getProfiler().popPush("forge_render_last");
+// Hook 2
+ForgeHooksClient.dispatchRenderStage(Stage.AFTER_LEVEL, this.minecraft.levelRenderer, posestack, matrix4f, this.minecraft.levelRenderer.getTicks(), camera, this.minecraft.levelRenderer.getFrustum());
+this.minecraft.getProfiler().popPush("hand");
+if (this.renderHand) {
+    RenderSystem.clear(256, Minecraft.ON_OSX);
+    this.renderItemInHand(poseStack, camera, partialTicks);
+}
+```
+The default one, used on Fabric, looks like this:
+```java
+this.resetProjectionMatrix(matrix4f);
+camera.setup(this.minecraft.level, (Entity)(this.minecraft.getCameraEntity() == null ? this.minecraft.player : this.minecraft.getCameraEntity()), !this.minecraft.options.getCameraType().isFirstPerson(), this.minecraft.options.getCameraType().isMirrored(), partialTicks);
+poseStack.mulPose(Axis.XP.rotationDegrees(camera.getXRot()));
+poseStack.mulPose(Axis.YP.rotationDegrees(camera.getYRot() + 180.0F));
+Matrix3f matrix3f = (new Matrix3f(poseStack.last().normal())).invert();
+RenderSystem.setInverseViewRotationMatrix(matrix3f);
+this.minecraft.levelRenderer.prepareCullFrustum(poseStack, camera.getPosition(), this.getProjectionMatrix(Math.max(d, (double)(Integer)this.minecraft.options.fov().get())));
+this.minecraft.levelRenderer.renderLevel(poseStack, partialTicks, finishTimeNano, bl, camera, this, this.lightTexture, matrix4f);
+this.minecraft.getProfiler().popPush("hand");
+if (this.renderHand) {
+    RenderSystem.clear(256, Minecraft.ON_OSX);
+    this.renderItemInHand(poseStack, camera, partialTicks);
+}
+```
