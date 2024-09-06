@@ -1904,10 +1904,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController(getThis(), "controller", 0, this::predicate));
+        controllers.add(new AnimationController<>(getThis(), "controller", 0, this::predicate));
     }
 
-    private PlayState predicate(AnimationState state) {
+    private PlayState predicate(AnimationState<E> state) {
         AnimationController<E> controller = state.getController();
 
         String summonAnimation = getSummonAnimation();

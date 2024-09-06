@@ -65,13 +65,18 @@
 
 
 * Stand User Enemies dont use their AI fully (due to being ridden by stands - they work fine when the stand is remote)
+* Stand User Enemies that spawn with Silver Chariot + Anubis do not take on the Anubis SC form
 
 
+* Vertical movement in Survival mode while gravitied is broken
 * GravityLib rendering breaks base-game animations
   * MR's Red Bind particles dont render in the right orientation when under different gravities
 
 
 * Horus is not fully implemented
+
+
+* The Sun starts tweaking out when moved out of and back into entity processing distance
 
 
 * Stand Type is not properly serialized for Mobs
@@ -81,11 +86,6 @@
 
 
 * Water transparency seemingly changes when the player hovers over a block (SEEMINGLY FIXED)
-#### Fabric
-* Server cannot start
-
-Caused by: java.lang.RuntimeException: Cannot load class net.minecraft.client.model.HumanoidModel in environment type SERVER
-... at net.arna.jcraft.registry.JItemRegistry.lambda$static$17(JItemRegistry.java:64) ~[main/:?]
 #### Forge
 * Camera is fucked in custom gravity
 

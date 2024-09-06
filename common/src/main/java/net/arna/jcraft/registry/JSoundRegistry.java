@@ -77,6 +77,10 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> TW_COUNTER = register("twcounter");
     RegistrySupplier<SoundEvent> MUDA_DA = register("mudada");
 
+    RegistrySupplier<SoundEvent> STW_ZAP = register("stwzap");
+    RegistrySupplier<SoundEvent> STW_WARBLE = register("stwwarble");
+    RegistrySupplier<SoundEvent> STW_TS = register("stwtimestop");
+
     //Dirty Deeds Done Dirt Cheap
     RegistrySupplier<SoundEvent> D4C_SUMMON = register("d4csummon");
     RegistrySupplier<SoundEvent> D4C_LIGHT = register("d4clight");

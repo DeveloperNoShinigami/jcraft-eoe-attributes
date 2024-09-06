@@ -236,7 +236,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
         private final BiConsumer<StarPlatinumEntity, AnimationState> animator;
 
         State(Consumer<AnimationState> animator) {
-            this((silverChariot, builder) -> animator.accept(builder));
+            this((stand, builder) -> animator.accept(builder));
         }
 
         State(BiConsumer<StarPlatinumEntity, AnimationState> animator) {

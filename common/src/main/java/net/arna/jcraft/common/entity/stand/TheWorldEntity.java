@@ -25,7 +25,7 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.function.Consumer;
 
-public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.State> {
+public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity, TheWorldEntity.State> {
     public static final SimpleAttack<TheWorldEntity> LOW_KICK = new SimpleAttack<TheWorldEntity>(20, 8, 14, 0.75f,
             6f, 17, 1.5f, 0.2f, 0.65f)
             .withAnim(State.LOW)
@@ -162,7 +162,6 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
 
     public TheWorldEntity(Level worldIn) {
         super(StandType.THE_WORLD, worldIn, JSoundRegistry.TW_SUMMON.get());
-        idleRotation = 225f;
 
         proCount = 4;
         conCount = 2;
@@ -211,14 +210,6 @@ public class TheWorldEntity extends StandEntity<TheWorldEntity, TheWorldEntity.S
         } else {
             return super.initMove(type);
         }
-    }
-
-    @Override
-    public void desummon() {
-        if (tsTime > 0) {
-            return;
-        }
-        super.desummon();
     }
 
     @Override

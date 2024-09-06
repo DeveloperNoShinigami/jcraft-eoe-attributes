@@ -29,6 +29,7 @@ public interface JEntityRendererRegister {
         EntityRendererRegistry.register(JEntityTypeRegistry.C_MOON, CMoonRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.MADE_IN_HEAVEN, MadeInHeavenRenderer::new);
 
+        EntityRendererRegistry.register(JEntityTypeRegistry.SHADOW_THE_WORLD, ShadowTheWorldRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.THE_WORLD, TheWorldRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN, TheWorldOverHeavenRenderer::new);
 

@@ -33,6 +33,7 @@ public class ClientSetupEvents {
         event.registerEntityRenderer(JEntityTypeRegistry.C_MOON.get(), CMoonRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.MADE_IN_HEAVEN.get(), MadeInHeavenRenderer::new);
 
+        event.registerEntityRenderer(JEntityTypeRegistry.SHADOW_THE_WORLD.get(), ShadowTheWorldRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.THE_WORLD.get(), TheWorldRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN.get(), TheWorldOverHeavenRenderer::new);
 

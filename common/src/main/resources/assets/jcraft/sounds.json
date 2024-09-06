@@ -288,6 +288,22 @@
       "jcraft:stands/theworld/counter"
     ]
   },
+  "stwtimestop": {
+    "subtitle": "subtitles.jcraft.twts",
+    "sounds": [
+      "jcraft:stands/shadow_the_world/ts"
+    ]
+  },
+  "stwwarble": {
+    "sounds": [
+      "jcraft:stands/shadow_the_world/warble"
+    ]
+  },
+  "stwzap": {
+    "sounds": [
+      "jcraft:stands/shadow_the_world/zap"
+    ]
+  },
   "d4csummon": {
     "sounds": [
       "jcraft:stands/d4c/summon"

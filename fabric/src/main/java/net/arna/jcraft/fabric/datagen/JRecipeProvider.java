@@ -145,10 +145,10 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .pattern("RDR")
                 .pattern("ENE")
                 .pattern("RDR")
-                .define('D', Items.DIAMOND_BLOCK)
-                .define('E', Items.EMERALD_BLOCK)
                 .define('N', Items.NETHER_STAR)
+                .define('E', Items.EMERALD_BLOCK)
                 .define('R', Items.REDSTONE_BLOCK)
+                .define('D', Items.DIAMOND_BLOCK)
                 .unlockedBy("has_nether_star", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHER_STAR))
                 .unlockedBy("has_redstone_block", InventoryChangeTrigger.TriggerInstance.hasItems(Items.REDSTONE_BLOCK))
                 .save(exporter);
@@ -383,15 +383,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .save(exporter);
         // knife bundle
         ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, JItemRegistry.KNIFEBUNDLE.get())
-                .requires(JItemRegistry.KNIFE.get())
-                .requires(JItemRegistry.KNIFE.get())
-                .requires(JItemRegistry.KNIFE.get())
-                .requires(JItemRegistry.KNIFE.get())
-                .requires(JItemRegistry.KNIFE.get())
-                .requires(JItemRegistry.KNIFE.get())
-                .requires(JItemRegistry.KNIFE.get())
-                .requires(JItemRegistry.KNIFE.get())
-                .requires(JItemRegistry.KNIFE.get())
+                .requires(JItemRegistry.KNIFE.get(), 9)
                 .unlockedBy("has_knife", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KNIFE.get()))
                 .save(exporter);
     }

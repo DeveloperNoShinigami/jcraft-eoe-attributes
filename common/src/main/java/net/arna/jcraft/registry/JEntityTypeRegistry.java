@@ -51,6 +51,16 @@ public interface JEntityTypeRegistry {
             ).build("kingcrimson")
     );
 
+    RegistrySupplier<EntityType<ShadowTheWorldEntity>> SHADOW_THE_WORLD = ENTITY_TYPE_REGISTRY.register(JCraft.id("shadow_the_world"),
+            () -> EntityType.Builder.of(
+                    WorldOnlyEntityFactory.from(ShadowTheWorldEntity::new),
+                    MobCategory.CREATURE
+            ).sized(
+                    0.6f,
+                    1.8f
+            ).build("shadow_the_world")
+    );
+
     RegistrySupplier<EntityType<TheWorldEntity>> THE_WORLD = ENTITY_TYPE_REGISTRY.register(JCraft.id("theworld"),
             () -> EntityType.Builder.of(
                     WorldOnlyEntityFactory.from(TheWorldEntity::new),
@@ -552,6 +562,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(C_MOON, CMoonEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(MADE_IN_HEAVEN, MadeInHeavenEntity::createMobAttributes);
+        EntityAttributeRegistry.register(SHADOW_THE_WORLD, ShadowTheWorldEntity::createMobAttributes);
         EntityAttributeRegistry.register(THE_WORLD, TheWorldEntity::createMobAttributes);
         EntityAttributeRegistry.register(THE_WORLD_OVER_HEAVEN, TheWorldOverHeavenEntity::createMobAttributes);
         EntityAttributeRegistry.register(SILVER_CHARIOT, SilverChariotEntity::createMobAttributes);

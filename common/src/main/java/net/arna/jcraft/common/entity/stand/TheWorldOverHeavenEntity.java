@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 
 public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEntity, TheWorldOverHeavenEntity.State> {
     public static final LungeAttack LUNGE = new LungeAttack(0, 10, 16, 0.75f,
-            8f, 10, 1.75f, 1f, 0f)
+            8f, 10, 1.75f, 1f, 0f, 11, 5)
             .withAnim(State.LUNGE)
             .withSound(JSoundRegistry.MUDA_DA.get())
             .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
