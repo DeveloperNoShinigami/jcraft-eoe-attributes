@@ -85,8 +85,10 @@ public class CommonStandComponentImpl implements CommonStandComponent {
         tag.putInt("Skin", skin);
     }
 
+    /**
+     * Makes a certain entity be considered the component holders stand.
+     */
     public void applySyncPacket(FriendlyByteBuf buf) {
-
         Entity entity = buf.readBoolean() ? this.entity.level().getEntity(buf.readVarInt()) : null;
         if (entity == null || entity instanceof StandEntity<?, ?>) {
             stand = (StandEntity<?, ?>) entity;
@@ -94,7 +96,6 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     }
 
     public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
-
         buf.writeBoolean(stand != null);
         if (stand != null) {
             buf.writeVarInt(stand.getId());

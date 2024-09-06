@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.stand;
 
+import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
@@ -45,11 +46,21 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowTheWorldEntity, ShadowTheWorldEntity.State> {
+    public static final UppercutAttack<ShadowTheWorldEntity> UPPERCUT = new UppercutAttack<ShadowTheWorldEntity>(JCraft.LIGHT_COOLDOWN,
+            10, 16, 0.75f, 6f, 20, 1.5f, 0.25f, -0.6f, 1.0f)
+            .withAnim(State.UPPERCUT)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withExtraHitBox(0, 0.35, 1.25)
+            .withHitSpark(JParticleType.HIT_SPARK_2)
+            .withInfo(
+                    Component.literal("Uppercut"),
+                    Component.literal("slower combo starter, launches vertically")
+            );
     public static final SimpleAttack<ShadowTheWorldEntity> LIGHT = SimpleAttack.<ShadowTheWorldEntity>lightAttack(
                     5, 7, 0.75f, 5, 10, 0.1f, -0.1f)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             // .withFollowup(LIGHT_FOLLOWUP)
-            // .withCrouchingVariant(LOW_KICK)
+            .withCrouchingVariant(UPPERCUT)
             .withInfo(
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")
@@ -63,6 +74,23 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
             .withInfo(
                     Component.literal("Lunge"),
                     Component.literal("medium speed launcher")
+            );
+    public static final KnockdownAttack<ShadowTheWorldEntity> KNOCKDOWN = new KnockdownAttack<ShadowTheWorldEntity>(0,
+            2, 4, 0.85f, 5f, 20, 1.75f, 2f, 0, 35)
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
+            .withHitSpark(JParticleType.HIT_SPARK_2)
+            .withLaunch()
+            .withInfo(
+                    Component.literal("3 Hit Combo (Finisher)"),
+                    Component.empty()
+            );
+    public static final SimpleMultiHitAttack<ShadowTheWorldEntity> THREE_HIT = new SimpleMultiHitAttack<ShadowTheWorldEntity>(100,
+            24, 0.85f, 4f, 15, 1.5f, 0.35f, 0.2f, IntSet.of(6, 14))
+            .withFinisher(20, KNOCKDOWN)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withInfo(
+                    Component.literal("3 Hit Combo"),
+                    Component.literal("knocks down")
             );
     public static final SimpleAttack<ShadowTheWorldEntity> IMPALING_THRUST_HIT = new SimpleAttack<ShadowTheWorldEntity>(0,
             0, 10, 0.8f, 0, 0, 0, 0, 0)
@@ -92,7 +120,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
             .withSound(JSoundRegistry.STW_ZAP.get())
             .withInfo(
                     Component.literal("Timeskip"),
-                    Component.literal("14m range")
+                    Component.literal("7m range")
             );
     public static final TimeStopMove<ShadowTheWorldEntity> TIME_STOP = new TimeStopMove<ShadowTheWorldEntity>(1400,
             20, 30, JServerConfig.STW_TIME_STOP_DURATION::getValue)
@@ -174,6 +202,10 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         attacker.playSound(JSoundRegistry.STW_ZAP.get(), 1f, 1f);
     }
 
+    public int getDesummonTime() {
+        return desummonTime;
+    }
+
     @Override
     public void queueMove(MoveInputType type) {
         // Only allow queueing during Charge
@@ -189,10 +221,14 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     @Override
     protected void registerMoves(MoveMap<ShadowTheWorldEntity, State> moves) {
         moves.registerImmediate(MoveType.LIGHT, LIGHT, State.LIGHT);
-        moves.registerImmediate(MoveType.HEAVY, LUNGE, State.LUNGE);
-        moves.registerImmediate(MoveType.SPECIAL2, CHARGE, State.CHARGE);
-        moves.registerImmediate(MoveType.SPECIAL3, IMPALING_THRUST, State.IMPALING_THRUST_CHARGE);
+        moves.register(MoveType.HEAVY, LUNGE, State.LUNGE);
+        moves.register(MoveType.BARRAGE, THREE_HIT, State.THREE_HIT);
+
+        // moves.register(MoveType.SPECIAL1, CHARGE, State.CHARGE);
+        moves.register(MoveType.SPECIAL2, CHARGE, State.CHARGE);
+        moves.register(MoveType.SPECIAL3, IMPALING_THRUST, State.IMPALING_THRUST_CHARGE);
         moves.register(MoveType.ULTIMATE, TIME_STOP, State.TIME_STOP);
+
         moves.register(MoveType.UTILITY, TIME_SKIP, State.IDLE);
     }
 
@@ -224,6 +260,9 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     @Override
     public void tick() {
         super.tick();
+        if (isAnimatedDesummoning()) {
+            if (--desummonTime < 1) discard();
+        }
         if (level().isClientSide()) {
             //todo: stw particles
             return;
@@ -235,9 +274,6 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                 setMoveStun(desummonTime);
                 startAnimatedDesummon();
             }
-        }
-        if (isAnimatedDesummoning()) {
-            if (--desummonTime < 1) discard();
         }
     }
 
@@ -264,8 +300,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.light"))),
         BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.shadow_the_world.block"))),
         LUNGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.lunge"))),
-        GROUND_BREAKER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.ground_slam"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.shadow_the_world.barrage"))),
+        THREE_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.3hit"))),
         IMPALING_THRUST_CHARGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.impaling_thrust_charge"))),
         IMPALING_THRUST_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.impaling_thrust_hit"))),
         CHARGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.charge"))),

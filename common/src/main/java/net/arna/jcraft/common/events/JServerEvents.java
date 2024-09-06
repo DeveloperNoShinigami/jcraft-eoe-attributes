@@ -305,11 +305,8 @@ public class JServerEvents {
         }
     }
 
-    public static EventResult entityLoad(Entity entity, Level world) {
-
-        if (world == null) {
-            return EventResult.pass();
-        }
+    public static EventResult entityLoad(Entity entity, boolean worldGenSpawned) {
+        ServerLevel world = (ServerLevel) entity.level();
 
         // If an item was spawned
         if (entity instanceof ItemEntity item) {

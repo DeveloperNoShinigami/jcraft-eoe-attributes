@@ -29,7 +29,7 @@ public class ShadowTheWorldRenderer extends StandEntityRenderer<ShadowTheWorldEn
 
     @Override
     public void actuallyRender(PoseStack poseStack, ShadowTheWorldEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        float a = StandEntityRenderer.getAlpha(animatable, partialTick) / 2.0f; // Other half is glow layer
+        float a = StandEntityRenderer.getAlpha(animatable, partialTick);
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, 15728640, packedOverlay, red, green, blue, a);
     }
 }

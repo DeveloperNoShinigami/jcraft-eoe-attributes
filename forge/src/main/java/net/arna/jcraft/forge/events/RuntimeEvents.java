@@ -48,7 +48,13 @@ public class RuntimeEvents {
             event.addCapability(JCraft.id("cd_capability"), new JCapabilityProvider<>(CooldownsCapability.CAPABILITY, () -> new CooldownsCapability(living)));
             event.addCapability(JCraft.id("hit_capability"), new JCapabilityProvider<>(HitPropertyCapability.CAPABILITY, () -> new HitPropertyCapability(living)));
             event.addCapability(JCraft.id("misc_capability"), new JCapabilityProvider<>(MiscCapability.CAPABILITY, () -> new MiscCapability(living)));
-            event.addCapability(JCraft.id("stand_capability"), new JCapabilityProvider<>(StandCapability.CAPABILITY, () -> new StandCapability(living)));
+
+            //todo: fixme
+            if (object.getCapability(StandCapability.CAPABILITY).isPresent())
+                JCraft.LOGGER.error("Attempted to attach duplicate stand capability to " + living);
+            else
+                event.addCapability(JCraft.id("stand_capability"), new JCapabilityProvider<>(StandCapability.CAPABILITY, () -> new StandCapability(living)));
+
             event.addCapability(JCraft.id("vampire_capability"), new JCapabilityProvider<>(VampireCapability.CAPABILITY, () -> new VampireCapability(living)));
 
             event.addCapability(JCraft.id("gravity_shift_capability"), new JCapabilityProvider<>(GravityShiftCapability.CAPABILITY, () -> new GravityShiftCapability(living)));

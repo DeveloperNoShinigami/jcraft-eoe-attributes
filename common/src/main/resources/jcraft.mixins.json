@@ -57,6 +57,7 @@
     "LivingEntityMixin",
     "LongUseItemMixin",
     "NetherPortalBlockMixin",
+    "PersistentEntitySectionManagerMixin",
     "PlayerEntityMixin",
     "RecipeManagerMixin",
     "RespawnAnchorBlockMixin",

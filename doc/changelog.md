@@ -82,6 +82,11 @@
 * Stand Type is not properly serialized for Mobs
 
 
+* There is still a way to get holdable moves to persist when they shouldn't
+* * With a decently precise input of vampire heavy -> buffered special 1, then going stand on and holding light
+    Laser eyes will charge for too long (to completion)
+
+
 * Getting stand skins is no longer possible due to Smithing Table rework
 
 
@@ -90,8 +95,11 @@
 * Camera is fucked in custom gravity
 
 
-* Stand users rapidly resummon (SEEMINGLY FIXED)
-* Stand users have their stand type set to null sometimes (bandaid fix added but cause should be found)
+* Stand users rapidly resummon - caused by multiple Capabilities on one entity
+* * NOT to be confused with server/client split, both of the caps are serverside.
+
+
+* Desummoning your stand after just booting up the world clears it (possibly fixed)
 
 
 * KC epitaph overlay doesn't render
