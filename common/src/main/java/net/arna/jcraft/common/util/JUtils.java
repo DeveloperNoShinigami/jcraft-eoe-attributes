@@ -562,6 +562,8 @@ public final class JUtils {
     public static float getBloodMult(LivingEntity entity) {
         EntityType<?> type = entity.getType();
 
+        if (entity instanceof StandEntity<?,?>) return 0;
+
         if (type.is(EntityTypeTags.RAIDERS)) {
             return 1.5f;
         }
