@@ -47,7 +47,8 @@ public abstract class DirectionMixin {
             method = "getFacingAxis",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/Entity;getViewYRot(F)F"
+                    target = "Lnet/minecraft/world/entity/Entity;getViewYRot(F)F",
+                    ordinal = 0
             )
     )
     private static float redirect_getLookDirectionForAxis_getYaw_0(Entity entity, float tickDelta) {
@@ -58,7 +59,7 @@ public abstract class DirectionMixin {
 
         return RotationUtil.rotPlayerToWorld(entity.getViewYRot(tickDelta), entity.getViewXRot(tickDelta), gravityDirection).x;
     }
-/*TODO mojmap
+
     @Redirect(
             method = "getFacingAxis",
             at = @At(
@@ -91,6 +92,4 @@ public abstract class DirectionMixin {
 
         return RotationUtil.rotPlayerToWorld(entity.getViewYRot(tickDelta), entity.getViewXRot(tickDelta), gravityDirection).y;
     }
-
- */
 }

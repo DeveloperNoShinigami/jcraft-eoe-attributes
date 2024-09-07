@@ -282,12 +282,13 @@ public abstract class LivingEntityMixin extends Entity {
 
         return RotationUtil.vecWorldToPlayer(target.position(), gravityDirection).z;
     }
-/*TODO mojmap
+
     @Redirect(
             method = "blockedByShield",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/LivingEntity;getX()D"
+                    target = "Lnet/minecraft/world/entity/LivingEntity;getX()D",
+                    ordinal = 0
             )
     )
     private double redirect_knockback_getX_0(LivingEntity target) {
@@ -359,11 +360,6 @@ public abstract class LivingEntityMixin extends Entity {
         return RotationUtil.vecWorldToPlayer(attacker.getEyePosition(), gravityDirection).z;
     }
 
-
-
- */
-
-
     @WrapOperation(
             method = "baseTick",
             at = @At(
@@ -379,8 +375,6 @@ public abstract class LivingEntityMixin extends Entity {
 
         return original.call(instance);
     }
-
-
 
     @Redirect(
             method = "spawnItemParticles",

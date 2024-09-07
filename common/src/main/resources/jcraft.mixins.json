@@ -92,7 +92,6 @@
     "gravity.PillagerEntityMixin",
     "gravity.PistonBlockEntityMixin",
     "gravity.PlayerEntityMixin",
-    "gravity.PlayerManagerMixin",
     "gravity.PointedDripstoneBlockMixin",
     "gravity.ProjectileEntityMixin",
     "gravity.RamImpactTaskMixin",
