@@ -1,4 +1,4 @@
-package net.arna.jcraft.mixin.client.gravity;
+package net.arna.jcraft.forge.mixin.client.gravity;
 
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,13 +17,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ScreenEffectRenderer.class)
-public abstract class InGameOverlayRendererMixin {
+public abstract class ScreenEffectRendererMixin {
     @Inject(
-            method = "getViewBlockingState",
+            method = "getOverlayBlock",
             at = @At("HEAD"),
-            cancellable = true
+            cancellable = true,
+            remap = false // This method was added by Forge so it's not obfuscated
     )
-    private static void inject_getInWallBlockState(Player player, CallbackInfoReturnable<BlockState> cir) {
+    private static void getOverlayBlock(Player player, CallbackInfoReturnable<Pair<BlockState, BlockPos>> cir) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(player);
         if (gravityDirection == Direction.DOWN) {
             return;
@@ -41,7 +43,7 @@ public abstract class InGameOverlayRendererMixin {
             mutable.set(d, e, f);
             BlockState blockState = player.level().getBlockState(mutable);
             if (blockState.getRenderShape() != RenderShape.INVISIBLE && blockState.isViewBlocking(player.level(), mutable)) {
-                cir.setReturnValue(blockState);
+                cir.setReturnValue(Pair.of(blockState, mutable.immutable()));
             }
         }
 

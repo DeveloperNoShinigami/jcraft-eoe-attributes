@@ -33,7 +33,6 @@
     "client.gravity.EntityRenderMixin",
     "client.gravity.FishingBobberEntityRendererMixin",
     "client.gravity.GameRendererMixin",
-    "client.gravity.InGameOverlayRendererMixin",
     "client.gravity.ItemPickupParticleMixin",
     "client.gravity.OtherClientPlayerEntityMixin",
     "client.gravity.PlayerEntityRendererMixin"

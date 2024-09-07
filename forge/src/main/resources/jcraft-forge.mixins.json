@@ -13,7 +13,8 @@
     "client.ForgeGuiMixin",
     "client.GameRendererMixin",
     "client.KeyBindingMixin",
-    "client.LevelRendererAccessor"
+    "client.LevelRendererAccessor",
+    "client.gravity.ScreenEffectRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

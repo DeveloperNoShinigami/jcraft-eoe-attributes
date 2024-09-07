@@ -11,7 +11,8 @@
   "client": [
     "ShaderProgramMixin",
     "client.GameRendererMixin",
-    "client.KeyBindingMixin"
+    "client.KeyBindingMixin",
+    "client.gravity.ScreenEffectRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
