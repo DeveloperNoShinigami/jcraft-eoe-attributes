@@ -46,7 +46,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowTheWorldEntity, ShadowTheWorldEntity.State> {
-    public static final UppercutAttack<ShadowTheWorldEntity> UPPERCUT = new UppercutAttack<ShadowTheWorldEntity>(JCraft.LIGHT_COOLDOWN,
+    public static final UppercutAttack<ShadowTheWorldEntity> UPPERCUT = new UppercutAttack<ShadowTheWorldEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),
             10, 16, 0.75f, 6f, 20, 1.5f, 0.25f, -0.6f, 1.0f)
             .withAnim(State.UPPERCUT)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())

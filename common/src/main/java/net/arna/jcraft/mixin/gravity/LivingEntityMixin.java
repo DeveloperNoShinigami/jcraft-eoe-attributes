@@ -9,6 +9,7 @@ import net.arna.jcraft.mixin_logic.LivingEntityMixinLogic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -29,6 +30,10 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow
     public abstract float getViewYRot(float tickDelta);
+
+    @Shadow public abstract void calculateEntityAnimation(boolean flutter);
+
+    @Shadow protected abstract void updateWalkAnimation(float partialTick);
 
 
     public LivingEntityMixin(EntityType<?> type, Level world) {
@@ -155,28 +160,15 @@ public abstract class LivingEntityMixin extends Entity {
             cancellable = true
     )
     private void inject_updateLimbs(boolean flutter, CallbackInfo ci) {
-        LivingEntity entity = LivingEntity.class.cast(this);
-
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
-        if (gravityDirection == Direction.DOWN) {
-            return;
-        }
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this);
+        if(gravityDirection == Direction.DOWN) return;
 
         ci.cancel();
 
-        Vec3 playerPosDelta = RotationUtil.vecWorldToPlayer(entity.getX() - entity.xo, entity.getY() - entity.yo, entity.getZ() - entity.zo, gravityDirection);
+        Vec3 playerPosDelta = RotationUtil.vecWorldToPlayer(this.getX() - this.xo, this.getY() - this.yOld, this.getZ() - this.zOld, gravityDirection);
 
-        //TODO ? entity.lastLimbDistance = entity.limbDistance;
-        double d = playerPosDelta.x;
-        double e = flutter ? playerPosDelta.y : 0.0D;
-        double f = playerPosDelta.z;
-        float g = (float) Math.sqrt(d * d + e * e + f * f) * 4.0F;
-        if (g > 1.0F) {
-            g = 1.0F;
-        }
-
-        //TODO ? entity.limbDistance += (g - entity.limbDistance) * 0.4F;
-        //TODO ? entity.limbAngle += entity.limbDistance;
+        float mag = (float) Mth.length(playerPosDelta.x,flutter ? playerPosDelta.y : 0.0D,playerPosDelta.z);
+        this.updateWalkAnimation(mag);
     }
 
     @Redirect(

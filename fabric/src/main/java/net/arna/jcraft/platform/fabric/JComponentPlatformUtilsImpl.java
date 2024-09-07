@@ -73,8 +73,8 @@ public class JComponentPlatformUtilsImpl {
         return Optional.empty();
     }
 
-    public static CommonGravityShiftComponent getGravityShift(Entity entity) {
-        return JComponents.GRAVITY_SHIFT.get(entity);
+    public static CommonGravityShiftComponent getGravityShift(LivingEntity livingEntity) {
+        return JComponents.GRAVITY_SHIFT.get(livingEntity);
     }
 
     public static CommonShockwaveHandlerComponent getShockwaveHandler(Level world) {

@@ -69,17 +69,13 @@
 
 
 * Vertical movement in Survival mode while gravitied is broken
-* GravityLib rendering breaks base-game animations
-  * MR's Red Bind particles dont render in the right orientation when under different gravities
+* MR's Red Bind particles dont render in the right orientation when under different gravities
 
 
-* Horus is not fully implemented
+* Horus & STW are not fully implemented
 
 
 * The Sun starts tweaking out when moved out of and back into entity processing distance
-
-
-* Stand Type is not properly serialized for Mobs
 
 
 * There is still a way to get holdable moves to persist when they shouldn't
@@ -97,9 +93,6 @@
 
 * Stand users rapidly resummon - caused by multiple Capabilities on one entity
 * * NOT to be confused with server/client split, both of the caps are serverside.
-
-
-* Desummoning your stand after just booting up the world clears it (possibly fixed)
 
 
 * KC epitaph overlay doesn't render

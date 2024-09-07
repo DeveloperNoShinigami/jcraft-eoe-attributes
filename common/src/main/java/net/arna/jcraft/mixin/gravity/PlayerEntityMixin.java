@@ -42,16 +42,15 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         super(entityType, world);
     }
 
-    /*TODO mojmap
     @Redirect(
             method = "travel",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;getRotationVector()Lnet/minecraft/util/math/Vec3d;",
+                    target = "Lnet/minecraft/world/entity/player/Player;getLookAngle()Lnet/minecraft/world/phys/Vec3;",
                     ordinal = 0
             )
     )
-    private Vec3 redirect_travel_getRotationVector_0(Player playerEntity) {
+    private Vec3 redirect_travel_getLookAngle_0(Player playerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(playerEntity);
         if (gravityDirection == Direction.DOWN) {
             return playerEntity.getLookAngle();
@@ -59,8 +58,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
         return RotationUtil.vecWorldToPlayer(playerEntity.getLookAngle(), gravityDirection);
     }
-
-     */
 
 
     @ModifyArg(
