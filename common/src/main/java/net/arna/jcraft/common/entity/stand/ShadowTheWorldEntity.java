@@ -220,6 +220,13 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         attacker.playSound(JSoundRegistry.STW_ZAP.get(), 1f, 1f);
     }
 
+    private static final Vector3f invisAura = new Vector3f(0, 0, 0);
+    @Override
+    public Vector3f getAuraColor() {
+        if (getState() == State.COUNTER) return invisAura;
+        return super.getAuraColor();
+    }
+
     public int getDesummonTime() {
         return desummonTime;
     }

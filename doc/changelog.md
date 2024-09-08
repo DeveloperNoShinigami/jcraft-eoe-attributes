@@ -53,9 +53,6 @@
 * Bug: Inventory disappeared instead of dropped when killed while being stunned
 ### Known Bugs
 #### Common
-* Stand Discs render the wrong stand
-
-
 * Timestop doesnt stop animated textures
 
 

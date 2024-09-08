@@ -77,11 +77,13 @@ public class DashData {
 
             if (spec == null || spec.moveStun < 1) {
                 String dashAnim = "dash";
-                if (spec.getType() == SpecType.VAMPIRE) {
-                    if (forward < 0) {
-                        dashAnim = "vm.bdash";
-                    } else {
-                        dashAnim = "vm.dash";
+                if (spec != null) {
+                    if (spec.getType() == SpecType.VAMPIRE) {
+                        if (forward < 0) {
+                            dashAnim = "vm.bdash";
+                        } else {
+                            dashAnim = "vm.dash";
+                        }
                     }
                 }
                 for (ServerPlayer recipient : JUtils.around((ServerLevel) entity.level(), entity.position(), 96)) {
