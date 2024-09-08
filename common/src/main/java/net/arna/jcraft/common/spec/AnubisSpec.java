@@ -164,8 +164,8 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
         }
     }
 
-    public AnubisSpec(Player player) {
-        super(SpecType.ANUBIS, player);
+    public AnubisSpec(LivingEntity livingEntity) {
+        super(SpecType.ANUBIS, livingEntity);
     }
 
     @Override
@@ -180,11 +180,11 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
     }
 
     private static boolean isHoldingSheathedAnubis(AnubisSpec spec) {
-        return spec.player.isHolding(JItemRegistry.ANUBIS_SHEATHED.get());
+        return spec.user.isHolding(JItemRegistry.ANUBIS_SHEATHED.get());
     }
 
     private static boolean isHoldingAnubis(AnubisSpec spec) {
-        return spec.player.isHolding(JItemRegistry.ANUBIS.get());
+        return spec.user.isHolding(JItemRegistry.ANUBIS.get());
     }
 
     @Override
@@ -221,7 +221,7 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
                     s = handleMove(REKKA3, CooldownType.SPECIAL2, State.REKKA3, attackSpeedMult);
                 } else {
                     s = handleMove(LOW_KICK, CooldownType.SPECIAL3, State.SWEEP, attackSpeedMult);
-                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, LOW_KICK.getDuration(), 2, true, false));
+                    user.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, LOW_KICK.getDuration(), 2, true, false));
                 }
 
                 return s;
@@ -238,7 +238,7 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
         if (++ticksSinceLastHit > 80 && attackSpeedMult > 1f) {
             ticksSinceLastHit = 0; // Technically untrue, but all this serves for is counting 5s since last hit then rolling over
             attackSpeedMult -= 0.2f;
-            JComponentPlatformUtils.getMiscData(player).setAttackSpeedMult(attackSpeedMult);
+            JComponentPlatformUtils.getMiscData(user).setAttackSpeedMult(attackSpeedMult);
         }
     }
 

@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lombok.AccessLevel;
 import lombok.Getter;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -35,14 +35,14 @@ public enum SpecType {
     private static final Int2ObjectMap<SpecType> byId = getAllSpecTypes().stream()
             .collect(Int2ObjectOpenHashMap::new, (map, type) -> map.put(type.getId(), type), Int2ObjectMap::putAll);
 
-    private final Function<Player, @Nullable JSpec<?, ?>> specCreator;
+    private final Function<LivingEntity, @Nullable JSpec<?, ?>> specCreator;
     @Getter
     private final String internalName;
     @Getter
     private final Component translatableName, description, details;
 
 
-    SpecType(Function<Player, @Nullable JSpec<?, ?>> specCreator, Component description, Component details) {
+    SpecType(Function<LivingEntity, @Nullable JSpec<?, ?>> specCreator, Component description, Component details) {
         internalName = name().toLowerCase();
         translatableName = Component.translatable("spec.jcraft." + internalName);
         this.description = description;
@@ -54,8 +54,8 @@ public enum SpecType {
         return ordinal();
     }
 
-    public JSpec<?, ?> createNew(Player player) {
-        return specCreator.apply(player);
+    public JSpec<?, ?> createNew(LivingEntity livingEntity) {
+        return specCreator.apply(livingEntity);
     }
 
     public static SpecType fromId(int id) {

@@ -28,8 +28,8 @@ public class JComponentPlatformUtilsImpl {
     }
 
 
-    public static CommonSpecComponent getSpecData(Player player) {
-        return SpecCapability.getCapability(player);
+    public static CommonSpecComponent getSpecData(LivingEntity livingEntity) {
+        return SpecCapability.getCapability(livingEntity);
     }
 
 
@@ -67,7 +67,6 @@ public class JComponentPlatformUtilsImpl {
         return HitPropertyCapability.getCapability(livingEntity);
     }
 
-    //todo: properly implement gravity caps
     public static Optional<GravityCapability> getGravity(Entity entity) {
         return GravityCapability.getCapabilityOptional(entity);
     }

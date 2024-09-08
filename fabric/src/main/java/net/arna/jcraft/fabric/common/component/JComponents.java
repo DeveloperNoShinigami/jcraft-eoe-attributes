@@ -64,11 +64,16 @@ public class JComponents implements EntityComponentInitializer, WorldComponentIn
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         registry.registerFor(Entity.class, GRAVITY_MODIFIER, GravityComponentImpl::new);
+
         registry.beginRegistration(LivingEntity.class, STAND)
                 .respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY)
                 .impl(StandComponentImpl.class)
                 .end(StandComponentImpl::new);
-        registry.registerForPlayers(SPEC, SpecComponentImpl::new, RespawnCopyStrategy.ALWAYS_COPY);
+        registry.beginRegistration(LivingEntity.class, SPEC)
+                .respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY)
+                .impl(SpecComponentImpl.class)
+                .end(SpecComponentImpl::new);
+
         registry.registerForPlayers(PH, PhComponentImpl::new, RespawnCopyStrategy.ALWAYS_COPY);
         registry.beginRegistration(LivingEntity.class, COOLDOWNS)
                 .respawnStrategy(RespawnCopyStrategy.LOSSLESS_ONLY)

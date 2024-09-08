@@ -304,6 +304,11 @@
       "jcraft:stands/shadow_the_world/zap"
     ]
   },
+  "stwlaugh": {
+    "sounds": [
+      "jcraft:stands/shadow_the_world/laugh"
+    ]
+  },
   "d4csummon": {
     "sounds": [
       "jcraft:stands/d4c/summon"

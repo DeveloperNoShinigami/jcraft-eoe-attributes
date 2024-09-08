@@ -53,29 +53,25 @@
 * Bug: Inventory disappeared instead of dropped when killed while being stunned
 ### Known Bugs
 #### Common
+* Stand Discs render the wrong stand
+
+
 * Timestop doesnt stop animated textures
 
 
-* KC epitaph models have fucked rendering
+* KC epitaph prediction model rendering has the wrong scale
+* * KC epitaph overlay doesn't render
+    `  [16:27:24] [Netty Local Client IO #0/ERROR] [de.ar.ne.fo.NetworkManagerImpl/]: Unknown message ID: jcraft:epth`
 
 
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by invisible ent)
 * To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
-* Also, there should be a semi-active check for people inside the D4C dimension that arent logged in PastDimensions
 
 
-* Stand User Enemies dont use their AI fully (due to being ridden by stands - they work fine when the stand is remote)
 * Stand User Enemies that spawn with Silver Chariot + Anubis do not take on the Anubis SC form
 
 
-* Vertical movement in Survival mode while gravitied is broken
 * MR's Red Bind particles dont render in the right orientation when under different gravities
-
-
-* Horus & STW are not fully implemented
-
-
-* The Sun starts tweaking out when moved out of and back into entity processing distance
 
 
 * There is still a way to get holdable moves to persist when they shouldn't
@@ -86,18 +82,16 @@
 * Getting stand skins is no longer possible due to Smithing Table rework
 
 
-* Water transparency seemingly changes when the player hovers over a block (SEEMINGLY FIXED)
+* Water transparency changes when the player hovers over a block (SEEMINGLY FIXED)
 #### Forge
-* Camera is fucked in custom gravity
-
-
 * Stand users rapidly resummon - caused by multiple Capabilities on one entity
 * * NOT to be confused with server/client split, both of the caps are serverside.
 
 
-* KC epitaph overlay doesn't render
-`  [16:27:24] [Netty Local Client IO #0/ERROR] [de.ar.ne.fo.NetworkManagerImpl/]: Unknown message ID: jcraft:epth`
 * KC Time Erase renders better than fabric, though it doesn't play the exit noise
+
+
+* The Sun starts tweaking out when moved out of and back into entity processing distance
 
 
 * changing the velocity of a projectile doesn't mark it as dirty which causes teleports for shit like Magician's Special 1 into crouching m1 (redirect)

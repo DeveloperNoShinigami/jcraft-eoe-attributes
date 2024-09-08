@@ -12,6 +12,7 @@ import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.moves.shadowtheworld.STWCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.theworld.overheaven.LungeAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -23,12 +24,14 @@ import net.arna.jcraft.common.util.MobilityType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
@@ -129,6 +132,14 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                     Component.literal("Timestop"),
                     Component.literal("2.5 seconds")
             );
+    public static final STWCounterAttack COUNTER = new STWCounterAttack(400, 5, 20, 0.75f)
+            .withInfo(
+                    Component.literal("Counter"),
+                    Component.literal("""
+                                            if struck by an opponent, you will stun them and teleport behind them
+                                            during this, you may not use your spec or move
+                                            """)
+            );
     private int desummonTime = 6;
     private static final EntityDataAccessor<Boolean> DESUMMONING;
     static { DESUMMONING = SynchedEntityData.defineId(ShadowTheWorldEntity.class, EntityDataSerializers.BOOLEAN); }
@@ -141,10 +152,13 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                 """;
         idleRotation = -45f;
 
+        proCount = 5;
+        conCount = 3;
+
         auraColors = new Vector3f[]{
                 new Vector3f(0.5f, 0.1f, 0.7f),
-                new Vector3f(1.0f, 0f, 0f),
-                new Vector3f(1.0f, 0.6f, 0.0f),
+                new Vector3f(0.8f, 0.2f, 0.4f),
+                new Vector3f(0.2f, 0.6f, 8.0f),
                 new Vector3f(0.7f, 0.3f, 1.0f)
         };
     }
@@ -158,15 +172,14 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         Vec3 pos2 = hitResult.getLocation();
         Vec3 towardsVec = pos2.subtract(start);
 
-        Vec3 kbVec = towardsVec.normalize().scale(2.0);
-
         DamageSource playerSource = world.damageSources().mobAttack(user);
 
         user.teleportToWithTicket(pos2.x, pos2.y, pos2.z);
 
         double count = Math.round(start.distanceTo(pos2));
 
-        Set<LivingEntity> targets = new HashSet<>();
+        boolean hitAny = false;
+        Set<LivingEntity> processed = new HashSet<>();
         for (int i = 0; i < count; i++) {
             Vec3 curPos = start.add(towardsVec.scale(i / count));
             if (i % 3 == 0) shockwaveHandler.addShockwave(curPos, towardsVec, 2.25f);
@@ -178,24 +191,29 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
 
             List<LivingEntity> hurt = world.getEntitiesOfClass(LivingEntity.class, new AABB(vec1, vec2),
                     EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != user));
-            hurt.removeIf(targets::contains);
-            if (targets.addAll(hurt)) {
+            hurt.removeIf(processed::contains);
+            if (processed.addAll(hurt)) {
+                hitAny = true;
                 JCraft.createParticle(world,
                         curPos.x + attacker.random.nextGaussian(),
                         curPos.y + attacker.random.nextGaussian(),
                         curPos.z + attacker.random.nextGaussian(),
                         JParticleType.HIT_SPARK_2
                 );
+                for (LivingEntity ent : hurt) {
+                    LivingEntity target = JUtils.getUserIfStand(ent);
+                    // +6 on hit/-4 on block launcher
+                    // +0 if you count STW desummon not letting you block
+                    StandEntity.damageLogic(world, target,
+                            target.position().subtract(curPos).normalize(), 10 + attacker.desummonTime, 3, false,
+                            8.0f, true, 12, playerSource, user, CommonHitPropertyComponent.HitAnimation.LAUNCH);
+                    target.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0, true, false));
+                }
             }
         }
 
-        if (!targets.isEmpty()) {
+        if (hitAny) {
             attacker.playSound(JSoundRegistry.IMPACT_1.get(), 1.0f, 1.0f);
-            for (LivingEntity ent : targets) {
-                LivingEntity target = JUtils.getUserIfStand(ent);
-                StandEntity.damageLogic(world, target, kbVec, 10, 3, false,
-                        8.0f, true, 12, playerSource, user, CommonHitPropertyComponent.HitAnimation.LAUNCH);
-            }
         }
 
         attacker.playSound(JSoundRegistry.TIME_SKIP.get(), 1f, 1f);
@@ -208,8 +226,6 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
 
     @Override
     public void queueMove(MoveInputType type) {
-        // Only allow queueing during Charge
-        if (curMove != null && curMove.getMoveType() == MoveType.SPECIAL2) super.queueMove(type);
     }
 
     @Override
@@ -224,9 +240,10 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         moves.register(MoveType.HEAVY, LUNGE, State.LUNGE);
         moves.register(MoveType.BARRAGE, THREE_HIT, State.THREE_HIT);
 
-        // moves.register(MoveType.SPECIAL1, CHARGE, State.CHARGE);
+        moves.register(MoveType.SPECIAL1, COUNTER, State.COUNTER);
         moves.register(MoveType.SPECIAL2, CHARGE, State.CHARGE);
         moves.register(MoveType.SPECIAL3, IMPALING_THRUST, State.IMPALING_THRUST_CHARGE);
+
         moves.register(MoveType.ULTIMATE, TIME_STOP, State.TIME_STOP);
 
         moves.register(MoveType.UTILITY, TIME_SKIP, State.IDLE);
@@ -247,6 +264,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     @Override
     public boolean allowMoveHandling() {
         if (isAnimatedDesummoning()) return false;
+        if (getState() == State.CHARGE_HIT) return false;
         boolean noMove = curMove == null;
         return noMove || curMove.getMoveType() == MoveType.SPECIAL3;
     }
@@ -268,7 +286,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
             return;
         }
         if (tsTime < 1) {
-            if ( (curMove != null || getState() == State.CHARGE_HIT) && getMoveStun() == 1) {
+            if ( (curMove != null || getState() == State.CHARGE_HIT) && getMoveStun() == 1 && getState() != State.COUNTER) {
                 // Stay in final attack pose
                 curMove = null;
                 setMoveStun(desummonTime);
@@ -306,6 +324,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         CHARGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.charge"))),
         CHARGE_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.charge_hit"))),
         UPPERCUT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.uppercut"))),
+        COUNTER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.counter"))),
         TIME_STOP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.timestop")));
 
         private final BiConsumer<ShadowTheWorldEntity, AnimationState> animator;

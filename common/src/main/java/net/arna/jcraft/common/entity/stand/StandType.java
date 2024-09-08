@@ -63,7 +63,8 @@ public enum StandType {
             Component.literal("Judge, Jury, Executioner"), Component.literal("Diamond"), Component.literal("Over Heaven")),
     PURPLE_HAZE_DISTORTION(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION.get(), PurpleHazeDistortionEntity::new, "purple_haze_distortion", true,
             Component.literal("Black Knight"), Component.literal("Vintage"), Component.literal("Reversal")),
-    HORUS(JEntityTypeRegistry.HORUS.get(), HorusEntity::new, "horus"),
+    HORUS(JEntityTypeRegistry.HORUS.get(), HorusEntity::new, "horus",
+            Component.literal("Pearl"), Component.literal("Dual"), Component.literal("Evil Incarnation")),
     CINDERELLA(JEntityTypeRegistry.CINDERELLA.get(), CinderellaEntity::new, "cinderella", false, false),
     OSIRIS(JEntityTypeRegistry.OSIRIS.get(), OsirisEntity::new, "osiris", false, false),
     ATUM(JEntityTypeRegistry.ATUM.get(), AtumEntity::new, "atum", false, false),
@@ -73,7 +74,7 @@ public enum StandType {
     FOO_FIGHTERS(JEntityTypeRegistry.FOO_FIGHTERS.get(), FooFightersEntity::new, "foo_fighters", false, false),
     GOO_GOO_DOLLS(JEntityTypeRegistry.GOO_GOO_DOLLS.get(), GooGooDollsEntity::new, "goo_goo_dolls", false, false),
     SHADOW_THE_WORLD(JEntityTypeRegistry.SHADOW_THE_WORLD.get(), ShadowTheWorldEntity::new, "shadow_the_world",
-            Component.literal("1"), Component.literal("2"), Component.literal("Buckle my Shoe")),
+            Component.literal("Contrast"), Component.literal("Frost"), Component.literal("missing texture lol")),
     ;
 
     /**

@@ -23,8 +23,8 @@ public class JComponentPlatformUtilsImpl {
     }
 
 
-    public static CommonSpecComponent getSpecData(Player player) {
-        return JComponents.SPEC.get(player);
+    public static CommonSpecComponent getSpecData(LivingEntity livingEntity) {
+        return JComponents.SPEC.get(livingEntity);
     }
 
 

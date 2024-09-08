@@ -55,6 +55,7 @@
     "LivingEntityInvoker",
     "LivingEntityMixin",
     "LongUseItemMixin",
+    "MobEntityMixin",
     "NetherPortalBlockMixin",
     "PersistentEntitySectionManagerMixin",
     "PlayerEntityMixin",

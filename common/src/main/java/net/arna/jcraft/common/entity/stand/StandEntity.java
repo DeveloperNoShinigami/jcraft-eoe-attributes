@@ -1605,8 +1605,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
         // Movement towards/away from target
         PathNavigation entityNavigation = mob.getNavigation();
-        if (entityNavigation.isDone() || distance < 2)
-            entityNavigation.moveTo(target, 1.0);
+        //if (entityNavigation.isDone() || distance < 2) entityNavigation.moveTo(target, 1.0);
         boolean evade = enemyAttack != null;
         if ( // in range (to get hit)
                 (enemyAttack instanceof AbstractSimpleAttack<?, ?> simpleEnemyAttack && !enemyAttack.isRanged() &&

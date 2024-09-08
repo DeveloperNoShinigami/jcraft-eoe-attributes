@@ -80,6 +80,7 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> STW_ZAP = register("stwzap");
     RegistrySupplier<SoundEvent> STW_WARBLE = register("stwwarble");
     RegistrySupplier<SoundEvent> STW_TS = register("stwtimestop");
+    RegistrySupplier<SoundEvent> STW_LAUGH = register("stwlaugh");
 
     //Dirty Deeds Done Dirt Cheap
     RegistrySupplier<SoundEvent> D4C_SUMMON = register("d4csummon");

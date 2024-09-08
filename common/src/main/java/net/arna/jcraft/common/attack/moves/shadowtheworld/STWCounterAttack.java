@@ -1,0 +1,88 @@
+package net.arna.jcraft.common.attack.moves.shadowtheworld;
+
+import lombok.NonNull;
+import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
+import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
+import net.arna.jcraft.common.entity.stand.ShadowTheWorldEntity;
+import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
+import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStatusRegistry;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
+
+public final class STWCounterAttack extends AbstractCounterAttack<STWCounterAttack, ShadowTheWorldEntity> {
+    private static final CounterMissMove<ShadowTheWorldEntity> missAttack = new CounterMissMove<>(20);
+
+    public STWCounterAttack(int cooldown, int windup, int duration, float moveDistance) {
+        super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public void onInitiate(ShadowTheWorldEntity attacker) {
+        super.onInitiate(attacker);
+        LivingEntity user = attacker.getUserOrThrow();
+        if (user instanceof ServerPlayer player) {
+            JSpec<?,?> spec = JComponentPlatformUtils.getSpecData(player).getSpec();
+            if (spec != null) spec.cancelMove();
+
+            JUtils.around((ServerLevel) player.level(), player.position(), 96).forEach(
+                    serverPlayer -> PlayerAnimPacket.send(player, serverPlayer, "stw.cntr"));
+        }
+        StandEntity.stun(user, 20, 0);
+    }
+
+    @Override
+    public void whiff(@NonNull ShadowTheWorldEntity attacker, @NonNull LivingEntity user) {
+        attacker.cancelMove();
+        attacker.desummon(false);
+        StandEntity.stun(user, missAttack.getDuration(), 0);
+    }
+
+    @Override
+    public void counter(@NonNull ShadowTheWorldEntity attacker, Entity countered, DamageSource counteredDamageSource) {
+        super.counter(attacker, countered, counteredDamageSource);
+
+        if (countered == null || !attacker.hasUser()) {
+            return;
+        }
+        LivingEntity user = attacker.getUserOrThrow();
+        Vec3 behind = countered.position().subtract(countered.getLookAngle());
+
+        user.setDeltaMovement(0, 0, 0);
+        user.hurtMarked = true;
+        user.teleportToWithTicket(behind.x, behind.y, behind.z);
+        user.lookAt(EntityAnchorArgument.Anchor.EYES, countered.getEyePosition());
+
+        if (countered instanceof LivingEntity livingEntity) {
+            livingEntity.removeEffect(JStatusRegistry.DAZED.get());
+            StandEntity.stun(livingEntity, 20, 0);
+
+            JUtils.cancelMoves(livingEntity);
+        }
+
+        attacker.playSound(JSoundRegistry.STW_LAUGH.get(), 1, 1);
+        attacker.playSound(JSoundRegistry.STW_ZAP.get(), 1, 1);
+
+        attacker.cancelMove();
+        attacker.desummon();
+    }
+
+    @Override
+    protected @NonNull STWCounterAttack getThis() {
+        return this;
+    }
+
+    @Override
+    public @NonNull STWCounterAttack copy() {
+        return copyExtras(new STWCounterAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+}

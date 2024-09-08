@@ -203,8 +203,8 @@ public final class JUtils {
         return toReturn;
     }
 
-    public static JSpec<?, ?> getSpec(Player player) {
-        return JComponentPlatformUtils.getSpecData(player).getSpec();
+    public static JSpec<?, ?> getSpec(LivingEntity livingEntity) {
+        return JComponentPlatformUtils.getSpecData(livingEntity).getSpec();
     }
 
     public static void serverPlaySound(SoundEvent sound, ServerLevel serverWorld, Vec3 pos) {

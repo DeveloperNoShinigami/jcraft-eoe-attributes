@@ -13,7 +13,7 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.SpecAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 
 public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
     public static final UppercutAttack<BrawlerSpec> HEAVY = new UppercutAttack<BrawlerSpec>(30, 10,
@@ -54,8 +54,8 @@ public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(Component.literal("Right Low Kick"), Component.literal("fast jab"));
 
-    public BrawlerSpec(Player player) {
-        super(SpecType.BRAWLER, player);
+    public BrawlerSpec(LivingEntity livingEntity) {
+        super(SpecType.BRAWLER, livingEntity);
     }
 
     @Override

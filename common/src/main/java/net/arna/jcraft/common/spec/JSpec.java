@@ -44,6 +44,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     private final MoveMap<A, S> moveMap = new MoveMap<>();
     private final MoveContext moveContext = new MoveContext();
     private final SpecType type;
+    public final LivingEntity user;
     public final Player player;
     @Setter
     public int moveStun = 0;
@@ -60,9 +61,14 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     private boolean holding = false;
     private MoveInputType holdingType = null;
 
-    protected JSpec(SpecType type, Player player) {
+    protected JSpec(SpecType type, LivingEntity livingEntity) {
         this.type = type;
-        this.player = player;
+        this.user = livingEntity;
+        if (this.user instanceof Player playerEntity) {
+            this.player = playerEntity;
+        } else {
+            this.player = null;
+        }
         registerMoves(moveMap);
         moveMap.freeze();
         moveMap.forEach(entry -> entry.getMove().registerContextEntries(moveContext));
@@ -70,27 +76,27 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
     @Override
     public LivingEntity getUser() {
-        return player;
+        return user;
     }
 
     @Override
     public LivingEntity getBaseEntity() {
-        return player;
+        return user;
     }
 
     @Override
     public DamageSource getDamageSource() {
-        return JDamageSources.create(player.level(), DamageTypes.PLAYER_ATTACK);
+        return JDamageSources.create(user.level(), DamageTypes.PLAYER_ATTACK);
     }
 
     @Override
     public boolean hasUser() {
-        return player != null;
+        return user != null;
     }
 
     @Override
     public LivingEntity getUserOrThrow() {
-        return Objects.requireNonNull(player, "Player must not be null");
+        return Objects.requireNonNull(user, "Player must not be null");
     }
 
     @Override
@@ -106,13 +112,14 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
     @Override
     public void setState(S state) {
-        ((ServerLevel) player.level()).players().forEach(serverPlayer -> PlayerAnimPacket.sendSpec(
+        if (player == null) return;
+        ((ServerLevel) user.level()).players().forEach(serverPlayer -> PlayerAnimPacket.sendSpec(
                 player, serverPlayer, (this.state = state).getKey(getThis()), moveStun, 1f));
     }
 
     @Override
     public void playAttackerSound(SoundEvent sound, float volume, float pitch) {
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), sound, SoundSource.PLAYERS,
+        user.level().playSound(null, user.getX(), user.getY(), user.getZ(), sound, SoundSource.PLAYERS,
                 volume, pitch);
     }
 
@@ -136,7 +143,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     public boolean canAttack() {
-        return moveStun <= 0 && !JUtils.isAffectedByTimeStop(player) && !player.hasEffect(JStatusRegistry.DAZED.get());
+        return moveStun <= 0 && !JUtils.isAffectedByTimeStop(user) && !user.hasEffect(JStatusRegistry.DAZED.get());
     }
 
     public boolean handleMove(MoveType type) {
@@ -149,11 +156,11 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             return false;
         }
 
-        if (player.isShiftKeyDown()) {
+        if (user.isShiftKeyDown()) {
             if (entry.getCrouchingVariant() != null) {
                 entry = entry.getCrouchingVariant();
             }
-        } else if (!player.onGround() && entry.getAerialVariant() != null) {
+        } else if (!user.onGround() && entry.getAerialVariant() != null) {
             entry = entry.getAerialVariant();
         }
         return handleMove(entry.getMove(), entry.getCooldownType(), entry.getAnimState(), animationSpeed);
@@ -170,7 +177,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             return false;
         }
 
-        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(player);
+        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
         int cd = cooldowns.getCooldown(cooldownType);
         if (cd > 0) {
             return false;
@@ -213,7 +220,8 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     public void setPlayerAnimation(String animationID, int duration, float animationSpeed) {
-        ((ServerLevel) player.level()).players().forEach(serverPlayer -> PlayerAnimPacket.sendSpec(
+        if (player == null) return;
+        ((ServerLevel) user.level()).players().forEach(serverPlayer -> PlayerAnimPacket.sendSpec(
                 player, serverPlayer, animationID, duration, animationSpeed));
     }
 
@@ -226,14 +234,14 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         armorPoints = 0;
         moveStun = 0;
 
-        if (player == null) {
+        if (user == null) {
             return;
         }
         // Cancel player animation if it exists
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeShort(13);
-        buf.writeInt(player.getId());
-        ServerLevel serverWorld = (ServerLevel) player.level();
+        buf.writeInt(user.getId());
+        ServerLevel serverWorld = (ServerLevel) user.level();
         for (ServerPlayer sendPlayer : serverWorld.players()) {
             ServerChannelFeedbackPacket.send(sendPlayer, buf);
         }
@@ -247,11 +255,11 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     public void tickSpec() {
-        if (player.isSpectator()) {
+        if (user.isSpectator()) {
             return;
         }
 
-        Level world = player.level();
+        Level world = user.level();
 
         if (world.isClientSide()) {
             //JCraft.LOGGER.info("CLIENT: Ticking spec " + this);

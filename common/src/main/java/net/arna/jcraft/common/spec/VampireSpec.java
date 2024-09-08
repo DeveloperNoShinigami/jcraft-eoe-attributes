@@ -22,7 +22,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 
 public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
     public static final UppercutAttack<VampireSpec> AIR_KICK = new UppercutAttack<VampireSpec>(30, 6,
@@ -108,9 +107,9 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
         }
     }
 
-    public VampireSpec(Player player) {
-        super(SpecType.VAMPIRE, player);
-        vampireComponent = JComponentPlatformUtils.getVampirism(player);
+    public VampireSpec(LivingEntity livingEntity) {
+        super(SpecType.VAMPIRE, livingEntity);
+        vampireComponent = JComponentPlatformUtils.getVampirism(livingEntity);
     }
 
     @Override

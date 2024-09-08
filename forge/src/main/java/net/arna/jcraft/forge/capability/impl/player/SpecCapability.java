@@ -4,7 +4,6 @@ import dev.architectury.networking.NetworkManager;
 import net.arna.jcraft.common.component.impl.player.CommonSpecComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.arna.jcraft.forge.capability.impl.living.CooldownsCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
@@ -19,8 +18,6 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
-import java.util.UUID;
-
 import static net.arna.jcraft.JCraft.MOD_ID;
 
 public class SpecCapability extends CommonSpecComponentImpl implements JCapability {
@@ -31,8 +28,8 @@ public class SpecCapability extends CommonSpecComponentImpl implements JCapabili
     public static Capability<SpecCapability> CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
 
-    public SpecCapability(Player player) {
-        super(player);
+    public SpecCapability(LivingEntity livingEntity) {
+        super(livingEntity);
     }
 
     @Override
@@ -70,12 +67,12 @@ public class SpecCapability extends CommonSpecComponentImpl implements JCapabili
     }
 
 
-    public static LazyOptional<SpecCapability> getCapabilityOptional(Player player) {
-        return player.getCapability(CAPABILITY);
+    public static LazyOptional<SpecCapability> getCapabilityOptional(LivingEntity livingEntity) {
+        return livingEntity.getCapability(CAPABILITY);
     }
 
-    public static SpecCapability getCapability(Player player) {
-        return player.getCapability(CAPABILITY).orElse(new SpecCapability(player));
+    public static SpecCapability getCapability(LivingEntity livingEntity) {
+        return livingEntity.getCapability(CAPABILITY).orElse(new SpecCapability(livingEntity));
     }
 
     public static void initNetwork(){

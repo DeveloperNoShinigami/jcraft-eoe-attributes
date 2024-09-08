@@ -4,6 +4,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.server.level.ServerLevel;
@@ -75,8 +76,17 @@ public class DashData {
             JSpec<?, ?> spec = JUtils.getSpec(player);
 
             if (spec == null || spec.moveStun < 1) {
-                JUtils.around((ServerLevel) entity.level(), entity.position(), 96).forEach(
-                        serverPlayer -> PlayerAnimPacket.send(player, serverPlayer, "dash"));
+                String dashAnim = "dash";
+                if (spec.getType() == SpecType.VAMPIRE) {
+                    if (forward < 0) {
+                        dashAnim = "vm.bdash";
+                    } else {
+                        dashAnim = "vm.dash";
+                    }
+                }
+                for (ServerPlayer recipient : JUtils.around((ServerLevel) entity.level(), entity.position(), 96)) {
+                    PlayerAnimPacket.send(player, recipient, dashAnim);
+                }
             }
         }
     }

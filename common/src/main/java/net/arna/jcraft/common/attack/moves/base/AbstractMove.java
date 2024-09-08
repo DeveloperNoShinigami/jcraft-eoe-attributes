@@ -404,6 +404,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
         // TODO convert these to actual tests
         // THATS TOO BAD!
+        // lmao
         if (!JPlatformUtils.isDevelopmentEnvironment()) {
             return;
         }

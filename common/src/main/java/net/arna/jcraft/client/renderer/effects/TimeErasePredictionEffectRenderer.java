@@ -142,10 +142,15 @@ public class TimeErasePredictionEffectRenderer {
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
         final float r = 1, g = 0, b = 0, a = 0.33f;
-        buffer.vertex(0, 0, 0).color(r, g, b, a).uv(0, 1).endVertex();
-        buffer.vertex(window.getGuiScaledWidth(), 0, 0).color(r, g, b, a).uv(1, 1).endVertex();
-        buffer.vertex(window.getGuiScaledWidth(), window.getGuiScaledHeight(), 0).color(r, g, b, a).uv(1, 0).endVertex();
-        buffer.vertex(0, window.getGuiScaledHeight(), 0).color(r, g, b, a).uv(0, 0).endVertex();
+
+        final double width = window.getScreenWidth();
+        final double height = window.getScreenHeight();
+
+        buffer.vertex(-width, -height, 0).color(r, g, b, a).uv(0, 0).endVertex();
+        buffer.vertex(width, -height, 0).color(r, g, b, a).uv(1, 0).endVertex();
+        buffer.vertex(width, height, 0).color(r, g, b, a).uv(1, 1).endVertex();
+        buffer.vertex(-width, height, 0).color(r, g, b, a).uv(0, 1).endVertex();
+
         BufferUploader.drawWithShader(buffer.end());
 
         RenderSystem.disableBlend();

@@ -10,6 +10,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.horus.HorusBarrageAttack;
 import net.arna.jcraft.common.attack.moves.horus.HorusDivekickAttack;
+import net.arna.jcraft.common.attack.moves.shared.EffectInflictingAttack;
 import net.arna.jcraft.common.attack.moves.shared.HoldableMove;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -19,19 +20,25 @@ import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JParticleType;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -166,11 +173,36 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             )
             .markRanged()
             .withAction(HorusEntity::placeIceBranch);
+    public static final EffectInflictingAttack<HorusEntity> PERFECT_FREEZE = new EffectInflictingAttack<HorusEntity>(50 * 20,
+            14, 30, 0f, 4f, 10, 2.5f, 0.3f, 0,
+            List.of(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 0, false, true))
+    )
+            .withInfo(
+                    Component.literal("Perfect Freeze"),
+                    Component.literal("""
+                            freezes all nearby enemies
+                            summons 3 ice branches to chase opponents
+                            stops all nearby projectiles""")
+            )
+            .withAction(HorusEntity::perfectFreeze);
 
-    private static void placeIceBranch(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
+    private static void perfectFreeze(HorusEntity attacker, LivingEntity livingEntity, MoveContext context, Set<LivingEntity> livingEntities) {
+        final int NUM_BRANCHES = 3;
+        for (int i = 0; i < NUM_BRANCHES; i++) {
+            IceBranchProjectile iceBranch = placeIceBranch(attacker, livingEntity, context, livingEntities);
+            iceBranch.setYRot(iceBranch.getYRot() + (360.0F * i) / NUM_BRANCHES);
+        }
+        attacker.level().getEntitiesOfClass(Projectile.class, attacker.getBoundingBox().inflate(5.0)).forEach(
+                p -> JUtils.setVelocity(p, 0, 0, 0)
+        );
+        JCraft.createParticle((ServerLevel) attacker.level(), attacker.getX(), attacker.getY(), attacker.getZ(), JParticleType.FLASH);
+    }
+
+    private static IceBranchProjectile placeIceBranch(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
         IceBranchProjectile iceBranchProjectile = new IceBranchProjectile(attacker.level(), user, 0);
         iceBranchProjectile.moveTo(attacker.getX(), attacker.getY(), attacker.getZ(), -attacker.getYRot() + 180, -attacker.getXRot());
         attacker.level().addFreshEntity(iceBranchProjectile);
+        return iceBranchProjectile;
     }
 
     public HorusEntity(Level world) {
@@ -208,6 +240,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         moves.register(MoveType.SPECIAL1, SCATTER, State.SCATTER);
         moves.register(MoveType.SPECIAL2, CHARGE_ICICLE, State.CHARGE_ICICLE);
         moves.register(MoveType.SPECIAL3, PLACE, State.PLACE);
+
+        moves.register(MoveType.ULTIMATE, PERFECT_FREEZE, State.ULTIMATE);
 
         moves.register(MoveType.UTILITY, DIVEKICK, State.DIVEKICK);
     }
@@ -360,6 +394,21 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             getZ() + direction.z,
                             0, 0, 0
                     );
+                } else if (getState() == State.ULTIMATE && getMoveStun() == PERFECT_FREEZE.getWindupPoint()) {
+                    for (int i = 0; i < 64; i++) {
+                        level().addParticle(ParticleTypes.SNOWFLAKE,
+                                getX() + random.nextGaussian(),
+                                getY() + random.nextGaussian(),
+                                getZ() + random.nextGaussian(),
+                                random.nextGaussian(), random.nextGaussian(), random.nextGaussian()
+                        );
+                        level().addParticle(random.nextBoolean() ? ParticleTypes.SPIT : LargeIcicleProjectile.ICE_PARTICLE,
+                                getX() + random.nextGaussian(),
+                                getY() + random.nextGaussian(),
+                                getZ() + random.nextGaussian(),
+                                random.nextGaussian(), random.nextGaussian(), random.nextGaussian()
+                        );
+                    }
                 }
             } else if (curMove != null) {
                 if (curMove.getOriginalMove() == CHARGE_ICICLE) icicleChargeTime++;
@@ -390,11 +439,12 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         CHARGE_ICICLE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.charge_icicle"))),
         CHARGE_FIRE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.charge_fire"))),
         PLACE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.place"))),
+        ULTIMATE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.ultimate"))),
         ;
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<HorusEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<HorusEntity>> animator) {
             this.animator = animator;
         }
 

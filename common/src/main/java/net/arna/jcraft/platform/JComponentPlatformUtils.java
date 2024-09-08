@@ -29,7 +29,7 @@ public class JComponentPlatformUtils {
     }
 
     @ExpectPlatform
-    public static CommonSpecComponent getSpecData(Player player) {
+    public static CommonSpecComponent getSpecData(LivingEntity livingEntity) {
         throw new AssertionError();
     }
 

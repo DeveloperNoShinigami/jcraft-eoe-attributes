@@ -7,12 +7,10 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.raid.Raids;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -98,12 +96,10 @@ public class JTagProviders {
             canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE_VILLAGER));
             canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.HUSK));
 
-            //todo: replace with single append of #minecraft:skeletons
             canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.SKELETON));
             canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WITHER_SKELETON));
             canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.STRAY));
 
-            //todo: replace with single append of #minecraft:raiders
             canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.VINDICATOR));
             canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.EVOKER));
             canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PILLAGER));

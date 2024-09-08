@@ -43,7 +43,6 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
 
         super.perform(attacker, user, ctx).stream().findFirst().ifPresent(
                 (target) -> {
-                    //todo: a wider approach to disabling stands or certain entity types from having stands?
                     if (target instanceof StandEntity<?,?>) return;
 
                     StandType itemStand = null;

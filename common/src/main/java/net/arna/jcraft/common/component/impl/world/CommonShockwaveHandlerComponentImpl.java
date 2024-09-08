@@ -100,7 +100,6 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
     }
 
     public void tick() {
-        //todo: client ticking of shockwaves
         for (int i = 0; i < shockwaves.size(); i++) {
             Shockwave shockwave = shockwaves.get(i);
             shockwave.tick();

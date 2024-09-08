@@ -7,16 +7,16 @@ import net.arna.jcraft.common.spec.SpecType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
-    private final Player player;
+    protected final LivingEntity user;
     private SpecType type = SpecType.NONE;
     private JSpec<?, ?> spec;
 
-    public CommonSpecComponentImpl(Player player) {
-        this.player = player;
+    public CommonSpecComponentImpl(LivingEntity livingEntity) {
+        this.user = livingEntity;
     }
 
     @Override
@@ -27,12 +27,12 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     @Override
     public void setType(@NonNull SpecType type) {
         setTypeRaw(type);
-        sync(player);
+        sync(user);
     }
 
     private void setTypeRaw(SpecType type) {
         this.type = type;
-        spec = type.createNew(player);
+        spec = type.createNew(user);
     }
 
     @Nullable
@@ -53,6 +53,6 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     }
 
     public boolean shouldSyncWith(ServerPlayer player) {
-        return player == this.player; // Only our player needs to know, I believe.
+        return player == this.user; // Only our player needs to know.
     }
 }
