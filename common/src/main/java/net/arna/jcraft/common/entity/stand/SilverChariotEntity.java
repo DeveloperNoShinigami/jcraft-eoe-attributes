@@ -381,7 +381,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         }
 
         // getOffHandStack() must be an AnubisItem
-        boolean hasAnubis = getOffhandItem().is(JItemRegistry.ANUBIS.get()) || user.getMainHandItem().getItem() == JItemRegistry.ANUBIS;
+        boolean hasAnubis = getOffhandItem().is(JItemRegistry.ANUBIS.get()) || user.getMainHandItem().getItem() == JItemRegistry.ANUBIS.get();
 
         if (user instanceof Player player) {
             hasAnubis |= player.getInventory().contains(JItemRegistry.ANUBIS.get().getDefaultInstance());

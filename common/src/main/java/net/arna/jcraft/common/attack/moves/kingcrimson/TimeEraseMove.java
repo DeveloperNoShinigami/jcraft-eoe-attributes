@@ -130,7 +130,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
         if (teTime > 0) {
             attacker.setTETime(--teTime);
 
-            if (attacker.blocking || attacker.curMove != null && attacker.getMoveStun() < attacker.curMove.getWindupPoint() * 2 / 3) {
+            if (attacker.blocking || attacker.curMove != null && attacker.getMoveStun() < attacker.curMove.getWindupPoint() * 3 / 2) {
                 attacker.cancelTE();
             }
 

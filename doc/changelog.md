@@ -60,15 +60,10 @@
 
 
 * KC epitaph prediction model rendering has the wrong scale
-* * KC epitaph overlay doesn't render
-    `  [16:27:24] [Netty Local Client IO #0/ERROR] [de.ar.ne.fo.NetworkManagerImpl/]: Unknown message ID: jcraft:epth`
 
 
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by invisible ent)
 * To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
-
-
-* Stand User Enemies that spawn with Silver Chariot + Anubis do not take on the Anubis SC form
 
 
 * MR's Red Bind particles dont render in the right orientation when under different gravities
@@ -86,9 +81,6 @@
 #### Forge
 * Stand users rapidly resummon - caused by multiple Capabilities on one entity
 * * NOT to be confused with server/client split, both of the caps are serverside.
-
-
-* KC Time Erase renders better than fabric, though it doesn't play the exit noise
 
 
 * The Sun starts tweaking out when moved out of and back into entity processing distance

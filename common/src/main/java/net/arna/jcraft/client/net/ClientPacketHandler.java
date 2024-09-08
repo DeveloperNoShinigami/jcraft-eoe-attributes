@@ -476,13 +476,15 @@ public class ClientPacketHandler {
         }
     }
 
-    public static void handleEpitaphOverlayState(FriendlyByteBuf buf) {
+    public static void handleEpitaphOverlayState(@NotNull Minecraft client, FriendlyByteBuf buf) {
         boolean start = buf.readBoolean();
-        if (start) {
-            EpitaphOverlay.start();
-        } else {
-            EpitaphOverlay.stop();
-        }
+        client.execute(() -> {
+            if (start) {
+                EpitaphOverlay.start();
+            } else {
+                EpitaphOverlay.stop();
+            }
+        });
     }
 
     public static void handlePredictionState(@NotNull Minecraft client, FriendlyByteBuf buf) {
