@@ -2,7 +2,6 @@ package net.arna.jcraft.mixin;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
-import net.arna.jcraft.common.recipes.StandSkinSmithingRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -31,12 +30,12 @@ public class RecipeManagerMixin {
     private void addStandSkinSmithingRecipe(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
         recipes = new HashMap<>(recipes);
         Map<ResourceLocation, Recipe<?>> smithingRecipes = new HashMap<>(recipes.getOrDefault(RecipeType.SMITHING, Map.of()));
-        smithingRecipes.put(StandSkinSmithingRecipe.ID, StandSkinSmithingRecipe.INSTANCE);
+//        smithingRecipes.put(StandSkinSmithingRecipe.ID, StandSkinSmithingRecipe.INSTANCE);
         recipes.put(RecipeType.SMITHING, ImmutableMap.copyOf(smithingRecipes));
         recipes = ImmutableMap.copyOf(recipes);
 
         byName = new HashMap<>(byName);
-        byName.put(StandSkinSmithingRecipe.ID, StandSkinSmithingRecipe.INSTANCE);
+//        byName.put(StandSkinSmithingRecipe.ID, StandSkinSmithingRecipe.INSTANCE);
         byName = ImmutableMap.copyOf(byName);
     }
 }
