@@ -38,7 +38,7 @@
     "client.gravity.PlayerEntityRendererMixin"
   ],
   "mixins": [
-    "AnvilScreenHandlerMixin",
+    "AnvilMenuMixin",
     "BedBlockMixin",
     "ChunkLightProviderAccessor",
     "EndCrystalEntityMixin",
@@ -59,7 +59,6 @@
     "NetherPortalBlockMixin",
     "PersistentEntitySectionManagerMixin",
     "PlayerEntityMixin",
-    "RecipeManagerMixin",
     "RespawnAnchorBlockMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
