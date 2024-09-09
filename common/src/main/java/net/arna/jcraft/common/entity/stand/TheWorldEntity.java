@@ -66,7 +66,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
                     Component.literal("fast reliable combo starter/extender, high stun")
             );
     public static final SimpleAttack<TheWorldEntity> SWEEP = new SimpleAttack<TheWorldEntity>(40, 6, 16, 0.75f, 5f,
-            16, 1.85f, 0.25f, 0.4f)
+            16, 1.85f, 0.5f, 0.4f)
             .withSound(JSoundRegistry.TW_KICK.get())
             .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
@@ -76,7 +76,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
                     Component.literal("fast, decent stun")
             );
     public static final UppercutAttack<TheWorldEntity> ROUNDHOUSE = new UppercutAttack<TheWorldEntity>(20, 7, 13, 0.75f, 5f,
-            10, 1.75f, 0.25f, -0.2f, 0.4f)
+            10, 1.75f, 0.5f, -0.2f, 0.4f)
             .withCrouchingVariant(SWEEP)
             .withSound(JSoundRegistry.TW_KICK.get())
             .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())

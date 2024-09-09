@@ -67,6 +67,7 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
                 if (!attacker.level().loadedAndEntityCanStandOn(BlockPos.containing(newPos), grabbed)) {
                     grabbed.setPos(newPos);
                 }
+                grabbed.setDeltaMovement(Vec3.ZERO);
             } else {
                 endGrab();
             }

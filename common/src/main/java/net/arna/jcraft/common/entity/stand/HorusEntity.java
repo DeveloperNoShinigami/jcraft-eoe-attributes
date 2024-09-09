@@ -156,11 +156,11 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     public static final HoldableMove<HorusEntity, State> CHARGE_ICICLE = new HoldableMove<>(
             100, MAX_ICICLE_CHARGE_TIME + 1, MAX_ICICLE_CHARGE_TIME, 0.75f, CHARGE_FIRE, State.CHARGE_FIRE, 9)
             .withInitAction((attacker, user, ctx) -> attacker.icicleChargeTime = 0)
-            .withArmor(1)
+            .withArmor(3)
             .withInfo(
                     Component.literal("Icicle Charge"),
                     Component.literal("""
-                            1 armor point
+                            3 armor points while charging
                             Can be held, and released 0.45s in.
                             If charged fully, attack becomes unblockable and launches far."""
                     ));
@@ -207,6 +207,9 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
 
     public HorusEntity(Level world) {
         super(StandType.HORUS, world);
+
+        proCount = 2;
+        conCount = 2;
 
         freespace = """
                 BNBs:

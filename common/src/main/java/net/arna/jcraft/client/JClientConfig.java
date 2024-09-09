@@ -1,14 +1,11 @@
 package net.arna.jcraft.client;
 
-import dev.architectury.networking.NetworkManager;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.network.c2s.PredictionTriggerPacket;
-import net.arna.jcraft.registry.JPacketRegistry;
 
 // Annotations to use here: https://shedaniel.gitbook.io/cloth-config/auto-config/annotations
 @SuppressWarnings("FieldMayBeFinal")
@@ -30,12 +27,12 @@ public class JClientConfig implements ConfigData {
         instance = AutoConfig.getConfigHolder(JClientConfig.class).getConfig();
     }
 
+    /*
     public void setClientsidePrediction(boolean clientsidePrediction) {
         this.clientsidePrediction = clientsidePrediction;
-
-        NetworkManager.sendToServer(JPacketRegistry.C2S_PREDICTION_TRIGGER,
-                PredictionTriggerPacket.write(clientsidePrediction));
+        NetworkManager.sendToServer(JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket.write(clientsidePrediction));
     }
+     */
 
     public enum UIPos {
         LEFT,

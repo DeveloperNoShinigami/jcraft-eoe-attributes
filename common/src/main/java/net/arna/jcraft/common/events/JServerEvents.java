@@ -14,7 +14,6 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.MockItem;
-import net.arna.jcraft.common.network.c2s.PredictionTriggerPacket;
 import net.arna.jcraft.common.network.s2c.PredictionUpdatePacket;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.tickable.*;
@@ -23,11 +22,7 @@ import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.common.util.EntityInterest;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JBlockRegistry;
-import net.arna.jcraft.registry.JDimensionRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
-import net.arna.jcraft.registry.JStatusRegistry;
-import net.arna.jcraft.registry.JTagRegistry;
+import net.arna.jcraft.registry.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -38,17 +33,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Tuple;
-
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -107,28 +97,9 @@ public class JServerEvents {
         Revivables.tick(server);
         JEnemies.tick(server);
         // Positional prediction logic for players that want a more current look at where their enemies are, at the cost of smoothness
-        PredictionTriggerPacket.getSubscribers().forEach(
-                subscriber -> {
-                    int adjustedPing = subscriber.latency;
-                    if (adjustedPing > MAX_COMPENSATION_MS) {
-                        adjustedPing = MAX_COMPENSATION_MS;
-                    }
-                    double pingTicks = adjustedPing * MS_TO_TICKS;
-
-                    Set<Tuple<Integer, Vec3>> idPosPairs = JUtils.around((ServerLevel) subscriber.level(), subscriber.position(), PREDICTION_RADIUS)
-                            .stream()
-                            .filter(serverPlayer -> serverPlayer != subscriber)
-                            .map(
-                                    serverPlayer -> {
-                                        // This will likely need extension
-                                        Vec3 predictedDeltaPos = JUtils.deltaPos(serverPlayer).scale(pingTicks);
-                                        return new Tuple<>(serverPlayer.getId(), serverPlayer.position().add(predictedDeltaPos));
-                                    }
-                            ).collect(Collectors.toSet());
-
-                    PredictionUpdatePacket.send(subscriber, idPosPairs);
-                }
-        );
+        //PredictionTriggerPacket.getSubscribers().forEach(JServerEvents::sendPredictionPacket);
+        //todo: run clientside prediction logic ON THE CLIENT (lol)
+        //      basically, just account for ping and deltaPos and project that position to the player
 
         // Player logic (cooldown handling and DamageTimer counting)
         for (ServerPlayer player : JUtils.all(server)) {
@@ -583,5 +554,26 @@ public class JServerEvents {
                 serverWorld.setBlockAndUpdate(sleepingPos, state.setValue(CoffinBlock.OCCUPIED, false));
             }
         }
+    }
+
+    private static void sendPredictionPacket(ServerPlayer subscriber) {
+        int adjustedPing = subscriber.latency;
+        if (adjustedPing > MAX_COMPENSATION_MS) {
+            adjustedPing = MAX_COMPENSATION_MS;
+        }
+        double pingTicks = adjustedPing * MS_TO_TICKS;
+
+        Set<Tuple<Integer, Vec3>> idPosPairs = JUtils.around((ServerLevel) subscriber.level(), subscriber.position(), PREDICTION_RADIUS)
+                .stream()
+                .filter(serverPlayer -> serverPlayer != subscriber)
+                .map(
+                        serverPlayer -> {
+                            // This will likely need extension
+                            Vec3 predictedDeltaPos = JUtils.deltaPos(serverPlayer).scale(pingTicks);
+                            return new Tuple<>(serverPlayer.getId(), serverPlayer.position().add(predictedDeltaPos));
+                        }
+                ).collect(Collectors.toSet());
+
+        PredictionUpdatePacket.send(subscriber, idPosPairs);
     }
 }

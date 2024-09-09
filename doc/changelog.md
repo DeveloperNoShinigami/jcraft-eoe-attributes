@@ -13,7 +13,7 @@
 * added Polished Meteorite Block
 * added Hot Sand (like Sand and Magma combined)
 * added Stellar Iron Block (crafted from Stellar Iron Ingot)
-* added Green Cindarella Block (based on Green Terracotta)
+* added Green Cinderella Block (based on Green Terracotta)
 * added Soul Wood (currently unobtainable)
 * added Pucci's hat (protects from the sun)
 * added Prison Key, Plankton Vial, Shiv (currently unobtainable)
@@ -25,10 +25,12 @@
 * improved texture and recipe for Green Baby
 * DIO's Diary can now be put into chiseled bookshelves
 * Skins now transfer between evolutions
+* Cinderella's Masks are now applied in the anvil
 #### Generation
 * meteorites can now also be found in Ice Spikes Biome
 * added Devil's Palm Biome
 #### NPCs & Stands
+* **added Horus and Shadow The World**
 * added Petshop, Aya Tsuji and the D'Arby brothers as NPCs (currently unobtainable except via spawn eggs) and added their stands (Horus, Cinderella, Osiris and Atum) as well, with only Horus being obtainable
 * added Silver Chariot Requiem (unobtainable)
 * added custom icons for Hierophant Green and Purple Haze
@@ -36,6 +38,7 @@
 ##### Magician's Red
 * Crossfire cooldown lowered (12 -> 5s)
 #### Miscellaneous
+* added /jcraft help
 * reordered Creative Inventory Tab
 * additionally sorted JCraft items into Vanilla Creative Inventory Tabs
 * Recipe Advancements added for (almost) all recipes
@@ -56,6 +59,9 @@
 * Timestop doesnt stop animated textures
 
 
+* Bloodsuck doesnt properly keep players in place (TESTING FIX)
+
+
 * KC epitaph prediction model rendering has the wrong scale
 
 
@@ -71,21 +77,20 @@
     Laser eyes will charge for too long (to completion)
 
 
-* Getting stand skins is no longer possible due to Smithing Table rework
-
-
-* Water transparency changes when the player hovers over a block (SEEMINGLY FIXED)
+###### Water transparency changes when the player hovers over a block (SEEMINGLY FIXED)
+#### Fabric
+* Falling onto a block in altered gravity (+X, -Z, -Y), instantly kills you
 #### Forge
-* Stand users rapidly resummon - caused by multiple Capabilities on one entity
-* * NOT to be confused with server/client split, both of the caps are serverside.
+* Stand users can occasionally get multiple stand capabilities?
 
 
-* The Sun starts tweaking out when moved out of and back into entity processing distance
+* KC Epitaph doesn't render Diavolo's hair overlay
 
 
-* changing the velocity of a projectile doesn't mark it as dirty which causes teleports for shit like Magician's Special 1 into crouching m1 (redirect)
+* The client doesn't register The Sun as it's stand if moved out of and into render distance
 
 
 #### todo :)
+* METALLICA
 * Internationalization
 * Actually use effect keyframes in animations

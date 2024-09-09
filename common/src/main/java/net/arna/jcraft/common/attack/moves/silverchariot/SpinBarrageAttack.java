@@ -57,7 +57,7 @@ public final class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAt
             if (user instanceof ServerPlayer serverPlayer) {
                 serverPlayer.addItem(itemStack);
             } else {
-                user.setItemInHand(InteractionHand.MAIN_HAND, itemStack);
+                user.setItemInHand(InteractionHand.MAIN_HAND, itemStack.copy());
             }
             itemStack.shrink(1);
         }

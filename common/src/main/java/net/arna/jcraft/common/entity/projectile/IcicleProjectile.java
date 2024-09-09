@@ -122,11 +122,11 @@ public class IcicleProjectile extends AbstractArrow implements GeoEntity {
                                     .normalize()
                                     .scale(currentVelocity * 0.75)
                     );
+                    hurtMarked = true;
                 } else {
                     this.onHitBlock(blockHitResult);
                     BlockPos blockPos = blockHitResult.getBlockPos();
                     this.level().gameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Context.of(this, this.level().getBlockState(blockPos)));
-
                 }
             }
         } else {

@@ -74,7 +74,7 @@ public enum StandType {
     FOO_FIGHTERS(JEntityTypeRegistry.FOO_FIGHTERS.get(), FooFightersEntity::new, "foo_fighters", false, false),
     GOO_GOO_DOLLS(JEntityTypeRegistry.GOO_GOO_DOLLS.get(), GooGooDollsEntity::new, "goo_goo_dolls", false, false),
     SHADOW_THE_WORLD(JEntityTypeRegistry.SHADOW_THE_WORLD.get(), ShadowTheWorldEntity::new, "shadow_the_world",
-            Component.literal("Contrast"), Component.literal("Frost"), Component.literal("missing texture lol")),
+            Component.literal("Contrast"), Component.literal("Frost"), Component.literal("Predator")),
     ;
 
     /**

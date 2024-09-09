@@ -68,8 +68,21 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")
             );
+    public static final KnockdownAttack<ShadowTheWorldEntity> GUARD_CANCEL = new KnockdownAttack<ShadowTheWorldEntity>(7 * 20,
+            10, 16, 0.75f, 7f, 12, 1.75f, 2f, 0f, 25)
+            .withAnim(State.GUARD_CANCEL)
+            .withHyperArmor()
+            .withSound(JSoundRegistry.STW_WARBLE.get())
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
+            .withHitSpark(JParticleType.HIT_SPARK_3)
+            .withLaunch()
+            .withInfo(
+                    Component.literal("Shoulder Bash"),
+                    Component.literal("uninterruptible get-off-me tool, brief knockdown")
+            );
     public static final LungeAttack LUNGE = new LungeAttack(40, 14, 20, 0.75f,
             8f, 19, 1.6f, 2f, 0f, 10, 6)
+            .withCrouchingVariant(GUARD_CANCEL)
             .withSound(JSoundRegistry.STW_WARBLE.get())
             .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -153,7 +166,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         idleRotation = -45f;
 
         proCount = 5;
-        conCount = 3;
+        conCount = 4;
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.5f, 0.1f, 0.7f),
@@ -244,7 +257,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     @Override
     protected void registerMoves(MoveMap<ShadowTheWorldEntity, State> moves) {
         moves.registerImmediate(MoveType.LIGHT, LIGHT, State.LIGHT);
-        moves.register(MoveType.HEAVY, LUNGE, State.LUNGE);
+        moves.registerImmediate(MoveType.HEAVY, LUNGE, State.LUNGE);
         moves.register(MoveType.BARRAGE, THREE_HIT, State.THREE_HIT);
 
         moves.register(MoveType.SPECIAL1, COUNTER, State.COUNTER);
@@ -325,6 +338,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.light"))),
         BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.shadow_the_world.block"))),
         LUNGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.lunge"))),
+        GUARD_CANCEL(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.guard_cancel"))),
         THREE_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.3hit"))),
         IMPALING_THRUST_CHARGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.impaling_thrust_charge"))),
         IMPALING_THRUST_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.impaling_thrust_hit"))),
@@ -332,7 +346,8 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         CHARGE_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.charge_hit"))),
         UPPERCUT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.uppercut"))),
         COUNTER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.counter"))),
-        TIME_STOP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.timestop")));
+        TIME_STOP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.timestop"))),
+        ;
 
         private final BiConsumer<ShadowTheWorldEntity, AnimationState> animator;
 

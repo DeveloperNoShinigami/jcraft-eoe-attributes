@@ -15,7 +15,6 @@ import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
-import net.arna.jcraft.common.network.c2s.PredictionTriggerPacket;
 import net.arna.jcraft.common.network.c2s.StandBlockPacket;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -76,8 +75,7 @@ public class JClientEvents {
         }
 
         // Sync initial prediction option
-        NetworkManager.sendToServer(JPacketRegistry.C2S_PREDICTION_TRIGGER,
-                PredictionTriggerPacket.write(JClientConfig.getInstance().isClientsidePrediction()));
+        // NetworkManager.sendToServer(JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket.write(JClientConfig.getInstance().isClientsidePrediction()));
     }
 
     public static void renderHud(GuiGraphics ctx, float tickDelta) {

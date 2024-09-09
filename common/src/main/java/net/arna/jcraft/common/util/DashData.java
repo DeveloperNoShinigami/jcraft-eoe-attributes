@@ -76,14 +76,10 @@ public class DashData {
             JSpec<?, ?> spec = JUtils.getSpec(player);
 
             if (spec == null || spec.moveStun < 1) {
-                String dashAnim = "dash";
+                String dashAnim = forward >= 0 ? "dash" : "bdash";
                 if (spec != null) {
                     if (spec.getType() == SpecType.VAMPIRE) {
-                        if (forward < 0) {
-                            dashAnim = "vm.bdash";
-                        } else {
-                            dashAnim = "vm.dash";
-                        }
+                        dashAnim = "vm." + dashAnim;
                     }
                 }
                 for (ServerPlayer recipient : JUtils.around((ServerLevel) entity.level(), entity.position(), 96)) {

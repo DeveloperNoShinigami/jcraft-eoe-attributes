@@ -1,12 +1,8 @@
 package net.arna.jcraft.common.item;
 
-import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -40,10 +36,13 @@ public class DebugWand extends Item {
     public InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
 
+        /*
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 
         NetworkManager.sendToServer(JPacketRegistry.C2S_MENU_CALL, buf);
+         */
 
+        //JComponentPlatformUtils.getGrab(player).startGrab(player.level().getEntity(2166), 40, 0.4);
         if (player == null || context.getLevel().isClientSide) {
             return InteractionResult.PASS;
         }

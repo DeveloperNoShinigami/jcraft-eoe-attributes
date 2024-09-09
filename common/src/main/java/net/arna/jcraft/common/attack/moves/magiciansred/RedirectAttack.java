@@ -35,6 +35,7 @@ public final class RedirectAttack extends AbstractMove<RedirectAttack, Magicians
                 }
                 ankh.setVariation(false);
                 ankh.setDeltaMovement(pos.subtract(ankh.position()).normalize().scale(0.6));
+                ankh.hurtMarked = true;
             }
         }
 

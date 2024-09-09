@@ -1,7 +1,9 @@
 package net.arna.jcraft.common.attack.moves.theworld.overheaven;
 
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 
 public final class LungeAttack extends AbstractSimpleAttack<LungeAttack, StandEntity<?,?>> {
@@ -35,6 +37,10 @@ public final class LungeAttack extends AbstractSimpleAttack<LungeAttack, StandEn
         if (moveStun > endMoveStun && moveStun <= beginMoveStun) {
             withMoveDistance(getMoveDistance() + 0.15f);
         }
+    }
+
+    public LungeAttack withCrouchingVariant(KnockdownAttack<? extends StandEntity<?,?>> crouchingVariant) {
+        return super.withCrouchingVariant((AbstractMove<?, ? super StandEntity<?, ?>>)crouchingVariant);
     }
 
     @Override

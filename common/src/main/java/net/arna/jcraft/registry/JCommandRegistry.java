@@ -19,5 +19,6 @@ public interface JCommandRegistry {
         StandBlockCommand.register(dispatcher);
         GravityCommand.register(dispatcher);
         JConfigCommand.register(dispatcher);
+        JCraftHelpCommand.register(dispatcher);
     }
 }

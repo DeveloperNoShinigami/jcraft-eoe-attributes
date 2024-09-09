@@ -1360,15 +1360,18 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     @Override
     public void stopRiding() {
+        if (tickCount == 0) {
+            // This may be necessary because the packet that sets passengers arrives early on Forge
+            JCraft.LOGGER.warn("Prevented stopRiding() call for recently created " + this);
+            return;
+        }
         if (getVehicle() == null) {
             return;
         }
-
         super.stopRiding();
         if (isRemote() || level().isClientSide) {
             return;
         }
-
         if (playDesummonSound) {
             playSound(JSoundRegistry.STAND_DESUMMON.get(), 1, 1);
         }

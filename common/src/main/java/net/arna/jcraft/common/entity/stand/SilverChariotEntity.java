@@ -390,6 +390,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                 player.addItem(getOffhandItem());
                 getOffhandItem().shrink(1);
             }
+        } else if (!hasRapier() && random.nextFloat() < 0.1f) {
+            desummon();
         }
 
         if (hasAnubis && mode != Mode.POSSESSED) {
