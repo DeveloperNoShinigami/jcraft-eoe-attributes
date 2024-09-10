@@ -10,9 +10,11 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.Set;
 
 import static net.minecraft.world.level.block.Block.getId;
@@ -32,8 +34,9 @@ public final class BlockBreakingAttack extends AbstractSimpleAttack<BlockBreakin
                     for (int z = -1; z < 2; z++) {
                         BlockPos curPos = bPos.offset(x, y, z);
                         BlockState curState = world.getBlockState(curPos);
-
-                        if (curState.getBlock().getExplosionResistance() > 10f || curState.isAir()) {
+                        Block block = curState.getBlock();
+                        
+                        if (block.defaultDestroyTime() < 0 || block.getExplosionResistance() > 10f || curState.isAir()) {
                             continue;
                         }
 

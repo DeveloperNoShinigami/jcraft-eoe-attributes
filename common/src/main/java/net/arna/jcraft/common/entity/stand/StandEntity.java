@@ -55,6 +55,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.JumpControl;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
@@ -882,7 +883,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (tickCount == 1) {
             playSummonSound();
         }
-        boolean client = level().isClientSide;
+        final boolean client = level().isClientSide;
         prevAlpha = getAlphaOverride();
 
         int moveStun = getMoveStun();
@@ -893,8 +894,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             playSummonAnim = false;
         }
 
-        boolean isFree = isFree();
-        boolean isRemote = isRemote();
+        final boolean isFree = isFree();
+        final boolean isRemote = isRemote();
 
         if (!hasUser()) {
             if (!client && !isFree && !isRemote) {
@@ -971,7 +972,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 }
             }
 
-            boolean isRemoteAndControllable = isRemote && remoteControllable();
+            final boolean isRemoteAndControllable = isRemote && remoteControllable();
 
             // Rotate with user (provided user controls the stand)
             if (!isFree || isRemoteAndControllable) {
@@ -996,10 +997,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 }
 
                 if (moveStun >= 0 && !blocking) {
-                    float attackDist = move.getMoveDistance();
+                    final float attackDist = move.getMoveDistance();
 
                     if (!move.isCharge()) {
                         if (!isRemote) {
+                            // TODO: find a cleaner way to slow down the users attack speed
                             user.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 5, 4, true, false));
                         }
 
@@ -1019,20 +1021,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             if (moveStun <= 0 && !blocking) {
                 // Attack buffering
                 if (queuedMove != null) {
-                    if (queuedMove == MoveInputType.STAND_SUMMON) {
-                        curMove = null;
-                        desummon();
-                    } else {
-                        if (userPlayer != null && canHoldMove(queuedMove)) {
-                            setHolding(PlayerInputPacket.getInputStateManager(userPlayer).heldInputs.containsKey(queuedMove));
-                            if (isHolding()) {
-                                setHoldingType(queuedMove);
-                            }
-                        }
-                        initMove(queuedMove.getMoveType());
-                    }
-
-                    queuedMove = null;
+                    doQueuedMove(userPlayer);
                 } else if (!idleOverride) {
                     // Process idle
                     curMove = null;
@@ -1076,6 +1065,23 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         {
             prevMove = curMove;
         }
+    }
+
+    protected void doQueuedMove(@Nullable ServerPlayer userPlayer) {
+        if (queuedMove == MoveInputType.STAND_SUMMON) {
+            curMove = null;
+            desummon();
+        } else {
+            if (userPlayer != null && canHoldMove(queuedMove)) {
+                setHolding(PlayerInputPacket.getInputStateManager(userPlayer).heldInputs.containsKey(queuedMove));
+                if (isHolding()) {
+                    setHoldingType(queuedMove);
+                }
+            }
+            initMove(queuedMove.getMoveType());
+        }
+
+        queuedMove = null;
     }
 
     public void tryBlock() {
@@ -1487,32 +1493,32 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
     private static final double sideswitchDistance = 1.25;
     /**
-     * Handles movement, stand control, system mechanic control for Stand user mobs while they have a target.
+     * Handles movement, stand control, system mechanic control for Stand User mobs while they have a target.
+     * General-purpose, and should be specialized to allow the AIs better control of their stands.
      */
     public static void standUserCombatAI(Mob mob, LivingEntity target, StandEntity<?, ?> stand) {
         if (mob == target || !JUtils.canDamage(JDamageSources.stand(stand), target)) {
             return;
         }
 
-        JumpControl mobJumpControl = mob.getJumpControl();
+        final JumpControl mobJumpControl = mob.getJumpControl();
+        final MoveControl mobMoveControl = mob.getMoveControl();
 
         mob.lookAt(target, 30, 30); // Point body at enemy
         mob.getLookControl().setLookAt(target); // Usually detrimental not to
 
-        JSpec<?, ?> enemySpec;
+        final JSpec<?, ?> enemySpec;
         StandEntity<?, ?> enemyStand = JUtils.getStand(target);
         if (enemyStand == stand) // Stands that attack their users would tweak tf out otherwise
         {
             enemyStand = null;
         }
         AbstractMove<?, ?> enemyAttack = null;
-        boolean enemyHasStand = enemyStand != null;
+        final boolean enemyHasStand = enemyStand != null;
 
         double distance = target.distanceTo(mob);
         int enemyMoveStun = 0;
         int blockPlusTicks = 0;
-
-        boolean wantToBlock = stand.wantToBlock;
 
         // Get enemy stand attack (most common)
         if (enemyHasStand) {
@@ -1538,38 +1544,174 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             }
         }
 
-        // Blocking logic
-        if (enemyAttack != null && enemyMoveStun > 0) { // Only block if the attack is actually active
-            // Block regardless of range if the attack is ranged, or is a barrage
-            if (enemyAttack.isRanged() || enemyAttack instanceof AbstractBarrageAttack<?, ?>) {
-                wantToBlock = true;
-            }
-            // Block if the attack isn't ranged, but is within hitting distance, and doesn't block break/bypass
-            if (enemyAttack instanceof AbstractSimpleAttack<?, ?> simpleEnemyAttack &&
-                    enemyAttack.getMoveDistance() + simpleEnemyAttack.getHitboxSize() * 0.66 > distance &&
-                    simpleEnemyAttack.getDamage() * 2 < stand.getStandGauge() && !simpleEnemyAttack.getBlockableType().isNonBlockable()) {
-                wantToBlock = true;
+        boolean wantToBlock = stand.doAutoBlocking(mob, enemyAttack, enemyHasStand, distance, enemyMoveStun);
+        stand.wantToBlock = wantToBlock;
+
+        if (wantToBlock) {
+            if (!stand.blocking && stand.canAttack() && !DashData.isDashing(mob)) {
+                stand.tryBlock();
             }
         } else {
-            wantToBlock = false;
+            stand.blocking = false;
         }
 
-        if (!enemyHasStand) { // Blocking logic against standless opponents
-            CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(mob);
-            if (cooldowns.getCooldown(CooldownType.DASH) > 0) // Careful approach
-            {
-                wantToBlock = distance > 2 && distance < 5; // Block at range <2, 5>
-            } else {
-                wantToBlock = false;
+        final MobEffectInstance mobStun = mob.getEffect(JStatusRegistry.DAZED.get());
+        // If stunned, and about to get hit by another move, Combo Break occasionally
+        if (mobStun != null) {
+            if (!stand.blocking && enemyAttack != null && enemyMoveStun > enemyAttack.getWindup() && stand.random.nextFloat() < 0.1f) {
+                comboBreak((ServerLevel) stand.level(), mob, mobStun);
             }
         }
 
+        // Movement towards/away from target
+        PathNavigation entityNavigation = mob.getNavigation();
+        boolean evade = stand.doEvasion(entityNavigation, distance, enemyStand, enemyAttack);
+
+        if (!stand.blocking) {
+            final MobEffectInstance stun = target.getEffect(JStatusRegistry.DAZED.get());
+            // Overestimating stun up to 1/4 of a second for longer combos and frametraps
+            int stunTicks = stun != null ? stun.getDuration() + stand.random.nextInt(5) : 0;
+            stunTicks += blockPlusTicks;
+            if (JComponentPlatformUtils.getTimeStopData(target).isPresent()) {
+                stunTicks += JComponentPlatformUtils.getTimeStopData(target).get().getTicks();
+            }
+
+            Tuple<AbstractMove<?, ?>, Boolean> attackData = null;
+            // Only select or buffer attacks when necessary
+            if (stand.getMoveStun() <= 1) {
+                attackData = stand.doMoveSelection(mob, target, mobJumpControl, enemyStand, enemyAttack, distance, enemyMoveStun, stunTicks);
+            }
+
+            stand.doMovement(mob, mobJumpControl, mobMoveControl, enemyStand, enemyHasStand, distance, entityNavigation, evade, stunTicks, attackData);
+        } else if (stand.getMoveStun() > 4) { // blocking & movestun > 4 likely means the enemy made you block
+            // Don't buffer any attacks as you are minus and will DIE
+            stand.queuedMove = null;
+        }
+    }
+
+    /**
+     * Handles forward/backward movement of an AI Stand User.
+     * @return Whether the AI Stand User should evade
+     */
+    protected boolean doEvasion(PathNavigation entityNavigation, double distance, StandEntity<?,?> enemyStand, AbstractMove<?,?> enemyAttack) {
+        boolean evade = enemyAttack != null;
+        if ( // in range (to get hit)
+                (enemyAttack instanceof AbstractSimpleAttack<?, ?> simpleEnemyAttack && !enemyAttack.isRanged() &&
+                        distance < enemyAttack.getMoveDistance() + simpleEnemyAttack.getHitboxSize() * 1.5)
+        ) {
+            entityNavigation.setSpeedModifier(-0.25);
+        } else {
+            entityNavigation.setSpeedModifier(1.0);
+        }
+        return evade;
+    }
+
+    /**
+     * Handles strafing and dashing of an AI Stand User.
+     */
+    protected void doMovement(Mob mob, JumpControl mobJumpControl, MoveControl mobMoveControl, StandEntity<?, ?> enemyStand, boolean enemyHasStand,
+                              double distance, PathNavigation entityNavigation, boolean evade, int stunTicks, @Nullable Tuple<AbstractMove<?, ?>, Boolean> attackData) {
+        if (attackData != null) {
+            AbstractMove<?, ?> selectedAttack = attackData.getA();
+            if ( // in range (to attack)
+                    (selectedAttack instanceof AbstractSimpleAttack<?, ?> simpleAttack &&
+                            distance < selectedAttack.getMoveDistance() + simpleAttack.getHitboxSize() * 0.75)
+            ) {
+                entityNavigation.setSpeedModifier(0.25);
+            }
+        }
+
+        // Dash to target
+        BlockPos targetPos = entityNavigation.getTargetPos();
+        if (targetPos != null && mob.onGround() && distance > 1.5) {
+            DashData.tryDash(evade ? -1 : 1, evade ? this.random.nextInt(2) - 1 : 0, mob);
+        }
+
+        // Move away during combo to prevent point-blank misses
+        float sStrafe = Mth.sin(this.tickCount * 0.02f) / 3f;
+        if (stunTicks > 0) {
+            float back = -0.5f;
+            if (enemyHasStand && enemyStand.blocking) {
+                back = 0f;
+            }
+            mobMoveControl.strafe(back, sStrafe);
+        } else if (distance < sideswitchDistance * 8) { // Outside of combo, strafe or jump over if close
+            float fStrafe = 0f;
+
+            // Jump if extremely close to opponent in attempt to sideswitch
+            if (distance < sideswitchDistance) {
+                fStrafe = 1;
+                mobJumpControl.jump();
+            }
+
+            mobMoveControl.strafe(fStrafe, sStrafe);
+        }
+    }
+
+    /**
+     * @return A Tuple containing the selected move, and a boolean of whather the move is a crouching variant. Null if no selection.
+     */
+    protected @Nullable Tuple<AbstractMove<?, ?>, Boolean> doMoveSelection(
+            Mob mob, LivingEntity target, JumpControl mobJumpControl, StandEntity<?, ?> enemyStand,
+            AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {
+        // Ensures the cooldowns are read/written to the correct entity.
+        Tuple<AbstractMove<?, ?>, Boolean> selectedAttackData;
+        if (mob instanceof StandEntity<?, ?> standEntity && standEntity.hasUser()) {
+            selectedAttackData = this.selectAttack(
+                    JComponentPlatformUtils.getCooldowns(standEntity.getUser()),
+                    mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
+        } else {
+            selectedAttackData = this.selectAttack(
+                    JComponentPlatformUtils.getCooldowns(mob),
+                    mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
+        }
+
+        if (selectedAttackData != null) {
+            AbstractMove<?, ?> selectedAttack = selectedAttackData.getA();
+
+            if (selectedAttack != null) {
+                boolean shouldPerformMove = this.getMoveStun() < 1;
+
+                if (this.curMove != null && this.curMove.getFollowup() != null) {
+                    shouldPerformMove = true;
+                }
+
+                mob.setShiftKeyDown(selectedAttackData.getB());
+                if (selectedAttack.isAerialVariant()) {
+                    mobJumpControl.jump();
+                    mob.setOnGround(false);
+                }
+
+                if (shouldPerformMove) {
+                    //JCraft.LOGGER.info("Stand User AI: Performing attack " + selectedAttack);
+                    if (selectedAttack.getMoveType() == null) {
+                        JCraft.LOGGER.error("Attempting to use attack with unset MoveType: " + selectedAttack.getName().getString() + ", stand: " + this);
+                    } else {
+                        this.initMove(selectedAttack.getMoveType());
+                    }
+                } else {
+                    this.queueMove(MoveInputType.fromMoveType(selectedAttack.getMoveType()));
+                }
+            }
+        }
+        return selectedAttackData;
+    }
+
+    private boolean doAutoBlocking(Mob mob, AbstractMove<?,?> enemyAttack, boolean enemyHasStand, double distance, int enemyMoveStun) {
+        boolean wantToBlock = this.wantToBlock;
+        wantToBlock = this.doCombatBlocking(mob, enemyAttack, enemyHasStand, distance, enemyMoveStun, wantToBlock);
         // Block if falling or there are projectiles nearby
-        // 2 tick check interval is efficient because block doesn't run out by then, and finding entities is expensive
-        if (stand.tickCount % 2 == 0) {
-            List<Projectile> nearbyProjectiles = stand.level().getEntitiesOfClass(Projectile.class, mob.getBoundingBox().inflate(3), EntitySelector.ENTITY_STILL_ALIVE);
+        wantToBlock = this.doEnvironmentalBlocking(mob, wantToBlock);
+        //JCraft.LOGGER.info("Want to block: " + wantToBlock);
+        return wantToBlock;
+    }
+
+    protected boolean doEnvironmentalBlocking(Mob mob, boolean wantToBlock) {
+        // Finding entities is expensive
+        if (this.tickCount % 2 == 0) {
+            List<Projectile> nearbyProjectiles = level().getEntitiesOfClass(Projectile.class, mob.getBoundingBox().inflate(3), EntitySelector.ENTITY_STILL_ALIVE);
             boolean anyInAir = false;
-            Vec3 pos = stand.position();
+            Vec3 pos = this.position();
             for (Projectile projectile : nearbyProjectiles) {
                 if (projectile.getOwner() == mob) {
                     continue;
@@ -1588,128 +1730,36 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
         if (mob.fallDistance > 3) wantToBlock = true; // Block fall damage
 
-        //JCraft.LOGGER.info("Want to block: " + wantToBlock);
-        stand.wantToBlock = wantToBlock;
-        if (wantToBlock) {
-            if (!stand.blocking && stand.canAttack() && !DashData.isDashing(mob)) {
-                stand.tryBlock();
+        return wantToBlock;
+    }
+
+    protected boolean doCombatBlocking(Mob mob, AbstractMove<?, ?> enemyAttack, boolean enemyHasStand, double distance, int enemyMoveStun, boolean wantToBlock) {
+        // Blocking logic
+        if (enemyAttack != null && enemyMoveStun > 0) { // Only block if the attack is actually active
+            // Block regardless of range if the attack is ranged, or is a barrage
+            if (enemyAttack.isRanged() || enemyAttack instanceof AbstractBarrageAttack<?, ?>) {
+                wantToBlock = true;
+            }
+            // Otherwise block if within hitting distance, and the attack doesn't block break/bypass
+            if (enemyAttack instanceof AbstractSimpleAttack<?, ?> simpleEnemyAttack &&
+                    enemyAttack.getMoveDistance() + simpleEnemyAttack.getHitboxSize() * 0.66 > distance &&
+                    simpleEnemyAttack.getDamage() * 2 < this.getStandGauge() && !simpleEnemyAttack.getBlockableType().isNonBlockable()) {
+                wantToBlock = true;
             }
         } else {
-            stand.blocking = false;
+            wantToBlock = false;
         }
 
-        MobEffectInstance mobStun = mob.getEffect(JStatusRegistry.DAZED.get());
-        // If stunned, and about to get hit by another move, Combo Break occasionally
-        if (mobStun != null) {
-            if (!stand.blocking && enemyAttack != null && enemyMoveStun > enemyAttack.getWindup() && stand.random.nextFloat() < 0.1f) {
-                comboBreak((ServerLevel) stand.level(), mob, mobStun);
+        if (!enemyHasStand) { // Blocking logic against standless opponents
+            CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(mob);
+            if (cooldowns.getCooldown(CooldownType.DASH) > 0) // Careful approach
+            {
+                wantToBlock = distance > 2 && distance < 5; // Block at range <2, 5> (outside stand attack range, but in player/ravager attack range)
+            } else {
+                wantToBlock = false;
             }
         }
-
-        // Movement towards/away from target
-        PathNavigation entityNavigation = mob.getNavigation();
-        //if (entityNavigation.isDone() || distance < 2) entityNavigation.moveTo(target, 1.0);
-        boolean evade = enemyAttack != null;
-        if ( // in range (to get hit)
-                (enemyAttack instanceof AbstractSimpleAttack<?, ?> simpleEnemyAttack && !enemyAttack.isRanged() &&
-                        distance < enemyAttack.getMoveDistance() + simpleEnemyAttack.getHitboxSize() * 1.5)
-        ) {
-            entityNavigation.setSpeedModifier(-0.25);
-        } else {
-            entityNavigation.setSpeedModifier(1.0);
-        }
-
-        if (!stand.blocking) {
-            MobEffectInstance stun = target.getEffect(JStatusRegistry.DAZED.get());
-            // Overestimating stun up to 1/4 of a second for longer combos and frametraps
-            int stunTicks = stun != null ? stun.getDuration() + stand.random.nextInt(5) : 0;
-            stunTicks += blockPlusTicks;
-            if (JComponentPlatformUtils.getTimeStopData(target).isPresent()) {
-                stunTicks += JComponentPlatformUtils.getTimeStopData(target).get().getTicks();
-            }
-
-            // Only select or buffer attacks when necessary
-            if (stand.getMoveStun() <= 1) {
-                // Ensures the cooldowns are read/written to the correct entity.
-                Tuple<AbstractMove<?, ?>, Boolean> selectedAttackData;
-                if (mob instanceof StandEntity<?, ?> standEntity && standEntity.hasUser()) {
-                    selectedAttackData = stand.selectAttack(
-                            JComponentPlatformUtils.getCooldowns(standEntity.getUser()),
-                            mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
-                } else {
-                    selectedAttackData = stand.selectAttack(
-                            JComponentPlatformUtils.getCooldowns(mob),
-                            mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
-                }
-
-                if (selectedAttackData != null) {
-                    AbstractMove<?, ?> selectedAttack = selectedAttackData.getA();
-
-                    if (selectedAttack != null) {
-                        boolean shouldPerformMove = stand.getMoveStun() < 1;
-
-                        if (stand.curMove != null && stand.curMove.getFollowup() != null) {
-                            shouldPerformMove = true;
-                        }
-
-                        mob.setShiftKeyDown(selectedAttackData.getB());
-                        if (selectedAttack.isAerialVariant()) {
-                            mobJumpControl.jump();
-                            mob.setOnGround(false);
-                        }
-
-                        if (shouldPerformMove) {
-                            //JCraft.LOGGER.info("Stand User AI: Performing attack " + selectedAttack);
-                            if (selectedAttack.getMoveType() == null) {
-                                JCraft.LOGGER.error("Attempting to use attack with unset MoveType: " + selectedAttack.getName().getString() + ", stand: " + stand);
-                            } else {
-                                stand.initMove(selectedAttack.getMoveType());
-                            }
-                        } else {
-                            stand.queueMove(MoveInputType.fromMoveType(selectedAttack.getMoveType()));
-                        }
-
-                        if ( // in range (to attack)
-                                (selectedAttack instanceof AbstractSimpleAttack<?, ?> simpleAttack &&
-                                        distance < selectedAttack.getMoveDistance() + simpleAttack.getHitboxSize() * 0.75)
-                        ) {
-                            entityNavigation.setSpeedModifier(0.25);
-                        }
-                    }
-                }
-            }
-
-            // Dash to target
-            BlockPos targetPos = entityNavigation.getTargetPos();
-            if (targetPos != null && mob.onGround() && distance > 1.5) {
-                // todo: an out-of-combat version of this that dashes towards the targetted location
-                DashData.tryDash(evade ? -1 : 1, evade ? stand.random.nextInt(2) - 1 : 0, mob);
-            }
-
-            // Move away during combo to prevent point-blank misses
-            float sStrafe = Mth.sin(stand.tickCount * 0.02f) / 3f;
-            if (stunTicks > 0) {
-                float back = -0.5f;
-                if (enemyHasStand && enemyStand.blocking) {
-                    back = 0f;
-                }
-                mob.getMoveControl().strafe(back, sStrafe);
-            } else if (distance < sideswitchDistance * 8) { // Outside of combo, strafe or jump over if close
-                float fStrafe = 0f;
-
-                // Jump if extremely close to opponent in attempt to sideswitch
-                if (distance < sideswitchDistance) {
-                    fStrafe = 1;
-                    mobJumpControl.jump();
-                }
-
-                mob.getMoveControl().strafe(fStrafe, sStrafe);
-            }
-
-        } else if (stand.getMoveStun() > 4) { // blocking & movestun > 4 likely means the enemy made you block
-            // Don't buffer any attacks as you are minus and will DIE
-            stand.queuedMove = null;
-        }
+        return wantToBlock;
     }
 
     public void queueMove(MoveInputType type) {

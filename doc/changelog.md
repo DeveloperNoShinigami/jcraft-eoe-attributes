@@ -54,12 +54,17 @@
 * added docs for future technical changes
 ### Bug Fixes
 * Bug: Inventory disappeared instead of dropped when killed while being stunned
+### Unclear Bugs
+* Water transparency changes when the player hovers over a block (SEEMINGLY FIXED)
 ### Known Bugs
 #### Common
-* Timestop doesnt stop animated textures
+* Timestop doesn't stop animated textures
 
 
-* Bloodsuck doesnt properly keep players in place (TESTING FIX)
+* There is no fall damage while in altered gravity
+
+
+* Bloodsuck doesn't properly keep players in place (TESTING FIX)
 
 
 * KC epitaph prediction model rendering has the wrong scale
@@ -69,17 +74,12 @@
 * To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
 
 
-* MR's Red Bind particles dont render in the right orientation when under different gravities
+* MR's Red Bind particles don't render in the right orientation when under different gravities
 
 
 * There is still a way to get holdable moves to persist when they shouldn't
 * * With a decently precise input of vampire heavy -> buffered special 1, then going stand on and holding light
     Laser eyes will charge for too long (to completion)
-
-
-###### Water transparency changes when the player hovers over a block (SEEMINGLY FIXED)
-#### Fabric
-* Falling onto a block in altered gravity (+X, -Z, -Y), instantly kills you
 #### Forge
 * Stand users can occasionally get multiple stand capabilities?
 

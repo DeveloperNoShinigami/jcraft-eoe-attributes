@@ -100,12 +100,9 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
 
     @Override
     public void standEntityClientTick(StandEntity<?, ?> stand) {
-        LivingEntity user = stand.getUser();
-        if (user == null) {
-            return;
-        }
-
-        Minecraft client = Minecraft.getInstance();
+        // This won't be called if the stand has no user; see StandEntity#tick()
+        final LivingEntity user = stand.getUserOrThrow();
+        final Minecraft client = Minecraft.getInstance();
 
         // Stand Auras
         if (JClientConfig.getInstance().isStandAuras()) {
@@ -116,15 +113,21 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
                 return;
             }
 
-            boolean isFP = client.options.getCameraType().isFirstPerson();
-            boolean isOwnerAndFP = user == client.player && isFP;
+            final boolean isFP = client.options.getCameraType().isFirstPerson();
+            final boolean isOwnerAndFP = user == client.player && isFP;
 
-            ClientLevel clientWorld = (ClientLevel) stand.level();
-            RandomSource random = clientWorld.getRandom();
+            final ClientLevel clientWorld = (ClientLevel) stand.level();
+            final RandomSource random = clientWorld.getRandom();
 
-            Direction gravity = GravityChangerAPI.getGravityDirection(stand);
+            final Direction gravity = GravityChangerAPI.getGravityDirection(stand);
 
-            Vector3f auraColor = stand.getAuraColor();
+            final Vector3f auraColor = stand.getAuraColor();
+
+            /*
+            Basically,
+            any stand you do not own should have an Aura drawn.
+            Stands you do own should have an aura drawn EITHER if you are not in first person, or it is detached.
+             */
 
             if ((!isOwnerAndFP || stand.isFree())
                     && !(stand.isRemoteAndControllable() && isFP)

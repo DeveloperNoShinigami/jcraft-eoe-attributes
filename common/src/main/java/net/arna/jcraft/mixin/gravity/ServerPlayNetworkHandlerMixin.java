@@ -66,10 +66,10 @@ public abstract class ServerPlayNetworkHandlerMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ServerPlayer;getY()D",
-                    ordinal = 7
+                    ordinal = 8
             )
     )
-    private double redirect_onPlayerMove_getY_7(ServerPlayer serverPlayerEntity) {
+    private double redirect_onPlayerMove_getY_8(ServerPlayer serverPlayerEntity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(serverPlayerEntity);
         if (gravityDirection == Direction.DOWN) {
             return serverPlayerEntity.getY();

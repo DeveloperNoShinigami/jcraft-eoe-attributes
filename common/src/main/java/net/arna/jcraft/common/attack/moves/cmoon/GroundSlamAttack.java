@@ -16,6 +16,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -58,8 +59,9 @@ public final class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttac
                     for (int z = min.getZ(); z < max.getZ(); z++) {
                         BlockPos curPos = bPos.offset(x, y, z);
                         BlockState curState = world.getBlockState(curPos);
+                        Block block = curState.getBlock();
 
-                        if (curState.getBlock().getExplosionResistance() > 10f || curState.isAir()) {
+                        if (block.defaultDestroyTime() < 0 || block.getExplosionResistance() > 10f || curState.isAir()) {
                             continue;
                         }
 
