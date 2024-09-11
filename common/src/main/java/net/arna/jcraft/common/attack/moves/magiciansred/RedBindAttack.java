@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.attack.moves.magiciansred;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.RedBindEntity;
@@ -41,7 +42,7 @@ public final class RedBindAttack extends AbstractSimpleAttack<RedBindAttack, Mag
 
         // Stun
         boundEntity.removeEffect(JStatusRegistry.DAZED.get());
-        StandEntity.stun(boundEntity, RedBindEntity.ticksToLive, 0);
+        JCraft.stun(boundEntity, RedBindEntity.ticksToLive, 0, user);
 
         // Create and bind
         RedBindEntity redBind = new RedBindEntity(JEntityTypeRegistry.RED_BIND.get(), attacker.level());

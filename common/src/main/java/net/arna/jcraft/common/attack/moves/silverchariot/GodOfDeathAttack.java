@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.attack.moves.silverchariot;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
@@ -21,7 +21,7 @@ public final class GodOfDeathAttack extends AbstractSimpleAttack<GodOfDeathAttac
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (targets.isEmpty()) {
-            StandEntity.stun(user, 30, 1);
+            JCraft.stun(user, 30, 1);
         } else {
             attacker.setMove(getFollowup(), SilverChariotEntity.State.BEAT_DOWN);
         }

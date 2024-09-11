@@ -63,7 +63,7 @@ import java.util.stream.Collectors;
 
 import static net.arna.jcraft.JCraft.ALLOW_MOB_EVOLVED_STANDS;
 import static net.arna.jcraft.JCraft.CHANCE_MOB_SPAWNS_WITH_STAND;
-import static net.arna.jcraft.common.entity.stand.StandEntity.stun;
+import static net.arna.jcraft.JCraft.stun;
 import static net.arna.jcraft.common.util.EntityInterest.blockAttractionInterest;
 import static net.arna.jcraft.common.util.EntityInterest.itemAttractionInterest;
 
@@ -86,7 +86,7 @@ public class JServerEvents {
     private static final int MAX_COMPENSATION_MS = 250; // Game is barely playable at this point
     private static final double MS_TO_TICKS = 1000.0 / 20.0; // 1000ms = 1s, 1s = 20t
 
-    public static void serverTick(MinecraftServer server) {
+    public static void serverPostTick(MinecraftServer server) {
         if (JCraft.preloadLockTicks > 0) {
             JCraft.preloadLockTicks--;
         }
@@ -96,6 +96,7 @@ public class JServerEvents {
         Timestops.tick(server);
         Revivables.tick(server);
         JEnemies.tick(server);
+        FrameDataRequests.tick();
 
         // Player logic (cooldown handling and DamageTimer counting)
         for (ServerPlayer player : JUtils.all(server)) {
@@ -144,7 +145,7 @@ public class JServerEvents {
                 // If the stand was hit, the attack will stop and the user will be hit remotely
                 if (ent instanceof StandEntity<?, ?> stand) {
                     if (stand.hasUser()) {
-                        stun(stand.getUser(), 10, 3);
+                        stun(stand.getUser(), 10, 3, player);
                         stand.cancelMove();
                     }
                 } else if (ent.getFirstPassenger() instanceof StandEntity<?, ?> stand) { // Stands should not have passengers
@@ -152,7 +153,7 @@ public class JServerEvents {
                         pushAway = false;
                     } else if (ent instanceof LivingEntity living) { // Stand users that aren't blocking get launched and their stand attacks are cancelled
                         //awayVector = awayVector.multiply(0.5);
-                        stun(living, 10, 3);
+                        stun(living, 10, 3, player);
                         stand.cancelMove();
                     }
                 }
@@ -267,7 +268,7 @@ public class JServerEvents {
 
         for (LivingEntity ent : toDamage) {
             ent.hurt(explosion.getDamageSource(), 7);
-            StandEntity.stun(ent, 10, 3);
+            JCraft.stun(ent, 10, 3);
             ent.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0));
         }
     }
@@ -466,7 +467,7 @@ public class JServerEvents {
         return EventResult.pass();
     }
 
-    public static EventResult hurt(LivingEntity entity, DamageSource source, float v) {
+    public static EventResult hurt(LivingEntity entity, DamageSource source, float damage) {
         boolean toLaunch = false;
         Entity attacker = source.getEntity();
         MobEffectInstance stun = entity.getEffect(JStatusRegistry.DAZED.get());
@@ -489,7 +490,7 @@ public class JServerEvents {
                 int duration = stun.getDuration() / 3;
 
                 entity.removeEffect(JStatusRegistry.DAZED.get());
-                StandEntity.stun(entity, duration, 3);
+                JCraft.stun(entity, duration, 3, attacker);
 
                 Vec3i upVec = GravityChangerAPI.getGravityDirection(entity).getNormal();
                 Vec3 upVecD = new Vec3(-upVec.getX() / 3.0, -upVec.getY() / 3.0, -upVec.getZ() / 3.0);

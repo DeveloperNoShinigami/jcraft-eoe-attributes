@@ -2,6 +2,7 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
@@ -341,7 +342,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         }
 
         user.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 9, false, false, true));
-        stun(user, 2, 2);
+        JCraft.stun(user, 2, 2);
         user.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 5, 4, false, false, true));
     }
 

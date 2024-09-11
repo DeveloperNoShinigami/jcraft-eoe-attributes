@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.attack.moves.theworld;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.TheWorldEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -27,7 +27,7 @@ public final class FeignBarrageCounterAttack extends AbstractCounterAttack<Feign
     @Override
     public void whiff(@NonNull TheWorldEntity attacker, @NonNull LivingEntity user) {
         attacker.setMove(missAttack, TheWorldEntity.State.COUNTER_MISS);
-        StandEntity.stun(user, missAttack.getDuration(), 0);
+        JCraft.stun(user, missAttack.getDuration(), 0);
     }
 
     @Override
@@ -47,7 +47,7 @@ public final class FeignBarrageCounterAttack extends AbstractCounterAttack<Feign
 
         if (countered instanceof LivingEntity livingEntity) {
             livingEntity.removeEffect(JStatusRegistry.DAZED.get());
-            StandEntity.stun(livingEntity, 20, 0);
+            JCraft.stun(livingEntity, 20, 0);
 
             JUtils.cancelMoves(livingEntity);
         }

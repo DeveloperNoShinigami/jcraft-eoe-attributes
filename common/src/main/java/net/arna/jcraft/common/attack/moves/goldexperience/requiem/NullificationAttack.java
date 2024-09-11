@@ -6,7 +6,6 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.GEREntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
@@ -31,7 +30,7 @@ public final class NullificationAttack extends AbstractCounterAttack<Nullificati
     @Override
     public void whiff(@NonNull GEREntity attacker, @NonNull LivingEntity user) {
         attacker.setMove(counterMiss, GEREntity.State.COUNTER_MISS);
-        StandEntity.stun(attacker.getUser(), counterMiss.getDuration(), 0);
+        JCraft.stun(attacker.getUser(), counterMiss.getDuration(), 0);
     }
 
     @Override
@@ -56,7 +55,7 @@ public final class NullificationAttack extends AbstractCounterAttack<Nullificati
         }
 
         if (countered instanceof LivingEntity living) {
-            StandEntity.stun(living, 10, 0);
+            JCraft.stun(living, 10, 0);
             JUtils.cancelMoves(living);
         }
 

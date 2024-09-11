@@ -77,9 +77,6 @@
 * Bone-positioned particles are misplaced when under different gravities
 
 
-* There is still a way to get holdable moves to persist when they shouldn't
-* * With a decently precise input of vampire heavy -> buffered special 1, then going stand on and holding light
-    Laser eyes will charge for too long (to completion)
 #### Forge
 \ Stand users can occasionally get multiple stand capabilities? (SEEMINGLY FIXED)
 
@@ -92,6 +89,10 @@
 
 
 #### todo :)
+* Fix attacks not being able to trade - because ticking isn't done in parallel, the first entity to be ticked
+    will have priority when it comes to attack calculations, even though both executed an attack at the same time.
+    A possible solution to this is to just queue up all the move.tick() calls and run them all at the very end of a server tick.
+
 * Hermit Purple, Metallica, Yellow Temperance
 * Internationalization
 * Actually use effect keyframes in animations

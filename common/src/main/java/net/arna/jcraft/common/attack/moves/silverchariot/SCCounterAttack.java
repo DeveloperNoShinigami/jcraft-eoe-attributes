@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.attack.moves.silverchariot;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -20,7 +20,7 @@ public final class SCCounterAttack extends AbstractCounterAttack<SCCounterAttack
     @Override
     public void whiff(@NonNull SilverChariotEntity attacker, @NonNull LivingEntity user) {
         attacker.setMove(counterMiss, SilverChariotEntity.State.COUNTER_MISS);
-        StandEntity.stun(user, counterMiss.getDuration(), 0);
+        JCraft.stun(user, counterMiss.getDuration(), 0);
     }
 
     @Override
@@ -30,7 +30,7 @@ public final class SCCounterAttack extends AbstractCounterAttack<SCCounterAttack
         if (!(countered instanceof LivingEntity ent)) {
             return;
         }
-        StandEntity.stun(ent, 30, 0);
+        JCraft.stun(ent, 30, 0);
         JUtils.cancelMoves(ent);
     }
 

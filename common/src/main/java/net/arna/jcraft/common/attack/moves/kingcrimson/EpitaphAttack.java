@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.attack.moves.kingcrimson;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -24,7 +24,7 @@ public final class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, Ki
     @Override
     public void whiff(@NonNull KingCrimsonEntity attacker, @NonNull LivingEntity user) {
         attacker.setMove(counterMiss, KingCrimsonEntity.State.COUNTER_MISS);
-        StandEntity.stun(user, counterMiss.getDuration(), 0);
+        JCraft.stun(user, counterMiss.getDuration(), 0);
         attacker.playSound(JSoundRegistry.KC_RAGE.get(), 1, 1);
     }
 
@@ -47,7 +47,7 @@ public final class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, Ki
         user.lookAt(EntityAnchorArgument.Anchor.EYES, countered.getEyePosition());
 
         if (countered instanceof LivingEntity livingEntity) {
-            StandEntity.stun(livingEntity, 20, 0);
+            JCraft.stun(livingEntity, 20, 0);
             JUtils.cancelMoves(livingEntity);
         }
 

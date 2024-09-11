@@ -18,15 +18,8 @@ import static net.arna.jcraft.common.entity.stand.StandEntity.standUserCombatAI;
 /**
  * Stores and updates all MobEntities that use Stands.
  */
-// todo: standardize all tickables with a concurrent mod-safe tick method or data structure
 public class JEnemies {
-    private static final HashMap<Mob, ResourceKey<Level>> enemies = new HashMap<>();
-    /**
-     * A queue designed to prevent any ConcurrentModificationException.
-     * Stores to-be JEnemies temporarily if they were attempted to be registered while {@link JEnemies#ticking} is true.
-     */
-    private static final Queue<Mob> queuedEnemies = new LinkedList<>();
-    private static boolean ticking = false;
+    private static final TickableHashMap<Mob, ResourceKey<Level>> enemies = new TickableHashMap<>();
 
     public static void add(Mob entity) {
         if (entity.level().isClientSide()) {
@@ -36,88 +29,66 @@ public class JEnemies {
             return;
         }
 
-        if (ticking) {
-            queuedEnemies.add(entity);
-        } else {
-            add(entity, entity.level().dimension());
-        }
+        add(entity, entity.level().dimension());
     }
 
     public static void add(Mob entity, ResourceKey<Level> registryKey) {
-        enemies.put(entity, registryKey);
+        enemies.add(entity, registryKey);
     }
 
     public static void tick(MinecraftServer server) {
-        if (ticking) {
-            JCraft.LOGGER.error("Tried to tick JEnemies while already ticking!");
-            return;
-        }
-        ticking = true;
-
-        while (!queuedEnemies.isEmpty()) {
-            Mob queued = queuedEnemies.peek();
-            add(queued, queued.level().dimension());
-            queuedEnemies.remove();
-        }
-
-        Iterator<Map.Entry<Mob, ResourceKey<Level>>> iter = enemies.entrySet().iterator();
-        while (iter.hasNext()) {
+        enemies.tick(iter -> {
             Map.Entry<Mob, ResourceKey<Level>> enemyData = iter.next();
             Mob enemy = enemyData.getKey();
 
-            if (!enemy.isAlive()) {
-                iter.remove();
-                continue;
-            }
+            if (enemy.isAlive()) {
+                if (!enemy.isNoAi()) {
+                    ServerLevel world = server.getLevel(enemyData.getValue());
+                    CommonStandComponent standComponent = JComponentPlatformUtils.getStandData(enemy);
+                    if (standComponent.getType() != null) {
+                        StandEntity<?, ?> stand = standComponent.getStand();
+                        if (stand == null) {
+                            JCraft.summon(world, enemy);
+                        } else {
+                            LivingEntity target = enemy.getTarget();
 
-            ServerLevel world = server.getLevel(enemyData.getValue());
+                            // Combat AI
+                            if (target != null && target.isAlive()) {
+                                standUserCombatAI(enemy, target, stand);
+                            } else {
+                                // Targeting priority: top to bottom
+                                LinkedList<LivingEntity> targets = new LinkedList<>();
+                                targets.add(enemy.getKillCredit());
+                                var damageRec = enemy.getCombatTracker().getMostSignificantFall();
+                                if (damageRec != null) {
+                                    var targetEntity = damageRec.source().getEntity();
+                                    if (targetEntity instanceof LivingEntity living) {
+                                        targets.add(living);
+                                    }
+                                }
 
-            if (enemy.isNoAi()) {
-                continue;
-            }
-            CommonStandComponent standComponent = JComponentPlatformUtils.getStandData(enemy);
-            if (standComponent.getType() != null) {
-                StandEntity<?, ?> stand = standComponent.getStand();
-                if (stand == null) {
-                    JCraft.summon(world, enemy);
-                } else {
-                    LivingEntity target = enemy.getTarget();
-
-                    // Combat AI
-                    if (target != null && target.isAlive()) {
-                        standUserCombatAI(enemy, target, stand);
-                    } else {
-                        // Targeting priority: top to bottom
-                        LinkedList<LivingEntity> targets = new LinkedList<>();
-                        targets.add(enemy.getKillCredit());
-                        var damageRec = enemy.getCombatTracker().getMostSignificantFall();
-                        if (damageRec != null) {
-                            var targetEntity = damageRec.source().getEntity();
-                            if (targetEntity instanceof LivingEntity living) {
-                                targets.add(living);
+                                targets.add(enemy.getLastHurtByMob());
+                                // Shouldn't use canTarget because that applies a PlayerEntity only filter.
+                                targets.stream()
+                                        .filter(potentialTarget -> potentialTarget != null &&
+                                                potentialTarget.isAlive() &&
+                                                // enemy.hasLineOfSight(potentialTarget) &&
+                                                potentialTarget.canBeSeenAsEnemy())
+                                        .findFirst()
+                                        .ifPresentOrElse(
+                                                selectedTarget -> {
+                                                    enemy.setTarget(selectedTarget);
+                                                    standUserCombatAI(enemy, selectedTarget, stand);
+                                                },
+                                                stand::standUserPassiveAI
+                                        );
                             }
                         }
-
-                        targets.add(enemy.getLastHurtByMob());
-                        // Shouldn't use canTarget because that applies a PlayerEntity only filter.
-                        targets.stream()
-                                .filter(potentialTarget -> potentialTarget != null &&
-                                        potentialTarget.isAlive() &&
-                                        // enemy.hasLineOfSight(potentialTarget) &&
-                                        potentialTarget.canBeSeenAsEnemy())
-                                .findFirst()
-                                .ifPresentOrElse(
-                                        selectedTarget -> {
-                                            enemy.setTarget(selectedTarget);
-                                            standUserCombatAI(enemy, selectedTarget, stand);
-                                        },
-                                        stand::standUserPassiveAI
-                                );
                     }
                 }
+            } else {
+                iter.remove();
             }
-        }
-
-        ticking = false;
+        });
     }
 }

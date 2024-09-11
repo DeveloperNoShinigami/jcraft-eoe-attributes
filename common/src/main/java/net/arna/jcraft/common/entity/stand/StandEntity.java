@@ -658,21 +658,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     /**
-     * Stuns specified {@link LivingEntity}
-     *
-     * @param entity    victim to stun
-     * @param duration  in ticks
-     * @param amplifier level of stun
-     */
-    public static void stun(LivingEntity entity, int duration, int amplifier) {
-        if (entity == null || !entity.isAlive() || duration == 0) {
-            return;
-        }
-        entity.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), duration, amplifier, false, false, true));
-        //JCraft.LOGGER.info("Stunned: " + entity.getEntityName() + " for: " + duration + " with stunType: " + amplifier);
-    }
-
-    /**
      * Basic damage method, you likely want to use baseDamageLogic or damageLogic instead
      *
      * @param damage       damage in half hearts
@@ -803,7 +788,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             projectile.hurtMarked = true;
         }
 
-        stun(user, 2, 2);
+        JCraft.stun(user, 2, 2);
         getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 5, 3, false, false, true));
     }
 
@@ -1292,7 +1277,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 }
             }
 
-            stun(ent, stunTicks, stunLevel);
+            JCraft.stun(ent, stunTicks, stunLevel, attacker);
 
             if (hitAnimation != null) {
                 JComponentPlatformUtils.getHitProperties(ent).setHitAnimation(hitAnimation, stunTicks);

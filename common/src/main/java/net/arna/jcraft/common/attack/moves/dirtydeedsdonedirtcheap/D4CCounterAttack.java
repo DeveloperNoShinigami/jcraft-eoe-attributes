@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.sounds.SoundEvents;
@@ -25,7 +25,7 @@ public class D4CCounterAttack extends AbstractCounterAttack<D4CCounterAttack, D4
     @Override
     public void whiff(@NonNull D4CEntity attacker, @NonNull LivingEntity user) {
         attacker.setMove(counterMiss, D4CEntity.State.COUNTER_MISS);
-        StandEntity.stun(user, counterMiss.getDuration(), 0);
+        JCraft.stun(user, counterMiss.getDuration(), 0);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class D4CCounterAttack extends AbstractCounterAttack<D4CCounterAttack, D4
 
         if (countered instanceof LivingEntity livingEntity) {
             livingEntity.hurt(livingEntity.level().damageSources().mobAttack(user), 10);
-            StandEntity.stun(livingEntity, 20, 3);
+            JCraft.stun(livingEntity, 20, 3);
             JUtils.cancelMoves(livingEntity);
         }
 

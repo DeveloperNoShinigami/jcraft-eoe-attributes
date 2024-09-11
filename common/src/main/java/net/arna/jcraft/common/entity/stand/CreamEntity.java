@@ -525,7 +525,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                     }
                     if (ent instanceof LivingEntity livingEntity) {
                         if (hurt) {
-                            stun(livingEntity, stun, 0);
+                            JCraft.stun(livingEntity, stun, 0, user);
                             JUtils.cancelMoves(livingEntity);
                         }
 

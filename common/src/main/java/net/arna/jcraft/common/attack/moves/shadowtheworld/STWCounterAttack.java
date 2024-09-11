@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.attack.moves.shadowtheworld;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.ShadowTheWorldEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
@@ -37,14 +37,14 @@ public final class STWCounterAttack extends AbstractCounterAttack<STWCounterAtta
             JUtils.around((ServerLevel) player.level(), player.position(), 96).forEach(
                     serverPlayer -> PlayerAnimPacket.send(player, serverPlayer, "stw.cntr"));
         }
-        StandEntity.stun(user, 20, 0);
+        JCraft.stun(user, 20, 0);
     }
 
     @Override
     public void whiff(@NonNull ShadowTheWorldEntity attacker, @NonNull LivingEntity user) {
         attacker.cancelMove();
         attacker.desummon(false);
-        StandEntity.stun(user, missAttack.getDuration(), 0);
+        JCraft.stun(user, missAttack.getDuration(), 0);
     }
 
     @Override
@@ -64,7 +64,7 @@ public final class STWCounterAttack extends AbstractCounterAttack<STWCounterAtta
 
         if (countered instanceof LivingEntity livingEntity) {
             livingEntity.removeEffect(JStatusRegistry.DAZED.get());
-            StandEntity.stun(livingEntity, 20, 0);
+            JCraft.stun(livingEntity, 20, 0);
 
             JUtils.cancelMoves(livingEntity);
         }

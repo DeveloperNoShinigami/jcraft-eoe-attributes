@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.attack.moves.theworld.overheaven;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -25,7 +26,7 @@ public final class SingularityAttack extends AbstractSimpleAttack<SingularityAtt
 
         if (blockBypass) {
             target.removeEffect(JStatusRegistry.DAZED.get());
-            StandEntity.stun(target, getStun(), 0);
+            JCraft.stun(target, getStun(), 0, attacker);
         }
 
         StandEntity.trueDamage(6, JDamageSources.stand(attacker), target);

@@ -12,7 +12,7 @@ public interface JEventsRegistry {
         EntityEvent.LIVING_HURT.register(JServerEvents::hurt);
         JEntityEvents.POST_ADD.register(JServerEvents::entityLoad);
         EntityEvent.LIVING_DEATH.register(JServerEvents::death);
-        TickEvent.SERVER_POST.register(JServerEvents::serverTick);
+        TickEvent.SERVER_POST.register(JServerEvents::serverPostTick);
 
         // Disable item/block usage while stunned
         InteractionEvent.RIGHT_CLICK_ITEM.register(JServerEvents::rightClick);

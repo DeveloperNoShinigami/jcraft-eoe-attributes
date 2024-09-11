@@ -1,9 +1,9 @@
 package net.arna.jcraft.common.attack.moves.theworld;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.TheWorldEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,7 +22,7 @@ public final class TWDonutAttack extends AbstractSimpleAttack<TWDonutAttack, The
 
         // If missed, stun the user for 1.5 seconds
         if (targets.isEmpty()) {
-            StandEntity.stun(user, 30, 0);
+            JCraft.stun(user, 30, 0);
         }
             /* If hit, impale and set position to middle of arm
         else for (LivingEntity entity : entities) {

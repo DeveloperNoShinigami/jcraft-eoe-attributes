@@ -244,7 +244,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
         if (!(target instanceof Mob mob)) {
             return;
         }
-        stun(mob, 10, 0);
+        JCraft.stun(mob, 10, 0);
         mob.setTarget(null);
         mob.setLastHurtByPlayer(null);
         if (mob instanceof NeutralMob angerable) {

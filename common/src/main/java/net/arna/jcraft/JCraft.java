@@ -74,10 +74,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import java.util.*;
 
-import static net.arna.jcraft.common.entity.stand.StandEntity.stun;
 import static net.arna.jcraft.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
 import static net.arna.jcraft.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
@@ -454,5 +454,35 @@ public final class JCraft {
         ((LivingArrowItem)JItemRegistry.LIVING_ARROW.get()).standIOMap.put(StandType.STAR_PLATINUM, StandType.STAR_PLATINUM_THE_WORLD);
 
         ((RequiemArrowItem)JItemRegistry.REQUIEM_ARROW.get()).standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
+    }
+
+    /**
+     * Stuns specified {@link LivingEntity}
+     *
+     * @param victim    victim to stun
+     * @param duration  in ticks
+     * @param amplifier level of stun
+     */
+    public static void stun(LivingEntity victim, int duration, @Range(from = 0, to = 4) int amplifier) {
+        stun(victim, duration, amplifier, null);
+    }
+
+    /**
+     * Stuns specified {@link LivingEntity}
+     *
+     * @param victim    victim to stun
+     * @param duration  in ticks
+     * @param amplifier level of stun, see {@link DazedStatusEffect} for specifics
+     * @param attacker  cause of stun
+     */
+    public static void stun(LivingEntity victim, int duration, @Range(from = 0, to = 4) int amplifier, @Nullable Entity attacker) {
+        if (victim == null || !victim.isAlive() || duration == 0) {
+            return;
+        }
+        if (attacker instanceof ServerPlayer serverPlayer) {
+
+        }
+        victim.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), duration, amplifier, false, false, true));
+        //JCraft.LOGGER.info("Stunned: " + entity.getEntityName() + " for: " + duration + " with stunType: " + amplifier);
     }
 }

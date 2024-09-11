@@ -225,7 +225,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
         }
 
         if (!isRemote()) {
-            stun(getUserOrThrow(), 2, 2);
+            JCraft.stun(getUserOrThrow(), 2, 2);
         }
         getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 5, 3, false, false, true));
     }

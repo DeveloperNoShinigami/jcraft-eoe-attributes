@@ -472,7 +472,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to check for.
      * @return Whether this move should be performed this tick.
      */
-    protected boolean shouldPerform(A attacker) {
+    public boolean shouldPerform(A attacker) {
         return attacker.getMoveStun() == getWindupPoint() && attacker.hasUser();
     }
 

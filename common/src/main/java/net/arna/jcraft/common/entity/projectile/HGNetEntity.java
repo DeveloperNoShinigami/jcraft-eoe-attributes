@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -161,7 +162,7 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
                         getInsideEntities().forEach(
                                 living -> {
                                     if (!JUtils.isBlocking(living) && !living.isPassengerOfSameVehicle(master)) {
-                                        StandEntity.stun(living, 17, 0);
+                                        JCraft.stun(living, 17, 0, master);
                                     }
                                 }
                         );

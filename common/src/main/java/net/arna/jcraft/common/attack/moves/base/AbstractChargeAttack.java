@@ -30,7 +30,7 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
     }
 
     @Override
-    protected boolean shouldPerform(A attacker) {
+    public boolean shouldPerform(A attacker) {
         return hasWindupPassed(attacker);
     }
 

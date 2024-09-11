@@ -15,6 +15,7 @@ public interface JCommandRegistry {
         ClearStandCommand.register(dispatcher);
         SetSpecCommand.register(dispatcher);
         MoveDataCommand.register(dispatcher);
+        FrameDataCommand.register(dispatcher);
         StandSkinCommand.register(dispatcher);
         StandBlockCommand.register(dispatcher);
         GravityCommand.register(dispatcher);

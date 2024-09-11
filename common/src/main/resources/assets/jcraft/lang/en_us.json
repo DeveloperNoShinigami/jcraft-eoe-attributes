@@ -367,6 +367,10 @@
   "jcraft.sunprotection.desc": "Protects from the Sun.",
   "jcraft.commands.error.nospec": "No spec found!",
   "jcraft.commands.error.nostand": "No stand found!",
+
+  "jcraft.framedata.definition": "Click for definition",
+  "jcraft.framedata.death": "Cancelled due to death",
+
   "jcraft.movetype.light": "Light",
   "jcraft.movetype.heavy": "Heavy",
   "jcraft.movetype.barrage": "Barrage",
@@ -375,6 +379,7 @@
   "jcraft.movetype.special3": "Special 3",
   "jcraft.movetype.ultimate": "Ultimate",
   "jcraft.movetype.utility": "Utility",
+
   "jcraft.trim_material.stellar_iron": "Stellar Iron Material",
   "warning.jcraft.spec.change": "Using this will change your spec, are you sure?",
   "death.attack.jcraft.stand": "%1$s was retired",

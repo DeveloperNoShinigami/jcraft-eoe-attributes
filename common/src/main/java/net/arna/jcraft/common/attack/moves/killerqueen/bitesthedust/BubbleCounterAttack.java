@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.world.damagesource.DamageSource;
@@ -22,7 +22,7 @@ public final class BubbleCounterAttack extends AbstractCounterAttack<BubbleCount
     @Override
     public void whiff(@NonNull KQBTDEntity attacker, @NonNull LivingEntity user) {
         attacker.setMove(missAttack, KQBTDEntity.State.COUNTER_MISS);
-        StandEntity.stun(user, missAttack.getDuration(), 0);
+        JCraft.stun(user, missAttack.getDuration(), 0);
     }
 
     @Override
@@ -33,7 +33,7 @@ public final class BubbleCounterAttack extends AbstractCounterAttack<BubbleCount
         }
 
         if (countered instanceof LivingEntity livingEntity) {
-            StandEntity.stun(livingEntity, 10, 3);
+            JCraft.stun(livingEntity, 10, 3);
             JUtils.cancelMoves(livingEntity);
         }
 
