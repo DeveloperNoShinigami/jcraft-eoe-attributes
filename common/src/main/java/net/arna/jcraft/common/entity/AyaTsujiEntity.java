@@ -21,10 +21,12 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity {
 
     public AyaTsujiEntity(Level world) {
         super(JEntityTypeRegistry.AYA_TSUJI.get(), world);
-        JEnemies.add(this);
         final CommonStandComponent standData = JComponentPlatformUtils.getStandData(this);
         standData.setType(StandType.CINDERELLA);
         standData.setSkin(0);
+
+        if (world.isClientSide()) return;
+        JEnemies.add(this);
     }
 
     @Override

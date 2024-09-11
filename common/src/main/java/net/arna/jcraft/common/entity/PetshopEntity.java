@@ -25,10 +25,12 @@ public class PetshopEntity extends PathfinderMob implements GeoEntity {
 
     public PetshopEntity(Level world) {
         super(JEntityTypeRegistry.PETSHOP.get(), world);
-        JEnemies.add(this);
         final CommonStandComponent standData = JComponentPlatformUtils.getStandData(this);
         standData.setType(StandType.HORUS);
         standData.setSkin(0);
+
+        if (world.isClientSide()) return;
+        JEnemies.add(this);
     }
 
     public static AttributeSupplier.Builder createPetshopAttributes() {

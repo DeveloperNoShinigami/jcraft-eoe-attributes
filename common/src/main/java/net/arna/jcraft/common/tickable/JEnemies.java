@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
+
 import java.util.*;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.standUserCombatAI;
@@ -17,6 +18,7 @@ import static net.arna.jcraft.common.entity.stand.StandEntity.standUserCombatAI;
 /**
  * Stores and updates all MobEntities that use Stands.
  */
+// todo: standardize all tickables with a concurrent mod-safe tick method or data structure
 public class JEnemies {
     private static final HashMap<Mob, ResourceKey<Level>> enemies = new HashMap<>();
     /**
@@ -27,6 +29,9 @@ public class JEnemies {
     private static boolean ticking = false;
 
     public static void add(Mob entity) {
+        if (entity.level().isClientSide()) {
+            throw new UnsupportedOperationException("Attempted to add an enemy to JEnemies from the clientside!");
+        }
         if (enemies.containsKey(entity)) {
             return;
         }

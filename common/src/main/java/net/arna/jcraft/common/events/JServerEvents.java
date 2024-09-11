@@ -96,10 +96,6 @@ public class JServerEvents {
         Timestops.tick(server);
         Revivables.tick(server);
         JEnemies.tick(server);
-        // Positional prediction logic for players that want a more current look at where their enemies are, at the cost of smoothness
-        //PredictionTriggerPacket.getSubscribers().forEach(JServerEvents::sendPredictionPacket);
-        //todo: run clientside prediction logic ON THE CLIENT (lol)
-        //      basically, just account for ping and deltaPos and project that position to the player
 
         // Player logic (cooldown handling and DamageTimer counting)
         for (ServerPlayer player : JUtils.all(server)) {

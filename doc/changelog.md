@@ -61,36 +61,37 @@
 * Timestop doesn't stop animated textures
 
 
-* There is no fall damage while in altered gravity
-
-
 * Bloodsuck doesn't properly keep players in place (TESTING FIX)
 
 
 * KC epitaph prediction model rendering has the wrong scale
 
 
-* Enemies can attack through dimensions (hit something -> D4C ult -> attacked by invisible ent)
+* Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
+* this bug is EVIL and has an unclear source >:(
+* in the future, try looking at what sets the enemies target to null
+* its obfuscated because of how goals are wrapped, but its probably possible to figure out
 * To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
 
 
-* MR's Red Bind particles don't render in the right orientation when under different gravities
+* Bone-positioned particles are misplaced when under different gravities
 
 
 * There is still a way to get holdable moves to persist when they shouldn't
 * * With a decently precise input of vampire heavy -> buffered special 1, then going stand on and holding light
     Laser eyes will charge for too long (to completion)
 #### Forge
-* Stand users can occasionally get multiple stand capabilities?
+\ Stand users can occasionally get multiple stand capabilities? (SEEMINGLY FIXED)
 
 
-* KC Epitaph doesn't render Diavolo's hair overlay
+* KC Epitaph doesn't render Diavolo's hair overlay - render code runs it just doesnt show up
 
 
 * The client doesn't register The Sun as it's stand if moved out of and into render distance
+* in Fabric, it simply unloads when out of sight. This behavior is preferable.
 
 
 #### todo :)
-* METALLICA
+* Hermit Purple, Metallica, Yellow Temperance
 * Internationalization
 * Actually use effect keyframes in animations

@@ -21,10 +21,12 @@ public class DarbyYoungerEntity extends PathfinderMob implements GeoEntity {
 
     public DarbyYoungerEntity(Level world) {
         super(JEntityTypeRegistry.DARBY_YOUNGER.get(), world);
-        JEnemies.add(this);
         final CommonStandComponent standData = JComponentPlatformUtils.getStandData(this);
         standData.setType(StandType.ATUM);
         standData.setSkin(0);
+
+        if (world.isClientSide()) return;
+        JEnemies.add(this);
     }
 
     @Override

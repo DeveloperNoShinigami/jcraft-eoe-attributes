@@ -17,6 +17,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * For clientside timestops, see {@link net.arna.jcraft.client.util.JClientUtils#activeTimestops}
+ */
 public class Timestops {
     protected static final List<DimensionData> timestops = new ArrayList<>();
 

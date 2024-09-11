@@ -1,6 +1,8 @@
 package net.arna.jcraft.mixin.gravity;
 
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.minecraft.core.Direction;
@@ -61,22 +63,43 @@ public abstract class ServerPlayNetworkHandlerMixin {
         return RotationUtil.vecWorldToPlayer(serverPlayerEntity.position(), gravityDirection).y;
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "handleMovePlayer",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerPlayer;getY()D",
-                    ordinal = 8
+                    target = "Lnet/minecraft/server/level/ServerPlayer;doCheckFallDamage(DDDZ)V"
             )
     )
-    private double redirect_onPlayerMove_getY_8(ServerPlayer serverPlayerEntity) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(serverPlayerEntity);
+    private void jGravityAPI$doCheckFallDamage(ServerPlayer instance, double movementX, double movementY, double movementZ, boolean onGround, Operation<Void> original) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(instance);
         if (gravityDirection == Direction.DOWN) {
-            return serverPlayerEntity.getY();
+            original.call(instance, movementX, movementY, movementZ, onGround);
+            return;
         }
-
-        return RotationUtil.vecWorldToPlayer(serverPlayerEntity.position(), gravityDirection).y;
+        Vec3 movement = RotationUtil.vecWorldToPlayer( new Vec3(movementX, movementY, movementZ), gravityDirection);
+        original.call(instance, movement.x, movement.y, movement.z, onGround);
     }
+
+    /*
+    BASICALLY, MODIFYARGS IS BANNED AND WE HAVE TO FIGURE IT OUT :)
+        @ModifyArgs(
+            method = "onPlayerMove",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;handleFall(DDDZ)V",
+                    ordinal = 0
+            )
+    )
+    private void modify_onPlayerMove_handleFall_0(Args args) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(this.player);
+        Vec3d argVec = new Vec3d(args.get(0), args.get(1), args.get(2));
+        argVec = RotationUtil.vecWorldToPlayer(argVec, gravityDirection);
+        args.set(0,argVec.x);
+        args.set(1,argVec.y);
+        args.set(2,argVec.z);
+
+    }
+     */
 
     @ModifyVariable(
             method = "handleMovePlayer",
