@@ -43,11 +43,11 @@ public final class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAt
     }
 
     @Override
-    public void tick(SilverChariotEntity attacker) {
-        if (attacker.getMoveStun() == 1) {
+    public void tick(SilverChariotEntity attacker, int moveStun) {
+        if (moveStun == 1) {
             giveBack(attacker);
         }
-        super.tick(attacker);
+        super.tick(attacker, moveStun);
     }
 
     private void giveBack(SilverChariotEntity attacker) {

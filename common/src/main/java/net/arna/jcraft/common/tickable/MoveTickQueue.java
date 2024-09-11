@@ -16,8 +16,14 @@ public class MoveTickQueue {
     }
 
     private static void tick(MinecraftServer server) {
-        while (!queue.isEmpty())
-            queue.poll().tick();
+        while (!queue.isEmpty()) {
+            MoveTick<?> moveTick = queue.poll();
+            IAttacker<?, ?> attacker = moveTick.attacker();
+            int moveStun = attacker.getMoveStun();
+            // attacker.setMoveStun(moveTick.moveStun());
+            moveTick.tick();
+            // attacker.setMoveStun(moveStun);
+        }
     }
 
     public static <A extends IAttacker<? extends A, ?>> void queueTick(A attacker, AbstractMove<?, ? super A> move, int moveStun) {
@@ -26,7 +32,7 @@ public class MoveTickQueue {
 
     private record MoveTick<A extends IAttacker<? extends A, ?>>(A attacker, AbstractMove<?, ? super A> move, int moveStun) {
         public void tick() {
-            move.tick(attacker, OptionalInt.of(moveStun));
+            move.tick(attacker, moveStun);
         }
     }
 }

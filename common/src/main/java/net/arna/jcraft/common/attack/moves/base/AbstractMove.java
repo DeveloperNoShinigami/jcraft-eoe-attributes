@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -452,13 +451,13 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Called every tick so long as this move is active.
      * Called separately for each attacker.
-     * Invokes the {@link #perform(IAttacker, LivingEntity, MoveContext)} method if {@link #shouldPerform(IAttacker, OptionalInt)}
+     * Invokes the {@link #perform(IAttacker, LivingEntity, MoveContext)} method if {@link #shouldPerform(IAttacker, int)}
      * returns {@code true} by default, but can be overridden to do whatever you want it to.
      *
      * @param attacker The attacker to tick for.
      */
-    public void tick(A attacker, OptionalInt moveStun) {
-        if (finisher != null && canFinish(attacker) && finisher.leftInt() <= getDuration() - attacker.getMoveStun()) {
+    public void tick(A attacker, int moveStun) {
+        if (finisher != null && canFinish(attacker) && finisher.leftInt() <= getDuration() - moveStun) {
             attacker.setCurrentMove(finisher.right());
         }
         if (shouldPerform(attacker, moveStun)) {
@@ -473,8 +472,8 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to check for.
      * @return Whether this move should be performed this tick.
      */
-    public boolean shouldPerform(A attacker, OptionalInt moveStun) {
-        return moveStun.orElseGet(attacker::getMoveStun) == getWindupPoint() && attacker.hasUser();
+    public boolean shouldPerform(A attacker, int moveStun) {
+        return moveStun == getWindupPoint() && attacker.hasUser();
     }
 
     /**
