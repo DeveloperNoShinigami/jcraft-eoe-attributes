@@ -72,7 +72,7 @@ public class FrameDataRequests {
                 }
 
                 if (attacker == null) return;
-                if (move != null) wasActive = move.shouldPerform(attacker);
+                if (move != null) wasActive = move.shouldPerform(attacker, attacker.getMoveStun());
                 if (frameData.lastMove != null || move != null) frameData.ticks.add(new Tick(wasActive));
 
                 final int moveStun = attacker.getMoveStun();

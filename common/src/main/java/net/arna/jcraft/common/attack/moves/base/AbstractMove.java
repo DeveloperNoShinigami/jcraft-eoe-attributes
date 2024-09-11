@@ -542,6 +542,17 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     }
 
     /**
+     * Returns whether the windup has passed. Uses stored moveStun value from {@link net.arna.jcraft.common.tickable.MoveTickQueue}
+     * Use for attack ticking logic, otherwise use the other one.
+     *
+     * @param attacker The attacker to check for
+     * @return Whether the windup has passed
+     */
+    public boolean hasWindupPassed(IAttacker<?, ?> attacker, int moveStun) {
+        return moveStun <= getWindupPoint();
+    }
+
+    /**
      * Acquires the rotation vector for the given attacker, taking gravity into account.
      *
      * @param attacker The attacker to get the rotation vector for

@@ -48,7 +48,7 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
     }
 
     @Override
-    public boolean shouldPerform(A attacker) {
+    public boolean shouldPerform(A attacker, int moveStun) {
         // If move stun is 22 ticks, windup is 6 and interval is 4, the first hit will occur at tick 6 (when move stun is 22 - 6 = 16),
         // the second at tick 10 (when move stun is 22 - 10 = 12), then at tick 14, etc.
         // For hit 2:
@@ -62,12 +62,12 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
         // Which means that if your move stun is 22, windup is 6 and interval is 6,
         // the first blow will not be landed after 6 ticks (when stand move stun is 22 - 6 = 16),
         // but rather after 10 ticks (when stand move stun is 22 - 10 = 12).
-        return attacker.hasUser() && hasWindupPassed(attacker) && (getDuration() - getWindup() - attacker.getMoveStun()) % interval == 0;
+        return attacker.hasUser() && hasWindupPassed(attacker, moveStun) && (getDuration() - getWindup() - moveStun) % interval == 0;
     }
 
     @Override
-    public void tick(A attacker) {
-        super.tick(attacker);
+    public void tick(A attacker, int moveStun) {
+        super.tick(attacker, moveStun);
 
         // Consider replacing the isRemote() with isFree()?
         if (attacker.hasUser() && inflictsSlowness && !attacker.isRemote()) {

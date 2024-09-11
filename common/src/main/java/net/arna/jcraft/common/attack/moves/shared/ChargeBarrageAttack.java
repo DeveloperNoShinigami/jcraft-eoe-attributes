@@ -41,28 +41,28 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
     }
 
     @Override
-    public void tick(A attacker) {
-        super.tick(attacker);
+    public void tick(A attacker, int moveStun) {
+        super.tick(attacker, moveStun);
         Entity attackerEntity = attacker.getBaseEntity();
         if (attackerEntity instanceof StandEntity<?, ?> stand) {
-            tickChargeBarrageAttack(stand, attacker.getMoveStun() < getWindupPoint(), getMoveDistance(), getWindupPoint());
+            tickChargeBarrageAttack(stand, moveStun < getWindupPoint(), getMoveDistance(), getWindupPoint(), moveStun);
         } else {
             JCraft.LOGGER.error("Trying to tick ChargeBarrageAttack non non-stand entity; " + attackerEntity);
         }
     }
 
-    protected Vec3 advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
+    private Vec3 advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint, int moveStun) {
         if (quadraticMovement) {
             return attacker.position().add(getRotVec(attacker).scale(
-                    (moveDistance * attacker.getMoveStun()) / (windupPoint * windupPoint)
+                    (moveDistance * moveStun) / (windupPoint * windupPoint)
             ));
         }
         return attacker.position().add(getRotVec(attacker).scale(moveDistance / windupPoint));
     }
 
-    protected void tickChargeBarrageAttack(StandEntity<?, ?> attacker, boolean shouldPerform, float moveDistance, int windupPoint) {
+    private void tickChargeBarrageAttack(StandEntity<?, ?> attacker, boolean shouldPerform, float moveDistance, int windupPoint, int moveStun) {
         if (shouldPerform) {
-            Vec3 newPos = advanceChargePos(attacker, moveDistance, windupPoint);
+            Vec3 newPos = advanceChargePos(attacker, moveDistance, windupPoint, moveStun);
             attacker.setFreePos(new Vector3f((float) newPos.x, (float) newPos.y, (float) newPos.z));
             attacker.setFree(true);
         } else {

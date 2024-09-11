@@ -30,8 +30,8 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
     }
 
     @Override
-    public boolean shouldPerform(A attacker) {
-        return hasWindupPassed(attacker);
+    public boolean shouldPerform(A attacker, int moveStun) {
+        return hasWindupPassed(attacker, moveStun);
     }
 
     @Override
@@ -48,10 +48,10 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
     }
 
     @Override
-    public void tick(A attacker) {
-        super.tick(attacker);
+    public void tick(A attacker, int moveStun) {
+        super.tick(attacker, moveStun);
 
-        tickChargeAttack(attacker, shouldPerform(attacker), getMoveDistance(), getWindupPoint());
+        tickChargeAttack(attacker, shouldPerform(attacker, moveStun), getMoveDistance(), getWindupPoint());
     }
 
     protected Vec3 advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
