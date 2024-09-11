@@ -2,10 +2,11 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.EmeraldSplashAttack;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.NetSetMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
@@ -25,8 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -259,43 +258,40 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
     @Override
     public boolean initMove(MoveType type) {
         LivingEntity user = getUserOrThrow();
-        if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-            AbstractMove<?, ? super HGEntity> followup = curMove.getFollowup();
-            if (followup != null) {
-                setMove(followup, (State) followup.getAnimation());
-            }
-        } else if (type == MoveType.SPECIAL1 && user.isShiftKeyDown()) {
-            if (!JUtils.canAct(user)) {
-                return false;
-            }
-
-            List<HGNetEntity> nets = level().getEntitiesOfClass(HGNetEntity.class,
-                    getBoundingBox().inflate(64), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
-
-            LivingEntity shooter = isRemote() ? this : user;
-
-            Vec3 upVec = GravityChangerAPI.getEyeOffset(shooter);
-            Vec3 heightOffset = upVec.scale(0.5);
-            Vec3 eyePos = shooter.position().add(heightOffset);
-
-            if (!nets.isEmpty()) {
-                Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
-                        (entity -> {
-                            if (entity instanceof IOwnable ownable && ownable.getMaster() == user) {
-                                return false;
-                            }
-                            return true;
-                        }));
-
-                for (HGNetEntity net : nets) {
-                    if (net.getMaster() != user) {
-                        continue;
-                    }
-                    net.tryFireAt(pos, false);
+        if (!tryFollowUp(type, MoveType.LIGHT)) {
+            if (type == MoveType.SPECIAL1 && user.isShiftKeyDown()) {
+                if (!JUtils.canAct(user)) {
+                    return false;
                 }
+
+                List<HGNetEntity> nets = level().getEntitiesOfClass(HGNetEntity.class,
+                        getBoundingBox().inflate(64), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+
+                LivingEntity shooter = isRemote() ? this : user;
+
+                Vec3 upVec = GravityChangerAPI.getEyeOffset(shooter);
+                Vec3 heightOffset = upVec.scale(0.5);
+                Vec3 eyePos = shooter.position().add(heightOffset);
+
+                if (!nets.isEmpty()) {
+                    Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
+                            (entity -> {
+                                if (entity instanceof IOwnable ownable && ownable.getMaster() == user) {
+                                    return false;
+                                }
+                                return true;
+                            }));
+
+                    for (HGNetEntity net : nets) {
+                        if (net.getMaster() != user) {
+                            continue;
+                        }
+                        net.tryFireAt(pos, false);
+                    }
+                }
+            } else {
+                return super.initMove(type);
             }
-        } else {
-            return super.initMove(type);
         }
 
         return true;
@@ -311,7 +307,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         super.tick();
 
         if (!level().isClientSide) {
-            if (curMove != null && curMove.getOriginalMove() == EMERALD_CHARGE) {
+            if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == EMERALD_CHARGE) {
                 getMoveContext().incrementInt(CHARGE_TIME, 1);
             }
         }

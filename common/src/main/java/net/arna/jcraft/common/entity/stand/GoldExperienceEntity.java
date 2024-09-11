@@ -209,14 +209,14 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                     return false;
                 }
                 boolean idling = this.getMoveStun() <= 0;
-                if (curMove == null || curMove.getMoveType() != MoveType.SPECIAL2) {
+                if (getCurrentMove() == null || getCurrentMove().getMoveType() != MoveType.SPECIAL2) {
                     if (idling) {
                         return handleMove(MoveType.SPECIAL2);
                     } else {
                         return false;
                     }
-                } else if (curMove.getFollowup() != null && curMove.hasWindupPassed(this)) {
-                    setMove(curMove.getFollowup(), (State) curMove.getFollowup().getAnimation());
+                } else if (getCurrentMove().getFollowup() != null && getCurrentMove().hasWindupPassed(this)) {
+                    setMove(getCurrentMove().getFollowup(), (State) getCurrentMove().getFollowup().getAnimation());
                 }
             }
             case SPECIAL3 -> {
@@ -238,8 +238,8 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                 return handleMove(MoveType.SPECIAL3);
             }
             case LIGHT -> {
-                if (curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-                    AbstractMove<?, ? super GoldExperienceEntity> followup = curMove.getFollowup();
+                if (getCurrentMove() != null && getCurrentMove().getMoveType() == MoveType.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
+                    AbstractMove<?, ? super GoldExperienceEntity> followup = getCurrentMove().getFollowup();
                     if (followup != null) {
                         setMove(followup, (State) followup.getAnimation());
                     }

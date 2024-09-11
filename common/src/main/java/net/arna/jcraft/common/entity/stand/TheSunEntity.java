@@ -2,9 +2,12 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.BarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.NoOpMove;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -29,7 +32,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
-
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -49,13 +51,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-
 import java.util.Collection;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.State> {
     private static final EntityDataAccessor<Boolean> PASSIVE;
@@ -205,7 +203,8 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         meteor.shoot(velocity.x, velocity.y, velocity.z, speed, divergence);
 
         attacker.level().addFreshEntity(meteor);
-        if (!attacker.getCurrentMove().isBarrage()) {
+        AbstractMove<?, ? super TheSunEntity> move = attacker.getCurrentMove();
+        if (move != null && !move.isBarrage()) {
             attacker.playSound(JSoundRegistry.SUN_METEOR_FIRE.get(), 1f, 1f);
         }
 

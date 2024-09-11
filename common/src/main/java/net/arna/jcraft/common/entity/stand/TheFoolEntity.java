@@ -246,7 +246,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public boolean initMove(MoveType type) {
         switch (type) {
             case SPECIAL1, SPECIAL2, SPECIAL3 -> {
-                if (curMove != null && curMove.getOriginalMove() == POUND && getMoveStun() <= 11) {
+                if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == POUND && getMoveStun() <= 11) {
                     initSlam(switch (type) {
                         default -> 1;
                         case SPECIAL2 -> 2;
@@ -264,8 +264,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                 return s;
             }
             case LIGHT -> {
-                if (curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-                    AbstractMove<?, ? super TheFoolEntity> followup = curMove.getFollowup();
+                if (getCurrentMove() != null && getCurrentMove().getMoveType() == MoveType.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
+                    AbstractMove<?, ? super TheFoolEntity> followup = getCurrentMove().getFollowup();
                     if (followup != null) {
                         setMove(followup, (State) followup.getAnimation());
                     }
@@ -361,7 +361,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             if (JUtils.isAffectedByTimeStop(user) || user.hasEffect(JStatusRegistry.DAZED.get())) {
                 return false;
             }
-            if (curMove != null && curMove.getOriginalMove() == GLIDE) {
+            if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == GLIDE) {
                 return true;
             }
             return getMoveStun() <= 0;
@@ -434,7 +434,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             return;
         }
 
-        AbstractMove<?, ? super TheFoolEntity> move = curMove;
+        AbstractMove<?, ? super TheFoolEntity> move = getCurrentMove();
         if (lastRemoteInputTime - tickCount > 4) {
             updateRemoteInputs(0, 0, false, false);
         }

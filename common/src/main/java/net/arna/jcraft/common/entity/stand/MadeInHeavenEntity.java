@@ -240,12 +240,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
 
     @Override
     public boolean initMove(MoveType type) {
-        if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-            AbstractMove<?, ? super MadeInHeavenEntity> followup = curMove.getFollowup();
-            if (followup != null) {
-                setMove(followup, (State) followup.getAnimation());
-            }
-        } else {
+        if (!tryFollowUp(type, MoveType.LIGHT)) {
             return super.initMove(type);
         }
 

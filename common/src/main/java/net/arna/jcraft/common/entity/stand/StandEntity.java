@@ -138,7 +138,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     protected MoveInputType queuedMove;
     private MoveInputType holdingType;
-    public AbstractMove<?, ? super E> curMove;
+    private AbstractMove<?, ? super E> curMove;
     public AbstractMove<?, ? super E> prevMove;
     public int armorPoints;
 
@@ -513,13 +513,32 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return JDamageSources.stand(this);
     }
 
+    /**
+     * May return null during the post-tick handling of attacks.
+     * @return This Stands current move.
+     */
     @Override
-    public AbstractMove<?, ? super E> getCurrentMove() {
+    public @Nullable AbstractMove<?, ? super E> getCurrentMove() {
         return curMove;
+    }
+
+    /**
+     * @return Whether the followup condition was passed.
+     */
+    public boolean tryFollowUp(MoveType in, MoveType followupType) {
+        if (in == followupType && getCurrentMove() != null && getCurrentMove().getMoveType() == followupType && getMoveStun() < getCurrentMove().getWindupPoint()) {
+            AbstractMove<?, ? super E> followup = getCurrentMove().getFollowup();
+            if (followup != null) {
+                setMove(followup, (S) followup.getAnimation());
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public void setCurrentMove(AbstractMove<?, ? super E> move) {
+        prevMove = curMove;
         curMove = move;
     }
 
@@ -645,7 +664,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return;
         }
 
-        curMove = move;
+        setCurrentMove(move);
         setMoveStun(move.getDuration());
         //setReset(false); // makes it worse
         if (animState != null) {
@@ -655,7 +674,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     public final void onUserMoveInput(MoveInputType type, boolean pressed, boolean moveInitiated) {
-        onUserMoveInput(curMove, type, pressed, moveInitiated);
+        onUserMoveInput(getCurrentMove(), type, pressed, moveInitiated);
     }
 
     /**
@@ -805,7 +824,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     public void desummon(boolean playSound) {
-        if (curMove != null || getMoveStun() > 0) {
+        if (getCurrentMove() != null || getMoveStun() > 0) {
             return;
         }
         playDesummonSound = playSound;
@@ -820,10 +839,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * Cancels the stand's move instantly
      */
     public void cancelMove() {
-        if (curMove != null) {
-            curMove.onCancel(getThis());
+        if (getCurrentMove() != null) {
+            getCurrentMove().onCancel(getThis());
         }
-        curMove = null;
+        setCurrentMove(null);
         setMoveStun(0);
         setState(getIdleState());
         setReset(true);
@@ -946,7 +965,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 kill();
             }
 
-            AbstractMove<?, ? super E> move = this.curMove;
+            AbstractMove<?, ? super E> move = this.getCurrentMove();
             if (defaultToNear() && moveStun <= 0) {
                 if (move == null) {
                     if (this.queuedMove == null) {
@@ -1010,7 +1029,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                     doQueuedMove(userPlayer);
                 } else if (!idleOverride) {
                     // Process idle
-                    curMove = null;
+                    setCurrentMove(null);
 
                     setStandGauge(Mth.clamp(this.getStandGauge() + 0.5f, 0, maxStandGauge));
 
@@ -1026,7 +1045,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 }
             } else if (blocking) { // Process block
                 if (wantToBlock) {
-                    curMove = null;
+                    setCurrentMove(null);
 
                     if (moveStun < 1) {
                         setMoveStun(1);
@@ -1046,16 +1065,16 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
         // JCraft.LOGGER.info( "State: " + this.getState() + " Movestun: " + curMoveStun + " Currently attacking: " + (this.curAttack != null)); // Massive debug log
 
-        if (curMove != prevMove && curMove != null)
+        if (getCurrentMove() != prevMove && getCurrentMove() != null)
         //JCraft.LOGGER.info("Logged previous attack change: " + this.curAttack + " " + this.previousAttack);
         {
-            prevMove = curMove;
+            prevMove = getCurrentMove();
         }
     }
 
     protected void doQueuedMove(@Nullable ServerPlayer userPlayer) {
         if (queuedMove == MoveInputType.STAND_SUMMON) {
-            curMove = null;
+            setCurrentMove(null);
             desummon();
         } else {
             if (userPlayer != null && canHoldMove(queuedMove)) {
@@ -1209,7 +1228,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
         StandEntity<?, ?> stand = JUtils.getStand(ent);
         if (stand != null) {
-            AbstractMove<?, ?> standAttack = stand.curMove;
+            AbstractMove<?, ?> standAttack = stand.getCurrentMove();
             if (standAttack != null) {
                 // Counter check
                 if (!tsHit && standAttack.isCounter() && stand.getMoveStun() < standAttack.getWindupPoint()) {
@@ -1509,7 +1528,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         // Get enemy stand attack (most common)
         if (enemyHasStand) {
             enemyMoveStun = enemyStand.getMoveStun();
-            enemyAttack = enemyStand.curMove;
+            enemyAttack = enemyStand.getCurrentMove();
 
             if (enemyStand.blocking) {
                 blockPlusTicks = enemyMoveStun;
@@ -1658,7 +1677,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             if (selectedAttack != null) {
                 boolean shouldPerformMove = this.getMoveStun() < 1;
 
-                if (this.curMove != null && this.curMove.getFollowup() != null) {
+                if (this.getCurrentMove() != null && this.getCurrentMove().getFollowup() != null) {
                     shouldPerformMove = true;
                 }
 

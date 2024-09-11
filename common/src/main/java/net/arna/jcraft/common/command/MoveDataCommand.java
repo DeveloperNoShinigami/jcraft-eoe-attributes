@@ -45,7 +45,7 @@ public class MoveDataCommand {
             if (standEntity == null) {
                 return 0;
             } else {
-                move = standEntity.curMove;
+                move = standEntity.getCurrentMove();
                 if (move == null) {
                     move = standEntity.prevMove;
                 }

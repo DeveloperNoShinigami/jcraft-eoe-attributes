@@ -285,8 +285,8 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     public boolean allowMoveHandling() {
         if (isAnimatedDesummoning()) return false;
         if (getState() == State.CHARGE_HIT) return false;
-        boolean noMove = curMove == null;
-        return noMove || curMove.getMoveType() == MoveType.SPECIAL3;
+        boolean noMove = getCurrentMove() == null;
+        return noMove || getCurrentMove().getMoveType() == MoveType.SPECIAL3;
     }
 
     @Override
@@ -306,9 +306,9 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
             return;
         }
         if (tsTime < 1) {
-            if ( (curMove != null || getState() == State.CHARGE_HIT) && getMoveStun() == 1 && getState() != State.COUNTER) {
+            if ( (getCurrentMove() != null || getState() == State.CHARGE_HIT) && getMoveStun() == 1 && getState() != State.COUNTER) {
                 // Stay in final attack pose
-                curMove = null;
+                setCurrentMove(null);
                 setMoveStun(desummonTime);
                 startAnimatedDesummon();
             }

@@ -105,7 +105,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
         if (!(player.getFirstPassenger() instanceof StandEntity<?, ?> stand)) {
             return;
         }
-        AbstractMove<?, ?> attack = stand.curMove;
+        AbstractMove<?, ?> attack = stand.getCurrentMove();
         if (attack == null || !attack.isCounter() || stand.getMoveStun() >= (attack.getDuration() - attack.getWindup())) {
             return;
         }

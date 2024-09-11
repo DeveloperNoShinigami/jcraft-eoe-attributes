@@ -19,7 +19,7 @@ public final class GodOfDeathHitAttack extends AbstractMultiHitAttack<GodOfDeath
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (getBlow(attacker) == 1) {
-            attacker.curMove = getFollowup();
+            attacker.setCurrentMove(getFollowup());
         }
 
         return targets;

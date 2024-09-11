@@ -88,8 +88,8 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
             forwardPos = new Vec3(stand.getX() + forwardPos.x, stand.getY() + forwardPos.y, stand.getZ() + forwardPos.z);
             if (targetStand == null ||
                     targetStand == attacker ||
-                    targetStand.curMove == null ||
-                    !targetStand.curMove.isBarrage() ||
+                    targetStand.getCurrentMove() == null ||
+                    !targetStand.getCurrentMove().isBarrage() ||
                     targetStand.distanceToSqr(forwardPos) > 4) {
                 continue;
             }

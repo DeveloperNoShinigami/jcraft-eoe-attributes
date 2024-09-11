@@ -35,7 +35,7 @@ public final class RedBindAttack extends AbstractSimpleAttack<RedBindAttack, Mag
         // Remove Stand
         StandEntity<?, ?> boundStand = JUtils.getStand(boundEntity);
         if (boundStand != null) {
-            boundStand.curMove = null;
+            boundStand.setCurrentMove(null);
             boundStand.setMoveStun(0);
             boundStand.desummon();
         }

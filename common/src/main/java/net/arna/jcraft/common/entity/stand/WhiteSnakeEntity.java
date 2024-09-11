@@ -1,13 +1,17 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.attack.moves.whitesnake.*;
+import net.arna.jcraft.common.attack.moves.whitesnake.ChargedSpewAttack;
+import net.arna.jcraft.common.attack.moves.whitesnake.GiveStandAttack;
+import net.arna.jcraft.common.attack.moves.whitesnake.MeltYourHeartAttack;
+import net.arna.jcraft.common.attack.moves.whitesnake.PoisonSpewAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -22,8 +26,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -210,12 +212,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
 
     @Override
     public boolean initMove(MoveType type) {
-        if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-            AbstractMove<?, ? super WhiteSnakeEntity> followup = curMove.getFollowup();
-            if (followup != null) {
-                setMove(followup, (State) followup.getAnimation());
-            }
-
+        if (tryFollowUp(type, MoveType.LIGHT)) {
             return true;
         } else {
             return super.initMove(type);

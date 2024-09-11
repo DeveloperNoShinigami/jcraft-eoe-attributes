@@ -1,9 +1,10 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.starplatinum.theworld.GroundSlamAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -20,8 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -188,12 +187,7 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
 
     @Override
     public boolean initMove(MoveType type) {
-        if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-            AbstractMove<?, ? super SPTWEntity> followup = curMove.getFollowup();
-            if (followup != null) {
-                setMove(followup, (State) followup.getAnimation());
-            }
-        } else {
+        if (!tryFollowUp(type, MoveType.LIGHT)) {
             boolean s = super.initMove(type);
             if (type == MoveType.SPECIAL1) {
                 turnAround = getUserOrThrow().isShiftKeyDown();
@@ -207,7 +201,7 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
     @Override
     public void tick() {
         super.tick();
-        if (!hasUser() || level().isClientSide || curMove == null || curMove.getOriginalMove() != TIME_STRIKE || getMoveStun() != 7) {
+        if (!hasUser() || level().isClientSide || getCurrentMove() == null || getCurrentMove().getOriginalMove() != TIME_STRIKE || getMoveStun() != 7) {
             return;
         }
 

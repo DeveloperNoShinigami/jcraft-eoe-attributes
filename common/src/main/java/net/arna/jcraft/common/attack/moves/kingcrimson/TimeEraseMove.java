@@ -52,7 +52,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
     public @NonNull Set<LivingEntity> perform(KingCrimsonEntity attacker, LivingEntity user, MoveContext ctx) {
         attacker.setTETime(erasureDuration);
 
-        attacker.curMove = null;
+        attacker.setCurrentMove(null);
         Mob doppelganger = null;
 
         if (user instanceof ServerPlayer player) {
@@ -130,7 +130,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
         if (teTime > 0) {
             attacker.setTETime(--teTime);
 
-            if (attacker.blocking || attacker.curMove != null && attacker.getMoveStun() < attacker.curMove.getWindupPoint() * 3 / 2) {
+            if (attacker.blocking || attacker.getCurrentMove() != null && attacker.getMoveStun() < attacker.getCurrentMove().getWindupPoint() * 3 / 2) {
                 attacker.cancelTE();
             }
 

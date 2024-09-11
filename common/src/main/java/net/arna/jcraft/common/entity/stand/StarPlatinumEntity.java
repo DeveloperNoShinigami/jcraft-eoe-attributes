@@ -5,7 +5,6 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.starplatinum.InhaleAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -191,14 +190,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
 
     @Override
     public boolean initMove(MoveType type) {
-        if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-            AbstractMove<?, ? super StarPlatinumEntity> followup = curMove.getFollowup();
-            if (followup != null) {
-                setMove(followup, (State) followup.getAnimation());
-                return true;
-            }
-        }
-
+        if (tryFollowUp(type, MoveType.LIGHT)) return true;
         return super.initMove(type);
     }
 

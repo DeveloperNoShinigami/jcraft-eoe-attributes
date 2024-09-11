@@ -2,11 +2,12 @@ package net.arna.jcraft.common.entity.stand;
 
 import lombok.Data;
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.cmoon.*;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -28,8 +29,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -238,12 +237,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                 return true;
             }
             case LIGHT -> {
-                if (curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-                    AbstractMove<?, ? super CMoonEntity> followup = curMove.getFollowup();
-                    if (followup != null) {
-                        setMove(followup, (State) followup.getAnimation());
-                    }
-                } else {
+                if (!tryFollowUp(type, MoveType.LIGHT)) {
                     return super.initMove(type);
                 }
                 return true;
