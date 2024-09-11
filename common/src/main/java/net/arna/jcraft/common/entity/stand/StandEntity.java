@@ -25,6 +25,7 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
 import net.arna.jcraft.common.network.s2c.ComboCounterPacket;
 import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.common.tickable.MoveTickQueue;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.mixin.LivingEntityInvoker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -972,7 +973,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
             // Attack logic
             if (move != null) {
-                move.tick(getThis());
+                MoveTickQueue.queueTick(getThis(), move, getMoveStun());
 
                 // Make sure the correct holding type is set
                 MoveInputType curMoveInputType = MoveInputType.fromMoveType(move.getMoveType());
