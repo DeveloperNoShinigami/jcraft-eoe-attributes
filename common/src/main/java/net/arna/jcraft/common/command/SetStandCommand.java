@@ -13,6 +13,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Collection;
@@ -24,23 +25,26 @@ public class SetStandCommand {
             Component.literal("The given stand only has " + s + " skins."));
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        RandomSource rng = RandomSource.create();
         dispatcher.register(Commands.literal("stand")
                 .then(Commands.literal("set")
                         .requires(source -> source.hasPermission(2) || "Arna57".equals(source.getTextName()) || "MrSterner".equals(source.getTextName()))
                         .then(Commands.argument("targets", EntityArgument.entities())
                                 .then(Commands.argument("stand", StandArgumentType.stand())
-                                        .executes(ctx -> executeSet(ctx, 0))
+                                        .executes(ctx -> executeSet(ctx, ctx.getArgument("stand", StandType.class), 0))
                                         .then(Commands.argument("skin", IntegerArgumentType.integer(0, 3))
-                                                .executes(ctx -> executeSet(ctx, ctx.getArgument("skin", Integer.class))))))));
+                                                .executes(ctx -> executeSet(ctx, ctx.getArgument("stand", StandType.class), ctx.getArgument("skin", Integer.class)))))
+                                .then(Commands.literal("random")
+                                        .executes(ctx -> executeSet(ctx, StandType.getRandom(rng), 0)))
+                        )));
     }
 
-    private static int executeSet(CommandContext<CommandSourceStack> ctx, int skin) throws CommandSyntaxException {
+    private static int executeSet(CommandContext<CommandSourceStack> ctx, StandType type, int skin) throws CommandSyntaxException {
         Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
         if (targets.isEmpty()) {
             return 0;
         }
 
-        StandType type = ctx.getArgument("stand", StandType.class);
         if (skin >= type.getSkinCount()) {
             throw INVALID_SKIN.create(type.getSkinCount());
         }

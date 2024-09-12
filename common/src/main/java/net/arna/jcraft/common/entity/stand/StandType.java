@@ -199,6 +199,10 @@ public enum StandType {
         return fromOrdinal(id);
     }
 
+    public static StandType getRandom(RandomSource random) {
+        return getAllStandTypes().get(random.nextInt(totalStandCount));
+    }
+
     public static StandType getRandomRegular(RandomSource random) {
         return getRegularStandTypes().get(random.nextInt(regularStandCount));
     }
