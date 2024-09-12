@@ -71,6 +71,7 @@ public class FrameDataRequests {
                     }
                 }
 
+                // todo: find out why Anubis + Silver Chariot's God of Death only registers every second move here
                 if (attacker == null) return;
                 if (move != null) wasActive = move.shouldPerform(attacker, attacker.getMoveStun());
                 if (frameData.lastMove != null || move != null) frameData.ticks.add(new Tick(wasActive));
@@ -84,10 +85,12 @@ public class FrameDataRequests {
                             );
                         }
                     } else if (move == null) {
-                        sendFrameData(player, frameData.ticks);
-                        iter.remove();
+                        // No move left, but still attacker is still acting
+                        // sendFrameData(player, frameData.ticks);
+                        frameData.ticks.add(new Tick(false));
+                        //iter.remove();
                     }
-                } else if (frameData.lastMove != null) { // If not acting
+                } else if (frameData.lastMove != null || (frameData.lastMove == null && move == null && !frameData.ticks.isEmpty())) { // If not acting
                     sendFrameData(player, frameData.ticks);
                     iter.remove();
                 }

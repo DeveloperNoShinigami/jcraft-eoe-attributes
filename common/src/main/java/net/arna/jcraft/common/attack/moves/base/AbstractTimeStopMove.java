@@ -27,7 +27,7 @@ public abstract class AbstractTimeStopMove<T extends AbstractTimeStopMove<T, A>,
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
         attacker.setTsTime(timeStopDuration.getAsInt());
-        attacker.setCurrentMove(null);
+        //attacker.setCurrentMove(null);
 
         user.addEffect(new MobEffectInstance(tsBlind));
 

@@ -133,6 +133,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             Removes fall damage.""")
             );
     // Special 1
+    //todo: crouching sp1 large icicle launch (literally flak)
     public static final SimpleAttack<HorusEntity> SCATTER = new SimpleAttack<HorusEntity>(
             60, 16, 20, 0.75f, 0, 0, 0, 0, 0)
             .withInfo(
@@ -173,6 +174,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             )
             .markRanged()
             .withAction(HorusEntity::placeIceBranch);
+    // TODO: large icicle barrage ult
     public static final EffectInflictingAttack<HorusEntity> PERFECT_FREEZE = new EffectInflictingAttack<HorusEntity>(50 * 20,
             14, 30, 0f, 4f, 10, 2.5f, 0.3f, 0,
             List.of(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 0, false, true))

@@ -16,18 +16,21 @@ public class MoveTickQueue {
     }
 
     private static void tick(MinecraftServer server) {
-        while (!queue.isEmpty()) {
-            MoveTick<?> moveTick = queue.poll();
-            IAttacker<?, ?> attacker = moveTick.attacker();
-            int moveStun = attacker.getMoveStun();
-            // attacker.setMoveStun(moveTick.moveStun());
-            moveTick.tick();
-            // attacker.setMoveStun(moveStun);
+        synchronized (queue) {
+            while (!queue.isEmpty()) {
+                MoveTick<?> moveTick = queue.poll();
+                IAttacker<?, ?> attacker = moveTick.attacker();
+                int moveStun = attacker.getMoveStun();
+                // attacker.setMoveStun(moveTick.moveStun());
+                moveTick.tick();
+                // attacker.setMoveStun(moveStun);
+            }
         }
     }
 
     public static <A extends IAttacker<? extends A, ?>> void queueTick(A attacker, AbstractMove<?, ? super A> move, int moveStun) {
-        queue.add(new MoveTick<>(attacker, move, moveStun));
+        //queue.add(new MoveTick<>(attacker, move, moveStun));
+        move.tick(attacker, moveStun);
     }
 
     private record MoveTick<A extends IAttacker<? extends A, ?>>(A attacker, AbstractMove<?, ? super A> move, int moveStun) {
