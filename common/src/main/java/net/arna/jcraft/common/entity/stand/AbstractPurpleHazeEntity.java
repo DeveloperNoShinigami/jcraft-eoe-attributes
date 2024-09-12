@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.PurpleHazeCloudEntity;
@@ -222,20 +223,21 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
 
     @Override
     public boolean initMove(MoveType type) {
+        AbstractMove<?, ? super E> move = getCurrentMove();
         if (type == MoveType.SPECIAL2) {
             LivingEntity user = getUserOrThrow();
             if (user.hasEffect(JStatusRegistry.DAZED.get())) {
                 return false;
             }
             boolean idling = this.getMoveStun() <= 0;
-            if (curMove == null || curMove.getMoveType() != MoveType.SPECIAL2) {
+            if (move == null || move.getMoveType() != MoveType.SPECIAL2) {
                 if (idling) {
                     return handleMove(MoveType.SPECIAL2);
                 } else {
                     return false;
                 }
-            } else if (curMove.getFollowup() != null && curMove.hasWindupPassed(this)) {
-                setMove(curMove.getFollowup(), (S) curMove.getFollowup().getAnimation());
+            } else if (move.getFollowup() != null && move.hasWindupPassed(this)) {
+                setMove(move.getFollowup(), (S) move.getFollowup().getAnimation());
             }
             return true;
         }

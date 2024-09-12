@@ -218,8 +218,8 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public boolean initMove(MoveType type) {
         if (type == MoveType.ULTIMATE && !moveContext.get(ReturnToZeroMove.ENTITY_DATA).isEmpty()) {
             RETURN_TO_ZERO.returnToZero(this);
-        } else if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-            AbstractMove<?, ? super GEREntity> followup = curMove.getFollowup();
+        } else if (type == MoveType.LIGHT && getCurrentMove() != null && getCurrentMove().getMoveType() == MoveType.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
+            AbstractMove<?, ? super GEREntity> followup = getCurrentMove().getFollowup();
             if (followup != null) {
                 setMove(followup, (State) followup.getAnimation());
             }
@@ -277,7 +277,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                 }
             }
         } else {
-            if (curMove != null && curMove.getOriginalMove() == LIFE_BEAM_CHARGE) {
+            if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == LIFE_BEAM_CHARGE) {
                 getMoveContext().incrementInt(CHARGE_TIME, 1);
             }
         }

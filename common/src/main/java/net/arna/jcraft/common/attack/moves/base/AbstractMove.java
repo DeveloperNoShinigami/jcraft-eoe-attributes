@@ -451,16 +451,16 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Called every tick so long as this move is active.
      * Called separately for each attacker.
-     * Invokes the {@link #perform(IAttacker, LivingEntity, MoveContext)} method if {@link #shouldPerform(IAttacker)}
+     * Invokes the {@link #perform(IAttacker, LivingEntity, MoveContext)} method if {@link #shouldPerform(IAttacker, int)}
      * returns {@code true} by default, but can be overridden to do whatever you want it to.
      *
      * @param attacker The attacker to tick for.
      */
-    public void tick(A attacker) {
-        if (finisher != null && canFinish(attacker) && finisher.leftInt() <= getDuration() - attacker.getMoveStun()) {
+    public void tick(A attacker, int moveStun) {
+        if (finisher != null && canFinish(attacker) && finisher.leftInt() <= getDuration() - moveStun) {
             attacker.setCurrentMove(finisher.right());
         }
-        if (shouldPerform(attacker)) {
+        if (shouldPerform(attacker, moveStun)) {
             doPerform(attacker);
         }
     }
@@ -472,8 +472,8 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to check for.
      * @return Whether this move should be performed this tick.
      */
-    public boolean shouldPerform(A attacker) {
-        return attacker.getMoveStun() == getWindupPoint() && attacker.hasUser();
+    public boolean shouldPerform(A attacker, int moveStun) {
+        return moveStun == getWindupPoint() && attacker.hasUser();
     }
 
     /**
@@ -538,6 +538,17 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      */
     public boolean hasWindupPassed(IAttacker<?, ?> attacker) {
         return attacker.getMoveStun() <= getWindupPoint();
+    }
+
+    /**
+     * Returns whether the windup has passed. Uses stored moveStun value from {@link net.arna.jcraft.common.tickable.MoveTickQueue}
+     * Use for attack ticking logic, otherwise use the other one.
+     *
+     * @param attacker The attacker to check for
+     * @return Whether the windup has passed
+     */
+    public boolean hasWindupPassed(IAttacker<?, ?> attacker, int moveStun) {
+        return moveStun <= getWindupPoint();
     }
 
     /**

@@ -195,9 +195,9 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             case SPECIAL2 -> getMoveContext().set(CloneSpawnMove.CLONE_TYPE, CloneSpawnMove.CloneType.BOW);
             case SPECIAL3 -> getMoveContext().set(CloneSpawnMove.CLONE_TYPE, CloneSpawnMove.CloneType.EMPTY);
             case ULTIMATE -> {
-                if (curMove != null && curMove.getOriginalMove() == DIM_HOP) {
+                if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == DIM_HOP) {
                     setMoveStun(0);
-                    curMove = null;
+                    setCurrentMove(null);
                 }
 
                 if (level().dimension().equals(JDimensionRegistry.AU_DIMENSION_KEY)) {
@@ -207,8 +207,8 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                 }
             }
             case LIGHT -> {
-                if (curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-                    AbstractMove<?, ? super D4CEntity> followup = curMove.getFollowup();
+                if (getCurrentMove() != null && getCurrentMove().getMoveType() == MoveType.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
+                    AbstractMove<?, ? super D4CEntity> followup = getCurrentMove().getFollowup();
                     if (followup != null) {
                         setMove(followup, (State) followup.getAnimation());
                         return true;
@@ -222,7 +222,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
 
     @Override
     public void queueMove(MoveInputType type) {
-        if (curMove != null && curMove.getOriginalMove() == CLONE_SPAWN) {
+        if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == CLONE_SPAWN) {
             return;
         }
         super.queueMove(type);

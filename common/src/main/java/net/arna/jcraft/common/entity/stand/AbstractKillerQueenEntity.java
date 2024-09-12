@@ -123,7 +123,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
         switch (type) {
             case LIGHT -> {
                 boolean idling = getMoveStun() <= 0;
-                if (curMove == null || curMove.getFollowup() == null) {
+                if (getCurrentMove() == null || getCurrentMove().getFollowup() == null) {
                     if (idling) {
                         if (user.isShiftKeyDown()) {
                             detonate();
@@ -131,11 +131,11 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
                             return super.initMove(MoveType.LIGHT);
                         }
                     }
-                } else if (getMoveStun() < curMove.getWindupPoint()) {
+                } else if (getMoveStun() < getCurrentMove().getWindupPoint()) {
                     if (user.isShiftKeyDown()) {
                         detonate();
                     } else {
-                        AbstractMove<?, ? super E> followup = curMove.getFollowup();
+                        AbstractMove<?, ? super E> followup = getCurrentMove().getFollowup();
                         setMove(followup, (S) followup.getAnimation());
                     }
                 }

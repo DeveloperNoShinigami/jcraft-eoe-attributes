@@ -50,10 +50,10 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     }
 
     @Override
-    public void tick(KingCrimsonEntity attacker) {
-        super.tick(attacker);
+    public void tick(KingCrimsonEntity attacker, int moveStun) {
+        super.tick(attacker, moveStun);
 
-        if (attacker.getMoveStun() == getWindupPoint()) {
+        if (moveStun == getWindupPoint()) {
             beginPrediction(attacker); // Clientside prediction, serverside is in specialAttack()
         }
 

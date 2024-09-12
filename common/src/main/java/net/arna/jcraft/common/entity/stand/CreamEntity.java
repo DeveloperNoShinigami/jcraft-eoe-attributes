@@ -4,11 +4,12 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.cream.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -29,7 +30,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -45,8 +45,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -340,14 +338,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
     @Override
     public boolean initMove(MoveType type) {
-        if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-            AbstractMove<?, ? super CreamEntity> followup = curMove.getFollowup();
-            if (followup != null) {
-                setMove(followup, (State) followup.getAnimation());
-                return true;
-            }
-        }
-
+        if (tryFollowUp(type, MoveType.LIGHT)) return true;
         return super.initMove(type);
     }
 
@@ -436,7 +427,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
         if (server) {
             if (!charging) {
-                if (curMove != null) {
+                if (getCurrentMove() != null) {
                     setVoidTime(0);
                     resetAlphaOverride();
                     voiding = false;
@@ -483,7 +474,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                             player.connection.send(new ClientboundSetEntityMotionPacket(user));
                         }
 
-                        if (curMove != null && curMove.getOriginalMove() == BALL_DESTROY) {
+                        if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == BALL_DESTROY) {
                             chargeDir = chargeDir.add(
                                     new Vec3(GravityChangerAPI.getGravityDirection(user).step()).scale(0.1)
                             ).normalize().scale(0.5);

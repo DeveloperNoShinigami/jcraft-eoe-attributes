@@ -18,8 +18,8 @@ public final class GlideMove extends AbstractMove<GlideMove, TheFoolEntity> {
     }
 
     @Override
-    public void tick(TheFoolEntity attacker) {
-        super.tick(attacker);
+    public void tick(TheFoolEntity attacker, int moveStun) {
+        super.tick(attacker, moveStun);
 
         LivingEntity user = attacker.getUser();
         if (user == null) {

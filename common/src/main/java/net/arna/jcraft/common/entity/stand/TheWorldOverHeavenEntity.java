@@ -2,12 +2,13 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntList;
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.Color;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.theworld.overheaven.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -30,9 +31,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -277,7 +275,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
     public boolean initMove(MoveType type) {
         switch (type) {
             case SPECIAL1, SPECIAL2, SPECIAL3 -> {
-                if (curMove != null && curMove.getOriginalMove() == CHARGE_OVERWRITE && getMoveStun() < 50) {
+                if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == CHARGE_OVERWRITE && getMoveStun() < 50) {
                     initOverwrite(switch (type) {
                         default -> 1;
                         case SPECIAL2 -> 2;
@@ -296,12 +294,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                 }
             }
             case LIGHT -> {
-                if (curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-                    AbstractMove<?, ? super TheWorldOverHeavenEntity> followup = curMove.getFollowup();
-                    if (followup != null) {
-                        setMove(followup, (State) followup.getAnimation());
-                    }
-                } else {
+                if (!tryFollowUp(type, MoveType.LIGHT)) {
                     return super.initMove(type);
                 }
             }

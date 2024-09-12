@@ -309,15 +309,12 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
 
     @Override
     public boolean initMove(MoveType type) {
-        if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-            AbstractMove<?, ? super SilverChariotEntity> followup = curMove.getFollowup();
-            if (followup != null) {
-                setMove(followup, (State) followup.getAnimation());
+        if (!tryFollowUp(type, MoveType.LIGHT)) {
+            if (type == MoveType.SPECIAL1 && getUserOrThrow().isHolding(JItemRegistry.ANUBIS.get()) && getCurrentMove() != null && getCurrentMove().getOriginalMove() == SPIN_BARRAGE && getMoveStun() < 7) {
+                setMove(ANUBIS_SPIN_BARRAGE, (State) ANUBIS_SPIN_BARRAGE.getAnimation());
+            } else {
+                return super.initMove(type);
             }
-        } else if (type == MoveType.SPECIAL1 && getUserOrThrow().isHolding(JItemRegistry.ANUBIS.get()) && curMove != null && curMove.getOriginalMove() == SPIN_BARRAGE && getMoveStun() < 7) {
-            setMove(ANUBIS_SPIN_BARRAGE, (State) ANUBIS_SPIN_BARRAGE.getAnimation());
-        } else {
-            return super.initMove(type);
         }
         return true;
     }
@@ -386,7 +383,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         if (user instanceof Player player) {
             hasAnubis |= player.getInventory().contains(JItemRegistry.ANUBIS.get().getDefaultInstance());
 
-            if (curMove == null && getOffhandItem() != null) {
+            if (getCurrentMove() == null && getOffhandItem() != null) {
                 player.addItem(getOffhandItem());
                 getOffhandItem().shrink(1);
             }
@@ -405,7 +402,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         }
 
         ARMOR_OFF.tickArmor(this);
-        if (curMove != null && getMoveStun() % 10 == 0 && curMove.getOriginalMove() == CIRCLE_CHARGE) {
+        if (getCurrentMove() != null && getMoveStun() % 10 == 0 && getCurrentMove().getOriginalMove() == CIRCLE_CHARGE) {
             getMoveContext().incrementInt(CHARGE_TIME, 1);
         }
     }

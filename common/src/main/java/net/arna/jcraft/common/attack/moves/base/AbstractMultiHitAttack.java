@@ -39,8 +39,8 @@ public abstract class AbstractMultiHitAttack<T extends AbstractMultiHitAttack<T,
     }
 
     @Override
-    public boolean shouldPerform(A attacker) {
-        return attacker.hasUser() && hitMoments.contains(getDuration() - attacker.getMoveStun());
+    public boolean shouldPerform(A attacker, int moveStun) {
+        return attacker.hasUser() && hitMoments.contains(getDuration() - moveStun);
     }
 
     @Override

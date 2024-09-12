@@ -236,7 +236,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             case HEAVY -> {
                 boolean idling = getMoveStun() <= 0;
 
-                if (curMove == null || curMove.getOriginalMove() != VERTICAL_CHOP) {
+                if (getCurrentMove() == null || getCurrentMove().getOriginalMove() != VERTICAL_CHOP) {
                     if (idling) {
                         return super.initMove(type);
                     } else {
@@ -248,7 +248,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             }
             case ULTIMATE -> {
                 // If predicting, and Time Erase isn't on cooldown
-                if (curMove != null && curMove.getOriginalMove() == PREDICTION && hasUser()) {
+                if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == PREDICTION && hasUser()) {
                     CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(getUser());
                     if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) <= 0) {
                         cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 400);
@@ -344,7 +344,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         PredictionMove.cancelPrediction(this);
 
         // General
-        curMove = null;
+        setCurrentMove(null);
         queuedMove = null;
 
         setMoveStun(2);

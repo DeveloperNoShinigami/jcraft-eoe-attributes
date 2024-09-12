@@ -30,10 +30,8 @@ public final class LungeAttack extends AbstractSimpleAttack<LungeAttack, StandEn
     }
 
     @Override
-    public void tick(StandEntity<?,?> attacker) {
-        super.tick(attacker);
-
-        int moveStun = attacker.getMoveStun();
+    public void tick(StandEntity<?,?> attacker, int moveStun) {
+        super.tick(attacker, moveStun);
         if (moveStun > endMoveStun && moveStun <= beginMoveStun) {
             withMoveDistance(getMoveDistance() + 0.15f);
         }

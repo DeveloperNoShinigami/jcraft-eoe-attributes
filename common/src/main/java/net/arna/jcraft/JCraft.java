@@ -29,6 +29,7 @@ import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.network.s2c.ShaderDeactivationPacket;
 import net.arna.jcraft.common.network.s2c.TimeStopStatePacket;
 import net.arna.jcraft.common.tickable.JEnemies;
+import net.arna.jcraft.common.tickable.MoveTickQueue;
 import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
@@ -169,6 +170,7 @@ public final class JCraft {
         JLootTableHelper.init();
         JServerConfig.init();
         JStatRegistry.init();
+        MoveTickQueue.init();
 
         GravityChannel.init();
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);

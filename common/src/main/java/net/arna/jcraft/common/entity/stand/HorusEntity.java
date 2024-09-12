@@ -133,6 +133,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             Removes fall damage.""")
             );
     // Special 1
+    //todo: crouching sp1 large icicle launch (literally flak)
     public static final SimpleAttack<HorusEntity> SCATTER = new SimpleAttack<HorusEntity>(
             60, 16, 20, 0.75f, 0, 0, 0, 0, 0)
             .withInfo(
@@ -173,6 +174,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             )
             .markRanged()
             .withAction(HorusEntity::placeIceBranch);
+    // TODO: large icicle barrage ult
     public static final EffectInflictingAttack<HorusEntity> PERFECT_FREEZE = new EffectInflictingAttack<HorusEntity>(50 * 20,
             14, 30, 0f, 4f, 10, 2.5f, 0.3f, 0,
             List.of(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 0, false, true))
@@ -251,24 +253,18 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
 
     @Override
     public boolean initMove(MoveType type) {
-        if (type == MoveType.HEAVY && curMove != null && curMove.getMoveType() == MoveType.HEAVY && getMoveStun() < curMove.getWindupPoint()) {
-            AbstractMove<?, ? super HorusEntity> followup = curMove.getFollowup();
-            if (followup != null) {
-                setMove(followup, (State) followup.getAnimation());
-            }
-
+        if (tryFollowUp(type, MoveType.HEAVY)) {
             return true;
-        } else if (type == MoveType.LIGHT && curMove != null && curMove.getMoveType() == MoveType.LIGHT && getMoveStun() < curMove.getWindupPoint()) {
-            AbstractMove<?, ? super HorusEntity> followup = curMove.getFollowup();
+        } else if (type == MoveType.LIGHT && getCurrentMove() != null && getCurrentMove().getMoveType() == MoveType.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
+            AbstractMove<?, ? super HorusEntity> followup = getCurrentMove().getFollowup();
             if (followup != null) {
                 if (getUserOrThrow().isDiscrete()) followup = followup.getCrouchingVariant();
                 setMove(followup, (State) followup.getAnimation());
             }
-
             return true;
-        } else {
-            return super.initMove(type);
         }
+
+        return super.initMove(type);
     }
 
     private static void scatter(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
@@ -413,8 +409,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                         );
                     }
                 }
-            } else if (curMove != null) {
-                if (curMove.getOriginalMove() == CHARGE_ICICLE) icicleChargeTime++;
+            } else if (getCurrentMove() != null) {
+                if (getCurrentMove().getOriginalMove() == CHARGE_ICICLE) icicleChargeTime++;
             }
         }
     }

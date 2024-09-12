@@ -17,10 +17,7 @@ import net.arna.jcraft.common.item.MockItem;
 import net.arna.jcraft.common.network.s2c.PredictionUpdatePacket;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.tickable.*;
-import net.arna.jcraft.common.util.CooldownType;
-import net.arna.jcraft.common.util.DashData;
-import net.arna.jcraft.common.util.EntityInterest;
-import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.*;
 import net.minecraft.core.BlockPos;
@@ -32,6 +29,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -61,9 +59,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static net.arna.jcraft.JCraft.ALLOW_MOB_EVOLVED_STANDS;
-import static net.arna.jcraft.JCraft.CHANCE_MOB_SPAWNS_WITH_STAND;
-import static net.arna.jcraft.JCraft.stun;
+import static net.arna.jcraft.JCraft.*;
 import static net.arna.jcraft.common.util.EntityInterest.blockAttractionInterest;
 import static net.arna.jcraft.common.util.EntityInterest.itemAttractionInterest;
 
@@ -468,14 +464,19 @@ public class JServerEvents {
     }
 
     public static EventResult hurt(LivingEntity entity, DamageSource source, float damage) {
+        // No snowball shenanigans
+        if (damage < 0.01f) return EventResult.pass();
+
         boolean toLaunch = false;
         Entity attacker = source.getEntity();
         MobEffectInstance stun = entity.getEffect(JStatusRegistry.DAZED.get());
 
         if (stun != null && stun.getAmplifier() != 2) {
+            boolean projectileAttack = false;
             // Only apply stun nerfs if hit with a weapon or a projectile
             if (attacker instanceof LivingEntity living) {
-                boolean hasWeapon = source.is(DamageTypes.MOB_PROJECTILE);
+                projectileAttack = source.is(DamageTypeTags.IS_PROJECTILE);
+                boolean hasWeapon = projectileAttack;
                 if (!hasWeapon) {
                     hasWeapon = !living.getMainHandItem().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty();
                 }
@@ -508,6 +509,13 @@ public class JServerEvents {
                 Vec3 knockback = entity.position().subtract(sourcePos).normalize().add(upVecD);
                 GravityChangerAPI.setWorldVelocity(entity, knockback);
                 entity.hurtMarked = true;
+
+                // todo: sslash and spierce sounds
+                JCraft.createParticle((ServerLevel) entity.level(),
+                        entity.getX() - upVec.getX(),
+                        entity.getY() - upVec.getY(),
+                        entity.getZ() - upVec.getZ(),
+                        projectileAttack ? JParticleType.STUN_PIERCE : JParticleType.STUN_SLASH);
             }
         }
         return EventResult.pass();
