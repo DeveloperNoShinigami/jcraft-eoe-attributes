@@ -1,6 +1,7 @@
 package net.arna.jcraft.client.registry;
 
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
+import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.client.renderer.entity.*;
 import net.arna.jcraft.client.renderer.entity.projectiles.*;
 import net.arna.jcraft.client.renderer.entity.stands.*;
@@ -11,90 +12,103 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+
+import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public interface JEntityRendererRegister {
-    //todo: figure out a way to map this
-    static void registerEntityRenderers() {
-        EntityRendererRegistry.register(JEntityTypeRegistry.STAR_PLATINUM, StarPlatinumRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.SPTW, SPTWRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.KING_CRIMSON, KingCrimsonRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.D4C, D4CRenderer::new);
+    record RendererData <T extends Entity> (RegistrySupplier<? extends EntityType<? extends T>> supplier, EntityRendererProvider<T> provider) {
+        public void registerFabric() {
+            EntityRendererRegistry.register(supplier, provider);
+        }
+    }
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.CREAM, CreamRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.KILLER_QUEEN, KillerQueenRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST, KQBTDRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.SHEER_HEART_ATTACK, SheerHeartAttackRenderer::new);
+    RendererData<?>[] entries = {
+            new RendererData<>(JEntityTypeRegistry.STAR_PLATINUM, StarPlatinumRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.SPTW, SPTWRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.KING_CRIMSON, KingCrimsonRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.WHITE_SNAKE, WhiteSnakeRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.C_MOON, CMoonRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.MADE_IN_HEAVEN, MadeInHeavenRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.D4C, D4CRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.SHADOW_THE_WORLD, ShadowTheWorldRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.THE_WORLD, TheWorldRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN, TheWorldOverHeavenRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.CREAM, CreamRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.KILLER_QUEEN, KillerQueenRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST, KQBTDRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.SHEER_HEART_ATTACK, SheerHeartAttackRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.SILVER_CHARIOT, SilverChariotRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.WHITE_SNAKE, WhiteSnakeRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.C_MOON, CMoonRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.MADE_IN_HEAVEN, MadeInHeavenRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.MAGICIANS_RED, MagiciansRedRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.SHADOW_THE_WORLD, ShadowTheWorldRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.THE_WORLD, TheWorldRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN, TheWorldOverHeavenRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.THE_FOOL, TheFoolRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.SILVER_CHARIOT, SilverChariotRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.GOLD_EXPERIENCE, GoldExperienceRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.GE_TREE, GETreeRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.GE_FROG, GEFrogRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.GE_SNAKE, GESnakeRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.GE_BUTTERFLY, GEButterflyRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.MAGICIANS_RED, MagiciansRedRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.HIEROPHANT_GREEN, HGRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.EMERALD, EmeraldRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.HG_NET, HGNetRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.THE_FOOL, TheFoolRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.THE_SUN, SunRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.GOLD_EXPERIENCE, GoldExperienceRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.GE_TREE, GETreeRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.GE_FROG, GEFrogRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.GE_SNAKE, GESnakeRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.GE_BUTTERFLY, GEButterflyRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.GER, GERRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.GER_SCORPION, GERScorpionRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.HIEROPHANT_GREEN, HGRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.EMERALD, EmeraldRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.HG_NET, HGNetRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION, PurpleHazeDistortionRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.PURPLE_HAZE, PurpleHazeRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.THE_SUN, SunRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.HORUS, HorusRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.ICICLE, IcicleRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.LARGE_ICICLE, LargeIcicleRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.ICE_BRANCH, IceBranchRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.GER, GERRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.GER_SCORPION, GERScorpionRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.CINDERELLA, CinderellaRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.OSIRIS, OsirisRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.ATUM, AtumRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.DIVER_DOWN, DiverDownRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.CHARIOT_REQUIEM, ChariotRequiemRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.DRAGONS_DREAM, DragonsDreamRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.FOO_FIGHTERS, FooFightersRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.GOO_GOO_DOLLS, GooGooDollsRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION, PurpleHazeDistortionRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.PURPLE_HAZE, PurpleHazeRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.LASER_PROJECTILE, LaserProjectileRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.BLOOD_PROJECTILE, BloodProjectileRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.BLOCK_PROJECTILE, BlockProjectileRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.KNIFE, KnifeRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.ANKH, AnkhRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.BUBBLE, BubbleRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.LIFE_DETECTOR, LifeDetectorRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.RED_BIND, RedBindRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.SAND_TORNADO, SandTornadoRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.WS_ACID_PROJECTILE, WSAcidRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.SUN_BEAM, SunBeamRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.BULLET, BulletRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.RAPIER, RapierRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.METEOR, MeteorRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.PH_CAPSULE, PHCapsuleRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.PURPLE_HAZE_CLOUD, JEntityRendererRegister::createEmpty);
+            new RendererData<>(JEntityTypeRegistry.HORUS, HorusRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.ICICLE, IcicleRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.LARGE_ICICLE, LargeIcicleRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.ICE_BRANCH, IceBranchRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.PETSHOP, PetshopRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.AYA_TSUJI, AyaTsujiRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.DARBY_OLDER, DarbyOlderRenderer::new);
-        EntityRendererRegistry.register(JEntityTypeRegistry.DARBY_YOUNGER, DarbyYoungerRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.CINDERELLA, CinderellaRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.OSIRIS, OsirisRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.ATUM, AtumRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.DIVER_DOWN, DiverDownRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.CHARIOT_REQUIEM, ChariotRequiemRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.DRAGONS_DREAM, DragonsDreamRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.FOO_FIGHTERS, FooFightersRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.GOO_GOO_DOLLS, GooGooDollsRenderer::new),
 
-        EntityRendererRegistry.register(JEntityTypeRegistry.METALLICA, MetallicaRenderer::new);
+            new RendererData<>(JEntityTypeRegistry.LASER_PROJECTILE, LaserProjectileRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.BLOOD_PROJECTILE, BloodProjectileRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.BLOCK_PROJECTILE, BlockProjectileRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.KNIFE, KnifeRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.ANKH, AnkhRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.BUBBLE, BubbleRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.LIFE_DETECTOR, LifeDetectorRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.RED_BIND, RedBindRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.SAND_TORNADO, SandTornadoRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.WS_ACID_PROJECTILE, WSAcidRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.SUN_BEAM, SunBeamRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.BULLET, BulletRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.RAPIER, RapierRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.METEOR, MeteorRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.PH_CAPSULE, PHCapsuleRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.PURPLE_HAZE_CLOUD, JEntityRendererRegister::createEmpty),
+
+            new RendererData<>(JEntityTypeRegistry.PETSHOP, PetshopRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.AYA_TSUJI, AyaTsujiRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.DARBY_OLDER, DarbyOlderRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.DARBY_YOUNGER, DarbyYoungerRenderer::new),
+
+            new RendererData<>(JEntityTypeRegistry.METALLICA, MetallicaRenderer::new),
+    };
+
+    static void registerEntityRenderers(Consumer<RendererData<?>> consumer) {
+        for (RendererData<?> entry : entries) consumer.accept(entry);
     }
 
     static <T extends Entity> EntityRenderer<T> createEmpty(EntityRendererProvider.Context ctx) {

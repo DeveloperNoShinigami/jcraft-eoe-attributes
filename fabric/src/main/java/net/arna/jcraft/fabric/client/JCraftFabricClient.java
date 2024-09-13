@@ -29,7 +29,7 @@ public final class JCraftFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
         JCraftClient.init();
         JModelPredicateProviderRegistry.register();
-        JEntityRendererRegister.registerEntityRenderers();
+        JEntityRendererRegister.registerEntityRenderers(JEntityRendererRegister.RendererData::registerFabric);
         BlockEntityRenderers.register(JBlockEntityTypeRegistry.COFFIN_TILE.get(), CoffinTileRenderer::new);
 
         // Particle registration
