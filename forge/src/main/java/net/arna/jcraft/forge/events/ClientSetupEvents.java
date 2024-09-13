@@ -1,6 +1,7 @@
 package net.arna.jcraft.forge.events;
 
 
+import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import net.arna.jcraft.client.gui.hud.JCraftHudOverlay;
 import net.arna.jcraft.client.registry.JEntityRendererRegister;
 import net.arna.jcraft.client.renderer.entity.*;
@@ -92,6 +93,8 @@ public class ClientSetupEvents {
         event.registerEntityRenderer(JEntityTypeRegistry.AYA_TSUJI.get(), AyaTsujiRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.DARBY_OLDER.get(), DarbyOlderRenderer::new);
         event.registerEntityRenderer(JEntityTypeRegistry.DARBY_YOUNGER.get(), DarbyYoungerRenderer::new);
+
+        event.registerEntityRenderer(JEntityTypeRegistry.METALLICA.get(), MetallicaRenderer::new);
     }
 
     @SubscribeEvent

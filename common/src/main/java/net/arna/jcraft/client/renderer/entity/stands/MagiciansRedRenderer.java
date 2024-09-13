@@ -3,7 +3,7 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
-import net.arna.jcraft.client.model.entity.MagiciansRedModel;
+import net.arna.jcraft.client.model.entity.stand.MagiciansRedModel;
 import net.arna.jcraft.client.renderer.entity.layer.MRGlowLayer;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;

@@ -24,6 +24,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -326,12 +327,17 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             return;
         }
 
+        if (level().isClientSide) {
+            return;
+        }
+
         IntList overwriteTimes = moveContext.get(OverwriteAttack.OVERWRITE_TIMES);
         List<LivingEntity> overwriteTargets = moveContext.get(OverwriteAttack.OVERWRITE_TARGETS);
         LivingEntity user = getUserOrThrow();
 
-        if (level().isClientSide) {
-            return;
+        // Mob TW:OH users normally don't swing after charging overwrite. This fixes that.
+        if (user instanceof Mob && getState() == State.CHARGE_OVERWRITE && random.nextBoolean()) {
+            initMove(random.nextBoolean() ? MoveType.SPECIAL1 : MoveType.SPECIAL2);
         }
 
         int moveStun = getMoveStun();

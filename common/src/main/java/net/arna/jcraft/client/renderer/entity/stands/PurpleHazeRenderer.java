@@ -6,7 +6,7 @@ import com.mojang.math.Axis;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
-import net.arna.jcraft.client.model.entity.PurpleHazeModel;
+import net.arna.jcraft.client.model.entity.stand.PurpleHazeModel;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

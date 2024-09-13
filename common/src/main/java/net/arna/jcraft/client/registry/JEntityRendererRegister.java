@@ -14,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
 public interface JEntityRendererRegister {
+    //todo: figure out a way to map this
     static void registerEntityRenderers() {
         EntityRendererRegistry.register(JEntityTypeRegistry.STAR_PLATINUM, StarPlatinumRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.SPTW, SPTWRenderer::new);
@@ -92,6 +93,8 @@ public interface JEntityRendererRegister {
         EntityRendererRegistry.register(JEntityTypeRegistry.AYA_TSUJI, AyaTsujiRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.DARBY_OLDER, DarbyOlderRenderer::new);
         EntityRendererRegistry.register(JEntityTypeRegistry.DARBY_YOUNGER, DarbyYoungerRenderer::new);
+
+        EntityRendererRegistry.register(JEntityTypeRegistry.METALLICA, MetallicaRenderer::new);
     }
 
     static <T extends Entity> EntityRenderer<T> createEmpty(EntityRendererProvider.Context ctx) {

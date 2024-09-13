@@ -6,7 +6,6 @@ import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.particle.*;
-import net.arna.jcraft.client.registry.JEntityRendererRegister;
 import net.arna.jcraft.client.registry.JModelPredicateProviderRegistry;
 import net.arna.jcraft.client.renderer.block.CoffinTileRenderer;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
@@ -38,7 +37,6 @@ public class JCraftForgeClient {
         });
 
         BlockEntityRenderers.register(JBlockEntityTypeRegistry.COFFIN_TILE.get(), CoffinTileRenderer::new);
-        JEntityRendererRegister.registerEntityRenderers();
 
         // Run when the MinecraftClient instance is fully initialized.
         Minecraft.getInstance().tell(EpitaphOverlay::preload);

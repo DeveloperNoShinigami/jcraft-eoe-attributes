@@ -1,4 +1,4 @@
-package net.arna.jcraft.client.model.entity;
+package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.common.entity.stand.ChariotRequiemEntity;
 import net.arna.jcraft.common.entity.stand.StandType;

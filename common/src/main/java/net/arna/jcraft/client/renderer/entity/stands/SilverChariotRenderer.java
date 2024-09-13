@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
-import net.arna.jcraft.client.model.entity.SilverChariotModel;
+import net.arna.jcraft.client.model.entity.stand.SilverChariotModel;
 import net.arna.jcraft.client.renderer.entity.layer.SCRapierLayer;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.util.JUtils;

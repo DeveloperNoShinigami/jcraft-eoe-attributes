@@ -487,4 +487,8 @@ public final class JCraft {
         victim.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), duration, amplifier, false, false, true));
         //JCraft.LOGGER.info("Stunned: " + entity.getEntityName() + " for: " + duration + " with stunType: " + amplifier);
     }
+
+    public static void prefixedLog(boolean isClient, String msg) {
+        LOGGER.info(isClient ? "[CLIENT]: " + msg : "[SERVER]: " + msg);
+    }
 }

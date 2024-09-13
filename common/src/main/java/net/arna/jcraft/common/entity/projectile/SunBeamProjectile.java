@@ -30,6 +30,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,8 +43,8 @@ import static net.arna.jcraft.common.util.JUtils.canDamage;
 public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
     private final int stun = 10;
     private int length = 0;
-    private int maxLength = 64;
-    private TheSunEntity sun;
+    private static final int MAX_LENGTH = 64;
+    private @Nullable TheSunEntity sun;
 
     public static final EntityDataAccessor<Integer> SKIN;
 
@@ -80,7 +81,7 @@ public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
         return ItemStack.EMPTY;
     }
 
-    // Scorpions aren't very heavy
+    // Light isn't very heavy
     @Override
     public void push(Entity entity) {
     }
@@ -91,13 +92,31 @@ public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
     }
 
     @Override
+    public boolean isOnFire() {
+        return false;
+    }
+
+    private boolean allowRotation = true;
+    @Override
+    public void setXRot(float xRot) {
+        if (allowRotation) super.setXRot(xRot);
+    }
+
+    @Override
+    public void setYRot(float yRot) {
+        if (allowRotation) super.setYRot(yRot);
+    }
+
+    @Override
     public void tick() {
+        allowRotation = false;
         super.tick();
 
+        if (sun != null) setPos(position().add(JUtils.deltaPos(sun)));
         Vec3 curPos = position();
 
         if (tickCount > 5 && tickCount <= 10) {
-            length += maxLength / 5;
+            length += MAX_LENGTH / 5;
         }
 
         if (level().isClientSide()) {

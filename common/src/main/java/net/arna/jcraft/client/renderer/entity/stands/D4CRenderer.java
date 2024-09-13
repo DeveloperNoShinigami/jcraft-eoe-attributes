@@ -3,7 +3,7 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
-import net.arna.jcraft.client.model.entity.StandEntityModel;
+import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.client.renderer.MultiBufferSource;

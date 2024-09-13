@@ -1,4 +1,4 @@
-package net.arna.jcraft.client.model.entity;
+package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.common.entity.stand.GoldExperienceEntity;
 import net.arna.jcraft.common.entity.stand.StandType;

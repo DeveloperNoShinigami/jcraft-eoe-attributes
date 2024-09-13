@@ -1,4 +1,4 @@
-package net.arna.jcraft.client.model.entity;
+package net.arna.jcraft.client.model.entity.stand;
 
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.AnimationState;

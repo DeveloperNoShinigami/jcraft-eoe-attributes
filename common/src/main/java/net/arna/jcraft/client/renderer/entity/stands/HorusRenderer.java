@@ -3,7 +3,7 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
-import net.arna.jcraft.client.model.entity.HorusModel;
+import net.arna.jcraft.client.model.entity.stand.HorusModel;
 import net.arna.jcraft.client.renderer.entity.layer.HorusEyesLayer;
 import net.arna.jcraft.common.entity.stand.HorusEntity;
 import net.minecraft.client.renderer.MultiBufferSource;

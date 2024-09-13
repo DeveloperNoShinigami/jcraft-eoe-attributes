@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
-import net.arna.jcraft.client.model.entity.ChariotRequiemModel;
+import net.arna.jcraft.client.model.entity.stand.ChariotRequiemModel;
 import net.arna.jcraft.client.renderer.entity.layer.SCROutlineLayer;
 import net.arna.jcraft.common.entity.stand.ChariotRequiemEntity;
 import net.minecraft.client.renderer.MultiBufferSource;

@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
@@ -39,6 +40,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -49,6 +51,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.Collection;
@@ -103,7 +106,8 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
             .withInfo(
                     Component.nullToEmpty("Starburst"),
                     Component.nullToEmpty("""
-                            Fires 3 bursts of 3 meteors with high spread.""")
+                            Fires 3 bursts of meteors with high spread.
+                            Amount of meteors changes proportional to the size of The Sun.""")
             );
 
     private static final BarrageAttack<TheSunEntity> FIRE_METEORS_2 = new BarrageAttack<TheSunEntity>(
@@ -175,7 +179,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         );
     }
 
-    private static Vec3 getLookVector(Vec3 origin, Vec3 target) {
+    private static Vector2f getLookPY(Vec3 origin, Vec3 target) {
         double d = target.x - origin.x;
         double e = target.y - origin.y;
         double f = target.z - origin.z;
@@ -183,6 +187,13 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
 
         float yaw = Mth.wrapDegrees((float) (Mth.atan2(-f, -d) * 57.2957763671875) - 90.0F); // deg; X, Z
         float pitch = Mth.wrapDegrees((float) (Mth.atan2(-e, -g) * 57.2957763671875)); // deg; Y, len
+
+        return new Vector2f(pitch, yaw);
+    }
+    private static Vec3 getLookVector(Vec3 origin, Vec3 target) {
+        Vector2f pitchYaw = getLookPY(origin, target);
+        float pitch = pitchYaw.x;
+        float yaw = pitchYaw.y;
 
         return new Vec3(
                 -Mth.sin(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F),
@@ -220,7 +231,17 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         sunBeam.assignSun(attacker);
         sunBeam.setPos(pos);
 
-        Vec3 lookVec = getLookVector(pos, attacker.targetPosition);
+        Vector2f pitchYaw = getLookPY(pos, attacker.targetPosition);
+        float pitch = pitchYaw.x;
+        float yaw = pitchYaw.y;
+        Vec3 lookVec = new Vec3(
+                -Mth.sin(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F),
+                -Mth.sin((pitch) * 0.017453292F),
+                Mth.cos(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F)
+        );
+
+        sunBeam.setXRot(pitch + (attacker.random.nextFloat() - 0.5f) * divergence);
+        sunBeam.setYRot(yaw + (attacker.random.nextFloat() - 0.5f) * divergence);
         sunBeam.shoot(lookVec.x, lookVec.y, lookVec.z, 0.01f, divergence);
 
         attacker.level().addFreshEntity(sunBeam);
@@ -228,7 +249,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     private static void fireMeteors1(TheSunEntity attacker, LivingEntity user) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3 * attacker.getScale(); i++) {
             Vec3 pos = attacker.randomPos();
             fireMeteor(attacker, user, pos, getLookVector(pos, attacker.targetPosition).scale(1.75)).setNoGravity(true);
         }
@@ -470,6 +491,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         float scale = getScale();
         float heatFieldSize = scale * 20.0F;
 
+        // todo: fixme (TheSunEntity scales too large on MP)
+        if (tickCount % 20 == 0) JCraft.prefixedLog(level().isClientSide, "TheSunEntity@" + getId() + " scale: " + scale);
+
         if (level().isClientSide()) {
             Vec3 pos = randomPos();
             Vec3 vel = JUtils.randUnitVec(random).scale(0.2 * scale).add(getDeltaMovement());
@@ -496,6 +520,16 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                 int desiredHeight = 32;
                 desiredPosition = userPos.add(Vec3.atLowerCornerOf(gravity.getNormal().multiply(-desiredHeight)));
             } else {
+                if (user instanceof Mob) {
+                    // Periodically increase size
+                    // Not a real combat strategy, but it does show off the possibility and change his damage output
+                    if (Mth.sin(tickCount / 100.0f) > 1.0f) initMove(MoveType.ULTIMATE);
+
+                    // Stay as close as possible to user without harming them
+                    Direction gravity = GravityChangerAPI.getGravityDirection(user);
+                    desiredPosition = userPos.add(Vec3.atLowerCornerOf(gravity.getNormal().multiply((int) -heatFieldSize)));
+                }
+
                 // Prioritize getting closer
                 double distance = pos.distanceToSqr(userPos);
                 if (distance > MAX_DISTANCE * MAX_DISTANCE) {

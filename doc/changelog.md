@@ -89,6 +89,9 @@
 * an interface that handles starting animations (for players and future mob spec users)
 
 
+* figure out a way to map the entity types and renderers into a common method (see: JEntityRenderRegister, ClientSetupEvents)
+
+
 * Fix attacks not being able to trade - because ticking isn't done in parallel, the first entity to be ticked
     will have priority when it comes to attack calculations, even though both executed an attack at the same time.
     A possible solution to this is to just queue up all the move.tick() calls and run them all at the very end of a server tick.

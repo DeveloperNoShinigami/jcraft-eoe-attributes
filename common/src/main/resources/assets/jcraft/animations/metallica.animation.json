@@ -1,0 +1,66 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.metallica.idle": {
+			"loop": true,
+			"bones": {
+				"scalpel": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"scalpel2": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"scalpel3": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"shield": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.metallica.block": {
+			"loop": true,
+			"animation_length": 0.48,
+			"bones": {
+				"scalpel": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"scalpel2": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"scalpel3": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"shield": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.48": {
+							"vector": [0, 0, 10800],
+							"easing": "linear"
+						}
+					},
+					"position": {
+						"vector": [0, 15, 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

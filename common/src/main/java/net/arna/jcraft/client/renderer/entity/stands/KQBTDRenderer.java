@@ -3,7 +3,7 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
-import net.arna.jcraft.client.model.entity.KQBTDModel;
+import net.arna.jcraft.client.model.entity.stand.KQBTDModel;
 import net.arna.jcraft.client.renderer.entity.layer.KQBTDEyesLayer;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
