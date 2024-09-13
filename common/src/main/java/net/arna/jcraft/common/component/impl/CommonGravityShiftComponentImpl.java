@@ -57,7 +57,7 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
     private final LivingEntity user;
     private final RandomSource random;
     private final List<Entity> shiftedEntities = new ArrayList<>();
-    private int time = 0;
+    protected int time = 0;
     private Vec3 particleDirection = Vec3.ZERO; // Only for ShiftType.DIRECTIONAL
     private ShiftType type = ShiftType.NONE;
 

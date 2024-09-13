@@ -93,7 +93,7 @@ public class RuntimeEvents {
         PhCapability.syncEntityCapability(event);
         SpecCapability.syncEntityCapability(event);
         GravityCapability.syncEntityCapability(event);
-        GravityShiftCapability.syncEntityCapability(event);
+        // GravityShiftCapability.syncEntityCapability(event);
     }
 
     @SubscribeEvent

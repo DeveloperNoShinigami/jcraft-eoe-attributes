@@ -65,6 +65,7 @@ public final class JCraftForge {
         GravityCapability.getCapability(entity).tick();
 
         if (entity instanceof LivingEntity living) {
+            GravityShiftCapability.getCapability(living).tick();
             BombTrackerCapability.getCapability(living).tick();
             CooldownsCapability.getCapability(living).tick();
             HitPropertyCapability.getCapability(living).tick();
