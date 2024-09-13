@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -114,7 +115,7 @@ public interface JEntityRendererRegister {
     static <T extends Entity> EntityRenderer<T> createEmpty(EntityRendererProvider.Context ctx) {
         return new EntityRenderer<>(ctx) {
             @Override
-            public ResourceLocation getTextureLocation(T entity) {
+            public ResourceLocation getTextureLocation(@NotNull T entity) {
                 return null;
             }
         };
