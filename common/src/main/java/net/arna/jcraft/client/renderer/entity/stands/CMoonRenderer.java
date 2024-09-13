@@ -6,6 +6,8 @@ import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.StandEntityModel;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -29,13 +31,14 @@ public class CMoonRenderer extends StandEntityRenderer<CMoonEntity> {
     @Override
     public void actuallyRender(PoseStack poseStack, CMoonEntity stand, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, getAlpha(animatable, partialTick));
-
+        // todo: try to replace this with a particle keyframe
         if (stand.getState() == CMoonEntity.State.GRAV_PUNCH && stand.getMoveStun() > gravWindup) {
             if (currentTick < 0 || currentTick != stand.tickCount) {
                 this.currentTick = stand.tickCount;
                 model.getBone("rightLower").ifPresent(bone -> {
                     RandomSource random = stand.getRandom();
-                    Vector3d worldPos = bone.getWorldPosition();
+                    Vector3d localPos = bone.getLocalPosition();
+                    Vec3 worldPos = RotationUtil.vecWorldToPlayer(localPos.x, localPos.y, localPos.z, GravityChangerAPI.getGravityDirection(animatable)).add(animatable.position());
                     Vec3 standVel = JUtils.deltaPos(stand);
 
                     stand.getCommandSenderWorld().addParticle(chargeParticle,

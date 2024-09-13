@@ -24,6 +24,7 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -133,14 +134,53 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             Removes fall damage.""")
             );
     // Special 1
+    public static final SimpleAttack<HorusEntity> LANCE = new SimpleAttack<HorusEntity>(
+            100, 18, 24, 0.75f, 0, 0, 0, 0, 0)
+            .withAnim(State.LANCE)
+            .withInfo(
+                    Component.literal("Ice Lance"),
+                    Component.literal("""
+                            Also slow, slightly higher cooldown.
+                            Fires a large icicle that detonates after 2s.""")
+            )
+            .markRanged()
+            .withAction(HorusEntity::iceLance);
+
+    private static void iceLance(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
+        AbstractMove<?, ? super HorusEntity> move = attacker.getCurrentMove();
+        if (move == null) return;
+
+        attacker.lastLargeIcicle = new LargeIcicleProjectile(attacker.level(), user);
+
+        Vec3i gravity = GravityChangerAPI.getGravityDirection(user).getNormal();
+        Vec3 velocity = user.getLookAngle();
+        double e = velocity.x;
+        double f = velocity.y;
+        double g = velocity.z;
+        double l = velocity.horizontalDistance();
+        attacker.lastLargeIcicle.moveTo(
+                attacker.getX() - gravity.getX() * 1.5,
+                attacker.getY() - gravity.getY() * 1.5,
+                attacker.getZ() - gravity.getZ() * 1.5,
+                (float) (Mth.atan2(-e, -g) * 57.2957763671875),
+                (float) (Mth.atan2(f, l) * 57.2957763671875)
+        );
+        attacker.lastLargeIcicle.setDeltaMovement(velocity.scale(1.75));
+        attacker.lastLargeIcicle.markProjectile();
+        attacker.lastLargeIcicle.lock();
+
+        attacker.level().addFreshEntity(attacker.lastLargeIcicle);
+    }
+
     //todo: crouching sp1 large icicle launch (literally flak)
     public static final SimpleAttack<HorusEntity> SCATTER = new SimpleAttack<HorusEntity>(
             60, 16, 20, 0.75f, 0, 0, 0, 0, 0)
+            .withCrouchingVariant(LANCE)
             .withInfo(
                     Component.literal("Scatter"),
                     Component.literal("""
                                     Relatively slow, very low cooldown.
-                                    Fires 6 icicles that bounce off walls,""")
+                                    Fires 6 icicles that bounce off walls.""")
             )
             .markRanged()
             .withAction(HorusEntity::scatter);
@@ -242,7 +282,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
         moves.register(MoveType.HEAVY, STOMP, State.STOMP);
 
-        moves.register(MoveType.SPECIAL1, SCATTER, State.SCATTER);
+        moves.registerImmediate(MoveType.SPECIAL1, SCATTER, State.SCATTER);
         moves.register(MoveType.SPECIAL2, CHARGE_ICICLE, State.CHARGE_ICICLE);
         moves.register(MoveType.SPECIAL3, PLACE, State.PLACE);
 
@@ -439,6 +479,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         CHARGE_FIRE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.charge_fire"))),
         PLACE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.place"))),
         ULTIMATE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.ultimate"))),
+        LANCE(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.horus.lance"))),
         ;
 
         private final Consumer<AnimationState<HorusEntity>> animator;

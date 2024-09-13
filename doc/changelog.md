@@ -61,7 +61,7 @@
 * Timestop doesn't stop animated textures
 
 
-* Bloodsuck doesn't properly keep players in place (TESTING FIX)
+* Bloodsuck doesn't properly keep players in place
 
 
 * KC epitaph prediction model rendering has the wrong scale
@@ -72,11 +72,8 @@
 * in the future, try looking at what sets the enemies target to null
 * its obfuscated because of how goals are wrapped, but its probably possible to figure out
 * To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
-
-
-* Bone-positioned particles are misplaced when under different gravities
-
-
+#### MULTIPLAYER
+* The Sun scales up way too much
 #### Forge
 \ Stand users can occasionally get multiple stand capabilities? (SEEMINGLY FIXED)
 
@@ -89,9 +86,8 @@
 
 
 #### todo :)
-* horus movelist expansion (cr.sp1 + cr.ult)
-
 * an interface that handles starting animations (for players and future mob spec users)
+
 
 * Fix attacks not being able to trade - because ticking isn't done in parallel, the first entity to be ticked
     will have priority when it comes to attack calculations, even though both executed an attack at the same time.

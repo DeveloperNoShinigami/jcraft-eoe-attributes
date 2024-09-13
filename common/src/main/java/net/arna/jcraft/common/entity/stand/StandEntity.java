@@ -1703,6 +1703,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     private boolean doAutoBlocking(Mob mob, AbstractMove<?,?> enemyAttack, boolean enemyHasStand, double distance, int enemyMoveStun) {
+        if (tsTime > 0) return false;
         boolean wantToBlock = this.wantToBlock;
         wantToBlock = this.doCombatBlocking(mob, enemyAttack, enemyHasStand, distance, enemyMoveStun, wantToBlock);
         // Block if falling or there are projectiles nearby
@@ -1833,8 +1834,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             needsCrouch = attack.isCrouchingVariant();
             int windupPoint = attack.getWindupPoint();
 
-            // Discount any on-cooldown non-followup attacks
-            if (!attack.isFollowup() && cooldowns.getCooldown(attack.getMoveType().getDefaultCooldownType()) > 0) {
+            if (attack.isFollowup()) {
+                // Discount any followup attacks when there is no move to follow up from
+                if (curMove == null || curMove.getFollowup() != null) continue;
+            } else if (cooldowns.getCooldown(attack.getMoveType().getDefaultCooldownType()) > 0) {
+                // Discount any on-cooldown non-followup attacks
                 movesOnCooldown++;
                 continue;
             }

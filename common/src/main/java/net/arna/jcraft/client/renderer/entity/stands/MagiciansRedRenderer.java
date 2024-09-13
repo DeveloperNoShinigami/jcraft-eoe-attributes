@@ -6,11 +6,14 @@ import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.MagiciansRedModel;
 import net.arna.jcraft.client.renderer.entity.layer.MRGlowLayer;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
+import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 
 public class MagiciansRedRenderer extends StandEntityRenderer<MagiciansRedEntity> {
@@ -22,12 +25,14 @@ public class MagiciansRedRenderer extends StandEntityRenderer<MagiciansRedEntity
     @Override
     public void actuallyRender(PoseStack poseStack, MagiciansRedEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, StandEntityRenderer.getAlpha(animatable, partialTick));
+        // todo: try to replace this with a particle keyframe
         if (animatable.getState() == MagiciansRedEntity.State.RED_BIND) {
             if (Minecraft.getInstance().isPaused()) {
                 return;
             }
             model.getBone("rope3").ifPresent(bone -> {
-                Vector3d worldPos = bone.getWorldPosition();
+                Vector3d localPos = bone.getLocalPosition();
+                Vec3 worldPos = RotationUtil.vecWorldToPlayer(localPos.x, localPos.y, localPos.z, GravityChangerAPI.getGravityDirection(animatable)).add(animatable.position());
 
                 animatable.getCommandSenderWorld().addParticle(ParticleTypes.FLAME,
                         worldPos.x, worldPos.y, worldPos.z,

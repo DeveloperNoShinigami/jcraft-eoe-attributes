@@ -11,10 +11,12 @@ import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -38,6 +40,7 @@ import java.util.Set;
 public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     private int ticksInAir;
     private LivingEntity livingOwner;
+    private boolean projectile = false;
     private boolean instant = false;
     private boolean lockVelocity = false;
     public void lock() {
@@ -84,8 +87,12 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
         entityData.set(IS_INSTANT, instant);
     }
 
+    public void markProjectile() {
+        this.projectile = true;
+    }
+
     @Override
-    public void setDeltaMovement(Vec3 deltaMovement) {
+    public void setDeltaMovement(@NotNull Vec3 deltaMovement) {
         if (lockVelocity) return;
         super.setDeltaMovement(deltaMovement);
     }
@@ -124,7 +131,48 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
             return;
         }
 
-        if (instant) {
+        if (projectile) {
+            Vec3 velocity = getDeltaMovement();
+            BlockPos blockPos = blockPosition();
+            BlockPos forward = blockPosition().offset((int)velocity.x, (int)velocity.y, (int)velocity.z);
+            if (ticksInAir > 30 || level().getBlockState(blockPos).canOcclude() || level().getBlockState(forward).canOcclude()) {
+                detonate();
+            } else {
+                Vec3 gravity = Vec3.atLowerCornerOf(GravityChangerAPI.getGravityDirection(this).getNormal());
+                this.lockVelocity = false;
+                setDeltaMovement(velocity.scale(0.99));
+                push(gravity.x * 9.81 / 400, gravity.y * 9.81 / 400, gravity.z * 9.81 / 400);
+                this.lockVelocity = true;
+
+                Vec3 pos = position();
+                Vec3 direction = velocity.normalize();
+                Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos.add(direction), 1.75, e -> true);
+                boolean hit = false;
+                for (LivingEntity living : hurt) {
+                    if (!canAttack(living)) continue;
+                    hit = !JUtils.isBlocking(living);
+
+                    LivingEntity target = JUtils.getUserIfStand(living);
+
+                    Vec3 kbVec = direction.scale(0.75);
+
+                    int stun = 15;
+
+                    StandEntity.damageLogic(level(), target, kbVec,
+                            stun, 3, false, 3f, true,
+                            4, level().damageSources().mobAttack(livingOwner), livingOwner,
+                            CommonHitPropertyComponent.HitAnimation.CRUSH, false, false);
+                }
+                if (hit) {
+                    Vec3 frontPos = pos.add(direction);
+                    JCraft.createParticle((ServerLevel) level(),
+                            frontPos.x + random.nextGaussian() * 0.25,
+                            frontPos.y + random.nextGaussian() * 0.25,
+                            frontPos.z + random.nextGaussian() * 0.25,
+                            JParticleType.HIT_SPARK_2);
+                }
+            }
+        } else if (instant) {
             if (ticksInAir == 1) {
                 attack();
             } else if (ticksInAir > 10) {
@@ -245,7 +293,10 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHit(HitResult hitResult) { }
+    protected void onHit(HitResult hitResult) {
+        if (level().isClientSide() || !projectile) return;
+        detonate();
+    }
 
     @Override
     protected float getWaterInertia() { // Not actually drag, just a multiplier
