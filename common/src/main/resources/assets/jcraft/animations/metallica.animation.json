@@ -260,7 +260,7 @@
 			}
 		},
 		"animation.metallica.light3": {
-			"animation_length": 1.12,
+			"animation_length": 1.28,
 			"bones": {
 				"scalpel": {
 					"rotation": {
@@ -533,6 +533,19 @@
 						"1.12": {
 							"vector": [0, 0, 360],
 							"easing": "easeOutSine"
+						}
+					},
+					"position": {
+						"0.76": {
+							"vector": [0, 0, 0]
+						},
+						"0.92": {
+							"vector": [4, 0, 0],
+							"easing": "easeInOutSine"
+						},
+						"1.08": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutSine"
 						}
 					}
 				}

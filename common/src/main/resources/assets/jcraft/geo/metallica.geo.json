@@ -6,7 +6,7 @@
 				"identifier": "geometry.metallica",
 				"texture_width": 32,
 				"texture_height": 32,
-				"visible_bounds_width": 3,
+				"visible_bounds_width": 4,
 				"visible_bounds_height": 3,
 				"visible_bounds_offset": [0, 0.5, 0]
 			},
@@ -16,13 +16,13 @@
 					"pivot": [0, 19.25, 0]
 				},
 				{
-					"name": "midbase",
+					"name": "lowbase",
 					"parent": "base",
-					"pivot": [0, 0, 0]
+					"pivot": [0, 9, 0]
 				},
 				{
 					"name": "shield",
-					"parent": "midbase",
+					"parent": "lowbase",
 					"pivot": [-0.70711, 0.70711, 0],
 					"cubes": [
 						{
@@ -43,7 +43,7 @@
 				},
 				{
 					"name": "scalpel",
-					"parent": "midbase",
+					"parent": "lowbase",
 					"pivot": [0, 0, 0]
 				},
 				{
@@ -96,7 +96,7 @@
 				},
 				{
 					"name": "scalpel2",
-					"parent": "midbase",
+					"parent": "lowbase",
 					"pivot": [0, 0, 0]
 				},
 				{
@@ -149,7 +149,7 @@
 				},
 				{
 					"name": "scalpel3",
-					"parent": "midbase",
+					"parent": "lowbase",
 					"pivot": [0, 0, 0]
 				},
 				{

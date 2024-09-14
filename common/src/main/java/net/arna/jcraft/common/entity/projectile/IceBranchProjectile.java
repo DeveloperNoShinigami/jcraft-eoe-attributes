@@ -135,7 +135,7 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
                 LivingEntity target = JUtils.getUserIfStand(living);
 
                 StandEntity.damageLogic(level(), target, Vec3.ZERO,
-                        30 - 10 * chainIndex / MAX_CHAIN_LENGTH, 0, false, 3f, true,
+                        30 - 10 * chainIndex / MAX_CHAIN_LENGTH, 0, false, 4f - 3f * (float)(chainIndex / MAX_CHAIN_LENGTH), true,
                         10, level().damageSources().mobAttack(livingOwner), livingOwner,
                         CommonHitPropertyComponent.HitAnimation.MID);
             }

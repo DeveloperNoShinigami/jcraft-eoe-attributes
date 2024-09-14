@@ -45,7 +45,7 @@
 8. Use the newly created `enum` entry in the `super` constructor of `MyEntity`.
 9. Create the class `MyModel` extending `StandEntityModel`.
 10. Create the class `MyRenderer` extending `GeoEntityRenderer`.
-11. Add `MyRenderer` to `JEntityRendererRegister` and `ClientSetupEvents` (for forge).
+11. Add `MyRenderer` to `JEntityRendererRegister`.
 12. Add the different skin PNGs, `my.geo.json` and `my.animation.json` from the `my.bbmodel` file from our modelers.
 13. Let someone take care of the animations.
 14. Add an English translation of the stand and its description to `en_us.json`.
