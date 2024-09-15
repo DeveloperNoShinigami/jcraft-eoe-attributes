@@ -107,7 +107,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.9f, 0.7f, 0.8f),
-                new Vector3f(0f, 0f, 0f),
+                new Vector3f(0.3f, 1.0f, 0.5f),
                 new Vector3f(0.8f, 0.2f, 0.2f),
                 new Vector3f(0.8f, 0.6f, 0.2f)
         };
@@ -115,8 +115,18 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
 
     @Override
     public Vector3f getAuraColor() {
+        int skin = getSkin();
         float deltaTick = (float) RenderUtils.getCurrentTick() * 50 % 2.0f;
-        return new Vector3f(auraColors[getSkin()]).mul(deltaTick, 1.0f, 1.0f);
+        return switch (skin) {
+            case 1 ->
+                new Vector3f(auraColors[skin]).mul(1.0f, deltaTick, 1.0f);
+            case 2 ->
+                new Vector3f(auraColors[skin]).mul(deltaTick, 1.0f, 1.0f);
+            case 3 ->
+                new Vector3f(auraColors[skin]).mul(1.0f, deltaTick, deltaTick);
+            default ->
+                new Vector3f(auraColors[skin]).mul(deltaTick * 0.5f, deltaTick, 1.0f);
+        };
     }
 
     @Override

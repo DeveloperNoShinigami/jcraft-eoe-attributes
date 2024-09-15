@@ -410,6 +410,10 @@
 						"0.0": {
 							"vector": [-25, 0, -9]
 						},
+						"0.56": {
+							"vector": [-21.56, -0.18, -10.61],
+							"easing": "easeOutSine"
+						},
 						"1.12": {
 							"vector": [-20, -2, -16],
 							"easing": "easeOutBack"
@@ -536,7 +540,7 @@
 							"easing": "easeOutBack"
 						},
 						"1.12": {
-							"vector": [0, 0, 0],
+							"vector": [1, 0, 1],
 							"easing": "easeOutSine"
 						}
 					}

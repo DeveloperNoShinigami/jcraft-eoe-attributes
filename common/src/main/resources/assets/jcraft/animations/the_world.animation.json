@@ -172,6 +172,16 @@
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
+				},
+				"eye": {
+					"position": {
+						"vector": [-0.3, 0, 0]
+					}
+				},
+				"eye2": {
+					"position": {
+						"vector": [0.3, 0, 0]
+					}
 				}
 			}
 		},
@@ -458,6 +468,16 @@
 				"TheWorld": {
 					"rotation": {
 						"vector": [0, 0, 0]
+					}
+				},
+				"eye": {
+					"position": {
+						"vector": [-0.3, 0, 0]
+					}
+				},
+				"eye2": {
+					"position": {
+						"vector": [0.3, 0, 0]
 					}
 				}
 			}
@@ -1596,6 +1616,16 @@
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
+				},
+				"eye": {
+					"position": {
+						"vector": [-0.3, 0, 0]
+					}
+				},
+				"eye2": {
+					"position": {
+						"vector": [0.3, 0, 0]
+					}
 				}
 			}
 		},
@@ -2489,7 +2519,7 @@
 				"eye": {
 					"position": {
 						"0.0": {
-							"vector": [0, 0, 0]
+							"vector": [-0.2, 0, 0]
 						},
 						"0.88": {
 							"vector": [0, 0, 0]
@@ -2502,13 +2532,13 @@
 				"eye2": {
 					"position": {
 						"0.0": {
-							"vector": [0, 0, 0]
+							"vector": [0.2, 0, 0]
 						},
 						"0.88": {
 							"vector": [0.225, 0, 0]
 						},
 						"1.24": {
-							"vector": [0.03, 0, 0]
+							"vector": [0.13, 0, 0]
 						}
 					}
 				},
@@ -3037,9 +3067,13 @@
 							"vector": [-86.31138, 5.15688, -97.10105],
 							"easing": "easeOutSine"
 						},
-						"0.6": {
+						"0.32": {
+							"vector": [-103.66635, -0.24673, -39.66934],
+							"easing": "easeOutSine"
+						},
+						"0.48": {
 							"vector": [0.33489, -6.20129, -6.38938],
-							"easing": "easeOutExpo"
+							"easing": "easeOutSine"
 						}
 					}
 				},
@@ -3383,6 +3417,27 @@
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
+				},
+				"eyes": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.8": {
+							"vector": [-0.3, -0.4, 0],
+							"easing": "easeOutSine"
+						}
+					}
+				},
+				"eye": {
+					"position": {
+						"vector": [-0.3, 0, 0]
+					}
+				},
+				"eye2": {
+					"position": {
+						"vector": [0.3, 0, 0]
+					}
 				}
 			}
 		},
@@ -3552,7 +3607,7 @@
 				"eye": {
 					"position": {
 						"0.48": {
-							"vector": [0, 0, 0]
+							"vector": [-0.2, 0, 0]
 						},
 						"0.88": {
 							"vector": [-0.6, 0, 0],
@@ -3563,7 +3618,7 @@
 				"eye2": {
 					"position": {
 						"0.0": {
-							"vector": [0, 0, 0]
+							"vector": [0.2, 0, 0]
 						},
 						"1.0": {
 							"vector": [0.3, 0, 0]
@@ -4547,6 +4602,16 @@
 				"TheWorld": {
 					"rotation": {
 						"vector": [0, 0, 0]
+					}
+				},
+				"eye": {
+					"position": {
+						"vector": [-0.3, 0, 0]
+					}
+				},
+				"eye2": {
+					"position": {
+						"vector": [0.3, 0, 0]
 					}
 				}
 			}
