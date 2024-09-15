@@ -1,6 +1,17 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
+		"animation.metallica.summon": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1,
+			"bones": {
+				"base": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
 		"animation.metallica.idle": {
 			"loop": true,
 			"bones": {
@@ -65,6 +76,11 @@
 					}
 				},
 				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"lowbase": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
@@ -533,19 +549,6 @@
 						"1.12": {
 							"vector": [0, 0, 360],
 							"easing": "easeOutSine"
-						}
-					},
-					"position": {
-						"0.76": {
-							"vector": [0, 0, 0]
-						},
-						"0.92": {
-							"vector": [4, 0, 0],
-							"easing": "easeInOutSine"
-						},
-						"1.08": {
-							"vector": [0, 0, 0],
-							"easing": "easeInOutSine"
 						}
 					}
 				}

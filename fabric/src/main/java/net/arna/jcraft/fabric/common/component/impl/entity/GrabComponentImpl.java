@@ -23,7 +23,8 @@ public class GrabComponentImpl extends CommonGrabComponentImpl implements GrabCo
         super.tick();
     }
 
-    public void sync() {
+    @Override
+    public void sync(Entity entity) {
         JComponents.GRAB.sync(grabbed);
     }
 

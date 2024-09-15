@@ -61,9 +61,6 @@
 * Timestop doesn't stop animated textures
 
 
-* Bloodsuck doesn't properly keep players in place
-
-
 * KC epitaph prediction model rendering has the wrong scale
 
 
@@ -87,9 +84,6 @@
 
 #### todo :)
 * an interface that handles starting animations (for players and future mob spec users)
-
-
-* figure out a way to map the entity types and renderers into a common method (see: JEntityRenderRegister, ClientSetupEvents)
 
 
 * Fix attacks not being able to trade - because ticking isn't done in parallel, the first entity to be ticked

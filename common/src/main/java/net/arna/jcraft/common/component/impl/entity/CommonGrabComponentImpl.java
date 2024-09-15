@@ -65,7 +65,8 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
                         .add(RotationUtil.vecPlayerToWorld(new Vec3(0, verticalOffset, 0), gravity))
                         .add(attacker.getLookAngle().scale(distance));
                 if (!attacker.level().loadedAndEntityCanStandOn(BlockPos.containing(newPos), grabbed)) {
-                    grabbed.setPos(newPos);
+                    if (grabbed instanceof ServerPlayer serverPlayer) serverPlayer.teleportTo(newPos.x, newPos.y, newPos.z);
+                    else grabbed.setPos(newPos);
                 }
                 grabbed.setDeltaMovement(Vec3.ZERO);
             } else {

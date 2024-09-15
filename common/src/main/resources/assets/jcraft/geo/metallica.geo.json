@@ -6,7 +6,7 @@
 				"identifier": "geometry.metallica",
 				"texture_width": 32,
 				"texture_height": 32,
-				"visible_bounds_width": 4,
+				"visible_bounds_width": 3,
 				"visible_bounds_height": 3,
 				"visible_bounds_offset": [0, 0.5, 0]
 			},
@@ -18,17 +18,17 @@
 				{
 					"name": "lowbase",
 					"parent": "base",
-					"pivot": [0, 9, 0]
+					"pivot": [0, 10, 0]
 				},
 				{
 					"name": "shield",
 					"parent": "lowbase",
-					"pivot": [-0.70711, 0.70711, 0],
+					"pivot": [0.29289, 0.70711, 0],
 					"cubes": [
 						{
-							"origin": [-8.70711, -7.29289, -1],
+							"origin": [-7.70711, -7.29289, -1],
 							"size": [16, 16, 2],
-							"pivot": [-0.70711, 0.70711, 0],
+							"pivot": [0.29289, 0.70711, 0],
 							"rotation": [0, 0, -45],
 							"uv": {
 								"north": {"uv": [16, 0], "uv_size": [-16, 16]},
@@ -44,15 +44,15 @@
 				{
 					"name": "scalpel",
 					"parent": "lowbase",
-					"pivot": [0, 0, 0]
+					"pivot": [1, 0, 0]
 				},
 				{
 					"name": "backGrip",
 					"parent": "scalpel",
-					"pivot": [3, 0, 0],
+					"pivot": [4, 0, 0],
 					"cubes": [
 						{
-							"origin": [-3, -1, -0.5],
+							"origin": [-2, -1, -0.5],
 							"size": [9, 2, 1],
 							"uv": {
 								"north": {"uv": [16, 0], "uv_size": [9, 2]},
@@ -64,7 +64,7 @@
 							}
 						},
 						{
-							"origin": [-8, -1, 0],
+							"origin": [-7, -1, 0],
 							"size": [5, 2, 0],
 							"uv": {
 								"north": {"uv": [16, 4], "uv_size": [5, 2]},
@@ -79,10 +79,10 @@
 				{
 					"name": "blur",
 					"parent": "backGrip",
-					"pivot": [-2, 1, 0],
+					"pivot": [-1, 1, 0],
 					"cubes": [
 						{
-							"origin": [-8, 1, 0],
+							"origin": [-7, 1, 0],
 							"size": [11, 11, 0],
 							"uv": {
 								"north": {"uv": [0, 16], "uv_size": [11, 11]},
@@ -97,15 +97,15 @@
 				{
 					"name": "scalpel2",
 					"parent": "lowbase",
-					"pivot": [0, 0, 0]
+					"pivot": [1, 0, 0]
 				},
 				{
 					"name": "backGrip2",
 					"parent": "scalpel2",
-					"pivot": [3, 0, 0],
+					"pivot": [4, 0, 0],
 					"cubes": [
 						{
-							"origin": [-3, -1, -0.5],
+							"origin": [-2, -1, -0.5],
 							"size": [9, 2, 1],
 							"uv": {
 								"north": {"uv": [16, 0], "uv_size": [9, 2]},
@@ -117,7 +117,7 @@
 							}
 						},
 						{
-							"origin": [-8, -1, 0],
+							"origin": [-7, -1, 0],
 							"size": [5, 2, 0],
 							"uv": {
 								"north": {"uv": [16, 4], "uv_size": [5, 2]},
@@ -132,10 +132,10 @@
 				{
 					"name": "blur2",
 					"parent": "backGrip2",
-					"pivot": [-2, 1, 0],
+					"pivot": [-1, 1, 0],
 					"cubes": [
 						{
-							"origin": [-8, 1, 0],
+							"origin": [-7, 1, 0],
 							"size": [11, 11, 0],
 							"uv": {
 								"north": {"uv": [0, 16], "uv_size": [11, 11]},
@@ -150,15 +150,15 @@
 				{
 					"name": "scalpel3",
 					"parent": "lowbase",
-					"pivot": [0, 0, 0]
+					"pivot": [1, 0, 0]
 				},
 				{
 					"name": "backGrip3",
 					"parent": "scalpel3",
-					"pivot": [3, 0, 0],
+					"pivot": [4, 0, 0],
 					"cubes": [
 						{
-							"origin": [-3, -1, -0.5],
+							"origin": [-2, -1, -0.5],
 							"size": [9, 2, 1],
 							"uv": {
 								"north": {"uv": [16, 0], "uv_size": [9, 2]},
@@ -170,7 +170,7 @@
 							}
 						},
 						{
-							"origin": [-8, -1, 0],
+							"origin": [-7, -1, 0],
 							"size": [5, 2, 0],
 							"uv": {
 								"north": {"uv": [16, 4], "uv_size": [5, 2]},
@@ -185,10 +185,10 @@
 				{
 					"name": "blur3",
 					"parent": "backGrip3",
-					"pivot": [-2, 1, 0],
+					"pivot": [-1, 1, 0],
 					"cubes": [
 						{
-							"origin": [-8, 1, 0],
+							"origin": [-7, 1, 0],
 							"size": [11, 11, 0],
 							"uv": {
 								"north": {"uv": [0, 16], "uv_size": [11, 11]},

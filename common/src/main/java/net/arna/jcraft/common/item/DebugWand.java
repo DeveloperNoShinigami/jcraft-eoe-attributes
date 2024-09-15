@@ -8,6 +8,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -35,17 +37,26 @@ public class DebugWand extends Item {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
+        Level level = context.getLevel();
 
         /*
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-
         NetworkManager.sendToServer(JPacketRegistry.C2S_MENU_CALL, buf);
          */
 
-        //JComponentPlatformUtils.getGrab(player).startGrab(player.level().getEntity(2166), 40, 0.4);
-        if (player == null || context.getLevel().isClientSide) {
+
+        if (player == null || level.isClientSide) {
             return InteractionResult.PASS;
         }
+
+        // Nearest armor stand grabs you
+        ArmorStand armorStand = level.getNearestEntity(ArmorStand.class, TargetingConditions.DEFAULT, player,
+                player.getX(),
+                player.getY(),
+                player.getZ(),
+                player.getBoundingBox().inflate(32.0));
+        JComponentPlatformUtils.getGrab(player).startGrab(armorStand, 80, 0.4);
+
 
         // Feel free to remove or modify these to debug other components/features.
         if (player.isShiftKeyDown()) {

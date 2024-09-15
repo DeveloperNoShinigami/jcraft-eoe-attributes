@@ -31,7 +31,7 @@ public class GrabCapability extends CommonGrabComponentImpl implements JCapabili
 
     @Override
     public void sync(Entity entity) {
-        super.sync(entity);
+        // super.sync(entity);
         if (entity.level() instanceof ServerLevel serverWorld) {
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeVarInt(entity.getId());
