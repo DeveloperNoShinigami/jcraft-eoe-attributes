@@ -7,7 +7,7 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.common.util.MobilityType;
+import net.arna.jcraft.common.attack.MobilityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;

@@ -16,7 +16,8 @@ public class KnifeRenderer extends GeoProjectileRenderer<KnifeProjectile> {
         super(renderManagerIn, new KnifeModel());
     }
 
-    protected int getBlockLight(KnifeProjectile entityIn, BlockPos partialTicks) {
+    @Override
+    protected int getBlockLightLevel(KnifeProjectile entityIn, BlockPos blockPos) {
         return (entityIn.getLightning() || entityIn.isOnFire()) ? 15 : entityIn.level().getBrightness(LightLayer.BLOCK, entityIn.blockPosition());
     }
 

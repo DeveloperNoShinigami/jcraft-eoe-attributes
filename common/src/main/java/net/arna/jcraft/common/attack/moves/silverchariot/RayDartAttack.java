@@ -3,7 +3,7 @@ package net.arna.jcraft.common.attack.moves.silverchariot;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
-import net.arna.jcraft.common.util.MobilityType;
+import net.arna.jcraft.common.attack.MobilityType;
 import net.minecraft.world.entity.LivingEntity;
 
 public final class RayDartAttack extends AbstractSimpleAttack<RayDartAttack, SilverChariotEntity> {

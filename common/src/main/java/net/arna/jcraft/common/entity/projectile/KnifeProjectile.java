@@ -1,5 +1,9 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -15,7 +19,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -26,10 +29,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.util.AzureLibUtil;
 
 public class KnifeProjectile extends AbstractArrow implements GeoEntity {
     private static final EntityDataAccessor<Boolean> LIGHTNING;
@@ -42,17 +41,12 @@ public class KnifeProjectile extends AbstractArrow implements GeoEntity {
         LIGHTNING = SynchedEntityData.defineId(KnifeProjectile.class, EntityDataSerializers.BOOLEAN);
     }
 
-    public KnifeProjectile(EntityType<? extends KnifeProjectile> entityType, Level world) {
-        super(entityType, world);
-    }
-
     public KnifeProjectile(Level world) {
         super(JEntityTypeRegistry.KNIFE.get(), world);
     }
 
     public KnifeProjectile(Level world, LivingEntity owner) {
         super(JEntityTypeRegistry.KNIFE.get(), owner, world);
-        this.setOwner(owner);
     }
 
     public Boolean getLightning() {

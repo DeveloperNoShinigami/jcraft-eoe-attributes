@@ -5,7 +5,7 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
-import net.arna.jcraft.common.util.MobilityType;
+import net.arna.jcraft.common.attack.MobilityType;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 

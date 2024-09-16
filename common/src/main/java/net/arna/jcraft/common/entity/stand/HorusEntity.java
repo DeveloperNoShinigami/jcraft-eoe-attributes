@@ -34,7 +34,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -171,8 +170,6 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
 
         attacker.level().addFreshEntity(attacker.lastLargeIcicle);
     }
-
-    //todo: crouching sp1 large icicle launch (literally flak)
     public static final SimpleAttack<HorusEntity> SCATTER = new SimpleAttack<HorusEntity>(
             60, 16, 20, 0.75f, 0, 0, 0, 0, 0)
             .withCrouchingVariant(LANCE)
@@ -314,13 +311,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                 IcicleProjectile icicle = new IcicleProjectile(attacker.level(), user);
                 float pitch = user.getXRot();
                 float yaw = user.getYRot() + i * offset;
-                if (yaw < -90 || yaw > 90) { // why the fuck do i have to do this??
-                    // IT DOESN'T EVEN WORK IN DIFFERENT GRAVITIES GOD DAMN IT
-                    yaw = -yaw;
-                    pitch = -pitch;
-                }
-                Vec2 rotVec = RotationUtil.rotPlayerToWorld(pitch, yaw, GravityChangerAPI.getGravityDirection(user));
-                icicle.shootFromRotation(user, rotVec.x, rotVec.y, 0.0F, 1.75F, 0.1F);
+                Vec3 rotVec = RotationUtil.vecPlayerToWorld(RotationUtil.rotToVec(yaw, pitch), GravityChangerAPI.getGravityDirection(user));
+                icicle.shoot(rotVec.x, rotVec.y, rotVec.z, 1.75F, 0.1F);
 
                 Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
                 Vec3 heightOffset = upVec.scale(0.75);

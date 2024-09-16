@@ -272,6 +272,15 @@ public interface JEntityTypeRegistry {
                     .build("knife")
     );
 
+    RegistrySupplier<EntityType<ScalpelProjectile>> SCALPEL = ENTITY_TYPE_REGISTRY.register(JCraft.id("scalpel"),
+            () -> EntityType.Builder.of(
+                            (EntityType<ScalpelProjectile> entityType, Level world) -> new ScalpelProjectile(world), MobCategory.MISC)
+                    .sized(0.5f, 0.5f)
+                    .clientTrackingRange(6)
+                    .updateInterval(10)
+                    .build("scalpel")
+    );
+
     RegistrySupplier<EntityType<EmeraldProjectile>> EMERALD = ENTITY_TYPE_REGISTRY.register(JCraft.id("emerald"),
             () -> EntityType.Builder.of(
                             (EntityType<EmeraldProjectile> entityType, Level world) -> new EmeraldProjectile(world),

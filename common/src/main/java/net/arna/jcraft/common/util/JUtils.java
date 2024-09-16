@@ -6,12 +6,15 @@ import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.projectile.JAttackEntity;
+import net.arna.jcraft.common.entity.spec.JSpecHolder;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.network.s2c.JExplosionPacket;
+import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.splatter.JSplatterManager;
@@ -37,12 +40,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -55,12 +53,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkSource;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -620,6 +613,22 @@ public final class JUtils {
             Vec3 vec3d = shooter.getDeltaMovement();
             projectile.setDeltaMovement(projectile.getDeltaMovement().add(vec3d.x, shooter.onGround() ? 0.0 : vec3d.y, vec3d.z));
         }
+    }
+
+    public static int PLAYER_ANIMATION_DIST = 256;
+
+    /**
+     * Plays an animation for the entity if their spec is currently not doing a move.
+     * Higher priority than the dash animation.
+     * @return Whether the animation was played.
+     */
+    public static boolean playAnimIfUnoccupied(LivingEntity living, String animation) {
+        CommonSpecComponent spec = JComponentPlatformUtils.getSpecData(living);
+        if (spec != null && spec.getSpec().curMove != null) return false;
+        if (living instanceof ServerPlayer player) {
+            around(player.serverLevel(), player.position(), PLAYER_ANIMATION_DIST).forEach(p -> PlayerAnimPacket.send(player, p, animation));
+        } else if (living instanceof JSpecHolder specHolder) { specHolder.setAnimation(animation, 1.0f); }
+        return true;
     }
 
     public static Collection<ServerPlayer> around(ServerLevel world, Vec3 pos, double radius) {

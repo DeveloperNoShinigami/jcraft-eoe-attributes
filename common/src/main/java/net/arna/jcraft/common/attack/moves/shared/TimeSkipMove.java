@@ -8,7 +8,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.CooldownType;
-import net.arna.jcraft.common.util.MobilityType;
+import net.arna.jcraft.common.attack.MobilityType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;

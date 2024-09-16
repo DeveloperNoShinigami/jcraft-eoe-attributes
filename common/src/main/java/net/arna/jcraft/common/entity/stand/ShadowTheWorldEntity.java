@@ -20,7 +20,7 @@ import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.common.util.MobilityType;
+import net.arna.jcraft.common.attack.MobilityType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;

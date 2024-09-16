@@ -1,0 +1,63 @@
+package net.arna.jcraft.common.entity.projectile;
+
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
+public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
+    public ScalpelProjectile(Level world) {
+        super(JEntityTypeRegistry.SCALPEL.get(), world);
+    }
+
+    public ScalpelProjectile(Level world, LivingEntity owner) {
+        super(JEntityTypeRegistry.SCALPEL.get(), owner, world);
+    }
+
+    @Override
+    protected void onHitEntity(EntityHitResult entityHitResult) {
+        if (level().isClientSide) {
+            return;
+        }
+        Entity entity = entityHitResult.getEntity();
+        Entity owner = this.getOwner();
+
+        if (owner != null && owner.hasPassenger(entity) || entity == owner) {
+            return;
+        }
+
+        if (isOnFire()) entity.setSecondsOnFire(5);
+
+        final int blockstun = 4;
+        final int stunT = 10;
+
+        JUtils.projectileDamageLogic(this, level(), entity, Vec3.ZERO, stunT, 1, false, 2, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
+        playSound(SoundEvents.TRIDENT_HIT, 1, 1);
+        // if (entity instanceof LivingEntity living) JComponentPlatformUtils.getMiscData(living).stab();
+        discard();
+    }
+
+    @Override
+    protected @NotNull ItemStack getPickupItem() {
+        return ItemStack.EMPTY;
+    }
+
+    // Animations
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() { return cache; }
+}

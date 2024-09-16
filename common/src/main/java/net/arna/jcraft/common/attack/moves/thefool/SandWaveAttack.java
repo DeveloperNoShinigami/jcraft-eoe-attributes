@@ -3,7 +3,7 @@ package net.arna.jcraft.common.attack.moves.thefool;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.moves.base.AbstractEffectInflictingBarrageAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
-import net.arna.jcraft.common.util.MobilityType;
+import net.arna.jcraft.common.attack.MobilityType;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;

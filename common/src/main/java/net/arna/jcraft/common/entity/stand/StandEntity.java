@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.MobilityType;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
@@ -1783,15 +1784,18 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return auraColors[getSkin()];
     }
 
-    /**
-     * Tells the AI to:
-     * PASS - ignore this and continue move evaluation
-     * USE - use the move
-     * STOP - skip to next evaluation
-     */
     public enum MoveSelectionResult {
+        /**
+         * Continues current move evaluation
+         */
         PASS,
+        /**
+         * Stops the evaluation and uses the move
+         */
         USE,
+        /**
+         * Skips to the next move evaluation
+         */
         STOP
     }
 

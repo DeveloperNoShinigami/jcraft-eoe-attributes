@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import lombok.Setter;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
@@ -14,6 +15,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
+import net.arna.jcraft.common.entity.spec.JSpecHolder;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
@@ -37,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * Class that needs to be instantiated per-player to contain temporary data relating to their current state.
+ * Class that needs to be instantiated per-entity to contain temporary data relating to their current state.
  * Used to handle stand-off attacks.
  */
 @Getter
@@ -214,16 +216,23 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         armorPoints = move.getArmor();
 
         if (state != null) {
-            setPlayerAnimation((this.state = state).getKey(getThis()), moveStun, animationSpeed);
+            setAnimation((this.state = state).getKey(getThis()), moveStun, animationSpeed);
         }
 
         return true;
     }
 
-    public void setPlayerAnimation(String animationID, int duration, float animationSpeed) {
-        if (player == null) return;
-        ((ServerLevel) user.level()).players().forEach(serverPlayer -> PlayerAnimPacket.sendSpec(
-                player, serverPlayer, animationID, duration, animationSpeed));
+    public void setAnimation(String animationID, int duration, float animationSpeed) {
+        if (player == null) {
+            if (user instanceof JSpecHolder specHolder) {
+                specHolder.setAnimation(animationID, animationSpeed);
+            } else {
+                JCraft.LOGGER.error("Tried to set animation for non-player entity with JSpec that does not implement JSpecHolder!");
+            }
+        } else {
+            JUtils.around((ServerLevel) user.level(), user.position(), JUtils.PLAYER_ANIMATION_DIST)
+                    .forEach(serverPlayer -> PlayerAnimPacket.sendSpec(player, serverPlayer, animationID, duration, animationSpeed));
+        }
     }
 
     public void cancelMove() {

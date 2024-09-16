@@ -69,7 +69,7 @@ public abstract class AbstractSpecGrabAttack<
         if (anyHit) {
             attacker.setMove(hitMove, hitState);
             attacker.setMoveStun(grabDuration);
-            attacker.setPlayerAnimation(hitState.getKey(attacker), grabDuration, 1f);
+            attacker.setAnimation(hitState.getKey(attacker), grabDuration, 1f);
         }
 
         return targets;
