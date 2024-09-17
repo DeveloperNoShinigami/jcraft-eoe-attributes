@@ -624,7 +624,7 @@ public final class JUtils {
      */
     public static boolean playAnimIfUnoccupied(LivingEntity living, String animation) {
         CommonSpecComponent spec = JComponentPlatformUtils.getSpecData(living);
-        if (spec != null && spec.getSpec().curMove != null) return false;
+        if (spec != null && spec.getSpec().moveStun > 0) return false;
         if (living instanceof ServerPlayer player) {
             around(player.serverLevel(), player.position(), PLAYER_ANIMATION_DIST).forEach(p -> PlayerAnimPacket.send(player, p, animation));
         } else if (living instanceof JSpecHolder specHolder) { specHolder.setAnimation(animation, 1.0f); }

@@ -3,6 +3,7 @@ package net.arna.jcraft.common.component.impl.living;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.common.component.living.CommonMiscComponent;
+import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,6 +35,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
     private boolean prevNoGrav;
     @Getter
     private float attackSpeedMult;
+    private float metallicaIron = MetallicaEntity.IRON_MAX;
 
     public CommonMiscComponentImpl(Entity entity) {
         this.entity = entity;
@@ -109,6 +111,16 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
     public void setAttackSpeedMult(float speedMult) {
         this.attackSpeedMult = speedMult;
         sync(entity);
+    }
+
+    @Override
+    public float getMetallicaIron() {
+        return this.metallicaIron;
+    }
+
+    @Override
+    public void setMetallicaIron(float iron) {
+        this.metallicaIron = iron;
     }
 
     public void tick() {
@@ -192,6 +204,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
         CompoundTag dvComp = tag.getCompound("DesiredVelocity");
         desiredVelocity = new Vec3(dvComp.getDouble("X"), dvComp.getDouble("Y"), dvComp.getDouble("Z"));
         damageTimer = tag.getInt("DamageTimer");
+        metallicaIron = tag.getFloat("MetallicaIron");
         if (tag.hasUUID("SlavedTo")) {
             slavedTo = tag.getUUID("SlavedTo");
         }
@@ -204,6 +217,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
         dvComp.putDouble("Z", desiredVelocity.z());
         tag.put("DesiredVelocity", dvComp);
         tag.putInt("DamageTimer", damageTimer);
+        tag.putFloat("MetallicaIron", metallicaIron);
         if (slavedTo != null) {
             tag.putUUID("SlavedTo", slavedTo);
         }

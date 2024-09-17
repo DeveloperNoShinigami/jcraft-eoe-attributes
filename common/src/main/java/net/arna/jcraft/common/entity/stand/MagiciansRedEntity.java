@@ -228,7 +228,7 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
 
     @Override
     public MoveSelectionResult specificMoveSelectionCriterion(AbstractMove<?, ? super MagiciansRedEntity> attack, LivingEntity mob, LivingEntity target, int stunTicks, int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
-        if (attack == REDIRECT && mob.getRandom().nextFloat() > 0.05f) return MoveSelectionResult.STOP;
+        if (attack.getOriginalMove() == REDIRECT && mob.getRandom().nextFloat() > 0.05f) return MoveSelectionResult.STOP;
         return MoveSelectionResult.PASS;
     }
 

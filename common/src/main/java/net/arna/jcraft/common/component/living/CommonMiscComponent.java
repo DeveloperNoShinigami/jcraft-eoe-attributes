@@ -46,4 +46,8 @@ public interface CommonMiscComponent extends JComponent {
     float getAttackSpeedMult();
 
     void setAttackSpeedMult(float speedMult);
+
+    // MetallicaEntity
+    float getMetallicaIron();
+    void setMetallicaIron(float iron);
 }

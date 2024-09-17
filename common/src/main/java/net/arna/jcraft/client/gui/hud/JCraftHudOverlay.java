@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.Setter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
+import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
 import net.arna.jcraft.common.spec.AnubisSpec;
@@ -30,12 +31,10 @@ public class JCraftHudOverlay {
     private static final Gauge SUN_SIZE_GAUGE = new Gauge(1.0f, 0.7f, 0.4f, 30);
     private static final Gauge TIME_ACCEL_GAUGE = new Gauge(1.0f, 0.8f, 0.0f, MadeInHeavenEntity.MAXIMUM_SPEEDOMETER);
     private static final Gauge BLOODLUST_GAUGE = new Gauge(0.8f, 0.1f, 0.2f, 5);
+    private static final Gauge IRON_GAUGE = new Gauge(0.7f, 0.7f, 0.9f, (int) MetallicaEntity.IRON_MAX);
 
     public static void render(GuiGraphics ctx) {
         Minecraft client = Minecraft.getInstance();
-        if (client == null) {
-            return;
-        }
 
         int width = client.getWindow().getGuiScaledWidth();
         int height = client.getWindow().getGuiScaledHeight();
@@ -63,6 +62,9 @@ public class JCraftHudOverlay {
             }
             if (stand instanceof MadeInHeavenEntity madeInHeaven && madeInHeaven.getAccelTime() > 0) {
                 TIME_ACCEL_GAUGE.render(ctx, gaugeX, height + gaugeHeightOffset, madeInHeaven.getSpeedometer());
+            }
+            if (stand instanceof MetallicaEntity metallica) {
+                IRON_GAUGE.render(ctx, gaugeX, height + gaugeHeightOffset, (int) metallica.getIron());
             }
         }
 

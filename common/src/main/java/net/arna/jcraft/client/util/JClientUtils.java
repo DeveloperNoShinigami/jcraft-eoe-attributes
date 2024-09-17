@@ -4,10 +4,7 @@ import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.AnimationProcessor;
 import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.entity.stand.CreamEntity;
-import net.arna.jcraft.common.entity.stand.D4CEntity;
-import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.util.DimensionData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
@@ -144,7 +141,8 @@ public class JClientUtils {
         Entity passenger = entity.getFirstPassenger();
         return passenger instanceof KingCrimsonEntity kc && kc.getTETime() > 0 ||
                 passenger instanceof D4CEntity d4c && d4c.getState() == D4CEntity.State.FLAG ||
-                passenger instanceof CreamEntity cream && cream.isHalfBall();
+                passenger instanceof CreamEntity cream && cream.isHalfBall() ||
+                passenger instanceof MetallicaEntity metallica && metallica.isInvisible();
     }
 
     public static void resetPartAngles(ModelPart part) {

@@ -15,8 +15,8 @@ public class HotSandBlock extends FallingBlock {
 
     @Override
     public void stepOn(Level world, BlockPos pos, BlockState state, Entity entity) {
-        if (!entity.isSteppingCarefully() && entity instanceof LivingEntity &&
-                !entity.isInWater() && !EnchantmentHelper.hasFrostWalker((LivingEntity)entity)) {
+        if (!entity.isSteppingCarefully() && !entity.isInWater() &&
+                entity instanceof LivingEntity livingEntity && !EnchantmentHelper.hasFrostWalker(livingEntity)) {
             entity.hurt(world.damageSources().hotFloor(), 1.0F);
         }
         super.stepOn(world, pos, state, entity);

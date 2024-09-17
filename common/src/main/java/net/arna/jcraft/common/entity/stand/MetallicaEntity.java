@@ -3,24 +3,35 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.moves.metallica.HarvestMove;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
+import net.arna.jcraft.common.component.living.CommonMiscComponent;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -30,10 +41,17 @@ import java.util.function.Consumer;
 
 public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntity.State> {
     private static final EntityDataAccessor<BlockPos> SIPHON_POS;
+    private static final EntityDataAccessor<Float> IRON;
+    private static final EntityDataAccessor<Boolean> INVISIBLE;
+    public static final float IRON_MAX = 80.0f;
+    public static final BlockPos NO_SIPHON = new BlockPos(0, Integer.MIN_VALUE, 0);
     static {
         SIPHON_POS = SynchedEntityData.defineId(MetallicaEntity.class, EntityDataSerializers.BLOCK_POS);
+        IRON = SynchedEntityData.defineId(MetallicaEntity.class, EntityDataSerializers.FLOAT);
+        INVISIBLE = SynchedEntityData.defineId(MetallicaEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
+    //todo: hvy sword summon, cr.sp1 fan, sp3 grab
     public static final SimpleAttack<MetallicaEntity> LIGHT_LAUNCH = new SimpleAttack<MetallicaEntity>(0,
             18, 22, 0.75f, 5f, 6,1.7f,  1.25f, 0.2f)
             .withLaunch()
@@ -85,22 +103,70 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     private static void preciseToss(MetallicaEntity stand, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
         Vec3 pos = stand.position();
         Vec3 upVec = GravityChangerAPI.getEyeOffset(user);
-        for (int i = 0; i < 3; i++) {
-            ScalpelProjectile scalpel = new ScalpelProjectile(user.level(), user);
+        for (int i = 1; i < 4; i++) {
+            ScalpelProjectile scalpel = ScalpelProjectile.fromMetallica(stand);
+            if (scalpel == null) continue;
             scalpel.setPos(pos.add(upVec.scale(0.25 * i)));
-            scalpel.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, 1.0F, 0.0F);
+            scalpel.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, 1.25F, 0.0F);
             stand.level().addFreshEntity(scalpel);
         }
     }
+    public static final SimpleAttack<MetallicaEntity> GO_INVISIBLE = new SimpleAttack<MetallicaEntity>(20,
+            10, 15, 0, 0, 0, 0, 0, 0)
+            .withInfo(
+                    Component.literal("Invisibility"),
+                    Component.literal("""
+                            Projects a field of iron particles that reflect light away from the user.
+                            Uses 10 iron per second.
+                            Cannot be queued.""")
+            )
+            .withAction(MetallicaEntity::toggleInvisibility)
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.ivs"));
+    private static void toggleInvisibility(MetallicaEntity metallica, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
+        metallica.entityData.set(INVISIBLE, !metallica.entityData.get(INVISIBLE));
+    }
+    public static final HarvestMove HARVEST = new HarvestMove()
+            .withCrouchingVariant(GO_INVISIBLE)
+            .withInfo(
+                    Component.literal("Harvest Iron"),
+                    Component.literal("""
+                            Harvests 1 iron with a 0.15s interval from the looked at block.
+                            5m max range.
+                            Cannot be queued.""")
+            )
+            .withHoldable()
+            .withInitAction((attacker, user, ctx) -> attacker.entityData.set(SIPHON_POS, NO_SIPHON))
+            .withAction(MetallicaEntity::harvest);
+    private static void harvest(MetallicaEntity stand, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
+        BlockHitResult hitResult = JUtils.genericBlockRaycast(user.level(), user, 5, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE);
+        if (hitResult.getType() == HitResult.Type.BLOCK && user.level().getBlockState(hitResult.getBlockPos()).is(JTagRegistry.IRON_BLOCKS)) {
+            stand.entityData.set(SIPHON_POS, hitResult.getBlockPos());
+            stand.addIron(1f);
+        } else {
+            stand.entityData.set(SIPHON_POS, NO_SIPHON);
+        }
+    }
+
+    private CommonMiscComponent miscComponent;
 
     public MetallicaEntity(Level worldIn) {
         super(StandType.METALLICA, worldIn, JSoundRegistry.STAND_SUMMON.get());
-        
+
+        freespace = """
+                Contains up to 80 units of iron.
+                Requires iron to create objects used in attacks.""";
         idleDistance = 0;
 
         auraColors = new Vector3f[] {
                 new Vector3f(0.1f, 0.1f, 0.4f)
         };
+    }
+
+    @Override
+    public void setUser(@Nullable LivingEntity user) {
+        super.setUser(user);
+        miscComponent = JComponentPlatformUtils.getMiscData(getUser());
+        setIron(miscComponent.getMetallicaIron());
     }
 
     @Override
@@ -110,9 +176,37 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     }
 
     @Override
+    public void queueMove(MoveInputType type) {
+        if (type == MoveInputType.UTILITY) return;
+        super.queueMove(type);
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        entityData.define(SIPHON_POS, null);
+        entityData.define(SIPHON_POS, NO_SIPHON);
+        entityData.define(IRON, IRON_MAX);
+        entityData.define(INVISIBLE, false);
+    }
+
+    public float getIron() {
+        return entityData.get(IRON);
+    }
+
+    public void setIron(float iron) {
+        entityData.set(IRON, iron);
+        miscComponent.setMetallicaIron(iron);
+    }
+
+    public void addIron(float add) {
+        setIron(Mth.clamp(entityData.get(IRON) + add, 0f, IRON_MAX));
+    }
+
+    public boolean drainIron(float r) {
+        float iron = getIron();
+        if (iron < r) return false;
+        setIron(iron - r);
+        return true;
     }
 
     @Override
@@ -121,11 +215,38 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         light.withFollowUp(State.LIGHT_FOLLOWUP).withFollowUp(State.LIGHT_FINAL);
 
         moves.register(MoveType.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS);
+        moves.register(MoveType.UTILITY, HARVEST, State.HARVEST).withCrouchingVariant(State.IDLE);
+    }
+
+    private static final MobEffectInstance INVISIBILITY = new MobEffectInstance(MobEffects.INVISIBILITY, 20, 0, true, false);
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (level().isClientSide()) return;
+        boolean invisible = entityData.get(INVISIBLE);
+        if (invisible && tickCount % 20 == 0) {
+            boolean canStayInvis = drainIron(10.0f);
+            if (!canStayInvis) {
+                entityData.set(INVISIBLE, false);
+            } else {
+                getUserOrThrow().addEffect(INVISIBILITY);
+            }
+        }
+    }
+
+    @Override
+    public boolean isInvisible() {
+        return entityData.get(INVISIBLE);
     }
 
     @Override
     public @NonNull MetallicaEntity getThis() {
         return this;
+    }
+
+    public BlockPos getSiphonPos() {
+        return entityData.get(SIPHON_POS);
     }
 
     // Animations
@@ -136,6 +257,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.light2"))),
         LIGHT_FINAL(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.light3"))),
         PRECISE_TOSS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.precise_toss"))),
+        HARVEST(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.harvest")))
         ;
 
         private final Consumer<AnimationState> animator;

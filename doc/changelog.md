@@ -30,7 +30,7 @@
 * meteorites can now also be found in Ice Spikes Biome
 * added Devil's Palm Biome
 #### NPCs & Stands
-* **added Horus and Shadow The World**
+* **added Horus, Shadow The World, and Metallica**
 * added Petshop, Aya Tsuji and the D'Arby brothers as NPCs (currently unobtainable except via spawn eggs) and added their stands (Horus, Cinderella, Osiris and Atum) as well, with only Horus being obtainable
 * added Silver Chariot Requiem (unobtainable)
 * added custom icons for Hierophant Green and Purple Haze
