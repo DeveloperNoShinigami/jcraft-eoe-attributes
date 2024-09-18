@@ -217,7 +217,9 @@ public interface JEntityTypeRegistry {
             () -> EntityType.Builder.of(
                     WorldOnlyEntityFactory.from(TheSunEntity::new),
                     MobCategory.CREATURE
-            ).sized(2f, 2f).build("the_sun")
+            ).sized(2f, 2f)
+                    .noSave()
+                    .build("the_sun")
     );
 
     RegistrySupplier<EntityType<PurpleHazeEntity>> PURPLE_HAZE = ENTITY_TYPE_REGISTRY.register(JCraft.id("purple_haze"),
@@ -561,7 +563,7 @@ public interface JEntityTypeRegistry {
                     MobCategory.CREATURE
             ).sized(
                     0.3f,
-                    0.3f
+                    1.8f
             ).build("metallica")
     );
 

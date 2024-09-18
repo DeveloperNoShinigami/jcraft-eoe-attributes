@@ -16,12 +16,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
-    public static final float IRON_COST = 6.0f;
+    public static final float IRON_COST = 5.0f;
+    private final Set<Entity> pierced = new HashSet<>();
 
     public ScalpelProjectile(Level world) {
         super(JEntityTypeRegistry.SCALPEL.get(), world);
@@ -39,9 +44,17 @@ public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult entityHitResult) {
+    protected void onHitBlock(@NotNull BlockHitResult result) {
+        super.onHitBlock(result);
+        if (level().isClientSide()) return;
+        pierced.clear();
+    }
+
+    @Override
+    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         if (level().isClientSide) return;
         Entity entity = entityHitResult.getEntity();
+        if (pierced.contains(entity)) return;
         Entity owner = this.getOwner();
 
         if (owner != null && owner.hasPassenger(entity) || entity == owner) {
@@ -56,13 +69,13 @@ public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
         JUtils.projectileDamageLogic(this, level(), entity, Vec3.ZERO, stunT, 1, false, 2, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
         playSound(SoundEvents.TRIDENT_HIT, 1, 1);
         // if (entity instanceof LivingEntity living) JComponentPlatformUtils.getMiscData(living).stab();
-        // discard();
         setDeltaMovement(getDeltaMovement().scale(0.5));
         hurtMarked = true;
+        pierced.add(entity);
     }
 
     @Override
-    protected boolean tryPickup(Player player) {
+    protected boolean tryPickup(@NotNull Player player) {
         if (JComponentPlatformUtils.getStandData(player).getStand() instanceof MetallicaEntity metallica) {
             if (metallica.getIron() < MetallicaEntity.IRON_MAX) {
                 metallica.addIron(IRON_COST);

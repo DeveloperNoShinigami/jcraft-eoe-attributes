@@ -2,10 +2,13 @@ package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
 
 
 public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEntity.State> {
@@ -25,12 +28,20 @@ public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEn
     }
 
     public enum State implements StandAnimationState<CinderellaEntity> {
-        IDLE,
-        BLOCK;
+        IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.cinderella.idle"))),
+        LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cinderella.light"))),
+        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.cinderella.block"))),
+        ;
+
+        private final Consumer<AnimationState> animator;
+
+        State(Consumer<AnimationState> animator) {
+            this.animator = animator;
+        }
 
         @Override
         public void playAnimation(CinderellaEntity attacker, AnimationState state) {
-            // TODO Arna
+            animator.accept(state);
         }
     }
 

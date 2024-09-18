@@ -8,7 +8,10 @@ import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.metallica.HarvestMove;
+import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
+import net.arna.jcraft.common.attack.moves.shared.UppercutAttack;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.component.living.CommonMiscComponent;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -25,6 +28,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -51,7 +56,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         INVISIBLE = SynchedEntityData.defineId(MetallicaEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
-    //todo: hvy sword summon, cr.sp1 fan, sp3 grab
+    //todo: sword summon (LITERALLY MILLIA H DISC), cr.sp1 fan, sp3 grab
     public static final SimpleAttack<MetallicaEntity> LIGHT_LAUNCH = new SimpleAttack<MetallicaEntity>(0,
             18, 22, 0.75f, 5f, 6,1.7f,  1.25f, 0.2f)
             .withLaunch()
@@ -88,6 +93,36 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.literal("Slice"),
                     Component.literal("quick combo starter")
             );
+    public static final KnockdownAttack<MetallicaEntity> SWEEP = new KnockdownAttack<MetallicaEntity>(40,
+            7, 14, 0.75f, 5f, 8, 1.5f, 0.3f, 0.4f, 35)
+            .withImpactSound(SoundEvents.PLAYER_ATTACK_SWEEP)
+            .withHitSpark(JParticleType.SWEEP_ATTACK)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
+            .withExtraHitBox(1.75, -0.4, 0.85)
+            .withInfo(
+                    Component.literal("Sweep"),
+                    Component.literal("""
+                            Fast 1.5s knockdown.
+                            §1Requires at least 25% iron to be usable.""")
+            )
+            .withCondition(metallica -> metallica.getIron() > IRON_MAX / 4.0f);
+    public static final UppercutAttack<MetallicaEntity> SMASH = new UppercutAttack<MetallicaEntity>(200,
+            11, 21, 1.0f, 7.5f, 18,2.0f,  1.5f, 0.2f, -0.5f)
+            .withCrouchingVariant(SWEEP)
+            .withLaunch()
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withHitSpark(JParticleType.HIT_SPARK_3)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
+            .withHyperArmor()
+            .withExtraHitBox(2.0, 0.5, 1.5)
+            .withInfo(
+                    Component.literal("Smash"),
+                    Component.literal("""
+                            Uninterruptible combo starter.
+                            Very far-reaching.
+                            §1Requires at least 50% iron to be usable.""")
+            )
+            .withCondition(metallica -> metallica.getIron() > IRON_MAX / 2.0f);
     public static final SimpleAttack<MetallicaEntity> PRECISE_TOSS = new SimpleAttack<MetallicaEntity>(
             60, 7, 12, 0.75f, 0, 0, 0, 0, 0)
             .withInfo(
@@ -170,6 +205,16 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     }
 
     @Override
+    protected void registerMoves(MoveMap<MetallicaEntity, MetallicaEntity.State> moves) {
+        var light = moves.register(MoveType.LIGHT, LIGHT, State.LIGHT);
+        light.withFollowUp(State.LIGHT_FOLLOWUP).withFollowUp(State.LIGHT_FINAL);
+        moves.register(MoveType.HEAVY, SMASH, State.SMASH).withCrouchingVariant(State.SWEEP);
+
+        moves.register(MoveType.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS);
+        moves.register(MoveType.UTILITY, HARVEST, State.HARVEST).withCrouchingVariant(State.IDLE);
+    }
+
+    @Override
     public boolean initMove(MoveType type) {
         if (tryFollowUp(type, MoveType.LIGHT)) return true;
         return super.initMove(type);
@@ -179,6 +224,12 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     public void queueMove(MoveInputType type) {
         if (type == MoveInputType.UTILITY) return;
         super.queueMove(type);
+    }
+
+    @Override
+    public boolean shouldOffsetHeight() {
+        if (getState() == State.SWEEP) return false;
+        return super.shouldOffsetHeight();
     }
 
     @Override
@@ -209,15 +260,6 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         return true;
     }
 
-    @Override
-    protected void registerMoves(MoveMap<MetallicaEntity, MetallicaEntity.State> moves) {
-        var light = moves.register(MoveType.LIGHT, LIGHT, State.LIGHT);
-        light.withFollowUp(State.LIGHT_FOLLOWUP).withFollowUp(State.LIGHT_FINAL);
-
-        moves.register(MoveType.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS);
-        moves.register(MoveType.UTILITY, HARVEST, State.HARVEST).withCrouchingVariant(State.IDLE);
-    }
-
     private static final MobEffectInstance INVISIBILITY = new MobEffectInstance(MobEffects.INVISIBILITY, 20, 0, true, false);
     @Override
     public void tick() {
@@ -233,6 +275,11 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                 getUserOrThrow().addEffect(INVISIBILITY);
             }
         }
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource damageSource) {
+        return !damageSource.is(DamageTypes.GENERIC_KILL) && !damageSource.is(DamageTypes.FELL_OUT_OF_WORLD);
     }
 
     @Override
@@ -257,7 +304,9 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.light2"))),
         LIGHT_FINAL(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.light3"))),
         PRECISE_TOSS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.precise_toss"))),
-        HARVEST(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.harvest")))
+        HARVEST(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.harvest"))),
+        SMASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.smash"))),
+        SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.sweep"))),
         ;
 
         private final Consumer<AnimationState> animator;

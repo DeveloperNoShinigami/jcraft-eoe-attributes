@@ -40,6 +40,6 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity {
     }
 
     public static AttributeSupplier.Builder createAyaTsujiAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0).add(Attributes.MOVEMENT_SPEED, 0.5);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0).add(Attributes.MOVEMENT_SPEED, 0.5);
     }
 }
