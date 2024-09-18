@@ -99,6 +99,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             .withHitSpark(JParticleType.SWEEP_ATTACK)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withExtraHitBox(1.75, -0.4, 0.85)
+            .withStaticY()
             .withInfo(
                     Component.literal("Sweep"),
                     Component.literal("""

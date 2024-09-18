@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
@@ -22,12 +23,12 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
     }
 
     @Override
-    protected int getBlockLightLevel(TheSunEntity entity, BlockPos pos) {
+    protected int getBlockLightLevel(@NotNull TheSunEntity entity, @NotNull BlockPos pos) {
         return 15;
     }
 
     @Override
-    protected int getSkyLightLevel(TheSunEntity entity, BlockPos pos) {
+    protected int getSkyLightLevel(@NotNull TheSunEntity entity, @NotNull BlockPos pos) {
         return 15;
     }
 
@@ -44,14 +45,13 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, TheSunEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        packedLight = 255;
-
-        poseStack.pushPose();
-        float scale = lerpScale(animatable, partialTick);
-        poseStack.scale(scale, scale, scale);
-
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-        poseStack.popPose();
+    public void preRender(PoseStack poseStack, TheSunEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        // I suspect the renderlayers fuck it up but... why???
+        if (!isReRender) {
+            //todo: planet fix this being dogshit in prod
+            float scale = lerpScale(animatable, partialTick);
+            poseStack.scale(scale, scale, scale);
+        }
     }
 }

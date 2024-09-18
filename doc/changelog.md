@@ -62,6 +62,7 @@
 
 
 * KC epitaph prediction model rendering has the wrong scale
+  (PLANET)
 
 
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
@@ -69,13 +70,16 @@
 * in the future, try looking at what sets the enemies target to null
 * its obfuscated because of how goals are wrapped, but its probably possible to figure out
 * To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
-#### MULTIPLAYER
-* The Sun scales up way too much
+#### Prod (i.e. fuck your devenv)
+* The Sun scales up too much
+  (PLANET)
+# Bug List
 #### Forge
 \ Stand users can occasionally get multiple stand capabilities? (SEEMINGLY FIXED)
 
 
 * KC Epitaph doesn't render Diavolo's hair overlay - render code runs it just doesnt show up
+  (PLANET)
 
 
 * The client doesn't register The Sun as it's stand if moved out of and into render distance

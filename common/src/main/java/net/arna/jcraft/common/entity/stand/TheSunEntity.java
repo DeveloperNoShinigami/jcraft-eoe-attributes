@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
@@ -491,8 +490,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         float scale = getScale();
         float heatFieldSize = scale * 20.0F;
 
-        // todo: fixme (TheSunEntity scales too large on MP)
-        if (tickCount % 20 == 0) JCraft.prefixedLog(level().isClientSide, "TheSunEntity@" + getId() + " scale: " + scale);
+        // if (tickCount % 20 == 0) JCraft.prefixedLog(level().isClientSide, "TheSunEntity@" + getId() + " scale: " + scale);
 
         if (level().isClientSide()) {
             Vec3 pos = randomPos();
