@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.projectile.JAttackEntity;
 import net.arna.jcraft.common.entity.spec.JSpecHolder;
@@ -624,8 +623,8 @@ public final class JUtils {
      * @return Whether the animation was played.
      */
     public static boolean playAnimIfUnoccupied(LivingEntity living, String animation) {
-        CommonSpecComponent spec = JComponentPlatformUtils.getSpecData(living);
-        if (spec != null && spec.getSpec().moveStun > 0) return false;
+        JSpec<?, ?> spec = JComponentPlatformUtils.getSpecData(living).getSpec();
+        if (spec != null && spec.moveStun > 0) return false;
         if (living instanceof ServerPlayer player) {
             around(player.serverLevel(), player.position(), PLAYER_ANIMATION_DIST).forEach(p -> PlayerAnimPacket.send(player, p, animation));
         } else if (living instanceof JSpecHolder specHolder) { specHolder.setAnimation(animation, 1.0f); }

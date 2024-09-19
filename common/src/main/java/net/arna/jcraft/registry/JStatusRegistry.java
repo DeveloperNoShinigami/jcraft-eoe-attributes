@@ -21,5 +21,6 @@ public interface JStatusRegistry {
     RegistrySupplier<MobEffect> WEIGHTLESS = EFFECTS.register("weightless", WeightlessStatusEffect::new);
     RegistrySupplier<MobEffect> BLEEDING = EFFECTS.register("jbleeding", BleedingEffect::new);
     RegistrySupplier<MobEffect> PHPOISON = EFFECTS.register("phpoison", PurpleInfectionEffect::new);
+    RegistrySupplier<MobEffect> HYPOXIA = EFFECTS.register("hypoxia", HypoxiaEffect::new);
 
 }
