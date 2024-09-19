@@ -2,7 +2,6 @@ package net.arna.jcraft.forge.events;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.arna.jcraft.client.events.JClientEvents;
-import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.renderer.effects.*;
 import net.arna.jcraft.forge.mixin.client.LevelRendererAccessor;
 import net.minecraft.client.Minecraft;
@@ -41,7 +40,7 @@ public class ClientRuntimeEvents {
             ShockwaveEffectRenderer.render(event.getPoseStack(), event.getCamera().getPosition(), level, renderBuffers.bufferSource());
             SplatterEffectRenderer.render(event.getPoseStack(), event.getCamera().getPosition(), level, event.getPartialTick());
             TimeErasePredictionEffectRenderer.render(event.getPoseStack(), event.getCamera().getPosition(), level, event.getPartialTick(), renderBuffers.bufferSource());
-            EpitaphOverlay.render();
+//            EpitaphOverlay.render();
         }
     }
 }

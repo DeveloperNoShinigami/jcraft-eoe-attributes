@@ -1,6 +1,7 @@
 package net.arna.jcraft.forge.events;
 
 
+import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.gui.hud.JCraftHudOverlay;
 import net.arna.jcraft.client.registry.JEntityRendererRegister;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -30,5 +31,7 @@ public class ClientSetupEvents {
     public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
         event.registerBelow(VanillaGuiOverlay.CHAT_PANEL.id(), "hud", (gui, guiGraphics, partialTick, screenWidth, screenHeight) ->
                 JCraftHudOverlay.render(guiGraphics));
+        event.registerBelow(VanillaGuiOverlay.PLAYER_HEALTH.id(), "epitaph", (gui, guiGraphics, partialTick, screenWidth, screenHeight) ->
+                EpitaphOverlay.render());
     }
 }
