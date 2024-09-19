@@ -4,29 +4,22 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import dev.architectury.event.events.client.ClientTickEvent;
 import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.util.RenderUtils;
 import net.arna.jcraft.common.attack.moves.kingcrimson.PredictionMove;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
+
 import java.util.*;
 
 public class TimeErasePredictionEffectRenderer {
@@ -128,7 +121,7 @@ public class TimeErasePredictionEffectRenderer {
         // Restore framebuffer
         Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
 
-        // Draw predictions buffer on top of main buffer
+        // Draw predictions buffer on top of the main buffer
         Window window = Minecraft.getInstance().getWindow();
         RenderSystem.enableBlend();
         RenderSystem.disableCull();
@@ -141,17 +134,28 @@ public class TimeErasePredictionEffectRenderer {
         BufferBuilder buffer = tess.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
+        // Do not use RenderSystem.backupProjectionMatrix() as that will override any existing backup.
+        Matrix4f projMatrix = RenderSystem.getProjectionMatrix();
+        VertexSorting vSort = RenderSystem.getVertexSorting();
+
+        // Set orthographic projection matrix for 'ui' rendering (we're effectively rendering an overlay)
+        Matrix4f flatProjMatrix = new Matrix4f().setOrtho(0, (float) window.getWidth(), 0, (float) window.getHeight(), 1000, 20000);
+        RenderSystem.setProjectionMatrix(flatProjMatrix, VertexSorting.ORTHOGRAPHIC_Z);
+
         final float r = 1, g = 0, b = 0, a = 0.33f;
 
-        final double width = window.getScreenWidth();
-        final double height = window.getScreenHeight();
+        final double width = window.getWidth();
+        final double height = window.getHeight();
 
-        buffer.vertex(-width, -height, 0).color(r, g, b, a).uv(0, 0).endVertex();
-        buffer.vertex(width, -height, 0).color(r, g, b, a).uv(1, 0).endVertex();
+        buffer.vertex(0, 0, 0).color(r, g, b, a).uv(0, 0).endVertex();
+        buffer.vertex(width, 0, 0).color(r, g, b, a).uv(1, 0).endVertex();
         buffer.vertex(width, height, 0).color(r, g, b, a).uv(1, 1).endVertex();
-        buffer.vertex(-width, height, 0).color(r, g, b, a).uv(0, 1).endVertex();
+        buffer.vertex(0, height, 0).color(r, g, b, a).uv(0, 1).endVertex();
 
         BufferUploader.drawWithShader(buffer.end());
+
+        // Restore projection matrix
+        RenderSystem.setProjectionMatrix(projMatrix, vSort);
 
         RenderSystem.disableBlend();
         RenderSystem.enableDepthTest();
