@@ -40,7 +40,8 @@ public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
             protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, WhiteSnakeEntity animatable) {
                 // Apply the camera transform for the given hand
                 return switch (bone.getName()) {
-                    case LEFT_HAND, RIGHT_HAND -> ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
+                    case LEFT_HAND -> ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
+                    case RIGHT_HAND -> ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
                     default -> ItemDisplayContext.NONE;
                 };
             }
@@ -51,8 +52,8 @@ public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
                                               MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
 
                 poseStack.mulPose(Axis.XP.rotationDegrees(bone.getRotX() - 90f));
-                poseStack.mulPose(Axis.YP.rotationDegrees(bone.getRotY() - 90f));
-                poseStack.mulPose(Axis.ZP.rotationDegrees(bone.getRotZ()));
+                // poseStack.mulPose(Axis.YP.rotationDegrees(bone.getRotY() - 90f));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(bone.getRotZ() - 90f));
 
                 if (stack == WhiteSnakeRenderer.this.mainHandItem) {
                     poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
@@ -82,6 +83,10 @@ public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
     @Override
     public void actuallyRender(PoseStack poseStack, WhiteSnakeEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         float a = StandEntityRenderer.getAlpha(animatable, partialTick);
+
+        this.mainHandItem = animatable.getMainHandItem();
+        this.offHandItem = animatable.getOffhandItem();
+
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);
     }
 }

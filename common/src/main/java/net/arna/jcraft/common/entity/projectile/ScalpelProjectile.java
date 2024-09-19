@@ -6,6 +6,7 @@ import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
@@ -54,9 +55,11 @@ public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
     protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         if (level().isClientSide) return;
         Entity entity = entityHitResult.getEntity();
+        if (entity instanceof StandEntity<?,?> stand) entity = stand.getUser();
+        if (entity == null) return;
         if (pierced.contains(entity)) return;
-        Entity owner = this.getOwner();
 
+        Entity owner = this.getOwner();
         if (owner != null && owner.hasPassenger(entity) || entity == owner) {
             return;
         }

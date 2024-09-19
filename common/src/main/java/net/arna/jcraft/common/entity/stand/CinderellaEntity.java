@@ -4,14 +4,27 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.common.attack.core.MoveMap;
+import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.StandAnimationState;
+import net.arna.jcraft.registry.JSoundRegistry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-
 public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEntity.State> {
+    public static final SimpleAttack<CinderellaEntity> LIGHT = SimpleAttack.<CinderellaEntity>lightAttack(
+                    7, 11, 0.75f, 4f, 11, 0.15f, 0.2f)
+            // .withFollowup(LIGHT_FOLLOWUP)
+            // .withCrouchingVariant(CROUCHING_LIGHT)
+            // .withAerialVariant(AIR_LIGHT)
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withInfo(
+                    Component.literal("Punch"),
+                    Component.literal("quick combo starter")
+            );
 
     public CinderellaEntity(Level world) {
         super(StandType.CINDERELLA, world);
@@ -19,7 +32,7 @@ public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEn
 
     @Override
     protected void registerMoves(MoveMap<CinderellaEntity, State> moves) {
-        // TODO Arna
+        moves.registerImmediate(MoveType.LIGHT, LIGHT, State.LIGHT);
     }
 
     @Override

@@ -52,7 +52,7 @@ public class PurpleHazeRenderer extends StandEntityRenderer<AbstractPurpleHazeEn
 
                 poseStack.mulPose(Axis.XP.rotationDegrees(bone.getRotX() - 90f));
                 poseStack.mulPose(Axis.YP.rotationDegrees(bone.getRotY() - 90f));
-                poseStack.mulPose(Axis.ZP.rotationDegrees(bone.getRotZ()));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(bone.getRotZ() - 90f));
 
                 if (stack == PurpleHazeRenderer.this.mainHandItem) {
                     poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
@@ -82,6 +82,8 @@ public class PurpleHazeRenderer extends StandEntityRenderer<AbstractPurpleHazeEn
     @Override
     public void actuallyRender(PoseStack poseStack, AbstractPurpleHazeEntity<?, ?> animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         float a = StandEntityRenderer.getAlpha(animatable, partialTick);
+        this.mainHandItem = animatable.getMainHandItem();
+        this.offHandItem = animatable.getOffhandItem();
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);
     }
 }

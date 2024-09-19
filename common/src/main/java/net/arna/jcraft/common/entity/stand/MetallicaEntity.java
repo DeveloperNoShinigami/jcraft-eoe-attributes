@@ -1,20 +1,21 @@
 package net.arna.jcraft.common.entity.stand;
 
+import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.metallica.HarvestMove;
-import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
-import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.attack.moves.shared.UppercutAttack;
+import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.component.living.CommonMiscComponent;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -106,7 +107,8 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                             Fast 1.5s knockdown.
                             §1Requires at least 25% iron to be usable.""")
             )
-            .withCondition(metallica -> metallica.getIron() > IRON_MAX / 4.0f);
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.swp"))
+            .withCondition(metallica -> metallica.getIron() >= IRON_MAX / 4.0f);
     public static final UppercutAttack<MetallicaEntity> SMASH = new UppercutAttack<MetallicaEntity>(200,
             11, 21, 1.0f, 7.5f, 18,2.0f,  1.5f, 0.2f, -0.5f)
             .withCrouchingVariant(SWEEP)
@@ -123,18 +125,56 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                             Very far-reaching.
                             §1Requires at least 50% iron to be usable.""")
             )
-            .withCondition(metallica -> metallica.getIron() > IRON_MAX / 2.0f);
-    public static final SimpleAttack<MetallicaEntity> PRECISE_TOSS = new SimpleAttack<MetallicaEntity>(
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.sms"))
+            .withCondition(metallica -> metallica.getIron() >= IRON_MAX / 2.0f);
+    public static final SimpleAttack<MetallicaEntity> FAN_TOSS = new SimpleAttack<MetallicaEntity>(
             60, 7, 12, 0.75f, 0, 0, 0, 0, 0)
             .withInfo(
                     Component.literal("Scalpel Toss (Precise)"),
                     Component.literal("""
-                                    Relatively slow, very low cooldown.
+                                    Decently fast, very low cooldown.
+                                    Fires 5 scalpels in a fan pattern.""")
+            )
+            .markRanged()
+            .withAction(MetallicaEntity::fanToss)
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.ft"))
+            .withCondition(metallica -> metallica.getIron() >= ScalpelProjectile.IRON_COST);
+    private static void fanToss(MetallicaEntity stand, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
+        final float offset = 10.0F;
+        int index = 0;
+        // 0 -> 1 -> -1 -> 2 -> -2
+        for (int i = 0; i < 5; i++) {
+            ScalpelProjectile scalpel = ScalpelProjectile.fromMetallica(stand);
+            if (scalpel == null) continue;
+
+            if (i % 2 == 0) index -= i;
+            else index += i;
+
+            final float pitch = user.getXRot();
+            final float yaw = user.getYRot() + index * offset;
+            Vec3 rotVec = RotationUtil.vecPlayerToWorld(RotationUtil.rotToVec(yaw, pitch), GravityChangerAPI.getGravityDirection(user));
+            scalpel.shoot(rotVec.x, rotVec.y, rotVec.z, 1.75F, 0.1F);
+
+            Vec3 upVec = GravityChangerAPI.getEyeOffset(stand.getUserOrThrow());
+            Vec3 heightOffset = upVec.scale(0.75);
+            scalpel.setPos(stand.getBaseEntity().position().add(heightOffset));
+
+            stand.level().addFreshEntity(scalpel);
+        }
+    }
+    public static final SimpleAttack<MetallicaEntity> PRECISE_TOSS = new SimpleAttack<MetallicaEntity>(
+            60, 7, 12, 0.75f, 0, 0, 0, 0, 0)
+            .withCrouchingVariant(FAN_TOSS)
+            .withInfo(
+                    Component.literal("Scalpel Toss (Precise)"),
+                    Component.literal("""
+                                    Decently fast, very low cooldown.
                                     Fires 3 scalpels in the exact pointed direction.""")
             )
             .markRanged()
             .withAction(MetallicaEntity::preciseToss)
-            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.pt"));
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.pt"))
+            .withCondition(metallica -> metallica.getIron() >= ScalpelProjectile.IRON_COST);
 
     private static void preciseToss(MetallicaEntity stand, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
         Vec3 pos = stand.position();
@@ -147,6 +187,15 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             stand.level().addFreshEntity(scalpel);
         }
     }
+    public static final SimpleMultiHitAttack<MetallicaEntity> GRAB_HIT = new SimpleMultiHitAttack<MetallicaEntity>(0,
+            34, 0.75f, 4f, 10, 2f, 0f, 0f, IntSet.of(11, 17, 26))
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withStunType(StunType.UNBURSTABLE)
+            .withInfo(
+                    Component.literal("Grab (Final Hit)"),
+                    Component.empty());
+    public static final GrabAttack<MetallicaEntity, State> GRAB = new GrabAttack<MetallicaEntity, State>(280,
+            0, 0, 0, 0, 0, 0, 0, 0, GRAB_HIT, State.IDLE, 30, 0.7);
     public static final SimpleAttack<MetallicaEntity> GO_INVISIBLE = new SimpleAttack<MetallicaEntity>(20,
             10, 15, 0, 0, 0, 0, 0, 0)
             .withInfo(
@@ -211,7 +260,8 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         light.withFollowUp(State.LIGHT_FOLLOWUP).withFollowUp(State.LIGHT_FINAL);
         moves.register(MoveType.HEAVY, SMASH, State.SMASH).withCrouchingVariant(State.SWEEP);
 
-        moves.register(MoveType.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS);
+        moves.register(MoveType.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS).withCrouchingVariant(State.FAN_TOSS);
+        moves.register(MoveType.SPECIAL3, GRAB, State.IDLE);
         moves.register(MoveType.UTILITY, HARVEST, State.HARVEST).withCrouchingVariant(State.IDLE);
     }
 
@@ -305,6 +355,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.light2"))),
         LIGHT_FINAL(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.light3"))),
         PRECISE_TOSS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.precise_toss"))),
+        FAN_TOSS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.fan_toss"))),
         HARVEST(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.harvest"))),
         SMASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.smash"))),
         SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.sweep"))),

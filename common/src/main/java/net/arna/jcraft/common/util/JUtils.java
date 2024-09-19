@@ -67,6 +67,7 @@ import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 
 public final class JUtils {
     public static final float DEG_TO_RAD = 0.017453292F;
+    public static final float RAD_TO_DEG = 57.2957795131F;
 
     public static Vec3 randUnitVec(net.minecraft.util.RandomSource random) {
         return new Vec3(random.nextGaussian(), random.nextGaussian(), random.nextGaussian()).normalize();

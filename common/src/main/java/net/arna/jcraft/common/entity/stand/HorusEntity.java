@@ -306,11 +306,11 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
 
     private static void scatter(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
         for (int batch = 0; batch < 2; batch++) {
-            float offset = batch == 0 ? 10.0F : -10.0F;
+            final float offset = batch == 0 ? 10.0F : -10.0F;
             for (int i = 1; i < 4; i++) {
                 IcicleProjectile icicle = new IcicleProjectile(attacker.level(), user);
-                float pitch = user.getXRot();
-                float yaw = user.getYRot() + i * offset;
+                final float pitch = user.getXRot();
+                final float yaw = user.getYRot() + i * offset;
                 Vec3 rotVec = RotationUtil.vecPlayerToWorld(RotationUtil.rotToVec(yaw, pitch), GravityChangerAPI.getGravityDirection(user));
                 icicle.shoot(rotVec.x, rotVec.y, rotVec.z, 1.75F, 0.1F);
 

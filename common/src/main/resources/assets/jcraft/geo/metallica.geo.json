@@ -201,6 +201,112 @@
 					]
 				},
 				{
+					"name": "scalpel4",
+					"parent": "lowbase",
+					"pivot": [1, 0, 0]
+				},
+				{
+					"name": "backGrip4",
+					"parent": "scalpel4",
+					"pivot": [4, 0, 0],
+					"cubes": [
+						{
+							"origin": [-2, -1, -0.5],
+							"size": [9, 2, 1],
+							"uv": {
+								"north": {"uv": [18, 17], "uv_size": [9, 2]},
+								"east": {"uv": [20, 25], "uv_size": [1, 2]},
+								"south": {"uv": [18, 19], "uv_size": [9, 2]},
+								"west": {"uv": [21, 25], "uv_size": [1, 2]},
+								"up": {"uv": [23, 23], "uv_size": [9, 1]},
+								"down": {"uv": [23, 25], "uv_size": [9, -1]}
+							}
+						},
+						{
+							"origin": [-7, -1, 0],
+							"size": [5, 2, 0],
+							"uv": {
+								"north": {"uv": [18, 23], "uv_size": [5, 2]},
+								"east": {"uv": [0, 0], "uv_size": [0, 2]},
+								"west": {"uv": [0, 0], "uv_size": [0, 2]},
+								"up": {"uv": [0, 0], "uv_size": [5, 0]},
+								"down": {"uv": [0, 0], "uv_size": [5, 0]}
+							}
+						}
+					]
+				},
+				{
+					"name": "blur4",
+					"parent": "backGrip4",
+					"pivot": [-1, 1, 0],
+					"cubes": [
+						{
+							"origin": [-7, 1, 0],
+							"size": [11, 11, 0],
+							"uv": {
+								"north": {"uv": [16, 0], "uv_size": [11, 11]},
+								"east": {"uv": [0, 0], "uv_size": [0, 11]},
+								"west": {"uv": [0, 0], "uv_size": [0, 11]},
+								"up": {"uv": [0, 0], "uv_size": [11, 0]},
+								"down": {"uv": [0, 0], "uv_size": [11, 0]}
+							}
+						}
+					]
+				},
+				{
+					"name": "scalpel5",
+					"parent": "lowbase",
+					"pivot": [1, 0, 0]
+				},
+				{
+					"name": "backGrip5",
+					"parent": "scalpel5",
+					"pivot": [4, 0, 0],
+					"cubes": [
+						{
+							"origin": [-2, -1, -0.5],
+							"size": [9, 2, 1],
+							"uv": {
+								"north": {"uv": [18, 17], "uv_size": [9, 2]},
+								"east": {"uv": [20, 25], "uv_size": [1, 2]},
+								"south": {"uv": [18, 19], "uv_size": [9, 2]},
+								"west": {"uv": [21, 25], "uv_size": [1, 2]},
+								"up": {"uv": [23, 23], "uv_size": [9, 1]},
+								"down": {"uv": [23, 25], "uv_size": [9, -1]}
+							}
+						},
+						{
+							"origin": [-7, -1, 0],
+							"size": [5, 2, 0],
+							"uv": {
+								"north": {"uv": [18, 23], "uv_size": [5, 2]},
+								"east": {"uv": [0, 0], "uv_size": [0, 2]},
+								"west": {"uv": [0, 0], "uv_size": [0, 2]},
+								"up": {"uv": [0, 0], "uv_size": [5, 0]},
+								"down": {"uv": [0, 0], "uv_size": [5, 0]}
+							}
+						}
+					]
+				},
+				{
+					"name": "blur5",
+					"parent": "backGrip5",
+					"pivot": [-1, 1, 0],
+					"cubes": [
+						{
+							"origin": [-7, 1, 0],
+							"size": [11, 11, 0],
+							"uv": {
+								"north": {"uv": [16, 0], "uv_size": [11, 11]},
+								"east": {"uv": [0, 0], "uv_size": [0, 11]},
+								"west": {"uv": [0, 0], "uv_size": [0, 11]},
+								"up": {"uv": [0, 0], "uv_size": [11, 0]},
+								"down": {"uv": [0, 0], "uv_size": [11, 0]}
+							}
+						}
+					]
+				},
+				{
 					"name": "cleaver",
 					"parent": "lowbase",
 					"pivot": [4, 0, 0],

@@ -28,10 +28,8 @@ public class GESnakeRenderer extends DynamicGeoEntityRenderer<GESnakeEntity> {
             @Override
             protected ItemStack getStackForBone(GeoBone bone, GESnakeEntity animatable) {
                 // Retrieve the items in the entity's hands for the relevant bone
-                return switch (bone.getName()) {
-                    case "body" -> GESnakeRenderer.this.mainHandItem;
-                    default -> null;
-                };
+                if (bone.getName() == "body") return GESnakeRenderer.this.mainHandItem;
+                return null;
             }
 
             @Override
