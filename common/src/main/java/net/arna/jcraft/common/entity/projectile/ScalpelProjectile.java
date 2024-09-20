@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -22,12 +23,9 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
     public static final float IRON_COST = 5.0f;
-    private final Set<Entity> pierced = new HashSet<>();
+    private final IntOpenHashSet pierced = new IntOpenHashSet(4);
 
     public ScalpelProjectile(Level world) {
         super(JEntityTypeRegistry.SCALPEL.get(), world);
@@ -57,7 +55,7 @@ public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
         Entity entity = entityHitResult.getEntity();
         if (entity instanceof StandEntity<?,?> stand) entity = stand.getUser();
         if (entity == null) return;
-        if (pierced.contains(entity)) return;
+        if (pierced.contains(entity.getId())) return;
 
         Entity owner = this.getOwner();
         if (owner != null && owner.hasPassenger(entity) || entity == owner) {
@@ -74,7 +72,7 @@ public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
         // if (entity instanceof LivingEntity living) JComponentPlatformUtils.getMiscData(living).stab();
         setDeltaMovement(getDeltaMovement().scale(0.5));
         hurtMarked = true;
-        pierced.add(entity);
+        pierced.add(entity.getId());
     }
 
     @Override

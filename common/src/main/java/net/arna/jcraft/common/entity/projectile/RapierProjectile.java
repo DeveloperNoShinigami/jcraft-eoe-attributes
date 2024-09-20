@@ -1,12 +1,15 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,7 +21,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -29,30 +31,27 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.util.AzureLibUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class RapierProjectile extends AbstractArrow implements GeoEntity {
     public static final ResourceLocation POSSESSED_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/rapier_possessed.png");
     public static final ResourceLocation ARMOR_OFF_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/rapier_no_armor.png");
     private static final EntityDataAccessor<Integer> SKIN;
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-    private StandEntity<?, ?> origin;
+    private final @Nullable StandEntity<?, ?> origin;
     private int ticksInAir, bouncesLeft = 5;
 
     static {
         SKIN = SynchedEntityData.defineId(RapierProjectile.class, EntityDataSerializers.INT);
     }
 
-    public RapierProjectile(EntityType<? extends RapierProjectile> entityType, Level world) {
-        super(entityType, world);
+    public RapierProjectile(Level world) {
+        super(JEntityTypeRegistry.RAPIER.get(), world);
+        this.origin = null;
     }
 
-    public RapierProjectile(Level world, LivingEntity owner, StandEntity<?, ?> silverChariot) {
+    public RapierProjectile(Level world, LivingEntity owner, @NotNull StandEntity<?, ?> silverChariot) {
         super(JEntityTypeRegistry.RAPIER.get(), owner, world);
-        this.setOwner(owner);
         this.origin = silverChariot;
     }
 
@@ -71,8 +70,8 @@ public class RapierProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public ItemStack getPickupItem() {
-        return new ItemStack(JItemRegistry.KNIFE.get());
+    public @NotNull ItemStack getPickupItem() {
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -114,15 +113,15 @@ public class RapierProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult entityHitResult) {
+    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         if (level().isClientSide) {
             return;
         }
-        Entity owner = this.getOwner();
+        final Entity owner = this.getOwner();
         if (owner == null) {
             return;
         }
-        Entity entity = entityHitResult.getEntity();
+        final Entity entity = entityHitResult.getEntity();
         if (owner.hasPassenger(entity) || entity == owner) {
             return;
         }
@@ -136,7 +135,7 @@ public class RapierProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected boolean tryPickup(Player player) {
+    protected boolean tryPickup(@NotNull Player player) {
         if (player != getOwner() || !(JUtils.getStand(player) instanceof SilverChariotEntity silverChariot)) {
             return false;
         }
@@ -146,23 +145,22 @@ public class RapierProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putShort("life", (short) this.ticksInAir);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
     }
 
     // Animations
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

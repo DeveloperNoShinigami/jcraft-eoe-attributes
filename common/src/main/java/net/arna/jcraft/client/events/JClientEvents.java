@@ -88,16 +88,18 @@ public class JClientEvents {
 
         framesSinceCounted++;
 
-        boolean isMid = JClientConfig.getInstance().getUiPosition() == JClientConfig.UIPos.MIDDLE;
-        boolean useIcons = JClientConfig.getInstance().isIconHud();
-        StandEntity<?, ?> stand = JUtils.getStand(player);
+        final JClientConfig config = JClientConfig.getInstance();
 
-        Font textRenderer = client.gui.getFont();
+        final boolean isMid = config.getUiPosition() == JClientConfig.UIPos.MIDDLE;
+        final boolean useIcons = config.isIconHud();
 
-        int selectedX = getHudX(client.getWindow().getGuiScaledWidth(), 128);
-        int selectedY = client.getWindow().getGuiScaledHeight();
+        final StandEntity<?, ?> stand = JUtils.getStand(player);
+        final Font textRenderer = client.gui.getFont();
 
-        switch (JClientConfig.getInstance().getUiPosition()) {
+        final int selectedX = getHudX(client.getWindow().getGuiScaledWidth(), 128) + config.getHorizontalHudOffset();
+        int selectedY = client.getWindow().getGuiScaledHeight() + config.getVerticalHudOffset();
+
+        switch (config.getUiPosition()) {
             case LEFT -> selectedY /= 20;
             case MIDDLE -> selectedY /= 3;
             case RIGHT -> selectedY = (int) (selectedY / 2.25f);

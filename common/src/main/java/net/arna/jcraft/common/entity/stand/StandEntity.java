@@ -1372,7 +1372,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     @Override
     public void stopRiding() {
-        if (tickCount == 0) {
+        if (tickCount == 0 && getRemovalReason() == null) {
             // This may be necessary because the packet that sets passengers arrives early on Forge
             JCraft.LOGGER.warn("Prevented stopRiding() call for recently created " + this);
             return;

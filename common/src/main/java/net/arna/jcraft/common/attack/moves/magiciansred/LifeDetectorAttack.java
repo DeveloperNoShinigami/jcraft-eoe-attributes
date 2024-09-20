@@ -5,8 +5,8 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.LifeDetectorEntity;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.world.entity.LivingEntity;
+
 import java.util.Set;
 
 public final class LifeDetectorAttack extends AbstractMove<LifeDetectorAttack, MagiciansRedEntity> {
@@ -17,7 +17,7 @@ public final class LifeDetectorAttack extends AbstractMove<LifeDetectorAttack, M
 
     @Override
     public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
-        LifeDetectorEntity lifeDetector = new LifeDetectorEntity(JEntityTypeRegistry.LIFE_DETECTOR.get(), attacker.level());
+        LifeDetectorEntity lifeDetector = new LifeDetectorEntity(attacker.level());
         lifeDetector.setMaster(user);
         lifeDetector.moveTo(attacker.getX(), attacker.getY() + 1.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());
         attacker.level().addFreshEntity(lifeDetector);

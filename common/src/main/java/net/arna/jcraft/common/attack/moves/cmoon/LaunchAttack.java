@@ -7,11 +7,11 @@ import net.arna.jcraft.common.entity.projectile.BlockProjectile;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
+
 import java.util.Set;
 
 public final class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoonEntity> {
@@ -26,7 +26,7 @@ public final class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoon
     public @NonNull Set<LivingEntity> perform(CMoonEntity attacker, LivingEntity user, MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        BlockProjectile block = new BlockProjectile(JEntityTypeRegistry.BLOCK_PROJECTILE.get(), attacker.level());
+        BlockProjectile block = new BlockProjectile(attacker.level());
         BlockState steppingState = attacker.getBlockStateOn();
         if (steppingState.isAir() || !steppingState.canOcclude()) {
             block.setBlockStack(Items.STONE.getDefaultInstance());

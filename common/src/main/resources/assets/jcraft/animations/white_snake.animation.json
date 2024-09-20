@@ -437,7 +437,7 @@
 							"easing": "easeOutSine"
 						},
 						"0.5833": {
-							"vector": [7.91598, 30.48124, 19.69692],
+							"vector": [6.80588, -25.82822, 27.7666],
 							"easing": "easeOutBack",
 							"easingArgs": []
 						}
@@ -455,7 +455,13 @@
 				},
 				"kneeRight": {
 					"rotation": {
-						"vector": ["linear", "linear", "linear"]
+						"0.0": {
+							"vector": [20, 0, 0]
+						},
+						"0.375": {
+							"vector": [92.5, 0, 0],
+							"easing": "easeInBack"
+						}
 					}
 				},
 				"legLeft": {
@@ -3511,7 +3517,13 @@
 				},
 				"eyeR": {
 					"position": {
-						"vector": [-0.3, 0, 0]
+						"0.0": {
+							"vector": [-0.3, 0, 0]
+						},
+						"1.125": {
+							"vector": [-0.7, 0, 0],
+							"easing": "easeInBack"
+						}
 					}
 				},
 				"eyeL": {

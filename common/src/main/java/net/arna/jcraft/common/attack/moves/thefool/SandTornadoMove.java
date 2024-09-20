@@ -5,8 +5,8 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.SandTornadoEntity;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.world.entity.LivingEntity;
+
 import java.util.Set;
 
 public final class SandTornadoMove extends AbstractMove<SandTornadoMove, TheFoolEntity> {
@@ -17,7 +17,7 @@ public final class SandTornadoMove extends AbstractMove<SandTornadoMove, TheFool
 
     @Override
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
-        SandTornadoEntity sandTornado = new SandTornadoEntity(JEntityTypeRegistry.SAND_TORNADO.get(), attacker.level());
+        SandTornadoEntity sandTornado = new SandTornadoEntity(attacker.level());
         sandTornado.setMaster(user);
         sandTornado.moveTo(attacker.getX(), attacker.getY() + 1.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());
         attacker.level().addFreshEntity(sandTornado);

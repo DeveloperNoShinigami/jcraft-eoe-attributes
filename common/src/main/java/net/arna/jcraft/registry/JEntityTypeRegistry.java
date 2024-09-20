@@ -14,6 +14,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Function;
 
 
@@ -215,9 +217,9 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<TheSunEntity>> THE_SUN = ENTITY_TYPE_REGISTRY.register(JCraft.id("the_sun"),
             () -> EntityType.Builder.of(
-                    WorldOnlyEntityFactory.from(TheSunEntity::new),
-                    MobCategory.CREATURE
-            ).sized(2f, 2f)
+                            WorldOnlyEntityFactory.from(TheSunEntity::new),
+                            MobCategory.CREATURE
+                    ).sized(2f, 2f)
                     .noSave()
                     .build("the_sun")
     );
@@ -325,7 +327,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<BulletProjectile>> BULLET = ENTITY_TYPE_REGISTRY.register(JCraft.id("bullet"),
             () -> EntityType.Builder.of(
-                            (EntityType<BulletProjectile> entityType, Level world) -> new BulletProjectile(entityType, world),
+                            WorldOnlyEntityFactory.from(BulletProjectile::new),
                             MobCategory.MISC
                     ).sized(0.1f, 0.1f)
                     .clientTrackingRange(6)
@@ -335,7 +337,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<RapierProjectile>> RAPIER = ENTITY_TYPE_REGISTRY.register(JCraft.id("rapier"),
             () -> EntityType.Builder.of(
-                            (EntityType<RapierProjectile> entityType, Level world) -> new RapierProjectile(entityType, world),
+                            WorldOnlyEntityFactory.from(RapierProjectile::new),
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(6)
@@ -345,7 +347,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<AnkhProjectile>> ANKH = ENTITY_TYPE_REGISTRY.register(JCraft.id("ankh"),
             () -> EntityType.Builder.of(
-                            (EntityType<AnkhProjectile> entityType, Level world) -> new AnkhProjectile(entityType, world),
+                            WorldOnlyEntityFactory.from(AnkhProjectile::new),
                             MobCategory.MISC
                     ).sized(0.75f, 0.75f)
                     .clientTrackingRange(6)
@@ -355,7 +357,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<MeteorProjectile>> METEOR = ENTITY_TYPE_REGISTRY.register(JCraft.id("meteor"),
             () -> EntityType.Builder.of(
-                            (EntityType<MeteorProjectile> entityType, Level world) -> new MeteorProjectile(entityType, world),
+                            WorldOnlyEntityFactory.from(MeteorProjectile::new),
                             MobCategory.MISC
                     ).sized(1.0f, 1.0f)
                     .clientTrackingRange(6)
@@ -365,7 +367,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<BubbleProjectile>> BUBBLE = ENTITY_TYPE_REGISTRY.register(JCraft.id("bubble"),
             () -> EntityType.Builder.of(
-                            (EntityType<BubbleProjectile> entityType, Level world) -> new BubbleProjectile(entityType, world),
+                            WorldOnlyEntityFactory.from(BubbleProjectile::new),
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(8)
@@ -375,7 +377,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<BloodProjectile>> BLOOD_PROJECTILE = ENTITY_TYPE_REGISTRY.register(JCraft.id("bloodprojectile"),
             () -> EntityType.Builder.of(
-                            (EntityType<BloodProjectile> entityType, Level world) -> new BloodProjectile(entityType, world),
+                            WorldOnlyEntityFactory.from(BloodProjectile::new),
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(4)
@@ -385,7 +387,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<LaserProjectile>> LASER_PROJECTILE = ENTITY_TYPE_REGISTRY.register(JCraft.id("laserprojectile"),
             () -> EntityType.Builder.of(
-                            (EntityType<LaserProjectile> entityType, Level world) -> new LaserProjectile(entityType, world),
+                            WorldOnlyEntityFactory.from(LaserProjectile::new),
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(4)
@@ -395,7 +397,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<PHCapsuleProjectile>> PH_CAPSULE = ENTITY_TYPE_REGISTRY.register(JCraft.id("ph_capsule"),
             () -> EntityType.Builder.of(
-                            (EntityType<PHCapsuleProjectile> entityType, Level world) -> new PHCapsuleProjectile(world),
+                            WorldOnlyEntityFactory.from(PHCapsuleProjectile::new),
                             MobCategory.MISC
                     ).sized(0.75f, 0.75f)
                     .clientTrackingRange(6)
@@ -405,7 +407,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<LifeDetectorEntity>> LIFE_DETECTOR = ENTITY_TYPE_REGISTRY.register(JCraft.id("lifedetector"),
             () -> EntityType.Builder.of(
-                            LifeDetectorEntity::new,
+                            WorldOnlyEntityFactory.from(LifeDetectorEntity::new),
                             MobCategory.MISC
                     ).sized(1f, 1f)
                     .build("lifedetector")
@@ -413,7 +415,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<HGNetEntity>> HG_NET = ENTITY_TYPE_REGISTRY.register(JCraft.id("hg_net"),
             () -> EntityType.Builder.of(
-                            HGNetEntity::new,
+                            WorldOnlyEntityFactory.from(HGNetEntity::new),
                             MobCategory.MISC
                     ).sized(2f, 4f)
                     .build("hg_net")
@@ -421,7 +423,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<RedBindEntity>> RED_BIND = ENTITY_TYPE_REGISTRY.register(JCraft.id("redbind"),
             () -> EntityType.Builder.of(
-                            RedBindEntity::new,
+                            WorldOnlyEntityFactory.from(RedBindEntity::new),
                             MobCategory.MISC
                     ).sized(1f, 2f)
                     .build("redbind")
@@ -429,7 +431,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<BlockProjectile>> BLOCK_PROJECTILE = ENTITY_TYPE_REGISTRY.register(JCraft.id("blockprojectile"),
             () -> EntityType.Builder.of(
-                            BlockProjectile::new,
+                            WorldOnlyEntityFactory.from(BlockProjectile::new),
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .build("blockprojectile")
@@ -437,7 +439,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<SandTornadoEntity>> SAND_TORNADO = ENTITY_TYPE_REGISTRY.register(JCraft.id("sandtornado"),
             () -> EntityType.Builder.of(
-                            SandTornadoEntity::new,
+                            WorldOnlyEntityFactory.from(SandTornadoEntity::new),
                             MobCategory.MISC
                     ).sized(1f, 2f)
                     .build("sandtornado")
@@ -455,7 +457,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<SunBeamProjectile>> SUN_BEAM = ENTITY_TYPE_REGISTRY.register(JCraft.id("sunbeam"),
             () -> EntityType.Builder.of(
-                            (EntityType<SunBeamProjectile> entityType, Level world) -> new SunBeamProjectile(world),
+                            (EntityType<SunBeamProjectile> entityType, Level world) -> new SunBeamProjectile(world, null, null),
                             MobCategory.MISC
                     ).sized(1f, 2f)
                     .build("sunbeam")
@@ -644,7 +646,7 @@ public interface JEntityTypeRegistry {
         private final Function<Level, T> ctor;
 
         @Override
-        public T create(EntityType<T> type, Level world) {
+        public @NotNull T create(@NotNull EntityType<T> type, @NotNull Level world) {
             return ctor.apply(world);
         }
     }

@@ -54,6 +54,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -206,9 +207,8 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     private static MeteorProjectile fireMeteor(TheSunEntity attacker, @NonNull LivingEntity user, Vec3 pos, Vec3 velocity, float speed, float divergence) {
-        MeteorProjectile meteor = new MeteorProjectile(attacker.level(), user);
+        MeteorProjectile meteor = new MeteorProjectile(attacker.level(), user, attacker);
         meteor.setSkin(attacker.getSkin());
-        meteor.assignSun(attacker);
         meteor.setPos(pos);
         meteor.shoot(velocity.x, velocity.y, velocity.z, speed, divergence);
 
@@ -224,10 +224,8 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     private static void fireSunBeam(TheSunEntity attacker, @NonNull LivingEntity user, float divergence) {
         Vec3 pos = attacker.randomPos();
 
-        SunBeamProjectile sunBeam = new SunBeamProjectile(attacker.level());
+        SunBeamProjectile sunBeam = new SunBeamProjectile(attacker.level(), user, attacker);
         sunBeam.setSkin(attacker.getSkin());
-        sunBeam.setOwner(user);
-        sunBeam.assignSun(attacker);
         sunBeam.setPos(pos);
 
         Vector2f pitchYaw = getLookPY(pos, attacker.targetPosition);
@@ -375,12 +373,8 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                 AIMING_DISTANCE * AIMING_DISTANCE
         );
 
-        if (eHit != null) {
-            targetPosition = eHit.getLocation();
-        } else {
-            targetPosition = user.level().clip(new ClipContext(eP, eP.add(rangeMod),
-                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user)).getLocation();
-        }
+        targetPosition = Objects.requireNonNullElseGet(eHit, () -> user.level().clip(new ClipContext(eP, eP.add(rangeMod),
+                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user))).getLocation();
 
         if (user instanceof ServerPlayer serverPlayer) {
             serverPlayer.connection.send(new ClientboundLevelParticlesPacket(JParticleTypeRegistry.SUN_LOCK_ON.get(), true,
@@ -643,13 +637,13 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.sun.idle"))),
         ;
 
-        private final BiConsumer<TheSunEntity, AnimationState> animator;
+        private final BiConsumer<TheSunEntity, AnimationState<TheSunEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<TheSunEntity>> animator) {
             this((silverChariot, builder) -> animator.accept(builder));
         }
 
-        State(BiConsumer<TheSunEntity, AnimationState> animator) {
+        State(BiConsumer<TheSunEntity, AnimationState<TheSunEntity>> animator) {
             this.animator = animator;
         }
 

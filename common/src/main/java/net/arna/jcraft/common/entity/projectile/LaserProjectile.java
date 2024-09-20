@@ -1,42 +1,37 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import lombok.Setter;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-
-
-import java.util.ArrayList;
-import java.util.List;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.util.AzureLibUtil;
+import org.jetbrains.annotations.NotNull;
 
 public class LaserProjectile extends AbstractArrow implements GeoEntity {
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     private int lifetime = 60;
-    private final List<Entity> hit = new ArrayList<>();
+    private final IntOpenHashSet hit = new IntOpenHashSet(8);
     @Setter
     private boolean unblockable = false;
 
-    public LaserProjectile(EntityType<? extends LaserProjectile> entityType, Level world) {
-        super(entityType, world);
+    public LaserProjectile(Level world) {
+        super(JEntityTypeRegistry.LASER_PROJECTILE.get(), world);
         this.pickup = Pickup.DISALLOWED;
     }
 
     public LaserProjectile(Level world, LivingEntity owner) {
         super(JEntityTypeRegistry.LASER_PROJECTILE.get(), owner, world);
-        this.setOwner(owner);
     }
 
     @Override
@@ -48,8 +43,8 @@ public class LaserProjectile extends AbstractArrow implements GeoEntity {
     public void tick() {
         super.tick();
         if (level().isClientSide()) {
-            double x = getX(), y = getY(), z = getZ();
-            Vec3 vel = getDeltaMovement();
+            final double x = getX(), y = getY(), z = getZ();
+            final Vec3 vel = getDeltaMovement();
 
             if (tickCount == 1) {
                 for (int i = 0; i < 20; i++) {
@@ -62,7 +57,7 @@ public class LaserProjectile extends AbstractArrow implements GeoEntity {
                     );
                 }
                 for (int i = 0; i < 10; i++) {
-                    Vec3 frontVel = vel.scale(random.nextDouble());
+                    final Vec3 frontVel = vel.scale(random.nextDouble());
                     level().addParticle(
                             ParticleTypes.FIREWORK,
                             x, y, z
@@ -84,7 +79,7 @@ public class LaserProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult entityHitResult) {
+    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         if (level().isClientSide) {
             return;
         }
@@ -93,13 +88,13 @@ public class LaserProjectile extends AbstractArrow implements GeoEntity {
             return;
         }
         Entity entity = entityHitResult.getEntity();
-        if (owner.hasPassenger(entity) || entity == owner || hit.contains(entity)) {
+        if (owner.hasPassenger(entity) || entity == owner || hit.contains(entity.getId())) {
             return;
         }
 
         JUtils.projectileDamageLogic(this, level(), entity, getDeltaMovement(), 20, 1, false,
                 5f, 0, CommonHitPropertyComponent.HitAnimation.CRUSH, unblockable, false);
-        hit.add(entity);
+        hit.add(entity.getId());
     }
 
     @Override
@@ -109,7 +104,7 @@ public class LaserProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public ItemStack getPickupItem() {
+    public @NotNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
@@ -119,11 +114,10 @@ public class LaserProjectile extends AbstractArrow implements GeoEntity {
     }
 
     // Animations
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

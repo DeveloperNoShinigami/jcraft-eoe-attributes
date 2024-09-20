@@ -1,12 +1,22 @@
 package net.arna.jcraft.common.entity.projectile;
 
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -15,39 +25,28 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import java.util.List;
+
+import java.util.Objects;
 import java.util.Set;
 
-public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity {
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+/**
+ * Used in C-Moon's {@link net.arna.jcraft.common.attack.moves.cmoon.LaunchAttack}
+ */
+public class BlockProjectile extends JAttackEntity implements GeoEntity {
     private final int maxTimeToLaunch = 15;
     private int timeToLaunch = maxTimeToLaunch;
     private int timeLaunched = 0;
@@ -55,23 +54,24 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
     private boolean launched = false;
     private boolean hit = false;
 
-    private static final EntityDataAccessor<Integer> EFFECT;
+    private static final EntityDataAccessor<Byte> EFFECT;
     private static final EntityDataAccessor<ItemStack> BLOCKSTACK;
 
     static {
-        EFFECT = SynchedEntityData.defineId(BlockProjectile.class, EntityDataSerializers.INT);
+        EFFECT = SynchedEntityData.defineId(BlockProjectile.class, EntityDataSerializers.BYTE);
         BLOCKSTACK = SynchedEntityData.defineId(BlockProjectile.class, EntityDataSerializers.ITEM_STACK);
     }
 
-    public BlockProjectile(EntityType<? extends LivingEntity> entityType, Level world) {
-        super(entityType, world);
+    public BlockProjectile(Level world) {
+        super(JEntityTypeRegistry.BLOCK_PROJECTILE.get(), world);
         setNoGravity(true);
+        supportsItems = true;
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        entityData.define(EFFECT, 0);
+        entityData.define(EFFECT, (byte)0);
         entityData.define(BLOCKSTACK, Items.STONE.getDefaultInstance());
     }
 
@@ -79,7 +79,12 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
         entityData.set(BLOCKSTACK, stack);
     }
 
-    public void setEffect(int effect) {
+    /**
+     * 0 - NONE
+     * 1 - BREAK
+     * 2 - HALT
+     */
+    public void setEffect(byte effect) {
         entityData.set(EFFECT, effect);
     }
 
@@ -90,7 +95,7 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
     private void breakBlock() {
         setPos(position().add(getDeltaMovement()));
         setDeltaMovement(0, 0, 0);
-        setEffect(1);
+        setEffect((byte)1);
         setDiscardFriction(false);
         kill();
     }
@@ -100,11 +105,14 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
         super.tick();
         if (level().isClientSide) {
             Vec3 vel = getDeltaMovement();
-            int effect = entityData.get(EFFECT);
+            final int effect = entityData.get(EFFECT);
             if (effect != 0) {
                 for (int i = 0; i < 32; i++) {
+                    ParticleOptions particle = (effect == 1) ?
+                            new BlockParticleOption(ParticleTypes.BLOCK, Block.byItem(entityData.get(BLOCKSTACK).getItem()).defaultBlockState()) :
+                            ParticleTypes.REVERSE_PORTAL;
                     level().addParticle(
-                            effect == 1 ? new BlockParticleOption(ParticleTypes.BLOCK, Blocks.STONE.defaultBlockState()) : ParticleTypes.REVERSE_PORTAL,
+                            particle,
                             getX() + vel.x + random.nextDouble() - 0.5,
                             getY() + vel.y + random.nextDouble() - 0.5,
                             getZ() + vel.z + random.nextDouble() - 0.5,
@@ -129,11 +137,10 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
             }
 
             if (entityData.get(EFFECT) != 0) {
-                setEffect(0);
+                setEffect((byte)0);
             }
 
-            if (hit || onGround() || tickCount > 200) // Placing this here delays it by 1 tick, allowing the client to see the proper end position
-            {
+            if (hit || onGround() || tickCount > 200) { // Placing this here delays it by 1 tick, allowing the client to see the proper end position
                 breakBlock();
             }
 
@@ -143,25 +150,20 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
                     timeToLaunch = maxTimeToLaunch;
                     toRefresh = false;
                     setDeltaMovement(0, 0, 0);
-                    setEffect(2);
+                    setEffect((byte)2);
                     playSound(JSoundRegistry.CMOON_BLOCKHALT.get(), 1, 1);
                 } else if (!launched) {
-                    Vec3 targetPos;
-                    Vec3 eP = master.getEyePosition();
-                    Vec3 rangeMod = master.getLookAngle().scale(32);
-                    EntityHitResult eHit = ProjectileUtil.getEntityHitResult(master, eP, eP.add(rangeMod),
+                    final Vec3 eP = master.getEyePosition();
+                    final Vec3 rangeMod = master.getLookAngle().scale(32);
+                    final EntityHitResult eHit = ProjectileUtil.getEntityHitResult(master, eP, eP.add(rangeMod),
                             master.getBoundingBox().inflate(32),
                             EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(entity -> entity != this),
                             1024 // Squared
                     );
 
-                    if (eHit != null) {
-                        targetPos = eHit.getLocation();
-                    } else {
-                        targetPos = level().clip(
-                                new ClipContext(eP, eP.add(rangeMod), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, master)
-                        ).getLocation();
-                    }
+                    final Vec3 targetPos = Objects.requireNonNullElseGet(eHit, () -> level().clip(
+                            new ClipContext(eP, eP.add(rangeMod), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, master)
+                    )).getLocation();
 
                     setDeltaMovement(targetPos.subtract(position()).normalize()); //.multiply(1)
 
@@ -202,8 +204,7 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
     }
 
     @Override
-    public void push(Entity entity) {
-    }
+    public void push(@NotNull Entity entity) { }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
@@ -215,7 +216,7 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return SoundEvents.STONE_STEP;
     }
 
@@ -226,7 +227,7 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
     }
 
     @Override
-    protected AABB makeBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
+    protected @NotNull AABB makeBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
         double x = getX();
         double y = getY();
         double z = getZ();
@@ -235,75 +236,39 @@ public class BlockProjectile extends LivingEntity implements IOwnable, GeoEntity
     }
 
     @Override
-    public boolean startRiding(Entity entity, boolean force) {
-        return false;
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        if (master == null) {
-            return;
-        }
-        boolean ownerIsPlayer = master instanceof Player;
-        tag.putBoolean("playerOwner", ownerIsPlayer);
-        if (ownerIsPlayer) {
-            tag.putUUID("ownerUUID", master.getUUID());
-        } else {
-            tag.putInt("ownerID", master.getId());
-        }
+        writeMasterNbt(tag);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        boolean ownerIsPlayer = tag.getBoolean("playerOwner");
-        if (ownerIsPlayer) {
-            master = level().getPlayerByUUID(tag.getUUID("ownerUUID"));
-        } else {
-            master = (LivingEntity) level().getEntity(tag.getInt("ownerID")); // Always is living
-        }
+        readMasterNbt(tag);
     }
 
     @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return List.of();
+    public void setItemSlot(@NotNull EquipmentSlot slot, @NotNull ItemStack stack) {
+        if (slot == EquipmentSlot.MAINHAND) super.setItemSlot(slot, stack);
     }
 
     @Override
-    public ItemStack getItemBySlot(EquipmentSlot slot) {
-        return entityData.get(BLOCKSTACK);
-    }
-
-    @Override
-    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
-    }
-
-    @Override
-    public HumanoidArm getMainArm() {
-        return null;
-    }
-
-    private LivingEntity master;
-
-    @Override
-    public LivingEntity getMaster() {
-        return master;
-    }
-
-    public void setMaster(LivingEntity l) {
-        this.master = l;
+    public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot slot) {
+        if (slot == EquipmentSlot.MAINHAND) return entityData.get(BLOCKSTACK);
+        return ItemStack.EMPTY;
     }
 
     // Animations
-
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+    
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.block.idle");
     private PlayState predicate(AnimationState<GeoAnimatable> state) {
-        return state.setAndContinue(RawAnimation.begin().thenLoop("animation.block.idle"));
+        return state.setAndContinue(IDLE);
     }
 
     @Override

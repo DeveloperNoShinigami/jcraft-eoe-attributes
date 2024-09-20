@@ -27,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -70,7 +71,7 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void setDeltaMovement(Vec3 deltaMovement) {
+    public void setDeltaMovement(@NotNull Vec3 deltaMovement) {
         if (lockVelocity) return;
         super.setDeltaMovement(deltaMovement);
     }
@@ -91,7 +92,7 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
 
         if (level().isClientSide()) {
             if (tickCount == 1) {
-                Vec3 rotVec = calculateViewVector(getXRot(), -getYRot());
+                final Vec3 rotVec = calculateViewVector(getXRot(), -getYRot());
                 for (int i = 0; i < 6; i++) {
                     level().addParticle(random.nextBoolean() ? LargeIcicleProjectile.ICE_PARTICLE : ParticleTypes.SNOWFLAKE,
                             getX(), getY(), getZ(),
@@ -124,9 +125,9 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
             return;
         }
         if (tickCount == 1) {
-            Vec3 rotVec = calculateViewVector(getXRot(), -getYRot()); // No-clipping projectiles have inverted yaw
-            Vec3 pos = position();
-            Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos.add(rotVec.scale(-0.25)), 1.25, e -> true);
+            final Vec3 rotVec = calculateViewVector(getXRot(), -getYRot()); // No-clipping projectiles have inverted yaw
+            final Vec3 pos = position();
+            final Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos.add(rotVec.scale(-0.25)), 1.25, e -> true);
             boolean hit = false;
             for (LivingEntity living : hurt) {
                 if (!canAttack(living)) continue;
@@ -140,10 +141,10 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
                         CommonHitPropertyComponent.HitAnimation.MID);
             }
             if (hit) {
-                Vec3 frontPos = pos.add(rotVec.scale(-0.5));
+                final Vec3 frontPos = pos.add(rotVec.scale(-0.5));
                 playSound(SoundEvents.PLAYER_HURT_FREEZE, 1, 1);
 
-                ServerLevel serverWorld = (ServerLevel) level();
+                final ServerLevel serverWorld = (ServerLevel) level();
                 JCraft.createParticle(serverWorld,
                         frontPos.x + random.nextGaussian() * 0.25,
                         frontPos.y + random.nextGaussian() * 0.25,
@@ -159,11 +160,11 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
                 grown = true; // Stop growth
             }
         } else if (chainIndex < MAX_CHAIN_LENGTH && !grown && tickCount == 10) {
-            ServerLevel serverWorld = (ServerLevel) level();
-            Vec3 rotVec = calculateViewVector(getXRot(), -getYRot()); // Noclipping projectiles have inverted yaw
-            Vec3 initialPos = position().add(rotVec.scale(-LENGTH));
+            final ServerLevel serverWorld = (ServerLevel) level();
+            final Vec3 rotVec = calculateViewVector(getXRot(), -getYRot()); // Noclipping projectiles have inverted yaw
+            final Vec3 initialPos = position().add(rotVec.scale(-LENGTH));
 
-            Optional<LivingEntity> target = serverWorld.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(32.0), EntitySelector.NO_CREATIVE_OR_SPECTATOR)
+            final Optional<LivingEntity> target = serverWorld.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(32.0), EntitySelector.NO_CREATIVE_OR_SPECTATOR)
                     .stream()
                     .filter(livingEntity -> livingEntity != livingOwner && !livingEntity.isPassengerOfSameVehicle(livingOwner))
                     .min(distanceComparator);
@@ -174,18 +175,15 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
                 next = new IceBranchProjectile(level(), livingOwner, chainIndex + 1);
 
                 if (target.isPresent()) {
-                    LivingEntity nearestTarget = target.get();
-                    Vec3 toTarget = nearestTarget.position()
+                    final LivingEntity nearestTarget = target.get();
+                    final Vec3 toTarget = nearestTarget.position()
                             .subtract(initialPos)
                             .add(
                                     random.nextGaussian() * inaccuracy,
                                     random.nextGaussian() * inaccuracy,
                                     random.nextGaussian() * inaccuracy
                             ).normalize();
-                    double e = toTarget.x;
-                    double f = toTarget.y;
-                    double g = toTarget.z;
-                    double l = toTarget.horizontalDistance();
+                    final double e = toTarget.x,f = toTarget.y, g = toTarget.z, l = toTarget.horizontalDistance();
                     next.setYRot((float) (Mth.atan2(-e, -g) * 57.2957763671875));
                     next.setXRot((float) (Mth.atan2(f, l) * 57.2957763671875));
                     next.setPos(initialPos.add(toTarget.scale(LENGTH)));
@@ -218,10 +216,10 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHit(HitResult result) { }
+    protected void onHit(@NotNull HitResult result) { }
 
     @Override
-    protected ItemStack getPickupItem() {
+    protected @NotNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 

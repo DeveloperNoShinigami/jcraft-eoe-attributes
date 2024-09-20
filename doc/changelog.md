@@ -29,16 +29,19 @@
 #### Generation
 * meteorites can now also be found in Ice Spikes Biome
 * added Devil's Palm Biome
-#### NPCs & Stands
+### NPCs & Stands
 * **added Horus, Shadow The World, and Metallica**
 * added Petshop, Aya Tsuji and the D'Arby brothers as NPCs (currently unobtainable except via spawn eggs) and added their stands (Horus, Cinderella, Osiris and Atum) as well, with only Horus being obtainable
 * added Silver Chariot Requiem (unobtainable)
-* added custom icons for Hierophant Green and Purple Haze
+* added custom icons for Hierophant Green and Purple Haze (& Distortion)
 * Updated models for Whitesnake, C-Moon, Made in Heaven, Cream
-##### Magician's Red
+#### Magician's Red
 * Crossfire cooldown lowered (12 -> 5s)
-#### Miscellaneous
+### Miscellaneous
 * added /jcraft help
+* added /framedata [stand/spec]
+* added client config options for precisely moving the JCraft HUD
+* improved Prediction client config
 * reordered Creative Inventory Tab
 * additionally sorted JCraft items into Vanilla Creative Inventory Tabs
 * Recipe Advancements added for (almost) all recipes
@@ -54,15 +57,13 @@
 * added docs for future technical changes
 ### Bug Fixes
 * Bug: Inventory disappeared instead of dropped when killed while being stunned
-### Unclear Bugs
-* Water transparency changes when the player hovers over a block (SEEMINGLY FIXED)
+
+
+
+
 ### Known Bugs
 #### Common
 * Timestop doesn't stop animated textures
-
-
-* KC epitaph prediction model rendering has the wrong scale
-  (PLANET)
 
 
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
@@ -75,25 +76,15 @@
   (PLANET)
 # Bug List
 #### Forge
-\ Stand users can occasionally get multiple stand capabilities? (SEEMINGLY FIXED)
-
-
-* KC Epitaph doesn't render Diavolo's hair overlay - render code runs it just doesnt show up
-  (PLANET)
-
-
 * The client doesn't register The Sun as it's stand if moved out of and into render distance
 * in Fabric, it simply unloads when out of sight. This behavior is preferable.
 
 
-#### todo :)
-* an interface that handles starting animations (for players and future mob spec users)
-
-
+#### todo (NOT THIS UPDATE) :)
 * Fix attacks not being able to trade - because ticking isn't done in parallel, the first entity to be ticked
     will have priority when it comes to attack calculations, even though both executed an attack at the same time.
     A possible solution to this is to just queue up all the move.tick() calls and run them all at the very end of a server tick.
 
-* Hermit Purple, Metallica, Yellow Temperance
+* Hermit Purple, Yellow Temperance
 * Internationalization
 * Actually use effect keyframes in animations

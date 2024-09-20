@@ -1,6 +1,14 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -8,6 +16,7 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.ICustomDamageHandler;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -21,22 +30,13 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 
 import java.util.List;
 
@@ -56,8 +56,8 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
 
     private boolean finalAttack = false;
 
-    public HGNetEntity(EntityType<? extends LivingEntity> entityType, Level world) {
-        super(entityType, world);
+    public HGNetEntity(Level world) {
+        super(JEntityTypeRegistry.HG_NET.get(), world);
     }
 
     static {
@@ -138,10 +138,10 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
             }
 
             if (JUtils.canAct(this)) {
-                Vec3 upVec = GravityChangerAPI.getEyeOffset(this);
+                final Vec3 upVec = GravityChangerAPI.getEyeOffset(this);
 
                 if (tickCount == 1) {
-                    Vec3 launchVec = upVec.scale(0.2);
+                    final Vec3 launchVec = upVec.scale(0.2);
 
                     JUtils.displayHitbox(level(), getBoundingBox());
                     getInsideEntities().forEach(
@@ -173,10 +173,10 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
                     if (animTimer > 0) {
                         if (animTimer % 8 == 0) {
                             for (int i = 0; i < 3; i++) {
-                                EmeraldProjectile emerald = new EmeraldProjectile(level(), getMaster());
+                                final EmeraldProjectile emerald = new EmeraldProjectile(level(), getMaster());
 
-                                Vec3 heightOffset = upVec.scale(0.8);
-                                Vec3 emeraldPos = position().add(heightOffset).add(JUtils.randUnitVec(getRandom()));
+                                final Vec3 heightOffset = upVec.scale(0.8);
+                                final Vec3 emeraldPos = position().add(heightOffset).add(JUtils.randUnitVec(getRandom()));
                                 emerald.setPos(emeraldPos);
                                 emerald.setDeltaMovement(target.subtract(emeraldPos).normalize().scale(1.5));
                                 if (finalAttack) {
@@ -226,20 +226,20 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
     }
 
     @Override
-    public void push(Entity entity) {
+    public void push(@NotNull Entity entity) {
         tryConstrict(entity);
     }
 
     @Override
-    public void doPush(Entity entity) {
+    public void doPush(@NotNull Entity entity) {
         tryConstrict(entity);
     }
 
     private void tryConstrict(Entity entity) {
-        if (!JUtils.canAct(this)) {
+        if (entity == null) {
             return;
         }
-        if (entity == null) {
+        if (!JUtils.canAct(this)) {
             return;
         }
         if (master == null || entity.isPassengerOfSameVehicle(master)) {
@@ -262,7 +262,7 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return SoundEvents.SLIME_HURT;
     }
 
@@ -278,13 +278,13 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
     }
 
     @Override
-    public boolean startRiding(Entity entity, boolean force) {
+    public boolean startRiding(@NotNull Entity entity, boolean force) {
         return false;
     }
 
     @Override
     public boolean addEffect(MobEffectInstance effect, @Nullable Entity source) {
-        if (effect.getEffect() == JStatusRegistry.DAZED) {
+        if (effect.getEffect() == JStatusRegistry.DAZED.get()) {
             return super.addEffect(effect, source);
         }
         return false;
@@ -313,33 +313,17 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("lifeTime", lifeTime);
-
-        if (master == null) {
-            return;
-        }
-        boolean ownerIsPlayer = master instanceof Player;
-        tag.putBoolean("playerOwner", ownerIsPlayer);
-        if (ownerIsPlayer) {
-            tag.putUUID("ownerUUID", master.getUUID());
-        } else {
-            tag.putInt("ownerID", master.getId());
-        }
+        writeMasterNbt(tag);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         lifeTime = tag.getInt("lifeTime");
-
-        boolean ownerIsPlayer = tag.getBoolean("playerOwner");
-        if (ownerIsPlayer) {
-            master = level().getPlayerByUUID(tag.getUUID("ownerUUID"));
-        } else {
-            master = (LivingEntity) level().getEntity(tag.getInt("ownerID")); // Always is living
-        }
+        readMasterNbt(tag);
     }
 
     // Animations
@@ -347,19 +331,24 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 6, this::predicate));
+        controllers.add(new AnimationController<>(this, "controller", 6, this::predicate));
     }
+
+    private static final RawAnimation SPAWN = RawAnimation.begin().thenPlay("animation.hg_nets.spawn");
+    private static final RawAnimation WILT = RawAnimation.begin().thenPlay("animation.hg_nets.wilt");
+    private static final RawAnimation CONSTRICT = RawAnimation.begin().thenPlay("animation.hg_nets.constrict");
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.hg_nets.idle");
 
     private PlayState predicate(AnimationState<GeoAnimatable> state) {
         if (tickCount < 5) {
-            state.setAnimation(RawAnimation.begin().thenPlay("animation.hg_nets.spawn"));
+            state.setAnimation(SPAWN);
         } else {
             if (getState() == 3) {
-                state.setAnimation(RawAnimation.begin().thenPlay("animation.hg_nets.wilt"));
+                state.setAnimation(WILT);
             } else if (getState() == 2) {
-                state.setAnimation(RawAnimation.begin().thenPlay("animation.hg_nets.constrict"));
+                state.setAnimation(CONSTRICT);
             } else {
-                state.setAnimation(RawAnimation.begin().thenLoop("animation.hg_nets.idle"));
+                state.setAnimation(IDLE);
             }
         }
         return PlayState.CONTINUE;

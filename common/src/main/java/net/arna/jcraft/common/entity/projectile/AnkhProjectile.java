@@ -13,16 +13,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-
+import org.jetbrains.annotations.NotNull;
 
 public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     private int ticksInAir;
@@ -30,13 +28,12 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     private double orbitRange = 3;
     private double orbitOffset = 0;
 
-    public AnkhProjectile(EntityType<? extends AnkhProjectile> entityType, Level world) {
-        super(entityType, world);
+    public AnkhProjectile(Level world) {
+        super(JEntityTypeRegistry.ANKH.get(), world);
     }
 
     public AnkhProjectile(Level world, LivingEntity owner) {
         super(JEntityTypeRegistry.ANKH.get(), owner, world);
-        this.setOwner(owner);
         this.pickup = Pickup.DISALLOWED;
     }
 
@@ -53,8 +50,8 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public ItemStack getPickupItem() {
-        return new ItemStack(Items.AIR);
+    public @NotNull ItemStack getPickupItem() {
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -73,12 +70,12 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected SoundEvent getDefaultHitGroundSoundEvent() {
+    protected @NotNull SoundEvent getDefaultHitGroundSoundEvent() {
         return SoundEvents.FIRECHARGE_USE;
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult entityHitResult) {
+    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         if (level().isClientSide) {
             return;
         }
@@ -103,14 +100,14 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("variation", this.variation);
         tag.putShort("life", (short) this.ticksInAir);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
         this.variation = tag.getBoolean("variation");
@@ -121,7 +118,7 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
         super.tick();
 
         if (level().isClientSide()) {
-            Vec3 vel = getDeltaMovement();
+            final Vec3 vel = getDeltaMovement();
             this.level().addParticle(
                     ParticleTypes.FLAME,
                     getX() + random.nextFloat() * 0.5f - 0.25f,
@@ -147,26 +144,22 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
 
                         // Orbiting logic
                         double orbitProg = Math.toRadians(this.tickCount * 3 + this.orbitOffset);
-                        Vec3 orbitPos = owner.getEyePosition().add(
+                        final Vec3 orbitPos = owner.getEyePosition().add(
                                 Math.sin(orbitProg) * this.orbitRange,
                                 0.0,
                                 Math.cos(orbitProg) * this.orbitRange
                         );
 
-                        Vec3 towardsVel = orbitPos.subtract(this.position()).normalize().scale(0.2);
-                        double stabilization = this.position().distanceTo(orbitPos);
-                        if (stabilization > 0.8) {
-                            stabilization = 0.8;
-                        }
+                        final Vec3 pos = this.position();
+
+                        final Vec3 towardsVel = orbitPos.subtract(pos).normalize().scale(0.2);
+                        double stabilization = Math.min(pos.distanceTo(orbitPos), 0.8);
                         this.setDeltaMovement(this.getDeltaMovement().scale(stabilization).add(towardsVel));
                         this.hurtMarked = true;
 
                         // Entity hit logic, due to variations being noclipped
-                        Vec3 pos = this.position();
-                        Vec3 nextPos = pos.add(this.getDeltaMovement());
-                        //HitResult hitResult = this.world.raycast(new RaycastContext(pos, nextPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
-                        //if (hitResult.getType() != HitResult.Type.MISS) nextPos = hitResult.getPos();
-                        EntityHitResult entityHitResult = this.findHitEntity(pos, nextPos);
+                        final Vec3 nextPos = pos.add(this.getDeltaMovement());
+                        final EntityHitResult entityHitResult = this.findHitEntity(pos, nextPos);
                         if (entityHitResult != null) {
                             this.onHitEntity(entityHitResult);
                         }
@@ -183,11 +176,8 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     // Animations
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
-
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

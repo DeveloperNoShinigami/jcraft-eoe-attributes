@@ -1,5 +1,9 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
@@ -10,7 +14,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -21,19 +24,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.util.AzureLibUtil;
+import org.jetbrains.annotations.NotNull;
 
 public class EmeraldProjectile extends AbstractArrow implements GeoEntity {
     private int ticksInAir;
     private int bouncesLeft = 5;
     private boolean reflect = false;
-
-    public EmeraldProjectile(EntityType<? extends EmeraldProjectile> entityType, Level world) {
-        super(entityType, world);
-    }
 
     public EmeraldProjectile(Level world) {
         super(JEntityTypeRegistry.EMERALD.get(), world);
@@ -51,7 +47,7 @@ public class EmeraldProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public ItemStack getPickupItem() {
+    public @NotNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
@@ -71,10 +67,7 @@ public class EmeraldProjectile extends AbstractArrow implements GeoEntity {
             ++ticksInAir;
         } else {
             if (level().isClientSide) {
-                double x = getX();
-                double y = getY();
-                double z = getZ();
-
+                final double x = getX(), y = getY(), z = getZ();
                 for (int i = 0; i < 8; i++) {
                     level().addParticle(EMERALD_PARTICLE, x, y, z,
                             random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
@@ -83,10 +76,8 @@ public class EmeraldProjectile extends AbstractArrow implements GeoEntity {
         }
 
         if (level().isClientSide) {
-            if (random.nextGaussian() < -0.002) {
-                double x = getX();
-                double y = getY();
-                double z = getZ();
+            if (random.nextFloat() < -0.002) {
+                final double x = getX(), y = getY(), z = getZ();
                 level().addParticle(ParticleTypes.HAPPY_VILLAGER, x, y, z,
                         random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
             }
@@ -99,21 +90,21 @@ public class EmeraldProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHit(HitResult hitResult) {
+    protected void onHit(@NotNull HitResult hitResult) {
         if (reflect) {
-            HitResult.Type type = hitResult.getType();
+            final HitResult.Type type = hitResult.getType();
             if (type == HitResult.Type.ENTITY) {
                 this.onHitEntity((EntityHitResult) hitResult);
                 this.level().gameEvent(GameEvent.PROJECTILE_LAND, hitResult.getLocation(), GameEvent.Context.of(this, null));
             } else if (type == HitResult.Type.BLOCK) {
-                BlockHitResult blockHitResult = (BlockHitResult) hitResult;
+                final BlockHitResult blockHitResult = (BlockHitResult) hitResult;
                 if (bouncesLeft-- > 0) {
-                    Vec3i normal = blockHitResult.getDirection().getNormal();
+                    final Vec3i normal = blockHitResult.getDirection().getNormal();
                     setDeltaMovement(getDeltaMovement().add(Vec3.atLowerCornerOf(normal)).normalize());
                     hurtMarked = true;
                 } else {
                     this.onHitBlock(blockHitResult);
-                    BlockPos blockPos = blockHitResult.getBlockPos();
+                    final BlockPos blockPos = blockHitResult.getBlockPos();
                     this.level().gameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Context.of(this, this.level().getBlockState(blockPos)));
                 }
             }
@@ -123,12 +114,12 @@ public class EmeraldProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult entityHitResult) {
+    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         if (level().isClientSide) {
             return;
         }
-        Entity entity = entityHitResult.getEntity();
-        Entity owner = this.getOwner();
+        final Entity entity = entityHitResult.getEntity();
+        final Entity owner = this.getOwner();
 
         if (owner != null && owner.hasPassenger(entity) || entity == owner) {
             return;
@@ -141,10 +132,7 @@ public class EmeraldProjectile extends AbstractArrow implements GeoEntity {
             entity.setSecondsOnFire(5);
         }
 
-        int blockstun = 4;
-        int stunT = 10;
-
-        JUtils.projectileDamageLogic(this, level(), entity, Vec3.ZERO, stunT, 1, false, 1, blockstun, CommonHitPropertyComponent.HitAnimation.MID);
+        JUtils.projectileDamageLogic(this, level(), entity, Vec3.ZERO, 10, 1, false, 1, 4, CommonHitPropertyComponent.HitAnimation.MID);
         playSound(SoundEvents.AMETHYST_BLOCK_BREAK, 1, 1);
         discard();
     }
@@ -156,25 +144,22 @@ public class EmeraldProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        tag.putShort("life", (short) this.ticksInAir);
+        tag.putInt("Life", this.ticksInAir);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        this.ticksInAir = tag.getShort("life");
+        this.ticksInAir = tag.getInt("Life");
     }
 
     // Animations
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
-
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

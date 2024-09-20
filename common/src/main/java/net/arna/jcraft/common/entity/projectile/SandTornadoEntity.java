@@ -1,9 +1,19 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -16,43 +26,27 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
 
-import java.util.List;
 import java.util.Set;
 
-public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnable {
+public class SandTornadoEntity extends JAttackEntity implements GeoEntity, IOwnable {
     private static final EntityDataAccessor<Boolean> DISAPPEARED;
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-    private LivingEntity master;
     private int hitsLeft = 5;
 
     static {
         DISAPPEARED = SynchedEntityData.defineId(SandTornadoEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
-    public SandTornadoEntity(EntityType<? extends LivingEntity> entityType, Level world) {
-        super(entityType, world);
+    public SandTornadoEntity(Level world) {
+        super(JEntityTypeRegistry.SAND_TORNADO.get(), world);
     }
 
     public boolean hasDisappeared() {
@@ -63,15 +57,6 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(DISAPPEARED, false);
-    }
-
-    @Override
-    public LivingEntity getMaster() {
-        return master;
-    }
-
-    public void setMaster(LivingEntity l) {
-        this.master = l;
     }
 
     private void disappear() {
@@ -87,7 +72,7 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
             return;
         }
 
-        Vec3 circulation = new Vec3(Mth.sin(tickCount * 0.25f) * 0.3f, 0.0, Mth.cos(tickCount * 0.25f) * 0.3f);
+        final Vec3 circulation = new Vec3(Mth.sin(tickCount * 0.25f) * 0.3f, 0.0, Mth.cos(tickCount * 0.25f) * 0.3f);
 
         if (level().isClientSide) {
             for (int i = 0; i < 3; i++) {
@@ -107,14 +92,14 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
                 return;
             }
 
-            Set<LivingEntity> toHurt = JUtils.generateHitbox(level(), getEyePosition(), 1.8, Set.of(this, master));
+            final Set<LivingEntity> toHurt = JUtils.generateHitbox(level(), getEyePosition(), 1.8, Set.of(this, master));
 
             if (toHurt.isEmpty()) {
                 setDeltaMovement(getDeltaMovement().add(getLookAngle().scale(0.5)).scale(0.4));
             } else {
                 setDeltaMovement(getDeltaMovement().scale(0.25));
                 for (LivingEntity living : toHurt) {
-                    LivingEntity target = JUtils.getUserIfStand(living);
+                    final LivingEntity target = JUtils.getUserIfStand(living);
                     if (target.isPassengerOfSameVehicle(master)) {
                         return;
                     }
@@ -147,7 +132,7 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
     }
 
     @Override
-    public boolean canCollideWith(Entity other) {
+    public boolean canCollideWith(@NotNull Entity other) {
         return false;
     }
 
@@ -158,7 +143,7 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return SoundEvents.SAND_STEP;
     }
 
@@ -174,7 +159,7 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
     }
 
     @Override
-    public boolean startRiding(Entity entity, boolean force) {
+    public boolean startRiding(@NotNull Entity entity, boolean force) {
         return false;
     }
 
@@ -188,59 +173,29 @@ public class SandTornadoEntity extends LivingEntity implements GeoEntity, IOwnab
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        if (master == null) {
-            return;
-        }
-        boolean ownerIsPlayer = master instanceof Player;
-        tag.putBoolean("playerOwner", ownerIsPlayer);
-        if (ownerIsPlayer) {
-            tag.putUUID("ownerUUID", master.getUUID());
-        } else {
-            tag.putInt("ownerID", master.getId());
-        }
+        writeMasterNbt(tag);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        boolean ownerIsPlayer = tag.getBoolean("playerOwner");
-        if (ownerIsPlayer) {
-            master = level().getPlayerByUUID(tag.getUUID("ownerUUID"));
-        } else {
-            master = (LivingEntity) level().getEntity(tag.getInt("ownerID")); // Always is living
-        }
-    }
-
-    @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return List.of();
-    }
-
-    @Override
-    public ItemStack getItemBySlot(EquipmentSlot slot) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
-    }
-
-    @Override
-    public HumanoidArm getMainArm() {
-        return null;
+        readMasterNbt(tag);
     }
 
     // Animations
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.sandtornado.idle");
+    private static final RawAnimation DISAPPEAR = RawAnimation.begin().thenLoop("animation.sandtornado.disappear");
     private PlayState predicate(AnimationState<GeoAnimatable> state) {
-        return state.setAndContinue(RawAnimation.begin().thenLoop(hasDisappeared() ? "animation.sandtornado.disappear" : "animation.sandtornado.idle"));
+        return state.setAndContinue(hasDisappeared() ? DISAPPEAR : IDLE);
     }
 
     @Override

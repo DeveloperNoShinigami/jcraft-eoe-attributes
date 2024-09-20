@@ -15,12 +15,14 @@ import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import org.jetbrains.annotations.NotNull;
 
 public class PHCapsuleProjectile extends AbstractArrow implements GeoAnimatable {
-    private AbstractPurpleHazeEntity.PoisonType poisonType;
+    private final AbstractPurpleHazeEntity.PoisonType poisonType;
 
     public PHCapsuleProjectile(Level world) {
         super(JEntityTypeRegistry.PH_CAPSULE.get(), world);
+        this.poisonType = AbstractPurpleHazeEntity.PoisonType.HARMING;
     }
 
     public PHCapsuleProjectile(LivingEntity owner, Level world, AbstractPurpleHazeEntity.PoisonType poisonType) {
@@ -29,12 +31,12 @@ public class PHCapsuleProjectile extends AbstractArrow implements GeoAnimatable 
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    protected @NotNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
     @Override
-    protected void onHit(HitResult hitResult) {
+    protected void onHit(@NotNull HitResult hitResult) {
         if (level().isClientSide()) {
             return;
         }
@@ -50,19 +52,17 @@ public class PHCapsuleProjectile extends AbstractArrow implements GeoAnimatable 
                     2, 1, false, 2f, 2, CommonHitPropertyComponent.HitAnimation.MID);
         }
 
-        discard();
-        PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level(), 2.0f, poisonType);
+        final PurpleHazeCloudEntity cloud = new PurpleHazeCloudEntity(level(), 2.0f, poisonType);
         cloud.copyPosition(this);
         level().addFreshEntity(cloud);
+        discard();
     }
 
     // Animations
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {}
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

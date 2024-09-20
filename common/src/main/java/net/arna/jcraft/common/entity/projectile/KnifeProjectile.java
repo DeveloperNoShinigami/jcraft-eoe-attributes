@@ -29,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class KnifeProjectile extends AbstractArrow implements GeoEntity {
     private static final EntityDataAccessor<Boolean> LIGHTNING;
@@ -70,7 +71,7 @@ public class KnifeProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public ItemStack getPickupItem() {
+    public @NotNull ItemStack getPickupItem() {
         return new ItemStack(JItemRegistry.KNIFE.get());
     }
 
@@ -89,9 +90,9 @@ public class KnifeProjectile extends AbstractArrow implements GeoEntity {
             return;
         }
         if (level().isClientSide) {
-            double x = getX();
-            double y = getY();
-            double z = getZ();
+            final double x = getX();
+            final double y = getY();
+            final double z = getZ();
             level().addParticle(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0, 0, 0);
             level().addParticle(ParticleTypes.ELECTRIC_SPARK, (x + xo) / 2, (y + yo) / 2, (z + zo) / 2, 0, 0, 0);
             return;
@@ -105,7 +106,7 @@ public class KnifeProjectile extends AbstractArrow implements GeoEntity {
         }
 
         delayTime--;
-        Entity owner = getOwner();
+        final Entity owner = getOwner();
         if (owner == null) {
             return;
         }
@@ -118,16 +119,16 @@ public class KnifeProjectile extends AbstractArrow implements GeoEntity {
         if (delayFired) {
             return;
         }
-        Vec3 eP = owner.getEyePosition();
-        Vec3 rangeMod = owner.getLookAngle().scale(24);
+        final Vec3 eP = owner.getEyePosition();
+        final Vec3 rangeMod = owner.getLookAngle().scale(24);
 
-        EntityHitResult eHit = ProjectileUtil.getEntityHitResult(owner, eP, eP.add(rangeMod),
+        final EntityHitResult eHit = ProjectileUtil.getEntityHitResult(owner, eP, eP.add(rangeMod),
                 owner.getBoundingBox().inflate(24),
                 EntitySelector.LIVING_ENTITY_STILL_ALIVE, // This is a hack, and will miss on stuff like End Crystals, but also makes it miss on other knives
                 576 // Squared
         );
 
-        HitResult hitResult = level().clip(new ClipContext(eP, eP.add(rangeMod), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner));
+        final HitResult hitResult = level().clip(new ClipContext(eP, eP.add(rangeMod), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner));
 
         playSound(JSoundRegistry.TWOH_SHOOT.get(), 1, 1);
 
@@ -142,12 +143,12 @@ public class KnifeProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void thunderHit(ServerLevel world, LightningBolt lightning) {
+    public void thunderHit(@NotNull ServerLevel world, @NotNull LightningBolt lightning) {
         this.setLightning(true);
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult entityHitResult) {
+    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         if (level().isClientSide) {
             return;
         }
@@ -183,14 +184,14 @@ public class KnifeProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putShort("life", (short) this.ticksInAir);
         tag.putBoolean("lightning", getLightning());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
         setLightning(tag.getBoolean("lightning"));

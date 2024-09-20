@@ -20,12 +20,13 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
 public class GETreeEntity extends AbstractArrow implements GeoEntity {
     private final Vec3 launchVec;
-    private LivingEntity livingOwner;
+    private final LivingEntity livingOwner;
 
     public GETreeEntity(Level world) {
         this(world, null, Vec3.ZERO);
@@ -67,15 +68,15 @@ public class GETreeEntity extends AbstractArrow implements GeoEntity {
         }
 
         if (tickCount == 4) {
-            DamageSource ds = level().damageSources().mobAttack(livingOwner);
-            Set<LivingEntity> hurt = JUtils.generateHitbox(level(), position().add(launchVec.normalize()), 2.5, Set.of(this, livingOwner));
+            final DamageSource ds = level().damageSources().mobAttack(livingOwner);
+            final Set<LivingEntity> hurt = JUtils.generateHitbox(level(), position().add(launchVec.normalize()), 2.5, Set.of(this, livingOwner));
 
             for (LivingEntity living : hurt) {
                 if (!JUtils.canDamage(ds, living)) {
                     continue;
                 }
 
-                LivingEntity target = JUtils.getUserIfStand(living);
+                final LivingEntity target = JUtils.getUserIfStand(living);
                 if (livingOwner != target) {
                     StandEntity.damageLogic(level(), target, Vec3.ZERO, 25, 3,
                             false, 7f, false, 11, ds, livingOwner, CommonHitPropertyComponent.HitAnimation.MID, false);
@@ -86,12 +87,12 @@ public class GETreeEntity extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    protected @NotNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean startRiding(Entity entity, boolean force) {
+    public boolean startRiding(@NotNull Entity entity, boolean force) {
         return false;
     }
 
@@ -103,16 +104,12 @@ public class GETreeEntity extends AbstractArrow implements GeoEntity {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
+    private static final RawAnimation ANIMATION = RawAnimation.begin()
+            .thenPlay("animation.getree.spawn")
+            .thenPlay("animation.getree.idle")
+            .thenPlay("animation.getree.return");
     private PlayState predicate(AnimationState<GeoAnimatable> state) {
-        if (state.getController().getCurrentAnimation() == null) {
-            state.setAnimation(
-                    RawAnimation.begin()
-                            .thenPlay("animation.getree.spawn")
-                            .thenPlay("animation.getree.idle")
-                            .thenPlay("animation.getree.return")
-            );
-        }
-        return PlayState.CONTINUE;
+        return state.setAndContinue(ANIMATION);
     }
 
     @Override

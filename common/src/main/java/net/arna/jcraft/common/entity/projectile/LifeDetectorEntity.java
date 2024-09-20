@@ -1,10 +1,19 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -16,30 +25,21 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 
 import java.util.List;
 import java.util.Set;
 
 public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
     private static final EntityDataAccessor<Boolean> EXPLODED;
-    public LivingEntity target;
+    private LivingEntity target;
 
     static {
         EXPLODED = SynchedEntityData.defineId(LifeDetectorEntity.class, EntityDataSerializers.BOOLEAN);
@@ -55,12 +55,12 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
         entityData.define(EXPLODED, false);
     }
 
-    public LifeDetectorEntity(EntityType<? extends LivingEntity> entityType, Level world) {
-        super(entityType, world);
+    public LifeDetectorEntity(Level world) {
+        super(JEntityTypeRegistry.LIFE_DETECTOR.get(), world);
     }
 
     @Override
-    public boolean canAttack(LivingEntity target) {
+    public boolean canAttack(@Nullable LivingEntity target) {
         if (target == null || master == null) {
             return false;
         }
@@ -76,18 +76,18 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
         return target.canBeSeenAsEnemy() && target.isAlive() && JUtils.canDamage(level().damageSources().mobAttack(master), target);
     }
 
-    private void Explode() {
+    private void explode() {
         setDeltaMovement(0, 0, 0);
         hurtMarked = true;
 
-        Vec3 pos = position();
-        Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos, 2.25, e -> true);
+        final Vec3 pos = position();
+        final Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos, 2.25, e -> true);
         for (LivingEntity living : hurt) {
             if (!canAttack(living)) {
                 continue;
             }
-            LivingEntity target = JUtils.getUserIfStand(living);
-            Vec3 kbVec = target.position().subtract(pos).normalize();
+            final LivingEntity target = JUtils.getUserIfStand(living);
+            final Vec3 kbVec = target.position().subtract(pos).normalize();
             StandEntity.damageLogic(level(), target, kbVec, 10, 1, false, 5f, true, 9,
                     level().damageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false);
         }
@@ -120,7 +120,8 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
             if (target == null) {
                 if (this.tickCount % 2 == 0) {
                     LivingEntity finalTarget = null;
-                    List<LivingEntity> targets = level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(32f), EntitySelector.ENTITY_STILL_ALIVE);
+                    final List<LivingEntity> targets = level().getEntitiesOfClass(LivingEntity.class,
+                            getBoundingBox().inflate(32f), EntitySelector.ENTITY_STILL_ALIVE);
 
                     for (LivingEntity t :
                             targets) {
@@ -140,22 +141,24 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
                     target = finalTarget;
                 }
             } else if (target.isAlive()) {
-                Vec3 eyePos = target.getEyePosition();
+                final Vec3 eyePos = target.getEyePosition();
                 lookAt(EntityAnchorArgument.Anchor.EYES, eyePos);
                 if (this.distanceToSqr(eyePos) < 2.5) {
-                    Explode(); //If closer than 1.58m
+                    explode(); //If closer than 1.58m
                 }
             } else {
                 target = null;
             }
 
             if (!hasExploded() && (this.tickCount >= 300 || getHealth() <= 0f)) {
-                Explode();
+                explode();
             }
 
             // Lerp velocity to simulate inertia
-            this.setDeltaMovement(
-                    getDeltaMovement().add(getLookAngle().scale(0.5)).scale(0.25)
+            setDeltaMovement(
+                    getDeltaMovement()
+                            .add(getLookAngle().scale(0.5))
+                            .scale(0.25)
             );
             this.hurtMarked = true;
         }
@@ -168,7 +171,7 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return SoundEvents.LAVA_EXTINGUISH;
     }
 
@@ -184,7 +187,7 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    public boolean startRiding(Entity entity, boolean force) {
+    public boolean startRiding(@NotNull Entity entity, boolean force) {
         return false;
     }
 
@@ -198,38 +201,22 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    protected AABB makeBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
-        double x = getX();
-        double y = getY();
-        double z = getZ();
-        double s = hasExploded() ? 0.1 : 0.5;
+    protected @NotNull AABB makeBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
+        final double x = getX(), y = getY(), z = getZ();
+        final double s = hasExploded() ? 0.1 : 0.5;
         return new AABB(x + s, y + s, z + s, x - s, y - s, z - s);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        if (master == null) {
-            return;
-        }
-        boolean ownerIsPlayer = master instanceof Player;
-        tag.putBoolean("playerOwner", ownerIsPlayer);
-        if (ownerIsPlayer) {
-            tag.putUUID("ownerUUID", master.getUUID());
-        } else {
-            tag.putInt("ownerID", master.getId());
-        }
+        writeMasterNbt(tag);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
-        boolean ownerIsPlayer = tag.getBoolean("playerOwner");
-        if (ownerIsPlayer) {
-            master = level().getPlayerByUUID(tag.getUUID("ownerUUID"));
-        } else {
-            master = (LivingEntity) level().getEntity(tag.getInt("ownerID")); // Always is living
-        }
+        readMasterNbt(tag);
     }
 
     // Animations
@@ -237,11 +224,13 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
+    private static final RawAnimation EXPLODE = RawAnimation.begin().thenLoop("animation.detector.explode");
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.detector.idle");
     private PlayState predicate(AnimationState<GeoAnimatable> state) {
-        return state.setAndContinue(RawAnimation.begin().thenLoop(hasExploded() ? "animation.detector.explode" : "animation.detector.idle"));
+        return state.setAndContinue(hasExploded() ? EXPLODE : IDLE);
     }
 
     @Override

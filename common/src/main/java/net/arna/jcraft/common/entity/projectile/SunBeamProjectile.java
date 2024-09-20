@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
@@ -8,7 +8,6 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
-import mod.azure.azurelib.util.RenderUtils;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
@@ -30,6 +29,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -40,11 +40,11 @@ import java.util.Set;
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
 
-public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
-    private final int stun = 10;
+public class SunBeamProjectile extends AbstractArrow implements GeoEntity {
     private int length = 0;
     private static final int MAX_LENGTH = 64;
-    private @Nullable TheSunEntity sun;
+    private final @Nullable TheSunEntity sun;
+    private DamageSource damageSource;
 
     public static final EntityDataAccessor<Integer> SKIN;
 
@@ -66,28 +66,32 @@ public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
         entityData.set(SKIN, skin);
     }
 
-    public SunBeamProjectile(Level world) {
+    public SunBeamProjectile(Level world, @Nullable LivingEntity owner, @Nullable TheSunEntity sun) {
         super(JEntityTypeRegistry.SUN_BEAM.get(), world);
-        this.setNoGravity(true);
+        setOwner(owner);
+        setNoGravity(true);
+        this.sun = sun;
         noCulling = true;
     }
 
-    public void assignSun(TheSunEntity sunEntity) {
-        this.sun = sunEntity;
+    @Override
+    public void setOwner(@Nullable Entity owner) {
+        super.setOwner(owner);
+        damageSource = JDamageSources.create(level(), DamageTypes.MOB_ATTACK, owner);
     }
 
     @Override
-    protected ItemStack getPickupItem() {
+    protected @NotNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
     // Light isn't very heavy
     @Override
-    public void push(Entity entity) {
+    public void push(@NotNull Entity entity) {
     }
 
     @Override
-    public boolean canCollideWith(Entity other) {
+    public boolean canCollideWith(@NotNull Entity other) {
         return false;
     }
 
@@ -113,7 +117,7 @@ public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
         super.tick();
 
         if (sun != null) setPos(position().add(JUtils.deltaPos(sun)));
-        Vec3 curPos = position();
+        final Vec3 curPos = position();
 
         if (tickCount > 5 && tickCount <= 10) {
             length += MAX_LENGTH / 5;
@@ -143,11 +147,9 @@ public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
                         filter.addAll(owner.getPassengers());
                     }
 
-                    DamageSource damageSource = JDamageSources.create(level(), DamageTypes.MOB_ATTACK, owner);
-
-                    // Recursive hitbox check between current and previous position
-                    Vec3 towardsVec = getDeltaMovement().normalize();
-                    List<LivingEntity> hurtAll = new ArrayList<>();
+                    // Hitbox check between current and previous position
+                    final Vec3 towardsVec = getDeltaMovement().normalize();
+                    final List<LivingEntity> hurtAll = new ArrayList<>();
                     double hitboxSize = 2.0;
                     for (double i = 0.0; i < length / hitboxSize; i++) {
                         Vec3 laserPos = curPos.add(towardsVec.scale(i * hitboxSize));
@@ -161,6 +163,7 @@ public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
                     if (!hurtAll.isEmpty()) {
                         for (LivingEntity l : hurtAll) {
                             LivingEntity target = JUtils.getUserIfStand(l);
+                            int stun = 10;
                             damageLogic(level(), target, Vec3.ZERO, stun, 1, false, 1f,
                                     true, 2, damageSource, owner, CommonHitPropertyComponent.HitAnimation.values()[random.nextInt(3)]);
                         }
@@ -179,10 +182,6 @@ public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
         }
     }
 
-    public void updateRotation() {
-        super.updateRotation();
-    }
-
     // Animations
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
@@ -191,18 +190,13 @@ public class SunBeamProjectile extends AbstractArrow implements GeoAnimatable {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
-    private static final RawAnimation fire = RawAnimation.begin().thenLoop("animation.sunbeam.fire");
+    private static final RawAnimation FIRE = RawAnimation.begin().thenLoop("animation.sunbeam.fire");
     private PlayState predicate(AnimationState<SunBeamProjectile> state) {
-        return state.setAndContinue(fire);
+        return state.setAndContinue(FIRE);
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
-
-    @Override
-    public double getTick(Object entity) {
-        return RenderUtils.getCurrentTick();
     }
 }

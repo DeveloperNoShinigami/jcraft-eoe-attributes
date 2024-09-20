@@ -115,10 +115,10 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
 
         if (level().isClientSide) {
             if (ticksInAir == 1) {
-                double x = getX();
-                double y = getY();
-                double z = getZ();
-                Vec3 velocity = getDeltaMovement().normalize();
+                final double x = getX();
+                final double y = getY();
+                final double z = getZ();
+                final Vec3 velocity = getDeltaMovement().normalize();
 
                 for (int i = 0; i < 24; i++) {
                     level().addParticle(random.nextBoolean() ? ICE_PARTICLE : ParticleTypes.SNOWFLAKE, x, y, z,
@@ -132,29 +132,29 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
         }
 
         if (projectile) {
-            Vec3 velocity = getDeltaMovement();
-            BlockPos blockPos = blockPosition();
-            BlockPos forward = blockPosition().offset((int)velocity.x, (int)velocity.y, (int)velocity.z);
+            final Vec3 velocity = getDeltaMovement();
+            final BlockPos blockPos = blockPosition();
+            final BlockPos forward = blockPosition().offset((int)velocity.x, (int)velocity.y, (int)velocity.z);
             if (ticksInAir > 30 || level().getBlockState(blockPos).canOcclude() || level().getBlockState(forward).canOcclude()) {
                 detonate();
             } else {
-                Vec3 gravity = Vec3.atLowerCornerOf(GravityChangerAPI.getGravityDirection(this).getNormal());
+                final Vec3 gravity = Vec3.atLowerCornerOf(GravityChangerAPI.getGravityDirection(this).getNormal());
                 this.lockVelocity = false;
                 setDeltaMovement(velocity.scale(0.99));
                 push(gravity.x * 9.81 / 400, gravity.y * 9.81 / 400, gravity.z * 9.81 / 400);
                 this.lockVelocity = true;
 
-                Vec3 pos = position();
-                Vec3 direction = velocity.normalize();
+                final Vec3 pos = position();
+                final Vec3 direction = velocity.normalize();
                 Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos.add(direction), 1.75, e -> true);
                 boolean hit = false;
                 for (LivingEntity living : hurt) {
-                    if (!canAttack(living)) continue;
+                    if (cantAttack(living)) continue;
                     hit = !JUtils.isBlocking(living);
 
                     LivingEntity target = JUtils.getUserIfStand(living);
 
-                    Vec3 kbVec = direction.scale(0.75);
+                    final Vec3 kbVec = direction.scale(0.75);
 
                     int stun = 15;
 
@@ -164,7 +164,7 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
                             CommonHitPropertyComponent.HitAnimation.CRUSH, false, false);
                 }
                 if (hit) {
-                    Vec3 frontPos = pos.add(direction);
+                    final Vec3 frontPos = pos.add(direction);
                     JCraft.createParticle((ServerLevel) level(),
                             frontPos.x + random.nextGaussian() * 0.25,
                             frontPos.y + random.nextGaussian() * 0.25,
@@ -193,18 +193,18 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
         float scale = entityData.get(SCALE);
         boolean perfect = scale == 1 && instant; // Fully charged instant largecicle
 
-        Vec3 pos = position();
-        Vec3 direction = getDeltaMovement().normalize();
+        final Vec3 pos = position();
+        final Vec3 direction = getDeltaMovement().normalize();
         Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos.add(direction.scale(1.25 * scale)), 1.75 * scale, e -> true);
         hurt.addAll(JUtils.generateHitbox(level(), pos.add(direction.scale(2.25 * scale)), 1.25 * scale, e -> true));
         boolean hit = false;
         for (LivingEntity living : hurt) {
-            if (!canAttack(living)) continue;
+            if (cantAttack(living)) continue;
             hit = !JUtils.isBlocking(living);
 
             LivingEntity target = JUtils.getUserIfStand(living);
 
-            Vec3 kbVec = direction.scale(0.75 * scale + (perfect ? 1 : 0));
+            final Vec3 kbVec = direction.scale(0.75 * scale + (perfect ? 1 : 0));
 
             int stun = (int) (15 * scale);
             if (instant) stun += 9;
@@ -215,7 +215,7 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
                     CommonHitPropertyComponent.HitAnimation.CRUSH, false, perfect);
         }
         if (hit) {
-            Vec3 frontPos = pos.add(direction.scale(2.5));
+            final Vec3 frontPos = pos.add(direction.scale(2.5));
             JCraft.createParticle((ServerLevel) level(),
                     frontPos.x + random.nextGaussian() * 0.25 * scale,
                     frontPos.y + random.nextGaussian() * 0.25 * scale,
@@ -229,12 +229,12 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     public void detonate() {
-        Vec3 direction = getDeltaMovement().normalize();
+        final Vec3 direction = getDeltaMovement().normalize();
         double x = getX();
         double y = getY();
         double z = getZ();
-        float pitch = -getXRot();
-        float yaw = -getYRot() + 180;
+        final float pitch = -getXRot();
+        final float yaw = -getYRot() + 180;
         for (int set = 0; set < 3; set++) {
             for (int i = 0; i < 3; i++) {
                 IcicleProjectile icicle = new IcicleProjectile(level(), livingOwner);
@@ -265,10 +265,10 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     public void onClientRemoval() {
         super.onClientRemoval();
         if (entityData.get(IS_INSTANT)) return;
-        double x = getX();
-        double y = getY();
-        double z = getZ();
-        Vec3 velocity = getDeltaMovement().normalize();
+        final double x = getX();
+        final double y = getY();
+        final double z = getZ();
+        final Vec3 velocity = getDeltaMovement().normalize();
 
         for (int i = 0; i < 32; i++) {
             level().addParticle(random.nextBoolean() ? ICE_PARTICLE : ParticleTypes.SNOWFLAKE, x, y, z,
@@ -280,20 +280,20 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public ItemStack getPickupItem() {
+    public @NotNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
-    private boolean canAttack(LivingEntity living) {
+    private boolean cantAttack(LivingEntity living) {
         if (living == livingOwner)
-            return false;
+            return true;
         if (livingOwner != null && JComponentPlatformUtils.getStandData(livingOwner).getStand() == living)
-            return false;
-        return true;
+            return true;
+        return false;
     }
 
     @Override
-    protected void onHit(HitResult hitResult) {
+    protected void onHit(@NotNull HitResult hitResult) {
         if (level().isClientSide() || !projectile) return;
         detonate();
     }
@@ -304,13 +304,13 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putShort("life", (short) this.ticksInAir);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
     }

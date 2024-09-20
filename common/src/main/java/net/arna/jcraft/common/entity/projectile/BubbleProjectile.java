@@ -13,7 +13,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -22,13 +21,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 
 
 public class BubbleProjectile extends AbstractArrow implements GeoEntity {
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-
-    public BubbleProjectile(EntityType<? extends BubbleProjectile> entityType, Level world) {
-        super(entityType, world);
+    public BubbleProjectile(Level world) {
+        super(JEntityTypeRegistry.BUBBLE.get(), world);
         this.pickup = Pickup.DISALLOWED;
     }
 
@@ -38,14 +36,13 @@ public class BubbleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public ItemStack getPickupItem() {
+    public @NotNull ItemStack getPickupItem() {
         return new ItemStack(Items.AIR);
     }
 
     @Override
     protected void onHit(HitResult hitResult) {
-        HitResult.Type type = hitResult.getType();
-
+        final HitResult.Type type = hitResult.getType();
         if (type == HitResult.Type.BLOCK) {
             this.onHitBlock((BlockHitResult) hitResult);
             this.gameEvent(GameEvent.PROJECTILE_LAND, getOwner());
@@ -79,19 +76,21 @@ public class BubbleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected SoundEvent getDefaultHitGroundSoundEvent() {
+    protected @NotNull SoundEvent getDefaultHitGroundSoundEvent() {
         return SoundEvents.BUBBLE_COLUMN_BUBBLE_POP;
     }
 
     // Animations
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.bubble.idle");
     private PlayState predicate(AnimationState<BubbleProjectile> state) {
-        return state.setAndContinue(RawAnimation.begin().thenLoop("animation.bubble.idle"));
+        return state.setAndContinue(IDLE);
     }
 
     @Override

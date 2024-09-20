@@ -1,21 +1,5 @@
 package net.arna.jcraft.common.entity.projectile;
 
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -24,12 +8,29 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.registry.JStatusRegistry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class RedBindEntity extends JAttackEntity implements GeoEntity {
     private LivingEntity boundEntity;
     private float boundHealth;
-    public static final int ticksToLive = 60;
-    private int timeLeft = ticksToLive;
+    public static final int LIFE_TIME = 60;
+    private int timeLeft = LIFE_TIME;
     private static final EntityDataAccessor<Boolean> EXPLODED;
     private static final EntityDataAccessor<Float> WIDTH;
 
@@ -61,8 +62,8 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
         entityData.define(WIDTH, 1f);
     }
 
-    public RedBindEntity(EntityType<? extends LivingEntity> entityType, Level world) {
-        super(entityType, world);
+    public RedBindEntity(Level world) {
+        super(JEntityTypeRegistry.RED_BIND.get(), world);
     }
 
     @Override
@@ -99,8 +100,8 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
 
     private void detonate() {
         if (master != null) {
-            Vec3 vel = boundEntity.position().add(0, 0.5, 0).subtract(master.position());
-            Vec3 launch = vel.normalize().scale(1.25);
+            final Vec3 vel = boundEntity.position().add(0, 0.5, 0).subtract(master.position());
+            final Vec3 launch = vel.normalize().scale(1.25);
             StandEntity.damageLogic(boundEntity.level(), boundEntity, launch, 20, 3, true,
                     6, false, 4, level().damageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false, true);
         }
@@ -116,7 +117,7 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
+    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
         return SoundEvents.LAVA_EXTINGUISH;
     }
 
@@ -129,6 +130,18 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
     @Override
     public boolean isNoGravity() {
         return true;
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        writeMasterNbt(tag);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
+        readMasterNbt(tag);
     }
 
     // Animations
@@ -144,7 +157,9 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.red_bind.idle");
+    private static final RawAnimation EXPLODE = RawAnimation.begin().thenLoop("animation.red_bind.explode");
     private PlayState predicate(AnimationState<RedBindEntity> state) {
-        return state.setAndContinue(RawAnimation.begin().thenLoop(hasExploded() ? "animation.red_bind.explode" : "animation.red_bind.idle"));
+        return state.setAndContinue(hasExploded() ? EXPLODE : IDLE);
     }
 }

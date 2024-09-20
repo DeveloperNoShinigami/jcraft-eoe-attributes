@@ -7,9 +7,9 @@ import net.arna.jcraft.common.entity.projectile.HGNetEntity;
 import net.arna.jcraft.common.entity.stand.HGEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.Gravity;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
+
 import java.util.Set;
 
 public final class NetSetMove extends AbstractMove<NetSetMove, HGEntity> {
@@ -21,7 +21,7 @@ public final class NetSetMove extends AbstractMove<NetSetMove, HGEntity> {
     public @NonNull Set<LivingEntity> perform(HGEntity attacker, LivingEntity user, MoveContext ctx) {
         Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
 
-        HGNetEntity net = new HGNetEntity(JEntityTypeRegistry.HG_NET.get(), attacker.level());
+        HGNetEntity net = new HGNetEntity(attacker.level());
         net.setSkin(attacker.getSkin());
         net.moveTo(
                 attacker.getX() + gravity.getStepX(),

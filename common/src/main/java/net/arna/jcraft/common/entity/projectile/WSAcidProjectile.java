@@ -29,12 +29,12 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import org.jetbrains.annotations.NotNull;
 
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 
 public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
     private static final EntityDataAccessor<Boolean> MYH; // Melt your Heart variant
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     static {
         MYH = SynchedEntityData.defineId(WSAcidProjectile.class, EntityDataSerializers.BOOLEAN);
@@ -47,7 +47,6 @@ public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
     public WSAcidProjectile(Level world, LivingEntity owner) {
         super(JEntityTypeRegistry.WS_ACID_PROJECTILE.get(), owner, world);
         setSoundEvent(SoundEvents.SLIME_BLOCK_FALL);
-        setOwner(owner);
         pickup = Pickup.DISALLOWED;
         noCulling = true;
     }
@@ -68,12 +67,12 @@ public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult entityHitResult) {
+    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
         if (level().isClientSide) {
             return;
         }
 
-        Entity owner = getOwner();
+        final Entity owner = getOwner();
         if (owner == null) {
             return;
         }
@@ -82,7 +81,7 @@ public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
             return; // Melt your Heart variants of this phase through entities
         }
 
-        Entity entity = entityHitResult.getEntity();
+        final Entity entity = entityHitResult.getEntity();
         if (owner.hasPassenger(entity) || entity == owner) {
             return;
         }
@@ -121,9 +120,9 @@ public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
 
     @Override
     public void tick() {
-        Entity owner = getOwner();
+        final Entity owner = getOwner();
         if (owner == null) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 discard();
             }
             return;
@@ -138,7 +137,7 @@ public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
                 double pX = x + random.nextDouble() * 2 - 1;
                 double pY = y + random.nextDouble() * 2 - 1;
                 double pZ = z + random.nextDouble() * 2 - 1;
-                Vec3 awayVector = getForward().scale(0.3);
+                final Vec3 awayVector = getForward().scale(0.3);
 
                 level().addParticle(
                         ParticleTypes.SPIT,
@@ -150,7 +149,7 @@ public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
         super.tick();
 
         if (!inGround) {
-            Vec3 vel = getDeltaMovement();
+            final Vec3 vel = getDeltaMovement();
             level().addParticle(
                     ParticleTypes.SPIT,
                     getX(), getY(), getZ(),
@@ -159,7 +158,7 @@ public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public ItemStack getPickupItem() {
+    public @NotNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
@@ -169,14 +168,17 @@ public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
     }
 
     // Animations
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<GeoAnimatable>(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
+    private static final RawAnimation MELT_IDLE = RawAnimation.begin().thenLoop("animation.wsacid.meltidle");
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.wsacid.idle");
     private PlayState predicate(AnimationState<GeoAnimatable> state) {
-        return state.setAndContinue(RawAnimation.begin().thenLoop(entityData.get(MYH) ? "animation.wsacid.meltidle" : "animation.wsacid.idle"));
+        return state.setAndContinue(entityData.get(MYH) ? MELT_IDLE : IDLE);
     }
 
     @Override

@@ -1,16 +1,26 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.util.IOwnable;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
+/**
+ * Class for any entities that serve as attacks.
+ * Every implementation must append {@link JAttackEntity#readMasterNbt(CompoundTag)} and {@link JAttackEntity#writeMasterNbt(CompoundTag)} to serialization methods.
+ */
 public class JAttackEntity extends LivingEntity implements IOwnable {
     protected LivingEntity master;
+    protected boolean supportsItems = false;
 
     protected JAttackEntity(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
@@ -27,18 +37,19 @@ public class JAttackEntity extends LivingEntity implements IOwnable {
     }
 
     @Override
-    public Iterable<ItemStack> getArmorSlots() {
+    public @NotNull Iterable<ItemStack> getArmorSlots() {
         return List.of();
     }
 
     @Override
-    public ItemStack getItemBySlot(EquipmentSlot slot) {
+    public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot slot) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
-
+    public void setItemSlot(@NotNull EquipmentSlot slot, @NotNull ItemStack stack) {
+        if (supportsItems) setItemSlot(slot, stack);
+        else JCraft.LOGGER.warn("Attempted to set item slot of " + getClass().getName() + "@" + hashCode());
     }
 
     @Override
@@ -46,8 +57,31 @@ public class JAttackEntity extends LivingEntity implements IOwnable {
         return false;
     }
 
+    public void writeMasterNbt(CompoundTag nbt) {
+        if (master == null) {
+            return;
+        }
+        final boolean ownerIsPlayer = master instanceof Player;
+        nbt.putBoolean("OwnerIsPlayer", ownerIsPlayer);
+        if (ownerIsPlayer) {
+            nbt.putUUID("MasterUUID", master.getUUID());
+        } else {
+            nbt.putInt("MasterID", master.getId());
+        }
+    }
+
+    public void readMasterNbt(CompoundTag nbt) {
+        final boolean ownerIsPlayer = nbt.getBoolean("OwnerIsPlayer");
+        if (ownerIsPlayer) {
+            master = level().getPlayerByUUID(nbt.getUUID("MasterUUID"));
+        } else {
+            if (level().getEntity(nbt.getInt("MasterID")) instanceof LivingEntity living)
+                master = living;
+        }
+    }
+
     @Override
-    public HumanoidArm getMainArm() {
-        return null;
+    public @NotNull HumanoidArm getMainArm() {
+        return HumanoidArm.RIGHT;
     }
 }
