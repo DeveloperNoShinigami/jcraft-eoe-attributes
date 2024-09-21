@@ -12,6 +12,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import java.util.Set;
 
@@ -95,7 +97,8 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
         if (block.defaultDestroyTime() < 0) {
             return;
         }
-        if (block.defaultDestroyTime() <= mineableHardness) {
+        if (block.defaultDestroyTime() <= mineableHardness &&
+                (user instanceof Player || world.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING))) {
             world.destroyBlock(pos, true, user);
         }
     }

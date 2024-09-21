@@ -23,7 +23,7 @@ public class AttackArgumentType implements ArgumentType<MoveType> {
     private static final SimpleCommandExceptionType NOT_FOUND = new SimpleCommandExceptionType(Component.literal("That attack type does not exist"));
     //todo: add "RANDOM" to suggestions
     private static final Map<String, MoveType> suggestions = Arrays.stream(MoveType.values()).collect(
-            ImmutableMap.toImmutableMap(type -> type.name().toLowerCase(), type -> type));
+            ImmutableMap.toImmutableMap(type -> type.name().toLowerCase(Locale.ROOT), type -> type));
     private final Collection<String> examples = ImmutableList.of("RANDOM", "LIGHT", "BARRAGE", "UTILITY");
 
     @Override

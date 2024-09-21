@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 
 public enum SpecType {
@@ -43,7 +44,7 @@ public enum SpecType {
 
 
     SpecType(Function<LivingEntity, @Nullable JSpec<?, ?>> specCreator, Component description, Component details) {
-        internalName = name().toLowerCase();
+        internalName = name().toLowerCase(Locale.ROOT);
         translatableName = Component.translatable("spec.jcraft." + internalName);
         this.description = description;
         this.details = details;

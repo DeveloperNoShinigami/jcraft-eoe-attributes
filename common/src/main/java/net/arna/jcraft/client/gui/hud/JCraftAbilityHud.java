@@ -18,6 +18,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Mth;
+
+import java.util.Locale;
 import java.util.Map;
 
 @UtilityClass
@@ -128,7 +130,7 @@ public class JCraftAbilityHud {
                 // Render cooldown HUD for specs
                 if (spec != null) {
 
-                    renderIcons(ctx, SPEC_ICONS, selectedX, selectedY, spec.getType().getInternalName().toLowerCase());
+                    renderIcons(ctx, SPEC_ICONS, selectedX, selectedY, spec.getType().getInternalName().toLowerCase(Locale.ROOT));
                 }
             } else {
                 // Render cooldown HUD for stands

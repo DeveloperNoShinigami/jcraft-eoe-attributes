@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.IntStream;
 
 public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
@@ -30,7 +31,7 @@ public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
 
     public StandEntityModel(StandType type, float torsoPitchOffset, float headPitchOffset, float velInfluence) {
         this.type = type;
-        String typeName = type.name().toLowerCase();
+        String typeName = type.name().toLowerCase(Locale.ROOT);
         model = JCraft.id("geo/" + typeName + ".geo.json");
         skins = IntStream.rangeClosed(0, type.getSkinCount())
                 .mapToObj(i -> JCraft.id("textures/entity/stands/" + typeName + "/" + (i == 0 ? "default" : "skin" + i) + ".png"))

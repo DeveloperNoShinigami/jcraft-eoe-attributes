@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.arna.jcraft.common.util.CooldownType;
 import net.minecraft.network.chat.Component;
 
+import java.util.Locale;
 import java.util.Random;
 
 @Getter
@@ -26,8 +27,8 @@ public enum MoveType {
     }
 
     MoveType(CooldownType defaultCooldownType, String key) {
-        friendlyName = Component.translatable("jcraft.movetype." + name().toLowerCase());
-        this.key = Component.keybind(key == null ? "key.jcraft." + name().toLowerCase() : key);
+        friendlyName = Component.translatable("jcraft.movetype." + name().toLowerCase(Locale.ROOT));
+        this.key = Component.keybind(key == null ? "key.jcraft." + name().toLowerCase(Locale.ROOT) : key);
         this.defaultCooldownType = defaultCooldownType;
     }
 

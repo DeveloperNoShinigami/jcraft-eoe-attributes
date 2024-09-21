@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.network.chat.Component;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -21,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
 public class StandArgumentType implements ArgumentType<StandType> {
     private static final SimpleCommandExceptionType NOT_FOUND = new SimpleCommandExceptionType(Component.literal("That stand was not found"));
     private static final Map<String, StandType> suggestions = StandType.getAllStandTypes().stream()
-            .collect(ImmutableMap.toImmutableMap(type -> type.name().toLowerCase().replaceAll("_", ""), type -> type));
+            .collect(ImmutableMap.toImmutableMap(type -> type.name().toLowerCase(Locale.ROOT).replaceAll("_", ""), type -> type));
     @Getter // implements ArgumentType#getExamples()
     private final Collection<String> examples = ImmutableList.of("MADE_IN_HEAVEN", "C_MOON", "GER");
 

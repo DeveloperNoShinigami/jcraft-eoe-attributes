@@ -15,6 +15,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -576,6 +578,10 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
         Vec3 heightOffset = upVec.scale(0.5);
         return attacker.getBaseEntity().position().add(heightOffset);
+    }
+
+    protected boolean mayGrief(LivingEntity user) {
+        return user instanceof Player || user.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
     }
 
     /**
