@@ -32,7 +32,7 @@ public final class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttac
     protected void processTarget(CMoonEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
-        LivingEntity user = attacker.getUserOrThrow();
+        final LivingEntity user = attacker.getUserOrThrow();
         GravityChangerAPI.setWorldVelocity(target, GravityChangerAPI.getGravityDirection(user).step());
         target.hurtMarked = true;
         if (user.isShiftKeyDown()) {
@@ -42,8 +42,8 @@ public final class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttac
 
     @Override
     public void performHook(CMoonEntity attacker, Set<LivingEntity> targets, Set<AABB> boxes, DamageSource damageSource, Vec3 forwardPos, Vec3 rotationVector, MoveContext ctx) {
-        Level world = attacker.level();
-        Vec3i gravityVector = GravityChangerAPI.getGravityDirection(attacker).getNormal();
+        final Level world = attacker.level();
+        final Vec3i gravityVector = GravityChangerAPI.getGravityDirection(attacker).getNormal();
 
         if (world.getGameRules().getBoolean(JCraft.STAND_GRIEFING)) {
             BlockPos bPos = attacker.blockPosition();
@@ -57,15 +57,15 @@ public final class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttac
             for (int x = min.getX(); x < max.getX(); x++) {
                 for (int y = min.getY(); y < max.getY(); y++) {
                     for (int z = min.getZ(); z < max.getZ(); z++) {
-                        BlockPos curPos = bPos.offset(x, y, z);
-                        BlockState curState = world.getBlockState(curPos);
-                        Block block = curState.getBlock();
+                        final BlockPos curPos = bPos.offset(x, y, z);
+                        final BlockState curState = world.getBlockState(curPos);
+                        final Block block = curState.getBlock();
 
                         if (block.defaultDestroyTime() < 0 || block.getExplosionResistance() > 10f || curState.isAir()) {
                             continue;
                         }
 
-                        FallingBlockEntity fallingBlock = FallingBlockEntity.fall(world, curPos, curState);
+                        final FallingBlockEntity fallingBlock = FallingBlockEntity.fall(world, curPos, curState);
                         fallingBlock.setDeltaMovement(-gravityVector.getX() * 0.5, -gravityVector.getY() * 0.5, -gravityVector.getZ() * 0.5);
                         fallingBlock.time = -120;
                         fallingBlock.hurtMarked = true;

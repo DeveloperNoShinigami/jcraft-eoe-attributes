@@ -20,7 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 public final class NullificationAttack extends AbstractCounterAttack<NullificationAttack, GEREntity> {
-    private static final int counterStopTime = 20; // Convenience
+    private static final int COUNTER_STOP_TIME = 20; // Convenience
     private final CounterMissMove<GEREntity> counterMiss = new CounterMissMove<>(20);
 
     public NullificationAttack(int cooldown, int windup, int duration, float moveDistance) {
@@ -41,25 +41,23 @@ public final class NullificationAttack extends AbstractCounterAttack<Nullificati
             return;
         }
 
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeShort(14);
         buf.writeInt(countered.getId());
-        buf.writeInt(counterStopTime);
-        for (Player sendPlayer : attacker.level().players()) {
+        buf.writeInt(COUNTER_STOP_TIME);
+        for (Player sendPlayer : JUtils.around((ServerLevel) attacker.level(), attacker.position(), 96)) {
             if (sendPlayer instanceof ServerPlayer serverPlayerEntity) {
                 ServerChannelFeedbackPacket.send(serverPlayerEntity, buf);
             }
         }
-        if (JComponentPlatformUtils.getTimeStopData(countered).isPresent()) {
-            JComponentPlatformUtils.getTimeStopData(countered).get().setTicks(counterStopTime);
-        }
+        JComponentPlatformUtils.getTimeStopData(countered).ifPresent(t -> t.setTicks(COUNTER_STOP_TIME));
 
         if (countered instanceof LivingEntity living) {
             JCraft.stun(living, 10, 0);
             JUtils.cancelMoves(living);
         }
 
-        Vec3 eP = attacker.getEyePosition();
+        final Vec3 eP = attacker.getEyePosition();
         JCraft.createParticle((ServerLevel) attacker.level(), eP.x, eP.y, eP.z, JParticleType.FLASH);
     }
 

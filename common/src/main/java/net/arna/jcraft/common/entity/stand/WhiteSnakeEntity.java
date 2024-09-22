@@ -231,9 +231,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             // Called for EVERYONE
             JCraft.getClientEntityHandler().whiteSnakeRemoteClientTick(this);
         } else {
-            double f = getRemoteForwardInput();
-            double s = getRemoteSideInput();
-            boolean jump = getRemoteJumpInput();
+            final double f = getRemoteForwardInput(), s = getRemoteSideInput();
+            final boolean jump = getRemoteJumpInput();
 
             tickRemoteMovement(f, s, jump);
 
@@ -262,19 +261,18 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
      * @param jump Jump input
      */
     public void tickRemoteMovement(double f, double s, boolean jump) {
-        Vec3 pos = position();
-
         // 1 tick of inertia, helping movement be fluid as well as dealing with packet drops
         if (lastRemoteInputTime - tickCount > 2) {
             updateRemoteInputs(0, 0, false, false);
         }
-        Vec3 rotVec = new Vec3(getLookAngle().x, 0, getLookAngle().z).normalize();
+        final Vec3 pos = position();
+        final Vec3 rotVec = new Vec3(getLookAngle().x, 0, getLookAngle().z).normalize();
 
         double dragMult = getMoveStun() > 0 ? 0.2 : 0.4;
         double moveSpeed = 0.24;
-        boolean onGround = onGround();
-        boolean climbing = getFeetBlockState().getTags().anyMatch(tag -> tag == BlockTags.CLIMBABLE);
-        boolean swimming = !level().getFluidState(blockPosition()).isEmpty();
+        final boolean onGround = onGround();
+        final boolean climbing = getFeetBlockState().getTags().anyMatch(tag -> tag == BlockTags.CLIMBABLE);
+        final boolean swimming = !level().getFluidState(blockPosition()).isEmpty();
 
         if (climbing || swimming) {
             dragMult *= 0.5;
@@ -301,7 +299,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
 
         remoteSpeed = remoteSpeed.scale(dragMult);
 
-        Vec3 userPos = getUserOrThrow().position();
+        final Vec3 userPos = getUserOrThrow().position();
         if (pos.add(remoteSpeed).distanceToSqr(userPos) > 400) {
             remoteSpeed = userPos.subtract(pos).scale(0.025); // 1/40th so it scales with distance
         }
@@ -344,18 +342,18 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
         MELT_YOUR_HEART(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.meltyourheart"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.light_followup")));
 
-        private final BiConsumer<WhiteSnakeEntity, AnimationState> animator;
+        private final BiConsumer<WhiteSnakeEntity, AnimationState<WhiteSnakeEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<WhiteSnakeEntity>> animator) {
             this((whiteSnake, builder) -> animator.accept(builder));
         }
 
-        State(BiConsumer<WhiteSnakeEntity, AnimationState> animator) {
+        State(BiConsumer<WhiteSnakeEntity, AnimationState<WhiteSnakeEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(WhiteSnakeEntity attacker, AnimationState builder) {
+        public void playAnimation(WhiteSnakeEntity attacker, AnimationState<WhiteSnakeEntity> builder) {
             animator.accept(attacker, builder);
         }
     }

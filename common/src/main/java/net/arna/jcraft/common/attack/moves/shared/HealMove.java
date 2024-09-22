@@ -44,22 +44,22 @@ public final class HealMove<A extends IAttacker<? extends A, ?>> extends Abstrac
 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = target.pickTargets(super.perform(attacker, user, ctx), user);
+        final Set<LivingEntity> targets = target.pickTargets(super.perform(attacker, user, ctx), user);
         targets.forEach(e -> {
             e.heal(health);
             consumer.accept(e);
         });
 
         if (target == HealTarget.TARGETS && attacker.getUserOrThrow().isShiftKeyDown()) {
-            ServerLevel world = (ServerLevel) user.level();
-            BlockHitResult hitResult = JUtils.genericBlockRaycast(world, user, 2, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
+            final ServerLevel world = (ServerLevel) user.level();
+            final BlockHitResult hitResult = JUtils.genericBlockRaycast(world, user, 2, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE);
             if (hitResult.getType() == HitResult.Type.BLOCK) {
-                BlockPos blockPos = hitResult.getBlockPos();
-                BlockState blockState = world.getBlockState(blockPos);
+                final BlockPos blockPos = hitResult.getBlockPos();
+                final BlockState blockState = world.getBlockState(blockPos);
 
                 boolean fertilized = false;
 
-                if (blockState.getBlock() instanceof BonemealableBlock fertilizable) {
+                if (blockState.getBlock() instanceof final BonemealableBlock fertilizable) {
                     if (fertilizable.isValidBonemealTarget(world, blockPos, blockState, false)) {
                         if (fertilizable.isBonemealSuccess(world, world.random, blockPos, blockState)) {
                             for (int i = 0; i < 5; i++) {

@@ -75,15 +75,15 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (ctx.getBoolean(BREAK_BLOCKS)) {
-            ServerLevel serverWorld = (ServerLevel) user.level();
-            LivingEntity attackerEntity = attacker.getBaseEntity();
-            Vec3i lookDirection = JUtils.getLookDirection(user).getNormal();
-            Vec3i localUp = GravityChangerAPI.getGravityDirection(user).getOpposite().getNormal();
+            final ServerLevel serverWorld = (ServerLevel) user.level();
+            final LivingEntity attackerEntity = attacker.getBaseEntity();
+            final Vec3i lookDirection = JUtils.getLookDirection(user).getNormal();
+            final Vec3i localUp = GravityChangerAPI.getGravityDirection(user).getOpposite().getNormal();
 
-            BlockPos userPos = lookDirection.getY() != 0 ? attackerEntity.blockPosition() : user.blockPosition();
+            final BlockPos userPos = lookDirection.getY() != 0 ? attackerEntity.blockPosition() : user.blockPosition();
 
             breakIfPossible(serverWorld, userPos.offset(lookDirection), user);
             breakIfPossible(serverWorld, userPos.offset(lookDirection.offset(localUp)), user);
@@ -93,7 +93,7 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
     }
 
     private void breakIfPossible(ServerLevel world, BlockPos pos, LivingEntity user) {
-        Block block = world.getBlockState(pos).getBlock();
+        final Block block = world.getBlockState(pos).getBlock();
         if (block.defaultDestroyTime() < 0) {
             return;
         }

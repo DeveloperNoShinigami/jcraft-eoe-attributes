@@ -201,7 +201,7 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
     @Override
     public void tick() {
         super.tick();
-        if (!hasUser() || level().isClientSide || getCurrentMove() == null || getCurrentMove().getOriginalMove() != TIME_STRIKE || getMoveStun() != 7) {
+        if (level().isClientSide || !hasUser() || getCurrentMove() == null || getCurrentMove().getOriginalMove() != TIME_STRIKE || getMoveStun() != 7) {
             return;
         }
 
@@ -211,8 +211,8 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
                 userData.putInt(JCraft.utilCD, 200);
              */
 
-        LivingEntity user = getUserOrThrow();
-        Vec3 prevPos = user.getEyePosition();
+        final LivingEntity user = getUserOrThrow();
+        final Vec3 prevPos = user.getEyePosition();
 
         TimeSkipMove.doTimeSkip(this, user, 2.5, List.of(JSoundRegistry.STAR_PLATINUM_TIMESKIP.get()));
         if (turnAround) {
@@ -244,14 +244,14 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
         GROUND_SLAM(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.sptw.ground_slam"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.sptw.light_followup")));
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<SPTWEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<SPTWEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(SPTWEntity attacker, AnimationState builder) {
+        public void playAnimation(SPTWEntity attacker, AnimationState<SPTWEntity> builder) {
             animator.accept(builder);
         }
     }

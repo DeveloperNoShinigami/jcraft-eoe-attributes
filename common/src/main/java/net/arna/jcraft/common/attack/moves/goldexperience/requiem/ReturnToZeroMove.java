@@ -18,8 +18,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.*;
 
 public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREntity> {
@@ -34,14 +34,14 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
 
     @Override
     public @NonNull Set<LivingEntity> perform(GEREntity attacker, LivingEntity user, MoveContext ctx) {
-        List<Entity> toReturn = attacker.level().getEntitiesOfClass(Entity.class, attacker.getBoundingBox().inflate(64),
+        final List<Entity> toReturn = attacker.level().getEntitiesOfClass(Entity.class, attacker.getBoundingBox().inflate(64),
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != user));
 
-        Map<Entity, CompoundTag> entityData = ctx.get(ENTITY_DATA);
-        List<ReturnData> returnInfo = ctx.get(RETURN_INFO);
+        final Map<Entity, CompoundTag> entityData = ctx.get(ENTITY_DATA);
+        final List<ReturnData> returnInfo = ctx.get(RETURN_INFO);
 
         for (Entity e : toReturn) {
-            CompoundTag data = new CompoundTag();
+            final CompoundTag data = new CompoundTag();
             e.saveWithoutId(data);
             entityData.put(e, data);
             returnInfo.add(new ReturnData(e.getEyePosition(), e));
@@ -51,22 +51,22 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
     }
 
     public void returnToZero(GEREntity attacker) {
-        MoveContext ctx = attacker.getMoveContext();
-        Map<Entity, CompoundTag> entityData = ctx.get(ENTITY_DATA);
-        List<ReturnData> returnInfo = ctx.get(RETURN_INFO);
+        final MoveContext ctx = attacker.getMoveContext();
+        final Map<Entity, CompoundTag> entityData = ctx.get(ENTITY_DATA);
+        final List<ReturnData> returnInfo = ctx.get(RETURN_INFO);
 
         for (Map.Entry<Entity, CompoundTag> data : entityData.entrySet()) {
-            Entity ent = data.getKey();
+            final Entity ent = data.getKey();
             if (!ent.isAlive()) {
                 continue;
             }
-            CompoundTag nbt = data.getValue();
+            final CompoundTag nbt = data.getValue();
 
-            if (ent instanceof Player playerEntity) {
-                nbt.put("Inventory", playerEntity.getInventory().save(new ListTag()));
-                nbt.put("EnderItems", playerEntity.getEnderChestInventory().createTag());
+            if (ent instanceof final ServerPlayer serverPlayer) {
+                // Backs up the player items before restoring other parts of their NBT
+                nbt.put("Inventory", serverPlayer.getInventory().save(new ListTag()));
+                nbt.put("EnderItems", serverPlayer.getEnderChestInventory().createTag());
 
-                ServerPlayer serverPlayer = ((ServerPlayer) playerEntity);
                 serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(ent));
                 ListTag list = nbt.getList("Pos", 6);
                 serverPlayer.teleportToWithTicket(list.getDouble(0), list.getDouble(1), list.getDouble(2));
@@ -86,11 +86,11 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
             return;
         }
         for (ReturnData data : attacker.getMoveContext().get(RETURN_INFO)) {
-            Entity entity = data.getEntity();
+            final Entity entity = data.getEntity();
             if (entity == null || !entity.isAlive()) {
                 continue;
             }
-            Vec3 position = data.getOriginalPos();
+            final Vec3 position = data.getOriginalPos();
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeShort(7);
 

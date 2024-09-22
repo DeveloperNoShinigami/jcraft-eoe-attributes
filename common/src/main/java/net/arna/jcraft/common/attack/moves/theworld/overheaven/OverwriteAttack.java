@@ -32,9 +32,9 @@ public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack,
     protected void processTarget(TheWorldOverHeavenEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
-        MoveContext ctx = attacker.getMoveContext();
-        IntList overwriteTimes = ctx.get(OVERWRITE_TIMES);
-        List<LivingEntity> overwriteTargets = ctx.get(OVERWRITE_TARGETS);
+        final MoveContext ctx = attacker.getMoveContext();
+        final IntList overwriteTimes = ctx.get(OVERWRITE_TIMES);
+        final List<LivingEntity> overwriteTargets = ctx.get(OVERWRITE_TARGETS);
 
         switch (attacker.getOverwriteType()) {
             case 1 -> {

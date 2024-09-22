@@ -35,7 +35,7 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
         }
 
         LivingEntity animal = null;
-        ItemStack animalItem = item.copy();
+        final ItemStack animalItem = item.copy();
         animalItem.setCount(1);
         switch (ctx.get(TYPE_TO_SUMMON)) {
             case SNAKE -> {
@@ -43,10 +43,12 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
                     return Set.of();
                 }
 
-                GESnakeEntity snake = new GESnakeEntity(JEntityTypeRegistry.GE_SNAKE.get(), attacker.level());
-                //todo: fix snake not working for mobs
+                final GESnakeEntity snake = new GESnakeEntity(JEntityTypeRegistry.GE_SNAKE.get(), attacker.level());
                 if (user instanceof Player playerEntity) {
                     snake.tame(playerEntity);
+                } else {
+                    snake.setTame(true);
+                    snake.setOwnerUUID(user.getUUID());
                 }
                 animal = snake;
             }
@@ -55,12 +57,12 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
                     return Set.of();
                 }
 
-                GEFrogEntity frog = new GEFrogEntity(JEntityTypeRegistry.GE_FROG.get(), attacker.level());
+                final GEFrogEntity frog = new GEFrogEntity(JEntityTypeRegistry.GE_FROG.get(), attacker.level());
                 frog.setMaster(user);
                 animal = frog;
             }
             case BUTTERFLY -> {
-                GEButterflyEntity butterfly = new GEButterflyEntity(JEntityTypeRegistry.GE_BUTTERFLY.get(), attacker.level());
+                final GEButterflyEntity butterfly = new GEButterflyEntity(JEntityTypeRegistry.GE_BUTTERFLY.get(), attacker.level());
                 butterfly.setMaster(user);
                 animal = butterfly;
             }

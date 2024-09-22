@@ -33,18 +33,18 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
 
     @Override
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (targets.isEmpty()) {
             return targets;
         }
 
-        LivingEntity superTarget = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
+        final LivingEntity superTarget = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
         ctx.set(SUPER_TARGET, superTarget);
 
-        List<FallingBlockEntity> sands = ctx.get(SANDS);
+        final List<FallingBlockEntity> sands = ctx.get(SANDS);
 
         for (int i = 0; i < 8; i++) {
-            FallingBlockEntity sand = FallingBlockEntity.fall(attacker.level(), superTarget.blockPosition(),
+            final FallingBlockEntity sand = FallingBlockEntity.fall(attacker.level(), superTarget.blockPosition(),
                     JBlockRegistry.FOOLISH_SAND_BLOCK.get().defaultBlockState());
             sand.time = -160;
             sand.noPhysics = true;
@@ -58,10 +58,10 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
     }
 
     public void tickSandstorm(TheFoolEntity attacker) {
-        MoveContext ctx = attacker.getMoveContext();
+        final MoveContext ctx = attacker.getMoveContext();
 
-        List<FallingBlockEntity> sands = ctx.get(SANDS);
-        LivingEntity superTarget = ctx.get(SUPER_TARGET);
+        final List<FallingBlockEntity> sands = ctx.get(SANDS);
+        final LivingEntity superTarget = ctx.get(SUPER_TARGET);
 
         if (superTarget == null) {
             return;
@@ -77,17 +77,21 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
             }
         }
 
-        superTarget.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 0, true, false));
-        superTarget.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 0, true, false));
+        superTarget.addEffect(
+                new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 0, true, false)
+        );
+        superTarget.addEffect(
+                new MobEffectInstance(MobEffects.BLINDNESS, 40, 0, true, false)
+        );
 
-        int age = attacker.tickCount;
+        final int age = attacker.tickCount;
         if (age % 20 == 0) {
             sands.get(0).discard();
             sands.remove(0);
         }
 
-        RandomSource random = attacker.getRandom();
-        Vec3 targetPos = superTarget.position().add(0, superTarget.getBbHeight() / 2, 0);
+        final RandomSource random = attacker.getRandom();
+        final Vec3 targetPos = superTarget.position().add(0, superTarget.getBbHeight() / 2, 0);
 
         int i = 0;
         int j = 1;
@@ -98,7 +102,7 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
             i++;
             j *= -1;
 
-            Vec3 newVel = sand.getDeltaMovement().scale(0.25).add( // Suppress current velocity
+            final Vec3 newVel = sand.getDeltaMovement().scale(0.25).add( // Suppress current velocity
                     // And add tracking
                     targetPos.subtract(
                             // MathHelper.sin(t) * 2, (isEven ? MathHelper.sin(t) : MathHelper.cos(t)) * 2, MathHelper.cos(t) * 2
@@ -115,7 +119,7 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
     }
 
     public void discardSands(TheFoolEntity attacker) {
-        List<FallingBlockEntity> sands = attacker.getMoveContext().get(SANDS);
+        final List<FallingBlockEntity> sands = attacker.getMoveContext().get(SANDS);
         sands.forEach(Entity::discard);
         sands.clear();
     }

@@ -24,8 +24,8 @@ public final class BTDDetonateAttack extends AbstractMove<BTDDetonateAttack, Abs
 
     @Override
     public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
-        LivingEntity btdEntity = ctx.get(BTDPlantAttack.BTD_ENTITY);
-        Vec3 btdPos = ctx.get(BTDPlantAttack.BTD_POS);
+        final LivingEntity btdEntity = ctx.get(BTDPlantAttack.BTD_ENTITY);
+        final Vec3 btdPos = ctx.get(BTDPlantAttack.BTD_POS);
         if (btdEntity == null) {
             return Set.of();
         }
@@ -33,10 +33,10 @@ public final class BTDDetonateAttack extends AbstractMove<BTDDetonateAttack, Abs
         attacker.level().explode(user, btdEntity.getX(), btdEntity.getY() + btdEntity.getBbHeight() / 2, btdEntity.getZ(), 2f, Level.ExplosionInteraction.NONE);
         btdEntity.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0, true, false));
 
-        Vec3 pos = btdEntity.position();
+        final Vec3 pos = btdEntity.position();
         JCraft.createParticle((ServerLevel) attacker.level(), pos.x, pos.y + 5, pos.z, JParticleType.BITES_THE_DUST);
-        Vec3 v1 = pos.add(3, 3, 3);
-        Vec3 v2 = pos.add(-3, -3, -3);
+        final Vec3 v1 = pos.add(3, 3, 3);
+        final Vec3 v2 = pos.add(-3, -3, -3);
         List<LivingEntity> list = attacker.level().getEntitiesOfClass(LivingEntity.class, new AABB(v1, v2),
                 EntitySelector.LIVING_ENTITY_STILL_ALIVE.and(e -> e != user.getVehicle() && e != user && e != attacker && e != btdEntity));
 

@@ -17,10 +17,10 @@ public final class MeltYourHeartAttack extends AbstractSimpleAttack<MeltYourHear
 
     @Override
     public @NonNull Set<LivingEntity> perform(WhiteSnakeEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         for (int i = 0; i < 10; i++) {
-            float yaw = i * 36F - 180F + i * 3.6F;
+            final float yaw = i * 36F - 180F + i * 3.6F;
             for (int j = 0; j < 10; j++) {
                 WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.level(), user);
                 acidProjectile.markMeltYourHeart();

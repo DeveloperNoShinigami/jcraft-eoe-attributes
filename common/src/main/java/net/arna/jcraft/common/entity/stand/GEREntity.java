@@ -1,10 +1,11 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.goldexperience.requiem.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -24,13 +25,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.function.Consumer;
 
 import static net.arna.jcraft.common.attack.moves.goldexperience.requiem.LifeBeamAttack.CHARGE_TIME;
-import static net.arna.jcraft.common.component.living.CommonHitPropertyComponent.HitAnimation.*;
+import static net.arna.jcraft.common.component.living.CommonHitPropertyComponent.HitAnimation.CRUSH;
+import static net.arna.jcraft.common.component.living.CommonHitPropertyComponent.HitAnimation.HIGH;
 
 public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public static final SimpleAttack<GEREntity> LIGHT_FOLLOWUP = new SimpleAttack<GEREntity>(
@@ -218,16 +218,12 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public boolean initMove(MoveType type) {
         if (type == MoveType.ULTIMATE && !moveContext.get(ReturnToZeroMove.ENTITY_DATA).isEmpty()) {
             RETURN_TO_ZERO.returnToZero(this);
-        } else if (type == MoveType.LIGHT && getCurrentMove() != null && getCurrentMove().getMoveType() == MoveType.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
-            AbstractMove<?, ? super GEREntity> followup = getCurrentMove().getFollowup();
-            if (followup != null) {
-                setMove(followup, (State) followup.getAnimation());
-            }
+            return true;
+        } else if (tryFollowUp(type, MoveType.LIGHT)) {
+            return true;
         } else {
             return super.initMove(type);
         }
-
-        return true;
     }
 
     public int getFlightTime() {
@@ -269,9 +265,10 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
         super.tick();
 
         if (level().isClientSide) {
+            // Fully charged life beam particle effect
             if (getState() == State.LASER && getMoveStun() == (LIFE_BEAM_CHARGE.getDuration() - 18)) {
-                Vec3 offset = GravityChangerAPI.getEyeOffset(this);
-                double x = getX() + offset.x, y = getY() + offset.y, z = getZ() + offset.z;
+                final Vec3 offset = GravityChangerAPI.getEyeOffset(this);
+                final double x = getX() + offset.x, y = getY() + offset.y, z = getZ() + offset.z;
                 for (int i = 0; i < 12; i++) {
                     level().addParticle(ParticleTypes.WITCH, x, y, z, random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
                 }
@@ -310,14 +307,14 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
         SETUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.setup"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.light_followup")));
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<GEREntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<GEREntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(GEREntity attacker, AnimationState state) {
+        public void playAnimation(GEREntity attacker, AnimationState<GEREntity> state) {
             animator.accept(state);
         }
     }

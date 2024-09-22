@@ -19,9 +19,9 @@ public final class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAt
 
     @Override
     public void onInitiate(SilverChariotEntity attacker) {
-        LivingEntity user = attacker.getUser();
+        final LivingEntity user = attacker.getUser();
         if (user != null) {
-            ItemStack mainHand = user.getMainHandItem(), offHand = user.getOffhandItem();
+            final ItemStack mainHand = user.getMainHandItem(), offHand = user.getOffhandItem();
             if (mainHand.is(JItemRegistry.ANUBIS.get())) {
                 attacker.setItemInHand(InteractionHand.OFF_HAND, mainHand.copy());
                 mainHand.shrink(1);
@@ -51,9 +51,9 @@ public final class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAt
     }
 
     private void giveBack(SilverChariotEntity attacker) {
-        LivingEntity user = attacker.getUser();
-        ItemStack itemStack = attacker.getOffhandItem();
-        if (user != null && itemStack != null && !itemStack.isEmpty()) {
+        final LivingEntity user = attacker.getUser();
+        final ItemStack itemStack = attacker.getOffhandItem();
+        if (user != null && !itemStack.isEmpty()) {
             if (user instanceof ServerPlayer serverPlayer) {
                 serverPlayer.addItem(itemStack);
             } else {

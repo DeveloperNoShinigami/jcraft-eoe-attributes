@@ -12,6 +12,7 @@ import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
 import net.arna.jcraft.common.attack.moves.thefool.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -264,21 +265,13 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                 return s;
             }
             case LIGHT -> {
-                if (getCurrentMove() != null && getCurrentMove().getMoveType() == MoveType.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
-                    AbstractMove<?, ? super TheFoolEntity> followup = getCurrentMove().getFollowup();
-                    if (followup != null) {
-                        setMove(followup, (State) followup.getAnimation());
-                    }
-                } else {
+                if (!tryFollowUp(type, MoveType.LIGHT)) {
                     return super.initMove(type);
                 }
             }
-            default -> {
-                return super.initMove(type);
-            }
         }
 
-        return true;
+        return super.initMove(type);
     }
 
     private void initSlam(int type) {
@@ -313,7 +306,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
 
     @Override
     public void standBlock() {
-        LivingEntity user = getUser();
+        final LivingEntity user = getUser();
         if (user == null) {
             return;
         }
@@ -324,14 +317,14 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         }
 
         // The Fool does a special block depending on your height
-        boolean sand = user.getBbHeight() < 1.8f;
+        final boolean sand = user.getBbHeight() < 1.8f;
         setSand(sand);
         if (sand) {
             this.setDistanceOffset(0);
         }
 
         // Projectile deflection
-        List<Projectile> toDeflect = level().getEntitiesOfClass(Projectile.class, getBoundingBox().inflate(0.75f), EntitySelector.ENTITY_STILL_ALIVE);
+        final List<Projectile> toDeflect = level().getEntitiesOfClass(Projectile.class, getBoundingBox().inflate(0.75f), EntitySelector.ENTITY_STILL_ALIVE);
 
         for (Projectile projectile : toDeflect) {
             if (projectile.getOwner() == user) {
@@ -387,12 +380,12 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         super.desummon();
     }
 
-    public static void createFoolishSand(Level world, BlockPos pos, Vec3 vel) {
-        BlockPos midBlockPos = pos.offset(0, 1, 0);
+    public static void createFoolishSand(Level world, TheFoolEntity theFool, BlockPos pos, Vec3 vel) {
+        final BlockPos midBlockPos = pos.subtract(GravityChangerAPI.getGravityDirection(theFool).getNormal());
         if (world.getBlockState(midBlockPos).canOcclude()) {
             return;
         }
-        FallingBlockEntity sand = FallingBlockEntity.fall(world, midBlockPos, JBlockRegistry.FOOLISH_SAND_BLOCK.get().defaultBlockState());
+        final FallingBlockEntity sand = FallingBlockEntity.fall(world, midBlockPos, JBlockRegistry.FOOLISH_SAND_BLOCK.get().defaultBlockState());
         sand.setHurtsEntities(5f, 5);
         sand.setDeltaMovement(vel);
         sand.hurtMarked = true;
@@ -414,27 +407,27 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             if (tickCount % 2 != 0) {
                 return;
             }
-            Vec3 pos = position();
             // If the fool is using any morphing attack, the amount of sand multiplies, and the stand itself changes color
-            int particleNum = isWave() ? 32 : 1 + Mth.clamp(getMoveStun() / 2, 0, 5) * (isSand() ? 2 : 1);
-            int height = isWave() || blocking ? 1 : 2;
+            final int particleNum = isWave() ? 32 : 1 + Mth.clamp(getMoveStun() / 2, 0, 5) * (isSand() ? 2 : 1);
+            final int height = isWave() || blocking ? 1 : 2;
 
+            final double x = getX(), y = getY(), z = getZ();
             for (int i = 0; i < particleNum; i++) {
                 ParticleOptions effect = (isWave() && random.nextFloat() * 0.5f > 0) ?
                         new BlockParticleOption(ParticleTypes.BLOCK, sandState) :
                         new BlockParticleOption(ParticleTypes.FALLING_DUST, sandState);
                 level().addParticle(
                         effect,
-                        pos.x + random.triangle(0, 1),
-                        pos.y + random.triangle(height / 2f, height / 2f),
-                        pos.z + random.triangle(0, 1),
+                        x + random.triangle(0, 1),
+                        y + random.triangle(height / 2f, height / 2f),
+                        z + random.triangle(0, 1),
                         0, 0, 0);
             }
 
             return;
         }
 
-        AbstractMove<?, ? super TheFoolEntity> move = getCurrentMove();
+        final AbstractMove<?, ? super TheFoolEntity> move = getCurrentMove();
         if (lastRemoteInputTime - tickCount > 4) {
             updateRemoteInputs(0, 0, false, false);
         }
@@ -479,18 +472,18 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         DRILL(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.thefool.drill"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.thefool.light_followup")));
 
-        private final BiConsumer<TheFoolEntity, AnimationState> animator;
+        private final BiConsumer<TheFoolEntity, AnimationState<TheFoolEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<TheFoolEntity>> animator) {
             this((fool, builder) -> animator.accept(builder));
         }
 
-        State(BiConsumer<TheFoolEntity, AnimationState> animator) {
+        State(BiConsumer<TheFoolEntity, AnimationState<TheFoolEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(TheFoolEntity attacker, AnimationState builder) {
+        public void playAnimation(TheFoolEntity attacker, AnimationState<TheFoolEntity> builder) {
             animator.accept(attacker, builder);
         }
     }

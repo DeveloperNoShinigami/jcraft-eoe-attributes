@@ -28,7 +28,7 @@ public final class CircleSlashAttack extends AbstractSimpleAttack<CircleSlashAtt
 
     @Override
     public @NonNull Set<LivingEntity> perform(SilverChariotEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         withDamage(originalDamage + attacker.getMoveContext().getInt(CHARGE_TIME) * 0.75f);
         double launchMultiplier = getDamage() / 5; // damage [6.5 to 11]

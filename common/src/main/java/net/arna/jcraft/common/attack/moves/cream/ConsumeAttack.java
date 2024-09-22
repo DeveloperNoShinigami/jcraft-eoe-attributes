@@ -15,7 +15,7 @@ public final class ConsumeAttack extends AbstractSimpleAttack<ConsumeAttack, Cre
 
     @Override
     public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         attacker.setVoidTime(120);
         attacker.setCharging(false);

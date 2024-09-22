@@ -24,20 +24,18 @@ public final class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExper
 
     @Override
     public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        Vec3 direction = user.getLookAngle();
+        final Vec3 direction = user.getLookAngle();
 
-        GETreeEntity tree = new GETreeEntity(attacker.level(), user, direction.scale(1.33));
+        final GETreeEntity tree = new GETreeEntity(attacker.level(), user, direction.scale(1.33));
 
-        Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
+        final Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
         GravityChangerAPI.setDefaultGravityDirection(tree, gravity);
 
-        Vec3 midPos = RotationUtil.vecPlayerToWorld(0.0, attacker.getBbHeight() * 0.25, 0.0, gravity);
-        double e = direction.x;
-        double f = direction.y;
-        double g = direction.z;
-        double l = direction.horizontalDistance();
+        final Vec3 midPos = RotationUtil.vecPlayerToWorld(0.0, attacker.getBbHeight() * 0.25, 0.0, gravity);
+        final double e = direction.x, f = direction.y, g = direction.z;
+        final double l = direction.horizontalDistance();
         tree.moveTo(attacker.getX() + midPos.x, attacker.getY() + midPos.y, attacker.getZ() + midPos.z,
                 (float) (Mth.atan2(e, g) * 57.2957763671875),
                 (float) (Mth.atan2(f, l) * 57.2957763671875)

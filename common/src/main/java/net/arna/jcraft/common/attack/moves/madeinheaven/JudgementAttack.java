@@ -21,8 +21,8 @@ public final class JudgementAttack extends AbstractBarrageAttack<JudgementAttack
 
     @Override
     public @NonNull Set<LivingEntity> perform(MadeInHeavenEntity attacker, LivingEntity user, MoveContext ctx) {
-        Vec3 initPos = ctx.get(INIT_POS);
-        Vec3 initRot = ctx.get(INIT_ROT);
+        final Vec3 initPos = ctx.get(INIT_POS);
+        final Vec3 initRot = ctx.get(INIT_ROT);
 
         Set<LivingEntity> targets = Set.of();
         if (attacker.getMoveStun() > 1) {

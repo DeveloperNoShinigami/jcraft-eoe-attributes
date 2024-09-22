@@ -28,12 +28,12 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
 
     @Override
     public @NonNull Set<LivingEntity> perform(KQBTDEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (targets.isEmpty()) {
             return Set.of();
         }
 
-        Entity btdEntity = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
+        final Entity btdEntity = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
         if (btdEntity instanceof LivingEntity living) {
             ctx.set(BTD_ENTITY, living);
             ctx.set(BTD_POS, btdEntity.position());
@@ -48,9 +48,9 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
     }
 
     private void displayBTDParticles(KQBTDEntity stand, ServerPlayer playerEntity) {
-        Entity bombEntity = stand.getMoveContext().get(BTD_ENTITY);
-        Vec3 bombPos = stand.getMoveContext().get(BTD_POS);
-        boolean bombExists = bombEntity != null;
+        final Entity bombEntity = stand.getMoveContext().get(BTD_ENTITY);
+        final Vec3 bombPos = stand.getMoveContext().get(BTD_POS);
+        final boolean bombExists = bombEntity != null;
 
         double dX1 = 0;
         double dY1 = 0;

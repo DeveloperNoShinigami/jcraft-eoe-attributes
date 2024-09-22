@@ -31,10 +31,10 @@ public final class DetonateAttack extends AbstractMove<DetonateAttack, AbstractK
 
     @Override
     public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
-        CommonBombTrackerComponent.BombData bombData = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
+        final CommonBombTrackerComponent.BombData bombData = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
 
-        Entity bombEntity = bombData.bombEntity;
-        Vec3 bombPos = bombData.getBombPos();
+        final Entity bombEntity = bombData.bombEntity;
+        final Vec3 bombPos = bombData.getBombPos();
 
         if (bombPos != null) {
             if (bombEntity instanceof ItemEntity || bombEntity instanceof BubbleProjectile) {
@@ -59,16 +59,16 @@ public final class DetonateAttack extends AbstractMove<DetonateAttack, AbstractK
     }
 
     public static void explode(AbstractKillerQueenEntity<?, ?> stand, Entity user, Vec3 pos) {
-        ServerLevel serverWorld = (ServerLevel) stand.level();
+        final ServerLevel serverWorld = (ServerLevel) stand.level();
 
         JCraft.createParticle(serverWorld, pos.x, pos.y, pos.z, JParticleType.BOOM);
         JUtils.serverPlaySound(JSoundRegistry.KQ_EXPLODE.get(), serverWorld, pos, 96);
 
-        DamageSource damageSource = JDamageSources.stand(stand);
-        Set<? extends LivingEntity> toExplode = AbstractSimpleAttack.findHits(stand, pos, 4.4, damageSource);
+        final DamageSource damageSource = JDamageSources.stand(stand);
+        final Set<? extends LivingEntity> toExplode = AbstractSimpleAttack.findHits(stand, pos, 4.4, damageSource);
 
         for (LivingEntity living : toExplode) {
-            Vec3 kbVec = living.getEyePosition().subtract(pos).normalize();
+            final Vec3 kbVec = living.getEyePosition().subtract(pos).normalize();
             StandEntity.damageLogic(stand.level(), living, kbVec, 2, 3, true, 11f, false, 4, damageSource, user, null);
             living.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0, true, false));
         }

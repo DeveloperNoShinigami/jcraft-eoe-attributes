@@ -22,12 +22,12 @@ public final class RedirectAttack extends AbstractMove<RedirectAttack, Magicians
 
     @Override
     public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
-        List<AnkhProjectile> ankhs = attacker.level().getEntitiesOfClass(AnkhProjectile.class,
-                attacker.getBoundingBox().inflate(32), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+        final List<AnkhProjectile> ankhs = attacker.level().getEntitiesOfClass(AnkhProjectile.class,
+                attacker.getBoundingBox().inflate(32), EntitySelector.ENTITY_STILL_ALIVE);
 
-        Vec3 eyePos = getOffsetHeightPos(attacker);
+        final Vec3 eyePos = getOffsetHeightPos(attacker);
         if (!ankhs.isEmpty()) {
-            Vec3 pos = JUtils.raycastAll(user, eyePos, eyePos.add(user.getLookAngle().scale(24)), ClipContext.Fluid.NONE);
+            final Vec3 pos = JUtils.raycastAll(user, eyePos, eyePos.add(user.getLookAngle().scale(24)), ClipContext.Fluid.NONE).getLocation();
 
             for (AnkhProjectile ankh : ankhs) {
                 if (ankh.getOwner() != user) {

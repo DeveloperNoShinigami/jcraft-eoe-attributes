@@ -37,7 +37,7 @@ public final class SurpriseMove extends AbstractMove<SurpriseMove, CreamEntity> 
         // OUT_DIR is set in .withAction() in CreamEntity.java
 
         ctx.get(OUT_POS).sub(ctx.get(OUT_DIR));
-        var outPos = ctx.get(OUT_POS);
+        final Vector3f outPos = ctx.get(OUT_POS);
         attacker.setPos(new Vec3(outPos.x(), outPos.y(), outPos.z()));
         attacker.setFreePos(outPos);
 

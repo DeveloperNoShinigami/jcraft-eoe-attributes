@@ -34,8 +34,8 @@ public final class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> 
     public void onInitiate(D4CEntity attacker) {
         super.onInitiate(attacker);
 
-        MoveContext ctx = attacker.getMoveContext();
-        boolean placingFirstStack = ctx.getBoolean(PLACING_FIRST_STACK);
+        final MoveContext ctx = attacker.getMoveContext();
+        final boolean placingFirstStack = ctx.getBoolean(PLACING_FIRST_STACK);
         if (placingFirstStack) {
             ctx.set(PLACING, placeableStacks.get(attacker.getRandom().nextInt(placeableStacks.size())));
         }
@@ -46,11 +46,14 @@ public final class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> 
 
     @Override
     public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        ItemStack offHandStack = attacker.getOffhandItem();
-        ItemEntity item = new ItemEntity(attacker.level(), attacker.getX(), attacker.getY() + 0.2, attacker.getZ(),
+        final ItemStack offHandStack = attacker.getOffhandItem();
+
+        final ItemEntity item = new ItemEntity(attacker.level(), attacker.getX(), attacker.getY() + 0.2, attacker.getZ(),
                 MockItem.createMockStack(ctx.get(PLACING)), 0, 0, 0);
         item.setPickUpDelay(200);
         attacker.level().addFreshEntity(item);
+
+        // Remove item from D4C's hand
         offHandStack.shrink(1);
 
         return Set.of();

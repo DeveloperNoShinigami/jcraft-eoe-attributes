@@ -20,7 +20,7 @@ public final class CrossfireVariationAttack extends AbstractMove<CrossfireVariat
     public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
         int orbitRange = user.isShiftKeyDown() ? 7 : 5;
         for (int i = 0; i < variationAnkhs; i++) {
-            AnkhProjectile ankh = new AnkhProjectile(attacker.level(), user);
+            final AnkhProjectile ankh = new AnkhProjectile(attacker.level(), user);
             ankh.setDeltaMovement(0.0, 1.0, 0.0);
             ankh.setPos(getOffsetHeightPos(attacker).add(0.0, 1.0, 0.0));
             ankh.setVariation(true);

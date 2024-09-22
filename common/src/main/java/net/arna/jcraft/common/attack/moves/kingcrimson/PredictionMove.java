@@ -76,26 +76,26 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
             return;
         }
 
-        Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
+        final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
         for (Entity entity : getEntitiesToCatch(attacker.level(), attacker, player)) {
             predictionInfo.put(entity, entity.position());
         }
 
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeBoolean(true);
         buf.writeVarInt(getWindupPoint());
         NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ERASE_PREDICTION_STATE, buf);
     }
 
     public static void finishPrediction(KingCrimsonEntity attacker) {
-        Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
+        final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
         for (Map.Entry<Entity, Vec3> prediction : predictionInfo.entrySet()) {
-            Entity entity = prediction.getKey();
+            final Entity entity = prediction.getKey();
             if (entity == null) {
                 continue;
             }
 
-            Vec3 pos = prediction.getValue();
+            final Vec3 pos = prediction.getValue();
             entity.teleportToWithTicket(pos.x, pos.y, pos.z);
         }
 
@@ -104,7 +104,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     }
 
     public static void cancelPrediction(KingCrimsonEntity attacker) {
-        Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
+        final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
         cancelPrediction(attacker, predictionInfo);
     }
 
@@ -118,8 +118,8 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     }
 
     public void tickPredictions(KingCrimsonEntity attacker) {
-        Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
-        Map<Entity, Vec3> predictions = new HashMap<>(predictionInfo);
+        final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
+        final Map<Entity, Vec3> predictions = new HashMap<>(predictionInfo);
         updatePredictions(predictions.entrySet(), attacker.getMoveStun());
         predictionInfo.clear();
         predictionInfo.putAll(predictions);
@@ -144,6 +144,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
         }
     }
 
+    //todo: fixme
     private static void updatePrediction(Map<Entity, Map.Entry<Entity, Vec3>> predictions, Map.Entry<Entity, Vec3> prediction,
                                          Set<Entity> updated, int ticksLeft) {
         Entity entity = prediction.getKey();

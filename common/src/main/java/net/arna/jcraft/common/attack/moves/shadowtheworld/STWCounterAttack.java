@@ -29,9 +29,9 @@ public final class STWCounterAttack extends AbstractCounterAttack<STWCounterAtta
     @Override
     public void onInitiate(ShadowTheWorldEntity attacker) {
         super.onInitiate(attacker);
-        LivingEntity user = attacker.getUserOrThrow();
+        final LivingEntity user = attacker.getUserOrThrow();
         if (user instanceof ServerPlayer player) {
-            JSpec<?,?> spec = JComponentPlatformUtils.getSpecData(player).getSpec();
+            final JSpec<?,?> spec = JComponentPlatformUtils.getSpecData(player).getSpec();
             if (spec != null) spec.cancelMove();
 
             JUtils.around((ServerLevel) player.level(), player.position(), 96).forEach(
@@ -54,8 +54,8 @@ public final class STWCounterAttack extends AbstractCounterAttack<STWCounterAtta
         if (countered == null || !attacker.hasUser()) {
             return;
         }
-        LivingEntity user = attacker.getUserOrThrow();
-        Vec3 behind = countered.position().subtract(countered.getLookAngle());
+        final LivingEntity user = attacker.getUserOrThrow();
+        final Vec3 behind = countered.position().subtract(countered.getLookAngle());
 
         user.setDeltaMovement(0, 0, 0);
         user.hurtMarked = true;

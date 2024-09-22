@@ -194,7 +194,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                         Vec3 heightOffset = upVec.scale(0.5);
                         Vec3 eyePos = shooter.position().add(heightOffset);
                         Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
-                                (entity -> !(entity instanceof IOwnable ownable) || ownable.getMaster() != user));
+                                (entity -> !(entity instanceof IOwnable ownable) || ownable.getMaster() != user)).getLocation();
 
                         user.level().getEntitiesOfClass(HGNetEntity.class, user.getBoundingBox().inflate(96), EntitySelector.LIVING_ENTITY_STILL_ALIVE)
                                 .stream()
@@ -257,7 +257,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
     @Override
     public boolean initMove(MoveType type) {
-        LivingEntity user = getUserOrThrow();
+        final LivingEntity user = getUserOrThrow();
         if (!tryFollowUp(type, MoveType.LIGHT)) {
             if (type == MoveType.SPECIAL1 && user.isShiftKeyDown()) {
                 if (!JUtils.canAct(user)) {
@@ -267,20 +267,14 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                 List<HGNetEntity> nets = level().getEntitiesOfClass(HGNetEntity.class,
                         getBoundingBox().inflate(64), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
-                LivingEntity shooter = isRemote() ? this : user;
+                final LivingEntity shooter = isRemote() ? this : user;
 
-                Vec3 upVec = GravityChangerAPI.getEyeOffset(shooter);
-                Vec3 heightOffset = upVec.scale(0.5);
-                Vec3 eyePos = shooter.position().add(heightOffset);
+                final Vec3 heightOffset = GravityChangerAPI.getEyeOffset(shooter).scale(0.5);
+                final Vec3 eyePos = shooter.position().add(heightOffset);
 
                 if (!nets.isEmpty()) {
-                    Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
-                            (entity -> {
-                                if (entity instanceof IOwnable ownable && ownable.getMaster() == user) {
-                                    return false;
-                                }
-                                return true;
-                            }));
+                    final Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
+                            (entity -> !(entity instanceof IOwnable ownable) || ownable.getMaster() != user)).getLocation();
 
                     for (HGNetEntity net : nets) {
                         if (net.getMaster() != user) {
@@ -312,7 +306,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             }
         }
 
-        boolean isRemote = isRemote();
+        final boolean isRemote = isRemote();
         setNoGravity(isRemote);
         if (!isRemote) {
             return;
@@ -322,8 +316,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             // Called for EVERYONE
             JCraft.getClientEntityHandler().hierophantGreenRemoteClientTick(this);
         } else {
-            double f = getRemoteForwardInput();
-            double s = getRemoteSideInput();
+            final double f = getRemoteForwardInput(), s = getRemoteSideInput();
 
             tickRemoteMovement(f, s, getRemoteJumpInput(), getRemoteSneakInput());
 
@@ -345,19 +338,19 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
     }
 
     public void tickRemoteMovement(double f, double s, boolean jump, boolean sneak) {
-        Vec3 pos = position();
         resetFallDistance();
 
+        final Vec3 pos = position();
         // 1 tick of inertia, helping movement be fluid as well as dealing with packet drops
         if (lastRemoteInputTime - tickCount > 2) {
             updateRemoteInputs(0, 0, false, false);
         }
-        Vec3 rotVec = new Vec3(getLookAngle().x, 0, getLookAngle().z).normalize();
+        final Vec3 rotVec = new Vec3(getLookAngle().x, 0, getLookAngle().z).normalize();
 
-        double dragMult = getMoveStun() > 0 ? 0.1 : 0.2;
-        double moveSpeed = 0.5;
+        final double dragMult = getMoveStun() > 0 ? 0.1 : 0.2;
+        final double moveSpeed = 0.5;
 
-        Vec3 upVec = GravityChangerAPI.getEyeOffset(this);
+        final Vec3 upVec = GravityChangerAPI.getEyeOffset(this);
 
         if (jump) {
             remoteSpeed = remoteSpeed.add(upVec.scale(moveSpeed));
@@ -373,7 +366,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
         remoteSpeed = remoteSpeed.scale(dragMult);
 
-        Vec3 userPos = getUserOrThrow().position();
+        final Vec3 userPos = getUserOrThrow().position();
         if (pos.add(remoteSpeed).distanceToSqr(userPos) > 30 * 30) {
             remoteSpeed = userPos.subtract(pos).scale(0.025); // 1/40th so it scales with distance
         }
@@ -417,18 +410,18 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         LEFT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.hg.left"))),
         RIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.hg.right")));
 
-        private final BiConsumer<HGEntity, AnimationState> animator;
+        private final BiConsumer<HGEntity, AnimationState<HGEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<HGEntity>> animator) {
             this((whiteSnake, builder) -> animator.accept(builder));
         }
 
-        State(BiConsumer<HGEntity, AnimationState> animator) {
+        State(BiConsumer<HGEntity, AnimationState<HGEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(HGEntity attacker, AnimationState builder) {
+        public void playAnimation(HGEntity attacker, AnimationState<HGEntity> builder) {
             animator.accept(attacker, builder);
         }
     }

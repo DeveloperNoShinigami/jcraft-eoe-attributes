@@ -45,23 +45,6 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
         proCount = 3;
         conCount = 3;
 
-        freespace =
-                """
-                        BNBs:
-                        ~ represents a queued attack
-                                                
-                            -the classic
-                            Light>Barrage>Light>Knee>Advancing Barrage~Star Finger~Star Breaker
-                            
-                            -the rushdown
-                            Light~Light>dash Barrage>cr.Light>Star Finger>Knee>Light>Advancing Barrage>Light~Light
-                            
-                            -the blowback
-                            Inhale>...>Star Finger>Star Breaker>Barrage>...
-
-                            -the poke
-                            Star Finger>Knee>Light>Advancing Barrage~Light>Barrage>Light>Star Breaker""";
-
         //moves = List.of(light, heavy, barrage, starfinger, inhale, lowkick, starfinger, jump);
     }
 

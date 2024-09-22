@@ -32,7 +32,7 @@ public final class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack,
     protected void processTarget(CMoonEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
-        Direction oppositeGravity = GravityChangerAPI.getGravityDirection(target).getOpposite();
+        final Direction oppositeGravity = GravityChangerAPI.getGravityDirection(target).getOpposite();
         GravityChangerAPI.addGravity(target, new Gravity(oppositeGravity, 2, 60, GRAVITY_SOURCE));
         target.addEffect(new MobEffectInstance(JStatusRegistry.WEIGHTLESS.get(), 60, 0, true, false));
         // Launches them up relative to their original gravity, to prevent ground clipping

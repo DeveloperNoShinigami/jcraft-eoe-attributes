@@ -39,7 +39,7 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
 
     @Override
     public @NonNull Set<LivingEntity> perform(WhiteSnakeEntity attacker, LivingEntity user, MoveContext ctx) {
-        ItemStack itemStack = attacker.getOffhandItem();
+        final ItemStack itemStack = attacker.getOffhandItem();
 
         super.perform(attacker, user, ctx).stream().findFirst().ifPresent(
                 (target) -> {
@@ -51,8 +51,7 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
                     CompoundTag data = itemStack.getOrCreateTag();
                     CommonStandComponent standData = JComponentPlatformUtils.getStandData(target);
 
-                    StandType targetStand = standData.getType();
-                    if (targetStand != null) {
+                    if (standData.getType() != null) {
                         return; // Can't overwrite other's stands
                     }
                     if (data.contains("StandID", Tag.TAG_INT)) {

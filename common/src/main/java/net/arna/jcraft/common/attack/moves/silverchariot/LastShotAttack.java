@@ -20,7 +20,7 @@ public final class LastShotAttack extends AbstractMove<LastShotAttack, SilverCha
             return Set.of();
         }
 
-        RapierProjectile rapier = new RapierProjectile(attacker.level(), user, attacker);
+        final RapierProjectile rapier = new RapierProjectile(attacker.level(), user, attacker);
         rapier.shootFromRotation(attacker, user.getXRot(), user.getYRot(), 0, 2, 1);
         rapier.setSkin(attacker.getMode() != SilverChariotEntity.Mode.ARMORLESS ?
                 -attacker.getMode().ordinal() : // Armorless and possessed output -1 and -2

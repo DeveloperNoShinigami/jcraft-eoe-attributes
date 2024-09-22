@@ -30,14 +30,13 @@ public final class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSpl
 
     @Override
     public @NonNull Set<LivingEntity> perform(HGEntity attacker, LivingEntity user, MoveContext ctx) {
-        int emeraldCount = 3 + ctx.getInt(CHARGE_TIME) / 10;
+        final int emeraldCount = 3 + ctx.getInt(CHARGE_TIME) / 10;
 
         for (int i = 0; i < emeraldCount; i++) {
-            EmeraldProjectile emerald = new EmeraldProjectile(attacker.level(), user);
+            final EmeraldProjectile emerald = new EmeraldProjectile(attacker.level(), user);
             emerald.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, speed, 5F);
 
-            Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
-            Vec3 heightOffset = upVec.scale(0.75);
+            final Vec3 heightOffset = GravityChangerAPI.getEyeOffset(user).scale(0.75);
             emerald.setPos(attacker.getBaseEntity().position().add(heightOffset));
 
             if (reflect) {
@@ -62,7 +61,7 @@ public final class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSpl
 
     @Override
     public @NonNull EmeraldSplashAttack copy() {
-        EmeraldSplashAttack emeraldSplashAttack = copyExtras(new EmeraldSplashAttack(getCooldown(), getDuration(), getMoveDistance(), getDamage(), getStun(), getKnockback(), getOffset(), getHitMoments(), speed));
+        final EmeraldSplashAttack emeraldSplashAttack = copyExtras(new EmeraldSplashAttack(getCooldown(), getDuration(), getMoveDistance(), getDamage(), getStun(), getKnockback(), getOffset(), getHitMoments(), speed));
         if (reflect) {
             emeraldSplashAttack.withReflect();
         }

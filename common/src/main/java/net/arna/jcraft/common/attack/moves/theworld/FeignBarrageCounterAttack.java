@@ -37,8 +37,8 @@ public final class FeignBarrageCounterAttack extends AbstractCounterAttack<Feign
         if (countered == null || !attacker.hasUser()) {
             return;
         }
-        LivingEntity user = attacker.getUserOrThrow();
-        Vec3 behind = countered.position().subtract(countered.getLookAngle());
+        final LivingEntity user = attacker.getUserOrThrow();
+        final Vec3 behind = countered.position().subtract(countered.getLookAngle());
 
         user.setDeltaMovement(0, 0, 0);
         user.hurtMarked = true;

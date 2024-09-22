@@ -51,26 +51,26 @@ public final class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends Abs
     }
 
     public static void doTimeSkip(IAttacker<?, ?> attacker, LivingEntity user, double distance, List<SoundEvent> sounds) {
-        boolean hasVehicle = user.isPassenger();
+        final boolean hasVehicle = user.isPassenger();
 
         if (hasVehicle) {
             distance /= 3;
         }
 
-        Vec3 rotVec = user.getLookAngle();
+        final Vec3 rotVec = user.getLookAngle();
         //todo: find length of line with direction rotVec, from the center of the stand users bounding box to the edge
         //      then subtract that from the position. this should prevent any TP clipping bullshit
-        Vec3 eyePos = user.getEyePosition();
+        final Vec3 eyePos = user.getEyePosition();
         HitResult hitResult = attacker.getEntityWorld().clip(
                 new ClipContext(
                         eyePos,
                         eyePos.add(rotVec.scale(distance)),
                         ClipContext.Block.COLLIDER,
                         ClipContext.Fluid.NONE, user));
-        Vec3 tpPos = hitResult.getLocation();
+        final Vec3 tpPos = hitResult.getLocation();
 
         // 3s minimum ult cooldown
-        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
+        final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
         if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) < 60) {
             cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 60);
         }

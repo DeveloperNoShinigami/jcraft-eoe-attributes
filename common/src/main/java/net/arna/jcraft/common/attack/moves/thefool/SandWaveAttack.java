@@ -32,7 +32,7 @@ public final class SandWaveAttack extends AbstractEffectInflictingBarrageAttack<
     public void tick(TheFoolEntity attacker, int moveStun) {
         super.tick(attacker, moveStun);
 
-        LivingEntity user = attacker.getUser();
+        final LivingEntity user = attacker.getUser();
         if (user == null || !user.onGround()) {
             return;
         }

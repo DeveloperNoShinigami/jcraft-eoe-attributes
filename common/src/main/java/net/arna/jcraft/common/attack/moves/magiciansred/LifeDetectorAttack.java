@@ -17,7 +17,7 @@ public final class LifeDetectorAttack extends AbstractMove<LifeDetectorAttack, M
 
     @Override
     public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
-        LifeDetectorEntity lifeDetector = new LifeDetectorEntity(attacker.level());
+        final LifeDetectorEntity lifeDetector = new LifeDetectorEntity(attacker.level());
         lifeDetector.setMaster(user);
         lifeDetector.moveTo(attacker.getX(), attacker.getY() + 1.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());
         attacker.level().addFreshEntity(lifeDetector);

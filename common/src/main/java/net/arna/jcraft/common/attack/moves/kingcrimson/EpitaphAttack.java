@@ -35,10 +35,10 @@ public final class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, Ki
         if (countered == null) {
             return;
         }
-        LivingEntity user = attacker.getUserOrThrow();
-        Vec3 ePos = countered.position();
+        final LivingEntity user = attacker.getUserOrThrow();
+        final Vec3 ePos = countered.position();
         if (!countered.isInWall()) {
-            Vec3 uPos = user.position();
+            final Vec3 uPos = user.position();
 
             countered.teleportToWithTicket(uPos.x, uPos.y, uPos.z);
             user.teleportToWithTicket(ePos.x, ePos.y, ePos.z);

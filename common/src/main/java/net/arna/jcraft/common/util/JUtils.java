@@ -225,15 +225,19 @@ public final class JUtils {
         );
     }
 
-    public static Vec3 raycastAll(Entity entity, Vec3 start, Vec3 end, ClipContext.Fluid fluidHandling) {
+    public static HitResult raycastAll(Entity entity, Vec3 start, Vec3 end, ClipContext.Fluid fluidHandling) {
         return raycastAll(entity, start, end, fluidHandling, null);
     }
 
-    public static Vec3 raycastAll(Entity entity, Vec3 start, Vec3 end, ClipContext.Fluid fluidHandling, Predicate<Entity> entityPredicate) {
+    /**
+     * @return The closer {@link EntityHitResult} or {@link BlockHitResult}, defaulting to the BlockHitResult
+     * if the distance is equal or no entity was hit.
+     */
+    public static HitResult raycastAll(Entity entity, Vec3 start, Vec3 end, ClipContext.Fluid fluidHandling, Predicate<Entity> entityPredicate) {
         Level world = entity.level();
         double rangeSquared = start.distanceToSqr(end);
 
-        Predicate<Entity> combined = EntitySelector.NO_CREATIVE_OR_SPECTATOR;
+        Predicate<Entity> combined = EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> !e.isPassengerOfSameVehicle(entity));
         if (entityPredicate != null) {
             combined = combined.and(entityPredicate);
         }
@@ -248,16 +252,16 @@ public final class JUtils {
 
         Vec3 blockPos = bHit.getLocation();
 
-        if (entityHit && !eHit.getEntity().isPassengerOfSameVehicle(entity)) {
+        if (entityHit) {
             Vec3 entityPos = eHit.getLocation();
             if (blockPos.distanceToSqr(start) > entityPos.distanceToSqr(start)) {
-                return entityPos;
+                return eHit;
             } else {
-                return blockPos;
+                return bHit;
             }
         }
 
-        return blockPos;
+        return bHit;
     }
 
     public static Direction getLookDirection(Entity entity) {
@@ -625,10 +629,14 @@ public final class JUtils {
     public static boolean playAnimIfUnoccupied(LivingEntity living, String animation) {
         JSpec<?, ?> spec = JComponentPlatformUtils.getSpecData(living).getSpec();
         if (spec != null && spec.moveStun > 0) return false;
+        playAnim(living, animation);
+        return true;
+    }
+
+    public static void playAnim(LivingEntity living, String animation) {
         if (living instanceof ServerPlayer player) {
             around(player.serverLevel(), player.position(), PLAYER_ANIMATION_DIST).forEach(p -> PlayerAnimPacket.send(player, p, animation));
         } else if (living instanceof JSpecHolder specHolder) { specHolder.setAnimation(animation, 1.0f); }
-        return true;
     }
 
     public static Collection<ServerPlayer> around(ServerLevel world, Vec3 pos, double radius) {

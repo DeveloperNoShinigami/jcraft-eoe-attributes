@@ -36,7 +36,7 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (!targets.isEmpty()) endCharge(attacker);
         return targets;
     }
@@ -61,7 +61,7 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
     protected void tickChargeAttack(StandEntity<A, S> attacker, boolean shouldPerform, float moveDistance, int windupPoint) {
         if (shouldPerform) {
             //float t = 1f - (float) curMoveStun / (float) realInitTime;
-            Vec3 newPos = advanceChargePos(attacker, moveDistance, windupPoint);
+            final Vec3 newPos = advanceChargePos(attacker, moveDistance, windupPoint);
             //stand.setDistanceOffset(1 + attackDist * t * t);
             attacker.setFreePos(new Vector3f((float) newPos.x, (float) newPos.y, (float) newPos.z));
             attacker.setFree(true);

@@ -21,19 +21,19 @@ public final class RedBindAttack extends AbstractSimpleAttack<RedBindAttack, Mag
 
     @Override
     public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (targets.isEmpty()) {
             return targets;
         }
 
-        LivingEntity boundEntity = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
+        final LivingEntity boundEntity = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
 
         if (JUtils.isBlocking(boundEntity)) {
             return Set.of();
         }
 
         // Remove Stand
-        StandEntity<?, ?> boundStand = JUtils.getStand(boundEntity);
+        final StandEntity<?, ?> boundStand = JUtils.getStand(boundEntity);
         if (boundStand != null) {
             boundStand.setCurrentMove(null);
             boundStand.setMoveStun(0);
@@ -45,7 +45,7 @@ public final class RedBindAttack extends AbstractSimpleAttack<RedBindAttack, Mag
         JCraft.stun(boundEntity, RedBindEntity.LIFE_TIME, 0, user);
 
         // Create and bind
-        RedBindEntity redBind = new RedBindEntity(attacker.level());
+        final RedBindEntity redBind = new RedBindEntity(attacker.level());
         redBind.setPos(boundEntity.position());
         redBind.setMaster(user);
         redBind.setBoundEntity(boundEntity);

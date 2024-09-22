@@ -22,13 +22,13 @@ public final class ChargedSpewAttack extends AbstractSimpleAttack<ChargedSpewAtt
 
     @Override
     public @NonNull Set<LivingEntity> perform(WhiteSnakeEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        Direction gravity = GravityChangerAPI.getGravityDirection(user);
+        final Direction gravity = GravityChangerAPI.getGravityDirection(user);
         for (int i = 0; i < 5; i++) {
-            WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.level(), user);
+            final WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.level(), user);
 
-            Vec2 corrected = RotationUtil.rotPlayerToWorld(user.getYRot() - 75F + i * 37.5F, user.getXRot(), gravity);
+            final Vec2 corrected = RotationUtil.rotPlayerToWorld(user.getYRot() - 75F + i * 37.5F, user.getXRot(), gravity);
             JUtils.shoot(acidProjectile, user, corrected.y, corrected.x, 0, 0.66F, 0);
 
             acidProjectile.setPos(attacker.getEyePosition());

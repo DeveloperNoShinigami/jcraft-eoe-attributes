@@ -146,17 +146,15 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             .withAction(HorusEntity::iceLance);
 
     private static void iceLance(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
-        AbstractMove<?, ? super HorusEntity> move = attacker.getCurrentMove();
+        final AbstractMove<?, ? super HorusEntity> move = attacker.getCurrentMove();
         if (move == null) return;
 
         attacker.lastLargeIcicle = new LargeIcicleProjectile(attacker.level(), user);
 
-        Vec3i gravity = GravityChangerAPI.getGravityDirection(user).getNormal();
-        Vec3 velocity = user.getLookAngle();
-        double e = velocity.x;
-        double f = velocity.y;
-        double g = velocity.z;
-        double l = velocity.horizontalDistance();
+        final Vec3i gravity = GravityChangerAPI.getGravityDirection(user).getNormal();
+        final Vec3 velocity = user.getLookAngle();
+        final double e = velocity.x, f = velocity.y, g = velocity.z;
+        final double l = velocity.horizontalDistance();
         attacker.lastLargeIcicle.moveTo(
                 attacker.getX() - gravity.getX() * 1.5,
                 attacker.getY() - gravity.getY() * 1.5,
@@ -211,7 +209,6 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             )
             .markRanged()
             .withAction(HorusEntity::placeIceBranch);
-    // TODO: large icicle barrage ult
     public static final EffectInflictingAttack<HorusEntity> PERFECT_FREEZE = new EffectInflictingAttack<HorusEntity>(50 * 20,
             14, 30, 0f, 4f, 10, 2.5f, 0.3f, 0,
             List.of(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 0, false, true))
@@ -228,7 +225,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     private static void perfectFreeze(HorusEntity attacker, LivingEntity livingEntity, MoveContext context, Set<LivingEntity> livingEntities) {
         final int NUM_BRANCHES = 3;
         for (int i = 0; i < NUM_BRANCHES; i++) {
-            IceBranchProjectile iceBranch = placeIceBranch(attacker, livingEntity, context, livingEntities);
+            final IceBranchProjectile iceBranch = placeIceBranch(attacker, livingEntity, context, livingEntities);
             iceBranch.setYRot(iceBranch.getYRot() + (360.0F * i) / NUM_BRANCHES);
         }
         attacker.level().getEntitiesOfClass(Projectile.class, attacker.getBoundingBox().inflate(5.0)).forEach(
@@ -238,7 +235,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     }
 
     private static IceBranchProjectile placeIceBranch(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
-        IceBranchProjectile iceBranchProjectile = new IceBranchProjectile(attacker.level(), user, 0);
+        final IceBranchProjectile iceBranchProjectile = new IceBranchProjectile(attacker.level(), user, 0);
         iceBranchProjectile.moveTo(attacker.getX(), attacker.getY(), attacker.getZ(), -attacker.getYRot() + 180, -attacker.getXRot());
         attacker.level().addFreshEntity(iceBranchProjectile);
         return iceBranchProjectile;
@@ -308,7 +305,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         for (int batch = 0; batch < 2; batch++) {
             final float offset = batch == 0 ? 10.0F : -10.0F;
             for (int i = 1; i < 4; i++) {
-                IcicleProjectile icicle = new IcicleProjectile(attacker.level(), user);
+                final IcicleProjectile icicle = new IcicleProjectile(attacker.level(), user);
                 final float pitch = user.getXRot();
                 final float yaw = user.getYRot() + i * offset;
                 Vec3 rotVec = RotationUtil.vecPlayerToWorld(RotationUtil.rotToVec(yaw, pitch), GravityChangerAPI.getGravityDirection(user));
@@ -325,11 +322,10 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     }
 
     private static void fireIcicle(HorusEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
-        IcicleProjectile icicle = new IcicleProjectile(attacker.level(), user);
+        final IcicleProjectile icicle = new IcicleProjectile(attacker.level(), user);
         icicle.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, 1.75F, 0.1F);
 
-        Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
-        Vec3 heightOffset = upVec.scale(0.75);
+        final Vec3 heightOffset = GravityChangerAPI.getEyeOffset(user).scale(0.75);
         icicle.setPos(attacker.getBaseEntity().position().add(heightOffset).add(
                 attacker.getRandom().nextGaussian() / 3,
                 attacker.getRandom().nextGaussian() / 3,
@@ -345,8 +341,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         attacker.lastLargeIcicle = new LargeIcicleProjectile(attacker.level(), user);
 
         // Shoot slightly upwards
-        Direction gravity = GravityChangerAPI.getGravityDirection(user);
-        Vec3 velocity = attacker.isFree() || !user.onGround() ?
+        final Direction gravity = GravityChangerAPI.getGravityDirection(user);
+        final Vec3 velocity = attacker.isFree() || !user.onGround() ?
                 attacker.getLookAngle()
                         .add(RotationUtil.vecPlayerToWorld(new Vec3(0, -1, 0), gravity))
                         .scale(0.01)
@@ -354,10 +350,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                 user.getLookAngle()
                         .add(RotationUtil.vecPlayerToWorld(new Vec3(0, 1, 0), gravity))
                         .scale(0.01);
-        double e = velocity.x;
-        double f = velocity.y;
-        double g = velocity.z;
-        double l = velocity.horizontalDistance();
+        final double e = velocity.x, f = velocity.y, g = velocity.z;
+        final double l = velocity.horizontalDistance();
         attacker.lastLargeIcicle.moveTo(attacker.getX(), attacker.getY(), attacker.getZ(),
                 (float) (Mth.atan2(-e, -g) * 57.2957763671875),
                 (float) (Mth.atan2(f, l) * 57.2957763671875)
@@ -369,21 +363,18 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     }
 
     private static void fireChargedIcicle(HorusEntity attacker, LivingEntity user, MoveContext context) {
-        LargeIcicleProjectile instantIcicle = new LargeIcicleProjectile(attacker.level(), user);
+        final LargeIcicleProjectile instantIcicle = new LargeIcicleProjectile(attacker.level(), user);
         float scale = attacker.icicleChargeTime / (MAX_ICICLE_CHARGE_TIME - 2.0f);
         if (scale < 0.1f) scale = 0.1f;
         if (scale > 1.0f) scale = 1.0f;
         instantIcicle.setScale(scale);
         instantIcicle.setInstant(true);
 
-        Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
-        Vec3 heightOffset = upVec.scale(0.75);
+        final Vec3 heightOffset = GravityChangerAPI.getEyeOffset(user).scale(0.75);
 
-        Vec3 velocity = user.getLookAngle().scale(0.01);
-        double e = velocity.x;
-        double f = velocity.y;
-        double g = velocity.z;
-        double l = velocity.horizontalDistance();
+        final Vec3 velocity = user.getLookAngle().scale(0.01);
+        final double e = velocity.x, f = velocity.y, g = velocity.z;
+        final double l = velocity.horizontalDistance();
 
         instantIcicle.moveTo(attacker.getX() + heightOffset.x, attacker.getY() + heightOffset.y, attacker.getZ() + heightOffset.z,
                 (float) (Mth.atan2(-e, -g) * 57.2957763671875),
@@ -398,7 +389,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     @Override
     public void tick() {
         super.tick();
-        int moveStun = getMoveStun();
+        final int moveStun = getMoveStun();
         if (moveStun <= MAX_ICICLE_CHARGE_TIME + 1) {
             if (level().isClientSide()) {
                 if (getState() == State.CHARGE_ICICLE) {
@@ -481,7 +472,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         }
 
         @Override
-        public void playAnimation(HorusEntity attacker, AnimationState builder) {
+        public void playAnimation(HorusEntity attacker, AnimationState<HorusEntity> builder) {
             animator.accept(builder);
         }
     }

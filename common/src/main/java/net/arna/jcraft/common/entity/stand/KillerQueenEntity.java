@@ -116,9 +116,9 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
         GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.killerqueen.grab_hit")));
 
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<KillerQueenEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<KillerQueenEntity>> animator) {
             this.animator = animator;
         }
 

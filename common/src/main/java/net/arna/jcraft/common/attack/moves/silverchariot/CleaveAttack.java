@@ -18,7 +18,7 @@ public final class CleaveAttack extends AbstractSimpleAttack<CleaveAttack, Silve
     public void onInitiate(SilverChariotEntity attacker) {
         super.onInitiate(attacker);
 
-        LivingEntity user = attacker.getUserOrThrow();
+        final LivingEntity user = attacker.getUserOrThrow();
         AbstractChargeAttack.prepDetachmentMove(attacker, user);
         attacker.setFreePos((user.position().add(attacker.getUserOrThrow().getLookAngle().scale(1.5)).toVector3f()));
         attacker.setFree(true);

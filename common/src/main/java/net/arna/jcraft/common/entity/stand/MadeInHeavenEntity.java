@@ -342,8 +342,8 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         if (!hasUser()) {
             return;
         }
-        LivingEntity user = getUserOrThrow();
-        int aTime = getAccelTime();
+        final LivingEntity user = getUserOrThrow();
+        final int aTime = getAccelTime();
 
         // Circling
         CIRCLE.tickCircle(this);
@@ -362,7 +362,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         }
 
         if (level().isClientSide) {
-            Entity clientCircleTarget = getCircleTarget();
+            final Entity clientCircleTarget = getCircleTarget();
             if (clientCircleTarget != null) {
                 lookAtWithoutReset(user, EntityAnchorArgument.Anchor.EYES, clientCircleTarget.getEyePosition());
             }
@@ -370,7 +370,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             if (getAccelTime() > 1) { // Updating on the client, to make sure all is smooth
                 CircleAttack.createSpeedParticles(this, this);
 
-                List<Entity> toCatch = level().getEntitiesOfClass(Entity.class, // Lower range by 32 to reduce lag
+                final List<Entity> toCatch = level().getEntitiesOfClass(Entity.class, // Lower range by 32 to reduce lag
                         getBoundingBox().inflate(96), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
                 for (Entity entity : toCatch) {
@@ -431,14 +431,14 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.light_followup"))),
         LOW_KICK(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.lowkick")));
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<MadeInHeavenEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<MadeInHeavenEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(MadeInHeavenEntity attacker, AnimationState builder) {
+        public void playAnimation(MadeInHeavenEntity attacker, AnimationState<MadeInHeavenEntity> builder) {
             animator.accept(builder);
         }
     }

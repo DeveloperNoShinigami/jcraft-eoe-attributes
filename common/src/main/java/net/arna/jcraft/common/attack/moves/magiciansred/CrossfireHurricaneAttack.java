@@ -43,12 +43,12 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
 
     public void tickHurricane(MagiciansRedEntity stand) {
         // Init variables
-        MoveContext ctx = stand.getMoveContext();
+        final MoveContext ctx = stand.getMoveContext();
         int hurricaneTime = ctx.getInt(HURRICANE_TIME);
         Vec3 hurricanePos = ctx.get(HURRICANE_POS);
-        LivingEntity user = stand.getUserOrThrow();
-        Entity vehicle = user.getVehicle();
-        Level world = stand.level();
+        final LivingEntity user = stand.getUserOrThrow();
+        final Entity vehicle = user.getVehicle();
+        final Level world = stand.level();
 
         // Run every four ticks because the hurricane's meant to be slow, and it's convenient for CPU usage
         if (stand.tickCount % 4 != 0 || hurricaneTime <= 0) {

@@ -20,7 +20,6 @@ import java.util.List;
  */
 public class JAttackEntity extends LivingEntity implements IOwnable {
     protected LivingEntity master;
-    protected boolean supportsItems = false;
 
     protected JAttackEntity(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
@@ -48,8 +47,7 @@ public class JAttackEntity extends LivingEntity implements IOwnable {
 
     @Override
     public void setItemSlot(@NotNull EquipmentSlot slot, @NotNull ItemStack stack) {
-        if (supportsItems) setItemSlot(slot, stack);
-        else JCraft.LOGGER.warn("Attempted to set item slot of " + getClass().getName() + "@" + hashCode());
+        JCraft.LOGGER.warn("Attempted to set item slot of " + getClass().getName() + "@" + hashCode());
     }
 
     @Override

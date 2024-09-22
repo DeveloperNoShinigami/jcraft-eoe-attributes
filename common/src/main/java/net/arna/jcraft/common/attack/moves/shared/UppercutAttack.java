@@ -23,9 +23,9 @@ public final class UppercutAttack<A extends IAttacker<? extends A, ?>> extends A
 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         for (LivingEntity target : targets) {
-            Vec3 upDir = new Vec3(GravityChangerAPI.getGravityDirection(user).step()).scale(-strength);
+            final Vec3 upDir = new Vec3(GravityChangerAPI.getGravityDirection(user).step()).scale(-strength);
             JUtils.addVelocity(target, upDir);
         }
 

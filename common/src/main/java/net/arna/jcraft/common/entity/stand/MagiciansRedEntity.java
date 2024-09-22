@@ -285,14 +285,14 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.light_followup"))),
         HAMMER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.hammer")));
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<MagiciansRedEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<MagiciansRedEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(MagiciansRedEntity attacker, AnimationState builder) {
+        public void playAnimation(MagiciansRedEntity attacker, AnimationState<MagiciansRedEntity> builder) {
             animator.accept(builder);
         }
     }

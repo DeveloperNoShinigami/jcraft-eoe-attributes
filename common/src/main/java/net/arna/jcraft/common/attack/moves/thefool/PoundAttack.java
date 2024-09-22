@@ -16,7 +16,7 @@ public final class PoundAttack extends AbstractSimpleAttack<PoundAttack, TheFool
 
     @Override
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         for (LivingEntity target : targets) {
             Vec3 vel = target.getDeltaMovement();

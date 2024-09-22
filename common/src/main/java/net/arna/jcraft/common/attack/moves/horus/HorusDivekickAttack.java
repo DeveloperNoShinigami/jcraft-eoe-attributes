@@ -26,7 +26,7 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
     @Override
     public void onInitiate(HorusEntity attacker) {
         super.onInitiate(attacker);
-        LivingEntity user = attacker.getUserOrThrow();
+        final LivingEntity user = attacker.getUserOrThrow();
         if (attacker.isFree()) attacker.setFree(false);
 
         attacker.getMoveContext().set(LOOK_DIR, user.getLookAngle().scale(0.65));
@@ -41,7 +41,7 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
     @Override
     protected void endCharge(HorusEntity attacker) {
         super.endCharge(attacker);
-        Vec3 newPos = advanceChargePos(attacker, getMoveDistance(), getWindupPoint());
+        final Vec3 newPos = advanceChargePos(attacker, getMoveDistance(), getWindupPoint());
         attacker.setFreePos(new Vector3f((float) newPos.x, (float) newPos.y, (float) newPos.z));
     }
 
@@ -59,7 +59,7 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
             if (attacker.getBlockStateOn().canOcclude()) {
                 endCharge((HorusEntity) attacker);
             } else {
-                LivingEntity user = attacker.getUserOrThrow();
+                final LivingEntity user = attacker.getUserOrThrow();
                 GravityChangerAPI.setWorldVelocity(user, attacker.getMoveContext().get(LOOK_DIR));
                 JUtils.syncVelocityUpdate(user);
                 user.resetFallDistance();

@@ -29,7 +29,7 @@ public final class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEn
                 Vec3 leftVec = user.getLookAngle().yRot(1.75f);
                 for (int i = 0; i < 8; i++) {
                     leftVec = leftVec.yRot(-3.141592f / 8).normalize();
-                    TheFoolEntity.createFoolishSand(attacker.level(), attacker.blockPosition(),
+                    TheFoolEntity.createFoolishSand(attacker.level(), attacker, attacker.blockPosition(),
                             new Vec3(leftVec.x / 4, 0.25, leftVec.z / 4));
                 }
             }
@@ -38,7 +38,7 @@ public final class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEn
                 for (double i = 0; i < 7; i++) {
                     for (double y = 0; y < i; y++) {
                         double hDiv = 4.5 * (1 + y / i);
-                        TheFoolEntity.createFoolishSand(attacker.level(), attacker.blockPosition(),
+                        TheFoolEntity.createFoolishSand(attacker.level(), attacker, attacker.blockPosition(),
                                 new Vec3(rotVec.x * Math.sqrt(i) / hDiv, y / 4.3, rotVec.z * Math.sqrt(i) / hDiv));
                     }
                 }

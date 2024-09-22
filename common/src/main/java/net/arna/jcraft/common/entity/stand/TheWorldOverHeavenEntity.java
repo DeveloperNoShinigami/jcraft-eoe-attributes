@@ -237,7 +237,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
         if (getSkin() > 0) {
             return super.getAuraColor();
         }
-        Color auraColor = Color.ofHSB(tickCount % 360f / 360f, 0.5f, 0.5f);
+        final Color auraColor = Color.ofHSB(tickCount % 360f / 360f, 0.5f, 0.5f);
         return new Vector3f(auraColor.getRed(), auraColor.getGreen(), auraColor.getBlue());
     }
 
@@ -319,6 +319,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
         entityData.define(OVERWRITE_TYPE, 0);
     }
 
+    public static final double NO_LOOK_RANGE = 512.0;
     @Override
     public void tick() {
         super.tick();
@@ -331,16 +332,16 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             return;
         }
 
-        IntList overwriteTimes = moveContext.get(OverwriteAttack.OVERWRITE_TIMES);
-        List<LivingEntity> overwriteTargets = moveContext.get(OverwriteAttack.OVERWRITE_TARGETS);
-        LivingEntity user = getUserOrThrow();
+        final IntList overwriteTimes = moveContext.get(OverwriteAttack.OVERWRITE_TIMES);
+        final List<LivingEntity> overwriteTargets = moveContext.get(OverwriteAttack.OVERWRITE_TARGETS);
+        final LivingEntity user = getUserOrThrow();
 
         // Mob TW:OH users normally don't swing after charging overwrite. This fixes that.
         if (user instanceof Mob && getState() == State.CHARGE_OVERWRITE && random.nextBoolean()) {
             initMove(random.nextBoolean() ? MoveType.SPECIAL1 : MoveType.SPECIAL2);
         }
 
-        int moveStun = getMoveStun();
+        final int moveStun = getMoveStun();
         if (moveStun <= 0 && getOverwriteType() != 0) {
             setOverwriteType(0);
         }
@@ -355,23 +356,20 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                 i--;
             } else {
                 // Inability to look at master
-                LivingEntity entity = overwriteTargets.get(i);
-
-                double range = 1024.0;
-
-                AABB box = entity
+                final LivingEntity entity = overwriteTargets.get(i);
+                final AABB box = entity
                         .getBoundingBox()
-                        .expandTowards(entity.getViewVector(1.0F).scale(range))
+                        .expandTowards(entity.getViewVector(1.0F).scale(NO_LOOK_RANGE))
                         .inflate(1.0D);
-                EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(
+                final EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(
                         entity, entity.getEyePosition(),
-                        entity.getEyePosition().add(entity.getLookAngle().scale(range)),
-                        box, EntitySelector.NO_CREATIVE_OR_SPECTATOR, range);
+                        entity.getEyePosition().add(entity.getLookAngle().scale(NO_LOOK_RANGE)),
+                        box, EntitySelector.NO_CREATIVE_OR_SPECTATOR, NO_LOOK_RANGE);
 
                 if (hitResult == null) {
                     continue;
                 }
-                Entity lookEntity = hitResult.getEntity();
+                final Entity lookEntity = hitResult.getEntity();
 
                 if (lookEntity != user && lookEntity != this) {
                     continue;
@@ -421,14 +419,14 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
         AIR_HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.twoh.air_heavy"))),
         ;
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<TheWorldOverHeavenEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<TheWorldOverHeavenEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(TheWorldOverHeavenEntity attacker, AnimationState builder) {
+        public void playAnimation(TheWorldOverHeavenEntity attacker, AnimationState<TheWorldOverHeavenEntity> builder) {
             animator.accept(builder);
         }
     }

@@ -31,15 +31,15 @@ public class D4CCounterAttack extends AbstractCounterAttack<D4CCounterAttack, D4
     @Override
     public void counter(@NonNull D4CEntity attacker, Entity countered, DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
-        var bl = counteredDamageSource.is(DamageTypes.MOB_PROJECTILE);
-        var bl2 = counteredDamageSource.is(DamageTypes.MAGIC);
+        final boolean bl = counteredDamageSource.is(DamageTypes.MOB_PROJECTILE);
+        final boolean bl2 = counteredDamageSource.is(DamageTypes.MAGIC);
 
         if (countered == null || !attacker.hasUser() || bl || bl2) {
             return;
         }
 
-        LivingEntity user = attacker.getUserOrThrow();
-        Vec3 trueKnockback = countered.position().subtract(user.position()).normalize().scale(1.5);
+        final LivingEntity user = attacker.getUserOrThrow();
+        final Vec3 trueKnockback = countered.position().subtract(user.position()).normalize().scale(1.5);
         countered.push(trueKnockback.x, 0.5, trueKnockback.z);
         countered.hurtMarked = true;
 

@@ -17,7 +17,7 @@ public final class PoisonSpewAttack extends AbstractSimpleAttack<PoisonSpewAttac
 
     @Override
     public @NonNull Set<LivingEntity> perform(WhiteSnakeEntity attacker, LivingEntity user, MoveContext ctx) {
-        WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.level(), user);
+        final WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.level(), user);
         acidProjectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, 1.33F, 0);
         acidProjectile.setPos(attacker.getEyePosition());
         attacker.level().addFreshEntity(acidProjectile);

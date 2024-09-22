@@ -25,7 +25,7 @@ public final class CoinTossAttack extends AbstractMove<CoinTossAttack, KillerQue
     @Override
     public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
         ItemEntity coin = ctx.get(COIN);
-        Vec3 lookVec = user.getLookAngle().scale(0.75);
+        final Vec3 lookVec = user.getLookAngle().scale(0.75);
         if (coin != null) {
             coin.discard();
         }

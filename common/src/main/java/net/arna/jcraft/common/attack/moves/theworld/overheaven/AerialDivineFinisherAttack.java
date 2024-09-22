@@ -5,12 +5,11 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
-import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.Set;
 
 public final class AerialDivineFinisherAttack extends AbstractSimpleAttack<AerialDivineFinisherAttack, TheWorldOverHeavenEntity> {
@@ -22,17 +21,17 @@ public final class AerialDivineFinisherAttack extends AbstractSimpleAttack<Aeria
 
     @Override
     public @NonNull Set<LivingEntity> perform(TheWorldOverHeavenEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        Vec3 heightOffset = RotationUtil.vecPlayerToWorld(new Vec3(0, user.getBbHeight() / 2.0, 0), GravityChangerAPI.getGravityDirection(user));
+        final Vec3 heightOffset = getOffsetHeightPos(attacker);
 
-        RandomSource random = attacker.getRandom();
+        final RandomSource random = attacker.getRandom();
         for (int i = 0; i < 8; i++) {
-            KnifeProjectile knife = new KnifeProjectile(attacker.level(), user);
+            final KnifeProjectile knife = new KnifeProjectile(attacker.level(), user);
             knife.setLightning(true);
             knife.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             knife.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, 2F, 1F);
-            knife.setPos(user.position().add(heightOffset).add(
+            knife.setPos(heightOffset.add(
                     random.triangle(0, 0.5),
                     random.triangle(0, 0.5),
                     random.triangle(0, 0.5)));

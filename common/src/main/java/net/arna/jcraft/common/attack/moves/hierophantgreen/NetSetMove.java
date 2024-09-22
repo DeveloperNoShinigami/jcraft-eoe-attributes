@@ -19,9 +19,9 @@ public final class NetSetMove extends AbstractMove<NetSetMove, HGEntity> {
 
     @Override
     public @NonNull Set<LivingEntity> perform(HGEntity attacker, LivingEntity user, MoveContext ctx) {
-        Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
+        final Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
 
-        HGNetEntity net = new HGNetEntity(attacker.level());
+        final HGNetEntity net = new HGNetEntity(attacker.level());
         net.setSkin(attacker.getSkin());
         net.moveTo(
                 attacker.getX() + gravity.getStepX(),

@@ -2,13 +2,14 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.*;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -26,9 +27,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.function.Consumer;
 
@@ -37,7 +37,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             .withAnim(State.ITEM_PLACE)
             .withInfo(
                     Component.literal("Item Place"),
-                    Component.literal("places an item from an alternate universe on the ground, attracts other such items"));
+                    Component.literal("places an item from an alternate universe on the ground, which attracts other such items"));
     public static final SimpleAttack<D4CEntity> LIGHT_FOLLOWUP = new SimpleAttack<D4CEntity>(
             0, 9, 14, 0.75f, 7f, 8, 1.75f, 1.25f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
@@ -207,13 +207,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                 }
             }
             case LIGHT -> {
-                if (getCurrentMove() != null && getCurrentMove().getMoveType() == MoveType.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
-                    AbstractMove<?, ? super D4CEntity> followup = getCurrentMove().getFollowup();
-                    if (followup != null) {
-                        setMove(followup, (State) followup.getAnimation());
-                        return true;
-                    }
-                }
+                if (tryFollowUp(type, MoveType.LIGHT)) return true;
             }
         }
 
@@ -229,11 +223,9 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     }
 
     @Override
-    protected AABB makeBoundingBox() {
+    protected @NotNull AABB makeBoundingBox() {
         if (getState() == State.FLAG) {
-            double x = getX();
-            double y = getY();
-            double z = getZ();
+            final double x = getX(), y = getY(), z = getZ();
             return new AABB(x + 0.5, y + 0.5, z + 0.5, x - 0.5, y, z - 0.5);
         }
         return super.makeBoundingBox();
@@ -282,14 +274,14 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
         ITEM_PLACE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.itemplace"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.light_followup")));
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<D4CEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<D4CEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(D4CEntity attacker, AnimationState state) {
+        public void playAnimation(D4CEntity attacker, AnimationState<D4CEntity> state) {
             animator.accept(state);
         }
     }

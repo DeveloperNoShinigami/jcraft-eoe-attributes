@@ -18,7 +18,7 @@ public final class TWDonutAttack extends AbstractSimpleAttack<TWDonutAttack, The
 
     @Override
     public @NonNull Set<LivingEntity> perform(TheWorldEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         // If missed, stun the user for 1.5 seconds
         if (targets.isEmpty()) {

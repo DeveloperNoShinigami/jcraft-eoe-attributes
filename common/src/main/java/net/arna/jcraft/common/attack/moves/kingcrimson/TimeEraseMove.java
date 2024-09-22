@@ -121,10 +121,6 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
     }
 
     public void tickTimeErase(KingCrimsonEntity attacker) {
-        if (!attacker.hasUser()) {
-            return;
-        }
-
         LivingEntity user = attacker.getUserOrThrow();
         int teTime = attacker.getTETime();
         if (teTime > 0) {

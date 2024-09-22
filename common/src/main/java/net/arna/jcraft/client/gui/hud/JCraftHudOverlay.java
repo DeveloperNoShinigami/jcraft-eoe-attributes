@@ -34,22 +34,24 @@ public class JCraftHudOverlay {
     private static final Gauge IRON_GAUGE = new Gauge(0.7f, 0.7f, 0.9f, (int) MetallicaEntity.IRON_MAX);
 
     public static void render(GuiGraphics ctx) {
-        Minecraft client = Minecraft.getInstance();
+        final Minecraft client = Minecraft.getInstance();
 
-        int width = client.getWindow().getGuiScaledWidth();
-        int height = client.getWindow().getGuiScaledHeight();
-        int x = width / 2;
+        final int width = client.getWindow().getGuiScaledWidth();
+        final int height = client.getWindow().getGuiScaledHeight();
+        final int x = width / 2;
 
-        LocalPlayer player = client.player;
+        final LocalPlayer player = client.player;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
         gaugeHeightOffset = gaugeHeightOffsetMax;
-        int gaugeX = x - gaugeWidth / 2;
+        final int gaugeX = x - gaugeWidth / 2;
 
-        StandEntity<?, ?> stand = JUtils.getStand(player);
+        if (client.gui.overlayMessageTime > 0) gaugeHeightOffset -= 12;
+
+        final StandEntity<?, ?> stand = JUtils.getStand(player);
         if (stand != null) {
             if (stand instanceof TheSunEntity theSun) {
-                float darken = (theSun.isPassive() ? 0.4f : 0.0f);
+                final float darken = (theSun.isPassive() ? 0.4f : 0.0f);
                 SUN_SIZE_GAUGE.render(ctx,
                         SUN_SIZE_GAUGE.red() - darken,
                         SUN_SIZE_GAUGE.green() - darken,
@@ -68,9 +70,9 @@ public class JCraftHudOverlay {
             }
         }
 
-        JSpec<?, ?> spec = JUtils.getSpec(player);
+        final JSpec<?, ?> spec = JUtils.getSpec(player);
         if (spec instanceof AnubisSpec) {
-            int displayBloodlust = (int) ((JComponentPlatformUtils.getMiscData(player).getAttackSpeedMult() - 1.0f) * 5);
+            final int displayBloodlust = (int) ((JComponentPlatformUtils.getMiscData(player).getAttackSpeedMult() - 1.0f) * 5);
             if (displayBloodlust > 0) {
                 BLOODLUST_GAUGE.render(ctx, gaugeX, height + gaugeHeightOffset, displayBloodlust);
             }

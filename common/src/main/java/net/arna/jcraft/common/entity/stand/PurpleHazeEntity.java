@@ -163,19 +163,6 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
         super.queueMove(type);
     }
 
-    @Override
-    public boolean initMove(MoveType type) {
-        if (type == MoveType.LIGHT && getCurrentMove() != null && getCurrentMove().getMoveType() == MoveType.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
-            AbstractMove<?, ? super PurpleHazeEntity> followup = getCurrentMove().getFollowup();
-            if (followup != null) {
-                setMove(followup, (State) followup.getAnimation());
-                return true;
-            }
-        }
-
-        return super.initMove(type);
-    }
-
     public boolean handleMove(MoveType type) {
         MoveMap.Entry<PurpleHazeEntity, State> entry = getMoveMap().getFirstValidEntry(type, getThis());
         if (entry == null) {

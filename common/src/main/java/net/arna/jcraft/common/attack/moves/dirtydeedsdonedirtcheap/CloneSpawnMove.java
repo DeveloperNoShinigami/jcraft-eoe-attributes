@@ -48,13 +48,13 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
 
     @Override
     public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        ItemStack weapon = ctx.get(CLONE_TYPE).weapon.getDefaultInstance();
+        final ItemStack weapon = ctx.get(CLONE_TYPE).weapon.getDefaultInstance();
         if (weapon.isDamageableItem()) {
             weapon.setDamageValue(weapon.getMaxDamage());
         }
 
         if (user instanceof ServerPlayer playerEntity) {
-            PlayerCloneEntity clone = new PlayerCloneEntity(attacker.level());
+            final PlayerCloneEntity clone = new PlayerCloneEntity(attacker.level());
             clone.copyPosition(playerEntity);
             clone.setMaster(playerEntity);
             clone.disableDrops();
@@ -63,8 +63,8 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
             clone.setItemSlot(EquipmentSlot.MAINHAND, weapon);
             JComponentPlatformUtils.getStandData(clone).setType(StandType.NONE);
         } else if (user instanceof Mob mob) { //Code sourced from MobEntity.class convertTo()
-            EntityType<?> entityType = mob.getType();
-            Mob newMob = (Mob) entityType.create(attacker.level());
+            final EntityType<?> entityType = mob.getType();
+            final Mob newMob = (Mob) entityType.create(attacker.level());
 
             if (newMob == null) {
                 JCraft.LOGGER.error("Failed to create D4C clone mob of type " + entityType + " in world " + attacker.level());

@@ -18,10 +18,10 @@ public final class CreamComboAttack extends AbstractMultiHitAttack<CreamComboAtt
 
     @Override
     public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (getBlow(attacker) == 2) {
-            Vec3 rV = getRotVec(attacker);
+            final Vec3 rV = getRotVec(attacker);
 
             for (LivingEntity target : targets) {
                 target.knockback(1, rV.x, rV.z);

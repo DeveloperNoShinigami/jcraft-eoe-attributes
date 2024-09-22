@@ -46,14 +46,14 @@ public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEn
         BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.cinderella.block"))),
         ;
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<CinderellaEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<CinderellaEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(CinderellaEntity attacker, AnimationState state) {
+        public void playAnimation(CinderellaEntity attacker, AnimationState<CinderellaEntity> state) {
             animator.accept(state);
         }
     }

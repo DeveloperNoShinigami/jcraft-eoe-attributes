@@ -17,7 +17,7 @@ public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, S
 
     @Override
     public @NonNull Set<LivingEntity> perform(SilverChariotEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         attacker.setMode(SilverChariotEntity.Mode.ARMORLESS);
         ctx.set(ARMOR_TIME, 500);

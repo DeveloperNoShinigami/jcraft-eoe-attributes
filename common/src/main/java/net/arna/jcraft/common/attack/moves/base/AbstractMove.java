@@ -684,11 +684,11 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     @FunctionalInterface
     public interface InitAction<A extends IAttacker<? extends A, ?>> {
-        void perform(A attacker, LivingEntity user, MoveContext ctx);
+        void perform(final A attacker, final LivingEntity user, final MoveContext ctx);
     }
 
     @FunctionalInterface
     public interface MoveAction<A extends IAttacker<? extends A, ?>> {
-        void perform(A attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets);
+        void perform(final A attacker, final LivingEntity user, final MoveContext ctx, final Set<LivingEntity> targets);
     }
 }

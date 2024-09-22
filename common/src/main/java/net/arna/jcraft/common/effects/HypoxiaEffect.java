@@ -12,7 +12,7 @@ public class HypoxiaEffect extends MobEffect {
     public HypoxiaEffect() {
         super(MobEffectCategory.HARMFUL, 0x858c30);
         this.addAttributeModifier(Attributes.MOVEMENT_SPEED,
-                "778B48FC-485B-5BA7-58C7-E0D755CE354D",
+                "05090A04-DE4D-C881-80CA-0D0836831466",
                 -0.2,
                 AttributeModifier.Operation.MULTIPLY_BASE
         );
@@ -21,12 +21,14 @@ public class HypoxiaEffect extends MobEffect {
     // Every quarter second
     @Override
     public boolean isDurationEffectTick(int duration, int amplifier) {
-        return duration % 5 == 0;
+        return duration % 20 == 0;
     }
 
     @Override
     public void applyEffectTick(@NotNull LivingEntity livingEntity, int amplifier) {
         super.applyEffectTick(livingEntity, amplifier);
-        livingEntity.setAirSupply((int) (livingEntity.getAirSupply() * 0.9));
+        final int airSupply = livingEntity.getAirSupply();
+        if (airSupply <= 0) livingEntity.hurt(livingEntity.damageSources().drown(), 2.0F);
+        livingEntity.setAirSupply(airSupply - 20);
     }
 }

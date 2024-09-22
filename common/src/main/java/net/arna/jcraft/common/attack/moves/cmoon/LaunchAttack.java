@@ -24,17 +24,17 @@ public final class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoon
 
     @Override
     public @NonNull Set<LivingEntity> perform(CMoonEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        BlockProjectile block = new BlockProjectile(attacker.level());
-        BlockState steppingState = attacker.getBlockStateOn();
+        final BlockProjectile block = new BlockProjectile(attacker.level());
+        final BlockState steppingState = attacker.getBlockStateOn();
         if (steppingState.isAir() || !steppingState.canOcclude()) {
             block.setBlockStack(Items.STONE.getDefaultInstance());
         } else {
             block.setBlockStack(steppingState.getBlock().asItem().getDefaultInstance());
         }
 
-        Vec3i hoverDir = GravityChangerAPI.getGravityDirection(user).getNormal().multiply(-1);
+        final Vec3i hoverDir = GravityChangerAPI.getGravityDirection(user).getNormal().multiply(-1);
 
         block.setMaster(user);
         block.moveTo(attacker.getX() + hoverDir.getX() * 1.5, attacker.getY() + hoverDir.getY() * 1.5,

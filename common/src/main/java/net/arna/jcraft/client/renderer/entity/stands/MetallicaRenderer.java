@@ -2,6 +2,7 @@ package net.arna.jcraft.client.renderer.entity.stands;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.util.RenderUtils;
 import net.arna.jcraft.client.model.entity.stand.MetallicaModel;
@@ -51,7 +52,10 @@ public class MetallicaRenderer extends StandEntityRenderer<MetallicaEntity> {
             matrixStack.translate(-toUser.x * time, -toUser.y * time, -toUser.z * time);
             for (int i = 0; i < 5; i++) {
                 matrixStack.translate(toUser.x, toUser.y, toUser.z);
+                matrixStack.pushPose();
+                matrixStack.mulPose(Axis.ZN.rotationDegrees(Mth.lerp(partialTick, user.xRotO, user.getXRot())));
                 this.heldItemRenderer.renderItem(animatable, IRON_NUGGET, ItemDisplayContext.GROUND, false, matrixStack, bufferSource, i);
+                matrixStack.popPose();
             }
             matrixStack.popPose();
         }

@@ -251,9 +251,9 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.light_followup"))),
         LUNGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.lunge")));
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<TheWorldEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<TheWorldEntity>> animator) {
             this.animator = animator;
         }
 

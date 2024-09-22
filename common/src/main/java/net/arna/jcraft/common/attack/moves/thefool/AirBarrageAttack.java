@@ -19,7 +19,7 @@ public final class AirBarrageAttack extends AbstractBarrageAttack<AirBarrageAtta
             return;
         }
 
-        LivingEntity user = attacker.getUserOrThrow();
+        final LivingEntity user = attacker.getUserOrThrow();
         user.setDeltaMovement(user.getDeltaMovement().scale(0.5).add(0, 0.01, 0));
         user.hurtMarked = true;
     }

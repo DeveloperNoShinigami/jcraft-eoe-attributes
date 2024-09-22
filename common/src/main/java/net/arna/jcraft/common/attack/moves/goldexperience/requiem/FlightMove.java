@@ -31,7 +31,7 @@ public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
         if (!attacker.hasUser()) {
             return;
         }
-        LivingEntity user = attacker.getUserOrThrow();
+        final LivingEntity user = attacker.getUserOrThrow();
         // Must be run on client and server because of fun mod compatibility
         int flightTime = attacker.getFlightTime();
         flightTime -= 1;

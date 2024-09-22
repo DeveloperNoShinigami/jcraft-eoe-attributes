@@ -29,12 +29,11 @@ public final class JumpMove<A extends IAttacker<? extends A, ?>> extends Abstrac
 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
-        if (!user.onGround()) {
-            return Set.of();
+        if (user.onGround()) {
+            final Vec3 upVel = Vec3.atLowerCornerOf(GravityChangerAPI.getGravityDirection(user).getNormal()).scale(-0.5);
+            final Vec3 jumpVel = Vec3.directionFromRotation(user.getXRot(), user.getYRot()).scale(strength).add(upVel);
+            JUtils.setVelocity(user, jumpVel.x, jumpVel.y, jumpVel.z);
         }
-        Vec3 upVel = Vec3.atLowerCornerOf(GravityChangerAPI.getGravityDirection(user).getNormal()).scale(-0.5);
-        Vec3 jumpVel = Vec3.directionFromRotation(user.getXRot(), user.getYRot()).scale(strength).add(upVel);
-        JUtils.setVelocity(user, jumpVel.x, jumpVel.y, jumpVel.z);
 
         return Set.of();
     }

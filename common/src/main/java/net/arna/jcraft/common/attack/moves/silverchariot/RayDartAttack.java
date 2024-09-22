@@ -18,7 +18,7 @@ public final class RayDartAttack extends AbstractSimpleAttack<RayDartAttack, Sil
     public void onInitiate(SilverChariotEntity attacker) {
         super.onInitiate(attacker);
 
-        LivingEntity user = attacker.getUser();
+        final LivingEntity user = attacker.getUser();
         if (user != null && user.onGround()) {
             user.setDeltaMovement(user.getDeltaMovement().add(getRotVec(attacker).scale(1)));
             user.hurtMarked = true;

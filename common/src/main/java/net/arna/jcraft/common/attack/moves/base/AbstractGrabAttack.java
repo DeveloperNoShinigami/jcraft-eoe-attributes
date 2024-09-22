@@ -45,12 +45,12 @@ public abstract class AbstractGrabAttack<T extends AbstractGrabAttack<T, A, S>, 
 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (targets.isEmpty()) {
             return targets;
         }
 
-        boolean unblockable = getBlockableType() == BlockableType.NON_BLOCKABLE;
+        final boolean unblockable = getBlockableType() == BlockableType.NON_BLOCKABLE;
 
         boolean anyHit = false;
         for (LivingEntity target : targets) {

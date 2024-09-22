@@ -3,6 +3,7 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
@@ -16,6 +17,7 @@ import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -30,17 +32,22 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -62,7 +69,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         INVISIBLE = SynchedEntityData.defineId(MetallicaEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
-    //todo: sword summon (LITERALLY MILLIA H DISC), cr.sp1 fan, sp3 grab
+    //todo: sword summon (LITERALLY MILLIA H DISC)
     public static final SimpleAttack<MetallicaEntity> LIGHT_LAUNCH = new SimpleAttack<MetallicaEntity>(0,
             18, 22, 0.75f, 5f, 6,1.7f,  1.25f, 0.2f)
             .withLaunch()
@@ -193,8 +200,54 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         }
     }
 
-    public static final EffectInflictingAttack<MetallicaEntity> GRAB_HIT_FINAL = new EffectInflictingAttack<MetallicaEntity>(0, 18,
-            24, 0.5f, 4f, 9, 2f, 1.2f, 0f, List.of(
+    public static final SimpleAttack<MetallicaEntity> INTERNAL_ATTACK = new SimpleAttack<MetallicaEntity>(0,
+            10, 15, 0, 0, 0, 0, 0, 0)
+            .withAction(MetallicaEntity::internalAttack)
+            .withInfo(
+                    Component.literal("Internal Attack"),
+                    Component.literal("""
+                            12 meter range.
+                            Uses the opponent's own iron to create a deadly remote attack.
+                            Applies Hypoxia for 3 seconds.
+                            Cannot attack hypoxic targets.
+                            This attack does not interrupt other moves.""")
+            )
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.ita"));
+
+    private static void internalAttack(MetallicaEntity metallica, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
+        final Vec3 eyePos = user.position().add(GravityChangerAPI.getEyeOffset(user));
+        final Vec3 rotVec = user.getLookAngle();
+        final HitResult hitResult = JUtils.raycastAll(user, eyePos, eyePos.add(rotVec.scale(12.0)), ClipContext.Fluid.NONE, EntitySelector.LIVING_ENTITY_STILL_ALIVE);
+        // JCraft.createParticle((ServerLevel) user.level(), hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z, JParticleType.STUN_PIERCE);
+        if (hitResult instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity living) {
+            final LivingEntity target = JUtils.getUserIfStand(living);
+            if (target.hasEffect(JStatusRegistry.HYPOXIA.get())) {
+                if (user instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.displayClientMessage(Component.literal("Cannot attack hypoxic targets."), true);
+                }
+            } else {
+                ServerLevel serverWorld = (ServerLevel) user.level();
+                final double x = target.getX(), y = target.getY(), z = target.getZ();
+                final RandomSource random = metallica.getRandom();
+                for (int i = 0; i < 3; i++) {
+                    JCraft.createParticle(serverWorld,
+                            x + random.nextGaussian(),
+                            y + random.nextGaussian(),
+                            z + random.nextGaussian(),
+                            JParticleType.SWEEP_ATTACK
+                    );
+                }
+                damage(3.5f, serverWorld.damageSources().sting(user), target);
+                target.addEffect(
+                        new MobEffectInstance(JStatusRegistry.HYPOXIA.get(), 60, 0, false, true)
+                );
+                JComponentPlatformUtils.getCooldowns(user).setCooldown(CooldownType.SPECIAL2, 200);
+            }
+        }
+    }
+
+    public static final EffectInflictingAttack<MetallicaEntity> GRAB_HIT_FINAL = new EffectInflictingAttack<MetallicaEntity>(0,
+            18, 24, 0.5f, 4f, 9, 2f, 1.2f, 0f, List.of(
                     new MobEffectInstance(JStatusRegistry.HYPOXIA.get(), 200, 0, false, true)))
             // .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -212,8 +265,8 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.empty())
             .withFinisher(14, GRAB_HIT_FINAL)
             .withAction((attacker, user, ctx, targets) -> attacker.addIron(10.0f))
-            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.grabh"));
-    public static final GrabAttack<MetallicaEntity, State> GRAB = new GrabAttack<MetallicaEntity, State>(280,
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnim(user, "mtl.grabh"));
+    public static final GrabAttack<MetallicaEntity, State> GRAB = new GrabAttack<>(280,
             9, 20, 0.5f, 0, 15, 1.5f, 0, 0, GRAB_HIT, State.GRAB_HIT, 17, 0.4)
             .withInfo(
                     Component.literal("Grab"),
@@ -227,8 +280,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                 JSpec<?, ?> spec = JComponentPlatformUtils.getSpecData(user).getSpec();
                 if (spec != null && spec.getCurrentMove() != null) spec.cancelMove();
             })
-            //todo: simplify (always unoccupied)
-            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.grab"));
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnim(user, "mtl.grab"));
     public static final SimpleAttack<MetallicaEntity> GO_INVISIBLE = new SimpleAttack<MetallicaEntity>(20,
             10, 15, 0, 0, 0, 0, 0, 0)
             .withInfo(
@@ -294,6 +346,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         moves.register(MoveType.HEAVY, SMASH, State.SMASH).withCrouchingVariant(State.SWEEP);
 
         moves.register(MoveType.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS).withCrouchingVariant(State.FAN_TOSS);
+        moves.register(MoveType.SPECIAL2, INTERNAL_ATTACK, State.IDLE);
         moves.register(MoveType.SPECIAL3, GRAB, State.IDLE);
         moves.register(MoveType.UTILITY, HARVEST, State.HARVEST).withCrouchingVariant(State.IDLE);
     }
@@ -408,14 +461,14 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.grab_hit"))),
         ;
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<MetallicaEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<MetallicaEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(MetallicaEntity attacker, AnimationState builder) {
+        public void playAnimation(MetallicaEntity attacker, AnimationState<MetallicaEntity> builder) {
             animator.accept(builder);
         }
     }

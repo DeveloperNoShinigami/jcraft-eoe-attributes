@@ -13,14 +13,12 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-
 
 public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<PurpleHazeDistortionEntity, PurpleHazeDistortionEntity.State> {
     private static final @NonNull KnockdownAttack<AbstractPurpleHazeEntity<?, ?>> CROUCHING_LIGHT_FOLLOWUP_ATTACK = BACKHAND_FOLLOWUP.copy().withAnim(State.BACKHAND_FOLLOWUP);
@@ -78,15 +76,18 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
                     Component.literal("unblockable, combo finisher")
             );
 
-    public PurpleHazeDistortionEntity(EntityType type, Level worldIn) {
-        this(worldIn);
-    }
-
     public PurpleHazeDistortionEntity(Level worldIn) {
         super(StandType.PURPLE_HAZE_DISTORTION, worldIn);
 
-        freespace += """
-                PASSIVE: 66% resistance to Purple Haze effect""";
+        freespace =
+                """
+                    PASSIVE: 66% resistance to Purple Haze effect
+                    
+                    BNBs:
+                    Light > Rekka1~Rekka2 > crouching Light > Barrage >...
+                        ...crouching Light~Light
+                        ...Ground Slam
+                        ...Light > Grab""";
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.8f, 0.2f, 1.0f),
@@ -112,12 +113,6 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
         moves.register(MoveType.ULTIMATE, FULL_RELEASE, State.FULL_RELEASE);
 
         moves.register(MoveType.UTILITY, DISTORTION).withCrouchingVariant(CooldownType.UTILITY, null);
-    }
-
-    @Override
-    public boolean initMove(MoveType type) {
-        if (tryFollowUp(type, MoveType.LIGHT)) return true;
-        return super.initMove(type);
     }
 
     @Override
@@ -179,18 +174,18 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
         RIGHT_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.rdash"))),
         ;
 
-        private final BiConsumer<PurpleHazeDistortionEntity, AnimationState> animator;
+        private final BiConsumer<PurpleHazeDistortionEntity, AnimationState<PurpleHazeDistortionEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<PurpleHazeDistortionEntity>> animator) {
             this((silverChariot, builder) -> animator.accept(builder));
         }
 
-        State(BiConsumer<PurpleHazeDistortionEntity, AnimationState> animator) {
+        State(BiConsumer<PurpleHazeDistortionEntity, AnimationState<PurpleHazeDistortionEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(PurpleHazeDistortionEntity attacker, AnimationState state) {
+        public void playAnimation(PurpleHazeDistortionEntity attacker, AnimationState<PurpleHazeDistortionEntity> state) {
             animator.accept(attacker, state);
         }
     }

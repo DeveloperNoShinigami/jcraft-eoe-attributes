@@ -20,7 +20,7 @@ public final class ElbowAttack extends AbstractSimpleAttack<ElbowAttack, KQBTDEn
 
     @Override
     public @NonNull Set<LivingEntity> perform(KQBTDEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         for (LivingEntity target : targets) {
             target.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, 4, true, false));
         }

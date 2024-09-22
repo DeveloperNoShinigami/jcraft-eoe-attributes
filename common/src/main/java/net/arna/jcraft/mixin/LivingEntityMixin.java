@@ -1,5 +1,7 @@
 package net.arna.jcraft.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.config.JServerConfig;
@@ -60,15 +62,20 @@ public abstract class LivingEntityMixin implements IDamageScaler {
             ((IDamageScaler) this).jcraft$resetHitCount();
         }
     }
-/*TODO
-    // Make stand users rideable entities in water (prevents stand desummon)
-    @Inject(cancellable = true, method = "canBeRiddenInWater", at = @At("HEAD"))
-    public void jcraft$canBeRiddenInWater(CallbackInfoReturnable<Boolean> cir) {
-        if (JComponentPlatformUtils.getStandData((LivingEntity) (Object) this).getType() != null)
-            cir.setReturnValue(true);
-    }
 
- */
+    @WrapOperation(
+            method = "baseTick",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/LivingEntity;setAirSupply(I)V",
+                    ordinal = 2
+            )
+    )
+    public void jcraft$stopBreathing(LivingEntity livingEntity, int airSupply, Operation<Void> original) {
+        if (!livingEntity.hasEffect(JStatusRegistry.HYPOXIA.get())) {
+            original.call(livingEntity, airSupply);
+        }
+    }
 
     @Inject(cancellable = true, method = "setLastHurtMob", at = @At("HEAD"))
     public void jcraft$onAttacking(Entity target, CallbackInfo info) {

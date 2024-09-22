@@ -16,7 +16,6 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -110,16 +109,9 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
 
     // Moveset
     @Override
+    @SuppressWarnings("unchecked") // we checked :)
     public boolean initMove(MoveType type) {
-        if (!hasUser()) {
-            return false;
-        }
-
-        LivingEntity user = getUserOrThrow();
-        if (user.hasEffect(JStatusRegistry.DAZED.get())) {
-            return false;
-        }
-
+        final LivingEntity user = getUserOrThrow();
         switch (type) {
             case LIGHT -> {
                 boolean idling = getMoveStun() <= 0;
@@ -135,7 +127,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
                     if (user.isShiftKeyDown()) {
                         detonate();
                     } else {
-                        AbstractMove<?, ? super E> followup = getCurrentMove().getFollowup();
+                        final AbstractMove<?, ? super E> followup = getCurrentMove().getFollowup();
                         setMove(followup, (S) followup.getAnimation());
                     }
                 }
@@ -144,10 +136,10 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             }
 
             case SPECIAL1 -> {
-                CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
+                final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
 
                 if (user.isCrouching() && cooldowns.getCooldown(CooldownType.STAND_SP1) <= 0) {
-                    BlockPos standingOn = user.blockPosition().relative(GravityChangerAPI.getGravityDirection(user));
+                    final BlockPos standingOn = user.blockPosition().relative(GravityChangerAPI.getGravityDirection(user));
                     if (!level().getBlockState(standingOn).isAir()) {
                         JComponentPlatformUtils.getBombTracker(user).getMainBomb().setBomb(standingOn);
                         cooldowns.setCooldown(CooldownType.STAND_SP1, BOMB_PLANT.getCooldown());
@@ -179,7 +171,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
         if (enemyStand != null && enemyStand.blocking) {
             return MoveSelectionResult.STOP;
         }
-        Vec3 bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
+        final Vec3 bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
         return bombPos != null && attack == DETONATE && target.distanceToSqr(bombPos) < 9.0D ?
                 MoveSelectionResult.USE : MoveSelectionResult.PASS;
     }

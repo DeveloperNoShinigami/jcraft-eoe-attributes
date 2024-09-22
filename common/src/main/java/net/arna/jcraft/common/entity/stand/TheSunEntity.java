@@ -175,25 +175,21 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                 getX() + random.nextGaussian() * scale,
                 getY() + random.nextGaussian() * scale,
                 getZ() + random.nextGaussian() * scale
-
         );
     }
 
     private static Vector2f getLookPY(Vec3 origin, Vec3 target) {
-        double d = target.x - origin.x;
-        double e = target.y - origin.y;
-        double f = target.z - origin.z;
-        double g = Math.sqrt(d * d + f * f);
+        final double d = target.x - origin.x, e = target.y - origin.y, f = target.z - origin.z;
+        final double g = Math.sqrt(d * d + f * f);
 
-        float yaw = Mth.wrapDegrees((float) (Mth.atan2(-f, -d) * 57.2957763671875) - 90.0F); // deg; X, Z
-        float pitch = Mth.wrapDegrees((float) (Mth.atan2(-e, -g) * 57.2957763671875)); // deg; Y, len
+        final float yaw = Mth.wrapDegrees((float) (Mth.atan2(-f, -d) * 57.2957763671875) - 90.0F); // deg; X, Z
+        final float pitch = Mth.wrapDegrees((float) (Mth.atan2(-e, -g) * 57.2957763671875)); // deg; Y, len
 
         return new Vector2f(pitch, yaw);
     }
     private static Vec3 getLookVector(Vec3 origin, Vec3 target) {
         Vector2f pitchYaw = getLookPY(origin, target);
-        float pitch = pitchYaw.x;
-        float yaw = pitchYaw.y;
+        final float pitch = pitchYaw.x, yaw = pitchYaw.y;
 
         return new Vec3(
                 -Mth.sin(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F),
@@ -207,13 +203,13 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     private static MeteorProjectile fireMeteor(TheSunEntity attacker, @NonNull LivingEntity user, Vec3 pos, Vec3 velocity, float speed, float divergence) {
-        MeteorProjectile meteor = new MeteorProjectile(attacker.level(), user, attacker);
+        final MeteorProjectile meteor = new MeteorProjectile(attacker.level(), user, attacker);
         meteor.setSkin(attacker.getSkin());
         meteor.setPos(pos);
         meteor.shoot(velocity.x, velocity.y, velocity.z, speed, divergence);
 
         attacker.level().addFreshEntity(meteor);
-        AbstractMove<?, ? super TheSunEntity> move = attacker.getCurrentMove();
+        final AbstractMove<?, ? super TheSunEntity> move = attacker.getCurrentMove();
         if (move != null && !move.isBarrage()) {
             attacker.playSound(JSoundRegistry.SUN_METEOR_FIRE.get(), 1f, 1f);
         }
@@ -222,16 +218,15 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     private static void fireSunBeam(TheSunEntity attacker, @NonNull LivingEntity user, float divergence) {
-        Vec3 pos = attacker.randomPos();
+        final Vec3 pos = attacker.randomPos();
 
-        SunBeamProjectile sunBeam = new SunBeamProjectile(attacker.level(), user, attacker);
+        final SunBeamProjectile sunBeam = new SunBeamProjectile(attacker.level(), user, attacker);
         sunBeam.setSkin(attacker.getSkin());
         sunBeam.setPos(pos);
 
-        Vector2f pitchYaw = getLookPY(pos, attacker.targetPosition);
-        float pitch = pitchYaw.x;
-        float yaw = pitchYaw.y;
-        Vec3 lookVec = new Vec3(
+        final Vector2f pitchYaw = getLookPY(pos, attacker.targetPosition);
+        final float pitch = pitchYaw.x, yaw = pitchYaw.y;
+        final Vec3 lookVec = new Vec3(
                 -Mth.sin(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F),
                 -Mth.sin((pitch) * 0.017453292F),
                 Mth.cos(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F)
@@ -365,9 +360,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
             return;
         }
 
-        Vec3 eP = user.getEyePosition();
-        Vec3 rangeMod = user.getLookAngle().scale(AIMING_DISTANCE);
-        EntityHitResult eHit = ProjectileUtil.getEntityHitResult(user, eP, eP.add(rangeMod),
+        final Vec3 eP = user.getEyePosition();
+        final Vec3 rangeMod = user.getLookAngle().scale(AIMING_DISTANCE);
+        final EntityHitResult eHit = ProjectileUtil.getEntityHitResult(user, eP, eP.add(rangeMod),
                 user.getBoundingBox().inflate(AIMING_DISTANCE),
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR,
                 AIMING_DISTANCE * AIMING_DISTANCE
@@ -415,7 +410,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     @Override
-    public boolean causeFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
+    public boolean causeFallDamage(float fallDistance, float damageMultiplier, @NotNull DamageSource damageSource) {
         return false;
     }
 
@@ -442,8 +437,8 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     public void push(Entity entity) {
         if (!isPassengerOfSameVehicle(entity)) {
             if (!entity.noPhysics && !this.noPhysics) {
-                double d = entity.getX() - this.getX();
-                double e = entity.getZ() - this.getZ();
+                double d = entity.getX() - getX();
+                double e = entity.getZ() - getZ();
                 double f = Mth.absMax(d, e);
                 if (f >= 0.001) {
                     f = Math.sqrt(f);
@@ -476,13 +471,13 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     public void tick() {
         super.tick();
 
-        LivingEntity user = getUser();
+        final LivingEntity user = getUser();
         if (user == null) {
             return;
         }
 
-        float scale = getScale();
-        float heatFieldSize = scale * 20.0F;
+        final float scale = getScale();
+        final float heatFieldSize = scale * 20.0F;
 
         // if (tickCount % 20 == 0) JCraft.prefixedLog(level().isClientSide, "TheSunEntity@" + getId() + " scale: " + scale);
 
@@ -595,9 +590,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     @Override
-    protected AABB makeBoundingBox() {
-        double x = getX(), y = getY(), z = getZ();
-        float scale = getScale() * 1.5f;
+    protected @NotNull AABB makeBoundingBox() {
+        final double x = getX(), y = getY(), z = getZ();
+        final float scale = getScale() * 1.5f;
         return newBoundingBox(x, y, z, scale);
     }
 
@@ -648,7 +643,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         }
 
         @Override
-        public void playAnimation(TheSunEntity attacker, AnimationState builder) {
+        public void playAnimation(TheSunEntity attacker, AnimationState<TheSunEntity> builder) {
             animator.accept(attacker, builder);
         }
     }

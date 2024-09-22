@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Set;
 
 public final class BerryBushAttack extends AbstractSimpleAttack<BerryBushAttack, GoldExperienceEntity> {
-    private static final BlockState berryBush = Blocks.SWEET_BERRY_BUSH.defaultBlockState().setValue(SweetBerryBushBlock.AGE, 1);
+    private static final BlockState BERRY_BUSH = Blocks.SWEET_BERRY_BUSH.defaultBlockState().setValue(SweetBerryBushBlock.AGE, 1);
 
     public BerryBushAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
                            float hitboxSize, float knockback, float offset) {
@@ -22,10 +22,10 @@ public final class BerryBushAttack extends AbstractSimpleAttack<BerryBushAttack,
 
     @Override
     public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
-        Level world = attacker.level();
-        BlockPos blockPos = attacker.blockPosition();
+        final Level world = attacker.level();
+        final BlockPos blockPos = attacker.blockPosition();
         if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.below()).canOcclude()) {
-            world.setBlockAndUpdate(blockPos, berryBush);
+            world.setBlockAndUpdate(blockPos, BERRY_BUSH);
         }
 
         return super.perform(attacker, user, ctx);

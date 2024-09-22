@@ -115,8 +115,8 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
 
     @Override
     public Vector3f getAuraColor() {
-        int skin = getSkin();
-        float deltaTick = (float) RenderUtils.getCurrentTick() * 50 % 2.0f;
+        final int skin = getSkin();
+        final float deltaTick = (float) RenderUtils.getCurrentTick() * 50 % 2.0f;
         return switch (skin) {
             case 1 ->
                 new Vector3f(auraColors[skin]).mul(1.0f, deltaTick, 1.0f);
@@ -164,7 +164,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
             return MoveSelectionResult.STOP;
         }
 
-        Vec3 bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
+        final Vec3 bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
         if (attack == DETONATE && bombPos != null && target.distanceToSqr(bombPos) < 9.0D) {
             return MoveSelectionResult.USE;
         } else if (attack == BTD_PLANT && moveContext.get(BTDPlantAttack.BTD_ENTITY) != null) {
@@ -177,10 +177,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     public void tick() {
         super.tick();
 
-        if (!hasUser() || level().isClientSide) {
-            return;
-        }
-
+        if (level().isClientSide() || !hasUser()) return;
         BUBBLE.tickBubble(this);
         BTD_PLANT.tickBomb(this);
     }
@@ -209,14 +206,14 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
         GRAB(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kqbtd.grab"))),
         GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kqbtd.grab_hit")));
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<KQBTDEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<KQBTDEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(KQBTDEntity attacker, AnimationState builder) {
+        public void playAnimation(KQBTDEntity attacker, AnimationState<KQBTDEntity> builder) {
             animator.accept(builder);
         }
     }

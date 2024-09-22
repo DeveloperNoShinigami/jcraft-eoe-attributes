@@ -10,13 +10,12 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.Set;
 
 import static net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack.createBox;
@@ -43,12 +42,12 @@ public final class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumE
             return;
         }
 
-        Vec3 rotVec = attacker.isFree() ? getRotVec(attacker) : attacker.getUserOrThrow().getLookAngle();
-        Vec3 eyePos = attacker.isFree() ?
+        final Vec3 rotVec = attacker.isFree() ? getRotVec(attacker) : attacker.getUserOrThrow().getLookAngle();
+        final Vec3 eyePos = attacker.isFree() ?
                 new Vec3(attacker.getFreePos()).add(RotationUtil.vecPlayerToWorld(new Vec3(0, attacker.getBbHeight(), 0), GravityChangerAPI.getGravityDirection(attacker)))
                 : attacker.getEyePosition();
-        Vec3 fPos = eyePos.add(rotVec.scale(1.75));
-        Vec3 ffPos = eyePos.add(rotVec.scale(3.25));
+        final Vec3 fPos = eyePos.add(rotVec.scale(1.75));
+        final Vec3 ffPos = eyePos.add(rotVec.scale(3.25));
 
         if (attacker.level().isClientSide) {
             // Display particles for the two hitboxes
@@ -81,29 +80,25 @@ public final class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumE
                 return;
             }
 
-            AABB fBox = createBox(fPos, 2);
-            AABB ffBox = createBox(ffPos, 2);
+            final AABB fBox = createBox(fPos, 2);
+            final AABB ffBox = createBox(ffPos, 2);
 
             JUtils.displayHitbox(attacker.level(), fBox);
             JUtils.displayHitbox(attacker.level(), ffBox);
-            Set<Entity> hits = AbstractSimpleAttack.findHits(attacker, Set.of(fBox, ffBox), null, Entity.class);
+            final Set<Entity> hits = AbstractSimpleAttack.findHits(attacker, Set.of(fBox, ffBox), null, Entity.class);
 
             for (Entity entity : hits) {
-                double distance = entity.position().distanceTo(eyePos);
-                if (distance > 3) // Falloff
+                double distance = entity.position().distanceToSqr(eyePos);
+                if (distance > 9) // Falloff
                 {
-                    distance -= distance * distance * 0.1;
+                    distance -= distance * 0.1;
                 }
 
-                entity.setDeltaMovement(entity.getDeltaMovement()
+                JUtils.setVelocity(entity,
+                        entity.getDeltaMovement()
                         .subtract(rotVec.x, 0, rotVec.z)
-                        .scale(0.2 * distance));
-
-                entity.hurtMarked = true;
-
-                if (entity instanceof ServerPlayer player) {
-                    player.connection.send(new ClientboundSetEntityMotionPacket(player));
-                }
+                        .scale(0.2 * distance)
+                );
             }
         }
     }

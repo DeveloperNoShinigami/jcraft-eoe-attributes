@@ -29,12 +29,12 @@ public final class BombPlantAttack extends AbstractSimpleAttack<BombPlantAttack,
 
     @Override
     public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
-        CommonBombTrackerComponent.BombData mainBomb = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
+        final CommonBombTrackerComponent.BombData mainBomb = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
 
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        Vec3 rotVec = getRotVec(attacker);
-        Vec3 boxCenter = attacker.position().add(
+        final Vec3 rotVec = getRotVec(attacker);
+        final Vec3 boxCenter = attacker.position().add(
                 RotationUtil.vecPlayerToWorld(new Vec3(0, attacker.getBbHeight() * 0.66, 0), GravityChangerAPI.getGravityDirection(attacker))
         ).add(rotVec);
 

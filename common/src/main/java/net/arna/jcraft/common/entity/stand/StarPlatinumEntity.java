@@ -157,6 +157,23 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                 new Vector3f(0.2f, 0.8f, 0.6f),
                 new Vector3f(0.1f, 0.3f, 1.0f)
         };
+
+        freespace =
+                """
+                        BNBs:
+                        ~ represents a queued attack
+                                                
+                            -the classic
+                            Light>Barrage>Light>Knee>Advancing Barrage~Star Finger~Star Breaker
+                            
+                            -the rushdown
+                            Light~Light>dash Barrage>cr.Light>Star Finger>Knee>Light>Advancing Barrage>Light~Light
+                            
+                            -the blowback
+                            Inhale>...>Star Finger>Star Breaker>Barrage>...
+
+                            -the poke
+                            Star Finger>Knee>Light>Advancing Barrage~Light>Barrage>Light>Star Breaker""";
     }
 
     @Override
@@ -226,13 +243,13 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
         UPPERCUT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.uppercut"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.light_followup")));
 
-        private final BiConsumer<StarPlatinumEntity, AnimationState> animator;
+        private final BiConsumer<StarPlatinumEntity, AnimationState<StarPlatinumEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<StarPlatinumEntity>> animator) {
             this((stand, builder) -> animator.accept(builder));
         }
 
-        State(BiConsumer<StarPlatinumEntity, AnimationState> animator) {
+        State(BiConsumer<StarPlatinumEntity, AnimationState<StarPlatinumEntity>> animator) {
             this.animator = animator;
         }
 

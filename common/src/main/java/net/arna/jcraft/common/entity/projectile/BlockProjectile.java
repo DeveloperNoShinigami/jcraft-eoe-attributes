@@ -65,7 +65,6 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
     public BlockProjectile(Level world) {
         super(JEntityTypeRegistry.BLOCK_PROJECTILE.get(), world);
         setNoGravity(true);
-        supportsItems = true;
     }
 
     @Override
@@ -77,6 +76,7 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
 
     public void setBlockStack(ItemStack stack) {
         entityData.set(BLOCKSTACK, stack);
+        item = stack;
     }
 
     /**
@@ -247,15 +247,14 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
         readMasterNbt(tag);
     }
 
+    private @NotNull ItemStack item = ItemStack.EMPTY;
     @Override
     public void setItemSlot(@NotNull EquipmentSlot slot, @NotNull ItemStack stack) {
-        if (slot == EquipmentSlot.MAINHAND) super.setItemSlot(slot, stack);
+        item = stack;
     }
-
     @Override
     public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot slot) {
-        if (slot == EquipmentSlot.MAINHAND) return entityData.get(BLOCKSTACK);
-        return ItemStack.EMPTY;
+        return item;
     }
 
     // Animations

@@ -17,7 +17,7 @@ public final class SheerHeartAttackAttack extends AbstractMove<SheerHeartAttackA
 
     @Override
     public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
-        SheerHeartAttackEntity sha = new SheerHeartAttackEntity(JEntityTypeRegistry.SHEER_HEART_ATTACK.get(), attacker.level());
+        final SheerHeartAttackEntity sha = new SheerHeartAttackEntity(JEntityTypeRegistry.SHEER_HEART_ATTACK.get(), attacker.level());
         sha.setMaster(user);
         sha.moveTo(attacker.getX(), attacker.getY() + 0.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());
         attacker.level().addFreshEntity(sha);

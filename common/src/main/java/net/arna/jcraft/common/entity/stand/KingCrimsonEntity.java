@@ -38,6 +38,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import mod.azure.azurelib.core.animation.AnimationState;
@@ -249,7 +250,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             case ULTIMATE -> {
                 // If predicting, and Time Erase isn't on cooldown
                 if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == PREDICTION && hasUser()) {
-                    CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(getUser());
+                    final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(getUser());
                     if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) <= 0) {
                         cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 400);
                         PredictionMove.finishPrediction(this);
@@ -269,8 +270,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 return super.initMove(type);
             }
             case SPECIAL3 -> {
-                LivingEntity user = getUserOrThrow();
-                boolean start = getMoveStun() <= 0;
+                final LivingEntity user = getUserOrThrow();
+                final boolean start = getMoveStun() <= 0;
 
                 if (start) {
                     return super.initMove(type);
@@ -280,14 +281,14 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 moveCancel();
 
                 // 7 second time erase cooldown
-                CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
+                final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
                 if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) < 140) {
                     cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 140);
                 }
 
                 // Particle effects
                 Vec3 oPos = user.position();
-                AABB bBox = user.getBoundingBox();
+                final AABB bBox = user.getBoundingBox();
                 for (ServerPlayer serverPlayer : ((ServerLevel) level()).players()) {
                     FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
                     buf.writeVarInt(2);
@@ -320,10 +321,10 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     }
 
     private void spawnTimeSkipParticles() {
-        LivingEntity user = getUserOrThrow();
+        final LivingEntity user = getUserOrThrow();
 
-        Vec3 pos = user.position();
-        AABB bBox = user.getBoundingBox();
+        final Vec3 pos = user.position();
+        final AABB bBox = user.getBoundingBox();
 
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeShort(2);
@@ -360,23 +361,21 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     }
 
     @Override
-    protected AABB makeBoundingBox() {
+    protected @NotNull AABB makeBoundingBox() {
         if (getTETime() > 0) {
-            double x = getX();
-            double y = getY();
-            double z = getZ();
+            final double x = getX(), y = getY(), z = getZ();
             return new AABB(x, y, z, x, y + 0.1, z);
         }
         return super.makeBoundingBox();
     }
 
     public void cancelTE() {
-        LivingEntity user = getUserOrThrow();
-        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
+        final LivingEntity user = getUserOrThrow();
+        final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
         cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) - getTETime() * 2);
 
         setTETime(0);
-        Mob doppelganger = moveContext.get(TimeEraseMove.DOPPELGANGER);
+        final Mob doppelganger = moveContext.get(TimeEraseMove.DOPPELGANGER);
         if (doppelganger != null) {
             doppelganger.discard();
         }
@@ -392,13 +391,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     public void tick() {
         super.tick();
 
-        LivingEntity user = this.getUser();
-        if (user == null) {
-            return;
-        }
-        if (level().isClientSide) {
-            return;
-        }
+        if (level().isClientSide() || !hasUser()) return;
         TIME_ERASE.tickTimeErase(this);
     }
 
@@ -434,14 +427,14 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.sweep"))),
         TIME_SKIP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.kingcrimson.idle")));
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<KingCrimsonEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<KingCrimsonEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(KingCrimsonEntity attacker, AnimationState builder) {
+        public void playAnimation(KingCrimsonEntity attacker, AnimationState<KingCrimsonEntity> builder) {
             animator.accept(builder);
         }
     }

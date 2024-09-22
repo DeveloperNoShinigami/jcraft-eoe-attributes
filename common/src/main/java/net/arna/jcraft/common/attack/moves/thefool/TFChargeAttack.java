@@ -22,16 +22,16 @@ public final class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, T
 
     @Override
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (targets.isEmpty()) {
             return targets;
         }
 
         attacker.setSand(true);
-        Vec3 pos = attacker.getEyePosition();
+        final Vec3 pos = attacker.getEyePosition();
 
         // Display sand effect
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 
         buf.writeShort(11);
         buf.writeDouble(pos.x);

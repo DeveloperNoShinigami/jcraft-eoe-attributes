@@ -23,12 +23,12 @@ public final class LifeBeamAttack extends AbstractMove<LifeBeamAttack, GEREntity
 
     @Override
     public @NonNull Set<LivingEntity> perform(GEREntity attacker, LivingEntity user, MoveContext ctx) {
-        GERScorpionEntity scorpion = new GERScorpionEntity(JEntityTypeRegistry.GER_SCORPION.get(), attacker.level());
+        final GERScorpionEntity scorpion = new GERScorpionEntity(JEntityTypeRegistry.GER_SCORPION.get(), attacker.level());
         if (ctx.getInt(CHARGE_TIME) >= 18) {
             scorpion.charge();
         }
         scorpion.setInitialVel(user.getLookAngle().scale(2));
-        Vec3 ePos = attacker.getEyePosition();
+        final Vec3 ePos = attacker.getEyePosition();
         scorpion.moveTo(ePos.x, ePos.y, ePos.z, -user.getYRot() - 90f, attacker.getXRot());
         scorpion.setMaster(user);
         attacker.level().addFreshEntity(scorpion);

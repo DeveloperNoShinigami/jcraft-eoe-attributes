@@ -18,7 +18,7 @@ public final class ExplosiveDashAttack extends AbstractMove<ExplosiveDashAttack,
 
     @Override
     public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
-        Vec3 lookVec = user.getLookAngle().scale(0.9);
+        final Vec3 lookVec = user.getLookAngle().scale(0.9);
         attacker.level().explode(user,
                 user.getX() - lookVec.x,
                 user.getY() + user.getBbHeight() / 2 - lookVec.y,

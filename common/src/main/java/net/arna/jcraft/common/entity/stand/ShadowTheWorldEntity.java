@@ -177,32 +177,32 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     }
 
     private static void impalingThrust(ShadowTheWorldEntity attacker, LivingEntity user, MoveContext ctx) {
-        ServerLevel world = (ServerLevel) attacker.level();
-        CommonShockwaveHandlerComponent shockwaveHandler = JComponentPlatformUtils.getShockwaveHandler(world);
+        final ServerLevel world = (ServerLevel) attacker.level();
+        final CommonShockwaveHandlerComponent shockwaveHandler = JComponentPlatformUtils.getShockwaveHandler(world);
 
-        Vec3 start = user.getEyePosition(), end = user.getEyePosition().add(user.getLookAngle().scale(8));
+        final Vec3 start = user.getEyePosition(), end = user.getEyePosition().add(user.getLookAngle().scale(8));
         HitResult hitResult = world.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
-        Vec3 pos2 = hitResult.getLocation();
-        Vec3 towardsVec = pos2.subtract(start);
+        final Vec3 pos2 = hitResult.getLocation();
+        final Vec3 towardsVec = pos2.subtract(start);
 
-        DamageSource playerSource = world.damageSources().mobAttack(user);
+        final DamageSource playerSource = world.damageSources().mobAttack(user);
 
         user.teleportToWithTicket(pos2.x, pos2.y, pos2.z);
 
-        double count = Math.round(start.distanceTo(pos2));
+        final double count = Math.round(start.distanceTo(pos2));
 
         boolean hitAny = false;
         Set<LivingEntity> processed = new HashSet<>();
         for (int i = 0; i < count; i++) {
-            Vec3 curPos = start.add(towardsVec.scale(i / count));
+            final Vec3 curPos = start.add(towardsVec.scale(i / count));
             if (i % 3 == 0) shockwaveHandler.addShockwave(curPos, towardsVec, 2.25f);
 
-            Vec3 vec1 = curPos.add(-1, -1, -1);
-            Vec3 vec2 = curPos.add(1, 1, 1);
+            final Vec3 vec1 = curPos.add(-1, -1, -1);
+            final Vec3 vec2 = curPos.add(1, 1, 1);
 
             JUtils.displayHitbox(world, vec1, vec2);
 
-            List<LivingEntity> hurt = world.getEntitiesOfClass(LivingEntity.class, new AABB(vec1, vec2),
+            final List<LivingEntity> hurt = world.getEntitiesOfClass(LivingEntity.class, new AABB(vec1, vec2),
                     EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != user));
             hurt.removeIf(processed::contains);
             if (processed.addAll(hurt)) {
@@ -214,7 +214,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                         JParticleType.HIT_SPARK_2
                 );
                 for (LivingEntity ent : hurt) {
-                    LivingEntity target = JUtils.getUserIfStand(ent);
+                    final LivingEntity target = JUtils.getUserIfStand(ent);
                     // +6 on hit/-4 on block launcher
                     // +0 if you count STW desummon not letting you block
                     StandEntity.damageLogic(world, target,
@@ -233,15 +233,11 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         attacker.playSound(JSoundRegistry.STW_ZAP.get(), 1f, 1f);
     }
 
-    private static final Vector3f invisAura = new Vector3f(0, 0, 0);
+    private static final Vector3f INVIS_AURA = new Vector3f(0, 0, 0);
     @Override
     public Vector3f getAuraColor() {
-        if (getState() == State.COUNTER) return invisAura;
+        if (getState() == State.COUNTER) return INVIS_AURA;
         return super.getAuraColor();
-    }
-
-    public int getDesummonTime() {
-        return desummonTime;
     }
 
     @Override
@@ -285,7 +281,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     public boolean allowMoveHandling() {
         if (isAnimatedDesummoning()) return false;
         if (getState() == State.CHARGE_HIT) return false;
-        boolean noMove = getCurrentMove() == null;
+        final boolean noMove = getCurrentMove() == null;
         return noMove || getCurrentMove().getMoveType() == MoveType.SPECIAL3;
     }
 
@@ -302,7 +298,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
             if (--desummonTime < 1) discard();
         }
         if (level().isClientSide()) {
-            //todo: stw particles
+            //stw particles?
             return;
         }
         if (tsTime < 1) {
@@ -349,18 +345,18 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         TIME_STOP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.timestop"))),
         ;
 
-        private final BiConsumer<ShadowTheWorldEntity, AnimationState> animator;
+        private final BiConsumer<ShadowTheWorldEntity, AnimationState<ShadowTheWorldEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<ShadowTheWorldEntity>> animator) {
             this((stand, builder) -> animator.accept(builder));
         }
 
-        State(BiConsumer<ShadowTheWorldEntity, AnimationState> animator) {
+        State(BiConsumer<ShadowTheWorldEntity, AnimationState<ShadowTheWorldEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(ShadowTheWorldEntity attacker, AnimationState builder) {
+        public void playAnimation(ShadowTheWorldEntity attacker, AnimationState<ShadowTheWorldEntity> builder) {
             animator.accept(attacker, builder);
         }
     }
@@ -371,11 +367,10 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         controllers.add(new AnimationController<>(getThis(), "desummon", 0, this::desummonPredicate));
     }
 
-    RawAnimation DESUMMON_SQUEEZE = RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.desummon");
+    private static final RawAnimation DESUMMON_SQUEEZE = RawAnimation.begin().thenPlayAndHold("animation.shadow_the_world.desummon");
     private PlayState desummonPredicate(AnimationState<ShadowTheWorldEntity> state) {
         if (isAnimatedDesummoning()) {
-            AnimationController<ShadowTheWorldEntity> controller = state.getController();
-            controller.setAnimation(DESUMMON_SQUEEZE);
+            state.getController().setAnimation(DESUMMON_SQUEEZE);
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

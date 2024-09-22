@@ -7,7 +7,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 
 public interface StandAnimationState<A extends IAttacker<A, ?> & GeoEntity> {
 
-    void playAnimation(A attacker, AnimationState state);
+    void playAnimation(A attacker, AnimationState<A> state);
 
     default void configureController(A attacker, AnimationController<A> controller) {
         // no-op by default

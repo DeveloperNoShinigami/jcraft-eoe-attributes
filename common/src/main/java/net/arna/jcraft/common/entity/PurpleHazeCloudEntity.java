@@ -17,6 +17,8 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Stack;
 
 public class PurpleHazeCloudEntity extends Entity {
@@ -77,16 +79,17 @@ public class PurpleHazeCloudEntity extends Entity {
     public void tick() {
         super.tick();
 
-        float radius = getRadius();
-        PoisonType poisonType = getPoisonType();
+        final float radius = getRadius();
+        final PoisonType poisonType = getPoisonType();
 
         if (level().isClientSide()) {
+            double x = getX(), y = getY(), z = getZ();
             for (int i = 0; i < radius; i++) {
                 level().addParticle(
                         JParticleTypeRegistry.PURPLE_HAZE_CLOUD.get(), false,
-                        getX() + random.nextGaussian() * radius / 2,
-                        getY() + random.nextGaussian() * radius / 2,
-                        getZ() + random.nextGaussian() * radius / 2,
+                        x + random.nextGaussian() * radius / 2,
+                        y + random.nextGaussian() * radius / 2,
+                        z + random.nextGaussian() * radius / 2,
                         0, 0, 0
                 );
 
@@ -97,9 +100,9 @@ public class PurpleHazeCloudEntity extends Entity {
                             case DEBILITATING -> ParticleTypes.SQUID_INK;
                         },
                         false,
-                        getX() + random.nextGaussian() * radius / 2,
-                        getY() + random.nextGaussian() * radius / 2,
-                        getZ() + random.nextGaussian() * radius / 2,
+                        x + random.nextGaussian() * radius / 2,
+                        y + random.nextGaussian() * radius / 2,
+                        z + random.nextGaussian() * radius / 2,
                         0, 0, 0
                 );
             }
@@ -124,12 +127,12 @@ public class PurpleHazeCloudEntity extends Entity {
                                     AbstractPurpleHazeEntity.infect(living, 3, MobEffects.WEAKNESS);
                                 }
                                 case NULLIFYING -> {
-                                    Stack<MobEffect> toRemove = new Stack<>();
+                                    final Stack<MobEffect> toRemove = new Stack<>();
 
                                     living.getActiveEffects().forEach(
                                             statusEffectInstance -> {
-                                                MobEffect effectType = statusEffectInstance.getEffect();
-                                                if (effectType != JStatusRegistry.DAZED && effectType != JStatusRegistry.KNOCKDOWN) {
+                                                final MobEffect effectType = statusEffectInstance.getEffect();
+                                                if (effectType != JStatusRegistry.DAZED.get() && effectType != JStatusRegistry.KNOCKDOWN.get()) {
                                                     toRemove.add(effectType);
                                                 }
                                             }
@@ -145,7 +148,7 @@ public class PurpleHazeCloudEntity extends Entity {
     }
 
     @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> data) {
+    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> data) {
         if (RADIUS.equals(data)) {
             this.refreshDimensions();
         }
@@ -154,9 +157,9 @@ public class PurpleHazeCloudEntity extends Entity {
     }
 
     @Override
-    protected AABB makeBoundingBox() {
-        float radius = getRadius();
-        double x = getX(), y = getY(), z = getZ();
+    protected @NotNull AABB makeBoundingBox() {
+        final float radius = getRadius();
+        final double x = getX(), y = getY(), z = getZ();
         return new AABB(
                 x - radius, y - radius, z - radius,
                 x + radius, y + radius, z + radius

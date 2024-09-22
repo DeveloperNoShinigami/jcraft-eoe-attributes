@@ -325,15 +325,15 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             return false;
         }
 
-        LivingEntity user = getUserOrThrow();
-        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
+        final LivingEntity user = getUserOrThrow();
+        final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
         int cooldown = cooldowns.getCooldown(cooldownType);
 
         if (cooldown > 0) {
             return false;
         }
 
-        AbstractMove<?, ? super SilverChariotEntity> attackRef = move.copy();
+        final AbstractMove<?, ? super SilverChariotEntity> attackRef = move.copy();
         if (getMode() == Mode.ARMORLESS) {
             attackRef.withWindup((int) (attackRef.getWindup() * 0.67));
             attackRef.withDuration((int) (attackRef.getDuration() * 0.67));
@@ -359,8 +359,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         if (!hasUser()) {
             return;
         }
-        LivingEntity user = getUserOrThrow();
-        Mode mode = getMode();
+        final LivingEntity user = getUserOrThrow();
+        final Mode mode = getMode();
 
         if (level().isClientSide) {
             // Possession particles
@@ -383,7 +383,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         if (user instanceof Player player) {
             hasAnubis |= player.getInventory().contains(JItemRegistry.ANUBIS.get().getDefaultInstance());
 
-            if (getCurrentMove() == null && getOffhandItem() != null) {
+            if (getCurrentMove() == null) {
                 player.addItem(getOffhandItem());
                 getOffhandItem().shrink(1);
             }
@@ -449,18 +449,18 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         CIRCLE_SLASH(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.silverchariot.circle_slash"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.silverchariot.light_followup")));
 
-        private final BiConsumer<SilverChariotEntity, AnimationState> animator;
+        private final BiConsumer<SilverChariotEntity, AnimationState<SilverChariotEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<SilverChariotEntity>> animator) {
             this((silverChariot, builder) -> animator.accept(builder));
         }
 
-        State(BiConsumer<SilverChariotEntity, AnimationState> animator) {
+        State(BiConsumer<SilverChariotEntity, AnimationState<SilverChariotEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(SilverChariotEntity attacker, AnimationState builder) {
+        public void playAnimation(SilverChariotEntity attacker, AnimationState<SilverChariotEntity> builder) {
             animator.accept(attacker, builder);
         }
 

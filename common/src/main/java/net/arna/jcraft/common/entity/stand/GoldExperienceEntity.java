@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.HitBoxData;
 import net.arna.jcraft.common.attack.core.MoveMap;
@@ -26,11 +28,7 @@ import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-
 import java.util.function.Consumer;
-
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, GoldExperienceEntity.State> {
     // JCraft.lightCooldown -> 0 | 0.5f -> 0.35f
@@ -204,7 +202,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
     public boolean initMove(MoveType type) {
         switch (type) {
             case SPECIAL2 -> {
-                LivingEntity user = getUserOrThrow();
+                final LivingEntity user = getUserOrThrow();
                 if (user.hasEffect(JStatusRegistry.DAZED.get())) {
                     return false;
                 }
@@ -223,7 +221,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                 if (!canAttack() || !hasUser()) {
                     return false;
                 }
-                LivingEntity user = getUserOrThrow();
+                final LivingEntity user = getUserOrThrow();
 
                 LifeGiverAttack.LifeGiverType toSummon = LifeGiverAttack.LifeGiverType.SNAKE;
                 if (user.onGround()) {
@@ -238,36 +236,13 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                 return handleMove(MoveType.SPECIAL3);
             }
             case LIGHT -> {
-                if (getCurrentMove() != null && getCurrentMove().getMoveType() == MoveType.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
-                    AbstractMove<?, ? super GoldExperienceEntity> followup = getCurrentMove().getFollowup();
-                    if (followup != null) {
-                        setMove(followup, (State) followup.getAnimation());
-                    }
-                } else {
+                if (!tryFollowUp(type, MoveType.LIGHT)) {
                     return super.initMove(type);
                 }
             }
-            default -> {
-                return super.initMove(type);
-            }
         }
-
-        return true;
+        return super.initMove(type);
     }
-
-    /*
-    @Override
-    public boolean allowUtilityUse() { // Disables using the utility while sneaking, allowing menu control
-        if (getUser().isSneaking()) return false;
-        return super.allowUtilityUse();
-    }
-    @Environment(EnvType.CLIENT)
-    boolean inMenu = false;
-    @Override
-    public void initClientUtility() {
-        inMenu = true;
-    }
-     */
 
     @Override
     public MoveSelectionResult specificMoveSelectionCriterion(AbstractMove<?, ? super GoldExperienceEntity> attack,
@@ -316,14 +291,14 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
         OVERCLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.overclock"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.light_followup")));
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<GoldExperienceEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<GoldExperienceEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(GoldExperienceEntity attacker, AnimationState builder) {
+        public void playAnimation(GoldExperienceEntity attacker, AnimationState<GoldExperienceEntity> builder) {
             animator.accept(builder);
         }
     }

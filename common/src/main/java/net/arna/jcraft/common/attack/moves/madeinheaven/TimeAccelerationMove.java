@@ -27,7 +27,7 @@ public final class TimeAccelerationMove extends AbstractMove<TimeAccelerationMov
 
     @Override
     public @NonNull Set<LivingEntity> perform(MadeInHeavenEntity attacker, LivingEntity user, MoveContext ctx) {
-        int accelTime = accelerationDuration.getAsInt();
+        final int accelTime = accelerationDuration.getAsInt();
         attacker.setAccelTime(accelTime);
         attacker.setAfterimage(true);
         TimeAccelStatePacket.sendStart(Objects.requireNonNull(attacker.getServer()).getPlayerList(), attacker, accelTime);
@@ -36,11 +36,11 @@ public final class TimeAccelerationMove extends AbstractMove<TimeAccelerationMov
     }
 
     public void tickTimeAcceleration(MadeInHeavenEntity attacker) {
-        int aTime = attacker.getAccelTime();
+        final int aTime = attacker.getAccelTime();
         attacker.setAccelTime(aTime - 1);
 
         if (aTime > 1) {
-            List<Entity> toCatch = attacker.level().getEntitiesOfClass(Entity.class,
+            final List<Entity> toCatch = attacker.level().getEntitiesOfClass(Entity.class,
                     attacker.getBoundingBox().inflate(96), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
             for (Entity entity : toCatch) {
                 if (entity instanceof LivingEntity) {
@@ -50,12 +50,11 @@ public final class TimeAccelerationMove extends AbstractMove<TimeAccelerationMov
             }
         } else if (aTime == 1) {
             if (attacker.getSpeedometer() == MadeInHeavenEntity.MAXIMUM_SPEEDOMETER) {
-                List<LivingEntity> toCatch = attacker.level().getEntitiesOfClass(LivingEntity.class,
+                final List<LivingEntity> toCatch = attacker.level().getEntitiesOfClass(LivingEntity.class,
                         attacker.getBoundingBox().inflate(96),
                         EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != attacker.getUser()));
 
-                for (LivingEntity entity : toCatch) // 15s of Standless to any victims of Universe Reset
-                {
+                for (LivingEntity entity : toCatch) { // 15s of Standless to any victims of Universe Reset
                     entity.addEffect(new MobEffectInstance(JStatusRegistry.STANDLESS.get(), 300, 0, true, false));
                 }
             }

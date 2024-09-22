@@ -24,13 +24,13 @@ public final class OverclockAttack extends AbstractSimpleAttack<OverclockAttack,
 
     @Override
     public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         for (LivingEntity target : targets) {
             target.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), 60, 3, true, false));
             target.addEffect(new MobEffectInstance(JStatusRegistry.OUTOFBODY.get(), 60, 0, false, true));
 
-            Vec3 upDir = new Vec3(GravityChangerAPI.getGravityDirection(user).step());
+            final Vec3 upDir = new Vec3(GravityChangerAPI.getGravityDirection(user).step());
             JUtils.setVelocity(target, upDir.scale(-0.8));
         }
 

@@ -21,7 +21,7 @@ public final class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> 
 
     @Override
     public @NonNull Set<LivingEntity> perform(KQBTDEntity attacker, LivingEntity user, MoveContext ctx) {
-        BubbleProjectile bubbleProjectile = new BubbleProjectile(attacker.level(), user);
+        final BubbleProjectile bubbleProjectile = new BubbleProjectile(attacker.level(), user);
         bubbleProjectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         bubbleProjectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, 0.5f, 0f);
         bubbleProjectile.setPos(attacker.position().add(0, 1.25, 0));
@@ -34,7 +34,7 @@ public final class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> 
     }
 
     public void tickBubble(KQBTDEntity stand) {
-        BubbleProjectile bubbleProjectile = stand.getMoveContext().get(BUBBLE_PROJECTILE);
+        final BubbleProjectile bubbleProjectile = stand.getMoveContext().get(BUBBLE_PROJECTILE);
         if (bubbleProjectile != null && !bubbleProjectile.isInGround() && stand.hasUser()) {
             bubbleProjectile.setDeltaMovement(stand.getUserOrThrow().getLookAngle().scale(0.5));
             bubbleProjectile.hurtMarked = true;

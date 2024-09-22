@@ -24,7 +24,7 @@ public final class BloodThrowAttack extends AbstractMove<BloodThrowAttack, KingC
 
     @Override
     public @NonNull Set<LivingEntity> perform(KingCrimsonEntity attacker, LivingEntity user, MoveContext ctx) {
-        BloodProjectile bloodProjectile = new BloodProjectile(attacker.level(), user);
+        final BloodProjectile bloodProjectile = new BloodProjectile(attacker.level(), user);
         bloodProjectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         bloodProjectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, user.isShiftKeyDown() ? 1.33F : 0.66F, 0);
         bloodProjectile.setPos(attacker.getEyePosition());

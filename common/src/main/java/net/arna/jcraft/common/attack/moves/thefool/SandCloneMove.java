@@ -27,7 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
-    public static final MoveVariable<Mob> SAND_CLONE = new MoveVariable<>(Mob.class);
+    private static final MoveVariable<Mob> SAND_CLONE = new MoveVariable<>(Mob.class);
 
     public SandCloneMove(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
@@ -36,10 +36,10 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
 
     @Override
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
-        Vec3 pos = user.getEyePosition();
+        final Vec3 pos = user.getEyePosition();
 
         // Display sand effect
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 
         buf.writeShort(11);
         buf.writeDouble(pos.x);
@@ -67,7 +67,7 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
                     y = 0.8;
                     hDiv = 9.5;
                 }
-                TheFoolEntity.createFoolishSand(attacker.level(), attacker.blockPosition(),
+                TheFoolEntity.createFoolishSand(attacker.level(), attacker, attacker.blockPosition(),
                         new Vec3(Math.sin(h) / hDiv, y, Math.cos(h) / hDiv));
             }
             return Set.of();
@@ -75,7 +75,7 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
 
         // Summon clone
         if (user instanceof ServerPlayer player) {
-            PlayerCloneEntity playerCloneEntity = new PlayerCloneEntity(attacker.level());
+            final PlayerCloneEntity playerCloneEntity = new PlayerCloneEntity(attacker.level());
             playerCloneEntity.copyPosition(player);
             playerCloneEntity.setMaster(player);
             playerCloneEntity.markSand();
@@ -88,8 +88,7 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
 
             setSandClone(ctx, playerCloneEntity);
         } else if (user instanceof Mob mob) {
-            Mob newMob = JUtils.mobCloneOf(mob);
-            setSandClone(ctx, newMob);
+            setSandClone(ctx, JUtils.mobCloneOf(mob));
         }
 
         attacker.level().addFreshEntity(ctx.get(SAND_CLONE));
@@ -97,23 +96,23 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
     }
 
     public void tickClone(TheFoolEntity attacker) {
-        Mob sandClone = attacker.getMoveContext().get(SAND_CLONE);
+        final Mob sandClone = attacker.getMoveContext().get(SAND_CLONE);
         if (sandClone != null && sandClone.tickCount > 200) {
             setSandClone(attacker.getMoveContext(), null);
         }
     }
 
     public void discardClone(TheFoolEntity attacker) {
-        Mob sandClone = attacker.getMoveContext().get(SAND_CLONE);
+        final Mob sandClone = attacker.getMoveContext().get(SAND_CLONE);
         if (sandClone != null) {
             sandClone.discard();
         }
     }
 
     private void setSandClone(MoveContext ctx, Mob clone) {
-        Mob sandClone = ctx.get(SAND_CLONE);
-        if (sandClone != null) {
-            sandClone.kill();
+        final Mob currentSandClone = ctx.get(SAND_CLONE);
+        if (currentSandClone != null) {
+            currentSandClone.kill();
         }
         ctx.set(SAND_CLONE, clone);
         if (clone == null) {
@@ -128,7 +127,7 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
             JCraft.LOGGER.error("Tried to apply sand clone attribute modifiers to invalid entity!");
             return;
         }
-        AttributeInstance maxHealthAttribute = entity.getAttribute(Attributes.MAX_HEALTH);
+        final AttributeInstance maxHealthAttribute = entity.getAttribute(Attributes.MAX_HEALTH);
         if (maxHealthAttribute == null) {
             JCraft.LOGGER.error("Tried to apply sand clone attribute modifiers to entity with no max health attribute!");
             return;

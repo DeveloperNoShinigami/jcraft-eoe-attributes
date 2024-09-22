@@ -17,7 +17,7 @@ public final class SandTornadoMove extends AbstractMove<SandTornadoMove, TheFool
 
     @Override
     public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
-        SandTornadoEntity sandTornado = new SandTornadoEntity(attacker.level());
+        final SandTornadoEntity sandTornado = new SandTornadoEntity(attacker.level());
         sandTornado.setMaster(user);
         sandTornado.moveTo(attacker.getX(), attacker.getY() + 1.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());
         attacker.level().addFreshEntity(sandTornado);

@@ -228,7 +228,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                 return true;
             }
             case ULTIMATE -> {
-                CommonGravityShiftComponent shiftComponent = JComponentPlatformUtils.getGravityShift(getUserOrThrow());
+                final CommonGravityShiftComponent shiftComponent = JComponentPlatformUtils.getGravityShift(getUserOrThrow());
                 if (shiftComponent.isActive()) {
                     shiftComponent.swapRadialType();
                 } else {
@@ -250,12 +250,12 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
 
     @Override
     public void standBlock() {
-        LivingEntity user = getUser();
+        final LivingEntity user = getUser();
         if (user == null) {
             return;
         }
         // Projectile deflection
-        List<Projectile> toDeflect = level().getEntitiesOfClass(Projectile.class, getBoundingBox().inflate(0.75f), EntitySelector.ENTITY_STILL_ALIVE);
+        final List<Projectile> toDeflect = level().getEntitiesOfClass(Projectile.class, getBoundingBox().inflate(0.75f), EntitySelector.ENTITY_STILL_ALIVE);
 
         for (Projectile projectile : toDeflect) {
             if (projectile.getOwner() == user) {
@@ -273,22 +273,16 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     public void tick() {
         super.tick();
 
-        if (!hasUser()) {
-            return;
-        }
-        LivingEntity user = getUserOrThrow();
-
-        if (level().isClientSide) {
-            return;
-        }
+        if (level().isClientSide()) return;
+        final LivingEntity user = getUserOrThrow();
 
         for (int i = 0; i < inversions.size(); i++) {
-            Inversion inversion = inversions.get(i);
-            int time = inversion.getTime();
+            final Inversion inversion = inversions.get(i);
+            final int time = inversion.getTime();
             inversion.setTime(time - 1);
 
             if (time < 1) {
-                LivingEntity entity = inversion.getEntity();
+                final LivingEntity entity = inversion.getEntity();
                 damage(inversion.getDamage(), level().damageSources().mobAttack(user), entity);
                 inversions.remove(i);
 
@@ -342,14 +336,14 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
         INVERSION_PUNCH(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cmoon.inversionpunch"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cmoon.light_followup")));
 
-        private final Consumer<AnimationState> animator;
+        private final Consumer<AnimationState<CMoonEntity>> animator;
 
-        State(Consumer<AnimationState> animator) {
+        State(Consumer<AnimationState<CMoonEntity>> animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(CMoonEntity attacker, AnimationState state) {
+        public void playAnimation(CMoonEntity attacker, AnimationState<CMoonEntity> state) {
             animator.accept(state);
         }
     }

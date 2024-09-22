@@ -49,9 +49,9 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
 
     @Override
     public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        ServerLevel world = (ServerLevel) attacker.level();
+        final ServerLevel world = (ServerLevel) attacker.level();
 
         if (world.dimension().equals(JDimensionRegistry.AU_DIMENSION_KEY)) {
             // Logic for cancelling dimhop early, and generating failsafe data

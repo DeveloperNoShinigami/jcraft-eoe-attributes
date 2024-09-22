@@ -43,11 +43,11 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
     @Override
     public void tick(A attacker, int moveStun) {
         super.tick(attacker, moveStun);
-        Entity attackerEntity = attacker.getBaseEntity();
+        final Entity attackerEntity = attacker.getBaseEntity();
         if (attackerEntity instanceof StandEntity<?, ?> stand) {
             tickChargeBarrageAttack(stand, moveStun < getWindupPoint(), getMoveDistance(), getWindupPoint(), moveStun);
         } else {
-            JCraft.LOGGER.error("Trying to tick ChargeBarrageAttack non non-stand entity; " + attackerEntity);
+            JCraft.LOGGER.error("Trying to tick ChargeBarrageAttack on non-stand entity; " + attackerEntity);
         }
     }
 
@@ -62,7 +62,7 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
 
     private void tickChargeBarrageAttack(StandEntity<?, ?> attacker, boolean shouldPerform, float moveDistance, int windupPoint, int moveStun) {
         if (shouldPerform) {
-            Vec3 newPos = advanceChargePos(attacker, moveDistance, windupPoint, moveStun);
+            final Vec3 newPos = advanceChargePos(attacker, moveDistance, windupPoint, moveStun);
             attacker.setFreePos(new Vector3f((float) newPos.x, (float) newPos.y, (float) newPos.z));
             attacker.setFree(true);
         } else {
@@ -72,12 +72,13 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-        Entity attackerEntity = attacker.getBaseEntity();
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        final Entity attackerEntity = attacker.getBaseEntity();
         if (targets.isEmpty() || attackerEntity == null) {
             return targets;
         }
 
+        // Moves slower if hit targets are closer, thus not phasing through them.
         Vec3 avgPos = Vec3.ZERO;
         float c = 0;
         for (LivingEntity target : targets) {
