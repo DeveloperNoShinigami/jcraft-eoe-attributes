@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 public interface JItemRegistry {
 
     DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.ITEM);
-    Map<RegistrySupplier<Item>, ResourceLocation> ITEMS = new LinkedHashMap<>();
+    Map<RegistrySupplier<? extends Item>, ResourceLocation> ITEMS = new LinkedHashMap<>();
 
     RegistrySupplier<Item> DEBUG_WAND = register("debug_wand", () -> new DebugWand(settings()));
 
@@ -36,9 +36,9 @@ public interface JItemRegistry {
 
     RegistrySupplier<Item> KQ_COIN = register("kq_coin", () -> new KQCoinItem(settings()));
 
-    RegistrySupplier<Item> GREEN_BABY = register("green_baby", () -> new GreenBabyItem(settings().rarity(Rarity.RARE)));
+    RegistrySupplier<GreenBabyItem> GREEN_BABY = register("green_baby", () -> new GreenBabyItem(settings().rarity(Rarity.RARE)));
 
-    RegistrySupplier<Item> DIOS_DIARY = register("dios_diary", () -> new DIOsDiaryItem(settings().rarity(Rarity.EPIC).fireResistant()));
+    RegistrySupplier<DIOsDiaryItem> DIOS_DIARY = register("dios_diary", () -> new DIOsDiaryItem(settings().rarity(Rarity.EPIC).fireResistant()));
 
 
     RegistrySupplier<Item> SINNERS_SOUL = register("sinners_soul", () -> new SinnersSoulItem(settings()));
@@ -57,9 +57,9 @@ public interface JItemRegistry {
 
     RegistrySupplier<Item> REQUIEM_RUBY = register("requiem_ruby", () -> new Item(settings().rarity(Rarity.EPIC).fireResistant()));
 
-    RegistrySupplier<Item> REQUIEM_ARROW = register("requiem_arrow", () -> new RequiemArrowItem(settings().rarity(Rarity.EPIC).fireResistant()));
+    RegistrySupplier<RequiemArrowItem> REQUIEM_ARROW = register("requiem_arrow", () -> new RequiemArrowItem(settings().rarity(Rarity.EPIC).fireResistant()));
 
-    RegistrySupplier<Item> LIVING_ARROW = register("living_arrow", () -> new LivingArrowItem(settings().rarity(Rarity.RARE).fireResistant()));
+    RegistrySupplier<LivingArrowItem> LIVING_ARROW = register("living_arrow", () -> new LivingArrowItem(settings().rarity(Rarity.RARE).fireResistant()));
 
     RegistrySupplier<Item> DIO_HEADBAND = register("dio_headband", () -> new DIOArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> DIO_JACKET = register("dio_jacket", () -> new DIOArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
@@ -108,8 +108,7 @@ public interface JItemRegistry {
 
     //Block
     RegistrySupplier<Item> FOOLISH_SAND_BLOCK = register("foolish_sand_block",
-            () -> new BlockItem(JBlockRegistry.FOOLISH_SAND_BLOCK.get(), settings()
-            ));
+            () -> new BlockItem(JBlockRegistry.FOOLISH_SAND_BLOCK.get(), settings()));
     RegistrySupplier<Item> SOUL_BLOCK = register("soul_block", () -> new BlockItem(JBlockRegistry.SOUL_BLOCK.get(), settings()));
     RegistrySupplier<Item> METEORITE_BLOCK = register("meteorite_block", () -> new BlockItem(JBlockRegistry.METEORITE_BLOCK.get(), settings()));
     RegistrySupplier<Item> POLISHED_METEORITE_BLOCK = register("polished_meteorite_block", () -> new BlockItem(JBlockRegistry.POLISHED_METEORITE_BLOCK.get(), settings()));
@@ -126,8 +125,8 @@ public interface JItemRegistry {
     RegistrySupplier<Item> COFFIN_BLOCK = register("coffin",
             () -> new BlockItem(JBlockRegistry.COFFIN_BLOCK.get(), settings()));
 
-    static RegistrySupplier<Item> register(String id, Supplier<Item> supplier) {
-        var item = ITEM_REGISTRY.register(id, supplier);
+    static <T extends Item> RegistrySupplier<T> register(String id, Supplier<? extends T> supplier) {
+        RegistrySupplier<T> item = ITEM_REGISTRY.register(id, supplier);
         ITEMS.put(item, JCraft.id(id));
         return item;
     }
