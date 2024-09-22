@@ -61,7 +61,8 @@ import java.util.function.Consumer;
 public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.State> {
     private static final EntityDataAccessor<Boolean> PASSIVE;
     private static final EntityDataAccessor<Float> SCALE;
-    public float prevScale = MIN_SCALE;
+    // Only used for rendering. Ensures the scale doesn't change halfway during a tick cuz of syncing.
+    public float prevScale = MIN_SCALE, curScale = MIN_SCALE;
     public static final float MAX_SCALE = 3.0F, MIN_SCALE = 1.0F;
     public static final double MAX_DISTANCE = 64.0, AIMING_DISTANCE = 128.0;
     private int overextensionTime = 0;
@@ -577,7 +578,8 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
 
         }
 
-        prevScale = getScale();
+        prevScale = curScale;
+        curScale = getScale();
     }
 
     public static void dryOut(ServerLevel serverWorld, BlockPos pos) {

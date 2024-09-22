@@ -17,10 +17,6 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
 import net.arna.jcraft.common.gravity.util.GravityChannel;
-import net.arna.jcraft.common.item.DIOsDiaryItem;
-import net.arna.jcraft.common.item.GreenBabyItem;
-import net.arna.jcraft.common.item.LivingArrowItem;
-import net.arna.jcraft.common.item.RequiemArrowItem;
 import net.arna.jcraft.common.loot.JLootTableHelper;
 import net.arna.jcraft.common.network.RemoteStandInteractPacket;
 import net.arna.jcraft.common.network.c2s.*;
@@ -186,7 +182,7 @@ public final class JCraft {
     public static void initDispenserBehaviors() {
         DispenserBlock.registerBehavior(JItemRegistry.KNIFE.get(), new AbstractProjectileDispenseBehavior() {
             @Override
-            protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
+            protected @NotNull Projectile getProjectile(@NotNull Level world, @NotNull Position position, @NotNull ItemStack stack) {
                 KnifeProjectile knife = new KnifeProjectile(world);
                 knife.pickup = AbstractArrow.Pickup.ALLOWED;
                 knife.setPos(position.x(), position.y(), position.z());
@@ -249,7 +245,7 @@ public final class JCraft {
         FriendlyByteBuf buf = TimeStopStatePacket.createStopPacket(timestopper.getId());
         serverWorld.players().forEach(playerEntity -> TimeStopStatePacket.send(playerEntity, buf));
 
-        Vec3 position = timestop.pos;
+        Vec3 position = Objects.requireNonNull(timestop.pos);
 
         List<ServerPlayer> toUnfreeze = serverWorld.getEntitiesOfClass(ServerPlayer.class,
                 new AABB(position.add(96.0, 96.0, 96.0), position.subtract(96.0, 96.0, 96.0)), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
@@ -448,14 +444,14 @@ public final class JCraft {
     }
 
     public static void initStandIOMaps() {
-        ((GreenBabyItem)JItemRegistry.GREEN_BABY.get()).standIOMap.put(StandType.WHITE_SNAKE, StandType.C_MOON);
-        ((DIOsDiaryItem)JItemRegistry.DIOS_DIARY.get()).standIOMap.put(StandType.C_MOON, StandType.MADE_IN_HEAVEN);
-        ((DIOsDiaryItem)JItemRegistry.DIOS_DIARY.get()).standIOMap.put(StandType.THE_WORLD, StandType.THE_WORLD_OVER_HEAVEN);
+        JItemRegistry.GREEN_BABY.get().standIOMap.put(StandType.WHITE_SNAKE, StandType.C_MOON);
+        JItemRegistry.DIOS_DIARY.get().standIOMap.put(StandType.C_MOON, StandType.MADE_IN_HEAVEN);
+        JItemRegistry.DIOS_DIARY.get().standIOMap.put(StandType.THE_WORLD, StandType.THE_WORLD_OVER_HEAVEN);
 
-        ((LivingArrowItem)JItemRegistry.LIVING_ARROW.get()).standIOMap.put(StandType.KILLER_QUEEN, StandType.KILLER_QUEEN_BITES_THE_DUST);
-        ((LivingArrowItem)JItemRegistry.LIVING_ARROW.get()).standIOMap.put(StandType.STAR_PLATINUM, StandType.STAR_PLATINUM_THE_WORLD);
+        JItemRegistry.LIVING_ARROW.get().standIOMap.put(StandType.KILLER_QUEEN, StandType.KILLER_QUEEN_BITES_THE_DUST);
+        JItemRegistry.LIVING_ARROW.get().standIOMap.put(StandType.STAR_PLATINUM, StandType.STAR_PLATINUM_THE_WORLD);
 
-        ((RequiemArrowItem)JItemRegistry.REQUIEM_ARROW.get()).standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
+        JItemRegistry.REQUIEM_ARROW.get().standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
     }
 
     /**
@@ -481,9 +477,9 @@ public final class JCraft {
         if (victim == null || !victim.isAlive() || duration == 0) {
             return;
         }
-        if (attacker instanceof ServerPlayer serverPlayer) {
-
-        }
+//        if (attacker instanceof ServerPlayer serverPlayer) {
+//
+//        }
         victim.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), duration, amplifier, false, false, true));
         //JCraft.LOGGER.info("Stunned: " + entity.getEntityName() + " for: " + duration + " with stunType: " + amplifier);
     }
