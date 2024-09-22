@@ -21,7 +21,6 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor(staticName = "attack")
 public class AttackArgumentType implements ArgumentType<MoveType> {
     private static final SimpleCommandExceptionType NOT_FOUND = new SimpleCommandExceptionType(Component.literal("That attack type does not exist"));
-    //todo: add "RANDOM" to suggestions
     private static final Map<String, MoveType> suggestions = Arrays.stream(MoveType.values()).collect(
             ImmutableMap.toImmutableMap(type -> type.name().toLowerCase(Locale.ROOT), type -> type));
     private final Collection<String> examples = ImmutableList.of("RANDOM", "LIGHT", "BARRAGE", "UTILITY");
@@ -30,11 +29,11 @@ public class AttackArgumentType implements ArgumentType<MoveType> {
     public MoveType parse(StringReader reader) throws CommandSyntaxException {
         String name = reader.readUnquotedString();
 
-        if (Objects.equals(name.toUpperCase(), "RANDOM")) {
+        if (Objects.equals(name.toUpperCase(Locale.ROOT), "RANDOM")) {
             return MoveType.randomMoveType();
         }
         try {
-            return MoveType.valueOf(name.toUpperCase());
+            return MoveType.valueOf(name.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             throw NOT_FOUND.createWithContext(reader);
         }
@@ -48,6 +47,11 @@ public class AttackArgumentType implements ArgumentType<MoveType> {
                 .map(Map.Entry::getValue)
                 .map(MoveType::name)
                 .forEach(builder::suggest);
+
+        if ("random".startsWith(input)) {
+            builder.suggest("RANDOM");
+        }
+
         return builder.buildFuture();
     }
 }

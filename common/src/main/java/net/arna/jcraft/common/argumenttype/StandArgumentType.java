@@ -30,7 +30,7 @@ public class StandArgumentType implements ArgumentType<StandType> {
     public StandType parse(StringReader reader) throws CommandSyntaxException {
         String name = reader.readUnquotedString();
         try {
-            return StandType.valueOf(name.toUpperCase());
+            return StandType.valueOf(name.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             throw NOT_FOUND.createWithContext(reader);
         }

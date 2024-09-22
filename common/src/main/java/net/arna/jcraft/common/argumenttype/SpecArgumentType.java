@@ -13,7 +13,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.arna.jcraft.common.spec.SpecType;
 import net.minecraft.network.chat.Component;
+
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -29,7 +31,7 @@ public class SpecArgumentType implements ArgumentType<SpecType> {
     public SpecType parse(StringReader reader) throws CommandSyntaxException {
         String name = reader.readUnquotedString();
         try {
-            return SpecType.valueOf(name.toUpperCase());
+            return SpecType.valueOf(name.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             throw NOT_FOUND.createWithContext(reader);
         }
