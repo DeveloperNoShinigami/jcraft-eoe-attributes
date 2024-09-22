@@ -40,18 +40,17 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
 
     // Not inlined for sake of debugging
     private static float lerpScale(TheSunEntity animatable, float partialTick) {
-        float scale = Mth.lerp(partialTick, animatable.prevScale, animatable.getScale());
+        float scale = Mth.lerp(partialTick, animatable.prevScale, animatable.curScale);
         return scale;
     }
 
     @Override
     public void preRender(PoseStack poseStack, TheSunEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-        // I suspect the renderlayers fuck it up but... why???
         if (!isReRender) {
-            //todo: planet fix this being dogshit in prod
             float scale = lerpScale(animatable, partialTick);
             poseStack.scale(scale, scale, scale);
         }
+
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }
