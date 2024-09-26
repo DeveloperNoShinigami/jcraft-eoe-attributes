@@ -28,6 +28,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -99,7 +100,9 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("4s max duration, can be held")
-            ).withAction(HorusEntity::fireIcicle);
+            )
+            .withAction(HorusEntity::fireIcicle)
+            .withAction((attacker, user, ctx, targets) -> attacker.playSound(JSoundRegistry.HORUS_BARRAGE_FIRE.get()));
     public static final SimpleAttack<HorusEntity> DETONATE = new SimpleAttack<HorusEntity>(
             0, 10, 12, 0.75f, 0, 0, 0, 0, 0)
             .withAnim(State.DETONATE)
@@ -112,6 +115,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             140, 11, 22, 0.75f, 9f, 12, 1.3f, 0.6f, 0.4f)
             .withFollowup(DETONATE)
             .withAnim(State.STOMP)
+            .withSound(JSoundRegistry.HORUS_STOMP.get())
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -142,6 +146,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             Also slow, slightly higher cooldown.
                             Fires a large icicle that detonates after 2s.""")
             )
+            .withSound(JSoundRegistry.HORUS_LANCE_CHARGE.get())
             .markRanged()
             .withAction(HorusEntity::iceLance);
 
@@ -167,6 +172,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         attacker.lastLargeIcicle.lock();
 
         attacker.level().addFreshEntity(attacker.lastLargeIcicle);
+        // attacker.playSound(JSoundRegistry.HORUS_LANCE_THROW.get());
     }
     public static final SimpleAttack<HorusEntity> SCATTER = new SimpleAttack<HorusEntity>(
             60, 16, 20, 0.75f, 0, 0, 0, 0, 0)
@@ -178,6 +184,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                                     Fires 6 icicles that bounce off walls.""")
             )
             .markRanged()
+            .withSound(JSoundRegistry.HORUS_SCATTER.get())
             .withAction(HorusEntity::scatter);
     // Special 2
     private int icicleChargeTime = 0;
@@ -208,6 +215,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.empty()
             )
             .markRanged()
+            .withSound(JSoundRegistry.HORUS_PlACE_CREEPING_ICE.get())
             .withAction(HorusEntity::placeIceBranch);
     public static final EffectInflictingAttack<HorusEntity> PERFECT_FREEZE = new EffectInflictingAttack<HorusEntity>(50 * 20,
             14, 30, 0f, 4f, 10, 2.5f, 0.3f, 0,
@@ -220,6 +228,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             summons 3 ice branches to chase opponents
                             stops all nearby projectiles""")
             )
+            .withSound(JSoundRegistry.HORUS_PlACE_CREEPING_ICE.get())
             .withAction(HorusEntity::perfectFreeze);
 
     private static void perfectFreeze(HorusEntity attacker, LivingEntity livingEntity, MoveContext context, Set<LivingEntity> livingEntities) {
@@ -260,6 +269,11 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                 new Vector3f(1.0f, 0.3f, 0.7f),
                 new Vector3f(1.0f, 0.0f, 0.0f)
         };
+    }
+
+    @Override
+    public @Nullable SoundEvent getSummonSound() {
+        return JSoundRegistry.HORUS_SUMMON.get();
     }
 
     private static void detonate(HorusEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
@@ -360,6 +374,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         attacker.lastLargeIcicle.lock();
 
         attacker.level().addFreshEntity(attacker.lastLargeIcicle);
+        attacker.playSound(JSoundRegistry.HORUS_STOMP_SLAM.get());
     }
 
     private static void fireChargedIcicle(HorusEntity attacker, LivingEntity user, MoveContext context) {

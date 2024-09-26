@@ -106,6 +106,15 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.literal("Slice"),
                     Component.literal("quick combo starter")
             );
+    public static final BarrageAttack<MetallicaEntity> BARRAGE = new BarrageAttack<MetallicaEntity>(240, 0,
+            40, 0.75f, 0.8f, 20, 1.6f, 0.25f, 0f, 3)
+            // .withSound(JSoundRegistry.METALLICA_BARRAGE.get())
+            .withHitSpark(JParticleType.HIT_SPARK_1)
+            .withImpactSound(JSoundRegistry.IMPACT_9.get())
+            .withInfo(
+                    Component.literal("Barrage"),
+                    Component.literal("fast reliable combo starter/extender, high stun, smaller hitbox than most barrages")
+            );
     public static final KnockdownAttack<MetallicaEntity> SWEEP = new KnockdownAttack<MetallicaEntity>(40,
             7, 14, 0.75f, 5f, 8, 1.5f, 0.3f, 0.4f, 35)
             .withImpactSound(SoundEvents.PLAYER_ATTACK_SWEEP)
@@ -328,7 +337,10 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         idleDistance = 0;
 
         auraColors = new Vector3f[] {
-                new Vector3f(0.1f, 0.1f, 0.4f)
+                new Vector3f(0.1f, 0.1f, 0.4f),
+                new Vector3f(0.5f, 0.2f, 0.3f),
+                new Vector3f(0.8f, 0.8f, 0.5f),
+                new Vector3f(0.8f, 0.2f, 0.6f),
         };
     }
 
@@ -343,6 +355,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     protected void registerMoves(MoveMap<MetallicaEntity, MetallicaEntity.State> moves) {
         var light = moves.register(MoveType.LIGHT, LIGHT, State.LIGHT);
         light.withFollowUp(State.LIGHT_FOLLOWUP).withFollowUp(State.LIGHT_FINAL);
+        moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
         moves.register(MoveType.HEAVY, SMASH, State.SMASH).withCrouchingVariant(State.SWEEP);
 
         moves.register(MoveType.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS).withCrouchingVariant(State.FAN_TOSS);
@@ -456,6 +469,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         PRECISE_TOSS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.precise_toss"))),
         FAN_TOSS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.fan_toss"))),
         HARVEST(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.harvest"))),
+        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.barrage"))),
         SMASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.smash"))),
         SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.sweep"))),
         GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.grab_hit"))),

@@ -249,6 +249,16 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> SUN_METEOR_FIRE = register("sunmeteorfire");
     RegistrySupplier<SoundEvent> SUN_IDLE = register("sunidle");
 
+    // Horus
+    RegistrySupplier<SoundEvent> HORUS_SUMMON = register("horussummon");
+    RegistrySupplier<SoundEvent> HORUS_BARRAGE_FIRE = register("horusbarragefire");
+    RegistrySupplier<SoundEvent> HORUS_SCATTER = register("horusscatter");
+    RegistrySupplier<SoundEvent> HORUS_LANCE_CHARGE = register("horuslancecharge");
+    RegistrySupplier<SoundEvent> HORUS_LANCE_THROW = register("horuslancethrow");
+    RegistrySupplier<SoundEvent> HORUS_PlACE_CREEPING_ICE = register("horusplacecreepingice");
+    RegistrySupplier<SoundEvent> HORUS_STOMP = register("horusstomp");
+    RegistrySupplier<SoundEvent> HORUS_STOMP_SLAM = register("horusstompslam");
+
     //// SPECS
     // Brawler
 
@@ -272,7 +282,5 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> BULLET_RICOCHET = register("bulletricochet");
     RegistrySupplier<SoundEvent> BULLET_PENETRATE = register("bulletpenetrate");
 
-    static void registerSounds() {
-
-    }
+    static void registerSounds() { }
 }

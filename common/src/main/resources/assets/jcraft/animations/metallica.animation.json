@@ -137,6 +137,232 @@
 				}
 			}
 		},
+		"animation.metallica.barrage": {
+			"loop": true,
+			"animation_length": 0.76,
+			"bones": {
+				"scalpel": {
+					"rotation": {
+						"vector": [0, -90, 0]
+					},
+					"position": {
+						"0.0": {
+							"vector": [-1, 13, -12],
+							"easing": "easeOutBack"
+						},
+						"0.2": {
+							"vector": [-1, 13, 10],
+							"easing": "easeInSine"
+						},
+						"0.6": {
+							"vector": [-1, 13, 10]
+						},
+						"0.76": {
+							"vector": [-1, 13, -12],
+							"easing": "easeOutBack"
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.2": {
+							"vector": [0, 0, 0],
+							"easing": "easeInBack"
+						},
+						"0.6": {
+							"vector": [0, 0, 0]
+						},
+						"0.76": {
+							"vector": [1, 1, 1],
+							"easing": "easeOutBack"
+						}
+					}
+				},
+				"blur": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"scalpel2": {
+					"rotation": {
+						"vector": [0, -90, 0]
+					},
+					"position": {
+						"0.0": {
+							"vector": [7, 4, 9]
+						},
+						"0.16": {
+							"vector": [6, 4, -12],
+							"easing": "easeOutBack"
+						},
+						"0.28": {
+							"vector": [-1, 13, 10],
+							"easing": "easeInSine"
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.08": {
+							"vector": [1, 1, 1]
+						},
+						"0.28": {
+							"vector": [0, 0, 0],
+							"easing": "easeInBack"
+						}
+					}
+				},
+				"scalpel3": {
+					"rotation": {
+						"vector": [0, -90, 0]
+					},
+					"position": {
+						"0.16": {
+							"vector": [-8, 16, 9]
+						},
+						"0.32": {
+							"vector": [-8, 17, -12],
+							"easing": "easeOutBack"
+						},
+						"0.48": {
+							"vector": [-1, 13, 10],
+							"easing": "easeInSine"
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.16": {
+							"vector": [0, 0, 0]
+						},
+						"0.24": {
+							"vector": [1, 1, 1]
+						},
+						"0.48": {
+							"vector": [0, 0, 0],
+							"easing": "easeInBack"
+						}
+					}
+				},
+				"shield": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"vector": [0, 12, 0]
+					}
+				},
+				"lowbase": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"cleaver": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"cleaver2": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"scalpel4": {
+					"rotation": {
+						"vector": [0, -90, 0]
+					},
+					"position": {
+						"0.32": {
+							"vector": [-7, 8, 9]
+						},
+						"0.48": {
+							"vector": [-7, 6, -12],
+							"easing": "easeOutBack"
+						},
+						"0.6": {
+							"vector": [-1, 13, 10],
+							"easing": "easeInSine"
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.32": {
+							"vector": [0, 0, 0]
+						},
+						"0.4": {
+							"vector": [1, 1, 1]
+						},
+						"0.6": {
+							"vector": [0, 0, 0],
+							"easing": "easeInBack"
+						}
+					}
+				},
+				"scalpel5": {
+					"rotation": {
+						"vector": [0, -90, 0]
+					},
+					"position": {
+						"0.44": {
+							"vector": [7, 19, 9]
+						},
+						"0.6": {
+							"vector": [6, 21, -12],
+							"easing": "easeOutBack"
+						},
+						"0.76": {
+							"vector": [-1, 13, 10],
+							"easing": "easeInSine"
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.44": {
+							"vector": [0, 0, 0]
+						},
+						"0.52": {
+							"vector": [1, 1, 1]
+						},
+						"0.76": {
+							"vector": [0, 0, 0],
+							"easing": "easeInBack"
+						}
+					}
+				},
+				"blur2": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"blur3": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"blur4": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"blur5": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
 		"animation.metallica.light": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.64,

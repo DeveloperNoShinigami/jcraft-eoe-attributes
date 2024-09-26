@@ -950,6 +950,46 @@
       "jcraft:stands/the_sun/idle"
     ]
   },
+  "horussummon": {
+    "sounds": [
+      "jcraft:stands/horus/summon"
+    ]
+  },
+  "horusbarragefire": {
+    "sounds": [
+      "jcraft:stands/horus/barrage_fire"
+    ]
+  },
+  "horusscatter": {
+    "sounds": [
+      "jcraft:stands/horus/scatter"
+    ]
+  },
+  "horuslancecharge": {
+    "sounds": [
+      "jcraft:stands/horus/lance_charge"
+    ]
+  },
+  "horuslancethrow": {
+    "sounds": [
+      "jcraft:stands/horus/lance_throw"
+    ]
+  },
+  "horusplacecreepingice": {
+    "sounds": [
+      "jcraft:stands/horus/place_creeping_ice"
+    ]
+  },
+  "horusstomp": {
+    "sounds": [
+      "jcraft:stands/horus/stomp"
+    ]
+  },
+  "horusstompslam": {
+    "sounds": [
+      "jcraft:stands/horus/stomp_slam"
+    ]
+  },
   "anubisslash": {
     "sounds": [
       "jcraft:specs/anubis/slash"

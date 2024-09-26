@@ -63,28 +63,23 @@
 
 ### Known Bugs
 #### Common
-* Timestop doesn't stop animated textures
-
-
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
-* this bug is EVIL and has an unclear source >:(
-* in the future, try looking at what sets the enemies target to null
-* its obfuscated because of how goals are wrapped, but its probably possible to figure out
-* To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
+  this bug is EVIL and has an unclear source >:(
+  in the future, try looking at what sets the enemies target to null
+  its obfuscated because of how goals are wrapped, but its probably possible to figure out
+  To add to this, the loading of chunks in D4Cs dimension should be done with tickets instead of a mass forceload
 #### Prod (i.e. fuck your devenv)
 * The Sun scales up too much
-  (PLANET)
-# Bug List
 #### Forge
 * The client doesn't register The Sun as it's stand if moved out of and into render distance
-* in Fabric, it simply unloads when out of sight. This behavior is preferable.
+  in Fabric, it simply unloads when out of sight. This behavior is preferable
 
 
 #### todo (NOT THIS UPDATE) :)
 * Fix attacks not being able to trade - because ticking isn't done in parallel, the first entity to be ticked
     will have priority when it comes to attack calculations, even though both executed an attack at the same time.
     A possible solution to this is to just queue up all the move.tick() calls and run them all at the very end of a server tick.
-
+* Timestop should stop animated textures
 * Hermit Purple, Yellow Temperance
 * Internationalization
 * Actually use effect keyframes in animations

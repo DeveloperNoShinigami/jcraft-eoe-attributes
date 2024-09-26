@@ -1,7 +1,5 @@
 package net.arna.jcraft.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.config.JServerConfig;
@@ -63,6 +61,8 @@ public abstract class LivingEntityMixin implements IDamageScaler {
         }
     }
 
+    /* todo: fixme?? causes InvocationTargetException on FORGE
+    // i assume its something related to referencing LivingEntity this directly
     @WrapOperation(
             method = "baseTick",
             at = @At(
@@ -76,6 +76,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
             original.call(livingEntity, airSupply);
         }
     }
+     */
 
     @Inject(cancellable = true, method = "setLastHurtMob", at = @At("HEAD"))
     public void jcraft$onAttacking(Entity target, CallbackInfo info) {
