@@ -11,6 +11,7 @@ import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.player.PhCapability;
 import net.arna.jcraft.forge.capability.impl.player.SpecCapability;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
+import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,6 +25,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingBreatheEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
 import net.minecraftforge.event.level.SleepFinishedTimeEvent;
@@ -149,5 +151,10 @@ public class RuntimeEvents {
         if (world.dayTime() % 24_000 < 12_000) { // before dusk
             event.setTimeAddition((world.dayTime() / 24_000) * 24_000 + 13_000); // nighttime
         }
+    }
+
+    @SubscribeEvent
+    public static void stopBreathing(LivingBreatheEvent event) {
+        event.setCanRefillAir(!event.getEntity().hasEffect(JStatusRegistry.HYPOXIA.get()));
     }
 }

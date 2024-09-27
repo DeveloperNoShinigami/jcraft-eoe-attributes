@@ -27,7 +27,7 @@ public class GrindstoneScreenHandlerMixin {
         ItemStack stack2 = repairSlots.getItem(1);
 
         ItemStack stack = stack1.isEmpty() ? stack2 : stack1;
-        if (stack.getItem() != JItemRegistry.STAND_DISC) {
+        if (stack.getItem() != JItemRegistry.STAND_DISC.get()) {
             return value;
         }
 
@@ -36,7 +36,7 @@ public class GrindstoneScreenHandlerMixin {
 
     @Inject(method = "removeNonCurses", at = @At("RETURN"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     private void grindStandDisc(ItemStack stack, int damage, int amount, CallbackInfoReturnable<ItemStack> cir, ItemStack copy) {
-        if (copy.getItem() != JItemRegistry.STAND_DISC) {
+        if (copy.getItem() != JItemRegistry.STAND_DISC.get()) {
             return;
         }
 

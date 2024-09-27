@@ -53,8 +53,8 @@ public class MetallicaRenderer extends StandEntityRenderer<MetallicaEntity> {
             for (int i = 0; i < 5; i++) {
                 matrixStack.translate(toUser.x, toUser.y, toUser.z);
                 matrixStack.pushPose();
-                matrixStack.mulPose(Axis.XN.rotationDegrees(Mth.lerp(partialTick, user.xRotO, user.getXRot())));
-                matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, user.yRotO, user.getYRot())));
+                matrixStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(partialTick, user.xRotO, user.getXRot())));
+                matrixStack.mulPose(Axis.YN.rotationDegrees(Mth.lerp(partialTick, user.yRotO, user.getYRot())));
                 this.heldItemRenderer.renderItem(animatable, IRON_NUGGET, ItemDisplayContext.GROUND, false, matrixStack, bufferSource, i);
                 matrixStack.popPose();
             }

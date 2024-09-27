@@ -107,14 +107,15 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.literal("quick combo starter")
             );
     public static final BarrageAttack<MetallicaEntity> BARRAGE = new BarrageAttack<MetallicaEntity>(240, 0,
-            40, 0.75f, 0.8f, 20, 1.6f, 0.25f, 0f, 3)
+            30, 0.75f, 0.8f, 20, 1.6f, 0.25f, 0f, 3)
             // .withSound(JSoundRegistry.METALLICA_BARRAGE.get())
             .withHitSpark(JParticleType.HIT_SPARK_1)
             .withImpactSound(JSoundRegistry.IMPACT_9.get())
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, high stun, smaller hitbox than most barrages")
-            );
+            )
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.brg"));
     public static final KnockdownAttack<MetallicaEntity> SWEEP = new KnockdownAttack<MetallicaEntity>(40,
             7, 14, 0.75f, 5f, 8, 1.5f, 0.3f, 0.4f, 35)
             .withImpactSound(SoundEvents.PLAYER_ATTACK_SWEEP)

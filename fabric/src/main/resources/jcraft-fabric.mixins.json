@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "EntityMixin",
+    "LivingEntityMixin",
     "ServerPlayerEntityMixin",
     "TimestopBlockMixin",
     "gravity.EntityMixin"

@@ -61,23 +61,6 @@ public abstract class LivingEntityMixin implements IDamageScaler {
         }
     }
 
-    /* todo: fixme?? causes InvocationTargetException on FORGE
-    // i assume its something related to referencing LivingEntity this directly
-    @WrapOperation(
-            method = "baseTick",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/LivingEntity;setAirSupply(I)V",
-                    ordinal = 2
-            )
-    )
-    public void jcraft$stopBreathing(LivingEntity livingEntity, int airSupply, Operation<Void> original) {
-        if (!livingEntity.hasEffect(JStatusRegistry.HYPOXIA.get())) {
-            original.call(livingEntity, airSupply);
-        }
-    }
-     */
-
     @Inject(cancellable = true, method = "setLastHurtMob", at = @At("HEAD"))
     public void jcraft$onAttacking(Entity target, CallbackInfo info) {
         if (JUtils.isAffectedByTimeStop((LivingEntity) (Object) this)) {
