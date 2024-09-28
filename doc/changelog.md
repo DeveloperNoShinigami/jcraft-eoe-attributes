@@ -79,6 +79,7 @@
 * Fix attacks not being able to trade - because ticking isn't done in parallel, the first entity to be ticked
     will have priority when it comes to attack calculations, even though both executed an attack at the same time.
     A possible solution to this is to just queue up all the move.tick() calls and run them all at the very end of a server tick.
+* Fix AI stand users having clientside head rotation that completely throws off players
 * Timestop should stop animated textures
 * Hermit Purple, Yellow Temperance
 * Internationalization

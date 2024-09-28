@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class GEFrogRenderer extends FrogRenderer {
@@ -23,7 +24,7 @@ public class GEFrogRenderer extends FrogRenderer {
     }
 
     @Override
-    public void render(Frog frogEntity, float f, float g, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i) {
+    public void render(Frog frogEntity, float f, float g, PoseStack matrixStack, @NotNull MultiBufferSource vertexConsumerProvider, int i) {
         matrixStack.pushPose();
         matrixStack.translate(0.0, 0.4, 0);
         matrixStack.mulPose(Axis.YN.rotationDegrees(frogEntity.getYRot()));

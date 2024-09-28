@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.arna.jcraft.common.tickable.FrameDataRequests;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 public class FrameDataCommand {
@@ -26,6 +27,10 @@ public class FrameDataCommand {
         ServerPlayer player = source.getPlayer();
         if (player == null) return 0;
         FrameDataRequests.add(player, stand ? FrameDataRequests.FrameDataType.STAND : FrameDataRequests.FrameDataType.SPEC);
+        player.displayClientMessage(
+                Component.translatable("jcraft.framedata.await"),
+                false
+        );
         return 1;
     }
 }

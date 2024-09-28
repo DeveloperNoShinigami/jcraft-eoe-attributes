@@ -1,0 +1,116 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"mtl.clv": {
+			"animation_length": 1,
+			"bones": {
+				"head": {
+					"position": {
+						"0.0": {
+							"vector": [0, -3, -5]
+						},
+						"0.36": {
+							"vector": [0, -1, 2]
+						},
+						"0.56": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutSine"
+						}
+					}
+				},
+				"torso": {
+					"rotation": {
+						"0.0": {
+							"vector": [25, 0, 0]
+						},
+						"0.36": {
+							"vector": [-12.5, 0, 0],
+							"easing": "easeInOutSine"
+						},
+						"0.56": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, -2, -5]
+						},
+						"0.36": {
+							"vector": [0, -1, 2],
+							"easing": "easeInOutSine"
+						},
+						"0.56": {
+							"vector": [0, -1, 0]
+						}
+					}
+				},
+				"leftArm": {
+					"rotation": {
+						"0.0": {
+							"vector": [-64.44, 27.51, 12.46]
+						},
+						"0.36": {
+							"vector": [64.86071, -19.67525, -95.37278],
+							"easing": "easeInOutSine"
+						},
+						"0.56": {
+							"vector": [-110.13929, -19.67525, -95.37278],
+							"easing": "easeInOutSine"
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [-1, -2, -4]
+						},
+						"0.36": {
+							"vector": [1, -2, 1],
+							"easing": "easeInOutSine"
+						},
+						"0.56": {
+							"vector": [1, -2, 0],
+							"easing": "easeInOutSine"
+						}
+					}
+				},
+				"rightArm": {
+					"rotation": {
+						"0.0": {
+							"vector": [-58, -31.95, -20.69]
+						},
+						"0.36": {
+							"vector": [75.10837, 14.76415, 97.11062],
+							"easing": "easeInOutSine"
+						},
+						"0.56": {
+							"vector": [-110.75338, 21.7987, 94.36908],
+							"easing": "easeInOutSine"
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [1, -2, -5]
+						},
+						"0.36": {
+							"vector": [-1, -2, 1],
+							"easing": "easeInOutSine"
+						},
+						"0.56": {
+							"vector": [-1, -2, -1],
+							"easing": "easeInOutSine"
+						}
+					}
+				},
+				"rightLeg": {
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"leftLeg": {
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		}
+	}
+}

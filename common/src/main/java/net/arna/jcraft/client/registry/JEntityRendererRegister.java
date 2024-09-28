@@ -100,6 +100,7 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.METEOR, MeteorRenderer::new),
             new RendererData<>(JEntityTypeRegistry.PH_CAPSULE, PHCapsuleRenderer::new),
             new RendererData<>(JEntityTypeRegistry.PURPLE_HAZE_CLOUD, JEntityRendererRegister::createEmpty),
+            new RendererData<>(JEntityTypeRegistry.METALLICA_FORKS, MetallicaForksRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.PETSHOP, PetshopRenderer::new),
             new RendererData<>(JEntityTypeRegistry.AYA_TSUJI, AyaTsujiRenderer::new),

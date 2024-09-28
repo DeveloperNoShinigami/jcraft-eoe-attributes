@@ -1115,7 +1115,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      */
     public static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel,
                                    boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source,
-                                   Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
+                                   @Nullable Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
         if (world == null || world.isClientSide || ent == null || !ent.canBeSeenAsEnemy()) {
             return;
         }
@@ -1137,7 +1137,9 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * @param damage       damage in half hearts
      * @param lift         will the attack lift the victim upon an aerial hit?
      */
-    public static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab) {
+    public static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel,
+                                   boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source,
+                                   @Nullable Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab) {
         if (world == null || world.isClientSide || ent == null || !ent.canBeSeenAsEnemy()) {
             return;
         }
@@ -1159,7 +1161,9 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * @param damage       damage in half hearts
      * @param lift         will the attack lift the victim upon an aerial hit?
      */
-    public static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation) {
+    public static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel,
+                                   boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source,
+                                   @Nullable Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation) {
         if (world == null || world.isClientSide || ent == null || !ent.canBeSeenAsEnemy()) {
             return;
         }
@@ -1220,7 +1224,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             }
         }
 
-        if (ent != null && !JServerConfig.ENABLE_FRIENDLY_FIRE.getValue() && ent.isAlliedTo(attacker)) {
+        if (ent != null && !JServerConfig.ENABLE_FRIENDLY_FIRE.getValue() && attacker != null && ent.isAlliedTo(attacker)) {
             return;
         }
 

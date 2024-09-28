@@ -465,10 +465,18 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<PurpleHazeCloudEntity>> PURPLE_HAZE_CLOUD = ENTITY_TYPE_REGISTRY.register(JCraft.id("purple_haze_cloud"),
             () -> EntityType.Builder.of(
-                            (EntityType<PurpleHazeCloudEntity> entityType, Level world) -> new PurpleHazeCloudEntity(world),
+                            WorldOnlyEntityFactory.from(PurpleHazeCloudEntity::new),
                             MobCategory.MISC
                     ).sized(1f, 1f)
                     .build("purple_haze_cloud")
+    );
+
+    RegistrySupplier<EntityType<MetallicaForksEntity>> METALLICA_FORKS = ENTITY_TYPE_REGISTRY.register(JCraft.id("metallica_forks"),
+            () -> EntityType.Builder.of(
+                            WorldOnlyEntityFactory.from(MetallicaForksEntity::new),
+                            MobCategory.MISC
+                    ).sized(1.5f, 1.5f)
+                    .build("metallica_forks")
     );
 
     RegistrySupplier<EntityType<PetshopEntity>> PETSHOP = ENTITY_TYPE_REGISTRY.register(JCraft.id("petshop"),
@@ -629,6 +637,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(RED_BIND, RedBindEntity::createLivingAttributes);
         EntityAttributeRegistry.register(BLOCK_PROJECTILE, BlockProjectile::createBlockAttributes);
         EntityAttributeRegistry.register(SAND_TORNADO, SandTornadoEntity::createTornadoAttributes);
+        EntityAttributeRegistry.register(METALLICA_FORKS, HGNetEntity::createNetAttributes);
 
         EntityAttributeRegistry.register(PETSHOP, PetshopEntity::createPetshopAttributes);
         EntityAttributeRegistry.register(AYA_TSUJI, AyaTsujiEntity::createAyaTsujiAttributes);

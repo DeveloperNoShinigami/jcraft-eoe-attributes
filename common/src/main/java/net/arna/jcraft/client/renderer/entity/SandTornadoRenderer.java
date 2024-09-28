@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SandTornadoRenderer extends GeoEntityRenderer<SandTornadoEntity> {
@@ -16,7 +17,7 @@ public class SandTornadoRenderer extends GeoEntityRenderer<SandTornadoEntity> {
     }
 
     @Override
-    public boolean shouldShowName(SandTornadoEntity animatable) {
+    public boolean shouldShowName(@NotNull SandTornadoEntity animatable) {
         return false;
     }
 

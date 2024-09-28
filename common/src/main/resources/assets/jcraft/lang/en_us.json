@@ -370,6 +370,7 @@
   "jcraft.commands.error.nospec": "No spec found!",
   "jcraft.commands.error.nostand": "No stand found!",
 
+  "jcraft.framedata.await": "Awaiting moves...",
   "jcraft.framedata.definition": "Click for definition",
   "jcraft.framedata.death": "Cancelled due to death",
 

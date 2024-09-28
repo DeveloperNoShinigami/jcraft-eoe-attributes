@@ -124,11 +124,11 @@ public class SandTornadoEntity extends JAttackEntity implements GeoEntity, IOwna
     }
 
     @Override
-    protected void doPush(Entity entity) {
+    protected void doPush(@NotNull Entity entity) {
     }
 
     @Override
-    public void push(Entity entity) {
+    public void push(@NotNull Entity entity) {
     }
 
     @Override

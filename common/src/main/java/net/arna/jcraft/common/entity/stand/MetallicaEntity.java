@@ -13,6 +13,7 @@ import net.arna.jcraft.common.attack.moves.metallica.HarvestMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.component.living.CommonMiscComponent;
+import net.arna.jcraft.common.entity.projectile.MetallicaForksEntity;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
@@ -69,7 +70,6 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         INVISIBLE = SynchedEntityData.defineId(MetallicaEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
-    //todo: sword summon (LITERALLY MILLIA H DISC)
     public static final SimpleAttack<MetallicaEntity> LIGHT_LAUNCH = new SimpleAttack<MetallicaEntity>(0,
             18, 22, 0.75f, 5f, 6,1.7f,  1.25f, 0.2f)
             .withLaunch()
@@ -131,10 +131,25 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.swp"))
             .withCondition(metallica -> metallica.getIron() >= IRON_MAX / 4.0f);
-    public static final UppercutAttack<MetallicaEntity> SMASH = new UppercutAttack<MetallicaEntity>(200,
-            11, 21, 1.0f, 7.5f, 18,2.0f,  1.5f, 0.2f, -0.5f)
-            .withCrouchingVariant(SWEEP)
+    public static final SimpleAttack<MetallicaEntity> CLEAVE = new SimpleAttack<MetallicaEntity>(0,
+            12, 21, 1.5f, 6.5f, 11,2.5f,  2.0f, 0.2f)
+            .withAnim(State.CLEAVE)
             .withLaunch()
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withHitSpark(JParticleType.HIT_SPARK_3)
+            .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
+            .withExtraHitBox(3.0, 0.5, 1.5)
+            .withInfo(
+                    Component.literal("Cleave"),
+                    Component.literal("""
+                            Interruptible, very far-reaching followup.""")
+            )
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.clv"))
+            .withCondition(metallica -> metallica.getIron() >= IRON_MAX / 2.0f);
+    public static final UppercutAttack<MetallicaEntity> SMASH = new UppercutAttack<MetallicaEntity>(200,
+            11, 21, 1.0f, 7.5f, 18,2.0f,  2.0f, 0.2f, -0.5f)
+            .withCrouchingVariant(SWEEP)
+            .withFollowup(CLEAVE)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
@@ -210,8 +225,35 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         }
     }
 
+    public static final SimpleAttack<MetallicaEntity> SUMMON_FORKS = new SimpleAttack<MetallicaEntity>(0,
+            5, 15, 0, 0, 0, 0, 0, 0)
+            .withAction(MetallicaEntity::summonForks)
+            .withInfo(
+                    Component.literal("Summon Pitchforks"),
+                    Component.literal("""
+                            12 meter range.
+                            Summons pitchforks from the ground that are guaranteed to knock down the opponent.""")
+            )
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.sfk"));
+    private static void summonForks(MetallicaEntity metallica, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
+        final Vec3 eyePos = user.position().add(GravityChangerAPI.getEyeOffset(user));
+        final Vec3 rotVec = user.getLookAngle();
+        final HitResult hitResult = JUtils.raycastAll(user, eyePos, eyePos.add(rotVec.scale(12.0)), ClipContext.Fluid.NONE, EntitySelector.LIVING_ENTITY_STILL_ALIVE);
+        // JCraft.createParticle((ServerLevel) user.level(), hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z, JParticleType.STUN_PIERCE);
+        if (hitResult.getType() == HitResult.Type.MISS) return;
+        final MetallicaForksEntity forks = MetallicaForksEntity.fromMetallica(metallica);
+        if (forks == null) return;
+        final Vec3 hitPos = hitResult.getLocation();
+        forks.moveTo(hitPos.x, hitPos.y, hitPos.z, user.getYRot(), user.getXRot());
+        forks.setOnGround(hitResult.getType() == HitResult.Type.BLOCK);
+        GravityChangerAPI.setDefaultGravityDirection(forks, GravityChangerAPI.getGravityDirection(user));
+        metallica.level().addFreshEntity(forks);
+        JComponentPlatformUtils.getCooldowns(user).setCooldown(CooldownType.SPECIAL2, 200);
+    }
+
     public static final SimpleAttack<MetallicaEntity> INTERNAL_ATTACK = new SimpleAttack<MetallicaEntity>(0,
             10, 15, 0, 0, 0, 0, 0, 0)
+            .withCrouchingVariant(SUMMON_FORKS)
             .withAction(MetallicaEntity::internalAttack)
             .withInfo(
                     Component.literal("Internal Attack"),
@@ -357,17 +399,20 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         var light = moves.register(MoveType.LIGHT, LIGHT, State.LIGHT);
         light.withFollowUp(State.LIGHT_FOLLOWUP).withFollowUp(State.LIGHT_FINAL);
         moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
-        moves.register(MoveType.HEAVY, SMASH, State.SMASH).withCrouchingVariant(State.SWEEP);
+        var heavy = moves.register(MoveType.HEAVY, SMASH, State.SMASH);
+        heavy.withFollowUp(State.CLEAVE);
+        heavy.withCrouchingVariant(State.SWEEP);
 
         moves.register(MoveType.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS).withCrouchingVariant(State.FAN_TOSS);
-        moves.register(MoveType.SPECIAL2, INTERNAL_ATTACK, State.IDLE);
-        moves.register(MoveType.SPECIAL3, GRAB, State.IDLE);
-        moves.register(MoveType.UTILITY, HARVEST, State.HARVEST).withCrouchingVariant(State.IDLE);
+        moves.register(MoveType.SPECIAL2, INTERNAL_ATTACK, State.NONE).withCrouchingVariant(State.NONE);
+        moves.register(MoveType.SPECIAL3, GRAB, State.NONE);
+        moves.register(MoveType.UTILITY, HARVEST, State.HARVEST).withCrouchingVariant(State.NONE);
     }
 
     @Override
     public boolean initMove(MoveType type) {
         if (tryFollowUp(type, MoveType.LIGHT)) return true;
+        if (tryFollowUp(type, MoveType.HEAVY)) return true;
         return super.initMove(type);
     }
 
@@ -463,6 +508,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     // Animations
     public enum State implements StandAnimationState<MetallicaEntity> {
         IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.idle"))),
+        NONE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.idle"))),
         BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.block"))),
         LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.light"))),
         LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.light2"))),
@@ -472,6 +518,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         HARVEST(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.harvest"))),
         BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.barrage"))),
         SMASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.smash"))),
+        CLEAVE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.cleave"))),
         SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.sweep"))),
         GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.grab_hit"))),
         ;
