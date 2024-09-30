@@ -74,6 +74,7 @@ public interface JCreativeMenuTabRegistry {
             output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.REQUIEM_RUBY.get());
             output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.REQUIEM_ARROW.get());
             output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.GREEN_BABY.get());
+            output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.DIARY_PAGE.get());
             output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.DIOS_DIARY.get());
             output.acceptAfter(Items.GLASS_BOTTLE, JItemRegistry.BLOOD_BOTTLE.get());
             output.acceptBefore(Items.WHITE_DYE, JItemRegistry.SINNERS_SOUL.get());
@@ -117,6 +118,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.REQUIEM_ARROW.get());
                     // other evolution items
                     entries.accept(JItemRegistry.GREEN_BABY.get());
+                    entries.accept(JItemRegistry.DIARY_PAGE.get());
                     entries.accept(JItemRegistry.DIOS_DIARY.get());
                     // stand drops
                     entries.accept(JItemRegistry.FV_REVOLVER.get());

@@ -310,7 +310,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.literal("Grab (Final Hit)"),
                     Component.empty()
             )
-            .withAction((attacker, user, ctx, targets) -> attacker.addIron(10.0f));
+            .withAction((attacker, user, ctx, targets) -> attacker.addIron(15.0f));
     public static final SimpleAttack<MetallicaEntity> GRAB_HIT = new SimpleAttack<MetallicaEntity>(0,
             13, 24, 0.5f, 4f, 10, 2f, 0f, 0f)
             .withStunType(StunType.UNBURSTABLE)
@@ -326,7 +326,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.literal("Grab"),
                     Component.literal("""
                             Unblockable, inflicts Hypoxia (10s).
-                            Restores 25% of your iron meter.
+                            Restores 30 iron.
                             Cannot be used alongside spec moves and will override them.""")
             )
             .withImpactSound(JSoundRegistry.IMPACT_9.get())
@@ -380,14 +380,14 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             })
             .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.bsc_fire"));
     public static final HoldableMove<MetallicaEntity, MetallicaEntity.State> BISECT_CHARGE = new HoldableMove<>(30 * 20,
-            41, 40, 0.75f, BISECT, State.NONE, 12)
+            81, 80, 0.75f, BISECT, State.NONE, 12)
             .withInfo(
                     Component.literal("Bisect"),
                     Component.literal("""
                             Chargeable projectile that consumes iron over time to become larger and more powerful.
                             Unblockable.""")
             )
-            .withCondition(metallica -> metallica.getIron() >= 24)
+            .withCondition(metallica -> metallica.getIron() >= 24 || metallica.bisectChargeTime > 0)
             .withInitAction((attacker, user, ctx) -> attacker.bisectChargeTime = 0)
             .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.bsc"));
 

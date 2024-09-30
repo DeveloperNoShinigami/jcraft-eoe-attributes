@@ -184,6 +184,20 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.recipe(JCraft.id("dios_diary")))
                 .build(JCraft.id("obtain_dio_outfit"));
         consumer.accept(obtainDioOutfit);
+        // obtain Diary Page
+        final Advancement obtainDiaryPage = Advancement.Builder.advancement()
+                .display(JItemRegistry.DIARY_PAGE.get(),
+                        Component.literal("It was me, §kDIO"),
+                        Component.literal("Obtain a Diary Page"),
+                        null,
+                        FrameType.GOAL,
+                        true,
+                        false,
+                        false)
+                .addCriterion("has_diary_page", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIARY_PAGE.get()))
+                .rewards(AdvancementRewards.Builder.experience(100))
+                .build(JCraft.id("obtain_diary_page"));
+        consumer.accept(obtainDiaryPage);
         // obtain Dio's diary
         final Advancement obtainDiosDiary = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIOS_DIARY.get(),
@@ -194,9 +208,9 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false,
                         false)
-                .parent(obtainDioOutfit)
+                .parent(obtainDiaryPage)
                 .addCriterion("has_diary", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIOS_DIARY.get()))
-                .rewards(AdvancementRewards.Builder.experience(500))
+                .rewards(AdvancementRewards.Builder.experience(800))
                 .build(JCraft.id("obtain_dios_diary"));
         consumer.accept(obtainDiosDiary);
     }

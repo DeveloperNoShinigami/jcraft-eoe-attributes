@@ -302,20 +302,31 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('Y', Items.YELLOW_DYE)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);
-        // Dio's diary
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, JItemRegistry.DIOS_DIARY.get())
-                .requires(Items.WAXED_OXIDIZED_COPPER)
-                .requires(Items.GOLD_BLOCK)
-                .requires(Items.NETHERITE_BLOCK)
-                .requires(Items.EXPERIENCE_BOTTLE)
-                .requires(Items.NETHER_STAR)
-                .requires(Items.ELYTRA)
-                .requires(Items.LINGERING_POTION)
-                .requires(Items.WRITABLE_BOOK)
-                .requires(Items.EMERALD_BLOCK)
+        // Dio's Diary
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.DIOS_DIARY.get())
+                .pattern("PLP")
+                .pattern("PNP")
+                .pattern("PPP")
+                .define('P', JItemRegistry.DIARY_PAGE.get())
+                .define('L', Items.LEATHER)
+                .define('N', Items.NETHER_STAR)
                 .unlockedBy("has_nether_star", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHER_STAR))
-                .unlockedBy("has_book", InventoryChangeTrigger.TriggerInstance.hasItems(Items.WRITABLE_BOOK))
+                .unlockedBy("has_diary_page", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIARY_PAGE.get()))
                 .save(exporter);
+        // Diary Page
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, JItemRegistry.DIARY_PAGE.get())
+                .requires(Items.WAXED_OXIDIZED_CUT_COPPER_SLAB)
+                .requires(Items.GOLD_INGOT)
+                .requires(Items.NETHERITE_INGOT)
+                .requires(Items.EXPERIENCE_BOTTLE)
+                .requires(Items.PAPER)
+                .requires(Items.NAUTILUS_SHELL)
+                .requires(Items.LINGERING_POTION)
+                .requires(Items.INK_SAC)
+                .requires(Items.EMERALD)
+                .unlockedBy("has_netherite_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_INGOT))
+                .save(exporter);
+
         // hot sand
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.HOT_SAND_BLOCK.get(), 8)
                 .pattern("SSS")

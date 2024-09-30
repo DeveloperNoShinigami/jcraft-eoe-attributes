@@ -32,7 +32,8 @@ public abstract class AbstractHoldableMove<T extends AbstractHoldableMove<T, A, 
     @Override
     public void tick(A attacker, int moveStun) {
         super.tick(attacker, moveStun);
-        if (moveStun == 1 || (!attacker.isHolding() && moveStun <= getDuration() - minimumCharge) && attacker.getHoldingType().getMoveType() == getMoveType()) {
+        final boolean charged = moveStun <= getDuration() - minimumCharge;
+        if (moveStun == 1 || (charged && (!attacker.isHolding() || attacker.getHoldingType().getMoveType() != getMoveType()))) {
             followUp(attacker);
         }
     }

@@ -444,6 +444,7 @@ public final class JCraft {
     }
 
     public static void initStandIOMaps() {
+        JItemRegistry.DIARY_PAGE.get().standIOMap.put(StandType.SHADOW_THE_WORLD, StandType.THE_WORLD);
         JItemRegistry.GREEN_BABY.get().standIOMap.put(StandType.WHITE_SNAKE, StandType.C_MOON);
         JItemRegistry.DIOS_DIARY.get().standIOMap.put(StandType.C_MOON, StandType.MADE_IN_HEAVEN);
         JItemRegistry.DIOS_DIARY.get().standIOMap.put(StandType.THE_WORLD, StandType.THE_WORLD_OVER_HEAVEN);

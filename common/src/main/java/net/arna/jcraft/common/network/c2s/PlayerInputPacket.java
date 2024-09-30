@@ -49,8 +49,12 @@ public class PlayerInputPacket {
                             (type, integer) -> {
                                 //JCraft.LOGGER.info("Holding: " + type + ", with remaining heartbeat time: " + integer);
 
-                                if (integer == 0) { // Marked for unprocessed removal by handleMoveInput(), which shouldn't mutate heldInputs.keySet()
+                                if (integer == 0) { // Marked for instant removal by handleMoveInput(), which shouldn't mutate heldInputs.keySet()
                                     sm.heldInputs.remove(type);
+                                    JSpec<?, ?> spec = JUtils.getSpec(player);
+                                    if (spec != null) {
+                                        spec.onUserMoveInput(type, false, false);
+                                    }
                                 } else {
                                     Integer newValue = integer - 1;
                                     // JUtils.canHoldMove() may change after a holdable button was pressed if the player swaps their abilities

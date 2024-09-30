@@ -2107,7 +2107,8 @@
 			}
 		},
 		"animation.metallica.bisect": {
-			"animation_length": 2,
+			"loop": "hold_on_last_frame",
+			"animation_length": 5,
 			"bones": {
 				"base": {
 					"rotation": {

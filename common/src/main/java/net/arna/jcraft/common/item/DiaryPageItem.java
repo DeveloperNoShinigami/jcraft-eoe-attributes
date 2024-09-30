@@ -9,15 +9,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class DIOsDiaryItem extends StandObtainmentItem {
-    public DIOsDiaryItem(Properties settings) {
+public class DiaryPageItem extends StandObtainmentItem {
+    public DiaryPageItem(Properties settings) {
         super(settings);
     }
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @Nullable Level world, List<Component> tooltip, @NotNull TooltipFlag context) {
         tooltip.add(Component.translatable("jcraft.diosdiary.desc"));
-        tooltip.add(Component.translatable("jcraft.diosdiary.evodesc"));
+        tooltip.add(Component.translatable("jcraft.diarypage.evodesc"));
         super.appendHoverText(stack, world, tooltip, context);
     }
 }

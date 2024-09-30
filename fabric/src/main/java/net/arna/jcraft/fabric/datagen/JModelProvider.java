@@ -8,12 +8,12 @@ import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.resources.ResourceLocation;
+
 import java.util.Optional;
 
 public class JModelProvider extends FabricModelProvider {
@@ -46,6 +46,7 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.DIO_HEADBAND.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.DIO_JACKET.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.DIO_PANTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DIARY_PAGE.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.DIOS_DIARY.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.GREEN_BABY.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.JOTARO_BOOTS.get(), ModelTemplates.FLAT_ITEM);

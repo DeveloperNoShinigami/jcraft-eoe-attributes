@@ -38,6 +38,8 @@ public interface JItemRegistry {
 
     RegistrySupplier<GreenBabyItem> GREEN_BABY = register("green_baby", () -> new GreenBabyItem(settings().rarity(Rarity.RARE)));
 
+    RegistrySupplier<DIOsDiaryItem> DIARY_PAGE = register("diary_page", () -> new DIOsDiaryItem(settings().rarity(Rarity.UNCOMMON)));
+
     RegistrySupplier<DIOsDiaryItem> DIOS_DIARY = register("dios_diary", () -> new DIOsDiaryItem(settings().rarity(Rarity.EPIC).fireResistant()));
 
 

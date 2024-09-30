@@ -18,6 +18,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -82,14 +84,9 @@ public class BisectProjectile extends AbstractArrow implements GeoEntity {
         final float scale = getScale();
 
         if (owner instanceof LivingEntity livingOwner) {
-            final Set<Entity> filter = new HashSet<>(2 + hit.size());
+            final Set<Entity> filter = new HashSet<>(2);
             filter.add(owner);
             filter.add(this);
-            for (Integer integer : hit) {
-                final Entity entity = level().getEntity(integer);
-                if (entity != null)
-                    filter.add(entity);
-            }
             if (owner.isVehicle()) {
                 filter.addAll(owner.getPassengers());
             }
@@ -115,11 +112,12 @@ public class BisectProjectile extends AbstractArrow implements GeoEntity {
             }
 
             hurtAll.removeIf(e -> !canDamage(damageSource, e));
+            hurtAll.removeIf(e -> hit.contains(e.getId()));
 
             if (!hurtAll.isEmpty()) {
                 for (LivingEntity l : hurtAll) {
                     final LivingEntity target = JUtils.getUserIfStand(l);
-                    damageLogic(level(), target, getDeltaMovement(), (int) (10 * scale), 3, false, 6f * scale,
+                    damageLogic(level(), target, getDeltaMovement(), (int) (10 * scale), 3, false, 5f * scale,
                             true, 0, damageSource, owner, CommonHitPropertyComponent.HitAnimation.LAUNCH, false, true);
                     hit.add(target.getId());
                 }
@@ -128,10 +126,16 @@ public class BisectProjectile extends AbstractArrow implements GeoEntity {
                         curPos.y + random.nextGaussian() * 0.25,
                         curPos.z + random.nextGaussian() * 0.25,
                         JParticleType.HIT_SPARK_3);
+                playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1, 0.5f);
             }
 
             if (tickCount > 240) discard();
         }
+    }
+
+    @Override
+    protected void onHit(@NotNull HitResult result) {
+
     }
 
     @Override
