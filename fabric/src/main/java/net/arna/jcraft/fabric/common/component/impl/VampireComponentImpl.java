@@ -10,12 +10,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
 public class VampireComponentImpl extends CommonVampireComponentImpl implements VampireComponent {
-    private final LivingEntity entity;
-
     public VampireComponentImpl(LivingEntity entity) {
         super(entity);
-        this.entity = entity;
-
     }
 
     @Override

@@ -278,16 +278,27 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<ScalpelProjectile>> SCALPEL = ENTITY_TYPE_REGISTRY.register(JCraft.id("scalpel"),
             () -> EntityType.Builder.of(
-                            (EntityType<ScalpelProjectile> entityType, Level world) -> new ScalpelProjectile(world), MobCategory.MISC)
-                    .sized(0.5f, 0.5f)
+                            WorldOnlyEntityFactory.from(ScalpelProjectile::new),
+                            MobCategory.MISC
+                    ).sized(0.5f, 0.5f)
                     .clientTrackingRange(6)
                     .updateInterval(10)
                     .build("scalpel")
     );
 
+    RegistrySupplier<EntityType<BisectProjectile>> BISECT = ENTITY_TYPE_REGISTRY.register(JCraft.id("bisect"),
+            () -> EntityType.Builder.of(
+                            WorldOnlyEntityFactory.from(BisectProjectile::new),
+                            MobCategory.MISC
+                    ).sized(1.0f, 1.0f)
+                    .clientTrackingRange(6)
+                    .updateInterval(1)
+                    .build("bisect")
+    );
+
     RegistrySupplier<EntityType<EmeraldProjectile>> EMERALD = ENTITY_TYPE_REGISTRY.register(JCraft.id("emerald"),
             () -> EntityType.Builder.of(
-                            (EntityType<EmeraldProjectile> entityType, Level world) -> new EmeraldProjectile(world),
+                            WorldOnlyEntityFactory.from(EmeraldProjectile::new),
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(6)
@@ -297,7 +308,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<IcicleProjectile>> ICICLE = ENTITY_TYPE_REGISTRY.register(JCraft.id("icicle"),
             () -> EntityType.Builder.of(
-                            (EntityType<IcicleProjectile> entityType, Level world) -> new IcicleProjectile(world),
+                            WorldOnlyEntityFactory.from(IcicleProjectile::new),
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(6)
@@ -307,7 +318,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<LargeIcicleProjectile>> LARGE_ICICLE = ENTITY_TYPE_REGISTRY.register(JCraft.id("large_icicle"),
             () -> EntityType.Builder.of(
-                            (EntityType<LargeIcicleProjectile> entityType, Level world) -> new LargeIcicleProjectile(world),
+                            WorldOnlyEntityFactory.from(LargeIcicleProjectile::new),
                             MobCategory.MISC
                     ).sized(1.0f, 1.0f)
                     .clientTrackingRange(6)
@@ -317,7 +328,7 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<IceBranchProjectile>> ICE_BRANCH = ENTITY_TYPE_REGISTRY.register(JCraft.id("ice_branch"),
             () -> EntityType.Builder.of(
-                            (EntityType<IceBranchProjectile> entityType, Level world) -> new IceBranchProjectile(world),
+                            WorldOnlyEntityFactory.from(IceBranchProjectile::new),
                             MobCategory.MISC
                     ).sized((float) IceBranchProjectile.LENGTH, (float) IceBranchProjectile.LENGTH)
                     .clientTrackingRange(6)

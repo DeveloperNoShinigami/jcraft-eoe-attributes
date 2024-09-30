@@ -25,6 +25,7 @@ public class JArmorRendererRegistry {
         consumer.accept(new RenderProvider() {
             private GeoArmorRenderer<?> renderer;
 
+            @SuppressWarnings("unchecked")
             @Override
             public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
                 if (this.renderer == null) {

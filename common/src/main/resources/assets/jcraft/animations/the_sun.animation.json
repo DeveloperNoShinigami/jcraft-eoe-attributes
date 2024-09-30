@@ -50,9 +50,6 @@
 						"2.0": {
 							"vector": [90, 90, 90]
 						}
-					},
-					"scale": {
-						"vector": [1, 1, 1]
 					}
 				},
 				"sunbeam": {
@@ -403,11 +400,6 @@
 							"vector": [1, 1, 1],
 							"easing": "easeInOutSine"
 						}
-					}
-				},
-				"core": {
-					"scale": {
-						"vector": [1, 1, 1]
 					}
 				}
 			}

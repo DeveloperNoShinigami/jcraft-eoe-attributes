@@ -34,6 +34,7 @@ public class DIOArmorItem extends ArmorItem implements GeoItem {
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
             private static GeoArmorRenderer<?> renderer;
+            @SuppressWarnings("unchecked")
             @Override public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
                     LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
                 if (renderer == null) renderer = new DIOArmorRenderer();
@@ -50,10 +51,10 @@ public class DIOArmorItem extends ArmorItem implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController(this, "controller", 20, this::predicate));
+        controllers.add(new AnimationController<>(this, "controller", 20, this::predicate));
     }
 
-    private PlayState predicate(AnimationState animationState) {
+    private PlayState predicate(AnimationState<DIOArmorItem> animationState) {
         return PlayState.STOP;
     }
 

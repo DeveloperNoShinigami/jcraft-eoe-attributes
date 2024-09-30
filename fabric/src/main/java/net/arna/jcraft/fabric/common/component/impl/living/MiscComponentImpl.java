@@ -10,11 +10,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 public class MiscComponentImpl extends CommonMiscComponentImpl implements MiscComponent {
-    private final Entity entity;
 
     public MiscComponentImpl(Entity entity) {
         super(entity);
-        this.entity = entity;
     }
 
     @Override

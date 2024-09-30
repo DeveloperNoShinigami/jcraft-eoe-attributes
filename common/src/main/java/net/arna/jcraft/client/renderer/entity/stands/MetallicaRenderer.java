@@ -35,18 +35,18 @@ public class MetallicaRenderer extends StandEntityRenderer<MetallicaEntity> {
 
         if (!animatable.hasUser()) return;
         if (animatable.getState() == MetallicaEntity.State.HARVEST) {
-            BlockPos siphonPos = animatable.getSiphonPos();
+            final BlockPos siphonPos = animatable.getSiphonPos();
             if (siphonPos == MetallicaEntity.NO_SIPHON) return;
-            LivingEntity user = animatable.getUserOrThrow();
-            Vec3 eyeOffset = GravityChangerAPI.getEyeOffset(user).scale(0.75);
-            Vec3 midPos = new Vec3(
+            final LivingEntity user = animatable.getUserOrThrow();
+            final Vec3 eyeOffset = GravityChangerAPI.getEyeOffset(user).scale(0.75);
+            final Vec3 midPos = new Vec3(
                     Mth.lerp(partialTick, user.xOld, user.getX()),
                     Mth.lerp(partialTick, user.yOld, user.getY()),
                     Mth.lerp(partialTick, user.zOld, user.getZ())
             ).add(GravityChangerAPI.getEyeOffset(user));
-            Vec3 toUser = siphonPos.getCenter().subtract(midPos).scale(0.2);
-            Vec3 standToUser = user.position().subtract(animatable.position()).add(eyeOffset);
-            double time = (RenderUtils.getCurrentTick() / 5.0) % 1.0;
+            final Vec3 toUser = siphonPos.getCenter().subtract(midPos).scale(0.2);
+            final Vec3 standToUser = user.position().subtract(animatable.position()).add(eyeOffset);
+            final double time = (RenderUtils.getCurrentTick() / 5.0) % 1.0;
             matrixStack.pushPose();
             matrixStack.translate(standToUser.x, standToUser.y, standToUser.z);
             matrixStack.translate(-toUser.x * time, -toUser.y * time, -toUser.z * time);
@@ -55,7 +55,7 @@ public class MetallicaRenderer extends StandEntityRenderer<MetallicaEntity> {
                 matrixStack.pushPose();
                 matrixStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(partialTick, user.xRotO, user.getXRot())));
                 matrixStack.mulPose(Axis.YN.rotationDegrees(Mth.lerp(partialTick, user.yRotO, user.getYRot()) + 90));
-                this.heldItemRenderer.renderItem(animatable, IRON_NUGGET, ItemDisplayContext.GROUND, false, matrixStack, bufferSource, i);
+                this.heldItemRenderer.renderItem(animatable, IRON_NUGGET, ItemDisplayContext.GROUND, false, matrixStack, bufferSource, packedLight);
                 matrixStack.popPose();
             }
             matrixStack.popPose();

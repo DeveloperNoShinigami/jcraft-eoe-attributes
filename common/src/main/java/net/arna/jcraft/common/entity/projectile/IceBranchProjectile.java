@@ -37,7 +37,6 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
     private static final int MAX_CHAIN_LENGTH = 10;
     private final int chainIndex;
 
-    private IceBranchProjectile next;
     private LivingEntity livingOwner;
 
     private boolean grown = false;
@@ -172,7 +171,7 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
             boolean shouldSplit = chainIndex % 4 == 2;
             double inaccuracy = shouldSplit ? 10 : 1;
             for (int i = 0; i < (shouldSplit ? 2 : 1); i++) {
-                next = new IceBranchProjectile(level(), livingOwner, chainIndex + 1);
+                IceBranchProjectile next = new IceBranchProjectile(level(), livingOwner, chainIndex + 1);
 
                 if (target.isPresent()) {
                     final LivingEntity nearestTarget = target.get();

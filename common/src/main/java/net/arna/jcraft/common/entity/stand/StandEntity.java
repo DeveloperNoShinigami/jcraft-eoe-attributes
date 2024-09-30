@@ -526,6 +526,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     /**
      * @return Whether the followup condition was passed.
      */
+    @SuppressWarnings("unchecked")
     public boolean tryFollowUp(MoveType in, MoveType followupType) {
         if (in == followupType && curMove != null && curMove.getMoveType() == followupType && getMoveStun() < curMove.getWindupPoint()) {
             AbstractMove<?, ? super E> followup = curMove.getFollowup();

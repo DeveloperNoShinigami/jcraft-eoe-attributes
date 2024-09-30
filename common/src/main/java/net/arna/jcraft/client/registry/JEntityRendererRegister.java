@@ -2,6 +2,7 @@ package net.arna.jcraft.client.registry;
 
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
+import net.arna.jcraft.client.model.entity.BisectModel;
 import net.arna.jcraft.client.renderer.entity.*;
 import net.arna.jcraft.client.renderer.entity.projectiles.*;
 import net.arna.jcraft.client.renderer.entity.stands.*;
@@ -59,6 +60,7 @@ public interface JEntityRendererRegister {
 
             new RendererData<>(JEntityTypeRegistry.HIEROPHANT_GREEN, HGRenderer::new),
             new RendererData<>(JEntityTypeRegistry.EMERALD, EmeraldRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.BISECT, context -> new GeoProjectileRenderer<>(context, new BisectModel())),
             new RendererData<>(JEntityTypeRegistry.HG_NET, HGNetRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.THE_SUN, SunRenderer::new),

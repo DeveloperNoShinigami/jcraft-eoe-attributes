@@ -74,6 +74,8 @@ public class MetallicaForksEntity extends JAttackEntity implements GeoEntity {
             return;
         }
 
+        if (master == null) discard();
+
         if (tickCount == 9) {
             final DamageSource ds = level().damageSources().mobAttack(master);
             final Set<LivingEntity> hurt = JUtils.generateHitbox(level(), position(), 2, Set.of(this, master));

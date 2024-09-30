@@ -36,10 +36,8 @@ public class GEButterflyRenderer extends DynamicGeoEntityRenderer<GEButterflyEnt
             @Override
             protected ItemStack getStackForBone(GeoBone bone, GEButterflyEntity animatable) {
                 // Retrieve the items in the entity's hands for the relevant bone
-                return switch (bone.getName()) {
-                    case "base" -> GEButterflyRenderer.this.mainHandItem;
-                    default -> null;
-                };
+                if (bone.getName().equals("base")) return mainHandItem;
+                return null;
             }
 
             @Override

@@ -9,12 +9,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 public class CooldownsComponentImpl extends CommonCooldownsComponentImpl implements CooldownsComponent {
-
-    private final Entity entity;
-
     public CooldownsComponentImpl(@NonNull Entity entity) {
         super(entity);
-        this.entity = entity;
     }
 
     @Override

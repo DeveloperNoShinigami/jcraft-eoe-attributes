@@ -29,7 +29,6 @@ import java.util.*;
 public class AttackHitboxEffectRenderer {
     // Use an evicting queue to limit the amount of hit boxes rendered at a time to 8.
     // If there are already 8 hit boxes, and we wish to add more, old ones will be removed.
-    @SuppressWarnings("UnstableApiUsage") // I do not care. (based)
     private static final Queue<Pair<LongLongPair, AABB>> hitboxes = EvictingQueue.create(8);
     private static final List<Pair<LongLongPair, AABB>> highPriorityBoxes = new ArrayList<>(); // These do not get evicted.
 

@@ -13,6 +13,7 @@ import net.arna.jcraft.common.attack.moves.metallica.HarvestMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.component.living.CommonMiscComponent;
+import net.arna.jcraft.common.entity.projectile.BisectProjectile;
 import net.arna.jcraft.common.entity.projectile.MetallicaForksEntity;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -234,7 +235,8 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                             12 meter range.
                             Summons pitchforks from the ground that are guaranteed to knock down the opponent.""")
             )
-            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.sfk"));
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.sfk"))
+            .withCondition(metallica -> metallica.getIron() >= MetallicaForksEntity.IRON_COST);
     private static void summonForks(MetallicaEntity metallica, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
         final Vec3 eyePos = user.position().add(GravityChangerAPI.getEyeOffset(user));
         final Vec3 rotVec = user.getLookAngle();
@@ -317,7 +319,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.empty())
             .withFinisher(14, GRAB_HIT_FINAL)
             .withAction((attacker, user, ctx, targets) -> attacker.addIron(10.0f))
-            .withInitAction((attacker, user, ctx) -> JUtils.playAnim(user, "mtl.grabh"));
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnim(user, "mtl.grab_hit"));
     public static final GrabAttack<MetallicaEntity, State> GRAB = new GrabAttack<>(280,
             9, 20, 0.5f, 0, 15, 1.5f, 0, 0, GRAB_HIT, State.GRAB_HIT, 17, 0.4)
             .withInfo(
@@ -369,6 +371,27 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         }
     }
 
+    public static final NoOpMove<MetallicaEntity> BISECT = new NoOpMove<MetallicaEntity>(0, 10, 0.75f)
+            .withInitAction((attacker, user, ctx) -> {
+                BisectProjectile bisect = new BisectProjectile(attacker.level(), user);
+                bisect.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, 2.0f, 0);
+                bisect.setScale(attacker.bisectChargeTime / 10.0f);
+                attacker.level().addFreshEntity(bisect);
+            })
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.bsc_fire"));
+    public static final HoldableMove<MetallicaEntity, MetallicaEntity.State> BISECT_CHARGE = new HoldableMove<>(30 * 20,
+            41, 40, 0.75f, BISECT, State.NONE, 12)
+            .withInfo(
+                    Component.literal("Bisect"),
+                    Component.literal("""
+                            Chargeable projectile that consumes iron over time to become larger and more powerful.
+                            Unblockable.""")
+            )
+            .withCondition(metallica -> metallica.getIron() >= 24)
+            .withInitAction((attacker, user, ctx) -> attacker.bisectChargeTime = 0)
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.bsc"));
+
+    private int bisectChargeTime = 0;
     private CommonMiscComponent miscComponent;
 
     public MetallicaEntity(Level worldIn) {
@@ -406,6 +429,9 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         moves.register(MoveType.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS).withCrouchingVariant(State.FAN_TOSS);
         moves.register(MoveType.SPECIAL2, INTERNAL_ATTACK, State.NONE).withCrouchingVariant(State.NONE);
         moves.register(MoveType.SPECIAL3, GRAB, State.NONE);
+
+        moves.register(MoveType.ULTIMATE, BISECT_CHARGE, State.BISECT);
+
         moves.register(MoveType.UTILITY, HARVEST, State.HARVEST).withCrouchingVariant(State.NONE);
     }
 
@@ -475,6 +501,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             }
         }
         if (level().isClientSide()) return;
+        // Invisibility iron drain
         boolean invisible = entityData.get(INVISIBLE);
         if (invisible && tickCount % 20 == 0) {
             boolean canStayInvis = drainIron(10.0f);
@@ -483,6 +510,10 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             } else {
                 getUserOrThrow().addEffect(INVISIBILITY);
             }
+        }
+        // Bisect iron drain
+        if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == BISECT_CHARGE) {
+            if (drainIron(2.0f)) bisectChargeTime++;
         }
     }
 
@@ -521,6 +552,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         CLEAVE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.cleave"))),
         SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.sweep"))),
         GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.grab_hit"))),
+        BISECT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.bisect"))),
         ;
 
         private final Consumer<AnimationState<MetallicaEntity>> animator;

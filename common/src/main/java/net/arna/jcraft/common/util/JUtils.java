@@ -669,8 +669,8 @@ public final class JUtils {
 
             // return an immutable collection to guard against accidental removals.
             if (tracker != null) {
-                return Collections.unmodifiableCollection(tracker.seenBy
-                        .stream().map(ServerPlayerConnection::getPlayer).collect(Collectors.toSet()));
+                return tracker.seenBy
+                        .stream().map(ServerPlayerConnection::getPlayer).collect(Collectors.toUnmodifiableSet());
             }
 
             return Collections.emptySet();

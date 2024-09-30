@@ -31,8 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 public class EntityMixinLogic {
-
-    public static void jcraft$updatePassengerPosition(Entity thisEntity, Entity passenger, Entity.MoveFunction positionUpdater, CallbackInfo info) {
+    public static void jcraft$updatePassengerPosition(final Entity thisEntity, final Entity passenger, final Entity.MoveFunction positionUpdater, final CallbackInfo info) {
         if (passenger instanceof StandEntity<?, ?> stand) {
             if (stand.isFree() && !stand.isRemote()) {
                 Vector3f freePos = stand.getFreePos();
@@ -41,20 +40,19 @@ public class EntityMixinLogic {
                 return;
             }
 
-            Entity e = (thisEntity);
-            double dist = stand.getDistanceOffset();
+            final double dist = stand.getDistanceOffset();
 
-            float y = e.getYRot() + stand.getRotationOffset();
+            float y = thisEntity.getYRot() + stand.getRotationOffset();
             y *= (float) Math.PI / 180;
 
-            double heightOffset = stand.shouldOffsetHeight() ? Vec3.directionFromRotation(e.getXRot(), e.getYRot()).y : 0;
-            Vec3 adjustedOffset = RotationUtil.vecPlayerToWorld(
+            final double heightOffset = stand.shouldOffsetHeight() ? Vec3.directionFromRotation(thisEntity.getXRot(), thisEntity.getYRot()).y : 0;
+            final Vec3 adjustedOffset = RotationUtil.vecPlayerToWorld(
                     Mth.cos(y) * dist,
                     passenger.getMyRidingOffset() + heightOffset,
                     Mth.sin(y) * dist,
-                    GravityChangerAPI.getGravityDirection(e)
+                    GravityChangerAPI.getGravityDirection(thisEntity)
             );
-            positionUpdater.accept(passenger, e.getX() + adjustedOffset.x, e.getY() + adjustedOffset.y, e.getZ() + adjustedOffset.z);
+            positionUpdater.accept(passenger, thisEntity.getX() + adjustedOffset.x, thisEntity.getY() + adjustedOffset.y, thisEntity.getZ() + adjustedOffset.z);
             info.cancel();
         }
     }

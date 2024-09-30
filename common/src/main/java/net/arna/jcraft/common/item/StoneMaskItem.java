@@ -87,6 +87,7 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
             private static GeoArmorRenderer<?> renderer;
+            @SuppressWarnings("unchecked")
             @Override public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
                     LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
                 if (renderer == null) renderer = new StoneMaskRenderer();

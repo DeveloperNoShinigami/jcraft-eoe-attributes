@@ -333,7 +333,6 @@ public abstract class EntityMixin {
         cir.setReturnValue(RotationUtil.vecWorldToPlayer(cir.getReturnValue(), gravityDirection));
     }
 
-    @SuppressWarnings("ParameterCanBeLocal")
     @Inject(
             method = "collideBoundingBox",
             at = @At("RETURN"),

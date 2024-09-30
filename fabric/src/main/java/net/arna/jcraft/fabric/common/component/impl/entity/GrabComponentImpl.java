@@ -10,12 +10,8 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public class GrabComponentImpl extends CommonGrabComponentImpl implements GrabComponent {
-
-    private Entity grabbed;
-
     public GrabComponentImpl(Entity grabbed) {
         super(grabbed);
-        this.grabbed = grabbed;
     }
 
     @Override
@@ -25,7 +21,7 @@ public class GrabComponentImpl extends CommonGrabComponentImpl implements GrabCo
 
     @Override
     public void sync(Entity entity) {
-        JComponents.GRAB.sync(grabbed);
+        JComponents.GRAB.sync(entity);
     }
 
     @Override

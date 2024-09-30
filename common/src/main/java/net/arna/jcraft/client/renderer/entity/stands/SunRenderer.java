@@ -38,10 +38,8 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
         return RenderType.dragonExplosionAlpha(texture);
     }
 
-    // Not inlined for sake of debugging
     private static float lerpScale(TheSunEntity animatable, float partialTick) {
-        float scale = Mth.lerp(partialTick, animatable.prevScale, animatable.curScale);
-        return scale;
+        return Mth.lerp(partialTick, animatable.prevScale, animatable.curScale);
     }
 
     @Override

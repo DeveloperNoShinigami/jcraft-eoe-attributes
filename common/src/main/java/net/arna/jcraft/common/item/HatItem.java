@@ -40,7 +40,7 @@ public class HatItem extends ArmorItem implements GeoItem {
     }
 
     @Override
-    public boolean isValidRepairItem(ItemStack stack, ItemStack ingredient) {
+    public boolean isValidRepairItem(@NotNull ItemStack stack, ItemStack ingredient) {
         if (ingredient.is(Items.LEATHER)) {
             return true;
         }
@@ -48,7 +48,7 @@ public class HatItem extends ArmorItem implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level world, @NotNull List<Component> tooltip, @NotNull TooltipFlag context) {
         if (getDefaultInstance().is(JTagRegistry.PROTECTS_FROM_SUN)) {
             tooltip.add(Component.translatable("jcraft.sunprotection.desc"));
         }
@@ -58,10 +58,10 @@ public class HatItem extends ArmorItem implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController(this, "controller", 20, this::predicate));
+        controllers.add(new AnimationController<>(this, "controller", 20, this::predicate));
     }
 
-    private PlayState predicate(AnimationState animationState) {
+    private PlayState predicate(AnimationState<HatItem> animationState) {
         return PlayState.STOP;
     }
 
@@ -76,6 +76,7 @@ public class HatItem extends ArmorItem implements GeoItem {
         consumer.accept(new RenderProvider() {
             private GeoArmorRenderer<?> renderer;
 
+            @SuppressWarnings("unchecked")
             @Override
             public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
                 if (this.renderer == null) {

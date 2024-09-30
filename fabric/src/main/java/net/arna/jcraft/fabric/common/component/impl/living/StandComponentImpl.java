@@ -10,11 +10,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 public class StandComponentImpl extends CommonStandComponentImpl implements StandComponent {
-    private final Entity entity;
 
     public StandComponentImpl(Entity entity) {
         super(entity);
-        this.entity = entity;
     }
 
     @Override

@@ -33,7 +33,6 @@ public class GravityComponentImpl extends CommonGravityComponentImpl implements 
     private Direction prevGravityDirection = Direction.DOWN;
     private boolean isInverted = false;
     private final RotationAnimation animation = new RotationAnimation();
-    private boolean needsInitialSync = false;
     private List<Gravity> gravityList = new ArrayList<>();
     private final Entity entity;
 

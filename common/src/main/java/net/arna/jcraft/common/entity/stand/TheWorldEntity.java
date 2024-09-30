@@ -258,7 +258,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
         }
 
         @Override
-        public void playAnimation(TheWorldEntity attacker, AnimationState builder) {
+        public void playAnimation(TheWorldEntity attacker, AnimationState<TheWorldEntity> builder) {
             animator.accept(builder);
         }
     }

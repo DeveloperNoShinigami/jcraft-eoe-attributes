@@ -13,8 +13,9 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public interface JCreativeMenuTabRegistry {
 
+public interface JCreativeMenuTabRegistry {
+    @SuppressWarnings("UnstableApiUsage") // we do not care :)
     static void init() {
         JCraft.CREATIVE_TAB_REGISTRY.register("general", JCreativeMenuTabRegistry::createJcraftItemGroup);
         // building blocks

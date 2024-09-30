@@ -37,6 +37,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
      * Registers a move and its immediate followup and variants.
      * Sub-moves must have an assigned animation state.
      */
+    @SuppressWarnings("unchecked")
     public void registerImmediate(@NonNull MoveType type, @NonNull AbstractMove<?, ? super A> move, @Nullable S animState) {
         Entry<A, S> entry = register(type, move, animState);
         if (move.getCrouchingVariant() != null) {

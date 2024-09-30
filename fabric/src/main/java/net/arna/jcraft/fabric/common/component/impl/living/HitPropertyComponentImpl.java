@@ -9,11 +9,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 public class HitPropertyComponentImpl extends CommonHitPropertyComponentImpl implements HitPropertyComponent {
-    private final Entity entity;
-
     public HitPropertyComponentImpl(Entity entity) {
         super(entity);
-        this.entity = entity;
     }
 
     @Override

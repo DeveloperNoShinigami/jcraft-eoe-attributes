@@ -63,6 +63,7 @@
 
 ### Known Bugs
 #### Common
+* MiH is missing a skin 2
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
   this bug is EVIL and has an unclear source >:(
   in the future, try looking at what sets the enemies target to null
@@ -84,3 +85,4 @@
 * Hermit Purple, Yellow Temperance
 * Internationalization
 * Actually use effect keyframes in animations
+* Fix a ton of shit that gets broken by server restarts

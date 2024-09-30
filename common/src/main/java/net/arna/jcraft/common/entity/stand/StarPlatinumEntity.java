@@ -254,7 +254,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
         }
 
         @Override
-        public void playAnimation(StarPlatinumEntity attacker, AnimationState builder) {
+        public void playAnimation(StarPlatinumEntity attacker, AnimationState<StarPlatinumEntity> builder) {
             animator.accept(attacker, builder);
         }
     }

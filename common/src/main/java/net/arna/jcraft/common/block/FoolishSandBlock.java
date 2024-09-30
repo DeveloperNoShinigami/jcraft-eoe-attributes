@@ -25,7 +25,7 @@ public class FoolishSandBlock extends FallingBlock {
 
     @Override
     public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        if (!increaseAge(state, world, pos)) {
+        if (increaseAge(state, world, pos)) {
             world.scheduleTick(pos, this, 20, TickPriority.NORMAL);
             return;
         }
@@ -35,7 +35,7 @@ public class FoolishSandBlock extends FallingBlock {
         for (Direction direction : Direction.values()) {
             blockPos.setWithOffset(pos, direction);
             BlockState blockState = world.getBlockState(blockPos);
-            if (blockState.is(this) && !increaseAge(blockState, world, blockPos)) {
+            if (blockState.is(this) && increaseAge(blockState, world, blockPos)) {
                 world.scheduleTick(blockPos, this, 20);
             }
         }
@@ -46,15 +46,18 @@ public class FoolishSandBlock extends FallingBlock {
         return 16777216;
     }
 
+    /**
+     * @return Whether the block should continue existing.
+     */
     private boolean increaseAge(BlockState state, Level world, BlockPos pos) {
         int i = state.getValue(AGE);
         if (i < MAX_AGE) {
             world.setBlock(pos, state.setValue(AGE, i + 1), 2);
-            return false;
+            return true;
         }
 
         world.removeBlock(pos, false);
-        return true;
+        return false;
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

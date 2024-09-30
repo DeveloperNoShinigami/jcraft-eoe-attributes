@@ -42,11 +42,11 @@ public class FlutteringArmorItem extends ArmorItem implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController(this, "controller", 10, this::predicate));
+        controllers.add(new AnimationController<>(this, "controller", 10, this::predicate));
     }
 
-    private PlayState predicate(AnimationState state) {
-        Entity entity = (Entity) state.getData(DataTickets.ENTITY);
+    private PlayState predicate(AnimationState<FlutteringArmorItem> state) {
+        Entity entity = state.getData(DataTickets.ENTITY);
 
         boolean moving = (entity instanceof Player player) ? !JUtils.deltaPos(player).equals(Vec3.ZERO) : entity.getDeltaMovement().horizontalDistanceSqr() > 0.01;
         state.getController().setAnimation(RawAnimation.begin().thenLoop(moving ? "animation.moving" : "animation.idle"));
@@ -62,6 +62,7 @@ public class FlutteringArmorItem extends ArmorItem implements GeoItem {
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
             private GeoArmorRenderer<?> renderer;
+            @SuppressWarnings("unchecked")
             @Override public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
                     LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
                 if (this.renderer == null) {
