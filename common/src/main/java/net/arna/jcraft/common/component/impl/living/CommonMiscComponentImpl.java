@@ -68,7 +68,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
 
     @Override
     public void startDamageTimer() {
-        this.damageTimer = 600;
+        this.damageTimer = 60 * 20;
         sync(entity);
     }
 

@@ -44,6 +44,7 @@ public class JServerConfig {
 
     private static final String MINECRAFT_REBALANCE = "minecraft_rebalance";
     public static final BooleanOption REDUCE_DEADLY_EXPLOSIONS = new BooleanOption("reduceDeadlyExplosions", MINECRAFT_REBALANCE, true);
+    public static final BooleanOption DISABLE_COMBAT_ELYTRA = new BooleanOption("disableCombatElytra", MINECRAFT_REBALANCE, true);
 
     // Interaction options
     private static final String INTERACTION = "interaction";

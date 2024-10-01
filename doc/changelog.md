@@ -23,9 +23,11 @@
 * Stellar Iron Ingot can now be used as armor trim
 * using the stand arrow now damages the user based on difficulty level (damage amount is a Game Rule)
 * improved texture and recipe for Green Baby
+* improved texture and recipe for DIO's Diary
 * DIO's Diary can now be put into chiseled bookshelves
 * Skins now transfer between evolutions
 * Cinderella's Masks are now applied in the anvil
+* Elytrae are disabled for 1 minute upon entering combat, with a config option that is ON by default
 #### Generation
 * meteorites can now also be found in Ice Spikes Biome
 * added Devil's Palm Biome
@@ -35,6 +37,7 @@
 * added Silver Chariot Requiem (unobtainable)
 * added custom icons for Hierophant Green and Purple Haze (& Distortion)
 * Updated models for Whitesnake, C-Moon, Made in Heaven, Cream
+* Mining Barrages used by NPC Stand Users no longer break blocks with standGriefing turned off
 #### Magician's Red
 * Crossfire cooldown lowered (12 -> 5s)
 ### Miscellaneous

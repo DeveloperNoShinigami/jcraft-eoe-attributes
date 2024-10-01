@@ -146,6 +146,11 @@
       "jcraft:stands/starplatinum/starfinger"
     ]
   },
+  "spinhaleloop": {
+    "sounds": [
+      "jcraft:stands/starplatinum/inhale_loop"
+    ]
+  },
   "sptw": {
     "sounds": [
       "jcraft:stands/sptw/the_world"

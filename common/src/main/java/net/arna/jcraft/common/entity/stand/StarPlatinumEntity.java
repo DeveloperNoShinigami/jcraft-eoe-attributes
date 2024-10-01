@@ -33,8 +33,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withExtraHitBox(0, 0.35, 1.25)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Component.literal("Uppercut"),
-                    Component.literal("slower combo starter, launches vertically")
+                    Component.translatable("jcraft.starplatinum.crm1"),
+                    Component.literal("Slower combo starter, launches vertically, good anti-air.")
             );
     public static final SimpleAttack<StarPlatinumEntity> LIGHT_FOLLOWUP = new SimpleAttack<StarPlatinumEntity>(
             0, 6, 10, 0.75f, 6f, 8, 1.5f, 1f, -0.25f)
@@ -45,8 +45,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withExtraHitBox(0, 0, 1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Component.literal("Punch"),
-                    Component.literal("quick combo finisher")
+                    Component.translatable("jcraft.starplatinum.m1m1"),
+                    Component.literal("Quick combo finisher.")
             );
     public static final SimpleAttack<StarPlatinumEntity> LIGHT = SimpleAttack.<StarPlatinumEntity>lightAttack(
                     5, 7, 0.75f, 5f, 10, 0.2f, -0.1f)
@@ -54,15 +54,15 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withCrouchingVariant(UPPERCUT)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withInfo(
-                    Component.literal("Punch"),
-                    Component.literal("quick combo starter")
+                    Component.translatable("jcraft.starplatinum.m1"),
+                    Component.literal("Quick combo starter.")
             );
     public static final MainBarrageAttack<StarPlatinumEntity> BARRAGE = new MainBarrageAttack<StarPlatinumEntity>(280,
             0, 40, 0.75f, 1f, 30, 2f, 0.25f, 0f, 3, Blocks.OBSIDIAN.defaultDestroyTime())
             .withSound(JSoundRegistry.STAR_PLATINUM_BARRAGE.get())
             .withInfo(
-                    Component.literal("Barrage"),
-                    Component.literal("fast reliable combo starter/extender, high stun")
+                    Component.translatable("jcraft.generic.barrage"),
+                    Component.literal("Fast, reliable combo starter/extender, high stun.")
             );
     public static final KnockdownAttack<StarPlatinumEntity> GRAB_HIT = new KnockdownAttack<StarPlatinumEntity>(0,
             10, 20, 1f, 6f, 15, 1.75f, 0.4f, 0f, 35)
@@ -71,7 +71,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withHyperArmor()
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
-                    Component.literal("Takedown (hit)"),
+                    Component.translatable("jcraft.starplatinum.crsp1hit"),
                     Component.empty()
             );
     public static final GrabAttack<StarPlatinumEntity, State> GRAB = new GrabAttack<>(280, 8, 20,
@@ -81,8 +81,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withHitAnimation(null)
             .withBlockableType(BlockableType.BLOCKABLE)
             .withInfo(
-                    Component.literal("Takedown"),
-                    Component.literal("blockable grab, knocks down")
+                    Component.translatable("jcraft.starplatinum.crsp1"),
+                    Component.literal("Blockable grab, knocks down.")
             );
     public static final SimpleAttack<StarPlatinumEntity> STAR_FINGER = new SimpleAttack<StarPlatinumEntity>(200,
             12, 20, 0.75f, 5f, 30, 1.75f, -0.4f, -0.25f)
@@ -91,8 +91,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withBlockStun(5)
             .withExtraHitBox(2, 0.1, 1)
             .withInfo(
-                    Component.literal("Star Finger"),
-                    Component.literal("medium windup, combo starter/extender")
+                    Component.translatable("jcraft.starplatinum.sp1"),
+                    Component.literal("Medium windup combo starter/extender, vacuums on hit, unsafe on block.")
             );
     public static final UppercutAttack<StarPlatinumEntity> KNEE_UP = new UppercutAttack<StarPlatinumEntity>(30,
             8, 14, 0.75f, 4f, 13, 1.6f, 0.2f, -0.4f, 0.5f)
@@ -100,8 +100,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withImpactSound(JSoundRegistry.IMPACT_6.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
-                    Component.literal("Upward Knee"),
-                    Component.literal("launches upward, larger and higher hitbox, higher stun")
+                    Component.translatable("jcraft.starplatinum.airsp2"),
+                    Component.literal("Launches upward, larger and higher hitbox, higher stun, less damage.")
             );
     public static final SimpleAttack<StarPlatinumEntity> KNEE = new SimpleAttack<StarPlatinumEntity>(20,
             7, 12, 0.9f, 6f, 9, 1.5f, 0.3f, 0f)
@@ -110,8 +110,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withImpactSound(JSoundRegistry.IMPACT_6.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
-                    Component.literal("Knee"),
-                    Component.literal("fast poke, low stun")
+                    Component.translatable("jcraft.starplatinum.sp2"),
+                    Component.literal("Fast poke, low stun.")
             );
     public static final ChargeBarrageAttack<StarPlatinumEntity> SHORT_CHARGE_BARRAGE = new ChargeBarrageAttack<StarPlatinumEntity>(280, 5, 25,
             6f, 0.6f, 15, 1.5f, 0.1f, 0f, 3, true)
@@ -119,8 +119,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withBarrageShockwaves()
             .withBackstab(false)
             .withInfo(
-                    Component.literal("Lunging Barrage"),
-                    Component.literal("fast combo starter/extender, medium stun")
+                    Component.translatable("jcraft.starplatinum.crsp3"),
+                    Component.literal("Lasts shorter. Less punishable on whiff.")
             );
     public static final ChargeBarrageAttack<StarPlatinumEntity> CHARGE_BARRAGE = new ChargeBarrageAttack<StarPlatinumEntity>(280, 5, 55,
             7f, 0.6f, 15, 1.5f, 0.1f, 0f, 3, false)
@@ -129,19 +129,19 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withBackstab(false)
             .withCrouchingVariant(SHORT_CHARGE_BARRAGE)
             .withInfo(
-                    Component.literal("Advancing Barrage"),
-                    Component.literal("fast combo starter/extender, medium stun, extremely punishable on whiff")
+                    Component.translatable("jcraft.starplatinum.sp3"),
+                    Component.literal("Fast combo starter/extender, medium stun, extremely punishable on whiff.")
             );
     public static final JumpMove<StarPlatinumEntity> JUMP = new JumpMove<StarPlatinumEntity>(300, 5,
             14, 1f, 1.5f)
             .withInfo(
-                    Component.literal("Stand Jump"),
-                    Component.literal("jumps in looked direction with slight upward bias, you must stay on the ground until Star Platinum jumps")
+                    Component.literal("jcraft.starplatinum.util"),
+                    Component.literal("Jumps in looked direction with slight upward bias, you must stay on the ground until Star Platinum jumps.")
             );
     public static final InhaleAttack INHALE = new InhaleAttack(800, 5, 5, 1f, 80)
             .withInfo(
-                    Component.literal("Inhale"),
-                    Component.literal("vacuums nearby entities for 4 seconds")
+                    Component.literal("jcraft.starplatinum.ult"),
+                    Component.literal("Vacuums looked entities for 4 seconds.")
             );
     private static final EntityDataAccessor<Integer> INHALE_TIME;
 
@@ -164,16 +164,16 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                         ~ represents a queued attack
                                                 
                             -the classic
-                            Light>Barrage>Light>Knee>Advancing Barrage~Star Finger~Star Breaker
+                            Punch>Barrage>Punch>Knee>Advancing Barrage~Star Finger~Star Breaker
                             
                             -the rushdown
-                            Light~Light>dash Barrage>cr.Light>Star Finger>Knee>Light>Advancing Barrage>Light~Light
+                            Punch~Punch>dash Barrage>cr.Punch>Star Finger>Knee>Punch>Advancing Barrage>Punch~Punch
                             
                             -the blowback
                             Inhale>...>Star Finger>Star Breaker>Barrage>...
 
                             -the poke
-                            Star Finger>Knee>Light>Advancing Barrage~Light>Barrage>Light>Star Breaker""";
+                            Star Finger>Knee>Punch>Advancing Barrage~Punch>Barrage>Punch>Star Breaker""";
     }
 
     @Override

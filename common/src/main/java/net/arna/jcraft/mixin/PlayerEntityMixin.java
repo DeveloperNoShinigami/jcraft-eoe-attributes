@@ -2,6 +2,7 @@ package net.arna.jcraft.mixin;
 
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.ComboCounterPacket;
 import net.arna.jcraft.common.spec.JSpec;
@@ -162,6 +163,14 @@ public abstract class PlayerEntityMixin implements IComboCounter {
             //stand.counter(source.getAttacker(), source); // Initiate counter
             player.removeEffect(JStatusRegistry.DAZED.get());
             info.cancel();
+        }
+    }
+
+    @Inject(cancellable = true, at = @At("HEAD"), method = "startFallFlying")
+    void jcraft$startFallFlying(CallbackInfo ci) {
+        Player player = ((Player) (Object) this);
+        if (JServerConfig.DISABLE_COMBAT_ELYTRA.getValue() && JComponentPlatformUtils.getMiscData(player).isOnDamageTimer()) {
+            ci.cancel();
         }
     }
 }

@@ -48,6 +48,7 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> STAR_PLATINUM_KNEE = register("spknee");
     RegistrySupplier<SoundEvent> STAR_BREAKER = register("starbreaker");
     RegistrySupplier<SoundEvent> STAR_FINGER = register("starfinger");
+    RegistrySupplier<SoundEvent> INHALE_LOOP = register("spinhaleloop");
 
     //King Crimson
     RegistrySupplier<SoundEvent> KC_SUMMON = register("kcsummon");

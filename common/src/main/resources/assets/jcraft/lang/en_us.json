@@ -296,7 +296,7 @@
   "entity.jcraft.horus.info.con1": "weak defense",
   "entity.jcraft.horus.info.con2": "no fast barrage-like move",
   "entity.jcraft.metallica": "Metallica",
-
+  "entity.jcraft.metallica.info.desc": "Cerebral Dedicated ZONER",
   "entity.jcraft.aya_tsuji": "Aya Tsuji",
   "entity.jcraft.cinderella": "Cinderella",
   "entity.jcraft.cinderella.info.desc": "Undescribed",
@@ -440,6 +440,7 @@
   "jcraft.serverconfig.option.enableFriendlyFire": "Enable Friendly Fire (Uses scoreboard teams)",
   "jcraft.serverconfig.category.minecraft_rebalance": "Minecraft Balance",
   "jcraft.serverconfig.option.reduceDeadlyExplosions": "Reduce Deadly Explosion Power (End Crystals, Beds, Respawn Anchors)",
+  "jcraft.serverconfig.option.disableCombatElytra": "Disable Elytra in Combat",
   "jcraft.serverconfig.category.interaction": "Interaction",
   "jcraft.serverconfig.option.universalAbilities": "Universal Abilities",
   "jcraft.serverconfig.option.exclusiveStands": "Exclusive Stands",
@@ -450,5 +451,31 @@
   "jcraft.serverconfig.option.wsStealStands": "Whitesnake Steals Stands",
   "jcraft.serverconfig.option.shaSearchRadius": "Sheer Heart Attack search radius",
   "jcraft.serverconfig.option.mihAccelerateTicks": "Made in Heaven time accel duration",
-  "jcraft.serverconfig.option.useFoolishSand": "Use Foolish Sand"
+  "jcraft.serverconfig.option.useFoolishSand": "Use Foolish Sand",
+
+  "jcraft.generic.barrage": "Barrage",
+  "jcraft.generic.ts": "Timestop",
+  "jcraft.generic.tp": "Timeskip",
+
+  "jcraft.starplatinum.m1": "Punch",
+  "jcraft.starplatinum.m1m1": "Punch",
+  "jcraft.starplatinum.crm1": "Uppercut",
+  "jcraft.starplatinum.hvy": "Star Breaker",
+  "jcraft.starplatinum.crhvy": "Ground Breaker",
+  "jcraft.starplatinum.sp1": "Star Finger",
+  "jcraft.starplatinum.crsp1": "Takedown",
+  "jcraft.starplatinum.crsp1hit": "Takedown (Hit)",
+  "jcraft.starplatinum.sp2": "Knee",
+  "jcraft.starplatinum.airsp2": "Upward Knee",
+  "jcraft.starplatinum.sp3": "Advancing Barrage",
+  "jcraft.starplatinum.crsp3": "Lunging Barrage",
+  "jcraft.starplatinum.util": "Stand Jump",
+  "jcraft.starplatinum.ult": "Inhale",
+
+  "jcraft.sptw.crm1": "Ground Slam",
+  "jcraft.sptw.sp1": "Time Strike",
+  "jcraft.sptw.sp2": "Backhand",
+  "jcraft.sptw.sp3": "What an Ugly Watch",
+  "jcraft.sptw.sp3hit": "What an Ugly Watch (Uppercut)",
+  "jcraft.sptw.crsp3hit": "What an Ugly Watch (Slam)"
 }

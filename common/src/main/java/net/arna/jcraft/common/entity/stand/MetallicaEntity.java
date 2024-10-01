@@ -411,6 +411,12 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     }
 
     @Override
+    public Vector3f getAuraColor() {
+        if (isInvisible()) return new Vector3f(0.0f, 0.0f, 0.0f);
+        return super.getAuraColor();
+    }
+
+    @Override
     public void setUser(@Nullable LivingEntity user) {
         super.setUser(user);
         miscComponent = JComponentPlatformUtils.getMiscData(getUser());

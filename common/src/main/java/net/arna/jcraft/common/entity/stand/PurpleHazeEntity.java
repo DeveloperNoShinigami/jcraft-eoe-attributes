@@ -252,6 +252,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                     if (target != null && !target.isAlive()) {
                         target = null;
                     }
+                    // else if (target instanceof StandEntity<?,?> standTarget && standTarget.hasUser()) { setTarget(standTarget.getUserOrThrow()); }
 
                     if (target == null) {
                         List<LivingEntity> potentialTargets = level().getEntitiesOfClass(

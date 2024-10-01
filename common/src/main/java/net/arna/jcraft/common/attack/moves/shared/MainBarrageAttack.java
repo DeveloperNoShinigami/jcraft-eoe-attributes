@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.attack.moves.shared;
 
 import lombok.NonNull;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.ctx.BooleanMoveVariable;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
+
 import java.util.Set;
 
 /**
@@ -40,6 +42,9 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
     @Override
     public void onInitiate(A attacker) {
         boolean breakBlocks = attacker.getUserOrThrow().isShiftKeyDown();
+        if (breakBlocks && !attacker.getEntityWorld().getGameRules().getBoolean(JCraft.STAND_GRIEFING) && !(attacker.getUserOrThrow() instanceof Player)) {
+            breakBlocks = false;
+        }
         withDuration(breakBlocks ? MINING_BARRAGE_TIME : baseDuration);
         super.onInitiate(attacker);
         attacker.getMoveContext().setBoolean(BREAK_BLOCKS, breakBlocks);

@@ -20,7 +20,7 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
             .withHyperArmor()
             .withLaunch()
             .withInfo(
-                    Component.literal("Ground Breaker"),
+                    Component.translatable("jcraft.starplatinum.crhvy"),
                     Component.literal("slow, uninterruptible launcher, breaks the ground")
             );
     public static final SimpleAttack<AbstractStarPlatinumEntity<?, ?>> STAR_BREAKER = new SimpleAttack<AbstractStarPlatinumEntity<?, ?>>(
@@ -34,7 +34,7 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
             .withLaunch()
             .withCrouchingVariant(GROUND_BREAKER)
             .withInfo(
-                    Component.literal("Star Breaker"),
+                    Component.translatable("jcraft.starplatinum.hvy"),
                     Component.literal("slow, uninterruptible launcher")
             );
 
