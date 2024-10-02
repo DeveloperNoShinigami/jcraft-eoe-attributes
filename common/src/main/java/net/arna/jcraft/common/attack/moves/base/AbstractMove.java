@@ -463,6 +463,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
             attacker.setCurrentMove(finisher.right());
         }
         if (shouldPerform(attacker, moveStun)) {
+            attacker.setPerformedThisTick(true);
             doPerform(attacker);
         }
     }
@@ -493,6 +494,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     /**
      * Performs this move.
+     * After performing, the attacker's {@link IAttacker#getCurrentMove()} may be null.
      *
      * @param attacker The attacker that will be performing this move.
      * @param user     The user of the attacker. Will never be null.

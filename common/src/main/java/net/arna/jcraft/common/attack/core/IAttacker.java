@@ -85,5 +85,8 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S> {
         getBaseEntity().playSound(sound, volume, pitch);
     }
 
+    void setPerformedThisTick(boolean b);
+    boolean performedThisTick();
+
     A getThis();
 }

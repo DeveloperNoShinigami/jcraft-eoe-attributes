@@ -314,7 +314,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
 
     @Override
     public float getSpeed() {
-        return 0.25F;
+        return 0.15F;
     }
 
     @Override

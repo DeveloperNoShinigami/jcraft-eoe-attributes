@@ -142,6 +142,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     private AbstractMove<?, ? super E> curMove;
     public AbstractMove<?, ? super E> prevMove;
     public int armorPoints;
+    private boolean performedThisTick;
 
     // Info
     @Getter
@@ -837,12 +838,25 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     public void idleOverride() {
     }
 
+    public void cancelMove() {
+        cancelMove(false);
+    }
+
     /**
      * Cancels the stand's move instantly
+     * @param offensiveCancel Whether the move cancellation was initiated by another party,
+     *                        and should execute the to-be-cancelled move if {@link AbstractMove#shouldPerform(IAttacker, int)} is true.
+     *                        This is used to mitigate the problem of subtick update priority between different IAttackers.
      */
-    public void cancelMove() {
-        if (getCurrentMove() != null) {
-            getCurrentMove().onCancel(getThis());
+    public void cancelMove(boolean offensiveCancel) {
+        if (curMove != null) {
+            if (offensiveCancel && !performedThisTick && curMove.shouldPerform(getThis(), getMoveStun() - 1)) {
+                setPerformedThisTick(true);
+                curMove.perform(getThis(), getUserOrThrow(), getMoveContext());
+            }
+            if (curMove != null) {
+                curMove.onCancel(getThis());
+            }
         }
         setCurrentMove(null);
         setMoveStun(0);
@@ -1018,7 +1032,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 }
             }
 
-            if (wantToBlock && !blocking && (user == null || !DashData.isDashing(user)) && canAttack()) {
+            if (wantToBlock && canBlock()) {
                 if (isFree() && !isRemote()) {
                     setFree(false);
                 }
@@ -1072,6 +1086,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         {
             prevMove = getCurrentMove();
         }
+    }
+
+    private boolean canBlock() {
+        return !blocking && (user == null || !DashData.isDashing(user)) && canAttack();
     }
 
     protected void doQueuedMove(@Nullable ServerPlayer userPlayer) {
@@ -1245,10 +1263,15 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 }
 
                 if (--stand.armorPoints < 0) {
-                    stand.cancelMove();
+                    stand.cancelMove(true);
                 } else {
                     JComponentPlatformUtils.getMiscData(ent).displayArmoredHit();
                 }
+            }
+
+            // If a stand wants to block and can, but didn't get the chance to due to execution order, prompt blocking here.
+            if (stand.wantToBlock && stand.canBlock()) {
+                stand.tryBlock();
             }
 
             if (stand.blocking && !stand.isRemote()) {
@@ -1319,7 +1342,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             JSpec<?, ?> spec = JUtils.getSpec(playerEntity);
             if (spec != null && spec.curMove != null) {
                 if (--spec.armorPoints < 0) {
-                    spec.cancelMove();
+                    spec.cancelMove(true);
                 } else {
                     JComponentPlatformUtils.getMiscData(playerEntity).displayArmoredHit();
                 }
@@ -1452,6 +1475,16 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     @Override
     public void setHoldingType(MoveInputType holdingType) {
         this.holdingType = holdingType;
+    }
+
+    @Override
+    public void setPerformedThisTick(boolean b) {
+        performedThisTick = b;
+    }
+
+    @Override
+    public boolean performedThisTick() {
+        return performedThisTick;
     }
 
     public abstract @NonNull E getThis();

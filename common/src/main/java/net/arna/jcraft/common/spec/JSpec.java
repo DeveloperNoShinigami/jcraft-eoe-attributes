@@ -51,6 +51,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     public final Player player;
     @Setter
     public int moveStun = 0;
+    private boolean performedThisTick;
 
     private S state;
 
@@ -236,8 +237,23 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     public void cancelMove() {
+        cancelMove(false);
+    }
+
+    /**
+     * Cancels the spec's move instantly
+     * @param offensiveCancel Whether the move cancellation was initiated by another party,
+     *                        and should execute the to-be-cancelled move if {@link AbstractMove#shouldPerform(IAttacker, int)} is true.
+     *                        This is used to mitigate the problem of subtick update priority between different IAttackers.
+     */
+    public void cancelMove(boolean offensiveCancel) {
         if (curMove != null) {
-            curMove.onCancel(getThis());
+            if (offensiveCancel && !performedThisTick && curMove.shouldPerform(getThis(), getMoveStun() - 1)) {
+                curMove.perform(getThis(), getUserOrThrow(), getMoveContext());
+            }
+            if (curMove != null) {
+                curMove.onCancel(getThis());
+            }
         }
         curMove = null;
         queuedMove = null;
@@ -341,6 +357,16 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     @Override
     public void setHoldingType(MoveInputType holdingType) {
         this.holdingType = holdingType;
+    }
+
+    @Override
+    public void setPerformedThisTick(boolean b) {
+        performedThisTick = b;
+    }
+
+    @Override
+    public boolean performedThisTick() {
+        return performedThisTick;
     }
 
     public abstract A getThis();

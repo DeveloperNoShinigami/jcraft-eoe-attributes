@@ -30,6 +30,7 @@ public class MoveTickQueue {
 
     public static <A extends IAttacker<? extends A, ?>> void queueTick(A attacker, AbstractMove<?, ? super A> move, int moveStun) {
         //queue.add(new MoveTick<>(attacker, move, moveStun));
+        attacker.setPerformedThisTick(false);
         move.tick(attacker, moveStun);
     }
 
