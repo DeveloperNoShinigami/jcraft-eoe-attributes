@@ -163,7 +163,7 @@ public interface JCreativeMenuTabRegistry {
                     }
                     // cinderella mask + enchantments
                     entries.accept(JItemRegistry.CINDERELLA_MASK.get());
-                    for (int i = 1; i <= 3; i++) {
+                    for (int i = 1; i <= 4; i++) {
                         final ItemStack stack = new ItemStack(Items.ENCHANTED_BOOK);
                         final CompoundTag nbt = stack.getOrCreateTag();
                         final ListTag enchantments = new ListTag();

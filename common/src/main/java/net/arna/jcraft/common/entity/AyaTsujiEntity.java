@@ -6,6 +6,8 @@ import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
@@ -41,7 +44,27 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
         if (world.isClientSide()) return;
         JEnemies.add(this);
 
-        merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.DIOS_DIARY.get()), new ItemStack(JItemRegistry.CINDERELLA_MASK.get()), 4, 0, 1f));
+        final ItemStack[] masks = new ItemStack[4];
+        for (int i = 1; i <= 4; i++) {
+            masks[i-1] = new ItemStack(JItemRegistry.CINDERELLA_MASK.get());
+            final CompoundTag nbt = masks[i-1].getOrCreateTag();
+            final ListTag enchantments = new ListTag();
+            final CompoundTag enchantment = new CompoundTag();
+            enchantment.putString("id", "jcraft:cinderellas_kiss");
+            enchantment.putShort("lvl", (short) i);
+            enchantments.add(enchantment);
+            nbt.put("Enchantments", enchantments);
+        }
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 30), masks[0], 4, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 45), masks[1], 3, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 60), masks[2], 2, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_PEARL, 4), masks[0], 4, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_PEARL, 6), masks[1], 3, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_PEARL, 8), masks[2], 2, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_PEARL, 10), masks[3], 1, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STAND_ARROW.get()), masks[1], 3, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STAND_ARROW.get(), 2), masks[2], 2, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STAND_ARROW.get(), 3), masks[3], 1, 0, 1f));
     }
 
     @Override
