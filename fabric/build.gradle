@@ -56,13 +56,13 @@ dependencies {
     //Geckolib
     //modImplementation("software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version}")
     //implementation("com.eliotlash.mclib:mclib:20")
-    modImplementation "mod.azure.azurelib:azurelib-fabric-1.20.1:${azurelib_version}"
+    include modImplementation("mod.azure.azurelib:azurelib-fabric-1.20.1:${azurelib_version}")
 
     //Player Anim
-    modImplementation "dev.kosmx.player-anim:player-animation-lib-fabric:${rootProject.player_anim_version}"
+    include modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${rootProject.player_anim_version}")
 
     // Terrablender
-    modImplementation("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
+    include modImplementation("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
 
     // Trimmed
     include modImplementation("maven.modrinth:trimmed:${minecraft_version}-${trimmed_version}+fabric")
@@ -73,7 +73,7 @@ dependencies {
     include modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-world:5.2.2")
 
     //Cloth
-    modApi "me.shedaniel.cloth:cloth-config-fabric:11.1.118"
+    include modApi("me.shedaniel.cloth:cloth-config-fabric:11.1.118")
 
     //Modmenu
     modApi "com.terraformersmc:modmenu:7.2.2"
