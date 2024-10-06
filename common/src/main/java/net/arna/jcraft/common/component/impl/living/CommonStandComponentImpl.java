@@ -43,6 +43,7 @@ public class CommonStandComponentImpl implements CommonStandComponent {
 
     @Override
     public void setStand(@Nullable StandEntity<?, ?> stand) {
+        // if (this.stand != null) this.stand.setUser(null);
         this.stand = stand;
         sync(entity);
     }

@@ -9,7 +9,6 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -157,20 +156,6 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
     @Override
     public boolean isClientSide() {
         return level().isClientSide();
-    }
-
-    @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-    }
-
-    @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-
-        if (getFirstPassenger() instanceof StandEntity<?,?> stand) {
-            JComponentPlatformUtils.getStandData(this).setStand(stand);
-        }
     }
 
     // Animations

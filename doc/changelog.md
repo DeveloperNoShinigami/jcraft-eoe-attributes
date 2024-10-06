@@ -4,6 +4,7 @@
 * updated to MC 1.20.1
 * <u>_Forge is now supported_</u>
 ### Dependencies
+* added custom Satin build for Forge, provided in the Discord and CurseForge page
 * added Architectury to support Forge as well as Fabric
 * added Terrablender to support custom biomes
 * changed Geckolib to Azurelib

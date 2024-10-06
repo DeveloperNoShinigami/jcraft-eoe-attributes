@@ -427,6 +427,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     @Override
     public void setUser(@Nullable LivingEntity user) {
         super.setUser(user);
+        if (user == null) return;
         miscComponent = JComponentPlatformUtils.getMiscData(getUser());
         setIron(miscComponent.getMetallicaIron());
     }

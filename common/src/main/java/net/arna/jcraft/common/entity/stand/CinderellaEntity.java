@@ -36,6 +36,18 @@ public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEn
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        // impossibly ghetto fix. we do not care.
+        if (!hasUser()) {
+            discard();
+            return;
+        }
+        if (level().isClientSide()) return;
+        if (getUserOrThrow().getFirstPassenger() != this) discard();
+    }
+
+    @Override
     public @NonNull CinderellaEntity getThis() {
         return this;
     }
