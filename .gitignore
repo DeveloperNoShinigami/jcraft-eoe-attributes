@@ -50,3 +50,5 @@ run/
 
 /common/src/main/generated/data/*
 /common/src/main/generated/assets/jcraft/*
+
+.architectury-transformer/
