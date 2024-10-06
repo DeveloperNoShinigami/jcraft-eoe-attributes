@@ -58,7 +58,7 @@ public class JCraftHudOverlay {
                         SUN_SIZE_GAUGE.blue() - darken,
                         gaugeX,
                         height + gaugeHeightOffset,
-                        (int) (theSun.getScale() * 10.0F));
+                        (int) (theSun.getRawScale() * 10.0F));
             } else {
                 BLOCK_GAUGE.render(ctx, gaugeX, height + gaugeHeightOffset, (int) stand.getStandGauge());
             }

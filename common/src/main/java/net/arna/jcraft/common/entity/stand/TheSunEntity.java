@@ -86,7 +86,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                 MeteorProjectile meteor = fireMeteor(attacker, user, pos, getLookVector(pos, attacker.targetPosition), 2.5f, 0f);
                 meteor.setNoGravity(true);
 
-                if (attacker.getScale() == MAX_SCALE) {
+                if (attacker.getRawScale() == MAX_SCALE) {
                     meteor.setExplosive(true);
                 }
             })
@@ -115,7 +115,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
             100, 10, 110, 0, 0, 0, 0, 0, 0, 2
     )
             .withAction((attacker, user, ctx, targets) -> {
-                for (int i = 0; i < attacker.getScale(); i++) {
+                for (int i = 0; i < attacker.getRawScale(); i++) {
                     fireMeteor(attacker, user, attacker.randomPos(), JUtils.randUnitVec(attacker.random), 1.25f, 0f);
                 }
             })
@@ -168,7 +168,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
             );
 
     private Vec3 randomPos() {
-        return randomPos(getScale());
+        return randomPos(getRawScale());
     }
 
     private Vec3 randomPos(double scale) {
@@ -242,7 +242,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     private static void fireMeteors1(TheSunEntity attacker, LivingEntity user) {
-        for (int i = 0; i < 3 * attacker.getScale(); i++) {
+        for (int i = 0; i < 3 * attacker.getRawScale(); i++) {
             Vec3 pos = attacker.randomPos();
             fireMeteor(attacker, user, pos, getLookVector(pos, attacker.targetPosition).scale(1.75)).setNoGravity(true);
         }
@@ -312,7 +312,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         switch (type) {
             case ULTIMATE -> {
                 boolean shrink = user.isShiftKeyDown();
-                float newScale = getScale() + (shrink ? -0.05f : 0.05f);
+                float newScale = getRawScale() + (shrink ? -0.05f : 0.05f);
 
                 if (!shrink && newScale <= MAX_SCALE) {
                     // Distributes world collision check to minimize lag
@@ -477,7 +477,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
             return;
         }
 
-        final float scale = getScale();
+        final float scale = getRawScale();
         final float heatFieldSize = scale * 20.0F;
 
         // if (tickCount % 20 == 0) JCraft.prefixedLog(level().isClientSide, "TheSunEntity@" + getId() + " scale: " + scale);
@@ -523,7 +523,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                 if (distance > MAX_DISTANCE * MAX_DISTANCE) {
                     desiredPosition = desiredPosition.add(userPos.subtract(pos).normalize());
                     if (++overextensionTime > 20) {
-                        entityData.set(SCALE, Mth.clamp(getScale() - 0.1f, MIN_SCALE, MAX_SCALE));
+                        entityData.set(SCALE, Mth.clamp(getRawScale() - 0.1f, MIN_SCALE, MAX_SCALE));
                     }
                 } else {
                     overextensionTime = 0;
@@ -579,7 +579,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         }
 
         prevScale = curScale;
-        curScale = getScale();
+        curScale = getRawScale();
     }
 
     public static void dryOut(ServerLevel serverWorld, BlockPos pos) {
@@ -594,7 +594,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     @Override
     protected @NotNull AABB makeBoundingBox() {
         final double x = getX(), y = getY(), z = getZ();
-        final float scale = getScale() * 1.5f;
+        final float scale = getRawScale() * 1.5f;
         return newBoundingBox(x, y, z, scale);
     }
 
@@ -625,8 +625,12 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         return this;
     }
 
-    public float getScale() {
+    public float getRawScale() {
         return entityData.get(SCALE);
+    }
+
+    public float getScale(float tickDelta) {
+        return Mth.lerp(tickDelta, prevScale, curScale);
     }
 
     // Animation code
