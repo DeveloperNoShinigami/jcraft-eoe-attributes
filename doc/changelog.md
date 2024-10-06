@@ -85,7 +85,8 @@
     A possible solution to this is to just queue up all the move.tick() calls and run them all at the very end of a server tick.
 * Fix AI stand users having clientside head rotation that completely throws off players
 * Timestop should stop animated textures
-* Hermit Purple, Yellow Temperance
+* CRAZY DIAMOND, THE HAND (NEXT UPDATE), Hermit Purple, Yellow Temperance
+* Stand NBT serialization
 * Internationalization
 * Actually use effect keyframes in animations
 * Fix a ton of shit that gets broken by server restarts

@@ -11,7 +11,6 @@ import net.arna.jcraft.common.entity.projectile.JAttackEntity;
 import net.arna.jcraft.common.entity.spec.JSpecHolder;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.network.s2c.JExplosionPacket;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
@@ -213,7 +212,7 @@ public final class JUtils {
     }
 
     public static BlockHitResult genericBlockRaycast(Level world, Entity entity, double range, ClipContext.Block shapeType, ClipContext.Fluid fluidHandling) {
-        Vec3 eyePos = RotationUtil.vecPlayerToWorld(entity.getEyePosition(), GravityChangerAPI.getGravityDirection(entity));
+        Vec3 eyePos = entity.position().add(GravityChangerAPI.getEyeOffset(entity));
         return world.clip(
                 new ClipContext(
                         eyePos,

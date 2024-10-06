@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.entity;
 
 import net.arna.jcraft.common.component.living.CommonStandComponent;
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -26,6 +27,7 @@ import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant {
@@ -45,23 +47,25 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
         JEnemies.add(this);
 
         final ItemStack[] masks = new ItemStack[4];
-        for (int i = 1; i <= 4; i++) {
-            masks[i-1] = new ItemStack(JItemRegistry.CINDERELLA_MASK.get());
-            final CompoundTag nbt = masks[i-1].getOrCreateTag();
-            final ListTag enchantments = new ListTag();
-            final CompoundTag enchantment = new CompoundTag();
-            enchantment.putString("id", "jcraft:cinderellas_kiss");
-            enchantment.putShort("lvl", (short) i);
-            enchantments.add(enchantment);
-            nbt.put("Enchantments", enchantments);
+        for (int i = 0; i <= 3; i++) {
+            masks[i] = new ItemStack(JItemRegistry.CINDERELLA_MASK.get());
+            if (i > 0) {
+                final CompoundTag nbt = masks[i].getOrCreateTag();
+                final ListTag enchantments = new ListTag();
+                final CompoundTag enchantment = new CompoundTag();
+                enchantment.putString("id", "jcraft:cinderellas_kiss");
+                enchantment.putShort("lvl", (short) i);
+                enchantments.add(enchantment);
+                nbt.put("Enchantments", enchantments);
+            }
         }
         merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 30), masks[0], 4, 0, 1f));
         merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 45), masks[1], 3, 0, 1f));
         merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 60), masks[2], 2, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_PEARL, 4), masks[0], 4, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_PEARL, 6), masks[1], 3, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_PEARL, 8), masks[2], 2, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_PEARL, 10), masks[3], 1, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_PEARL, 8), masks[0], 4, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_EYE, 8), masks[1], 3, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_EYE, 12), masks[2], 2, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_EYE, 16), masks[3], 1, 0, 1f));
         merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STAND_ARROW.get()), masks[1], 3, 0, 1f));
         merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STAND_ARROW.get(), 2), masks[2], 2, 0, 1f));
         merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STAND_ARROW.get(), 3), masks[3], 1, 0, 1f));
@@ -149,5 +153,19 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
     @Override
     public boolean isClientSide() {
         return level().isClientSide();
+    }
+
+    @Override
+    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+    }
+
+    @Override
+    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+
+        if (getFirstPassenger() instanceof StandEntity<?,?> stand) {
+            JComponentPlatformUtils.getStandData(this).setStand(stand);
+        }
     }
 }

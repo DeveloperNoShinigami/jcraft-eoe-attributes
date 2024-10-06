@@ -20,6 +20,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -1419,21 +1420,27 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
+    public void readAdditionalSaveData(@NotNull final CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
 
         setSkin(nbt.getInt("Skin"));
+        if (getVehicle() instanceof LivingEntity livingEntity) {
+            final CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
+            if (standData.getType() == standType) {
+                standData.setStand(this);
+            }
+        }
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
+    public void addAdditionalSaveData(@NotNull final CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
 
         nbt.putInt("Skin", getSkin());
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull final DamageSource source, float amount) {
         if (user == null ||
                 source.getEntity() == user ||
                 user.isInvulnerableTo(source) ||

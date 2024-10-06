@@ -10,6 +10,7 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,15 +38,17 @@ public final class FeignBarrageCounterAttack extends AbstractCounterAttack<Feign
         if (countered == null || !attacker.hasUser()) {
             return;
         }
+        // Teleports behind countered
         final LivingEntity user = attacker.getUserOrThrow();
         final Vec3 behind = countered.position().subtract(countered.getLookAngle());
-
-        user.setDeltaMovement(0, 0, 0);
-        user.hurtMarked = true;
-        user.teleportToWithTicket(behind.x, behind.y, behind.z);
+        final BlockPos behindBlockPos = new BlockPos((int) behind.x, (int) behind.y, (int) behind.z);
+        JUtils.setVelocity(user, 0, 0, 0);
+        if (!user.level().getBlockState(behindBlockPos).canOcclude()) {
+            user.teleportToWithTicket(behind.x, behind.y, behind.z);
+        }
         user.lookAt(EntityAnchorArgument.Anchor.EYES, countered.getEyePosition());
 
-        if (countered instanceof LivingEntity livingEntity) {
+        if (countered instanceof LivingEntity livingEntity) { // Override stun & cancel all moves
             livingEntity.removeEffect(JStatusRegistry.DAZED.get());
             JCraft.stun(livingEntity, 20, 0);
 

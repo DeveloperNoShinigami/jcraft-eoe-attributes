@@ -367,7 +367,7 @@
   "jcraft.stonemask.desc": "§eVampirism §9spec obtainment item",
   "jcraft.blood_bottle.units": "Blood units: ",
   "jcraft.cinderella_mask.enchdesc": "Needs an §9enchantment§r.",
-  "jcraft.cinderella_mask.usedesc": "Use with a full Stand Disc in a Smithing table to get a skin.",
+  "jcraft.cinderella_mask.usedesc": "Use with a full Stand Disc in an Anvil to get a skin.",
   "jcraft.sunprotection.desc": "Protects from the Sun.",
   "jcraft.commands.error.nospec": "No spec found!",
   "jcraft.commands.error.nostand": "No stand found!",

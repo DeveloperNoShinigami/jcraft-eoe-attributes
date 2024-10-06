@@ -92,9 +92,12 @@ public final class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumE
 
             for (Entity entity : hits) {
                 double distance = entity.position().distanceToSqr(eyePos);
-                if (distance > 9) // Falloff
-                {
+                if (distance > 4) { // Fall-off
                     distance -= distance * 0.1;
+                } else { // Don't go past
+                    if (entity.getDeltaMovement().lengthSqr() > 0.25) {
+                        distance = -0.1;
+                    }
                 }
 
                 JUtils.setVelocity(entity,

@@ -35,6 +35,7 @@ public final class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, Ki
         if (countered == null) {
             return;
         }
+        // Swaps positions with countered
         final LivingEntity user = attacker.getUserOrThrow();
         final Vec3 ePos = countered.position();
         if (!countered.isInWall()) {

@@ -43,6 +43,12 @@ public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        if (!level().isClientSide() && inGroundTime >= 300) discard();
+    }
+
+    @Override
     protected void onHitBlock(@NotNull BlockHitResult result) {
         super.onHitBlock(result);
         if (level().isClientSide()) return;

@@ -207,7 +207,8 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.literal("Scalpel Toss (Precise)"),
                     Component.literal("""
                                     Decently fast, very low cooldown.
-                                    Fires 3 scalpels in the exact pointed direction.""")
+                                    Fires 3 scalpels in the exact pointed direction.
+                                    Scalpels disappear after 15s in the ground, and may be picked up to regain iron.""")
             )
             .markRanged()
             .withAction(MetallicaEntity::preciseToss)
@@ -345,9 +346,14 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                             Cannot be queued.""")
             )
             .withAction(MetallicaEntity::toggleInvisibility)
-            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.ivs"));
+            .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.ivs"))
+            .withCondition(metallica -> metallica.getIron() >= 10f);
     private static void toggleInvisibility(MetallicaEntity metallica, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
-        metallica.entityData.set(INVISIBLE, !metallica.entityData.get(INVISIBLE));
+        final boolean newInvis = !metallica.entityData.get(INVISIBLE);
+        metallica.entityData.set(INVISIBLE, newInvis);
+        if (newInvis) {
+            user.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 39, 0, true, true));
+        }
     }
     public static final HarvestMove HARVEST = new HarvestMove()
             .withCrouchingVariant(GO_INVISIBLE)
@@ -355,6 +361,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.literal("Harvest Iron"),
                     Component.literal("""
                             Harvests 1 iron with a 0.15s interval from the looked at block.
+                            3 times faster if harvesting from an iron block.
                             5m max range.
                             Cannot be queued.""")
             )
@@ -362,10 +369,11 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             .withInitAction((attacker, user, ctx) -> attacker.entityData.set(SIPHON_POS, NO_SIPHON))
             .withAction(MetallicaEntity::harvest);
     private static void harvest(MetallicaEntity stand, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
-        BlockHitResult hitResult = JUtils.genericBlockRaycast(user.level(), user, 5, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE);
-        if (hitResult.getType() == HitResult.Type.BLOCK && user.level().getBlockState(hitResult.getBlockPos()).is(JTagRegistry.IRON_BLOCKS)) {
-            stand.entityData.set(SIPHON_POS, hitResult.getBlockPos());
-            stand.addIron(1f);
+        final BlockHitResult hitResult = JUtils.genericBlockRaycast(user.level(), user, 5, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE);
+        if (hitResult.getType() == HitResult.Type.BLOCK) {
+            final BlockPos hitPos = hitResult.getBlockPos();
+            stand.entityData.set(SIPHON_POS, hitPos);
+            stand.addIron(user.level().getBlockState(hitPos).is(JTagRegistry.IRON_BLOCKS) ? 3f : 1f);
         } else {
             stand.entityData.set(SIPHON_POS, NO_SIPHON);
         }
@@ -387,7 +395,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                             Chargeable projectile that consumes iron over time to become larger and more powerful.
                             Unblockable.""")
             )
-            .withCondition(metallica -> metallica.getIron() >= 24 || metallica.bisectChargeTime > 0)
+            .withCondition(metallica -> metallica.getIron() >= 24f || metallica.bisectChargeTime > 0)
             .withInitAction((attacker, user, ctx) -> attacker.bisectChargeTime = 0)
             .withInitAction((attacker, user, ctx) -> JUtils.playAnimIfUnoccupied(user, "mtl.bsc"));
 
@@ -488,7 +496,6 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         return true;
     }
 
-    private static final MobEffectInstance INVISIBILITY = new MobEffectInstance(MobEffects.INVISIBILITY, 20, 0, true, false);
     private static final BlockParticleOption FAKE_BLOOD = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_WIRE.defaultBlockState());
     @Override
     public void tick() {
@@ -514,7 +521,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             if (!canStayInvis) {
                 entityData.set(INVISIBLE, false);
             } else {
-                getUserOrThrow().addEffect(INVISIBILITY);
+                getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 21, 0, true, true));
             }
         }
         // Bisect iron drain
