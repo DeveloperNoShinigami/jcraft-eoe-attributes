@@ -272,7 +272,7 @@ public interface JEntityTypeRegistry {
                             (EntityType<KnifeProjectile> entityType, Level world) -> new KnifeProjectile(world), MobCategory.MISC)
                     .sized(0.5f, 0.5f)
                     .clientTrackingRange(6)
-                    .updateInterval(10)
+                    .updateInterval(20)
                     .build("knife")
     );
 
@@ -282,7 +282,7 @@ public interface JEntityTypeRegistry {
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(6)
-                    .updateInterval(10)
+                    .updateInterval(20)
                     .build("scalpel")
     );
 
@@ -292,7 +292,7 @@ public interface JEntityTypeRegistry {
                             MobCategory.MISC
                     ).sized(1.0f, 1.0f)
                     .clientTrackingRange(6)
-                    .updateInterval(1)
+                    .updateInterval(20)
                     .build("bisect")
     );
 
@@ -302,7 +302,7 @@ public interface JEntityTypeRegistry {
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(6)
-                    .updateInterval(15)
+                    .updateInterval(3)
                     .build("emerald")
     );
 
@@ -312,7 +312,7 @@ public interface JEntityTypeRegistry {
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(6)
-                    .updateInterval(15)
+                    .updateInterval(3)
                     .build("icicle")
     );
 
@@ -322,7 +322,7 @@ public interface JEntityTypeRegistry {
                             MobCategory.MISC
                     ).sized(1.0f, 1.0f)
                     .clientTrackingRange(6)
-                    .updateInterval(1)
+                    .updateInterval(20)
                     .build("large_icicle")
     );
 
@@ -332,7 +332,7 @@ public interface JEntityTypeRegistry {
                             MobCategory.MISC
                     ).sized((float) IceBranchProjectile.LENGTH, (float) IceBranchProjectile.LENGTH)
                     .clientTrackingRange(6)
-                    .updateInterval(1)
+                    .updateInterval(20)
                     .build("ice_branch")
     );
 
@@ -352,7 +352,7 @@ public interface JEntityTypeRegistry {
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(6)
-                    .updateInterval(15)
+                    .updateInterval(3)
                     .build("rapier")
     );
 
@@ -382,7 +382,7 @@ public interface JEntityTypeRegistry {
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(8)
-                    .updateInterval(20)
+                    .updateInterval(3)
                     .build("bubble")
     );
 
@@ -392,7 +392,7 @@ public interface JEntityTypeRegistry {
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(4)
-                    .updateInterval(10)
+                    .updateInterval(20)
                     .build("bloodprojectile")
     );
 
@@ -402,7 +402,7 @@ public interface JEntityTypeRegistry {
                             MobCategory.MISC
                     ).sized(0.5f, 0.5f)
                     .clientTrackingRange(4)
-                    .updateInterval(10)
+                    .updateInterval(20)
                     .build("laserprojectile")
     );
 

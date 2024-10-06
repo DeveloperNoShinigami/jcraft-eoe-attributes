@@ -23,7 +23,7 @@ public enum StandType {
     NONE(),
     STAR_PLATINUM(JEntityTypeRegistry.STAR_PLATINUM.get(), StarPlatinumEntity::new, "starplatinum",
             Component.literal("Manga"), Component.literal("Arcade"), Component.literal("OVA")),
-    THE_WORLD(JEntityTypeRegistry.THE_WORLD.get(), TheWorldEntity::new, "theworld",
+    THE_WORLD(JEntityTypeRegistry.THE_WORLD.get(), TheWorldEntity::new, "theworld", true,
             Component.literal("OVA"), Component.literal("Black"), Component.literal("Greatest High")),
     KING_CRIMSON(JEntityTypeRegistry.KING_CRIMSON.get(), KingCrimsonEntity::new, "kingcrimson",
             Component.literal("Royal"), Component.literal("Manga"), Component.literal("Nightshade")),

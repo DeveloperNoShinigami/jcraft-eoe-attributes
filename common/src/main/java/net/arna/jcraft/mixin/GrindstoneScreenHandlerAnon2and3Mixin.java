@@ -18,7 +18,7 @@ public class GrindstoneScreenHandlerAnon2and3Mixin extends Slot {
 
     @Inject(method = "mayPlace", at = @At("HEAD"), cancellable = true)
     private void canInsertStandDiscs(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (stack.getItem() == JItemRegistry.STAND_DISC && !StandDiscItem.isEmptyDisc(stack))
+        if (stack.getItem() == JItemRegistry.STAND_DISC.get() && !StandDiscItem.isEmptyDisc(stack))
         // This is executed before the item is inserted, so both slots must be empty when inserting a disc.
         // You cannot insert two discs simultaneously.
         {

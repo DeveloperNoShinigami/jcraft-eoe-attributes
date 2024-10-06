@@ -110,7 +110,6 @@ public class IcicleProjectile extends AbstractArrow implements GeoEntity {
                                     .normalize()
                                     .scale(currentVelocity * 0.75)
                     );
-                    hurtMarked = true;
                 } else {
                     this.onHitBlock(blockHitResult);
                     final BlockPos blockPos = blockHitResult.getBlockPos();
@@ -120,6 +119,7 @@ public class IcicleProjectile extends AbstractArrow implements GeoEntity {
         } else {
             super.onHit(hitResult);
         }
+        hurtMarked = true;
     }
 
     @Override

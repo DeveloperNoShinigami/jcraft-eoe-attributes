@@ -101,7 +101,6 @@ public class EmeraldProjectile extends AbstractArrow implements GeoEntity {
                 if (bouncesLeft-- > 0) {
                     final Vec3i normal = blockHitResult.getDirection().getNormal();
                     setDeltaMovement(getDeltaMovement().add(Vec3.atLowerCornerOf(normal)).normalize());
-                    hurtMarked = true;
                 } else {
                     this.onHitBlock(blockHitResult);
                     final BlockPos blockPos = blockHitResult.getBlockPos();
@@ -111,6 +110,7 @@ public class EmeraldProjectile extends AbstractArrow implements GeoEntity {
         } else {
             super.onHit(hitResult);
         }
+        hurtMarked = true;
     }
 
     @Override
