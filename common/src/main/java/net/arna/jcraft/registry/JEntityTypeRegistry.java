@@ -502,7 +502,7 @@ public interface JEntityTypeRegistry {
             () -> EntityType.Builder.of(
                             (EntityType<AyaTsujiEntity> entityType, Level world) -> new AyaTsujiEntity(world),
                             MobCategory.CREATURE
-                    ).sized(1f, 2f)
+                    ).sized(0.6f, 2f)
                     .build("aya_tsuji")
     );
 

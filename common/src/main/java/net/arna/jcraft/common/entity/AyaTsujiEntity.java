@@ -1,5 +1,13 @@
 package net.arna.jcraft.common.entity;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
@@ -12,10 +20,12 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -23,10 +33,6 @@ import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.util.AzureLibUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,8 +40,6 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
 
     private Player tradingPlayer;
     private MerchantOffers merchantOffers = new MerchantOffers();;
-
-    private final AnimatableInstanceCache geoCache = AzureLibUtil.createInstanceCache(this);
 
     public AyaTsujiEntity(Level world) {
         super(JEntityTypeRegistry.AYA_TSUJI.get(), world);
@@ -72,30 +76,30 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        // TODO Arna
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return geoCache;
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.001));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, LivingEntity.class, 32.0F));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(8, new MoveTowardsTargetGoal(this, 0.001, 32f));
     }
 
     public static AttributeSupplier.Builder createAyaTsujiAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0).add(Attributes.MOVEMENT_SPEED, 0.5);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 20.0).add(Attributes.MOVEMENT_SPEED, 0.25);
     }
 
     @Override
-    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+    protected @NotNull InteractionResult mobInteract(@NotNull final Player player, @NotNull final InteractionHand hand) {
         if (this.getOffers().isEmpty()) {
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
+            return InteractionResult.sidedSuccess(isClientSide());
         } else {
+            if (getTarget() == player) return InteractionResult.FAIL;
             if (!this.level().isClientSide) {
                 this.setTradingPlayer(player);
                 this.openTradingScreen(player, this.getDisplayName(), 1);
             }
 
-            return InteractionResult.sidedSuccess(this.level().isClientSide);
+            return InteractionResult.sidedSuccess(isClientSide());
         }
     }
 
@@ -167,5 +171,39 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
         if (getFirstPassenger() instanceof StandEntity<?,?> stand) {
             JComponentPlatformUtils.getStandData(this).setStand(stand);
         }
+    }
+
+    // Animations
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "idle_controller", 10, this::idlePredicate));
+        controllers.add(new AnimationController<>(this, "walk_controller", 10, this::walkPredicate));
+    }
+
+    private static final RawAnimation WALK = RawAnimation.begin().thenLoop("animation.aya_tsuji.walk");
+    private PlayState walkPredicate(AnimationState<AyaTsujiEntity> state) {
+        final float velocityLengthSqr = (float) getDeltaMovement().length();
+        if (velocityLengthSqr < 0.1f) {
+            return state.setAndContinue(IDLE);
+        } else {
+            state.setControllerSpeed(1.0f + velocityLengthSqr / 2.5f);
+        }
+        return state.setAndContinue(WALK);
+    }
+
+    private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.aya_tsuji.idle");
+    private PlayState idlePredicate(AnimationState<AyaTsujiEntity> state) {
+        if (getDeltaMovement().lengthSqr() > 0.01 && getTarget() == null) {
+            return state.setAndContinue(IDLE);
+        }
+
+        return PlayState.STOP;
     }
 }
