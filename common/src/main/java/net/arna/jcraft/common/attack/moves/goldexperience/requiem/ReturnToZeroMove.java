@@ -2,7 +2,6 @@ package net.arna.jcraft.common.attack.moves.goldexperience.requiem;
 
 import com.google.common.reflect.TypeToken;
 import io.netty.buffer.Unpooled;
-import lombok.Data;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
@@ -86,11 +85,11 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
             return;
         }
         for (ReturnData data : attacker.getMoveContext().get(RETURN_INFO)) {
-            final Entity entity = data.getEntity();
+            final Entity entity = data.entity();
             if (entity == null || !entity.isAlive()) {
                 continue;
             }
-            final Vec3 position = data.getOriginalPos();
+            final Vec3 position = data.originalPos();
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeShort(7);
 
@@ -120,14 +119,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
         return copyExtras(new ReturnToZeroMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
     }
 
-    @Data
-    public static class ReturnData {
-        Vec3 originalPos;
-        Entity entity;
-
-        public ReturnData(Vec3 originalPos, Entity entity) {
-            this.originalPos = originalPos;
-            this.entity = entity;
-        }
+    record ReturnData(Vec3 originalPos, Entity entity) {
+        // nothing else needed
     }
 }
