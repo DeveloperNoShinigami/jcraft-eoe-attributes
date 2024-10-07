@@ -5,7 +5,6 @@ import io.netty.buffer.Unpooled;
 import net.arna.jcraft.common.component.impl.entity.CommonGrabComponentImpl;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -58,16 +57,5 @@ public class GrabCapability extends CommonGrabComponentImpl implements JCapabili
     }
     public static GrabCapability getCapability(Entity entity) {
         return entity.getCapability(CAPABILITY).orElse(new GrabCapability(entity));
-    }
-
-    public static void initClient(){
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, GRAB_S2C, (buf, context) -> {
-            int id = buf.readVarInt();
-            if (Minecraft.getInstance().level != null) {
-                Entity entity = Minecraft.getInstance().level.getEntity(id);
-                if (entity == null) return;
-                GrabCapability.getCapabilityOptional(entity).ifPresent(c -> c.applySyncPacket(buf));
-            }
-        });
     }
 }

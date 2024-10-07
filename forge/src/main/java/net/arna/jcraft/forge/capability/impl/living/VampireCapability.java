@@ -4,8 +4,6 @@ import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import net.arna.jcraft.common.component.impl.CommonVampireComponentImpl;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -55,13 +53,4 @@ public class VampireCapability extends CommonVampireComponentImpl implements JCa
         return entity.getCapability(CAPABILITY).orElse(new VampireCapability(entity));
     }
 
-    public static void initClient(){
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, VAMP_S2C, (buf, context) -> {
-            // Received by the VampireCapability holder and only them
-            LocalPlayer localPlayer = Minecraft.getInstance().player;
-            if (localPlayer != null) {
-                VampireCapability.getCapabilityOptional(localPlayer).ifPresent(c -> c.applySyncPacket(buf));
-            }
-        });
-    }
 }

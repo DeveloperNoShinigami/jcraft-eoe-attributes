@@ -5,7 +5,6 @@ import lombok.NonNull;
 import net.arna.jcraft.common.component.impl.player.CommonPhComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -72,17 +71,6 @@ public class PhCapability extends CommonPhComponentImpl implements JCapability {
 
     public static PhCapability getCapability(Player player) {
         return player.getCapability(CAPABILITY).orElse(new PhCapability(player));
-    }
-    public static void initClient(){
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, PH_S2C, (buf, context) -> {
-
-            int id = buf.readInt();
-            CompoundTag nbt = buf.readNbt();
-
-            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
-                PhCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
-            }
-        });
     }
 
     public static void initServer() {

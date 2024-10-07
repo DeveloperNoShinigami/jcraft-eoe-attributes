@@ -80,18 +80,4 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
         return entity.getCapability(CAPABILITY).orElse(new StandCapability(entity));
     }
 
-    public static void initClient(){
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, STAND_S2C, (buf, context) -> {
-            int id = buf.readInt();
-            int standType = buf.readInt();
-            int skin = buf.readInt();
-
-            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof LivingEntity livingEntity) {
-                StandCapability.getCapabilityOptional(livingEntity).ifPresent(c -> {
-                    c.setTypeAndSkin(StandType.fromOrdinal(standType), skin);
-                    c.applySyncPacket(buf);
-                });
-            }
-        });
-    }
 }

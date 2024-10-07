@@ -6,7 +6,6 @@ import lombok.NonNull;
 import net.arna.jcraft.common.component.impl.CommonGravityShiftComponentImpl;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -63,15 +62,5 @@ public class GravityShiftCapability extends CommonGravityShiftComponentImpl impl
     }
     public static GravityShiftCapability getCapability(LivingEntity user) {
         return user.getCapability(CAPABILITY).orElse(new GravityShiftCapability(user));
-    }
-    public static void initClient(){
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, GS_S2C, (buf, context) -> {
-            int id = buf.readInt();
-            CompoundTag nbt = buf.readNbt();
-
-            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof LivingEntity living) {
-                GravityShiftCapability.getCapability(living).deserializeNBT(nbt);
-            }
-        });
     }
 }

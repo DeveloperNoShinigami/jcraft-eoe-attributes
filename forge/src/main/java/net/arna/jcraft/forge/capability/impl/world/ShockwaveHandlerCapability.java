@@ -6,8 +6,6 @@ import io.netty.buffer.Unpooled;
 import net.arna.jcraft.common.component.impl.world.CommonShockwaveHandlerComponentImpl;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -34,9 +32,8 @@ public class ShockwaveHandlerCapability extends CommonShockwaveHandlerComponentI
     // NBT serialization is kind of pointless for very short-term, visual effects?
     @Override
     public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
         // super.writeToNbt(tag);
-        return tag;
+        return new CompoundTag();
     }
     @Override
     public void deserializeNBT(CompoundTag tag) {
@@ -57,13 +54,5 @@ public class ShockwaveHandlerCapability extends CommonShockwaveHandlerComponentI
     }
     public static ShockwaveHandlerCapability getCapability(Level world) {
         return world.getCapability(CAPABILITY).orElse(new ShockwaveHandlerCapability(world));
-    }
-
-    public static void initClient(){
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, SHOCK_S2C, (buf, context) -> {
-            ClientLevel clientWorld = Minecraft.getInstance().level;
-            if (clientWorld == null) return;
-            getCapabilityOptional(clientWorld).ifPresent(shockwaveCap -> shockwaveCap.applySyncPacket(buf));
-        });
     }
 }

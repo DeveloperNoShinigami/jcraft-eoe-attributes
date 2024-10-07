@@ -4,7 +4,6 @@ import dev.architectury.networking.NetworkManager;
 import net.arna.jcraft.common.component.impl.player.CommonSpecComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -74,17 +73,6 @@ public class SpecCapability extends CommonSpecComponentImpl implements JCapabili
         return livingEntity.getCapability(CAPABILITY).orElse(new SpecCapability(livingEntity));
     }
 
-    public static void initClient(){
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, SPEC_S2C, (buf, context) -> {
-
-            int id = buf.readInt();
-            CompoundTag nbt = buf.readNbt();
-
-            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
-                SpecCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
-            }
-        });
-    }
 
     public static void initServer() {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, SPEC_C2S, (buf, context) -> {

@@ -1,6 +1,7 @@
 package net.arna.jcraft.forge.events;
 
 
+import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.gui.hud.JCraftHudOverlay;
 import net.arna.jcraft.client.registry.JEntityRendererRegister;
@@ -9,7 +10,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -33,5 +36,10 @@ public class ClientSetupEvents {
                 JCraftHudOverlay.render(guiGraphics));
         event.registerBelow(VanillaGuiOverlay.PLAYER_HEALTH.id(), "epitaph", (gui, guiGraphics, partialTick, screenWidth, screenHeight) ->
                 EpitaphOverlay.render());
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH) // run before Arch's event
+    public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+        JCraftClient.registerKeyBindings(event::register);
     }
 }

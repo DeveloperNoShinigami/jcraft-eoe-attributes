@@ -4,7 +4,6 @@ import dev.architectury.networking.NetworkManager;
 import net.arna.jcraft.common.component.impl.living.CommonCooldownsComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -76,18 +75,6 @@ public class CooldownsCapability extends CommonCooldownsComponentImpl implements
 
     public static CooldownsCapability getCapability(LivingEntity entity) {
         return entity.getCapability(CAPABILITY).orElse(new CooldownsCapability(entity));
-    }
-
-    public static void initClient(){
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, CD_S2C, (buf, context) -> {
-            int id = buf.readInt();
-            CompoundTag nbt = buf.readNbt();
-
-            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
-                CooldownsCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
-            }
-
-        });
     }
 
     public static void initServer() {
