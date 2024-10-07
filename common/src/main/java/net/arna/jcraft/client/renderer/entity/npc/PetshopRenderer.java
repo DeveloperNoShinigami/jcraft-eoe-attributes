@@ -1,9 +1,9 @@
-package net.arna.jcraft.client.renderer.entity;
+package net.arna.jcraft.client.renderer.entity.npc;
 
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.client.model.entity.PetshopModel;
-import net.arna.jcraft.common.entity.PetshopEntity;
+import net.arna.jcraft.client.model.entity.npc.PetshopModel;
+import net.arna.jcraft.common.entity.npc.PetshopEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 

@@ -1,10 +1,10 @@
-package net.arna.jcraft.client.model.entity;
+package net.arna.jcraft.client.model.entity.npc;
 
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.entity.AyaTsujiEntity;
+import net.arna.jcraft.common.entity.npc.AyaTsujiEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 

@@ -1,8 +1,8 @@
-package net.arna.jcraft.client.model.entity;
+package net.arna.jcraft.client.model.entity.npc;
 
 import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.entity.DarbyOlderEntity;
+import net.arna.jcraft.common.entity.npc.DarbyOlderEntity;
 import net.minecraft.resources.ResourceLocation;
 
 public class DarbyOlderModel extends GeoModel<DarbyOlderEntity> {

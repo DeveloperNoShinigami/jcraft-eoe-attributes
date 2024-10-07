@@ -1,8 +1,8 @@
-package net.arna.jcraft.client.model.entity;
+package net.arna.jcraft.client.model.entity.npc;
 
 import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.entity.PetshopEntity;
+import net.arna.jcraft.common.entity.npc.PetshopEntity;
 import net.minecraft.resources.ResourceLocation;
 
 public class PetshopModel extends GeoModel<PetshopEntity> {

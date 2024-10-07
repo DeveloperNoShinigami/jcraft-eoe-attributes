@@ -67,7 +67,8 @@ public class AttackHitboxEffectRenderer {
     }
 
     private static void renderBoxes(final MultiBufferSource consumerProvider, final PoseStack matrices, final Collection<Pair<LongLongPair, AABB>> boxes) {
-        for (final Iterator<Pair<LongLongPair, AABB>> iterator = boxes.iterator(); iterator.hasNext(); ) {
+        final Iterator<Pair<LongLongPair, AABB>> iterator = boxes.iterator();
+        while (iterator.hasNext()) {
             final Pair<LongLongPair, AABB> pair = iterator.next();
             renderBox(consumerProvider, pair.right(), matrices);
             if (Util.getEpochMillis() - pair.left().leftLong() > pair.left().rightLong()) {

@@ -1,4 +1,4 @@
-package net.arna.jcraft.common.entity;
+package net.arna.jcraft.common.entity.npc;
 
 import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
