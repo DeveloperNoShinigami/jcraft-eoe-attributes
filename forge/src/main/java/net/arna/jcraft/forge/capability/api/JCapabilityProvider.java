@@ -1,5 +1,6 @@
 package net.arna.jcraft.forge.capability.api;
 
+import lombok.NonNull;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
@@ -8,8 +9,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import org.jetbrains.annotations.Nullable;
-
-import javax.annotation.Nonnull;
 
 public class JCapabilityProvider<C extends INBTSerializable<CompoundTag>> implements ICapabilityProvider, INBTSerializable<CompoundTag> {
     private final C instance;
@@ -23,9 +22,9 @@ public class JCapabilityProvider<C extends INBTSerializable<CompoundTag>> implem
         this.capOptional = LazyOptional.of(() -> this.instance);
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability(@NonNull Capability<T> cap, @Nullable Direction side) {
         return capability.orEmpty(cap, capOptional);
     }
 
