@@ -28,24 +28,24 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     private double orbitRange = 3;
     private double orbitOffset = 0;
 
-    public AnkhProjectile(Level world) {
+    public AnkhProjectile(final Level world) {
         super(JEntityTypeRegistry.ANKH.get(), world);
     }
 
-    public AnkhProjectile(Level world, LivingEntity owner) {
+    public AnkhProjectile(final Level world, final LivingEntity owner) {
         super(JEntityTypeRegistry.ANKH.get(), owner, world);
         this.pickup = Pickup.DISALLOWED;
     }
 
-    public void setOrbitRange(double range) {
+    public void setOrbitRange(final double range) {
         this.orbitRange = range;
     }
 
-    public void setOrbitOffset(double offset) {
+    public void setOrbitOffset(final double offset) {
         this.orbitOffset = offset;
     }
 
-    public void setVariation(boolean variation) {
+    public void setVariation(final boolean variation) {
         this.variation = variation;
     }
 
@@ -75,15 +75,15 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
+    protected void onHitEntity(final @NotNull EntityHitResult entityHitResult) {
         if (level().isClientSide) {
             return;
         }
-        Entity owner = getOwner();
+        final Entity owner = getOwner();
         if (owner == null) {
             return;
         }
-        Entity entity = entityHitResult.getEntity();
+        final Entity entity = entityHitResult.getEntity();
         if (owner.hasPassenger(entity) || entity == owner) {
             return;
         }
@@ -94,20 +94,20 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHitBlock(BlockHitResult blockHitResult) {
+    protected void onHitBlock(final BlockHitResult blockHitResult) {
         MagiciansRedEntity.ignite(level(), blockHitResult.getBlockPos());
         super.onHitBlock(blockHitResult);
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(final @NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("variation", this.variation);
         tag.putShort("life", (short) this.ticksInAir);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(final @NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
         this.variation = tag.getBoolean("variation");

@@ -20,19 +20,19 @@ public class JDamageSources {
     public static final ResourceKey<DamageType> BLEEDING = ResourceKey.create(Registries.DAMAGE_TYPE, JCraft.id("jbleeding"));
     public static final ResourceKey<DamageType> PHPOISON = ResourceKey.create(Registries.DAMAGE_TYPE, JCraft.id("phpoison"));
 
-    public static DamageSource create(Level world, ResourceKey<DamageType> key, @Nullable Entity source, @Nullable Entity attacker) {
+    public static DamageSource create(final Level world, final ResourceKey<DamageType> key, final @Nullable Entity source, final @Nullable Entity attacker) {
         return new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key), source, attacker);
     }
 
-    public static DamageSource create(Level world, ResourceKey<DamageType> key, @Nullable Entity attacker) {
+    public static DamageSource create(final Level world, final ResourceKey<DamageType> key, final @Nullable Entity attacker) {
         return new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key), attacker);
     }
 
-    public static DamageSource create(Level world, ResourceKey<DamageType> key) {
+    public static DamageSource create(final Level world, final ResourceKey<DamageType> key) {
         return new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key));
     }
 
-    public static @NotNull DamageSource stand(StandEntity<?, ?> stand) {
+    public static @NotNull DamageSource stand(final StandEntity<?, ?> stand) {
         return create(stand.level(), STAND, stand.getUser());
     }
 

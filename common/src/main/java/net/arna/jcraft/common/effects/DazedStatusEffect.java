@@ -40,11 +40,11 @@ public class DazedStatusEffect extends MobEffect {
 
     // Should the status effect be applied and under what condition?
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(final int duration, final int amplifier) {
         return true;
     }
 
-    public static boolean canBeComboBroken(int amplifier) {
+    public static boolean canBeComboBroken(final int amplifier) {
         return switch (amplifier) {
             case (1), (3), (4) -> true;
             default -> false;
@@ -59,7 +59,7 @@ public class DazedStatusEffect extends MobEffect {
     // 3 - Launch, not combo breakable
     // 4 - Winded, small movement penalty, combo breakable
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(final LivingEntity entity, final int amplifier) {
         Vec3 eVel = entity.getDeltaMovement();
         double yVel = eVel.y;
         double horizontalMult = 0.4;
@@ -84,7 +84,7 @@ public class DazedStatusEffect extends MobEffect {
     }
 
     @Override
-    public double getAttributeModifierValue(int amplifier, AttributeModifier modifier) {
+    public double getAttributeModifierValue(final int amplifier, final AttributeModifier modifier) {
         if (Objects.equals(modifier.getId(), slowUUID)) {
             return switch (amplifier) {
                 case 3, 1, 0 -> -1;

@@ -9,7 +9,7 @@ public class OutOfBodyEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(final int duration, final int amplifier) {
         return false;
     }
 }

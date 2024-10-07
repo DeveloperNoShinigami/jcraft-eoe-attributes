@@ -23,12 +23,12 @@ import org.jetbrains.annotations.NotNull;
 import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
 
 public class BloodProjectile extends AbstractArrow implements GeoEntity {
-    public BloodProjectile(Level world) {
+    public BloodProjectile(final Level world) {
         super(JEntityTypeRegistry.BLOOD_PROJECTILE.get(), world);
         this.pickup = Pickup.DISALLOWED;
     }
 
-    public BloodProjectile(Level world, LivingEntity owner) {
+    public BloodProjectile(final Level world, final LivingEntity owner) {
         super(JEntityTypeRegistry.BLOOD_PROJECTILE.get(), owner, world);
         this.setSoundEvent(SoundEvents.SLIME_BLOCK_FALL);
     }
@@ -39,7 +39,7 @@ public class BloodProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
+    protected void onHitEntity(final @NotNull EntityHitResult entityHitResult) {
         if (level().isClientSide) {
             return;
         }
@@ -81,7 +81,7 @@ public class BloodProjectile extends AbstractArrow implements GeoEntity {
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+    public void registerControllers(final AnimatableManager.ControllerRegistrar controllers) {
 
     }
 

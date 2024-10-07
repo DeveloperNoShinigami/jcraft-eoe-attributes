@@ -33,12 +33,12 @@ public class KnockdownStatusEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(final int duration, final int amplifier) {
         return duration <= 5;
     }
 
     @Override
-    public void addAttributeModifiers(LivingEntity entity, AttributeMap attributes, int amplifier) {
+    public void addAttributeModifiers(final LivingEntity entity, final AttributeMap attributes, final int amplifier) {
         super.addAttributeModifiers(entity, attributes, amplifier);
         if (entity.isPassenger()) {
             entity.stopRiding();
@@ -47,13 +47,13 @@ public class KnockdownStatusEffect extends MobEffect {
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributes, int amplifier) {
+    public void removeAttributeModifiers(final LivingEntity entity, final AttributeMap attributes, final int amplifier) {
         super.removeAttributeModifiers(entity, attributes, amplifier);
         entity.setPose(Pose.STANDING);
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {// 5 tick (0.25s) stun immunity window after knockdown
+    public void applyEffectTick(final LivingEntity entity, final int amplifier) {// 5 tick (0.25s) stun immunity window after knockdown
         entity.removeEffect(JStatusRegistry.DAZED.get());
     }
 }

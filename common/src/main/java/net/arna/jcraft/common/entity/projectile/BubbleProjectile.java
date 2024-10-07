@@ -25,12 +25,12 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class BubbleProjectile extends AbstractArrow implements GeoEntity {
-    public BubbleProjectile(Level world) {
+    public BubbleProjectile(final Level world) {
         super(JEntityTypeRegistry.BUBBLE.get(), world);
         this.pickup = Pickup.DISALLOWED;
     }
 
-    public BubbleProjectile(Level world, LivingEntity owner) {
+    public BubbleProjectile(final Level world, final LivingEntity owner) {
         super(JEntityTypeRegistry.BUBBLE.get(), owner, world);
         this.setOwner(owner);
     }
@@ -41,7 +41,7 @@ public class BubbleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHit(HitResult hitResult) {
+    protected void onHit(final HitResult hitResult) {
         final HitResult.Type type = hitResult.getType();
         if (type == HitResult.Type.BLOCK) {
             this.onHitBlock((BlockHitResult) hitResult);
@@ -66,7 +66,7 @@ public class BubbleProjectile extends AbstractArrow implements GeoEntity {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public boolean shouldRenderAtSqrDistance(double distance) {
+    public boolean shouldRenderAtSqrDistance(final double distance) {
         return true;
     }
 
@@ -84,12 +84,12 @@ public class BubbleProjectile extends AbstractArrow implements GeoEntity {
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+    public void registerControllers(final AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.bubble.idle");
-    private PlayState predicate(AnimationState<BubbleProjectile> state) {
+    private PlayState predicate(final AnimationState<BubbleProjectile> state) {
         return state.setAndContinue(IDLE);
     }
 

@@ -24,7 +24,7 @@ public class StunningMeleeAttackGoal extends Goal {
     private int cooldown;
     private long lastUpdateTime;
 
-    public StunningMeleeAttackGoal(PathfinderMob mob, double speed, boolean pauseWhenMobIdle, int stunT) {
+    public StunningMeleeAttackGoal(final PathfinderMob mob, final double speed, final boolean pauseWhenMobIdle, final int stunT) {
         this.mob = mob;
         this.speed = speed;
         this.pauseWhenMobIdle = pauseWhenMobIdle;
@@ -124,7 +124,7 @@ public class StunningMeleeAttackGoal extends Goal {
         attack(target, d);
     }
 
-    protected void attack(LivingEntity target, double squaredDistance) {
+    protected void attack(final LivingEntity target, final double squaredDistance) {
         double d = getSquaredMaxAttackDistance(target);
         if (!(squaredDistance <= d) || cooldown > 0) {
             return;
@@ -153,7 +153,7 @@ public class StunningMeleeAttackGoal extends Goal {
         return this.adjustedTickDelay(20);
     }
 
-    protected double getSquaredMaxAttackDistance(LivingEntity entity) {
+    protected double getSquaredMaxAttackDistance(final LivingEntity entity) {
         return (this.mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + entity.getBbWidth());
     }
 }

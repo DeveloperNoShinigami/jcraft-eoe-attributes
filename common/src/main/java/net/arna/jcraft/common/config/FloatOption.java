@@ -13,18 +13,18 @@ public class FloatOption extends ConfigOption {
     @Getter
     private Float min, max;
 
-    public FloatOption(String key, String category, float value) {
+    public FloatOption(final String key, final String category, final float value) {
         super(Type.FLOAT, key, category);
         this.value = this.defaultValue = value;
     }
 
-    public FloatOption(String key, String category, float value, float min) {
+    public FloatOption(final String key, final String category, final float value, final float min) {
         super(Type.FLOAT, key, category);
         this.value = this.defaultValue = value;
         this.min = min;
     }
 
-    public FloatOption(String key, String category, float value, float min, float max) {
+    public FloatOption(final String key, final String category, final float value, final float min, final float max) {
         super(Type.FLOAT, key, category);
         this.value = this.defaultValue = value;
         this.min = min;
@@ -42,12 +42,12 @@ public class FloatOption extends ConfigOption {
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
+    public void write(final FriendlyByteBuf buf) {
         buf.writeFloat(value);
     }
 
     @Override
-    public void read(FriendlyByteBuf buf) {
+    public void read(final FriendlyByteBuf buf) {
         value = buf.readFloat();
     }
 
@@ -57,7 +57,7 @@ public class FloatOption extends ConfigOption {
     }
 
     @Override
-    public void read(JsonElement element) {
+    public void read(final JsonElement element) {
         value = element.getAsFloat();
     }
 }

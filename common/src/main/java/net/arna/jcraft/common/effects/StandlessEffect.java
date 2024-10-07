@@ -12,16 +12,16 @@ public class StandlessEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(final int duration, final int amplifier) {
         return true;
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(final LivingEntity entity, final int amplifier) {
         if (entity.level().isClientSide()) {
             return;
         }
-        StandEntity<?, ?> stand = JUtils.getStand(entity);
+        final StandEntity<?, ?> stand = JUtils.getStand(entity);
         if (stand != null) {
             stand.desummon();
         }

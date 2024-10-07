@@ -20,12 +20,12 @@ public class HypoxiaEffect extends MobEffect {
 
     // Every quarter second
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(final int duration, final int amplifier) {
         return duration % 20 == 0;
     }
 
     @Override
-    public void applyEffectTick(@NotNull LivingEntity livingEntity, int amplifier) {
+    public void applyEffectTick(final @NotNull LivingEntity livingEntity, final int amplifier) {
         super.applyEffectTick(livingEntity, amplifier);
         final int airSupply = livingEntity.getAirSupply();
         if (airSupply <= 0) livingEntity.hurt(livingEntity.damageSources().drown(), 2.0F);

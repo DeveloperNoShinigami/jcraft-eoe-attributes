@@ -28,12 +28,12 @@ public class WeightlessStatusEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(final int duration, final int amplifier) {
         return amplifier == 1;
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(final LivingEntity entity, final int amplifier) {
         Level world = entity.level();
 
         Vec3 pos = entity.position();
@@ -78,7 +78,7 @@ public class WeightlessStatusEffect extends MobEffect {
     }
 
     @Override
-    public void addAttributeModifiers(LivingEntity entity, AttributeMap attributes, int amplifier) {
+    public void addAttributeModifiers(final LivingEntity entity, final AttributeMap attributes, final int amplifier) {
         super.addAttributeModifiers(entity, attributes, amplifier);
 
         if (entity.level().isClientSide) {
@@ -104,7 +104,7 @@ public class WeightlessStatusEffect extends MobEffect {
     }
 
     @Override
-    public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributes, int amplifier) {
+    public void removeAttributeModifiers(final LivingEntity entity, final AttributeMap attributes, final int amplifier) {
         super.removeAttributeModifiers(entity, attributes, amplifier);
 
         if (entity.level().isClientSide) {

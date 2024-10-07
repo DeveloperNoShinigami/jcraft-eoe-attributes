@@ -44,12 +44,12 @@ public class BisectProjectile extends AbstractArrow implements GeoEntity {
         SCALE = SynchedEntityData.defineId(BisectProjectile.class, EntityDataSerializers.FLOAT);
     }
 
-    public BisectProjectile(Level level) {
+    public BisectProjectile(final Level level) {
         super(JEntityTypeRegistry.BISECT.get(), level);
         setNoGravity(true);
     }
 
-    public BisectProjectile(Level level, LivingEntity owner) {
+    public BisectProjectile(final Level level, final LivingEntity owner) {
         super(JEntityTypeRegistry.BISECT.get(), owner, level);
     }
 
@@ -59,7 +59,7 @@ public class BisectProjectile extends AbstractArrow implements GeoEntity {
         entityData.define(SCALE, 1.0f);
     }
 
-    public void setScale(float scale) {
+    public void setScale(final float scale) {
         entityData.set(SCALE, scale);
     }
     public float getScale() {
@@ -134,7 +134,7 @@ public class BisectProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHit(@NotNull HitResult result) {
+    protected void onHit(final @NotNull HitResult result) {
 
     }
 
@@ -146,7 +146,7 @@ public class BisectProjectile extends AbstractArrow implements GeoEntity {
     // Animations
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+    public void registerControllers(final AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 

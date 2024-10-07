@@ -70,7 +70,7 @@ public class JServerConfig {
     }
 
     @SneakyThrows
-    public static void load(MinecraftServer server) {
+    public static void load(final MinecraftServer server) {
         Path path = server.getWorldPath(LevelResource.ROOT).resolve("jcraft.json");
         if (!Files.exists(path)) {
             save(server);
@@ -92,7 +92,7 @@ public class JServerConfig {
 
     @Synchronized
     @SneakyThrows
-    public static void save(MinecraftServer server) {
+    public static void save(final MinecraftServer server) {
         Path path = server.getWorldPath(LevelResource.ROOT).resolve("jcraft.json");
 
         JsonObject data = new JsonObject();

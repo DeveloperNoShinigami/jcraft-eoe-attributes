@@ -11,7 +11,7 @@ public class BleedingEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(final int duration, final int amplifier) {
         int i = 40 >> amplifier;
         if (i > 0) {
             return duration % i == 0;
@@ -21,7 +21,7 @@ public class BleedingEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(final LivingEntity entity, final int amplifier) {
         entity.hurt(JDamageSources.bleeding(entity.level()), 1.0f);
     }
 }

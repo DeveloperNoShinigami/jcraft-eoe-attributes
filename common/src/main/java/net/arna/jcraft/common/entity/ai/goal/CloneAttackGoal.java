@@ -17,7 +17,7 @@ public class CloneAttackGoal extends Goal {
     private final double speed;
     private long lastUpdateTime;
 
-    public CloneAttackGoal(PlayerCloneEntity mob, double speed) {
+    public CloneAttackGoal(final PlayerCloneEntity mob, final double speed) {
         clone = mob;
         cloneLookControl = mob.getLookControl();
         cloneNavigation = mob.getNavigation();
@@ -91,7 +91,7 @@ public class CloneAttackGoal extends Goal {
         }
     }
 
-    private double getSquaredMaxAttackDistance(LivingEntity entity) {
+    private double getSquaredMaxAttackDistance(final LivingEntity entity) {
         return 1.44F + entity.getBbWidth(); // 0.6^2 * 4 i.e. cloneWidth^2 * 2^2
     }
 }

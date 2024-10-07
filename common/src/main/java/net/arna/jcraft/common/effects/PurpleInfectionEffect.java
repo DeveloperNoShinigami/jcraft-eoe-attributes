@@ -13,7 +13,7 @@ public class PurpleInfectionEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(final int duration, final int amplifier) {
         int i = 0b101000 >> amplifier;
         if (i > 0) {
             return duration % i == 0;
@@ -23,7 +23,7 @@ public class PurpleInfectionEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public void applyEffectTick(final LivingEntity entity, final int amplifier) {
         StandType standType = JComponentPlatformUtils.getStandData(entity).getType();
         float damage = 0.6666f; // 1/3rd of a heart
         if (standType == StandType.PURPLE_HAZE_DISTORTION) {

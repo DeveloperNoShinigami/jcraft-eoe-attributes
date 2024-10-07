@@ -15,7 +15,7 @@ public class SHAAttackGoal extends Goal {
     private int cooldown;
     private LivingEntity target;
 
-    public SHAAttackGoal(SheerHeartAttackEntity mob, double speed) {
+    public SHAAttackGoal(final SheerHeartAttackEntity mob, final double speed) {
         sha = mob;
         shaLookControl = sha.getLookControl();
         shaNavigation = sha.getNavigation();

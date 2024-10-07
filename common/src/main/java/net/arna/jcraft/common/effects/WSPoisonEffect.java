@@ -14,14 +14,14 @@ public class WSPoisonEffect extends MobEffect {
 
     // Should the status effect be applied and under what condition?
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean isDurationEffectTick(final int duration, final int amplifier) {
         return true;
     }
 
     // Stun heavily reduces speed
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
-        if (entity instanceof Mob mob) {
+    public void applyEffectTick(final LivingEntity entity, final int amplifier) {
+        if (entity instanceof final Mob mob) {
             mob.setDeltaMovement(mob.getDeltaMovement().scale(0.2));
 
             mob.setTarget(null);

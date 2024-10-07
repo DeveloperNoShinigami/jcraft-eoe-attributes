@@ -13,18 +13,18 @@ public class IntOption extends ConfigOption {
     @Getter
     private Integer min, max;
 
-    public IntOption(String key, String category, int value) {
+    public IntOption(final String key, final String category, final int value) {
         super(Type.INTEGER, key, category);
         this.value = this.defaultValue = value;
     }
 
-    public IntOption(String key, String category, int value, int min) {
+    public IntOption(final String key, final String category, final int value, final int min) {
         super(Type.INTEGER, key, category);
         this.value = this.defaultValue = value;
         this.min = min;
     }
 
-    public IntOption(String key, String category, int value, int min, int max) {
+    public IntOption(final String key, final String category, final int value, final int min, final int max) {
         super(Type.INTEGER, key, category);
         this.value = this.defaultValue = value;
         this.min = min;
@@ -42,12 +42,12 @@ public class IntOption extends ConfigOption {
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
+    public void write(final FriendlyByteBuf buf) {
         buf.writeVarInt(value);
     }
 
     @Override
-    public void read(FriendlyByteBuf buf) {
+    public void read(final FriendlyByteBuf buf) {
         value = buf.readVarInt();
     }
 
@@ -57,7 +57,7 @@ public class IntOption extends ConfigOption {
     }
 
     @Override
-    public void read(JsonElement element) {
+    public void read(final JsonElement element) {
         value = element.getAsInt();
     }
 }

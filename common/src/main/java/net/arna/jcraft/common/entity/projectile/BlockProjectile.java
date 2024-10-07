@@ -62,7 +62,7 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
         BLOCKSTACK = SynchedEntityData.defineId(BlockProjectile.class, EntityDataSerializers.ITEM_STACK);
     }
 
-    public BlockProjectile(Level world) {
+    public BlockProjectile(final Level world) {
         super(JEntityTypeRegistry.BLOCK_PROJECTILE.get(), world);
         setNoGravity(true);
     }
@@ -74,7 +74,7 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
         entityData.define(BLOCKSTACK, Items.STONE.getDefaultInstance());
     }
 
-    public void setBlockStack(ItemStack stack) {
+    public void setBlockStack(final ItemStack stack) {
         entityData.set(BLOCKSTACK, stack);
         item = stack;
     }
@@ -84,7 +84,7 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
      * 1 - BREAK
      * 2 - HALT
      */
-    public void setEffect(byte effect) {
+    public void setEffect(final byte effect) {
         entityData.set(EFFECT, effect);
     }
 
@@ -175,9 +175,9 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
 
             if (launched && timeLaunched < 20 && !hit) {
                 timeLaunched++;
-                Set<LivingEntity> toHurt = JUtils.generateHitbox(level(), position(), 1, Set.of(master));
-                DamageSource damageSource = level().damageSources().mobAttack(master);
-                for (LivingEntity living : toHurt) {
+                final Set<LivingEntity> toHurt = JUtils.generateHitbox(level(), position(), 1, Set.of(master));
+                final DamageSource damageSource = level().damageSources().mobAttack(master);
+                for (final LivingEntity living : toHurt) {
                     LivingEntity target = JUtils.getUserIfStand(living);
                     if (target == master || target == this || !JUtils.canDamage(damageSource, target)) {
                         continue;
@@ -204,10 +204,10 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    public void push(@NotNull Entity entity) { }
+    public void push(final @NotNull Entity entity) { }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(final DamageSource source, final float amount) {
         if (source.getDirectEntity() != null) {
             return false;
         }
@@ -216,7 +216,7 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
+    protected SoundEvent getHurtSound(final @NotNull DamageSource source) {
         return SoundEvents.STONE_STEP;
     }
 
@@ -236,24 +236,24 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(final @NotNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         writeMasterNbt(tag);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(final @NotNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         readMasterNbt(tag);
     }
 
     private @NotNull ItemStack item = ItemStack.EMPTY;
     @Override
-    public void setItemSlot(@NotNull EquipmentSlot slot, @NotNull ItemStack stack) {
+    public void setItemSlot(final @NotNull EquipmentSlot slot, final @NotNull ItemStack stack) {
         item = stack;
     }
     @Override
-    public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot slot) {
+    public @NotNull ItemStack getItemBySlot(final @NotNull EquipmentSlot slot) {
         return item;
     }
 
@@ -261,12 +261,12 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+    public void registerControllers(final AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.block.idle");
-    private PlayState predicate(AnimationState<GeoAnimatable> state) {
+    private PlayState predicate(final AnimationState<GeoAnimatable> state) {
         return state.setAndContinue(IDLE);
     }
 
