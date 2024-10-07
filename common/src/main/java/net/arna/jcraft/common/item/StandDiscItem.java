@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -41,8 +42,8 @@ public class StandDiscItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
-        ItemStack itemStack = user.getItemInHand(hand);
+    public @NotNull InteractionResultHolder<ItemStack> use(Level world, Player user, @NotNull InteractionHand hand) {
+        final ItemStack itemStack = user.getItemInHand(hand);
         if (world.isClientSide) {
             return InteractionResultHolder.pass(itemStack);
         }
@@ -58,14 +59,8 @@ public class StandDiscItem extends Item {
         // Get NBT and swap stands
         StandType itemStand = null;
         int itemSkin = 0;
-        StandType userStand = null;
-        int userSkin = 0;
 
-        CompoundTag data = itemStack.getOrCreateTag();
-        CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
-
-        userStand = standData.getType();
-        userSkin = standData.getSkin();
+        final CompoundTag data = itemStack.getOrCreateTag();
         if (data.contains("StandID", Tag.TAG_INT)) {
             itemStand = StandType.fromIdOrOrdinal(data.getInt("StandID"));
         }
@@ -73,6 +68,9 @@ public class StandDiscItem extends Item {
             itemSkin = data.getInt("Skin");
         }
 
+        final CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
+        final StandType userStand = standData.getType();
+        final int userSkin = standData.getSkin();
         standData.setTypeAndSkin(itemStand, itemSkin);
         data.putInt("StandID", userStand == null ? 0 : userStand.ordinal());
         data.putInt("Skin", userSkin);

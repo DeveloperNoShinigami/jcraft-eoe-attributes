@@ -61,6 +61,7 @@
 * added docs for future technical changes
 ### Bug Fixes
 * Bug: Inventory disappeared instead of dropped when killed while being stunned
+* Bug: Attackers could not hit each other at the same time due to subtick priority
 
 
 

@@ -52,8 +52,8 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     @Override
     public StandType getType() {
         if (type == null && stand != null) {
-            this.type = stand.getStandType();
-            JCraft.LOGGER.error("StandType was null despite non-null stand " + stand);
+            // this.type = stand.getStandType();
+            JCraft.LOGGER.warn("StandType is null despite non-null stand " + stand);
         }
         return this.type;
     }

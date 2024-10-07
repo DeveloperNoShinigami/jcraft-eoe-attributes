@@ -76,11 +76,12 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.001));
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, LivingEntity.class, 32.0F));
-        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(8, new MoveTowardsTargetGoal(this, 0.001, 32f));
+        this.goalSelector.addGoal(10, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(8, new FloatGoal(this));
+        this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.001));
+        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, LivingEntity.class, 32.0F));
+        this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 0.001, 32f));
     }
 
     public static AttributeSupplier.Builder createAyaTsujiAttributes() {
