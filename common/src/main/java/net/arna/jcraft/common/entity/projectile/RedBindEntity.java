@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -23,7 +24,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RedBindEntity extends JAttackEntity implements GeoEntity {
@@ -47,7 +47,7 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
         return entityData.get(WIDTH);
     }
 
-    public void setBoundEntity(@NotNull LivingEntity boundEntity) {
+    public void setBoundEntity(@NonNull LivingEntity boundEntity) {
         this.boundEntity = boundEntity;
         this.boundHealth = boundEntity.getHealth();
         this.entityData.set(WIDTH, (float) boundEntity.getBoundingBox().getSize());
@@ -117,7 +117,7 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
+    protected SoundEvent getHurtSound(@NonNull DamageSource source) {
         return SoundEvents.LAVA_EXTINGUISH;
     }
 
@@ -133,13 +133,13 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(@NonNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         writeMasterNbt(tag);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(@NonNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         readMasterNbt(tag);
     }

@@ -1,5 +1,6 @@
 package net.arna.jcraft.client.util;
 
+import lombok.NonNull;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.particle.AuraArcParticle;
 import net.arna.jcraft.client.particle.AuraBlobParticle;
@@ -27,7 +28,6 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -176,7 +176,7 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
     }
 
     @Override
-    public void whiteSnakeRemoteClientTick(final @NotNull WhiteSnakeEntity whiteSnakeEntity) {
+    public void whiteSnakeRemoteClientTick(final @NonNull WhiteSnakeEntity whiteSnakeEntity) {
         final Minecraft client = Minecraft.getInstance();
         if (JUtils.getStand(client.player) != whiteSnakeEntity) {
             return;
@@ -203,7 +203,7 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
     }
 
     @Override
-    public void purpleHazeRemoteClientTick(final @NotNull AbstractPurpleHazeEntity<?, ?> purpleHazeEntity) {
+    public void purpleHazeRemoteClientTick(final @NonNull AbstractPurpleHazeEntity<?, ?> purpleHazeEntity) {
         final Minecraft client = Minecraft.getInstance();
         if (JUtils.getStand(client.player) != purpleHazeEntity) {
             return;
@@ -230,7 +230,7 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
     }
 
     @Override
-    public void hierophantGreenRemoteClientTick(final @NotNull HGEntity hgEntity) {
+    public void hierophantGreenRemoteClientTick(final @NonNull HGEntity hgEntity) {
         final Minecraft client = Minecraft.getInstance();
         if (JUtils.getStand(client.player) != hgEntity) {
             return;

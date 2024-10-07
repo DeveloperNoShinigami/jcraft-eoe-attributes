@@ -8,6 +8,7 @@ import ladysnake.satin.api.experimental.ReadableDepthFramebuffer;
 import ladysnake.satin.api.managed.ManagedShaderEffect;
 import ladysnake.satin.api.managed.ShaderEffectManager;
 import ladysnake.satin.api.util.GlMatrices;
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -15,7 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ZaWarudoShaderHandler extends StandShaderHandler {
@@ -37,7 +37,7 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void onWorldRendered(final @NotNull PoseStack matrices, final @NotNull Camera camera, final float tickDelta, final long nanoTime) {
+    public void onWorldRendered(final @NonNull PoseStack matrices, final @NonNull Camera camera, final float tickDelta, final long nanoTime) {
         if (renderingEffect) {
             SHADER.setUniformValue("InverseTransformMatrix", GlMatrices.getInverseTransformMatrix(projectionMatrix));
             Vec3 cameraPos = camera.getPosition();

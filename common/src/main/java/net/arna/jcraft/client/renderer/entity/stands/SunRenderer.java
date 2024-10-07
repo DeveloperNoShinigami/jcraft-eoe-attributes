@@ -2,6 +2,7 @@ package net.arna.jcraft.client.renderer.entity.stands;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import lombok.NonNull;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.arna.jcraft.client.model.entity.stand.TheSunModel;
@@ -12,7 +13,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
@@ -22,12 +22,12 @@ public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
     }
 
     @Override
-    protected int getBlockLightLevel(final @NotNull TheSunEntity entity, final @NotNull BlockPos pos) {
+    protected int getBlockLightLevel(final @NonNull TheSunEntity entity, final @NonNull BlockPos pos) {
         return 15;
     }
 
     @Override
-    protected int getSkyLightLevel(final @NotNull TheSunEntity entity, final @NotNull BlockPos pos) {
+    protected int getSkyLightLevel(final @NonNull TheSunEntity entity, final @NonNull BlockPos pos) {
         return 15;
     }
 

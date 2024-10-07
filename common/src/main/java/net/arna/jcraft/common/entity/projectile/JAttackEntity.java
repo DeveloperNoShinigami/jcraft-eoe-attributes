@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.util.IOwnable;
 import net.minecraft.nbt.CompoundTag;
@@ -10,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -36,17 +36,17 @@ public class JAttackEntity extends LivingEntity implements IOwnable {
     }
 
     @Override
-    public @NotNull Iterable<ItemStack> getArmorSlots() {
+    public @NonNull Iterable<ItemStack> getArmorSlots() {
         return List.of();
     }
 
     @Override
-    public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot slot) {
+    public @NonNull ItemStack getItemBySlot(@NonNull EquipmentSlot slot) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setItemSlot(@NotNull EquipmentSlot slot, @NotNull ItemStack stack) {
+    public void setItemSlot(@NonNull EquipmentSlot slot, @NonNull ItemStack stack) {
         JCraft.LOGGER.warn("Attempted to set item slot of " + getClass().getName() + "@" + hashCode());
     }
 
@@ -79,7 +79,7 @@ public class JAttackEntity extends LivingEntity implements IOwnable {
     }
 
     @Override
-    public @NotNull HumanoidArm getMainArm() {
+    public @NonNull HumanoidArm getMainArm() {
         return HumanoidArm.RIGHT;
     }
 }

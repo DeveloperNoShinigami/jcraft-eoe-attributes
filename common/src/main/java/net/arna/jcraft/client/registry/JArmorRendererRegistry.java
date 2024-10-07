@@ -1,5 +1,6 @@
 package net.arna.jcraft.client.registry;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import net.fabricmc.api.EnvType;
@@ -8,7 +9,6 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -27,7 +27,7 @@ public class JArmorRendererRegistry {
 
             @SuppressWarnings("unchecked")
             @Override
-            public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
+            public @NonNull HumanoidModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
                 if (this.renderer == null) {
                     this.renderer = pRenderer;
                 }

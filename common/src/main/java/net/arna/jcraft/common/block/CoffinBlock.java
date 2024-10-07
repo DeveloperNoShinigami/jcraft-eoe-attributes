@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.block;
 
 import com.mojang.datafixers.util.Either;
+import lombok.NonNull;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +24,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 //todo: make coffin drop itself
@@ -39,9 +39,9 @@ public class CoffinBlock extends BedBlock {
         super(DyeColor.RED, settings);
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, final Level world, @NotNull BlockPos pos, final @NotNull Player player, final @NotNull InteractionHand hand, final @NotNull BlockHitResult hit) {
+    public InteractionResult use(@NonNull BlockState state, final Level world, @NonNull BlockPos pos, final @NonNull Player player, final @NonNull InteractionHand hand, final @NonNull BlockHitResult hit) {
         if (world.isClientSide) {
             return InteractionResult.CONSUME;
         }
@@ -89,7 +89,7 @@ public class CoffinBlock extends BedBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
+    public BlockState getStateForPlacement(@NonNull BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         if (state != null) state.setValue(OCCUPIED, false);
         return state;
@@ -101,12 +101,12 @@ public class CoffinBlock extends BedBlock {
      */
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(@NonNull BlockPos pos, @NonNull BlockState state) {
         return JBlockEntityTypeRegistry.COFFIN_TILE.get().create(pos, state);
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    public @NonNull VoxelShape getShape(BlockState state, @NonNull BlockGetter world, @NonNull BlockPos pos, @NonNull CollisionContext context) {
         return BedPart.FOOT == state.getValue(BedBlock.PART) ?
             switch (state.getValue(FACING)) {
                 case NORTH -> NORTH_SHAPE;

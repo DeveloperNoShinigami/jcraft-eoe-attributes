@@ -7,6 +7,7 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
@@ -19,7 +20,12 @@ import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
 import net.arna.jcraft.common.gravity.util.GravityChannel;
 import net.arna.jcraft.common.loot.JLootTableHelper;
 import net.arna.jcraft.common.network.RemoteStandInteractPacket;
-import net.arna.jcraft.common.network.c2s.*;
+import net.arna.jcraft.common.network.c2s.ConfigUpdatePacket;
+import net.arna.jcraft.common.network.c2s.CooldownCancelPacket;
+import net.arna.jcraft.common.network.c2s.MenuCallPacket;
+import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
+import net.arna.jcraft.common.network.c2s.PredictionTriggerPacket;
+import net.arna.jcraft.common.network.c2s.StandBlockPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.network.s2c.ShaderDeactivationPacket;
@@ -28,9 +34,30 @@ import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
 import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.common.tickable.Timestops;
-import net.arna.jcraft.common.util.*;
+import net.arna.jcraft.common.util.CooldownType;
+import net.arna.jcraft.common.util.DashData;
+import net.arna.jcraft.common.util.DimensionData;
+import net.arna.jcraft.common.util.DummyClientEntityHandler;
+import net.arna.jcraft.common.util.EntityInterest;
+import net.arna.jcraft.common.util.IClientEntityHandler;
+import net.arna.jcraft.common.util.JParticleType;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.*;
+import net.arna.jcraft.registry.JArgumentTypeRegistry;
+import net.arna.jcraft.registry.JCommandRegistry;
+import net.arna.jcraft.registry.JCreativeMenuTabRegistry;
+import net.arna.jcraft.registry.JDimensionRegistry;
+import net.arna.jcraft.registry.JEnchantmentRegistry;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.registry.JEventsRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.registry.JMenuRegistry;
+import net.arna.jcraft.registry.JPacketRegistry;
+import net.arna.jcraft.registry.JParticleTypeRegistry;
+import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStatRegistry;
+import net.arna.jcraft.registry.JStatusRegistry;
+import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
@@ -69,11 +96,15 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.WeakHashMap;
 
 import static net.arna.jcraft.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
@@ -182,7 +213,7 @@ public final class JCraft {
     public static void initDispenserBehaviors() {
         DispenserBlock.registerBehavior(JItemRegistry.KNIFE.get(), new AbstractProjectileDispenseBehavior() {
             @Override
-            protected @NotNull Projectile getProjectile(@NotNull Level world, @NotNull Position position, @NotNull ItemStack stack) {
+            protected @NonNull Projectile getProjectile(@NonNull Level world, @NonNull Position position, @NonNull ItemStack stack) {
                 KnifeProjectile knife = new KnifeProjectile(world);
                 knife.pickup = AbstractArrow.Pickup.ALLOWED;
                 knife.setPos(position.x(), position.y(), position.z());
@@ -191,7 +222,7 @@ public final class JCraft {
         });
     }
 
-    public static void markItemOfInterest(@NotNull Entity entity, @NotNull EntityInterest interest) {
+    public static void markItemOfInterest(@NonNull Entity entity, @NonNull EntityInterest interest) {
         entitiesOfInterest.put(entity, interest);
     }
 

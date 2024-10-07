@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -20,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     private int ticksInAir;
@@ -50,7 +50,7 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public @NotNull ItemStack getPickupItem() {
+    public @NonNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
@@ -70,12 +70,12 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected @NotNull SoundEvent getDefaultHitGroundSoundEvent() {
+    protected @NonNull SoundEvent getDefaultHitGroundSoundEvent() {
         return SoundEvents.FIRECHARGE_USE;
     }
 
     @Override
-    protected void onHitEntity(final @NotNull EntityHitResult entityHitResult) {
+    protected void onHitEntity(final @NonNull EntityHitResult entityHitResult) {
         if (level().isClientSide) {
             return;
         }
@@ -100,14 +100,14 @@ public class AnkhProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(final @NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(final @NonNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("variation", this.variation);
         tag.putShort("life", (short) this.ticksInAir);
     }
 
     @Override
-    public void readAdditionalSaveData(final @NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(final @NonNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
         this.variation = tag.getBoolean("variation");

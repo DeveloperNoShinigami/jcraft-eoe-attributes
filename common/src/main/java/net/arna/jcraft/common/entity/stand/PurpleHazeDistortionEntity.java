@@ -7,14 +7,19 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.moves.shared.*;
+import net.arna.jcraft.common.attack.moves.shared.GrabAttack;
+import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
+import net.arna.jcraft.common.attack.moves.shared.NoOpMove;
+import net.arna.jcraft.common.attack.moves.shared.PilotModeMove;
+import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
+import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
+import net.arna.jcraft.common.attack.moves.shared.UppercutAttack;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.function.BiConsumer;
@@ -196,7 +201,7 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
     }
 
     @Override
-    protected @NotNull String getSummonAnimation() {
+    protected @NonNull String getSummonAnimation() {
         return "animation.purple_haze.summon";
     }
 

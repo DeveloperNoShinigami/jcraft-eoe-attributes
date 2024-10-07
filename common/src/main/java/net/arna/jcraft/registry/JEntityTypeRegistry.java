@@ -3,18 +3,83 @@ package net.arna.jcraft.registry;
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.entity.*;
-import net.arna.jcraft.common.entity.projectile.*;
-import net.arna.jcraft.common.entity.stand.*;
+import net.arna.jcraft.common.entity.AyaTsujiEntity;
+import net.arna.jcraft.common.entity.DarbyOlderEntity;
+import net.arna.jcraft.common.entity.DarbyYoungerEntity;
+import net.arna.jcraft.common.entity.GEButterflyEntity;
+import net.arna.jcraft.common.entity.GEFrogEntity;
+import net.arna.jcraft.common.entity.GERScorpionEntity;
+import net.arna.jcraft.common.entity.GESnakeEntity;
+import net.arna.jcraft.common.entity.PetshopEntity;
+import net.arna.jcraft.common.entity.PlayerCloneEntity;
+import net.arna.jcraft.common.entity.PurpleHazeCloudEntity;
+import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
+import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
+import net.arna.jcraft.common.entity.projectile.BisectProjectile;
+import net.arna.jcraft.common.entity.projectile.BlockProjectile;
+import net.arna.jcraft.common.entity.projectile.BloodProjectile;
+import net.arna.jcraft.common.entity.projectile.BubbleProjectile;
+import net.arna.jcraft.common.entity.projectile.BulletProjectile;
+import net.arna.jcraft.common.entity.projectile.EmeraldProjectile;
+import net.arna.jcraft.common.entity.projectile.GETreeEntity;
+import net.arna.jcraft.common.entity.projectile.HGNetEntity;
+import net.arna.jcraft.common.entity.projectile.IceBranchProjectile;
+import net.arna.jcraft.common.entity.projectile.IcicleProjectile;
+import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
+import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
+import net.arna.jcraft.common.entity.projectile.LaserProjectile;
+import net.arna.jcraft.common.entity.projectile.LifeDetectorEntity;
+import net.arna.jcraft.common.entity.projectile.MetallicaForksEntity;
+import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
+import net.arna.jcraft.common.entity.projectile.PHCapsuleProjectile;
+import net.arna.jcraft.common.entity.projectile.RapierProjectile;
+import net.arna.jcraft.common.entity.projectile.RedBindEntity;
+import net.arna.jcraft.common.entity.projectile.SandTornadoEntity;
+import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
+import net.arna.jcraft.common.entity.projectile.SunBeamProjectile;
+import net.arna.jcraft.common.entity.projectile.WSAcidProjectile;
+import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
+import net.arna.jcraft.common.entity.stand.AtumEntity;
+import net.arna.jcraft.common.entity.stand.CMoonEntity;
+import net.arna.jcraft.common.entity.stand.ChariotRequiemEntity;
+import net.arna.jcraft.common.entity.stand.CinderellaEntity;
+import net.arna.jcraft.common.entity.stand.CreamEntity;
+import net.arna.jcraft.common.entity.stand.D4CEntity;
+import net.arna.jcraft.common.entity.stand.DiverDownEntity;
+import net.arna.jcraft.common.entity.stand.DragonsDreamEntity;
+import net.arna.jcraft.common.entity.stand.FooFightersEntity;
+import net.arna.jcraft.common.entity.stand.GEREntity;
+import net.arna.jcraft.common.entity.stand.GoldExperienceEntity;
+import net.arna.jcraft.common.entity.stand.GooGooDollsEntity;
+import net.arna.jcraft.common.entity.stand.HGEntity;
+import net.arna.jcraft.common.entity.stand.HorusEntity;
+import net.arna.jcraft.common.entity.stand.KQBTDEntity;
+import net.arna.jcraft.common.entity.stand.KillerQueenEntity;
+import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
+import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
+import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
+import net.arna.jcraft.common.entity.stand.MetallicaEntity;
+import net.arna.jcraft.common.entity.stand.OsirisEntity;
+import net.arna.jcraft.common.entity.stand.PurpleHazeDistortionEntity;
+import net.arna.jcraft.common.entity.stand.PurpleHazeEntity;
+import net.arna.jcraft.common.entity.stand.SPTWEntity;
+import net.arna.jcraft.common.entity.stand.ShadowTheWorldEntity;
+import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
+import net.arna.jcraft.common.entity.stand.StarPlatinumEntity;
+import net.arna.jcraft.common.entity.stand.TheFoolEntity;
+import net.arna.jcraft.common.entity.stand.TheSunEntity;
+import net.arna.jcraft.common.entity.stand.TheWorldEntity;
+import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
+import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -666,7 +731,7 @@ public interface JEntityTypeRegistry {
         private final Function<Level, T> ctor;
 
         @Override
-        public @NotNull T create(@NotNull EntityType<T> type, @NotNull Level world) {
+        public @NonNull T create(@NonNull EntityType<T> type, @NonNull Level world) {
             return ctor.apply(world);
         }
     }

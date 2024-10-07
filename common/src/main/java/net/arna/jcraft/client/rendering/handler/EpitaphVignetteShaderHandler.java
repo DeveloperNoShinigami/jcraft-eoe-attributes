@@ -6,11 +6,11 @@ import ladysnake.satin.api.event.PostWorldRenderCallbackV2;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import ladysnake.satin.api.managed.ManagedShaderEffect;
 import ladysnake.satin.api.managed.ShaderEffectManager;
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import org.jetbrains.annotations.NotNull;
 
 public class EpitaphVignetteShaderHandler extends StandShaderHandler {
     public static final EpitaphVignetteShaderHandler INSTANCE = new EpitaphVignetteShaderHandler();
@@ -21,7 +21,7 @@ public class EpitaphVignetteShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void onWorldRendered(final @NotNull PoseStack matrices, final @NotNull Camera camera, final float tickDelta, final long nanoTime) {
+    public void onWorldRendered(final @NonNull PoseStack matrices, final @NonNull Camera camera, final float tickDelta, final long nanoTime) {
         SHADER.setUniformValue("Intensity", EpitaphOverlay.getVignetteIntensity());
         SHADER.setUniformValue("Extend", EpitaphOverlay.getVignetteExtend());
     }

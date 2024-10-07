@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.component.impl;
 
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.moves.cmoon.GravityShiftMove;
 import net.arna.jcraft.common.component.living.CommonGravityShiftComponent;
@@ -19,7 +20,6 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
         RADIAL_REPULSE,
         RADIAL_ATTRACT;
 
-        public static @NotNull ShiftType fromId(final int id) {
+        public static @NonNull ShiftType fromId(final int id) {
             switch (id) {
                 default -> {
                     return NONE;

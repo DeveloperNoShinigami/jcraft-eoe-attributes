@@ -3,6 +3,7 @@ package net.arna.jcraft.common.util;
 import com.google.common.base.MoreObjects;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -38,7 +39,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -51,11 +57,23 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkSource;
-import net.minecraft.world.phys.*;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -360,7 +378,7 @@ public final class JUtils {
     /**
      * @return the change in position for an entity between the current and last tick.
      */
-    public static Vec3 deltaPos(@NotNull Entity ent) {
+    public static Vec3 deltaPos(@NonNull Entity ent) {
         return new Vec3(
                 ent.getX() - ent.xo,
                 ent.getY() - ent.yo,
@@ -607,7 +625,7 @@ public final class JUtils {
      * @param speed      in meters per tick
      * @param divergence Spread, done via a {@link Vec3} of {@link net.minecraft.util.RandomSource#triangle(double, double)} calls
      */
-    public static void shoot(@NotNull Projectile projectile, @Nullable Entity shooter, float pitch, float yaw, float roll, float speed, float divergence) {
+    public static void shoot(@NonNull Projectile projectile, @Nullable Entity shooter, float pitch, float yaw, float roll, float speed, float divergence) {
         float f = -Mth.sin(yaw * DEG_TO_RAD) * Mth.cos(pitch * DEG_TO_RAD);
         float g = -Mth.sin((pitch + roll) * DEG_TO_RAD);
         float h = Mth.cos(yaw * DEG_TO_RAD) * Mth.cos(pitch * DEG_TO_RAD);

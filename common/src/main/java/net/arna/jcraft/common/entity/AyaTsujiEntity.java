@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -24,7 +25,12 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal;
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -32,7 +38,6 @@ import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant {
@@ -89,7 +94,7 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
     }
 
     @Override
-    protected @NotNull InteractionResult mobInteract(@NotNull final Player player, @NotNull final InteractionHand hand) {
+    protected @NonNull InteractionResult mobInteract(@NonNull final Player player, @NonNull final InteractionHand hand) {
         if (this.getOffers().isEmpty()) {
             return InteractionResult.sidedSuccess(isClientSide());
         } else {

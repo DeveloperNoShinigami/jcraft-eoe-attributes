@@ -10,8 +10,18 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.cream.*;
-import net.arna.jcraft.common.attack.moves.shared.*;
+import net.arna.jcraft.common.attack.moves.cream.BallChargeAttack;
+import net.arna.jcraft.common.attack.moves.cream.BallModeMove;
+import net.arna.jcraft.common.attack.moves.cream.ConsumeAttack;
+import net.arna.jcraft.common.attack.moves.cream.CreamComboAttack;
+import net.arna.jcraft.common.attack.moves.cream.DestroyAttack;
+import net.arna.jcraft.common.attack.moves.cream.SurpriseMove;
+import net.arna.jcraft.common.attack.moves.shared.ChargeBarrageAttack;
+import net.arna.jcraft.common.attack.moves.shared.EffectInflictingAttack;
+import net.arna.jcraft.common.attack.moves.shared.GrabAttack;
+import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
+import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
+import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
@@ -43,7 +53,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -366,7 +375,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     }
 
     @Override
-    protected @NotNull AABB makeBoundingBox() {
+    protected @NonNull AABB makeBoundingBox() {
         final double x = getX(), y = getY(), z = getZ();
 
         if (isHalfBall()) {

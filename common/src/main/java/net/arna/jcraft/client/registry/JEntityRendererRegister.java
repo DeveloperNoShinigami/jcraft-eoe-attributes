@@ -2,10 +2,73 @@ package net.arna.jcraft.client.registry;
 
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
+import lombok.NonNull;
 import net.arna.jcraft.client.model.entity.BisectModel;
-import net.arna.jcraft.client.renderer.entity.*;
-import net.arna.jcraft.client.renderer.entity.projectiles.*;
-import net.arna.jcraft.client.renderer.entity.stands.*;
+import net.arna.jcraft.client.renderer.entity.AyaTsujiRenderer;
+import net.arna.jcraft.client.renderer.entity.DarbyOlderRenderer;
+import net.arna.jcraft.client.renderer.entity.DarbyYoungerRenderer;
+import net.arna.jcraft.client.renderer.entity.GEButterflyRenderer;
+import net.arna.jcraft.client.renderer.entity.GEFrogRenderer;
+import net.arna.jcraft.client.renderer.entity.GERScorpionRenderer;
+import net.arna.jcraft.client.renderer.entity.GESnakeRenderer;
+import net.arna.jcraft.client.renderer.entity.GETreeRenderer;
+import net.arna.jcraft.client.renderer.entity.HGNetRenderer;
+import net.arna.jcraft.client.renderer.entity.MetallicaForksRenderer;
+import net.arna.jcraft.client.renderer.entity.PetshopRenderer;
+import net.arna.jcraft.client.renderer.entity.SandTornadoRenderer;
+import net.arna.jcraft.client.renderer.entity.SheerHeartAttackRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.AnkhRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.BlockProjectileRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.BloodProjectileRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.BubbleRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.BulletRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.EmeraldRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.GeoProjectileRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.IceBranchRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.IcicleRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.KnifeRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.LargeIcicleRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.LaserProjectileRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.LifeDetectorRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.MeteorRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.PHCapsuleRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.RapierRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.RedBindRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.ScalpelRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.SunBeamRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.WSAcidRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.AtumRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.CMoonRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.ChariotRequiemRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.CinderellaRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.CreamRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.D4CRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.DiverDownRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.DragonsDreamRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.FooFightersRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.GERRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.GoldExperienceRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.GooGooDollsRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.HGRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.HorusRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.KQBTDRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.KillerQueenRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.KingCrimsonRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.MadeInHeavenRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.MagiciansRedRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.MetallicaRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.OsirisRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.PurpleHazeDistortionRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.PurpleHazeRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.SPTWRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.ShadowTheWorldRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.SilverChariotRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.StarPlatinumRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.SunRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.TheFoolRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.TheWorldOverHeavenRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.TheWorldRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.WhiteSnakeRenderer;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,7 +77,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -119,7 +181,7 @@ public interface JEntityRendererRegister {
     static <T extends Entity> EntityRenderer<T> createEmpty(EntityRendererProvider.Context ctx) {
         return new EntityRenderer<>(ctx) {
             @Override
-            public ResourceLocation getTextureLocation(@NotNull T entity) {
+            public ResourceLocation getTextureLocation(@NonNull T entity) {
                 return null;
             }
         };

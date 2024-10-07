@@ -6,6 +6,14 @@ import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.MobilityType;
 import net.arna.jcraft.common.attack.core.IAttacker;
@@ -28,7 +36,15 @@ import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
 import net.arna.jcraft.common.network.s2c.ComboCounterPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
-import net.arna.jcraft.common.util.*;
+import net.arna.jcraft.common.util.CooldownType;
+import net.arna.jcraft.common.util.DashData;
+import net.arna.jcraft.common.util.IComboCounter;
+import net.arna.jcraft.common.util.ICustomDamageHandler;
+import net.arna.jcraft.common.util.IDamageScaler;
+import net.arna.jcraft.common.util.IOwnable;
+import net.arna.jcraft.common.util.JParticleType;
+import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.mixin.LivingEntityInvoker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
@@ -66,17 +82,8 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 
 import java.util.List;
 
@@ -229,7 +236,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return true;
     }
 
-    @NotNull
+    @NonNull
     public LivingEntity getUserOrThrow() {
         if (user == null) {
             throw new NullPointerException("No user set");
@@ -1420,7 +1427,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull final CompoundTag nbt) {
+    public void readAdditionalSaveData(@NonNull final CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
 
         setSkin(nbt.getInt("Skin"));
@@ -1433,14 +1440,14 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull final CompoundTag nbt) {
+    public void addAdditionalSaveData(@NonNull final CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
 
         nbt.putInt("Skin", getSkin());
     }
 
     @Override
-    public boolean hurt(@NotNull final DamageSource source, float amount) {
+    public boolean hurt(@NonNull final DamageSource source, float amount) {
         if (user == null ||
                 source.getEntity() == user ||
                 user.isInvulnerableTo(source) ||

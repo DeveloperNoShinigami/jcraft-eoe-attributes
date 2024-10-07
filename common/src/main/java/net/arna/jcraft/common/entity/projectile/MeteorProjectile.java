@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -36,7 +37,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class MeteorProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public @NotNull ItemStack getPickupItem() {
+    public @NonNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
@@ -94,7 +94,7 @@ public class MeteorProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected @NotNull SoundEvent getDefaultHitGroundSoundEvent() {
+    protected @NonNull SoundEvent getDefaultHitGroundSoundEvent() {
         return SoundEvents.FIRECHARGE_USE;
     }
 
@@ -103,7 +103,7 @@ public class MeteorProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
+    protected void onHitEntity(@NonNull EntityHitResult entityHitResult) {
         Entity owner = getOwner();
         if (owner == null) {
             return;
@@ -133,7 +133,7 @@ public class MeteorProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHitBlock(@NotNull BlockHitResult blockHitResult) {
+    protected void onHitBlock(@NonNull BlockHitResult blockHitResult) {
         if (!level().isClientSide()) {
             final Direction movementDirection = getMotionDirection();
             final BlockPos blockPos2 = blockPosition(); //.offset(movementDirection);
@@ -149,13 +149,13 @@ public class MeteorProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(@NonNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putShort("life", (short) this.ticksInAir);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(@NonNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
     }

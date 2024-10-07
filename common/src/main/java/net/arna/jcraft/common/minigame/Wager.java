@@ -1,9 +1,9 @@
 package net.arna.jcraft.common.minigame;
 
+import lombok.NonNull;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +21,7 @@ public class Wager extends AbstractWager {
     /**
      * (Deep) copy constructor.
      */
-    public Wager(@NotNull final AbstractWager wager) {
+    public Wager(@NonNull final AbstractWager wager) {
         for (final ItemStack stack : wager.items) {
             items.add(stack.copy());
         }
@@ -30,7 +30,7 @@ public class Wager extends AbstractWager {
     /**
      * Wagers another stack of items.
      */
-    public void increaseWager(@NotNull final ItemStack increase) {
+    public void increaseWager(@NonNull final ItemStack increase) {
         items.add(Objects.requireNonNull(increase));
     }
 
@@ -38,14 +38,14 @@ public class Wager extends AbstractWager {
         items.sort(ITEM_STACK_COMPARATOR);
     }
 
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(@NonNull CompoundTag tag) {
         items.clear();
         for (final Tag itemTag : tag.getList("wager_items", Tag.TAG_COMPOUND)) {
             items.add(ItemStack.of((CompoundTag)itemTag));
         }
     }
 
-    public static Wager sum(@NotNull final Collection<? extends AbstractWager> coll) {
+    public static Wager sum(@NonNull final Collection<? extends AbstractWager> coll) {
         final Wager result = new Wager();
         for (final AbstractWager wager : coll) {
             for (final ItemStack stack : wager.items) {
@@ -55,14 +55,14 @@ public class Wager extends AbstractWager {
         return result;
     }
 
-    public static Wager sum(@NotNull final AbstractWager wager1, @NotNull final  AbstractWager wager2) {
+    public static Wager sum(@NonNull final AbstractWager wager1, @NonNull final  AbstractWager wager2) {
         return sum(List.of(wager1, wager2));
     }
 
     /**
      * Splits the specified wager into equal parts. Some of the initial wager may get lost due to rounding down.
      */
-    public static ImmutableWager split(@NotNull final AbstractWager wager, final int divisor) {
+    public static ImmutableWager split(@NonNull final AbstractWager wager, final int divisor) {
         if (divisor <= 0) {
             throw new IllegalArgumentException("Divisor must be positive!");
         }

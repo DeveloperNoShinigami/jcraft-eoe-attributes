@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -21,7 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.NotNull;
 
 
 public class BubbleProjectile extends AbstractArrow implements GeoEntity {
@@ -36,7 +36,7 @@ public class BubbleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public @NotNull ItemStack getPickupItem() {
+    public @NonNull ItemStack getPickupItem() {
         return new ItemStack(Items.AIR);
     }
 
@@ -76,7 +76,7 @@ public class BubbleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected @NotNull SoundEvent getDefaultHitGroundSoundEvent() {
+    protected @NonNull SoundEvent getDefaultHitGroundSoundEvent() {
         return SoundEvents.BUBBLE_COLUMN_BUBBLE_POP;
     }
 

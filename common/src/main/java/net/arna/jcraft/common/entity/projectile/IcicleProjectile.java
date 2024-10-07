@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -24,7 +25,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class IcicleProjectile extends AbstractArrow implements GeoEntity {
     private int ticksInAir;
@@ -45,7 +45,7 @@ public class IcicleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public @NotNull ItemStack getPickupItem() {
+    public @NonNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
@@ -94,7 +94,7 @@ public class IcicleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHit(@NotNull HitResult hitResult) {
+    protected void onHit(@NonNull HitResult hitResult) {
         if (reflect) {
             final HitResult.Type type = hitResult.getType();
             if (type == HitResult.Type.ENTITY) {
@@ -123,7 +123,7 @@ public class IcicleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
+    protected void onHitEntity(@NonNull EntityHitResult entityHitResult) {
         if (level().isClientSide) {
             return;
         }
@@ -153,13 +153,13 @@ public class IcicleProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(@NonNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putShort("life", (short) this.ticksInAir);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(@NonNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
     }

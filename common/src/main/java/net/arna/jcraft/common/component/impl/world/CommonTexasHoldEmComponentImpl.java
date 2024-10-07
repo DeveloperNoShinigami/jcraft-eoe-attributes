@@ -1,12 +1,12 @@
 package net.arna.jcraft.common.component.impl.world;
 
+import lombok.NonNull;
 import net.arna.jcraft.common.component.world.CommonTexasHoldEmComponent;
 import net.arna.jcraft.common.minigame.card.texasholdem.TexasHoldEm;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -45,7 +45,7 @@ public class CommonTexasHoldEmComponentImpl implements CommonTexasHoldEmComponen
     }
 
     @Override
-    public boolean addGame(final @NotNull TexasHoldEm game) {
+    public boolean addGame(final @NonNull TexasHoldEm game) {
         if (games.contains(game)) {
             return false;
         }

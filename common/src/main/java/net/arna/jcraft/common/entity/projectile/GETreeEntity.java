@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -20,7 +21,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -87,12 +87,12 @@ public class GETreeEntity extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
+    protected @NonNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean startRiding(@NotNull Entity entity, boolean force) {
+    public boolean startRiding(@NonNull Entity entity, boolean force) {
         return false;
     }
 

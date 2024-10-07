@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.event.events.client.ClientTickEvent;
 import ladysnake.satin.api.event.PostWorldRenderCallbackV2;
 import ladysnake.satin.api.event.ShaderEffectRenderCallback;
+import lombok.NonNull;
 import net.arna.jcraft.client.rendering.skybox.CrimsonSkyBoxCool;
 import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
 import net.arna.jcraft.common.util.BlockInfo;
@@ -16,7 +17,6 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class CrimsonShaderHandler extends StandShaderHandler {
     public List<BlockInfo> list = new ArrayList<>();
 
     @Override
-    public void onWorldRendered(final @NotNull PoseStack matrices, final @NotNull Camera camera, final float tickDelta, final long nanoTime) {
+    public void onWorldRendered(final @NonNull PoseStack matrices, final @NonNull Camera camera, final float tickDelta, final long nanoTime) {
         if (renderingEffect) {
             final Level world = camera.getEntity().level();
             if(list.isEmpty()){

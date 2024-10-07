@@ -1,9 +1,9 @@
 package net.arna.jcraft.common.minigame;
 
+import lombok.NonNull;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -28,7 +28,7 @@ public abstract class AbstractWager {
      * Returns <code>true</code> if this wager is an expansion of the given wager. Being an expansion means that
      * this wager contains at least all item stacks that the other wager has, in the same order.
      */
-    public boolean expands(@NotNull final AbstractWager wager) {
+    public boolean expands(@NonNull final AbstractWager wager) {
         if (wager.items.size() > items.size()) {
             return false;
         }
@@ -42,7 +42,7 @@ public abstract class AbstractWager {
         return true;
     }
 
-    public void writeToNbt(@NotNull CompoundTag tag) {
+    public void writeToNbt(@NonNull CompoundTag tag) {
         final ListTag itemsTag = new ListTag();
         for (final ItemStack stack : items) {
             final CompoundTag itemNbt = new CompoundTag();

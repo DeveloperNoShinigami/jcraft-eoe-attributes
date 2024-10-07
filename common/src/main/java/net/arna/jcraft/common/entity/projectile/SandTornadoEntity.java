@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -32,7 +33,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -124,15 +124,15 @@ public class SandTornadoEntity extends JAttackEntity implements GeoEntity, IOwna
     }
 
     @Override
-    protected void doPush(@NotNull Entity entity) {
+    protected void doPush(@NonNull Entity entity) {
     }
 
     @Override
-    public void push(@NotNull Entity entity) {
+    public void push(@NonNull Entity entity) {
     }
 
     @Override
-    public boolean canCollideWith(@NotNull Entity other) {
+    public boolean canCollideWith(@NonNull Entity other) {
         return false;
     }
 
@@ -143,7 +143,7 @@ public class SandTornadoEntity extends JAttackEntity implements GeoEntity, IOwna
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
+    protected SoundEvent getHurtSound(@NonNull DamageSource source) {
         return SoundEvents.SAND_STEP;
     }
 
@@ -159,7 +159,7 @@ public class SandTornadoEntity extends JAttackEntity implements GeoEntity, IOwna
     }
 
     @Override
-    public boolean startRiding(@NotNull Entity entity, boolean force) {
+    public boolean startRiding(@NonNull Entity entity, boolean force) {
         return false;
     }
 
@@ -173,13 +173,13 @@ public class SandTornadoEntity extends JAttackEntity implements GeoEntity, IOwna
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(@NonNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         writeMasterNbt(tag);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(@NonNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         readMasterNbt(tag);
     }

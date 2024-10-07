@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -27,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -70,7 +70,7 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void setDeltaMovement(@NotNull Vec3 deltaMovement) {
+    public void setDeltaMovement(@NonNull Vec3 deltaMovement) {
         if (lockVelocity) return;
         super.setDeltaMovement(deltaMovement);
     }
@@ -215,10 +215,10 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHit(@NotNull HitResult result) { }
+    protected void onHit(@NonNull HitResult result) { }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
+    protected @NonNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 

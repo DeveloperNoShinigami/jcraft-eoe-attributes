@@ -1,6 +1,7 @@
 package net.arna.jcraft.forge.capability.impl.player;
 
 import dev.architectury.networking.NetworkManager;
+import lombok.NonNull;
 import net.arna.jcraft.common.component.impl.player.CommonPhComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
@@ -15,7 +16,6 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import org.jetbrains.annotations.NotNull;
 
 import static net.arna.jcraft.JCraft.MOD_ID;
 
@@ -66,7 +66,7 @@ public class PhCapability extends CommonPhComponentImpl implements JCapability {
         super.readFromNbt(tag);
     }
 
-    public static @NotNull LazyOptional<PhCapability> getCapabilityOptional(Player player) {
+    public static @NonNull LazyOptional<PhCapability> getCapabilityOptional(Player player) {
         return player.getCapability(CAPABILITY);
     }
 

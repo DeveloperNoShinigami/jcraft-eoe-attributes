@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.item;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoItem;
 import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.constant.DataTickets;
@@ -27,7 +28,6 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -88,7 +88,7 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
         consumer.accept(new RenderProvider() {
             private static GeoArmorRenderer<?> renderer;
             @SuppressWarnings("unchecked")
-            @Override public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
+            @Override public @NonNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
                     LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
                 if (renderer == null) renderer = new StoneMaskRenderer();
                 renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);

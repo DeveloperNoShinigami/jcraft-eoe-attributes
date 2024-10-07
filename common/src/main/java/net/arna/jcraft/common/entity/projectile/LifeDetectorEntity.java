@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -31,7 +32,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -171,7 +171,7 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
+    protected SoundEvent getHurtSound(@NonNull DamageSource source) {
         return SoundEvents.LAVA_EXTINGUISH;
     }
 
@@ -187,7 +187,7 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    public boolean startRiding(@NotNull Entity entity, boolean force) {
+    public boolean startRiding(@NonNull Entity entity, boolean force) {
         return false;
     }
 
@@ -201,20 +201,20 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    protected @NotNull AABB makeBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
+    protected @NonNull AABB makeBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
         final double x = getX(), y = getY(), z = getZ();
         final double s = hasExploded() ? 0.1 : 0.5;
         return new AABB(x + s, y + s, z + s, x - s, y - s, z - s);
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(@NonNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         writeMasterNbt(tag);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(@NonNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         readMasterNbt(tag);
     }

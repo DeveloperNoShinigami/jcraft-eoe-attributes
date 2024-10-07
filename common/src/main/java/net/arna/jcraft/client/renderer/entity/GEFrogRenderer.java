@@ -2,6 +2,7 @@ package net.arna.jcraft.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import lombok.NonNull;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.ItemInHandRenderer;
@@ -12,7 +13,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class GEFrogRenderer extends FrogRenderer {
@@ -24,7 +24,7 @@ public class GEFrogRenderer extends FrogRenderer {
     }
 
     @Override
-    public void render(final Frog frogEntity, final float f, final float g, final PoseStack matrixStack, final @NotNull MultiBufferSource vertexConsumerProvider, final int i) {
+    public void render(final Frog frogEntity, final float f, final float g, final PoseStack matrixStack, final @NonNull MultiBufferSource vertexConsumerProvider, final int i) {
         matrixStack.pushPose();
         matrixStack.translate(0.0, 0.4, 0);
         matrixStack.mulPose(Axis.YN.rotationDegrees(frogEntity.getYRot()));

@@ -48,7 +48,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -411,7 +410,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     @Override
-    public boolean causeFallDamage(float fallDistance, float damageMultiplier, @NotNull DamageSource damageSource) {
+    public boolean causeFallDamage(float fallDistance, float damageMultiplier, @NonNull DamageSource damageSource) {
         return false;
     }
 
@@ -592,7 +591,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     @Override
-    protected @NotNull AABB makeBoundingBox() {
+    protected @NonNull AABB makeBoundingBox() {
         final double x = getX(), y = getY(), z = getZ();
         final float scale = getRawScale() * 1.5f;
         return newBoundingBox(x, y, z, scale);
@@ -660,7 +659,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     @Override
-    protected @NotNull String getSummonAnimation() {
+    protected @NonNull String getSummonAnimation() {
         return "animation.sun.summon";
     }
 

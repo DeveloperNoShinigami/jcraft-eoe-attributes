@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.damage;
 
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.core.registries.Registries;
@@ -9,7 +10,6 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -32,20 +32,20 @@ public class JDamageSources {
         return new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key));
     }
 
-    public static @NotNull DamageSource stand(final StandEntity<?, ?> stand) {
+    public static @NonNull DamageSource stand(final StandEntity<?, ?> stand) {
         return create(stand.level(), STAND, stand.getUser());
     }
 
     @Contract(value = "_ -> new", pure = true)
-    public static @NotNull DamageSource whitesnakePoison(Entity user) {
+    public static @NonNull DamageSource whitesnakePoison(Entity user) {
         return create(user.level(), WHITE_SNAKE_POISON, user);
     }
 
-    public static @NotNull DamageSource bleeding(Level world) {
+    public static @NonNull DamageSource bleeding(Level world) {
         return create(world, BLEEDING);
     }
 
-    public static @NotNull DamageSource phpoison(Level world) {
+    public static @NonNull DamageSource phpoison(Level world) {
         return create(world, PHPOISON);
     }
 }

@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.entity;
 
 import com.mojang.authlib.GameProfile;
+import lombok.NonNull;
 import net.arna.jcraft.common.entity.ai.goal.CloneAttackGoal;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
@@ -41,7 +42,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -154,7 +154,7 @@ public class PlayerCloneEntity extends Monster implements RangedAttackMob, IOwna
         return entityData.get(MASTER).orElse(null);
     }
 
-    public @NotNull String getMasterName() {
+    public @NonNull String getMasterName() {
         return entityData.get(MASTER_NAME);
     }
 

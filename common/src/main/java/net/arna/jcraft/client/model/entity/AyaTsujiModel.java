@@ -1,12 +1,12 @@
 package net.arna.jcraft.client.model.entity;
 
+import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.AyaTsujiEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
 
 public class AyaTsujiModel extends GeoModel<AyaTsujiEntity> {
     @Override
@@ -25,7 +25,7 @@ public class AyaTsujiModel extends GeoModel<AyaTsujiEntity> {
     }
 
     @Override
-    public void setCustomAnimations(final @NotNull AyaTsujiEntity animatable, final long instanceId, final AnimationState<AyaTsujiEntity> animationState) {
+    public void setCustomAnimations(final @NonNull AyaTsujiEntity animatable, final long instanceId, final AnimationState<AyaTsujiEntity> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
 
         this.getBone("head").ifPresent(head -> {

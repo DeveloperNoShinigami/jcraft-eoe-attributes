@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.moves.killerqueen.CoinTossAttack;
@@ -13,10 +15,7 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.function.Consumer;
 
@@ -134,7 +133,7 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
     }
 
     @Override
-    protected @NotNull String getSummonAnimation() {
+    protected @NonNull String getSummonAnimation() {
         return "animation.killerqueen.summon";
     }
 

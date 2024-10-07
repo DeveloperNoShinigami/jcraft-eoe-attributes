@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.component.impl.world;
 
 import lombok.Getter;
+import lombok.NonNull;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -8,7 +9,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
         // JComponentPlatformUtils.SHOCKWAVE_HANDLER.sync(world, (buf, player) -> writeSyncPacket(buf, shockwave));
     }
 
-    public void readFromNbt(final @NotNull CompoundTag tag) {
+    public void readFromNbt(final @NonNull CompoundTag tag) {
         for (Tag element : tag.getList("shockwaves", Tag.TAG_COMPOUND)) {
             CompoundTag compound = (CompoundTag) element;
             shockwaves.add(new Shockwave(
@@ -49,7 +49,7 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
         }
     }
 
-    public void writeToNbt(final @NotNull CompoundTag tag) {
+    public void writeToNbt(final @NonNull CompoundTag tag) {
         ListTag list = new ListTag();
         for (Shockwave shockwave : shockwaves) {
             CompoundTag compound = new CompoundTag();

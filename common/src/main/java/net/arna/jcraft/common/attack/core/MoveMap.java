@@ -1,6 +1,10 @@
 package net.arna.jcraft.common.attack.core;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.Streams;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -8,10 +12,13 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.util.CooldownType;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
@@ -130,7 +137,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
         return copyMap.getOrDefault(move, move);
     }
 
-    @NotNull
+    @NonNull
     @Override
     public Iterator<Entry<A, S>> iterator() {
         // Ensure we add all variants here too.

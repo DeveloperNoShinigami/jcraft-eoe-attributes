@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -27,7 +28,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -100,15 +100,15 @@ public class MetallicaForksEntity extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    protected void doPush(@NotNull Entity entity) {
+    protected void doPush(@NonNull Entity entity) {
     }
 
     @Override
-    public void push(@NotNull Entity entity) {
+    public void push(@NonNull Entity entity) {
     }
 
     @Override
-    public boolean canCollideWith(@NotNull Entity other) {
+    public boolean canCollideWith(@NonNull Entity other) {
         return false;
     }
 
@@ -118,7 +118,7 @@ public class MetallicaForksEntity extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    protected @NotNull AABB makeBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
+    protected @NonNull AABB makeBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
         final double x = getX(), y = getY(), z = getZ();
         final double s = 0.5;
         return new AABB(x + s, y + s, z + s, x - s, y - s, z - s);
@@ -126,7 +126,7 @@ public class MetallicaForksEntity extends JAttackEntity implements GeoEntity {
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(@NotNull DamageSource source) {
+    protected SoundEvent getHurtSound(@NonNull DamageSource source) {
         return SoundEvents.METAL_HIT;
     }
 

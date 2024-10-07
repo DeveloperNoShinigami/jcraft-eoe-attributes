@@ -1,5 +1,10 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
+import mod.azure.azurelib.core.animatable.GeoAnimatable;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.PurpleHazeCloudEntity;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
@@ -11,11 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.util.AzureLibUtil;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import org.jetbrains.annotations.NotNull;
 
 public class PHCapsuleProjectile extends AbstractArrow implements GeoAnimatable {
     private final AbstractPurpleHazeEntity.PoisonType poisonType;
@@ -31,12 +31,12 @@ public class PHCapsuleProjectile extends AbstractArrow implements GeoAnimatable 
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
+    protected @NonNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
     @Override
-    protected void onHit(@NotNull HitResult hitResult) {
+    protected void onHit(@NonNull HitResult hitResult) {
         if (level().isClientSide()) {
             return;
         }

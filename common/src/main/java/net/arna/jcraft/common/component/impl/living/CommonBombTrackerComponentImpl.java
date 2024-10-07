@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.component.impl.living;
 
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
 import net.minecraft.nbt.CompoundTag;
@@ -7,14 +8,13 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponent {
     private final Entity entity;
     public final BombData main = new BombData();
     public final BombData btd = new BombData();
 
-    public CommonBombTrackerComponentImpl(final @NotNull Entity entity) {
+    public CommonBombTrackerComponentImpl(final @NonNull Entity entity) {
         this.entity = entity;
     }
 
@@ -99,9 +99,9 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
     }
 
 
-    public void readFromNbt(final @NotNull CompoundTag tag) {
+    public void readFromNbt(final @NonNull CompoundTag tag) {
     }
 
-    public void writeToNbt(final @NotNull CompoundTag tag) {
+    public void writeToNbt(final @NonNull CompoundTag tag) {
     }
 }

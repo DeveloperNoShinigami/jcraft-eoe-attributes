@@ -10,7 +10,12 @@ import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.*;
+import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.BTDDetonateAttack;
+import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.BTDGrabHitAttack;
+import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.BTDPlantAttack;
+import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.BubbleAttack;
+import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.BubbleCounterAttack;
+import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.ElbowAttack;
 import net.arna.jcraft.common.attack.moves.shared.BarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.GrabAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -23,7 +28,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.function.Consumer;
@@ -224,7 +228,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     }
 
     @Override
-    protected @NotNull String getSummonAnimation() {
+    protected @NonNull String getSummonAnimation() {
         return "animation.kqbtd.summon";
     }
 

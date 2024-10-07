@@ -1,5 +1,6 @@
 package net.arna.jcraft.fabric.common.component.impl.world;
 
+import lombok.NonNull;
 import net.arna.jcraft.common.component.impl.world.CommonShockwaveHandlerComponentImpl;
 import net.arna.jcraft.fabric.common.component.JComponents;
 import net.arna.jcraft.fabric.common.component.world.ShockwaveHandlerComponent;
@@ -7,7 +8,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 public class ShockwaveHandlerComponentImpl extends CommonShockwaveHandlerComponentImpl implements ShockwaveHandlerComponent {
 
@@ -25,12 +25,12 @@ public class ShockwaveHandlerComponentImpl extends CommonShockwaveHandlerCompone
     }
 
     @Override
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(@NonNull CompoundTag tag) {
         super.readFromNbt(tag);
     }
 
     @Override
-    public void writeToNbt(@NotNull CompoundTag tag) {
+    public void writeToNbt(@NonNull CompoundTag tag) {
         super.writeToNbt(tag);
     }
 

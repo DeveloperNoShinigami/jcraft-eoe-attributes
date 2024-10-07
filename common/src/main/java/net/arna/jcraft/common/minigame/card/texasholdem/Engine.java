@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.minigame.card.texasholdem;
 
 import lombok.Getter;
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.minigame.AbstractWager;
 import net.arna.jcraft.common.minigame.ImmutableWager;
@@ -12,7 +13,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -344,11 +344,11 @@ public final class Engine {
 
         private final Function<Collection<Card>, Optional<List<Rank>>> evaluator;
 
-        HandEvaluator(@NotNull final Function<Collection<Card>, Optional<List<Rank>>> evaluator) {
+        HandEvaluator(@NonNull final Function<Collection<Card>, Optional<List<Rank>>> evaluator) {
             this.evaluator = Objects.requireNonNull(evaluator);
         }
 
-        private static void checkCollection(@NotNull Collection<Card> cards) {
+        private static void checkCollection(@NonNull Collection<Card> cards) {
             if (cards.size() != 7) {
                 throw new IllegalArgumentException("Can only evaluate a number of 7 cards!");
             }
@@ -359,14 +359,14 @@ public final class Engine {
          * @param sorted a pre-rank-sorted list of cards
          * @param empty an empty rank list
          */
-        private static void cards2Ranks(@NotNull final List<Card> sorted, @NotNull final List<Rank> empty) {
+        private static void cards2Ranks(@NonNull final List<Card> sorted, @NonNull final List<Rank> empty) {
             for (Card card : sorted) {
                 empty.add(card.rank());
             }
         }
 
         @Override
-        public Optional<List<Rank>> apply(@NotNull Collection<Card> cards) {
+        public Optional<List<Rank>> apply(@NonNull Collection<Card> cards) {
             checkCollection(cards);
             return evaluator.apply(cards);
         }
@@ -476,7 +476,7 @@ public final class Engine {
      *
      * @implNote The immutable wagers are not cached, but they shouldn't get so big for it to matter.
      */
-    @NotNull
+    @NonNull
     public ImmutableWager getWager(final int player) {
         return new ImmutableWager(wagers.get(player));
     }
@@ -495,7 +495,7 @@ public final class Engine {
      * @see #playerCount()
      * @see Wager#expands(AbstractWager)
      */
-    public void raise(final int player, @NotNull final ImmutableWager raise) {
+    public void raise(final int player, @NonNull final ImmutableWager raise) {
         if (!raise.expands(currentRaise)) {
             throw new IllegalArgumentException(String.format("%s is not an expansion of %s!", raise, currentRaise));
         }
@@ -532,7 +532,7 @@ public final class Engine {
      * Returns a deep, immutable copy of the current pot.
      */
     // this only works well in single-threading
-    @NotNull
+    @NonNull
     public ImmutableWager getPot() {
         if (potChanged) {
             calculatePot();
@@ -544,7 +544,7 @@ public final class Engine {
     /**
      * Returns the big blind if it was set already, otherwise an empty {@link Optional}.
      */
-    @NotNull
+    @NonNull
     public Optional<ImmutableWager> getBigBlind() {
         if (bigBlind == null) {
             return Optional.empty();
@@ -557,7 +557,7 @@ public final class Engine {
      * @throws IndexOutOfBoundsException If the specified player is smaller than 0 or greater than or equal to the player count
      * @see #playerCount()
      */
-    public boolean setBigBlind(final int player, @NotNull final AbstractWager bigBlind) {
+    public boolean setBigBlind(final int player, @NonNull final AbstractWager bigBlind) {
         if (this.bigBlind != null) {
             return false;
         }
@@ -628,7 +628,7 @@ public final class Engine {
         phase = Phase.PRE_END;
     }
 
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(@NonNull CompoundTag tag) {
         final ListIterator<Wager> wagersIt = wagers.listIterator();
         for (final Tag wagerTag : tag.getList("wagers", Tag.TAG_COMPOUND)) {
             wagersIt.next().readFromNbt((CompoundTag)wagerTag);
@@ -670,7 +670,7 @@ public final class Engine {
         phase = Phase.values()[tag.getInt("phase")];
     }
 
-    public void writeToNbt(@NotNull CompoundTag tag) {
+    public void writeToNbt(@NonNull CompoundTag tag) {
         // we assume the player count to be known at this point
         final ListTag wagersTag = new ListTag();
         for (final Wager wager : wagers) {

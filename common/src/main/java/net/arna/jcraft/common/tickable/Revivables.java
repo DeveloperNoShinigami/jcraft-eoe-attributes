@@ -10,7 +10,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,7 +28,7 @@ public class Revivables {
         final ResourceKey<Level> worldKey;
         public int timer = 20 * 60; // 1min
 
-        private ReviveData(@NotNull EntityType<?> type, @NotNull Vec3 pos, @NotNull ResourceKey<Level> worldKey) {
+        private ReviveData(@NonNull EntityType<?> type, @NonNull Vec3 pos, @NonNull ResourceKey<Level> worldKey) {
             this.type = type;
             this.pos = pos;
             this.worldKey = worldKey;

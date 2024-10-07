@@ -1,12 +1,12 @@
 package net.arna.jcraft.common.attack.moves.silverchariot;
 
+import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public final class SCChargeAttack extends AbstractChargeAttack<SCChargeAttack, SilverChariotEntity, SilverChariotEntity.State> {
 
@@ -35,13 +35,13 @@ public final class SCChargeAttack extends AbstractChargeAttack<SCChargeAttack, S
         ctx.register(LOOK_DIR);
     }
 
-    @NotNull
+    @NonNull
     @Override
     protected SCChargeAttack getThis() {
         return this;
     }
 
-    @NotNull
+    @NonNull
     @Override
     public SCChargeAttack copy() {
         return copyExtras(new SCChargeAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(), getStun(),

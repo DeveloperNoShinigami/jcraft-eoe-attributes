@@ -1,8 +1,15 @@
 package net.arna.jcraft.common.item;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoItem;
 import mod.azure.azurelib.animatable.client.RenderProvider;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.renderer.GeoArmorRenderer;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.client.renderer.armor.KarsArmorRenderer;
 import net.arna.jcraft.client.renderer.armor.PuccisHatRenderer;
 import net.arna.jcraft.client.renderer.armor.RedHatRenderer;
@@ -18,14 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -40,7 +40,7 @@ public class HatItem extends ArmorItem implements GeoItem {
     }
 
     @Override
-    public boolean isValidRepairItem(@NotNull ItemStack stack, ItemStack ingredient) {
+    public boolean isValidRepairItem(@NonNull ItemStack stack, ItemStack ingredient) {
         if (ingredient.is(Items.LEATHER)) {
             return true;
         }
@@ -48,7 +48,7 @@ public class HatItem extends ArmorItem implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level world, @NotNull List<Component> tooltip, @NotNull TooltipFlag context) {
+    public void appendHoverText(@NonNull ItemStack stack, @Nullable Level world, @NonNull List<Component> tooltip, @NonNull TooltipFlag context) {
         if (getDefaultInstance().is(JTagRegistry.PROTECTS_FROM_SUN)) {
             tooltip.add(Component.translatable("jcraft.sunprotection.desc"));
         }
@@ -78,7 +78,7 @@ public class HatItem extends ArmorItem implements GeoItem {
 
             @SuppressWarnings("unchecked")
             @Override
-            public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
+            public @NonNull HumanoidModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
                 if (this.renderer == null) {
                     if (itemStack.is(JItemRegistry.KARS_HEADWRAP.get())) {
                         this.renderer = new KarsArmorRenderer();

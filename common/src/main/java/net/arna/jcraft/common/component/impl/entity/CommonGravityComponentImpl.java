@@ -1,10 +1,15 @@
 package net.arna.jcraft.common.component.impl.entity;
 
+import lombok.NonNull;
 import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.RotationAnimation;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
-import net.arna.jcraft.common.gravity.util.*;
+import net.arna.jcraft.common.gravity.util.EntityTags;
+import net.arna.jcraft.common.gravity.util.Gravity;
+import net.arna.jcraft.common.gravity.util.GravityChannel;
+import net.arna.jcraft.common.gravity.util.NetworkUtil;
+import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -20,11 +25,14 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 public class CommonGravityComponentImpl implements CommonGravityComponent {
     private Direction gravityDirection = Direction.DOWN;
@@ -106,7 +114,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
         return !(entity instanceof Projectile);
     }
 
-    @NotNull
+    @NonNull
     private Vec3 getCentreOfRotation(final Direction oldGravity, final Direction newGravity, final RotationParameters rotationParameters) {
         Vec3 relativeRotationCentre = Vec3.ZERO;
         if (entity instanceof EndCrystal) {
@@ -353,7 +361,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
         }
     }
 
-    public void writeToNbt(final @NotNull CompoundTag nbt) {
+    public void writeToNbt(final @NonNull CompoundTag nbt) {
         int index = 0;
         for (Gravity temp : getGravity()) {
             if (temp.direction() != null && temp.source() != null) {

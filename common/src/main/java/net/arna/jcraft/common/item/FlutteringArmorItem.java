@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.item;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoItem;
 import mod.azure.azurelib.animatable.client.RenderProvider;
 import mod.azure.azurelib.constant.DataTickets;
@@ -24,7 +25,6 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -63,7 +63,7 @@ public class FlutteringArmorItem extends ArmorItem implements GeoItem {
         consumer.accept(new RenderProvider() {
             private GeoArmorRenderer<?> renderer;
             @SuppressWarnings("unchecked")
-            @Override public @NotNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
+            @Override public @NonNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
                     LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
                 if (this.renderer == null) {
                     if (itemStack.is(JItemRegistry.DIO_CAPE.get())) {

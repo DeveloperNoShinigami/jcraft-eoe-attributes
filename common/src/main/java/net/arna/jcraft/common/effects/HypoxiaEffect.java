@@ -1,11 +1,11 @@
 package net.arna.jcraft.common.effects;
 
+import lombok.NonNull;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import org.jetbrains.annotations.NotNull;
 
 public class HypoxiaEffect extends MobEffect {
 
@@ -25,7 +25,7 @@ public class HypoxiaEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(final @NotNull LivingEntity livingEntity, final int amplifier) {
+    public void applyEffectTick(final @NonNull LivingEntity livingEntity, final int amplifier) {
         super.applyEffectTick(livingEntity, amplifier);
         final int airSupply = livingEntity.getAirSupply();
         if (airSupply <= 0) livingEntity.hurt(livingEntity.damageSources().drown(), 2.0F);

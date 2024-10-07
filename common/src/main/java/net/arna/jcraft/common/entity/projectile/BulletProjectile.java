@@ -1,5 +1,10 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
@@ -24,11 +29,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.util.AzureLibUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class BulletProjectile extends AbstractArrow implements GeoEntity {
     private int stunTicks;
@@ -126,7 +126,7 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void setDeltaMovement(@NotNull Vec3 velocity) {
+    public void setDeltaMovement(@NonNull Vec3 velocity) {
         super.setDeltaMovement(velocity);
         hurtMarked = true;
     }
@@ -195,7 +195,7 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag nbt) {
+    public void addAdditionalSaveData(@NonNull CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("StunTicks", stunTicks);
         nbt.putFloat("Mass", mass);
@@ -203,7 +203,7 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag nbt) {
+    public void readAdditionalSaveData(@NonNull CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         stunTicks = nbt.getInt("StunTicks");
         mass = nbt.getFloat("Mass");
@@ -211,7 +211,7 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
+    protected @NonNull ItemStack getPickupItem() {
         //return BulletItem.ofCaliber(getCaliber());
         return ItemStack.EMPTY;
     }

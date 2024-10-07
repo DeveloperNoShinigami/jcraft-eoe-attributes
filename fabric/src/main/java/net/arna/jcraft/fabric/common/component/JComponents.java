@@ -7,6 +7,7 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import dev.onyxstudios.cca.api.v3.world.WorldComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.world.WorldComponentInitializer;
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.fabric.common.component.entity.GrabComponent;
 import net.arna.jcraft.fabric.common.component.entity.GravityComponent;
@@ -16,19 +17,28 @@ import net.arna.jcraft.fabric.common.component.impl.VampireComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.entity.GrabComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.entity.GravityComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.entity.TimeStopComponentImpl;
-import net.arna.jcraft.fabric.common.component.impl.living.*;
+import net.arna.jcraft.fabric.common.component.impl.living.BombTrackerComponentImpl;
+import net.arna.jcraft.fabric.common.component.impl.living.CooldownsComponentImpl;
+import net.arna.jcraft.fabric.common.component.impl.living.HitPropertyComponentImpl;
+import net.arna.jcraft.fabric.common.component.impl.living.MiscComponentImpl;
+import net.arna.jcraft.fabric.common.component.impl.living.StandComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.player.PhComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.player.SpecComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.world.ShockwaveHandlerComponentImpl;
 import net.arna.jcraft.fabric.common.component.impl.world.TexasHoldEmComponentImpl;
-import net.arna.jcraft.fabric.common.component.living.*;
+import net.arna.jcraft.fabric.common.component.living.BombTrackerComponent;
+import net.arna.jcraft.fabric.common.component.living.CooldownsComponent;
+import net.arna.jcraft.fabric.common.component.living.GravityShiftComponent;
+import net.arna.jcraft.fabric.common.component.living.HitPropertyComponent;
+import net.arna.jcraft.fabric.common.component.living.MiscComponent;
+import net.arna.jcraft.fabric.common.component.living.StandComponent;
+import net.arna.jcraft.fabric.common.component.living.VampireComponent;
 import net.arna.jcraft.fabric.common.component.player.PhComponent;
 import net.arna.jcraft.fabric.common.component.player.SpecComponent;
 import net.arna.jcraft.fabric.common.component.world.ShockwaveHandlerComponent;
 import net.arna.jcraft.fabric.common.component.world.TexasHoldEmComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
 
 public class JComponents implements EntityComponentInitializer, WorldComponentInitializer {
 
@@ -107,7 +117,7 @@ public class JComponents implements EntityComponentInitializer, WorldComponentIn
     }
 
     @Override
-    public void registerWorldComponentFactories(@NotNull WorldComponentFactoryRegistry registry) {
+    public void registerWorldComponentFactories(@NonNull WorldComponentFactoryRegistry registry) {
         registry.register(SHOCKWAVE_HANDLER, ShockwaveHandlerComponentImpl::new);
         registry.register(TEXAS_HOLD_EM, TexasHoldEmComponentImpl::new);
     }

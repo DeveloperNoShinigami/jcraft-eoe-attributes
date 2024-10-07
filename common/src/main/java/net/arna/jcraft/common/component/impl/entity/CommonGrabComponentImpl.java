@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.component.impl.entity;
 
 import lombok.Getter;
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.entity.CommonGrabComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -12,7 +13,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
     /**
@@ -106,9 +106,9 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
         verticalOffset = buf.readDouble();
     }
 
-    public void readFromNbt(final @NotNull CompoundTag tag) {
+    public void readFromNbt(final @NonNull CompoundTag tag) {
     }
 
-    public void writeToNbt(final @NotNull CompoundTag tag) {
+    public void writeToNbt(final @NonNull CompoundTag tag) {
     }
 }

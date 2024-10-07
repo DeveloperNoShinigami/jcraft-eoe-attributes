@@ -9,7 +9,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 @Data
@@ -23,7 +22,7 @@ public class SplatterSection {
     private final AABB hitBox;
     private boolean removed;
 
-    public SplatterSection(Level world, Direction direction, @NotNull Vector3f minPos, @NotNull Vector3f maxPos, Vec2 minUv, Vec2 maxUv) {
+    public SplatterSection(Level world, Direction direction, @NonNull Vector3f minPos, @NonNull Vector3f maxPos, Vec2 minUv, Vec2 maxUv) {
         this.world = world;
         this.direction = direction;
         this.minPos = minPos;

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +57,7 @@ public class MoveContext {
     }
 
     @SuppressWarnings("unchecked")
-    @NotNull
+    @NonNull
     private <T> Entry<T> getEntry(final MoveVariable<T> variable) {
         final Entry<?> entry = entries.get(variable);
         if (entry == null) {

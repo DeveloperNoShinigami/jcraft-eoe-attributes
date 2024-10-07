@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.entity.projectile;
 
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -28,7 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -134,12 +134,12 @@ public class BisectProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void onHit(final @NotNull HitResult result) {
+    protected void onHit(final @NonNull HitResult result) {
 
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
+    protected @NonNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 

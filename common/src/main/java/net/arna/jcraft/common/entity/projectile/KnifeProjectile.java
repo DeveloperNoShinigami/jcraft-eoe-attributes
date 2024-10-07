@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -29,7 +30,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class KnifeProjectile extends AbstractArrow implements GeoEntity {
     private static final EntityDataAccessor<Boolean> LIGHTNING;
@@ -71,7 +71,7 @@ public class KnifeProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public @NotNull ItemStack getPickupItem() {
+    public @NonNull ItemStack getPickupItem() {
         return new ItemStack(JItemRegistry.KNIFE.get());
     }
 
@@ -143,12 +143,12 @@ public class KnifeProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void thunderHit(@NotNull ServerLevel world, @NotNull LightningBolt lightning) {
+    public void thunderHit(@NonNull ServerLevel world, @NonNull LightningBolt lightning) {
         this.setLightning(true);
     }
 
     @Override
-    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
+    protected void onHitEntity(@NonNull EntityHitResult entityHitResult) {
         if (level().isClientSide) {
             return;
         }
@@ -184,14 +184,14 @@ public class KnifeProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(@NonNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putShort("life", (short) this.ticksInAir);
         tag.putBoolean("lightning", getLightning());
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(@NonNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksInAir = tag.getShort("life");
         setLightning(tag.getBoolean("lightning"));

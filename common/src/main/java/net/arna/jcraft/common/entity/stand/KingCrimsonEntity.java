@@ -4,11 +4,23 @@ import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.kingcrimson.*;
-import net.arna.jcraft.common.attack.moves.shared.*;
+import net.arna.jcraft.common.attack.moves.kingcrimson.BloodThrowAttack;
+import net.arna.jcraft.common.attack.moves.kingcrimson.EpitaphAttack;
+import net.arna.jcraft.common.attack.moves.kingcrimson.KCDonutAttack;
+import net.arna.jcraft.common.attack.moves.kingcrimson.PredictionMove;
+import net.arna.jcraft.common.attack.moves.kingcrimson.TimeEraseMove;
+import net.arna.jcraft.common.attack.moves.shared.BarrageAttack;
+import net.arna.jcraft.common.attack.moves.shared.EffectInflictingAttack;
+import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
+import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
+import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
+import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
+import net.arna.jcraft.common.attack.moves.shared.TimeSkipMove;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
@@ -38,11 +50,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -361,7 +370,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     }
 
     @Override
-    protected @NotNull AABB makeBoundingBox() {
+    protected @NonNull AABB makeBoundingBox() {
         if (getTETime() > 0) {
             final double x = getX(), y = getY(), z = getZ();
             return new AABB(x, y, z, x, y + 0.1, z);

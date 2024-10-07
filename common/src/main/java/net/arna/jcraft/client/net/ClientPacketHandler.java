@@ -8,6 +8,7 @@ import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.JClientConfig;
@@ -25,7 +26,12 @@ import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.network.s2c.TimeAccelStatePacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.splatter.Splatter;
-import net.arna.jcraft.common.util.*;
+import net.arna.jcraft.common.util.DimensionData;
+import net.arna.jcraft.common.util.IJCraftAnimatedPlayer;
+import net.arna.jcraft.common.util.IJExplosion;
+import net.arna.jcraft.common.util.JExplosionModifier;
+import net.arna.jcraft.common.util.JParticleType;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -46,7 +52,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -56,7 +61,20 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-import static net.arna.jcraft.registry.JPacketRegistry.*;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_COMBO_COUNTER;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_EPITAPH_STATE;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_J_EXPLOSION;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_PLAYER_ANIMATION;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_PREDICTION_UPDATE;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_SERVER_CHANNEL_FEEDBACK;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_SERVER_CONFIG;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_SHADER_ACTIVATION;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_SHADER_DEACTIVATION;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_SPLATTER;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_STAND_HURT;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_TIME_ACCELERATION_STATE;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_TIME_ERASE_PREDICTION_STATE;
+import static net.arna.jcraft.registry.JPacketRegistry.S2C_TIME_STOP;
 
 
 @UtilityClass
@@ -79,7 +97,7 @@ public class ClientPacketHandler {
         register(S2C_PREDICTION_UPDATE, ClientPacketHandler::handlePrediction);
     }
 
-    private static void handlePrediction(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+    private static void handlePrediction(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         final int size = buf.readInt();
         if (size == 0) {
             return;
@@ -99,7 +117,7 @@ public class ClientPacketHandler {
         }
     }
 
-    private static void handleTimeStop(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+    private static void handleTimeStop(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         if (client.level == null || client.player == null) {
             return;
         }
@@ -136,7 +154,7 @@ public class ClientPacketHandler {
         });
     }
 
-    public static void handleAnimation(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+    public static void handleAnimation(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         if (client.level == null || client.player == null) {
             return;
         }
@@ -196,7 +214,7 @@ public class ClientPacketHandler {
         });
     }
 
-    public static void handleChannelFeedback(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+    public static void handleChannelFeedback(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         if (client.level == null || client.player == null) {
             return;
         }
@@ -396,7 +414,7 @@ public class ClientPacketHandler {
         }
     }
 
-    public static void handleShaderActivation(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+    public static void handleShaderActivation(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         final int delay = buf.readInt();
         final int duration = buf.readInt();
         final ShaderActivationPacket.Type type = ShaderActivationPacket.Type.byName(buf.readUtf());
@@ -436,7 +454,7 @@ public class ClientPacketHandler {
         }
     }
 
-    public static void handleShaderDeactivation(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+    public static void handleShaderDeactivation(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         final ShaderActivationPacket.Type type = ShaderActivationPacket.Type.byName(buf.readUtf());
         final Level world = client.level;
         if (world != null) {
@@ -461,7 +479,7 @@ public class ClientPacketHandler {
         }
     }
 
-    public static void handleTimeAccelState(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+    public static void handleTimeAccelState(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         final TimeAccelStatePacket.State state = TimeAccelStatePacket.State.values()[buf.readVarInt()];
         final Entity e = client.level == null ? null : client.level.getEntity(buf.readVarInt());
 
@@ -476,7 +494,7 @@ public class ClientPacketHandler {
         }
     }
 
-    public static void handleEpitaphOverlayState(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+    public static void handleEpitaphOverlayState(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         final boolean start = buf.readBoolean();
         client.execute(() -> {
             if (start) {
@@ -487,7 +505,7 @@ public class ClientPacketHandler {
         });
     }
 
-    public static void handlePredictionState(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+    public static void handlePredictionState(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         final boolean start = buf.readBoolean();
         final int length = start ? buf.readVarInt() : 0;
 
@@ -500,7 +518,7 @@ public class ClientPacketHandler {
         });
     }
 
-    public static void handleServerConfig(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+    public static void handleServerConfig(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         final boolean editable = buf.readBoolean();
         final boolean show = buf.readBoolean();
 
@@ -511,7 +529,7 @@ public class ClientPacketHandler {
         }
     }
 
-    private static void handleJExplosion(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+    private static void handleJExplosion(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         final ClientboundExplodePacket nativePacket = new ClientboundExplodePacket(buf);
         final JExplosionModifier modifier = buf.readBoolean() ? JExplosionModifier.read(buf) : null;
 
@@ -525,7 +543,7 @@ public class ClientPacketHandler {
         });
     }
 
-    private static void handleComboCounter(final @NotNull Minecraft minecraftClient, final FriendlyByteBuf buf) {
+    private static void handleComboCounter(final @NonNull Minecraft minecraftClient, final FriendlyByteBuf buf) {
         JCraftClient.comboCounter = buf.readInt();
         if (JCraftClient.comboCounter == 1) {
             JCraftClient.markComboStarted();

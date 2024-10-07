@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.entity.projectile;
 
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
@@ -25,7 +26,10 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -37,7 +41,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -204,7 +207,7 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    public void push(final @NotNull Entity entity) { }
+    public void push(final @NonNull Entity entity) { }
 
     @Override
     public boolean hurt(final DamageSource source, final float amount) {
@@ -216,7 +219,7 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(final @NotNull DamageSource source) {
+    protected SoundEvent getHurtSound(final @NonNull DamageSource source) {
         return SoundEvents.STONE_STEP;
     }
 
@@ -227,7 +230,7 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    protected @NotNull AABB makeBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
+    protected @NonNull AABB makeBoundingBox() { // Centered around 0,0,0 instead of 0,0.5,0
         double x = getX();
         double y = getY();
         double z = getZ();
@@ -236,24 +239,24 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(final @NotNull CompoundTag tag) {
+    public void addAdditionalSaveData(final @NonNull CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         writeMasterNbt(tag);
     }
 
     @Override
-    public void readAdditionalSaveData(final @NotNull CompoundTag tag) {
+    public void readAdditionalSaveData(final @NonNull CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         readMasterNbt(tag);
     }
 
-    private @NotNull ItemStack item = ItemStack.EMPTY;
+    private @NonNull ItemStack item = ItemStack.EMPTY;
     @Override
-    public void setItemSlot(final @NotNull EquipmentSlot slot, final @NotNull ItemStack stack) {
+    public void setItemSlot(final @NonNull EquipmentSlot slot, final @NonNull ItemStack stack) {
         item = stack;
     }
     @Override
-    public @NotNull ItemStack getItemBySlot(final @NotNull EquipmentSlot slot) {
+    public @NonNull ItemStack getItemBySlot(final @NonNull EquipmentSlot slot) {
         return item;
     }
 

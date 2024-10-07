@@ -10,7 +10,13 @@ import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.*;
+import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.CloneSpawnMove;
+import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.D4CCounterAttack;
+import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.D4CGrabAttack;
+import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.DimensionalHopMove;
+import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.FlagMove;
+import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.GiveGunMove;
+import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.ItemPlaceMove;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
@@ -27,7 +33,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.function.Consumer;
@@ -223,7 +228,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     }
 
     @Override
-    protected @NotNull AABB makeBoundingBox() {
+    protected @NonNull AABB makeBoundingBox() {
         if (getState() == State.FLAG) {
             final double x = getX(), y = getY(), z = getZ();
             return new AABB(x + 0.5, y + 0.5, z + 0.5, x - 0.5, y, z - 0.5);

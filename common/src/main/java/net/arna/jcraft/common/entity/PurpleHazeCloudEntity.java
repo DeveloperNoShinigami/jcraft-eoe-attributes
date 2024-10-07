@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity;
 
+import lombok.NonNull;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity.PoisonType;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
@@ -17,7 +18,6 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Stack;
 
@@ -148,7 +148,7 @@ public class PurpleHazeCloudEntity extends Entity {
     }
 
     @Override
-    public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> data) {
+    public void onSyncedDataUpdated(@NonNull EntityDataAccessor<?> data) {
         if (RADIUS.equals(data)) {
             this.refreshDimensions();
         }
@@ -157,7 +157,7 @@ public class PurpleHazeCloudEntity extends Entity {
     }
 
     @Override
-    protected @NotNull AABB makeBoundingBox() {
+    protected @NonNull AABB makeBoundingBox() {
         final float radius = getRadius();
         final double x = getX(), y = getY(), z = getZ();
         return new AABB(

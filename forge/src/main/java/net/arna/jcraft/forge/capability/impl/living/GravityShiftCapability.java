@@ -2,6 +2,7 @@ package net.arna.jcraft.forge.capability.impl.living;
 
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
+import lombok.NonNull;
 import net.arna.jcraft.common.component.impl.CommonGravityShiftComponentImpl;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.forge.capability.api.JCapability;
@@ -16,7 +17,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.NotNull;
 
 import static net.arna.jcraft.JCraft.MOD_ID;
 
@@ -58,7 +58,7 @@ public class GravityShiftCapability extends CommonGravityShiftComponentImpl impl
         super.readFromNbt(tag);
     }
 
-    public static @NotNull LazyOptional<GravityShiftCapability> getCapabilityOptional(LivingEntity user) {
+    public static @NonNull LazyOptional<GravityShiftCapability> getCapabilityOptional(LivingEntity user) {
         return user.getCapability(CAPABILITY);
     }
     public static GravityShiftCapability getCapability(LivingEntity user) {

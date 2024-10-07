@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.minigame;
 
+import lombok.NonNull;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +17,7 @@ public final class ImmutableWager extends AbstractWager {
     /**
      * Creates an immutable copy of the given wager.
      */
-    public ImmutableWager(@NotNull final AbstractWager wager) {
+    public ImmutableWager(@NonNull final AbstractWager wager) {
         for (final ItemStack stack : wager.items) {
             items.add(stack.copy());
         }
@@ -26,7 +26,7 @@ public final class ImmutableWager extends AbstractWager {
     /**
      * Returns an immutable view of the item stacks wagered.
      */
-    public @NotNull List<ItemStack> getItemWager() {
+    public @NonNull List<ItemStack> getItemWager() {
         return Collections.unmodifiableList(items);
     }
 

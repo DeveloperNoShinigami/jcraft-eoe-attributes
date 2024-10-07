@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.item;
 
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -11,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ public abstract class StandObtainmentItem extends Item {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level world, Player user, @NotNull InteractionHand hand) {
+    public @NonNull InteractionResultHolder<ItemStack> use(Level world, Player user, @NonNull InteractionHand hand) {
         ItemStack itemStack = user.getItemInHand(hand);
         if (world.isClientSide) {
             return InteractionResultHolder.consume(itemStack);

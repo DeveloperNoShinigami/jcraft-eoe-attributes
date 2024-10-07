@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.item;
 
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -19,7 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class StandDiscItem extends Item {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level world, Player user, @NotNull InteractionHand hand) {
+    public @NonNull InteractionResultHolder<ItemStack> use(Level world, Player user, @NonNull InteractionHand hand) {
         final ItemStack itemStack = user.getItemInHand(hand);
         if (world.isClientSide) {
             return InteractionResultHolder.pass(itemStack);

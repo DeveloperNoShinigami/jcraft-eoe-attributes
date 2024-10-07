@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import lombok.NonNull;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -29,7 +30,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -81,17 +81,17 @@ public class SunBeamProjectile extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected @NotNull ItemStack getPickupItem() {
+    protected @NonNull ItemStack getPickupItem() {
         return ItemStack.EMPTY;
     }
 
     // Light isn't very heavy
     @Override
-    public void push(@NotNull Entity entity) {
+    public void push(@NonNull Entity entity) {
     }
 
     @Override
-    public boolean canCollideWith(@NotNull Entity other) {
+    public boolean canCollideWith(@NonNull Entity other) {
         return false;
     }
 

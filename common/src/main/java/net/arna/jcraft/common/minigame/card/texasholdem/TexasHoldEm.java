@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.minigame.card.texasholdem;
 
+import lombok.NonNull;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -7,7 +8,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityLookup;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +31,7 @@ public final class TexasHoldEm {
     /**
      * @throws IllegalArgumentException If there are less than 2 or more than 22 players.
      */
-    public TexasHoldEm(@NotNull final Set<LivingEntity> players) {
+    public TexasHoldEm(@NonNull final Set<LivingEntity> players) {
         this.players = new HashSet<>(players);
         this.engine = new Engine(players.size()); // throws IAE
         // sanity check
@@ -51,7 +51,7 @@ public final class TexasHoldEm {
         return playersUuid;
     }
 
-    public boolean reloadPlayers(@NotNull final Level world) {
+    public boolean reloadPlayers(@NonNull final Level world) {
         if (!players.isEmpty()) {
             return false; // means they are already loaded in
         }
