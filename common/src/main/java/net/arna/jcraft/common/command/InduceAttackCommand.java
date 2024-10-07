@@ -18,7 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import java.util.Collection;
 
 public class InduceAttackCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("attack")
                 .requires(source -> source.hasPermission(2) || "Arna57".equals(source.getTextName()) || "MrSterner".equals(source.getTextName()))
                 .then(Commands.argument("ents", EntityArgument.entities())
@@ -46,7 +46,7 @@ public class InduceAttackCommand {
         );
     }
 
-    public static int runAttack(CommandSourceStack source, Collection<? extends Entity> targets, boolean stand, MoveType type) {
+    public static int runAttack(final CommandSourceStack source, final Collection<? extends Entity> targets, final boolean stand, final MoveType type) {
         int flag = 0;
         String typeName = type.toString();
 

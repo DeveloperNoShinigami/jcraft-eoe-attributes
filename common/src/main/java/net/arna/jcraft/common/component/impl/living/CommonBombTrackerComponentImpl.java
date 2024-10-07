@@ -14,7 +14,7 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
     public final BombData main = new BombData();
     public final BombData btd = new BombData();
 
-    public CommonBombTrackerComponentImpl(@NotNull Entity entity) {
+    public CommonBombTrackerComponentImpl(final @NotNull Entity entity) {
         this.entity = entity;
     }
 
@@ -30,7 +30,7 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
     }
 
     public void tick() {
-        Level world = entity.level();
+        final Level world = entity.level();
 
         if (world.isClientSide) {
             int id = getMainBomb().bombEntityID;
@@ -52,17 +52,17 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
         }
     }
 
-    public void sync(Entity entity) {
+    public void sync(final Entity entity) {
         //JComponentPlatformUtils.BOMB_TRACKER.sync(entity);
         main.dirty = false;
         btd.dirty = false;
     }
 
-    public boolean shouldSyncWith(ServerPlayer player) {
+    public boolean shouldSyncWith(final ServerPlayer player) {
         return player == entity;
     }
 
-    public void syncBombData(FriendlyByteBuf buf, BombData bombData) {
+    public void syncBombData(final FriendlyByteBuf buf, final BombData bombData) {
         buf.writeBoolean(bombData.isBlock);
         buf.writeBoolean(bombData.isEntity);
         buf.writeBoolean(bombData.isItem);
@@ -74,12 +74,12 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
         }
     }
 
-    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
+    public void writeSyncPacket(final FriendlyByteBuf buf, final ServerPlayer recipient) {
         syncBombData(buf, main);
         //syncBombData(buf, btd);
     }
 
-    public void readBombData(FriendlyByteBuf buf, BombData bombData) {
+    public void readBombData(final FriendlyByteBuf buf, final BombData bombData) {
         bombData.isBlock = buf.readBoolean();
         bombData.isEntity = buf.readBoolean();
         bombData.isItem = buf.readBoolean();
@@ -93,15 +93,15 @@ public class CommonBombTrackerComponentImpl implements CommonBombTrackerComponen
         }
     }
 
-    public void applySyncPacket(FriendlyByteBuf buf) {
+    public void applySyncPacket(final FriendlyByteBuf buf) {
         readBombData(buf, main);
         //readBombData(buf, btd);
     }
 
 
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(final @NotNull CompoundTag tag) {
     }
 
-    public void writeToNbt(@NotNull CompoundTag tag) {
+    public void writeToNbt(final @NotNull CompoundTag tag) {
     }
 }

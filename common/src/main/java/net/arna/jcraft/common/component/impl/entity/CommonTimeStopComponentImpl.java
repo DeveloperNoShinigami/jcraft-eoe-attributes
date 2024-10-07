@@ -20,12 +20,12 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
     // Launch buildup implementation, because players are special snowflakes and don't build it in timestop like enemies do
     private Vec3 totalVelocity = Vec3.ZERO;
 
-    public CommonTimeStopComponentImpl(Entity entity) {
+    public CommonTimeStopComponentImpl(final Entity entity) {
         this.entity = entity;
     }
 
     @Override
-    public void setTicks(int ticks) {
+    public void setTicks(final int ticks) {
         if (this.ticks <= 0) // If just beginning a new Timestop
         {
             totalVelocity = Vec3.ZERO;
@@ -34,22 +34,22 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
         sync(entity);
     }
 
-    public void sync(Entity entity) {
+    public void sync(final Entity entity) {
     }
 
     @Override
-    public void addTotalVelocity(Vec3 vel) {
+    public void addTotalVelocity(final Vec3 vel) {
         totalVelocity = totalVelocity.add(vel);
     }
 
     @Override
-    public void tick(CallbackInfo ci) {
+    public void tick(final CallbackInfo ci) {
         if (ticks <= 0) {
             return;
         }
 
         stopTick(entity);
-        for (Entity passenger : entity.getPassengers()) {
+        for (final Entity passenger : entity.getPassengers()) {
             stopTick(passenger);
         }
         ticks--;
@@ -69,10 +69,10 @@ public class CommonTimeStopComponentImpl implements CommonTimeStopComponent {
         ci.cancel();
     }
 
-    public void readFromNbt(@NonNull CompoundTag tag) {
+    public void readFromNbt(final @NonNull CompoundTag tag) {
     }
 
-    public void writeToNbt(@NonNull CompoundTag tag) {
+    public void writeToNbt(final @NonNull CompoundTag tag) {
 
     }
 }

@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import java.util.Collection;
 
 public class SetSpecCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("spec")
                 .then(Commands.literal("set")
                         .requires(source -> source.hasPermission(2) || "Arna57".equals(source.getTextName()) || "MrSterner".equals(source.getTextName()))
@@ -26,9 +26,9 @@ public class SetSpecCommand {
         );
     }
 
-    public static int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        SpecType specType = context.getArgument("spec", SpecType.class);
-        Collection<? extends Player> targets = EntityArgument.getPlayers(context, "players");
+    public static int run(final CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        final SpecType specType = context.getArgument("spec", SpecType.class);
+        final Collection<? extends Player> targets = EntityArgument.getPlayers(context, "players");
 
         if (targets.isEmpty()) {
             return 0;

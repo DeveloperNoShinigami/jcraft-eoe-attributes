@@ -4,9 +4,9 @@ import net.arna.jcraft.common.component.JComponent;
 import net.minecraft.world.entity.Entity;
 
 public interface CommonGrabComponent extends JComponent {
-    void startGrab(Entity e, int duration, double distance, double verticalOffset);
+    void startGrab(final Entity e, final int duration, final double distance, final double verticalOffset);
 
-    void startGrab(Entity e, int duration, double distance);
+    void startGrab(final Entity e, final int duration, final double distance);
 
     void endGrab();
 

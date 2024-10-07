@@ -35,13 +35,13 @@ public class CoffinBlock extends BedBlock {
     protected static final VoxelShape WEST_SHAPE;
     protected static final VoxelShape EAST_SHAPE;
 
-    public CoffinBlock(Properties settings) {
+    public CoffinBlock(final Properties settings) {
         super(DyeColor.RED, settings);
     }
 
     @NotNull
     @Override
-    public InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, final Level world, @NotNull BlockPos pos, final @NotNull Player player, final @NotNull InteractionHand hand, final @NotNull BlockHitResult hit) {
         if (world.isClientSide) {
             return InteractionResult.CONSUME;
         }
@@ -53,7 +53,7 @@ public class CoffinBlock extends BedBlock {
             }
         }
 
-        Direction facing = state.getValue(FACING);
+        final Direction facing = state.getValue(FACING);
 
         if (!canSetSpawn(world)) {
             world.removeBlock(pos, false);

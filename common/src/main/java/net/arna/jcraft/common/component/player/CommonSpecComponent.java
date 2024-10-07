@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public interface CommonSpecComponent extends JComponent {
     SpecType getType();
 
-    void setType(@NonNull SpecType type);
+    void setType(final @NonNull SpecType type);
 
     @Nullable
     JSpec<?, ?> getSpec();

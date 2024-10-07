@@ -3,6 +3,7 @@ package net.arna.jcraft.common.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import lombok.Getter;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
 import net.arna.jcraft.common.gravity.util.Gravity;
@@ -19,7 +20,7 @@ import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
 
 public class GravityCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> literalSet = literal("add");
         for (Direction direction : Direction.values()) {
             literalSet.then(
@@ -63,7 +64,7 @@ public class GravityCommand {
                                 .executes(context -> executeRandomise(context.getSource(), EntityArgument.getEntities(context, "entities"))))));
     }
 
-    private static void getSendFeedback(CommandSourceStack source, Entity entity, Direction gravityDirection) {
+    private static void getSendFeedback(final CommandSourceStack source, final Entity entity, final Direction gravityDirection) {
         Component text = Component.translatable("direction." + gravityDirection.getName());
         if (source.getEntity() != null && source.getEntity() == entity) {
             source.sendSuccess(() -> Component.translatable("commands.gravity.get.self", text), true);
@@ -72,13 +73,13 @@ public class GravityCommand {
         }
     }
 
-    private static int executeGet(CommandSourceStack source, Entity entity) {
+    private static int executeGet(final CommandSourceStack source, final Entity entity) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         getSendFeedback(source, entity, gravityDirection);
         return gravityDirection.get3DDataValue();
     }
 
-    private static int executeSet(CommandSourceStack source, Direction gravityDirection, int priority, int duration, Collection<? extends Entity> entities) {
+    private static int executeSet(final CommandSourceStack source, final Direction gravityDirection, final int priority, final int duration, final Collection<? extends Entity> entities) {
         int i = 0;
         for (Entity entity : entities) {
             //if (GravityChangerAPI.getGravityDirection(entity) != gravityDirection) {
@@ -90,7 +91,7 @@ public class GravityCommand {
         return i;
     }
 
-    private static int executeSetDefault(CommandSourceStack source, Direction gravityDirection, Collection<? extends Entity> entities) {
+    private static int executeSetDefault(final CommandSourceStack source, final Direction gravityDirection, final Collection<? extends Entity> entities) {
         int i = 0;
         for (Entity entity : entities) {
             if (GravityChangerAPI.getDefaultGravityDirection(entity) != gravityDirection) {
@@ -103,7 +104,7 @@ public class GravityCommand {
         return i;
     }
 
-    private static int executeRotate(CommandSourceStack source, FacingDirection relativeDirection, Collection<? extends Entity> entities) {
+    private static int executeRotate(final CommandSourceStack source, final FacingDirection relativeDirection, final Collection<? extends Entity> entities) {
         int i = 0;
         for (Entity entity : entities) {
             Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
@@ -122,7 +123,7 @@ public class GravityCommand {
         return i;
     }
 
-    private static int executeRandomise(CommandSourceStack source, Collection<? extends Entity> entities) {
+    private static int executeRandomise(final CommandSourceStack source, final Collection<? extends Entity> entities) {
         int i = 0;
         for (Entity entity : entities) {
             Direction gravityDirection = Direction.getRandom(source.getLevel().random);
@@ -136,7 +137,7 @@ public class GravityCommand {
         return i;
     }
 
-    private static int executeClearGravity(CommandSourceStack source, Collection<? extends Entity> entities) {
+    private static int executeClearGravity(final CommandSourceStack source, final Collection<? extends Entity> entities) {
         int i = 0;
         for (Entity entity : entities) {
             GravityChangerAPI.clearGravity(entity, new RotationParameters());
@@ -145,6 +146,7 @@ public class GravityCommand {
         return i;
     }
 
+    @Getter
     public enum FacingDirection {
         DOWN(-1, "down"),
         UP(-1, "up"),
@@ -156,17 +158,10 @@ public class GravityCommand {
         private final int horizontalOffset;
         private final String name;
 
-        FacingDirection(int horizontalOffset, String name) {
+        FacingDirection(final int horizontalOffset, final String name) {
             this.horizontalOffset = horizontalOffset;
             this.name = name;
         }
 
-        public int getHorizontalOffset() {
-            return this.horizontalOffset;
-        }
-
-        public String getName() {
-            return this.name;
-        }
     }
 }

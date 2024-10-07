@@ -20,13 +20,13 @@ import static net.arna.jcraft.common.command.AboutStandCommand.appendMove;
 public class AboutSpecCommand {
     private static final Component newLine = Component.literal("\n");
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("spec")
                 .then(Commands.literal("about")
                         .executes(AboutSpecCommand::run)));
     }
 
-    public static int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public static int run(final CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
 
         JSpec<?, ?> spec = JUtils.getSpec(player);

@@ -18,12 +18,12 @@ import net.minecraft.server.level.ServerPlayer;
 //todo: replace with a Patchouli in-game wikipedia
 @Deprecated(forRemoval = true)
 public class AboutStandCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("stand")
                 .then(Commands.literal("about").executes(AboutStandCommand::run)));
     }
 
-    public static int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public static int run(final CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerPlayer player = context.getSource().getPlayerOrException();
         StandEntity<?, ?> stand = JUtils.getStand(player);
 

@@ -19,22 +19,22 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
     private final List<Shockwave> shockwaves = new ArrayList<>();
     protected final Level world;
 
-    public CommonShockwaveHandlerComponentImpl(Level world) {
+    public CommonShockwaveHandlerComponentImpl(final Level world) {
         this.world = world;
     }
 
     @Override
-    public void addShockwave(double x, double y, double z, float pitch, float yaw, float scale) {
+    public void addShockwave(final double x, final double y, final double z, final float pitch, final float yaw, final float scale) {
         Shockwave shockwave = new Shockwave(x, y, z, pitch, yaw, scale);
         shockwaves.add(shockwave);
         sync(shockwave);
     }
 
-    public void sync(Shockwave shockwave) {
+    public void sync(final Shockwave shockwave) {
         // JComponentPlatformUtils.SHOCKWAVE_HANDLER.sync(world, (buf, player) -> writeSyncPacket(buf, shockwave));
     }
 
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(final @NotNull CompoundTag tag) {
         for (Tag element : tag.getList("shockwaves", Tag.TAG_COMPOUND)) {
             CompoundTag compound = (CompoundTag) element;
             shockwaves.add(new Shockwave(
@@ -49,7 +49,7 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
         }
     }
 
-    public void writeToNbt(@NotNull CompoundTag tag) {
+    public void writeToNbt(final @NotNull CompoundTag tag) {
         ListTag list = new ListTag();
         for (Shockwave shockwave : shockwaves) {
             CompoundTag compound = new CompoundTag();
@@ -65,11 +65,11 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
         tag.put("shockwaves", list);
     }
 
-    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
+    public void writeSyncPacket(final FriendlyByteBuf buf, final ServerPlayer recipient) {
         writeSyncPacket(buf, (Shockwave) null);
     }
 
-    public void writeSyncPacket(FriendlyByteBuf buf, @Nullable Shockwave shockwave) {
+    public void writeSyncPacket(final FriendlyByteBuf buf, final @Nullable Shockwave shockwave) {
         List<Shockwave> shockwaves = shockwave == null ? this.shockwaves : List.of(shockwave);
 
         buf.writeInt(shockwaves.size());

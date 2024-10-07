@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 public interface JComponent {
-    void readFromNbt(@NotNull CompoundTag tag);
+    void readFromNbt(final @NotNull CompoundTag tag);
 
-    void writeToNbt(@NotNull CompoundTag tag);
+    void writeToNbt(final @NotNull CompoundTag tag);
 }

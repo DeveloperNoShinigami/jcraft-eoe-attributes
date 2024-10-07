@@ -7,9 +7,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public interface CommonTimeStopComponent extends JComponent {
     int getTicks();
 
-    void setTicks(int ticks);
+    void setTicks(final int ticks);
 
-    void addTotalVelocity(Vec3 vel);
+    void addTotalVelocity(final Vec3 vel);
 
-    void tick(CallbackInfo ci);
+    void tick(final CallbackInfo ci);
 }

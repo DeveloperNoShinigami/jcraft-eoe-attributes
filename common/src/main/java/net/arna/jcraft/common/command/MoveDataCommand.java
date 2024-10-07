@@ -17,7 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 public class MoveDataCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("movedata")
                 .then(Commands.literal("stand")
                         .executes(
@@ -32,7 +32,7 @@ public class MoveDataCommand {
         );
     }
 
-    public static int run(CommandSourceStack source, boolean stand) {
+    public static int run(final CommandSourceStack source, boolean stand) {
         Player player = source.getPlayer();
         if (player == null) {
             return 0;

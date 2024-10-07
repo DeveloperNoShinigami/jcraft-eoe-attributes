@@ -20,7 +20,7 @@ public abstract class ConfigOption {
     @Getter
     private final String category;
 
-    protected ConfigOption(Type type, String key, String category) {
+    protected ConfigOption(final Type type, final String key, final String category) {
         this.type = type;
         this.key = key;
         this.category = category;
@@ -31,7 +31,7 @@ public abstract class ConfigOption {
     }
 
     @NonNull
-    public static FriendlyByteBuf writeOptions(@NonNull FriendlyByteBuf buf, Collection<ConfigOption> options) {
+    public static FriendlyByteBuf writeOptions(final @NonNull FriendlyByteBuf buf, final Collection<ConfigOption> options) {
         for (ConfigOption option : options) {
             buf.writeUtf(option.getKey());
             option.write(buf);
@@ -41,7 +41,7 @@ public abstract class ConfigOption {
     }
 
     @NonNull
-    public static Set<ConfigOption> readOptions(FriendlyByteBuf buf) {
+    public static Set<ConfigOption> readOptions(final FriendlyByteBuf buf) {
         Set<ConfigOption> changedOptions = new HashSet<>();
         while (buf.readableBytes() > 0) {
             String key = buf.readUtf();
@@ -60,13 +60,13 @@ public abstract class ConfigOption {
         return changedOptions;
     }
 
-    public abstract void write(FriendlyByteBuf buf);
+    public abstract void write(final FriendlyByteBuf buf);
 
-    public abstract void read(FriendlyByteBuf buf);
+    public abstract void read(final FriendlyByteBuf buf);
 
     public abstract JsonElement write();
 
-    public abstract void read(JsonElement element);
+    public abstract void read(final JsonElement element);
 
     public enum Type {
         INTEGER, FLOAT, BOOLEAN, ENUM

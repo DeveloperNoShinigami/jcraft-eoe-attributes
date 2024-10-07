@@ -10,7 +10,7 @@ public interface CommonCooldownsComponent extends JComponent {
      * @param type The type to check for
      * @return the current cooldown in ticks for the given type
      */
-    int getCooldown(CooldownType type);
+    int getCooldown(final CooldownType type);
 
     /**
      * Returns the initial duration for the given type.
@@ -19,7 +19,7 @@ public interface CommonCooldownsComponent extends JComponent {
      * @param type The type to get the initial duration for.
      * @return The initial duration for the given type.
      */
-    int getInitialDuration(CooldownType type);
+    int getInitialDuration(final CooldownType type);
 
     /**
      * Sets the cooldown for the given type.
@@ -27,9 +27,9 @@ public interface CommonCooldownsComponent extends JComponent {
      * @param type     The type to set a cooldown for
      * @param duration The duration of the cooldown
      */
-    void setCooldown(CooldownType type, int duration);
+    void setCooldown(final CooldownType type,final  int duration);
 
-    default void startCooldown(CooldownType type) {
+    default void startCooldown(final CooldownType type) {
         if (type.getDuration() < 0) {
             throw new IllegalArgumentException("Given type has no default duration. " +
                     "Please use #setCooldown(CooldownType, int)");
@@ -47,7 +47,7 @@ public interface CommonCooldownsComponent extends JComponent {
      *
      * @param type The type to remove
      */
-    void clear(CooldownType type);
+    void clear(final CooldownType type);
 
     /**
      * Simply clears all cooldowns.

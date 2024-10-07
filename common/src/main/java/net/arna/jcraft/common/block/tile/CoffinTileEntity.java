@@ -18,17 +18,17 @@ import mod.azure.azurelib.util.AzureLibUtil;
 public class CoffinTileEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
-    public CoffinTileEntity(BlockPos pos, BlockState state) {
+    public CoffinTileEntity(final BlockPos pos, final BlockState state) {
         super(JBlockEntityTypeRegistry.COFFIN_TILE.get(), pos, state);
     }
 
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+    public void registerControllers(final AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 30, this::predicate));
     }
 
-    private PlayState predicate(AnimationState<?> animationState) {
+    private PlayState predicate(final AnimationState<?> animationState) {
         if (level == null || !level.getBlockState(getBlockPos()).is(JBlockRegistry.COFFIN_BLOCK.get())) {
             return PlayState.STOP;
         }

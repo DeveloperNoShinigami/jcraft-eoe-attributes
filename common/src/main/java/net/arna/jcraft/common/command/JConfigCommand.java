@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class JConfigCommand {
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("jconfig")
                 .executes(ctx -> {
                     ServerPlayer player = ctx.getSource().getPlayerOrException();

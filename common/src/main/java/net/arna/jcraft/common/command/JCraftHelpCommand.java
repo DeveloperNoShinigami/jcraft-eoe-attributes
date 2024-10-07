@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 
 public class JCraftHelpCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("jcraft")
                 .then(Commands.literal("help")
                         .executes(JCraftHelpCommand::run)
@@ -24,7 +24,7 @@ public class JCraftHelpCommand {
             .withUnderlined(true)
             .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://trello.com/b/B5Q7ZthB/jcraft-eyes-of-ender-community-trello"));
 
-    public static int run(CommandContext<CommandSourceStack> ctx) {
+    public static int run(final CommandContext<CommandSourceStack> ctx) {
         ServerPlayer serverPlayer = ctx.getSource().getPlayer();
         if (serverPlayer == null) return 0;
         serverPlayer.displayClientMessage(

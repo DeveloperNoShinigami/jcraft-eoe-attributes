@@ -9,18 +9,18 @@ public interface CommonStandComponent extends JComponent {
     @Nullable
     StandType getType();
 
-    default void setType(@Nullable StandType type) {
+    default void setType(final @Nullable StandType type) {
         setTypeAndSkin(type, 0);
     }
 
-    void setTypeAndSkin(@Nullable StandType type, int skin);
+    void setTypeAndSkin(final @Nullable StandType type, final int skin);
 
     int getSkin();
 
-    void setSkin(int skin);
+    void setSkin(final int skin);
 
     @Nullable
     StandEntity<?, ?> getStand();
 
-    void setStand(@Nullable StandEntity<?, ?> stand);
+    void setStand(final @Nullable StandEntity<?, ?> stand);
 }

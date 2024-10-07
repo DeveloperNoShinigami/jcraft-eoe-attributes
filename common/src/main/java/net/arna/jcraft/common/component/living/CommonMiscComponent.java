@@ -10,7 +10,7 @@ public interface CommonMiscComponent extends JComponent {
     // General
     Vec3 getDesiredVelocity();
 
-    void updateRemoteInputs(int forward, int sideways, boolean jumping);
+    void updateRemoteInputs(final int forward, final int sideways, final boolean jumping);
 
     void startDamageTimer();
 
@@ -19,7 +19,7 @@ public interface CommonMiscComponent extends JComponent {
     // TheWorldOverHeavenEntity
     UUID getSlavedTo();
 
-    void setSlavedTo(UUID uuid);
+    void setSlavedTo(final UUID uuid);
 
     LivingEntity getMaster();
 
@@ -31,11 +31,11 @@ public interface CommonMiscComponent extends JComponent {
     // WeightlessStatusEffect
     int getHoverTime();
 
-    void setHoverTime(int hoverTime);
+    void setHoverTime(final int hoverTime);
 
     boolean getPrevNoGrav();
 
-    void setPrevNoGrav(boolean noGrav);
+    void setPrevNoGrav(final boolean noGrav);
 
     // Armored Hits
     int getArmoredHitTicks();
@@ -45,9 +45,9 @@ public interface CommonMiscComponent extends JComponent {
     // AnubisSpec
     float getAttackSpeedMult();
 
-    void setAttackSpeedMult(float speedMult);
+    void setAttackSpeedMult(final float speedMult);
 
     // MetallicaEntity
     float getMetallicaIron();
-    void setMetallicaIron(float iron);
+    void setMetallicaIron(final float iron);
 }

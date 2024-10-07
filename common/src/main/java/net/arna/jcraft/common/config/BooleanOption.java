@@ -10,7 +10,7 @@ public class BooleanOption extends ConfigOption {
     private boolean value;
     private final boolean defaultValue;
 
-    protected BooleanOption(String key, String category, boolean value) {
+    protected BooleanOption(final String key, final String category, final boolean value) {
         super(Type.BOOLEAN, key, category);
         this.value = this.defaultValue = value;
     }
@@ -25,12 +25,12 @@ public class BooleanOption extends ConfigOption {
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
+    public void write(final FriendlyByteBuf buf) {
         buf.writeBoolean(value);
     }
 
     @Override
-    public void read(FriendlyByteBuf buf) {
+    public void read(final FriendlyByteBuf buf) {
         value = buf.readBoolean();
     }
 
@@ -40,7 +40,7 @@ public class BooleanOption extends ConfigOption {
     }
 
     @Override
-    public void read(JsonElement element) {
+    public void read(final JsonElement element) {
         value = element.getAsBoolean();
     }
 }

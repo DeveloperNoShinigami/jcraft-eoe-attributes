@@ -12,27 +12,27 @@ public class EnumOption<E extends Enum<?>> extends ConfigOption {
     private E value;
     private final E defaultValue;
 
-    public EnumOption(String key, String category, Class<E> clazz, E value) {
+    public EnumOption(final String key, final String category, final Class<E> clazz, final E value) {
         super(Type.ENUM, key, category);
         this.clazz = clazz;
         this.value = this.defaultValue = value;
     }
 
-    public void setValue(int ordinal) {
+    public void setValue(final int ordinal) {
         setValue(clazz.getEnumConstants()[ordinal]);
     }
 
-    public void setValue(E value) {
+    public void setValue(final E value) {
         this.value = value;
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
+    public void write(final FriendlyByteBuf buf) {
         buf.writeVarInt(value.ordinal());
     }
 
     @Override
-    public void read(FriendlyByteBuf buf) {
+    public void read(final FriendlyByteBuf buf) {
         setValue(buf.readVarInt());
     }
 
@@ -42,7 +42,7 @@ public class EnumOption<E extends Enum<?>> extends ConfigOption {
     }
 
     @Override
-    public void read(JsonElement element) {
+    public void read(final JsonElement element) {
         String name = element.getAsString();
         value = Arrays.stream(clazz.getEnumConstants())
                 .filter(e -> e.name().equals(name))

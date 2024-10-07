@@ -10,13 +10,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SoulBlock extends Block {
-    public SoulBlock(Properties settings) {
+    public SoulBlock(final Properties settings) {
         super(settings);
     }
 
     @Override
-    public void stepOn(Level world, BlockPos pos, BlockState state, Entity entity) {
-        if (!entity.isCurrentlyGlowing() && entity instanceof LivingEntity livingEntity) {
+    public void stepOn(final Level world, final BlockPos pos, final BlockState state, final Entity entity) {
+        if (!entity.isCurrentlyGlowing() && entity instanceof final LivingEntity livingEntity) {
             livingEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 80, 0));
         }
         super.stepOn(world, pos, state, entity);

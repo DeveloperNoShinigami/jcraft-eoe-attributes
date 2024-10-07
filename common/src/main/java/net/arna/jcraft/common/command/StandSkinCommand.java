@@ -18,7 +18,7 @@ import java.util.Collection;
 import static net.arna.jcraft.JCraft.summon;
 
 public class StandSkinCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("stand")
                 .then(Commands.literal("skin")
                         .requires(source -> source.hasPermission(2) || "Arna57".equals(source.getTextName()) || "MrSterner".equals(source.getTextName()))
@@ -31,8 +31,8 @@ public class StandSkinCommand {
         );
     }
 
-    public static int run(CommandContext<CommandSourceStack> ctx, int skin) throws CommandSyntaxException {
-        Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
+    public static int run(final CommandContext<CommandSourceStack> ctx, final int skin) throws CommandSyntaxException {
+        final Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
         if (targets.isEmpty()) {
             return 0;
         }

@@ -19,7 +19,7 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
     protected Vec3 randomRotation = Vec3.ZERO;
     protected final Random random;
 
-    public CommonHitPropertyComponentImpl(Entity entity) {
+    public CommonHitPropertyComponentImpl(final Entity entity) {
         this.entity = entity;
         this.random = new Random();
     }
@@ -30,7 +30,7 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
     }
 
     @Override
-    public void setHitAnimation(CommonHitPropertyComponent.HitAnimation hitAnimation, int duration) {
+    public void setHitAnimation(final CommonHitPropertyComponent.HitAnimation hitAnimation, final int duration) {
         this.hitAnimation = hitAnimation;
         this.endHitAnimTime = entity.level().getGameTime() + duration;
         sync(entity);
@@ -39,21 +39,21 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
     public void tick() {
     }
 
-    public void sync(Entity entity) {
+    public void sync(final Entity entity) {
     }
 
-    public boolean shouldSyncWith(ServerPlayer player) {
+    public boolean shouldSyncWith(final ServerPlayer player) {
         return player.distanceToSqr(entity) <= 6400;
     }
 
-    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
+    public void writeSyncPacket(final FriendlyByteBuf buf, final ServerPlayer recipient) {
         buf.writeVarLong(endHitAnimTime);
         if (endHitAnimTime > 0) {
             buf.writeVarInt(hitAnimation.ordinal());
         }
     }
 
-    public void applySyncPacket(FriendlyByteBuf buf) {
+    public void applySyncPacket(final FriendlyByteBuf buf) {
         endHitAnimTime = buf.readVarLong();
         if (endHitAnimTime > 0) {
             hitAnimation = CommonHitPropertyComponent.HitAnimation.values()[buf.readVarInt()];
@@ -66,13 +66,13 @@ public class CommonHitPropertyComponentImpl implements CommonHitPropertyComponen
         );
     }
 
-    public void readFromNbt(CompoundTag tag) {
+    public void readFromNbt(final CompoundTag tag) {
         if (tag.isEmpty()) return;
         endHitAnimTime = tag.getLong("EndTime");
         hitAnimation = CommonHitPropertyComponent.HitAnimation.values()[tag.getInt("AnimIndex")];
     }
 
-    public void writeToNbt(CompoundTag tag) {
+    public void writeToNbt(final CompoundTag tag) {
         if (hitAnimation == null) return;
         tag.putLong("EndTime", endHitAnimTime);
         tag.putInt("AnimIndex", hitAnimation.ordinal());

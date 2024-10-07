@@ -11,7 +11,7 @@ public class CommonPhComponentImpl implements CommonPhComponent {
     private final Player player;
     private int level = 0;
 
-    public CommonPhComponentImpl(Player player) {
+    public CommonPhComponentImpl(final Player player) {
         this.player = player;
     }
 
@@ -30,18 +30,18 @@ public class CommonPhComponentImpl implements CommonPhComponent {
         level = 0;
     }
 
-    public void sync(Entity entity) {
+    public void sync(final Entity entity) {
     }
 
-    public void readFromNbt(@NonNull CompoundTag tag) {
+    public void readFromNbt(final @NonNull CompoundTag tag) {
         level = tag.getInt("level");
     }
 
-    public void writeToNbt(@NonNull CompoundTag tag) {
+    public void writeToNbt(final @NonNull CompoundTag tag) {
         tag.putInt("level", level);
     }
 
-    public boolean shouldSyncWith(ServerPlayer player) {
+    public boolean shouldSyncWith(final ServerPlayer player) {
         return player == this.player; // Only our player needs to know, I believe.
     }
 }

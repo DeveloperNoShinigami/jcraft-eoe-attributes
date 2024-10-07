@@ -18,20 +18,20 @@ public class FoolishSandBlock extends FallingBlock {
     public static final int MAX_AGE = 250;
     public static final IntegerProperty AGE;
 
-    public FoolishSandBlock(Properties settings) {
+    public FoolishSandBlock(final Properties settings) {
         super(settings);
         registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void tick(final BlockState state, final ServerLevel world, final BlockPos pos, final RandomSource random) {
         if (increaseAge(state, world, pos)) {
             world.scheduleTick(pos, this, 20, TickPriority.NORMAL);
             return;
         }
 
         super.tick(state, world, pos, random);
-        BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
+        final BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
         for (Direction direction : Direction.values()) {
             blockPos.setWithOffset(pos, direction);
             BlockState blockState = world.getBlockState(blockPos);
@@ -42,14 +42,14 @@ public class FoolishSandBlock extends FallingBlock {
     }
 
     @Override
-    public int getDustColor(BlockState state, BlockGetter world, BlockPos pos) {
+    public int getDustColor(final BlockState state, final BlockGetter world, final BlockPos pos) {
         return 16777216;
     }
 
     /**
      * @return Whether the block should continue existing.
      */
-    private boolean increaseAge(BlockState state, Level world, BlockPos pos) {
+    private boolean increaseAge(final BlockState state, final Level world, final BlockPos pos) {
         int i = state.getValue(AGE);
         if (i < MAX_AGE) {
             world.setBlock(pos, state.setValue(AGE, i + 1), 2);
@@ -64,7 +64,7 @@ public class FoolishSandBlock extends FallingBlock {
         builder.add(AGE);
     }
 
-    public ItemStack getCloneItemStack(BlockGetter world, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(final BlockGetter world, final BlockPos pos, final BlockState state) {
         return ItemStack.EMPTY;
     }
 

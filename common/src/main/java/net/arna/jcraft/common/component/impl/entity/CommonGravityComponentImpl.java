@@ -36,11 +36,11 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     private List<Gravity> gravityList = new ArrayList<>();
     private final Entity entity;
 
-    public CommonGravityComponentImpl(Entity entity) {
+    public CommonGravityComponentImpl(final Entity entity) {
         this.entity = entity;
     }
 
-    public void onGravityChanged(Direction oldGravity, Direction newGravity, RotationParameters rotationParameters, boolean initialGravity) {
+    public void onGravityChanged(final Direction oldGravity, final Direction newGravity, final RotationParameters rotationParameters, final boolean initialGravity) {
         entity.fallDistance = 0;
         entity.setPos(entity.position()); // Causes bounding box recalculation
 
@@ -69,7 +69,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
         if (!shouldChangeVelocity()) {
             return;
         }
-        Vec3 realWorldVelocity = getRealWorldVelocity(entity, prevGravityDirection);
+        final Vec3 realWorldVelocity = getRealWorldVelocity(entity, prevGravityDirection);
         if (rotationParameters.rotateVelocity()) {
             //Rotate velocity with gravity, this will cause things to appear to take a sharp turn
             Vector3f worldSpaceVec = realWorldVelocity.toVector3f();
@@ -84,7 +84,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     // getVelocity() does not return the actual velocity. It returns the velocity plus acceleration.
     // Even if the entity is standing still, getVelocity() will still give a downwards vector.
     // The real velocity is this tick position subtract last tick position
-    private Vec3 getRealWorldVelocity(Entity entity, Direction prevGravityDirection) {
+    private Vec3 getRealWorldVelocity(final Entity entity, final Direction prevGravityDirection) {
         if (entity.isControlledByLocalInstance()) {
             return new Vec3(
                     entity.getX() - entity.xo,
@@ -107,7 +107,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
     @NotNull
-    private Vec3 getCentreOfRotation(Direction oldGravity, Direction newGravity, RotationParameters rotationParameters) {
+    private Vec3 getCentreOfRotation(final Direction oldGravity, final Direction newGravity, final RotationParameters rotationParameters) {
         Vec3 relativeRotationCentre = Vec3.ZERO;
         if (entity instanceof EndCrystal) {
             //In the middle of the block below
@@ -126,7 +126,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
     // Adjust position to avoid suffocation in blocks when changing gravity
-    private void adjustEntityPosition(Direction oldGravity) {
+    private void adjustEntityPosition(final Direction oldGravity) {
         if (entity instanceof AreaEffectCloud || entity instanceof AbstractArrow || entity instanceof EndCrystal) {
             return;
         }
@@ -158,9 +158,9 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
     private static Vec3 getPositionAdjustmentOffset(
-            AABB entityBoundingBox, AABB nearbyCollisionUnion, Direction movingDirection
+            final AABB entityBoundingBox, final AABB nearbyCollisionUnion, final Direction movingDirection
     ) {
-        Direction.Axis axis = movingDirection.getAxis();
+        final Direction.Axis axis = movingDirection.getAxis();
         double offset = 0;
         if (movingDirection.getAxisDirection() == Direction.AxisDirection.POSITIVE) {
             double pushing = nearbyCollisionUnion.max(axis);
@@ -208,7 +208,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
     @Override
-    public void updateGravity(RotationParameters rotationParameters, boolean initialGravity) {
+    public void updateGravity(final RotationParameters rotationParameters, final boolean initialGravity) {
         if (canChangeGravity()) {
             Direction newGravity = getActualGravityDirection();
             Direction oldGravity = gravityDirection;
@@ -247,7 +247,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
     @Override
-    public void setDefaultGravityDirection(Direction gravityDirection, RotationParameters rotationParameters, boolean initialGravity) {
+    public void setDefaultGravityDirection(final Direction gravityDirection, final RotationParameters rotationParameters, final boolean initialGravity) {
         if (canChangeGravity()) {
             defaultGravityDirection = gravityDirection;
             updateGravity(rotationParameters, initialGravity);
@@ -255,7 +255,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
     @Override
-    public void addGravity(Gravity gravity, boolean initialGravity) {
+    public void addGravity(final Gravity gravity, final boolean initialGravity) {
         if (canChangeGravity()) {
             gravityList.removeIf(g -> Objects.equals(g.source(), gravity.source()));
             if (gravity.direction() != null) {
@@ -271,10 +271,10 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
     @Override
-    public void setGravity(List<Gravity> _gravityList, boolean initialGravity) {
-        Gravity highestBefore = getHighestPriority();
+    public void setGravity(final List<Gravity> _gravityList, final boolean initialGravity) {
+        final Gravity highestBefore = getHighestPriority();
         gravityList = new ArrayList<>(_gravityList);
-        Gravity highestAfter = getHighestPriority();
+        final Gravity highestAfter = getHighestPriority();
 
         if (highestBefore == highestAfter) {
             return;
@@ -291,7 +291,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
     @Override
-    public void invertGravity(boolean _isInverted, RotationParameters rotationParameters, boolean initialGravity) {
+    public void invertGravity(final boolean _isInverted, final RotationParameters rotationParameters, final boolean initialGravity) {
         isInverted = _isInverted;
         updateGravity(rotationParameters, initialGravity);
     }
@@ -302,7 +302,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
     @Override
-    public void clearGravity(RotationParameters rotationParameters, boolean initialGravity) {
+    public void clearGravity(final RotationParameters rotationParameters, final boolean initialGravity) {
         gravityList.clear();
         updateGravity(rotationParameters, initialGravity);
     }
@@ -313,7 +313,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
 
-    public void readFromNbt(CompoundTag nbt) {
+    public void readFromNbt(final CompoundTag nbt) {
         //Store old values
         Direction oldDefaultGravity = defaultGravityDirection;
         List<Gravity> oldList = gravityList;
@@ -353,7 +353,7 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
         }
     }
 
-    public void writeToNbt(@NotNull CompoundTag nbt) {
+    public void writeToNbt(final @NotNull CompoundTag nbt) {
         int index = 0;
         for (Gravity temp : getGravity()) {
             if (temp.direction() != null && temp.source() != null) {
@@ -371,12 +371,12 @@ public class CommonGravityComponentImpl implements CommonGravityComponent {
     }
 
     public void tick() {
-        Entity vehicle = entity.getVehicle();
+        final Entity vehicle = entity.getVehicle();
         if (vehicle != null) {
             addGravity(new Gravity(GravityChangerAPI.getGravityDirection(vehicle), 99999999, 2, "vehicle"), true);
         }
-        List<Gravity> gravityList = getGravity();
-        Gravity highestBefore = getHighestPriority();
+        final List<Gravity> gravityList = getGravity();
+        final Gravity highestBefore = getHighestPriority();
         if (gravityList.removeIf(g -> g.duration() == 0)) {
             if (highestBefore != null) {
                 updateGravity(highestBefore.rotationParameters(), false);

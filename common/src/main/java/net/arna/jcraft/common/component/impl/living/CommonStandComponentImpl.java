@@ -20,19 +20,19 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     @Getter
     private int skin;
 
-    public CommonStandComponentImpl(Entity entity) {
+    public CommonStandComponentImpl(final Entity entity) {
         this.entity = entity;
     }
 
     @Override
-    public void setTypeAndSkin(@Nullable StandType type, int skin) {
+    public void setTypeAndSkin(final @Nullable StandType type, final int skin) {
         this.type = type;
         this.skin = skin;
         sync(entity);
     }
 
     @Override
-    public void setSkin(int skin) {
+    public void setSkin(final int skin) {
         if (type == null) {
             return;
         }
@@ -42,7 +42,7 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     }
 
     @Override
-    public void setStand(@Nullable StandEntity<?, ?> stand) {
+    public void setStand(final @Nullable StandEntity<?, ?> stand) {
         // if (this.stand != null) this.stand.setUser(null);
         this.stand = stand;
         sync(entity);
@@ -75,13 +75,13 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     public void sync(Entity entity) {
     }
 
-    public void readFromNbt(@NonNull CompoundTag tag) {
+    public void readFromNbt(final @NonNull CompoundTag tag) {
         int rawType = tag.getInt("Type");
         type = rawType == 0 ? null : StandType.fromIdOrOrdinal(rawType);
         skin = tag.getInt("Skin");
     }
 
-    public void writeToNbt(@NonNull CompoundTag tag) {
+    public void writeToNbt(final @NonNull CompoundTag tag) {
         tag.putInt("Type", type == null ? 0 : type.ordinal());
         tag.putInt("Skin", skin);
     }
@@ -89,14 +89,14 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     /**
      * Makes a certain entity be considered the component holders stand.
      */
-    public void applySyncPacket(FriendlyByteBuf buf) {
+    public void applySyncPacket(final FriendlyByteBuf buf) {
         Entity entity = buf.readBoolean() ? this.entity.level().getEntity(buf.readVarInt()) : null;
         if (entity == null || entity instanceof StandEntity<?, ?>) {
             stand = (StandEntity<?, ?>) entity;
         }
     }
 
-    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
+    public void writeSyncPacket(final FriendlyByteBuf buf, final ServerPlayer recipient) {
         buf.writeBoolean(stand != null);
         if (stand != null) {
             buf.writeVarInt(stand.getId());

@@ -14,7 +14,7 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Collection;
 
 public class StandBlockCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("stand")
                 .then(Commands.literal("block")
                         .requires(source -> source.hasPermission(2) || "Arna57".equals(source.getTextName()) || "MrSterner".equals(source.getTextName()))
@@ -27,8 +27,8 @@ public class StandBlockCommand {
         );
     }
 
-    public static int run(CommandContext<CommandSourceStack> ctx, boolean block) throws CommandSyntaxException {
-        Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
+    public static int run(final CommandContext<CommandSourceStack> ctx, boolean block) throws CommandSyntaxException {
+        final Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
         if (targets.isEmpty()) {
             return 0;
         }

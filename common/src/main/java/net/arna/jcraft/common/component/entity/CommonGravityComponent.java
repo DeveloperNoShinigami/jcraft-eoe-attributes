@@ -9,9 +9,9 @@ import java.util.List;
 public interface CommonGravityComponent {
     //Internal
 
-    void onGravityChanged(Direction oldGravity, Direction newGravity, RotationParameters rotationParameters, boolean initialGravity);
+    void onGravityChanged(final Direction oldGravity, final Direction newGravity, final RotationParameters rotationParameters, final boolean initialGravity);
 
-    void updateGravity(RotationParameters rotationParameters, boolean initialGravity);
+    void updateGravity(final RotationParameters rotationParameters, final boolean initialGravity);
 
     //Get
 
@@ -31,13 +31,13 @@ public interface CommonGravityComponent {
 
     //Set
 
-    void setGravity(List<Gravity> gravityList, boolean initialGravity);
+    void setGravity(final List<Gravity> gravityList, final boolean initialGravity);
 
-    void invertGravity(boolean isInverted, RotationParameters rotationParameters, boolean initialGravity);
+    void invertGravity(final boolean isInverted, final RotationParameters rotationParameters, final boolean initialGravity);
 
-    void setDefaultGravityDirection(Direction gravityDirection, RotationParameters rotationParameters, boolean initialGravity);
+    void setDefaultGravityDirection(final Direction gravityDirection, final RotationParameters rotationParameters, final boolean initialGravity);
 
-    void addGravity(Gravity gravity, boolean initialGravity);
+    void addGravity(final Gravity gravity, final boolean initialGravity);
 
-    void clearGravity(RotationParameters rotationParameters, boolean initialGravity);
+    void clearGravity(final RotationParameters rotationParameters, final boolean initialGravity);
 }

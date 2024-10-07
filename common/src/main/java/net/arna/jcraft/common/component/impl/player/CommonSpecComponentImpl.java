@@ -15,7 +15,7 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     private SpecType type = SpecType.NONE;
     private JSpec<?, ?> spec;
 
-    public CommonSpecComponentImpl(LivingEntity livingEntity) {
+    public CommonSpecComponentImpl(final LivingEntity livingEntity) {
         this.user = livingEntity;
     }
 
@@ -25,12 +25,12 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     }
 
     @Override
-    public void setType(@NonNull SpecType type) {
+    public void setType(final @NonNull SpecType type) {
         setTypeRaw(type);
         sync(user);
     }
 
-    private void setTypeRaw(SpecType type) {
+    private void setTypeRaw(final SpecType type) {
         this.type = type;
         spec = type.createNew(user);
     }
@@ -41,18 +41,18 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
         return spec;
     }
 
-    public void sync(Entity entity) {
+    public void sync(final Entity entity) {
     }
 
-    public void readFromNbt(@NonNull CompoundTag tag) {
+    public void readFromNbt(final @NonNull CompoundTag tag) {
         setTypeRaw(SpecType.fromId(tag.getInt("Type")));
     }
 
-    public void writeToNbt(@NonNull CompoundTag tag) {
+    public void writeToNbt(final @NonNull CompoundTag tag) {
         tag.putInt("Type", type.getId());
     }
 
-    public boolean shouldSyncWith(ServerPlayer player) {
+    public boolean shouldSyncWith(final ServerPlayer player) {
         return player == this.user; // Only our player needs to know.
     }
 }

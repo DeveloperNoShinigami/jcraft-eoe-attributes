@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
     /**
      * The grabbed entity.
-     * Grab logic is ran from the side of the victim, which prevents multiple attackers from attempting to grab it.
+     * Grab logic is run from the side of the victim, which prevents multiple attackers from attempting to grab it.
      */
     @Getter
     private final Entity grabbed;
@@ -27,19 +27,19 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
     public int duration = 0;
     private double distance, verticalOffset = 0.4;
 
-    public CommonGrabComponentImpl(Entity grabbed) {
+    public CommonGrabComponentImpl(final Entity grabbed) {
         this.grabbed = grabbed;
     }
 
     @Override
-    public void startGrab(Entity attacker, int duration, double distance) {
+    public void startGrab(final Entity attacker, final int duration, final double distance) {
         startGrab(attacker, duration, distance, 0.4);
     }
 
     @Override
-    public void startGrab(Entity attacker, int duration, double distance, double verticalOffset) {
+    public void startGrab(final Entity attacker, final int duration, final double distance, final double verticalOffset) {
         if (attacker == null) {
-            JCraft.LOGGER.warn("Null attacker tried to grab: " + grabbed);
+            JCraft.LOGGER.warn(String.format("Null attacker tried to grab: %s", grabbed));
             return;
         }
 
@@ -75,16 +75,16 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
         }
     }
 
-    public void sync(Entity entity) {
+    public void sync(final Entity entity) {
         //JComponentPlatformUtils.GRAB.sync(grabbed);
     }
 
-    public boolean shouldSyncWith(ServerPlayer player) {
+    public boolean shouldSyncWith(final ServerPlayer player) {
         // It'll be passively synced in a choppy way for those far away
         return player.distanceToSqr(grabbed) <= 6400; // 5 chunks
     }
 
-    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
+    public void writeSyncPacket(final FriendlyByteBuf buf, final ServerPlayer recipient) {
         boolean notGrabbing = attacker == null;
         buf.writeBoolean(notGrabbing);
         if (notGrabbing) {
@@ -96,7 +96,7 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
         buf.writeDouble(verticalOffset);
     }
 
-    public void applySyncPacket(FriendlyByteBuf buf) {
+    public void applySyncPacket(final FriendlyByteBuf buf) {
         if (buf.readBoolean()) {
             return;
         }
@@ -106,9 +106,9 @@ public abstract class CommonGrabComponentImpl implements CommonGrabComponent {
         verticalOffset = buf.readDouble();
     }
 
-    public void readFromNbt(@NotNull CompoundTag tag) {
+    public void readFromNbt(final @NotNull CompoundTag tag) {
     }
 
-    public void writeToNbt(@NotNull CompoundTag tag) {
+    public void writeToNbt(final @NotNull CompoundTag tag) {
     }
 }

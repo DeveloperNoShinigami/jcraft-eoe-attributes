@@ -8,26 +8,26 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public interface CommonShockwaveHandlerComponent {
-    void addShockwave(double x, double y, double z, float pitch, float yaw, float scale);
+    void addShockwave(final double x, final double y, final double z, final float pitch, final float yaw, final float scale);
 
-    default void addShockwave(double x, double y, double z, float pitch, float yaw) {
+    default void addShockwave(final double x, final double y, final double z, final float pitch, final float yaw) {
         addShockwave(x, y, z, pitch, yaw, 1.0f);
     }
 
-    default void addShockwave(Vec3 pos, float pitch, float yaw, float scale) {
+    default void addShockwave(final Vec3 pos, final float pitch, final float yaw, final float scale) {
         addShockwave(pos.x, pos.y, pos.z, pitch, yaw, scale);
     }
 
-    default void addShockwave(Vec3 pos, float pitch, float yaw) {
+    default void addShockwave(final Vec3 pos, final float pitch, final float yaw) {
         addShockwave(pos.x, pos.y, pos.z, pitch, yaw);
     }
 
-    default void addShockwave(Vec3 pos, Vec3 rotation, float scale) {
+    default void addShockwave(final Vec3 pos, final Vec3 rotation, final float scale) {
         Vec2 polarRot = JUtils.rotationVectorToPolar(rotation);
         addShockwave(pos.x, pos.y, pos.z, polarRot.x, polarRot.y, scale);
     }
 
-    default void addShockwave(Vec3 pos, Vec3 rotation) {
+    default void addShockwave(final Vec3 pos, final Vec3 rotation) {
         Vec2 polarRot = JUtils.rotationVectorToPolar(rotation);
         addShockwave(pos.x, pos.y, pos.z, polarRot.x, polarRot.y);
     }

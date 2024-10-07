@@ -11,7 +11,7 @@ public interface CommonHitPropertyComponent extends JComponent {
 
     HitAnimation getHitAnimation();
 
-    void setHitAnimation(HitAnimation hitAnimation, int duration);
+    void setHitAnimation(final HitAnimation hitAnimation, final int duration);
 
     enum HitAnimation {
         HIGH,

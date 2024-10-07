@@ -24,22 +24,22 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
     private final Entity entity;
     public boolean skipSync;
 
-    public CommonCooldownsComponentImpl(@NonNull Entity entity) {
+    public CommonCooldownsComponentImpl(final @NonNull Entity entity) {
         this.entity = entity;
     }
 
     @Override
-    public int getCooldown(CooldownType type) {
+    public int getCooldown(final CooldownType type) {
         return Math.max(cooldowns.getOrDefault(type, 0), 0);
     }
 
     @Override
-    public int getInitialDuration(CooldownType type) {
+    public int getInitialDuration(final CooldownType type) {
         return initialDurations.getOrDefault(type, 0);
     }
 
     @Override
-    public void setCooldown(CooldownType type, int duration) {
+    public void setCooldown(final CooldownType type, int duration) {
         if (duration == 0) {
             clear(type);
             return;
@@ -83,7 +83,7 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
 
         startCooldown(CooldownType.COOLDOWN_CANCEL);
 
-        Vec3 pPos = entity.getEyePosition();
+        final Vec3 pPos = entity.getEyePosition();
         entity.level().playSound(null, entity, JSoundRegistry.COOLDOWN_CANCEL.get(), SoundSource.PLAYERS, 1, 1);
         if (!entity.level().isClientSide) {
             JCraft.createParticle((ServerLevel) entity.level(), pPos.x, pPos.y, pPos.z, JParticleType.COOLDOWN_CANCEL);
@@ -93,7 +93,7 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
     }
 
     @Override
-    public void clear(CooldownType type) {
+    public void clear(final CooldownType type) {
         cooldowns.put(type, 0);
         initialDurations.put(type, 0);
         sync(entity);
@@ -110,7 +110,7 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
         sync(entity);
     }
 
-    public void sync(Entity entity) {
+    public void sync(final Entity entity) {
 
     }
 
@@ -136,12 +136,12 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
         }
     }
 
-    public void readFromNbt(@NonNull CompoundTag tag) {
+    public void readFromNbt(final @NonNull CompoundTag tag) {
         readMap(cooldowns, tag.getCompound("Cooldowns"));
         readMap(initialDurations, tag.getCompound("InitialDurations"));
     }
 
-    private static void readMap(Object2IntMap<CooldownType> map, CompoundTag tag) {
+    private static void readMap(final Object2IntMap<CooldownType> map, CompoundTag tag) {
         for (CooldownType type : CooldownType.values()) {
             if (tag.contains(type.name(), Tag.TAG_INT)) {
                 map.put(type, tag.getInt(type.name()));
@@ -151,12 +151,12 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
         }
     }
 
-    public void writeToNbt(@NonNull CompoundTag tag) {
+    public void writeToNbt(final @NonNull CompoundTag tag) {
         tag.put("Cooldowns", writeMap(this.cooldowns));
         tag.put("InitialDurations", writeMap(this.initialDurations));
     }
 
-    private static CompoundTag writeMap(Object2IntMap<CooldownType> map) {
+    private static CompoundTag writeMap(final Object2IntMap<CooldownType> map) {
         CompoundTag nbt = new CompoundTag();
         map.object2IntEntrySet().forEach(entry -> {
             if (entry.getIntValue() > 0) {
@@ -166,7 +166,7 @@ public class CommonCooldownsComponentImpl implements CommonCooldownsComponent {
         return nbt;
     }
 
-    public boolean shouldSyncWith(ServerPlayer player) {
+    public boolean shouldSyncWith(final ServerPlayer player) {
         return player == entity; // Others don't need to know our cooldowns.
     }
 }

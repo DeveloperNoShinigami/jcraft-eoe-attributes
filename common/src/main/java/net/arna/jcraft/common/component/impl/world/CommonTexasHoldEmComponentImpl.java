@@ -17,11 +17,11 @@ public class CommonTexasHoldEmComponentImpl implements CommonTexasHoldEmComponen
     protected final Level world;
     protected Collection<TexasHoldEm> games = new HashSet<>();
 
-    public CommonTexasHoldEmComponentImpl(Level world) {
+    public CommonTexasHoldEmComponentImpl(final Level world) {
         this.world = Objects.requireNonNull(world);
     }
 
-    public void readFromNbt(CompoundTag tag) {
+    public void readFromNbt(final CompoundTag tag) {
         for (final Tag gameTag : tag.getList("texas_hold_em", Tag.TAG_COMPOUND)) {
             final TexasHoldEm game = new TexasHoldEm();
             game.readFromNbt((CompoundTag)gameTag);
@@ -29,7 +29,7 @@ public class CommonTexasHoldEmComponentImpl implements CommonTexasHoldEmComponen
         }
     }
 
-    public void writeToNbt(CompoundTag tag) {
+    public void writeToNbt(final CompoundTag tag) {
         final ListTag gamesTag = new ListTag();
         for (final TexasHoldEm game : games) {
             final CompoundTag gameTag = new CompoundTag();
@@ -45,7 +45,7 @@ public class CommonTexasHoldEmComponentImpl implements CommonTexasHoldEmComponen
     }
 
     @Override
-    public boolean addGame(@NotNull final TexasHoldEm game) {
+    public boolean addGame(final @NotNull TexasHoldEm game) {
         if (games.contains(game)) {
             return false;
         }

@@ -37,22 +37,22 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
     private float attackSpeedMult;
     private float metallicaIron = MetallicaEntity.IRON_MAX;
 
-    public CommonMiscComponentImpl(Entity entity) {
+    public CommonMiscComponentImpl(final Entity entity) {
         this.entity = entity;
     }
 
     @Override
-    public void updateRemoteInputs(int forward, int sideways, boolean jumping) {
+    public void updateRemoteInputs(final int forward, final int sideways, final boolean jumping) {
         if (!(entity instanceof Player player)) {
             return;
         }
 
-        Vec3 v = new Vec3(forward, 0, sideways).normalize();
+        final Vec3 v = new Vec3(forward, 0, sideways).normalize();
 
         Vec3 rotVec = player.getLookAngle();
         rotVec = new Vec3(rotVec.x, 0, rotVec.z).normalize();
 
-        float moveSpeed = player.getSpeed();
+        final float moveSpeed = player.getSpeed();
         desiredVelocity = rotVec.scale(v.x * moveSpeed) // W/S
                 .add(rotVec.yRot(1.5707963f).scale(v.z * moveSpeed)); // A/D
         if (jumping && player.onGround()) {
@@ -61,7 +61,7 @@ public class CommonMiscComponentImpl implements CommonMiscComponent {
     }
 
     @Override
-    public void setSlavedTo(UUID slavedTo) {
+    public void setSlavedTo(final UUID slavedTo) {
         this.slavedTo = slavedTo;
         sync(entity);
     }

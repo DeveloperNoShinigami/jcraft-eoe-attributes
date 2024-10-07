@@ -33,7 +33,7 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
         RADIAL_REPULSE,
         RADIAL_ATTRACT;
 
-        public static @NotNull ShiftType fromId(int id) {
+        public static @NotNull ShiftType fromId(final int id) {
             switch (id) {
                 default -> {
                     return NONE;
@@ -61,7 +61,7 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
     private Vec3 particleDirection = Vec3.ZERO; // Only for ShiftType.DIRECTIONAL
     private ShiftType type = ShiftType.NONE;
 
-    public CommonGravityShiftComponentImpl(LivingEntity user) {
+    public CommonGravityShiftComponentImpl(final LivingEntity user) {
         this.user = user;
         this.random = RandomSource.create();
     }
@@ -72,8 +72,8 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
         }
         time--;
 
-        Level world = user.level();
-        Vec3 pos = user.position();
+        final Level world = user.level();
+        final Vec3 pos = user.position();
 
         if (world.isClientSide) {
             for (int h = 0; h < 256; ++h) {
@@ -110,9 +110,9 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
                     return;
                 }
 
-                List<Entity> toCatch = world.getEntitiesOfClass(Entity.class, user.getBoundingBox().inflate(64), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+                final List<Entity> toCatch = world.getEntitiesOfClass(Entity.class, user.getBoundingBox().inflate(64), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
-                for (Entity entity : toCatch) {
+                for (final Entity entity : toCatch) {
                     if (entity.isPassengerOfSameVehicle(user)) {
                         continue;
                     }
@@ -194,28 +194,28 @@ public abstract class CommonGravityShiftComponentImpl implements CommonGravitySh
         sync(user);
     }
 
-    public void sync(Entity entity) {
+    public void sync(final Entity entity) {
 
     }
 
-    public boolean shouldSyncWith(ServerPlayer player) {
+    public boolean shouldSyncWith(final ServerPlayer player) {
         if (player.distanceToSqr(user) > RANGE_SQR) {
             return false;
         }
         return true;
     }
 
-    private static Vec3 vecFromArray(int[] arr) {
+    private static Vec3 vecFromArray(final int[] arr) {
         return new Vec3(arr[0], arr[1], arr[2]);
     }
 
-    public void readFromNbt(CompoundTag tag) {
+    public void readFromNbt(final CompoundTag tag) {
         this.time = tag.getInt("Time");
         this.type = ShiftType.fromId(tag.getInt("Type"));
         this.particleDirection = vecFromArray(tag.getIntArray("Direction"));
     }
 
-    public void writeToNbt(CompoundTag tag) {
+    public void writeToNbt(final CompoundTag tag) {
         tag.putInt("Time", time);
         tag.putInt("Type", type.ordinal());
 

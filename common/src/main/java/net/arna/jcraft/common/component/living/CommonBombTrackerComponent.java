@@ -46,7 +46,7 @@ public interface CommonBombTrackerComponent extends JComponent {
             return null;
         }
 
-        public void setBomb(@Nullable Entity entity) {
+        public void setBomb(final @Nullable Entity entity) {
             isEntity = isBlock = isItem = false;
             if (entity != null) {
                 isEntity = true;
@@ -57,7 +57,7 @@ public interface CommonBombTrackerComponent extends JComponent {
             dirty = true;
         }
 
-        public void setBomb(BlockPos blockPos) {
+        public void setBomb(final BlockPos blockPos) {
             isEntity = isItem = false;
             isBlock = true;
             bombBlock = blockPos;
@@ -66,7 +66,7 @@ public interface CommonBombTrackerComponent extends JComponent {
             dirty = true;
         }
 
-        public void setBomb(@Nullable ItemStack itemStack) {
+        public void setBomb(final @Nullable ItemStack itemStack) {
             isEntity = isBlock = isItem = false;
             if (itemStack != null) {
                 isItem = true;

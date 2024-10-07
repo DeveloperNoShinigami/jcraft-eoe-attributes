@@ -8,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 public class FrameDataCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("framedata")
                 .then(Commands.literal("stand")
                         .executes(
@@ -23,7 +23,7 @@ public class FrameDataCommand {
         );
     }
 
-    public static int run(CommandSourceStack source, boolean stand) {
+    public static int run(final CommandSourceStack source, final boolean stand) {
         ServerPlayer player = source.getPlayer();
         if (player == null) return 0;
         FrameDataRequests.add(player, stand ? FrameDataRequests.FrameDataType.STAND : FrameDataRequests.FrameDataType.SPEC);

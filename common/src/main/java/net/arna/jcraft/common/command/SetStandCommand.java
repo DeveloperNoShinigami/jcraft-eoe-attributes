@@ -24,7 +24,7 @@ public class SetStandCommand {
     private static final DynamicCommandExceptionType INVALID_SKIN = new DynamicCommandExceptionType(s ->
             Component.literal("The given stand only has " + s + " skins."));
 
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         RandomSource rng = RandomSource.create();
         dispatcher.register(Commands.literal("stand")
                 .then(Commands.literal("set")
@@ -39,8 +39,8 @@ public class SetStandCommand {
                         )));
     }
 
-    private static int executeSet(CommandContext<CommandSourceStack> ctx, StandType type, int skin) throws CommandSyntaxException {
-        Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
+    private static int executeSet(final CommandContext<CommandSourceStack> ctx, StandType type, int skin) throws CommandSyntaxException {
+        final Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
         if (targets.isEmpty()) {
             return 0;
         }

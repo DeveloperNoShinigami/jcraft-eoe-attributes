@@ -30,7 +30,7 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
 
     public static final int MIN_REGEN_BLOOD = 16; // 75%
 
-    public CommonVampireComponentImpl(LivingEntity entity) {
+    public CommonVampireComponentImpl(final LivingEntity entity) {
         this.entity = entity;
         if (entity instanceof Player playerEntity) {
             this.player = playerEntity;
@@ -39,7 +39,7 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
     }
 
     public void tick() {
-        Level world = entity.level();
+        final Level world = entity.level();
         if (world.isClientSide) {
             return;
         }
@@ -96,7 +96,7 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
     }
 
     @Override
-    public void setBlood(float blood) {
+    public void setBlood(final float blood) {
         this.blood = Mth.clamp(blood, 0, 20);
         sync(entity);
     }
@@ -113,29 +113,29 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
         sync(entity);
     }
 
-    public void sync(Entity entity) {
+    public void sync(final Entity entity) {
     }
 
-    public boolean shouldSyncWith(ServerPlayer player) {
+    public boolean shouldSyncWith(final ServerPlayer player) {
         return player == entity;
     }
 
-    public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
+    public void writeSyncPacket(final FriendlyByteBuf buf, final ServerPlayer recipient) {
         buf.writeFloat(blood);
         buf.writeBoolean(isVampire);
     }
 
-    public void applySyncPacket(FriendlyByteBuf buf) {
+    public void applySyncPacket(final FriendlyByteBuf buf) {
         blood = buf.readFloat();
         isVampire = buf.readBoolean();
     }
 
-    public void readFromNbt(CompoundTag tag) {
+    public void readFromNbt(final CompoundTag tag) {
         blood = tag.getFloat("Blood");
         isVampire = tag.getBoolean("Vampire");
     }
 
-    public void writeToNbt(CompoundTag tag) {
+    public void writeToNbt(final CompoundTag tag) {
         tag.putFloat("Blood", blood);
         tag.putBoolean("Vampire", isVampire);
     }

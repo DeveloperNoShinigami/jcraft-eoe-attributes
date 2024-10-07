@@ -9,6 +9,6 @@ public interface CommonTexasHoldEmComponent {
 
     Collection<TexasHoldEm> getGames();
 
-    boolean addGame(@NotNull final TexasHoldEm game);
+    boolean addGame(final @NotNull TexasHoldEm game);
 
 }
