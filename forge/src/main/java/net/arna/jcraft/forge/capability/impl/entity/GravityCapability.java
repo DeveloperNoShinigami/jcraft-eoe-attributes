@@ -5,7 +5,6 @@ import net.arna.jcraft.common.component.impl.entity.CommonGravityComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -68,16 +67,18 @@ public class GravityCapability extends CommonGravityComponentImpl implements JCa
     public static GravityCapability getCapability(Entity user) {
         return user.getCapability(CAPABILITY).orElse(new GravityCapability(user));
     }
-    public static void initNetwork() {
+    public static void initClient() {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, G_S2C, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
 
-            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof LocalPlayer player) {
+            if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof Player player) {
                 GravityCapability.getCapabilityOptional(player).ifPresent(c -> c.deserializeNBT(nbt));
             }
         });
+    }
 
+    public static void initServer() {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, G_C2S, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();

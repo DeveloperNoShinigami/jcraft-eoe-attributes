@@ -59,7 +59,7 @@ public class ShockwaveHandlerCapability extends CommonShockwaveHandlerComponentI
         return world.getCapability(CAPABILITY).orElse(new ShockwaveHandlerCapability(world));
     }
 
-    public static void initNetwork(){
+    public static void initClient(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, SHOCK_S2C, (buf, context) -> {
             ClientLevel clientWorld = Minecraft.getInstance().level;
             if (clientWorld == null) return;

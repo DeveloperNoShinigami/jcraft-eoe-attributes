@@ -78,7 +78,7 @@ public class MiscCapability extends CommonMiscComponentImpl implements JCapabili
         return entity.getCapability(CAPABILITY).orElse(new MiscCapability(entity));
     }
 
-    public static void initNetwork(){
+    public static void initClient(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, MISC_S2C, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
@@ -88,7 +88,9 @@ public class MiscCapability extends CommonMiscComponentImpl implements JCapabili
             }
 
         });
+    }
 
+    public static void initServer() {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, MISC_C2S, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();

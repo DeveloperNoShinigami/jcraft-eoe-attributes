@@ -1,6 +1,5 @@
 package net.arna.jcraft.forge;
 
-import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.forge.EventBuses;
 import net.arna.jcraft.JCraft;
@@ -40,11 +39,10 @@ public final class JCraftForge {
         modBus.addListener(ClientSetupEvents::onInitializeClient);
 
         //DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> JCraftClient::init);
-        JNetworkingForge.init();
+        JNetworkingForge.initServer();
 
-        EntityTickEvent.ENTITY_PRE.register(this::tickEntityCaps);
-        TickEvent.ServerLevelTick.SERVER_LEVEL_POST.register(this::tickWorldCaps);
-        ClientTickEvent.ClientLevel.CLIENT_LEVEL_POST.register(this::tickWorldCaps);
+        EntityTickEvent.ENTITY_PRE.register(JCraftForge::tickEntityCaps);
+        TickEvent.ServerLevelTick.SERVER_LEVEL_POST.register(JCraftForge::tickWorldCaps);
         ArgumentTypeInfos.registerByClass(StandArgumentType.class,  SingletonArgumentInfo.contextFree(StandArgumentType::stand));
         ArgumentTypeInfos.registerByClass(SpecArgumentType.class,  SingletonArgumentInfo.contextFree(SpecArgumentType::spec));
         ArgumentTypeInfos.registerByClass(AttackArgumentType.class,  SingletonArgumentInfo.contextFree(AttackArgumentType::attack));
@@ -56,11 +54,11 @@ public final class JCraftForge {
         JCraft.initDispenserBehaviors();
     }
 
-    private void tickWorldCaps(Level world) {
+    public static void tickWorldCaps(Level world) {
         ShockwaveHandlerCapability.getCapability(world).tick();
     }
 
-    private void tickEntityCaps(Entity entity) {
+    public static void tickEntityCaps(Entity entity) {
         GrabCapability.getCapability(entity).tick();
         GravityCapability.getCapability(entity).tick();
 

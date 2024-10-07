@@ -56,7 +56,7 @@ public class BombTrackerCapability extends CommonBombTrackerComponentImpl implem
         return entity.getCapability(CAPABILITY).orElse(new BombTrackerCapability(entity));
     }
 
-    public static void initNetwork(){
+    public static void initClient(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, BOMB_S2C, (buf, context) -> {
             // Received by the cap holder and only them
             LocalPlayer localPlayer = Minecraft.getInstance().player;

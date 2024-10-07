@@ -4,7 +4,6 @@ import dev.architectury.networking.NetworkManager;
 import net.arna.jcraft.common.component.impl.entity.CommonTimeStopComponentImpl;
 import net.arna.jcraft.forge.JNetworkingForge;
 import net.arna.jcraft.forge.capability.api.JCapability;
-import net.arna.jcraft.forge.capability.impl.living.CooldownsCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -79,7 +78,7 @@ public class TimeStopCapability extends CommonTimeStopComponentImpl implements J
         return entity.getCapability(CAPABILITY).orElse(new TimeStopCapability(entity));
     }
 
-    public static void initNetwork(){
+    public static void initClient(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, TIME_S2C, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
@@ -89,7 +88,9 @@ public class TimeStopCapability extends CommonTimeStopComponentImpl implements J
             }
 
         });
+    }
 
+    public static void initServer(){
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, TIME_C2S, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();

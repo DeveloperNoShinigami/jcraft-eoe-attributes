@@ -60,7 +60,7 @@ public class GrabCapability extends CommonGrabComponentImpl implements JCapabili
         return entity.getCapability(CAPABILITY).orElse(new GrabCapability(entity));
     }
 
-    public static void initNetwork(){
+    public static void initClient(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, GRAB_S2C, (buf, context) -> {
             int id = buf.readVarInt();
             if (Minecraft.getInstance().level != null) {

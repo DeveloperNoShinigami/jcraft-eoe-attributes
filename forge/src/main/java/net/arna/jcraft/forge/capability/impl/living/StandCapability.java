@@ -80,7 +80,7 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
         return entity.getCapability(CAPABILITY).orElse(new StandCapability(entity));
     }
 
-    public static void initNetwork(){
+    public static void initClient(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, STAND_S2C, (buf, context) -> {
             int id = buf.readInt();
             int standType = buf.readInt();

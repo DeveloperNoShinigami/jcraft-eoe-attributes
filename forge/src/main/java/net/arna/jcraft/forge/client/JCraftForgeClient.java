@@ -1,5 +1,6 @@
 package net.arna.jcraft.forge.client;
 
+import dev.architectury.event.events.client.ClientTickEvent;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.JClientConfig;
@@ -8,6 +9,7 @@ import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.particle.*;
 import net.arna.jcraft.client.registry.JModelPredicateProviderRegistry;
 import net.arna.jcraft.client.renderer.block.CoffinTileRenderer;
+import net.arna.jcraft.forge.JCraftForge;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.minecraft.client.Minecraft;
@@ -26,6 +28,7 @@ public class JCraftForgeClient {
     @SubscribeEvent
     public static void handleClientSetup(final FMLClientSetupEvent ignoredEvent) {
         JCraftClient.init();
+        ClientTickEvent.ClientLevel.CLIENT_LEVEL_POST.register(JCraftForge::tickWorldCaps);
         //JModelPredicateProviderRegistry.register();
 
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory(

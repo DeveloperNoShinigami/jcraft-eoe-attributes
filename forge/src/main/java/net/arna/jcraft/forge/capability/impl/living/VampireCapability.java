@@ -55,7 +55,7 @@ public class VampireCapability extends CommonVampireComponentImpl implements JCa
         return entity.getCapability(CAPABILITY).orElse(new VampireCapability(entity));
     }
 
-    public static void initNetwork(){
+    public static void initClient(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, VAMP_S2C, (buf, context) -> {
             // Received by the VampireCapability holder and only them
             LocalPlayer localPlayer = Minecraft.getInstance().player;

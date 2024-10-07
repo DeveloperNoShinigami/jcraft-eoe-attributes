@@ -78,7 +78,7 @@ public class CooldownsCapability extends CommonCooldownsComponentImpl implements
         return entity.getCapability(CAPABILITY).orElse(new CooldownsCapability(entity));
     }
 
-    public static void initNetwork(){
+    public static void initClient(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, CD_S2C, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();
@@ -88,7 +88,9 @@ public class CooldownsCapability extends CommonCooldownsComponentImpl implements
             }
 
         });
+    }
 
+    public static void initServer() {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, CD_C2S, (buf, context) -> {
             int id = buf.readInt();
             CompoundTag nbt = buf.readNbt();

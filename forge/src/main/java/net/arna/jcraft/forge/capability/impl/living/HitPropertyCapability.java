@@ -63,7 +63,7 @@ public class HitPropertyCapability extends CommonHitPropertyComponentImpl implem
         return entity.getCapability(CAPABILITY).orElse(new HitPropertyCapability(entity));
     }
 
-    public static void initNetwork(){
+    public static void initClient(){
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, HIT_S2C, (buf, context) -> {
             int id = buf.readVarInt();
 

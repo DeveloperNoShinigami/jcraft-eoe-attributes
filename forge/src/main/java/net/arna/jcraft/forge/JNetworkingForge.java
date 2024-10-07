@@ -17,21 +17,30 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 public class JNetworkingForge {
-    public static void init() {
-        GrabCapability.initNetwork();
-        TimeStopCapability.initNetwork();
+    public static void initServer() {
+        TimeStopCapability.initServer();
 
-        BombTrackerCapability.initNetwork();
-        CooldownsCapability.initNetwork();
-        HitPropertyCapability.initNetwork();
-        MiscCapability.initNetwork();
-        StandCapability.initNetwork();
-        VampireCapability.initNetwork();
-        PhCapability.initNetwork();
-        SpecCapability.initNetwork();
-        ShockwaveHandlerCapability.initNetwork();
-        GravityShiftCapability.initNetwork();
-        GravityCapability.initNetwork();
+        CooldownsCapability.initServer();
+        MiscCapability.initServer();
+        PhCapability.initServer();
+        SpecCapability.initServer();
+        GravityCapability.initServer();
+    }
+    public static void initClient() {
+        GrabCapability.initClient();
+        TimeStopCapability.initClient();
+
+        BombTrackerCapability.initClient();
+        CooldownsCapability.initClient();
+        HitPropertyCapability.initClient();
+        MiscCapability.initClient();
+        StandCapability.initClient();
+        VampireCapability.initClient();
+        PhCapability.initClient();
+        SpecCapability.initClient();
+        ShockwaveHandlerCapability.initClient();
+        GravityShiftCapability.initClient();
+        GravityCapability.initClient();
     }
 
     public static <T extends JCapability> void sendPackets(Entity entity, ResourceLocation s2c, ResourceLocation c2s, T cap) {
