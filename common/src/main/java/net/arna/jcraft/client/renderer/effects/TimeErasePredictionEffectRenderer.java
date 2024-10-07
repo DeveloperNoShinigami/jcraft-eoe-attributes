@@ -82,7 +82,7 @@ public class TimeErasePredictionEffectRenderer {
         consumers.endBatch(Sheets.cutoutBlockSheet());
 
         // Acquire the predictions
-        Set<Map.Entry<Entity, Vec3>> predictionsSet;
+        final Set<Map.Entry<Entity, Vec3>> predictionsSet;
         synchronized (predictions) {
             predictionsSet = new HashSet<>(predictions.entrySet());
         }
@@ -163,11 +163,11 @@ public class TimeErasePredictionEffectRenderer {
     }
 
     private static void updatePredictions() {
-        final Set<Map.Entry<Entity, Vec3>> predictionsSet;
+        final Map<Entity, Vec3>  predictionsCopy;
         synchronized (predictions) {
-            predictionsSet = new HashSet<>(predictions.entrySet());
+            predictionsCopy = new HashMap<>(predictions);
         }
 
-        PredictionMove.updatePredictions(predictionsSet, ticksLeft);
+        PredictionMove.updatePredictions(predictionsCopy, ticksLeft);
     }
 }

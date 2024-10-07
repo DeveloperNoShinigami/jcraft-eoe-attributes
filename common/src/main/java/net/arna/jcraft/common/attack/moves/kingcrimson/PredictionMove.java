@@ -26,7 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEntity> {
     public static final MoveVariable<Map<Entity, Vec3>> PREDICTION_INFO = new MoveVariable<>(new TypeToken<>() {
@@ -120,7 +119,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     public void tickPredictions(final KingCrimsonEntity attacker) {
         final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
         final Map<Entity, Vec3> predictions = new HashMap<>(predictionInfo);
-        updatePredictions(predictions.entrySet(), attacker.getMoveStun());
+        updatePredictions(predictions, attacker.getMoveStun());
         predictionInfo.clear();
         predictionInfo.putAll(predictions);
     }
@@ -134,20 +133,17 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != stand && e != player));
     }
 
-    public static void updatePredictions(final Set<Map.Entry<Entity, Vec3>> predictionsSet, final int ticksLeft) {
-        Map<Entity, Map.Entry<Entity, Vec3>> predictions = predictionsSet.stream()
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> e));
-        Set<Entity> updated = new HashSet<>();
-
-        for (Map.Entry<Entity, Map.Entry<Entity, Vec3>> prediction : predictions.entrySet()) {
-            updatePrediction(predictions, prediction.getValue(), updated, ticksLeft);
+    public static void updatePredictions(final Map<Entity, Vec3> predictions, final int ticksLeft) {
+        final Set<Entity> updated = new HashSet<>();
+        for (Map.Entry<Entity, Vec3> prediction : predictions.entrySet()) {
+            updatePrediction(predictions, prediction, updated, ticksLeft);
         }
     }
 
     //todo: fixme
-    private static void updatePrediction(final Map<Entity, Map.Entry<Entity, Vec3>> predictions, final Map.Entry<Entity, Vec3> prediction,
+    private static void updatePrediction(final Map<Entity, Vec3> predictions, final Map.Entry<Entity, Vec3> prediction,
                                          final Set<Entity> updated, final int ticksLeft) {
-        Entity entity = prediction.getKey();
+        final Entity entity = prediction.getKey();
         if (updated.contains(entity)) {
             return;
         }
@@ -157,14 +153,14 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
             return;
         }
 
-        Level world = entity.level();
+        final Level world = entity.level();
 
-        Vec3 currentPos = entity.position().add(0, 0.1, 0);
+        final Vec3 currentPos = entity.position().add(0, 0.1, 0);
         Vec3 futurePos = currentPos;
         boolean changed = false;
 
-        Vec3i gravity = GravityChangerAPI.getGravityDirection(entity).getNormal();
-        Vec3 drop = new Vec3(gravity.getX(), gravity.getY(), gravity.getZ()).scale(9.81 / 400 * ticksLeft * ticksLeft);
+        final Vec3i gravity = GravityChangerAPI.getGravityDirection(entity).getNormal();
+        final Vec3 drop = new Vec3(gravity.getX(), gravity.getY(), gravity.getZ()).scale(9.81 / 400 * ticksLeft * ticksLeft);
 
         // If in air and not in a liquid, account for drop
         if (!entity.onGround() && !entity.isUnderWater() && !entity.isInLava()) {
@@ -194,7 +190,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
             }
 
             // Ensure vehicle is updated.
-            Map.Entry<Entity, Vec3> vehiclePrediction = predictions.get(vehicle);
+            Map.Entry<Entity, Vec3> vehiclePrediction = Map.entry(vehicle, predictions.get(vehicle));
             updatePrediction(predictions, vehiclePrediction, updated, ticksLeft);
             // Account for change in position of vehicle.
             futurePos = futurePos.add(vehiclePrediction.getValue().subtract(vehiclePrediction.getKey().position()));
