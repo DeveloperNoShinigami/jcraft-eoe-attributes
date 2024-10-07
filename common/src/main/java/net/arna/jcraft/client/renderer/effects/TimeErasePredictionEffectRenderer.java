@@ -81,12 +81,6 @@ public class TimeErasePredictionEffectRenderer {
         consumers.endBatch(Sheets.solidBlockSheet());
         consumers.endBatch(Sheets.cutoutBlockSheet());
 
-        // Acquire the predictions
-        Set<Map.Entry<Entity, Vec3>> predictionsSet;
-        synchronized (predictions) {
-            predictionsSet = new HashSet<>(predictions.entrySet());
-        }
-
         // Init frame-buffer
         predictionsBuffer.clear(false);
         predictionsBuffer.bindWrite(true);
@@ -94,7 +88,7 @@ public class TimeErasePredictionEffectRenderer {
         // Render entities
         final EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
 
-        for (final Map.Entry<Entity, Vec3> prediction : predictionsSet) {
+        for (final Map.Entry<Entity, Vec3> prediction : predictions.entrySet()) {
             final Entity entity = prediction.getKey();
             if (entity == null || !entity.isAlive()) {
                 continue;
@@ -163,11 +157,6 @@ public class TimeErasePredictionEffectRenderer {
     }
 
     private static void updatePredictions() {
-        final Set<Map.Entry<Entity, Vec3>> predictionsSet;
-        synchronized (predictions) {
-            predictionsSet = new HashSet<>(predictions.entrySet());
-        }
-
-        PredictionMove.updatePredictions(predictionsSet, ticksLeft);
+        PredictionMove.updatePredictions(predictions, ticksLeft);
     }
 }
