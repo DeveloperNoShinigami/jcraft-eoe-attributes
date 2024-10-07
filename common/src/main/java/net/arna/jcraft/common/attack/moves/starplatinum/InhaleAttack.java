@@ -26,18 +26,18 @@ public final class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumE
     private final RandomSource random = RandomSource.create();
     private final int inhaleDuration;
 
-    public InhaleAttack(int cooldown, int windup, int duration, float moveDistance, int inhaleDuration) {
+    public InhaleAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final int inhaleDuration) {
         super(cooldown, windup, duration, moveDistance);
         this.inhaleDuration = inhaleDuration;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(StarPlatinumEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final StarPlatinumEntity attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.setInhaleTime(inhaleDuration);
         return Set.of();
     }
 
-    public void tickInhale(StarPlatinumEntity attacker) {
+    public void tickInhale(final StarPlatinumEntity attacker) {
         int inhaleTime = attacker.getInhaleTime();
         if (inhaleTime <= 0 || !attacker.hasUser()) {
             return;

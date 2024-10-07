@@ -5,20 +5,19 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.LaserProjectile;
 import net.minecraft.resources.ResourceLocation;
 
-
 public class LaserProjectileModel extends GeoModel<LaserProjectile> {
     @Override
-    public ResourceLocation getModelResource(LaserProjectile object) {
+    public ResourceLocation getModelResource(final LaserProjectile object) {
         return JCraft.id("geo/laser.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(LaserProjectile object) {
+    public ResourceLocation getTextureResource(final LaserProjectile object) {
         return JCraft.id("textures/entity/projectiles/laser.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(LaserProjectile animatable) {
+    public ResourceLocation getAnimationResource(final LaserProjectile animatable) {
         return JCraft.id("animations/knife.animation.json");
     }
 

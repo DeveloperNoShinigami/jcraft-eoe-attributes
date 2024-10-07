@@ -23,11 +23,11 @@ public class SkyBoxManager {
         return currentSkyBox;
     }
 
-    public void setCurrentSkyBox(JSkyBox skyBox) {
+    public void setCurrentSkyBox(final JSkyBox skyBox) {
         this.currentSkyBox = skyBox;
     }
 
-    public void renderSkyBox(PoseStack matrices, Matrix4f matrix4f, float tickDelta, Camera camera, boolean thickFog) {
+    public void renderSkyBox(final PoseStack matrices, final Matrix4f matrix4f, final float tickDelta, final Camera camera, final boolean thickFog) {
         currentSkyBox.render(matrices, matrix4f, tickDelta, camera, thickFog);
     }
 
@@ -35,7 +35,7 @@ public class SkyBoxManager {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
 }

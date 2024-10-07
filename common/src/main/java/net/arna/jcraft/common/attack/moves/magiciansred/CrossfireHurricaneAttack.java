@@ -30,18 +30,18 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
     public static final IntMoveVariable HURRICANE_TIME = new IntMoveVariable();
     public static final MoveVariable<Vec3> HURRICANE_POS = new MoveVariable<>(Vec3.class);
 
-    public CrossfireHurricaneAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public CrossfireHurricaneAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user, final MoveContext ctx) {
         ctx.setInt(HURRICANE_TIME, 50);
         ctx.set(HURRICANE_POS, attacker.position());
         return Set.of();
     }
 
-    public void tickHurricane(MagiciansRedEntity stand) {
+    public void tickHurricane(final MagiciansRedEntity stand) {
         // Init variables
         final MoveContext ctx = stand.getMoveContext();
         int hurricaneTime = ctx.getInt(HURRICANE_TIME);
@@ -57,7 +57,7 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
         ctx.setInt(HURRICANE_TIME, --hurricaneTime);
 
         // Homing
-        List<LivingEntity> nearbyEnts = world.getEntitiesOfClass(LivingEntity.class,
+        final List<LivingEntity> nearbyEnts = world.getEntitiesOfClass(LivingEntity.class,
                 new AABB(hurricanePos.add(32.0, 32.0, 32.0), hurricanePos.subtract(32.0, 32.0, 32.0)),
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != vehicle && e != stand && e != user));
 
@@ -72,7 +72,7 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
         }
 
         // Damage
-        List<LivingEntity> toHurt = world.getEntitiesOfClass(LivingEntity.class,
+        final List<LivingEntity> toHurt = world.getEntitiesOfClass(LivingEntity.class,
                 new AABB(hurricanePos.add(2.5, 1, 2.5), hurricanePos.subtract(2.5, 1, 2.5)),
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != stand && e != user && e != vehicle));
 
@@ -90,7 +90,7 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
         }
 
         // Particles
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeShort(10);
 
         buf.writeDouble(hurricanePos.x);
@@ -103,7 +103,7 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(HURRICANE_TIME);
         ctx.register(HURRICANE_POS);
     }

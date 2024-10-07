@@ -8,17 +8,17 @@ import net.minecraft.resources.ResourceLocation;
 
 public class CoffinModel extends GeoModel<CoffinTileEntity> {
     @Override
-    public ResourceLocation getAnimationResource(CoffinTileEntity entity) {
+    public ResourceLocation getAnimationResource(final CoffinTileEntity entity) {
         return JCraft.id("animations/coffin.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(CoffinTileEntity animatable) {
+    public ResourceLocation getModelResource(final CoffinTileEntity animatable) {
         return JCraft.id("geo/coffin.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(CoffinTileEntity entity) {
+    public ResourceLocation getTextureResource(final CoffinTileEntity entity) {
         return JCraft.id("textures/block/coffin.png");
     }
 }

@@ -13,14 +13,14 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public final class AerialDivineFinisherAttack extends AbstractSimpleAttack<AerialDivineFinisherAttack, TheWorldOverHeavenEntity> {
-    public AerialDivineFinisherAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                                      float hitboxSize, float knockback, float offset) {
+    public AerialDivineFinisherAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                                      final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheWorldOverHeavenEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final TheWorldOverHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         final Vec3 heightOffset = getOffsetHeightPos(attacker);

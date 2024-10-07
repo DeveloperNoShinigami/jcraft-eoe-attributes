@@ -12,8 +12,8 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
  * @param <A>
  */
 public final class SimpleMultiHitAttack<A extends IAttacker<? extends A, ?>> extends AbstractMultiHitAttack<SimpleMultiHitAttack<A>, A> {
-    public SimpleMultiHitAttack(int cooldown, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback,
-                                float offset, IntCollection hitMoments) {
+    public SimpleMultiHitAttack(final int cooldown, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback,
+                                final float offset, final IntCollection hitMoments) {
         super(cooldown, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);
     }
 
@@ -26,9 +26,9 @@ public final class SimpleMultiHitAttack<A extends IAttacker<? extends A, ?>> ext
      * @param offset       The amount the hitbox is offset by.
      * @param hitMoments   The ticks at which this attack is performed.
      */
-    public static <A extends IAttacker<? extends A, ?>> SimpleMultiHitAttack<A> lightAttack(int duration, float moveDistance, float damage,
-                                                                                            int stun,
-                                                                                            float offset, IntCollection hitMoments) {
+    public static <A extends IAttacker<? extends A, ?>> SimpleMultiHitAttack<A> lightAttack(final int duration, final float moveDistance, final float damage,
+                                                                                            final int stun,
+                                                                                            final float offset, final IntCollection hitMoments) {
         return new SimpleMultiHitAttack<>(30, duration, moveDistance, damage, stun, 1.5f, 0.75f,
                 offset, hitMoments);
     }

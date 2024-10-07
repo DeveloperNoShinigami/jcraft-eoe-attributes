@@ -8,18 +8,14 @@ import java.util.Optional;
 
 public class NetworkUtilClient {
 
-    public static Optional<CommonGravityComponent> getGravityComponent(Minecraft client, int entityId) {
+    public static Optional<CommonGravityComponent> getGravityComponent(final Minecraft client, final int entityId) {
         if (client.level == null) {
             return Optional.empty();
         }
-        Entity entity = client.level.getEntity(entityId);
+        final Entity entity = client.level.getEntity(entityId);
         if (entity == null) {
             return Optional.empty();
         }
-        CommonGravityComponent gc = GravityChangerAPI.getGravityComponent(entity);
-        if (gc == null) {
-            return Optional.empty();
-        }
-        return Optional.of(gc);
+        return Optional.ofNullable(GravityChangerAPI.getGravityComponent(entity));
     }
 }

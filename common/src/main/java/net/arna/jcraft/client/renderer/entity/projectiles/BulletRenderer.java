@@ -8,22 +8,20 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
-
-
 public class BulletRenderer extends GeoProjectileRenderer<BulletProjectile> {
-    public BulletRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public BulletRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new BulletModel()); // 3x1x1 px cuboid model
     }
 
     @Override
-    public RenderType getRenderType(BulletProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final BulletProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entitySolid(texture);
     }
 
     @Override
-    public void render(BulletProjectile animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(final BulletProjectile animatable, final float yaw, final float partialTick, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
         poseStack.pushPose();
-        float scale = animatable.getCaliber() * 0.016f; // 62.5mm/px
+        final float scale = animatable.getCaliber() * 0.016f; // 62.5mm/px
         poseStack.scale(scale, scale, scale);
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
         poseStack.popPose();

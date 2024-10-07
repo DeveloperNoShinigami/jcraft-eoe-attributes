@@ -13,7 +13,7 @@ import java.util.Set;
 public final class BallModeMove extends AbstractMove<BallModeMove, CreamEntity> {
     private final boolean enter;
 
-    public BallModeMove(int cooldown, int windup, int duration, float moveDistance, boolean enter) {
+    public BallModeMove(final int cooldown, final int windup, final int duration, final float moveDistance, final boolean enter) {
         super(cooldown, windup, duration, moveDistance);
         this.enter = enter;
         if (enter) {
@@ -22,7 +22,7 @@ public final class BallModeMove extends AbstractMove<BallModeMove, CreamEntity> 
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final CreamEntity attacker, final LivingEntity user, final MoveContext ctx) {
         if (enter) {
             attacker.beginHalfBall();
         } else {

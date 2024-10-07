@@ -43,8 +43,8 @@ public class EpitaphOverlay {
     }
 
     public static void preload() {
-        TextureManager texMan = Minecraft.getInstance().getTextureManager();
-        ExecutorService executor = Executors.newCachedThreadPool();
+        final TextureManager texMan = Minecraft.getInstance().getTextureManager();
+        final ExecutorService executor = Executors.newCachedThreadPool();
         for (State state : State.values()) {
             state.preload(texMan, executor);
         }
@@ -121,6 +121,9 @@ public class EpitaphOverlay {
         return lastFrame / 9f;
     }
 
+    /**
+     * The states the overlay can be in.
+     */
     public enum State {
         NONE(null, false),
         INTRO("intro", false),
@@ -132,7 +135,7 @@ public class EpitaphOverlay {
         @Getter
         private final @Nullable FrameCounter frameCounter;
 
-        State(@Nullable String path, boolean looping) {
+        State(final @Nullable String path, final boolean looping) {
             final String prefix = "textures/gui/epitaph_overlay/";
             animation = path == null ? null : HUDAnimation.create(JCraft.id(prefix + path + "/atlas.png"),
                     JCraft.id(prefix + path + "/atlas.json"));
@@ -145,7 +148,7 @@ public class EpitaphOverlay {
          * @param textureManager The texture manager that should be used to load the textures
          * @param executor       The executor to load the textures with.
          */
-        private void preload(TextureManager textureManager, Executor executor) {
+        private void preload(final TextureManager textureManager, final Executor executor) {
             if (animation == null) {
                 return;
             }
@@ -158,7 +161,7 @@ public class EpitaphOverlay {
          * @param index The index of the frame to get
          * @return the frame at the given index.
          */
-        public HUDAnimation.Frame getFrame(int index) {
+        public HUDAnimation.Frame getFrame(final int index) {
             if (animation == null) {
                 throw new IllegalStateException("NONE state has no animation.");
             }
@@ -173,7 +176,7 @@ public class EpitaphOverlay {
          * @param forceOutro Whether to move to the outro state regardless of what our current state is.
          * @return The next state
          */
-        public State nextState(boolean forceOutro) {
+        public State nextState(final boolean forceOutro) {
             if (animation == null) {
                 return this;
             }

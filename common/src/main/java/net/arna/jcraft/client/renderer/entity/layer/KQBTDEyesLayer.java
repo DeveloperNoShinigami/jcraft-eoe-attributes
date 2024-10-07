@@ -16,14 +16,14 @@ import net.minecraft.resources.ResourceLocation;
 public class KQBTDEyesLayer extends GeoRenderLayer<KQBTDEntity> {
     private static final ResourceLocation LAYER = new ResourceLocation(JCraft.MOD_ID, "textures/entity/stands/killer_queen_bites_the_dust/eyes.png");
 
-    public KQBTDEyesLayer(GeoRenderer<KQBTDEntity> entityRendererIn) {
+    public KQBTDEyesLayer(final GeoRenderer<KQBTDEntity> entityRendererIn) {
         super(entityRendererIn);
     }
 
     @Override
-    public void render(PoseStack poseStack, KQBTDEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
-                       MultiBufferSource bufferSource, VertexConsumer buffer, float partialTicks, int packedLight, int packedOverlay) {
-        RenderType cameo = RenderType.eyes(LAYER);
+    public void render(final PoseStack poseStack, final KQBTDEntity animatable, final BakedGeoModel bakedModel, final RenderType renderType,
+                       final MultiBufferSource bufferSource, final VertexConsumer buffer, final float partialTicks, final int packedLight, final int packedOverlay) {
+        final RenderType cameo = RenderType.eyes(LAYER);
 
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
                 bufferSource.getBuffer(cameo), partialTicks, 15728640, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);

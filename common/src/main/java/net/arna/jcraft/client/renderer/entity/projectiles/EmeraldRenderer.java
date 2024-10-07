@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 
 public class EmeraldRenderer extends GeoProjectileRenderer<EmeraldProjectile> {
-    public EmeraldRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public EmeraldRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new EmeraldModel());
     }
 }

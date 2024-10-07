@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class JArmor<T extends Item & GeoItem> extends GeoArmorRenderer<T> {
 
-    public JArmor(GeoModel<T> model) {
+    public JArmor(final GeoModel<T> model) {
         super(model);
     }
 

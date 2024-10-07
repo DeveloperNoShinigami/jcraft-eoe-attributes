@@ -7,17 +7,17 @@ import net.minecraft.resources.ResourceLocation;
 
 public class SunBeamModel extends GeoModel<SunBeamProjectile> {
     @Override
-    public ResourceLocation getModelResource(SunBeamProjectile object) {
+    public ResourceLocation getModelResource(final SunBeamProjectile object) {
         return JCraft.id("geo/sunbeam.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(SunBeamProjectile object) {
+    public ResourceLocation getTextureResource(final SunBeamProjectile object) {
         return JCraft.id("textures/entity/sunbeam/skin_" + object.getSkin() + ".png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(SunBeamProjectile animatable) {
+    public ResourceLocation getAnimationResource(final SunBeamProjectile animatable) {
         return JCraft.id("animations/sunbeam.animation.json");
     }
 

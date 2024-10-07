@@ -17,13 +17,13 @@ import java.util.Set;
 public final class CoinTossAttack extends AbstractMove<CoinTossAttack, KillerQueenEntity> {
     public static final MoveVariable<ItemEntity> COIN = new MoveVariable<>(ItemEntity.class);
 
-    public CoinTossAttack(int cooldown) {
+    public CoinTossAttack(final int cooldown) {
         super(cooldown, 0, 0, 1f);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KillerQueenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         ItemEntity coin = ctx.get(COIN);
         final Vec3 lookVec = user.getLookAngle().scale(0.75);
         if (coin != null) {
@@ -43,7 +43,7 @@ public final class CoinTossAttack extends AbstractMove<CoinTossAttack, KillerQue
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(COIN);
     }
 

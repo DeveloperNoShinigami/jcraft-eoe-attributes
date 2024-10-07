@@ -12,8 +12,8 @@ import java.util.List;
 public final class KnockdownAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingAttack<KnockdownAttack<A>, A> {
     private final int knockdownDuration;
 
-    public KnockdownAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                           float hitboxSize, float knockback, float offset, int knockdownDuration) {
+    public KnockdownAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                           final float hitboxSize, final float knockback, final float offset, final int knockdownDuration) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset,
                 List.of(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), knockdownDuration, 0)));
         this.knockdownDuration = knockdownDuration;

@@ -8,13 +8,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class FlamethrowerAttack extends AbstractBarrageAttack<FlamethrowerAttack, MagiciansRedEntity> {
-    public FlamethrowerAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback,
-                              float offset, int interval) {
+    public FlamethrowerAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback,
+                              final float offset, final int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         for (LivingEntity target : targets) {
             if (!target.isOnFire()) {

@@ -25,12 +25,12 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public final class DetonateAttack extends AbstractMove<DetonateAttack, AbstractKillerQueenEntity<?, ?>> {
-    public DetonateAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public DetonateAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final AbstractKillerQueenEntity<?, ?> attacker, final LivingEntity user, final MoveContext ctx) {
         final CommonBombTrackerComponent.BombData bombData = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
 
         final Entity bombEntity = bombData.bombEntity;
@@ -58,7 +58,7 @@ public final class DetonateAttack extends AbstractMove<DetonateAttack, AbstractK
         return copyExtras(new DetonateAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
     }
 
-    public static void explode(AbstractKillerQueenEntity<?, ?> stand, Entity user, Vec3 pos) {
+    public static void explode(final AbstractKillerQueenEntity<?, ?> stand, final Entity user, final Vec3 pos) {
         final ServerLevel serverWorld = (ServerLevel) stand.level();
 
         JCraft.createParticle(serverWorld, pos.x, pos.y, pos.z, JParticleType.BOOM);

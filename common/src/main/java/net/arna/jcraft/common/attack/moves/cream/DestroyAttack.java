@@ -14,15 +14,15 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public final class DestroyAttack extends AbstractEffectInflictingAttack<DestroyAttack, CreamEntity> {
-    public DestroyAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                         float hitboxSize, float knockback, float offset) {
+    public DestroyAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                         final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset,
                 List.of(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0, true, false)));
         hitSpark = JParticleType.HIT_SPARK_3;
     }
 
     @Override
-    protected void processTarget(CreamEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
+    protected void processTarget(final CreamEntity attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         StandEntity.trueDamage(8, JDamageSources.stand(attacker), target);

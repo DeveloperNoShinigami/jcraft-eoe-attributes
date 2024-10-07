@@ -20,21 +20,21 @@ public class GoldExperienceRenderer extends StandEntityRenderer<GoldExperienceEn
     private static final int overclockWindupPoint = GoldExperienceEntity.OVERCLOCK.getWindupPoint();
     private static final ParticleOptions chargeParticle = ParticleTypes.COMPOSTER;
 
-    public GoldExperienceRenderer(EntityRendererProvider.Context context) {
+    public GoldExperienceRenderer(final EntityRendererProvider.Context context) {
         super(context, new GoldenExperienceModel());
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, GoldExperienceEntity stand, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(final PoseStack poseStack, final GoldExperienceEntity stand, final BakedGeoModel model, final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, getAlpha(animatable, partialTick));
 
         if (stand.getState() == GoldExperienceEntity.State.OVERCLOCK && stand.getMoveStun() > overclockWindupPoint) {
             if (currentTick < 0 || currentTick != stand.tickCount) {
                 this.currentTick = stand.tickCount;
                 model.getBone("lowerleft").ifPresent(bone -> {
-                    RandomSource random = stand.getRandom();
-                    Vector3d worldPos = bone.getWorldPosition();
-                    Vec3 standVel = JUtils.deltaPos(stand);
+                    final RandomSource random = stand.getRandom();
+                    final Vector3d worldPos = bone.getWorldPosition();
+                    final Vec3 standVel = JUtils.deltaPos(stand);
 
                     stand.getCommandSenderWorld().addParticle(chargeParticle,
                             worldPos.x, worldPos.y, worldPos.z,

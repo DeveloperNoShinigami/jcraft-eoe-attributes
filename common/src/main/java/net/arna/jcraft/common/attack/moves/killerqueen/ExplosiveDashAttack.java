@@ -11,13 +11,13 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public final class ExplosiveDashAttack extends AbstractMove<ExplosiveDashAttack, AbstractKillerQueenEntity<?, ?>> {
-    public ExplosiveDashAttack(int cooldown) {
+    public ExplosiveDashAttack(final int cooldown) {
         super(cooldown, 0, 0, 0);
         dash = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final AbstractKillerQueenEntity<?, ?> attacker, final LivingEntity user, final MoveContext ctx) {
         final Vec3 lookVec = user.getLookAngle().scale(0.9);
         attacker.level().explode(user,
                 user.getX() - lookVec.x,

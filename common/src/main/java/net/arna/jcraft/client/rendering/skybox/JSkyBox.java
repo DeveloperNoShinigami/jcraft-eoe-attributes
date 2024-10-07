@@ -7,5 +7,5 @@ import org.joml.Matrix4f;
 public interface JSkyBox {
     float getAlpha();
 
-    void render(PoseStack matrices, Matrix4f matrix4f, float tickDelta, Camera camera, boolean thickFog);
+    void render(final PoseStack matrices, final Matrix4f matrix4f, final float tickDelta, final Camera camera, final boolean thickFog);
 }

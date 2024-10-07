@@ -5,7 +5,7 @@ import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 
 public class PixelParticle extends RisingParticle {
-    PixelParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider) {
+    PixelParticle(final ClientLevel world, final double x, final double y, final double z, final double velocityX, final double velocityY, final double velocityZ, final SpriteSet spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
         this.setSpriteFromAge(spriteProvider);
         this.setColor(1.0f, 0.7f, 0.4f);
@@ -27,18 +27,18 @@ public class PixelParticle extends RisingParticle {
     }
 
     @Override
-    protected int getLightColor(float tint) {
+    protected int getLightColor(final float tint) {
         return 255;
     }
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteProvider;
 
-        public Factory(SpriteSet spriteProvider) {
+        public Factory(final SpriteSet spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(final SimpleParticleType defaultParticleType, final ClientLevel clientWorld, final double d, final double e, final double f, final double g, final double h, final double i) {
             return new PixelParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
         }
     }

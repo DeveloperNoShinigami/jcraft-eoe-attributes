@@ -18,14 +18,14 @@ import net.minecraft.world.item.ShieldItem;
 import org.jetbrains.annotations.Nullable;
 
 public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
-    public WhiteSnakeRenderer(EntityRendererProvider.Context context) {
+    public WhiteSnakeRenderer(final EntityRendererProvider.Context context) {
         super(context, new WhiteSnakeModel());
 
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
 
-            @javax.annotation.Nullable
+            @Nullable
             @Override
-            protected ItemStack getStackForBone(GeoBone bone, WhiteSnakeEntity animatable) {
+            protected ItemStack getStackForBone(final GeoBone bone, final WhiteSnakeEntity animatable) {
                 // Retrieve the items in the entity's hands for the relevant bone
                 return switch (bone.getName()) {
                     case LEFT_HAND -> animatable.isLeftHanded() ?
@@ -37,7 +37,7 @@ public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
             }
 
             @Override
-            protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, WhiteSnakeEntity animatable) {
+            protected ItemDisplayContext getTransformTypeForStack(final GeoBone bone, final ItemStack stack, final WhiteSnakeEntity animatable) {
                 // Apply the camera transform for the given hand
                 return switch (bone.getName()) {
                     case LEFT_HAND -> ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
@@ -48,8 +48,8 @@ public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
 
             // Do some quick render modifications depending on what the item is
             @Override
-            protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, WhiteSnakeEntity animatable,
-                                              MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
+            protected void renderStackForBone(final PoseStack poseStack, final GeoBone bone, final ItemStack stack, final WhiteSnakeEntity animatable,
+                                              final MultiBufferSource bufferSource, final float partialTick, final int packedLight, final int packedOverlay) {
 
                 poseStack.mulPose(Axis.XP.rotationDegrees(bone.getRotX() - 90f));
                 // poseStack.mulPose(Axis.YP.rotationDegrees(bone.getRotY() - 90f));
@@ -76,13 +76,13 @@ public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
     }
 
     @Override
-    public RenderType getRenderType(WhiteSnakeEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final WhiteSnakeEntity animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return StandEntityRenderer.renderTypeOf(animatable, texture);
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, WhiteSnakeEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        float a = StandEntityRenderer.getAlpha(animatable, partialTick);
+    public void actuallyRender(final PoseStack poseStack, final WhiteSnakeEntity animatable, final BakedGeoModel model, final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
+        final float a = StandEntityRenderer.getAlpha(animatable, partialTick);
 
         this.mainHandItem = animatable.getMainHandItem();
         this.offHandItem = animatable.getOffhandItem();

@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.Set;
 
 public final class RedirectAttack extends AbstractMove<RedirectAttack, MagiciansRedEntity> {
-    public RedirectAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public RedirectAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         mobilityType = MobilityType.TELEPORT; // this is a LIE, it just tells the AI to use it at a range of >3m
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final List<AnkhProjectile> ankhs = attacker.level().getEntitiesOfClass(AnkhProjectile.class,
                 attacker.getBoundingBox().inflate(32), EntitySelector.ENTITY_STILL_ALIVE);
 

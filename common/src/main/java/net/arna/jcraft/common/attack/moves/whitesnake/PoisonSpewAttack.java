@@ -9,14 +9,14 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class PoisonSpewAttack extends AbstractSimpleAttack<PoisonSpewAttack, WhiteSnakeEntity> {
-    public PoisonSpewAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                            float hitboxSize, float knockback, float offset) {
+    public PoisonSpewAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                            final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         this.ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(WhiteSnakeEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.level(), user);
         acidProjectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, 1.33F, 0);
         acidProjectile.setPos(attacker.getEyePosition());

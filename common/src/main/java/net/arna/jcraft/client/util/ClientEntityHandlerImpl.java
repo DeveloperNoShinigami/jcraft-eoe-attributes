@@ -40,17 +40,17 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
     }
 
     @Override
-    public void bombTrackerParticleTick(Entity entity, CommonBombTrackerComponent.BombData bombData) {
-        Vec3 bombPos = bombData.getBombPos();
+    public void bombTrackerParticleTick(final Entity entity, final CommonBombTrackerComponent.BombData bombData) {
+        final Vec3 bombPos = bombData.getBombPos();
         if (bombPos == null) {
             return;
         }
-        ClientLevel clientWorld = (ClientLevel) entity.level();
+        final ClientLevel clientWorld = (ClientLevel) entity.level();
 
         SimpleParticleType particleType = ParticleTypes.WITCH; // Far particle
-        Vec3 v1 = bombPos.add(3, 3, 3);
-        Vec3 v2 = bombPos.add(-3, -3, -3);
-        List<LivingEntity> list = clientWorld.getEntitiesOfClass(LivingEntity.class, new AABB(v1, v2), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
+        final Vec3 v1 = bombPos.add(3, 3, 3);
+        final Vec3 v2 = bombPos.add(-3, -3, -3);
+        final List<LivingEntity> list = clientWorld.getEntitiesOfClass(LivingEntity.class, new AABB(v1, v2), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
 
         double xLength = 0, yLength = 0, zLength = 0;
         if (!bombData.isBlock) {
@@ -74,7 +74,7 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
             }
         }
 
-        RandomSource random = clientWorld.getRandom();
+        final RandomSource random = clientWorld.getRandom();
 
         //TODO: fix bomb particle rendering in other gravities
         if (bombData.isEntity) {
@@ -99,7 +99,7 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
     }
 
     @Override
-    public void standEntityClientTick(StandEntity<?, ?> stand) {
+    public void standEntityClientTick(final StandEntity<?, ?> stand) {
         // This won't be called if the stand has no user; see StandEntity#tick()
         final LivingEntity user = stand.getUserOrThrow();
         final Minecraft client = Minecraft.getInstance();
@@ -142,13 +142,13 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
 
     private static final double metersPerTickSquared = 9.81 / 400;
 
-    private void displayAuraParticles(ClientLevel clientWorld, RandomSource random, Entity entity, Vector3f maxBox, Direction gravity, Vector3f color) {
+    private void displayAuraParticles(final ClientLevel clientWorld, final RandomSource random, final Entity entity, final Vector3f maxBox, final Direction gravity, final Vector3f color) {
         if (JClientUtils.shouldNotRender(entity)) {
             return;
         }
 
-        Vec3 pos = entity.position();
-        Vec3 vel = Vec3.atLowerCornerOf(gravity.getNormal()).scale(-metersPerTickSquared);
+        final Vec3 pos = entity.position();
+        final Vec3 vel = Vec3.atLowerCornerOf(gravity.getNormal()).scale(-metersPerTickSquared);
         /*
         Vec3d vel = entity.getVelocity();
         if (entity instanceof ClientPlayerEntity)
@@ -176,13 +176,13 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
     }
 
     @Override
-    public void whiteSnakeRemoteClientTick(@NotNull WhiteSnakeEntity whiteSnakeEntity) {
-        Minecraft client = Minecraft.getInstance();
+    public void whiteSnakeRemoteClientTick(final @NotNull WhiteSnakeEntity whiteSnakeEntity) {
+        final Minecraft client = Minecraft.getInstance();
         if (JUtils.getStand(client.player) != whiteSnakeEntity) {
             return;
         }
 
-        Options options = client.options;
+        final Options options = client.options;
         float f = 0, s = 0;
         boolean jump = options.keyJump.isDown();
         if (options.keyUp.isDown()) {
@@ -203,13 +203,13 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
     }
 
     @Override
-    public void purpleHazeRemoteClientTick(@NotNull AbstractPurpleHazeEntity<?, ?> purpleHazeEntity) {
-        Minecraft client = Minecraft.getInstance();
+    public void purpleHazeRemoteClientTick(final @NotNull AbstractPurpleHazeEntity<?, ?> purpleHazeEntity) {
+        final Minecraft client = Minecraft.getInstance();
         if (JUtils.getStand(client.player) != purpleHazeEntity) {
             return;
         }
 
-        Options options = client.options;
+        final Options options = client.options;
         float f = 0, s = 0;
         boolean jump = options.keyJump.isDown();
         if (options.keyUp.isDown()) {
@@ -230,16 +230,16 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
     }
 
     @Override
-    public void hierophantGreenRemoteClientTick(@NotNull HGEntity hgEntity) {
-        Minecraft client = Minecraft.getInstance();
+    public void hierophantGreenRemoteClientTick(final @NotNull HGEntity hgEntity) {
+        final Minecraft client = Minecraft.getInstance();
         if (JUtils.getStand(client.player) != hgEntity) {
             return;
         }
 
-        Options options = client.options;
+        final Options options = client.options;
         float f = 0, s = 0;
-        boolean jump = options.keyJump.isDown();
-        boolean sneak = options.keyShift.isDown();
+        final boolean jump = options.keyJump.isDown();
+        final boolean sneak = options.keyShift.isDown();
         if (options.keyUp.isDown()) {
             f += 1.0f;
         }
@@ -257,8 +257,8 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
     }
 
     @Override
-    public void sheerHeartAttackEntityTick(SheerHeartAttackEntity sHAEntity) {
-        Minecraft client = Minecraft.getInstance();
+    public void sheerHeartAttackEntityTick(final SheerHeartAttackEntity sHAEntity) {
+        final Minecraft client = Minecraft.getInstance();
         UUID ownerId = sHAEntity.getOwnerId();
         if (ownerId == null) {
             return;

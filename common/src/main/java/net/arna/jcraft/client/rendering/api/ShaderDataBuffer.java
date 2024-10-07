@@ -13,7 +13,7 @@ public class ShaderDataBuffer {
      *
      * @param size the size of the buffer (how many float numbers it can store)
      */
-    public void generate(long size) {
+    public void generate(final long size) {
         destroy();
 
         tbo = glGenBuffers();
@@ -37,15 +37,15 @@ public class ShaderDataBuffer {
         tex = 0;
     }
 
-    public void upload(float[] data) {
+    public void upload(final float[] data) {
         glBindBuffer(GL_TEXTURE_BUFFER, tbo);
         glBufferSubData(GL_TEXTURE_BUFFER, 0, data);
         glBindBuffer(GL_TEXTURE_BUFFER, 0);
     }
 
-    public void apply(EffectInstance effect, String uniform) {
+    public void apply(final EffectInstance effect, final String uniform) {
         glBindBuffer(GL_TEXTURE_BUFFER, tbo);
-        int unit = effect.samplerMap.size();
+        final int unit = effect.samplerMap.size();
         glActiveTexture(GL_TEXTURE0 + unit);
         glBindTexture(GL_TEXTURE_BUFFER, tex);
 

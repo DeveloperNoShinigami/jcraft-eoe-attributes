@@ -35,7 +35,7 @@ public class PlayerCloneClientPlayerEntity extends AbstractClientPlayer {
         });
     }
 
-    public PlayerCloneClientPlayerEntity(PlayerCloneEntity clone) {
+    public PlayerCloneClientPlayerEntity(final PlayerCloneEntity clone) {
         super(Objects.requireNonNull(Minecraft.getInstance().level), CLONE_PROFILE);
         this.clone = clone;
         entities.add(this);

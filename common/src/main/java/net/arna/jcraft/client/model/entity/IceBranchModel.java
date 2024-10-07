@@ -16,17 +16,17 @@ public class IceBranchModel extends GeoModel<IceBranchProjectile> {
         }
     }
     @Override
-    public ResourceLocation getModelResource(IceBranchProjectile object) {
+    public ResourceLocation getModelResource(final IceBranchProjectile object) {
         return JCraft.id("geo/ice_branch.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(IceBranchProjectile object) {
+    public ResourceLocation getTextureResource(final IceBranchProjectile object) {
         return skins.get(object.getId() % 3);
     }
 
     @Override
-    public ResourceLocation getAnimationResource(IceBranchProjectile animatable) {
+    public ResourceLocation getAnimationResource(final IceBranchProjectile animatable) {
         return JCraft.id("animations/ice_branch.animation.json");
     }
 }

@@ -17,17 +17,17 @@ public class MainMenuScreen extends AbstractContainerScreen<MainMenu> {
 
     protected StandEntity<?,?> stand;
 
-    public MainMenuScreen(MainMenu menu, Inventory playerInventory, Component title) {
+    public MainMenuScreen(final MainMenu menu, final Inventory playerInventory, final Component title) {
         super(menu, playerInventory, title);
         stand = JUtils.getStand(playerInventory.player);
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(final GuiGraphics guiGraphics, final float partialTick, final int mouseX, final int mouseY) {
         guiGraphics.blit(JCraft.id("textures/gui/menu_screen.png"), leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderLabels(final GuiGraphics guiGraphics, final int mouseX, final int mouseY) {
         int row = 0;
         drawText(guiGraphics, this.title, row++, 0);
         if (stand == null || stand.getStandType() == StandType.NONE) {

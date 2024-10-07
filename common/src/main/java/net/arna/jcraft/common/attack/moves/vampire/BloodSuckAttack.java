@@ -16,23 +16,23 @@ import java.util.Set;
 public final class BloodSuckAttack<A extends JSpec<A, S>, S extends Enum<S> & SpecAnimationState<A>> extends AbstractSpecGrabAttack<BloodSuckAttack<A, S>, A, S> {
     public static final MoveVariable<LivingEntity> TARGET = new MoveVariable<>(LivingEntity.class);
 
-    public BloodSuckAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
-                           float hitboxSize, float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState, int grabDuration, double grabOffset) {
+    public BloodSuckAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun,
+                           final float hitboxSize, final float knockback, final float offset, final AbstractMove<?, ? super A> hitMove, final S hitState, final int grabDuration, final double grabOffset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMove, hitState, grabDuration, grabOffset);
     }
 
-    public BloodSuckAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
-                           float hitboxSize, float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState) {
+    public BloodSuckAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun,
+                           final float hitboxSize, final float knockback, final float offset, final AbstractMove<?, ? super A> hitMove, final S hitState) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMove, hitState);
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(TARGET, null);
     }
 
     @Override
-    public void performHook(A attacker, Set<LivingEntity> targets, Set<AABB> boxes, DamageSource damageSource, Vec3 forwardPos, Vec3 rotationVector, MoveContext ctx) {
+    public void performHook(final A attacker, final Set<LivingEntity> targets, final Set<AABB> boxes, final DamageSource damageSource, final Vec3 forwardPos, final Vec3 rotationVector, final MoveContext ctx) {
         super.performHook(attacker, targets, boxes, damageSource, forwardPos, rotationVector, ctx);
         if (!targets.isEmpty()) {
             ctx.set(TARGET, targets.stream().findFirst().get());

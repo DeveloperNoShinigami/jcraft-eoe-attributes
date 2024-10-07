@@ -11,20 +11,21 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
 public final class SCCounterAttack extends AbstractCounterAttack<SCCounterAttack, SilverChariotEntity> {
+
     private final CounterMissMove<SilverChariotEntity> counterMiss = new CounterMissMove<>(20);
 
-    public SCCounterAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public SCCounterAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public void whiff(@NonNull SilverChariotEntity attacker, @NonNull LivingEntity user) {
+    public void whiff(final @NonNull SilverChariotEntity attacker, final @NonNull LivingEntity user) {
         attacker.setMove(counterMiss, SilverChariotEntity.State.COUNTER_MISS);
         JCraft.stun(user, counterMiss.getDuration(), 0);
     }
 
     @Override
-    public void counter(@NonNull SilverChariotEntity attacker, Entity countered, DamageSource counteredDamageSource) {
+    public void counter(final @NonNull SilverChariotEntity attacker, final Entity countered, final DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
 
         if (!(countered instanceof LivingEntity ent)) {

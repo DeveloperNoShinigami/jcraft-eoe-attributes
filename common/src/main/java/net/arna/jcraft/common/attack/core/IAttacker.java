@@ -26,7 +26,7 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S> {
 
     int getMoveStun();
 
-    void setMoveStun(int moveStun);
+    void setMoveStun(final int moveStun);
 
     // This cannot be called getWorld because it doesn't get remapped since it's in an interface.
     // StandEntity implements
@@ -38,11 +38,11 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S> {
 
     DamageSource getDamageSource();
 
-    boolean initMove(MoveType type);
+    boolean initMove(final MoveType type);
 
-    boolean canHoldMove(@Nullable MoveInputType type);
+    boolean canHoldMove(final @Nullable MoveInputType type);
 
-    default void onUserMoveInput(AbstractMove<?, ? super A> currentMove, MoveInputType type, boolean pressed, boolean moveInitiated) {
+    default void onUserMoveInput(final AbstractMove<?, ? super A> currentMove, final MoveInputType type, final boolean pressed, final boolean moveInitiated) {
         if ((moveInitiated && pressed && canHoldMove(type))) {
             setHoldingType(type);
         }
@@ -56,11 +56,11 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S> {
 
     boolean isHolding();
 
-    void setHolding(boolean holding);
+    void setHolding(final boolean holding);
 
     MoveInputType getHoldingType();
 
-    void setHoldingType(MoveInputType holdingType);
+    void setHoldingType(final MoveInputType holdingType);
 
     boolean canAttack();
 
@@ -70,22 +70,22 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S> {
 
     AbstractMove<?, ? super A> getCurrentMove();
 
-    void setCurrentMove(AbstractMove<?, ? super A> move);
+    void setCurrentMove(final AbstractMove<?, ? super A> move);
 
-    default void setMove(AbstractMove<?, ? super A> move, S state) {
+    default void setMove(final AbstractMove<?, ? super A> move, S state) {
         setCurrentMove(move);
         setState(state);
     }
 
     S getState();
 
-    void setState(S state);
+    void setState(final S state);
 
-    default void playAttackerSound(SoundEvent sound, float volume, float pitch) {
+    default void playAttackerSound(final SoundEvent sound, final float volume, final float pitch) {
         getBaseEntity().playSound(sound, volume, pitch);
     }
 
-    void setPerformedThisTick(boolean b);
+    void setPerformedThisTick(final boolean b);
     boolean performedThisTick();
 
     A getThis();

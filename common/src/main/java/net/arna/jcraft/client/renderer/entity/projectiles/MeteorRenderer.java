@@ -10,22 +10,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 
 public class MeteorRenderer extends GeoProjectileRenderer<MeteorProjectile> {
-    public MeteorRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public MeteorRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new MeteorModel());
     }
 
     @Override
-    protected int getBlockLightLevel(MeteorProjectile entity, BlockPos pos) {
+    protected int getBlockLightLevel(final MeteorProjectile entity, final BlockPos pos) {
         return 15;
     }
 
     @Override
-    public RenderType getRenderType(MeteorProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final MeteorProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.eyes(texture);
     }
 
     @Override
-    public void render(MeteorProjectile animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(final MeteorProjectile animatable, final float yaw, final float partialTick, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
     }
 }

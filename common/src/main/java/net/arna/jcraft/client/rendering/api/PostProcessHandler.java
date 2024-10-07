@@ -14,7 +14,7 @@ public class PostProcessHandler {
      * IMPORTANT: processors has to be added in the right order!!!
      * There's no way of getting an instance, so you need to keep the instance yourself.
      */
-    public static void addInstance(PostProcessor instance) {
+    public static void addInstance(final PostProcessor instance) {
         instances.add(instance);
     }
 
@@ -26,11 +26,11 @@ public class PostProcessHandler {
         didCopyDepth = true;
     }
 
-    public static void resize(int width, int height) {
+    public static void resize(final int width, final int height) {
         instances.forEach(i -> i.resize(width, height));
     }
 
-    public static void renderLast(PoseStack matrices) {
+    public static void renderLast(final PoseStack matrices) {
         copyDepthBuffer(); // copy the depth buffer if the mixin didn't trigger
 
         PostProcessor.viewModelStack = matrices;

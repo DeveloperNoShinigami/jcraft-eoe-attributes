@@ -20,19 +20,19 @@ public final class FeignBarrageCounterAttack extends AbstractCounterAttack<Feign
     private static final CounterMissMove<TheWorldEntity> missAttack = new CounterMissMove<>(10);
     private final AbstractMove<?, ? super TheWorldEntity> hitMove;
 
-    public FeignBarrageCounterAttack(int cooldown, int windup, int duration, float moveDistance, AbstractMove<?, ? super TheWorldEntity> hitMove) {
+    public FeignBarrageCounterAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final AbstractMove<?, ? super TheWorldEntity> hitMove) {
         super(cooldown, windup, duration, moveDistance);
         this.hitMove = hitMove;
     }
 
     @Override
-    public void whiff(@NonNull TheWorldEntity attacker, @NonNull LivingEntity user) {
+    public void whiff(final @NonNull TheWorldEntity attacker, final @NonNull LivingEntity user) {
         attacker.setMove(missAttack, TheWorldEntity.State.COUNTER_MISS);
         JCraft.stun(user, missAttack.getDuration(), 0);
     }
 
     @Override
-    public void counter(@NonNull TheWorldEntity attacker, Entity countered, DamageSource counteredDamageSource) {
+    public void counter(final @NonNull TheWorldEntity attacker, final Entity countered, final DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
 
         if (countered == null || !attacker.hasUser()) {

@@ -12,12 +12,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class SheerHeartAttackRenderer extends GeoEntityRenderer<SheerHeartAttackEntity> {
 
-    public SheerHeartAttackRenderer(EntityRendererProvider.Context context) {
+    public SheerHeartAttackRenderer(final EntityRendererProvider.Context context) {
         super(context, new SheerHeartAttackModel());
     }
 
     @Override
-    public RenderType getRenderType(SheerHeartAttackEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final SheerHeartAttackEntity animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(this.getTextureLocation(animatable));
     }
 }

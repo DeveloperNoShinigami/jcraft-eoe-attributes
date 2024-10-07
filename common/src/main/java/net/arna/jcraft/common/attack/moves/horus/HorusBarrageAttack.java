@@ -7,13 +7,13 @@ import net.arna.jcraft.common.entity.stand.HorusEntity;
 
 public final class HorusBarrageAttack extends AbstractBarrageAttack<HorusBarrageAttack, HorusEntity> {
 
-    public HorusBarrageAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize, float knockback, float offset, int interval) {
+    public HorusBarrageAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun, final float hitboxSize, final float knockback, final float offset, final int interval) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, interval);
         withHoldable();
     }
 
     @Override
-    public void onUserMoveInput(HorusEntity attacker, MoveInputType type, boolean pressed, boolean moveInitiated) {
+    public void onUserMoveInput(final HorusEntity attacker, final MoveInputType type, final boolean pressed, final boolean moveInitiated) {
         super.onUserMoveInput(attacker, type, pressed, moveInitiated);
         // Must be held
         if (type.getMoveType() == getMoveType() && !pressed) attacker.cancelMove();

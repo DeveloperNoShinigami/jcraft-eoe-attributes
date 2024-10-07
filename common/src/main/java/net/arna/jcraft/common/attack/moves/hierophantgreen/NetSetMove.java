@@ -13,12 +13,12 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class NetSetMove extends AbstractMove<NetSetMove, HGEntity> {
-    public NetSetMove(int cooldown, int windup, int duration, float attackDistance) {
+    public NetSetMove(final int cooldown, final int windup, final int duration, final float attackDistance) {
         super(cooldown, windup, duration, attackDistance);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(HGEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final HGEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
 
         final HGNetEntity net = new HGNetEntity(attacker.level());

@@ -21,20 +21,20 @@ public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
     private final float torsoPitchOffset, headPitchOffset, velInfluence;
     // public float prevTorsoPitch, prevHeadPitch, prevBasePitch = 0.0f;
 
-    public StandEntityModel(StandType type) {
+    public StandEntityModel(final StandType type) {
         this(type, 0f, 0f);
     }
 
-    public StandEntityModel(StandType type, float torsoPitchOffset, float headPitchOffset) {
+    public StandEntityModel(final StandType type, final float torsoPitchOffset, final float headPitchOffset) {
         this(type, torsoPitchOffset, headPitchOffset, 90f);
     }
 
-    public StandEntityModel(StandType type, float torsoPitchOffset, float headPitchOffset, float velInfluence) {
+    public StandEntityModel(final StandType type, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
         this.type = type;
-        String typeName = type.name().toLowerCase(Locale.ROOT);
+        final String typeName = type.name().toLowerCase(Locale.ROOT);
         model = JCraft.id("geo/" + typeName + ".geo.json");
         skins = IntStream.rangeClosed(0, type.getSkinCount())
-                .mapToObj(i -> JCraft.id("textures/entity/stands/" + typeName + "/" + (i == 0 ? "default" : "skin" + i) + ".png"))
+                .mapToObj(i -> JCraft.id(String.format("textures/entity/stands/%s/%s.png", typeName, i == 0 ? "default" : "skin" + i)))
                 .toList();
         animation = JCraft.id("animations/" + typeName + ".animation.json");
 
@@ -44,22 +44,22 @@ public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
     }
 
     @Override
-    public ResourceLocation getModelResource(E entity) {
+    public ResourceLocation getModelResource(final E entity) {
         return model;
     }
 
     @Override
-    public ResourceLocation getTextureResource(E entity) {
+    public ResourceLocation getTextureResource(final E entity) {
         return skins.get(Mth.clamp(entity.getSkin(), 0, type.getSkinCount()));
     }
 
     @Override
-    public ResourceLocation getAnimationResource(E entity) {
+    public ResourceLocation getAnimationResource(final E entity) {
         return animation;
     }
 
     @Override
-    public void setCustomAnimations(E animatable, long instanceId, AnimationState<E> animationState) {
+    public void setCustomAnimations(final E animatable, final long instanceId, final AnimationState<E> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
         if (skipCustomAnimations() || !animatable.hasUser()) {
             return;

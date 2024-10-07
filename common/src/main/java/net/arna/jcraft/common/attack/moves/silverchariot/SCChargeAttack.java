@@ -9,27 +9,29 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public final class SCChargeAttack extends AbstractChargeAttack<SCChargeAttack, SilverChariotEntity, SilverChariotEntity.State> {
+
     public static final MoveVariable<Vec3> LOOK_DIR = new MoveVariable<>(Vec3.class);
-    public SCChargeAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                          float hitboxSize, float knockback, float offset, SilverChariotEntity.State hitAnimState) {
+
+    public SCChargeAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                          final float hitboxSize, final float knockback, final float offset, final SilverChariotEntity.State hitAnimState) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitAnimState);
     }
 
     @Override
-    public void onInitiate(SilverChariotEntity attacker) {
+    public void onInitiate(final SilverChariotEntity attacker) {
         super.onInitiate(attacker);
         attacker.getMoveContext().set(LOOK_DIR, attacker.getUserOrThrow().getLookAngle());
     }
 
     @Override
-    protected Vec3 advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
+    protected Vec3 advanceChargePos(final StandEntity<?, ?> attacker, final float moveDistance, final int windupPoint) {
         return attacker.position().add(
                 attacker.getMoveContext().get(LOOK_DIR).scale(moveDistance / windupPoint)
         );
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(LOOK_DIR);
     }
 

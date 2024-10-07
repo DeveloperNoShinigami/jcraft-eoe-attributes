@@ -27,8 +27,8 @@ public class StandArgumentType implements ArgumentType<StandType> {
     private final Collection<String> examples = ImmutableList.of("MADE_IN_HEAVEN", "C_MOON", "GER");
 
     @Override
-    public StandType parse(StringReader reader) throws CommandSyntaxException {
-        String name = reader.readUnquotedString();
+    public StandType parse(final StringReader reader) throws CommandSyntaxException {
+        final String name = reader.readUnquotedString();
         try {
             return StandType.valueOf(name.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
@@ -37,8 +37,8 @@ public class StandArgumentType implements ArgumentType<StandType> {
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        String input = builder.getRemainingLowerCase().replaceAll("_", "");
+    public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
+        final String input = builder.getRemainingLowerCase().replaceAll("_", "");
         suggestions.entrySet().stream()
                 .filter(e -> e.getKey().startsWith(input))
                 .map(Map.Entry::getValue)

@@ -17,7 +17,7 @@ public final class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSpl
     private final float speed;
     private boolean reflect = false;
 
-    public EmeraldSplashAttack(int cooldown, int duration, float moveDistance, float damage, int stun, float knockback, float offset, IntSet hitMoments, float speed) {
+    public EmeraldSplashAttack(final int cooldown, final int duration, final float moveDistance, final float damage, final int stun, final float knockback, final float offset, final IntSet hitMoments, final float speed) {
         super(cooldown, duration, moveDistance, damage, stun, 0, knockback, offset, hitMoments);
         this.speed = speed;
         ranged = true;
@@ -29,7 +29,7 @@ public final class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSpl
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(HGEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final HGEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final int emeraldCount = 3 + ctx.getInt(CHARGE_TIME) / 10;
 
         for (int i = 0; i < emeraldCount; i++) {
@@ -50,7 +50,7 @@ public final class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSpl
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(CHARGE_TIME);
     }
 

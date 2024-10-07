@@ -15,14 +15,14 @@ import net.minecraft.resources.ResourceLocation;
 public class HorusEyesLayer extends GeoRenderLayer<HorusEntity> {
     private static final ResourceLocation LAYER = new ResourceLocation(JCraft.MOD_ID, "textures/entity/stands/horus/eyes.png");
 
-    public HorusEyesLayer(GeoRenderer<HorusEntity> entityRendererIn) {
+    public HorusEyesLayer(final GeoRenderer<HorusEntity> entityRendererIn) {
         super(entityRendererIn);
     }
 
     @Override
-    public void render(PoseStack poseStack, HorusEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
-                       MultiBufferSource bufferSource, VertexConsumer bufferIn, float partialTick, int packedLight, int packedOverlay) {
-        RenderType cameo = RenderType.entityTranslucentEmissive(LAYER);
+    public void render(final PoseStack poseStack, final HorusEntity animatable, final BakedGeoModel bakedModel, final RenderType renderType,
+                       final MultiBufferSource bufferSource, final VertexConsumer bufferIn, final float partialTick, final int packedLight, final int packedOverlay) {
+        final RenderType cameo = RenderType.entityTranslucentEmissive(LAYER);
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
                 bufferSource.getBuffer(cameo), partialTick, 15728640, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
     }

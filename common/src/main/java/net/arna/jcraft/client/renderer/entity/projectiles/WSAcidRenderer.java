@@ -8,12 +8,12 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 public class WSAcidRenderer extends GeoProjectileRenderer<WSAcidProjectile> {
-    public WSAcidRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public WSAcidRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new WSAcidModel());
     }
 
     @Override
-    public RenderType getRenderType(WSAcidProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final WSAcidProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(texture);
     }
 }

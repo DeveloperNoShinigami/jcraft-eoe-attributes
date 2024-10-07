@@ -18,17 +18,17 @@ import org.jetbrains.annotations.NotNull;
 public class GEFrogRenderer extends FrogRenderer {
     private final ItemInHandRenderer heldItemRenderer;
 
-    public GEFrogRenderer(EntityRendererProvider.Context context) {
+    public GEFrogRenderer(final EntityRendererProvider.Context context) {
         super(context);
         this.heldItemRenderer = context.getItemInHandRenderer();
     }
 
     @Override
-    public void render(Frog frogEntity, float f, float g, PoseStack matrixStack, @NotNull MultiBufferSource vertexConsumerProvider, int i) {
+    public void render(final Frog frogEntity, final float f, final float g, final PoseStack matrixStack, final @NotNull MultiBufferSource vertexConsumerProvider, final int i) {
         matrixStack.pushPose();
         matrixStack.translate(0.0, 0.4, 0);
         matrixStack.mulPose(Axis.YN.rotationDegrees(frogEntity.getYRot()));
-        ItemStack itemStack = frogEntity.getItemBySlot(EquipmentSlot.MAINHAND);
+        final ItemStack itemStack = frogEntity.getItemBySlot(EquipmentSlot.MAINHAND);
         this.heldItemRenderer.renderItem(frogEntity, itemStack, ItemDisplayContext.GROUND, false, matrixStack, vertexConsumerProvider, i);
         matrixStack.popPose();
         super.render(frogEntity, f, g, matrixStack, vertexConsumerProvider, i);

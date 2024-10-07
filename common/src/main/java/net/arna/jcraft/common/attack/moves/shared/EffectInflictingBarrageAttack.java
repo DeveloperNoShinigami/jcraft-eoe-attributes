@@ -9,9 +9,9 @@ import java.util.List;
 
 @Getter
 public final class EffectInflictingBarrageAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingBarrageAttack<EffectInflictingBarrageAttack<A>, A> {
-    public EffectInflictingBarrageAttack(int cooldown, int windup, int duration, float attackDistance, float damage,
-                                         int stun, float hitboxSize, float knockback, float offset, int interval,
-                                         @NonNull List<MobEffectInstance> effects) {
+    public EffectInflictingBarrageAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage,
+                                         final int stun, final float hitboxSize, final float knockback, final float offset, final int interval,
+                                         final @NonNull List<MobEffectInstance> effects) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, interval, effects);
     }
 

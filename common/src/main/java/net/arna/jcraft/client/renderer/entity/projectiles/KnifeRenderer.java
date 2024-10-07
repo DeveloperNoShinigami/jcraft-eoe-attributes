@@ -9,20 +9,19 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LightLayer;
 
-
 public class KnifeRenderer extends GeoProjectileRenderer<KnifeProjectile> {
 
-    public KnifeRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public KnifeRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new KnifeModel());
     }
 
     @Override
-    protected int getBlockLightLevel(KnifeProjectile entityIn, BlockPos blockPos) {
+    protected int getBlockLightLevel(final KnifeProjectile entityIn, final BlockPos blockPos) {
         return (entityIn.getLightning() || entityIn.isOnFire()) ? 15 : entityIn.level().getBrightness(LightLayer.BLOCK, entityIn.blockPosition());
     }
 
     @Override
-    public RenderType getRenderType(KnifeProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final KnifeProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(texture);
     }
 

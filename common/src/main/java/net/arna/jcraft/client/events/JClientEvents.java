@@ -46,7 +46,7 @@ import static net.arna.jcraft.client.util.JClientUtils.activeTimestops;
 @Environment(EnvType.CLIENT)
 public class JClientEvents {
 
-    public static void onLast(PoseStack matrixStack, Vec3 cameraPos) {
+    public static void onLast(final PoseStack matrixStack, final Vec3 cameraPos) {
         matrixStack.pushPose();
         matrixStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
         Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
@@ -61,14 +61,14 @@ public class JClientEvents {
         matrixStack.popPose();
     }
 
-    public static void afterTranslucent(PoseStack matrixStack, Vec3 cameraPos, LevelRenderer worldRenderer) {
+    public static void afterTranslucent(final PoseStack matrixStack, final Vec3 cameraPos, final LevelRenderer worldRenderer) {
         matrixStack.pushPose();
         matrixStack.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
         RenderHandler.MATRIX4F = new Matrix4f(RenderSystem.getModelViewMatrix());
         matrixStack.popPose();
     }
 
-    public static void clientPlayerJoin(LocalPlayer clientPlayerEntity) {
+    public static void clientPlayerJoin(final LocalPlayer clientPlayerEntity) {
         if (clientPlayerEntity == null) {
             JCraft.LOGGER.fatal("onPlayReady was called with invalid client player!");
             return;
@@ -78,9 +78,9 @@ public class JClientEvents {
         // NetworkManager.sendToServer(JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket.write(JClientConfig.getInstance().isClientsidePrediction()));
     }
 
-    public static void renderHud(GuiGraphics ctx, float tickDelta) {
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
+    public static void renderHud(final GuiGraphics ctx, final float tickDelta) {
+        final Minecraft client = Minecraft.getInstance();
+        final LocalPlayer player = client.player;
         if (player == null) {
             JCraft.LOGGER.fatal("Attempted to render hud with no player!");
             return;
@@ -107,21 +107,21 @@ public class JClientEvents {
 
         // Draw text HUD
         if (!useIcons) {
-            CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(player);
+            final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(player);
 
-            CooldownType[] values = CooldownType.values();
+            final CooldownType[] values = CooldownType.values();
             for (int i = 0; i < values.length; i++) {
-                CooldownType type = values[i];
-                int cooldownTicks = cooldowns.getCooldown(type);
+                final CooldownType type = values[i];
+                final int cooldownTicks = cooldowns.getCooldown(type);
 
                 if (cooldownTicks == 0) {
                     continue;
                 }
-                double cooldown = (cooldownTicks - tickDelta) / 20d;
+                final double cooldown = (cooldownTicks - tickDelta) / 20d;
 
                 // These are (mainly) based off of keybindings which are client-only and thus have
                 // to be done here and cannot be done in CooldownType.
-                String keyBindText = switch (type) {
+                final String keyBindText = switch (type) {
                     case STAND_LIGHT -> "M1";
                     case HEAVY, STAND_HEAVY -> generateName(heavyKey.getParent());
                     case BARRAGE, STAND_BARRAGE -> generateName(barrageKey.getParent());
@@ -137,8 +137,8 @@ public class JClientEvents {
 
                 CooldownType.Category category = type.getCategory();
 
-                boolean isSpec = category == CooldownType.Category.SPEC;
-                boolean isUniversal = category == CooldownType.Category.UNIVERSAL;
+                final boolean isSpec = category == CooldownType.Category.SPEC;
+                final boolean isUniversal = category == CooldownType.Category.UNIVERSAL;
                 float defaultAlpha = 0.65f;
                 int xOffset = 0;
 
@@ -161,7 +161,7 @@ public class JClientEvents {
                 } else if (isUniversal) {
                     offsetIndex -= 6;
                 }
-                float offsetY = selectedY * 1.25f + 9f * offsetIndex;
+                final float offsetY = selectedY * 1.25f + 9f * offsetIndex;
 
                 ctx.drawString(
                         textRenderer,
@@ -181,9 +181,9 @@ public class JClientEvents {
                 remark = comboRemarks.get(Math.floorDiv(comboCounter, 7));
             }
 
-            boolean recentHit = framesSinceCounted < 5;
+            final boolean recentHit = framesSinceCounted < 5;
 
-            RandomSource random = player.getRandom();
+            final RandomSource random = player.getRandom();
 
             if (comboStarted && ++framesSinceComboStarted > 59) {
                 comboStarted = false;
@@ -199,8 +199,8 @@ public class JClientEvents {
         }
     }
 
-    public static void tickClient(Minecraft client) {
-        LocalPlayer player = client.player;
+    public static void tickClient(final Minecraft client) {
+        final LocalPlayer player = client.player;
         if (player == null) {
             return;
         }
@@ -210,19 +210,19 @@ public class JClientEvents {
             return;
         }
 
-        StandEntity<?, ?> stand = JUtils.getStand(player);
+        final StandEntity<?, ?> stand = JUtils.getStand(player);
 
         // Handle JCraft inputs (stand, spec, universal controls)
         // Regular input (all moves, regular Minecraft movement (WASD and jumping) and dashing)
         if (player.isAlive()) {
-            Object2BooleanMap<MovementInputType> movementInput = getChangedInputs(getMovementBindings());
-            Object2BooleanMap<MoveInputType> moveInput = getChangedInputs(getBindings());
+            final Object2BooleanMap<MovementInputType> movementInput = getChangedInputs(getMovementBindings());
+            final Object2BooleanMap<MoveInputType> moveInput = getChangedInputs(getBindings());
 
             if (!movementInput.isEmpty() || !moveInput.isEmpty()) {
                 NetworkManager.sendToServer(JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket.write(movementInput, moveInput));
             }
 
-            Object2BooleanMap<MoveInputType> heldMoves = new Object2BooleanOpenHashMap<>();
+            final Object2BooleanMap<MoveInputType> heldMoves = new Object2BooleanOpenHashMap<>();
             getBindings().forEach((key, value) -> {
                 if (key.isDown()) {
                     heldMoves.put(value, true);
@@ -238,7 +238,7 @@ public class JClientEvents {
 
         // Block
         if (getTrackedUseKey().isChangedThisTick()) {
-            boolean pressed = getTrackedUseKey().isPressedThisTick();
+            final boolean pressed = getTrackedUseKey().isPressedThisTick();
             NetworkManager.sendToServer(JPacketRegistry.C2S_STAND_BLOCK, StandBlockPacket.write(pressed));
             if (stand != null && stand.isRemoteAndControllable() && pressed) {
                 NetworkManager.sendToServer(JPacketRegistry.C2S_REMOTE_STAND_INTERACT, new FriendlyByteBuf(Unpooled.buffer()));
@@ -255,23 +255,23 @@ public class JClientEvents {
         }
 
         // Timestop handling (nearly identical to serverside, but toStop is obtained in user.world instead of server world)
-        Iterator<DimensionData> iter = activeTimestops.iterator();
+        final Iterator<DimensionData> iter = activeTimestops.iterator();
 
         while (iter.hasNext()) {
-            DimensionData timestop = iter.next();
-            LivingEntity user = timestop.user;
+            final DimensionData timestop = iter.next();
+            final LivingEntity user = timestop.user;
 
             if (user == null || !user.isAlive() || --timestop.timer <= 0) {
                 iter.remove();
                 continue;
             }
 
-            Vec3 pos = timestop.pos;
+            final Vec3 pos = timestop.pos;
 
-            List<? extends Entity> toStop = user.level().getEntitiesOfClass(Entity.class,
+            final List<? extends Entity> toStop = user.level().getEntitiesOfClass(Entity.class,
                     new AABB(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
-            for (Entity entity : toStop) {
+            for (final Entity entity : toStop) {
                 if (!entity.isPassenger() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle()) {
                     if (JComponentPlatformUtils.getTimeStopData(entity).isPresent()) {
                         JComponentPlatformUtils.getTimeStopData(entity).get().setTicks(2);

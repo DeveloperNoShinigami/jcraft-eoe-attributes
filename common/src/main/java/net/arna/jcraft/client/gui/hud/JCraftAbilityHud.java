@@ -2,6 +2,7 @@ package net.arna.jcraft.client.gui.hud;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.event.events.client.ClientGuiEvent;
 import lombok.experimental.UtilityClass;
 import net.arna.jcraft.JCraft;
@@ -71,7 +72,7 @@ public class JCraftAbilityHud {
             .put(CooldownType.STAND_SP3, SPECIAL_3)
             .put(CooldownType.UTILITY, UTILITY)
             .build();
-    // Used for JConfig.UIPos.MIDDLE, to prevent overwhelming verticality
+    // Used for JConfig.UIPos.MIDDLE, to prevent overwhelming verticallity
     private static final Map<CooldownType, IconPos> STAND_ICONS_MID = ImmutableMap.<CooldownType, IconPos>builder()
             .put(CooldownType.STAND_LIGHT, LIGHT)
             .put(CooldownType.STAND_HEAVY, HEAVY)
@@ -96,7 +97,7 @@ public class JCraftAbilityHud {
             .put(CooldownType.SPECIAL3, SPEC_SPECIAL_3)
             .build();
 
-    public static int getHudX(int scaledX, int rightOffset) {
+    public static int getHudX(final int scaledX, final int rightOffset) {
         return switch (JClientConfig.getInstance().getUiPosition()) {
             case LEFT -> 2;
             case RIGHT -> scaledX - rightOffset;
@@ -108,35 +109,31 @@ public class JCraftAbilityHud {
         ClientGuiEvent.RENDER_HUD.register((ctx, tickDelta) -> render(ctx));
     }
 
-    public static void render(GuiGraphics ctx) {
-        Minecraft client = Minecraft.getInstance();
-        LocalPlayer player = client.player;
+    public static void render(final GuiGraphics ctx) {
+        final Minecraft client = Minecraft.getInstance();
+        final LocalPlayer player = client.player;
         if (player == null) {
             return;
         }
 
-
-        boolean isMid = JClientConfig.getInstance().getUiPosition() == JClientConfig.UIPos.MIDDLE;
-        boolean useIcons = JClientConfig.getInstance().isIconHud();
-        StandEntity<?, ?> stand = JUtils.getStand(player);
+        final boolean isMid = JClientConfig.getInstance().getUiPosition() == JClientConfig.UIPos.MIDDLE;
+        final boolean useIcons = JClientConfig.getInstance().isIconHud();
+        final StandEntity<?, ?> stand = JUtils.getStand(player);
 
         if (useIcons) {
             int selectedX = getHudX(client.getWindow().getGuiScaledWidth(), 48);
             int selectedY = isMid ? iconSpacing * 11 : 0;
 
-            JSpec<?, ?> spec = JUtils.getSpec(player);
-            //System.out.println("Spec: " + spec);
+            final JSpec<?, ?> spec = JUtils.getSpec(player);
             if (stand == null) {
                 // Render cooldown HUD for specs
                 if (spec != null) {
-
                     renderIcons(ctx, SPEC_ICONS, selectedX, selectedY, spec.getType().getInternalName().toLowerCase(Locale.ROOT));
                 }
             } else {
                 // Render cooldown HUD for stands
                 renderIcons(ctx, isMid ? STAND_ICONS_MID : STAND_ICONS, selectedX, selectedY, stand.getType().toShortString());
             }
-
             renderIcons(ctx, UNIVERSAL_ICONS, selectedX, selectedY, "universal");
         }
     }
@@ -149,10 +146,10 @@ public class JCraftAbilityHud {
      * @param selectedY y offset (in pixels) accounting for player's config choice
      * @param type      decides which resource folder is loaded when rendering icons
      */
-    private static void renderIcons(GuiGraphics ctx, Map<CooldownType, IconPos> icons, int selectedX, int selectedY, String type) {
+    private static void renderIcons(final GuiGraphics ctx, final Map<CooldownType, IconPos> icons, final int selectedX, final int selectedY, final String type) {
         icons.forEach((cooldownType, iconPos) -> {
-            int iconX = iconPos.x() + selectedX;
-            int iconY = iconPos.y() + selectedY;
+            final int iconX = iconPos.x() + selectedX;
+            final int iconY = iconPos.y() + selectedY;
 
             double cd = getCooldownProgress(cooldownType);
             if (cd < 0) {
@@ -165,13 +162,13 @@ public class JCraftAbilityHud {
         });
     }
 
-    public static void renderIcon(GuiGraphics ctx, int x, int y, String type, String icon) {
-        ResourceLocation texture = JCraft.id("textures/gui/ability_icons/" + type + "/" + icon + ".png");
+    public static void renderIcon(final GuiGraphics ctx, final int x, final int y, final String type, final String icon) {
+        final ResourceLocation texture = JCraft.id("textures/gui/ability_icons/" + type + "/" + icon + ".png");
         renderIcon(ctx, x, y, texture, icon);
     }
 
-    public static void renderIcon(GuiGraphics ctx, int x, int y, ResourceLocation texture, String fallback) {
-        var matrices = ctx.pose();
+    public static void renderIcon(final GuiGraphics ctx, final int x, final int y, ResourceLocation texture, final String fallback) {
+        final PoseStack matrices = ctx.pose();
         matrices.pushPose();
 
         if (!isTextureAvailable(texture)) {
@@ -187,8 +184,8 @@ public class JCraftAbilityHud {
         matrices.popPose();
     }
 
-    public static void renderBorder(GuiGraphics ctx, int x, int y) {
-        var matrices = ctx.pose();
+    public static void renderBorder(final GuiGraphics ctx, final int x, final int y) {
+        final PoseStack matrices = ctx.pose();
         matrices.pushPose();
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.enableBlend();
@@ -199,11 +196,11 @@ public class JCraftAbilityHud {
         matrices.popPose();
     }
 
-    private static boolean isTextureAvailable(ResourceLocation textureLocation) {
-        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+    private static boolean isTextureAvailable(final ResourceLocation textureLocation) {
+        final ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
         try {
             return resourceManager.getResource(textureLocation).isPresent();
-        } catch (Exception e) {
+        } catch (Exception ex) {
             return false;
         }
     }
@@ -212,16 +209,16 @@ public class JCraftAbilityHud {
      * @param type The type of the cooldown
      * @return Progress value of cooldown between zero and one if it is present, otherwise defaults to -1
      */
-    private static double getCooldownProgress(CooldownType type) {
-        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(Minecraft.getInstance().player);
-        int cooldown = cooldowns.getCooldown(type);
-        int initialDuration = cooldowns.getInitialDuration(type);
+    private static double getCooldownProgress(final CooldownType type) {
+        final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(Minecraft.getInstance().player);
+        final int cooldown = cooldowns.getCooldown(type);
+        final int initialDuration = cooldowns.getInitialDuration(type);
 
         return cooldown > 0 && initialDuration != 0 ? normalize(cooldown, 0, initialDuration) : -1;
     }
 
-    public static void renderCooldown(GuiGraphics ctx, double cd, int x, int y) {
-        var matrices = ctx.pose();
+    public static void renderCooldown(final GuiGraphics ctx, final double cd, final int x, final int y) {
+        final  PoseStack matrices = ctx.pose();
         matrices.pushPose();
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.enableBlend();
@@ -233,10 +230,11 @@ public class JCraftAbilityHud {
         matrices.popPose();
     }
 
-    private static double normalize(double value, double min, double max) {
+    private static double normalize(final double value, final double min, final double max) {
         return ((value - min) / (max - min));
     }
 
     private record IconPos(String name, int x, int y) {
+        // intentionally left empty
     }
 }

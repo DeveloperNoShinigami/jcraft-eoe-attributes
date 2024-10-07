@@ -22,17 +22,19 @@ import java.util.List;
 import java.util.Set;
 
 public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFoolEntity> {
+
     public static final MoveVariable<LivingEntity> SUPER_TARGET = new MoveVariable<>(LivingEntity.class);
+
     public static final MoveVariable<List<FallingBlockEntity>> SANDS = new MoveVariable<>(new TypeToken<>() {
     });
 
-    public SandstormAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback, float offset) {
+    public SandstormAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         hitSpark = JParticleType.HIT_SPARK_3;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (targets.isEmpty()) {
             return targets;
@@ -57,7 +59,7 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
         return targets;
     }
 
-    public void tickSandstorm(TheFoolEntity attacker) {
+    public void tickSandstorm(final TheFoolEntity attacker) {
         final MoveContext ctx = attacker.getMoveContext();
 
         final List<FallingBlockEntity> sands = ctx.get(SANDS);
@@ -118,14 +120,14 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
         }
     }
 
-    public void discardSands(TheFoolEntity attacker) {
+    public void discardSands(final TheFoolEntity attacker) {
         final List<FallingBlockEntity> sands = attacker.getMoveContext().get(SANDS);
         sands.forEach(Entity::discard);
         sands.clear();
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(SUPER_TARGET);
         ctx.register(SANDS, new ArrayList<>());
     }

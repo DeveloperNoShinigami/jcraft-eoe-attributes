@@ -24,9 +24,9 @@ public class SCROutlineLayer extends GeoRenderLayer<ChariotRequiemEntity> {
     }
 
     @Override
-    public void render(PoseStack poseStack, ChariotRequiemEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
-                       MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        RenderType cameo = RenderType.eyes(skins.get(animatable.getSkin()));
+    public void render(final PoseStack poseStack, final ChariotRequiemEntity animatable, final BakedGeoModel bakedModel, final RenderType renderType,
+                       final MultiBufferSource bufferSource, final VertexConsumer buffer, final float partialTick, final int packedLight, final int packedOverlay) {
+        final RenderType cameo = RenderType.eyes(skins.get(animatable.getSkin()));
 
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
                 bufferSource.getBuffer(cameo), partialTick, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);

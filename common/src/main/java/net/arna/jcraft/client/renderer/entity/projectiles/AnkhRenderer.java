@@ -11,22 +11,22 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public class AnkhRenderer extends GeoProjectileRenderer<AnkhProjectile> {
-    public AnkhRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public AnkhRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new AnkhModel());
     }
 
     @Override
-    protected int getBlockLightLevel(AnkhProjectile entity, BlockPos pos) {
+    protected int getBlockLightLevel(final AnkhProjectile entity, final BlockPos pos) {
         return 15;
     }
 
     @Override
-    public RenderType getRenderType(AnkhProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final AnkhProjectile animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.eyes(texture);
     }
 
     @Override
-    public void render(AnkhProjectile animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(final AnkhProjectile animatable, final float yaw, final float partialTick, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
     }
 }

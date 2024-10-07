@@ -28,14 +28,14 @@ public final class HealMove<A extends IAttacker<? extends A, ?>> extends Abstrac
     private final HealTarget target;
     private final Consumer<LivingEntity> consumer;
 
-    public HealMove(int cooldown, int windup, int duration, float moveDistance, float hitboxSize, float offset,
-                    float health, HealTarget target) {
+    public HealMove(final int cooldown, final int windup, final int duration, final float moveDistance, final float hitboxSize, final float offset,
+                    final float health, final HealTarget target) {
         this(cooldown, windup, duration, moveDistance, hitboxSize, offset, health, target, e -> {
         });
     }
 
-    public HealMove(int cooldown, int windup, int duration, float moveDistance, float hitboxSize, float offset,
-                    float health, HealTarget target, Consumer<LivingEntity> consumer) {
+    public HealMove(final int cooldown, final int windup, final int duration, final float moveDistance, final float hitboxSize, final float offset,
+                    final float health, final HealTarget target, final Consumer<LivingEntity> consumer) {
         super(cooldown, windup, duration, moveDistance, 0f, 0, hitboxSize, 0f, offset);
         this.health = health;
         this.target = target;
@@ -43,7 +43,7 @@ public final class HealMove<A extends IAttacker<? extends A, ?>> extends Abstrac
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = target.pickTargets(super.perform(attacker, user, ctx), user);
         targets.forEach(e -> {
             e.heal(health);

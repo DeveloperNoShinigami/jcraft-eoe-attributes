@@ -11,8 +11,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public final class SandWaveAttack extends AbstractEffectInflictingBarrageAttack<SandWaveAttack, TheFoolEntity> {
-    public SandWaveAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                          float hitboxSize, float knockback, float offset, int interval) {
+    public SandWaveAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                          final float hitboxSize, final float knockback, final float offset, final int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval,
                 List.of(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 15, 0, true, false)));
         mobilityType = MobilityType.DASH;
@@ -20,7 +20,7 @@ public final class SandWaveAttack extends AbstractEffectInflictingBarrageAttack<
     }
 
     @Override
-    public void onInitiate(TheFoolEntity attacker) {
+    public void onInitiate(final TheFoolEntity attacker) {
         super.onInitiate(attacker);
 
         attacker.setSand(true);
@@ -29,7 +29,7 @@ public final class SandWaveAttack extends AbstractEffectInflictingBarrageAttack<
     }
 
     @Override
-    public void tick(TheFoolEntity attacker, int moveStun) {
+    public void tick(final TheFoolEntity attacker, final int moveStun) {
         super.tick(attacker, moveStun);
 
         final LivingEntity user = attacker.getUser();

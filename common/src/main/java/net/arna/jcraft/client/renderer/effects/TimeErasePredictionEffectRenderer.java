@@ -44,7 +44,7 @@ public class TimeErasePredictionEffectRenderer {
         });
 
         RenderSystem.recordRenderCall(() -> {
-            Window window = Minecraft.getInstance().getWindow();
+            final Window window = Minecraft.getInstance().getWindow();
             predictionsBuffer = new TextureTarget(window.getWidth(), window.getHeight(), true, true);
         });
     }
@@ -55,8 +55,8 @@ public class TimeErasePredictionEffectRenderer {
         }
         ticksLeft = length;
 
-        Minecraft client = Minecraft.getInstance();
-        for (Entity entity : PredictionMove.getEntitiesToCatch(client.level, JCraftClient.getStandEntity(), client.player)) {
+        final Minecraft client = Minecraft.getInstance();
+        for (final Entity entity : PredictionMove.getEntitiesToCatch(client.level, JCraftClient.getStandEntity(), client.player)) {
             predictions.put(entity, entity.position());
         }
     }
@@ -67,7 +67,7 @@ public class TimeErasePredictionEffectRenderer {
     }
 
     @SuppressWarnings("deprecation") // Minecraft does this too.
-    public static void render(PoseStack stack, Vec3 camPos, ClientLevel world, float tickDelta, MultiBufferSource pConsumers) {
+    public static void render(final PoseStack stack, final Vec3 camPos, final ClientLevel world, final float tickDelta, final MultiBufferSource pConsumers) {
         if (ticksLeft < 0) {
             if (ticksLeft == -1) {
                 predictionsBuffer.clear(false);
@@ -92,19 +92,19 @@ public class TimeErasePredictionEffectRenderer {
         predictionsBuffer.bindWrite(true);
 
         // Render entities
-        EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        final EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
 
-        for (Map.Entry<Entity, Vec3> prediction : predictionsSet) {
-            Entity entity = prediction.getKey();
+        for (final Map.Entry<Entity, Vec3> prediction : predictionsSet) {
+            final Entity entity = prediction.getKey();
             if (entity == null || !entity.isAlive()) {
                 continue;
             }
 
-            Vec3 pos = prediction.getValue().subtract(camPos);
-            BlockPos bPos = BlockPos.containing(prediction.getValue());
+            final Vec3 pos = prediction.getValue().subtract(camPos);
+            final BlockPos bPos = BlockPos.containing(prediction.getValue());
 
-            int blockLight = Math.max(entity.isOnFire() ? 15 : entity.level().getBrightness(LightLayer.BLOCK, bPos), 7);
-            int skyLight = Math.max(entity.level().getBrightness(LightLayer.SKY, bPos), 7);
+            final int blockLight = Math.max(entity.isOnFire() ? 15 : entity.level().getBrightness(LightLayer.BLOCK, bPos), 7);
+            final int skyLight = Math.max(entity.level().getBrightness(LightLayer.SKY, bPos), 7);
             entityRenderDispatcher.render(entity, pos.x, pos.y - 0.1, pos.z, entity.getYRot(), tickDelta, stack,
                     consumers, LightTexture.pack(blockLight, skyLight));
         }
@@ -122,7 +122,7 @@ public class TimeErasePredictionEffectRenderer {
         Minecraft.getInstance().getMainRenderTarget().bindWrite(true);
 
         // Draw predictions buffer on top of the main buffer
-        Window window = Minecraft.getInstance().getWindow();
+        final Window window = Minecraft.getInstance().getWindow();
         RenderSystem.enableBlend();
         RenderSystem.disableCull();
         RenderSystem.disableDepthTest();
@@ -130,16 +130,16 @@ public class TimeErasePredictionEffectRenderer {
         RenderSystem.setShaderTexture(0, predictionsBuffer.getColorTextureId());
         RenderUtils.startOverlayRender();
 
-        Tesselator tess = Tesselator.getInstance();
-        BufferBuilder buffer = tess.getBuilder();
+        final Tesselator tess = Tesselator.getInstance();
+        final BufferBuilder buffer = tess.getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
         // Do not use RenderSystem.backupProjectionMatrix() as that will override any existing backup.
-        Matrix4f projMatrix = RenderSystem.getProjectionMatrix();
-        VertexSorting vSort = RenderSystem.getVertexSorting();
+        final Matrix4f projMatrix = RenderSystem.getProjectionMatrix();
+        final VertexSorting vSort = RenderSystem.getVertexSorting();
 
         // Set orthographic projection matrix for 'ui' rendering (we're effectively rendering an overlay)
-        Matrix4f flatProjMatrix = new Matrix4f().setOrtho(0, (float) window.getWidth(), 0, (float) window.getHeight(), 1000, 20000);
+        final Matrix4f flatProjMatrix = new Matrix4f().setOrtho(0, (float) window.getWidth(), 0, (float) window.getHeight(), 1000, 20000);
         RenderSystem.setProjectionMatrix(flatProjMatrix, VertexSorting.ORTHOGRAPHIC_Z);
 
         final float r = 1, g = 0, b = 0, a = 0.33f;
@@ -163,7 +163,7 @@ public class TimeErasePredictionEffectRenderer {
     }
 
     private static void updatePredictions() {
-        Set<Map.Entry<Entity, Vec3>> predictionsSet;
+        final Set<Map.Entry<Entity, Vec3>> predictionsSet;
         synchronized (predictions) {
             predictionsSet = new HashSet<>(predictions.entrySet());
         }

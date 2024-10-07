@@ -19,13 +19,13 @@ public abstract class AbstractTimeStopMove<T extends AbstractTimeStopMove<T, A>,
     protected IntSupplier timeStopDuration;
     private static final MobEffectInstance tsBlind = new MobEffectInstance(MobEffects.BLINDNESS, 19, 0, true, false, false);
 
-    protected AbstractTimeStopMove(int cooldown, int windup, int duration, float moveDistance, IntSupplier timeStopDuration) {
+    protected AbstractTimeStopMove(final int cooldown, final int windup, final int duration, final float moveDistance, final IntSupplier timeStopDuration) {
         super(cooldown, windup, duration, moveDistance);
         this.timeStopDuration = timeStopDuration;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.setTsTime(timeStopDuration.getAsInt());
         //attacker.setCurrentMove(null);
 

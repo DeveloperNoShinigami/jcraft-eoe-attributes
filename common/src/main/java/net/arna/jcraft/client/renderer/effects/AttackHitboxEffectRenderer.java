@@ -36,21 +36,21 @@ public class AttackHitboxEffectRenderer {
 
     }
 
-    public static void addHitboxes(Iterable<AABB> boxes) {
+    public static void addHitboxes(final Iterable<AABB> boxes) {
         boxes.forEach(AttackHitboxEffectRenderer::addHitbox);
     }
 
-    public static void addHitbox(AABB box) {
+    public static void addHitbox(final AABB box) {
         addHitbox(box, 2500, false);
     }
 
     @Synchronized
-    public static void addHitbox(AABB box, long duration, boolean highPriority) {
+    public static void addHitbox(final AABB box, final long duration, final boolean highPriority) {
         (highPriority ? highPriorityBoxes : hitboxes).add(Pair.of(LongLongPair.of(Util.getEpochMillis(), duration), box));
     }
 
     @Synchronized
-    public static void render(PoseStack matrices, Vec3 camPos, LevelRenderer worldRenderer, MultiBufferSource consumerProvider) {
+    public static void render(final PoseStack matrices, final Vec3 camPos, final LevelRenderer worldRenderer, final MultiBufferSource consumerProvider) {
         if (!Minecraft.getInstance().getEntityRenderDispatcher().shouldRenderHitBoxes()) {
             return;
         }
@@ -66,9 +66,9 @@ public class AttackHitboxEffectRenderer {
         matrices.popPose();
     }
 
-    private static void renderBoxes(MultiBufferSource consumerProvider, PoseStack matrices, Collection<Pair<LongLongPair, AABB>> boxes) {
-        for (Iterator<Pair<LongLongPair, AABB>> iterator = boxes.iterator(); iterator.hasNext(); ) {
-            Pair<LongLongPair, AABB> pair = iterator.next();
+    private static void renderBoxes(final MultiBufferSource consumerProvider, final PoseStack matrices, final Collection<Pair<LongLongPair, AABB>> boxes) {
+        for (final Iterator<Pair<LongLongPair, AABB>> iterator = boxes.iterator(); iterator.hasNext(); ) {
+            final Pair<LongLongPair, AABB> pair = iterator.next();
             renderBox(consumerProvider, pair.right(), matrices);
             if (Util.getEpochMillis() - pair.left().leftLong() > pair.left().rightLong()) {
                 iterator.remove();
@@ -77,10 +77,10 @@ public class AttackHitboxEffectRenderer {
     }
 
     @SuppressWarnings("DuplicatedCode") // Don't care
-    private static void renderBox(MultiBufferSource consumerProvider, AABB box, PoseStack matrices) {
+    private static void renderBox(final MultiBufferSource consumerProvider, final AABB box, final PoseStack matrices) {
         // Draw faces
-        Tesselator tess = Tesselator.getInstance();
-        BufferBuilder quadsVc = tess.getBuilder();
+        final Tesselator tess = Tesselator.getInstance();
+        final BufferBuilder quadsVc = tess.getBuilder();
         quadsVc.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
@@ -88,16 +88,16 @@ public class AttackHitboxEffectRenderer {
         RenderSystem.enableDepthTest();
         RenderSystem.depthMask(false); // Don't write to the depth buffer.
 
-        int c = 0x54FF0000;
+        final int c = 0x54FF0000;
 
-        float minX = (float) box.minX;
-        float minY = (float) box.minY;
-        float minZ = (float) box.minZ;
-        float maxX = (float) box.maxX;
-        float maxY = (float) box.maxY;
-        float maxZ = (float) box.maxZ;
+        final float minX = (float) box.minX;
+        final float minY = (float) box.minY;
+        final float minZ = (float) box.minZ;
+        final float maxX = (float) box.maxX;
+        final float maxY = (float) box.maxY;
+        final float maxZ = (float) box.maxZ;
 
-        Matrix4f m = matrices.last().pose();
+        final Matrix4f m = matrices.last().pose();
 
         // Up
         quadsVc.vertex(m, minX, maxY, minZ).color(c).endVertex();
@@ -142,7 +142,7 @@ public class AttackHitboxEffectRenderer {
         RenderSystem.disableDepthTest();
 
         // Draw lines
-        VertexConsumer linesVc = Objects.requireNonNull(consumerProvider).getBuffer(RenderType.LINES);
+        final VertexConsumer linesVc = Objects.requireNonNull(consumerProvider).getBuffer(RenderType.LINES);
         LevelRenderer.renderLineBox(matrices, linesVc, box, 1f, 0f, 0f, 1f);
     }
 }

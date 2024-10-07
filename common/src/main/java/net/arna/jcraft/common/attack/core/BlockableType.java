@@ -10,7 +10,7 @@ public enum BlockableType {
 
     private final boolean nonBlockable, nonBlockableEffects;
 
-    BlockableType(boolean nonBlockable, boolean nonBlockableEffects) {
+    BlockableType(final boolean nonBlockable, final boolean nonBlockableEffects) {
         this.nonBlockable = nonBlockable;
         this.nonBlockableEffects = nonBlockableEffects;
     }

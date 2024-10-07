@@ -23,18 +23,18 @@ public final class NullificationAttack extends AbstractCounterAttack<Nullificati
     private static final int COUNTER_STOP_TIME = 20; // Convenience
     private final CounterMissMove<GEREntity> counterMiss = new CounterMissMove<>(20);
 
-    public NullificationAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public NullificationAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public void whiff(@NonNull GEREntity attacker, @NonNull LivingEntity user) {
+    public void whiff(final @NonNull GEREntity attacker, final @NonNull LivingEntity user) {
         attacker.setMove(counterMiss, GEREntity.State.COUNTER_MISS);
         JCraft.stun(attacker.getUser(), counterMiss.getDuration(), 0);
     }
 
     @Override
-    public void counter(@NonNull GEREntity attacker, Entity countered, DamageSource counteredDamageSource) {
+    public void counter(final @NonNull GEREntity attacker, final Entity countered, final DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
 
         if (countered == null || !attacker.hasUser()) {

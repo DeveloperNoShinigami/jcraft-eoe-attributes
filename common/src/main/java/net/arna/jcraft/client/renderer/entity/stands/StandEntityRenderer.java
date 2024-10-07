@@ -24,6 +24,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
@@ -35,7 +36,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     protected static final String RIGHT_HAND = "bipedHandRight";
 
     //private final StandEntityModel<T> standEntityModel;
-    protected StandEntityRenderer(EntityRendererProvider.Context renderManager, StandEntityModel<T> modelProvider) {
+    protected StandEntityRenderer(final EntityRendererProvider.Context renderManager, final StandEntityModel<T> modelProvider) {
         super(renderManager, modelProvider);
     }
 
@@ -50,21 +51,21 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     SmoothCutout - Cutout
     Solid - no transparency
      */
-    public static RenderType renderTypeOf(StandEntity<?, ?> stand, ResourceLocation textureLocation) {
+    public static RenderType renderTypeOf(final StandEntity<?, ?> stand, final ResourceLocation textureLocation) {
         Minecraft mcClient = Minecraft.getInstance();
         return mcClient.options.getCameraType().isFirstPerson() && mcClient.player != null && JUtils.getStand(mcClient.player) == stand ?
                 RenderType.entityNoOutline(textureLocation) : RenderType.entityTranslucent(textureLocation);
     }
 
     @Override
-    public RenderType getRenderType(T animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final T animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return renderTypeOf(animatable, texture);
     }
 
     // Adds the ability to change render alpha
     @Override
-    public void preRender(PoseStack poseStack, T stand, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer,
-                          boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(final PoseStack poseStack, final T stand, final BakedGeoModel model, final MultiBufferSource bufferSource, final VertexConsumer buffer,
+                          final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
 
         float a = getAlpha(stand, partialTick);
         a *= alpha;
@@ -77,11 +78,11 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
 
     // Better than a mixin, makes stands look towards the users HEAD rotation as opposed to body
     @Override
-    public void actuallyRender(PoseStack poseStack, T animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource,
-                               VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(final PoseStack poseStack, final T animatable, final BakedGeoModel model, RenderType renderType, final MultiBufferSource bufferSource,
+                               VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
         poseStack.pushPose();
 
-        boolean shouldSit = animatable.isPassenger() && (animatable.getVehicle() != null);
+        final boolean shouldSit = animatable.isPassenger() && (animatable.getVehicle() != null);
         float lerpBodyRot = Mth.rotLerp(partialTick, animatable.yBodyRotO, animatable.yBodyRot);
         float lerpHeadRot = Mth.rotLerp(partialTick, animatable.yHeadRotO, animatable.yHeadRot);
         float netHeadYaw = lerpHeadRot - lerpBodyRot;
@@ -108,7 +109,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             }
         }
 
-        float ageInTicks = animatable.tickCount + partialTick;
+        final float ageInTicks = animatable.tickCount + partialTick;
         float limbSwingAmount = 0;
         float limbSwing = 0;
 
@@ -126,13 +127,13 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
         }
 
         if (!isReRender) {
-            float headPitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
-            float motionThreshold = getMotionAnimThreshold(animatable);
-            Vec3 velocity = animatable.getDeltaMovement();
-            float avgVelocity = (float)(Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
-            AnimationState<T> animationState = new AnimationState<T>(animatable, limbSwing, limbSwingAmount,
+            final float headPitch = Mth.lerp(partialTick, animatable.xRotO, animatable.getXRot());
+            final float motionThreshold = getMotionAnimThreshold(animatable);
+            final Vec3 velocity = animatable.getDeltaMovement();
+            final float avgVelocity = (float)(Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
+            final AnimationState<T> animationState = new AnimationState<T>(animatable, limbSwing, limbSwingAmount,
                     partialTick, avgVelocity >= motionThreshold && limbSwingAmount != 0);
-            long instanceId = getInstanceId(animatable);
+            final long instanceId = getInstanceId(animatable);
 
             animationState.setData(DataTickets.TICK, animatable.getTick(animatable));
             animationState.setData(DataTickets.ENTITY, animatable);
@@ -187,7 +188,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     }
 
     @Override
-    protected int getBlockLightLevel(T stand, BlockPos pos) {
+    protected int getBlockLightLevel(final T stand, final BlockPos pos) {
         if (!stand.hasUser()) {
             return super.getBlockLightLevel(stand, pos);
         }
@@ -199,17 +200,17 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     }
 
     @Override
-    protected int getSkyLightLevel(T stand, BlockPos pos) {
+    protected int getSkyLightLevel(final T stand, final BlockPos pos) {
         return stand.hasUser() ? stand.level().getBrightness(LightLayer.SKY, stand.getUserOrThrow().blockPosition()) :
                 super.getSkyLightLevel(stand, pos);
     }
 
-    public static boolean shouldApplyAlpha(StandEntity<?, ?> stand) {
-        Minecraft mcClient = Minecraft.getInstance();
+    public static boolean shouldApplyAlpha(final StandEntity<?, ?> stand) {
+        final Minecraft mcClient = Minecraft.getInstance();
         return mcClient.player != null && mcClient.options.getCameraType().isFirstPerson() && JUtils.getStand(mcClient.player) == stand;
     }
 
-    public static float getAlpha(StandEntity<?, ?> stand, float tickDelta) {
+    public static float getAlpha(final StandEntity<?, ?> stand, final float tickDelta) {
         if (!shouldApplyAlpha(stand)) {
             return 1f;
         }
@@ -219,7 +220,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             return stand.getAlphaOverride();
         }
 
-        float a = Mth.clamp((float) stand.distanceToSqr(Minecraft.getInstance().player) / 2f, 0, 1);
+        final float a = Mth.clamp((float) stand.distanceToSqr(Minecraft.getInstance().player) / 2f, 0, 1);
         if (!stand.hasAlphaOverride()) {
             return a; // If we don't have an override, use this alpha value.
         }
@@ -228,15 +229,15 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
         return Mth.lerp(tickDelta, a, stand.getAlphaOverride());
     }
 
-    protected float getRed(T stand, float red, float alpha) {
+    protected float getRed(final T stand, final float red, final float alpha) {
         return red;
     }
 
-    protected float getGreen(T stand, float green, float alpha) {
+    protected float getGreen(final T stand, final float green, final float alpha) {
         return green;
     }
 
-    protected float getBlue(T stand, float blue, float alpha) {
+    protected float getBlue(final T stand, final float blue, final float alpha) {
         return blue;
     }
 }

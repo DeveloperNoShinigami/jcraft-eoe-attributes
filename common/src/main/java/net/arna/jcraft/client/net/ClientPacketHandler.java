@@ -79,17 +79,17 @@ public class ClientPacketHandler {
         register(S2C_PREDICTION_UPDATE, ClientPacketHandler::handlePrediction);
     }
 
-    private static void handlePrediction(@NotNull Minecraft client, FriendlyByteBuf buf) {
-        int size = buf.readInt();
+    private static void handlePrediction(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+        final int size = buf.readInt();
         if (size == 0) {
             return;
         }
         for (int i = 0; i < size; i++) {
-            int entID = buf.readInt();
-            Vec3 predictedPos = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            final int entID = buf.readInt();
+            final Vec3 predictedPos = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
 
             client.execute(() -> {
-                Entity ent = client.level.getEntity(entID);
+                final Entity ent = client.level.getEntity(entID);
                 if (ent == null) {
                     return;
                 }
@@ -99,21 +99,21 @@ public class ClientPacketHandler {
         }
     }
 
-    private static void handleTimeStop(@NotNull Minecraft client, FriendlyByteBuf buf) {
+    private static void handleTimeStop(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
         if (client.level == null || client.player == null) {
             return;
         }
 
-        boolean isStart = buf.readBoolean();
-        int entID = buf.readInt();
+        final boolean isStart = buf.readBoolean();
+        final int entID = buf.readInt();
 
         if (isStart) {
-            Vec3 position = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
-            ResourceKey<Level> registryKey = buf.readResourceKey(Registries.DIMENSION);
+            final Vec3 position = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+            final ResourceKey<Level> registryKey = buf.readResourceKey(Registries.DIMENSION);
             int time = buf.readInt();
 
             client.execute(() -> {
-                Entity ent = client.level.getEntity(entID);
+                final Entity ent = client.level.getEntity(entID);
                 if (!(ent instanceof LivingEntity livingEntity)) {
                     return;
                 }
@@ -124,31 +124,31 @@ public class ClientPacketHandler {
         }
     }
 
-    private static void register(ResourceLocation id, Consumer<FriendlyByteBuf> handler) {
+    private static void register(final ResourceLocation id, final Consumer<FriendlyByteBuf> handler) {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, id, (buf, context) -> {
             handler.accept(buf);
         });
     }
 
-    private static void register(ResourceLocation id, BiConsumer<Minecraft, FriendlyByteBuf> handler) {
+    private static void register(final ResourceLocation id, final BiConsumer<Minecraft, FriendlyByteBuf> handler) {
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, id, (buf, context) -> {
             handler.accept(Minecraft.getInstance(), buf);
         });
     }
 
-    public static void handleAnimation(@NotNull Minecraft client, FriendlyByteBuf buf) {
+    public static void handleAnimation(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
         if (client.level == null || client.player == null) {
             return;
         }
 
-        int entID = buf.readInt();
-        String animID = buf.readUtf(); // I know exactly how unoptimized this is, but I fail to care
-        boolean isSpec = buf.readBoolean();
+        final int entID = buf.readInt();
+        final String animID = buf.readUtf(); // I know exactly how unoptimized this is, but I fail to care
+        final boolean isSpec = buf.readBoolean();
 
         //JCraft.LOGGER.info("JCRAFT CLIENT:\nRecieving animation packet of animID: " + animID + " for entity ID: " + entID);
 
-        int moveStun;
-        float animationSpeed;
+        final int moveStun;
+        final float animationSpeed;
 
         if (isSpec) {
             moveStun = buf.readInt();
@@ -160,14 +160,14 @@ public class ClientPacketHandler {
         }
 
         client.execute(() -> {
-            Entity ent = client.level.getEntity(entID);
+            final Entity ent = client.level.getEntity(entID);
             //JCraft.LOGGER.info("Animation is to be applied to: " + ent);
-            if (ent instanceof Player player) {
+            if (ent instanceof final Player player) {
                 // Animate
-                ModifierLayer<IAnimation> animationContainer = ((IJCraftAnimatedPlayer) player).jcraft_getModAnimation();
-                KeyframeAnimation anim = PlayerAnimationRegistry.getAnimation(JCraft.id(animID));
+                final ModifierLayer<IAnimation> animationContainer = ((IJCraftAnimatedPlayer) player).jcraft_getModAnimation();
+                final KeyframeAnimation anim = PlayerAnimationRegistry.getAnimation(JCraft.id(animID));
                 if (anim == null) {
-                    JCraft.LOGGER.error("Tried to play null animation on player: " + player + ", in world " + client.level);
+                    JCraft.LOGGER.error(String.format("Tried to play null animation on player: %s, in world %s", player, client.level));
                     return;
                 }
 
@@ -178,9 +178,9 @@ public class ClientPacketHandler {
 
                 // Synchronize spec values
                 if (isSpec) {
-                    JSpec<?, ?> spec = JUtils.getSpec(player);
+                    final JSpec<?, ?> spec = JUtils.getSpec(player);
                     if (spec == null) {
-                        JCraft.LOGGER.error("Tried to set spec animation values on player without spec: " + player + ", in world " + client.level);
+                        JCraft.LOGGER.error(String.format("Tried to set spec animation values on player without spec: %s, in world %s", player, client.level));
                     } else {
                         //JCraft.LOGGER.info("Spec: " + spec.getName());
                         spec.moveStun = moveStun;
@@ -196,18 +196,18 @@ public class ClientPacketHandler {
         });
     }
 
-    public static void handleChannelFeedback(@NotNull Minecraft client, FriendlyByteBuf buf) {
+    public static void handleChannelFeedback(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
         if (client.level == null || client.player == null) {
             return;
         }
 
-        short control = buf.readShort();
+        final short control = buf.readShort();
         switch (control) {
             // Attack hit boxes
             case (1) -> {
-                int count = buf.readVarInt();
+                final int count = buf.readVarInt();
 
-                List<AABB> boxes = IntStream.range(0, count)
+                final List<AABB> boxes = IntStream.range(0, count)
                         .mapToObj(i -> {
                             double minX = buf.readDouble();
                             double minY = buf.readDouble();
@@ -235,7 +235,7 @@ public class ClientPacketHandler {
                 double sizeZ = Mth.clamp(buf.readDouble(), 0.1, 100);
 
                 client.execute(() -> {
-                    Random random = new Random();
+                    final Random random = new Random();
 
                     for (int h = 0; h < 8; ++h) {
                         client.level.addParticle(
@@ -251,10 +251,10 @@ public class ClientPacketHandler {
 
             // Generic single particle
             case (3) -> {
-                double x = buf.readDouble();
-                double y = buf.readDouble();
-                double z = buf.readDouble();
-                JParticleType particleType = buf.readEnum(JParticleType.class);
+                final double x = buf.readDouble();
+                final double y = buf.readDouble();
+                final double z = buf.readDouble();
+                final JParticleType particleType = buf.readEnum(JParticleType.class);
 
                 client.execute(() -> client.level.addParticle(particleType.getParticleType(), true, x, y, z,
                         0, 0, 0));
@@ -262,18 +262,18 @@ public class ClientPacketHandler {
 
             // Complex hit spark
             case (5) -> {
-                double x = buf.readDouble();
-                double y = buf.readDouble();
-                double z = buf.readDouble();
-                JParticleType particleType = buf.readEnum(JParticleType.class);
-                int sparkCount = buf.readInt();
-                double speed = buf.readDouble();
+                final double x = buf.readDouble();
+                final double y = buf.readDouble();
+                final double z = buf.readDouble();
+                final JParticleType particleType = buf.readEnum(JParticleType.class);
+                final int sparkCount = buf.readInt();
+                final double speed = buf.readDouble();
 
                 client.execute(() -> {
-                    Random random = new Random();
-                    SimpleParticleType type = particleType.getParticleType();
+                    final Random random = new Random();
+                    final SimpleParticleType type = particleType.getParticleType();
                     for (int i = 0; i < sparkCount; i++) {
-                        Vec3 vel = JUtils.randUnitVec(random);
+                        final Vec3 vel = JUtils.randUnitVec(random);
                         client.level.addParticle(type, false,
                                 x + random.nextGaussian() * 0.33, y + random.nextGaussian() * 0.33, z + random.nextGaussian() * 0.33,
                                 vel.x * speed, vel.y * speed, vel.z * speed);
@@ -283,16 +283,16 @@ public class ClientPacketHandler {
 
             // Return to Zero trackers
             case (7) -> {
-                int entID = buf.readInt();
-                Vec3 originalPos = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+                final int entID = buf.readInt();
+                final Vec3 originalPos = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
 
                 client.execute(() -> {
-                    Entity ent = client.level.getEntity(entID);
+                    final Entity ent = client.level.getEntity(entID);
                     if (ent == null) {
                         return;
                     }
-                    Vec3 currentPos = ent.getEyePosition();
-                    Vec3 originalToCurrent = currentPos.subtract(originalPos).normalize();
+                    final Vec3 currentPos = ent.getEyePosition();
+                    final Vec3 originalToCurrent = currentPos.subtract(originalPos).normalize();
                     for (double h = 0; h < currentPos.distanceTo(originalPos); ++h) {
                         client.level.addParticle(
                                 ParticleTypes.ELECTRIC_SPARK,
@@ -305,27 +305,27 @@ public class ClientPacketHandler {
 
             // Bites the Dust tracker
             case (9) -> {
-                double v1x = buf.readDouble();
-                double v1y = buf.readDouble();
-                double v1z = buf.readDouble();
+                final double v1x = buf.readDouble();
+                final double v1y = buf.readDouble();
+                final double v1z = buf.readDouble();
 
-                double v2x = buf.readDouble();
-                double v2y = buf.readDouble();
-                double v2z = buf.readDouble();
+                final double v2x = buf.readDouble();
+                final double v2y = buf.readDouble();
+                final double v2z = buf.readDouble();
 
-                double oX = buf.readDouble();
-                double oY = buf.readDouble();
-                double oZ = buf.readDouble();
+                final double oX = buf.readDouble();
+                final double oY = buf.readDouble();
+                final double oZ = buf.readDouble();
 
-                boolean inRange = buf.readBoolean();
+                final boolean inRange = buf.readBoolean();
 
                 client.execute(() -> {
-                    Random random = new Random();
+                    final Random random = new Random();
 
                     for (int h = 0; h < 16; ++h) {
-                        double x = v1x + random.nextDouble(v2x) - v2x / 2;
-                        double y = v1y + random.nextDouble(v2y) - v2y / 2;
-                        double z = v1z + random.nextDouble(v2z) - v2z / 2;
+                        final double x = v1x + random.nextDouble(v2x) - v2x / 2;
+                        final double y = v1y + random.nextDouble(v2y) - v2y / 2;
+                        final double z = v1z + random.nextDouble(v2z) - v2z / 2;
 
                         client.level.addParticle(
                                 inRange ? ParticleTypes.WAX_OFF : ParticleTypes.GLOW,
@@ -333,9 +333,9 @@ public class ClientPacketHandler {
                     }
 
                     for (int h = 0; h < 8; ++h) {
-                        double x = oX + random.nextDouble(v2x) - v2x / 2;
-                        double y = oY + random.nextDouble(v2y) - v2y / 2;
-                        double z = oZ + random.nextDouble(v2z) - v2z / 2;
+                        final double x = oX + random.nextDouble(v2x) - v2x / 2;
+                        final double y = oY + random.nextDouble(v2y) - v2y / 2;
+                        final double z = oZ + random.nextDouble(v2z) - v2z / 2;
 
                         client.level.addParticle(
                                 ParticleTypes.GLOW,
@@ -346,10 +346,10 @@ public class ClientPacketHandler {
 
             // Crossfire hurricane
             case (10) -> {
-                Random random = new Random();
-                double x = buf.readDouble();
-                double y = buf.readDouble();
-                double z = buf.readDouble();
+                final Random random = new Random();
+                final double x = buf.readDouble();
+                final double y = buf.readDouble();
+                final double z = buf.readDouble();
 
                 client.execute(() -> {
                     for (int h = 0; h < 360; ++h) {
@@ -363,13 +363,13 @@ public class ClientPacketHandler {
 
             // Fool Dust Cloud
             case (11) -> {
-                double x = buf.readDouble();
-                double y = buf.readDouble();
-                double z = buf.readDouble();
-                double size = buf.readDouble();
+                final double x = buf.readDouble();
+                final double y = buf.readDouble();
+                final double z = buf.readDouble();
+                final double size = buf.readDouble();
 
                 client.execute(() -> {
-                    Random random = new Random();
+                    final Random random = new Random();
                     for (int h = 0; h < size * 128; ++h) {
                         client.level.addParticle(
                                 new BlockParticleOption(ParticleTypes.FALLING_DUST, Blocks.SAND.defaultBlockState()),
@@ -383,7 +383,7 @@ public class ClientPacketHandler {
 
             // Reset Player Animation
             case (13) -> {
-                int entID = buf.readInt();
+                final int entID = buf.readInt();
 
                 client.execute(() -> {
                     Entity ent = client.level.getEntity(entID);
@@ -396,11 +396,11 @@ public class ClientPacketHandler {
         }
     }
 
-    public static void handleShaderActivation(@NotNull Minecraft client, FriendlyByteBuf buf) {
-        int delay = buf.readInt();
-        int duration = buf.readInt();
-        ShaderActivationPacket.Type type = ShaderActivationPacket.Type.byName(buf.readUtf());
-        Level world = client.level;
+    public static void handleShaderActivation(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+        final int delay = buf.readInt();
+        final int duration = buf.readInt();
+        final ShaderActivationPacket.Type type = ShaderActivationPacket.Type.byName(buf.readUtf());
+        final Level world = client.level;
         if (world == null) {
             return;
         }
@@ -409,10 +409,10 @@ public class ClientPacketHandler {
             case NONE -> {
             }
             case ZA_WARUDO -> {
-                int id = buf.readInt();
+                final int id = buf.readInt();
                 client.execute(() -> {
-                    Entity sourceShader = world.getEntity(id);
-                    if (sourceShader instanceof LivingEntity livingEntity) {
+                    final Entity sourceShader = world.getEntity(id);
+                    if (sourceShader instanceof final LivingEntity livingEntity) {
 
                         ZaWarudoShaderHandler zaWarudoShaderHandler = ZaWarudoShaderHandler.INSTANCE;
                         zaWarudoShaderHandler.shaderSourceEntity = Optional.of(livingEntity).orElse(client.player);
@@ -427,7 +427,7 @@ public class ClientPacketHandler {
                     return;
                 }
 
-                CrimsonShaderHandler crimsonShaderHandler = CrimsonShaderHandler.INSTANCE;
+                final CrimsonShaderHandler crimsonShaderHandler = CrimsonShaderHandler.INSTANCE;
                 crimsonShaderHandler.effectLength = duration;
                 crimsonShaderHandler.shouldRender = true;
 
@@ -436,9 +436,9 @@ public class ClientPacketHandler {
         }
     }
 
-    public static void handleShaderDeactivation(@NotNull Minecraft client, FriendlyByteBuf buf) {
-        ShaderActivationPacket.Type type = ShaderActivationPacket.Type.byName(buf.readUtf());
-        Level world = client.level;
+    public static void handleShaderDeactivation(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+        final ShaderActivationPacket.Type type = ShaderActivationPacket.Type.byName(buf.readUtf());
+        final Level world = client.level;
         if (world != null) {
             switch (type) {
                 case NONE -> {
@@ -461,11 +461,11 @@ public class ClientPacketHandler {
         }
     }
 
-    public static void handleTimeAccelState(@NotNull Minecraft client, FriendlyByteBuf buf) {
-        TimeAccelStatePacket.State state = TimeAccelStatePacket.State.values()[buf.readVarInt()];
-        Entity e = client.level == null ? null : client.level.getEntity(buf.readVarInt());
+    public static void handleTimeAccelState(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+        final TimeAccelStatePacket.State state = TimeAccelStatePacket.State.values()[buf.readVarInt()];
+        final Entity e = client.level == null ? null : client.level.getEntity(buf.readVarInt());
 
-        if (!(e instanceof MadeInHeavenEntity mih) || !mih.isAlive()) {
+        if (!(e instanceof final MadeInHeavenEntity mih) || !mih.isAlive()) {
             return;
         }
 
@@ -476,8 +476,8 @@ public class ClientPacketHandler {
         }
     }
 
-    public static void handleEpitaphOverlayState(@NotNull Minecraft client, FriendlyByteBuf buf) {
-        boolean start = buf.readBoolean();
+    public static void handleEpitaphOverlayState(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+        final boolean start = buf.readBoolean();
         client.execute(() -> {
             if (start) {
                 EpitaphOverlay.start();
@@ -487,9 +487,9 @@ public class ClientPacketHandler {
         });
     }
 
-    public static void handlePredictionState(@NotNull Minecraft client, FriendlyByteBuf buf) {
-        boolean start = buf.readBoolean();
-        int length = start ? buf.readVarInt() : 0;
+    public static void handlePredictionState(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+        final boolean start = buf.readBoolean();
+        final int length = start ? buf.readVarInt() : 0;
 
         client.execute(() -> {
             if (start) {
@@ -500,9 +500,9 @@ public class ClientPacketHandler {
         });
     }
 
-    public static void handleServerConfig(@NotNull Minecraft client, FriendlyByteBuf buf) {
-        boolean editable = buf.readBoolean();
-        boolean show = buf.readBoolean();
+    public static void handleServerConfig(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+        final boolean editable = buf.readBoolean();
+        final boolean show = buf.readBoolean();
 
         ConfigOption.readOptions(buf);
 
@@ -511,12 +511,12 @@ public class ClientPacketHandler {
         }
     }
 
-    private static void handleJExplosion(@NotNull Minecraft client, FriendlyByteBuf buf) {
-        ClientboundExplodePacket nativePacket = new ClientboundExplodePacket(buf);
-        JExplosionModifier modifier = buf.readBoolean() ? JExplosionModifier.read(buf) : null;
+    private static void handleJExplosion(final @NotNull Minecraft client, final FriendlyByteBuf buf) {
+        final ClientboundExplodePacket nativePacket = new ClientboundExplodePacket(buf);
+        final JExplosionModifier modifier = buf.readBoolean() ? JExplosionModifier.read(buf) : null;
 
         client.execute(() -> {
-            Explosion explosion = new Explosion(client.level, null, nativePacket.getX(), nativePacket.getY(), nativePacket.getZ(),
+            final Explosion explosion = new Explosion(client.level, null, nativePacket.getX(), nativePacket.getY(), nativePacket.getZ(),
                     nativePacket.getPower(), nativePacket.getToBlow());
             ((IJExplosion) explosion).jcraft$setModifier(modifier);
             explosion.finalizeExplosion(true);
@@ -525,7 +525,7 @@ public class ClientPacketHandler {
         });
     }
 
-    private static void handleComboCounter(@NotNull Minecraft minecraftClient, FriendlyByteBuf buf) {
+    private static void handleComboCounter(final @NotNull Minecraft minecraftClient, final FriendlyByteBuf buf) {
         JCraftClient.comboCounter = buf.readInt();
         if (JCraftClient.comboCounter == 1) {
             JCraftClient.markComboStarted();
@@ -536,13 +536,13 @@ public class ClientPacketHandler {
         JCraftClient.framesSinceCounted = 0;
     }
 
-    private static void handleSplatter(Minecraft client, FriendlyByteBuf buf) {
-        ClientLevel world = client.level;
+    private static void handleSplatter(final Minecraft client, final FriendlyByteBuf buf) {
+        final ClientLevel world = client.level;
         if (world == null) {
             return;
         }
 
-        Splatter splatter = JUtils.getSplatterManager(world).readSplatter(buf);
+        final Splatter splatter = JUtils.getSplatterManager(world).readSplatter(buf);
 
         long ageMs = splatter.getType().getMaxAge() * 50L;
         AttackHitboxEffectRenderer.addHitbox(splatter.getMainBox(), ageMs, true);
@@ -551,15 +551,15 @@ public class ClientPacketHandler {
                 .forEach(section -> AttackHitboxEffectRenderer.addHitbox(section.getHitBox(), ageMs, true));
     }
 
-    private static void handleStandHurt(Minecraft client, FriendlyByteBuf buf) {
-        int entityId = buf.readVarInt();
+    private static void handleStandHurt(final Minecraft client, final FriendlyByteBuf buf) {
+        final int entityId = buf.readVarInt();
         client.execute(() -> {
             if (client.level == null) {
                 return;
             }
 
-            Entity entity = client.level.getEntity(entityId);
-            if (!(entity instanceof LivingEntity living)) {
+            final Entity entity = client.level.getEntity(entityId);
+            if (!(entity instanceof final LivingEntity living)) {
                 return;
             }
 

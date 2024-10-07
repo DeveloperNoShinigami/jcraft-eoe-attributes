@@ -8,13 +8,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 public final class KCDonutAttack extends AbstractSimpleAttack<KCDonutAttack, KingCrimsonEntity> {
-    public KCDonutAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                         float hitboxSize, float knockback, float offset) {
+    public KCDonutAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                         final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    protected void processTarget(KingCrimsonEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
+    protected void processTarget(final KingCrimsonEntity attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
         final Vec3 pos = attacker.position().add(attacker.getLookAngle().scale(1.5));
         target.teleportToWithTicket(pos.x, target.getY(), pos.z);

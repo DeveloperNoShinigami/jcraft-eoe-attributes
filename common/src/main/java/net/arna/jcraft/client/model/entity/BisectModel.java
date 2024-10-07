@@ -8,22 +8,22 @@ import net.minecraft.resources.ResourceLocation;
 
 public class BisectModel extends GeoModel<BisectProjectile> {
     @Override
-    public ResourceLocation getModelResource(BisectProjectile animatable) {
+    public ResourceLocation getModelResource(final BisectProjectile animatable) {
         return JCraft.id("geo/bisect.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(BisectProjectile animatable) {
+    public ResourceLocation getTextureResource(final BisectProjectile animatable) {
         return JCraft.id("textures/entity/projectiles/bisect.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(BisectProjectile animatable) {
+    public ResourceLocation getAnimationResource(final BisectProjectile animatable) {
         return JCraft.id("animations/bisect.animation.json");
     }
 
     @Override
-    public void setCustomAnimations(BisectProjectile animatable, long instanceId, AnimationState<BisectProjectile> animationState) {
+    public void setCustomAnimations(final BisectProjectile animatable, final long instanceId, final AnimationState<BisectProjectile> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
         getBone("base").ifPresent(base -> {
             final float scale = animatable.getScale();

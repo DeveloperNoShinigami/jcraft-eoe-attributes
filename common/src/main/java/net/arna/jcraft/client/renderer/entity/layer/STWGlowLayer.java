@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class STWGlowLayer extends GeoRenderLayer<ShadowTheWorldEntity> {
-    public STWGlowLayer(GeoRenderer<ShadowTheWorldEntity> entityRendererIn) {
+    public STWGlowLayer(final GeoRenderer<ShadowTheWorldEntity> entityRendererIn) {
         super(entityRendererIn);
     }
 
@@ -25,13 +25,13 @@ public class STWGlowLayer extends GeoRenderLayer<ShadowTheWorldEntity> {
             i -> JCraft.id("textures/entity/stands/shadow_the_world/"+ "shade_" + i + ".png")).toList();
 
     @Override
-    public void render(PoseStack poseStack, ShadowTheWorldEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
-                       MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        RenderType cameo = RenderType.entityTranslucentEmissive(skins.get(animatable.getSkin()));
+    public void render(final PoseStack poseStack, final ShadowTheWorldEntity animatable, final BakedGeoModel bakedModel, final RenderType renderType,
+                       final MultiBufferSource bufferSource, final VertexConsumer buffer, final float partialTick, final int packedLight, final int packedOverlay) {
+        final RenderType cameo = RenderType.entityTranslucentEmissive(skins.get(animatable.getSkin()));
 
         poseStack.pushPose();
-        float tick = (animatable.tickCount + partialTick) * 3.1415f / 10.0f;
-        float mod = 0.015f;
+        final float tick = (animatable.tickCount + partialTick) * 3.1415f / 10.0f;
+        final float mod = 0.015f;
         /*
         if (animatable.isAnimatedDesummoning()) {
             final float desummonProgress = (7 - animatable.getDesummonTime() + partialTick) * 0.04f;

@@ -7,17 +7,17 @@ import net.minecraft.resources.ResourceLocation;
 
 public class DarbyOlderModel extends GeoModel<DarbyOlderEntity> {
     @Override
-    public ResourceLocation getModelResource(DarbyOlderEntity animatable) {
+    public ResourceLocation getModelResource(final DarbyOlderEntity animatable) {
         return JCraft.id("geo/darby_older.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(DarbyOlderEntity animatable) {
+    public ResourceLocation getTextureResource(final DarbyOlderEntity animatable) {
         return JCraft.id("textures/entity/darby_older.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(DarbyOlderEntity animatable) {
+    public ResourceLocation getAnimationResource(final DarbyOlderEntity animatable) {
         return JCraft.id("animations/darby_older.animation.json");
     }
 }

@@ -12,18 +12,18 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class GravitationalHopMove extends AbstractMove<GravitationalHopMove, CMoonEntity> {
-    public GravitationalHopMove(int cooldown) {
+    public GravitationalHopMove(final int cooldown) {
         super(cooldown, 0, 0, 0f);
         mobilityType = MobilityType.HIGHJUMP;
     }
 
     @Override
-    public void onInitiate(CMoonEntity attacker) {
+    public void onInitiate(final CMoonEntity attacker) {
         getInitActions().forEach(action -> action.perform(attacker, attacker.getUser(), attacker.getMoveContext()));
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(CMoonEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final CMoonEntity attacker, final LivingEntity user, final MoveContext ctx) {
         if (user.onGround()) {
             if (user.hasEffect(JStatusRegistry.WEIGHTLESS.get())) {
                 user.removeEffect(JStatusRegistry.WEIGHTLESS.get());

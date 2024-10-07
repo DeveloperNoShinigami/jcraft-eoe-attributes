@@ -11,13 +11,13 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public final class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttack, SPTWEntity> {
-    public GroundSlamAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                            float hitboxSize, float knockback, float offset) {
+    public GroundSlamAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                            final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(SPTWEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final SPTWEntity attacker, final LivingEntity user, final MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         Vec3 pos = user.position();

@@ -16,15 +16,18 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekickAttack, HorusEntity, HorusEntity.State> {
+
     public static final MoveVariable<Vec3> LOOK_DIR = new MoveVariable<>(Vec3.class);
-    public HorusDivekickAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback, float offset, HorusEntity.State hitAnimState) {
+
+    public HorusDivekickAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback, final float offset, final HorusEntity.State hitAnimState) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitAnimState);
         withMobilityType(MobilityType.FLIGHT);
     }
 
     private static final MobEffectInstance LEVITATE = new MobEffectInstance(MobEffects.SLOW_FALLING, 9, 4, true, false);
+
     @Override
-    public void onInitiate(HorusEntity attacker) {
+    public void onInitiate(final HorusEntity attacker) {
         super.onInitiate(attacker);
         final LivingEntity user = attacker.getUserOrThrow();
         if (attacker.isFree()) attacker.setFree(false);
@@ -39,21 +42,21 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
     }
 
     @Override
-    protected void endCharge(HorusEntity attacker) {
+    protected void endCharge(final HorusEntity attacker) {
         super.endCharge(attacker);
         final Vec3 newPos = advanceChargePos(attacker, getMoveDistance(), getWindupPoint());
         attacker.setFreePos(new Vector3f((float) newPos.x, (float) newPos.y, (float) newPos.z));
     }
 
     @Override
-    protected Vec3 advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
+    protected Vec3 advanceChargePos(final StandEntity<?, ?> attacker, final float moveDistance, final int windupPoint) {
         return attacker.position().add(
                 attacker.getMoveContext().get(LOOK_DIR)
         );
     }
 
     @Override
-    protected void tickChargeAttack(StandEntity<HorusEntity, HorusEntity.State> attacker, boolean shouldPerform, float moveDistance, int windupPoint) {
+    protected void tickChargeAttack(final StandEntity<HorusEntity, HorusEntity.State> attacker, final boolean shouldPerform, final float moveDistance, final int windupPoint) {
         super.tickChargeAttack(attacker, shouldPerform, moveDistance, windupPoint);
         if (attacker.getMoveStun() < windupPoint) {
             if (attacker.getBlockStateOn().canOcclude()) {
@@ -68,7 +71,7 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(LOOK_DIR);
     }
 

@@ -22,12 +22,12 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
     public static final MoveVariable<LivingEntity> BTD_ENTITY = new MoveVariable<>(LivingEntity.class);
     public static final MoveVariable<Vec3> BTD_POS = new MoveVariable<>(Vec3.class);
 
-    public BTDPlantAttack(int cooldown, int windup, int duration, float attackDistance, int stun, float hitboxSize, float offset) {
+    public BTDPlantAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final int stun, final float hitboxSize, final float offset) {
         super(cooldown, windup, duration, attackDistance, 0f, stun, hitboxSize, 0f, offset);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(KQBTDEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (targets.isEmpty()) {
             return Set.of();
@@ -41,13 +41,13 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
         return targets;
     }
 
-    public void tickBomb(KQBTDEntity stand) {
+    public void tickBomb(final KQBTDEntity stand) {
         if (stand.getUser() instanceof ServerPlayer player) {
             displayBTDParticles(stand, player);
         }
     }
 
-    private void displayBTDParticles(KQBTDEntity stand, ServerPlayer playerEntity) {
+    private void displayBTDParticles(final KQBTDEntity stand, final ServerPlayer playerEntity) {
         final Entity bombEntity = stand.getMoveContext().get(BTD_ENTITY);
         final Vec3 bombPos = stand.getMoveContext().get(BTD_POS);
         final boolean bombExists = bombEntity != null;
@@ -76,7 +76,7 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
         if (!bombExists) {
             return;
         }
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeShort(9);
 
         buf.writeDouble(dX1);
@@ -91,9 +91,9 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
         buf.writeDouble(bombPos.z);
 
         boolean anyInRange = false;
-        Vec3 pos = bombEntity.position();
-        Vec3 v1 = pos.add(3, 3, 3);
-        Vec3 v2 = pos.add(-3, -3, -3);
+        final Vec3 pos = bombEntity.position();
+        final Vec3 v1 = pos.add(3, 3, 3);
+        final Vec3 v2 = pos.add(-3, -3, -3);
         List<LivingEntity> list = stand.level().getEntitiesOfClass(LivingEntity.class, new AABB(v1, v2),
                 EntitySelector.LIVING_ENTITY_STILL_ALIVE.and(e -> e != bombEntity));
         for (LivingEntity l : list) {
@@ -111,7 +111,7 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(BTD_ENTITY);
         ctx.register(BTD_POS);
     }

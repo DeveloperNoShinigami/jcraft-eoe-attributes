@@ -23,14 +23,14 @@ import java.util.Set;
 public final class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<TimeSkipMove<A>, A> {
     private final double distance;
 
-    public TimeSkipMove(int cooldown, double distance) {
+    public TimeSkipMove(final int cooldown, final double distance) {
         super(cooldown, 0, 0, 0);
         this.distance = distance;
         mobilityType = MobilityType.TELEPORT;
     }
 
     @Override
-    public boolean canBeInitiated(A attacker) {
+    public boolean canBeInitiated(final A attacker) {
         if (Timestops.getTimestop(attacker.getUser()) != null) {
             return false;
         }
@@ -38,19 +38,19 @@ public final class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends Abs
     }
 
     @Override
-    public void onInitiate(A attacker) {
+    public void onInitiate(final A attacker) {
         // Don't play the sounds
         getInitActions().forEach(action -> action.perform(attacker, attacker.getUser(), attacker.getMoveContext()));
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         doTimeSkip(attacker, user, distance, getSounds());
 
         return Set.of();
     }
 
-    public static void doTimeSkip(IAttacker<?, ?> attacker, LivingEntity user, double distance, List<SoundEvent> sounds) {
+    public static void doTimeSkip(final IAttacker<?, ?> attacker, final LivingEntity user, double distance, final List<SoundEvent> sounds) {
         final boolean hasVehicle = user.isPassenger();
 
         if (hasVehicle) {

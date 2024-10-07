@@ -10,13 +10,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class KQGrabAttack extends AbstractGrabAttack<KQGrabAttack, KillerQueenEntity, KillerQueenEntity.State> {
-    public KQGrabAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize,
-                        float knockback, float offset, AbstractMove<?, ? super KillerQueenEntity> hitMove, KillerQueenEntity.State hitState) {
+    public KQGrabAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun, final float hitboxSize,
+                        final float knockback, final float offset, final AbstractMove<?, ? super KillerQueenEntity> hitMove, final KillerQueenEntity.State hitState) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMove, hitState);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KillerQueenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         targets.stream().findFirst().ifPresent(JComponentPlatformUtils.getBombTracker(user).getMainBomb()::setBomb);
         return targets;

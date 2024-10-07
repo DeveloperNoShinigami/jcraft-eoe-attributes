@@ -8,12 +8,12 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 public class BubbleRenderer extends GeoProjectileRenderer<BubbleProjectile> {
-    public BubbleRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public BubbleRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new BubbleModel());
     }
 
     @Override
-    public RenderType getRenderType(BubbleProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final BubbleProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(texture);
     }
 }

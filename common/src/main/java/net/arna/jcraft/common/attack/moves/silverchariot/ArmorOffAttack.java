@@ -11,12 +11,12 @@ import java.util.Set;
 public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, SilverChariotEntity> {
     public static final IntMoveVariable ARMOR_TIME = new IntMoveVariable();
 
-    public ArmorOffAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback, float offset) {
+    public ArmorOffAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(SilverChariotEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final SilverChariotEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         attacker.setMode(SilverChariotEntity.Mode.ARMORLESS);
@@ -25,7 +25,7 @@ public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, S
         return targets;
     }
 
-    public void tickArmor(SilverChariotEntity stand) {
+    public void tickArmor(final SilverChariotEntity stand) {
         if (stand.getMode() != SilverChariotEntity.Mode.ARMORLESS) {
             return;
         }
@@ -39,7 +39,7 @@ public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, S
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(ARMOR_TIME);
     }
 

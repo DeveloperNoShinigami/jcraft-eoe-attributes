@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class MoveVariable<T> {
     private final Class<T> type;
 
-    public MoveVariable(TypeToken<T> typeToken) {
+    public MoveVariable(final TypeToken<T> typeToken) {
         // For parameterized types, this simply returns a Class object of the raw type.
         // This does not matter, however, as at compile-time, Java thinks it returns
         // a class of a parameterized type, which is good enough for what we are trying to achieve.

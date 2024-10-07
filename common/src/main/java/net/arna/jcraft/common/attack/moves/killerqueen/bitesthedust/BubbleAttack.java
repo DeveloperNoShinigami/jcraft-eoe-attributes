@@ -14,13 +14,13 @@ import java.util.Set;
 public final class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> {
     public static final MoveVariable<BubbleProjectile> BUBBLE_PROJECTILE = new MoveVariable<>(BubbleProjectile.class);
 
-    public BubbleAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public BubbleAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(KQBTDEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final BubbleProjectile bubbleProjectile = new BubbleProjectile(attacker.level(), user);
         bubbleProjectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         bubbleProjectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, 0.5f, 0f);
@@ -33,7 +33,7 @@ public final class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> 
         return Set.of();
     }
 
-    public void tickBubble(KQBTDEntity stand) {
+    public void tickBubble(final KQBTDEntity stand) {
         final BubbleProjectile bubbleProjectile = stand.getMoveContext().get(BUBBLE_PROJECTILE);
         if (bubbleProjectile != null && !bubbleProjectile.isInGround() && stand.hasUser()) {
             bubbleProjectile.setDeltaMovement(stand.getUserOrThrow().getLookAngle().scale(0.5));
@@ -42,7 +42,7 @@ public final class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> 
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(BUBBLE_PROJECTILE);
     }
 

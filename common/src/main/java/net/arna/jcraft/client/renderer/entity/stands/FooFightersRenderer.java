@@ -11,13 +11,13 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 public class FooFightersRenderer extends GeoEntityRenderer<FooFightersEntity> {
-    public FooFightersRenderer(EntityRendererProvider.Context renderManager) {
+    public FooFightersRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new FooFightersModel());
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, FooFightersEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        float a = StandEntityRenderer.getAlpha(animatable, partialTick);
+    public void actuallyRender(final PoseStack poseStack, final FooFightersEntity animatable, final BakedGeoModel model, final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
+        final float a = StandEntityRenderer.getAlpha(animatable, partialTick);
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);
     }
 }

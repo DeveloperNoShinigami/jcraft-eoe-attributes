@@ -29,9 +29,10 @@ public class ShockwaveEffectRenderer {
             .toList();
 
     private static final List<CommonShockwaveHandlerComponent.Shockwave> toRender = new ArrayList<>();
-    public static void render(PoseStack stack, Vec3 camPos, ClientLevel world, MultiBufferSource consumerProvider) {
 
-        CommonShockwaveHandlerComponent shockwaveHandler = JComponentPlatformUtils.getShockwaveHandler(world);
+    public static void render(final PoseStack stack, final Vec3 camPos, final ClientLevel world, final MultiBufferSource consumerProvider) {
+
+        final CommonShockwaveHandlerComponent shockwaveHandler = JComponentPlatformUtils.getShockwaveHandler(world);
 
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
@@ -41,26 +42,26 @@ public class ShockwaveEffectRenderer {
         // java.util.ConcurrentModificationException prevention
         toRender.clear();
         toRender.addAll(shockwaveHandler.getShockwaves());
-        for (CommonShockwaveHandlerComponent.Shockwave shockwave : toRender) {
+        for (final CommonShockwaveHandlerComponent.Shockwave shockwave : toRender) {
             stack.pushPose();
 
             // Calculate matrix
             stack.translate(shockwave.getX() - camPos.x, shockwave.getY() - camPos.y, shockwave.getZ() - camPos.z);
             stack.mulPose(Axis.YP.rotationDegrees(-shockwave.getYaw()));
             stack.mulPose(Axis.XP.rotationDegrees(shockwave.getPitch()));
-            Matrix4f mat = stack.last().pose();
+            final Matrix4f mat = stack.last().pose();
 
             // Calculate light
-            int blockLight = world.getBrightness(LightLayer.BLOCK, shockwave.getBlockPos());
-            int skyLight = world.getBrightness(LightLayer.SKY, shockwave.getBlockPos());
-            int light = LightTexture.pack(blockLight, skyLight);
+            final int blockLight = world.getBrightness(LightLayer.BLOCK, shockwave.getBlockPos());
+            final int skyLight = world.getBrightness(LightLayer.SKY, shockwave.getBlockPos());
+            final int light = LightTexture.pack(blockLight, skyLight);
 
             // Set texture
             RenderSystem.setShaderTexture(0, TEXTURES.get(shockwave.getFrame()));
 
             // Setup buffer
-            Tesselator tess = Tesselator.getInstance();
-            BufferBuilder buff = tess.getBuilder();
+            final Tesselator tess = Tesselator.getInstance();
+            final BufferBuilder buff = tess.getBuilder();
             buff.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP);
 
             // Fill buffer

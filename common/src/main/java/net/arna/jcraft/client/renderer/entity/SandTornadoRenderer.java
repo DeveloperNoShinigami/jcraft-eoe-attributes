@@ -12,16 +12,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class SandTornadoRenderer extends GeoEntityRenderer<SandTornadoEntity> {
     @Override
-    public RenderType getRenderType(SandTornadoEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final SandTornadoEntity animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
     @Override
-    public boolean shouldShowName(@NotNull SandTornadoEntity animatable) {
+    public boolean shouldShowName(final @NotNull SandTornadoEntity animatable) {
         return false;
     }
 
-    public SandTornadoRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public SandTornadoRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new SandTornadoModel());
         this.shadowRadius = 1.1f;
     }

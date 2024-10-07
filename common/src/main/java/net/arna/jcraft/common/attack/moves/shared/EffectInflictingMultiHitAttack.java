@@ -10,9 +10,9 @@ import java.util.List;
 
 @Getter
 public final class EffectInflictingMultiHitAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingMultiHitAttack<EffectInflictingMultiHitAttack<A>, A> {
-    public EffectInflictingMultiHitAttack(int cooldown, int duration, float attackDistance, float damage, int stun,
-                                          float hitboxSize, float knockback, float offset,
-                                          @NonNull IntCollection hitMoments, @NonNull List<MobEffectInstance> effects) {
+    public EffectInflictingMultiHitAttack(final int cooldown, final int duration, final float attackDistance, final float damage, final int stun,
+                                          final float hitboxSize, final float knockback, final float offset,
+                                          final @NonNull IntCollection hitMoments, final @NonNull List<MobEffectInstance> effects) {
         super(cooldown, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMoments, effects);
     }
 

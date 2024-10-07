@@ -30,16 +30,16 @@ public enum MoveInputType {
     private final MoveType moveType;
     private final boolean holdable;
 
-    MoveInputType(@Nullable MoveType moveType) {
+    MoveInputType(final @Nullable MoveType moveType) {
         this(moveType, false);
     }
 
-    MoveInputType(@Nullable MoveType moveType, boolean holdable) {
+    MoveInputType(final @Nullable MoveType moveType, final boolean holdable) {
         this.moveType = moveType;
         this.holdable = holdable;
     }
 
-    public static @Nullable MoveInputType fromMoveType(MoveType moveType) {
+    public static @Nullable MoveInputType fromMoveType(final MoveType moveType) {
         //return Objects.requireNonNull(getFromMoveType().get(moveType), "No MoveQueue has been associated with the given MoveType.");
         return getFromMoveType().get(moveType);
     }

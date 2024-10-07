@@ -11,8 +11,8 @@ import org.jetbrains.annotations.Nullable;
 // For the time being, colors are ignored
 public class InversionParticle extends RisingParticle {
 
-    protected InversionParticle(ClientLevel clientWorld, double d, double e, double f, double g, double h, double i,
-                                SpriteSet spriteProvider) {
+    protected InversionParticle(final ClientLevel clientWorld, final double d, final double e, final double f, final double g, final double h, final double i,
+                                final SpriteSet spriteProvider) {
         super(clientWorld, d, e, f, g, h, i);
         quadSize *= 1f;
         pickSprite(spriteProvider);
@@ -32,7 +32,7 @@ public class InversionParticle extends RisingParticle {
 
         @Nullable
         @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(final SimpleParticleType parameters, final ClientLevel world, final double x, final double y, final double z, final double velocityX, final double velocityY, final double velocityZ) {
             return new InversionParticle(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider);
         }
     }

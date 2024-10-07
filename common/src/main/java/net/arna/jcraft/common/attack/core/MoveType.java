@@ -22,11 +22,11 @@ public enum MoveType {
     private final Component key;
     private final CooldownType defaultCooldownType;
 
-    MoveType(CooldownType defaultCooldownType) {
+    MoveType(final CooldownType defaultCooldownType) {
         this(defaultCooldownType, null);
     }
 
-    MoveType(CooldownType defaultCooldownType, String key) {
+    MoveType(final CooldownType defaultCooldownType, final String key) {
         friendlyName = Component.translatable("jcraft.movetype." + name().toLowerCase(Locale.ROOT));
         this.key = Component.keybind(key == null ? "key.jcraft." + name().toLowerCase(Locale.ROOT) : key);
         this.defaultCooldownType = defaultCooldownType;

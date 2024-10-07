@@ -10,24 +10,24 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerModifierLayer<T extends IAnimation> extends ModifierLayer<T> implements IAnimation {
     @Override
-    public @NotNull Vec3f get3DTransform(@NotNull String modelName, @NotNull TransformType type, float tickDelta, @NotNull Vec3f value0) {
+    public @NotNull Vec3f get3DTransform(final @NotNull String modelName, final @NotNull TransformType type, final float tickDelta, final @NotNull Vec3f value0) {
         return super.get3DTransform(modelName, type, tickDelta, value0);
     }
 
     @Override
-    public void setupAnim(float tickDelta) {
+    public void setupAnim(final float tickDelta) {
         super.setupAnim(tickDelta);
     }
 
     @Override
-    public @NotNull FirstPersonMode getFirstPersonMode(float tickDelta) {
+    public @NotNull FirstPersonMode getFirstPersonMode(final float tickDelta) {
         return FirstPersonMode.THIRD_PERSON_MODEL;
     }
 
     private static final FirstPersonConfiguration config = new FirstPersonConfiguration(true, true, true, true);
 
     @Override
-    public @NotNull FirstPersonConfiguration getFirstPersonConfiguration(float tickDelta) {
+    public @NotNull FirstPersonConfiguration getFirstPersonConfiguration(final float tickDelta) {
         return config;
     }
 }

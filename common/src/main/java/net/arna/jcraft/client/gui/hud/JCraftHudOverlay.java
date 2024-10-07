@@ -33,7 +33,7 @@ public class JCraftHudOverlay {
     private static final Gauge BLOODLUST_GAUGE = new Gauge(0.8f, 0.1f, 0.2f, 5);
     private static final Gauge IRON_GAUGE = new Gauge(0.7f, 0.7f, 0.9f, (int) MetallicaEntity.IRON_MAX);
 
-    public static void render(GuiGraphics ctx) {
+    public static void render(final GuiGraphics ctx) {
         final Minecraft client = Minecraft.getInstance();
 
         final int width = client.getWindow().getGuiScaledWidth();
@@ -79,7 +79,7 @@ public class JCraftHudOverlay {
         }
     }
 
-    protected record Gauge(float red, float green, float blue, @Setter int max) {
+    protected record Gauge(float red, float green, float blue, int max) {
         public Gauge(Vector3f color, int max) {
             this(color.x(), color.y(), color.z(), max);
         }

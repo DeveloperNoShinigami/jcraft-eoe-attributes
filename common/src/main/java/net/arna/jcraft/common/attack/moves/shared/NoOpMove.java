@@ -20,12 +20,12 @@ public final class NoOpMove<A extends IAttacker<? extends A, ?>> extends Abstrac
         this(0, 0, 0f);
     }
 
-    public NoOpMove(int cooldown, int duration, float moveDistance) {
+    public NoOpMove(final int cooldown, final int duration, final float moveDistance) {
         super(cooldown, duration + 1, duration, moveDistance);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         return Set.of();
     }
 

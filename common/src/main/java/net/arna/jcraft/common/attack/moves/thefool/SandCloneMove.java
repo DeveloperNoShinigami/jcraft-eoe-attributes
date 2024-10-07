@@ -29,13 +29,13 @@ import java.util.Set;
 public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
     private static final MoveVariable<Mob> SAND_CLONE = new MoveVariable<>(Mob.class);
 
-    public SandCloneMove(int cooldown, int windup, int duration, float moveDistance) {
+    public SandCloneMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Vec3 pos = user.getEyePosition();
 
         // Display sand effect
@@ -95,14 +95,14 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
         return Set.of();
     }
 
-    public void tickClone(TheFoolEntity attacker) {
+    public void tickClone(final TheFoolEntity attacker) {
         final Mob sandClone = attacker.getMoveContext().get(SAND_CLONE);
         if (sandClone != null && sandClone.tickCount > 200) {
             setSandClone(attacker.getMoveContext(), null);
         }
     }
 
-    public void discardClone(TheFoolEntity attacker) {
+    public void discardClone(final TheFoolEntity attacker) {
         final Mob sandClone = attacker.getMoveContext().get(SAND_CLONE);
         if (sandClone != null) {
             sandClone.discard();

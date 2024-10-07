@@ -78,7 +78,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param cooldown The cooldown of this move in ticks
      * @return This move
      */
-    public T withCooldown(int cooldown) {
+    public T withCooldown(final int cooldown) {
         this.cooldown = cooldown;
         return getThis();
     }
@@ -91,7 +91,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param windup The windup of this move in ticks
      * @return This move
      */
-    public T withWindup(int windup) {
+    public T withWindup(final int windup) {
         this.windup = windup;
         return getThis();
     }
@@ -102,7 +102,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param state This moves animation
      * @return This move
      */
-    public T withAnim(Enum<?> state) {
+    public T withAnim(final Enum<?> state) {
         this.animation = state;
         return getThis();
     }
@@ -116,7 +116,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param duration The duration of this move in ticks
      * @return This move
      */
-    public T withDuration(int duration) {
+    public T withDuration(final int duration) {
         this.duration = duration;
         return getThis();
     }
@@ -129,7 +129,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param moveDistance The move distance of this move
      * @return This move
      */
-    public T withMoveDistance(float moveDistance) {
+    public T withMoveDistance(final float moveDistance) {
         this.moveDistance = moveDistance;
         return getThis();
     }
@@ -141,7 +141,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param description The description of this move
      * @return This move
      */
-    public T withInfo(@NonNull Component name, @NonNull Component description) {
+    public T withInfo(final @NonNull Component name, final @NonNull Component description) {
         this.name = name;
         this.description = description;
         return getThis();
@@ -154,7 +154,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param crouchingVariant The crouching variant of this move.
      * @return This move
      */
-    public T withCrouchingVariant(AbstractMove<?, ? super A> crouchingVariant) {
+    public T withCrouchingVariant(final AbstractMove<?, ? super A> crouchingVariant) {
         if (isCrouchingVariant) {
             throw new IllegalStateException("Can't assign a crouching variant to a crouching variant.");
         }
@@ -175,7 +175,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param aerialVariant The aerial variant of this move.
      * @return This move
      */
-    public T withAerialVariant(AbstractMove<?, ? super A> aerialVariant) {
+    public T withAerialVariant(final AbstractMove<?, ? super A> aerialVariant) {
         if (isAerialVariant) {
             throw new IllegalStateException("Can't assign an aerial variant to an aerial variant.");
         }
@@ -211,7 +211,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param followup The move that will be initiated after this move is performed.
      * @return This move
      */
-    public T withFollowup(AbstractMove<?, ? super A> followup) {
+    public T withFollowup(final AbstractMove<?, ? super A> followup) {
         this.followup = followup.copy();
         this.followup.isFollowup = true;
         return getThis();
@@ -224,7 +224,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param sound A sound to play when this move is performed.
      * @return This move
      */
-    public T withSound(SoundEvent sound) {
+    public T withSound(final SoundEvent sound) {
         sounds.add(sound);
         return getThis();
     }
@@ -236,7 +236,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param sound A sound to play when this move hits something.
      * @return This move
      */
-    public T withImpactSound(SoundEvent sound) {
+    public T withImpactSound(final SoundEvent sound) {
         impactSounds.add(sound);
         return getThis();
     }
@@ -247,7 +247,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param armor The number of hits this attack can withstand
      * @return This move
      */
-    public T withArmor(int armor) {
+    public T withArmor(final int armor) {
         this.armor = armor;
         return getThis();
     }
@@ -270,7 +270,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param condition The condition to add
      * @return This move
      */
-    public T withCondition(Predicate<? super A> condition) {
+    public T withCondition(final Predicate<? super A> condition) {
         conditions.add(condition);
         return getThis();
     }
@@ -282,7 +282,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param action An action
      * @return This move
      */
-    public T withInitAction(InitAction<? super A> action) {
+    public T withInitAction(final InitAction<? super A> action) {
         initActions.add(action);
         return getThis();
     }
@@ -294,7 +294,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param action An action
      * @return This move
      */
-    public T withAction(MoveAction<? super A> action) {
+    public T withAction(final MoveAction<? super A> action) {
         actions.add(action);
         return getThis();
     }
@@ -305,7 +305,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param mobilityType The mobility type of this attack
      * @return This attack
      */
-    public T withMobilityType(MobilityType mobilityType) {
+    public T withMobilityType(final MobilityType mobilityType) {
         this.mobilityType = mobilityType;
         return getThis();
     }
@@ -338,7 +338,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param holdable Whether this move can be held. {@code null} for default behavior (dependent on the move-type).
      * @return This move
      */
-    public T withHoldable(Boolean holdable) {
+    public T withHoldable(final Boolean holdable) {
         this.isHoldable = holdable;
         return getThis();
     }
@@ -354,12 +354,12 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param move The move to switch to
      * @return This move
      */
-    public T withFinisher(int tick, AbstractMove<?, ? super A> move) {
+    public T withFinisher(final int tick, final AbstractMove<?, ? super A> move) {
         finisher = IntObjectPair.of(tick, move);
         return getThis();
     }
 
-    public T modifyFinisherTime(int tick) {
+    public T modifyFinisherTime(final int tick) {
         if (finisher == null) {
             throw new IllegalStateException("modifyFinisherTime(" + tick + ") called without a pre-set finisher!");
         } else {
@@ -388,7 +388,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param type The MoveType this move is registered as
      */
     @ApiStatus.Internal
-    public final void onRegister(MoveType type) {
+    public final void onRegister(final MoveType type) {
         moveType = type;
 
         if (crouchingVariant != null) {
@@ -422,7 +422,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to check for
      * @return Whether this attack may be initiated
      */
-    public boolean canBeInitiated(A attacker) {
+    public boolean canBeInitiated(final A attacker) {
         // Followups generally don't check canAttack() cuz they require that move-stun > 0 while canAttack() requires the opposite.
         return (isFollowup() || attacker.canAttack()) && conditions.stream().allMatch(condition -> condition.test(attacker));
     }
@@ -431,7 +431,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * Called when this move is initialized.
      * By default, only plays the sound(s) and invokes the init actions, if any.
      */
-    public void onInitiate(A attacker) {
+    public void onInitiate(final A attacker) {
         initActions.forEach(action -> action.perform(attacker, attacker.getUser(), attacker.getMoveContext()));
         sounds.forEach(sound -> attacker.playAttackerSound(sound, 1f, 1f));
     }
@@ -439,14 +439,14 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Called when this move is canceled. Does nothing by default.
      */
-    public void onCancel(A attacker) {
+    public void onCancel(final A attacker) {
     }
 
     /**
      * Whether this attack should be allowed to move onto its finisher.
      * Certain attacks shouldn't always be able to, see: {@link net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack#canFinish(IAttacker)}
      */
-    public boolean canFinish(A attacker) {
+    public boolean canFinish(final A attacker) {
         return true;
     }
 
@@ -458,7 +458,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      *
      * @param attacker The attacker to tick for.
      */
-    public void tick(A attacker, int moveStun) {
+    public void tick(final A attacker, final int moveStun) {
         if (finisher != null && canFinish(attacker) && finisher.leftInt() <= getDuration() - moveStun) {
             attacker.setCurrentMove(finisher.right());
         }
@@ -475,7 +475,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to check for.
      * @return Whether this move should be performed this tick.
      */
-    public boolean shouldPerform(A attacker, int moveStun) {
+    public boolean shouldPerform(final A attacker, final int moveStun) {
         return moveStun == getWindupPoint() && attacker.hasUser();
     }
 
@@ -484,7 +484,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      *
      * @param attacker The attacker that will be performing this move.
      */
-    public final void doPerform(A attacker) {
+    public final void doPerform(final A attacker) {
         LivingEntity user = attacker.getUserOrThrow();
         MoveContext ctx = attacker.getMoveContext();
 
@@ -501,14 +501,14 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param ctx      The move context in which to store data.
      * @return A set of all targeted entities.
      */
-    public abstract @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx);
+    public abstract @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx);
 
     /**
      * Register entries in the move context of an attacker to be used by this move.
      *
      * @param ctx The context in which to register entries.
      */
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
     }
 
     /**
@@ -519,7 +519,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to get the blow for
      * @return The current blow of this move for the given attacker
      */
-    public int getBlow(A attacker) {
+    public int getBlow(final A attacker) {
         return 0;
     }
 
@@ -540,7 +540,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to check for
      * @return Whether the windup has passed
      */
-    public boolean hasWindupPassed(IAttacker<?, ?> attacker) {
+    public boolean hasWindupPassed(final IAttacker<?, ?> attacker) {
         return attacker.getMoveStun() <= getWindupPoint();
     }
 
@@ -551,7 +551,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to check for
      * @return Whether the windup has passed
      */
-    public boolean hasWindupPassed(IAttacker<?, ?> attacker, int moveStun) {
+    public boolean hasWindupPassed(final IAttacker<?, ?> attacker, final int moveStun) {
         return moveStun <= getWindupPoint();
     }
 
@@ -561,7 +561,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to get the rotation vector for
      * @return The rotation vector for the given attacker
      */
-    public static Vec3 getRotVec(IAttacker<?, ?> attacker) {
+    public static Vec3 getRotVec(final IAttacker<?, ?> attacker) {
         Vec3 rotVec = attacker.getBaseEntity().getLookAngle();
         if (GravityChangerAPI.getGravityDirection(attacker.getUserOrThrow()) == Direction.UP) {
             rotVec = new Vec3(rotVec.x, -rotVec.y, rotVec.z);
@@ -576,13 +576,13 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to get the eye position for
      * @return The eye position of the given attacker
      */
-    protected Vec3 getOffsetHeightPos(A attacker) {
-        Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
-        Vec3 heightOffset = upVec.scale(0.5);
+    protected Vec3 getOffsetHeightPos(final A attacker) {
+        final Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
+        final Vec3 heightOffset = upVec.scale(0.5);
         return attacker.getBaseEntity().position().add(heightOffset);
     }
 
-    protected boolean mayGrief(LivingEntity user) {
+    protected boolean mayGrief(final LivingEntity user) {
         return user instanceof Player || user.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
     }
 
@@ -594,7 +594,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param pressed       Whether the move was pressed or released.
      * @param moveInitiated Whether the move was initiated (or rejected because of e.g., a cooldown).
      */
-    public void onUserMoveInput(A attacker, MoveInputType type, boolean pressed, boolean moveInitiated) {
+    public void onUserMoveInput(final A attacker, final MoveInputType type, final boolean pressed, final boolean moveInitiated) {
     }
 
     /**
@@ -619,7 +619,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param base The instance to copy the data to.
      * @return The given base with copied data.
      */
-    protected @NonNull T copyExtras(@NonNull T base) {
+    protected @NonNull T copyExtras(final @NonNull T base) {
         AbstractMove<T, A> cast = base; // Required to access private fields
         cast.sounds.addAll(sounds);
         cast.impactSounds.addAll(impactSounds);

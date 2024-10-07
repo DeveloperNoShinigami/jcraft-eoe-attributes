@@ -5,7 +5,6 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.minecraft.resources.ResourceLocation;
 
-
 public class KnifeModel extends GeoModel<KnifeProjectile> {
     @Override
     public ResourceLocation getModelResource(KnifeProjectile object) {

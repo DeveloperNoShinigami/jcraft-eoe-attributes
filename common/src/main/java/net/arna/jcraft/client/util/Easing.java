@@ -6,7 +6,7 @@ public abstract class Easing {
     public static final HashMap<String, Easing> EASINGS = new HashMap<>();
     public final String name;
 
-    public Easing(String name) {
+    public Easing(final String name) {
         this.name = name;
         EASINGS.put(name, this);
     }
@@ -24,7 +24,7 @@ public abstract class Easing {
      * @param d the duration time
      * @return the eased value
      */
-    public abstract float ease(float t, float b, float c, float d);
+    public abstract float ease(final float t, final float b, final float c, final float d);
 
     public static final Easing CIRC_OUT = new Easing("circOut") {
         public float ease(float t, float b, float c, float d) {

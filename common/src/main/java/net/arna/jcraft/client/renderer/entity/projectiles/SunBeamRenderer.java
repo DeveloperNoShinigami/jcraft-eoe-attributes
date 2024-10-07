@@ -11,22 +11,22 @@ import net.minecraft.resources.ResourceLocation;
 
 public class SunBeamRenderer extends GeoProjectileRenderer<SunBeamProjectile> {
 
-    public SunBeamRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public SunBeamRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new SunBeamModel());
     }
 
     @Override
-    protected int getBlockLightLevel(SunBeamProjectile entity, BlockPos pos) {
+    protected int getBlockLightLevel(final SunBeamProjectile entity, final BlockPos pos) {
         return 15;
     }
 
     @Override
-    public RenderType getRenderType(SunBeamProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final SunBeamProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.eyes(texture);
     }
 
     @Override
-    public void render(SunBeamProjectile animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(final SunBeamProjectile animatable, final float yaw, final float partialTick, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
     }
 }

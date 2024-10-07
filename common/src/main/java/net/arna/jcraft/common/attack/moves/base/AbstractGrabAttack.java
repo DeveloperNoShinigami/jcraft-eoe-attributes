@@ -20,13 +20,13 @@ public abstract class AbstractGrabAttack<T extends AbstractGrabAttack<T, A, S>, 
     private final int grabDuration;
     private final double grabOffset;
 
-    protected AbstractGrabAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize,
-                                 float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState) {
+    protected AbstractGrabAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun, final float hitboxSize,
+                                 final float knockback, final float offset, final AbstractMove<?, ? super A> hitMove, final S hitState) {
         this(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMove, hitState, hitMove.getWindup() - 1, 1);
     }
 
-    protected AbstractGrabAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize,
-                                 float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState, int grabDuration, double grabOffset) {
+    protected AbstractGrabAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun, final float hitboxSize,
+                                 final float knockback, final float offset, final AbstractMove<?, ? super A> hitMove, final S hitState, final int grabDuration, final double grabOffset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);
 
         grab = true;
@@ -44,7 +44,7 @@ public abstract class AbstractGrabAttack<T extends AbstractGrabAttack<T, A, S>, 
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (targets.isEmpty()) {
             return targets;

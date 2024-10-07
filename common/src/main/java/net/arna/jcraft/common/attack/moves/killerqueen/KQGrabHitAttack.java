@@ -25,13 +25,13 @@ import java.util.Set;
 public final class KQGrabHitAttack extends AbstractMove<KQGrabHitAttack, KillerQueenEntity> {
     private final int stun;
 
-    public KQGrabHitAttack(int cooldown, int windup, int duration, float moveDistance, int stun) {
+    public KQGrabHitAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final int stun) {
         super(cooldown, windup, duration, moveDistance);
         this.stun = stun;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KillerQueenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.playSound(JSoundRegistry.KQ_DETONATE.get(), 1, 1);
 
         final CommonBombTrackerComponent.BombData bombData = JComponentPlatformUtils.getBombTracker(user).getMainBomb();

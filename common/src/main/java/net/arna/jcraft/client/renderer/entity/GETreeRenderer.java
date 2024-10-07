@@ -6,7 +6,7 @@ import net.arna.jcraft.common.entity.projectile.GETreeEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 public class GETreeRenderer extends GeoProjectileRenderer<GETreeEntity> {
-    public GETreeRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public GETreeRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new GETreeModel());
         shadowRadius = 2.5f;
     }

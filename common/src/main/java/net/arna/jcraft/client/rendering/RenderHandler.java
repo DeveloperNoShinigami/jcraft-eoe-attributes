@@ -35,19 +35,19 @@ public class RenderHandler {
         DELAYED_RENDER = MultiBufferSource.immediateWithBuffers(BUFFERS, new BufferBuilder(size));
     }
 
-    public static void cacheFogData(float near, float far, FogShape shape) {
+    public static void cacheFogData(final float near, final float far, final FogShape shape) {
         FOG_NEAR = near;
         FOG_FAR = far;
         FOG_SHAPE = shape;
     }
 
-    public static void cacheFogData(float r, float g, float b) {
+    public static void cacheFogData(final float r, final float g, final float b) {
         FOG_RED = r;
         FOG_GREEN = g;
         FOG_BLUE = b;
     }
 
-    public static void beginBufferedRendering(PoseStack matrixStack) {
+    public static void beginBufferedRendering(final PoseStack matrixStack) {
         matrixStack.pushPose();
         LightTexture lightTexture = Minecraft.getInstance().gameRenderer.lightTexture();
         lightTexture.turnOnLightLayer();
@@ -77,12 +77,12 @@ public class RenderHandler {
         FOG_SHAPE = shaderFogShape;
     }
 
-    public static void renderBufferedBatches(PoseStack matrixStack) {
+    public static void renderBufferedBatches(final PoseStack matrixStack) {
         draw(DELAYED_RENDER, BUFFERS);
     }
 
-    public static void endBufferedRendering(PoseStack poseStack) {
-        LightTexture lightTexture = Minecraft.getInstance().gameRenderer.lightTexture();
+    public static void endBufferedRendering(final PoseStack poseStack) {
+        final LightTexture lightTexture = Minecraft.getInstance().gameRenderer.lightTexture();
         RenderSystem.setShaderFogStart(FOG_NEAR);
         RenderSystem.setShaderFogEnd(FOG_FAR);
         RenderSystem.setShaderFogShape(FOG_SHAPE);
@@ -95,9 +95,9 @@ public class RenderHandler {
         RenderSystem.depthMask(true);
     }
 
-    public static void draw(MultiBufferSource.BufferSource source, HashMap<RenderType, BufferBuilder> buffers) {
+    public static void draw(final MultiBufferSource.BufferSource source, final HashMap<RenderType, BufferBuilder> buffers) {
         for (RenderType type : buffers.keySet()) {
-            ShaderInstance instance = RenderUtils.getShader(type);
+            final ShaderInstance instance = RenderUtils.getShader(type);
             if (UNIFORM_HANDLERS.containsKey(type)) {
                 ShaderUniformHandler handler = UNIFORM_HANDLERS.get(type);
                 handler.updateShaderData(instance);

@@ -10,17 +10,17 @@ import net.minecraft.resources.ResourceLocation;
 
 
 public class RedBindRenderer extends GeoProjectileRenderer<RedBindEntity> {
-    public RedBindRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public RedBindRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new RedBindModel());
     }
 
     @Override
-    public RenderType getRenderType(RedBindEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final RedBindEntity animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.eyes(texture);
     }
 
     @Override
-    public void render(RedBindEntity animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(final RedBindEntity animatable, final float yaw, final float partialTick, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
         float xz = animatable.getBoundWidth();
 
         poseStack.pushPose();

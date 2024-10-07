@@ -15,12 +15,12 @@ public class InversionShaderHandler implements ShaderEffectRenderCallback {
 
     private InversionShaderHandler() {}
 
-    private static void setup(ManagedShaderEffect managedShaderEffect) {
+    private static void setup(final ManagedShaderEffect managedShaderEffect) {
         toInvertBuffer = SHADER.getTarget("to_invert");
     }
 
     @Override
-    public void renderShaderEffects(float tickDelta) {
+    public void renderShaderEffects(final float tickDelta) {
         SHADER.render(tickDelta);
         toInvertBuffer.clear(); // Clear for the next round.
     }

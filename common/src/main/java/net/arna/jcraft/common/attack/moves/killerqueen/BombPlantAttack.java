@@ -21,14 +21,14 @@ import java.util.Optional;
 import java.util.Set;
 
 public final class BombPlantAttack extends AbstractSimpleAttack<BombPlantAttack, AbstractKillerQueenEntity<?, ?>> {
-    public BombPlantAttack(int cooldown, int windup, int duration, float attackDistance, int stun, float hitboxSize, float offset) {
+    public BombPlantAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final int stun, final float hitboxSize, final float offset) {
         super(cooldown, windup, duration, attackDistance, 0f, stun, hitboxSize, 0f, offset);
     }
 
     private static final Vec3 halfBox = new Vec3(0.5, 0.5, 0.5);
 
     @Override
-    public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final AbstractKillerQueenEntity<?, ?> attacker, final LivingEntity user, final MoveContext ctx) {
         final CommonBombTrackerComponent.BombData mainBomb = JComponentPlatformUtils.getBombTracker(user).getMainBomb();
 
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);

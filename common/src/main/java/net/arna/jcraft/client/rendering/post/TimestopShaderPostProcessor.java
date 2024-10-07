@@ -38,15 +38,13 @@ public class TimestopShaderPostProcessor extends MultiInstancePostProcessor<Time
     }
 
     @Override
-    public void beforeProcess(PoseStack viewModelStack) {
-        float progress = (float) (time / duration);
-
+    public void beforeProcess(final PoseStack viewModelStack) {
+        final float progress = (float) (time / duration);
 
         if (progress > 1F) {
             setActive(false);
             return;
         }
-
 
         timeStopEffect.getUniform("Center").set(centerWorldPos);
     }
@@ -56,8 +54,8 @@ public class TimestopShaderPostProcessor extends MultiInstancePostProcessor<Time
         setDataBufferUniform(timeStopEffect, "Data", "instanceCount");
     }
 
-    public static void playEffect(Vector3f center) {
-        Runnable timeStop = () -> {
+    public static void playEffect(final Vector3f center) {
+        final Runnable timeStop = () -> {
             JPlatformUtils.getZaWarudo().addFxInstance(new TimestopShaderFX(center) {
                 @Override
                 public void update(double deltaTime) {

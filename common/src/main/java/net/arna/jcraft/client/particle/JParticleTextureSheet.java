@@ -21,7 +21,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class JParticleTextureSheet {
     public static final ParticleRenderType PARTICLE_SHEET_AURA = new ParticleRenderType() {
-        public void begin(BufferBuilder builder, TextureManager textureManager) {
+        public void begin(final BufferBuilder builder, final TextureManager textureManager) {
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
 
             RenderSystem.depthMask(false);
@@ -31,7 +31,7 @@ public class JParticleTextureSheet {
             builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
 
-        public void end(Tesselator tessellator) {
+        public void end(final Tesselator tessellator) {
             tessellator.end();
         }
 
@@ -41,7 +41,7 @@ public class JParticleTextureSheet {
     };
 
     public static final ParticleRenderType INVERSION_SHEET = new ParticleRenderType() {
-        public void begin(BufferBuilder builder, TextureManager textureManager) {
+        public void begin(final BufferBuilder builder, final TextureManager textureManager) {
             // Doesn't seem to work by using a blend function, so we'll use a shader instead.
             // Think that is because of the render order, but I'm not sure.
             InversionShaderHandler.getToInvertBuffer().copyDepthFrom(Minecraft.getInstance().getMainRenderTarget()); // Copy depth buffer
@@ -56,7 +56,7 @@ public class JParticleTextureSheet {
             builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         }
 
-        public void end(Tesselator tessellator) {
+        public void end(final Tesselator tessellator) {
             tessellator.end();
 
             Minecraft.getInstance().getMainRenderTarget().bindWrite(true); // Revert to the main buffer

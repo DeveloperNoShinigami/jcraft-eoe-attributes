@@ -15,13 +15,13 @@ import java.util.Set;
 public final class BerryBushAttack extends AbstractSimpleAttack<BerryBushAttack, GoldExperienceEntity> {
     private static final BlockState BERRY_BUSH = Blocks.SWEET_BERRY_BUSH.defaultBlockState().setValue(SweetBerryBushBlock.AGE, 1);
 
-    public BerryBushAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
-                           float hitboxSize, float knockback, float offset) {
+    public BerryBushAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun,
+                           final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final GoldExperienceEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Level world = attacker.level();
         final BlockPos blockPos = attacker.blockPosition();
         if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.below()).canOcclude()) {

@@ -15,13 +15,13 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public final class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, TheFoolEntity, TheFoolEntity.State> {
-    public TFChargeAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                          float hitboxSize, float knockback, float offset, TheFoolEntity.State hitAnimState) {
+    public TFChargeAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                          final float hitboxSize, final float knockback, final float offset, final TheFoolEntity.State hitAnimState) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitAnimState);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (targets.isEmpty()) {
             return targets;

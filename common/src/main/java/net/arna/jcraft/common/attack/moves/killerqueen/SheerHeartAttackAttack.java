@@ -10,13 +10,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class SheerHeartAttackAttack extends AbstractMove<SheerHeartAttackAttack, KillerQueenEntity> {
-    public SheerHeartAttackAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public SheerHeartAttackAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(KillerQueenEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KillerQueenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final SheerHeartAttackEntity sha = new SheerHeartAttackEntity(JEntityTypeRegistry.SHEER_HEART_ATTACK.get(), attacker.level());
         sha.setMaster(user);
         sha.moveTo(attacker.getX(), attacker.getY() + 0.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());

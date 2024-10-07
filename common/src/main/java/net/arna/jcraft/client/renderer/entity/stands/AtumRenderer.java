@@ -12,12 +12,12 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 
 public class AtumRenderer extends GeoEntityRenderer<AtumEntity> {
-    public AtumRenderer(EntityRendererProvider.Context renderManager) {
+    public AtumRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new AtumModel());
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, AtumEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(final PoseStack poseStack, final AtumEntity animatable, final BakedGeoModel model, final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
         float a = StandEntityRenderer.getAlpha(animatable, partialTick);
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);
     }

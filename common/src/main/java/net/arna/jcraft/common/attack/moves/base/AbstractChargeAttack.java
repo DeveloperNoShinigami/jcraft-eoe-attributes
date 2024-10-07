@@ -16,8 +16,8 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
         extends AbstractSimpleAttack<T, A> {
     protected final S hitAnimState;
 
-    protected AbstractChargeAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                                   float hitboxSize, float knockback, float offset, S hitAnimState) {
+    protected AbstractChargeAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                                   final float hitboxSize, final float knockback, final float offset, final S hitAnimState) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
 
         this.hitAnimState = hitAnimState;
@@ -30,35 +30,35 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
     }
 
     @Override
-    public boolean shouldPerform(A attacker, int moveStun) {
+    public boolean shouldPerform(final A attacker, final int moveStun) {
         return hasWindupPassed(attacker, moveStun);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (!targets.isEmpty()) endCharge(attacker);
         return targets;
     }
 
-    protected void endCharge(A attacker) {
+    protected void endCharge(final A attacker) {
         attacker.setCurrentMove(null);
         attacker.setMoveStun(10);
         attacker.setState(hitAnimState);
     }
 
     @Override
-    public void tick(A attacker, int moveStun) {
+    public void tick(final A attacker, final int moveStun) {
         super.tick(attacker, moveStun);
 
         tickChargeAttack(attacker, shouldPerform(attacker, moveStun), getMoveDistance(), getWindupPoint());
     }
 
-    protected Vec3 advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint) {
+    protected Vec3 advanceChargePos(final StandEntity<?, ?> attacker, final float moveDistance, final int windupPoint) {
         return attacker.position().add(getRotVec(attacker).scale(moveDistance / windupPoint));
     }
 
-    protected void tickChargeAttack(StandEntity<A, S> attacker, boolean shouldPerform, float moveDistance, int windupPoint) {
+    protected void tickChargeAttack(final StandEntity<A, S> attacker, final boolean shouldPerform, final float moveDistance, final int windupPoint) {
         if (shouldPerform) {
             //float t = 1f - (float) curMoveStun / (float) realInitTime;
             final Vec3 newPos = advanceChargePos(attacker, moveDistance, windupPoint);
@@ -70,7 +70,7 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
         }
     }
 
-    public static void prepDetachmentMove(StandEntity<?, ?> attacker, LivingEntity user) {
+    public static void prepDetachmentMove(final StandEntity<?, ?> attacker, final LivingEntity user) {
         attacker.setPos(user.position());
         attacker.setYHeadRot(user.getYHeadRot());
         attacker.setYBodyRot(user.getYHeadRot());
@@ -78,7 +78,7 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
     }
 
     @Override
-    protected Vec3 getOffsetForwardPos(A attacker, Vec3 offsetHeightPos, Vec3 upVec, Vec3 rotVec) {
+    protected Vec3 getOffsetForwardPos(final A attacker, final Vec3 offsetHeightPos, final Vec3 upVec, final Vec3 rotVec) {
         return offsetHeightPos.add(rotVec);
     }
 }

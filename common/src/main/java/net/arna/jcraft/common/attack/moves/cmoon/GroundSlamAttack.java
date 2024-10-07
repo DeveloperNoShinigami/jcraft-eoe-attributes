@@ -23,13 +23,13 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public final class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttack, CMoonEntity> {
-    public GroundSlamAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                            float hitboxSize, float knockback, float offset) {
+    public GroundSlamAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                            final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    protected void processTarget(CMoonEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
+    protected void processTarget(final CMoonEntity attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         final LivingEntity user = attacker.getUserOrThrow();
@@ -41,7 +41,7 @@ public final class GroundSlamAttack extends AbstractSimpleAttack<GroundSlamAttac
     }
 
     @Override
-    public void performHook(CMoonEntity attacker, Set<LivingEntity> targets, Set<AABB> boxes, DamageSource damageSource, Vec3 forwardPos, Vec3 rotationVector, MoveContext ctx) {
+    public void performHook(final CMoonEntity attacker, final Set<LivingEntity> targets, final Set<AABB> boxes, final DamageSource damageSource, final Vec3 forwardPos, final Vec3 rotationVector, final MoveContext ctx) {
         final Level world = attacker.level();
         final Vec3i gravityVector = GravityChangerAPI.getGravityDirection(attacker).getNormal();
 

@@ -15,14 +15,14 @@ import java.util.Set;
 public final class UppercutAttack<A extends IAttacker<? extends A, ?>> extends AbstractSimpleAttack<UppercutAttack<A>, A> {
     private final float strength;
 
-    public UppercutAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                          float hitboxSize, float knockback, float offset, float strength) {
+    public UppercutAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                          final float hitboxSize, final float knockback, final float offset, final float strength) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         this.strength = strength;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         for (LivingEntity target : targets) {
             final Vec3 upDir = new Vec3(GravityChangerAPI.getGravityDirection(user).step()).scale(-strength);

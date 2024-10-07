@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.Set;
 
 public final class BTDDetonateAttack extends AbstractMove<BTDDetonateAttack, AbstractKillerQueenEntity<?, ?>> {
-    public BTDDetonateAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public BTDDetonateAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(AbstractKillerQueenEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final AbstractKillerQueenEntity<?, ?> attacker, final LivingEntity user, final MoveContext ctx) {
         final LivingEntity btdEntity = ctx.get(BTDPlantAttack.BTD_ENTITY);
         final Vec3 btdPos = ctx.get(BTDPlantAttack.BTD_POS);
         if (btdEntity == null) {

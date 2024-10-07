@@ -20,12 +20,12 @@ public class FloatMoveVariable extends MoveVariable<Float> {
             super(float.class);
         }
 
-        public void setValue(float value) {
+        public void setValue(final float value) {
             floatValue = value;
         }
 
         @Override
-        public void setValue(Float value) {
+        public void setValue(final Float value) {
             setValue(value.floatValue());
         }
 

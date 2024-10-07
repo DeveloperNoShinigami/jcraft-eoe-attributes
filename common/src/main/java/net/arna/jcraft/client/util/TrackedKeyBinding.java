@@ -19,7 +19,7 @@ public class TrackedKeyBinding {
     private final KeyMapping parent;
     private boolean changedThisTick, pressedThisTick, releasedThisTick;
 
-    public static void resetValues(boolean clientScreenAssigned) {
+    public static void resetValues(final boolean clientScreenAssigned) {
             bindings.values().forEach(TrackedKeyBinding::reset);
             if (clientScreenAssigned) {
                 bindings.values().stream()
@@ -31,30 +31,30 @@ public class TrackedKeyBinding {
             }
     }
 
-    private TrackedKeyBinding(KeyMapping parent) {
+    private TrackedKeyBinding(final KeyMapping parent) {
         this.parent = parent;
     }
 
-    public static TrackedKeyBinding createAndRegister(String translationKey, InputConstants.Type type, int code, String category) {
+    public static TrackedKeyBinding createAndRegister(final String translationKey, final InputConstants.Type type, final int code, final String category) {
         return createAndRegister(translationKey, type, code, category, KeyMappingRegistry::register);
     }
 
-    public static TrackedKeyBinding createAndRegister(String translationKey, InputConstants.Type type, int code, String category,
-                                                      Consumer<KeyMapping> register) {
-        KeyMapping keyBinding = new KeyMapping(translationKey, type, code, category);
+    public static TrackedKeyBinding createAndRegister(final String translationKey, final InputConstants.Type type, final int code, final String category,
+                                                      final Consumer<KeyMapping> register) {
+        final KeyMapping keyBinding = new KeyMapping(translationKey, type, code, category);
         register.accept(keyBinding);
 
         return wrap(keyBinding);
     }
 
-    public static TrackedKeyBinding wrap(KeyMapping binding) {
-        TrackedKeyBinding trackingBinding = new TrackedKeyBinding(binding);
+    public static TrackedKeyBinding wrap(final KeyMapping binding) {
+        final TrackedKeyBinding trackingBinding = new TrackedKeyBinding(binding);
         bindings.put(binding, trackingBinding);
         return trackingBinding;
     }
 
-    public static void onKeyPressSet(KeyMapping binding, boolean pressed) {
-        TrackedKeyBinding trackedBinding = bindings.get(binding);
+    public static void onKeyPressSet(final KeyMapping binding, final boolean pressed) {
+        final TrackedKeyBinding trackedBinding = bindings.get(binding);
         if (trackedBinding == null) {
             return;
         }

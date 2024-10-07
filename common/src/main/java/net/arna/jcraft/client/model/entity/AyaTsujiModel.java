@@ -10,22 +10,22 @@ import org.jetbrains.annotations.NotNull;
 
 public class AyaTsujiModel extends GeoModel<AyaTsujiEntity> {
     @Override
-    public ResourceLocation getModelResource(AyaTsujiEntity animatable) {
+    public ResourceLocation getModelResource(final AyaTsujiEntity animatable) {
         return JCraft.id("geo/aya_tsuji.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(AyaTsujiEntity animatable) {
+    public ResourceLocation getTextureResource(final AyaTsujiEntity animatable) {
         return JCraft.id("textures/entity/aya_tsuji.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(AyaTsujiEntity animatable) {
+    public ResourceLocation getAnimationResource(final AyaTsujiEntity animatable) {
         return JCraft.id("animations/aya_tsuji.animation.json");
     }
 
     @Override
-    public void setCustomAnimations(@NotNull final AyaTsujiEntity animatable, long instanceId, AnimationState<AyaTsujiEntity> animationState) {
+    public void setCustomAnimations(final @NotNull AyaTsujiEntity animatable, final long instanceId, final AnimationState<AyaTsujiEntity> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
 
         this.getBone("head").ifPresent(head -> {

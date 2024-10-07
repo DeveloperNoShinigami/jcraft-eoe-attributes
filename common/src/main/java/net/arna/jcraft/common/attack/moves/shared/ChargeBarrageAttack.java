@@ -21,8 +21,8 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
     private final float originalMoveDistance;
     private final boolean quadraticMovement;
 
-    public ChargeBarrageAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                               float hitboxSize, float knockback, float offset, int interval, boolean quadraticMovement) {
+    public ChargeBarrageAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                               final float hitboxSize, final float knockback, final float offset, final int interval, final boolean quadraticMovement) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval);
         this.originalMoveDistance = moveDistance;
         this.quadraticMovement = quadraticMovement;
@@ -35,13 +35,13 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
     }
 
     @Override
-    public void onInitiate(A attacker) {
+    public void onInitiate(final A attacker) {
         super.onInitiate(attacker);
         withMoveDistance(originalMoveDistance);
     }
 
     @Override
-    public void tick(A attacker, int moveStun) {
+    public void tick(final A attacker, final int moveStun) {
         super.tick(attacker, moveStun);
         final Entity attackerEntity = attacker.getBaseEntity();
         if (attackerEntity instanceof StandEntity<?, ?> stand) {
@@ -51,7 +51,7 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
         }
     }
 
-    private Vec3 advanceChargePos(StandEntity<?, ?> attacker, float moveDistance, int windupPoint, int moveStun) {
+    private Vec3 advanceChargePos(final StandEntity<?, ?> attacker, final float moveDistance, final int windupPoint, final int moveStun) {
         if (quadraticMovement) {
             return attacker.position().add(getRotVec(attacker).scale(
                     (moveDistance * moveStun) / (windupPoint * windupPoint)
@@ -60,7 +60,7 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
         return attacker.position().add(getRotVec(attacker).scale(moveDistance / windupPoint));
     }
 
-    private void tickChargeBarrageAttack(StandEntity<?, ?> attacker, boolean shouldPerform, float moveDistance, int windupPoint, int moveStun) {
+    private void tickChargeBarrageAttack(final StandEntity<?, ?> attacker, final boolean shouldPerform, final float moveDistance, final int windupPoint, final int moveStun) {
         if (shouldPerform) {
             final Vec3 newPos = advanceChargePos(attacker, moveDistance, windupPoint, moveStun);
             attacker.setFreePos(new Vector3f((float) newPos.x, (float) newPos.y, (float) newPos.z));
@@ -71,7 +71,7 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         final Entity attackerEntity = attacker.getBaseEntity();
         if (targets.isEmpty() || attackerEntity == null) {
@@ -96,7 +96,7 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
     }
 
     @Override
-    protected Vec3 getOffsetForwardPos(A attacker, Vec3 offsetHeightPos, Vec3 upVec, Vec3 rotVec) {
+    protected Vec3 getOffsetForwardPos(final A attacker, final Vec3 offsetHeightPos, final Vec3 upVec, final Vec3 rotVec) {
         return offsetHeightPos.add(rotVec);
     }
 

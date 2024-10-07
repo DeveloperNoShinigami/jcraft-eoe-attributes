@@ -9,13 +9,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class Rekka3Attack extends AbstractMultiHitAttack<Rekka3Attack, AnubisSpec> {
-    public Rekka3Attack(int cooldown, int duration, float moveDistance, float damage, int stun, float hitboxSize,
-                        float knockback, float offset, @NonNull IntCollection hitMoments) {
+    public Rekka3Attack(final int cooldown, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize,
+                        final float knockback, final float offset, final @NonNull IntCollection hitMoments) {
         super(cooldown, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(AnubisSpec attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final AnubisSpec attacker, final LivingEntity user, final MoveContext ctx) {
         if (attacker.getAttackSpeedMult() == 1 && getBlow(attacker) == 1) {
             attacker.curMove = getFollowup();
         }

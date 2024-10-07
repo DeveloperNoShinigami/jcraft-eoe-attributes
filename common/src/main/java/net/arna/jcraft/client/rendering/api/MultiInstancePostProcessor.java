@@ -39,7 +39,7 @@ public abstract class MultiInstancePostProcessor<I extends DynamicShaderFxInstan
      * @return the instance got added or null if the amount of instances has reached the max
      */
     @Nullable
-    public I addFxInstance(I instance) {
+    public I addFxInstance(final I instance) {
         if (instances.size() >= getMaxInstances()) {
             JCraft.LOGGER.warn("Failed to add fx instance to " + this + ": reached max instance count of " + getMaxInstances());
             return null;
@@ -50,9 +50,9 @@ public abstract class MultiInstancePostProcessor<I extends DynamicShaderFxInstan
     }
 
     @Override
-    public void beforeProcess(PoseStack viewModelStack) {
+    public void beforeProcess(final PoseStack viewModelStack) {
         for (int i = instances.size() - 1; i >= 0; i--) {
-            DynamicShaderFxInstance instance = instances.get(i);
+            final DynamicShaderFxInstance instance = instances.get(i);
             instance.update(MC.getDeltaFrameTime());
             if (instance.isRemoved()) {
                 instances.remove(i);
@@ -66,8 +66,8 @@ public abstract class MultiInstancePostProcessor<I extends DynamicShaderFxInstan
 
         float[] data = new float[instances.size() * getDataSizePerInstance()];
         for (int ins = 0; ins < instances.size(); ins++) {
-            DynamicShaderFxInstance instance = instances.get(ins);
-            int offset = ins * getDataSizePerInstance();
+            final DynamicShaderFxInstance instance = instances.get(ins);
+            final int offset = ins * getDataSizePerInstance();
             instance.writeDataToBuffer((index, d) -> {
                 if (index >= getDataSizePerInstance() || index < 0)
                     throw new IndexOutOfBoundsException(index);
@@ -85,7 +85,7 @@ public abstract class MultiInstancePostProcessor<I extends DynamicShaderFxInstan
         dataBuffer.upload(data);
     }
 
-    protected void setDataBufferUniform(EffectInstance effectInstance, String bufferName, String countName) {
+    protected void setDataBufferUniform(final EffectInstance effectInstance, final String bufferName, final String countName) {
         dataBuffer.apply(effectInstance, bufferName);
         effectInstance.getUniform(countName).set(instances.size());
     }

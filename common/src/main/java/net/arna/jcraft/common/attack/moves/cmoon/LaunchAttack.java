@@ -15,15 +15,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Set;
 
 public final class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoonEntity> {
-    public LaunchAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                        float hitboxSize, float knockback, float offset) {
+    public LaunchAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                        final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         ranged = true;
         hitSpark = JParticleType.HIT_SPARK_2;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(CMoonEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final CMoonEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         final BlockProjectile block = new BlockProjectile(attacker.level());

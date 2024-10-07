@@ -12,7 +12,7 @@ public class HarvestMove extends AbstractBarrageAttack<HarvestMove, MetallicaEnt
     }
 
     @Override
-    public void onUserMoveInput(MetallicaEntity attacker, MoveInputType type, boolean pressed, boolean moveInitiated) {
+    public void onUserMoveInput(final MetallicaEntity attacker, final MoveInputType type, final boolean pressed,final  boolean moveInitiated) {
         super.onUserMoveInput(attacker, type, pressed, moveInitiated);
         // Must be held
         if (type.getMoveType() == getMoveType() && !pressed) attacker.cancelMove();

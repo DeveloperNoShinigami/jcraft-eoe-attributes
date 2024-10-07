@@ -9,13 +9,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class D4CGrabAttack extends AbstractGrabAttack<D4CGrabAttack, D4CEntity, D4CEntity.State> {
-    public D4CGrabAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
-                         float hitboxSize, float knockback, float offset, AbstractMove<?, ? super D4CEntity> hitMove, D4CEntity.State hitState, int grabDuration, double grabOffset) {
+    public D4CGrabAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun,
+                         final float hitboxSize, final float knockback, final float offset, final AbstractMove<?, ? super D4CEntity> hitMove, final D4CEntity.State hitState, final int grabDuration, final double grabOffset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMove, hitState, grabDuration, grabOffset);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final D4CEntity attacker, final LivingEntity user, final MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (targets.isEmpty()) {

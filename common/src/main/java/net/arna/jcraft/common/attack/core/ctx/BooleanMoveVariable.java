@@ -21,12 +21,12 @@ public class BooleanMoveVariable extends MoveVariable<Boolean> {
             return booleanValue;
         }
 
-        public void setValue(boolean value) {
+        public void setValue(final boolean value) {
             super.setValue(booleanValue = value);
         }
 
         @Override
-        public void setValue(Boolean value) {
+        public void setValue(final Boolean value) {
             setValue(value.booleanValue());
         }
 

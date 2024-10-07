@@ -20,13 +20,13 @@ import java.util.function.IntSupplier;
 public final class TimeAccelerationMove extends AbstractMove<TimeAccelerationMove, MadeInHeavenEntity> {
     private final IntSupplier accelerationDuration;
 
-    public TimeAccelerationMove(int cooldown, int windup, int duration, float moveDistance, IntSupplier accelerationDuration) {
+    public TimeAccelerationMove(final int cooldown, final int windup, final int duration, final float moveDistance, final IntSupplier accelerationDuration) {
         super(cooldown, windup, duration, moveDistance);
         this.accelerationDuration = accelerationDuration;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MadeInHeavenEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final int accelTime = accelerationDuration.getAsInt();
         attacker.setAccelTime(accelTime);
         attacker.setAfterimage(true);
@@ -35,7 +35,7 @@ public final class TimeAccelerationMove extends AbstractMove<TimeAccelerationMov
         return Set.of();
     }
 
-    public void tickTimeAcceleration(MadeInHeavenEntity attacker) {
+    public void tickTimeAcceleration(final MadeInHeavenEntity attacker) {
         final int aTime = attacker.getAccelTime();
         attacker.setAccelTime(aTime - 1);
 

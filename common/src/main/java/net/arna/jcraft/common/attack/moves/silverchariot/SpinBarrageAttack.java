@@ -12,13 +12,13 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Set;
 
 public final class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAttack, SilverChariotEntity> {
-    public SpinBarrageAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                             float hitboxSize, float knockback, float offset, int interval) {
+    public SpinBarrageAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                             final float hitboxSize, final float knockback, final float offset, final int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval);
     }
 
     @Override
-    public void onInitiate(SilverChariotEntity attacker) {
+    public void onInitiate(final SilverChariotEntity attacker) {
         final LivingEntity user = attacker.getUser();
         if (user != null) {
             final ItemStack mainHand = user.getMainHandItem(), offHand = user.getOffhandItem();
@@ -37,20 +37,20 @@ public final class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAt
     }
 
     @Override
-    public void onCancel(SilverChariotEntity attacker) {
+    public void onCancel(final SilverChariotEntity attacker) {
         giveBack(attacker);
         super.onCancel(attacker);
     }
 
     @Override
-    public void tick(SilverChariotEntity attacker, int moveStun) {
+    public void tick(final SilverChariotEntity attacker, final int moveStun) {
         if (moveStun == 1) {
             giveBack(attacker);
         }
         super.tick(attacker, moveStun);
     }
 
-    private void giveBack(SilverChariotEntity attacker) {
+    private void giveBack(final SilverChariotEntity attacker) {
         final LivingEntity user = attacker.getUser();
         final ItemStack itemStack = attacker.getOffhandItem();
         if (user != null && !itemStack.isEmpty()) {
@@ -64,7 +64,7 @@ public final class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAt
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(SilverChariotEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final SilverChariotEntity attacker, final LivingEntity user, final MoveContext ctx) {
         return super.perform(attacker, user, ctx);
     }
 

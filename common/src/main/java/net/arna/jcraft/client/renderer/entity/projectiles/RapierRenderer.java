@@ -10,12 +10,12 @@ import net.minecraft.resources.ResourceLocation;
 
 public class RapierRenderer extends GeoProjectileRenderer<RapierProjectile> {
 
-    public RapierRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public RapierRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new RapierModel());
     }
 
     @Override
-    public RenderType getRenderType(RapierProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final RapierProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(texture);
     }
 }

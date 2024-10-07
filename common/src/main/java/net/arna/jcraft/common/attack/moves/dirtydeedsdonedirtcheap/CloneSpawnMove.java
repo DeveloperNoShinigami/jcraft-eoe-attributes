@@ -35,7 +35,7 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
 
     public static final MoveVariable<CloneType> CLONE_TYPE = new MoveVariable<>(CloneType.class);
 
-    public CloneSpawnMove(int cooldown, int windup, int duration, float moveDistance) {
+    public CloneSpawnMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
     }
@@ -47,13 +47,13 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final D4CEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final ItemStack weapon = ctx.get(CLONE_TYPE).weapon.getDefaultInstance();
         if (weapon.isDamageableItem()) {
             weapon.setDamageValue(weapon.getMaxDamage());
         }
 
-        if (user instanceof ServerPlayer playerEntity) {
+        if (user instanceof final ServerPlayer playerEntity) {
             final PlayerCloneEntity clone = new PlayerCloneEntity(attacker.level());
             clone.copyPosition(playerEntity);
             clone.setMaster(playerEntity);
@@ -62,7 +62,7 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
             attacker.level().addFreshEntity(clone);
             clone.setItemSlot(EquipmentSlot.MAINHAND, weapon);
             JComponentPlatformUtils.getStandData(clone).setType(StandType.NONE);
-        } else if (user instanceof Mob mob) { //Code sourced from MobEntity.class convertTo()
+        } else if (user instanceof final Mob mob) { //Code sourced from MobEntity.class convertTo()
             final EntityType<?> entityType = mob.getType();
             final Mob newMob = (Mob) entityType.create(attacker.level());
 
@@ -90,7 +90,7 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(CLONE_TYPE, CloneType.SWORD);
     }
 

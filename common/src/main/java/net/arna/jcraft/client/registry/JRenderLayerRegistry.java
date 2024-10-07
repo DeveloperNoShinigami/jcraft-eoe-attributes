@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 @Environment(EnvType.CLIENT)
 public class JRenderLayerRegistry extends RenderStateShard {
 
-    public JRenderLayerRegistry(String name, Runnable beginAction, Runnable endAction) {
+    public JRenderLayerRegistry(final String name, final Runnable beginAction, final Runnable endAction) {
         super(name, beginAction, endAction);
     }
 
@@ -47,29 +47,29 @@ public class JRenderLayerRegistry extends RenderStateShard {
     /**
      * Creates a custom render layer with a texture.
      */
-    public static RenderType createGenericRenderLayer(String modId, String name, VertexFormat format, VertexFormat.Mode mode, ShaderStateShard shader, TransparencyStateShard transparency, ResourceLocation texture) {
+    public static RenderType createGenericRenderLayer(final String modId, final String name, final VertexFormat format, final VertexFormat.Mode mode, final ShaderStateShard shader, final TransparencyStateShard transparency, final ResourceLocation texture) {
         return createGenericRenderLayer(modId + ":" + name, format, mode, shader, transparency, new TextureStateShard(texture, false, false));
     }
 
     /**
      * Creates a custom render layer with an empty texture state.
      */
-    public static RenderType createGenericRenderLayer(String modId, String name, VertexFormat format, VertexFormat.Mode mode, ShaderStateShard shader, TransparencyStateShard transparency, EmptyTextureStateShard texture) {
+    public static RenderType createGenericRenderLayer(final String modId, final String name, final VertexFormat format, final VertexFormat.Mode mode, final ShaderStateShard shader, final TransparencyStateShard transparency, final EmptyTextureStateShard texture) {
         return createGenericRenderLayer(modId + ":" + name, format, mode, shader, transparency, texture);
     }
 
     /**
      * Creates a custom render layer with an empty texture.
      */
-    public static RenderType createGenericRenderLayer(String modId, String name, VertexFormat format, VertexFormat.Mode mode, ShaderStateShard shader, TransparencyStateShard transparency) {
+    public static RenderType createGenericRenderLayer(final String modId, final String name, final VertexFormat format, final VertexFormat.Mode mode, final ShaderStateShard shader, final TransparencyStateShard transparency) {
         return createGenericRenderLayer(modId + ":" + name, format, mode, shader, transparency, NO_TEXTURE);
     }
 
     /**
      * Creates a custom render layer and creates a buffer builder for it.
      */
-    public static RenderType createGenericRenderLayer(String name, VertexFormat format, VertexFormat.Mode mode, ShaderStateShard shader, TransparencyStateShard transparency, EmptyTextureStateShard texture) {
-        RenderType type = RenderType.create(//TODO add rubidium etc?
+    public static RenderType createGenericRenderLayer(final String name, final VertexFormat format, final VertexFormat.Mode mode, final ShaderStateShard shader, final TransparencyStateShard transparency, final EmptyTextureStateShard texture) {
+        final RenderType type = RenderType.create(//TODO add rubidium etc?
                 name, format, mode, JPlatformUtils.isModLoaded("sodium") ? 262144 : 256, false, false, RenderType.CompositeState.builder()
                         .setShaderState(shader)
                         .setTransparencyState(transparency)

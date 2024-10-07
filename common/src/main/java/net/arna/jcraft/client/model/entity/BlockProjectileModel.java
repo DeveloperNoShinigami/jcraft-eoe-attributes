@@ -5,20 +5,19 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.BlockProjectile;
 import net.minecraft.resources.ResourceLocation;
 
-
 public class BlockProjectileModel extends GeoModel<BlockProjectile> {
     @Override
-    public ResourceLocation getModelResource(BlockProjectile object) {
+    public ResourceLocation getModelResource(final BlockProjectile object) {
         return JCraft.id("geo/block.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(BlockProjectile object) {
+    public ResourceLocation getTextureResource(final BlockProjectile object) {
         return JCraft.id("textures/entity/projectiles/block.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(BlockProjectile animatable) {
+    public ResourceLocation getAnimationResource(final BlockProjectile animatable) {
         return JCraft.id("animations/block.animation.json");
     }
 

@@ -19,37 +19,36 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import org.jetbrains.annotations.Nullable;
 
-
 public class GEButterflyRenderer extends DynamicGeoEntityRenderer<GEButterflyEntity> {
     protected ItemStack mainHandItem;
 
     @Override
-    public RenderType getRenderType(GEButterflyEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final GEButterflyEntity animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(texture);
     }
 
-    public GEButterflyRenderer(EntityRendererProvider.Context renderManager) {
+    public GEButterflyRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new GEButterflyModel());
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
 
-            @javax.annotation.Nullable
+            @Nullable
             @Override
-            protected ItemStack getStackForBone(GeoBone bone, GEButterflyEntity animatable) {
+            protected ItemStack getStackForBone(final GeoBone bone, final GEButterflyEntity animatable) {
                 // Retrieve the items in the entity's hands for the relevant bone
                 if (bone.getName().equals("base")) return mainHandItem;
                 return null;
             }
 
             @Override
-            protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, GEButterflyEntity animatable) {
+            protected ItemDisplayContext getTransformTypeForStack(final GeoBone bone, final ItemStack stack, final GEButterflyEntity animatable) {
                 // Apply the camera transform for the given hand
                 return ItemDisplayContext.NONE;
             }
 
             // Do some quick render modifications depending on what the item is
             @Override
-            protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, GEButterflyEntity animatable,
-                                              MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
+            protected void renderStackForBone(final PoseStack poseStack, final GeoBone bone, final ItemStack stack, final GEButterflyEntity animatable,
+                                              final MultiBufferSource bufferSource, final float partialTick, final int packedLight, final int packedOverlay) {
 
                 if (stack == GEButterflyRenderer.this.mainHandItem) {
                     poseStack.scale(0.33f, 0.33f, 0.33f);
@@ -66,7 +65,7 @@ public class GEButterflyRenderer extends DynamicGeoEntityRenderer<GEButterflyEnt
     }
 
     @Override
-    public void preRender(PoseStack poseStack, GEButterflyEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(final PoseStack poseStack, final GEButterflyEntity animatable, final BakedGeoModel model, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         this.mainHandItem = animatable.getItemBySlot(EquipmentSlot.MAINHAND);
     }

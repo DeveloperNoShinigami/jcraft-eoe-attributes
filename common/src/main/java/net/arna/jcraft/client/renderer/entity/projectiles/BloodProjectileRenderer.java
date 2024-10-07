@@ -9,12 +9,12 @@ import net.minecraft.resources.ResourceLocation;
 
 
 public class BloodProjectileRenderer extends GeoProjectileRenderer<BloodProjectile> {
-    public BloodProjectileRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public BloodProjectileRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new BloodProjectileModel());
     }
 
     @Override
-    public RenderType getRenderType(BloodProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final BloodProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(texture);
     }
 }

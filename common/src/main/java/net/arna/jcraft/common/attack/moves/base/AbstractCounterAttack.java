@@ -10,13 +10,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public abstract class AbstractCounterAttack<T extends AbstractCounterAttack<T, A>, A extends IAttacker<? extends A, ?>> extends AbstractMove<T, A> {
-    protected AbstractCounterAttack(int cooldown, int windup, int duration, float moveDistance) {
+    protected AbstractCounterAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         counter = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         if (attacker instanceof StandEntity<?, ?> stand && stand.isFree()) {
             stand.setFree(false);
         }
@@ -33,7 +33,7 @@ public abstract class AbstractCounterAttack<T extends AbstractCounterAttack<T, A
      * @param attacker The stand that missed
      * @param user     The stand's user
      */
-    public abstract void whiff(@NonNull A attacker, @NonNull LivingEntity user);
+    public abstract void whiff(final @NonNull A attacker, final @NonNull LivingEntity user);
 
     /**
      * Called when this counter-attack hit.
@@ -43,7 +43,7 @@ public abstract class AbstractCounterAttack<T extends AbstractCounterAttack<T, A
      * @param countered             The entity whose attack was countered
      * @param counteredDamageSource The damage source the countered entity was using
      */
-    public void counter(@NonNull A attacker, Entity countered, DamageSource counteredDamageSource) {
+    public void counter(final @NonNull A attacker, final Entity countered, final DamageSource counteredDamageSource) {
         attacker.setMoveStun(0);
         attacker.setCurrentMove(null);
     }

@@ -5,9 +5,8 @@ import net.arna.jcraft.client.model.entity.AyaTsujiModel;
 import net.arna.jcraft.common.entity.AyaTsujiEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
-
 public class AyaTsujiRenderer extends GeoEntityRenderer<AyaTsujiEntity> {
-    public AyaTsujiRenderer(EntityRendererProvider.Context renderManager) {
+    public AyaTsujiRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new AyaTsujiModel());
     }
 }

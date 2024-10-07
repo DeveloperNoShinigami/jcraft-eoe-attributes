@@ -16,12 +16,12 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class ReviveMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<ReviveMove<A>, A> {
-    public ReviveMove(int cooldown, int windup, int duration, float reviveDistance) {
+    public ReviveMove(final int cooldown, final int windup, final int duration, final float reviveDistance) {
         super(cooldown, windup, duration, reviveDistance);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         MinecraftServer server = user.getServer();
         assert server != null;
         ServerLevel serverWorld = server.getLevel(user.level().dimension());
@@ -57,7 +57,7 @@ public final class ReviveMove<A extends IAttacker<? extends A, ?>> extends Abstr
         return Set.of();
     }
 
-    public static boolean isBoss(LivingEntity living) {
+    public static boolean isBoss(final LivingEntity living) {
         //todo: find a better way to check if smth is a boss
         return living.getMaxHealth() >= 80.0f;
     }

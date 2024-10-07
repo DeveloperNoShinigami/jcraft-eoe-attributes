@@ -12,7 +12,7 @@ public class AuraBlobParticle extends RisingParticle {
     protected final SpriteSet spriteProvider;
     private final Entity parent;
 
-    AuraBlobParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider, Vector3f color, Entity parent) {
+    AuraBlobParticle(final ClientLevel world, final double x, final double y, final double z, final double velocityX, final double velocityY, final double velocityZ, final SpriteSet spriteProvider, final Vector3f color, final Entity parent) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
         this.spriteProvider = spriteProvider;
         this.setColor(color.x(), color.y(), color.z());
@@ -52,7 +52,7 @@ public class AuraBlobParticle extends RisingParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(final SimpleParticleType defaultParticleType, final ClientLevel clientWorld, final double d, final double e, final double f, final double g, final double h, final double i) {
             return new AuraBlobParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider, color, parent);
         }
     }

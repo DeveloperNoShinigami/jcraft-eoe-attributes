@@ -5,20 +5,19 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.BulletProjectile;
 import net.minecraft.resources.ResourceLocation;
 
-
 public class BulletModel extends GeoModel<BulletProjectile> {
     @Override
-    public ResourceLocation getModelResource(BulletProjectile object) {
+    public ResourceLocation getModelResource(final BulletProjectile object) {
         return JCraft.id("geo/bullet.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(BulletProjectile object) {
+    public ResourceLocation getTextureResource(final BulletProjectile object) {
         return JCraft.id("textures/entity/projectiles/bullet.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(BulletProjectile animatable) {
+    public ResourceLocation getAnimationResource(final BulletProjectile animatable) {
         return JCraft.id("animations/knife.animation.json");
     }
 

@@ -9,12 +9,12 @@ import net.minecraft.resources.ResourceLocation;
 
 
 public class LaserProjectileRenderer extends GeoProjectileRenderer<LaserProjectile> {
-    public LaserProjectileRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public LaserProjectileRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new LaserProjectileModel());
     }
 
     @Override
-    public RenderType getRenderType(LaserProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final LaserProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(texture);
     }
 }

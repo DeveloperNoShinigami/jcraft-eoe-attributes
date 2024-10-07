@@ -29,8 +29,8 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
     private final int baseStun, baseDuration;
     private static final int MINING_BARRAGE_TIME = 200;
 
-    public MainBarrageAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
-                             float hitboxSize, float knockback, float offset, int interval, float mineableHardness) {
+    public MainBarrageAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun,
+                             final float hitboxSize, final float knockback, final float offset, final int interval, final float mineableHardness) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, interval);
         this.mineableHardness = mineableHardness;
         this.baseDuration = duration;
@@ -40,7 +40,7 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
     }
 
     @Override
-    public void onInitiate(A attacker) {
+    public void onInitiate(final A attacker) {
         boolean breakBlocks = attacker.getUserOrThrow().isShiftKeyDown();
         if (breakBlocks && !attacker.getEntityWorld().getGameRules().getBoolean(JCraft.STAND_GRIEFING) && !(attacker.getUserOrThrow() instanceof Player)) {
             breakBlocks = false;
@@ -52,7 +52,7 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
     }
 
     @Override
-    public boolean canFinish(A attacker) {
+    public boolean canFinish(final A attacker) {
         if (attacker.getMoveContext().getBoolean(BREAK_BLOCKS)) {
             return false;
         }
@@ -60,7 +60,7 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
     }
 
     @Override
-    public void onUserMoveInput(A attacker, MoveInputType type, boolean pressed, boolean moveInitiated) {
+    public void onUserMoveInput(final A attacker, final MoveInputType type, final boolean pressed, final boolean moveInitiated) {
         super.onUserMoveInput(attacker, type, pressed, moveInitiated);
         // Mining barrages may be held
         if (attacker.getMoveContext().getBoolean(BREAK_BLOCKS) && type.getMoveType() == getMoveType() && !pressed) {
@@ -74,12 +74,12 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(BREAK_BLOCKS, false);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (ctx.getBoolean(BREAK_BLOCKS)) {
@@ -97,7 +97,7 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
         return targets;
     }
 
-    private void breakIfPossible(ServerLevel world, BlockPos pos, LivingEntity user) {
+    private void breakIfPossible(final ServerLevel world, final BlockPos pos, final LivingEntity user) {
         final Block block = world.getBlockState(pos).getBlock();
         if (block.defaultDestroyTime() < 0) {
             return;

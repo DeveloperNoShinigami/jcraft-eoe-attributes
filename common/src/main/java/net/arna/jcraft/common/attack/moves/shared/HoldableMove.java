@@ -9,13 +9,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class HoldableMove<A extends IAttacker<A, S>, S extends Enum<S>> extends AbstractHoldableMove<HoldableMove<A, S>, A, S> {
-    public HoldableMove(int cooldown, int windup, int duration, float attackDistance, AbstractMove<?, ? super A> followupMove, S followupState, int minimumCharge) {
+    public HoldableMove(final int cooldown, final int windup, final int duration, final float attackDistance, final AbstractMove<?, ? super A> followupMove, final S followupState, final int minimumCharge) {
         super(cooldown, windup, duration, attackDistance, followupMove, followupState, minimumCharge);
         withFollowup(followupMove);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         return Set.of();
     }
 

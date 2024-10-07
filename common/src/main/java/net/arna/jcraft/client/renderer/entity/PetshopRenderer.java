@@ -8,12 +8,12 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 public class PetshopRenderer extends GeoEntityRenderer<PetshopEntity> {
-    public PetshopRenderer(EntityRendererProvider.Context renderManager) {
+    public PetshopRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new PetshopModel());
     }
 
     @Override
-    public ResourceLocation getTextureLocation(PetshopEntity animatable) {
+    public ResourceLocation getTextureLocation(final PetshopEntity animatable) {
         return JCraft.id("textures/entity/petshop.png");
     }
 }

@@ -11,13 +11,13 @@ import net.arna.jcraft.common.util.StandAnimationState;
 public final class GrabAttack<A extends IAttacker<A, S> & GeoEntity, S extends Enum<S> & StandAnimationState<A>>
         extends AbstractGrabAttack<GrabAttack<A, S>, A, S> {
 
-    public GrabAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
-                      float hitboxSize, float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState, int grabDuration, double grabOffset) {
+    public GrabAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun,
+                      final float hitboxSize, final float knockback, final float offset, final AbstractMove<?, ? super A> hitMove, final S hitState, final int grabDuration, final double grabOffset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMove, hitState, grabDuration, grabOffset);
     }
 
-    public GrabAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
-                      float hitboxSize, float knockback, float offset, AbstractMove<?, ? super A> hitMove, S hitState) {
+    public GrabAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun,
+                      final float hitboxSize, final float knockback, final float offset, final AbstractMove<?, ? super A> hitMove, final S hitState) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMove, hitState);
     }
 

@@ -24,8 +24,8 @@ public final class RekkaAttack<A extends IAttacker<A, S> & GeoEntity, S extends 
     private final int switchStart;
     private final StandAnimationState<A> nextState;
 
-    public RekkaAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun, float hitboxSize,
-                       float knockback, float offset, int rekkaLevel, int switchStart, RekkaAttack<A, S> next, StandAnimationState<A> nextState) {
+    public RekkaAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun, final float hitboxSize,
+                       final float knockback, final float offset, final int rekkaLevel, final int switchStart, final RekkaAttack<A, S> next, final StandAnimationState<A> nextState) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);
         if (rekkaLevel > 1) {
             hitSpark = JParticleType.HIT_SPARK_2;

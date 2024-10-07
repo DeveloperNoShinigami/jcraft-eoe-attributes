@@ -21,14 +21,14 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
     public static final FloatMoveVariable ORBIT_PROG = new FloatMoveVariable();
     public static final MoveVariable<LivingEntity> TARGET = new WeakMoveVariable<>(LivingEntity.class);
 
-    public CircleAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public CircleAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
         mobilityType = MobilityType.DASH;
     }
 
     @Override
-    public void onInitiate(MadeInHeavenEntity attacker) {
+    public void onInitiate(final MadeInHeavenEntity attacker) {
         super.onInitiate(attacker);
 
         LivingEntity user = attacker.getUserOrThrow();
@@ -45,12 +45,12 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
     }
 
     @Override
-    public void onCancel(MadeInHeavenEntity attacker) {
+    public void onCancel(final MadeInHeavenEntity attacker) {
         endCircle(attacker);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MadeInHeavenEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         ctx.setInt(CIRCLING_TIME, 100);
         attacker.setAfterimage(true);
         attacker.updateRemoteInputs(0, 0, false, false);
@@ -58,7 +58,7 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
         return target == null ? Set.of() : Set.of(target);
     }
 
-    public void endCircle(MadeInHeavenEntity attacker) {
+    public void endCircle(final MadeInHeavenEntity attacker) {
         MoveContext ctx = attacker.getMoveContext();
         ctx.setInt(CIRCLING_TIME, 0);
         ctx.set(TARGET, null);
@@ -68,7 +68,7 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
         }
     }
 
-    public void tickCircle(MadeInHeavenEntity attacker) {
+    public void tickCircle(final MadeInHeavenEntity attacker) {
         MoveContext ctx = attacker.getMoveContext();
         int circlingTime = ctx.getInt(CIRCLING_TIME);
         if (circlingTime <= 0 || !attacker.hasUser()) {
@@ -102,7 +102,7 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
                 toExit = true;
             }
 
-            Vec3 newVelocity;
+            final Vec3 newVelocity;
             if (toExit) {
                 newVelocity = exitVel.add(0, 0.5, 0);
                 endCircle(attacker);
@@ -124,9 +124,9 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
         }
     }
 
-    public static void createSpeedParticles(MadeInHeavenEntity attacker, Entity entity) {
-        RandomSource random = attacker.getRandom();
-        AABB box = entity.getBoundingBox();
+    public static void createSpeedParticles(final MadeInHeavenEntity attacker, final Entity entity) {
+        final RandomSource random = attacker.getRandom();
+        final AABB box = entity.getBoundingBox();
         for (int i = 0; i < box.getSize(); i++) {
             entity.level().addParticle(JParticleTypeRegistry.SPEED_PARTICLE.get(),
                     random.nextDouble() * box.getXsize() + box.minX,
@@ -137,7 +137,7 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(CIRCLING_TIME);
         ctx.register(ORBIT_PROG);
         ctx.register(TARGET);

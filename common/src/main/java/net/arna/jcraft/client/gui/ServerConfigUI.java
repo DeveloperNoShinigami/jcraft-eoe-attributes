@@ -16,19 +16,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ServerConfigUI {
-    public static void show(boolean editable) {
-        ConfigBuilder builder = ConfigBuilder.create();
-        Set<ConfigOption> changedOptions = new HashSet<>();
+    public static void show(final boolean editable) {
+        final ConfigBuilder builder = ConfigBuilder.create();
+        final Set<ConfigOption> changedOptions = new HashSet<>();
 
-        for (ConfigOption option : ConfigOption.getImmutableOptions().values()) {
-            ConfigCategory category = builder.getOrCreateCategory(Component.translatable("jcraft.serverconfig.category." + option.getCategory()));
-            MutableComponent optionText = Component.translatable("jcraft.serverconfig.option." + option.getKey());
+        for (final ConfigOption option : ConfigOption.getImmutableOptions().values()) {
+            final ConfigCategory category = builder.getOrCreateCategory(Component.translatable("jcraft.serverconfig.category." + option.getCategory()));
+            final MutableComponent optionText = Component.translatable("jcraft.serverconfig.option." + option.getKey());
 
-            AbstractConfigListEntry<?> entry = switch (option.getType()) {
+            final AbstractConfigListEntry<?> entry = switch (option.getType()) {
                 case INTEGER -> {
-                    IntOption intOption = (IntOption) option;
+                    final IntOption intOption = (IntOption) option;
                     if (intOption.getMin() != null && intOption.getMax() != null) {
-                        IntSliderBuilder sliderBuilder = builder.entryBuilder().startIntSlider(optionText, intOption.getValue(),
+                        final IntSliderBuilder sliderBuilder = builder.entryBuilder().startIntSlider(optionText, intOption.getValue(),
                                         intOption.getMin(), intOption.getMax())
                                 .setDefaultValue(intOption.getDefaultValue())
                                 .setSaveConsumer(value -> {
@@ -38,7 +38,7 @@ public class ServerConfigUI {
 
                         yield sliderBuilder.build();
                     } else {
-                        IntFieldBuilder fieldBuilder = builder.entryBuilder().startIntField(optionText, intOption.getValue())
+                        final IntFieldBuilder fieldBuilder = builder.entryBuilder().startIntField(optionText, intOption.getValue())
                                 .setDefaultValue(intOption.getDefaultValue())
                                 .setSaveConsumer(value -> {
                                     intOption.setValue(value);
@@ -61,8 +61,8 @@ public class ServerConfigUI {
                     }
                 }
                 case FLOAT -> {
-                    FloatOption floatOption = (FloatOption) option;
-                    FloatFieldBuilder fieldBuilder = builder.entryBuilder().startFloatField(optionText, floatOption.getValue())
+                    final FloatOption floatOption = (FloatOption) option;
+                    final FloatFieldBuilder fieldBuilder = builder.entryBuilder().startFloatField(optionText, floatOption.getValue())
                             .setDefaultValue(floatOption.getDefaultValue())
                             .setSaveConsumer(value -> {
                                 floatOption.setValue(value);
@@ -84,8 +84,8 @@ public class ServerConfigUI {
                     yield fieldBuilder.build();
                 }
                 case BOOLEAN -> {
-                    BooleanOption booleanOption = (BooleanOption) option;
-                    BooleanToggleBuilder toggleBuilder = builder.entryBuilder().startBooleanToggle(optionText, booleanOption.getValue())
+                    final BooleanOption booleanOption = (BooleanOption) option;
+                    final BooleanToggleBuilder toggleBuilder = builder.entryBuilder().startBooleanToggle(optionText, booleanOption.getValue())
                             .setDefaultValue(booleanOption.getDefaultValue())
                             .setSaveConsumer(value -> {
                                 booleanOption.setValue(value);
@@ -94,9 +94,9 @@ public class ServerConfigUI {
                     yield toggleBuilder.build();
                 }
                 case ENUM -> {
-                    EnumOption<?> enumOption = (EnumOption<?>) option;
+                    final EnumOption<?> enumOption = (EnumOption<?>) option;
                     //noinspection unchecked // this is fine
-                    EnumSelectorBuilder<Enum<?>> selectorBuilder = builder.entryBuilder().startEnumSelector(optionText,
+                    final EnumSelectorBuilder<Enum<?>> selectorBuilder = builder.entryBuilder().startEnumSelector(optionText,
                                     (Class<Enum<?>>) enumOption.getClazz(), enumOption.getValue())
                             .setDefaultValue(enumOption.getDefaultValue())
                             .setSaveConsumer(e -> {

@@ -11,22 +11,22 @@ import net.minecraft.resources.ResourceLocation;
 import org.joml.Quaternionf;
 
 public class LifeDetectorRenderer extends GeoProjectileRenderer<LifeDetectorEntity> {
-    public LifeDetectorRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public LifeDetectorRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new LifeDetectorModel());
     }
 
     @Override
-    protected int getBlockLightLevel(LifeDetectorEntity entity, BlockPos pos) {
+    protected int getBlockLightLevel(final LifeDetectorEntity entity, final BlockPos pos) {
         return 15;
     }
 
     @Override
-    public RenderType getRenderType(LifeDetectorEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final LifeDetectorEntity animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.eyes(texture);
     }
 
     @Override
-    public void render(LifeDetectorEntity animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(final LifeDetectorEntity animatable, final float yaw, final float partialTick, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
         poseStack.pushPose();
         poseStack.mulPose(new Quaternionf().rotateXYZ(3.1415f, 3.1415f, 0)); // Why is this necessary???
         super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);

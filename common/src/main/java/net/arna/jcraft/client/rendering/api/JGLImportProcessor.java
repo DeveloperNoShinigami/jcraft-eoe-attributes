@@ -17,11 +17,11 @@ public class JGLImportProcessor extends GlslPreprocessor {
 
     @Nullable
     @Override
-    public String applyImport(boolean pUseFullPath, String pDirectory) {
-        ResourceLocation resourcelocation = new ResourceLocation(pDirectory);
-        ResourceLocation resourcelocation1 = new ResourceLocation(resourcelocation.getNamespace(), "shaders/include/" + resourcelocation.getPath());
+    public String applyImport(final boolean pUseFullPath, final String pDirectory) {
+        final ResourceLocation resourcelocation = new ResourceLocation(pDirectory);
+        final ResourceLocation resourcelocation1 = new ResourceLocation(resourcelocation.getNamespace(), "shaders/include/" + resourcelocation.getPath());
         try {
-            Resource resource1 = Minecraft.getInstance().getResourceManager().getResource(resourcelocation1).get();
+            final Resource resource1 = Minecraft.getInstance().getResourceManager().getResource(resourcelocation1).get();
 
             return IOUtils.toString(resource1.open(), StandardCharsets.UTF_8);
         } catch (IOException ioexception) {

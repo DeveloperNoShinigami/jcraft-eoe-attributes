@@ -20,12 +20,12 @@ import java.util.Set;
 import static net.minecraft.world.level.block.Block.getId;
 
 public final class BlockBreakingAttack extends AbstractSimpleAttack<BlockBreakingAttack, AbstractStarPlatinumEntity<?, ?>> {
-    public BlockBreakingAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback, float offset) {
+    public BlockBreakingAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    public void performHook(AbstractStarPlatinumEntity<?, ?> attacker, Set<LivingEntity> targets, Set<AABB> boxes, DamageSource damageSource, Vec3 forwardPos, Vec3 rotationVector, MoveContext ctx) {
+    public void performHook(final AbstractStarPlatinumEntity<?, ?> attacker, final Set<LivingEntity> targets, final Set<AABB> boxes, final DamageSource damageSource, final Vec3 forwardPos, final Vec3 rotationVector, final MoveContext ctx) {
         Level world = attacker.level();
         if (world.getGameRules().getBoolean(JCraft.STAND_GRIEFING)) {
             BlockPos bPos = attacker.blockPosition().offset((int) rotationVector.x * 1, (int) rotationVector.y * 1, (int) rotationVector.z * 1);

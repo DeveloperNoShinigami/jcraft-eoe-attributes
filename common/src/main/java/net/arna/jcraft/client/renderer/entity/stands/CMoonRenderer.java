@@ -24,12 +24,12 @@ public class CMoonRenderer extends StandEntityRenderer<CMoonEntity> {
     private static final int gravWindup = CMoonEntity.GRAV_PUNCH.getWindupPoint();
     private static final ParticleOptions chargeParticle = new DustParticleOptions(new Vector3f(0.8f, 0.2f, 1.0f), 2.0f);
 
-    public CMoonRenderer(EntityRendererProvider.Context context) {
+    public CMoonRenderer(final EntityRendererProvider.Context context) {
         super(context, new StandEntityModel<>(StandType.C_MOON));
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, CMoonEntity stand, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(final PoseStack poseStack, final CMoonEntity stand, final BakedGeoModel model, final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, getAlpha(animatable, partialTick));
         // todo: try to replace this with a particle keyframe
         if (stand.getState() == CMoonEntity.State.GRAV_PUNCH && stand.getMoveStun() > gravWindup) {

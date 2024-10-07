@@ -16,18 +16,18 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
-    public FlightMove(int cooldown, int windup, int duration, float moveDistance) {
+    public FlightMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         mobilityType = MobilityType.FLIGHT;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(GEREntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final GEREntity attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.setFlightTime(20);
         return Set.of();
     }
 
-    public void tickFlight(GEREntity attacker) {
+    public void tickFlight(final GEREntity attacker) {
         if (!attacker.hasUser()) {
             return;
         }
@@ -45,7 +45,7 @@ public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
             Vec3 vel = new Vec3(user.getDeltaMovement().x, 0.0, user.getDeltaMovement().z);
             // Targetting priority
             LivingEntity targetEntity = null;
-            CombatEntry mostDamagingOpponent = user.getCombatTracker().getMostSignificantFall();
+            final CombatEntry mostDamagingOpponent = user.getCombatTracker().getMostSignificantFall();
             if (mostDamagingOpponent != null && mostDamagingOpponent.source().getEntity() instanceof LivingEntity livingTarget) {
                 targetEntity = livingTarget;
             }
@@ -56,7 +56,7 @@ public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
                 targetEntity = user.getLastHurtByMob();
             }
             // If target wasn't found, search in a radius
-            Vec3 target = targetEntity != null ? targetEntity.getEyePosition() :
+            final Vec3 target = targetEntity != null ? targetEntity.getEyePosition() :
                     attacker.position().add(Math.sin(attacker.tickCount * 0.2) * 3, 0, Math.cos(attacker.tickCount * 0.2) * 3);
 
             double dY = Mth.clamp(target.y() - y, -1, 1);

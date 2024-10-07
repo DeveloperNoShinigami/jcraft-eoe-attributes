@@ -7,15 +7,15 @@ import net.arna.jcraft.common.attack.MobilityType;
 import net.minecraft.world.entity.LivingEntity;
 
 public final class RayDartAttack extends AbstractSimpleAttack<RayDartAttack, SilverChariotEntity> {
-    public RayDartAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                         float hitboxSize, float knockback, float offset) {
+    public RayDartAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                         final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         ranged = true;
         mobilityType = MobilityType.DASH;
     }
 
     @Override
-    public void onInitiate(SilverChariotEntity attacker) {
+    public void onInitiate(final SilverChariotEntity attacker) {
         super.onInitiate(attacker);
 
         final LivingEntity user = attacker.getUser();

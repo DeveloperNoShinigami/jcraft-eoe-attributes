@@ -13,54 +13,54 @@ public class MoveContext {
     private final Map<MoveVariable<?>, Entry<?>> entries = new HashMap<>();
 
     @SuppressWarnings("unchecked")
-    public <T> T get(MoveVariable<T> variable) {
-        Entry<?> entry = getEntry(variable);
+    public <T> T get(final MoveVariable<T> variable) {
+        final Entry<?> entry = getEntry(variable);
         return (T) entry.getValue();
     }
 
-    public int getInt(IntMoveVariable variable) {
-        IntMoveVariable.IntEntry entry = (IntMoveVariable.IntEntry) getEntry(variable);
+    public int getInt(final IntMoveVariable variable) {
+        final IntMoveVariable.IntEntry entry = (IntMoveVariable.IntEntry) getEntry(variable);
         return entry.getIntValue();
     }
 
-    public float getFloat(FloatMoveVariable variable) {
-        FloatMoveVariable.FloatEntry entry = (FloatMoveVariable.FloatEntry) getEntry(variable);
+    public float getFloat(final FloatMoveVariable variable) {
+        final FloatMoveVariable.FloatEntry entry = (FloatMoveVariable.FloatEntry) getEntry(variable);
         return entry.getFloatValue();
     }
 
-    public boolean getBoolean(BooleanMoveVariable variable) {
-        BooleanMoveVariable.BooleanEntry entry = (BooleanMoveVariable.BooleanEntry) getEntry(variable);
+    public boolean getBoolean(final BooleanMoveVariable variable) {
+        final BooleanMoveVariable.BooleanEntry entry = (BooleanMoveVariable.BooleanEntry) getEntry(variable);
         return entry.getBooleanValue();
     }
 
-    public <T> void set(MoveVariable<T> variable, T value) {
+    public <T> void set(final MoveVariable<T> variable, final T value) {
         getEntry(variable).setValue(value);
     }
 
-    public void setInt(IntMoveVariable variable, int value) {
-        IntMoveVariable.IntEntry entry = (IntMoveVariable.IntEntry) getEntry(variable);
+    public void setInt(final IntMoveVariable variable, final int value) {
+        final IntMoveVariable.IntEntry entry = (IntMoveVariable.IntEntry) getEntry(variable);
         entry.setValue(value);
     }
 
-    public void setFloat(FloatMoveVariable variable, float value) {
-        FloatMoveVariable.FloatEntry entry = (FloatMoveVariable.FloatEntry) getEntry(variable);
+    public void setFloat(final FloatMoveVariable variable, final float value) {
+        final FloatMoveVariable.FloatEntry entry = (FloatMoveVariable.FloatEntry) getEntry(variable);
         entry.setValue(value);
     }
 
-    public void setBoolean(BooleanMoveVariable variable, boolean value) {
-        BooleanMoveVariable.BooleanEntry entry = (BooleanMoveVariable.BooleanEntry) getEntry(variable);
+    public void setBoolean(final BooleanMoveVariable variable, final boolean value) {
+        final BooleanMoveVariable.BooleanEntry entry = (BooleanMoveVariable.BooleanEntry) getEntry(variable);
         entry.setValue(value);
     }
 
-    public void incrementInt(IntMoveVariable variable, int increment) {
-        IntMoveVariable.IntEntry entry = (IntMoveVariable.IntEntry) getEntry(variable);
+    public void incrementInt(final IntMoveVariable variable, final int increment) {
+        final IntMoveVariable.IntEntry entry = (IntMoveVariable.IntEntry) getEntry(variable);
         entry.setValue(entry.getIntValue() + increment);
     }
 
     @SuppressWarnings("unchecked")
     @NotNull
-    private <T> Entry<T> getEntry(MoveVariable<T> variable) {
-        Entry<?> entry = entries.get(variable);
+    private <T> Entry<T> getEntry(final MoveVariable<T> variable) {
+        final Entry<?> entry = entries.get(variable);
         if (entry == null) {
             throw new IllegalArgumentException("No entry for the given variable could be found. " +
                     "Has it been registered?");
@@ -69,11 +69,11 @@ public class MoveContext {
         return (Entry<T>) entry;
     }
 
-    public <T> void register(@NonNull MoveVariable<T> variable) {
+    public <T> void register(final @NonNull MoveVariable<T> variable) {
         entries.put(variable, variable.createEntry());
     }
 
-    public <T> void register(@NonNull MoveVariable<T> variable, T initialValue) {
+    public <T> void register(final @NonNull MoveVariable<T> variable, final T initialValue) {
         register(variable);
         set(variable, initialValue);
     }

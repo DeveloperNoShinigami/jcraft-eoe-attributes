@@ -22,14 +22,14 @@ import java.util.Set;
 public final class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack, CMoonEntity> {
     public static final String GRAVITY_SOURCE = JCraft.MOD_ID + "$" + GravPunchAttack.class.getSimpleName();
 
-    public GravPunchAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                           float hitboxSize, float knockback, float offset) {
+    public GravPunchAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                           final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         hitSpark = JParticleType.HIT_SPARK_2; //todo: gravpunch inversion hitspark
     }
 
     @Override
-    protected void processTarget(CMoonEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
+    protected void processTarget(final CMoonEntity attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         final Direction oppositeGravity = GravityChangerAPI.getGravityDirection(target).getOpposite();
@@ -40,7 +40,7 @@ public final class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack,
     }
 
     @Override
-    public void performHook(CMoonEntity attacker, Set<LivingEntity> targets, Set<AABB> boxes, DamageSource damageSource, Vec3 forwardPos, Vec3 rotationVector, MoveContext ctx) {
+    public void performHook(final CMoonEntity attacker, final Set<LivingEntity> targets, final Set<AABB> boxes, final DamageSource damageSource, final Vec3 forwardPos, final Vec3 rotationVector, final MoveContext ctx) {
         if (targets.isEmpty()) {
             return;
         }

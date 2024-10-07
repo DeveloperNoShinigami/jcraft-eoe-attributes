@@ -32,8 +32,8 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
     private final int interval;
     protected boolean inflictsSlowness = true;
 
-    protected AbstractBarrageAttack(int cooldown, int windup, int duration, float moveDistance, float damage,
-                                    int stun, float hitboxSize, float knockback, float offset, int interval) {
+    protected AbstractBarrageAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage,
+                                    final int stun, final float hitboxSize, final float knockback, final float offset, final int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         barrage = true;
         this.interval = interval;
@@ -48,7 +48,7 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
     }
 
     @Override
-    public boolean shouldPerform(A attacker, int moveStun) {
+    public boolean shouldPerform(final A attacker, final int moveStun) {
         // If move stun is 22 ticks, windup is 6 and interval is 4, the first hit will occur at tick 6 (when move stun is 22 - 6 = 16),
         // the second at tick 10 (when move stun is 22 - 10 = 12), then at tick 14, etc.
         // For hit 2:
@@ -66,7 +66,7 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
     }
 
     @Override
-    public void tick(A attacker, int moveStun) {
+    public void tick(final A attacker, final int moveStun) {
         super.tick(attacker, moveStun);
 
         // Consider replacing the isRemote() with isFree()?
@@ -76,14 +76,14 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
     }
 
     @Override
-    protected Set<LivingEntity> validateTargets(A attacker, Set<LivingEntity> targets) {
+    protected Set<LivingEntity> validateTargets(final A attacker, final Set<LivingEntity> targets) {
         if (!(attacker instanceof StandEntity<?, ?> stand)) {
             return targets;
         }
 
         // Barrage clashing logic.
-        for (LivingEntity target : targets) {
-            StandEntity<?, ?> targetStand = JUtils.getStand(target);
+        for (final LivingEntity target : targets) {
+            final StandEntity<?, ?> targetStand = JUtils.getStand(target);
             Vec3 forwardPos = stand.getLookAngle();
             forwardPos = new Vec3(stand.getX() + forwardPos.x, stand.getY() + forwardPos.y, stand.getZ() + forwardPos.z);
             if (targetStand == null ||
@@ -107,7 +107,7 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
             // Cancels both barrages
             stand.cancelMove();
             targetStand.cancelMove();
-            Vec3 midPos = attacker.getBaseEntity().position().scale(.5)
+            final Vec3 midPos = attacker.getBaseEntity().position().scale(.5)
                     .add(targetStand.position().scale(.5));
             attacker.getEntityWorld().playSound(null, midPos.x, midPos.y, midPos.z, JSoundRegistry.IMPACT_1.get(), SoundSource.NEUTRAL, 1, 0.5f);
 
@@ -117,13 +117,13 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
         return targets;
     }
 
-    protected void onClash(LivingEntity entity) {
+    protected void onClash(final LivingEntity entity) {
         entity.removeEffect(JStatusRegistry.DAZED.get());
         entity.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), 10, 3, true, false));
     }
 
     @Override
-    public int getBlow(A attacker) {
+    public int getBlow(final A attacker) {
         int tick = getDuration() - attacker.getMoveStun();
         return tick <= getWindup() ? 0 : (tick - getWindup()) / getInterval();
     }
@@ -133,14 +133,14 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
             if (targets.isEmpty()) {
                 return;
             }
-            LivingEntity attackerEntity = attacker.getBaseEntity();
-            RandomSource random = attackerEntity.getRandom();
+            final LivingEntity attackerEntity = attacker.getBaseEntity();
+            final RandomSource random = attackerEntity.getRandom();
             Vec3 shockwavePos = attackerEntity.position().add(
                     random.nextGaussian() / 3.0,
                     random.nextGaussian() / 3.0,
                     random.nextGaussian() / 3.0
             );
-            Vec3 rotVec = user.getLookAngle();
+            final Vec3 rotVec = user.getLookAngle();
             shockwavePos = shockwavePos.add(rotVec);
             shockwavePos = shockwavePos.add(RotationUtil.vecPlayerToWorld(new Vec3(0, attackerEntity.getBbHeight() / 1.8 - getOffset(), 0), GravityChangerAPI.getGravityDirection(user)));
             JComponentPlatformUtils.getShockwaveHandler(attacker.getEntityWorld())
@@ -149,7 +149,7 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
     }
 
     @Override
-    protected @NonNull T copyExtras(@NonNull T base) {
+    protected @NonNull T copyExtras(final @NonNull T base) {
         AbstractBarrageAttack<T, A> cast = super.copyExtras(base);
         cast.inflictsSlowness = inflictsSlowness;
         return base;

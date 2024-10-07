@@ -29,9 +29,9 @@ public class JClientUtils {
 
     // Mustn't directly remove the DimensionData due to the possibility of a ConcurrentModificationException
     // Setting the timer to 0 will make the next tick remove it
-    public static void removeTimestop(int timestopperId) {
+    public static void removeTimestop(final int timestopperId) {
         for (DimensionData timestop : activeTimestops) {
-            Entity timestopper = timestop.user;
+            final Entity timestopper = timestop.user;
             if (timestopper.getId() != timestopperId) {
                 continue;
             }
@@ -40,8 +40,8 @@ public class JClientUtils {
         }
     }
 
-    public static boolean isInTSRange(Vec3 pos) {
-        for (DimensionData timeStop : activeTimestops) {
+    public static boolean isInTSRange(final Vec3 pos) {
+        for (final DimensionData timeStop : activeTimestops) {
             if (timeStop != null && timeStop.pos.distanceToSqr(pos.x(), pos.y(), pos.z()) <= 65536) {
                 return true;
             }
@@ -49,8 +49,8 @@ public class JClientUtils {
         return false;
     }
 
-    public static boolean isInTSRange(BlockPos pos) {
-        for (DimensionData timeStop : activeTimestops) {
+    public static boolean isInTSRange(final BlockPos pos) {
+        for (final DimensionData timeStop : activeTimestops) {
             if (timeStop != null && timeStop.pos.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return true;
             }
@@ -58,8 +58,8 @@ public class JClientUtils {
         return false;
     }
 
-    public static int getTicksIfInTSRange(BlockPos pos) {
-        for (DimensionData timeStop : activeTimestops) {
+    public static int getTicksIfInTSRange(final BlockPos pos) {
+        for (final DimensionData timeStop : activeTimestops) {
             if (timeStop != null && timeStop.pos.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return timeStop.timer;
             }
@@ -68,23 +68,23 @@ public class JClientUtils {
     }
 
     // Torso/Head rotation for stands
-    public static void animateGenericHumanoid(StandEntityModel<?> model, StandEntity<?, ?> entity, LivingEntity player, float partialTick) {
+    public static void animateGenericHumanoid(final StandEntityModel<?> model, final StandEntity<?, ?> entity, final LivingEntity player, final float partialTick) {
         animateGenericHumanoid(model, entity, player, partialTick, false, false);
     }
 
-    public static void animateGenericHumanoid(StandEntityModel<?> model, StandEntity<?, ?> entity, LivingEntity player, float partialTick, boolean flipBody, boolean flipHead) {
+    public static void animateGenericHumanoid(final StandEntityModel<?> model, final StandEntity<?, ?> entity, final LivingEntity player, final float partialTick, final boolean flipBody, final boolean flipHead) {
         animateGenericHumanoid(model, entity, player, partialTick, flipBody, flipHead, 0, 0, 90f);
     }
 
-    public static void animateGenericHumanoid(StandEntityModel<?> model, StandEntity<?, ?> entity, LivingEntity player, float partialTick, boolean flipBody, boolean flipHead, float tPO, float hPO) {
+    public static void animateGenericHumanoid(final StandEntityModel<?> model, final StandEntity<?, ?> entity, final LivingEntity player, final float partialTick, final boolean flipBody, final boolean flipHead, final float tPO, final float hPO) {
         animateGenericHumanoid(model, entity, player, partialTick, flipBody, flipHead, tPO, hPO, 90f);
     }
 
     // basically, unless the animation specifies every rotation, said rotations will persist through each model.
-    public static void animateGenericHumanoid(StandEntityModel<?> model, StandEntity<?, ?> entity, LivingEntity player, float partialTick, boolean flipBody, boolean flipHead, float tPO, float hPO, float velInfluence) {
+    public static void animateGenericHumanoid(final StandEntityModel<?> model, final StandEntity<?, ?> entity, final LivingEntity player, final float partialTick, final boolean flipBody, final boolean flipHead, final float tPO, final float hPO, float velInfluence) {
         float overVel = 0;
 
-        AnimationProcessor<?> animationProcessor = model.getAnimationProcessor();
+        final AnimationProcessor<?> animationProcessor = model.getAnimationProcessor();
 
         if (entity.getMoveStun() < 1) {
             Vec3 playerVel = (entity.isRemote() && !entity.remoteControllable()) ? entity.getDeltaMovement() : deltaPos(player);
@@ -109,7 +109,7 @@ public class JClientUtils {
 
         if (entity.isBlocking() || entity.isIdle()) {
             // Look up/down, same as the stand user
-            CoreGeoBone head = animationProcessor.getBone("head");
+            final CoreGeoBone head = animationProcessor.getBone("head");
             if (head != null) {
                 //model.prevHeadPitch = head.getRotX();
                 float headPitch = (player.getXRot() - overVel * velInfluence) * 3.1415f / 180f;
@@ -119,7 +119,7 @@ public class JClientUtils {
         } else if (entity.getMoveStun() > 0) { // if doing something
             if (entity.shouldOffsetHeight()) {
                 // Turn entire stand up/down
-                CoreGeoBone base = animationProcessor.getBone("base");
+                final CoreGeoBone base = animationProcessor.getBone("base");
                 if (base != null) {
                     //model.prevBasePitch = base.getRotX();
                     float torsoPitch = (player.getXRot() * 0.9f) * 3.1415f / 180f;
@@ -130,29 +130,29 @@ public class JClientUtils {
     }
 
     public static boolean shouldForceRender(Entity entity) {
-        if (entity instanceof D4CEntity d4c && d4c.getState() == D4CEntity.State.FLAG ||
-                entity instanceof KingCrimsonEntity kc && kc.getTETime() > 0 && kc.getUser() == Minecraft.getInstance().player) {
+        if (entity instanceof final D4CEntity d4c && d4c.getState() == D4CEntity.State.FLAG ||
+                entity instanceof final KingCrimsonEntity kc && kc.getTETime() > 0 && kc.getUser() == Minecraft.getInstance().player) {
             return true;
         }
-        return entity instanceof CreamEntity cream && cream.isHalfBall();
+        return entity instanceof final CreamEntity cream && cream.isHalfBall();
     }
 
     public static boolean shouldNotRender(Entity entity) {
-        Entity passenger = entity.getFirstPassenger();
-        return passenger instanceof KingCrimsonEntity kc && kc.getTETime() > 0 ||
-                passenger instanceof D4CEntity d4c && d4c.getState() == D4CEntity.State.FLAG ||
-                passenger instanceof CreamEntity cream && cream.isHalfBall() ||
-                passenger instanceof MetallicaEntity metallica && metallica.isInvisible();
+        final Entity passenger = entity.getFirstPassenger();
+        return passenger instanceof final KingCrimsonEntity kc && kc.getTETime() > 0 ||
+                passenger instanceof final D4CEntity d4c && d4c.getState() == D4CEntity.State.FLAG ||
+                passenger instanceof final CreamEntity cream && cream.isHalfBall() ||
+                passenger instanceof final MetallicaEntity metallica && metallica.isInvisible();
     }
 
-    public static void resetPartAngles(ModelPart part) {
-        PartPose defaultTransform = part.getInitialPose();
+    public static void resetPartAngles(final ModelPart part) {
+        final PartPose defaultTransform = part.getInitialPose();
         part.xRot = defaultTransform.xRot;
         part.yRot = defaultTransform.yRot;
         part.zRot = defaultTransform.zRot;
     }
 
-    public static void animateHit(CommonHitPropertyComponent.HitAnimation hitAnimation, long endHitAnimTime, Vec3 randomRotation, ModelPart head, @Nullable ModelPart hat, ModelPart body, ModelPart rightArm, ModelPart leftArm, ModelPart rightLeg, ModelPart leftLeg) {
+    public static void animateHit(final CommonHitPropertyComponent.HitAnimation hitAnimation, long endHitAnimTime, final Vec3 randomRotation, final ModelPart head, final @Nullable ModelPart hat, final ModelPart body, final ModelPart rightArm, final ModelPart leftArm, final ModelPart rightLeg, final ModelPart leftLeg) {
         if (endHitAnimTime > 20L) {
             endHitAnimTime = 20L;
         }

@@ -45,7 +45,7 @@ public class CrimsonSkyBoxCool implements JSkyBox {
     }
 
     @Override
-    public void render(PoseStack matrices, Matrix4f matrix4f, float tickDelta, Camera camera, boolean thickFog) {
+    public void render(final PoseStack matrices, final Matrix4f matrix4f, final float tickDelta, final Camera camera, final boolean thickFog) {
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
 
@@ -53,12 +53,12 @@ public class CrimsonSkyBoxCool implements JSkyBox {
         RenderSystem.enableBlend();
         RenderSystem.depthMask(false);
 
-        ClientLevel world = Objects.requireNonNull(Minecraft.getInstance().level);
+        final ClientLevel world = Objects.requireNonNull(Minecraft.getInstance().level);
 
-        Vector3f rotationStatic = this.rotation.getStatic();
+        Vector3f rotationStatic = this.rotation.staticRot();
 
         matrices.pushPose();
-        double timeRotation = isShouldRotate() ? 360.0D * Mth.positiveModulo(world.dayTime() / (24000.D / this.rotation.getRotationSpeed()) + 0.75D, 1) : 0D;
+        final double timeRotation = isShouldRotate() ? 360.0D * Mth.positiveModulo(world.dayTime() / (24000.D / this.rotation.rotationSpeed()) + 0.75D, 1) : 0D;
         this.applyTimeRotation(matrices, (float) timeRotation);
         matrices.mulPose(Axis.XP.rotationDegrees(rotationStatic.x()));
         matrices.mulPose(Axis.YP.rotationDegrees(rotationStatic.y()));
@@ -75,11 +75,11 @@ public class CrimsonSkyBoxCool implements JSkyBox {
     }
 
     private void renderSkybox(PoseStack matrices, float tickDelta) {
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuilder();
+        final Tesselator tesselator = Tesselator.getInstance();
+        final BufferBuilder bufferBuilder = tesselator.getBuilder();
 
         for (int i = 0; i < 6; ++i) {
-            Textures.Texture tex = this.textures.byId(i);
+            final Textures.Texture tex = this.textures.byId(i);
             matrices.pushPose();
 
             RenderSystem.setShaderTexture(0, tex.getTextureId());
@@ -99,19 +99,19 @@ public class CrimsonSkyBoxCool implements JSkyBox {
                 matrices.mulPose(Axis.YP.rotationDegrees(90.0F));
             }
 
-            Matrix4f matrix4f = matrices.last().pose();
+            final Matrix4f matrix4f = matrices.last().pose();
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
             bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, -100.0F).uv(tex.getMinU(), tex.getMinV()).color(1f, 1f, 1f, alpha).endVertex();
             bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, 100.0F).uv(tex.getMinU(), tex.getMaxV()).color(1f, 1f, 1f, alpha).endVertex();
             bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, 100.0F).uv(tex.getMaxU(), tex.getMaxV()).color(1f, 1f, 1f, alpha).endVertex();
             bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, -100.0F).uv(tex.getMaxU(), tex.getMinV()).color(1f, 1f, 1f, alpha).endVertex();
-            tessellator.end();
+            tesselator.end();
             matrices.popPose();
         }
     }
 
     private void applyTimeRotation(PoseStack matrices, float timeRotation) {
-        Vector3f timeRotationAxis = this.rotation.getAxis();
+        Vector3f timeRotationAxis = this.rotation.axisRot();
         matrices.mulPose(Axis.XP.rotationDegrees(timeRotationAxis.x()));
         matrices.mulPose(Axis.YP.rotationDegrees(timeRotationAxis.y()));
         matrices.mulPose(Axis.ZP.rotationDegrees(timeRotationAxis.z()));

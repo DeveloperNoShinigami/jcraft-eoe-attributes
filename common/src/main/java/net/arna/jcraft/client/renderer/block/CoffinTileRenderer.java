@@ -10,12 +10,12 @@ import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.properties.BedPart;
 
 public class CoffinTileRenderer extends GeoBlockRenderer<CoffinTileEntity> {
-    public CoffinTileRenderer(BlockEntityRendererProvider.Context context) {
+    public CoffinTileRenderer(final BlockEntityRendererProvider.Context context) {
         super(new CoffinModel());
     }
 
     @Override
-    public void render(CoffinTileEntity animatable, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+    public void render(final CoffinTileEntity animatable, final float partialTick, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight, final int packedOverlay) {
         if (BedPart.HEAD == animatable.getBlockState().getValue(BedBlock.PART)) {
             return;
         }

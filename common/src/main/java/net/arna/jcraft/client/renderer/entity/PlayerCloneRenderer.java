@@ -21,22 +21,22 @@ import java.util.UUID;
 public class PlayerCloneRenderer extends HumanoidMobRenderer<PlayerCloneEntity, HumanoidModel<PlayerCloneEntity>> {
     private final PlayerRenderer parent;
 
-    public PlayerCloneRenderer(EntityRendererProvider.Context ctx, boolean slim) {
+    public PlayerCloneRenderer(final EntityRendererProvider.Context ctx, final boolean slim) {
         super(ctx, new PlayerModel<>(ctx.bakeLayer(slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), slim), 0.5f);
         parent = new PlayerRenderer(ctx, slim);
     }
 
     @Override
-    public boolean shouldRender(PlayerCloneEntity clone, Frustum frustum, double d, double e, double f) {
-        boolean s = super.shouldRender(clone, frustum, d, e, f);
+    public boolean shouldRender(final PlayerCloneEntity clone, final Frustum frustum, final double d, final double e, final double f) {
+        final boolean s = super.shouldRender(clone, frustum, d, e, f);
 
         if (clone.shouldRenderForMaster()) {
             return s;
         }
 
-        LocalPlayer player = Minecraft.getInstance().player;
+        final LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            UUID masterId = clone.getMasterId();
+            final UUID masterId = clone.getMasterId();
             if (masterId == null) {
                 return s;
             }
@@ -46,8 +46,8 @@ public class PlayerCloneRenderer extends HumanoidMobRenderer<PlayerCloneEntity, 
     }
 
     @Override
-    public void render(PlayerCloneEntity clone, float f, float g, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i) {
-        PlayerCloneClientPlayerEntity clonePlayer = CloneSkinTracker.toPlayer(clone);
+    public void render(final PlayerCloneEntity clone, final float f, final float g, final PoseStack matrixStack, final MultiBufferSource vertexConsumerProvider, final int i) {
+        final PlayerCloneClientPlayerEntity clonePlayer = CloneSkinTracker.toPlayer(clone);
         if (clonePlayer == null) {
             return;
         }
@@ -55,7 +55,7 @@ public class PlayerCloneRenderer extends HumanoidMobRenderer<PlayerCloneEntity, 
     }
 
     @Override
-    public ResourceLocation getTextureLocation(PlayerCloneEntity entity) {
+    public ResourceLocation getTextureLocation(final PlayerCloneEntity entity) {
         return CloneSkinTracker.getSkinFor(entity, MinecraftProfileTexture.Type.SKIN);
     }
 }

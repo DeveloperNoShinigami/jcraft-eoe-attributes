@@ -5,20 +5,19 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.GETreeEntity;
 import net.minecraft.resources.ResourceLocation;
 
-
 public class GETreeModel extends GeoModel<GETreeEntity> {
     @Override
-    public ResourceLocation getModelResource(GETreeEntity object) {
+    public ResourceLocation getModelResource(final GETreeEntity object) {
         return JCraft.id("geo/getree.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(GETreeEntity object) {
+    public ResourceLocation getTextureResource(final GETreeEntity object) {
         return JCraft.id("textures/entity/getree.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(GETreeEntity animatable) {
+    public ResourceLocation getAnimationResource(final GETreeEntity animatable) {
         return JCraft.id("animations/getree.animation.json");
     }
 

@@ -15,15 +15,15 @@ public abstract class AbstractEffectInflictingBarrageAttack<T extends AbstractEf
         extends AbstractBarrageAttack<T, A> {
     private final List<MobEffectInstance> effects = new ArrayList<>();
 
-    protected AbstractEffectInflictingBarrageAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                                                    float hitboxSize, float knockback, float offset, int interval,
-                                                    @NonNull List<MobEffectInstance> effects) {
+    protected AbstractEffectInflictingBarrageAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                                                    final float hitboxSize, final float knockback, final float offset, final int interval,
+                                                    final @NonNull List<MobEffectInstance> effects) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval);
         this.effects.addAll(effects);
     }
 
     @Override
-    protected void processTarget(A attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
+    protected void processTarget(final A attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         AbstractEffectInflictingAttack.inflictEffects(target, effects, getBlockableType().isNonBlockableEffects());

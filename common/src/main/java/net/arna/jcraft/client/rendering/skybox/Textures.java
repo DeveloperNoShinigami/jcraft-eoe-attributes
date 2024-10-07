@@ -16,7 +16,7 @@ public class Textures {
         this.textureList.add(west);
     }
 
-    public Texture byId(int i) {
+    public Texture byId(final int i) {
         return this.textureList.get(i);
     }
 

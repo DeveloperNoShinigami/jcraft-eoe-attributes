@@ -8,7 +8,7 @@ import net.minecraft.client.particle.SpriteSet;
 public class JGlowingParticle extends RisingParticle {
     protected final SpriteSet spriteProvider;
 
-    JGlowingParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider) {
+    JGlowingParticle(final ClientLevel world, final double x, final double y, final double z, final double velocityX, final double velocityY, final double velocityZ, final SpriteSet spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
         this.spriteProvider = spriteProvider;
         initialize();

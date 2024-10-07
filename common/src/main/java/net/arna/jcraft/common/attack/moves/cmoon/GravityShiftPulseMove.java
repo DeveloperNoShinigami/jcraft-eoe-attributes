@@ -9,12 +9,12 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class GravityShiftPulseMove extends AbstractMove<GravityShiftPulseMove, CMoonEntity> {
-    public GravityShiftPulseMove(int cooldown, int windup, int duration, float moveDistance) {
+    public GravityShiftPulseMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(CMoonEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final CMoonEntity attacker, final LivingEntity user, final MoveContext ctx) {
         JComponentPlatformUtils.getGravityShift(user).startDirectional();
         return Set.of();
     }

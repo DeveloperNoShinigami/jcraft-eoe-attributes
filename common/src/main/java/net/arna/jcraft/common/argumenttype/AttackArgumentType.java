@@ -26,10 +26,10 @@ public class AttackArgumentType implements ArgumentType<MoveType> {
     private final Collection<String> examples = ImmutableList.of("RANDOM", "LIGHT", "BARRAGE", "UTILITY");
 
     @Override
-    public MoveType parse(StringReader reader) throws CommandSyntaxException {
-        String name = reader.readUnquotedString();
+    public MoveType parse(final StringReader reader) throws CommandSyntaxException {
+        final String name = reader.readUnquotedString();
 
-        if (Objects.equals(name.toUpperCase(Locale.ROOT), "RANDOM")) {
+        if ("RANDOM".equals(name.toUpperCase(Locale.ROOT))) {
             return MoveType.randomMoveType();
         }
         try {
@@ -40,8 +40,8 @@ public class AttackArgumentType implements ArgumentType<MoveType> {
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        String input = builder.getRemainingLowerCase().replaceAll("_", "");
+    public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
+        final String input = builder.getRemainingLowerCase().replaceAll("_", "");
         suggestions.entrySet().stream()
                 .filter(e -> e.getKey().startsWith(input))
                 .map(Map.Entry::getValue)

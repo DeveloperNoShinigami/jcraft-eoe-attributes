@@ -17,13 +17,13 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 
 public class MagiciansRedRenderer extends StandEntityRenderer<MagiciansRedEntity> {
-    public MagiciansRedRenderer(EntityRendererProvider.Context context) {
+    public MagiciansRedRenderer(final EntityRendererProvider.Context context) {
         super(context, new MagiciansRedModel());
         addRenderLayer(new MRGlowLayer(this));
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, MagiciansRedEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(final PoseStack poseStack, final MagiciansRedEntity animatable, final BakedGeoModel model, final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, StandEntityRenderer.getAlpha(animatable, partialTick));
         // todo: try to replace this with a particle keyframe
         if (animatable.getState() == MagiciansRedEntity.State.RED_BIND) {
@@ -31,8 +31,8 @@ public class MagiciansRedRenderer extends StandEntityRenderer<MagiciansRedEntity
                 return;
             }
             model.getBone("rope3").ifPresent(bone -> {
-                Vector3d localPos = bone.getLocalPosition();
-                Vec3 worldPos = RotationUtil.vecWorldToPlayer(localPos.x, localPos.y, localPos.z, GravityChangerAPI.getGravityDirection(animatable)).add(animatable.position());
+                final Vector3d localPos = bone.getLocalPosition();
+                final Vec3 worldPos = RotationUtil.vecWorldToPlayer(localPos.x, localPos.y, localPos.z, GravityChangerAPI.getGravityDirection(animatable)).add(animatable.position());
 
                 animatable.getCommandSenderWorld().addParticle(ParticleTypes.FLAME,
                         worldPos.x, worldPos.y, worldPos.z,

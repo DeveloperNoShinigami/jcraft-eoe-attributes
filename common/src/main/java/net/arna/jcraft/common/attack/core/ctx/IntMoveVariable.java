@@ -20,12 +20,12 @@ public class IntMoveVariable extends MoveVariable<Integer> {
             super(int.class);
         }
 
-        public void setValue(int value) {
+        public void setValue(final int value) {
             super.setValue(this.intValue = value);
         }
 
         @Override
-        public void setValue(Integer value) {
+        public void setValue(final Integer value) {
             setValue(value.intValue());
         }
 

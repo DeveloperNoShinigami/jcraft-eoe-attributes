@@ -28,12 +28,12 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
     public static final MoveVariable<List<ReturnData>> RETURN_INFO = new MoveVariable<>(new TypeToken<>() {
     });
 
-    public ReturnToZeroMove(int cooldown, int windup, int duration, float moveDistance) {
+    public ReturnToZeroMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(GEREntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final GEREntity attacker, final LivingEntity user, final MoveContext ctx) {
         final List<Entity> toReturn = attacker.level().getEntitiesOfClass(Entity.class, attacker.getBoundingBox().inflate(64),
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != user));
 
@@ -50,7 +50,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
         return Set.of();
     }
 
-    public void returnToZero(GEREntity attacker) {
+    public void returnToZero(final GEREntity attacker) {
         final MoveContext ctx = attacker.getMoveContext();
         final Map<Entity, CompoundTag> entityData = ctx.get(ENTITY_DATA);
         final List<ReturnData> returnInfo = ctx.get(RETURN_INFO);
@@ -81,7 +81,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
         attacker.playSound(JSoundRegistry.GER_RTZ.get(), 1, 1);
     }
 
-    public void tickReturnInfo(GEREntity attacker) {
+    public void tickReturnInfo(final GEREntity attacker) {
         if (!(attacker.getUser() instanceof ServerPlayer serverPlayer)) {
             return;
         }
@@ -105,7 +105,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(ENTITY_DATA, new WeakHashMap<>());
         ctx.register(RETURN_INFO, new ArrayList<>());
     }

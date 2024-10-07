@@ -9,12 +9,12 @@ public class StarPlatinumModel extends StandEntityModel<AbstractStarPlatinumEnti
     //EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
     private static final ResourceLocation MODEL = JCraft.id("geo/star_platinum.geo.json");
 
-    public StarPlatinumModel(boolean theWorld) {
+    public StarPlatinumModel(final boolean theWorld) {
         super(theWorld ? StandType.STAR_PLATINUM_THE_WORLD : StandType.STAR_PLATINUM);
     }
 
     @Override
-    public ResourceLocation getModelResource(AbstractStarPlatinumEntity<?, ?> object) {
+    public ResourceLocation getModelResource(final AbstractStarPlatinumEntity<?, ?> object) {
         return MODEL;
     }
 }

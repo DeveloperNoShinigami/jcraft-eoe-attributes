@@ -30,14 +30,14 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
 
     private final ManagedShaderEffect SHADER = ShaderEffectManager.getInstance().manage(SHADER_ID, this::setup);
 
-    private void setup(ManagedShaderEffect managedShaderEffect) {
+    private void setup(final ManagedShaderEffect managedShaderEffect) {
         Minecraft mc = Minecraft.getInstance();
         SHADER.setSamplerUniform("DepthSampler", ((ReadableDepthFramebuffer) mc.getMainRenderTarget()).getStillDepthMap());
         SHADER.setUniformValue("ViewPort", 0, 0, mc.getWindow().getWidth(), mc.getWindow().getHeight());
     }
 
     @Override
-    public void onWorldRendered(@NotNull PoseStack matrices, @NotNull Camera camera, float tickDelta, long nanoTime) {
+    public void onWorldRendered(final @NotNull PoseStack matrices, final @NotNull Camera camera, final float tickDelta, final long nanoTime) {
         if (renderingEffect) {
             SHADER.setUniformValue("InverseTransformMatrix", GlMatrices.getInverseTransformMatrix(projectionMatrix));
             Vec3 cameraPos = camera.getPosition();
@@ -56,7 +56,7 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void tick(Minecraft client) {
+    public void tick(final Minecraft client) {
 
        if (shouldRender) {
             if (!renderingEffect) {
@@ -85,7 +85,7 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
         }
     }
 
-    private float lerp(double n, double prevN, float tickDelta) {
+    private float lerp(final double n, final double prevN, final float tickDelta) {
         return (float) Mth.lerp(tickDelta, prevN, n);
     }
 
@@ -100,7 +100,7 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void renderShaderEffects(float tickDelta) {
+    public void renderShaderEffects(final float tickDelta) {
         if (this.renderingEffect) {
             SHADER.render(tickDelta);
         }

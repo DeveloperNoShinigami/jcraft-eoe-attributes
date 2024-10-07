@@ -53,25 +53,25 @@ public class HUDAnimation {
     @Getter(lazy = true)
     private final int frameCount = frames.size();
 
-    public static HUDAnimation create(ResourceLocation atlas, ResourceLocation atlasData) {
-        Optional<Resource> dataRes = Minecraft.getInstance().getResourceManager().getResource(atlasData);
+    public static HUDAnimation create(final ResourceLocation atlas, final ResourceLocation atlasData) {
+        final Optional<Resource> dataRes = Minecraft.getInstance().getResourceManager().getResource(atlasData);
         if (dataRes.isEmpty()) {
             throw new IllegalArgumentException("Atlas data not found.");
         }
 
-        JsonObject data;
+        final JsonObject data;
         try (BufferedReader reader = dataRes.get().openAsReader()) {
             data = new Gson().fromJson(reader, JsonObject.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("Could not read atlas data.");
         }
 
-        JsonArray framesData = data.getAsJsonArray("frames");
-        JsonObject sizeData = data.getAsJsonObject("meta").getAsJsonObject("size");
+        final JsonArray framesData = data.getAsJsonArray("frames");
+        final JsonObject sizeData = data.getAsJsonObject("meta").getAsJsonObject("size");
 
-        int atlasWidth = sizeData.get("w").getAsInt();
-        int atlasHeight = sizeData.get("h").getAsInt();
-        List<Frame> frames = StreamSupport.stream(framesData.spliterator(), false)
+        final int atlasWidth = sizeData.get("w").getAsInt();
+        final int atlasHeight = sizeData.get("h").getAsInt();
+        final List<Frame> frames = StreamSupport.stream(framesData.spliterator(), false)
                 .peek(HUDAnimation::validateFrame)
                 .map(frame -> Frame.parse(frame.getAsJsonObject(), atlas, atlasWidth, atlasHeight))
                 .sorted(Comparator.comparingInt(Frame::getIndex))
@@ -85,7 +85,7 @@ public class HUDAnimation {
             throw new IllegalArgumentException("Frame in atlas data is not an object");
         }
 
-        JsonObject frameObj = frame.getAsJsonObject();
+        final JsonObject frameObj = frame.getAsJsonObject();
         if (!FILE_NAME_PATTERN.asMatchPredicate().test(frameObj.get("filename").getAsString())) {
             throw new IllegalArgumentException("Frame in atlas data has invalid filename (must be of format 'frame<i>' where <i> is a 1-based index.");
         }

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.RenderStateShard;
 
 public class Phases extends RenderStateShard {
-    public Phases(String string, Runnable runnable, Runnable runnable2) {
+    public Phases(final String string, final Runnable runnable, final Runnable runnable2) {
         super(string, runnable, runnable2);
     }
 

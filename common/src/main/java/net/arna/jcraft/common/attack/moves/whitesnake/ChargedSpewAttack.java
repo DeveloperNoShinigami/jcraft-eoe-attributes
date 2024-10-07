@@ -14,14 +14,14 @@ import net.minecraft.world.phys.Vec2;
 import java.util.Set;
 
 public final class ChargedSpewAttack extends AbstractSimpleAttack<ChargedSpewAttack, WhiteSnakeEntity> {
-    public ChargedSpewAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                             float hitboxSize, float knockback, float offset) {
+    public ChargedSpewAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                             final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         this.ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(WhiteSnakeEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         final Direction gravity = GravityChangerAPI.getGravityDirection(user);

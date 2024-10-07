@@ -11,8 +11,8 @@ public final class LungeAttack extends AbstractSimpleAttack<LungeAttack, StandEn
     private final int beginMoveStun;
     private final int endMoveStun;
 
-    public LungeAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                       float hitboxSize, float knockback, float offset, int beginMoveStun, int endMoveStun) {
+    public LungeAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                       final float hitboxSize, final float knockback, final float offset, final int beginMoveStun, final int endMoveStun) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         originalMoveDistance = moveDistance;
         this.beginMoveStun = beginMoveStun;
@@ -22,7 +22,7 @@ public final class LungeAttack extends AbstractSimpleAttack<LungeAttack, StandEn
     }
 
     @Override
-    public void onInitiate(StandEntity<?,?> attacker) {
+    public void onInitiate(final StandEntity<?,?> attacker) {
         super.onInitiate(attacker);
 
         // Reset move distance
@@ -30,14 +30,14 @@ public final class LungeAttack extends AbstractSimpleAttack<LungeAttack, StandEn
     }
 
     @Override
-    public void tick(StandEntity<?,?> attacker, int moveStun) {
+    public void tick(final StandEntity<?,?> attacker, final int moveStun) {
         super.tick(attacker, moveStun);
         if (moveStun > endMoveStun && moveStun <= beginMoveStun) {
             withMoveDistance(getMoveDistance() + 0.15f);
         }
     }
 
-    public LungeAttack withCrouchingVariant(KnockdownAttack<? extends StandEntity<?,?>> crouchingVariant) {
+    public LungeAttack withCrouchingVariant(final KnockdownAttack<? extends StandEntity<?,?>> crouchingVariant) {
         return super.withCrouchingVariant((AbstractMove<?, ? super StandEntity<?, ?>>)crouchingVariant);
     }
 

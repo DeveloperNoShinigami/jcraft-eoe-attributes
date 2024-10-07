@@ -20,28 +20,28 @@ import javax.annotation.Nullable;
 public class GESnakeRenderer extends DynamicGeoEntityRenderer<GESnakeEntity> {
     protected ItemStack mainHandItem;
 
-    public GESnakeRenderer(EntityRendererProvider.Context renderManager) {
+    public GESnakeRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new GESnakeModel());
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
 
             @Nullable
             @Override
-            protected ItemStack getStackForBone(GeoBone bone, GESnakeEntity animatable) {
+            protected ItemStack getStackForBone(final GeoBone bone, final GESnakeEntity animatable) {
                 // Retrieve the items in the entity's hands for the relevant bone
-                if (bone.getName() == "body") return GESnakeRenderer.this.mainHandItem;
+                if ("body".equals(bone.getName())) return GESnakeRenderer.this.mainHandItem;
                 return null;
             }
 
             @Override
-            protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, GESnakeEntity animatable) {
+            protected ItemDisplayContext getTransformTypeForStack(final GeoBone bone, final ItemStack stack, final GESnakeEntity animatable) {
                 // Apply the camera transform for the given hand
                 return ItemDisplayContext.NONE;
             }
 
             // Do some quick render modifications depending on what the item is
             @Override
-            protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, GESnakeEntity animatable,
-                                              MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
+            protected void renderStackForBone(final PoseStack poseStack, final GeoBone bone, final ItemStack stack, final GESnakeEntity animatable,
+                                              final MultiBufferSource bufferSource, final float partialTick, final int packedLight, final int packedOverlay) {
 
                 if (stack == GESnakeRenderer.this.mainHandItem) {
                     poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
@@ -57,7 +57,7 @@ public class GESnakeRenderer extends DynamicGeoEntityRenderer<GESnakeEntity> {
     }
 
     @Override
-    public void preRender(PoseStack poseStack, GESnakeEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(final PoseStack poseStack, final GESnakeEntity animatable, final BakedGeoModel model, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
         this.mainHandItem = animatable.getItemBySlot(EquipmentSlot.MAINHAND);
     }

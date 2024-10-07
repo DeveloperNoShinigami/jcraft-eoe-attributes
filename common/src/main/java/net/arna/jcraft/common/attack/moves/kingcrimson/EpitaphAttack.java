@@ -17,19 +17,19 @@ import net.minecraft.world.phys.Vec3;
 public final class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, KingCrimsonEntity> {
     private final CounterMissMove<KingCrimsonEntity> counterMiss = new CounterMissMove<>(20);
 
-    public EpitaphAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public EpitaphAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public void whiff(@NonNull KingCrimsonEntity attacker, @NonNull LivingEntity user) {
+    public void whiff(final @NonNull KingCrimsonEntity attacker, final @NonNull LivingEntity user) {
         attacker.setMove(counterMiss, KingCrimsonEntity.State.COUNTER_MISS);
         JCraft.stun(user, counterMiss.getDuration(), 0);
         attacker.playSound(JSoundRegistry.KC_RAGE.get(), 1, 1);
     }
 
     @Override
-    public void counter(@NonNull KingCrimsonEntity attacker, Entity countered, DamageSource counteredDamageSource) {
+    public void counter(final @NonNull KingCrimsonEntity attacker, final Entity countered, final DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
 
         if (countered == null) {

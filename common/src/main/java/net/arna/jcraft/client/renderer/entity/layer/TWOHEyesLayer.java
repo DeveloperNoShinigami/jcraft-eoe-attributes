@@ -28,15 +28,15 @@ public class TWOHEyesLayer extends GeoRenderLayer<TheWorldOverHeavenEntity> {
                     Map.entry(4, new Vector3f(1f, 0.8f, 0)) // Heavy, YELLOW
             );
 
-    public TWOHEyesLayer(GeoRenderer<TheWorldOverHeavenEntity> entityRendererIn) {
+    public TWOHEyesLayer(final GeoRenderer<TheWorldOverHeavenEntity> entityRendererIn) {
         super(entityRendererIn);
     }
 
     @Override
-    public void render(PoseStack poseStack, TheWorldOverHeavenEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
-                       MultiBufferSource bufferSource, VertexConsumer bufferIn, float partialTick, int packedLight, int packedOverlay) {
-        Vector3f color = overwriteColors.get(animatable.getOverwriteType());
-        RenderType cameo = RenderType.eyes(LAYER);
+    public void render(final PoseStack poseStack, final TheWorldOverHeavenEntity animatable, final BakedGeoModel bakedModel, final RenderType renderType,
+                       final MultiBufferSource bufferSource, final VertexConsumer bufferIn, final float partialTick, final int packedLight, final int packedOverlay) {
+        final Vector3f color = overwriteColors.get(animatable.getOverwriteType());
+        final RenderType cameo = RenderType.eyes(LAYER);
 
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
                 bufferSource.getBuffer(cameo), partialTick, 15728640, OverlayTexture.NO_OVERLAY, color.x(), color.y(), color.z(), 1f);

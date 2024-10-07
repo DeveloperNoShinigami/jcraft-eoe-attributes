@@ -9,13 +9,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class CrossfireAttack extends AbstractMove<CrossfireAttack, MagiciansRedEntity> {
-    public CrossfireAttack(int cooldown, int windup, int duration, float attackDistance) {
+    public CrossfireAttack(final int cooldown, final int windup, final int duration, final float attackDistance) {
         super(cooldown, windup, duration, attackDistance);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user, final MoveContext ctx) {
         for (int i = 0; i < 3; i++) {
             final AnkhProjectile ankh = new AnkhProjectile(attacker.level(), user);
             ankh.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, 1F, 5F);

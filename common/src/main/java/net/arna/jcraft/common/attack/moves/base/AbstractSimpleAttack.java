@@ -60,8 +60,8 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     private BlockableType blockableType = BlockableType.BLOCKABLE;
     protected @Nullable JParticleType hitSpark = JParticleType.HIT_SPARK_1;
 
-    protected AbstractSimpleAttack(int cooldown, int windup, int duration, float moveDistance, float damage,
-                                   int stun, float hitboxSize, float knockback, float offset) {
+    protected AbstractSimpleAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage,
+                                   final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance);
         this.damage = damage;
         this.stun = stun;
@@ -79,7 +79,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param damage The damage of this attack
      * @return This attack
      */
-    public T withDamage(float damage) {
+    public T withDamage(final float damage) {
         this.damage = damage;
         return getThis();
     }
@@ -91,7 +91,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param hitboxSize The hitbox size of this attack
      * @return This attack
      */
-    public T withHitboxSize(float hitboxSize) {
+    public T withHitboxSize(final float hitboxSize) {
         this.hitboxSize = hitboxSize;
         return getThis();
     }
@@ -103,7 +103,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param knockback The knockback of this attack
      * @return This attack
      */
-    public T withKnockback(float knockback) {
+    public T withKnockback(final float knockback) {
         this.knockback = knockback;
         return getThis();
     }
@@ -115,7 +115,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param offset The offset of this attack
      * @return This attack
      */
-    public T withOffset(float offset) {
+    public T withOffset(final float offset) {
         this.offset = offset;
         return getThis();
     }
@@ -127,7 +127,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param stun The stun of this attack
      * @return This attack
      */
-    public T withStun(int stun) {
+    public T withStun(final int stun) {
         this.stun = stun;
         return getThis();
     }
@@ -138,7 +138,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param type The type of stun to apply
      * @return This attack
      */
-    public T withStunType(StunType type) {
+    public T withStunType(final StunType type) {
         this.stunType = type;
         return getThis();
     }
@@ -160,7 +160,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      *
      * @return This attack
      */
-    public T withOverrideStun(boolean overrideStun) {
+    public T withOverrideStun(final boolean overrideStun) {
         this.overrideStun = overrideStun;
         return getThis();
     }
@@ -172,7 +172,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param lift The new value of {@code lift}
      * @return This attack
      */
-    public T withLift(boolean lift) {
+    public T withLift(final boolean lift) {
         this.lift = lift;
         return getThis();
     }
@@ -184,7 +184,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param canBackstab Whether the attack can backstab
      * @return This attack
      */
-    public T withBackstab(boolean canBackstab) {
+    public T withBackstab(final boolean canBackstab) {
         this.canBackstab = canBackstab;
         return getThis();
     }
@@ -197,7 +197,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param blockStun The number of ticks to stun for
      * @return This attack
      */
-    public T withBlockStun(int blockStun) {
+    public T withBlockStun(final int blockStun) {
         this.blockStun = blockStun;
         return getThis();
     }
@@ -213,7 +213,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
         return withStaticY(true);
     }
 
-    public T withStaticY(boolean staticHeight) {
+    public T withStaticY(final boolean staticHeight) {
         this.staticY = staticHeight;
         return getThis();
     }
@@ -225,7 +225,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param blockableType The new blockable type
      * @return This attack
      */
-    public T withBlockableType(@NonNull BlockableType blockableType) {
+    public T withBlockableType(final @NonNull BlockableType blockableType) {
         this.blockableType = blockableType;
         return getThis();
     }
@@ -235,7 +235,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      *
      * @return This attack
      */
-    public T withHitAnimation(CommonHitPropertyComponent.HitAnimation hitAnimation) {
+    public T withHitAnimation(final CommonHitPropertyComponent.HitAnimation hitAnimation) {
         this.hitAnimation = hitAnimation;
         return getThis();
     }
@@ -248,7 +248,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @return This attack
      * @see #withExtraHitBox(double, double, double)
      */
-    public T withExtraHitBox(double size) {
+    public T withExtraHitBox(final double size) {
         return withExtraHitBox(new HitBoxData(size));
     }
 
@@ -261,7 +261,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param size           The size of the hitbox
      * @return This attack
      */
-    public T withExtraHitBox(double forwardOffset, double verticalOffset, double size) {
+    public T withExtraHitBox(final double forwardOffset, final double verticalOffset, final double size) {
         return withExtraHitBox(new HitBoxData(forwardOffset, verticalOffset, size));
     }
 
@@ -271,7 +271,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param hitBox The hitbox to add
      * @return This attack
      */
-    public T withExtraHitBox(HitBoxData hitBox) {
+    public T withExtraHitBox(final HitBoxData hitBox) {
         extraHitBoxes.add(hitBox);
         return getThis();
     }
@@ -310,7 +310,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param particle The hit spark particle to use
      * @return This attack
      */
-    public T withHitSpark(JParticleType particle) {
+    public T withHitSpark(final JParticleType particle) {
         hitSpark = particle;
         return getThis();
     }
@@ -321,7 +321,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param targetProcessor The target processor to add
      * @return This attack
      */
-    public T withTargetProcessor(TargetProcessor<? super A> targetProcessor) {
+    public T withTargetProcessor(final TargetProcessor<? super A> targetProcessor) {
         targetProcessors.add(targetProcessor);
         return getThis();
     }
@@ -332,7 +332,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param targetProcessor The target processor to add
      * @return This attack
      */
-    public T withTargetPostProcessor(TargetProcessor<? super A> targetProcessor) {
+    public T withTargetPostProcessor(final TargetProcessor<? super A> targetProcessor) {
         targetPostProcessors.add(targetProcessor);
         return getThis();
     }
@@ -342,15 +342,15 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     }
 
     // Utility methods
-    public static AABB createBox(Vec3 center, double size) {
+    public static AABB createBox(final Vec3 center, final double size) {
         double axisSize = size / 2;
 
-        Vec3 min = center.subtract(axisSize, axisSize, axisSize);
-        Vec3 max = center.add(axisSize, axisSize, axisSize);
+        final Vec3 min = center.subtract(axisSize, axisSize, axisSize);
+        final Vec3 max = center.add(axisSize, axisSize, axisSize);
         return new AABB(min, max);
     }
 
-    public static AABB createBox(Vec3 offsetHeightPos, Vec3 rotVec, Vec3 upVec, HitBoxData data) {
+    public static AABB createBox(final Vec3 offsetHeightPos, final Vec3 rotVec, final Vec3 upVec, final HitBoxData data) {
         return createBox(offsetHeightPos.add(rotVec.scale(data.forwardOffset()))
                 .add(upVec.scale(data.verticalOffset())), data.size());
     }
@@ -366,7 +366,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param damageSource The damage source to check for
      * @return All found valid targets
      */
-    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, Vec3 boxCenter, double boxSize, @Nullable DamageSource damageSource) {
+    public static Set<LivingEntity> findHits(final IAttacker<?, ?> attacker, final Vec3 boxCenter, final double boxSize, final @Nullable DamageSource damageSource) {
         return findHits(attacker, createBox(boxCenter, boxSize), damageSource);
     }
 
@@ -380,7 +380,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param damageSource The damage source to check for
      * @return All found valid targets
      */
-    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, AABB box, @Nullable DamageSource damageSource) {
+    public static Set<LivingEntity> findHits(final IAttacker<?, ?> attacker, final AABB box, final @Nullable DamageSource damageSource) {
         return findHits(attacker, Set.of(box), damageSource);
     }
 
@@ -394,7 +394,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param damageSource The damage source to check for
      * @return All found valid targets
      */
-    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, Set<AABB> boxes, @Nullable DamageSource damageSource) {
+    public static Set<LivingEntity> findHits(final IAttacker<?, ?> attacker, final Set<AABB> boxes, final @Nullable DamageSource damageSource) {
         return findHits(attacker, boxes, damageSource, LivingEntity.class);
     }
 
@@ -409,8 +409,8 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param mayHitUser   Whether the user of the attacker can be hit
      * @return All found valid targets
      */
-    public static Set<LivingEntity> findHits(IAttacker<?, ?> attacker, Set<AABB> boxes, @Nullable DamageSource damageSource,
-                                             boolean mayHitUser) {
+    public static Set<LivingEntity> findHits(final IAttacker<?, ?> attacker, final Set<AABB> boxes, final @Nullable DamageSource damageSource,
+                                             final boolean mayHitUser) {
         return findHits(attacker, boxes, damageSource, LivingEntity.class, mayHitUser);
     }
 
@@ -426,8 +426,8 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param type         The type of entities to look for
      * @return All found valid targets
      */
-    public static <T extends Entity> @NonNull Set<T> findHits(IAttacker<?, ?> attacker, @NonNull Set<AABB> boxes,
-                                                              @Nullable DamageSource damageSource, Class<T> type) {
+    public static <T extends Entity> @NonNull Set<T> findHits(final IAttacker<?, ?> attacker, final @NonNull Set<AABB> boxes,
+                                                              final @Nullable DamageSource damageSource, final Class<T> type) {
         return findHits(attacker, boxes, damageSource, type, false);
     }
 
@@ -443,8 +443,8 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param mayHitUser   Whether the user of the attacker can be hit
      * @return All found valid targets
      */
-    public static <T extends Entity> @NonNull Set<T> findHits(IAttacker<?, ?> attacker, @NonNull Set<AABB> boxes,
-                                                              @Nullable DamageSource damageSource, Class<T> type, boolean mayHitUser) {
+    public static <T extends Entity> @NonNull Set<T> findHits(final IAttacker<?, ?> attacker, final @NonNull Set<AABB> boxes,
+                                                              final @Nullable DamageSource damageSource, final Class<T> type, final boolean mayHitUser) {
         LivingEntity user = attacker.getUser();
         return boxes.stream()
                 .flatMap(box -> attacker.getEntityWorld().getEntitiesOfClass(type, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e ->
@@ -464,26 +464,26 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     // Logic methods
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         Vec3 userRotVec = user.getLookAngle();
-        Direction gravDir = GravityChangerAPI.getGravityDirection(user);
+        final Direction gravDir = GravityChangerAPI.getGravityDirection(user);
         if (gravDir == Direction.UP) {
             userRotVec = new Vec3(userRotVec.x, -userRotVec.y, userRotVec.z);
         }
 
-        Vec3 hPos = getOffsetHeightPos(attacker);
+        final Vec3 hPos = getOffsetHeightPos(attacker);
         Vec3 rotVec = (staticY || attacker.isRemote()) ? getRotVec(attacker) : userRotVec;
-        Vec3 upVec = new Vec3(gravDir.step()).scale(-1.0);
+        final Vec3 upVec = new Vec3(gravDir.step()).scale(-1.0);
 
         if (staticY) {
             rotVec = rotVec.with(gravDir.getAxis(), 0);
         }
 
-        Vec3 fPos = getOffsetForwardPos(attacker, hPos, upVec, rotVec);
+        final Vec3 fPos = getOffsetForwardPos(attacker, hPos, upVec, rotVec);
 
-        Set<AABB> boxes = calculateBoxes(attacker, user, rotVec, upVec, hPos, fPos);
-        DamageSource damageSource = attacker.getDamageSource();
-        Set<LivingEntity> targets = attackBoxes(attacker, boxes, damageSource, fPos);
+        final Set<AABB> boxes = calculateBoxes(attacker, user, rotVec, upVec, hPos, fPos);
+        final DamageSource damageSource = attacker.getDamageSource();
+        final Set<LivingEntity> targets = attackBoxes(attacker, boxes, damageSource, fPos);
         performHook(attacker, targets, boxes, damageSource, fPos, rotVec, ctx);
         return targets;
     }
@@ -498,7 +498,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param rotationVector The attacker's rotation unit vector
      * @param ctx            The attacker's MoveContext instance
      */
-    public void performHook(A attacker, Set<LivingEntity> targets, Set<AABB> boxes, DamageSource damageSource, Vec3 forwardPos, Vec3 rotationVector, MoveContext ctx) {
+    public void performHook(final A attacker, final Set<LivingEntity> targets, final Set<AABB> boxes, final DamageSource damageSource, final Vec3 forwardPos, final Vec3 rotationVector, final MoveContext ctx) {
     }
 
     /**
@@ -513,7 +513,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param fPos     The offset forward position
      * @return All boxes that should be attacked
      */
-    protected Set<AABB> calculateBoxes(A attacker, LivingEntity user, Vec3 rotVec, Vec3 upVec, Vec3 hPos, Vec3 fPos) {
+    protected Set<AABB> calculateBoxes(final A attacker, final LivingEntity user, final Vec3 rotVec, final Vec3 upVec, final Vec3 hPos, final Vec3 fPos) {
         if (hitboxSize <= 0 && extraHitBoxes.isEmpty()) {
             return Set.of();
         }
@@ -534,26 +534,26 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param center       The center of this attack. This is where the particle will be spawned at.
      * @return A set of all affected targets.
      */
-    protected final Set<LivingEntity> attackBoxes(A attacker, Set<AABB> boxes, DamageSource damageSource, Vec3 center) {
+    protected final Set<LivingEntity> attackBoxes(final A attacker, final Set<AABB> boxes, final DamageSource damageSource, final Vec3 center) {
         JUtils.displayHitboxes(attacker.getEntityWorld(), boxes);
 
-        Set<LivingEntity> targets = findHits(attacker, boxes, damageSource, mayHitUser);
+        final Set<LivingEntity> targets = findHits(attacker, boxes, damageSource, mayHitUser);
         if (targets.isEmpty()) {
             return Set.of();
         }
 
-        ServerLevel serverWorld = (ServerLevel) attacker.getEntityWorld();
+        final ServerLevel serverWorld = (ServerLevel) attacker.getEntityWorld();
 
         // Particles
-        RandomSource random = RandomSource.create();
+        final RandomSource random = RandomSource.create();
         boolean anyHit = false;
 
         // Process targets
-        Vec3 rotVec = getRotVec(attacker);
-        Vec3 kbVec = rotVec.scale(knockback).add(new Vec3(0.0, Math.abs(knockback) / 4, 0.0));
+        final Vec3 rotVec = getRotVec(attacker);
+        final Vec3 kbVec = rotVec.scale(knockback).add(new Vec3(0.0, Math.abs(knockback) / 4, 0.0));
         for (LivingEntity target : validateTargets(attacker, targets)) {
-            Vec3 pos = target.position().add(GravityChangerAPI.getEyeOffset(target).scale(0.65)).subtract(rotVec.scale(0.65));
-            boolean blocking = JUtils.isBlocking(target);
+            final Vec3 pos = target.position().add(GravityChangerAPI.getEyeOffset(target).scale(0.65)).subtract(rotVec.scale(0.65));
+            final boolean blocking = JUtils.isBlocking(target);
             if (blocking) {
                 JCraft.createHitsparks(serverWorld, pos.x(), pos.y(), pos.z(), JParticleType.BLOCK_SPARK, 3, 0);
             } else {
@@ -570,7 +570,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
             targetProcessors.forEach(processor -> processor.processTarget(attacker, target, kbVec, damageSource, blocking));
             processTarget(attacker, target, kbVec, damageSource);
-            boolean blockingAfter = JUtils.isBlocking(target);
+            final boolean blockingAfter = JUtils.isBlocking(target);
             targetPostProcessors.forEach(processor -> processor.processTarget(attacker, target, kbVec, damageSource, blockingAfter));
         }
 
@@ -591,22 +591,22 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      *                     boolean, float, boolean, int, DamageSource, Entity, CommonHitPropertyComponent.HitAnimation, boolean, boolean)}
      * @param damageSource The damage source to apply damage with
      */
-    protected void processTarget(A attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
+    protected void processTarget(final A attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         StandEntity.damageLogic(attacker.getEntityWorld(), target, kbVec, stun, stunType.ordinal(), overrideStun,
                 damage, lift, getBlockStun(), damageSource, attacker.getUserOrThrow(), hitAnimation, canBackstab, blockableType.isNonBlockable());
     }
 
-    protected Set<LivingEntity> validateTargets(A attacker, Set<LivingEntity> targets) {
+    protected Set<LivingEntity> validateTargets(final A attacker, final Set<LivingEntity> targets) {
         targets.removeIf(target -> !target.isAlive());
         return targets;
     }
 
-    protected Vec3 getOffsetForwardPos(A attacker, Vec3 offsetHeightPos, Vec3 upVec, Vec3 rotVec) {
+    protected Vec3 getOffsetForwardPos(final A attacker, final Vec3 offsetHeightPos, final Vec3 upVec, final Vec3 rotVec) {
         return offsetHeightPos.add(rotVec.scale(getMoveDistance())).add(upVec.scale(-offset));
     }
 
     @Override
-    protected @NonNull T copyExtras(@NonNull T base) {
+    protected @NonNull T copyExtras(final @NonNull T base) {
         AbstractSimpleAttack<T, A> cast = super.copyExtras(base);
         cast.targetProcessors.addAll(targetProcessors);
         cast.targetPostProcessors.addAll(targetPostProcessors);

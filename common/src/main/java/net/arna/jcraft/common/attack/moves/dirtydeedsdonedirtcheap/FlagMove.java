@@ -12,13 +12,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class FlagMove extends AbstractMove<FlagMove, D4CEntity> {
-    public FlagMove(int cooldown, int windup, int duration, float moveDistance) {
+    public FlagMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         mobilityType = MobilityType.HIGHJUMP;
     }
 
     @Override
-    public void onInitiate(D4CEntity attacker) {
+    public void onInitiate(final D4CEntity attacker) {
         super.onInitiate(attacker);
 
         attacker.getUserOrThrow().addEffect(
@@ -30,7 +30,7 @@ public final class FlagMove extends AbstractMove<FlagMove, D4CEntity> {
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final D4CEntity attacker, final LivingEntity user, final MoveContext ctx) {
         int duration = getWindupPoint();
         user.addEffect(
                 new MobEffectInstance(MobEffects.INVISIBILITY, duration, 0, true, false)

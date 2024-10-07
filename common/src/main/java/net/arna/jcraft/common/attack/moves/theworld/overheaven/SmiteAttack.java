@@ -31,8 +31,8 @@ public final class SmiteAttack extends AbstractEffectInflictingAttack<SmiteAttac
     private static final MoveVariable<LightningBolt> BOLT = new MoveVariable<>(LightningBolt.class);
     private final boolean aerial;
 
-    public SmiteAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                       float hitboxSize, float knockback, float offset, boolean aerial) {
+    public SmiteAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                       final float hitboxSize, final float knockback, final float offset, final boolean aerial) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset,
                 List.of(new MobEffectInstance(MobEffects.LEVITATION, 7, 9, true, false)));
         this.aerial = ranged = aerial;
@@ -40,7 +40,7 @@ public final class SmiteAttack extends AbstractEffectInflictingAttack<SmiteAttac
     }
 
     @Override
-    public void onInitiate(TheWorldOverHeavenEntity attacker) {
+    public void onInitiate(final TheWorldOverHeavenEntity attacker) {
         super.onInitiate(attacker);
 
         LivingEntity user = attacker.getUserOrThrow();
@@ -79,7 +79,7 @@ public final class SmiteAttack extends AbstractEffectInflictingAttack<SmiteAttac
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheWorldOverHeavenEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final TheWorldOverHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         Vec3 lP = ctx.get(LIGHTNING_POS);
 
         LightningBolt bolt = new LightningBolt(EntityType.LIGHTNING_BOLT, attacker.level());
@@ -94,19 +94,19 @@ public final class SmiteAttack extends AbstractEffectInflictingAttack<SmiteAttac
     }
 
     @Override
-    protected Set<AABB> calculateBoxes(TheWorldOverHeavenEntity attacker, LivingEntity user, Vec3 rotVec, Vec3 upVec, Vec3 hPos, Vec3 fPos) {
+    protected Set<AABB> calculateBoxes(final TheWorldOverHeavenEntity attacker, final LivingEntity user, final Vec3 rotVec, final Vec3 upVec, final Vec3 hPos, final Vec3 fPos) {
         return Set.of(createBox(attacker.getMoveContext().get(LIGHTNING_POS), getHitboxSize()));
     }
 
     @Override
-    protected void processTarget(TheWorldOverHeavenEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
+    protected void processTarget(final TheWorldOverHeavenEntity attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         target.thunderHit((ServerLevel) attacker.level(), attacker.getMoveContext().get(BOLT));
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(LIGHTNING_POS);
         ctx.register(BOLT);
     }

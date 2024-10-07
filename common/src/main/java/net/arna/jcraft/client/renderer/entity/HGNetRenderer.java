@@ -7,14 +7,14 @@ import net.arna.jcraft.common.entity.projectile.HGNetEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 public class HGNetRenderer extends GeoEntityRenderer<HGNetEntity> {
-    public HGNetRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public HGNetRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new HGNetModel());
         addRenderLayer(new HGNetGlowLayer(this));
         shadowRadius = 1.25f;
     }
 
     @Override
-    public boolean shouldShowName(HGNetEntity animatable) {
+    public boolean shouldShowName(final HGNetEntity animatable) {
         return false;
     }
 }

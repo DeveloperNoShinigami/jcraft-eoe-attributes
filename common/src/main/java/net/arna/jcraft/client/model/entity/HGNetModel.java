@@ -13,17 +13,17 @@ public class HGNetModel extends GeoModel<HGNetEntity> {
             i -> JCraft.id("textures/entity/hg_nets/" + i + ".png")).toList();
 
     @Override
-    public ResourceLocation getModelResource(HGNetEntity object) {
+    public ResourceLocation getModelResource(final HGNetEntity object) {
         return JCraft.id("geo/hg_nets.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(HGNetEntity object) {
+    public ResourceLocation getTextureResource(final HGNetEntity object) {
         return skins.get(object.getSkin());
     }
 
     @Override
-    public ResourceLocation getAnimationResource(HGNetEntity animatable) {
+    public ResourceLocation getAnimationResource(final HGNetEntity animatable) {
         return JCraft.id("animations/hg_nets.animation.json");
     }
 

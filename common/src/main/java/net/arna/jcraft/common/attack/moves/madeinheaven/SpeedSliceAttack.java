@@ -26,8 +26,8 @@ import java.util.Set;
 public final class SpeedSliceAttack extends AbstractMove<SpeedSliceAttack, MadeInHeavenEntity> {
     private final float damage, hitboxSize, knockback;
 
-    public SpeedSliceAttack(int cooldown, int windup, int duration, float moveDistance, float damage, float hitboxSize,
-                            float knockback) {
+    public SpeedSliceAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final float hitboxSize,
+                            final float knockback) {
         super(cooldown, windup, duration, moveDistance);
         this.damage = damage;
         this.hitboxSize = hitboxSize;
@@ -38,43 +38,43 @@ public final class SpeedSliceAttack extends AbstractMove<SpeedSliceAttack, MadeI
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MadeInHeavenEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         return doSpeedSlice(attacker, user.getEyePosition(), user.getEyePosition().add(user.getLookAngle().scale(8)),
                 getDamage(), getKnockback(), getHitboxSize(), 20, 1);
     }
 
-    public static Set<LivingEntity> doSpeedSlice(MadeInHeavenEntity attacker, Vec3 start, Vec3 end, float damage, float knockback, float size, int stunTicks, int stunType) {
-        Level world = attacker.level();
-        LivingEntity user = attacker.getUserOrThrow();
-        HitResult hitResult = world.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
-        Vec3 pos1 = user.position();
-        Vec3 pos2 = hitResult.getLocation();
-        Vec3 towardsVec = pos2.subtract(pos1);
+    public static Set<LivingEntity> doSpeedSlice(final MadeInHeavenEntity attacker, final Vec3 start, final Vec3 end, final float damage, final float knockback, final float size, final int stunTicks, final int stunType) {
+        final Level world = attacker.level();
+        final LivingEntity user = attacker.getUserOrThrow();
+        final HitResult hitResult = world.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
+        final Vec3 pos1 = user.position();
+        final Vec3 pos2 = hitResult.getLocation();
+        final Vec3 towardsVec = pos2.subtract(pos1);
 
-        Vec3 kbVec = towardsVec.normalize();
+        final Vec3 kbVec = towardsVec.normalize();
 
-        DamageSource playerSource = world.damageSources().mobAttack(user);
+        final DamageSource playerSource = world.damageSources().mobAttack(user);
 
         user.teleportToWithTicket(pos2.x, pos2.y, pos2.z);
 
-        Set<LivingEntity> targets = new HashSet<>();
+        final Set<LivingEntity> targets = new HashSet<>();
         double count = Math.round(pos1.distanceTo(pos2));
 
         for (int i = 0; i < count; i++) {
-            Vec3 curPos = pos1.add(towardsVec.scale(i / count));
+            final Vec3 curPos = pos1.add(towardsVec.scale(i / count));
 
-            Vec3 vec1 = curPos.add(-size, -size, -size);
-            Vec3 vec2 = curPos.add(size, size, size);
+            final Vec3 vec1 = curPos.add(-size, -size, -size);
+            final Vec3 vec2 = curPos.add(size, size, size);
 
             JUtils.displayHitbox(world, vec1, vec2);
 
-            List<LivingEntity> hurt = world.getEntitiesOfClass(LivingEntity.class, new AABB(vec1, vec2),
+            final List<LivingEntity> hurt = world.getEntitiesOfClass(LivingEntity.class, new AABB(vec1, vec2),
                     EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != user));
             hurt.removeIf(targets::contains);
             targets.addAll(hurt);
         }
 
-        for (LivingEntity ent : targets) {
+        for (final LivingEntity ent : targets) {
             LivingEntity target = JUtils.getUserIfStand(ent);
             StandEntity.damageLogic(world, target, kbVec.scale(knockback).add(0, knockback / 4, 0),
                     stunTicks, stunType, false, damage, true, (int) (4 + damage), playerSource, user, CommonHitPropertyComponent.HitAnimation.MID);

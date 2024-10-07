@@ -7,17 +7,17 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ScalpelModel extends GeoModel<ScalpelProjectile> {
     @Override
-    public ResourceLocation getModelResource(ScalpelProjectile object) {
+    public ResourceLocation getModelResource(final ScalpelProjectile object) {
         return JCraft.id("geo/scalpel.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(ScalpelProjectile object) {
+    public ResourceLocation getTextureResource(final ScalpelProjectile object) {
         return JCraft.id("textures/entity/projectiles/scalpel.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(ScalpelProjectile animatable) {
+    public ResourceLocation getAnimationResource(final ScalpelProjectile animatable) {
         return JCraft.id("animations/knife.animation.json");
     }
 

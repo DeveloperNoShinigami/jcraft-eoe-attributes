@@ -18,8 +18,8 @@ import org.joml.Vector3f;
 public class SplatterEffectRenderer {
 
 
-    public static void render(PoseStack matrices, Vec3 camPos, ClientLevel world, float tickDelta) {
-        JSplatterManager splatterManager = JUtils.getSplatterManager(world);
+    public static void render(final PoseStack matrices, final Vec3 camPos, final ClientLevel world, final float tickDelta) {
+        final JSplatterManager splatterManager = JUtils.getSplatterManager(world);
 
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -39,10 +39,10 @@ public class SplatterEffectRenderer {
             matrices.pushPose();
             matrices.translate(-camPos.x, -camPos.y, -camPos.z);
 
-            Tesselator tess = Tesselator.getInstance();
-            BufferBuilder buf = tess.getBuilder();
+            final Tesselator tess = Tesselator.getInstance();
+            final BufferBuilder buf = tess.getBuilder();
             buf.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP);
-            float alpha = splatter.getStrength(tickDelta);
+            final float alpha = splatter.getStrength(tickDelta);
 
             for (SplatterSection section : splatter.getSections()) {
                 if (!section.isRemoved()) {
@@ -60,28 +60,28 @@ public class SplatterEffectRenderer {
     }
 
     @SuppressWarnings("DuplicatedCode") // I do not care how similar the different directions' code are.
-    private static void renderSection(SplatterSection section, BufferBuilder buf, PoseStack matrices, float alpha, float offset) {
+    private static void renderSection(final SplatterSection section, final BufferBuilder buf, final PoseStack matrices, final float alpha, final float offset) {
         matrices.pushPose();
-        Vector3f offsetVec = section.getDirection().step();
+        final Vector3f offsetVec = section.getDirection().step();
         offsetVec.mul(offset, offset, offset); // Prevent z-fighting with anchor block and other splatters.
         matrices.translate(offsetVec.x(), offsetVec.y(), offsetVec.z());
-        Matrix4f m = matrices.last().pose();
+        final Matrix4f m = matrices.last().pose();
 
-        int blockLight = section.getWorld().getBrightness(LightLayer.BLOCK, section.getBlockPos());
-        int skyLight = section.getWorld().getBrightness(LightLayer.SKY, section.getBlockPos());
-        int light = LightTexture.pack(blockLight, skyLight);
+        final int blockLight = section.getWorld().getBrightness(LightLayer.BLOCK, section.getBlockPos());
+        final int skyLight = section.getWorld().getBrightness(LightLayer.SKY, section.getBlockPos());
+        final int light = LightTexture.pack(blockLight, skyLight);
 
-        Vector3f min = section.getMinPos();
-        Vector3f max = section.getMaxPos();
-        Vec2 minUv = section.getMinUv();
-        Vec2 maxUv = section.getMaxUv();
+        final Vector3f min = section.getMinPos();
+        final Vector3f max = section.getMaxPos();
+        final Vec2 minUv = section.getMinUv();
+        final Vec2 maxUv = section.getMaxUv();
 
-        float minX = min.x();
-        float minY = min.y();
-        float minZ = min.z();
-        float maxX = max.x();
-        float maxY = max.y();
-        float maxZ = max.z();
+        final float minX = min.x();
+        final float minY = min.y();
+        final float minZ = min.z();
+        final float maxX = max.x();
+        final float maxY = max.y();
+        final float maxZ = max.z();
 
         switch (section.getDirection()) {
             case UP -> {
@@ -125,7 +125,7 @@ public class SplatterEffectRenderer {
         matrices.popPose();
     }
 
-    private static void vertex(BufferBuilder buf, Matrix4f matrix, float x, float y, float z, float u, float v, float alpha, int light) {
+    private static void vertex(final BufferBuilder buf, final Matrix4f matrix, final float x, final float y, final float z, final float u, final float v, final float alpha, final int light) {
         buf
                 .vertex(matrix, x, y, z)
                 .color(1f, 1f, 1f, alpha)

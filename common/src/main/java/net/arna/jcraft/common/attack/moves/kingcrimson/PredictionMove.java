@@ -32,12 +32,12 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     public static final MoveVariable<Map<Entity, Vec3>> PREDICTION_INFO = new MoveVariable<>(new TypeToken<>() {
     });
 
-    public PredictionMove(int cooldown, int windup, int duration, float moveDistance) {
+    public PredictionMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public void onInitiate(KingCrimsonEntity attacker) {
+    public void onInitiate(final KingCrimsonEntity attacker) {
         super.onInitiate(attacker);
 
         attacker.getMoveContext().get(PREDICTION_INFO).clear();
@@ -50,7 +50,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     }
 
     @Override
-    public void tick(KingCrimsonEntity attacker, int moveStun) {
+    public void tick(final KingCrimsonEntity attacker, final int moveStun) {
         super.tick(attacker, moveStun);
 
         if (moveStun == getWindupPoint()) {
@@ -67,11 +67,11 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(KingCrimsonEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KingCrimsonEntity attacker, final LivingEntity user, final MoveContext ctx) {
         return Set.of();
     }
 
-    public void beginPrediction(KingCrimsonEntity attacker) {
+    public void beginPrediction(final KingCrimsonEntity attacker) {
         if (!(attacker.getUser() instanceof ServerPlayer player)) {
             return;
         }
@@ -87,7 +87,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
         NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ERASE_PREDICTION_STATE, buf);
     }
 
-    public static void finishPrediction(KingCrimsonEntity attacker) {
+    public static void finishPrediction(final KingCrimsonEntity attacker) {
         final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
         for (Map.Entry<Entity, Vec3> prediction : predictionInfo.entrySet()) {
             final Entity entity = prediction.getKey();
@@ -103,12 +103,12 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
         attacker.cancelMove();
     }
 
-    public static void cancelPrediction(KingCrimsonEntity attacker) {
+    public static void cancelPrediction(final KingCrimsonEntity attacker) {
         final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
         cancelPrediction(attacker, predictionInfo);
     }
 
-    public static void cancelPrediction(KingCrimsonEntity attacker, Map<Entity, Vec3> predictionInfo) {
+    public static void cancelPrediction(final KingCrimsonEntity attacker, final Map<Entity, Vec3> predictionInfo) {
         if (attacker.getUser() instanceof ServerPlayer player) {
             NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_EPITAPH_STATE, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
             NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ERASE_PREDICTION_STATE, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
@@ -117,7 +117,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
         predictionInfo.clear();
     }
 
-    public void tickPredictions(KingCrimsonEntity attacker) {
+    public void tickPredictions(final KingCrimsonEntity attacker) {
         final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
         final Map<Entity, Vec3> predictions = new HashMap<>(predictionInfo);
         updatePredictions(predictions.entrySet(), attacker.getMoveStun());
@@ -125,7 +125,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
         predictionInfo.putAll(predictions);
     }
 
-    public static List<Entity> getEntitiesToCatch(Level world, StandEntity<?, ?> stand, Player player) {
+    public static List<Entity> getEntitiesToCatch(final Level world, final StandEntity<?, ?> stand, final Player player) {
         if (world == null || stand == null) {
             return List.of();
         }
@@ -134,7 +134,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != stand && e != player));
     }
 
-    public static void updatePredictions(Set<Map.Entry<Entity, Vec3>> predictionsSet, int ticksLeft) {
+    public static void updatePredictions(final Set<Map.Entry<Entity, Vec3>> predictionsSet, final int ticksLeft) {
         Map<Entity, Map.Entry<Entity, Vec3>> predictions = predictionsSet.stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e));
         Set<Entity> updated = new HashSet<>();
@@ -145,8 +145,8 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     }
 
     //todo: fixme
-    private static void updatePrediction(Map<Entity, Map.Entry<Entity, Vec3>> predictions, Map.Entry<Entity, Vec3> prediction,
-                                         Set<Entity> updated, int ticksLeft) {
+    private static void updatePrediction(final Map<Entity, Map.Entry<Entity, Vec3>> predictions, final Map.Entry<Entity, Vec3> prediction,
+                                         final Set<Entity> updated, final int ticksLeft) {
         Entity entity = prediction.getKey();
         if (updated.contains(entity)) {
             return;
@@ -211,7 +211,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(PREDICTION_INFO, new WeakHashMap<>());
     }
 

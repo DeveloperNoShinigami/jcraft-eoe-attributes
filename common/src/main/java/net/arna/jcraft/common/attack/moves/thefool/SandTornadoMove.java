@@ -10,13 +10,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class SandTornadoMove extends AbstractMove<SandTornadoMove, TheFoolEntity> {
-    public SandTornadoMove(int cooldown, int windup, int duration, float moveDistance) {
+    public SandTornadoMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final SandTornadoEntity sandTornado = new SandTornadoEntity(attacker.level());
         sandTornado.setMaster(user);
         sandTornado.moveTo(attacker.getX(), attacker.getY() + 1.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());

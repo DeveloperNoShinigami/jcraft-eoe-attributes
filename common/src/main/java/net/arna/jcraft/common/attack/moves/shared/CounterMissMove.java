@@ -12,12 +12,12 @@ import java.util.Set;
  * missed your counter and are punished for it.
  */
 public final class CounterMissMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<CounterMissMove<A>, A> {
-    public CounterMissMove(int duration) {
+    public CounterMissMove(final int duration) {
         super(0, duration + 1, duration, 1f);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         return Set.of();
     }
 

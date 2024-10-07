@@ -24,8 +24,8 @@ public class CrimsonSkyBox implements JSkyBox {
     }
 
     @Override
-    public void render(PoseStack matrices, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog) {
-        Minecraft client = Minecraft.getInstance();
+    public void render(final PoseStack matrices, Matrix4f projectionMatrix, final float tickDelta, final Camera camera, final boolean thickFog) {
+        final Minecraft client = Minecraft.getInstance();
         assert client.level != null;
         this.alpha = 1;
 
@@ -35,14 +35,14 @@ public class CrimsonSkyBox implements JSkyBox {
         Matrix4f mat = matrices.last().pose();
         Matrix4f invMat = new Matrix4f(mat);
         invMat.invert();
-        var jShader =  JPlatformUtils.getTest();
+        final var jShader =  JPlatformUtils.getTest();
         jShader.safeGetUniform("InverseTransformMatrix").set(invMat);
         jShader.safeGetUniform("Time").set((client.level.getGameTime() + tickDelta) / 20);
         Supplier<ShaderInstance> shaderInstanceSupplier = () -> jShader;
         RenderSystem.setShader(shaderInstanceSupplier);
 
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuilder();
+        final Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tesselator.getBuilder();
 
         for (int i = 0; i < 6; ++i) {
             matrices.pushPose();
@@ -72,7 +72,7 @@ public class CrimsonSkyBox implements JSkyBox {
             bufferBuilder.vertex(projectionMatrix, -110.0F, -110.0F, 110.0F).uv(0.0F, 16.0F).color(40, 40, 40, 255 * getAlpha()).endVertex();
             bufferBuilder.vertex(projectionMatrix, 110.0F, -110.0F, 110.0F).uv(16.0F, 16.0F).color(40, 40, 40, 255 * getAlpha()).endVertex();
             bufferBuilder.vertex(projectionMatrix, 110.0F, -110.0F, -110.0F).uv(16.0F, 0.0F).color(40, 40, 40, 255 * getAlpha()).endVertex();
-            tessellator.end();
+            tesselator.end();
             matrices.popPose();
         }
 

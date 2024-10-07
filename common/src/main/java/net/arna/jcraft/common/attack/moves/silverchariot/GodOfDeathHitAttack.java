@@ -9,14 +9,14 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class GodOfDeathHitAttack extends AbstractMultiHitAttack<GodOfDeathHitAttack, SilverChariotEntity> {
-    public GodOfDeathHitAttack(int cooldown, int duration, float moveDistance, float damage, int stun,
-                               float hitboxSize, float knockback, float offset, IntCollection hitMoments) {
+    public GodOfDeathHitAttack(final int cooldown, final int duration, final float moveDistance, final float damage, final int stun,
+                               final float hitboxSize, final float knockback, final float offset, final IntCollection hitMoments) {
         super(cooldown, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(SilverChariotEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final SilverChariotEntity attacker, final LivingEntity user, final MoveContext ctx) {
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (getBlow(attacker) == 1) {
             attacker.setCurrentMove(getFollowup());

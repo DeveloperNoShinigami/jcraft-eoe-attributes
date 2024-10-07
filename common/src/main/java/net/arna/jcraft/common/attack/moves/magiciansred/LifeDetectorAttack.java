@@ -10,13 +10,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class LifeDetectorAttack extends AbstractMove<LifeDetectorAttack, MagiciansRedEntity> {
-    public LifeDetectorAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public LifeDetectorAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final LifeDetectorEntity lifeDetector = new LifeDetectorEntity(attacker.level());
         lifeDetector.setMaster(user);
         lifeDetector.moveTo(attacker.getX(), attacker.getY() + 1.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());

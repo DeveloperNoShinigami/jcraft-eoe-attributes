@@ -14,14 +14,14 @@ import net.minecraft.world.phys.Vec3;
 public final class SingularityAttack extends AbstractSimpleAttack<SingularityAttack, TheWorldOverHeavenEntity> {
     private final boolean blockBypass;
 
-    public SingularityAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                             float hitboxSize, float knockback, float offset, boolean blockBypass) {
+    public SingularityAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                             final float hitboxSize, final float knockback, final float offset, final boolean blockBypass) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         this.blockBypass = blockBypass;
     }
 
     @Override
-    protected void processTarget(TheWorldOverHeavenEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
+    protected void processTarget(final TheWorldOverHeavenEntity attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         if (blockBypass) {

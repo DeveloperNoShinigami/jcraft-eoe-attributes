@@ -25,11 +25,11 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
     @Getter
     private boolean frozen = false;
 
-    public Entry<A, S> register(@NonNull MoveType type, @NonNull AbstractMove<?, ? super A> move) {
+    public Entry<A, S> register(final @NonNull MoveType type, final @NonNull AbstractMove<?, ? super A> move) {
         return register(type, move, null);
     }
 
-    public Entry<A, S> register(@NonNull MoveType type, @NonNull AbstractMove<?, ? super A> move, @Nullable S animState) {
+    public Entry<A, S> register(final @NonNull MoveType type, final @NonNull AbstractMove<?, ? super A> move, final @Nullable S animState) {
         return register(type, move, type.getDefaultCooldownType(), animState);
     }
 
@@ -38,8 +38,8 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
      * Sub-moves must have an assigned animation state.
      */
     @SuppressWarnings("unchecked")
-    public void registerImmediate(@NonNull MoveType type, @NonNull AbstractMove<?, ? super A> move, @Nullable S animState) {
-        Entry<A, S> entry = register(type, move, animState);
+    public void registerImmediate(final @NonNull MoveType type, final @NonNull AbstractMove<?, ? super A> move, final @Nullable S animState) {
+        final Entry<A, S> entry = register(type, move, animState);
         if (move.getCrouchingVariant() != null) {
             entry.withCrouchingVariant((S) move.getCrouchingVariant().getAnimation());
         }
@@ -51,10 +51,10 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
         }
     }
 
-    public Entry<A, S> register(@NonNull MoveType type, @NonNull AbstractMove<?, ? super A> move, @Nullable CooldownType cooldownType, @Nullable S animState) {
+    public Entry<A, S> register(final @NonNull MoveType type, final @NonNull AbstractMove<?, ? super A> move, final @Nullable CooldownType cooldownType, final @Nullable S animState) {
         checkFrozen();
 
-        AbstractMove<?, ? super A> copy = move.copy();
+        final AbstractMove<?, ? super A> copy = move.copy();
         //noinspection ConstantValue // That's the idea
         if (copy == null) {
             throw new IllegalStateException(move.getClass().getSimpleName() + "#copy() returned null.");
@@ -62,7 +62,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
 
         copy.onRegister(type);
 
-        Entry<A, S> entry = new Entry<A, S>(null, type, copy, cooldownType, animState);
+        final Entry<A, S> entry = new Entry<A, S>(null, type, copy, cooldownType, animState);
         moves.put(type, entry);
         return entry;
     }
@@ -74,7 +74,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
      * @param move The move to register
      * @return The entry for the given move
      */
-    public Entry<A, S> registerExtra(@NonNull AbstractMove<?, ? super A> move) {
+    public Entry<A, S> registerExtra(final @NonNull AbstractMove<?, ? super A> move) {
         Entry<A, S> entry = new Entry<A, S>(null, null, move, null, null);
         extraMoves.add(entry);
         return entry;
@@ -88,7 +88,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
     }
 
     @NonNull
-    public List<Entry<A, S>> getEntries(MoveType type) {
+    public List<Entry<A, S>> getEntries(final MoveType type) {
         return Collections.unmodifiableList(moves.get(type));
     }
 
@@ -100,7 +100,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
      * @return The first valid entry for the given type, or null if none are found.
      */
     @Nullable
-    public Entry<A, S> getFirstValidEntry(MoveType type, A attacker) {
+    public Entry<A, S> getFirstValidEntry(final MoveType type, final A attacker) {
         return getEntries(type).stream()
                 .filter(entry -> entry.getMove().getConditions().stream().allMatch(c -> c.test(attacker)))
                 .findFirst()
@@ -126,7 +126,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
     // Upon registering, the move registered is copied before being put in this map.
     // At any point you want the registered version for a move, use this method.
     @Contract("!null -> !null; null -> null")
-    public AbstractMove<?, ? super A> getRegisteredMoveFor(AbstractMove<?, ? super A> move) {
+    public AbstractMove<?, ? super A> getRegisteredMoveFor(final AbstractMove<?, ? super A> move) {
         return copyMap.getOrDefault(move, move);
     }
 
@@ -161,7 +161,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
         return frozen ? getAllMoves() : toList();
     }
 
-    private Stream<Entry<A, S>> streamEntryAndChildren(Entry<A, S> entry) {
+    private Stream<Entry<A, S>> streamEntryAndChildren(final Entry<A, S> entry) {
         Stream.Builder<Entry<A, S>> builder = Stream.builder();
         builder.add(entry);
         if (entry.getCrouchingVariant() != null) {
@@ -186,7 +186,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
         private final @Nullable S animState;
         private @Nullable Entry<A, S> crouchingVariant, aerialVariant, followUp;
 
-        private Entry(Entry<A, S> parent, MoveType type, AbstractMove<?, ? super A> move, CooldownType cooldownType, @Nullable S animState) {
+        private Entry(final Entry<A, S> parent, final MoveType type, final AbstractMove<?, ? super A> move, final CooldownType cooldownType, final @Nullable S animState) {
             this.parent = parent;
             this.type = type;
             this.move = move;
@@ -217,7 +217,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * @return The crouching variant entry
          * @see #withCrouchingVariant(CooldownType, Object)
          */
-        public Entry<A, S> withCrouchingVariant(S animState) {
+        public Entry<A, S> withCrouchingVariant(final S animState) {
             return withCrouchingVariant(cooldownType, animState);
         }
 
@@ -233,7 +233,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * @return The crouching variant entry
          * @see #withCrouchingVariant(Object)
          */
-        public Entry<A, S> withCrouchingVariant(CooldownType cooldownType, S animState) {
+        public Entry<A, S> withCrouchingVariant(final CooldownType cooldownType, final S animState) {
             if (move.getCrouchingVariant() == null) {
                 throw new IllegalArgumentException("The move of this entry has " +
                         "no crouching variant.");
@@ -253,7 +253,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * @return The aerial variant entry
          * @see #withAerialVariant(CooldownType, Object)
          */
-        public Entry<A, S> withAerialVariant(S animState) {
+        public Entry<A, S> withAerialVariant(final S animState) {
             return withAerialVariant(cooldownType, animState);
         }
 
@@ -269,7 +269,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * @return The aerial variant entry
          * @see #withAerialVariant(Object)
          */
-        public Entry<A, S> withAerialVariant(CooldownType cooldownType, S animState) {
+        public Entry<A, S> withAerialVariant(final CooldownType cooldownType, final S animState) {
             if (move.getAerialVariant() == null) {
                 throw new IllegalArgumentException("The move of this entry has " +
                         "no aerial variant.");
@@ -289,7 +289,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * @return The followup entry
          * @see #withFollowUp(CooldownType, Object)
          */
-        public Entry<A, S> withFollowUp(S animState) {
+        public Entry<A, S> withFollowUp(final S animState) {
             return withFollowUp(cooldownType, animState);
         }
 
@@ -305,7 +305,7 @@ public class MoveMap<A extends IAttacker<A, S>, S> implements Iterable<MoveMap.E
          * @return The followup entry
          * @see #withFollowUp(CooldownType, Object)
          */
-        public Entry<A, S> withFollowUp(CooldownType cooldownType, S animState) {
+        public Entry<A, S> withFollowUp(final CooldownType cooldownType, final S animState) {
             if (move.getFollowup() == null) {
                 throw new IllegalArgumentException("The move of this entry has " +
                         "no follow-up.");

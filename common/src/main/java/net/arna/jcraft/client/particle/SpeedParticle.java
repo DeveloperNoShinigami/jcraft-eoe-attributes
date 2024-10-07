@@ -7,7 +7,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 public class SpeedParticle extends RisingParticle {
     private final SpriteSet spriteProvider;
 
-    SpeedParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider) {
+    SpeedParticle(final ClientLevel world, final double x, final double y, final double z, final double velocityX, final double velocityY, final double velocityZ, final SpriteSet spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
         this.spriteProvider = spriteProvider;
         this.quadSize = 0.2f + random.nextFloat() * 0.1f;
@@ -21,7 +21,7 @@ public class SpeedParticle extends RisingParticle {
 
     public void tick() {
         super.tick();
-        float c = 1f - (float) age / (float) lifetime;
+        final float c = 1f - (float) age / (float) lifetime;
         this.setColor(c * 0.2f, c, c);
 
         if (!this.removed) {
@@ -30,7 +30,7 @@ public class SpeedParticle extends RisingParticle {
     }
 
     @Override
-    protected int getLightColor(float tint) {
+    protected int getLightColor(final float tint) {
         return 255;
     }
 
@@ -41,7 +41,7 @@ public class SpeedParticle extends RisingParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(final SimpleParticleType defaultParticleType, final ClientLevel clientWorld, final double d, final double e, final double f, final double g, final double h, final double i) {
             return new SpeedParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
         }
     }

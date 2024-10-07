@@ -8,7 +8,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 
 public class BitesTheDustParticle extends JGlowingParticle {
 
-    BitesTheDustParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider) {
+    BitesTheDustParticle(final ClientLevel world, final double x, final double y, final double z, final double velocityX, final double velocityY, final double velocityZ, final SpriteSet spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider);
     }
 
@@ -25,7 +25,7 @@ public class BitesTheDustParticle extends JGlowingParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(final SimpleParticleType defaultParticleType, final ClientLevel clientWorld, final double d, final double e, final double f, final double g, final double h, final double i) {
             return new BitesTheDustParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
         }
     }

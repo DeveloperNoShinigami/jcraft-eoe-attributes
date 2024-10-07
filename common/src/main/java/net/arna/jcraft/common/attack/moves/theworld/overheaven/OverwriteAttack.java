@@ -23,13 +23,13 @@ public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack,
     public static final MoveVariable<List<LivingEntity>> OVERWRITE_TARGETS = new MoveVariable<>(new TypeToken<>() {
     });
 
-    public OverwriteAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                           float hitboxSize, float knockback, float offset) {
+    public OverwriteAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                           final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    protected void processTarget(TheWorldOverHeavenEntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
+    protected void processTarget(final TheWorldOverHeavenEntity attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         final MoveContext ctx = attacker.getMoveContext();
@@ -61,7 +61,7 @@ public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack,
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(OVERWRITE_TIMES, new IntArrayList());
         ctx.register(OVERWRITE_TARGETS, new ArrayList<>());
     }

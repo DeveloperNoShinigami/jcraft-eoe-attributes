@@ -26,12 +26,12 @@ public class RapierModel extends GeoModel<RapierProjectile> {
     }
 
     @Override
-    public ResourceLocation getModelResource(RapierProjectile object) {
+    public ResourceLocation getModelResource(final RapierProjectile object) {
         return JCraft.id("geo/rapier.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(RapierProjectile object) {
+    public ResourceLocation getTextureResource(final RapierProjectile object) {
         int skin = object.getSkin();
         if (skins.containsKey(skin)) {
             return skins.get(skin);
@@ -41,7 +41,7 @@ public class RapierModel extends GeoModel<RapierProjectile> {
     }
 
     @Override
-    public ResourceLocation getAnimationResource(RapierProjectile animatable) {
+    public ResourceLocation getAnimationResource(final RapierProjectile animatable) {
         return JCraft.id("animations/knife.animation.json");
     }
 }

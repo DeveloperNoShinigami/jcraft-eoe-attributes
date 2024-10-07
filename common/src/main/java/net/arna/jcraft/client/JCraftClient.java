@@ -150,7 +150,7 @@ public class JCraftClient {
     }
 
     private static Map<TrackedKeyBinding, MovementInputType> createMovementBindingsMap() {
-        Options options = Minecraft.getInstance().options;
+        final Options options = Minecraft.getInstance().options;
         return ImmutableMap.<TrackedKeyBinding, MovementInputType>builder()
                 .put(TrackedKeyBinding.wrap(options.keyUp), MovementInputType.FORWARD)
                 .put(TrackedKeyBinding.wrap(options.keyDown), MovementInputType.BACKWARD)
@@ -165,10 +165,10 @@ public class JCraftClient {
     /**
      * @return a cleaned-up version of TranslatableText name of button
      */
-    public static String generateName(KeyMapping keyBinding) {
-        String str = keyBinding.saveString();
-        String[] components = str.split("\\.");
-        String last = components[components.length - 1];
+    public static String generateName(final KeyMapping keyBinding) {
+        final String str = keyBinding.saveString();
+        final String[] components = str.split("\\.");
+        final String last = components[components.length - 1];
         String secondLast = components[components.length - 2] + " ";
         if (components[components.length - 2].equals("keyboard")) {
             secondLast = "";
@@ -176,7 +176,7 @@ public class JCraftClient {
         return StringUtils.capitalize(secondLast) + StringUtils.capitalize(last);
     }
 
-    public static <E extends Enum<E>> Object2BooleanMap<E> getChangedInputs(Map<TrackedKeyBinding, E> bindings) {
+    public static <E extends Enum<E>> Object2BooleanMap<E> getChangedInputs(final Map<TrackedKeyBinding, E> bindings) {
         return bindings.entrySet().stream()
                 .filter(entry -> entry.getKey().isChangedThisTick())
                 .collect(Object2BooleanOpenHashMap::new, (map, entry) -> map.put(entry.getValue(), entry.getKey().isPressedThisTick()),
@@ -207,8 +207,8 @@ public class JCraftClient {
         private final ResourceLocation fabricId = JCraft.id("decimal_format_updater");
 
         @Override
-        public CompletableFuture<Void> reload(PreparationBarrier synchronizer, ResourceManager manager, ProfilerFiller prepareProfiler,
-                                              ProfilerFiller applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
+        public CompletableFuture<Void> reload(final PreparationBarrier synchronizer, final ResourceManager manager, final ProfilerFiller prepareProfiler,
+                                              final ProfilerFiller applyProfiler, final Executor prepareExecutor, final Executor applyExecutor) {
             return synchronizer.wait(Unit.INSTANCE).thenRunAsync(() ->
                     decimalFormat = Suppliers.memoize(JCraftClient::createDecimalFormat), applyExecutor);
         }

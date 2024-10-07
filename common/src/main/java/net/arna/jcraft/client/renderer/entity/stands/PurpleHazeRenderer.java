@@ -18,14 +18,14 @@ import net.minecraft.world.item.ShieldItem;
 import org.jetbrains.annotations.Nullable;
 
 public class PurpleHazeRenderer extends StandEntityRenderer<AbstractPurpleHazeEntity<?, ?>> {
-    public PurpleHazeRenderer(EntityRendererProvider.Context context) {
+    public PurpleHazeRenderer(final EntityRendererProvider.Context context) {
         super(context, new PurpleHazeModel(false));
 
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
 
-            @javax.annotation.Nullable
+            @Nullable
             @Override
-            protected ItemStack getStackForBone(GeoBone bone, AbstractPurpleHazeEntity animatable) {
+            protected ItemStack getStackForBone(final GeoBone bone, final AbstractPurpleHazeEntity animatable) {
                 // Retrieve the items in the entity's hands for the relevant bone
                 return switch (bone.getName()) {
                     case LEFT_HAND -> animatable.isLeftHanded() ?
@@ -37,7 +37,7 @@ public class PurpleHazeRenderer extends StandEntityRenderer<AbstractPurpleHazeEn
             }
 
             @Override
-            protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, AbstractPurpleHazeEntity animatable) {
+            protected ItemDisplayContext getTransformTypeForStack(final GeoBone bone, final ItemStack stack, final AbstractPurpleHazeEntity animatable) {
                 // Apply the camera transform for the given hand
                 return switch (bone.getName()) {
                     case LEFT_HAND, RIGHT_HAND -> ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
@@ -47,8 +47,8 @@ public class PurpleHazeRenderer extends StandEntityRenderer<AbstractPurpleHazeEn
 
             // Do some quick render modifications depending on what the item is
             @Override
-            protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, AbstractPurpleHazeEntity animatable,
-                                              MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
+            protected void renderStackForBone(final PoseStack poseStack, final GeoBone bone, final ItemStack stack, final AbstractPurpleHazeEntity animatable,
+                                              final MultiBufferSource bufferSource, final float partialTick, final int packedLight, final int packedOverlay) {
 
                 poseStack.mulPose(Axis.XP.rotationDegrees(bone.getRotX() - 90f));
                 poseStack.mulPose(Axis.YP.rotationDegrees(bone.getRotY() - 90f));
@@ -75,13 +75,13 @@ public class PurpleHazeRenderer extends StandEntityRenderer<AbstractPurpleHazeEn
     }
 
     @Override
-    public RenderType getRenderType(AbstractPurpleHazeEntity<?, ?> animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final AbstractPurpleHazeEntity<?, ?> animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return StandEntityRenderer.renderTypeOf(animatable, texture);
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, AbstractPurpleHazeEntity<?, ?> animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        float a = StandEntityRenderer.getAlpha(animatable, partialTick);
+    public void actuallyRender(final PoseStack poseStack, final AbstractPurpleHazeEntity<?, ?> animatable, final BakedGeoModel model, final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
+        final float a = StandEntityRenderer.getAlpha(animatable, partialTick);
         this.mainHandItem = animatable.getMainHandItem();
         this.offHandItem = animatable.getOffhandItem();
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);

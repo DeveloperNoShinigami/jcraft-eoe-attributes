@@ -22,18 +22,18 @@ import java.util.stream.Stream;
 public class StuckKnivesFeatureRenderer<T extends LivingEntity, M extends AgeableListModel<T>> extends RenderLayer<T, M> {
     private final EntityRenderDispatcher dispatcher;
 
-    public StuckKnivesFeatureRenderer(EntityRendererProvider.Context context, LivingEntityRenderer<T, M> entityRenderer) {
+    public StuckKnivesFeatureRenderer(final EntityRendererProvider.Context context, final LivingEntityRenderer<T, M> entityRenderer) {
         super(entityRenderer);
         this.dispatcher = context.getEntityRenderDispatcher();
     }
 
-    protected int getObjectCount(T entity) {
+    protected int getObjectCount(final T entity) {
         return JComponentPlatformUtils.getMiscData(entity).getStuckKnifeCount();
     }
 
-    protected void renderObject(PoseStack matrices, MultiBufferSource vertexConsumers, int light, Entity entity, float directionX, float directionY, float directionZ, float tickDelta) {
-        float f = Mth.sqrt(directionX * directionX + directionZ * directionZ);
-        KnifeProjectile knife = new KnifeProjectile(entity.level());
+    protected void renderObject(final PoseStack matrices, final MultiBufferSource vertexConsumers, final int light, final Entity entity, final float directionX, final float directionY, final float directionZ, final float tickDelta) {
+        final float f = Mth.sqrt(directionX * directionX + directionZ * directionZ);
+        final KnifeProjectile knife = new KnifeProjectile(entity.level());
         knife.setPosRaw(entity.getX(), entity.getY(), entity.getZ());
         knife.setYRot((float) (Math.atan2(directionX, directionZ) * 57.2957763671875));
         knife.setXRot((float) (Math.atan2(directionY, f) * 57.2957763671875));
@@ -43,20 +43,20 @@ public class StuckKnivesFeatureRenderer<T extends LivingEntity, M extends Ageabl
     }
 
     @Override
-    public void render(PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, T livingEntity, float f, float g, float h, float j, float k, float l) {
-        int m = this.getObjectCount(livingEntity);
-        RandomSource random = RandomSource.create(livingEntity.getId());
+    public void render(final PoseStack matrixStack, final MultiBufferSource vertexConsumerProvider, final int i, final T livingEntity, final float f, final float g, final float h, final float j, final float k, final float l) {
+        final int m = this.getObjectCount(livingEntity);
+        final RandomSource random = RandomSource.create(livingEntity.getId());
         if (m <= 0) {
             return;
         }
         for (int n = 0; n < m; ++n) {
             matrixStack.pushPose();
 
-            AnimalModelAccessor accessor = (AnimalModelAccessor) getParentModel();
-            List<ModelPart> parts = Stream.concat(Streams.stream(accessor.callHeadParts()), Streams.stream(accessor.callBodyParts())).toList();
-            ModelPart part = parts.get(random.nextInt(parts.size()));
+            final AnimalModelAccessor accessor = (AnimalModelAccessor) getParentModel();
+            final List<ModelPart> parts = Stream.concat(Streams.stream(accessor.callHeadParts()), Streams.stream(accessor.callBodyParts())).toList();
+            final ModelPart part = parts.get(random.nextInt(parts.size()));
             if (!part.isEmpty()) {
-                ModelPart.Cube cuboid = part.getRandomCube(random);
+                final ModelPart.Cube cuboid = part.getRandomCube(random);
                 part.translateAndRotate(matrixStack);
 
                 float o = random.nextFloat();

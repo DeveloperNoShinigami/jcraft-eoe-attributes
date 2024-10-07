@@ -15,15 +15,15 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public final class OverclockAttack extends AbstractSimpleAttack<OverclockAttack, GoldExperienceEntity> {
-    public OverclockAttack(int cooldown, int windup, int duration, float attackDistance, float damage, int stun,
-                           float hitboxSize, float knockback, float offset) {
+    public OverclockAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun,
+                           final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);
         withStunType(StunType.LAUNCH);
         hitSpark = JParticleType.HIT_SPARK_3;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final GoldExperienceEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         for (LivingEntity target : targets) {

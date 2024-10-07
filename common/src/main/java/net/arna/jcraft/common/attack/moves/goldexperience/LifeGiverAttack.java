@@ -19,13 +19,13 @@ import java.util.Set;
 public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienceEntity> {
     public static final MoveVariable<LifeGiverType> TYPE_TO_SUMMON = new MoveVariable<>(LifeGiverType.class);
 
-    public LifeGiverAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public LifeGiverAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(GoldExperienceEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final GoldExperienceEntity attacker, final LivingEntity user, final MoveContext ctx) {
         ItemStack item = user.getOffhandItem(); // Get offhand, or if unavailable main hand stack
         if (item.isEmpty()) {
             item = user.getMainHandItem();
@@ -82,7 +82,7 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(TYPE_TO_SUMMON);
     }
 

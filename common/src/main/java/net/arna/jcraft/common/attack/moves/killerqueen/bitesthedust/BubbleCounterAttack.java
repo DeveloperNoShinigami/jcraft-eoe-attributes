@@ -15,18 +15,18 @@ import net.minecraft.world.entity.LivingEntity;
 public final class BubbleCounterAttack extends AbstractCounterAttack<BubbleCounterAttack, KQBTDEntity> {
     private static final CounterMissMove<KQBTDEntity> missAttack = new CounterMissMove<>(15);
 
-    public BubbleCounterAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public BubbleCounterAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public void whiff(@NonNull KQBTDEntity attacker, @NonNull LivingEntity user) {
+    public void whiff(final @NonNull KQBTDEntity attacker, final @NonNull LivingEntity user) {
         attacker.setMove(missAttack, KQBTDEntity.State.COUNTER_MISS);
         JCraft.stun(user, missAttack.getDuration(), 0);
     }
 
     @Override
-    public void counter(@NonNull KQBTDEntity attacker, Entity countered, DamageSource counteredDamageSource) {
+    public void counter(final @NonNull KQBTDEntity attacker, final Entity countered, final DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
         if (countered == null || !attacker.hasUser() || counteredDamageSource.is(DamageTypes.MAGIC)) {
             return;

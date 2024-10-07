@@ -18,8 +18,8 @@ public final class SimpleAttack<A extends IAttacker<? extends A, ?>> extends Abs
      * @param knockback    The strength of the knock-back.
      * @param offset       The amount the hitbox is offset by.
      */
-    public SimpleAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                        float hitboxSize, float knockback, float offset) {
+    public SimpleAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                        final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
@@ -32,8 +32,8 @@ public final class SimpleAttack<A extends IAttacker<? extends A, ?>> extends Abs
      * @param damage       The damage this attack deals.
      * @param offset       The amount the hitbox is offset by.
      */
-    public static <A extends IAttacker<? extends A, ?>> SimpleAttack<A> lightAttack(int windup, int duration, float moveDistance, float damage, int stun,
-                                                                                    float knockback, float offset) {
+    public static <A extends IAttacker<? extends A, ?>> SimpleAttack<A> lightAttack(final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                                                                                    final float knockback, final float offset) {
         return new SimpleAttack<>(JCraft.LIGHT_COOLDOWN, windup, duration, moveDistance, damage, stun, 1.5f, knockback, offset);
     }
 

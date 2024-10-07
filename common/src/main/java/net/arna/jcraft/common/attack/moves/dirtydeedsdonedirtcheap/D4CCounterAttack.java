@@ -18,18 +18,18 @@ import net.minecraft.world.phys.Vec3;
 public class D4CCounterAttack extends AbstractCounterAttack<D4CCounterAttack, D4CEntity> {
     private final CounterMissMove<D4CEntity> counterMiss = new CounterMissMove<>(10);
 
-    public D4CCounterAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public D4CCounterAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public void whiff(@NonNull D4CEntity attacker, @NonNull LivingEntity user) {
+    public void whiff(final @NonNull D4CEntity attacker, final @NonNull LivingEntity user) {
         attacker.setMove(counterMiss, D4CEntity.State.COUNTER_MISS);
         JCraft.stun(user, counterMiss.getDuration(), 0);
     }
 
     @Override
-    public void counter(@NonNull D4CEntity attacker, Entity countered, DamageSource counteredDamageSource) {
+    public void counter(final @NonNull D4CEntity attacker, final Entity countered, final DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
         final boolean bl = counteredDamageSource.is(DamageTypes.MOB_PROJECTILE);
         final boolean bl2 = counteredDamageSource.is(DamageTypes.MAGIC);

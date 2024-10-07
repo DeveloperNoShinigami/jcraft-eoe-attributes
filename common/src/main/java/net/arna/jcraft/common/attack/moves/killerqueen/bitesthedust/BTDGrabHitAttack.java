@@ -12,13 +12,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class BTDGrabHitAttack extends AbstractMultiHitAttack<BTDGrabHitAttack, KQBTDEntity> {
-    public BTDGrabHitAttack(int cooldown, int duration, float attackDistance, float damage, int stun, float hitboxSize,
-                            float knockback, float offset, @NonNull IntCollection hitMoments) {
+    public BTDGrabHitAttack(final int cooldown, final int duration, final float attackDistance, final float damage, final int stun, final float hitboxSize,
+                            final float knockback, final float offset, final @NonNull IntCollection hitMoments) {
         super(cooldown, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(KQBTDEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user, final MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         switch (getBlow(attacker)) {
             case 0 -> {

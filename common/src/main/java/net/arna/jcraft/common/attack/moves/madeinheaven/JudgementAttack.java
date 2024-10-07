@@ -15,19 +15,19 @@ public final class JudgementAttack extends AbstractBarrageAttack<JudgementAttack
     public static final MoveVariable<Vec3> INIT_POS = new MoveVariable<>(Vec3.class),
             INIT_ROT = new MoveVariable<>(Vec3.class);
 
-    public JudgementAttack(int cooldown, int windup, int duration, float moveDistance, int interval) {
+    public JudgementAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final int interval) {
         super(cooldown, windup, duration, moveDistance, 0, 0, 0, 0, 0, interval);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MadeInHeavenEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Vec3 initPos = ctx.get(INIT_POS);
         final Vec3 initRot = ctx.get(INIT_ROT);
 
         Set<LivingEntity> targets = Set.of();
         if (attacker.getMoveStun() > 1) {
             if (getBlow(attacker) > 0) {
-                RandomSource random = attacker.getRandom();
+                final RandomSource random = attacker.getRandom();
                 targets = SpeedSliceAttack.doSpeedSlice(attacker,
                         initPos.add(initRot.scale(random.triangle(2, 2))),
                         initPos.add(random.triangle(0, 5), random.triangle(0, 5),
@@ -47,7 +47,7 @@ public final class JudgementAttack extends AbstractBarrageAttack<JudgementAttack
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(INIT_POS, Vec3.ZERO);
         ctx.register(INIT_ROT, Vec3.ZERO);
     }

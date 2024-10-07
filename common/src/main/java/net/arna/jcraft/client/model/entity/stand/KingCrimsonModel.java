@@ -15,13 +15,13 @@ public class KingCrimsonModel extends StandEntityModel<KingCrimsonEntity> {
 
 
     @Override
-    public void setCustomAnimations(KingCrimsonEntity animatable, long instanceId, AnimationState<KingCrimsonEntity> animationState) {
+    public void setCustomAnimations(final KingCrimsonEntity animatable, final long instanceId, final AnimationState<KingCrimsonEntity> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
         if (!animatable.hasUser()) {
             return;
         }
 
-        LivingEntity user = animatable.getUserOrThrow();
+        final LivingEntity user = animatable.getUserOrThrow();
         float overVel = 0;
         float velInfluence = 90f;
 
@@ -38,13 +38,13 @@ public class KingCrimsonModel extends StandEntityModel<KingCrimsonEntity> {
             }
         }
 
-        CoreGeoBone head = this.getAnimationProcessor().getBone("head");
+        final CoreGeoBone head = this.getAnimationProcessor().getBone("head");
 
         if ((animatable.isBlocking() || animatable.isIdle()) && head != null) {
             head.setRotX(-(user.getXRot() + overVel * velInfluence) * 3.1415f / 180f);
 
         } else if (animatable.getMoveStun() > 0) {
-            CoreGeoBone torso = this.getAnimationProcessor().getBone("base");
+            final CoreGeoBone torso = this.getAnimationProcessor().getBone("base");
             if (torso != null) {
                 float torsoPitch = (user.getXRot() * 0.9f) * 3.1415f / 180f;
                 torso.setRotX(torso.getRotX() - torsoPitch);

@@ -7,17 +7,17 @@ import net.minecraft.resources.ResourceLocation;
 
 public class MeteorModel extends GeoModel<MeteorProjectile> {
     @Override
-    public ResourceLocation getModelResource(MeteorProjectile object) {
+    public ResourceLocation getModelResource(final MeteorProjectile object) {
         return JCraft.id("geo/meteor.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(MeteorProjectile object) {
+    public ResourceLocation getTextureResource(final MeteorProjectile object) {
         return JCraft.id("textures/entity/meteor/skin_" + object.getSkin() + ".png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(MeteorProjectile animatable) {
+    public ResourceLocation getAnimationResource(final MeteorProjectile animatable) {
         return JCraft.id("animations/meteor.animation.json");
     }
 }

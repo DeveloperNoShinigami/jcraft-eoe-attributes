@@ -7,17 +7,17 @@ import net.minecraft.resources.ResourceLocation;
 
 public class PetshopModel extends GeoModel<PetshopEntity> {
     @Override
-    public ResourceLocation getModelResource(PetshopEntity animatable) {
+    public ResourceLocation getModelResource(final PetshopEntity animatable) {
         return JCraft.id("geo/petshop.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(PetshopEntity animatable) {
+    public ResourceLocation getTextureResource(final PetshopEntity animatable) {
         return JCraft.id("textures/entity/petshop.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(PetshopEntity animatable) {
+    public ResourceLocation getAnimationResource(final PetshopEntity animatable) {
         return JCraft.id("animations/petshop.animation.json");
     }
 }

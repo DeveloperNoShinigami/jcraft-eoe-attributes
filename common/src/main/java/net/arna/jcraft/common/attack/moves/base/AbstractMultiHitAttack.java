@@ -21,14 +21,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class AbstractMultiHitAttack<T extends AbstractMultiHitAttack<T, A>, A extends IAttacker<? extends A, ?>> extends AbstractSimpleAttack<T, A> {
     private IntSortedSet hitMoments;
 
-    protected AbstractMultiHitAttack(int cooldown, int duration, float moveDistance, float damage, int stun,
-                                     float hitboxSize, float knockback, float offset, @NonNull IntCollection hitMoments) {
+    protected AbstractMultiHitAttack(final int cooldown, final int duration, final float moveDistance, final float damage, final int stun,
+                                     final float hitboxSize, final float knockback, final float offset, final @NonNull IntCollection hitMoments) {
         super(cooldown, hitMoments.intStream().min().orElse(0), duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
 
         withHitMoments(hitMoments);
     }
 
-    public T withHitMoments(IntCollection hitMoments) {
+    public T withHitMoments(final IntCollection hitMoments) {
         // Ensure hitMoments is sorted
         IntSortedSet intermediary = new IntLinkedOpenHashSet();
         hitMoments.intStream()
@@ -39,12 +39,12 @@ public abstract class AbstractMultiHitAttack<T extends AbstractMultiHitAttack<T,
     }
 
     @Override
-    public boolean shouldPerform(A attacker, int moveStun) {
+    public boolean shouldPerform(final A attacker, final int moveStun) {
         return attacker.hasUser() && hitMoments.contains(getDuration() - moveStun);
     }
 
     @Override
-    public int getBlow(A attacker) {
+    public int getBlow(final A attacker) {
         int tick = getDuration() - attacker.getMoveStun();
         AtomicInteger blow = new AtomicInteger(-1);
         hitMoments.forEach(i -> {

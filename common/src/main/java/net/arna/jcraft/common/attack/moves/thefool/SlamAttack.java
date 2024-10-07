@@ -13,14 +13,14 @@ import java.util.Set;
 public final class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEntity> {
     public static final IntMoveVariable VARIANT = new IntMoveVariable();
 
-    public SlamAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                      float hitboxSize, float knockback, float offset) {
+    public SlamAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                      final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
+        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         attacker.playSound(JSoundRegistry.IMPACT_11.get(), 1, 1);
 
@@ -49,7 +49,7 @@ public final class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEn
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(VARIANT);
     }
 

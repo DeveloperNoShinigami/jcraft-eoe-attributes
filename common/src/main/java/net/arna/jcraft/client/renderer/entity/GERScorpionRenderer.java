@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 
 public class GERScorpionRenderer extends GeoEntityRenderer<GERScorpionEntity> {
-    public GERScorpionRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public GERScorpionRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new GERScorpionModel());
     }
 }

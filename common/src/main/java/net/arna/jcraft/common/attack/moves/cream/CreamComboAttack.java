@@ -10,14 +10,14 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public final class CreamComboAttack extends AbstractMultiHitAttack<CreamComboAttack, CreamEntity> {
-    public CreamComboAttack(int cooldown, int duration, float moveDistance, float damage, int stun,
-                            float hitboxSize, float knockback, float offset,
-                            @NonNull IntCollection hitMoments) {
+    public CreamComboAttack(final int cooldown, final int duration, final float moveDistance, final float damage, final int stun,
+                            final float hitboxSize, final float knockback, final float offset,
+                            final @NonNull IntCollection hitMoments) {
         super(cooldown, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final CreamEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (getBlow(attacker) == 2) {

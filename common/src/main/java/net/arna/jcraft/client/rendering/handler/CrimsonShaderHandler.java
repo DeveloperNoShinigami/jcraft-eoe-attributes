@@ -28,17 +28,17 @@ public class CrimsonShaderHandler extends StandShaderHandler {
     public List<BlockInfo> list = new ArrayList<>();
 
     @Override
-    public void onWorldRendered(@NotNull PoseStack matrices, @NotNull Camera camera, float tickDelta, long nanoTime) {
+    public void onWorldRendered(final @NotNull PoseStack matrices, final @NotNull Camera camera, final float tickDelta, final long nanoTime) {
         if (renderingEffect) {
-            Level world = camera.getEntity().level();
+            final Level world = camera.getEntity().level();
             if(list.isEmpty()){
                 list = JUtils.collectBlockInfo(world, camera.getBlockPosition(), 8);
             }
-            BlockRenderDispatcher manager = Minecraft.getInstance().getBlockRenderer();
+            final BlockRenderDispatcher manager = Minecraft.getInstance().getBlockRenderer();
 
 
-            MultiBufferSource.BufferSource consumer = Minecraft.getInstance().renderBuffers().bufferSource();
-            for (BlockInfo info : list){
+            final MultiBufferSource.BufferSource consumer = Minecraft.getInstance().renderBuffers().bufferSource();
+            for (final BlockInfo info : list){
 
 
                 matrices.pushPose();
@@ -63,8 +63,8 @@ public class CrimsonShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void tick(Minecraft client) {
-        SkyBoxManager skyboxManager = SkyBoxManager.getInstance();
+    public void tick(final Minecraft client) {
+        final SkyBoxManager skyboxManager = SkyBoxManager.getInstance();
 
         if (shouldRender) {
             if (!renderingEffect) {
@@ -95,7 +95,7 @@ public class CrimsonShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void renderShaderEffects(float tickDelta) {
+    public void renderShaderEffects(final float tickDelta) {
 
     }
 

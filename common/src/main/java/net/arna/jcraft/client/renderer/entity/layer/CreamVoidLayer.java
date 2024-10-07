@@ -19,15 +19,15 @@ public class CreamVoidLayer extends GeoRenderLayer<CreamEntity> {
     private static final List<ResourceLocation> skins = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/stands/cream/void" + i + ".png")).toList();
 
-    public CreamVoidLayer(GeoRenderer<CreamEntity> entityRendererIn) {
+    public CreamVoidLayer(final GeoRenderer<CreamEntity> entityRendererIn) {
         super(entityRendererIn);
     }
 
     @Override
-    public void render(PoseStack poseStack, CreamEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
-                       MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+    public void render(final PoseStack poseStack, final CreamEntity animatable, final BakedGeoModel bakedModel, final RenderType renderType,
+                       final MultiBufferSource bufferSource, final VertexConsumer buffer, final float partialTick, final int packedLight, final int packedOverlay) {
         if (animatable.tickCount == 0) return; // Prevents summoning anim flashing players screen
-        RenderType cameo = RenderType.dragonExplosionAlpha(skins.get(animatable.getSkin()));
+        final RenderType cameo = RenderType.dragonExplosionAlpha(skins.get(animatable.getSkin()));
 
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,
                 bufferSource.getBuffer(cameo), partialTick, 15728640, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1f);

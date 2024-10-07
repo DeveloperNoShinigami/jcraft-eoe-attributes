@@ -5,20 +5,19 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.BubbleProjectile;
 import net.minecraft.resources.ResourceLocation;
 
-
 public class BubbleModel extends GeoModel<BubbleProjectile> {
     @Override
-    public ResourceLocation getModelResource(BubbleProjectile object) {
+    public ResourceLocation getModelResource(final BubbleProjectile object) {
         return JCraft.id("geo/bubble.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(BubbleProjectile object) {
+    public ResourceLocation getTextureResource(final BubbleProjectile object) {
         return JCraft.id("textures/entity/projectiles/bubble.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(BubbleProjectile animatable) {
+    public ResourceLocation getAnimationResource(final BubbleProjectile animatable) {
         return JCraft.id("animations/bubble.animation.json");
     }
 

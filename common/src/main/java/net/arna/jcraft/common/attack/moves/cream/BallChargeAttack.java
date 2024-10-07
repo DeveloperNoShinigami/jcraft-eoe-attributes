@@ -9,12 +9,12 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class BallChargeAttack extends AbstractMove<BallChargeAttack, CreamEntity> {
-    public BallChargeAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public BallChargeAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final CreamEntity attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.playSound(JSoundRegistry.CREAM_CHARGE.get(), 1, 1);
         attacker.setCharging(true);
         attacker.setChargeDir(user.getLookAngle().scale(0.5));

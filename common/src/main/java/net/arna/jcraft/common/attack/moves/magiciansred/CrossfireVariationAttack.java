@@ -11,13 +11,13 @@ import java.util.Set;
 public final class CrossfireVariationAttack extends AbstractMove<CrossfireVariationAttack, MagiciansRedEntity> {
     private static final int variationAnkhs = 6;
 
-    public CrossfireVariationAttack(int cooldown, int windup, int moveStunTicks, float moveDistance) {
+    public CrossfireVariationAttack(final int cooldown, final int windup, final int moveStunTicks, final float moveDistance) {
         super(cooldown, windup, moveStunTicks, moveDistance);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MagiciansRedEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user, final MoveContext ctx) {
         int orbitRange = user.isShiftKeyDown() ? 7 : 5;
         for (int i = 0; i < variationAnkhs; i++) {
             final AnkhProjectile ankh = new AnkhProjectile(attacker.level(), user);

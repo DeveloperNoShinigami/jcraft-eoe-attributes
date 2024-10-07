@@ -28,8 +28,8 @@ public class SpecArgumentType implements ArgumentType<SpecType> {
     private final Collection<String> examples = ImmutableList.of("BRAWLER", "ANUBIS");
 
     @Override
-    public SpecType parse(StringReader reader) throws CommandSyntaxException {
-        String name = reader.readUnquotedString();
+    public SpecType parse(final StringReader reader) throws CommandSyntaxException {
+        final String name = reader.readUnquotedString();
         try {
             return SpecType.valueOf(name.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
@@ -38,8 +38,8 @@ public class SpecArgumentType implements ArgumentType<SpecType> {
     }
 
     @Override
-    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        String input = builder.getRemainingLowerCase().replaceAll("_", "");
+    public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
+        final String input = builder.getRemainingLowerCase().replaceAll("_", "");
         suggestions.entrySet().stream()
                 .filter(e -> e.getKey().startsWith(input))
                 .map(Map.Entry::getValue)

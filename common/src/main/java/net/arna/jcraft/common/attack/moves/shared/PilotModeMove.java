@@ -8,12 +8,12 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class PilotModeMove<A extends StandEntity<? extends A, ?>> extends AbstractMove<PilotModeMove<A>, A> {
-    public PilotModeMove(int cooldown) {
+    public PilotModeMove(final int cooldown) {
         super(cooldown, 0, 0, 0);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.togglePilotMode();
         return Set.of();
     }

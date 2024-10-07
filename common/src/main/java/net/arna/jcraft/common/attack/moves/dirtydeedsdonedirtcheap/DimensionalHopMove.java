@@ -33,12 +33,12 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove, D4CEntity> {
-    public DimensionalHopMove(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback, float offset) {
+    public DimensionalHopMove(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    public void onInitiate(D4CEntity attacker) {
+    public void onInitiate(final D4CEntity attacker) {
         super.onInitiate(attacker);
 
         if (attacker.level() != JCraft.auWorld) {
@@ -48,7 +48,7 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final     D4CEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         final ServerLevel world = (ServerLevel) attacker.level();
@@ -87,7 +87,7 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
 
     //todo: fix fixLightInAU() crashing the server repeatedly (its currently not called)
     @SuppressWarnings("DataFlowIssue") // There is no issue
-    private static void fixLightInAU(D4CEntity attacker, ServerLevel world, ServerLevel auWorld) {
+    private static void fixLightInAU(final D4CEntity attacker, final ServerLevel world, final ServerLevel auWorld) {
         ChunkPos origin = attacker.chunkPosition();
 
         // Lighting providers are too complicated, man. Wth

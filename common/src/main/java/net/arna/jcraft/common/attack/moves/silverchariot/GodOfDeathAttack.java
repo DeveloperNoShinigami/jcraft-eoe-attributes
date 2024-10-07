@@ -10,14 +10,14 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class GodOfDeathAttack extends AbstractSimpleAttack<GodOfDeathAttack, SilverChariotEntity> {
-    public GodOfDeathAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                            float hitboxSize, float knockback, float offset) {
+    public GodOfDeathAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                            final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         hitSpark = JParticleType.SWEEP_ATTACK;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(SilverChariotEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final SilverChariotEntity attacker, final LivingEntity user, final MoveContext ctx) {
         Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         if (targets.isEmpty()) {

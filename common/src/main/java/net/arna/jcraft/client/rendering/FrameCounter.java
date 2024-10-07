@@ -30,7 +30,7 @@ public class FrameCounter {
     @Getter
     private boolean paused;
 
-    public FrameCounter(float framerate, int frameCount, boolean shouldLoop) {
+    public FrameCounter(final float framerate, final int frameCount, final boolean shouldLoop) {
         singleFrameTime = (long) (1_000_000_000L / framerate);
         this.frameCount = frameCount;
         this.shouldLoop = shouldLoop;

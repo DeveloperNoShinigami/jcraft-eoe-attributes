@@ -11,12 +11,12 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class GiveGunMove extends AbstractMove<GiveGunMove, D4CEntity> {
-    public GiveGunMove(int cooldown, int windup, int duration, float moveDistance) {
+    public GiveGunMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final D4CEntity attacker, final LivingEntity user, final MoveContext ctx) {
         if (user instanceof final ServerPlayer playerEntity) {
             playerEntity.addItem(JItemRegistry.FV_REVOLVER.get().getDefaultInstance());
             attacker.getMainHandItem().shrink(1);

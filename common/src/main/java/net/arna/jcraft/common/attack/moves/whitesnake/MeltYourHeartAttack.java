@@ -10,13 +10,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class MeltYourHeartAttack extends AbstractSimpleAttack<MeltYourHeartAttack, WhiteSnakeEntity> {
-    public MeltYourHeartAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                               float hitboxSize, float knockback, float offset) {
+    public MeltYourHeartAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                               final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(WhiteSnakeEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         for (int i = 0; i < 10; i++) {

@@ -16,19 +16,19 @@ import java.util.Set;
 public final class JumpMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<JumpMove<A>, A> {
     private final float strength;
 
-    public JumpMove(int cooldown, int windup, int duration, float moveDistance, float strength) {
+    public JumpMove(final int cooldown, final int windup, final int duration, final float moveDistance, final float strength) {
         super(cooldown, windup, duration, moveDistance);
         this.strength = strength;
         mobilityType = MobilityType.DASH;
     }
 
     @Override
-    public boolean canBeInitiated(A attacker) {
+    public boolean canBeInitiated(final A attacker) {
         return super.canBeInitiated(attacker) && attacker.getUser().onGround();
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         if (user.onGround()) {
             final Vec3 upVel = Vec3.atLowerCornerOf(GravityChangerAPI.getGravityDirection(user).getNormal()).scale(-0.5);
             final Vec3 jumpVel = Vec3.directionFromRotation(user.getXRot(), user.getYRot()).scale(strength).add(upVel);

@@ -21,13 +21,13 @@ public class EpitaphVignetteShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void onWorldRendered(@NotNull PoseStack matrices, @NotNull Camera camera, float tickDelta, long nanoTime) {
+    public void onWorldRendered(final @NotNull PoseStack matrices, final @NotNull Camera camera, final float tickDelta, final long nanoTime) {
         SHADER.setUniformValue("Intensity", EpitaphOverlay.getVignetteIntensity());
         SHADER.setUniformValue("Extend", EpitaphOverlay.getVignetteExtend());
     }
 
     @Override
-    public void renderShaderEffects(float tickDelta) {
+    public void renderShaderEffects(final float tickDelta) {
         if (EpitaphOverlay.shouldRenderVignette()) SHADER.render(tickDelta);
     }
 

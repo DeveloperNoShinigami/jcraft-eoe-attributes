@@ -23,12 +23,12 @@ import net.minecraft.world.phys.Vec3;
 public final class STWCounterAttack extends AbstractCounterAttack<STWCounterAttack, ShadowTheWorldEntity> {
     private static final CounterMissMove<ShadowTheWorldEntity> missAttack = new CounterMissMove<>(20);
 
-    public STWCounterAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public STWCounterAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public void onInitiate(ShadowTheWorldEntity attacker) {
+    public void onInitiate(final ShadowTheWorldEntity attacker) {
         super.onInitiate(attacker);
         final LivingEntity user = attacker.getUserOrThrow();
         if (user instanceof ServerPlayer player) {
@@ -42,14 +42,14 @@ public final class STWCounterAttack extends AbstractCounterAttack<STWCounterAtta
     }
 
     @Override
-    public void whiff(@NonNull ShadowTheWorldEntity attacker, @NonNull LivingEntity user) {
+    public void whiff(final @NonNull ShadowTheWorldEntity attacker, final @NonNull LivingEntity user) {
         attacker.cancelMove();
         attacker.desummon(false);
         JCraft.stun(user, missAttack.getDuration(), 0);
     }
 
     @Override
-    public void counter(@NonNull ShadowTheWorldEntity attacker, Entity countered, DamageSource counteredDamageSource) {
+    public void counter(final @NonNull ShadowTheWorldEntity attacker, final Entity countered, final DamageSource counteredDamageSource) {
         super.counter(attacker, countered, counteredDamageSource);
 
         if (countered == null || !attacker.hasUser()) {

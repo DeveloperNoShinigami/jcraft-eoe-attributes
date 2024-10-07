@@ -33,29 +33,29 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
     public static final MoveVariable<Mob> DOPPELGANGER = new WeakMoveVariable<>(Mob.class);
     private final int erasureDuration;
 
-    public TimeEraseMove(int cooldown, int windup, int duration, float moveDistance, int erasureDuration) {
+    public TimeEraseMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int erasureDuration) {
         super(cooldown, windup, duration, moveDistance);
         this.erasureDuration = erasureDuration;
     }
 
     @Override
-    public void onInitiate(KingCrimsonEntity attacker) {
+    public void onInitiate(final KingCrimsonEntity attacker) {
         super.onInitiate(attacker);
 
-        if (attacker.getUser() instanceof ServerPlayer player) {
+        if (attacker.getUser() instanceof final ServerPlayer player) {
             player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(JSoundRegistry.TIME_ERASE.get()), SoundSource.PLAYERS,
                     attacker.getX(), attacker.getY(), attacker.getZ(), 1, 1, 0));
         }
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(KingCrimsonEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KingCrimsonEntity attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.setTETime(erasureDuration);
 
         attacker.setCurrentMove(null);
         Mob doppelganger = null;
 
-        if (user instanceof ServerPlayer player) {
+        if (user instanceof final ServerPlayer player) {
             // Shader handling
             ShaderActivationPacket.send(player, attacker, 0, 120, ShaderActivationPacket.Type.CRIMSON);
 
@@ -105,7 +105,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
         return Set.of();
     }
 
-    private void summonFakeKC(KingCrimsonEntity attacker) {
+    private void summonFakeKC(final KingCrimsonEntity attacker) {
         Mob doppelganger = attacker.getMoveContext().get(DOPPELGANGER);
         CommonStandComponent standData = JComponentPlatformUtils.getStandData(doppelganger);
         standData.setTypeAndSkin(attacker.getStandType(), attacker.getSkin());
@@ -120,7 +120,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
         clone.setSilent(true);
     }
 
-    public void tickTimeErase(KingCrimsonEntity attacker) {
+    public void tickTimeErase(final KingCrimsonEntity attacker) {
         LivingEntity user = attacker.getUserOrThrow();
         int teTime = attacker.getTETime();
         if (teTime > 0) {
@@ -170,7 +170,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(DOPPELGANGER);
     }
 

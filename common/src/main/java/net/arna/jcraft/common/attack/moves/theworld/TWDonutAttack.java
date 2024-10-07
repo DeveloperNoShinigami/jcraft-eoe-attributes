@@ -10,14 +10,14 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class TWDonutAttack extends AbstractSimpleAttack<TWDonutAttack, TheWorldEntity> {
-    public TWDonutAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                         float hitboxSize, float knockback, float offset) {
+    public TWDonutAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                         final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         hitSpark = JParticleType.HIT_SPARK_3;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheWorldEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final TheWorldEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         // If missed, stun the user for 1.5 seconds

@@ -12,13 +12,13 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public final class GlideMove extends AbstractMove<GlideMove, TheFoolEntity> {
-    public GlideMove(int cooldown, int windup, int duration, float moveDistance) {
+    public GlideMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         mobilityType = MobilityType.FLIGHT;
     }
 
     @Override
-    public void tick(TheFoolEntity attacker, int moveStun) {
+    public void tick(final TheFoolEntity attacker, final int moveStun) {
         super.tick(attacker, moveStun);
 
         final LivingEntity user = attacker.getUser();
@@ -34,7 +34,7 @@ public final class GlideMove extends AbstractMove<GlideMove, TheFoolEntity> {
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheFoolEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.setSand(false); // Ends transformation state
         return Set.of();
     }

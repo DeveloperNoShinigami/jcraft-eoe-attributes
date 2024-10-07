@@ -7,12 +7,12 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import org.jetbrains.annotations.NotNull;
 
 public class MetallicaForksRenderer extends GeoEntityRenderer<MetallicaForksEntity> {
-    public MetallicaForksRenderer(EntityRendererProvider.Context renderManager) {
+    public MetallicaForksRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new MetallicaForksModel());
     }
 
     @Override
-    public boolean shouldShowName(@NotNull MetallicaForksEntity animatable) {
+    public boolean shouldShowName(final @NotNull MetallicaForksEntity animatable) {
         return false;
     }
 }

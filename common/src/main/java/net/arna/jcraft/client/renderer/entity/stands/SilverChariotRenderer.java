@@ -16,7 +16,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEntity> {
 
-    public SilverChariotRenderer(EntityRendererProvider.Context context) {
+    public SilverChariotRenderer(final EntityRendererProvider.Context context) {
         super(context, new SilverChariotModel());
         addRenderLayer(new SCRapierLayer(this));
     }
@@ -25,8 +25,8 @@ public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEnti
 
 
     @Override
-    public void actuallyRender(PoseStack poseStack, SilverChariotEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        float a = StandEntityRenderer.getAlpha(animatable, partialTick);
+    public void actuallyRender(final PoseStack poseStack, final SilverChariotEntity animatable, final BakedGeoModel model, final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
+        final float a = StandEntityRenderer.getAlpha(animatable, partialTick);
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);
         if (animatable.getMode() == SilverChariotEntity.Mode.ARMORLESS && animatable.hasUser()) {
             for (double i = 0; i < 3; i++) {

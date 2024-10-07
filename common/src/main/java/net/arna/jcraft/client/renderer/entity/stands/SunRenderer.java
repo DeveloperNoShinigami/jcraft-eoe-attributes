@@ -16,31 +16,31 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
-    public SunRenderer(EntityRendererProvider.Context renderManager) {
+    public SunRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new TheSunModel());
         addRenderLayer(new SunGlowLayer(this));
     }
 
     @Override
-    protected int getBlockLightLevel(@NotNull TheSunEntity entity, @NotNull BlockPos pos) {
+    protected int getBlockLightLevel(final @NotNull TheSunEntity entity, final @NotNull BlockPos pos) {
         return 15;
     }
 
     @Override
-    protected int getSkyLightLevel(@NotNull TheSunEntity entity, @NotNull BlockPos pos) {
+    protected int getSkyLightLevel(final @NotNull TheSunEntity entity, final @NotNull BlockPos pos) {
         return 15;
     }
 
     //TODO: translucent layer that isn't layered over and has no shading
     @Override
-    public RenderType getRenderType(TheSunEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final TheSunEntity animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.dragonExplosionAlpha(texture);
     }
 
     @Override
-    public void preRender(PoseStack poseStack, TheSunEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(final PoseStack poseStack, final TheSunEntity animatable, final BakedGeoModel model, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
         if (!isReRender) {
-            float scale = animatable.getScale(partialTick);
+            final float scale = animatable.getScale(partialTick);
             poseStack.scale(scale, scale, scale);
         }
 

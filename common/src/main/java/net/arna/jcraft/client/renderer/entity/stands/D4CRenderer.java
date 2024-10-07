@@ -18,16 +18,15 @@ import net.minecraft.world.item.ShieldItem;
 
 import javax.annotation.Nullable;
 
-
 public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
-    public D4CRenderer(EntityRendererProvider.Context context) {
+    public D4CRenderer(final EntityRendererProvider.Context context) {
         super(context, new StandEntityModel<>(StandType.D4C));
 
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
 
             @Nullable
             @Override
-            protected ItemStack getStackForBone(GeoBone bone, D4CEntity animatable) {
+            protected ItemStack getStackForBone(final GeoBone bone, final D4CEntity animatable) {
                 // Retrieve the items in the entity's hands for the relevant bone
                 return switch (bone.getName()) {
                     case LEFT_HAND -> animatable.isLeftHanded() ?
@@ -39,7 +38,7 @@ public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
             }
 
             @Override
-            protected ItemDisplayContext getTransformTypeForStack(GeoBone bone, ItemStack stack, D4CEntity animatable) {
+            protected ItemDisplayContext getTransformTypeForStack(final GeoBone bone, final ItemStack stack, final D4CEntity animatable) {
                 // Apply the camera transform for the given hand
                 return switch (bone.getName()) {
                     case LEFT_HAND, RIGHT_HAND -> ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
@@ -49,8 +48,8 @@ public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
 
             // Do some quick render modifications depending on what the item is
             @Override
-            protected void renderStackForBone(PoseStack poseStack, GeoBone bone, ItemStack stack, D4CEntity animatable,
-                                              MultiBufferSource bufferSource, float partialTick, int packedLight, int packedOverlay) {
+            protected void renderStackForBone(final PoseStack poseStack, final GeoBone bone, final ItemStack stack, final D4CEntity animatable,
+                                              final MultiBufferSource bufferSource, final float partialTick, final int packedLight, final int packedOverlay) {
                 /*
                 float ang = -90f;
                 D4CEntity.State state = animatable.getState();
@@ -81,9 +80,9 @@ public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, D4CEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        float a = StandEntityRenderer.getAlpha(animatable, partialTick);
-        float gR = 1.0f - a;
+    public void actuallyRender(final PoseStack poseStack, final D4CEntity animatable, final BakedGeoModel model, final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
+        final float a = StandEntityRenderer.getAlpha(animatable, partialTick);
+        final float gR = 1.0f - a;
 
         this.mainHandItem = animatable.getMainHandItem();
         this.offHandItem = animatable.getOffhandItem();

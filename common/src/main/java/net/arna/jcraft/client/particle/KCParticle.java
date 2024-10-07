@@ -7,7 +7,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 public class KCParticle extends RisingParticle {
     private final SpriteSet spriteProvider;
 
-    KCParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider) {
+    KCParticle(final ClientLevel world, final double x, final double y, final double z, final double velocityX, final double velocityY, final double velocityZ, final SpriteSet spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ);
         this.spriteProvider = spriteProvider;
         this.quadSize = 0.2f + random.nextFloat() * 0.2f;
@@ -21,7 +21,7 @@ public class KCParticle extends RisingParticle {
 
     public void tick() {
         super.tick();
-        float c = 1f - (float) age / (float) lifetime;
+        final float c = 1f - (float) age / (float) lifetime;
         this.setColor(c, c, c);
 
         if (!this.removed) {
@@ -41,7 +41,7 @@ public class KCParticle extends RisingParticle {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(final SimpleParticleType defaultParticleType, final ClientLevel clientWorld, final double d, final double e, final double f, final double g, final double h, final double i) {
             return new KCParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
         }
     }

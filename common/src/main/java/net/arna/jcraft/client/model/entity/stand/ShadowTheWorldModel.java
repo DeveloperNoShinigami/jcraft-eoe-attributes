@@ -15,7 +15,7 @@ public class ShadowTheWorldModel extends StandEntityModel<ShadowTheWorldEntity> 
     }
 
     @Override
-    public ResourceLocation getModelResource(ShadowTheWorldEntity entity) {
+    public ResourceLocation getModelResource(final ShadowTheWorldEntity entity) {
         return MODEL;
     }
 }

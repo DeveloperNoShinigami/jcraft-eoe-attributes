@@ -8,7 +8,7 @@ public class PurpleHazeCloudParticle extends RisingParticle {
     private final SpriteSet spriteProvider;
     private final float decrement;
 
-    protected PurpleHazeCloudParticle(ClientLevel clientWorld, double d, double e, double f, double g, double h, double i, SpriteSet spriteProvider) {
+    protected PurpleHazeCloudParticle(final ClientLevel clientWorld, final double d, final double e, final double f, final double g, final double h, final double i, final SpriteSet spriteProvider) {
         super(clientWorld, d, e, f, g, h, i);
         this.spriteProvider = spriteProvider;
         this.lifetime = 16;
@@ -34,11 +34,11 @@ public class PurpleHazeCloudParticle extends RisingParticle {
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteProvider;
 
-        public Factory(SpriteSet spriteProvider) {
+        public Factory(final SpriteSet spriteProvider) {
             this.spriteProvider = spriteProvider;
         }
 
-        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(final SimpleParticleType defaultParticleType, final ClientLevel clientWorld, final double d, final double e, final double f, final double g, final double h, final double i) {
             return new PurpleHazeCloudParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
         }
     }

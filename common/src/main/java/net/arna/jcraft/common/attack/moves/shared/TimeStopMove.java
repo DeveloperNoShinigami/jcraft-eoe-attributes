@@ -9,7 +9,7 @@ import java.util.function.IntSupplier;
 
 @Getter
 public final class TimeStopMove<A extends StandEntity<? extends A, ?>> extends AbstractTimeStopMove<TimeStopMove<A>, A> {
-    public TimeStopMove(int cooldown, int windup, int duration, IntSupplier timeStopDuration) {
+    public TimeStopMove(final int cooldown, final int windup, final int duration, final IntSupplier timeStopDuration) {
         super(cooldown, windup, duration, 1f, timeStopDuration);
     }
 

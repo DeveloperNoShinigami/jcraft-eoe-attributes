@@ -22,7 +22,7 @@ import static net.arna.jcraft.common.entity.projectile.RapierProjectile.POSSESSE
 public class SCRapierLayer extends GeoRenderLayer<SilverChariotEntity> {
     private static List<ResourceLocation> skins;
 
-    public SCRapierLayer(GeoRenderer<SilverChariotEntity> entityRendererIn) {
+    public SCRapierLayer(final GeoRenderer<SilverChariotEntity> entityRendererIn) {
         super(entityRendererIn);
 
         skins = IntStream.rangeClosed(0, StandType.SILVER_CHARIOT.getSkinCount())
@@ -31,12 +31,12 @@ public class SCRapierLayer extends GeoRenderLayer<SilverChariotEntity> {
     }
 
     @Override
-    public void render(PoseStack poseStack, SilverChariotEntity animatable, BakedGeoModel bakedModel, RenderType renderType,
-                       MultiBufferSource bufferIn, VertexConsumer buffer, float partialTicks, int packedLight, int packedOverlay) {
+    public void render(final PoseStack poseStack, final SilverChariotEntity animatable, final BakedGeoModel bakedModel, final RenderType renderType,
+                       final MultiBufferSource bufferIn, final VertexConsumer buffer, final float partialTicks, final int packedLight, final int packedOverlay) {
         if (animatable.hasRapier()) {
             SilverChariotEntity.Mode mode = animatable.getMode();
 
-            RenderType cameo = RenderType.armorCutoutNoCull(
+            final RenderType cameo = RenderType.armorCutoutNoCull(
                     mode == SilverChariotEntity.Mode.POSSESSED ? POSSESSED_TEXTURE :
                             mode == SilverChariotEntity.Mode.ARMORLESS ? ARMOR_OFF_TEXTURE :
                                     skins.get(animatable.getSkin())

@@ -18,12 +18,12 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Set;
 
 public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, WhiteSnakeEntity> {
-    public GiveStandAttack(int cooldown, int windup, int duration, float moveDistance, int stun, float hitboxSize, float knockback, float offset) {
+    public GiveStandAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, 0, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    public boolean canBeInitiated(WhiteSnakeEntity attacker) {
+    public boolean canBeInitiated(final WhiteSnakeEntity attacker) {
         if (!attacker.hasUser()) {
             return false;
         }
@@ -31,14 +31,14 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
     }
 
     @Override
-    public void onInitiate(WhiteSnakeEntity attacker) {
+    public void onInitiate(final WhiteSnakeEntity attacker) {
         attacker.setItemSlot(EquipmentSlot.OFFHAND, attacker.getUserOrThrow().getOffhandItem());
         attacker.getUserOrThrow().setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
         super.onInitiate(attacker);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(WhiteSnakeEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final ItemStack itemStack = attacker.getOffhandItem();
 
         super.perform(attacker, user, ctx).stream().findFirst().ifPresent(

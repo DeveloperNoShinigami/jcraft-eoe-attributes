@@ -26,12 +26,12 @@ public final class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> 
             Items.OAK_SAPLING.getDefaultInstance()
     );
 
-    public ItemPlaceMove(int cooldown, int windup, int duration, float moveDistance) {
+    public ItemPlaceMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public void onInitiate(D4CEntity attacker) {
+    public void onInitiate(final D4CEntity attacker) {
         super.onInitiate(attacker);
 
         final MoveContext ctx = attacker.getMoveContext();
@@ -45,7 +45,7 @@ public final class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> 
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final D4CEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final ItemStack offHandStack = attacker.getOffhandItem();
 
         final ItemEntity item = new ItemEntity(attacker.level(), attacker.getX(), attacker.getY() + 0.2, attacker.getZ(),
@@ -60,7 +60,7 @@ public final class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> 
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(PLACING_FIRST_STACK, true);
         ctx.register(PLACING);
     }

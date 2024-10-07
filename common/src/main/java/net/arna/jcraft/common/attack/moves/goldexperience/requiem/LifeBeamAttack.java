@@ -16,13 +16,13 @@ import java.util.Set;
 public final class LifeBeamAttack extends AbstractMove<LifeBeamAttack, GEREntity> {
     public static final IntMoveVariable CHARGE_TIME = new IntMoveVariable();
 
-    public LifeBeamAttack(int cooldown, int windup, int duration, float moveDistance) {
+    public LifeBeamAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(GEREntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final GEREntity attacker, final LivingEntity user, final MoveContext ctx) {
         final GERScorpionEntity scorpion = new GERScorpionEntity(JEntityTypeRegistry.GER_SCORPION.get(), attacker.level());
         if (ctx.getInt(CHARGE_TIME) >= 18) {
             scorpion.charge();
@@ -37,7 +37,7 @@ public final class LifeBeamAttack extends AbstractMove<LifeBeamAttack, GEREntity
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(CHARGE_TIME);
     }
 

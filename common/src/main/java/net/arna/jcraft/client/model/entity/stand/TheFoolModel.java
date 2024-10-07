@@ -14,7 +14,7 @@ public class TheFoolModel extends StandEntityModel<TheFoolEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureResource(TheFoolEntity entity) {
+    public ResourceLocation getTextureResource(final TheFoolEntity entity) {
         return entity.isSand() ? SAND_TEXTURE : super.getTextureResource(entity);
     }
 }

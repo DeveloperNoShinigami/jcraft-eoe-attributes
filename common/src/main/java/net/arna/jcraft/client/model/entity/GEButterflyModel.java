@@ -7,17 +7,17 @@ import net.minecraft.resources.ResourceLocation;
 
 public class GEButterflyModel extends GeoModel<GEButterflyEntity> {
     @Override
-    public ResourceLocation getModelResource(GEButterflyEntity object) {
+    public ResourceLocation getModelResource(final GEButterflyEntity object) {
         return JCraft.id("geo/gebutterfly.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(GEButterflyEntity object) {
+    public ResourceLocation getTextureResource(final GEButterflyEntity object) {
         return JCraft.id("textures/entity/gebutterfly.png");
     }
 
     @Override
-    public ResourceLocation getAnimationResource(GEButterflyEntity animatable) {
+    public ResourceLocation getAnimationResource(final GEButterflyEntity animatable) {
         return JCraft.id("animations/gebutterfly.animation.json");
     }
 }

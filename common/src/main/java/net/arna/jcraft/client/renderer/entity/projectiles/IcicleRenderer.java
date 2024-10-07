@@ -9,12 +9,12 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public class IcicleRenderer extends GeoProjectileRenderer<IcicleProjectile> {
-    public IcicleRenderer(EntityRendererProvider.Context renderManagerIn) {
+    public IcicleRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new IcicleModel());
     }
 
     @Override
-    public RenderType getRenderType(IcicleProjectile animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final IcicleProjectile animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.entityTranslucent(texture);
     }
 }

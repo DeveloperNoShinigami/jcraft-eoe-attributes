@@ -16,12 +16,12 @@ public final class SurpriseMove extends AbstractMove<SurpriseMove, CreamEntity> 
     public static final MoveVariable<Vector3f> OUT_POS = new MoveVariable<>(Vector3f.class);
     public static final MoveVariable<Vector3f> OUT_DIR = new MoveVariable<>(Vector3f.class);
 
-    public SurpriseMove(int cooldown, int windup, int duration, float moveDistance) {
+    public SurpriseMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public void onInitiate(CreamEntity attacker) {
+    public void onInitiate(final CreamEntity attacker) {
         super.onInitiate(attacker);
 
         // OUT_POS are set in .withInitAction() in CreamEntity.java
@@ -31,7 +31,7 @@ public final class SurpriseMove extends AbstractMove<SurpriseMove, CreamEntity> 
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final CreamEntity attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.setCharging(true);
 
         // OUT_DIR is set in .withAction() in CreamEntity.java
@@ -49,7 +49,7 @@ public final class SurpriseMove extends AbstractMove<SurpriseMove, CreamEntity> 
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(OUT_POS, new Vector3f());
         ctx.register(OUT_DIR, new Vector3f());
     }

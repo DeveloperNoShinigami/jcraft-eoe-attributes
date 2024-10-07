@@ -110,8 +110,8 @@ public abstract class PostProcessor {
             );
             shaderEffect.resize(MC.getWindow().getScreenWidth(), MC.getWindow().getScreenHeight());
             effects = shaderEffect.passes.stream().map(PostPass::getEffect).toArray(EffectInstance[]::new);
-        } catch (IOException | JsonParseException e) {
-            JCraft.LOGGER.error("Failed to load post-processing shader: ", e);
+        } catch (IOException | JsonParseException ex) {
+            JCraft.LOGGER.error("Failed to load post-processing shader: ", ex);
         }
     }
 
@@ -128,7 +128,7 @@ public abstract class PostProcessor {
         }
     }
 
-    public void resize(int width, int height) {
+    public void resize(final int width, final int height) {
         if (shaderEffect != null) {
             shaderEffect.resize(width, height);
             if (tempDepthBuffer != null) {

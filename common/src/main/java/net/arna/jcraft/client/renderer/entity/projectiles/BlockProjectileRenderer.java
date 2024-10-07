@@ -15,18 +15,18 @@ import net.minecraft.world.item.ItemDisplayContext;
 public class BlockProjectileRenderer extends GeoProjectileRenderer<BlockProjectile> {
     private final ItemRenderer itemRenderer;
 
-    public BlockProjectileRenderer(EntityRendererProvider.Context ctx) {
+    public BlockProjectileRenderer(final EntityRendererProvider.Context ctx) {
         super(ctx, new BlockProjectileModel());
         this.itemRenderer = ctx.getItemRenderer();
     }
 
     @Override
-    public RenderType getRenderType(BlockProjectile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(final BlockProjectile animatable, final ResourceLocation texture, final MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.eyes(texture);
     }
 
     @Override
-    public void render(BlockProjectile animatable, float yaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(final BlockProjectile animatable, final float yaw, final float partialTick, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
         poseStack.pushPose();
         //poseStack.multiply(Quaternion.fromEulerXyz(3.1415f, 3.1415f, 0));
         itemRenderer.renderStatic(

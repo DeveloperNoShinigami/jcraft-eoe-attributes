@@ -7,7 +7,7 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 
 public class HitsparkParticle extends JGlowingParticle {
-    HitsparkParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider) {
+    HitsparkParticle(final ClientLevel world, final double x, final double y, final double z, final double velocityX, final double velocityY, final double velocityZ, final SpriteSet spriteProvider) {
         super(world, x, y, z, velocityX, velocityY, velocityZ, spriteProvider);
     }
 
@@ -22,13 +22,13 @@ public class HitsparkParticle extends JGlowingParticle {
         private final float scale;
         private final int maxAge;
 
-        public Factory(SpriteSet spriteProvider, float scale, int maxAge) {
+        public Factory(final SpriteSet spriteProvider, final float scale, final int maxAge) {
             this.spriteProvider = spriteProvider;
             this.scale = scale;
             this.maxAge = maxAge;
         }
 
-        public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
+        public Particle createParticle(final SimpleParticleType defaultParticleType, final ClientLevel clientWorld, final double d, final double e, final double f, final double g, final double h, final double i) {
             HitsparkParticle hitsparkParticle = new HitsparkParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
             hitsparkParticle.quadSize = this.scale;
             hitsparkParticle.lifetime = this.maxAge;

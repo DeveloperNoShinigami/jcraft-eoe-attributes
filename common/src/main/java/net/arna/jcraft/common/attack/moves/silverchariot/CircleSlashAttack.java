@@ -14,20 +14,20 @@ public final class CircleSlashAttack extends AbstractSimpleAttack<CircleSlashAtt
     public static final IntMoveVariable CHARGE_TIME = new IntMoveVariable(); // in half seconds
     private final float originalDamage;
 
-    public CircleSlashAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                             float hitboxSize, float knockback, float offset) {
+    public CircleSlashAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                             final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         originalDamage = damage;
     }
 
     @Override
-    public void onInitiate(SilverChariotEntity attacker) {
+    public void onInitiate(final SilverChariotEntity attacker) {
         super.onInitiate(attacker);
         withDamage(originalDamage);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(SilverChariotEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final SilverChariotEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
         withDamage(originalDamage + attacker.getMoveContext().getInt(CHARGE_TIME) * 0.75f);
@@ -42,7 +42,7 @@ public final class CircleSlashAttack extends AbstractSimpleAttack<CircleSlashAtt
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(CHARGE_TIME);
     }
 

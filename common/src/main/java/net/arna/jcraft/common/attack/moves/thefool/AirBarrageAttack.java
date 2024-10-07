@@ -6,13 +6,13 @@ import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.minecraft.world.entity.LivingEntity;
 
 public final class AirBarrageAttack extends AbstractBarrageAttack<AirBarrageAttack, TheFoolEntity> {
-    public AirBarrageAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                            float hitboxSize, float knockback, float offset, int interval) {
+    public AirBarrageAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                            final float hitboxSize, final float knockback, final float offset, final int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval);
     }
 
     @Override
-    public void tick(TheFoolEntity attacker, int moveStun) {
+    public void tick(final TheFoolEntity attacker, final int moveStun) {
         super.tick(attacker, moveStun);
 
         if (!attacker.hasUser()) {

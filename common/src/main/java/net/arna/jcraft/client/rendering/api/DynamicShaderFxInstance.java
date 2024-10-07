@@ -10,7 +10,7 @@ public abstract class DynamicShaderFxInstance {
     /**
      * Called every frame (before the effect is rendered)
      */
-    public void update(double deltaTime) {
+    public void update(final double deltaTime) {
         time += deltaTime / 20F;
     }
 
@@ -19,7 +19,7 @@ public abstract class DynamicShaderFxInstance {
      *
      * @param writer for writing data to the texture buffer
      */
-    public abstract void writeDataToBuffer(BiConsumer<Integer, Float> writer);
+    public abstract void writeDataToBuffer(final BiConsumer<Integer, Float> writer);
 
     public final void remove() {
         removed = true;

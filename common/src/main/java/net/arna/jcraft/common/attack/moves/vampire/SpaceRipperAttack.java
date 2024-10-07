@@ -16,14 +16,14 @@ import java.util.Set;
 public final class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, VampireSpec> {
     public static final IntMoveVariable CHARGE_TIME = new IntMoveVariable();
 
-    public SpaceRipperAttack(int cooldown, int windup, int duration, float attackDistance) {
+    public SpaceRipperAttack(final int cooldown, final int windup, final int duration, final float attackDistance) {
         super(cooldown, windup, duration, attackDistance);
         ranged = true;
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(VampireSpec attacker, LivingEntity user, MoveContext ctx) {
-        Vec3 rotVec = user.getLookAngle();
+    public @NonNull Set<LivingEntity> perform(final VampireSpec attacker, final LivingEntity user, final MoveContext ctx) {
+        final Vec3 rotVec = user.getLookAngle();
 
         int chargeTime = ctx.getInt(CHARGE_TIME);
 
@@ -31,9 +31,9 @@ public final class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, Vam
             LaserProjectile laser = new LaserProjectile(attacker.getEntityWorld(), user);
             laser.setDeltaMovement(getRotVec(attacker).scale(2 + (chargeTime - 15) / 10.0));
 
-            Vec3 sideOffset = rotVec.yRot(1.57079632679f * i).scale(0.125);
-            Vec3 offset = RotationUtil.vecPlayerToWorld(sideOffset.x, sideOffset.y + (double) user.getEyeHeight(), sideOffset.z, GravityChangerAPI.getGravityDirection(user));
-            Vec3 offsetHeightPos = attacker.getBaseEntity().position().add(offset);
+            final Vec3 sideOffset = rotVec.yRot(1.57079632679f * i).scale(0.125);
+            final Vec3 offset = RotationUtil.vecPlayerToWorld(sideOffset.x, sideOffset.y + (double) user.getEyeHeight(), sideOffset.z, GravityChangerAPI.getGravityDirection(user));
+            final Vec3 offsetHeightPos = attacker.getBaseEntity().position().add(offset);
             laser.setPos(offsetHeightPos);
 
             if (chargeTime > 24) {
@@ -49,7 +49,7 @@ public final class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, Vam
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerContextEntries(final MoveContext ctx) {
         ctx.register(CHARGE_TIME);
     }
 

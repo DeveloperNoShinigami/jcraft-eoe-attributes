@@ -13,8 +13,8 @@ import java.util.List;
 public final class KnockdownMultiHitAttack<A extends IAttacker<? extends A, ?>> extends AbstractEffectInflictingMultiHitAttack<KnockdownMultiHitAttack<A>, A> {
     private final int knockdownDuration;
 
-    public KnockdownMultiHitAttack(int cooldown, int duration, float attackDistance, float damage, int stun, float hitboxSize,
-                                   float knockback, float offset, @NonNull IntCollection hitMoments, int knockdownDuration) {
+    public KnockdownMultiHitAttack(final int cooldown, final int duration, final float attackDistance, final float damage, final int stun, final float hitboxSize,
+                                   final float knockback, final float offset, final @NonNull IntCollection hitMoments, final int knockdownDuration) {
         super(cooldown, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMoments,
                 List.of(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), knockdownDuration, 0, true, false)));
         this.knockdownDuration = knockdownDuration;

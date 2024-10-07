@@ -21,7 +21,7 @@ public class WeakMoveVariable<T> extends MoveVariable<T> {
     private static class WeakEntry<T> extends MoveContext.Entry<T> {
         private @Nullable WeakReference<T> value;
 
-        public WeakEntry(Class<T> type) {
+        public WeakEntry(final Class<T> type) {
             super(type);
         }
 
@@ -31,7 +31,7 @@ public class WeakMoveVariable<T> extends MoveVariable<T> {
         }
 
         @Override
-        public void setValue(T value) {
+        public void setValue(final T value) {
             this.value = value == null ? null : new WeakReference<>(value);
         }
     }

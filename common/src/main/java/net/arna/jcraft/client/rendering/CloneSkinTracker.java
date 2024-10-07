@@ -17,31 +17,31 @@ public class CloneSkinTracker {
     private static final Map<PlayerCloneEntity, PlayerCloneClientPlayerEntity> playerCache = new WeakHashMap<>();
     private static final Set<PlayerCloneEntity> loading = Collections.newSetFromMap(new WeakHashMap<>());
 
-    public static ResourceLocation getSkinFor(PlayerCloneEntity clone, MinecraftProfileTexture.Type type) {
+    public static ResourceLocation getSkinFor(final PlayerCloneEntity clone, final MinecraftProfileTexture.Type type) {
         if (!skinCache.containsKey(clone)) {
             load(clone);
         }
-        ResourceLocation skin = skinCache.getOrDefault(clone, Collections.emptyMap()).get(type);
+        final ResourceLocation skin = skinCache.getOrDefault(clone, Collections.emptyMap()).get(type);
         return skin == null && type == MinecraftProfileTexture.Type.SKIN ? DefaultPlayerSkin.getDefaultSkin(clone.getMasterId()) : skin;
     }
 
-    public static String getModelFor(PlayerCloneEntity clone) {
+    public static String getModelFor(final PlayerCloneEntity clone) {
         if (!skinCache.containsKey(clone)) {
             load(clone);
         }
         return modelCache.getOrDefault(clone, clone.getMasterId() == null ? "default" : DefaultPlayerSkin.getSkinModelName(clone.getMasterId()));
     }
 
-    public static PlayerCloneClientPlayerEntity toPlayer(PlayerCloneEntity clone) {
+    public static PlayerCloneClientPlayerEntity toPlayer(final PlayerCloneEntity clone) {
         if (clone.getGameProfile() == null) {
             return null;
         }
-        PlayerCloneClientPlayerEntity clonePlayer = playerCache.computeIfAbsent(clone, PlayerCloneClientPlayerEntity::new);
+        final PlayerCloneClientPlayerEntity clonePlayer = playerCache.computeIfAbsent(clone, PlayerCloneClientPlayerEntity::new);
         clonePlayer.updateData();
         return clonePlayer;
     }
 
-    private static void load(PlayerCloneEntity clone) {
+    private static void load(final PlayerCloneEntity clone) {
         GameProfile profile = clone.getGameProfile();
         if (profile == null) {
             return;

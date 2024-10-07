@@ -12,14 +12,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 public final class OverheadKickAttack extends AbstractSimpleAttack<OverheadKickAttack, GEREntity> {
-    public OverheadKickAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
-                              float hitboxSize, float knockback, float offset) {
+    public OverheadKickAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                              final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         hitSpark = JParticleType.HIT_SPARK_3;
     }
 
     @Override
-    protected void processTarget(GEREntity attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource) {
+    protected void processTarget(final GEREntity attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
         JUtils.addVelocity(target, 0, -1, 0);
