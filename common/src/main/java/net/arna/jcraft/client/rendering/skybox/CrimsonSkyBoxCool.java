@@ -82,7 +82,7 @@ public class CrimsonSkyBoxCool implements JSkyBox {
             final Textures.Texture tex = this.textures.byId(i);
             matrices.pushPose();
 
-            RenderSystem.setShaderTexture(0, tex.getTextureId());
+            RenderSystem.setShaderTexture(0, tex.textureId());
 
             if (i == 1) {
                 matrices.mulPose(Axis.XP.rotationDegrees(90.0F));
@@ -101,10 +101,10 @@ public class CrimsonSkyBoxCool implements JSkyBox {
 
             final Matrix4f matrix4f = matrices.last().pose();
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-            bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, -100.0F).uv(tex.getMinU(), tex.getMinV()).color(1f, 1f, 1f, alpha).endVertex();
-            bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, 100.0F).uv(tex.getMinU(), tex.getMaxV()).color(1f, 1f, 1f, alpha).endVertex();
-            bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, 100.0F).uv(tex.getMaxU(), tex.getMaxV()).color(1f, 1f, 1f, alpha).endVertex();
-            bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, -100.0F).uv(tex.getMaxU(), tex.getMinV()).color(1f, 1f, 1f, alpha).endVertex();
+            bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, -100.0F).uv(tex.minU(), tex.minV()).color(1f, 1f, 1f, alpha).endVertex();
+            bufferBuilder.vertex(matrix4f, -100.0F, -100.0F, 100.0F).uv(tex.minU(), tex.maxV()).color(1f, 1f, 1f, alpha).endVertex();
+            bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, 100.0F).uv(tex.maxU(), tex.maxV()).color(1f, 1f, 1f, alpha).endVertex();
+            bufferBuilder.vertex(matrix4f, 100.0F, -100.0F, -100.0F).uv(tex.maxU(), tex.minV()).color(1f, 1f, 1f, alpha).endVertex();
             tesselator.end();
             matrices.popPose();
         }
