@@ -163,7 +163,7 @@ public class TimeErasePredictionEffectRenderer {
     }
 
     private static void updatePredictions() {
-        final Map<Entity, Vec3>  predictionsCopy;
+        final Map<Entity, Vec3> predictionsCopy;
         synchronized (predictions) {
             predictionsCopy = new HashMap<>(predictions);
         }
