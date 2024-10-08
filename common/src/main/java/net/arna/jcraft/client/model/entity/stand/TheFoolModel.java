@@ -5,9 +5,12 @@ import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link StandEntityModel} for {@link TheFoolEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.stands.TheFoolRenderer TheFoolRenderer
+ */
 public class TheFoolModel extends StandEntityModel<TheFoolEntity> {
     private static final ResourceLocation SAND_TEXTURE = JCraft.id("textures/entity/stands/the_fool/sand.png");
-    //EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
 
     public TheFoolModel() {
         super(StandType.THE_FOOL, 0.7854f, -0.349f, 30f);

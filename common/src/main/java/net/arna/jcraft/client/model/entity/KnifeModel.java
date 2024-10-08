@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link KnifeProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.KnifeRenderer KnifeRenderer
+ */
 public class KnifeModel extends GeoModel<KnifeProjectile> {
     @Override
     public ResourceLocation getModelResource(KnifeProjectile object) {

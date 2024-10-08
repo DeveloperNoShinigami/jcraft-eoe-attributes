@@ -17,6 +17,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link StandEntityRenderer} for {@link net.arna.jcraft.common.entity.stand.PurpleHazeEntity PurpleHazeEntity}.
+ * @see PurpleHazeModel
+ */
 public class PurpleHazeRenderer extends StandEntityRenderer<AbstractPurpleHazeEntity<?, ?>> {
     public PurpleHazeRenderer(final EntityRendererProvider.Context context) {
         super(context, new PurpleHazeModel(false));

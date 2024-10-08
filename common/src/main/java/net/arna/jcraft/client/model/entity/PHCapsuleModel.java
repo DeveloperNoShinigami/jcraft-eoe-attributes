@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.PHCapsuleProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link PHCapsuleProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.PHCapsuleRenderer PHCapsuleRenderer
+ */
 public class PHCapsuleModel extends GeoModel<PHCapsuleProjectile> {
     @Override
     public ResourceLocation getModelResource(final PHCapsuleProjectile object) {

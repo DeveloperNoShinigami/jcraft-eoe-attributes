@@ -10,6 +10,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link StandEntityRenderer} for {@link KQBTDEntity}.
+ * @see KQBTDModel
+ */
 public class KQBTDRenderer extends StandEntityRenderer<KQBTDEntity> {
     public KQBTDRenderer(final EntityRendererProvider.Context context) {
         super(context, new KQBTDModel());

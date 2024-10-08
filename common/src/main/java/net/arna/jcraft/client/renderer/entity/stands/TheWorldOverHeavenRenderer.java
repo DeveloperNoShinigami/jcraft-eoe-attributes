@@ -10,6 +10,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link StandEntityRenderer} for {@link TheWorldOverHeavenEntity}.
+ * @see TheWorldOverHeavenModel
+ */
 public class TheWorldOverHeavenRenderer extends StandEntityRenderer<TheWorldOverHeavenEntity> {
     public TheWorldOverHeavenRenderer(final EntityRendererProvider.Context context) {
         super(context, new TheWorldOverHeavenModel());

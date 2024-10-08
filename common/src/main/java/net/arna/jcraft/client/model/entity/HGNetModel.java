@@ -8,6 +8,11 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * The {@link GeoModel} for {@link HGNetEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.HGNetRenderer HGNetRenderer
+ * @see net.arna.jcraft.client.renderer.entity.layer.HGNetGlowLayer
+ */
 public class HGNetModel extends GeoModel<HGNetEntity> {
     private static final List<ResourceLocation> skins = IntStream.range(0, 4).mapToObj(
             i -> JCraft.id("textures/entity/hg_nets/" + i + ".png")).toList();

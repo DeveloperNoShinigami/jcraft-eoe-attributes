@@ -5,7 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.LifeDetectorEntity;
 import net.minecraft.resources.ResourceLocation;
 
-
+/**
+ * The {@link GeoModel} for {@link LifeDetectorEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.LifeDetectorRenderer LifeDetectorRenderer
+ */
 public class LifeDetectorModel extends GeoModel<LifeDetectorEntity> {
     @Override
     public ResourceLocation getModelResource(final LifeDetectorEntity object) {

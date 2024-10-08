@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.BulletProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link BulletProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.BulletRenderer BulletRenderer
+ */
 public class BulletModel extends GeoModel<BulletProjectile> {
     @Override
     public ResourceLocation getModelResource(final BulletProjectile object) {

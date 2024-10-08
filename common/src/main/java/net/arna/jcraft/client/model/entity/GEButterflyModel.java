@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.GEButterflyEntity;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link GEButterflyEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.GEButterflyRenderer GEButterflyRenderer
+ */
 public class GEButterflyModel extends GeoModel<GEButterflyEntity> {
     @Override
     public ResourceLocation getModelResource(final GEButterflyEntity object) {

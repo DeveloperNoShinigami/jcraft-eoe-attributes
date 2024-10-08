@@ -17,6 +17,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link StandEntityRenderer} for {@link WhiteSnakeEntity}.
+ * @see WhiteSnakeModel
+ */
 public class WhiteSnakeRenderer extends StandEntityRenderer<WhiteSnakeEntity> {
     public WhiteSnakeRenderer(final EntityRendererProvider.Context context) {
         super(context, new WhiteSnakeModel());

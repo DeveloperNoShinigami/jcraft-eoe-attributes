@@ -13,6 +13,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.IntStream;
 
+/**
+ * The base {@link GeoModel} for stands of any {@link StandType}.
+ * @param <E> the entity to model
+ * @see net.arna.jcraft.client.renderer.entity.stands.StandEntityRenderer StandEntityRenderer
+ */
 public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
     private final StandType type;
     private final ResourceLocation model;

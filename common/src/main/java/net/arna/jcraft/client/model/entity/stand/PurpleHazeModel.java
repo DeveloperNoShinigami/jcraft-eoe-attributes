@@ -5,6 +5,12 @@ import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The common {@link StandEntityModel} for {@link net.arna.jcraft.common.entity.stand.PurpleHazeEntity PurpleHazeEntity}
+ * and {@link net.arna.jcraft.common.entity.stand.PurpleHazeDistortionEntity PurpleHazeDistortionEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.stands.PurpleHazeRenderer PurpleHazeRenderer
+ * @see net.arna.jcraft.client.renderer.entity.stands.PurpleHazeDistortionRenderer PurpleHazeDistortionRenderer
+ */
 public class PurpleHazeModel extends StandEntityModel<AbstractPurpleHazeEntity<?, ?>> {
     private static final ResourceLocation MODEL = JCraft.id("geo/purple_haze.geo.json");
 

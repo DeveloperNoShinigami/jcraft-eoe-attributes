@@ -10,6 +10,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link GeoProjectileRenderer} for {@link AnkhProjectile}.
+ * @see AnkhModel
+ */
 public class AnkhRenderer extends GeoProjectileRenderer<AnkhProjectile> {
     public AnkhRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new AnkhModel());

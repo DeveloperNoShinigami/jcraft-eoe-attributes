@@ -15,6 +15,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link GeoEntityRenderer} for {@link TheSunEntity}.
+ * @see TheSunModel
+ */
 public class SunRenderer extends GeoEntityRenderer<TheSunEntity> {
     public SunRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new TheSunModel());

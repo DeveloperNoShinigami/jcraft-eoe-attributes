@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.BloodProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link BloodProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.BloodProjectileRenderer BloodProjectileRenderer
+ */
 public class BloodProjectileModel extends GeoModel<BloodProjectile> {
     @Override
     public ResourceLocation getModelResource(final BloodProjectile object) {

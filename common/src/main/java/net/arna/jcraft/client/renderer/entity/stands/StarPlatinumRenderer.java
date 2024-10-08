@@ -9,6 +9,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link StandEntityRenderer} for {@link net.arna.jcraft.common.entity.stand.StarPlatinumEntity StarPlatinumEntity}.
+ * @see StarPlatinumModel
+ */
 public class StarPlatinumRenderer extends StandEntityRenderer<AbstractStarPlatinumEntity<?, ?>> {
 
     public StarPlatinumRenderer(final EntityRendererProvider.Context context) {

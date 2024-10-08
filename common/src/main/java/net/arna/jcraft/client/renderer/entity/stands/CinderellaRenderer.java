@@ -10,6 +10,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link GeoEntityRenderer} for {@link CinderellaEntity}
+ * @see CinderellaModel
+ */
 public class CinderellaRenderer extends GeoEntityRenderer<CinderellaEntity> {
     public CinderellaRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new CinderellaModel());

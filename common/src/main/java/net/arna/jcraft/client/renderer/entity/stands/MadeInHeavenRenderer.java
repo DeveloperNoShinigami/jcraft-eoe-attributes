@@ -12,6 +12,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
+/**
+ * The {@link StandEntityRenderer} for {@link MadeInHeavenEntity}.
+ * @see MadeInHeavenModel
+ */
 public class MadeInHeavenRenderer extends StandEntityRenderer<MadeInHeavenEntity> {
 
     public MadeInHeavenRenderer(final EntityRendererProvider.Context context) {

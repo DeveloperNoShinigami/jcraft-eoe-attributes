@@ -19,6 +19,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link DynamicGeoEntityRenderer} for {@link GEButterflyEntity}.
+ * @see GEButterflyModel
+ */
 public class GEButterflyRenderer extends DynamicGeoEntityRenderer<GEButterflyEntity> {
     protected ItemStack mainHandItem;
 

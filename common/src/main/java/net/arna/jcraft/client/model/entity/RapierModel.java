@@ -10,6 +10,10 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@link GeoModel} for {@link RapierProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.RapierRenderer RapierRenderer
+ */
 public class RapierModel extends GeoModel<RapierProjectile> {
 
     public static final Map<Integer, ResourceLocation> skins = new HashMap<>(

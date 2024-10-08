@@ -14,6 +14,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link StandEntityRenderer} for {@link ShadowTheWorldEntity}.
+ * @see ShadowTheWorldModel
+ */
 public class ShadowTheWorldRenderer extends StandEntityRenderer<ShadowTheWorldEntity> {
     public ShadowTheWorldRenderer(final EntityRendererProvider.Context context) {
         super(context, new ShadowTheWorldModel());

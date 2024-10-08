@@ -9,7 +9,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-
+/**
+ * The {@link GeoEntityRenderer} for {@link SheerHeartAttackEntity}.
+ * @see SheerHeartAttackModel
+ */
 public class SheerHeartAttackRenderer extends GeoEntityRenderer<SheerHeartAttackEntity> {
 
     public SheerHeartAttackRenderer(final EntityRendererProvider.Context context) {

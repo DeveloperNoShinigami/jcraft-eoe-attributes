@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.npc.DarbyYoungerEntity;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link DarbyYoungerModel}.
+ * @see net.arna.jcraft.client.renderer.entity.npc.DarbyYoungerRenderer DarbyYoungerRenderer
+ */
 public class DarbyYoungerModel extends GeoModel<DarbyYoungerEntity> {
     @Override
     public ResourceLocation getModelResource(final DarbyYoungerEntity animatable) {

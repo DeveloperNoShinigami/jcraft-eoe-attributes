@@ -10,6 +10,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link GeoEntityRenderer} for {@link DragonsDreamEntity}.
+ * @see DragonsDreamModel
+ */
 public class DragonsDreamRenderer extends GeoEntityRenderer<DragonsDreamEntity> {
     public DragonsDreamRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new DragonsDreamModel());

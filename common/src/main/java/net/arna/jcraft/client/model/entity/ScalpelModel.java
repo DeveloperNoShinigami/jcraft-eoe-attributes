@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link ScalpelProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.ScalpelRenderer ScalpelRenderer
+ */
 public class ScalpelModel extends GeoModel<ScalpelProjectile> {
     @Override
     public ResourceLocation getModelResource(final ScalpelProjectile object) {

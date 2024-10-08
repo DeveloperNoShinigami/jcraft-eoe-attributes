@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.SandTornadoEntity;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link SandTornadoEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.SandTornadoRenderer SandTornadoRenderer
+ */
 public class SandTornadoModel extends GeoModel<SandTornadoEntity> {
     @Override
     public ResourceLocation getModelResource(final SandTornadoEntity object) {

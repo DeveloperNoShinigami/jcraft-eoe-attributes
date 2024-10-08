@@ -7,7 +7,10 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
-
+/**
+ * The {@link GeoProjectileRenderer} for {@link BloodProjectile}.
+ * @see BloodProjectileModel
+ */
 public class BloodProjectileRenderer extends GeoProjectileRenderer<BloodProjectile> {
     public BloodProjectileRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new BloodProjectileModel());

@@ -9,6 +9,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link StandEntityRenderer} for {@link TheFoolEntity}.
+ * @see TheFoolModel
+ */
 public class TheFoolRenderer extends StandEntityRenderer<TheFoolEntity> {
     public TheFoolRenderer(final EntityRendererProvider.Context context) {
         super(context, new TheFoolModel());

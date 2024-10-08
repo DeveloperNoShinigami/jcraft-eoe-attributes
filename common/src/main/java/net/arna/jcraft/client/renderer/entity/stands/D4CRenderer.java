@@ -18,6 +18,9 @@ import net.minecraft.world.item.ShieldItem;
 
 import javax.annotation.Nullable;
 
+/**
+ * The {@link StandEntityRenderer} for {@link D4CEntity}.
+ */
 public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
     public D4CRenderer(final EntityRendererProvider.Context context) {
         super(context, new StandEntityModel<>(StandType.D4C));

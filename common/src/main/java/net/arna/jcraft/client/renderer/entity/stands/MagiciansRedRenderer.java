@@ -16,6 +16,10 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 
+/**
+ * The {@link StandEntityRenderer} for {@link MagiciansRedEntity}.
+ * @see MagiciansRedModel
+ */
 public class MagiciansRedRenderer extends StandEntityRenderer<MagiciansRedEntity> {
     public MagiciansRedRenderer(final EntityRendererProvider.Context context) {
         super(context, new MagiciansRedModel());

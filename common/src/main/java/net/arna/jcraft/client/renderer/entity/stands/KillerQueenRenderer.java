@@ -9,6 +9,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link StandEntityRenderer} for {@link KillerQueenEntity}.
+ * @see KillerQueenModel
+ */
 public class KillerQueenRenderer extends StandEntityRenderer<KillerQueenEntity> {
     public KillerQueenRenderer(final EntityRendererProvider.Context context) {
         super(context, new KillerQueenModel());

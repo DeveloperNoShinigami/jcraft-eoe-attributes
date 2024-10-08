@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.MetallicaForksEntity;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link MetallicaForksEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.MetallicaForksRenderer MetallicaForksRenderer
+ */
 public class MetallicaForksModel extends GeoModel<MetallicaForksEntity> {
     @Override
     public ResourceLocation getModelResource(final MetallicaForksEntity animatable) {

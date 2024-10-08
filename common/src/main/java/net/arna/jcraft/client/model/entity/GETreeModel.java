@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.GETreeEntity;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link GETreeModel}.
+ * @see net.arna.jcraft.client.renderer.entity.GETreeRenderer GETreeRenderer
+ */
 public class GETreeModel extends GeoModel<GETreeEntity> {
     @Override
     public ResourceLocation getModelResource(final GETreeEntity object) {

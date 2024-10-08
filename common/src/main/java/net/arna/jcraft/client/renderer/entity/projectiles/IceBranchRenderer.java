@@ -14,6 +14,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link GeoEntityRenderer} for {@link IceBranchProjectile}.
+ * @see IceBranchModel
+ */
 public class IceBranchRenderer extends GeoEntityRenderer<IceBranchProjectile> {
     public IceBranchRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new IceBranchModel());

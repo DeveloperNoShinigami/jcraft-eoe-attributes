@@ -20,6 +20,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
+/**
+ * The {@link StandEntityRenderer} for {@link MetallicaEntity}.
+ * @see MetallicaModel
+ */
 public class MetallicaRenderer extends StandEntityRenderer<MetallicaEntity> {
     private final ItemInHandRenderer heldItemRenderer;
     public MetallicaRenderer(final EntityRendererProvider.Context context) {

@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.SunBeamProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link SunBeamProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.SunBeamRenderer
+ */
 public class SunBeamModel extends GeoModel<SunBeamProjectile> {
     @Override
     public ResourceLocation getModelResource(final SunBeamProjectile object) {

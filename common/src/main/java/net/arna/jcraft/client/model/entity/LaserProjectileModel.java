@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.LaserProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link LaserProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.LaserProjectileRenderer LaserProjectileRenderer
+ */
 public class LaserProjectileModel extends GeoModel<LaserProjectile> {
     @Override
     public ResourceLocation getModelResource(final LaserProjectile object) {

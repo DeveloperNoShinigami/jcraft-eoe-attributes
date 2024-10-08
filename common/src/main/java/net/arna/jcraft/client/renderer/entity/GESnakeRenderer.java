@@ -17,6 +17,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import javax.annotation.Nullable;
 
+/**
+ * The {@link DynamicGeoEntityRenderer} for {@link GESnakeEntity}.
+ * @see GESnakeModel
+ */
 public class GESnakeRenderer extends DynamicGeoEntityRenderer<GESnakeEntity> {
     protected ItemStack mainHandItem;
 

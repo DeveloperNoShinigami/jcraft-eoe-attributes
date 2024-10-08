@@ -7,6 +7,10 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoProjectileRenderer} for {@link WSAcidProjectile}.
+ * @see WSAcidModel
+ */
 public class WSAcidRenderer extends GeoProjectileRenderer<WSAcidProjectile> {
     public WSAcidRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new WSAcidModel());

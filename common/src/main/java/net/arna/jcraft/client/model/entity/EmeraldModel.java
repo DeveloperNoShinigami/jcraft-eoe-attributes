@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.EmeraldProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link EmeraldProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.EmeraldRenderer EmeraldRenderer
+ */
 public class EmeraldModel extends GeoModel<EmeraldProjectile> {
     @Override
     public ResourceLocation getModelResource(final EmeraldProjectile object) {

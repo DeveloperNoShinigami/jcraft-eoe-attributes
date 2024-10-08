@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link LargeIcicleProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.LargeIcicleRenderer LargeIcicleRenderer
+ */
 public class LargeIcicleModel extends GeoModel<LargeIcicleProjectile> {
     @Override
     public ResourceLocation getModelResource(final LargeIcicleProjectile object) {

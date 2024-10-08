@@ -10,6 +10,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Quaternionf;
 
+/**
+ * The {@link GeoProjectileRenderer} for {@link LifeDetectorEntity}.
+ * @see LifeDetectorModel
+ */
 public class LifeDetectorRenderer extends GeoProjectileRenderer<LifeDetectorEntity> {
     public LifeDetectorRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new LifeDetectorModel());

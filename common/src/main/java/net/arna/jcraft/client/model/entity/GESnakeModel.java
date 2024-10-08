@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.GESnakeEntity;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link GESnakeEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.GESnakeRenderer GESnakeRenderer
+ */
 public class GESnakeModel extends GeoModel<GESnakeEntity> {
     @Override
     public ResourceLocation getModelResource(final GESnakeEntity object) {

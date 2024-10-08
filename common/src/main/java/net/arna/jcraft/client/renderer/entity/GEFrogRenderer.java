@@ -14,6 +14,9 @@ import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Renderer for {@link net.arna.jcraft.common.entity.GEFrogEntity GEFrogEntity}.
+ */
 @Environment(EnvType.CLIENT)
 public class GEFrogRenderer extends FrogRenderer {
     private final ItemInHandRenderer heldItemRenderer;

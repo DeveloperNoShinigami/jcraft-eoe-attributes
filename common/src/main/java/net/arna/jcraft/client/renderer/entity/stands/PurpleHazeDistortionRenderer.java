@@ -10,6 +10,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link StandEntityRenderer} for {@link net.arna.jcraft.common.entity.stand.PurpleHazeEntity PurpleHazeEntity}.
+ * @see PurpleHazeModel
+ */
 public class PurpleHazeDistortionRenderer extends StandEntityRenderer<AbstractPurpleHazeEntity<?, ?>> {
     public PurpleHazeDistortionRenderer(final EntityRendererProvider.Context context) {
         super(context, new PurpleHazeModel(true));

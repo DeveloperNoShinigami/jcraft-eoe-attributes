@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.npc.PetshopEntity;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link PetshopEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.npc.PetshopRenderer PetshopRenderer
+ */
 public class PetshopModel extends GeoModel<PetshopEntity> {
     @Override
     public ResourceLocation getModelResource(final PetshopEntity animatable) {

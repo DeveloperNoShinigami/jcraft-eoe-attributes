@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link SheerHeartAttackEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.SheerHeartAttackRenderer SheerHeartAttackRenderer
+ */
 public class SheerHeartAttackModel extends GeoModel<SheerHeartAttackEntity> {
 
     @Override

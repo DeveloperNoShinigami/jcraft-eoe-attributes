@@ -10,6 +10,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link GeoEntityRenderer} for {@link SandTornadoEntity}.
+ * @see SandTornadoModel
+ */
 public class SandTornadoRenderer extends GeoEntityRenderer<SandTornadoEntity> {
     @Override
     public RenderType getRenderType(final SandTornadoEntity animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {

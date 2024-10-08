@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.BlockProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link BlockProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.BlockProjectileRenderer BlockProjectileRenderer
+ */
 public class BlockProjectileModel extends GeoModel<BlockProjectile> {
     @Override
     public ResourceLocation getModelResource(final BlockProjectile object) {

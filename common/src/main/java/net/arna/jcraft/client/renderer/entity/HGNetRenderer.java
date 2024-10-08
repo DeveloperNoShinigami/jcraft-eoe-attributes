@@ -6,6 +6,10 @@ import net.arna.jcraft.client.renderer.entity.layer.HGNetGlowLayer;
 import net.arna.jcraft.common.entity.projectile.HGNetEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link GeoEntityRenderer} for {@link HGNetEntity}.
+ * @see HGNetModel
+ */
 public class HGNetRenderer extends GeoEntityRenderer<HGNetEntity> {
     public HGNetRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new HGNetModel());

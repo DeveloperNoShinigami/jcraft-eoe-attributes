@@ -10,6 +10,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link StandEntityRenderer} for {@link GEREntity}.
+ */
 public class GERRenderer extends StandEntityRenderer<GEREntity> {
     public GERRenderer(final EntityRendererProvider.Context context) {
         super(context, new StandEntityModel<>(StandType.GOLD_EXPERIENCE_REQUIEM));

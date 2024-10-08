@@ -14,6 +14,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link GeoEntityRenderer} for {@link LargeIcicleProjectile}.
+ * @see LargeIcicleModel
+ */
 public class LargeIcicleRenderer extends GeoEntityRenderer<LargeIcicleProjectile> {
     public LargeIcicleRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new LargeIcicleModel());

@@ -8,6 +8,10 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@link GeoModel} for {@link IceBranchProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.IceBranchRenderer IceBranchRenderer
+ */
 public class IceBranchModel extends GeoModel<IceBranchProjectile> {
     public static final Map<Integer, ResourceLocation> skins = new HashMap<>();
     static {

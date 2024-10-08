@@ -7,6 +7,10 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoProjectileRenderer} for {@link ScalpelProjectile}.
+ * @see ScalpelModel
+ */
 public class ScalpelRenderer extends GeoProjectileRenderer<ScalpelProjectile> {
     public ScalpelRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new ScalpelModel());

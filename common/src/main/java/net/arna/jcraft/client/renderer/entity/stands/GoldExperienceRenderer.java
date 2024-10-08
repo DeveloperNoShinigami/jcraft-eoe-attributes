@@ -15,6 +15,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 
+/**
+ * The {@link StandEntityRenderer} for {@link GoldExperienceEntity}.
+ * @see GoldenExperienceModel
+ */
 public class GoldExperienceRenderer extends StandEntityRenderer<GoldExperienceEntity> {
     private int currentTick = -1;
     private static final int overclockWindupPoint = GoldExperienceEntity.OVERCLOCK.getWindupPoint();

@@ -7,6 +7,10 @@ import net.arna.jcraft.common.entity.npc.PetshopEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoEntityRenderer} for {@link PetshopEntity}
+ * @see PetshopModel
+ */
 public class PetshopRenderer extends GeoEntityRenderer<PetshopEntity> {
     public PetshopRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new PetshopModel());

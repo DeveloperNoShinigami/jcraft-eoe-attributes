@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.BubbleProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link BubbleProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.BubbleRenderer BubbleRenderer
+ */
 public class BubbleModel extends GeoModel<BubbleProjectile> {
     @Override
     public ResourceLocation getModelResource(final BubbleProjectile object) {

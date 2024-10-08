@@ -6,6 +6,9 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.BisectProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link BisectProjectile}.
+ */
 public class BisectModel extends GeoModel<BisectProjectile> {
     @Override
     public ResourceLocation getModelResource(final BisectProjectile animatable) {

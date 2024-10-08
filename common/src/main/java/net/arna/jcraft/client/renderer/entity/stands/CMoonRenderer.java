@@ -19,6 +19,9 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 
+/**
+ * The {@link StandEntityRenderer} for {@link CMoonEntity}.
+ */
 public class CMoonRenderer extends StandEntityRenderer<CMoonEntity> {
     private int currentTick = -1;
     private static final int gravWindup = CMoonEntity.GRAV_PUNCH.getWindupPoint();

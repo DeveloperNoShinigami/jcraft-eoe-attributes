@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.GERScorpionEntity;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link GERScorpionEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.GERScorpionRenderer GERScorpionRenderer
+ */
 public class GERScorpionModel extends GeoModel<GERScorpionEntity> {
     @Override
     public ResourceLocation getModelResource(final GERScorpionEntity object) {

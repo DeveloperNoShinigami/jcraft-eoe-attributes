@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link AnkhProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.AnkhRenderer
+ */
 public class AnkhModel extends GeoModel<AnkhProjectile> {
     @Override
     public ResourceLocation getModelResource(AnkhProjectile object) {

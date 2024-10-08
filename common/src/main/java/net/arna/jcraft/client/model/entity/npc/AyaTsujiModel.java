@@ -8,6 +8,10 @@ import net.arna.jcraft.common.entity.npc.AyaTsujiEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
+/**
+ * The {@link GeoModel} for {@link AyaTsujiEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.npc.AyaTsujiRenderer AyaTsujiRenderer
+ */
 public class AyaTsujiModel extends GeoModel<AyaTsujiEntity> {
     @Override
     public ResourceLocation getModelResource(final AyaTsujiEntity animatable) {

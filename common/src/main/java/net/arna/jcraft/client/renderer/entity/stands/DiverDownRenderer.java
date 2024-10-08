@@ -10,6 +10,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link GeoEntityRenderer} for {@link DiverDownEntity}.
+ * @see DiverDownModel
+ */
 public class DiverDownRenderer extends GeoEntityRenderer<DiverDownEntity> {
     public DiverDownRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new DiverDownModel());

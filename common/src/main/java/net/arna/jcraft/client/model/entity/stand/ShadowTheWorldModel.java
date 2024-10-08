@@ -7,6 +7,10 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Locale;
 
+/**
+ * The {@link StandEntityModel} for {@link ShadowTheWorldEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.stands.ShadowTheWorldRenderer ShadowTheWorldRenderer
+ */
 public class ShadowTheWorldModel extends StandEntityModel<ShadowTheWorldEntity> {
     private static final ResourceLocation MODEL = JCraft.id("geo/" + StandType.THE_WORLD.name().toLowerCase(Locale.ROOT) + ".geo.json");
 

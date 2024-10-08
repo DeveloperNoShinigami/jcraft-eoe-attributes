@@ -9,6 +9,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link StandEntityRenderer} for {@link KingCrimsonEntity}.
+ * @see KingCrimsonModel
+ */
 public class KingCrimsonRenderer extends StandEntityRenderer<KingCrimsonEntity> {
 
     public KingCrimsonRenderer(final EntityRendererProvider.Context context) {

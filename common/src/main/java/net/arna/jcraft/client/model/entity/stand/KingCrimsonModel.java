@@ -7,12 +7,15 @@ import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
+/**
+ * The {@link StandEntityModel} for {@link KingCrimsonEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.stands.KingCrimsonRenderer KingCrimsonRenderer
+ */
 public class KingCrimsonModel extends StandEntityModel<KingCrimsonEntity> {
 
     public KingCrimsonModel() {
         super(StandType.KING_CRIMSON);
     }
-
 
     @Override
     public void setCustomAnimations(final KingCrimsonEntity animatable, final long instanceId, final AnimationState<KingCrimsonEntity> animationState) {

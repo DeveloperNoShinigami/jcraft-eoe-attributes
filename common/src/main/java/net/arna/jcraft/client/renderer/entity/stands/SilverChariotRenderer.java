@@ -14,6 +14,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
+/**
+ * The {@link StandEntityRenderer} for {@link SilverChariotEntity}.
+ * @see SilverChariotModel
+ */
 public class SilverChariotRenderer extends StandEntityRenderer<SilverChariotEntity> {
 
     public SilverChariotRenderer(final EntityRendererProvider.Context context) {

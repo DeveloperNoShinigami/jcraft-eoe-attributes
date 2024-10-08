@@ -27,6 +27,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
+/**
+ * The {@link GeoEntityRenderer} for stands of any {@link net.arna.jcraft.common.entity.stand.StandType StandType}.
+ * @param <T> the entity to render
+ * @see StandEntityModel
+ */
 public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityRenderer<T> {
 
     protected ItemStack mainHandItem, offHandItem;

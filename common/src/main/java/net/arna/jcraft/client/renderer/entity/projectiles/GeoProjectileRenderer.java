@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
-public class GeoProjectileRenderer<T extends Entity& GeoAnimatable> extends GeoEntityRenderer<T> {
+public class GeoProjectileRenderer<T extends Entity & GeoAnimatable> extends GeoEntityRenderer<T> {
     public GeoProjectileRenderer(final EntityRendererProvider.Context renderManager, final GeoModel<T> model) {
         super(renderManager, model);
     }

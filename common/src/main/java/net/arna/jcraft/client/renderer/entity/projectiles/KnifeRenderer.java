@@ -9,6 +9,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LightLayer;
 
+/**
+ * The {@link GeoProjectileRenderer} for {@link KnifeProjectile}.
+ * @see KnifeModel
+ */
 public class KnifeRenderer extends GeoProjectileRenderer<KnifeProjectile> {
 
     public KnifeRenderer(final EntityRendererProvider.Context renderManagerIn) {

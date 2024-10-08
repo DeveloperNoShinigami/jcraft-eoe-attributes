@@ -11,7 +11,10 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 
-
+/**
+ * The {@link GeoProjectileRenderer} for {@link BlockProjectile}.
+ * @see BlockProjectileModel
+ */
 public class BlockProjectileRenderer extends GeoProjectileRenderer<BlockProjectile> {
     private final ItemRenderer itemRenderer;
 

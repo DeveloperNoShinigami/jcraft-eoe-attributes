@@ -7,6 +7,10 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoProjectileRenderer} for {@link BubbleProjectile}.
+ * @see BubbleModel
+ */
 public class BubbleRenderer extends GeoProjectileRenderer<BubbleProjectile> {
     public BubbleRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new BubbleModel());

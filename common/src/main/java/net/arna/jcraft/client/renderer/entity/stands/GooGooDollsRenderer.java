@@ -10,6 +10,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
+/**
+ * The {@link GeoEntityRenderer} for {@link GooGooDollsEntity}.
+ * @see GooGooDollsModel
+ */
 public class GooGooDollsRenderer extends GeoEntityRenderer<GooGooDollsEntity> {
     public GooGooDollsRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new GooGooDollsModel());

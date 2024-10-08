@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.IcicleProjectile;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link IcicleProjectile}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.IcicleRenderer IcicleRenderer
+ */
 public class IcicleModel extends GeoModel<IcicleProjectile> {
     @Override
     public ResourceLocation getModelResource(final IcicleProjectile object) {

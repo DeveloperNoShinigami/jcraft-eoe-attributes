@@ -9,6 +9,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoProjectileRenderer} for {@link MeteorProjectile}.
+ * @see MeteorModel
+ */
 public class MeteorRenderer extends GeoProjectileRenderer<MeteorProjectile> {
     public MeteorRenderer(final EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new MeteorModel());

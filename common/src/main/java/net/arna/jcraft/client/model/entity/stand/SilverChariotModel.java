@@ -5,6 +5,10 @@ import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link StandEntityModel} for {@link SilverChariotEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.stands.SilverChariotRenderer SilverChariotRenderer
+ */
 public class SilverChariotModel extends StandEntityModel<SilverChariotEntity> {
     private static final ResourceLocation NO_ARMOR_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/no_armor.png");
     private static final ResourceLocation POSSESSED_TEXTURE = JCraft.id("textures/entity/stands/silver_chariot/possessed.png");

@@ -5,6 +5,10 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.projectile.RedBindEntity;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * The {@link GeoModel} for {@link RedBindEntity}.
+ * @see net.arna.jcraft.client.renderer.entity.projectiles.RedBindRenderer RedBindRenderer
+ */
 public class RedBindModel extends GeoModel<RedBindEntity> {
     @Override
     public ResourceLocation getModelResource(final RedBindEntity object) {
