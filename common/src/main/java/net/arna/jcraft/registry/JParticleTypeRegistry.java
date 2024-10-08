@@ -13,6 +13,7 @@ public interface JParticleTypeRegistry {
     RegistrySupplier<SimpleParticleType> HITSPARK_1 = PARTICLES.register("hitspark_1", () -> new SimpleParticleType(false));
     RegistrySupplier<SimpleParticleType> HITSPARK_2 = PARTICLES.register("hitspark_2", () -> new SimpleParticleType(false));
     RegistrySupplier<SimpleParticleType> HITSPARK_3 = PARTICLES.register("hitspark_3", () -> new SimpleParticleType(false));
+    RegistrySupplier<SimpleParticleType> INVERTED_HITSPARK_3 = PARTICLES.register("inverted_hitspark_3", () -> new SimpleParticleType(false));
     RegistrySupplier<SimpleParticleType> STUN_SLASH = PARTICLES.register("stun_slash", () -> new SimpleParticleType(false));
     RegistrySupplier<SimpleParticleType> STUN_PIERCE = PARTICLES.register("stun_pierce", () -> new SimpleParticleType(false));
     RegistrySupplier<SimpleParticleType> AURA_BLOB = PARTICLES.register("aura_blob", () -> new SimpleParticleType(false));

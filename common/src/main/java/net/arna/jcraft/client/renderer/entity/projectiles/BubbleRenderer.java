@@ -1,6 +1,6 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
-import net.arna.jcraft.client.model.entity.BubbleModel;
+import net.arna.jcraft.client.model.JProjectileModel;
 import net.arna.jcraft.common.entity.projectile.BubbleProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -9,11 +9,10 @@ import net.minecraft.resources.ResourceLocation;
 
 /**
  * The {@link GeoProjectileRenderer} for {@link BubbleProjectile}.
- * @see BubbleModel
  */
 public class BubbleRenderer extends GeoProjectileRenderer<BubbleProjectile> {
     public BubbleRenderer(final EntityRendererProvider.Context renderManagerIn) {
-        super(renderManagerIn, new BubbleModel());
+        super(renderManagerIn, new JProjectileModel<>("bubble", true));
     }
 
     @Override

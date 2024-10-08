@@ -1,6 +1,6 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
-import net.arna.jcraft.client.model.entity.LaserProjectileModel;
+import net.arna.jcraft.client.model.JProjectileModel;
 import net.arna.jcraft.common.entity.projectile.LaserProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -9,11 +9,10 @@ import net.minecraft.resources.ResourceLocation;
 
 /**
  * The {@link GeoProjectileRenderer} for {@link LaserProjectile}.
- * @see LaserProjectileModel
  */
 public class LaserProjectileRenderer extends GeoProjectileRenderer<LaserProjectile> {
     public LaserProjectileRenderer(final EntityRendererProvider.Context renderManagerIn) {
-        super(renderManagerIn, new LaserProjectileModel());
+        super(renderManagerIn, new JProjectileModel<>("laser"));
     }
 
     @Override

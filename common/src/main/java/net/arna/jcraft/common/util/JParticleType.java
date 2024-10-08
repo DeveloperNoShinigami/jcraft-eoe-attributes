@@ -18,6 +18,7 @@ public enum JParticleType {
     HIT_SPARK_1(JParticleTypeRegistry.HITSPARK_1),
     HIT_SPARK_2(JParticleTypeRegistry.HITSPARK_2),
     HIT_SPARK_3(JParticleTypeRegistry.HITSPARK_3),
+    INVERTED_HIT_SPARK_3(JParticleTypeRegistry.INVERTED_HITSPARK_3),
     PIXEL(JParticleTypeRegistry.PIXEL),
     BLOCK_SPARK(JParticleTypeRegistry.BLOCKSPARK),
     GO(JParticleTypeRegistry.GO),

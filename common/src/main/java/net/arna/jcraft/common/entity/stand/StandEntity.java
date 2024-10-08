@@ -452,7 +452,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     /**
      * Puts the stand into remote mode.
-     * USE {@link #setRemote(boolean)} FOR PRACTICAL APPLICATION
+     * @see StandEntity#setRemote(boolean) Where this method is called.
      */
     protected void beginRemote() {
         if (user == null) {
@@ -496,14 +496,14 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     */
 
     /**
-     * Gets the stands position while detached
+     * Gets this Stands position while detached
      */
     public Vector3f getFreePos() {
         return new Vector3f(this.entityData.get(FREEX), this.entityData.get(FREEY), this.entityData.get(FREEZ));
     }
 
     /**
-     * Sets the stands position while detached
+     * Sets this Stands position while detached
      *
      * @param freePos new position
      */
@@ -1531,18 +1531,22 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return true;
     }
 
-    public void standUserPassiveAI() {
+    /**
+     * Handles out-of-combat AI for Stand user mobs.
+     * @return Mob using this Stand.
+     */
+    public @Nullable Mob standUserPassiveAI() {
         // Guaranteed cast due to being called in JEnemies, which only handles MobEntities
-        Mob user = (Mob) getUser();
+        final Mob user = (Mob) getUser();
         if (user == null) {
-            JCraft.LOGGER.error("standUserPassiveAI called with no Stand user for: " + this);
-            return;
+            JCraft.LOGGER.error("standUserPassiveAI() called with no Stand user for {}", this);
+        } else {
+            boolean wantToBlock = false;
+            if (user.fallDistance > 3) wantToBlock = true;
+            if (user.getNavigation().isInProgress()) DashData.tryDash(1, 0, user);
+            this.wantToBlock = wantToBlock;
         }
-
-        boolean wantToBlock = false;
-        if (user.fallDistance > 3) wantToBlock = true;
-        if (user.getNavigation().isInProgress()) DashData.tryDash(1, 0, user);
-        this.wantToBlock = wantToBlock;
+        return user;
     }
     private static final double sideswitchDistance = 1.25;
     /**

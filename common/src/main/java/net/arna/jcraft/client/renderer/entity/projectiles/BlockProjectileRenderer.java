@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.arna.jcraft.client.model.entity.BlockProjectileModel;
+import net.arna.jcraft.client.model.JProjectileModel;
 import net.arna.jcraft.common.entity.projectile.BlockProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -13,13 +13,12 @@ import net.minecraft.world.item.ItemDisplayContext;
 
 /**
  * The {@link GeoProjectileRenderer} for {@link BlockProjectile}.
- * @see BlockProjectileModel
  */
 public class BlockProjectileRenderer extends GeoProjectileRenderer<BlockProjectile> {
     private final ItemRenderer itemRenderer;
 
     public BlockProjectileRenderer(final EntityRendererProvider.Context ctx) {
-        super(ctx, new BlockProjectileModel());
+        super(ctx, new JProjectileModel<>("block", true));
         this.itemRenderer = ctx.getItemRenderer();
     }
 

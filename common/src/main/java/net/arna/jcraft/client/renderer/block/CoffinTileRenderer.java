@@ -15,7 +15,8 @@ public class CoffinTileRenderer extends GeoBlockRenderer<CoffinTileEntity> {
     }
 
     @Override
-    public void render(final CoffinTileEntity animatable, final float partialTick, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight, final int packedOverlay) {
+    public void render(final CoffinTileEntity animatable, final float partialTick, final PoseStack poseStack,
+                       final MultiBufferSource bufferSource, final int packedLight, final int packedOverlay) {
         if (BedPart.HEAD == animatable.getBlockState().getValue(BedBlock.PART)) {
             return;
         }

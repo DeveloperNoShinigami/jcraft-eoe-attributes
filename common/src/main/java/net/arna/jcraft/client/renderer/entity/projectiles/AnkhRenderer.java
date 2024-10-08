@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.renderer.entity.projectiles;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.arna.jcraft.client.model.entity.AnkhModel;
+import lombok.NonNull;
+import net.arna.jcraft.client.model.JProjectileModel;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -12,25 +12,20 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link GeoProjectileRenderer} for {@link AnkhProjectile}.
- * @see AnkhModel
  */
 public class AnkhRenderer extends GeoProjectileRenderer<AnkhProjectile> {
     public AnkhRenderer(final EntityRendererProvider.Context renderManagerIn) {
-        super(renderManagerIn, new AnkhModel());
+        super(renderManagerIn, new JProjectileModel<>("ankh"));
     }
 
     @Override
-    protected int getBlockLightLevel(final AnkhProjectile entity, final BlockPos pos) {
+    protected int getBlockLightLevel(final @NonNull AnkhProjectile entity, final @NonNull BlockPos pos) {
         return 15;
     }
 
     @Override
-    public RenderType getRenderType(final AnkhProjectile animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
+    public RenderType getRenderType(final @NonNull AnkhProjectile animatable, final ResourceLocation texture,
+                                    final @Nullable MultiBufferSource bufferSource, final float partialTick) {
         return RenderType.eyes(texture);
-    }
-
-    @Override
-    public void render(final AnkhProjectile animatable, final float yaw, final float partialTick, final PoseStack poseStack, final MultiBufferSource bufferSource, final int packedLight) {
-        super.render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
     }
 }

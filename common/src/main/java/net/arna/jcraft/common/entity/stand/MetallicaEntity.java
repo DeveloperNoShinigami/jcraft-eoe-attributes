@@ -9,6 +9,7 @@ import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.metallica.HarvestMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -45,6 +46,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -359,7 +361,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         final boolean newInvis = !metallica.entityData.get(INVISIBLE);
         metallica.entityData.set(INVISIBLE, newInvis);
         if (newInvis) {
-            user.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 39, 0, true, true));
+            user.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 39, 0, true, false));
         }
     }
     public static final HarvestMove HARVEST = new HarvestMove()
@@ -521,7 +523,9 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                 );
             }
         }
+
         if (level().isClientSide()) return;
+
         // Invisibility iron drain
         boolean invisible = entityData.get(INVISIBLE);
         if (invisible && tickCount % 20 == 0) {
@@ -529,13 +533,30 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             if (!canStayInvis) {
                 entityData.set(INVISIBLE, false);
             } else {
-                getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 21, 0, true, true));
+                getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 21, 0, true, false));
             }
         }
-        // Bisect iron drain
-        if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == BISECT_CHARGE) {
-            if (drainIron(2.0f)) bisectChargeTime++;
+
+        if (getCurrentMove() != null) {
+            final AbstractMove<?, ? super MetallicaEntity> originalMove = getCurrentMove().getOriginalMove();
+            if (originalMove == BISECT_CHARGE) { // Bisect iron drain
+                if (drainIron(2.0f)) bisectChargeTime++;
+            } else if (originalMove == HARVEST && !(getUser() instanceof ServerPlayer)) { // AI iron harvest
+                if (getIron() >= IRON_MAX) cancelMove();
+            }
         }
+    }
+
+    @Override
+    public @Nullable Mob standUserPassiveAI() {
+        final Mob mob = super.standUserPassiveAI();
+        if (mob != null) {
+            if (getIron() < IRON_MAX) {
+                getUser().setShiftKeyDown(false);
+                initMove(MoveType.UTILITY);
+            }
+        }
+        return mob;
     }
 
     @Override
@@ -555,6 +576,12 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
 
     public BlockPos getSiphonPos() {
         return entityData.get(SIPHON_POS);
+    }
+
+    @Override
+    public MoveSelectionResult specificMoveSelectionCriterion(AbstractMove<?, ? super MetallicaEntity> attack, LivingEntity mob, LivingEntity target, int stunTicks, int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
+        if (attack.getOriginalMove() == HARVEST && getIron() >= IRON_MAX) return MoveSelectionResult.STOP;
+        return super.specificMoveSelectionCriterion(attack, mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
     }
 
     // Animations
