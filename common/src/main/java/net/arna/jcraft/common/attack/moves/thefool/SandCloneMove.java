@@ -24,6 +24,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Collection;
 import java.util.Set;
 
 public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
@@ -47,16 +49,16 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
         buf.writeDouble(pos.z);
         buf.writeDouble(2);
 
-        for (ServerPlayer sendPlayer : ((ServerLevel) attacker.level()).players()) {
-            ServerChannelFeedbackPacket.send(sendPlayer, buf);
-            if (sendPlayer == user) {
-                continue;
-            }
-            if (sendPlayer.closerThan(user, 4)) // Blind players caught in the cloud
-            {
-                sendPlayer.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 0, true, false));
+        Collection<ServerPlayer> nearby = JUtils.around((ServerLevel) attacker.level(), pos, 128);
+
+        for (ServerPlayer serverPlayer : nearby) {
+            if (serverPlayer == user) continue;
+            if (serverPlayer.closerThan(user, 4)) { // Blind players caught in the cloud
+                serverPlayer.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 0, true, false));
             }
         }
+
+        ServerChannelFeedbackPacket.send(nearby, buf);
 
         if (user.isShiftKeyDown()) {
             for (int i = 0; i < 32; i++) {

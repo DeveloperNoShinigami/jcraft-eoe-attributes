@@ -26,7 +26,6 @@ import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -117,8 +116,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     @Override
     public void setState(S state) {
         if (player == null) return;
-        ((ServerLevel) user.level()).players().forEach(serverPlayer -> PlayerAnimPacket.sendSpec(
-                player, serverPlayer, (this.state = state).getKey(getThis()), moveStun, 1f));
+        PlayerAnimPacket.sendSpec(player, JUtils.around((ServerLevel) user.level(), user.position(), JUtils.PLAYER_ANIMATION_DIST), (this.state = state).getKey(getThis()), moveStun, 1f);
     }
 
     @Override
@@ -231,8 +229,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
                 JCraft.LOGGER.error("Tried to set animation for non-player entity with JSpec that does not implement JSpecHolder!");
             }
         } else {
-            JUtils.around((ServerLevel) user.level(), user.position(), JUtils.PLAYER_ANIMATION_DIST)
-                    .forEach(serverPlayer -> PlayerAnimPacket.sendSpec(player, serverPlayer, animationID, duration, animationSpeed));
+            PlayerAnimPacket.sendSpec(player, JUtils.around((ServerLevel) user.level(), user.position(), JUtils.PLAYER_ANIMATION_DIST), animationID, duration, animationSpeed);
         }
     }
 
@@ -264,13 +261,10 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             return;
         }
         // Cancel player animation if it exists
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeShort(13);
         buf.writeInt(user.getId());
-        ServerLevel serverWorld = (ServerLevel) user.level();
-        for (ServerPlayer sendPlayer : serverWorld.players()) {
-            ServerChannelFeedbackPacket.send(sendPlayer, buf);
-        }
+        ServerChannelFeedbackPacket.send(JUtils.around((ServerLevel) user.level(), user.position(), JUtils.PLAYER_ANIMATION_DIST), buf);
     }
 
     public boolean shouldSneak() {

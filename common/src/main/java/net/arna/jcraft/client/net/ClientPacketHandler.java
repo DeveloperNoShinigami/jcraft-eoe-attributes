@@ -2,6 +2,7 @@ package net.arna.jcraft.client.net;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.architectury.networking.NetworkManager;
+import dev.architectury.networking.transformers.PacketSink;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
@@ -43,6 +44,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundExplodePacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -76,10 +78,15 @@ import static net.arna.jcraft.registry.JPacketRegistry.S2C_TIME_ACCELERATION_STA
 import static net.arna.jcraft.registry.JPacketRegistry.S2C_TIME_ERASE_PREDICTION_STATE;
 import static net.arna.jcraft.registry.JPacketRegistry.S2C_TIME_STOP;
 
+/**
+ * Packets sent to players must be sent with the appropriate method;
+ * {@link NetworkManager#sendToPlayer(ServerPlayer, ResourceLocation, FriendlyByteBuf)} vs. {@link NetworkManager#sendToPlayers(Iterable, ResourceLocation, FriendlyByteBuf)}
+ * Iterating through a list of players to send the same buffer object will cause out of bounds packet reads on all but the first iterated client.
+ * This is due to {@link NetworkManager#collectPackets(PacketSink, NetworkManager.Side, ResourceLocation, FriendlyByteBuf)} consuming the buffer.
+ */
 
 @UtilityClass
 public class ClientPacketHandler {
-
     public static void init() {
         register(S2C_SERVER_CHANNEL_FEEDBACK, ClientPacketHandler::handleChannelFeedback);
         register(S2C_PLAYER_ANIMATION, ClientPacketHandler::handleAnimation);

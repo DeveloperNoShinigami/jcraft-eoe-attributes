@@ -15,7 +15,6 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -23,6 +22,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.List;
 import java.util.Set;
 
@@ -97,9 +97,7 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
         buf.writeDouble(hurricanePos.y);
         buf.writeDouble(hurricanePos.z);
 
-        for (ServerPlayer sendPlayer : ((ServerLevel) world).players()) {
-            ServerChannelFeedbackPacket.send(sendPlayer, buf);
-        }
+        ServerChannelFeedbackPacket.send(JUtils.around((ServerLevel) world, hurricanePos, 128), buf);
     }
 
     @Override

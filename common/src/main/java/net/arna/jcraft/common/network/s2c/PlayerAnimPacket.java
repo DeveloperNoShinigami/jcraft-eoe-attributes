@@ -2,6 +2,7 @@ package net.arna.jcraft.common.network.s2c;
 
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
+import lombok.NonNull;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,7 +16,8 @@ public class PlayerAnimPacket {
      * @param from ServerPlayerEntity to animate
      * @param to   ServerPlayerEntity that views animation
      */
-    public static void sendSpec(Player from, ServerPlayer to, String animID, int moveStun, float animationSpeed) {
+    public static void sendSpec(@NonNull final Player from, @NonNull final Iterable<ServerPlayer> to,
+                                final String animID, final int moveStun, final float animationSpeed) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeInt(from.getId());
         buf.writeUtf(animID);
@@ -24,7 +26,7 @@ public class PlayerAnimPacket {
         buf.writeInt(moveStun);
         buf.writeFloat(animationSpeed);
 
-        NetworkManager.sendToPlayer(to, JPacketRegistry.S2C_PLAYER_ANIMATION, buf);
+        NetworkManager.sendToPlayers(to, JPacketRegistry.S2C_PLAYER_ANIMATION, buf);
     }
 
     /**

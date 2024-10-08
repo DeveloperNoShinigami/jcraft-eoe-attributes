@@ -712,7 +712,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         applyAbsorptionAndStats(damage, damageSource, ent);
     }
 
-    private static void applyAbsorptionAndStats(float damage, DamageSource damageSource, LivingEntity ent) {
+    private static void applyAbsorptionAndStats(float damage, final DamageSource damageSource, final LivingEntity ent) {
         float f = damage;
         damage = Math.max(damage - ent.getAbsorptionAmount(), 0.0F);
         ent.setAbsorptionAmount(ent.getAbsorptionAmount() - (f - damage));
@@ -721,18 +721,13 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return;
         }
 
-        float h = ent.getHealth();
-
-        LivingEntityInvoker invoker = (LivingEntityInvoker) ent;
+        final float h = ent.getHealth();
+        final LivingEntityInvoker invoker = (LivingEntityInvoker) ent;
 
         // Statistics
-        Level world = ent.level();
+        final Level world = ent.level();
         if (ent instanceof Player) {
-            if (world instanceof ServerLevel serverWorld) {
-                var packet = NetworkManager.toPacket(NetworkManager.Side.S2C, JPacketRegistry.S2C_STAND_HURT, new FriendlyByteBuf(Unpooled.buffer()).writeVarInt(ent.getId()));
-                serverWorld.getChunkSource().broadcastAndSend(ent, packet);
-            }
-
+            NetworkManager.sendToPlayers(JUtils.tracking(ent), JPacketRegistry.S2C_STAND_HURT, new FriendlyByteBuf(Unpooled.buffer()).writeVarInt(ent.getId()));
         } else {
             world.broadcastEntityEvent(ent, (byte) 2);
         }

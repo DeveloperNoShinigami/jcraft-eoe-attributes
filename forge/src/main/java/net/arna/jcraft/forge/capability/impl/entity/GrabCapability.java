@@ -32,12 +32,10 @@ public class GrabCapability extends CommonGrabComponentImpl implements JCapabili
     public void sync(Entity entity) {
         // super.sync(entity);
         if (entity.level() instanceof ServerLevel serverWorld) {
-            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeVarInt(entity.getId());
             writeSyncPacket(buf, null);
-            JUtils.around(serverWorld, entity.position(), 128).forEach(
-                    recipient -> NetworkManager.sendToPlayer(recipient, GRAB_S2C, buf)
-            );
+            NetworkManager.sendToPlayers(JUtils.around(serverWorld, entity.position(), 128), GRAB_S2C, buf);
         }
     }
 

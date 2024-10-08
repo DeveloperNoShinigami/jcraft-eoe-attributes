@@ -14,7 +14,6 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.MockItem;
-import net.arna.jcraft.common.network.s2c.PredictionUpdatePacket;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.tickable.*;
 import net.arna.jcraft.common.util.*;
@@ -30,7 +29,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -57,7 +55,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static net.arna.jcraft.JCraft.*;
 import static net.arna.jcraft.common.util.EntityInterest.blockAttractionInterest;
@@ -510,7 +507,6 @@ public class JServerEvents {
                     GravityChangerAPI.setWorldVelocity(entity, knockback);
                     entity.hurtMarked = true;
 
-                    // todo: sslash and spierce sounds
                     JCraft.createParticle(serverWorld,
                             entity.getX() - upVec.getX(),
                             entity.getY() - upVec.getY(),
@@ -560,26 +556,5 @@ public class JServerEvents {
                 serverWorld.setBlockAndUpdate(sleepingPos, state.setValue(CoffinBlock.OCCUPIED, false));
             }
         }
-    }
-
-    private static void sendPredictionPacket(ServerPlayer subscriber) {
-        int adjustedPing = subscriber.latency;
-        if (adjustedPing > MAX_COMPENSATION_MS) {
-            adjustedPing = MAX_COMPENSATION_MS;
-        }
-        double pingTicks = adjustedPing * MS_TO_TICKS;
-
-        Set<Tuple<Integer, Vec3>> idPosPairs = JUtils.around((ServerLevel) subscriber.level(), subscriber.position(), PREDICTION_RADIUS)
-                .stream()
-                .filter(serverPlayer -> serverPlayer != subscriber)
-                .map(
-                        serverPlayer -> {
-                            // This will likely need extension
-                            Vec3 predictedDeltaPos = JUtils.deltaPos(serverPlayer).scale(pingTicks);
-                            return new Tuple<>(serverPlayer.getId(), serverPlayer.position().add(predictedDeltaPos));
-                        }
-                ).collect(Collectors.toSet());
-
-        PredictionUpdatePacket.send(subscriber, idPosPairs);
     }
 }

@@ -234,19 +234,18 @@ public final class JCraft {
      * @param position in world
      */
     //todo: make TS stop animated textures
-    public static void beginTimestop(LivingEntity timestopper, Vec3 position, ServerLevel world, int duration) {
+    public static void beginTimestop(@NonNull final LivingEntity timestopper, @NonNull final Vec3 position,
+                                     @NonNull final ServerLevel world, final int duration) {
         //JCraft.LOGGER.info(timestopper + " is stopping time in world " + world + " for " + duration + " ticks.");
 
         // Registration
         ResourceKey<Level> worldRegistryKey = world.dimension();
         Timestops.enqueue(new DimensionData(timestopper, position, worldRegistryKey, duration));
 
-        // Synchronization
-        FriendlyByteBuf buf = TimeStopStatePacket.createStartPacket(timestopper.getId(), position, worldRegistryKey, duration);
-        world.players().forEach(playerEntity -> TimeStopStatePacket.send(playerEntity, buf)); // Sends to unaffected players because they may walk into range
+        // Synchronization - Sends to unaffected players because they may walk into range
+        TimeStopStatePacket.send(world.players(), TimeStopStatePacket.createStartPacket(timestopper.getId(), position, worldRegistryKey, duration));
 
-
-        List<ServerPlayer> toStop = world.getEntitiesOfClass(ServerPlayer.class,
+        final List<ServerPlayer> toStop = world.getEntitiesOfClass(ServerPlayer.class,
                 new AABB(position.add(96.0, 96.0, 96.0), position.subtract(96.0, 96.0, 96.0)), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
 
         for (ServerPlayer serverPlayer : toStop) {
@@ -273,8 +272,7 @@ public final class JCraft {
         }
 
         // Synchronization
-        FriendlyByteBuf buf = TimeStopStatePacket.createStopPacket(timestopper.getId());
-        serverWorld.players().forEach(playerEntity -> TimeStopStatePacket.send(playerEntity, buf));
+        TimeStopStatePacket.send(serverWorld.players(), TimeStopStatePacket.createStopPacket(timestopper.getId()));
 
         Vec3 position = Objects.requireNonNull(timestop.pos);
 
@@ -364,10 +362,7 @@ public final class JCraft {
         buf.writeDouble(z);
         buf.writeEnum(type);
 
-        JUtils.around(world, new Vec3(x, y, z), 128).forEach(
-                serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf)
-        );
-
+        ServerChannelFeedbackPacket.send(JUtils.around(world, new Vec3(x, y, z), 128), buf);
     }
 
     public static void createHitsparks(ServerLevel world, double x, double y, double z, JParticleType type, int sparkCount, double sparkSpeed) {
@@ -384,9 +379,7 @@ public final class JCraft {
         buf.writeInt(sparkCount);
         buf.writeDouble(sparkSpeed);
 
-        JUtils.around(world, new Vec3(x, y, z), 128).forEach(
-                serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf)
-        );
+        ServerChannelFeedbackPacket.send(JUtils.around(world, new Vec3(x, y, z), 128), buf);
     }
 
     /**

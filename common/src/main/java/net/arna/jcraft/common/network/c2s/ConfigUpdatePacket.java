@@ -14,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ConfigUpdatePacket {
     public static final ResourceLocation ID = JCraft.id("config_update");
@@ -35,12 +36,12 @@ public class ConfigUpdatePacket {
         Set<ConfigOption> changedOptions = ConfigOption.readOptions(buf);
 
         // Broadcast changes to everyone except the person who made them.
-        FriendlyByteBuf clientChangesBuf = writeClientChanges(changedOptions);
-        for (ServerPlayer serverPlayer : JUtils.all(server)) {
-            if (serverPlayer != player) {
-                NetworkManager.sendToPlayer(serverPlayer, JPacketRegistry.S2C_SERVER_CONFIG, clientChangesBuf);
-            }
-        }
+        final FriendlyByteBuf clientChangesBuf = writeClientChanges(changedOptions);
+        final Set<ServerPlayer> receivers = JUtils.all(server)
+                .stream()
+                .filter(serverPlayer -> serverPlayer != player)
+                .collect(Collectors.toUnmodifiableSet());
+        NetworkManager.sendToPlayers(receivers, JPacketRegistry.S2C_SERVER_CONFIG, clientChangesBuf);
     }
 
     private static FriendlyByteBuf writeClientChanges(Collection<ConfigOption> options) {

@@ -12,11 +12,9 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 public final class NullificationAttack extends AbstractCounterAttack<NullificationAttack, GEREntity> {
@@ -45,11 +43,7 @@ public final class NullificationAttack extends AbstractCounterAttack<Nullificati
         buf.writeShort(14);
         buf.writeInt(countered.getId());
         buf.writeInt(COUNTER_STOP_TIME);
-        for (Player sendPlayer : JUtils.around((ServerLevel) attacker.level(), attacker.position(), 96)) {
-            if (sendPlayer instanceof ServerPlayer serverPlayerEntity) {
-                ServerChannelFeedbackPacket.send(serverPlayerEntity, buf);
-            }
-        }
+        ServerChannelFeedbackPacket.send(JUtils.around((ServerLevel) attacker.level(), attacker.position(), 96), buf);
         JComponentPlatformUtils.getTimeStopData(countered).ifPresent(t -> t.setTicks(COUNTER_STOP_TIME));
 
         if (countered instanceof LivingEntity living) {

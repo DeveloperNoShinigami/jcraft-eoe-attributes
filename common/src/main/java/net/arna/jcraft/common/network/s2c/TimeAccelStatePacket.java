@@ -7,13 +7,15 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import lombok.Data;
+import lombok.NonNull;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.minecraft.Util;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.players.PlayerList;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+
 import java.util.Map;
 
 // TODO: fix time sync between server and client so it doesn't jump at the end
@@ -54,29 +56,25 @@ public class TimeAccelStatePacket {
         });
     }
 
-    public static void sendStart(PlayerList playerManager, MadeInHeavenEntity mih, int duration) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+    public static void sendStart(@NonNull final MadeInHeavenEntity mih, int duration) {
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeVarInt(State.START.ordinal());
         buf.writeVarInt(mih.getId());
         buf.writeVarInt(duration);
 
-        playerManager.getPlayers().forEach(player -> {
-            NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
-        });
+        NetworkManager.sendToPlayers(((ServerLevel) mih.level()).players(), JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
 
         synchronized (lock) {
             accelerations.put(mih.getId(), new TimeAcceleration(duration, mih.getId()));
         }
     }
 
-    public static void sendStop(PlayerList playerManager, MadeInHeavenEntity mih) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+    public static void sendStop(@NonNull final MadeInHeavenEntity mih) {
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeVarInt(State.STOP.ordinal());
         buf.writeVarInt(mih.getId());
 
-        playerManager.getPlayers().forEach(player -> {
-            NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
-        });
+        NetworkManager.sendToPlayers(((ServerLevel) mih.level()).players(), JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
 
         synchronized (lock) {
             accelerations.remove(mih.getId());
