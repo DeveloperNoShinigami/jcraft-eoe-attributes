@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -57,23 +56,22 @@ public class JSplatterManager {
      * @param xRange The range of this splatter on the x-axis
      * @param zRange The range of this splatter on the z-axis
      */
-    public Splatter addSplatter(Vec3 pos, SplatterType type, float xRange, float zRange, @Nullable Entity creator) {
-        Pair<Vec3, Direction> anchoredPos = anchorPos(pos);
+    public Splatter addSplatter(Vec3 pos, final SplatterType type, final float xRange, final float zRange,
+                                @Nullable final Entity creator) {
+        final Pair<Vec3, Direction> anchoredPos = anchorPos(pos);
         pos = anchoredPos.left();
 
-        Splatter splatter = new Splatter(world, pos, anchoredPos.right().getOpposite(), type, xRange, zRange, creator);
+        final Splatter splatter = new Splatter(world, pos, anchoredPos.right().getOpposite(), type, xRange, zRange, creator);
         splatters.add(splatter);
         if (world.isClientSide) {
             return splatter;
         }
 
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         writeSplatter(splatter, buf);
 
         // We already confirmed this is a server-world.
-        for (ServerPlayer player : JUtils.around((ServerLevel) world, pos, 64)) {
-            NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_SPLATTER, buf);
-        }
+        NetworkManager.sendToPlayers(JUtils.around((ServerLevel) world, pos, 64), JPacketRegistry.S2C_SPLATTER, buf);
 
         return splatter;
     }

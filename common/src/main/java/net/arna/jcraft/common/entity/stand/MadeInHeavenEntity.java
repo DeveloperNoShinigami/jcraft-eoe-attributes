@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
@@ -38,8 +40,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.List;
 import java.util.Set;
@@ -330,7 +330,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     @Override
     public void desummon() {
         if (!level().isClientSide() && getAccelTime() > 0) {
-            TimeAccelStatePacket.sendStop(getServer().getPlayerList(), this);
+            TimeAccelStatePacket.sendStop(this);
         }
         super.desummon();
     }

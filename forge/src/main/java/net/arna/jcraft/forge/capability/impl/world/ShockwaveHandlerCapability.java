@@ -41,12 +41,10 @@ public class ShockwaveHandlerCapability extends CommonShockwaveHandlerComponentI
     }
 
     @Override
-    public void sync(Shockwave shockwave) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+    public void sync(final Shockwave shockwave) {
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         writeSyncPacket(buf, shockwave);
-        JUtils.around((ServerLevel)world, shockwave.getBlockPos().getCenter(), 128).forEach(
-                recipient -> NetworkManager.sendToPlayer(recipient, SHOCK_S2C, buf)
-        );
+        NetworkManager.sendToPlayers(JUtils.around((ServerLevel)world, shockwave.getBlockPos().getCenter(), 128), SHOCK_S2C, buf);
     }
 
     public static LazyOptional<ShockwaveHandlerCapability> getCapabilityOptional(Level world) {

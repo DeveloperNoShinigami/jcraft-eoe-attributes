@@ -9,9 +9,9 @@ import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.Set;
 
 public final class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, TheFoolEntity, TheFoolEntity.State> {
@@ -39,9 +39,7 @@ public final class TFChargeAttack extends AbstractChargeAttack<TFChargeAttack, T
         buf.writeDouble(pos.z);
         buf.writeDouble(0.5);
 
-        for (ServerPlayer sendPlayer : JUtils.around((ServerLevel) attacker.level(), pos, 96)) {
-            ServerChannelFeedbackPacket.send(sendPlayer, buf);
-        }
+        ServerChannelFeedbackPacket.send(JUtils.around((ServerLevel) attacker.level(), pos, 96), buf);
 
         return targets;
     }

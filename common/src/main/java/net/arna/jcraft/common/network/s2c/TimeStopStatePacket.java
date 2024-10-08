@@ -32,4 +32,8 @@ public class TimeStopStatePacket {
     public static void send(ServerPlayer serverPlayerEntity, FriendlyByteBuf buf) {
         NetworkManager.sendToPlayer(serverPlayerEntity, JPacketRegistry.S2C_TIME_STOP, buf);
     }
+
+    public static void send(Iterable<ServerPlayer> serverPlayers, FriendlyByteBuf buf) {
+        NetworkManager.sendToPlayers(serverPlayers, JPacketRegistry.S2C_TIME_STOP, buf);
+    }
 }

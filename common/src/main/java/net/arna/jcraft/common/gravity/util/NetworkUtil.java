@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.gravity.util;
 
 import dev.architectury.networking.NetworkManager;
+import lombok.NonNull;
 import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
@@ -10,7 +11,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class NetworkUtil {
@@ -32,20 +36,20 @@ public class NetworkUtil {
     }
 
     //Sending packets to players that are tracking an entity
-
-    public static void sendToTracking(Entity entity, ResourceLocation channel, FriendlyByteBuf buf, PacketMode mode) {
-        //PlayerLookup.tracking(entity) might not return the player if entity is a player, so it has to be done separately
+    public static void sendToTracking(@NonNull final Entity entity, final ResourceLocation channel,
+                                      final FriendlyByteBuf buf, final PacketMode mode) {
+        // PlayerLookup.tracking(entity) might not return the player if entity is a player, so it has to be done separately
         if (mode != PacketMode.EVERYONE_BUT_SELF) {
             if (entity instanceof ServerPlayer player) {
                 NetworkManager.sendToPlayer(player, channel, buf);
             }
         }
         if (mode != PacketMode.ONLY_SELF) {
-            for (ServerPlayer player : JUtils.tracking(entity)) {
-                if (player != entity) {
-                    NetworkManager.sendToPlayer(player, channel, buf);
-                }
-            }
+            final Set<ServerPlayer> recipients = JUtils.tracking(entity)
+                    .stream()
+                    .filter(serverPlayer -> serverPlayer != entity)
+                    .collect(Collectors.toUnmodifiableSet());
+            NetworkManager.sendToPlayers(recipients, channel, buf);
         }
     }
 

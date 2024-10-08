@@ -28,6 +28,7 @@ import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.network.s2c.ShaderDeactivationPacket;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
@@ -296,19 +297,18 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 }
 
                 // Particle effects
-                Vec3 oPos = user.position();
+                final Vec3 oPos = user.position();
                 final AABB bBox = user.getBoundingBox();
-                for (ServerPlayer serverPlayer : ((ServerLevel) level()).players()) {
-                    FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-                    buf.writeVarInt(2);
-                    buf.writeDouble(oPos.x);
-                    buf.writeDouble(oPos.y);
-                    buf.writeDouble(oPos.z);
-                    buf.writeDouble(bBox.getXsize());
-                    buf.writeDouble(bBox.getYsize());
-                    buf.writeDouble(bBox.getZsize());
-                    ServerChannelFeedbackPacket.send(serverPlayer, buf);
-                }
+                final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+                buf.writeVarInt(2);
+                buf.writeDouble(oPos.x);
+                buf.writeDouble(oPos.y);
+                buf.writeDouble(oPos.z);
+                buf.writeDouble(bBox.getXsize());
+                buf.writeDouble(bBox.getYsize());
+                buf.writeDouble(bBox.getZsize());
+
+                ServerChannelFeedbackPacket.send(JUtils.around((ServerLevel) level(), oPos, 128), buf);
 
                 // Stop epitaph state
                 if (user instanceof ServerPlayer player) {
@@ -335,7 +335,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         final Vec3 pos = user.position();
         final AABB bBox = user.getBoundingBox();
 
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeShort(2);
         buf.writeDouble(pos.x);
         buf.writeDouble(pos.y);
@@ -343,10 +343,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         buf.writeDouble(bBox.getXsize());
         buf.writeDouble(bBox.getYsize());
         buf.writeDouble(bBox.getZsize());
-
-        if (level() instanceof ServerLevel serverWorld) {
-            serverWorld.players().forEach(serverPlayer -> ServerChannelFeedbackPacket.send(serverPlayer, buf));
-        }
+        ServerChannelFeedbackPacket.send(JUtils.around((ServerLevel) level(), pos, 128), buf);
     }
 
     public void moveCancel() {

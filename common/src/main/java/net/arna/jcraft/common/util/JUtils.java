@@ -39,12 +39,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -56,24 +51,10 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkSource;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -134,54 +115,58 @@ public final class JUtils {
     }
 
     public static void displayHitboxes(Level world, Collection<AABB> boxes) {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        buf.writeShort(1);
-        buf.writeVarInt(boxes.size());
+        if (world instanceof ServerLevel serverLevel) {
+            final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            buf.writeShort(1);
+            buf.writeVarInt(boxes.size());
 
-        double minX = Double.MAX_VALUE;
-        double minY = Double.MAX_VALUE;
-        double minZ = Double.MAX_VALUE;
+            double minX = Double.MAX_VALUE;
+            double minY = Double.MAX_VALUE;
+            double minZ = Double.MAX_VALUE;
 
-        double maxX = Double.MIN_VALUE;
-        double maxY = Double.MIN_VALUE;
-        double maxZ = Double.MIN_VALUE;
+            double maxX = Double.MIN_VALUE;
+            double maxY = Double.MIN_VALUE;
+            double maxZ = Double.MIN_VALUE;
 
-        for (AABB box : boxes) {
-            if (box.minX < minX) {
-                minX = box.minX;
-            }
-            if (box.minY < minY) {
-                minY = box.minY;
-            }
-            if (box.minZ < minZ) {
-                minZ = box.minZ;
+            for (AABB box : boxes) {
+                if (box.minX < minX) {
+                    minX = box.minX;
+                }
+                if (box.minY < minY) {
+                    minY = box.minY;
+                }
+                if (box.minZ < minZ) {
+                    minZ = box.minZ;
+                }
+
+                if (box.maxX < maxX) {
+                    maxX = box.maxX;
+                }
+                if (box.maxY < maxY) {
+                    maxY = box.maxY;
+                }
+                if (box.maxZ < maxZ) {
+                    maxZ = box.maxZ;
+                }
+
+                buf.writeDouble(box.minX);
+                buf.writeDouble(box.minY);
+                buf.writeDouble(box.minZ);
+
+                buf.writeDouble(box.maxX);
+                buf.writeDouble(box.maxY);
+                buf.writeDouble(box.maxZ);
             }
 
-            if (box.maxX < maxX) {
-                maxX = box.maxX;
-            }
-            if (box.maxY < maxY) {
-                maxY = box.maxY;
-            }
-            if (box.maxZ < maxZ) {
-                maxZ = box.maxZ;
-            }
+            final AABB entireBox = new AABB(minX, minY, minZ, maxX, maxY, maxZ).inflate(48);
 
-            buf.writeDouble(box.minX);
-            buf.writeDouble(box.minY);
-            buf.writeDouble(box.minZ);
-
-            buf.writeDouble(box.maxX);
-            buf.writeDouble(box.maxY);
-            buf.writeDouble(box.maxZ);
+            ServerChannelFeedbackPacket.send(
+                    serverLevel.getPlayers(p -> entireBox.contains(p.position())),
+                    buf
+            );
+        } else {
+            throw new IllegalArgumentException("JUtils.displayHitboxes() must be called serverside!");
         }
-
-        AABB entireBox = new AABB(minX, minY, minZ, maxX, maxY, maxZ).inflate(48);
-        world.players().stream()
-                .filter(p -> p instanceof ServerPlayer)
-                .map(p -> (ServerPlayer) p)
-                .filter(p -> entireBox.contains(p.position()))
-                .forEach(p -> ServerChannelFeedbackPacket.send(p, buf));
     }
 
     // Defaults to LivingEntity
@@ -676,18 +661,21 @@ public final class JUtils {
         return Collections.emptyList();
     }
 
-    public static Collection<ServerPlayer> tracking(Entity entity) {
-        Objects.requireNonNull(entity, "Entity cannot be null");
-        ChunkSource manager = entity.level().getChunkSource();
-
-        if (manager instanceof ServerChunkCache) {
-            ChunkMap storage = ((ServerChunkCache) manager).chunkMap;
-            ChunkMap.TrackedEntity tracker = storage.entityMap.get(entity.getId());
+    /**
+     * @return All {@link ServerPlayer}s tracking the specified {@code entity}.
+     * If the {@code entity} is a Player, there is <u>NO GUARANTEE</u> that the returned {@code Collection<ServerPlayer>} contains them.
+     */
+    public static @NonNull Collection<ServerPlayer> tracking(@NonNull final Entity entity) {
+        if (entity.level().getChunkSource() instanceof ServerChunkCache serverChunkCache) { // Is serverside?
+            final ChunkMap storage = serverChunkCache.chunkMap;
+            final ChunkMap.TrackedEntity tracker = storage.entityMap.get(entity.getId());
 
             // return an immutable collection to guard against accidental removals.
             if (tracker != null) {
                 return tracker.seenBy
-                        .stream().map(ServerPlayerConnection::getPlayer).collect(Collectors.toUnmodifiableSet());
+                        .stream()
+                        .map(ServerPlayerConnection::getPlayer)
+                        .collect(Collectors.toUnmodifiableSet());
             }
 
             return Collections.emptySet();

@@ -11,8 +11,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
+
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.IntSupplier;
 
@@ -30,7 +30,7 @@ public final class TimeAccelerationMove extends AbstractMove<TimeAccelerationMov
         final int accelTime = accelerationDuration.getAsInt();
         attacker.setAccelTime(accelTime);
         attacker.setAfterimage(true);
-        TimeAccelStatePacket.sendStart(Objects.requireNonNull(attacker.getServer()).getPlayerList(), attacker, accelTime);
+        TimeAccelStatePacket.sendStart(attacker, accelTime);
 
         return Set.of();
     }

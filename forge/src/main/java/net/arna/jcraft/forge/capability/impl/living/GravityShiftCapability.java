@@ -35,14 +35,12 @@ public class GravityShiftCapability extends CommonGravityShiftComponentImpl impl
     public void sync(Entity entity) {
         super.sync(entity);
         if (entity.level() instanceof ServerLevel serverWorld) {
-            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeInt(entity.getId());
-            CompoundTag nbt = new CompoundTag();
+            final CompoundTag nbt = new CompoundTag();
             writeToNbt(nbt);
             buf.writeNbt(nbt);
-            JUtils.around(serverWorld, entity.position(), RANGE).forEach(
-                    recipient -> NetworkManager.sendToPlayer(recipient, GS_S2C, buf)
-            );
+            NetworkManager.sendToPlayers(JUtils.around(serverWorld, entity.position(), RANGE), GS_S2C, buf);
         }
     }
 

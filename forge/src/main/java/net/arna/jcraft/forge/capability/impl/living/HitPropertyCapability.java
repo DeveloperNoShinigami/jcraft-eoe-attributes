@@ -8,12 +8,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static net.arna.jcraft.JCraft.MOD_ID;
 
@@ -32,14 +36,14 @@ public class HitPropertyCapability extends CommonHitPropertyComponentImpl implem
 
         if (entity instanceof LivingEntity livingEntity) {
             if (entity.level() instanceof ServerLevel serverWorld) {
-                FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+                final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
                 buf.writeVarInt(livingEntity.getId());
-                this.writeSyncPacket(buf, null);
-                serverWorld.players().forEach(recipient -> {
-                    if (this.shouldSyncWith(recipient)) {
-                        NetworkManager.sendToPlayer(recipient, HIT_S2C, buf);
-                    }
-                });
+                writeSyncPacket(buf, null);
+                final Set<ServerPlayer> recipients = serverWorld.players()
+                        .stream()
+                        .filter(this::shouldSyncWith)
+                        .collect(Collectors.toUnmodifiableSet());
+                NetworkManager.sendToPlayers(recipients, HIT_S2C, buf);
             }
         }
     }
