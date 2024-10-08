@@ -32,6 +32,18 @@ import org.joml.Vector3f;
 
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Bites_the_Dust">Killer Queen Bites The Dust</a>.
+ * @see StandType#KILLER_QUEEN_BITES_THE_DUST
+ * @see net.arna.jcraft.client.model.entity.stand.KQBTDModel KQBTDModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.KQBTDRenderer KQBTDRenderer
+ * @see BTDDetonateAttack
+ * @see BTDGrabHitAttack
+ * @see BTDPlantAttack
+ * @see BubbleAttack
+ * @see BubbleCounterAttack
+ * @see ElbowAttack
+ */
 public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQBTDEntity.State> {
     public static final ElbowAttack ELBOW = new ElbowAttack(60, 5, 9, 0.75f,
             7.5f, 10, 1f, 1.1f, 0f)

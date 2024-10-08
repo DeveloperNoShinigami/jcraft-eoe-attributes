@@ -45,6 +45,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Made_in_Heaven">Made In Heaven</a>.
+ * @see StandType#MADE_IN_HEAVEN
+ * @see net.arna.jcraft.client.model.entity.stand.MadeInHeavenModel MadeInHeavenModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.MadeInHeavenRenderer MadeInHeavenRenderer
+ * @see CircleAttack
+ * @see FuryChopAttack
+ * @see JudgementAttack
+ * @see SpeedSliceAttack
+ * @see TimeAccelerationMove
+ */
 public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHeavenEntity.State> {
     public static final EffectInflictingAttack<MadeInHeavenEntity> SPEED_CHOP = new EffectInflictingAttack<MadeInHeavenEntity>(
             JCraft.LIGHT_COOLDOWN, 6, 11, 0.75f, 3f, 8, 1.5f, 0.5f, -0.1f,

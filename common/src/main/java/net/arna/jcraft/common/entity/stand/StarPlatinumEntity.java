@@ -30,6 +30,14 @@ import org.joml.Vector3f;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Star_Platinum">Star Platinum</a>.
+ * @see StandType#STAR_PLATINUM
+ * @see net.arna.jcraft.client.model.entity.stand.StarPlatinumModel StarPlatinumModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.StarPlatinumRenderer StarPlatinumRenderer
+ * @see net.arna.jcraft.common.attack.moves.starplatinum.BlockBreakingAttack BlockBreakingAttack
+ * @see InhaleAttack
+ */
 public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPlatinumEntity, StarPlatinumEntity.State> {
     public static final UppercutAttack<StarPlatinumEntity> UPPERCUT = new UppercutAttack<StarPlatinumEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),
             8, 14, 0.75f, 6f, 20, 1.5f, 0.25f, -0.6f, 0.75f)

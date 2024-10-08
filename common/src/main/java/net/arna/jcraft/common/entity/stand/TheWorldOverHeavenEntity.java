@@ -36,6 +36,18 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/The_World">The World Over Heaven</a>.
+ * @see StandType#THE_WORLD
+ * @see net.arna.jcraft.client.model.entity.stand.TheWorldOverHeavenModel TheWorldOverHeavenModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.TheWorldOverHeavenRenderer TheWorldOverHeavenRenderer
+ * @see AerialDivineFinisherAttack
+ * @see DivineFinisherAttack
+ * @see LungeAttack
+ * @see OverwriteAttack
+ * @see SingularityAttack
+ * @see SmiteAttack
+ */
 public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEntity, TheWorldOverHeavenEntity.State> {
     public static final LungeAttack LUNGE = new LungeAttack(0, 10, 16, 0.75f,
             8f, 10, 1.75f, 1f, 0f, 11, 5)

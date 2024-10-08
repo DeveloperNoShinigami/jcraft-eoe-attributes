@@ -24,6 +24,14 @@ import org.joml.Vector3f;
 
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/The_World">The World</a>.
+ * @see StandType#THE_WORLD
+ * @see net.arna.jcraft.client.model.entity.stand.TheWorldModel TheWorldModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.TheWorldRenderer TheWorldRenderer
+ * @see FeignBarrageCounterAttack
+ * @see TWDonutAttack
+ */
 public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity, TheWorldEntity.State> {
     public static final SimpleAttack<TheWorldEntity> LOW_KICK = new SimpleAttack<TheWorldEntity>(20, 8, 14, 0.75f,
             6f, 17, 1.5f, 0.2f, 0.65f)

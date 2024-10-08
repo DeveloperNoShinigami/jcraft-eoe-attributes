@@ -7,6 +7,12 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Chariot_Requiem">Chariot Requiem</a>.
+ * @see StandType#CHARIOT_REQUIEM
+ * @see net.arna.jcraft.client.model.entity.stand.ChariotRequiemModel ChariotRequiemModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.ChariotRequiemRenderer ChariotRequiemRenderer
+ */
 public class ChariotRequiemEntity extends StandEntity<ChariotRequiemEntity, ChariotRequiemEntity.State> {
 
     public ChariotRequiemEntity(Level world) {

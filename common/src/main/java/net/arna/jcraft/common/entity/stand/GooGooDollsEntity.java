@@ -7,6 +7,12 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Goo_Goo_Dolls">Goo Goo Dolls</a>.
+ * @see StandType#GOO_GOO_DOLLS
+ * @see net.arna.jcraft.client.model.entity.stand.GooGooDollsModel GooGooDollsModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.GooGooDollsRenderer GooGooDollsRenderer
+ */
 public class GooGooDollsEntity extends StandEntity<GooGooDollsEntity, GooGooDollsEntity.State> {
 
     public GooGooDollsEntity(Level world) {

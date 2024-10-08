@@ -31,6 +31,16 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Whitesnake">Whitesnake</a>.
+ * @see StandType#WHITE_SNAKE
+ * @see net.arna.jcraft.client.model.entity.stand.WhiteSnakeModel WhiteSnakeModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.WhiteSnakeRenderer WhiteSnakeRenderer
+ * @see ChargedSpewAttack
+ * @see GiveStandAttack
+ * @see MeltYourHeartAttack
+ * @see PoisonSpewAttack
+ */
 public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEntity.State> {
     public static final UppercutAttack<WhiteSnakeEntity> UPPERCUT = new UppercutAttack<WhiteSnakeEntity>(
             20, 8, 14, 1, 6f, 16, 1.25f, 0.5f, -0.5f, 0.5f)

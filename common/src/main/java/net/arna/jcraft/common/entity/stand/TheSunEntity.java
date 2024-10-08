@@ -57,6 +57,12 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Sun">The Sun</a>.
+ * @see StandType#THE_SUN
+ * @see net.arna.jcraft.client.model.entity.stand.TheSunModel TheSunModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.SunRenderer SunRenderer
+ */
 public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.State> {
     private static final EntityDataAccessor<Boolean> PASSIVE;
     private static final EntityDataAccessor<Float> SCALE;

@@ -32,6 +32,15 @@ import static net.arna.jcraft.common.attack.moves.goldexperience.requiem.LifeBea
 import static net.arna.jcraft.common.component.living.CommonHitPropertyComponent.HitAnimation.CRUSH;
 import static net.arna.jcraft.common.component.living.CommonHitPropertyComponent.HitAnimation.HIGH;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Gold_Experience_Requiem">Gold Experience Requiem</a>.
+ * @see StandType#GOLD_EXPERIENCE_REQUIEM
+ * @see FlightMove
+ * @see LifeBeamAttack
+ * @see NullificationAttack
+ * @see OverheadKickAttack
+ * @see ReturnToZeroMove
+ */
 public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     public static final SimpleAttack<GEREntity> LIGHT_FOLLOWUP = new SimpleAttack<GEREntity>(
             0, 6, 13, 0.75f, 6f, 8, 1.5f, 1f, -0.1f)

@@ -37,6 +37,18 @@ import org.joml.Vector3f;
 
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Dirty_Deeds_Done_Dirt_Cheap">Dirty Deeds Done Dirt Cheap</a>.
+ * @see StandType#D4C
+ * @see net.arna.jcraft.client.renderer.entity.stands.D4CRenderer D4CRenderer
+ * @see CloneSpawnMove
+ * @see D4CCounterAttack
+ * @see D4CGrabAttack
+ * @see DimensionalHopMove
+ * @see FlagMove
+ * @see GiveGunMove
+ * @see ItemPlaceMove
+ */
 public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     public static final ItemPlaceMove ITEM_PLACE = new ItemPlaceMove(JCraft.LIGHT_COOLDOWN, 8, 12, 0.75f)
             .withAnim(State.ITEM_PLACE)

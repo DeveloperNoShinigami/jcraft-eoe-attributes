@@ -34,8 +34,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/C-MOON">C-MOON</a>.
+ * @see StandType#C_MOON
+ * @see net.arna.jcraft.client.renderer.entity.stands.CMoonRenderer CMoonRenderer
+ * @see GravitationalHopMove
+ * @see GravityShiftMove
+ * @see GravityShiftPulseMove
+ * @see GroundSlamAttack
+ * @see LaunchAttack
+ */
 public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
-    public static final int GRAVITY_CHANGE_DURATION = 600;
+    public static final int GRAVITY_CHANGE_DURATION = 600; // in ticks
     public static final SimpleAttack<CMoonEntity> INVERSION_PUNCH = SimpleAttack.<CMoonEntity>lightAttack(6, 12,
                     0.75f, 5f, 9, 0.5f, -0.1f)
             .withAnim(State.INVERSION_PUNCH)

@@ -43,6 +43,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Horus">Horus</a>.
+ * @see StandType#HORUS
+ * @see net.arna.jcraft.client.model.entity.stand.HorusModel HorusModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.HorusRenderer HorusRenderer
+ * @see net.arna.jcraft.common.entity.npc.PetshopEntity PetshopEntity
+ * @see HorusBarrageAttack
+ * @see HorusDivekickAttack
+ */
 public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     public static final SimpleAttack<HorusEntity> LIGHT_CROUCHING_FOLLOWUP = new SimpleAttack<HorusEntity>(
             0, 15, 25, 0.75f, 7f, 25, 1.85f, 1.5f, 0.2f)

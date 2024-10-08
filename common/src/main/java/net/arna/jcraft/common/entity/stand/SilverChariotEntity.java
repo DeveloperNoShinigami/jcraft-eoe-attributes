@@ -36,6 +36,22 @@ import java.util.function.Consumer;
 
 import static net.arna.jcraft.common.attack.moves.silverchariot.CircleSlashAttack.CHARGE_TIME;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Silver_Chariot">Silver Chariot</a>.
+ * @see StandType#SILVER_CHARIOT
+ * @see net.arna.jcraft.client.model.entity.stand.SilverChariotModel SilverChariotModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.SilverChariotRenderer SilverChariotRenderer
+ * @see ArmorOffAttack
+ * @see CircleSlashAttack
+ * @see CleaveAttack
+ * @see GodOfDeathAttack
+ * @see GodOfDeathHitAttack
+ * @see LastShotAttack
+ * @see RayDartAttack
+ * @see SCChargeAttack
+ * @see SCCounterAttack
+ * @see SpinBarrageAttack
+ */
 public class SilverChariotEntity extends StandEntity<SilverChariotEntity, SilverChariotEntity.State> {
     public static final LastShotAttack LAST_SHOT = new LastShotAttack(140, 12, 15, 1f)
             .withAnim(State.LAST_SHOT)

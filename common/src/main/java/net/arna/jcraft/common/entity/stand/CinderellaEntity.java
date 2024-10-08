@@ -14,7 +14,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Cinderella">Cinderella</a>.
+ * @see StandType#CINDERELLA
+ * @see net.arna.jcraft.client.model.entity.stand.CinderellaModel CinderellaModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.CinderellaRenderer CinderellaRenderer
+ * @see net.arna.jcraft.common.entity.npc.AyaTsujiEntity AyaTsujiEntity
+ */
 public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEntity.State> {
+
     public static final SimpleAttack<CinderellaEntity> LIGHT = SimpleAttack.<CinderellaEntity>lightAttack(
                     7, 11, 0.75f, 4f, 11, 0.15f, 0.2f)
             // .withFollowup(LIGHT_FOLLOWUP)

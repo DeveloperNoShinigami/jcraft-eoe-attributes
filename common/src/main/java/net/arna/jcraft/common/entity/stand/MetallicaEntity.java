@@ -59,6 +59,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Metallica">Metallica</a>.
+ * @see StandType#METALLICA
+ * @see net.arna.jcraft.client.model.entity.stand.MetallicaModel MetallicaModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.MetallicaRenderer MetallicaRenderer
+ * @see HarvestMove
+ */
 public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntity.State> {
     private static final EntityDataAccessor<BlockPos> SIPHON_POS;
     private static final EntityDataAccessor<Float> IRON;

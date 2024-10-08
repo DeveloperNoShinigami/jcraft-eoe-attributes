@@ -33,6 +33,14 @@ import java.util.function.Consumer;
 
 import static net.arna.jcraft.common.attack.moves.hierophantgreen.EmeraldSplashAttack.CHARGE_TIME;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Hierophant_Green">Hierophant Green</a>.
+ * @see StandType#HIEROPHANT_GREEN
+ * @see net.arna.jcraft.client.model.entity.stand.HGModel HGModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.HGRenderer HGRenderer
+ * @see EmeraldSplashAttack
+ * @see NetSetMove
+ */
 public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
     public static final UppercutAttack<HGEntity> AIR_LIGHT = new UppercutAttack<HGEntity>(
             JCraft.LIGHT_COOLDOWN, 7, 14, 0.75f, 5f, 15, 1.5f, 0.4f, -0.3f, 0.4f)

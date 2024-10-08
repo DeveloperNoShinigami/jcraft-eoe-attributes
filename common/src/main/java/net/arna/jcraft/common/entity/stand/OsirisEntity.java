@@ -7,6 +7,13 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import mod.azure.azurelib.core.animation.AnimationState;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Osiris">Osiris</a>.
+ * @see StandType#OSIRIS
+ * @see net.arna.jcraft.client.model.entity.stand.OsirisModel OsirisModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.OsirisRenderer OsirisRenderer
+ * @see net.arna.jcraft.common.entity.npc.DarbyOlderEntity DarbyOlderEntity
+ */
 public class OsirisEntity extends StandEntity<OsirisEntity, OsirisEntity.State> {
 
     public OsirisEntity(Level world) {

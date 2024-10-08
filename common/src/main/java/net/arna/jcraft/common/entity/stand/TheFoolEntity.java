@@ -48,6 +48,21 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/The_Fool">The Fool</a>.
+ * @see net.arna.jcraft.client.model.entity.stand.TheFoolModel TheFoolModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.TheFoolRenderer TheFoolRenderer
+ * @see AirBarrageAttack
+ * @see GlideMove
+ * @see PoundAttack
+ * @see SandCloneMove
+ * @see SandstormAttack
+ * @see SandTornadoMove
+ * @see SandWaveAttack
+ * @see SlamAttack
+ * @see TFChargeAttack
+ * @see TFComboAttack
+ */
 public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.State> {
     public static final SimpleMultiHitAttack<TheFoolEntity> DRILL = new SimpleMultiHitAttack<TheFoolEntity>(
             20, 14, 1.5f, 2.5f, 7, 1.5f, 0.2f, 0.25f, IntSet.of(5, 8, 11))

@@ -7,6 +7,12 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Diver_Down">Diver Down</a>.
+ * @see StandType#DIVER_DOWN
+ * @see net.arna.jcraft.client.model.entity.stand.DiverDownModel DiverDownModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.DiverDownRenderer DiverDownRenderer
+ */
 public class DiverDownEntity extends StandEntity<DiverDownEntity, DiverDownEntity.State> {
 
     public DiverDownEntity(Level world) {

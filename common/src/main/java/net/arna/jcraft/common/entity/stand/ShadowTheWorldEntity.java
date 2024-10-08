@@ -54,6 +54,13 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/The_World">Shadow The World</a>.
+ * @see StandType#SHADOW_THE_WORLD
+ * @see net.arna.jcraft.client.model.entity.stand.ShadowTheWorldModel ShadowTheWorldModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.ShadowTheWorldRenderer ShadowTheWorldRenderer
+ * @see STWCounterAttack
+ */
 public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowTheWorldEntity, ShadowTheWorldEntity.State> {
     public static final UppercutAttack<ShadowTheWorldEntity> UPPERCUT = new UppercutAttack<ShadowTheWorldEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),
             10, 16, 0.75f, 6f, 20, 1.5f, 0.25f, -0.6f, 1.0f)

@@ -25,6 +25,12 @@ import org.joml.Vector3f;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Purple_Haze_Distortion">Purple Haze Distortion</a>.
+ * @see StandType#PURPLE_HAZE_DISTORTION
+ * @see net.arna.jcraft.client.model.entity.stand.PurpleHazeModel PurpleHazeModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.PurpleHazeDistortionRenderer PurpleHazeDistortionRenderer
+ */
 public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<PurpleHazeDistortionEntity, PurpleHazeDistortionEntity.State> {
     private static final @NonNull KnockdownAttack<AbstractPurpleHazeEntity<?, ?>> CROUCHING_LIGHT_FOLLOWUP_ATTACK = BACKHAND_FOLLOWUP.copy().withAnim(State.BACKHAND_FOLLOWUP);
     private static final @NonNull UppercutAttack<AbstractPurpleHazeEntity<?, ?>> CROUCHING_LIGHT_ATTACK = BACKHAND.copy().withFollowup(CROUCHING_LIGHT_FOLLOWUP_ATTACK);

@@ -7,6 +7,13 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import mod.azure.azurelib.core.animation.AnimationState;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Atum">Atum</a>.
+ * @see StandType#ATUM
+ * @see net.arna.jcraft.client.model.entity.stand.AtumModel AtumModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.AtumRenderer AtumRenderer
+ * @see net.arna.jcraft.common.entity.npc.DarbyYoungerEntity DarbyYoungerEntity
+ */
 public class AtumEntity extends StandEntity<AtumEntity, AtumEntity.State> {
 
     public AtumEntity(Level world) {

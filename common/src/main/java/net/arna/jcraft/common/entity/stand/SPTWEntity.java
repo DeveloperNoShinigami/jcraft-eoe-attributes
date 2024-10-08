@@ -25,6 +25,13 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Star_Platinum">Star Platinum The World</a>.
+ * @see StandType#STAR_PLATINUM_THE_WORLD
+ * @see net.arna.jcraft.client.model.entity.stand.StarPlatinumModel StarPlatinumModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.SPTWRenderer SPTWRenderer
+ * @see GroundSlamAttack
+ */
 public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPTWEntity.State> {
     public static final GroundSlamAttack GROUND_SLAM = new GroundSlamAttack(20, 12, 19,
             0.75f, 7f, 11, 1.8f, 0f, 0.8f)

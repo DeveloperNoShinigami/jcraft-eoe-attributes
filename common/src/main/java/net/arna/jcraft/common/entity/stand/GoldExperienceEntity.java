@@ -30,6 +30,16 @@ import org.joml.Vector3f;
 
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Gold_Experience">Gold Experience</a>.
+ * @see StandType#GOLD_EXPERIENCE
+ * @see net.arna.jcraft.client.model.entity.stand.GoldenExperienceModel GoldenExperienceModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.GoldExperienceRenderer GoldExperienceRenderer
+ * @see BerryBushAttack
+ * @see LifeGiverAttack
+ * @see OverclockAttack
+ * @see TreeAttack
+ */
 public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, GoldExperienceEntity.State> {
     // JCraft.lightCooldown -> 0 | 0.5f -> 0.35f
     public static final BerryBushAttack BERRY_BUSH = new BerryBushAttack(120, 16, 20,

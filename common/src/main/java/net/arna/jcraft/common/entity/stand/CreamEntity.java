@@ -62,6 +62,18 @@ import java.util.function.Consumer;
 import static net.arna.jcraft.common.attack.moves.cream.SurpriseMove.OUT_DIR;
 import static net.arna.jcraft.common.attack.moves.cream.SurpriseMove.OUT_POS;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Cream">Cream</a>.
+ * @see StandType#CREAM
+ * @see net.arna.jcraft.client.model.entity.stand.CreamModel CreamModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.CreamRenderer CreamRenderer
+ * @see BallChargeAttack
+ * @see BallModeMove
+ * @see ConsumeAttack
+ * @see CreamComboAttack
+ * @see DestroyAttack
+ * @see SurpriseMove
+ */
 public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     public static final EffectInflictingAttack<CreamEntity> BITE = new EffectInflictingAttack<CreamEntity>(20,
             7, 13, 0.75f, 6f, 20, 1.75f, 0.75f, 0.3f,

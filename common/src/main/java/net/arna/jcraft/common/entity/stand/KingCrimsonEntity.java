@@ -57,6 +57,17 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/King_Crimson">King Crimson</a>.
+ * @see StandType#KING_CRIMSON
+ * @see net.arna.jcraft.client.model.entity.stand.KingCrimsonModel KingCrimsonModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.KingCrimsonRenderer KingCrimsonRenderer
+ * @see BloodThrowAttack
+ * @see EpitaphAttack
+ * @see KCDonutAttack
+ * @see PredictionMove
+ * @see TimeEraseMove
+ */
 public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimsonEntity.State> {
     public static final KnockdownAttack<KingCrimsonEntity> SWEEP = new KnockdownAttack<KingCrimsonEntity>(40,
             10, 20, 0.85f, 5f, 20, 1.5f, 0.4f, 0.3f, 35)

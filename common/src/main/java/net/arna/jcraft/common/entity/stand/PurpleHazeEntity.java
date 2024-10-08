@@ -45,6 +45,12 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Purple_Haze">Purple Haze</a>.
+ * @see StandType#PURPLE_HAZE
+ * @see net.arna.jcraft.client.model.entity.stand.PurpleHazeModel PurpleHazeModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.PurpleHazeRenderer PurpleHazeRenderer
+ */
 public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeEntity, PurpleHazeEntity.State> {
     private static final @NonNull KnockdownAttack<AbstractPurpleHazeEntity<?, ?>> CROUCHING_LIGHT_FOLLOWUP_ATTACK = BACKHAND_FOLLOWUP.copy().withAnim(State.BACKHAND_FOLLOWUP).allowHitUser();
     private static final @NonNull UppercutAttack<AbstractPurpleHazeEntity<?, ?>> CROUCHING_LIGHT_ATTACK = BACKHAND.copy().withFollowup(CROUCHING_LIGHT_FOLLOWUP_ATTACK).allowHitUser();

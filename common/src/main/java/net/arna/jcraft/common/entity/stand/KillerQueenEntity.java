@@ -19,6 +19,19 @@ import org.joml.Vector3f;
 
 import java.util.function.Consumer;
 
+/**
+ * The {@link StandEntity} for <a href="https://jojowiki.com/Killer_Queen">Killer Queen</a>.
+ * @see StandType#KILLER_QUEEN
+ * @see net.arna.jcraft.client.model.entity.stand.KillerQueenModel KillerQueenModel
+ * @see net.arna.jcraft.client.renderer.entity.stands.KillerQueenRenderer KillerQueenRenderer
+ * @see net.arna.jcraft.common.attack.moves.killerqueen.BombPlantAttack BombPlantAttack
+ * @see CoinTossAttack
+ * @see net.arna.jcraft.common.attack.moves.killerqueen.DetonateAttack DetonateAttack
+ * @see net.arna.jcraft.common.attack.moves.killerqueen.ExplosiveDashAttack ExplosiveDashAttack
+ * @see KQGrabAttack
+ * @see KQGrabAttack
+ * @see SheerHeartAttackAttack
+ */
 public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQueenEntity, KillerQueenEntity.State> {
     public static final SimpleAttack<KillerQueenEntity> HEAVY = new SimpleAttack<KillerQueenEntity>(
             200, 16, 24, 0.75f, 9f, 10, 2f, 1.75f, 0f)
