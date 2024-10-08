@@ -55,8 +55,8 @@
 1. Create the class `MyEntity` (replacing `My` with its name of course), subclassing `Entity` or one of its subclasses (like `PathAwareEntity`).
 2. Add the interface `GeoEntity` to `MyEntity`.
 3. Add the line `private final AnimatableInstanceCache geoCache = AzureLibUtil.createInstanceCache(this);` to `MyEntity` and implement the interface getter accordingly.
-4. Add the method `public static DefaultAttributeContainer.Builder createMyAttributes()` to `MyEntity` and return the stats for your entity, e.g. use `MobEntity.createMobAttributes()`.
-5. Add a constructor that only takes a `World` as a parameter. Ignore the missing type for the `super` call right now.
+4. Add the method `public static AttributeSupplier.Builder createMyAttributes()` to `MyEntity` and return the stats for your entity, e.g. use `LivingEntity.createLivingAttributes()`.
+5. Add a constructor that only takes a `Level` as a parameter. Ignore the missing type for the `super` call right now.
 6. Add the type of the entity to `JEntityTypeRegistry`. The dimension parameter is the hitbox of the entity in blocks.
 7. Register the entity attributes in `JEntityTypeRegistry#registerAttributes`.
 8. Use the newly created entity type in the `super` constructor of `MyEntity`.
