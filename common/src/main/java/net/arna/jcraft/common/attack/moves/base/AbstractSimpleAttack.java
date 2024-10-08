@@ -28,8 +28,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.function.Predicate;
 
 /**
  * An attack with just one hit box.
@@ -445,21 +444,23 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      */
     public static <T extends Entity> @NonNull Set<T> findHits(final IAttacker<?, ?> attacker, final @NonNull Set<AABB> boxes,
                                                               final @Nullable DamageSource damageSource, final Class<T> type, final boolean mayHitUser) {
-        LivingEntity user = attacker.getUser();
-        return boxes.stream()
-                .flatMap(box -> attacker.getEntityWorld().getEntitiesOfClass(type, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e ->
-                                e != attacker
-                                        && (mayHitUser || e != user
-                                        && e != user.getVehicle()
-                                        && e != JUtils.getStand(user))
-                        )
-                ).stream())
-                .flatMap(e -> e instanceof StandEntity<?, ?> hitStand &&
-                        !hitStand.isRemote() &&
-                        hitStand.hasUser() &&
-                        type.isInstance(hitStand.getUserOrThrow()) ? Stream.of(e, type.cast(hitStand.getUserOrThrow())) : Stream.of(e))
-                .filter(damageSource == null ? e -> true : e -> JUtils.canDamage(damageSource, e)) // This must be done after the previous flatmap call as it excludes stands.
-                .collect(Collectors.toSet());
+        final LivingEntity user = attacker.getUser();
+        final Set<T> result = new HashSet<>();
+        final Predicate<? super Entity> filter = e -> e != attacker && (mayHitUser || (e != user && e != user.getVehicle() && e != JUtils.getStand(user)));
+        for (final AABB box : boxes) {
+            for (final T entity : attacker.getEntityWorld().getEntitiesOfClass(type, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(filter))) {
+                if (damageSource == null || JUtils.canDamage(damageSource, entity)) {
+                    result.add(entity);
+                }
+                if (entity instanceof final StandEntity<?,?> hitStand && !hitStand.isRemote() && hitStand.hasUser() && type.isInstance(hitStand.getUserOrThrow())) {
+                    T hitUser = type.cast(hitStand.getUserOrThrow());
+                    if (damageSource == null || JUtils.canDamage(damageSource, hitUser)) {
+                        result.add(hitUser);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     // Logic methods
