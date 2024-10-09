@@ -6,10 +6,10 @@ import net.arna.jcraft.common.entity.projectile.StandArrowEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 /**
- * The {@link GeoEntityRenderer} for {@link StandArrowEntity}.
+ * The {@link GeoProjectileRenderer} for {@link StandArrowEntity}.
  * @see StandArrowModel
  */
-public class StandArrowRenderer extends GeoEntityRenderer<StandArrowEntity> {
+public class StandArrowRenderer extends GeoProjectileRenderer<StandArrowEntity> {
     public StandArrowRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new StandArrowModel());
     }
