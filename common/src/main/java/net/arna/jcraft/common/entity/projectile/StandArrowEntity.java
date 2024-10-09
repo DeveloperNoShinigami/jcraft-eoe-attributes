@@ -13,7 +13,7 @@ import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -50,7 +50,8 @@ public class StandArrowEntity extends AbstractArrow implements GeoEntity {
     protected void onHitEntity(final @NonNull EntityHitResult result) {
         super.onHitEntity(result);
         if (result.getEntity() instanceof final LivingEntity mob) {
-            if (mob.level().isClientSide()) {
+            final Level level = mob.level();
+            if (level.isClientSide()) {
                 return;
             }
             if (JUtils.getStand(mob) == null) {
@@ -58,9 +59,9 @@ public class StandArrowEntity extends AbstractArrow implements GeoEntity {
                 standData.setType(StandType.getRandomRegular(random));
                 mob.unRide();
                 JCraft.summon(mob.level(), mob);
-            }
-            else if (mob instanceof final Player player) {
-                player.addItem(new ItemStack(JItemRegistry.STAND_ARROW.get()));
+            } else {
+                final ItemStack arrowItemStack = new ItemStack(JItemRegistry.STAND_ARROW.get());
+                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), arrowItemStack));
             }
         }
     }

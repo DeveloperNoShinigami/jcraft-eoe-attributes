@@ -15,8 +15,8 @@
 					"name": "stand_arrow_projectile",
 					"pivot": [0, 3, 0],
 					"cubes": [
-						{"origin": [-3, 2, -8], "size": [5, 1, 16], "pivot": [-0.5, 2.5, 0], "rotation": [0, 90, 0], "uv": [0, 0]},
-						{"origin": [-2.5, 2.5, -8], "size": [5, 1, 16], "pivot": [0, 3, 0], "rotation": [-90, 0, -90], "uv": [0, 0]}
+						{"origin": [-3, -1, -8], "size": [5, 1, 16], "pivot": [-0.5, -0.5, 0], "rotation": [0, 90, 0], "uv": [0, 0]},
+						{"origin": [-2.5, -0.5, -8.5], "size": [5, 1, 16], "pivot": [0, 0, -0.5], "rotation": [-90, 0, -90], "uv": [0, 0]}
 					]
 				}
 			]
