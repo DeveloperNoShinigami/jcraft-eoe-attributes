@@ -39,6 +39,7 @@ import net.arna.jcraft.common.entity.projectile.RapierProjectile;
 import net.arna.jcraft.common.entity.projectile.RedBindEntity;
 import net.arna.jcraft.common.entity.projectile.SandTornadoEntity;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
+import net.arna.jcraft.common.entity.projectile.StandArrowEntity;
 import net.arna.jcraft.common.entity.projectile.SunBeamProjectile;
 import net.arna.jcraft.common.entity.projectile.WSAcidProjectile;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
@@ -529,6 +530,16 @@ public interface JEntityTypeRegistry {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("wsacidprojectile")
+    );
+
+    RegistrySupplier<EntityType<StandArrowEntity>> STAND_ARROW_PROJECTILE = ENTITY_TYPE_REGISTRY.register(JCraft.id("standarrowprojectile"),
+            () -> EntityType.Builder.of(
+                            WorldOnlyEntityFactory.from(StandArrowEntity::new),
+                            MobCategory.MISC
+                    ).sized(0.5f, 0.5f)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("standarrowprojectile")
     );
 
     RegistrySupplier<EntityType<SunBeamProjectile>> SUN_BEAM = ENTITY_TYPE_REGISTRY.register(JCraft.id("sunbeam"),

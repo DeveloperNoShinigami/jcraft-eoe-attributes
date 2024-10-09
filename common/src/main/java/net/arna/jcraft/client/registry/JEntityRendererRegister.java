@@ -35,6 +35,7 @@ import net.arna.jcraft.client.renderer.entity.projectiles.PHCapsuleRenderer;
 import net.arna.jcraft.client.renderer.entity.projectiles.RapierRenderer;
 import net.arna.jcraft.client.renderer.entity.projectiles.RedBindRenderer;
 import net.arna.jcraft.client.renderer.entity.projectiles.ScalpelRenderer;
+import net.arna.jcraft.client.renderer.entity.projectiles.StandArrowRenderer;
 import net.arna.jcraft.client.renderer.entity.projectiles.SunBeamRenderer;
 import net.arna.jcraft.client.renderer.entity.projectiles.WSAcidRenderer;
 import net.arna.jcraft.client.renderer.entity.stands.AtumRenderer;
@@ -165,6 +166,7 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.PH_CAPSULE, PHCapsuleRenderer::new),
             new RendererData<>(JEntityTypeRegistry.PURPLE_HAZE_CLOUD, JEntityRendererRegister::createEmpty),
             new RendererData<>(JEntityTypeRegistry.METALLICA_FORKS, MetallicaForksRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.STAND_ARROW_PROJECTILE, StandArrowRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.PETSHOP, PetshopRenderer::new),
             new RendererData<>(JEntityTypeRegistry.AYA_TSUJI, AyaTsujiRenderer::new),

@@ -2,6 +2,7 @@ package net.arna.jcraft.common.item;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
+import net.arna.jcraft.common.entity.projectile.StandArrowEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.core.Holder;
@@ -14,13 +15,16 @@ import net.minecraft.world.damagesource.DamageEffects;
 import net.minecraft.world.damagesource.DamageScaling;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
-public class StandArrowItem extends Item {
+public class StandArrowItem extends ArrowItem {
     public static final DamageType DAMAGE_TYPE = new DamageType("stand_arrow", DamageScaling.NEVER, 0f, DamageEffects.HURT);
 
     public StandArrowItem(Properties settings) {
@@ -76,5 +80,10 @@ public class StandArrowItem extends Item {
         }
 
         return InteractionResultHolder.consume(itemStack);
+    }
+
+    @Override
+    public AbstractArrow createArrow(Level level, ItemStack stack, LivingEntity shooter) {
+        return new StandArrowEntity(shooter, level);
     }
 }
