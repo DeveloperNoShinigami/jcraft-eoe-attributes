@@ -50,6 +50,9 @@ public class StandArrowEntity extends AbstractArrow implements GeoEntity {
     protected void onHitEntity(final @NonNull EntityHitResult result) {
         super.onHitEntity(result);
         if (result.getEntity() instanceof final LivingEntity mob) {
+            if (mob.level().isClientSide()) {
+                return;
+            }
             if (JUtils.getStand(mob) == null) {
                 final CommonStandComponent standData = JComponentPlatformUtils.getStandData(mob);
                 standData.setType(StandType.getRandomRegular(random));
