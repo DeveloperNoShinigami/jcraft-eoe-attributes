@@ -38,7 +38,7 @@ public class StandArrowEntity extends AbstractArrow implements GeoEntity {
 
     @Override
     public void registerControllers(final AnimatableManager.ControllerRegistrar controllers) {
-        // TODO Arna
+        // intentionally left empty
     }
 
     @Override
