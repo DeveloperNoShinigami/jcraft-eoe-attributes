@@ -1,6 +1,7 @@
 package net.arna.jcraft.fabric.datagen;
 
 import net.arna.jcraft.registry.JBlockRegistry;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -8,6 +9,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.world.entity.EntityType;
@@ -76,6 +78,7 @@ public class JTagProviders {
             getOrCreateRawBuilder(ItemTags.BEACON_PAYMENT_ITEMS).addElement(JItemRegistry.STELLAR_IRON_INGOT.getId());
             getOrCreateRawBuilder(ItemTags.BOOKSHELF_BOOKS).addElement(JItemRegistry.DIOS_DIARY.getId());
             getOrCreateRawBuilder(ItemTags.SOUL_FIRE_BASE_BLOCKS).addElement(JItemRegistry.SOUL_BLOCK.getId());
+            getOrCreateRawBuilder(ItemTags.ARROWS).addElement(JItemRegistry.STAND_ARROW.getId());
 
             getOrCreateRawBuilder(JTagRegistry.SOUL_LOG_ITEMS).addElement(JItemRegistry.SOUL_WOOD_BLOCK.getId());
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.KARS_HEADWRAP.getId());
@@ -92,6 +95,8 @@ public class JTagProviders {
 
         @Override
         protected void addTags(HolderLookup.Provider arg) {
+            getOrCreateRawBuilder(EntityTypeTags.ARROWS).addElement(JEntityTypeRegistry.STAND_ARROW_PROJECTILE.getId());
+
             // possible mob stand users
             TagBuilder canHaveStandBuilder = getOrCreateRawBuilder(JTagRegistry.CAN_HAVE_STAND);
 
