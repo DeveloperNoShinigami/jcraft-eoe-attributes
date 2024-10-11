@@ -1,14 +1,7 @@
 package net.arna.jcraft.mixin.gravity;
 
-import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.ThrowablePotionItem;
-import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ThrowablePotionItem.class)
@@ -18,6 +11,7 @@ public abstract class ThrowablePotionItemMixin extends PotionItem {
         super(settings);
     }
 
+    /*
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         ItemStack itemStack = user.getItemInHand(hand);
@@ -35,7 +29,7 @@ public abstract class ThrowablePotionItemMixin extends PotionItem {
 
         return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide());
     }
-
+     */
 }
 
 

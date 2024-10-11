@@ -41,7 +41,8 @@ public class NetworkUtil {
         // PlayerLookup.tracking(entity) might not return the player if entity is a player, so it has to be done separately
         if (mode != PacketMode.EVERYONE_BUT_SELF) {
             if (entity instanceof ServerPlayer player) {
-                NetworkManager.sendToPlayer(player, channel, buf);
+                // NetworkManager.sendToPlayer methods consume the buffer.
+                NetworkManager.sendToPlayer(player, channel, new FriendlyByteBuf(buf.copy()));
             }
         }
         if (mode != PacketMode.ONLY_SELF) {

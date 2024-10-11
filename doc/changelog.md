@@ -6,6 +6,7 @@
 
 ### Known Bugs
 ## Common
+* metallica being thin makes it suck at blocking :(
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
   this bug is EVIL and has an unclear source >:(
   in the future, try looking at what sets the enemies target to null
@@ -18,6 +19,8 @@
 
 
 #### todo (THIS UPDATE) :)
+* my cawk
+* MR barrage fire :)
 * Fix AI stand users having clientside head rotation that completely throws off players
 * Timestop should stop animated textures
 * CRAZY DIAMOND, THE HAND, Hermit Purple, Yellow Temperance

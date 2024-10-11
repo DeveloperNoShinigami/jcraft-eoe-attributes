@@ -82,7 +82,11 @@ public class JEnemies {
                                                     enemy.setTarget(selectedTarget);
                                                     standUserCombatAI(enemy, selectedTarget, stand);
                                                 },
-                                                stand::standUserPassiveAI
+                                                () -> {
+                                                    if (stand.hasUser()) {
+                                                        stand.standUserPassiveAI();
+                                                    }
+                                                }
                                         );
                             }
                         }
