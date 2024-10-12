@@ -71,6 +71,7 @@ import net.arna.jcraft.common.entity.stand.ShadowTheWorldEntity;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.arna.jcraft.common.entity.stand.StarPlatinumEntity;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
+import net.arna.jcraft.common.entity.stand.TheHandEntity;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
 import net.arna.jcraft.common.entity.stand.TheWorldEntity;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
@@ -664,6 +665,13 @@ public interface JEntityTypeRegistry {
             ).build("metallica")
     );
 
+    RegistrySupplier<EntityType<TheHandEntity>> THE_HAND = ENTITY_TYPE_REGISTRY.register(JCraft.id("the_hand"),
+            () -> EntityType.Builder.of(
+                    WorldOnlyEntityFactory.from(TheHandEntity::new),
+                    MobCategory.CREATURE
+            ).sized(0.6f, 1.8f).build("the_hand")
+    );
+
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
         EntityAttributeRegistry.register(SPTW, SPTWEntity::createMobAttributes);
@@ -732,6 +740,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(DARBY_YOUNGER, DarbyYoungerEntity::createDarbyYoungerAttributes);
 
         EntityAttributeRegistry.register(METALLICA, MetallicaEntity::createMobAttributes);
+        EntityAttributeRegistry.register(THE_HAND, TheHandEntity::createMobAttributes);
     }
 
     static void init() {

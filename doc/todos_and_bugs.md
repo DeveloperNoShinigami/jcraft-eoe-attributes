@@ -13,6 +13,7 @@
 * Dragon's Dream
 * Foo Fighters
 * Goo Goo Dolls
+* The Hand
 
 ### Hitboxes
 Modify the hitboxes to match the models of:
@@ -27,6 +28,7 @@ Modify the hitboxes to match the models of:
 * Dragon's Dream
 * Foo Fighters
 * Goo Goo Dolls
+* The Hand
 
 ### Descriptions
 * C-Moon
@@ -39,6 +41,7 @@ Modify the hitboxes to match the models of:
 * Dragon's Dream
 * Foo Fighters
 * Goo Goo Dolls
+* The Hand
 
 ### Translations
 * move the move names from literals to translatables

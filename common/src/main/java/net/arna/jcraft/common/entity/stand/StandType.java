@@ -76,7 +76,8 @@ public enum StandType {
     SHADOW_THE_WORLD(JEntityTypeRegistry.SHADOW_THE_WORLD.get(), ShadowTheWorldEntity::new, "shadow_the_world",
             Component.literal("Contrast"), Component.literal("Frost"), Component.literal("Predator")),
     METALLICA(JEntityTypeRegistry.METALLICA.get(), MetallicaEntity::new, "metallica",
-            Component.literal("Lead"), Component.literal("Brass"), Component.literal("Hollow"))
+            Component.literal("Lead"), Component.literal("Brass"), Component.literal("Hollow")),
+    THE_HAND(JEntityTypeRegistry.THE_HAND.get(), TheHandEntity::new, "the_hand", false, true),
     ;
 
     /**

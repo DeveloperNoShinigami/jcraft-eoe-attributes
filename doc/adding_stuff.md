@@ -38,7 +38,7 @@
 1. Create the class `MyEntity` (replacing `My` with its name of course), subclassing `StandEntity`.
 2. Create an inner `enum` called `State` that implements `StandAnimationState` with at least two entries: `IDLE` and `BLOCK`.
 3. Implement `getThis()` (just returning `this`), `getStateValues()` (returning `State.values()`), `getSummonAnimation()` (returning `"animation.my.summon"`) and `getBlockState()` (returning `State.BLOCK`).
-4. Add a constructor that only takes a `World` as a parameter. Ignore the missing type for the `super` call right now.
+4. Add a constructor that only takes a `Level` as a parameter. Ignore the missing type for the `super` call right now.
 5. Add the type of the stand to `JEntityTypeRegistry`. The dimension parameter is the hitbox of the stand in blocks.
 6. Register the stand attributes in `JEntityTypeRegistry#registerAttributes`.
 7. Add the stand to `StandType`.

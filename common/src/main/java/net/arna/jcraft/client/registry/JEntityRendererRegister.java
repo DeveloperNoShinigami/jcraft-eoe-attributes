@@ -67,6 +67,7 @@ import net.arna.jcraft.client.renderer.entity.stands.SilverChariotRenderer;
 import net.arna.jcraft.client.renderer.entity.stands.StarPlatinumRenderer;
 import net.arna.jcraft.client.renderer.entity.stands.SunRenderer;
 import net.arna.jcraft.client.renderer.entity.stands.TheFoolRenderer;
+import net.arna.jcraft.client.renderer.entity.stands.TheHandRenderer;
 import net.arna.jcraft.client.renderer.entity.stands.TheWorldOverHeavenRenderer;
 import net.arna.jcraft.client.renderer.entity.stands.TheWorldRenderer;
 import net.arna.jcraft.client.renderer.entity.stands.WhiteSnakeRenderer;
@@ -174,6 +175,7 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.DARBY_YOUNGER, DarbyYoungerRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.METALLICA, MetallicaRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.THE_HAND, TheHandRenderer::new),
     };
 
     static void registerEntityRenderers(Consumer<RendererData<?>> consumer) {
