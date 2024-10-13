@@ -36,7 +36,7 @@ public abstract class EntityMixin {
     @Final
     protected RandomSource random;
 
-    @Shadow public abstract void lerpTo(double x, double y, double z, float yRot, float xRot, int lerpSteps, boolean teleport);
+    // @Shadow public abstract void lerpTo(double x, double y, double z, float yRot, float xRot, int lerpSteps, boolean teleport);
 
     @Shadow public abstract Vec3 position();
 
@@ -89,7 +89,7 @@ public abstract class EntityMixin {
     }
 
     @Inject(
-            method = "getEyePosition",
+            method = "getEyePosition()Lnet/minecraft/world/phys/Vec3;",
             at = @At("HEAD"),
             cancellable = true
     )
@@ -118,8 +118,8 @@ public abstract class EntityMixin {
     @ModifyVariable(
             method = "move",
             at = @At("HEAD"),
-            ordinal = 0
-    )
+            ordinal = 0,
+            argsOnly = true)
     private Vec3 modify_move_Vec3d_0_0(Vec3 vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
@@ -153,8 +153,8 @@ public abstract class EntityMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V"
             ),
-            ordinal = 0
-    )
+            ordinal = 0,
+            argsOnly = true)
     private Vec3 modify_move_Vec3d_0_1(Vec3 vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
@@ -186,14 +186,30 @@ public abstract class EntityMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    private void inject_getLandingPos(CallbackInfoReturnable<BlockPos> cir) {
+    private void inject_getOnPosLegacy(CallbackInfoReturnable<BlockPos> cir) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
             return;
         }
-        BlockPos blockPos = BlockPos.containing(RotationUtil.vecPlayerToWorld(0.0D, -0.20000000298023224D, 0.0D, gravityDirection).add(this.position()));
+        BlockPos blockPos = BlockPos.containing(RotationUtil.vecPlayerToWorld(0.0D, -0.2F, 0.0D, gravityDirection).add(this.position()));
         cir.setReturnValue(blockPos);
     }
+
+    @Inject(
+            method = "getOnPos()Lnet/minecraft/core/BlockPos;",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void inject_getOnPos(CallbackInfoReturnable<BlockPos> cir) {
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
+        if (gravityDirection == Direction.DOWN) {
+            return;
+        }
+        BlockPos blockPos = BlockPos.containing(RotationUtil.vecPlayerToWorld(0.0D, -1.0E-5F, 0.0D, gravityDirection).add(this.position()));
+        cir.setReturnValue(blockPos);
+    }
+
+    //todo: copy getOnPos(F) inject from actual gravityapi
 
     @ModifyVariable(
             method = "collide",
@@ -201,8 +217,8 @@ public abstract class EntityMixin {
                     value = "INVOKE_ASSIGN",
                     target = "Lnet/minecraft/world/level/Level;getEntityCollisions(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/util/List;"
             ),
-            ordinal = 0
-    )
+            ordinal = 0,
+            argsOnly = true)
     private Vec3 modify_adjustMovementForCollisions_Vec3d_0(Vec3 vec3d) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection((Entity) (Object) this);
         if (gravityDirection == Direction.DOWN) {
@@ -300,8 +316,8 @@ public abstract class EntityMixin {
     @ModifyVariable(
             method = "collideBoundingBox",
             at = @At("HEAD"),
-            ordinal = 0
-    )
+            ordinal = 0,
+            argsOnly = true)
     private static Vec3 modify_adjustMovementForCollisions_Vec3d_0(Vec3 vec3d, Entity entity) {
         if (entity == null) {
             return vec3d;
@@ -416,11 +432,8 @@ public abstract class EntityMixin {
         EntityMixinLogic.inject_spawnSprintingParticles((Entity) (Object) this, this.random, this.dimensions, ci);
     }
 
-
-
-
     @Inject(
-            method = "push",
+            method = "push(Lnet/minecraft/world/entity/Entity;)V",
             at = @At("HEAD"),
             cancellable = true
     )

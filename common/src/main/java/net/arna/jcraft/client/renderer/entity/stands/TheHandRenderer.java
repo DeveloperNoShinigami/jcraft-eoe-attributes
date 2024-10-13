@@ -3,20 +3,21 @@ package net.arna.jcraft.client.renderer.entity.stands;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.arna.jcraft.client.model.entity.stand.TheHandModel;
+import net.arna.jcraft.client.renderer.entity.layer.HandErasureLayer;
 import net.arna.jcraft.common.entity.stand.TheHandEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 /**
- * The {@link GeoEntityRenderer} for {@link TheHandEntity}
+ * The {@link StandEntityRenderer} for {@link TheHandEntity}
  * @see TheHandModel
  */
-public class TheHandRenderer extends GeoEntityRenderer<TheHandEntity> {
+public class TheHandRenderer extends StandEntityRenderer<TheHandEntity> {
     public TheHandRenderer(final EntityRendererProvider.Context renderManager) {
         super(renderManager, new TheHandModel());
+        addRenderLayer(new HandErasureLayer(this));
     }
 
     @Override

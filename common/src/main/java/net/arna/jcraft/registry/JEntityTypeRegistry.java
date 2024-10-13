@@ -660,7 +660,7 @@ public interface JEntityTypeRegistry {
                     WorldOnlyEntityFactory.from(MetallicaEntity::new),
                     MobCategory.CREATURE
             ).sized(
-                    0.3f,
+                    0.6f,
                     1.8f
             ).build("metallica")
     );

@@ -1,8 +1,6 @@
 ## TODOs
 ### Animations
 * Petshop
-* Horus
-* Aya Tsuji
 * Cinderella
 * Darby Older
 * Osiris
@@ -31,8 +29,6 @@ Modify the hitboxes to match the models of:
 * The Hand
 
 ### Descriptions
-* C-Moon
-* Horus
 * Cinderella
 * Osiris
 * Atum
@@ -47,9 +43,6 @@ Modify the hitboxes to match the models of:
 * move the move names from literals to translatables
 
 ### Misc
-* `display` of Shiv
-* attack and speed modifier of Shiv must be balanced
-* Dragon's Dream's head is weird
 
 ### Arch port
 https://trello.com/b/GFOQk6nR/arch-port-1201

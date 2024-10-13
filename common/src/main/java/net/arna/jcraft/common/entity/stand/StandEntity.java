@@ -82,6 +82,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -554,13 +555,13 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     @Override
-    public Vec3 getLookAngle() {
+    public @NotNull Vec3 getLookAngle() {
         // Ignore pitch in rotation vectors.
         return calculateViewVector(0, getYRot());
     }
 
     @Override
-    public SoundSource getSoundSource() {
+    public @NotNull SoundSource getSoundSource() {
         return SoundSource.PLAYERS;
     }
 
@@ -1378,7 +1379,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         if (tsHit) {
-            JComponentPlatformUtils.getTimeStopData(ent).get().addTotalVelocity(kbVec);
+            JComponentPlatformUtils.getTimeStopData(ent).ifPresent(ts -> ts.addTotalVelocity(kbVec));
         } else {
             JUtils.syncVelocityUpdate(ent);
         }
@@ -1500,8 +1501,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     // Physical properties
     @Override
-    public void push(Entity entity) {
-    }
+    public void push(Entity entity) {}
 
     @Override
     public boolean canCollideWith(Entity other) {
