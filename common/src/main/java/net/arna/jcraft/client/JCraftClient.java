@@ -133,8 +133,9 @@ public class JCraftClient {
         dash = TrackedKeyBinding.createAndRegister("key.jcraft.dash", InputConstants.Type.MOUSE,
                 GLFW.GLFW_MOUSE_BUTTON_4, "key.category.jcraft", register);
 
+        // todo: actually finish jcraft menu
         menuKey = new KeyMapping("key.jcraft.menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_KP_DIVIDE, "key.category.jcraft");
-        register.accept(menuKey);
+        // register.accept(menuKey);
     }
 
     /// TEXT HUD

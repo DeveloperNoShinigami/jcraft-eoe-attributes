@@ -1,12 +1,19 @@
 # Changelog
 
+### General
+* JCraft damage now only considers armor values up to Netherite level
+* Stand Arrows can now be fired out of bows
+### Structures
+* Cinderella's parlor has floors, filling the previously empty space
+* Cinderella's parlor is now about as rare as a village
 ### NPCs & Stands
+* **Added The Hand**
 * Taught NPC Metallica users to harvest iron
 ### Bug Fixes
+* Fixed Gravity changes crashing Forge multiplayer
 
 ### Known Bugs
 ## Common
-* metallica being thin makes it suck at blocking :(
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
   this bug is EVIL and has an unclear source >:(
   in the future, try looking at what sets the enemies target to null
@@ -28,3 +35,5 @@
 * Internationalization
 * Actually use effect keyframes in animations
 * Fix a ton of shit that gets broken by server restarts
+
+

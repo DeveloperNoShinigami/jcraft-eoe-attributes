@@ -8,7 +8,6 @@ import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
@@ -54,8 +53,8 @@ public class StandArrowEntity extends AbstractArrow implements GeoEntity {
             if (level.isClientSide()) {
                 return;
             }
-            if (JUtils.getStand(mob) == null) {
-                final CommonStandComponent standData = JComponentPlatformUtils.getStandData(mob);
+            final CommonStandComponent standData = JComponentPlatformUtils.getStandData(mob);
+            if (StandType.isNone(standData.getType())) {
                 standData.setType(StandType.getRandomRegular(random));
                 mob.unRide();
                 JCraft.summon(mob.level(), mob);

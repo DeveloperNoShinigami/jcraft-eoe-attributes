@@ -3,7 +3,7 @@
   "biomes": "#jcraft:has_structure/cinderella",
   "step": "surface_structures",
   "spawn_overrides": {},
-  "terrain_adaptation": "none",
+  "terrain_adaptation": "beard_thin",
   "start_pool": "jcraft:cinderella",
   "size": 1,
   "start_height": {

@@ -36,6 +36,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -299,6 +300,16 @@ public final class JUtils {
         return ent;
     }
 
+    /**
+     * @return the stand user if the specified entity is a {@link StandEntity}
+     */
+    public static Entity getUserIfStand(Entity ent) {
+        if (ent instanceof StandEntity<?, ?> stand && stand.hasUser()) {
+            return stand.getUser();
+        }
+        return ent;
+    }
+
     public static void projectileDamageLogic(Projectile proj, Level world, Entity ent, Vec3 kb, int stunT, int stunType, boolean overrideStun, float damage, int blockstun, CommonHitPropertyComponent.HitAnimation hitAnimation) {
         projectileDamageLogic(proj, world, ent, kb, stunT, stunType, overrideStun, damage, blockstun, hitAnimation, false, false);
     }
@@ -327,6 +338,12 @@ public final class JUtils {
         if (ent instanceof EndCrystal endCrystal) {
             endCrystal.hurt(source, damage);
         }
+    }
+
+    public static float getDamageThroughArmor(final float damage, float totalArmor, float toughnessAttribute) {
+        if (totalArmor > 20.0f) totalArmor = 20.0f;
+        if (toughnessAttribute > 12.0f) toughnessAttribute = 12.0f;
+        return CombatRules.getDamageAfterAbsorb(damage, totalArmor, toughnessAttribute);
     }
 
     //To check method ms usage, use spark[something]

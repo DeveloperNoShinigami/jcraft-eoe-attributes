@@ -36,15 +36,7 @@ import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
 import net.arna.jcraft.common.network.s2c.ComboCounterPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
-import net.arna.jcraft.common.util.CooldownType;
-import net.arna.jcraft.common.util.DashData;
-import net.arna.jcraft.common.util.IComboCounter;
-import net.arna.jcraft.common.util.ICustomDamageHandler;
-import net.arna.jcraft.common.util.IDamageScaler;
-import net.arna.jcraft.common.util.IOwnable;
-import net.arna.jcraft.common.util.JParticleType;
-import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.common.util.StandAnimationState;
+import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.mixin.LivingEntityInvoker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
@@ -63,7 +55,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -706,7 +697,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         damage *= scaling;
 
         // All stands ignore 10% of armor & armor toughness
-        damage = CombatRules.getDamageAfterAbsorb(damage, (float) ent.getArmorValue() * 0.9f, (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 0.9f);
+        damage = JUtils.getDamageThroughArmor(damage, (float) ent.getArmorValue() * 0.9f, (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 0.9f);
         damage = ((LivingEntityInvoker) ent).invokeModifyAppliedDamage(damageSource, damage);
 
         // Apply absorption
@@ -770,7 +761,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         damage *= scaling;
 
         // All stands ignore 10% of armor & armor toughness
-        damage = CombatRules.getDamageAfterAbsorb(damage, (float) ent.getArmorValue() * 0.9f, (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 0.9f);
+        damage = JUtils.getDamageThroughArmor(damage, (float) ent.getArmorValue() * 0.9f, (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 0.9f);
 
         // Apply absorption
         applyAbsorptionAndStats(damage, damageSource, ent);
