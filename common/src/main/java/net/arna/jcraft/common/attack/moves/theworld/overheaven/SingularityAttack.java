@@ -22,7 +22,8 @@ public final class SingularityAttack extends AbstractSimpleAttack<SingularityAtt
 
     @Override
     protected void processTarget(final TheWorldOverHeavenEntity attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
-        super.processTarget(attacker, target, kbVec, damageSource);
+        StandEntity.damageLogic(attacker.getEntityWorld(), target, kbVec, getStun(), getStunType().ordinal(), true,
+                0, isLift(), getBlockStun(), damageSource, attacker.getUserOrThrow(), getHitAnimation(), true, false);
 
         if (blockBypass) {
             target.removeEffect(JStatusRegistry.DAZED.get());

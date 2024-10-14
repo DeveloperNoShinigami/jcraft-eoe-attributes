@@ -15,6 +15,7 @@ import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.sounds.SoundEvent;
@@ -25,12 +26,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal;
-import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -38,12 +36,13 @@ import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant {
 
     private Player tradingPlayer;
-    private MerchantOffers merchantOffers = new MerchantOffers();;
+    private final MerchantOffers merchantOffers = new MerchantOffers();;
 
     public AyaTsujiEntity(Level world) {
         super(JEntityTypeRegistry.AYA_TSUJI.get(), world);
@@ -67,26 +66,26 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
                 nbt.put("Enchantments", enchantments);
             }
         }
-        merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 30), masks[0], 4, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 45), masks[1], 3, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 60), masks[2], 2, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_PEARL, 8), masks[0], 4, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 15), masks[0], 4, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 25), masks[1], 3, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.EMERALD, 35), masks[2], 2, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_PEARL, 16), masks[0], 4, 0, 1f));
         merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_EYE, 8), masks[1], 3, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_EYE, 12), masks[2], 2, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_EYE, 16), masks[3], 1, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STAND_ARROW.get()), masks[1], 3, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STAND_ARROW.get(), 2), masks[2], 2, 0, 1f));
-        merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STAND_ARROW.get(), 3), masks[3], 1, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_EYE, 10), masks[2], 2, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(Items.ENDER_EYE, 12), masks[3], 1, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STELLAR_IRON_INGOT.get()), masks[1], 3, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STAND_ARROW.get(), 1), masks[2], 2, 0, 1f));
+        merchantOffers.add(new MerchantOffer(new ItemStack(JItemRegistry.STAND_ARROW.get(), 2), masks[3], 1, 0, 1f));
     }
 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(10, new OpenDoorGoal(this, true));
-        this.goalSelector.addGoal(8, new FloatGoal(this));
-        this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.001));
-        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, LivingEntity.class, 32.0F));
-        this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 0.001, 32f));
+        this.goalSelector.addGoal(8, new RandomStrollGoal(this, 1.0));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, LivingEntity.class, 32.0F));
+        this.goalSelector.addGoal(4, new MoveTowardsTargetGoal(this, 1.0, 32f));
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(IronGolem.class));
     }
 
     public static AttributeSupplier.Builder createAyaTsujiAttributes() {
@@ -120,22 +119,22 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
     }
 
     @Override
-    public MerchantOffers getOffers() {
+    public @NotNull MerchantOffers getOffers() {
         return merchantOffers;
     }
 
     @Override
-    public void overrideOffers(MerchantOffers offers) {
+    public void overrideOffers(@NonNull MerchantOffers offers) {
         // intentionally left empty
     }
 
     @Override
-    public void notifyTrade(MerchantOffer offer) {
+    public void notifyTrade(@NonNull MerchantOffer offer) {
         // intentionally left empty
     }
 
     @Override
-    public void notifyTradeUpdated(ItemStack stack) {
+    public void notifyTradeUpdated(@NonNull ItemStack stack) {
         // intentionally left empty
     }
 
@@ -155,13 +154,24 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
     }
 
     @Override
-    public SoundEvent getNotifyTradeSound() {
+    public @Nullable SoundEvent getNotifyTradeSound() {
         return null;
     }
 
     @Override
     public boolean isClientSide() {
         return level().isClientSide();
+    }
+
+    @Override
+    public void tick() {
+        if (tradingPlayer != null) {
+            if (navigation.isInProgress()) {
+                navigation.stop();
+            }
+            lookAt(EntityAnchorArgument.Anchor.EYES, tradingPlayer.getEyePosition());
+        }
+        super.tick();
     }
 
     // Animations
@@ -181,7 +191,7 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("animation.aya_tsuji.walk");
     private PlayState walkPredicate(AnimationState<AyaTsujiEntity> state) {
         final float velocityLengthSqr = (float) getDeltaMovement().length();
-        if (velocityLengthSqr < 0.1f) {
+        if (velocityLengthSqr < 0.05f) {
             return state.setAndContinue(IDLE);
         } else {
             state.setControllerSpeed(1.0f + velocityLengthSqr / 2.5f);

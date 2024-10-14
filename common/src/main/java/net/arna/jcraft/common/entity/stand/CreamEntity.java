@@ -412,6 +412,15 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     }
 
     @Override
+    public void remove(@NonNull RemovalReason reason) {
+        if (reason == RemovalReason.DISCARDED && hasUser() && getUserOrThrow() instanceof Player player
+                && player.getAbilities().flying && !player.isCreative() && !player.isSpectator()) {
+            player.getAbilities().flying = false;
+        }
+        super.remove(reason);
+    }
+
+    @Override
     public boolean defaultToNear() {
         if (charging) {
             return false;

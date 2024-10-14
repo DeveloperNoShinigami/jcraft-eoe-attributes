@@ -78,7 +78,7 @@ public enum StandType {
     METALLICA(JEntityTypeRegistry.METALLICA.get(), MetallicaEntity::new, "metallica",
             Component.literal("Lead"), Component.literal("Brass"), Component.literal("Hollow")),
     THE_HAND(JEntityTypeRegistry.THE_HAND.get(), TheHandEntity::new, "the_hand", false, true,
-            Component.literal("john hand"), Component.literal("hi"), Component.literal("chat")),
+            Component.literal("Shift"), Component.literal("Inverted"), Component.literal("Deletion")),
     ;
 
     /**

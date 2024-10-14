@@ -4,13 +4,18 @@
 * JCraft damage now only considers armor values up to Netherite level
 * Stand Arrows can now be fired out of bows
 ### Structures
+todo: floors + str void on y layer1
 * Cinderella's parlor has floors, filling the previously empty space
 * Cinderella's parlor is now about as rare as a village
 ### NPCs & Stands
 * **Added The Hand**
+* NPC Stand users now wander around
 * Taught NPC Metallica users to harvest iron
+* Adjusted Aya Tsuji's mask prices
+* Updated King Crimson's model
 ### Bug Fixes
 * Fixed Gravity changes crashing Forge multiplayer
+* Fixed infinite creative flight achieved by swapping GE:R and Cream while flying
 
 ### Known Bugs
 ## Common

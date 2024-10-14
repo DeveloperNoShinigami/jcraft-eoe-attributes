@@ -1111,6 +1111,9 @@
 					}
 				},
 				"head": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
 					"position": {
 						"vector": [0, 0, 3]
 					},
@@ -1825,6 +1828,11 @@
 					}
 				},
 				"TheFool": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"head": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
@@ -2580,6 +2588,9 @@
 			"animation_length": 1.24,
 			"bones": {
 				"head": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
 					"scale": {
 						"vector": [1, 2, 1]
 					}
@@ -3377,6 +3388,11 @@
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
@@ -3577,6 +3593,11 @@
 					}
 				},
 				"TheFool": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"head": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
@@ -4342,6 +4363,11 @@
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
@@ -4587,6 +4613,11 @@
 					}
 				},
 				"TheFool": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"head": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}

@@ -59,6 +59,7 @@
     "NetherPortalBlockMixin",
     "PersistentEntitySectionManagerMixin",
     "PlayerEntityMixin",
+    "RandomStrollGoalMixin",
     "RespawnAnchorBlockMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",

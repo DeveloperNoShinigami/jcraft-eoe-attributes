@@ -20,6 +20,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.NeutralMob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -264,6 +265,15 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
             return;
         }
         super.desummon();
+    }
+
+    @Override
+    public void remove(@NonNull RemovalReason reason) {
+        if (reason == RemovalReason.DISCARDED && hasUser() && getUserOrThrow() instanceof Player player
+            && player.getAbilities().flying && !player.isCreative() && !player.isSpectator()) {
+            player.getAbilities().flying = false;
+        }
+        super.remove(reason);
     }
 
     @Override

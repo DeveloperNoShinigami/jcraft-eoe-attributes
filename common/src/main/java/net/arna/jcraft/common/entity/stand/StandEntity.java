@@ -1532,10 +1532,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (user == null) {
             JCraft.LOGGER.error("standUserPassiveAI() called with no Stand user for {}", this);
         } else {
-            boolean wantToBlock = false;
-            if (user.fallDistance > 3) wantToBlock = true;
-            if (user.getNavigation().isInProgress()) DashData.tryDash(1, 0, user);
-            this.wantToBlock = wantToBlock;
+            // Block fall damage
+            this.wantToBlock = user.fallDistance >= 3;
+            // Occasionally dash to destination
+            if (user.getNavigation().isInProgress() && random.nextFloat() < 0.01f) DashData.tryDash(1, 0, user);
         }
         return user;
     }

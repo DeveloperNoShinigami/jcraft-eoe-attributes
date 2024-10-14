@@ -63,7 +63,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             .withAction(
                     TheHandEntity::offTheGround
             );
-    public static final SimpleAttack<TheHandEntity> CROUCHING_LIGHT = new SimpleAttack<TheHandEntity>(JCraft.LIGHT_COOLDOWN,
+    public static final SimpleAttack<TheHandEntity> CROUCHING_LIGHT = new SimpleAttack<TheHandEntity>((int) (JCraft.LIGHT_COOLDOWN * 2.0),
             9, 14, 0.5f, 5f, 15, 1.5f, 0.25f, 0.4f)
             .withFollowup(CROUCHING_LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
@@ -243,7 +243,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
 
     private static void offTheGround(final TheHandEntity attacker, final LivingEntity user, final MoveContext ctx, final Set<LivingEntity> targets) {
         JComponentPlatformUtils.getShockwaveHandler(attacker.level())
-                .addShockwave(attacker.position(), new Vec3(GravityChangerAPI.getGravityDirection(attacker).step()), 2.5f);
+                .addShockwave(attacker.position().add(user.getLookAngle()), new Vec3(GravityChangerAPI.getGravityDirection(attacker).step()), 2.5f);
 
         targets.forEach(livingEntity -> livingEntity.removeEffect(JStatusRegistry.KNOCKDOWN.get()));
     }

@@ -6,6 +6,7 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.network.chat.Component;
@@ -46,13 +47,10 @@ public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEn
     @Override
     public void tick() {
         super.tick();
-        // impossibly ghetto fix. we do not care.
-        if (!hasUser()) {
+        // still ghetto, makes a ghost entity where aya spawns (but only if she generates naturally)
+        if (!hasUser() || JUtils.getStand(getUserOrThrow()) != this || getUserOrThrow().getFirstPassenger() != this) {
             discard();
-            return;
         }
-        if (level().isClientSide()) return;
-        if (getUserOrThrow().getFirstPassenger() != this) discard();
     }
 
     @Override

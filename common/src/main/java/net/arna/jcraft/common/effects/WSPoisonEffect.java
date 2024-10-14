@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.effects;
 
+import lombok.NonNull;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +21,7 @@ public class WSPoisonEffect extends MobEffect {
 
     // Stun heavily reduces speed
     @Override
-    public void applyEffectTick(final LivingEntity entity, final int amplifier) {
+    public void applyEffectTick(final @NonNull LivingEntity entity, final int amplifier) {
         if (entity instanceof final Mob mob) {
             mob.setDeltaMovement(mob.getDeltaMovement().scale(0.2));
 
