@@ -190,7 +190,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
             }
 
             // Ensure vehicle is updated.
-            Map.Entry<Entity, Vec3> vehiclePrediction = Map.entry(vehicle, predictions.get(vehicle));
+            Map.Entry<Entity, Vec3> vehiclePrediction = new AbstractMap.SimpleEntry<>(vehicle, predictions.get(vehicle));
             updatePrediction(predictions, vehiclePrediction, updated, ticksLeft);
             // Account for change in position of vehicle.
             futurePos = futurePos.add(vehiclePrediction.getValue().subtract(vehiclePrediction.getKey().position()));
