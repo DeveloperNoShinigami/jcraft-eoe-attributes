@@ -28,7 +28,7 @@ public class FrameDataCommand {
         if (player == null) return 0;
         FrameDataRequests.add(player, stand ? FrameDataRequests.FrameDataType.STAND : FrameDataRequests.FrameDataType.SPEC);
         player.displayClientMessage(
-                Component.translatable("jcraft.framedata.await"),
+                Component.translatable("jcraft.await.move"),
                 false
         );
         return 1;

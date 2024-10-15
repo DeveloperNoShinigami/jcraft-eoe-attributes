@@ -45,8 +45,8 @@ public class JCraftHelpCommand {
                         Sets your spec
                         §c/attack§r
                         Causes targets to start a spec/stand attack, which IGNORES COOLDOWNS
-                        §c/movedata§r
-                        Displays information about the move your stand or spec did
+                        §c/framedata§r
+                        Displays information about moves your stand or spec did after starting the command
                         §c/jgravity§r
                         Sets your gravity direction
                         """), false

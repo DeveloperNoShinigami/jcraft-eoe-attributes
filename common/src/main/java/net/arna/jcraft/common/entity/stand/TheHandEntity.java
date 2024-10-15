@@ -8,10 +8,7 @@ import net.arna.jcraft.common.attack.MobilityType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
-import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
-import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.attack.moves.shared.UppercutAttack;
+import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.thehand.EraseAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -93,7 +90,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             .withImpactSound(JSoundRegistry.IMPACT_6.get())
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
-                    Component.literal("Chop"),
+                    Component.literal("Punch"),
                     Component.literal("Relatively quick combo starter."));
 
     public static final MainBarrageAttack<TheHandEntity> BARRAGE = new MainBarrageAttack<TheHandEntity>(240, 0,
@@ -147,7 +144,20 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                     Component.literal("Erase"),
                     Component.literal("Slow, unblockable attack-")
             );
-
+    public static final SimpleAttack<TheHandEntity> GRAB_HIT = new SimpleAttack<TheHandEntity>(0, 14, 16,
+            0.75f, 8f, 5, 1.75f, 1.5f, 0f)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withLaunch()
+            .withHitSpark(JParticleType.HIT_SPARK_2)
+            .withInfo(
+                    Component.literal("Grab (Hit)"),
+                    Component.empty());
+    public static final GrabAttack<TheHandEntity, State> GRAB = new GrabAttack<>(300, 10, 20,
+            0.75f, 0f, 16, 1.5f, 0f, 0f, GRAB_HIT, State.GRAB_HIT)
+            // .withSound(JSoundRegistry.TH_GRAB.get())
+            .withInfo(
+                    Component.literal("Grab"),
+                    Component.literal("unblockable, knocks back"));
     public static final EraseAttack ERASE_SPACE = new EraseAttack(300, 12,
             20, 0.75f, 4.0f, 6, 2.0f, -0.5f, 0.0f)
             // .withSound(JSoundRegistry.TH_ERASE.get())
@@ -258,6 +268,8 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
         moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
         moves.registerImmediate(MoveType.SPECIAL1, ERASE, State.ERASE);
 
+        moves.registerImmediate(MoveType.SPECIAL3, GRAB, State.GRAB);
+
         moves.register(MoveType.UTILITY, ERASE_SPACE, State.ERASE_SPACE);
     }
 
@@ -291,6 +303,8 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
         ERASE_GROUND(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.erase_ground"))),
         ERASE_SPACE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.erase_space"))),
         SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.the_hand.sweep"))),
+        GRAB(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.grab"))),
+        GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.grab_hit"))),
         ;
 
         private final Consumer<AnimationState<TheHandEntity>> animator;

@@ -3,8 +3,10 @@
 ### General
 * JCraft damage now only considers armor values up to Netherite level
 * Stand Arrows can now be fired out of bows
+### Commands
+* /movedata was merged into **/framedata**
 ### Structures
-todo: floors + str void on y layer1
+todo: struct. void
 * Cinderella's parlor has floors, filling the previously empty space
 * Cinderella's parlor is now about as rare as a village
 ### NPCs & Stands

@@ -91,7 +91,9 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
             final BlockPos userPos = lookDirection.getY() != 0 ? attackerEntity.blockPosition() : user.blockPosition();
 
             breakIfPossible(serverWorld, userPos.offset(lookDirection), user);
-            breakIfPossible(serverWorld, userPos.offset(lookDirection.offset(localUp)), user);
+            breakIfPossible(serverWorld, userPos.offset(lookDirection).offset(localUp), user);
+            breakIfPossible(serverWorld, userPos.offset(lookDirection).offset(lookDirection), user);
+            breakIfPossible(serverWorld, userPos.offset(lookDirection).offset(lookDirection).offset(localUp), user);
         }
 
         return targets;

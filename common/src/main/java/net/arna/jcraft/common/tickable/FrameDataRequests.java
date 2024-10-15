@@ -1,8 +1,11 @@
 package net.arna.jcraft.common.tickable;
 
 import lombok.Getter;
+import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -91,7 +94,7 @@ public class FrameDataRequests {
                         //iter.remove();
                     }
                 } else if (frameData.lastMove != null || (frameData.lastMove == null && move == null && !frameData.ticks.isEmpty())) { // If not acting
-                    sendFrameData(player, frameData.ticks);
+                    sendFrameData(player, frameData.lastMove, frameData.ticks);
                     iter.remove();
                 }
 
@@ -103,7 +106,7 @@ public class FrameDataRequests {
         });
     }
 
-    private static void sendFrameData(ServerPlayer recipient, Queue<Tick> ticks) {
+    private static void sendFrameData(@NonNull final ServerPlayer recipient, @NonNull final AbstractMove<?, ?> move,@NonNull  final Queue<Tick> ticks) {
         final StringBuilder builder = new StringBuilder();
         boolean first = true;
         boolean isStartup = true;
@@ -173,6 +176,7 @@ public class FrameDataRequests {
                     Component.literal("Recovery: §a" + recovery + "§r ticks\n").setStyle(RECOVERY_STYLE)
             );
         }
+        sendMoveInfo(recipient, move, recovery);
         recipient.displayClientMessage(frameDataStats, false);
     }
 
@@ -195,4 +199,39 @@ public class FrameDataRequests {
             ).withClickEvent(
                     new ClickEvent(ClickEvent.Action.OPEN_URL, "https://glossary.infil.net/?t=Recovery")
             );
+
+    private static void sendMoveInfo(@NonNull final ServerPlayer player, @NonNull final AbstractMove<?, ?> move, final int recovery) {
+        final StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("======== Last move: §2").append(move.getName().getString()).append("§r ========\n");
+        stringBuilder.append("Move distance: §6").append(move.getMoveDistance()).append("§r m\n");
+
+        final int armor = move.getArmor();
+        if (armor > 0) {
+            stringBuilder.append("§rAttack has: §7").append(armor == Integer.MAX_VALUE ? "Hyper Armor§r\n" : armor + " Armor Points§r\n");
+        }
+
+        if (move instanceof final AbstractSimpleAttack<?, ?> attack) {
+            if (attack.getBlockableType() == BlockableType.NON_BLOCKABLE_EFFECTS_ONLY) {
+                stringBuilder.append("§rEffects on hit are §5Unblockable§r\n");
+            }
+
+            if (attack.getHitboxSize() > 0 || !attack.getExtraHitBoxes().isEmpty()) {
+                stringBuilder
+                        .append("Damage: §6").append(attack.getDamage() / 2f).append("§r hearts\n")
+                        .append("Knockback: §6").append(attack.getKnockback()).append("§r\n");
+
+                stringBuilder.append("Advantage on hit: §c").append(attack.getStun() - recovery - 1).append("§r ticks of ").append(attack.getStunType()).append(" Stun\n");
+                if (attack.getBlockableType() == BlockableType.NON_BLOCKABLE) {
+                    stringBuilder.append("§5Unblockable§r\n");
+                } else {
+                    stringBuilder.append("Advantage on block: §5").append(attack.getBlockStun() - recovery).append("§r ticks");
+                }
+
+            } else {
+                stringBuilder.append("No physical hit\n");
+            }
+        }
+        player.displayClientMessage(Component.nullToEmpty(stringBuilder.toString()), false);
+    }
 }
