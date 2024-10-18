@@ -36,7 +36,7 @@ todo: struct. void
 * my cawk
 * MR barrage fire :)
 * Fix AI stand users having clientside head rotation that completely throws off players
-* Timestop should stop animated textures
+* Timestop should stop stand anims
 * CRAZY DIAMOND, THE HAND, Hermit Purple, Yellow Temperance
 * Stand NBT serialization
 * Internationalization

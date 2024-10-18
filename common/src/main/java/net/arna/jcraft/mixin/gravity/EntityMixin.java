@@ -1,6 +1,5 @@
 package net.arna.jcraft.mixin.gravity;
 
-import com.google.common.collect.ImmutableList;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
@@ -349,17 +348,49 @@ public abstract class EntityMixin {
         cir.setReturnValue(RotationUtil.vecWorldToPlayer(cir.getReturnValue(), gravityDirection));
     }
 
+    /*
+    LITHIUM ERROR -
+    Expected (
+    Lnet/minecraft/class_1297;
+    Lnet/minecraft/class_243;
+    Lnet/minecraft/class_238;
+    Lnet/minecraft/class_1937;
+    Ljava/util/List;
+    Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfoReturnable;)V
+    but found (
+    Lnet/minecraft/class_1297;
+    Lnet/minecraft/class_243;
+    Lnet/minecraft/class_238;
+    Lnet/minecraft/class_1937;
+    Ljava/util/List;
+    Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfoReturnable;
+    Lcom/google/common/collect/ImmutableList$Builder;)V
+     */
     @Inject(
             method = "collideBoundingBox",
             at = @At("RETURN"),
             cancellable = true,
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private static void redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(@Nullable Entity entity, Vec3 movement,
-                                                                                           AABB entityBoundingBox, Level world, List<VoxelShape> collisions, CallbackInfoReturnable<Vec3> cir,
-                                                                                           ImmutableList.Builder<VoxelShape> shapeListBuilder) {
-        EntityMixinLogic.redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(entity, movement, entityBoundingBox, world, collisions, cir, shapeListBuilder);
+    private static void redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(
+            @Nullable Entity entity, Vec3 movement, AABB entityBoundingBox, Level world,
+            List<VoxelShape> collisions, CallbackInfoReturnable<Vec3> cir) {
+        EntityMixinLogic.redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(entity, movement, entityBoundingBox, world, collisions, cir);
     }
+
+    /*
+    @Inject(
+            method = "collideBoundingBox",
+            at = @At("RETURN"),
+            cancellable = true,
+            locals = LocalCapture.CAPTURE_FAILSOFT
+    )
+    private static void redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(
+            @Nullable Entity entity, Vec3 movement, AABB entityBoundingBox, Level world,
+            List<VoxelShape> collisions, CallbackInfoReturnable<Vec3> cir, ImmutableList.Builder<VoxelShape> shapeListBuilder) {
+        EntityMixinLogic.redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(entity, movement, entityBoundingBox, world, shapeListBuilder, cir);
+    }
+     */
 
 
     @ModifyArg(

@@ -24,6 +24,7 @@
     "client.LivingEntityRendererMixin",
     "client.ParticleAccessor",
     "client.ParticleManagerMixin",
+    "client.TextureManagerMixin",
     "client.WorldRendererMixin",
     "client.gravity.BiomeEffectSoundPlayerMixin",
     "client.gravity.CameraMixin",

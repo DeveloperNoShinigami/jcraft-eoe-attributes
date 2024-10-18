@@ -215,22 +215,32 @@ public class EntityMixinLogic {
         }
     }
 
-    public static void redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(@Nullable Entity entity, Vec3 movement,
-                                                                                           AABB entityBoundingBox, Level world, List<VoxelShape> collisions, CallbackInfoReturnable<Vec3> cir,
-                                                                                           ImmutableList.Builder<VoxelShape> shapeListBuilder) {
-        collisions = shapeListBuilder.build();
-        Direction gravityDirection;
+    public static void redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(
+            @Nullable Entity entity, Vec3 movement,
+            AABB entityBoundingBox, Level world, ImmutableList.Builder<VoxelShape> shapeListBuilder, CallbackInfoReturnable<Vec3> cir
+            ) {
+        redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(entity, movement, entityBoundingBox, world, shapeListBuilder.build(), cir);
+    }
+
+    /**
+     * Used in {@link net.arna.jcraft.mixin.gravity.EntityMixin#redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(Entity, Vec3, AABB, Level, List, CallbackInfoReturnable)}
+     * Has a problem with Lithium, causing choppy movement. Related Lithium mixin can be found
+     * <a href="https://github.com/CaffeineMC/lithium-fabric/blob/1.20.1/src/main/java/me/jellysquid/mods/lithium/mixin/entity/collisions/movement/EntityMixin.java">here</a>
+     */
+    public static void redirect_adjustMovementForCollisions_adjustMovementForCollisions_0(
+            @Nullable final Entity entity, final Vec3 movement, AABB entityBoundingBox,
+            final Level world, final List<VoxelShape> collisions, final CallbackInfoReturnable<Vec3> cir
+    ) {
+        final Direction gravityDirection;
         if (entity == null || (gravityDirection = GravityChangerAPI.getGravityDirection(entity)) == Direction.DOWN) {
             return;
         }
 
-        Vec3 playerMovement = RotationUtil.vecWorldToPlayer(movement, gravityDirection);
-        double playerMovementX = playerMovement.x;
-        double playerMovementY = playerMovement.y;
-        double playerMovementZ = playerMovement.z;
-        Direction directionX = RotationUtil.dirPlayerToWorld(Direction.EAST, gravityDirection);
-        Direction directionY = RotationUtil.dirPlayerToWorld(Direction.UP, gravityDirection);
-        Direction directionZ = RotationUtil.dirPlayerToWorld(Direction.SOUTH, gravityDirection);
+        final Vec3 playerMovement = RotationUtil.vecWorldToPlayer(movement, gravityDirection);
+        double playerMovementX = playerMovement.x, playerMovementY = playerMovement.y, playerMovementZ = playerMovement.z;
+        final Direction directionX = RotationUtil.dirPlayerToWorld(Direction.EAST, gravityDirection);
+        final Direction directionY = RotationUtil.dirPlayerToWorld(Direction.UP, gravityDirection);
+        final Direction directionZ = RotationUtil.dirPlayerToWorld(Direction.SOUTH, gravityDirection);
         if (playerMovementY != 0.0D) {
             playerMovementY = Shapes.collide(directionY.getAxis(), entityBoundingBox, collisions, playerMovementY * directionY.getAxisDirection().getStep()) * directionY.getAxisDirection().getStep();
             if (playerMovementY != 0.0D) {
