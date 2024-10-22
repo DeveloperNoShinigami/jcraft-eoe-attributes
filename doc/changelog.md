@@ -3,6 +3,7 @@
 ### General
 * JCraft damage now only considers armor values up to Netherite level
 * Stand Arrows can now be fired out of bows
+* Replaced Lingering Potion in Diary Page recipe with Eye of Ender
 ### Commands
 * /movedata was merged into **/framedata**
 ### Structures

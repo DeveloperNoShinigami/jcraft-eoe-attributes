@@ -321,7 +321,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .requires(Items.EXPERIENCE_BOTTLE)
                 .requires(Items.PAPER)
                 .requires(Items.NAUTILUS_SHELL)
-                .requires(Items.LINGERING_POTION)
+                .requires(Items.ENDER_EYE)
                 .requires(Items.INK_SAC)
                 .requires(Items.EMERALD)
                 .unlockedBy("has_netherite_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_INGOT))
