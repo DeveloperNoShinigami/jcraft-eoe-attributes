@@ -16,7 +16,6 @@
 ### Hitboxes
 Modify the hitboxes to match the models of:
 * Horus
-* Aya Tsuji
 * Darby Older
 * Osiris
 * Darby Younger

@@ -14,6 +14,11 @@
 12. Add the texture(s) for the block in `textures/block`.
 13. Test your addition.
 
+## Adding a Damage Type
+1. Declare the ResourceKey using `JDamageSources.createDamageType()`.
+2. Add a .JSON file to `resources/data/jcraft/damage_type` of the same name as the damage type.
+3. Test your addition.
+
 ## Adding a Spawn Egg
 1. Add the spawn egg with its two colors to `JItemRegistry`.
 2. Add an English translation of the spawn egg to `en_us.json`.

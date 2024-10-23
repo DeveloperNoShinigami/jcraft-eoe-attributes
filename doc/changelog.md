@@ -1,13 +1,12 @@
 # Changelog
 
 ### General
-* JCraft damage now only considers armor values up to Netherite level
+* Stand damage now only considers armor values up to Netherite level
 * Stand Arrows can now be fired out of bows
 * Replaced Lingering Potion in Diary Page recipe with Eye of Ender
 ### Commands
 * /movedata was merged into **/framedata**
 ### Structures
-todo: struct. void
 * Cinderella's parlor has floors, filling the previously empty space
 * Cinderella's parlor is now about as rare as a village
 ### NPCs & Stands
@@ -17,11 +16,27 @@ todo: struct. void
 * Adjusted Aya Tsuji's mask prices
 * Updated King Crimson's model
 ### Bug Fixes
+* Fixed crash with MmmMmmMmmMmm Dummy Mod
+* Fixed crash with Dave's Potioneering
+* Resolved crash with Jaden's Nether Expansion
 * Fixed Gravity changes crashing Forge multiplayer
 * Fixed infinite creative flight achieved by swapping GE:R and Cream while flying
 
 ### Known Bugs
 ## Common
+* Splatter rendering gets extremely fucked at higher coordinates (~1mil and above)
+this is probably due to:
+```java
+    /// SplatterEffectRenderer
+    matrices.translate(-camPos.x, -camPos.y, -camPos.z);
+
+    /// PoseStack
+    public void translate(double x, double y, double z) {
+        this.translate((float)x, (float)y, (float)z);
+    }
+```
+* Managed to get the "right" key to register as constantly pressed, screwing with dashes
+  * i assume this works for any direction
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
   this bug is EVIL and has an unclear source >:(
   in the future, try looking at what sets the enemies target to null

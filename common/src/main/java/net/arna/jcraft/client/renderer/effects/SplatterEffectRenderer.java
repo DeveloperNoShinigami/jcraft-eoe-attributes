@@ -59,7 +59,7 @@ public class SplatterEffectRenderer {
         RenderSystem.depthMask(true);
     }
 
-    @SuppressWarnings("DuplicatedCode") // I do not care how similar the different directions' code are.
+    @SuppressWarnings("DuplicatedCode") // I do not care how similar the different directions' code are. (vased)
     private static void renderSection(final SplatterSection section, final BufferBuilder buf, final PoseStack matrices, final float alpha, final float offset) {
         matrices.pushPose();
         final Vector3f offsetVec = section.getDirection().step();
@@ -71,17 +71,13 @@ public class SplatterEffectRenderer {
         final int skyLight = section.getWorld().getBrightness(LightLayer.SKY, section.getBlockPos());
         final int light = LightTexture.pack(blockLight, skyLight);
 
-        final Vector3f min = section.getMinPos();
-        final Vector3f max = section.getMaxPos();
         final Vec2 minUv = section.getMinUv();
         final Vec2 maxUv = section.getMaxUv();
 
-        final float minX = min.x();
-        final float minY = min.y();
-        final float minZ = min.z();
-        final float maxX = max.x();
-        final float maxY = max.y();
-        final float maxZ = max.z();
+        final Vector3f min = section.getMinPos();
+        final float minX = min.x(), minY = min.y(), minZ = min.z();
+        final Vector3f max = section.getMaxPos();
+        final float maxX = max.x(), maxY = max.y(), maxZ = max.z();
 
         switch (section.getDirection()) {
             case UP -> {
@@ -125,7 +121,8 @@ public class SplatterEffectRenderer {
         matrices.popPose();
     }
 
-    private static void vertex(final BufferBuilder buf, final Matrix4f matrix, final float x, final float y, final float z, final float u, final float v, final float alpha, final int light) {
+    private static void vertex(final BufferBuilder buf, final Matrix4f matrix, final float x, final float y, final float z,
+                               final float u, final float v, final float alpha, final int light) {
         buf
                 .vertex(matrix, x, y, z)
                 .color(1f, 1f, 1f, alpha)

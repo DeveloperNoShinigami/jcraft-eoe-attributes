@@ -14,11 +14,14 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nullable;
 
 public class JDamageSources {
+    public static ResourceKey<DamageType> createDamageType(final String name) {
+        return ResourceKey.create(Registries.DAMAGE_TYPE, JCraft.id(name));
+    }
 
-    public static final ResourceKey<DamageType> STAND = ResourceKey.create(Registries.DAMAGE_TYPE, JCraft.id("stand"));
-    public static final ResourceKey<DamageType> WHITE_SNAKE_POISON = ResourceKey.create(Registries.DAMAGE_TYPE, JCraft.id("wspoison"));
-    public static final ResourceKey<DamageType> BLEEDING = ResourceKey.create(Registries.DAMAGE_TYPE, JCraft.id("jbleeding"));
-    public static final ResourceKey<DamageType> PHPOISON = ResourceKey.create(Registries.DAMAGE_TYPE, JCraft.id("phpoison"));
+    public static final ResourceKey<DamageType> STAND = createDamageType("stand");
+    public static final ResourceKey<DamageType> WHITE_SNAKE_POISON = createDamageType("wspoison");
+    public static final ResourceKey<DamageType> BLEEDING = createDamageType("jbleeding");
+    public static final ResourceKey<DamageType> PHPOISON = createDamageType("phpoison");
 
     public static DamageSource create(final Level world, final ResourceKey<DamageType> key, final @Nullable Entity source, final @Nullable Entity attacker) {
         return new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key), source, attacker);

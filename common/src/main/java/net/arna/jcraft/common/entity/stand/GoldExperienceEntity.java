@@ -3,10 +3,7 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import net.arna.jcraft.common.attack.core.BlockableType;
-import net.arna.jcraft.common.attack.core.HitBoxData;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.core.*;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.goldexperience.BerryBushAttack;
 import net.arna.jcraft.common.attack.moves.goldexperience.LifeGiverAttack;
@@ -252,6 +249,12 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             }
         }
         return super.initMove(type);
+    }
+
+    @Override
+    public void queueMove(MoveInputType type) {
+        if (getState() == State.REKKA2 && type == MoveInputType.SPECIAL2) return;
+        super.queueMove(type);
     }
 
     @Override
