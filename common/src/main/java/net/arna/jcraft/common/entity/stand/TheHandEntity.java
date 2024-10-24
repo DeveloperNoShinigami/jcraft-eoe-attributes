@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.stand;
 
+import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
@@ -93,6 +94,27 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                     Component.literal("Punch"),
                     Component.literal("Relatively quick combo starter."));
 
+    public static final KnockdownAttack<TheHandEntity> STOMP_BARRAGE_FINISHER = new KnockdownAttack<TheHandEntity>(0,
+            6, 10, 1.0f, 6f, 6, 1.75f, 0.5f, 0.3f, 35)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withExtraHitBox(0, 0, 1)
+            .withHitSpark(JParticleType.HIT_SPARK_2)
+            .withInfo(
+                    Component.literal("Stomp Barrage (Last Hit)"),
+                    Component.literal("Lifts knocked down enemies off the ground.")
+            );
+    public static final SimpleMultiHitAttack<TheHandEntity> STOMP_BARRAGE = new SimpleMultiHitAttack<TheHandEntity>(180,
+            33, 1.0f, 1.0f, 10, 1.5f, 0.3f, 0.2f, IntSet.of(6, 9, 13, 16, 19, 22))
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withFinisher(23, STOMP_BARRAGE_FINISHER)
+            .withInfo(
+                    Component.literal("Stomp Barrage"),
+                    Component.literal("""
+                            Fast startup, and good advantage on block.
+                            Last hit knocks down, and cannot be comboed out of with cr.M1""")
+            );
+
     public static final MainBarrageAttack<TheHandEntity> BARRAGE = new MainBarrageAttack<TheHandEntity>(240, 0,
             40, 0.75f, 0.8f, 30, 2f, 0.25f, 0f, 3, Blocks.DEEPSLATE.defaultDestroyTime())
             .withSound(JSoundRegistry.D4C_BARRAGE.get())
@@ -109,7 +131,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withInfo(
                     Component.literal("Sweep"),
-                    Component.literal("Can be comboed out of with cr.M1~M1>Barrage")
+                    Component.literal("Can be comboed out of with cr.M1~M1>...")
             );
     public static final UppercutAttack<TheHandEntity> KICK = new UppercutAttack<TheHandEntity>(100, 13, 24, 0.75f,
             9f, 12, 2f, 1.1f, 0.1f, 0.3f)
@@ -267,7 +289,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
         moves.registerImmediate(MoveType.HEAVY, KICK, State.KICK);
         moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
         moves.registerImmediate(MoveType.SPECIAL1, ERASE, State.ERASE);
-
+        moves.register(MoveType.SPECIAL2, STOMP_BARRAGE, State.STOMP_BARRAGE);
         moves.registerImmediate(MoveType.SPECIAL3, GRAB, State.GRAB);
 
         moves.register(MoveType.UTILITY, ERASE_SPACE, State.ERASE_SPACE);
@@ -305,6 +327,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
         SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.the_hand.sweep"))),
         GRAB(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.grab"))),
         GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.grab_hit"))),
+        STOMP_BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.stomp_barrage"))),
         ;
 
         private final Consumer<AnimationState<TheHandEntity>> animator;
