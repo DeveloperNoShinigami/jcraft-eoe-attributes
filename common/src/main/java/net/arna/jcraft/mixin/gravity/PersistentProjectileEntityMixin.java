@@ -1,6 +1,5 @@
 package net.arna.jcraft.mixin.gravity;
 
-
 import com.llamalad7.mixinextras.sugar.Local;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
@@ -23,20 +22,13 @@ public abstract class PersistentProjectileEntityMixin extends Entity {
         super(type, world);
     }
 
-
-    @ModifyVariable(
-            method = "tick",
-            at = @At(
-                    value = "STORE"
-            )
-            , ordinal = 0
-    )
-    public Vec3 tick(Vec3 modify) {
-        modify = new Vec3(modify.x, modify.y + 0.05, modify.z);
-        modify = RotationUtil.vecWorldToPlayer(modify, GravityChangerAPI.getGravityDirection(this));
-        modify = new Vec3(modify.x, modify.y - 0.05, modify.z);
-        modify = RotationUtil.vecPlayerToWorld(modify, GravityChangerAPI.getGravityDirection(this));
-        return modify;
+    @ModifyVariable(method = "tick", at = @At(value = "STORE"), ordinal = 0)
+    public Vec3 gravity$tickProjectile(Vec3 original) {
+        final Direction gravity = GravityChangerAPI.getGravityDirection(this);
+        if (gravity == Direction.DOWN) return original;
+        original = RotationUtil.vecWorldToPlayer(new Vec3(original.x, original.y + 0.05, original.z), gravity);
+        original = new Vec3(original.x, original.y - 0.05, original.z);
+        return RotationUtil.vecPlayerToWorld(original, gravity);
     }
 
     @ModifyArg(
