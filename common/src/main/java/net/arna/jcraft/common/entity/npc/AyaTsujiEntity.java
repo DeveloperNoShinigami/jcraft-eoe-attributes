@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant {
 
     private Player tradingPlayer;
-    private final MerchantOffers merchantOffers = new MerchantOffers();;
+    private final MerchantOffers merchantOffers = new MerchantOffers();
 
     public AyaTsujiEntity(Level world) {
         super(JEntityTypeRegistry.AYA_TSUJI.get(), world);
@@ -94,17 +94,14 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
 
     @Override
     protected @NonNull InteractionResult mobInteract(@NonNull final Player player, @NonNull final InteractionHand hand) {
-        if (this.getOffers().isEmpty()) {
-            return InteractionResult.sidedSuccess(isClientSide());
-        } else {
+        if (!this.getOffers().isEmpty()) {
             if (getTarget() == player) return InteractionResult.FAIL;
             if (!this.level().isClientSide) {
                 this.setTradingPlayer(player);
                 this.openTradingScreen(player, this.getDisplayName(), 1);
             }
-
-            return InteractionResult.sidedSuccess(isClientSide());
         }
+        return InteractionResult.sidedSuccess(isClientSide());
     }
 
     @Override

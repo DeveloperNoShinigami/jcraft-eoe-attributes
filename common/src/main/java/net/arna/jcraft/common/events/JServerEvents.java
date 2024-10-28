@@ -10,6 +10,7 @@ import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.config.JServerConfig;
+import net.arna.jcraft.common.entity.StandMeteorEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -50,6 +51,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -554,6 +556,26 @@ public class JServerEvents {
                     serverWorld.setDayTime(serverWorld.getDayTime() / 24000 * 24000 + 13000); // round up to nearest day and set to night
                 }
                 serverWorld.setBlockAndUpdate(sleepingPos, state.setValue(CoffinBlock.OCCUPIED, false));
+            }
+        }
+    }
+
+    public static void serverLevelPostTick(ServerLevel serverLevel) {
+        final DimensionType dimensionType = serverLevel.dimensionType();
+        if (dimensionType.hasCeiling() || !serverLevel.getGameRules().getBoolean(FALLING_METEORS)) return;
+        for (ServerPlayer serverPlayer : serverLevel.getPlayers(ServerPlayer::isAlive)) {
+            if (serverLevel.random.nextFloat() < 0.00001f) { // 0.001% chance per tick, i.e. 0.02% chance per second
+                final Vec3 randomPos = new Vec3(
+                        serverPlayer.getX() + serverLevel.random.nextDouble() * 128.0 - 64.0,
+                        Math.min(242, serverLevel.getMaxBuildHeight() - 1),
+                        serverPlayer.getZ() + serverLevel.random.nextDouble() * 128.0 - 64.0
+                );
+                final BlockPos randomBlockPos = BlockPos.containing(randomPos);
+                if (serverLevel.isLoaded(randomBlockPos) && serverLevel.getBiome(randomBlockPos).is(JTagRegistry.METEORS_CAN_FALL)) {
+                    final StandMeteorEntity meteor = new StandMeteorEntity(serverLevel);
+                    meteor.setPos(randomPos);
+                    serverLevel.addFreshEntity(meteor);
+                }
             }
         }
     }

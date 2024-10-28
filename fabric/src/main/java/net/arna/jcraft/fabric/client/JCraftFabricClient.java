@@ -1,10 +1,12 @@
 package net.arna.jcraft.fabric.client;
 
+import dev.architectury.registry.client.level.entity.EntityModelLayerRegistry;
 import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.events.JClientEvents;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.registry.JEntityRendererRegister;
 import net.arna.jcraft.client.registry.JItemPropertiesRegistry;
+import net.arna.jcraft.client.registry.JEntityModelLayerRegistry;
 import net.arna.jcraft.client.registry.JModelPredicateProviderRegistry;
 import net.arna.jcraft.client.renderer.block.CoffinTileRenderer;
 import net.arna.jcraft.client.renderer.effects.*;
@@ -26,6 +28,7 @@ public final class JCraftFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
         JCraftClient.init();
         JModelPredicateProviderRegistry.register();
+        JEntityModelLayerRegistry.init(modelLayerDefinition -> EntityModelLayerRegistry.register(modelLayerDefinition.getKey(), modelLayerDefinition.getValue()));
         JEntityRendererRegister.registerEntityRenderers(JEntityRendererRegister.RendererData::registerFabric);
         BlockEntityRenderers.register(JBlockEntityTypeRegistry.COFFIN_TILE.get(), CoffinTileRenderer::new);
 

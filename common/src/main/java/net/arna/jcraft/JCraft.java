@@ -110,6 +110,7 @@ import static net.arna.jcraft.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY_TYP
 import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
 import static net.arna.jcraft.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JItemRegistry.ITEM_REGISTRY;
+import static net.minecraft.world.level.GameRules.*;
 
 public final class JCraft {
     // Unchanging mod values
@@ -134,14 +135,16 @@ public final class JCraft {
 
     // Gamerules
     //public static final GameRules.Key<GameRules.BooleanRule> KINGCRIMSON_TELEPORT_EFFECT = GameRuleRegistry.register("kingCrimsonTeleportEffect", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
-    public static final GameRules.Key<GameRules.BooleanValue> COMBO_COUNTER = GameRules.register("comboCounter", GameRules.Category.MISC, GameRules.BooleanValue.create(true));
-    public static final GameRules.Key<GameRules.IntegerValue> CHANCE_MOB_SPAWNS_WITH_STAND = GameRules.register("chanceMobSpawnsWithStand", GameRules.Category.MOBS, GameRules.IntegerValue.create(5));
-    public static final GameRules.Key<GameRules.BooleanValue> ALLOW_MOB_EVOLVED_STANDS = GameRules.register("allowMobEvolvedStands", GameRules.Category.MOBS, GameRules.BooleanValue.create(false));
-    public static final GameRules.Key<GameRules.BooleanValue> STAND_GRIEFING = GameRules.register("standGriefing", GameRules.Category.MISC, GameRules.BooleanValue.create(true));
-    public static final GameRules.Key<GameRules.BooleanValue> KEEP_STAND = GameRules.register("keepStand", GameRules.Category.MISC, GameRules.BooleanValue.create(true));
-    public static final GameRules.Key<GameRules.BooleanValue> KEEP_SPEC = GameRules.register("keepSpec", GameRules.Category.MISC, GameRules.BooleanValue.create(true));
+    public static final GameRules.Key<BooleanValue> COMBO_COUNTER = register("comboCounter", Category.MISC, BooleanValue.create(true));
+    public static final GameRules.Key<IntegerValue> CHANCE_MOB_SPAWNS_WITH_STAND = register("chanceMobSpawnsWithStand", Category.MOBS, IntegerValue.create(5));
+    public static final GameRules.Key<BooleanValue> ALLOW_MOB_EVOLVED_STANDS = register("allowMobEvolvedStands", Category.MOBS, BooleanValue.create(false));
+    public static final GameRules.Key<BooleanValue> STAND_GRIEFING = register("standGriefing", Category.MISC, BooleanValue.create(true));
+    public static final GameRules.Key<BooleanValue> KEEP_STAND = register("keepStand", Category.MISC, BooleanValue.create(true));
+    public static final GameRules.Key<BooleanValue> KEEP_SPEC = register("keepSpec", Category.MISC, BooleanValue.create(true));
     //public static GameRules.Key<GameRules.IntRule> DAMAGE_MULT = GameRuleRegistry.register("jcraftDamageMult", GameRules.Category.MISC, GameRuleFactory.createIntRule(0, 0, 100));
-    public static final GameRules.Key<GameRules.IntegerValue> STAND_ARROW_BASE_DAMAGE = GameRules.register("standArrowBaseDamage", GameRules.Category.MISC, GameRules.IntegerValue.create(2));
+    public static final GameRules.Key<IntegerValue> STAND_ARROW_BASE_DAMAGE = register("standArrowBaseDamage", Category.MISC, IntegerValue.create(2));
+
+    public static final GameRules.Key<BooleanValue> FALLING_METEORS = register("doFallingMeteors", Category.SPAWNING, BooleanValue.create(true));
 
     // Dimensional travel bullshit
     /**

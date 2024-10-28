@@ -1,10 +1,19 @@
 package net.arna.jcraft.common.entity;
 
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.core.animation.AnimatableManager;
+import mod.azure.azurelib.core.animation.AnimationController;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.ai.goal.SHAAttackGoal;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.common.util.JExplosionModifier;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +25,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -29,26 +37,17 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 
 public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
     private static final EntityDataAccessor<Optional<UUID>> OWNER_ID = SynchedEntityData.defineId(SheerHeartAttackEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     private LivingEntity master;
 
-    public SheerHeartAttackEntity(EntityType<? extends Mob> entityType, Level world) {
-        super(entityType, world);
+    public SheerHeartAttackEntity(Level world) {
+        super(JEntityTypeRegistry.SHEER_HEART_ATTACK.get(), world);
     }
 
     @Override

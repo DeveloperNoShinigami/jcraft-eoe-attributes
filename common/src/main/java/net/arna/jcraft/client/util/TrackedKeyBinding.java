@@ -1,7 +1,6 @@
 package net.arna.jcraft.client.util;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import lombok.Getter;
 import net.minecraft.client.KeyMapping;

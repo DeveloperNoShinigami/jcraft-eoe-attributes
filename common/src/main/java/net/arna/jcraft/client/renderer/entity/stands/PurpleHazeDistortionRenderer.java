@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.stand.PurpleHazeModel;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
-import net.arna.jcraft.common.entity.stand.AbstractStarPlatinumEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

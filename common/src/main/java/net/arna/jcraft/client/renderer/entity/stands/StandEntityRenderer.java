@@ -135,7 +135,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             final float motionThreshold = getMotionAnimThreshold(animatable);
             final Vec3 velocity = animatable.getDeltaMovement();
             final float avgVelocity = (float)(Math.abs(velocity.x) + Math.abs(velocity.z) / 2f);
-            final AnimationState<T> animationState = new AnimationState<T>(animatable, limbSwing, limbSwingAmount,
+            final AnimationState<T> animationState = new AnimationState<>(animatable, limbSwing, limbSwingAmount,
                     partialTick, avgVelocity >= motionThreshold && limbSwingAmount != 0);
             final long instanceId = getInstanceId(animatable);
 

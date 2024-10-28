@@ -6,17 +6,11 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.entity.*;
 import net.arna.jcraft.common.entity.npc.AyaTsujiEntity;
 import net.arna.jcraft.common.entity.npc.DarbyOlderEntity;
 import net.arna.jcraft.common.entity.npc.DarbyYoungerEntity;
-import net.arna.jcraft.common.entity.GEButterflyEntity;
-import net.arna.jcraft.common.entity.GEFrogEntity;
-import net.arna.jcraft.common.entity.GERScorpionEntity;
-import net.arna.jcraft.common.entity.GESnakeEntity;
 import net.arna.jcraft.common.entity.npc.PetshopEntity;
-import net.arna.jcraft.common.entity.PlayerCloneEntity;
-import net.arna.jcraft.common.entity.PurpleHazeCloudEntity;
-import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
 import net.arna.jcraft.common.entity.projectile.BisectProjectile;
 import net.arna.jcraft.common.entity.projectile.BlockProjectile;
@@ -182,11 +176,21 @@ public interface JEntityTypeRegistry {
 
     RegistrySupplier<EntityType<SheerHeartAttackEntity>> SHEER_HEART_ATTACK = ENTITY_TYPE_REGISTRY.register(JCraft.id("sha"),
             () -> EntityType.Builder.of(
-                    SheerHeartAttackEntity::new,
+                    WorldOnlyEntityFactory.from(SheerHeartAttackEntity::new),
                     MobCategory.CREATURE
             ).sized(
                     0.5f,
                     0.5f
+            ).build("sha")
+    );
+
+    RegistrySupplier<EntityType<StandMeteorEntity>> STAND_METEOR = ENTITY_TYPE_REGISTRY.register(JCraft.id("stand_meteor"),
+            () -> EntityType.Builder.of(
+                    WorldOnlyEntityFactory.from(StandMeteorEntity::new),
+                    MobCategory.MISC
+            ).sized(
+                    4.0f,
+                    4.0f
             ).build("sha")
     );
 
@@ -741,6 +745,8 @@ public interface JEntityTypeRegistry {
 
         EntityAttributeRegistry.register(METALLICA, MetallicaEntity::createMobAttributes);
         EntityAttributeRegistry.register(THE_HAND, TheHandEntity::createMobAttributes);
+
+        EntityAttributeRegistry.register(STAND_METEOR, StandMeteorEntity::createMobAttributes);
     }
 
     static void init() {

@@ -37,6 +37,7 @@ public final class LungeAttack extends AbstractSimpleAttack<LungeAttack, StandEn
         }
     }
 
+    @SuppressWarnings("unchecked")
     public LungeAttack withCrouchingVariant(final KnockdownAttack<? extends StandEntity<?,?>> crouchingVariant) {
         return super.withCrouchingVariant((AbstractMove<?, ? super StandEntity<?, ?>>)crouchingVariant);
     }

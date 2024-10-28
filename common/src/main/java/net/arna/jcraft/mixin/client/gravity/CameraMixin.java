@@ -49,7 +49,7 @@ public abstract class CameraMixin {
             )
     )
     private void wrapOperation_update_setPos_0(Camera camera, double x, double y, double z, Operation<Void> original, BlockGetter area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta) {
-        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);;
+        Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         Optional<RotationAnimation> animationOptional = GravityChangerAPI.getGravityAnimation(entity);
         if(animationOptional.isEmpty()){
             original.call(this, x, y, z);

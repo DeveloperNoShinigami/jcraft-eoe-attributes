@@ -372,7 +372,7 @@ public class TestEngine {
     @Test
     public void testPocketsWithoutBigBlind() {
         final Engine engine = new Engine(4);
-        Assertions.assertThrows(IllegalStateException.class, () -> engine.dealPockets());
+        Assertions.assertThrows(IllegalStateException.class, engine::dealPockets);
     }
 
     /**

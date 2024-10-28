@@ -1,15 +1,10 @@
 package net.arna.jcraft.mixin.client;
 
-import net.arna.jcraft.client.registry.JRenderLayerRegistry;
 import net.arna.jcraft.client.renderer.features.ArmoredMoveFeatureRenderer;
 import net.arna.jcraft.client.renderer.features.StuckKnivesFeatureRenderer;
 import net.arna.jcraft.client.util.PlayerCloneClientPlayerEntity;
-import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
-import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -23,8 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+
 import java.util.List;
 
 @Mixin(LivingEntityRenderer.class)
@@ -60,6 +54,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
         }
     }
 
+    /*
     @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lcom/mojang/blaze3d/vertex/PoseStack;popPose()V"))
     private void suckmahballs(T livingEntity, float f, float g, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, CallbackInfo ci) {
@@ -76,10 +71,10 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
         }
 
         for (RenderLayer<T, M> featureRenderer : layers) {
-            //TODO we got all funny features here planet suckondeeze
 
         }
     }
+     */
 
     @Shadow
     protected abstract float getBob(T entity, float tickDelta);

@@ -23,7 +23,7 @@ public class FrameDataRequests {
     }
 
     public enum FrameDataType {
-        STAND, SPEC;
+        STAND, SPEC
     }
 
     private static class FrameData { // Named after a VERY common term, even though minecraft is updated in 20 TICKS per second, as opposed to 60 FRAMES per second
@@ -46,6 +46,7 @@ public class FrameDataRequests {
         frameDataRequests.add(serverPlayer, new FrameData(serverPlayer.level().getGameTime(), type));
     }
 
+    @SuppressWarnings("unchecked")
     public static void tick() {
         frameDataRequests.tick(iter -> {
             final Map.Entry<ServerPlayer, FrameData> entry = iter.next();
@@ -106,7 +107,7 @@ public class FrameDataRequests {
         });
     }
 
-    private static void sendFrameData(@NonNull final ServerPlayer recipient, @NonNull final AbstractMove<?, ?> move,@NonNull  final Queue<Tick> ticks) {
+    private static void sendFrameData(@NonNull final ServerPlayer recipient, @NonNull final AbstractMove<?, ?> move, @NonNull  final Queue<Tick> ticks) {
         final StringBuilder builder = new StringBuilder();
         boolean first = true;
         boolean isStartup = true;

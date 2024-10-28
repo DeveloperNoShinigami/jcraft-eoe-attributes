@@ -17,8 +17,6 @@ public class HungerManagerMixin {
     private CommonVampireComponent vampireComponent;
     @Unique
     private boolean isVampire;
-    @Unique
-    private Player player;
 
     @Inject(method = "getFoodLevel", at = @At("HEAD"), cancellable = true)
     void jcraft$getBloodLevel(CallbackInfoReturnable<Integer> cir) {
@@ -38,7 +36,6 @@ public class HungerManagerMixin {
     void jcraft$updateVampirism(Player player, CallbackInfo ci) {
         this.vampireComponent = JComponentPlatformUtils.getVampirism(player);
         this.isVampire = vampireComponent.isVampire();
-        this.player = player;
 
         if (isVampire) {
             ci.cancel();

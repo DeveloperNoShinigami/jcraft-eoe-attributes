@@ -2,7 +2,6 @@ package net.arna.jcraft.client.model.entity.npc;
 
 import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.entity.npc.AyaTsujiEntity;
 import net.arna.jcraft.common.entity.npc.DarbyOlderEntity;
 import net.minecraft.resources.ResourceLocation;
 

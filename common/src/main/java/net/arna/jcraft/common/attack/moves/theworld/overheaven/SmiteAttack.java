@@ -23,6 +23,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -56,12 +57,12 @@ public final class SmiteAttack extends AbstractEffectInflictingAttack<SmiteAttac
                     576 // Squared
             );
 
-            if (eHit != null) {
-                ctx.set(LIGHTNING_POS, eHit.getLocation());
-            } else {
-                ctx.set(LIGHTNING_POS, attacker.level().clip(new ClipContext(eP, eP.add(rangeMod),
-                        ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user)).getLocation());
-            }
+            ctx.set(LIGHTNING_POS,
+                    Objects.requireNonNullElseGet(
+                            eHit,
+                            () -> attacker.level().clip(new ClipContext(eP, eP.add(rangeMod), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user))
+                    ).getLocation()
+            );
         }
 
         Vec3 lightningPos = ctx.get(LIGHTNING_POS);

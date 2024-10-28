@@ -1,7 +1,6 @@
 package net.arna.jcraft.client.gui.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import lombok.Setter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;

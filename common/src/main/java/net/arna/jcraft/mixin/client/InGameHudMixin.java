@@ -1,6 +1,5 @@
 package net.arna.jcraft.mixin.client;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
@@ -20,8 +19,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static net.arna.jcraft.client.gui.hud.JCraftAbilityHud.GUI_ICONS_TEXTURE;
 
 @Mixin(Gui.class)
 public abstract class InGameHudMixin {

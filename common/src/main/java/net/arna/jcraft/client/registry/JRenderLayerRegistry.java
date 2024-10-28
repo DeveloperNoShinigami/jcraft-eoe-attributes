@@ -26,7 +26,7 @@ public class JRenderLayerRegistry extends RenderStateShard {
                     "transparent_block",
                     DefaultVertexFormat.POSITION,
                     VertexFormat.Mode.QUADS,
-                    new ShaderStateShard(() -> JPlatformUtils.getTest()),
+                    new ShaderStateShard(JPlatformUtils::getTest),
                     Phases.NORMAL_TRANSPARENCY,
                     TextureAtlas.LOCATION_PARTICLES);
 
@@ -36,7 +36,7 @@ public class JRenderLayerRegistry extends RenderStateShard {
                     "rrre",
                     DefaultVertexFormat.NEW_ENTITY,
                     VertexFormat.Mode.QUADS,
-                    new ShaderStateShard(() -> JPlatformUtils.getRred()),
+                    new ShaderStateShard(JPlatformUtils::getRred),
                     RenderStateShard.TRANSLUCENT_TRANSPARENCY
             );
 

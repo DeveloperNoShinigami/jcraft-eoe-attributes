@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.stand.CreamModel;
 import net.arna.jcraft.client.renderer.entity.layer.CreamVoidLayer;
-import net.arna.jcraft.common.entity.stand.CMoonEntity;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

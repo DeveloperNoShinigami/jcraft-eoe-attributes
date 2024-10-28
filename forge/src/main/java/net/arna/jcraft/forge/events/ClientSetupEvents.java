@@ -4,6 +4,7 @@ package net.arna.jcraft.forge.events;
 import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.gui.hud.JCraftHudOverlay;
+import net.arna.jcraft.client.registry.JEntityModelLayerRegistry;
 import net.arna.jcraft.client.registry.JEntityRendererRegister;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
@@ -18,6 +19,11 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetupEvents {
+
+    @SubscribeEvent
+    public static void registerEntityModelLayers(final EntityRenderersEvent.RegisterLayerDefinitions event) {
+        JEntityModelLayerRegistry.init(modelLayerDefinition -> event.registerLayerDefinition(modelLayerDefinition.getKey(), modelLayerDefinition.getValue()));
+    }
 
     @SuppressWarnings("unchecked")
     @SubscribeEvent
