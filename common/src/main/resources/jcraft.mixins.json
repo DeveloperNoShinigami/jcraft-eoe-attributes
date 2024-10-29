@@ -17,6 +17,7 @@
     "client.ClientWorldMixin",
     "client.EffectProgramMixin",
     "client.EntityRenderDispatcherMixin",
+    "client.GameNarratorMixin",
     "client.GameRendererMixin",
     "client.HeldItemFeatureRendererMixin",
     "client.InGameHudMixin",

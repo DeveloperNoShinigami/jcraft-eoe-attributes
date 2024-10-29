@@ -3,7 +3,10 @@
 ### General
 * Stand damage now only considers armor values up to Netherite level
 * Stand Arrows can now be fired out of bows
+* Coffins now drop themselves upon being broken
 * Replaced Lingering Potion in Diary Page recipe with Eye of Ender
+* Narrator can now be disabled in the client settings (due to potential conflicts with JCraft binds, and a Mojang not adding the option)
+* Mining Barrages now have extended range
 ### Commands
 * /movedata was merged into **/framedata**
 ### Structures
@@ -12,6 +15,7 @@
 ### NPCs & Stands
 * **Added The Hand**
 * NPC Stand users now wander around
+* Taught NPC Stand users to not try to block unblockable moves
 * Taught NPC Metallica users to harvest iron
 * Adjusted Aya Tsuji's mask prices
 * Updated King Crimson's model

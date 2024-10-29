@@ -3,14 +3,17 @@ package net.arna.jcraft.common.block;
 import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
 import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -19,6 +22,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -26,22 +30,30 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-//todo: make coffin drop itself
+import java.util.Collections;
+import java.util.List;
 
-// Actual sleep logic is handled in JServerEvents
-public class CoffinBlock extends BedBlock {
-    protected static final VoxelShape NORTH_SHAPE;
-    protected static final VoxelShape SOUTH_SHAPE;
-    protected static final VoxelShape WEST_SHAPE;
-    protected static final VoxelShape EAST_SHAPE;
+/**
+ * @see net.arna.jcraft.common.events.JServerEvents#allowSleep(Player, BlockPos)
+ * @see net.arna.jcraft.common.events.JServerEvents#stopSleeping(Entity, BlockPos)
+ * @see net.arna.jcraft.common.events.JServerEvents#modifySleepingDirection(Entity, BlockPos, Direction)
+ */
+public final class CoffinBlock extends BedBlock {
 
+    private static final VoxelShape NORTH_SHAPE, SOUTH_SHAPE, WEST_SHAPE, EAST_SHAPE;
     public CoffinBlock(final Properties settings) {
         super(DyeColor.RED, settings);
     }
 
+    private static List<ItemStack> DROP_LIST;
+    public static void init() {
+        DROP_LIST = List.of(new ItemStack(JItemRegistry.COFFIN_BLOCK.get()));
+    }
+
     @NonNull
     @Override
-    public InteractionResult use(@NonNull BlockState state, final Level world, @NonNull BlockPos pos, final @NonNull Player player, final @NonNull InteractionHand hand, final @NonNull BlockHitResult hit) {
+    public InteractionResult use(@NonNull BlockState state, final Level world, @NonNull BlockPos pos,
+                                 @NonNull final Player player, @NonNull final InteractionHand hand, @NonNull final BlockHitResult hit) {
         if (world.isClientSide) {
             return InteractionResult.CONSUME;
         }
@@ -89,7 +101,7 @@ public class CoffinBlock extends BedBlock {
     }
 
     @Override
-    public BlockState getStateForPlacement(@NonNull BlockPlaceContext context) {
+    public BlockState getStateForPlacement(@NonNull final BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         if (state != null) state.setValue(OCCUPIED, false);
         return state;
@@ -101,12 +113,19 @@ public class CoffinBlock extends BedBlock {
      */
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NonNull BlockPos pos, @NonNull BlockState state) {
+    public BlockEntity newBlockEntity(@NonNull final BlockPos pos, @NonNull final BlockState state) {
         return JBlockEntityTypeRegistry.COFFIN_TILE.get().create(pos, state);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public @NonNull VoxelShape getShape(BlockState state, @NonNull BlockGetter world, @NonNull BlockPos pos, @NonNull CollisionContext context) {
+    public @NonNull List<ItemStack> getDrops(@NonNull final BlockState state, @NonNull final LootParams.Builder params) {
+        return state.getValue(PART) == BedPart.FOOT ? DROP_LIST : Collections.emptyList();
+    }
+
+    @Override
+    public @NonNull VoxelShape getShape(@NonNull final BlockState state, @NonNull final BlockGetter world,
+                                        @NonNull final BlockPos pos, @NonNull final CollisionContext context) {
         return BedPart.FOOT == state.getValue(BedBlock.PART) ?
             switch (state.getValue(FACING)) {
                 case NORTH -> NORTH_SHAPE;

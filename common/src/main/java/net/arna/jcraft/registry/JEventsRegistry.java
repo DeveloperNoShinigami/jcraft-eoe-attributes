@@ -9,7 +9,7 @@ import net.arna.jcraft.common.network.c2s.ConfigUpdatePacket;
 
 public interface JEventsRegistry {
     static void registerEvents() {
-        // NOTE: THESE ARE ALSO SEEMINGLY REGISTERED ON THE CLIENT
+        // NOTE: THESE ARE ALSO REGISTERED ON THE CLIENT
         EntityEvent.LIVING_HURT.register(JServerEvents::hurt);
         JEntityEvents.POST_ADD.register(JServerEvents::entityLoad);
         EntityEvent.LIVING_DEATH.register(JServerEvents::death);

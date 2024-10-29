@@ -37,7 +37,6 @@ public final class JCraftFabric implements ModInitializer {
         ArgumentTypeRegistry.registerArgumentType(JCraft.id("spec"), SpecArgumentType.class, SingletonArgumentInfo.contextFree(SpecArgumentType::spec));
         ArgumentTypeRegistry.registerArgumentType(JCraft.id("attack"), AttackArgumentType.class, SingletonArgumentInfo.contextFree(AttackArgumentType::attack));
 
-        JCraft.initStandIOMaps();
-        JCraft.initDispenserBehaviors();
+        JCraft.postInit();
     }
 }

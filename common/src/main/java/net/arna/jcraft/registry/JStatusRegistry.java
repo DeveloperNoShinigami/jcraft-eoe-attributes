@@ -8,10 +8,6 @@ import static net.arna.jcraft.JCraft.EFFECTS;
 
 public interface JStatusRegistry {
 
-    static void init(){
-
-    }
-
     RegistrySupplier<MobEffect> DAZED = EFFECTS.register("dazed_effect", DazedStatusEffect::new);
     RegistrySupplier<MobEffect> KNOCKDOWN = EFFECTS.register("knockdown", KnockdownStatusEffect::new);
 
@@ -23,4 +19,7 @@ public interface JStatusRegistry {
     RegistrySupplier<MobEffect> PHPOISON = EFFECTS.register("phpoison", PurpleInfectionEffect::new);
     RegistrySupplier<MobEffect> HYPOXIA = EFFECTS.register("hypoxia", HypoxiaEffect::new);
 
+    static void init() {
+        // intentionally left empty
+    }
 }

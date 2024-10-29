@@ -1,4 +1,8 @@
 ## TODOs
+
+### Loot Table registration on FORGE
+### Fix GravityAPI movement (in EntityMixin) being incompatible with Lithium
+
 ### Animations
 * Petshop
 * Cinderella

@@ -5,6 +5,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.stats.StatType;
 
+// UNUSED
+@Deprecated()
 public class JStatRegistry {
     //public static StatType<Item> TEST;
 
@@ -12,7 +14,7 @@ public class JStatRegistry {
         return Registry.register(BuiltInRegistries.STAT_TYPE, JCraft.id(id), new StatType<>(registry));
     }
 
-    public static void init() {
+    public static void registerStatistics() {
         //TEST = registerType("test", Registry.ITEM);
     }
 }

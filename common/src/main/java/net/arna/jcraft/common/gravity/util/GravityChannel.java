@@ -75,7 +75,7 @@ public class GravityChannel<P extends GravityPacket> {
         });
     }
 
-    public static void init() {
+    public static void registerReceivers() {
         DEFAULT_GRAVITY.registerServerReceiver();
         UPDATE_GRAVITY.registerServerReceiver();
         OVERWRITE_GRAVITY.registerServerReceiver();

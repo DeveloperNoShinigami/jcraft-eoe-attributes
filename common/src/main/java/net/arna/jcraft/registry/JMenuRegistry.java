@@ -11,7 +11,6 @@ public interface JMenuRegistry {
     RegistrySupplier<MenuType<MainMenu>> MAIN_MENU_TYPE = JCraft.MENU_REGISTRY.register("main_menu", () -> MenuRegistry.ofExtended((id, inv, buf) -> new MainMenu(id, inv.player)));
 
     static void init() {
-
+        // intentionally left empty
     }
-
 }

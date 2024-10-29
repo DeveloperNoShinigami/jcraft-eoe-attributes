@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
@@ -20,12 +21,7 @@ import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
 import net.arna.jcraft.common.gravity.util.GravityChannel;
 import net.arna.jcraft.common.loot.JLootTableHelper;
 import net.arna.jcraft.common.network.RemoteStandInteractPacket;
-import net.arna.jcraft.common.network.c2s.ConfigUpdatePacket;
-import net.arna.jcraft.common.network.c2s.CooldownCancelPacket;
-import net.arna.jcraft.common.network.c2s.MenuCallPacket;
-import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
-import net.arna.jcraft.common.network.c2s.PredictionTriggerPacket;
-import net.arna.jcraft.common.network.c2s.StandBlockPacket;
+import net.arna.jcraft.common.network.c2s.*;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.network.s2c.ShaderDeactivationPacket;
@@ -34,30 +30,9 @@ import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
 import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.common.tickable.Timestops;
-import net.arna.jcraft.common.util.CooldownType;
-import net.arna.jcraft.common.util.DashData;
-import net.arna.jcraft.common.util.DimensionData;
-import net.arna.jcraft.common.util.DummyClientEntityHandler;
-import net.arna.jcraft.common.util.EntityInterest;
-import net.arna.jcraft.common.util.IClientEntityHandler;
-import net.arna.jcraft.common.util.JParticleType;
-import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JArgumentTypeRegistry;
-import net.arna.jcraft.registry.JCommandRegistry;
-import net.arna.jcraft.registry.JCreativeMenuTabRegistry;
-import net.arna.jcraft.registry.JDimensionRegistry;
-import net.arna.jcraft.registry.JEnchantmentRegistry;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.arna.jcraft.registry.JEventsRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
-import net.arna.jcraft.registry.JMenuRegistry;
-import net.arna.jcraft.registry.JPacketRegistry;
-import net.arna.jcraft.registry.JParticleTypeRegistry;
-import net.arna.jcraft.registry.JSoundRegistry;
-import net.arna.jcraft.registry.JStatRegistry;
-import net.arna.jcraft.registry.JStatusRegistry;
-import net.arna.jcraft.registry.JTagRegistry;
+import net.arna.jcraft.registry.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
@@ -99,12 +74,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.WeakHashMap;
+import java.util.*;
 
 import static net.arna.jcraft.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
@@ -161,48 +131,70 @@ public final class JCraft {
     @Getter
     private static final Map<Entity, EntityInterest> entitiesOfInterest = new HashMap<>();
 
-    // Standardized cooldowns
-    public static final int dashCooldown = 40;
-    public static final int LIGHT_COOLDOWN = 20;
+    // Standardized cool-downs
+    public static final int DASH_COOLDOWN = 40, LIGHT_COOLDOWN = 20;
 
     @Getter
     @Setter
     private static IClientEntityHandler clientEntityHandler = DummyClientEntityHandler.INSTANCE;
 
-
     public static void init() {
+        /*  NAMING PATTERN:
+                JThingRegistry.init() - for interfaces with an EMPTY init() method, used for instantiating them
+                JThingRegistry.registerThings() - for interfaces/classes with a NON-EMPTY registerThings() method
+         */
+
         // Particle registration (serverside)
-        JParticleTypeRegistry.initParticleTypes();
+        JParticleTypeRegistry.init();
         PARTICLES.register();
 
-        // Registration
         ENTITY_TYPE_REGISTRY.register();
+
         BLOCK_REGISTRY.register();
+
         ITEM_REGISTRY.register();
+
         BLOCK_ENTITY_TYPE_REGISTRY.register();
+
         JTagRegistry.init();
+
         JCreativeMenuTabRegistry.init();
         CREATIVE_TAB_REGISTRY.register();
+
         JMenuRegistry.init();
         MENU_REGISTRY.register();
 
         CommandRegistrationEvent.EVENT.register(JCommandRegistry::registerCommands);
+
         JEventsRegistry.registerEvents();
+
         JStatusRegistry.init();
         EFFECTS.register();
-        JSoundRegistry.registerSounds();
+
+        JSoundRegistry.init();
         SOUNDS.register();
+
         JEntityTypeRegistry.registerAttributes();
-        JDimensionRegistry.registerDimensions();
-        JArgumentTypeRegistry.registerArgumentTypes();
+
+        JDimensionRegistry.init();
+
+        // Command Arguments are registered separately in JCraftFabric and JCraftForge
+
         JEnchantmentRegistry.init();
         ENCHANTMENT.register();
-        JLootTableHelper.init();
-        JServerConfig.init();
-        JStatRegistry.init();
-        MoveTickQueue.init();
 
-        GravityChannel.init();
+        JLootTableHelper.registerLootTables();
+
+        // TODO: Loot Table registration is currently only finalized on Fabric, which @Ayutac needs to fix
+
+        JServerConfig.init();
+
+        // JStatRegistry.registerStatistics(); // EMPTY
+
+        MoveTickQueue.registerMoveTickQueue();
+
+        GravityChannel.registerReceivers();
+
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, ConfigUpdatePacket.ID, ConfigUpdatePacket::handle);
@@ -213,7 +205,29 @@ public final class JCraft {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_MENU_CALL, MenuCallPacket::handle);
     }
 
-    public static void initDispenserBehaviors() {
+    public static void postInit() {
+        initBlockPostLoad();
+        initStandIOMaps();
+        initDispenserBehaviors();
+    }
+
+    private static void initBlockPostLoad() {
+        CoffinBlock.init();
+    }
+
+    private static void initStandIOMaps() {
+        JItemRegistry.DIARY_PAGE.get().standIOMap.put(StandType.SHADOW_THE_WORLD, StandType.THE_WORLD);
+        JItemRegistry.GREEN_BABY.get().standIOMap.put(StandType.WHITE_SNAKE, StandType.C_MOON);
+        JItemRegistry.DIOS_DIARY.get().standIOMap.put(StandType.C_MOON, StandType.MADE_IN_HEAVEN);
+        JItemRegistry.DIOS_DIARY.get().standIOMap.put(StandType.THE_WORLD, StandType.THE_WORLD_OVER_HEAVEN);
+
+        JItemRegistry.LIVING_ARROW.get().standIOMap.put(StandType.KILLER_QUEEN, StandType.KILLER_QUEEN_BITES_THE_DUST);
+        JItemRegistry.LIVING_ARROW.get().standIOMap.put(StandType.STAR_PLATINUM, StandType.STAR_PLATINUM_THE_WORLD);
+
+        JItemRegistry.REQUIEM_ARROW.get().standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
+    }
+
+    private static void initDispenserBehaviors() {
         DispenserBlock.registerBehavior(JItemRegistry.KNIFE.get(), new AbstractProjectileDispenseBehavior() {
             @Override
             protected @NonNull Projectile getProjectile(@NonNull Level world, @NonNull Position position, @NonNull ItemStack stack) {
@@ -236,7 +250,6 @@ public final class JCraft {
      *
      * @param position in world
      */
-    //todo: make TS stop animated textures
     public static void beginTimestop(@NonNull final LivingEntity timestopper, @NonNull final Vec3 position,
                                      @NonNull final ServerLevel world, final int duration) {
         //JCraft.LOGGER.info(timestopper + " is stopping time in world " + world + " for " + duration + " ticks.");
@@ -468,18 +481,6 @@ public final class JCraft {
 
     public static ResourceLocation id(String name) {
         return new ResourceLocation(MOD_ID, name);
-    }
-
-    public static void initStandIOMaps() {
-        JItemRegistry.DIARY_PAGE.get().standIOMap.put(StandType.SHADOW_THE_WORLD, StandType.THE_WORLD);
-        JItemRegistry.GREEN_BABY.get().standIOMap.put(StandType.WHITE_SNAKE, StandType.C_MOON);
-        JItemRegistry.DIOS_DIARY.get().standIOMap.put(StandType.C_MOON, StandType.MADE_IN_HEAVEN);
-        JItemRegistry.DIOS_DIARY.get().standIOMap.put(StandType.THE_WORLD, StandType.THE_WORLD_OVER_HEAVEN);
-
-        JItemRegistry.LIVING_ARROW.get().standIOMap.put(StandType.KILLER_QUEEN, StandType.KILLER_QUEEN_BITES_THE_DUST);
-        JItemRegistry.LIVING_ARROW.get().standIOMap.put(StandType.STAR_PLATINUM, StandType.STAR_PLATINUM_THE_WORLD);
-
-        JItemRegistry.REQUIEM_ARROW.get().standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
     }
 
     /**

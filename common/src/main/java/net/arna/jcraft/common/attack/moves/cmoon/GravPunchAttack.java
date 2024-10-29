@@ -25,7 +25,7 @@ public final class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack,
     public GravPunchAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
                            final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
-        hitSpark = JParticleType.HIT_SPARK_2; //todo: gravpunch inversion hitspark
+        hitSpark = JParticleType.INVERTED_HIT_SPARK_3;
     }
 
     @Override

@@ -43,7 +43,6 @@ import java.util.UUID;
 
 public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
     private static final EntityDataAccessor<Optional<UUID>> OWNER_ID = SynchedEntityData.defineId(SheerHeartAttackEntity.class, EntityDataSerializers.OPTIONAL_UUID);
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     private LivingEntity master;
 
     public SheerHeartAttackEntity(Level world) {
@@ -126,7 +125,7 @@ public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
             // Run every 2 seconds (player lists are rather expensive)
             if (tickCount % 40 == 0) {
                 // If the owner name is set, but the owner isn't (when loaded via NBT data), find owner
-                UUID ownerId = getOwnerId();
+                final UUID ownerId = getOwnerId();
                 if (ownerId != null) {
                     ServerLevel serverWorld = (ServerLevel) level();
                     for (ServerPlayer serverPlayerEntity : (serverWorld).players()) {
@@ -137,7 +136,7 @@ public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
                 }
             }
 
-            LivingEntity attacking = getLastHurtMob();
+            final LivingEntity attacking = getLastHurtMob();
             if (attacking != null && canAttack(attacking)) {
                 setTarget(attacking);
             }
@@ -152,12 +151,12 @@ public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
                 kill();
             }
 
-            Vec3 pos = position();
-            LivingEntity target = getTarget();
+            final Vec3 pos = position();
+            final LivingEntity target = getTarget();
 
             if (target == null) {
                 if (this.tickCount % 10 == 0) { // Entity lists are still expensive
-                    List<LivingEntity> toTrack = level().getEntitiesOfClass(
+                    final List<LivingEntity> toTrack = level().getEntitiesOfClass(
                             LivingEntity.class,
                             new AABB(pos.add(16, 16, 16), pos.add(-16, -16, -16)),
                             EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != this && e != master)
@@ -166,7 +165,7 @@ public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
                     LivingEntity coldTarget = null;
                     LivingEntity hotTarget = null;
 
-                    for (LivingEntity living : toTrack) {
+                    for (final LivingEntity living : toTrack) {
                         if (!canAttack(living)) {
                             continue;
                         }
@@ -213,14 +212,21 @@ public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
                         .build());
     }
 
+    // Animations
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
+    public static final RawAnimation
+            SHA_WALK = RawAnimation.begin().thenLoop("animation.sha.walk"),
+            SHA_IDLE = RawAnimation.begin().thenLoop("animation.sha.idle");
+
     private PlayState predicate(AnimationState<SheerHeartAttackEntity> state) {
         state.setAnimation(
-                state.isMoving() ? RawAnimation.begin().thenLoop("animation.sha.walk") : RawAnimation.begin().thenLoop("animation.sha.idle")
+                state.isMoving() ? SHA_WALK : SHA_IDLE
         );
         return PlayState.CONTINUE;
     }

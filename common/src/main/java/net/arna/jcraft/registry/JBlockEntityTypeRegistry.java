@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public interface JBlockEntityTypeRegistry {
 
-
     DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.BLOCK_ENTITY_TYPE);
 
     RegistrySupplier<BlockEntityType<CoffinTileEntity>> COFFIN_TILE = BLOCK_ENTITY_TYPE_REGISTRY.register(JCraft.id("coffin_block_entity"),
@@ -18,6 +17,6 @@ public interface JBlockEntityTypeRegistry {
 
 
     static void init() {
-
+        // intentionally left empty
     }
 }

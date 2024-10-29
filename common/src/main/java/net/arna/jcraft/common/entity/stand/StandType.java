@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -168,7 +169,7 @@ public enum StandType {
         this.nameText = Component.translatable("entity.jcraft.nostand");
         this.obtainable = false;
         this.evolution = false;
-        this.skinNames = List.of();
+        this.skinNames = Collections.emptyList();
     }
 
     public static boolean isNone(StandType standType) {

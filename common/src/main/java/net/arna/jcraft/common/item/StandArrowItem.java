@@ -8,6 +8,7 @@ import net.arna.jcraft.common.entity.projectile.StandArrowEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
@@ -84,6 +85,7 @@ public class StandArrowItem extends ArrowItem {
 
     @Override
     public @NonNull AbstractArrow createArrow(@NonNull final Level level, @NonNull final ItemStack stack, @Nullable final LivingEntity shooter) {
+        if (!(shooter instanceof ServerPlayer)) stack.shrink(1);
         return new StandArrowEntity(shooter, level);
     }
 }

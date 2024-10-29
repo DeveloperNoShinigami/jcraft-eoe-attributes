@@ -11,18 +11,20 @@ import java.util.*;
 public class MoveTickQueue {
     private static final Queue<MoveTick<?>> queue = new LinkedList<>();
 
-    public static void init() {
+    public static void registerMoveTickQueue() {
         TickEvent.SERVER_POST.register(MoveTickQueue::tick);
     }
 
-    private static void tick(MinecraftServer server) {
+    private static void tick(final MinecraftServer server) {
         synchronized (queue) {
             while (!queue.isEmpty()) {
+                /*
                 MoveTick<?> moveTick = queue.poll();
                 IAttacker<?, ?> attacker = moveTick.attacker();
                 int moveStun = attacker.getMoveStun();
-                // attacker.setMoveStun(moveTick.moveStun());
-                moveTick.tick();
+                attacker.setMoveStun(moveTick.moveStun());
+                 */
+                queue.poll().tick();
                 // attacker.setMoveStun(moveStun);
             }
         }

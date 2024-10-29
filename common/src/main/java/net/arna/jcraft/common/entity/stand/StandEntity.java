@@ -528,9 +528,9 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * @return Whether the followup condition was passed.
      */
     @SuppressWarnings("unchecked")
-    public boolean tryFollowUp(MoveType in, MoveType followupType) {
+    public boolean tryFollowUp(final MoveType in, final MoveType followupType) {
         if (in == followupType && curMove != null && curMove.getMoveType() == followupType && getMoveStun() < curMove.getWindupPoint()) {
-            AbstractMove<?, ? super E> followup = curMove.getFollowup();
+            final AbstractMove<?, ? super E> followup = curMove.getFollowup();
             if (followup != null) {
                 setMove(followup, (S) followup.getAnimation());
                 return true;
@@ -1443,7 +1443,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return false;
         }
 
-        if (blocking && source.is(DamageTypes.MOB_PROJECTILE)) {
+        if (blocking && source.is(DamageTypes.MOB_PROJECTILE) || source.is(DamageTypes.ARROW)) {
             return false;
         }
 
@@ -1641,11 +1641,14 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * Handles forward/backward movement of an AI Stand User.
      * @return Whether the AI Stand User should evade
      */
-    protected boolean doEvasion(PathNavigation entityNavigation, double distance, StandEntity<?,?> enemyStand, AbstractMove<?,?> enemyAttack) {
+    protected boolean doEvasion(final PathNavigation entityNavigation, final double distance,
+                                @Nullable final StandEntity<?,?> enemyStand, @Nullable final AbstractMove<?,?> enemyAttack) {
         boolean evade = enemyAttack != null;
-        if ( // in range (to get hit)
-                (enemyAttack instanceof AbstractSimpleAttack<?, ?> simpleEnemyAttack && !enemyAttack.isRanged() &&
-                        distance < enemyAttack.getMoveDistance() + simpleEnemyAttack.getHitboxSize() * 1.5)
+        if ( // in range (to get hit), or the enemy attack is unblockable
+                enemyAttack instanceof AbstractSimpleAttack<?, ?> simpleEnemyAttack && (
+                        (!enemyAttack.isRanged() && distance < enemyAttack.getMoveDistance() + simpleEnemyAttack.getHitboxSize() * 1.5) ||
+                                simpleEnemyAttack.getBlockableType().isNonBlockableEffects()
+                )
         ) {
             entityNavigation.setSpeedModifier(-0.25);
         } else {
@@ -1790,10 +1793,14 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 wantToBlock = true;
             }
             // Otherwise block if within hitting distance, and the attack doesn't block break/bypass
-            if (enemyAttack instanceof AbstractSimpleAttack<?, ?> simpleEnemyAttack &&
-                    enemyAttack.getMoveDistance() + simpleEnemyAttack.getHitboxSize() * 0.66 > distance &&
-                    simpleEnemyAttack.getDamage() * 2 < this.getStandGauge() && !simpleEnemyAttack.getBlockableType().isNonBlockable()) {
-                wantToBlock = true;
+            if (enemyAttack instanceof AbstractSimpleAttack<?, ?> simpleEnemyAttack) {
+                if (simpleEnemyAttack.getBlockableType().isNonBlockableEffects()) {
+                    return false;
+                }
+                if (enemyAttack.getMoveDistance() + simpleEnemyAttack.getHitboxSize() * 0.66 > distance &&
+                        simpleEnemyAttack.getDamage() * 2 < this.getStandGauge() && !simpleEnemyAttack.getBlockableType().isNonBlockable()) {
+                    wantToBlock = true;
+                }
             }
         } else {
             wantToBlock = false;

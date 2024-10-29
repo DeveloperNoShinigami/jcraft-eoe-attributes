@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Class for any entities that serve as attacks.
@@ -37,7 +37,7 @@ public class JAttackEntity extends LivingEntity implements IOwnable {
 
     @Override
     public @NonNull Iterable<ItemStack> getArmorSlots() {
-        return List.of();
+        return Collections.emptyList();
     }
 
     @Override

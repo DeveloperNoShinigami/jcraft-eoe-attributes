@@ -283,5 +283,7 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> BULLET_RICOCHET = register("bulletricochet");
     RegistrySupplier<SoundEvent> BULLET_PENETRATE = register("bulletpenetrate");
 
-    static void registerSounds() { }
+    static void init() {
+        // intentionally left empty
+    }
 }

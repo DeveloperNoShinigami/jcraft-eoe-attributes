@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.entity;
 
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -16,10 +19,11 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.phys.Vec3;
 
 import static net.arna.jcraft.JCraft.LOGGER;
 
-public class StandMeteorEntity extends Mob {
+public final class StandMeteorEntity extends Mob {
     private final Registry<Structure> structureRegistry;
 
     private static final ResourceLocation
@@ -40,7 +44,14 @@ public class StandMeteorEntity extends Mob {
 
     @Override
     protected float getWaterSlowDown() {
-        return 0.1F;
+        return 0.9F;
+    }
+
+    public @NonNull Vec3 getFluidFallingAdjustedMovement(double gravity, boolean isFalling, @NonNull final Vec3 deltaMovement) {
+        if (!isFalling) return deltaMovement;
+        return deltaMovement.subtract(
+                RotationUtil.vecPlayerToWorld(0, gravity, 0, GravityChangerAPI.getGravityDirection(this))
+        );
     }
 
     @Override
@@ -49,7 +60,7 @@ public class StandMeteorEntity extends Mob {
 
         final double x = getX(), y = getY(), z = getZ();
 
-        if (level() instanceof ServerLevel serverLevel) {
+        if (level() instanceof final ServerLevel serverLevel) {
             if (onGround()) {
                 level().explode(this, x, y, z, 3.0f, Level.ExplosionInteraction.TNT);
                 final Structure meteorStructure = isUnderWater() ? structureRegistry.get(METEOR_OCEAN) : structureRegistry.get(METEOR_LAND);

@@ -11,7 +11,7 @@ public class CinderellasKissEnchantment extends Enchantment {
     public static final CinderellasKissEnchantment INSTANCE = new CinderellasKissEnchantment();
 
     private CinderellasKissEnchantment() {
-        super(Rarity.RARE, EnchantmentCategory.WEARABLE, new EquipmentSlot[]{EquipmentSlot.MAINHAND});
+        super(Rarity.RARE, EnchantmentCategory.WEARABLE, new EquipmentSlot[]{EquipmentSlot.HEAD});
     }
 
     @Override

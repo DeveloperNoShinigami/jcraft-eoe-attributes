@@ -118,7 +118,6 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withTargetProcessor(CMoonEntity::addInversion)
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
-            .withHitSpark(JParticleType.INVERTED_HIT_SPARK_3)
             .withExtraHitBox(1d)
             .withInfo(
                     Component.literal("Only One Punch"),

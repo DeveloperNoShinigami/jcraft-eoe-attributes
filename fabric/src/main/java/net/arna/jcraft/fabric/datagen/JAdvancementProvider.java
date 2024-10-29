@@ -194,6 +194,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false,
                         false)
+                .parent(obtainMeteoriteIronOre)
                 .addCriterion("has_diary_page", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIARY_PAGE.get()))
                 .rewards(AdvancementRewards.Builder.experience(100))
                 .build(JCraft.id("obtain_diary_page"));
@@ -202,7 +203,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         final Advancement obtainDiosDiary = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIOS_DIARY.get(),
                         Component.literal("It was me, DIO!"),
-                        Component.literal("Obtain Dio's diary"),
+                        Component.literal("Obtain DIO's diary"),
                         null,
                         FrameType.CHALLENGE,
                         true,

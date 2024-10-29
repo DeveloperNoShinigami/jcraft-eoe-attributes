@@ -10,7 +10,7 @@ public interface JDimensionRegistry {
     ResourceKey<Level> AU_DIMENSION_KEY = ResourceKey.create(Registries.DIMENSION, JCraft.id("audim"));
     ResourceKey<DimensionType> AU_TYPE_KEY = ResourceKey.create(Registries.DIMENSION_TYPE, AU_DIMENSION_KEY.location());
 
-    static void registerDimensions() {
-
+    static void init() {
+        // intentionally left empty
     }
 }

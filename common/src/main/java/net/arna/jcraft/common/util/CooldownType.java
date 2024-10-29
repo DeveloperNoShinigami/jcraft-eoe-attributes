@@ -26,7 +26,7 @@ public enum CooldownType {
     UTILITY(Category.UNIVERSAL),
     COMBO_BREAKER(Category.UNIVERSAL, 1200, true, true),  // 60s
     COOLDOWN_CANCEL(Category.UNIVERSAL, 900, true, true), // 45s
-    DASH(Category.UNIVERSAL, JCraft.dashCooldown, true, true);
+    DASH(Category.UNIVERSAL, JCraft.DASH_COOLDOWN, true, true);
 
     private final Category category;
     private final int duration;

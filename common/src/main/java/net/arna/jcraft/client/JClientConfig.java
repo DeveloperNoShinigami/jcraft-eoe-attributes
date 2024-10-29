@@ -22,6 +22,7 @@ public class JClientConfig implements ConfigData {
     private int verticalHudOffset = 0;
     private boolean iconHud = true;
     private boolean standAuras = true;
+    private boolean disableNarrator = true;
     private boolean timeEraseShader = true;
     private boolean epitaphOverlay = true;
 

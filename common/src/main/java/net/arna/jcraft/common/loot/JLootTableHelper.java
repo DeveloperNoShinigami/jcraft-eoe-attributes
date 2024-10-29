@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 public class JLootTableHelper {
     public static final Multimap<ResourceLocation, Consumer<LootTable.Builder>> modifications = MultimapBuilder.hashKeys().linkedHashSetValues().build();
 
-    public static void init() {
+    public static void registerLootTables() {
         registerModification(JLootTableHelper::addMaskPool,
                 new ResourceLocation("chests/abandoned_mineshaft"),
                 new ResourceLocation("chests/buried_treasure"),

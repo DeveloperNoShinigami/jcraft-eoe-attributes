@@ -52,7 +52,7 @@ public class DashData {
         if (cooldowns.getCooldown(CooldownType.DASH) > 0 || !entity.onGround() || entity.hasEffect(JStatusRegistry.DAZED.get()) || entity.hasEffect(JStatusRegistry.KNOCKDOWN.get())) {
             return;
         }
-        cooldowns.setCooldown(CooldownType.DASH, JCraft.dashCooldown);
+        cooldowns.setCooldown(CooldownType.DASH, JCraft.DASH_COOLDOWN);
 
         double dashSpeed = 0.75;
         Vec3 rotVec = Vec3.directionFromRotation(entity.getXRot(), entity.getYRot());

@@ -10,5 +10,6 @@ public interface JEnchantmentRegistry {
     RegistrySupplier<Enchantment> CINDERELLAS_KISS = ENCHANTMENT.register("cinderellas_kiss", () -> CinderellasKissEnchantment.INSTANCE);
 
     static void init() {
+        // intentionally left empty
     }
 }

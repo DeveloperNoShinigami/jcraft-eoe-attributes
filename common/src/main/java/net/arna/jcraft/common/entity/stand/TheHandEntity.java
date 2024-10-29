@@ -6,11 +6,14 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.MobilityType;
+import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.thehand.EraseAttack;
+import net.arna.jcraft.common.attack.moves.thehand.MultiHitEraseAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
@@ -145,26 +148,30 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                     Component.literal("Uninterruptible launcher.")
             );
     public static final EraseAttack ERASE_GROUND = new EraseAttack(120, 18,
-            29, 0.75f, 8.0f, 15, 2.0f, 0, 0.35f)
+            29, 0.75f, 8.0f, 14, 2.0f, 0, 0.35f)
             // .withSound(JSoundRegistry.TH_ERASE.get())
             .withAnim(State.ERASE_GROUND)
             .withImpactSound(JSoundRegistry.IMPACT_12.get())
             .withInfo(
                     Component.literal("Erase"),
                     Component.literal("""
+                            §eCan be cancelled back into itself.§r
                             Erases the ground in front of the user.
                             Works on any non-indestructible block.""")
             )
             .withStaticY()
             .withAction(TheHandEntity::eraseGround);
     public static final EraseAttack ERASE = new EraseAttack(120, 18,
-            29, 0.75f, 8.0f, 15, 2.0f, 0, 0)
+            29, 0.75f, 8.0f, 14, 2.0f, 0, 0)
             // .withSound(JSoundRegistry.TH_ERASE.get())
+            .withAnim(State.ERASE)
             .withCrouchingVariant(ERASE_GROUND)
             .withImpactSound(JSoundRegistry.IMPACT_12.get())
             .withInfo(
                     Component.literal("Erase"),
-                    Component.literal("Slow, unblockable attack-")
+                    Component.literal("""
+                            §eCan be cancelled back into itself.§r
+                            Slow, unblockable attack.""")
             );
     public static final SimpleAttack<TheHandEntity> GRAB_HIT = new SimpleAttack<TheHandEntity>(0, 14, 16,
             0.75f, 8f, 5, 1.75f, 1.5f, 0f)
@@ -194,6 +201,40 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             .withMobilityType(MobilityType.DASH)
             .withAction(TheHandEntity::eraseSpace);
 
+    public static final EraseAttack RAGE_FINISHER = new EraseAttack(0,
+            41, 50, 0.74f, 6.0f, 12, 2.0f, 2.0f, 0.0f)
+            .withImpactSound(JSoundRegistry.IMPACT_12.get())
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
+            .withExtraHitBox(1.5)
+            .withInfo(
+                    Component.literal("Rage (Finisher)"),
+                    Component.empty()
+            )
+            .withLaunch();
+
+    public static final BarrageAttack<TheHandEntity> RAGE_FOLLOWUP = new BarrageAttack<TheHandEntity>(0,
+            9, 50, 0.75f, 1.0f, 13, 1.75f, 0.2f, 0.0f, 2)
+            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withInfo(
+                    Component.literal("Rage (Barrage)"),
+                    Component.empty()
+            )
+            .withFinisher(29, RAGE_FINISHER);
+
+    public static final MultiHitEraseAttack RAGE = new MultiHitEraseAttack(30 * 20,
+            57, 0.75f, 6.0f, 20, 2.0f, 0.2f, 0.0f, IntSet.of(26, 40))
+            // .withSound(JSoundRegistry.TH_RAGE.get())
+            .withImpactSound(JSoundRegistry.IMPACT_12.get())
+            .withHyperArmor()
+            .withInfo(
+                    Component.literal("Rage"),
+                    Component.literal("""
+                            First two hits are uninterruptible.
+                            If the second hit makes contact, The Hand will beat the opponent down.
+                            """)
+            )
+            .withAction(TheHandEntity::rage);
+
     public TheHandEntity(final Level world) {
         super(StandType.THE_HAND, world);
 
@@ -203,11 +244,11 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
         freespace =
                 """
                         BNBs:
-                            -the lazy zoner
-                            Light>Barrage>Light>Grab/Charge
+                            -the stand up comedian
+                            Light>Barrage>Sweep>cr.M1~M1>Stomp Barrage
                             
-                            -the western
-                            Light>Summon Gun>Barrage>Light~stand.OFF>M2>M2>M2>~s.ON+Light>Charge""";
+                            -the st. louis devastator
+                            (Sweep>)cr.M1~M1>Barrage>Rage""";
 
         auraColors = new Vector3f[] {
                 new Vector3f(0, 0, 1.0f),
@@ -280,6 +321,16 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
         targets.forEach(livingEntity -> livingEntity.removeEffect(JStatusRegistry.KNOCKDOWN.get()));
     }
 
+    private static void rage(TheHandEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
+        if (targets.isEmpty()) return;
+        final AbstractMove<?, ? super TheHandEntity> attack = attacker.getCurrentMove();
+        if (attack instanceof final MultiHitEraseAttack multiHitEraseAttack) {
+            if (multiHitEraseAttack.getBlow(attacker) == 1) {
+                attacker.setMove(RAGE_FOLLOWUP, State.RAGE_FOLLOWUP);
+            }
+        }
+    }
+
     @Override
     protected void registerMoves(final MoveMap<TheHandEntity, State> moves) {
         var light = moves.register(MoveType.LIGHT, LIGHT, State.LIGHT);
@@ -292,13 +343,36 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
         moves.register(MoveType.SPECIAL2, STOMP_BARRAGE, State.STOMP_BARRAGE);
         moves.registerImmediate(MoveType.SPECIAL3, GRAB, State.GRAB);
 
+        moves.register(MoveType.ULTIMATE, RAGE, State.RAGE);
+
         moves.register(MoveType.UTILITY, ERASE_SPACE, State.ERASE_SPACE);
     }
 
     @Override
-    public boolean initMove(MoveType type) {
+    public boolean initMove(final MoveType type) {
         if (tryFollowUp(type, MoveType.LIGHT)) return true;
+        if (type == MoveType.SPECIAL1
+                && getCurrentMove() != null
+                && getCurrentMove().getMoveType() == MoveType.SPECIAL1
+                && getMoveStun() < 4
+        ) {
+            final AbstractMove<?, ? super TheHandEntity> repeat = getCurrentMove();
+            if (repeat != null) {
+                setMove(repeat, (State) repeat.getAnimation());
+                return true;
+            }
+        }
         return super.initMove(type);
+    }
+
+    @Override
+    public void queueMove(final MoveInputType type) {
+        if (type == MoveInputType.SPECIAL1
+                && getCurrentMove() != null
+                && getCurrentMove().getMoveType() == MoveType.SPECIAL1) {
+            return;
+        }
+        super.queueMove(type);
     }
 
     @Override
@@ -328,6 +402,8 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
         GRAB(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.grab"))),
         GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.grab_hit"))),
         STOMP_BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.stomp_barrage"))),
+        RAGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.rage"))),
+        RAGE_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.rage_followup"))),
         ;
 
         private final Consumer<AnimationState<TheHandEntity>> animator;

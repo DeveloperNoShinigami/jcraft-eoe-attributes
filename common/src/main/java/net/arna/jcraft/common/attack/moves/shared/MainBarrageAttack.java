@@ -8,14 +8,13 @@ import net.arna.jcraft.common.attack.core.ctx.BooleanMoveVariable;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
@@ -84,16 +83,19 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
 
         if (ctx.getBoolean(BREAK_BLOCKS)) {
             final ServerLevel serverWorld = (ServerLevel) user.level();
-            final LivingEntity attackerEntity = attacker.getBaseEntity();
-            final Vec3i lookDirection = JUtils.getLookDirection(user).getNormal();
-            final Vec3i localUp = GravityChangerAPI.getGravityDirection(user).getOpposite().getNormal();
+            final Vec3 lookDirection = user.getLookAngle();
+            final Vec3 localUp = GravityChangerAPI.getEyeOffset(user);
+            final Vec3 baseLookPos = user.position().add(lookDirection);
 
-            final BlockPos userPos = lookDirection.getY() != 0 ? attackerEntity.blockPosition() : user.blockPosition();
+            /* PATTERN:
+            [][]
+            [][]
+             */
 
-            breakIfPossible(serverWorld, userPos.offset(lookDirection), user);
-            breakIfPossible(serverWorld, userPos.offset(lookDirection).offset(localUp), user);
-            breakIfPossible(serverWorld, userPos.offset(lookDirection).offset(lookDirection), user);
-            breakIfPossible(serverWorld, userPos.offset(lookDirection).offset(lookDirection).offset(localUp), user);
+            breakIfPossible(serverWorld, BlockPos.containing(baseLookPos), user);
+            breakIfPossible(serverWorld, BlockPos.containing(baseLookPos.add(localUp)), user);
+            breakIfPossible(serverWorld, BlockPos.containing(baseLookPos.add(lookDirection)), user);
+            breakIfPossible(serverWorld, BlockPos.containing(baseLookPos.add(lookDirection).add(localUp)), user);
         }
 
         return targets;

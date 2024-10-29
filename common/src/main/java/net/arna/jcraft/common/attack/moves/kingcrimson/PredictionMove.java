@@ -76,7 +76,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
         }
 
         final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
-        for (Entity entity : getEntitiesToCatch(attacker.level(), attacker, player)) {
+        for (final Entity entity : getEntitiesToCatch(attacker.level(), attacker, player)) {
             predictionInfo.put(entity, entity.position());
         }
 
@@ -126,7 +126,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
 
     public static List<Entity> getEntitiesToCatch(final Level world, final StandEntity<?, ?> stand, final Player player) {
         if (world == null || stand == null) {
-            return List.of();
+            return Collections.emptyList();
         }
 
         return world.getEntitiesOfClass(Entity.class, stand.getBoundingBox().inflate(64),

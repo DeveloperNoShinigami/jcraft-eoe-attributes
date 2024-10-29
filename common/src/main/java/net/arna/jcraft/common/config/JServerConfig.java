@@ -67,6 +67,7 @@ public class JServerConfig {
     // Empty method to force class initialization.
     // Not doing this breaks the /jconfig command (cuz this class won't be initialized on clients).
     public static void init() {
+        // intentionally left empty
     }
 
     @SneakyThrows

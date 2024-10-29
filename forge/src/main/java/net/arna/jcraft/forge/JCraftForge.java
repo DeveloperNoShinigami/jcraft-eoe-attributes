@@ -50,8 +50,7 @@ public final class JCraftForge {
 
     @SubscribeEvent
     public void onInitializeCommon(final FMLCommonSetupEvent event) {
-        JCraft.initStandIOMaps();
-        JCraft.initDispenserBehaviors();
+        JCraft.postInit();
     }
 
     public static void tickWorldCaps(Level world) {

@@ -30,7 +30,7 @@ public interface JParticleTypeRegistry {
     RegistrySupplier<SimpleParticleType> PURPLE_HAZE_CLOUD = PARTICLES.register("purple_haze_cloud", () -> new SimpleParticleType(false));
     RegistrySupplier<SimpleParticleType> PURPLE_HAZE_PARTICLE = PARTICLES.register("purple_haze_particle", () -> new SimpleParticleType(false));
 
-
-    static void initParticleTypes() {
+    static void init() {
+        // intentionally left empty
     }
 }

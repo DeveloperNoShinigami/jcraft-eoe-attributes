@@ -19,7 +19,6 @@ public interface JTagRegistry {
     TagKey<Biome> METEORS_CAN_FALL = TagKey.create(Registries.BIOME, JCraft.id("meteors_can_fall"));
 
     static void init() {
-
+        // intentionally left empty
     }
-
 }
