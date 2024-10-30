@@ -260,6 +260,14 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> HORUS_STOMP = register("horusstomp");
     RegistrySupplier<SoundEvent> HORUS_STOMP_SLAM = register("horusstompslam");
 
+    // The Hand
+    RegistrySupplier<SoundEvent> THE_HAND_SUMMON = register("thsummon");
+    RegistrySupplier<SoundEvent> THE_HAND_KICK_BARRAGE = register("thkickbarrage");
+    RegistrySupplier<SoundEvent> THE_HAND_SWIPE = register("thswipe");
+    RegistrySupplier<SoundEvent> THE_HAND_SWIPE_QUICK = register("thswipequick");
+    RegistrySupplier<SoundEvent> THE_HAND_GRAB = register("thgrab");
+    RegistrySupplier<SoundEvent> THE_HAND_RAGE = register("thrage");
+
     //// SPECS
     // Brawler
 

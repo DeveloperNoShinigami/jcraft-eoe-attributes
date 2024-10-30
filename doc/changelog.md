@@ -1,5 +1,5 @@
 # Changelog
-
+## Further stabilized Forge Multiplayer
 ### General
 * Stand damage now only considers armor values up to Netherite level
 * Stand Arrows can now be fired out of bows

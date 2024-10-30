@@ -260,7 +260,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     }
 
     public HorusEntity(Level world) {
-        super(StandType.HORUS, world);
+        super(StandType.HORUS, world, JSoundRegistry.HORUS_SUMMON.get());
 
         proCount = 2;
         conCount = 2;

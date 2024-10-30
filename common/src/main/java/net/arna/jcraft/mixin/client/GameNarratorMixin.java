@@ -15,6 +15,8 @@ public class GameNarratorMixin {
             cancellable = true
     )
     public void jcraft$disableNarrator(final CallbackInfoReturnable<Boolean> cir) {
-        if (JClientConfig.getInstance().isDisableNarrator()) cir.setReturnValue(false);
+        final JClientConfig config = JClientConfig.getInstance();
+        if (config == null) return;
+        if (config.isDisableNarrator()) cir.setReturnValue(false);
     }
 }

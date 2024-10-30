@@ -995,6 +995,36 @@
       "jcraft:stands/horus/stomp_slam"
     ]
   },
+  "thsummon": {
+    "sounds": [
+      "jcraft:stands/the_hand/summon"
+    ]
+  },
+  "thkickbarrage": {
+    "sounds": [
+      "jcraft:stands/the_hand/kickbarrage"
+    ]
+  },
+  "thswipe": {
+    "sounds": [
+      "jcraft:stands/the_hand/swipe"
+    ]
+  },
+  "thswipequick": {
+    "sounds": [
+      "jcraft:stands/the_hand/swipe_quick"
+    ]
+  },
+  "thgrab": {
+    "sounds": [
+      "jcraft:stands/the_hand/grab"
+    ]
+  },
+  "thrage": {
+    "sounds": [
+      "jcraft:stands/the_hand/rage"
+    ]
+  },
   "anubisslash": {
     "sounds": [
       "jcraft:specs/anubis/slash"

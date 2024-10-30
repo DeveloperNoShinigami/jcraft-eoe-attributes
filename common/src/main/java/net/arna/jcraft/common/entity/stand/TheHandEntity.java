@@ -25,6 +25,7 @@ import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -109,6 +110,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             );
     public static final SimpleMultiHitAttack<TheHandEntity> STOMP_BARRAGE = new SimpleMultiHitAttack<TheHandEntity>(180,
             33, 1.0f, 1.0f, 10, 1.5f, 0.3f, 0.2f, IntSet.of(6, 9, 13, 16, 19, 22))
+            .withSound(JSoundRegistry.THE_HAND_KICK_BARRAGE.get())
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withFinisher(23, STOMP_BARRAGE_FINISHER)
             .withInfo(
@@ -129,6 +131,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
 
     public static final KnockdownAttack<TheHandEntity> SWEEP = new KnockdownAttack<TheHandEntity>(100, 13, 18, 1.0f,
             9f, 15, 1.6f, 0.4f, 0.3f, 35)
+            .withSound(JSoundRegistry.D4C_LIGHT.get())
             .withAnim(State.SWEEP)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_3)
@@ -138,6 +141,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             );
     public static final UppercutAttack<TheHandEntity> KICK = new UppercutAttack<TheHandEntity>(100, 13, 24, 0.75f,
             9f, 12, 2f, 1.1f, 0.1f, 0.3f)
+            .withSound(JSoundRegistry.D4C_LIGHT.get())
             .withCrouchingVariant(SWEEP)
             .withImpactSound(JSoundRegistry.IMPACT_1.get())
             .withHitSpark(JParticleType.HIT_SPARK_3)
@@ -149,28 +153,32 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             );
     public static final EraseAttack ERASE_GROUND = new EraseAttack(120, 18,
             29, 0.75f, 8.0f, 14, 2.0f, 0, 0.35f)
-            // .withSound(JSoundRegistry.TH_ERASE.get())
+            .withSound(JSoundRegistry.THE_HAND_SWIPE.get())
             .withAnim(State.ERASE_GROUND)
             .withImpactSound(JSoundRegistry.IMPACT_12.get())
             .withInfo(
                     Component.literal("Erase"),
                     Component.literal("""
                             §eCan be cancelled back into itself.§r
+                            Two points of armor granted by the initial attack.
                             Erases the ground in front of the user.
                             Works on any non-indestructible block.""")
             )
             .withStaticY()
+            .withInitAction(TheHandEntity::trySetArmor)
             .withAction(TheHandEntity::eraseGround);
     public static final EraseAttack ERASE = new EraseAttack(120, 18,
             29, 0.75f, 8.0f, 14, 2.0f, 0, 0)
-            // .withSound(JSoundRegistry.TH_ERASE.get())
+            .withSound(JSoundRegistry.THE_HAND_SWIPE.get())
             .withAnim(State.ERASE)
             .withCrouchingVariant(ERASE_GROUND)
             .withImpactSound(JSoundRegistry.IMPACT_12.get())
+            .withInitAction(TheHandEntity::trySetArmor)
             .withInfo(
                     Component.literal("Erase"),
                     Component.literal("""
                             §eCan be cancelled back into itself.§r
+                            Two points of armor granted by the initial attack.
                             Slow, unblockable attack.""")
             );
     public static final SimpleAttack<TheHandEntity> GRAB_HIT = new SimpleAttack<TheHandEntity>(0, 14, 16,
@@ -183,13 +191,13 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                     Component.empty());
     public static final GrabAttack<TheHandEntity, State> GRAB = new GrabAttack<>(300, 10, 20,
             0.75f, 0f, 16, 1.5f, 0f, 0f, GRAB_HIT, State.GRAB_HIT)
-            // .withSound(JSoundRegistry.TH_GRAB.get())
+            .withSound(JSoundRegistry.THE_HAND_GRAB.get())
             .withInfo(
                     Component.literal("Grab"),
                     Component.literal("unblockable, knocks back"));
     public static final EraseAttack ERASE_SPACE = new EraseAttack(300, 12,
             20, 0.75f, 4.0f, 6, 2.0f, -0.5f, 0.0f)
-            // .withSound(JSoundRegistry.TH_ERASE.get())
+            .withSound(JSoundRegistry.THE_HAND_SWIPE_QUICK.get())
             .withAnim(State.ERASE_GROUND)
             .withImpactSound(JSoundRegistry.IMPACT_12.get())
             .withInfo(
@@ -203,6 +211,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
 
     public static final EraseAttack RAGE_FINISHER = new EraseAttack(0,
             41, 50, 0.74f, 6.0f, 12, 2.0f, 2.0f, 0.0f)
+            .withSound(JSoundRegistry.D4C_LIGHT.get())
             .withImpactSound(JSoundRegistry.IMPACT_12.get())
             .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
             .withExtraHitBox(1.5)
@@ -223,7 +232,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
 
     public static final MultiHitEraseAttack RAGE = new MultiHitEraseAttack(30 * 20,
             57, 0.75f, 6.0f, 20, 2.0f, 0.2f, 0.0f, IntSet.of(26, 40))
-            // .withSound(JSoundRegistry.TH_RAGE.get())
+            .withSound(JSoundRegistry.THE_HAND_RAGE.get())
             .withImpactSound(JSoundRegistry.IMPACT_12.get())
             .withHyperArmor()
             .withInfo(
@@ -236,7 +245,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             .withAction(TheHandEntity::rage);
 
     public TheHandEntity(final Level world) {
-        super(StandType.THE_HAND, world);
+        super(StandType.THE_HAND, world, JSoundRegistry.THE_HAND_SUMMON.get());
 
         proCount = 4;
         conCount = 2;
@@ -256,6 +265,13 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                 new Vector3f(0.8f, 0.2f, 0.8f),
                 new Vector3f(0.2f, 0, 0.5f),
         };
+    }
+
+    private static void trySetArmor(TheHandEntity stand, LivingEntity user, MoveContext context) {
+        final AbstractMove<?, ? super TheHandEntity> move = stand.getCurrentMove();
+        if (move == null || move.getMoveType() != MoveType.SPECIAL2) {
+            stand.armorPoints = 2;
+        }
     }
 
     private static void eraseGround(TheHandEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
@@ -379,6 +395,11 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
     public boolean shouldOffsetHeight() {
         if (getState() == State.ERASE_GROUND) return false;
         return super.shouldOffsetHeight();
+    }
+
+    @Override
+    public @Nullable SoundEvent getSummonSound() {
+        return JSoundRegistry.THE_HAND_SUMMON.get();
     }
 
     @Override

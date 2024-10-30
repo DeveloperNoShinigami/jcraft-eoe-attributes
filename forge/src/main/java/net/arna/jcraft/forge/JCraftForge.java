@@ -12,6 +12,7 @@ import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.arna.jcraft.forge.events.ClientSetupEvents;
+import net.arna.jcraft.forge.loot.JForgeLootModifiers;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.world.entity.Entity;
@@ -37,6 +38,8 @@ public final class JCraftForge {
 
         modBus.addListener(this::onInitializeCommon);
         modBus.addListener(ClientSetupEvents::onInitializeClient);
+
+        JForgeLootModifiers.register(modBus);
 
         //DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> JCraftClient::init);
         JNetworkingForge.initServer();
