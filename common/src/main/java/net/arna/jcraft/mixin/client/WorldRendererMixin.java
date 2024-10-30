@@ -4,10 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.world.entity.Entity;
 import org.joml.Matrix4f;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LevelRenderer.class)
 public class WorldRendererMixin {
 
+    @Shadow @Final private Minecraft minecraft;
     @Unique private Entity entity;
 
     @ModifyArg(method = "renderEntity",
@@ -42,6 +46,33 @@ public class WorldRendererMixin {
 
         return yaw;
     }
+
+    /* TODO: this
+    @ModifyVariable(
+            method = "renderSnowAndRain(Lnet/minecraft/client/renderer/LightTexture;FDDD)V",
+            at = @At("STORE"),
+            ordinal = 6
+    )
+    private float jcraft$stopRain(float original) {
+        if (JClientUtils.isInTSRange(minecraft.player.position())) {
+            return 0f;
+        }
+        return original;
+    }
+
+    @ModifyVariable(
+            method = "renderClouds(Lcom/mojang/blaze3d/vertex/PoseStack;Lorg/joml/Matrix4f;FDDD)V",
+            at = @At(value = "HEAD"),
+            ordinal = 0,
+            argsOnly = true
+    )
+    private float jcraft$stopClouds(float original) {
+        if (JClientUtils.isInTSRange(minecraft.player.position())) {
+            return 0f;
+        }
+        return original;
+    }
+     */
 
     @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
     private void jcraft$renderSky(PoseStack matrices, Matrix4f matrix4f, float tickDelta, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci) {
