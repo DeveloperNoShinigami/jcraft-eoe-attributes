@@ -225,7 +225,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
     }
 
     public TheWorldOverHeavenEntity(Level worldIn) {
-        super(StandType.THE_WORLD_OVER_HEAVEN, worldIn, JSoundRegistry.TWOH_SUMMON.get());
+        super(StandType.THE_WORLD_OVER_HEAVEN, worldIn, JSoundRegistry.TWOH_SUMMON);
         idleRotation = -45f;
         summonAnimDuration = 29;
 

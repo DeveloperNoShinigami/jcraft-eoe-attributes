@@ -5,7 +5,6 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
@@ -22,7 +21,6 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
@@ -206,7 +204,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             );
 
     public TheHandEntity(final Level world) {
-        super(StandType.THE_HAND, world, JSoundRegistry.THE_HAND_SUMMON.get());
+        super(StandType.THE_HAND, world, JSoundRegistry.THE_HAND_SUMMON);
 
         proCount = 4;
         conCount = 2;
@@ -275,11 +273,6 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
     public boolean shouldOffsetHeight() {
         if (getState() == State.ERASE_GROUND) return false;
         return super.shouldOffsetHeight();
-    }
-
-    @Override
-    public @Nullable SoundEvent getSummonSound() {
-        return JSoundRegistry.THE_HAND_SUMMON.get();
     }
 
     @Override

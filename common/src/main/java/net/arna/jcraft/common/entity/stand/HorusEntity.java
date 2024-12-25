@@ -7,7 +7,6 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.horus.*;
@@ -21,8 +20,6 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +27,6 @@ import org.joml.Vector3f;
 
 import java.lang.ref.WeakReference;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -101,7 +97,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("Barrage"),
                     Component.literal("4s max duration, can be held")
             )
-            .withAction(PlaySoundAction.playSound(JSoundRegistry.HORUS_BARRAGE_FIRE.get()));
+            .withAction(PlaySoundAction.playSound(JSoundRegistry.HORUS_BARRAGE_FIRE));
     public static final HorusDetonateAttack DETONATE = new HorusDetonateAttack(0, 10, 12, 0.75f)
             .withAnim(State.DETONATE)
             .withInfo(
@@ -141,7 +137,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             Also slow, slightly higher cooldown.
                             Fires a large icicle that detonates after 2s.""")
             )
-            .withSound(JSoundRegistry.HORUS_LANCE_CHARGE.get());
+            .withSound(JSoundRegistry.HORUS_LANCE_CHARGE);
     public static final ScatterAttack SCATTER = new ScatterAttack(60, 16, 20, 0.75f)
             .withCrouchingVariant(LANCE)
             .withInfo(
@@ -150,7 +146,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                                     Relatively slow, very low cooldown.
                                     Fires 6 icicles that bounce off walls.""")
             )
-            .withSound(JSoundRegistry.HORUS_SCATTER.get());
+            .withSound(JSoundRegistry.HORUS_SCATTER);
     // Special 2
     public static final IcicleFireAttack CHARGE_FIRE = new IcicleFireAttack(0, 0, 10, 0.75f)
             .withInfo(
@@ -174,7 +170,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("Chasing Freeze"),
                     Component.empty()
             )
-            .withSound(JSoundRegistry.HORUS_PlACE_CREEPING_ICE.get());
+            .withSound(JSoundRegistry.HORUS_PlACE_CREEPING_ICE);
     public static final PerfectFreezeAttack PERFECT_FREEZE = new PerfectFreezeAttack(50 * 20, 14, 30,
             0f, 4f, 10, 2.5f, 0.3f, 0)
             .withInfo(
@@ -184,12 +180,12 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             summons 3 ice branches to chase opponents
                             stops all nearby projectiles""")
             )
-            .withSound(JSoundRegistry.HORUS_PlACE_CREEPING_ICE.get());
+            .withSound(JSoundRegistry.HORUS_PlACE_CREEPING_ICE);
 
     private WeakReference<LargeIcicleProjectile> lastLargeIcicle = new WeakReference<>(null);
 
     public HorusEntity(Level world) {
-        super(StandType.HORUS, world, JSoundRegistry.HORUS_SUMMON.get());
+        super(StandType.HORUS, world, JSoundRegistry.HORUS_SUMMON);
 
         proCount = 2;
         conCount = 2;
@@ -215,11 +211,6 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
 
     public void setLastLargeIcicle(LargeIcicleProjectile icicle) {
         lastLargeIcicle = new WeakReference<>(icicle);
-    }
-
-    @Override
-    public @Nullable SoundEvent getSummonSound() {
-        return JSoundRegistry.HORUS_SUMMON.get();
     }
 
     private static void registerMoves(MoveMap<HorusEntity, HorusEntity.State> moves) {
@@ -255,10 +246,6 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         }
 
         return super.initMove(type);
-    }
-
-    private static void scatter(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
-
     }
 
     @Override

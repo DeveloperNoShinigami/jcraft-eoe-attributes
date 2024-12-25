@@ -112,7 +112,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             480, 22, 34, 1, 8f, 20, 2, 0.5f, 0)
             .withSound(JSoundRegistry.WS_STAND_DISC)
             .withImpactSound(JSoundRegistry.IMPACT_2)
-            .withAction(EffectAction.inflict(JStatusRegistry.STANDLESS.get(), 160, 0))
+            .withAction(EffectAction.inflict(JStatusRegistry.STANDLESS, 160, 0))
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
@@ -181,7 +181,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             );
 
     public WhiteSnakeEntity(Level worldIn) {
-        super(StandType.WHITE_SNAKE, worldIn, JSoundRegistry.WS_SUMMON.get());
+        super(StandType.WHITE_SNAKE, worldIn, JSoundRegistry.WS_SUMMON);
         idleRotation = 220f;
 
         proCount = 3;

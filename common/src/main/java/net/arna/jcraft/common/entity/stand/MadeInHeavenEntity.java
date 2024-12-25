@@ -64,7 +64,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     public static final SimpleAttack<MadeInHeavenEntity> SPEED_CHOP = new SimpleAttack<MadeInHeavenEntity>(
             JCraft.LIGHT_COOLDOWN, 6, 11, 0.75f, 3f, 8, 1.5f, 0.5f, -0.1f)
             .withAnim(State.SPEED_CHOP)
-            .withAction(EffectAction.inflict(JStatusRegistry.BLEEDING.get(), 80, 1, true, false, true))
+            .withAction(EffectAction.inflict(JStatusRegistry.BLEEDING, 80, 1, true, false, true))
             .withImpactSound(SoundEvents.TRIDENT_HIT)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
@@ -201,7 +201,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     }
 
     public MadeInHeavenEntity(Level worldIn) {
-        super(StandType.MADE_IN_HEAVEN, worldIn, JSoundRegistry.MIH_SUMMON.get());
+        super(StandType.MADE_IN_HEAVEN, worldIn, JSoundRegistry.MIH_SUMMON);
         idleRotation = -45f;
 
         proCount = 4;

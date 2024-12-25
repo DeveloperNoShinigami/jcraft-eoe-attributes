@@ -152,7 +152,7 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
             );
 
     public MagiciansRedEntity(Level worldIn) {
-        super(StandType.MAGICIANS_RED, worldIn, JSoundRegistry.MR_SUMMON.get());
+        super(StandType.MAGICIANS_RED, worldIn, JSoundRegistry.MR_SUMMON);
         idleRotation = 225f;
 
         proCount = 3;

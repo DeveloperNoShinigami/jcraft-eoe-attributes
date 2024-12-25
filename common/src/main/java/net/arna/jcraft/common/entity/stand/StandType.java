@@ -17,68 +17,69 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 // do NOT change the order in this enum, only append new stands AT THE END
 public enum StandType {
     NONE(),
-    STAR_PLATINUM(JEntityTypeRegistry.STAR_PLATINUM.get(), StarPlatinumEntity::new, "starplatinum",
+    STAR_PLATINUM(JEntityTypeRegistry.STAR_PLATINUM, StarPlatinumEntity::new, "starplatinum",
             Component.literal("Manga"), Component.literal("Arcade"), Component.literal("OVA")),
-    THE_WORLD(JEntityTypeRegistry.THE_WORLD.get(), TheWorldEntity::new, "theworld", true,
+    THE_WORLD(JEntityTypeRegistry.THE_WORLD, TheWorldEntity::new, "theworld", true,
             Component.literal("OVA"), Component.literal("Black"), Component.literal("Greatest High")),
-    KING_CRIMSON(JEntityTypeRegistry.KING_CRIMSON.get(), KingCrimsonEntity::new, "kingcrimson",
+    KING_CRIMSON(JEntityTypeRegistry.KING_CRIMSON, KingCrimsonEntity::new, "kingcrimson",
             Component.literal("Royal"), Component.literal("Manga"), Component.literal("Nightshade")),
-    D4C(JEntityTypeRegistry.D4C.get(), D4CEntity::new, "d4c",
+    D4C(JEntityTypeRegistry.D4C, D4CEntity::new, "d4c",
             Component.literal("Jojoveller"), Component.literal("Teaser"), Component.literal("Spangled")),
-    CREAM(JEntityTypeRegistry.CREAM.get(), CreamEntity::new, "cream",
+    CREAM(JEntityTypeRegistry.CREAM, CreamEntity::new, "cream",
             Component.literal("Menace"), Component.literal("Eraser"), Component.literal("White Void")),
-    KILLER_QUEEN(JEntityTypeRegistry.KILLER_QUEEN.get(), KillerQueenEntity::new, "killerqueen",
+    KILLER_QUEEN(JEntityTypeRegistry.KILLER_QUEEN, KillerQueenEntity::new, "killerqueen",
             Component.literal("Gunpowder"), Component.literal("Deadly"), Component.literal("1999")),
-    WHITE_SNAKE(JEntityTypeRegistry.WHITE_SNAKE.get(), WhiteSnakeEntity::new, "whitesnake",
+    WHITE_SNAKE(JEntityTypeRegistry.WHITE_SNAKE, WhiteSnakeEntity::new, "whitesnake",
             Component.literal("Mamba"), Component.literal("Peppermint"), Component.literal("Radioactive")),
-    SILVER_CHARIOT(JEntityTypeRegistry.SILVER_CHARIOT.get(), SilverChariotEntity::new, "silverchariot",
+    SILVER_CHARIOT(JEntityTypeRegistry.SILVER_CHARIOT, SilverChariotEntity::new, "silverchariot",
             Component.literal("Gold Chariot"), Component.literal("OVA"), Component.literal("Vento")),
-    MAGICIANS_RED(JEntityTypeRegistry.MAGICIANS_RED.get(), MagiciansRedEntity::new, "mr",
+    MAGICIANS_RED(JEntityTypeRegistry.MAGICIANS_RED, MagiciansRedEntity::new, "mr",
             Component.literal("Purple"), Component.literal("OVA"), Component.literal("Nether")),
-    THE_FOOL(JEntityTypeRegistry.THE_FOOL.get(), TheFoolEntity::new, "thefool",
+    THE_FOOL(JEntityTypeRegistry.THE_FOOL, TheFoolEntity::new, "thefool",
             Component.literal("Chilled"), Component.literal("OVA"), Component.literal("Neon")),
-    GOLD_EXPERIENCE(JEntityTypeRegistry.GOLD_EXPERIENCE.get(), GoldExperienceEntity::new, "goldexperience",
+    GOLD_EXPERIENCE(JEntityTypeRegistry.GOLD_EXPERIENCE, GoldExperienceEntity::new, "goldexperience",
             Component.literal("Anime"), Component.literal("Spectre"), Component.literal("Burning Passion")),
-    HIEROPHANT_GREEN(JEntityTypeRegistry.HIEROPHANT_GREEN.get(), HGEntity::new, "hierophantgreen",
+    HIEROPHANT_GREEN(JEntityTypeRegistry.HIEROPHANT_GREEN, HGEntity::new, "hierophantgreen",
             Component.literal("Cold"), Component.literal("Burning"), Component.literal("Seaside")),
-    THE_SUN(JEntityTypeRegistry.THE_SUN.get(), TheSunEntity::new, "the_sun",
+    THE_SUN(JEntityTypeRegistry.THE_SUN, TheSunEntity::new, "the_sun",
             Component.literal(":D"), Component.literal("Neutron Star"), Component.literal("Dark")),
-    PURPLE_HAZE(JEntityTypeRegistry.PURPLE_HAZE.get(), PurpleHazeEntity::new, "purple_haze",
+    PURPLE_HAZE(JEntityTypeRegistry.PURPLE_HAZE, PurpleHazeEntity::new, "purple_haze",
             Component.literal("Toxin"), Component.literal("Stopping Force"), Component.literal("Reversal")),
-    C_MOON(JEntityTypeRegistry.C_MOON.get(), CMoonEntity::new, "cmoon", true,
+    C_MOON(JEntityTypeRegistry.C_MOON, CMoonEntity::new, "cmoon", true,
             Component.literal("Inversion"), Component.literal("Gravity"), Component.literal("Rose")),
-    MADE_IN_HEAVEN(JEntityTypeRegistry.MADE_IN_HEAVEN.get(), MadeInHeavenEntity::new, "mih", true,
+    MADE_IN_HEAVEN(JEntityTypeRegistry.MADE_IN_HEAVEN, MadeInHeavenEntity::new, "mih", true,
             Component.literal("Cruel"), Component.literal("Daft"), Component.literal("Nightmare")),
-    THE_WORLD_OVER_HEAVEN(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN.get(), TheWorldOverHeavenEntity::new, "twoh", true,
+    THE_WORLD_OVER_HEAVEN(JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN, TheWorldOverHeavenEntity::new, "twoh", true,
             Component.literal("Shooting Star"), Component.literal("Above the Clouds"), Component.literal("Dirt to Divinity")),
-    KILLER_QUEEN_BITES_THE_DUST(JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST.get(), KQBTDEntity::new, "kqbtd", true,
+    KILLER_QUEEN_BITES_THE_DUST(JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST, KQBTDEntity::new, "kqbtd", true,
             Component.literal("Veiled"), Component.literal("Back from the Dead"), Component.literal("Garf")),
-    GOLD_EXPERIENCE_REQUIEM(JEntityTypeRegistry.GER.get(), GEREntity::new, "ger", true,
+    GOLD_EXPERIENCE_REQUIEM(JEntityTypeRegistry.GER, GEREntity::new, "ger", true,
             Component.literal("Silver"), Component.literal("Manga"), Component.literal("Cherry Blossom")),
-    STAR_PLATINUM_THE_WORLD(JEntityTypeRegistry.SPTW.get(), SPTWEntity::new, "sptw", true,
+    STAR_PLATINUM_THE_WORLD(JEntityTypeRegistry.SPTW, SPTWEntity::new, "sptw", true,
             Component.literal("Judge, Jury, Executioner"), Component.literal("Diamond"), Component.literal("Over Heaven")),
-    PURPLE_HAZE_DISTORTION(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION.get(), PurpleHazeDistortionEntity::new, "purple_haze_distortion", true,
+    PURPLE_HAZE_DISTORTION(JEntityTypeRegistry.PURPLE_HAZE_DISTORTION, PurpleHazeDistortionEntity::new, "purple_haze_distortion", true,
             Component.literal("Black Knight"), Component.literal("Vintage"), Component.literal("Reversal")),
-    HORUS(JEntityTypeRegistry.HORUS.get(), HorusEntity::new, "horus",
+    HORUS(JEntityTypeRegistry.HORUS, HorusEntity::new, "horus",
             Component.literal("Pearl"), Component.literal("Dual"), Component.literal("Evil Incarnation")),
-    CINDERELLA(JEntityTypeRegistry.CINDERELLA.get(), CinderellaEntity::new, "cinderella", false, false),
-    OSIRIS(JEntityTypeRegistry.OSIRIS.get(), OsirisEntity::new, "osiris", false, false),
-    ATUM(JEntityTypeRegistry.ATUM.get(), AtumEntity::new, "atum", false, false),
-    CHARIOT_REQUIEM(JEntityTypeRegistry.CHARIOT_REQUIEM.get(), ChariotRequiemEntity::new, "chariot_requiem", false, false),
-    DIVER_DOWN(JEntityTypeRegistry.DIVER_DOWN.get(), DiverDownEntity::new, "diver_down", false, false),
-    DRAGONS_DREAM(JEntityTypeRegistry.DRAGONS_DREAM.get(), DragonsDreamEntity::new, "dragons_dream", false, false),
-    FOO_FIGHTERS(JEntityTypeRegistry.FOO_FIGHTERS.get(), FooFightersEntity::new, "foo_fighters", false, false),
-    GOO_GOO_DOLLS(JEntityTypeRegistry.GOO_GOO_DOLLS.get(), GooGooDollsEntity::new, "goo_goo_dolls", false, false),
-    SHADOW_THE_WORLD(JEntityTypeRegistry.SHADOW_THE_WORLD.get(), ShadowTheWorldEntity::new, "shadow_the_world",
+    CINDERELLA(JEntityTypeRegistry.CINDERELLA, CinderellaEntity::new, "cinderella", false, false),
+    OSIRIS(JEntityTypeRegistry.OSIRIS, OsirisEntity::new, "osiris", false, false),
+    ATUM(JEntityTypeRegistry.ATUM, AtumEntity::new, "atum", false, false),
+    CHARIOT_REQUIEM(JEntityTypeRegistry.CHARIOT_REQUIEM, ChariotRequiemEntity::new, "chariot_requiem", false, false),
+    DIVER_DOWN(JEntityTypeRegistry.DIVER_DOWN, DiverDownEntity::new, "diver_down", false, false),
+    DRAGONS_DREAM(JEntityTypeRegistry.DRAGONS_DREAM, DragonsDreamEntity::new, "dragons_dream", false, false),
+    FOO_FIGHTERS(JEntityTypeRegistry.FOO_FIGHTERS, FooFightersEntity::new, "foo_fighters", false, false),
+    GOO_GOO_DOLLS(JEntityTypeRegistry.GOO_GOO_DOLLS, GooGooDollsEntity::new, "goo_goo_dolls", false, false),
+    SHADOW_THE_WORLD(JEntityTypeRegistry.SHADOW_THE_WORLD, ShadowTheWorldEntity::new, "shadow_the_world",
             Component.literal("Contrast"), Component.literal("Frost"), Component.literal("Predator")),
-    METALLICA(JEntityTypeRegistry.METALLICA.get(), MetallicaEntity::new, "metallica",
+    METALLICA(JEntityTypeRegistry.METALLICA, MetallicaEntity::new, "metallica",
             Component.literal("Lead"), Component.literal("Brass"), Component.literal("Hollow")),
-    THE_HAND(JEntityTypeRegistry.THE_HAND.get(), TheHandEntity::new, "the_hand", false, true,
+    THE_HAND(JEntityTypeRegistry.THE_HAND, TheHandEntity::new, "the_hand", false, true,
             Component.literal("Shift"), Component.literal("Inverted"), Component.literal("Deletion")),
     ;
 
@@ -130,8 +131,7 @@ public enum StandType {
             .map(StandType::getEntityType)
             .collect(Collectors.toSet());
 
-    @Getter
-    private final EntityType<? extends StandEntity<?, ?>> entityType;
+    private final Supplier<? extends EntityType<? extends StandEntity<?, ?>>> entityType;
     @Getter
     private final boolean evolution;
     @Getter
@@ -144,15 +144,15 @@ public enum StandType {
     @Getter
     private final List<Component> skinNames;
 
-    StandType(EntityType<? extends StandEntity<?, ?>> entityType, Function<Level, StandEntity<?, ?>> ctor, String nameKey, Component... skinNames) {
+    StandType(Supplier<? extends EntityType<? extends StandEntity<?, ?>>> entityType, Function<Level, StandEntity<?, ?>> ctor, String nameKey, Component... skinNames) {
         this(entityType, ctor, nameKey, false, skinNames);
     }
 
-    StandType(EntityType<? extends StandEntity<?, ?>> entityType, Function<Level, StandEntity<?, ?>> ctor, String nameKey, boolean evolution, Component... skinNames) {
+    StandType(Supplier<? extends EntityType<? extends StandEntity<?, ?>>> entityType, Function<Level, StandEntity<?, ?>> ctor, String nameKey, boolean evolution, Component... skinNames) {
         this(entityType, ctor, nameKey, evolution, true, skinNames);
     }
 
-    StandType(EntityType<? extends StandEntity<?, ?>> entityType, Function<Level, StandEntity<?, ?>> ctor, String nameKey, boolean evolution, boolean obtainable, Component... skinNames) {
+    StandType(Supplier<? extends EntityType<? extends StandEntity<?, ?>>> entityType, Function<Level, StandEntity<?, ?>> ctor, String nameKey, boolean evolution, boolean obtainable, Component... skinNames) {
         this.entityType = entityType;
         this.ctor = ctor;
         this.nameKey = nameKey;
@@ -163,7 +163,7 @@ public enum StandType {
     }
 
     StandType() {
-        this.entityType = null;
+        this.entityType = () -> null;
         this.ctor = null;
         this.nameKey = "nostand";
         this.nameText = Component.translatable("entity.jcraft.nostand");
@@ -210,6 +210,10 @@ public enum StandType {
 
     public static StandType getRandomRegular(RandomSource random) {
         return getRegularStandTypes().get(random.nextInt(regularStandCount));
+    }
+
+    public EntityType<? extends StandEntity<?, ?>> getEntityType() {
+        return entityType.get();
     }
 
     @NonNull

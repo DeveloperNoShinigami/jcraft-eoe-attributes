@@ -77,6 +77,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
 import static net.arna.jcraft.JCraft.comboBreak;
 import static net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
@@ -165,9 +166,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     private boolean remoteJumpInput = false, remoteSneakInput = false;
 
     // Summoning
-    @Getter
     @Nullable
-    private final SoundEvent summonSound;
+    private final Supplier<SoundEvent> summonSound;
     private final boolean playGenericSummonSound;
     protected int summonAnimDuration = 19;
     private boolean playSummonAnim = true;
@@ -186,11 +186,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         this(type, world, null, true);
     }
 
-    protected StandEntity(StandType type, Level world, @Nullable SoundEvent summonSound) {
+    protected StandEntity(StandType type, Level world, @Nullable Supplier<SoundEvent> summonSound) {
         this(type, world, summonSound, false);
     }
 
-    protected StandEntity(StandType type, Level world, @Nullable SoundEvent summonSound, boolean playGenericSummonSound) {
+    protected StandEntity(StandType type, Level world, @Nullable Supplier<SoundEvent> summonSound, boolean playGenericSummonSound) {
         super(type.getEntityType(), world);
         this.moveSet = MoveSet.get(type, "default");
         if (this.moveSet == null) {
@@ -1465,7 +1465,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         if (summonSound != null) {
-            playSound(summonSound, 1f, 1f);
+            playSound(summonSound.get(), 1f, 1f);
         }
         if (summonSound == null || playGenericSummonSound) {
             playSound(JSoundRegistry.STAND_SUMMON.get(), 1f, 1f);
@@ -1476,7 +1476,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     public void stopRiding() {
         if (tickCount == 0 && getRemovalReason() == null) {
             // This may be necessary because the packet that sets passengers arrives early on Forge
-            JCraft.LOGGER.warn("Prevented stopRiding() call for recently created " + this);
+            JCraft.LOGGER.warn("Prevented stopRiding() call for recently created {}", this);
             return;
         }
         if (getVehicle() == null) {

@@ -5,7 +5,6 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.data.MoveSet;
@@ -202,7 +201,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                             """));
 
     public HGEntity(Level worldIn) {
-        super(StandType.HIEROPHANT_GREEN, worldIn, JSoundRegistry.HG_SUMMON.get());
+        super(StandType.HIEROPHANT_GREEN, worldIn, JSoundRegistry.HG_SUMMON);
         idleRotation = 220f;
 
         proCount = 3;

@@ -229,7 +229,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     }
 
     public SilverChariotEntity(Level worldIn) {
-        super(StandType.SILVER_CHARIOT, worldIn, JSoundRegistry.SC_SUMMON.get());
+        super(StandType.SILVER_CHARIOT, worldIn, JSoundRegistry.SC_SUMMON);
         idleRotation = 225f;
 
         proCount = 4;

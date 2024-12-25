@@ -105,7 +105,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = AbstractKillerQueenEntity.LIGHT.copy().withFollowup(LIGHT_FOLLOWUP);
 
     public KQBTDEntity(Level worldIn) {
-        super(StandType.KILLER_QUEEN_BITES_THE_DUST, worldIn, JSoundRegistry.KQBTD_SUMMON.get());
+        super(StandType.KILLER_QUEEN_BITES_THE_DUST, worldIn, JSoundRegistry.KQBTD_SUMMON);
 
         proCount = 4;
         conCount = 2;

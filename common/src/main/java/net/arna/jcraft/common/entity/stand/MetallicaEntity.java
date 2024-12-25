@@ -205,7 +205,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     public static final SimpleAttack<MetallicaEntity> GRAB_HIT_FINAL = new SimpleAttack<MetallicaEntity>(0,
             18, 24, 0.5f, 4f, 9, 2f, 1.2f, 0f)
             // .withImpactSound(JSoundRegistry.IMPACT_1)
-            .withAction(EffectAction.inflict(JStatusRegistry.HYPOXIA.get(), 200, 0, false, true))
+            .withAction(EffectAction.inflict(JStatusRegistry.HYPOXIA, 200, 0, false, true))
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
@@ -274,7 +274,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     private CommonMiscComponent miscComponent;
 
     public MetallicaEntity(Level worldIn) {
-        super(StandType.METALLICA, worldIn, JSoundRegistry.STAND_SUMMON.get());
+        super(StandType.METALLICA, worldIn, JSoundRegistry.STAND_SUMMON);
 
         freespace = """
                 Contains up to 80 units of iron.

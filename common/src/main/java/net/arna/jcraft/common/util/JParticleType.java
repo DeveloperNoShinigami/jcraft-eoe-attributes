@@ -2,12 +2,12 @@ package net.arna.jcraft.common.util;
 
 import com.mojang.serialization.Codec;
 import dev.architectury.registry.registries.RegistrySupplier;
-import lombok.Getter;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 
-@Getter
+import java.util.function.Supplier;
+
 public enum JParticleType {
     BOOM(JParticleTypeRegistry.BOOM_1),
     BITES_THE_DUST(JParticleTypeRegistry.BITES_THE_DUST),
@@ -29,12 +29,17 @@ public enum JParticleType {
     STUN_PIERCE(JParticleTypeRegistry.STUN_PIERCE);
 
     public static final Codec<JParticleType> CODEC = JCodecUtils.createEnumCodec(JParticleType.class);
-    private final SimpleParticleType particleType;
+    private final Supplier<? extends SimpleParticleType> particleType;
 
     JParticleType(SimpleParticleType particleType) {
-        this.particleType = particleType;
+        this.particleType = () -> particleType;
     }
+
     JParticleType(RegistrySupplier<SimpleParticleType> supplier) {
-        this.particleType = supplier.get();
+        this.particleType = supplier;
+    }
+
+    public SimpleParticleType getParticleType() {
+        return particleType.get();
     }
 }

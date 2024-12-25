@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.attack.actions;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -19,11 +20,13 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class EffectAction extends MoveAction<EffectAction, IAttacker<?, ?>> {
-    private final List<MobEffectInstance> effects;
+    private final List<Supplier<MobEffectInstance>> effects;
 
     public static EffectAction inflict(final MobEffect effect, final int duration, final int amplifier) {
         return inflict(new MobEffectInstance(effect, duration, amplifier));
@@ -39,17 +42,37 @@ public class EffectAction extends MoveAction<EffectAction, IAttacker<?, ?>> {
         return inflict(new MobEffectInstance(effect, duration, amplifier, ambient, visible, showIcon));
     }
 
+    public static EffectAction inflict(final Supplier<MobEffect> effect, final int duration, final int amplifier) {
+        return inflict(() -> new MobEffectInstance(effect.get(), duration, amplifier));
+    }
+
+    public static EffectAction inflict(final Supplier<MobEffect> effect, final int duration, final int amplifier,
+                                       final boolean ambient, final boolean visible) {
+        return inflict(() -> new MobEffectInstance(effect.get(), duration, amplifier, ambient, visible));
+    }
+
+    public static EffectAction inflict(final Supplier<MobEffect> effect, final int duration, final int amplifier,
+                                       final boolean ambient, final boolean visible, final boolean showIcon) {
+        return inflict(() -> new MobEffectInstance(effect.get(), duration, amplifier, ambient, visible, showIcon));
+    }
+
     public static EffectAction inflict(final MobEffectInstance effect) {
-        return new SingleEffectAction(effect);
+        return new SingleEffectAction(() -> effect);
     }
 
     public static EffectAction inflict(final MobEffectInstance... effects) {
         return effects.length == 1
-                ? new SingleEffectAction(effects[0])
-                : new EffectAction(ImmutableList.copyOf(effects));
+                ? new SingleEffectAction(Suppliers.memoize(() -> effects[0]))
+                : new EffectAction(Stream.of(effects)
+                    .map(inst -> (Supplier<MobEffectInstance>) () -> inst)
+                    .toList());
     }
 
-    public static EffectAction inflict(final Collection<MobEffectInstance> effects) {
+    public static EffectAction inflict(final Supplier<MobEffectInstance> effect) {
+        return new SingleEffectAction(effect);
+    }
+
+    public static EffectAction inflict(final Collection<Supplier<MobEffectInstance>> effects) {
         return effects.size() == 1
                 ? new SingleEffectAction(effects.iterator().next())
                 : new EffectAction(ImmutableList.copyOf(effects));
@@ -59,6 +82,7 @@ public class EffectAction extends MoveAction<EffectAction, IAttacker<?, ?>> {
     public void perform(final IAttacker<?, ?> attacker, final LivingEntity user, final MoveContext ctx, final Set<LivingEntity> targets) {
         // Clone effects and add them to the targets
         for (LivingEntity target : targets) effects.stream()
+                .map(Supplier::get)
                 .map(MobEffectInstance::new)
                 .forEach(target::addEffect);
     }
@@ -71,16 +95,16 @@ public class EffectAction extends MoveAction<EffectAction, IAttacker<?, ?>> {
     // Small optimization for actions that only inflict a single effect.
     // Most of the time, only one effect is inflicted, so this can save a bit of performance.
     private static class SingleEffectAction extends EffectAction {
-        private final MobEffectInstance effect;
+        private final Supplier<MobEffectInstance> effect;
 
-        public SingleEffectAction(final MobEffectInstance effect) {
+        public SingleEffectAction(final Supplier<MobEffectInstance> effect) {
             super(ImmutableList.of(effect));
             this.effect = effect;
         }
 
         @Override
         public void perform(final IAttacker<?, ?> attacker, final LivingEntity user, final MoveContext ctx, final Set<LivingEntity> targets) {
-            for (LivingEntity target : targets) target.addEffect(new MobEffectInstance(effect));
+            for (LivingEntity target : targets) target.addEffect(new MobEffectInstance(effect.get()));
         }
     }
 
@@ -90,8 +114,9 @@ public class EffectAction extends MoveAction<EffectAction, IAttacker<?, ?>> {
         @Override
         public Codec<EffectAction> getCodec() {
             return RecordCodecBuilder.create(instance -> instance.group(
-                    JCodecUtils.MOB_EFFECT_INSTANCE_CODEC.listOf().fieldOf("effects").forGetter(EffectAction::getEffects)
-            ).apply(instance, EffectAction::inflict));
+                    JCodecUtils.MOB_EFFECT_INSTANCE_CODEC.listOf().fieldOf("effects").forGetter(a ->
+                            a.getEffects().stream().map(Supplier::get).toList())
+            ).apply(instance, effects -> inflict(effects.toArray(MobEffectInstance[]::new))));
         }
     }
 }

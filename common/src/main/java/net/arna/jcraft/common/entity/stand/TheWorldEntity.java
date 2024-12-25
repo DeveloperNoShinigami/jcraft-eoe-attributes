@@ -164,7 +164,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
             );
 
     public TheWorldEntity(Level worldIn) {
-        super(StandType.THE_WORLD, worldIn, JSoundRegistry.TW_SUMMON.get());
+        super(StandType.THE_WORLD, worldIn, JSoundRegistry.TW_SUMMON);
 
         proCount = 4;
         conCount = 2;

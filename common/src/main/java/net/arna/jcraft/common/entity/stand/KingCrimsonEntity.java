@@ -185,7 +185,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
 
     public KingCrimsonEntity(Level worldIn) {
-        super(StandType.KING_CRIMSON, worldIn, JSoundRegistry.KC_SUMMON.get());
+        super(StandType.KING_CRIMSON, worldIn, JSoundRegistry.KC_SUMMON);
 
         idleDistance = 1f;
         idleRotation = -65f;

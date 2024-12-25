@@ -167,7 +167,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             );
 
     public GoldExperienceEntity(Level worldIn) {
-        super(StandType.GOLD_EXPERIENCE, worldIn, JSoundRegistry.GE_SUMMON.get());
+        super(StandType.GOLD_EXPERIENCE, worldIn, JSoundRegistry.GE_SUMMON);
 
         idleRotation = -30f;
 

@@ -10,7 +10,6 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
@@ -157,7 +156,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     private static final EntityDataAccessor<Boolean> DESUMMONING = SynchedEntityData.defineId(ShadowTheWorldEntity.class, EntityDataSerializers.BOOLEAN);
 
     public ShadowTheWorldEntity(Level worldIn) {
-        super(StandType.SHADOW_THE_WORLD, worldIn, JSoundRegistry.STW_WARBLE.get());
+        super(StandType.SHADOW_THE_WORLD, worldIn, JSoundRegistry.STW_WARBLE);
 
         freespace = """
                 The user is allowed to use spec moves as soon as Shadow The World is performing one.

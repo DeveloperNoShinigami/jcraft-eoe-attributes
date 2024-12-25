@@ -3,7 +3,6 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
@@ -159,7 +158,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     public TheSunEntity(Level worldIn) {
-        super(StandType.THE_SUN, worldIn, JSoundRegistry.SUN_SUMMON.get());
+        super(StandType.THE_SUN, worldIn, JSoundRegistry.SUN_SUMMON);
 
         idleRotation = 0;
 

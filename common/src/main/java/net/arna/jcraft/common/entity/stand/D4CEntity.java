@@ -112,7 +112,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             34, 0.75f, 4f, 10, 2f, 0f, 0f, IntSet.of(11, 17, 26))
             .withImpactSound(JSoundRegistry.IMPACT_1)
             // Play sound regardless of whether something hit.
-            .withAction(PlaySoundAction.playSound(JSoundRegistry.REVOLVER_FIRE.get()))
+            .withAction(PlaySoundAction.playSound(JSoundRegistry.REVOLVER_FIRE))
             .withStunType(StunType.UNBURSTABLE)
             .withFinisher(17, GRAB_HIT_FINAL)
             .withInfo(
@@ -147,7 +147,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                     Component.literal("hides in a flag in an un-stunnable, floating state"));
 
     public D4CEntity(Level worldIn) {
-        super(StandType.D4C, worldIn, JSoundRegistry.D4C_SUMMON.get(), true);
+        super(StandType.D4C, worldIn, JSoundRegistry.D4C_SUMMON, true);
 
         idleRotation = -45f;
 

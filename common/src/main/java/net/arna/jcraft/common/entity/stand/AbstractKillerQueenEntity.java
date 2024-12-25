@@ -24,6 +24,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQueenEntity<E, S>, S extends Enum<S> & StandAnimationState<E>> extends StandEntity<E, S>
         permits KillerQueenEntity, KQBTDEntity {
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LOW = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
@@ -78,7 +80,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             );
     protected ItemEntity coin;
 
-    protected AbstractKillerQueenEntity(StandType type, Level worldIn, @Nullable SoundEvent summonSound) {
+    protected AbstractKillerQueenEntity(StandType type, Level worldIn, @Nullable Supplier<SoundEvent> summonSound) {
         super(type, worldIn, summonSound, true);
         idleRotation = -30f;
 

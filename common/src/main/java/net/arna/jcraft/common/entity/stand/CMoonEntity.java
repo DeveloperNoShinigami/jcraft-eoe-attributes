@@ -6,7 +6,6 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.actions.CMoonInversionAction;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
@@ -167,7 +166,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     private final List<Inversion> inversions = new ArrayList<>();
 
     public CMoonEntity(Level worldIn) {
-        super(StandType.C_MOON, worldIn, JSoundRegistry.CMOON_SUMMON.get());
+        super(StandType.C_MOON, worldIn, JSoundRegistry.CMOON_SUMMON);
         idleRotation = 220f;
 
         proCount = 4;

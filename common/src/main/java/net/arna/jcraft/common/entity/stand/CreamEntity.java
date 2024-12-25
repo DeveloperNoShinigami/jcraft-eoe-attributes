@@ -143,7 +143,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                             """));
     public static final ChargeBarrageAttack<CreamEntity> CHARGE = new ChargeBarrageAttack<CreamEntity>(200, 15, 30,
             4f, 2f, 10, 1.5f, 0.5f, 0f, 3, false)
-            .withAction(EffectAction.inflict(JStatusRegistry.KNOCKDOWN.get(), 25, 0, true, false))
+            .withAction(EffectAction.inflict(JStatusRegistry.KNOCKDOWN, 25, 0, true, false))
             .withLaunchNoShockwave()
             .withImpactSound(JSoundRegistry.IMPACT_5)
             .withBlockableType(BlockableType.NON_BLOCKABLE)
@@ -235,7 +235,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     }
 
     public CreamEntity(Level worldIn) {
-        super(StandType.CREAM, worldIn, JSoundRegistry.CREAM_SUMMON.get());
+        super(StandType.CREAM, worldIn, JSoundRegistry.CREAM_SUMMON);
 
         idleRotation = 220f;
 

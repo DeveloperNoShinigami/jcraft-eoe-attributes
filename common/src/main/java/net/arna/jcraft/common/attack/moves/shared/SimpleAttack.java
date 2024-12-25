@@ -63,7 +63,7 @@ public final class SimpleAttack<A extends IAttacker<? extends A, ?>> extends Abs
 
         @Override
         protected @NotNull App<RecordCodecBuilder.Mu<SimpleAttack<?>>, SimpleAttack<?>> buildCodec(RecordCodecBuilder.Instance<SimpleAttack<?>> instance) {
-            return attackDefault(instance).apply(instance, applyAttackExtras(SimpleAttack::new));
+            return attackDefault(instance, SimpleAttack::new);
         }
     }
 }

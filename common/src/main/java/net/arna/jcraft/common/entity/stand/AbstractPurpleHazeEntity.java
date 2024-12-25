@@ -3,7 +3,6 @@ package net.arna.jcraft.common.entity.stand;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
@@ -163,7 +162,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             );
 
     protected AbstractPurpleHazeEntity(StandType type, Level worldIn) {
-        super(type, worldIn, JSoundRegistry.PH_SUMMON.get());
+        super(type, worldIn, JSoundRegistry.PH_SUMMON);
         idleRotation = 225f;
 
         proCount = 3;
