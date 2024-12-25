@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.whitesnake;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.WSAcidProjectile;
@@ -13,6 +16,11 @@ public final class PoisonSpewAttack extends AbstractSimpleAttack<PoisonSpewAttac
                             final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         this.ranged = true;
+    }
+
+    @Override
+    public @NonNull MoveType<PoisonSpewAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -34,5 +42,14 @@ public final class PoisonSpewAttack extends AbstractSimpleAttack<PoisonSpewAttac
     public @NonNull PoisonSpewAttack copy() {
         return copyExtras(new PoisonSpewAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<PoisonSpewAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<PoisonSpewAttack>, PoisonSpewAttack> buildCodec(RecordCodecBuilder.Instance<PoisonSpewAttack> instance) {
+            return attackDefault(instance, PoisonSpewAttack::new);
+        }
     }
 }

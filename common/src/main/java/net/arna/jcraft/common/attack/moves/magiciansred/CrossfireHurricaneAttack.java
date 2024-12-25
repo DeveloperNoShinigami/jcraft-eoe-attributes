@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.magiciansred;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
@@ -32,6 +35,11 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
 
     public CrossfireHurricaneAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public @NonNull MoveType<CrossfireHurricaneAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -101,7 +109,7 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(HURRICANE_TIME);
         ctx.register(HURRICANE_POS);
     }
@@ -114,5 +122,14 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
     @Override
     public @NonNull CrossfireHurricaneAttack copy() {
         return copyExtras(new CrossfireHurricaneAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<CrossfireHurricaneAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<CrossfireHurricaneAttack>, CrossfireHurricaneAttack> buildCodec(RecordCodecBuilder.Instance<CrossfireHurricaneAttack> instance) {
+            return baseDefault(instance, CrossfireHurricaneAttack::new);
+        }
     }
 }

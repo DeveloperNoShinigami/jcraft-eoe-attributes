@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.goldexperience;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.GoldExperienceEntity;
@@ -10,14 +13,21 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 public final class BerryBushAttack extends AbstractSimpleAttack<BerryBushAttack, GoldExperienceEntity> {
     private static final BlockState BERRY_BUSH = Blocks.SWEET_BERRY_BUSH.defaultBlockState().setValue(SweetBerryBushBlock.AGE, 1);
 
-    public BerryBushAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun,
+    public BerryBushAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
                            final float hitboxSize, final float knockback, final float offset) {
-        super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);
+        super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
+    }
+
+    @Override
+    public @NotNull MoveType<BerryBushAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -40,5 +50,14 @@ public final class BerryBushAttack extends AbstractSimpleAttack<BerryBushAttack,
     public @NonNull BerryBushAttack copy() {
         return copyExtras(new BerryBushAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(), getStun(),
                 getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<BerryBushAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<BerryBushAttack>, BerryBushAttack> buildCodec(RecordCodecBuilder.Instance<BerryBushAttack> instance) {
+            return attackDefault(instance, BerryBushAttack::new);
+        }
     }
 }

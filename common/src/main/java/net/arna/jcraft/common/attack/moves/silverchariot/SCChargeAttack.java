@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.silverchariot;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
@@ -9,12 +12,16 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.world.phys.Vec3;
 
 public final class SCChargeAttack extends AbstractChargeAttack<SCChargeAttack, SilverChariotEntity, SilverChariotEntity.State> {
-
     public static final MoveVariable<Vec3> LOOK_DIR = new MoveVariable<>(Vec3.class);
 
     public SCChargeAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
-                          final float hitboxSize, final float knockback, final float offset, final SilverChariotEntity.State hitAnimState) {
-        super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitAnimState);
+                          final float hitboxSize, final float knockback, final float offset) {
+        super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, SilverChariotEntity.State.P_CHARGE_HIT);
+    }
+
+    @Override
+    public @NonNull MoveType<SCChargeAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -31,7 +38,7 @@ public final class SCChargeAttack extends AbstractChargeAttack<SCChargeAttack, S
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(LOOK_DIR);
     }
 
@@ -45,6 +52,15 @@ public final class SCChargeAttack extends AbstractChargeAttack<SCChargeAttack, S
     @Override
     public SCChargeAttack copy() {
         return copyExtras(new SCChargeAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(), getStun(),
-                getHitboxSize(), getKnockback(), getOffset(), getHitAnimState()));
+                getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractChargeAttack.Type<SCChargeAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SCChargeAttack>, SCChargeAttack> buildCodec(RecordCodecBuilder.Instance<SCChargeAttack> instance) {
+            return attackDefault(instance, SCChargeAttack::new);
+        }
     }
 }

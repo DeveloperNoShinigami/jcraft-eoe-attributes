@@ -1,12 +1,17 @@
 package net.arna.jcraft.common.attack.moves.cream;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 public final class CreamComboAttack extends AbstractMultiHitAttack<CreamComboAttack, CreamEntity> {
@@ -14,6 +19,11 @@ public final class CreamComboAttack extends AbstractMultiHitAttack<CreamComboAtt
                             final float hitboxSize, final float knockback, final float offset,
                             final @NonNull IntCollection hitMoments) {
         super(cooldown, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);
+    }
+
+    @Override
+    public @NotNull MoveType<CreamComboAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -41,5 +51,14 @@ public final class CreamComboAttack extends AbstractMultiHitAttack<CreamComboAtt
     public @NonNull CreamComboAttack copy() {
         return copyExtras(new CreamComboAttack(getCooldown(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset(), getHitMoments()));
+    }
+
+    public static class Type extends AbstractMultiHitAttack.Type<CreamComboAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<CreamComboAttack>, CreamComboAttack> buildCodec(RecordCodecBuilder.Instance<CreamComboAttack> instance) {
+            return multiHitDefault(instance, CreamComboAttack::new);
+        }
     }
 }

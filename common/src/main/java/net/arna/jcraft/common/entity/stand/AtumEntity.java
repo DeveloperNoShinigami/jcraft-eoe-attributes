@@ -2,6 +2,7 @@ package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.MoveMap;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -15,13 +16,13 @@ import mod.azure.azurelib.core.animation.AnimationState;
  * @see net.arna.jcraft.common.entity.npc.DarbyYoungerEntity DarbyYoungerEntity
  */
 public class AtumEntity extends StandEntity<AtumEntity, AtumEntity.State> {
+    public static final MoveSet<AtumEntity, State> MOVE_SET = MoveSet.create(StandType.ATUM, AtumEntity::registerMoves, State.class);
 
     public AtumEntity(Level world) {
         super(StandType.ATUM, world);
     }
 
-    @Override
-    protected void registerMoves(MoveMap<AtumEntity, State> moves) {
+    private static void registerMoves(MoveMap<AtumEntity, State> moves) {
         // TODO Arna
     }
 
@@ -35,7 +36,7 @@ public class AtumEntity extends StandEntity<AtumEntity, AtumEntity.State> {
         BLOCK;
 
         @Override
-        public void playAnimation(AtumEntity attacker, AnimationState state) {
+        public void playAnimation(AtumEntity attacker, AnimationState<AtumEntity> state) {
             // TODO Arna
         }
     }

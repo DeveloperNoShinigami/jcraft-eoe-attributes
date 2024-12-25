@@ -1,8 +1,11 @@
 package net.arna.jcraft.common.attack.moves.thefool;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
@@ -34,6 +37,11 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
     public SandCloneMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
+    }
+
+    @Override
+    public @NonNull MoveType<SandCloneMove> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -141,7 +149,7 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
     }
 
     @Override
-    public void registerContextEntries(MoveContext ctx) {
+    public void registerExtraContextEntries(MoveContext ctx) {
         ctx.register(SAND_CLONE);
     }
 
@@ -153,5 +161,14 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
     @Override
     public @NonNull SandCloneMove copy() {
         return copyExtras(new SandCloneMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<SandCloneMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SandCloneMove>, SandCloneMove> buildCodec(RecordCodecBuilder.Instance<SandCloneMove> instance) {
+            return baseDefault(instance, SandCloneMove::new);
+        }
     }
 }

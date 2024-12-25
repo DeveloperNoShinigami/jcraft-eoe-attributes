@@ -3,6 +3,7 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import net.arna.jcraft.common.attack.core.MoveMap;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -14,9 +15,15 @@ import org.jetbrains.annotations.Nullable;
  * @see net.arna.jcraft.client.renderer.entity.stands.GooGooDollsRenderer GooGooDollsRenderer
  */
 public class GooGooDollsEntity extends StandEntity<GooGooDollsEntity, GooGooDollsEntity.State> {
+    public static final MoveSet<GooGooDollsEntity, State> MOVE_SET = MoveSet.create(StandType.GOO_GOO_DOLLS,
+            GooGooDollsEntity::registerMoves, State.class);
 
     public GooGooDollsEntity(Level world) {
         super(StandType.GOO_GOO_DOLLS, world);
+    }
+
+    private static void registerMoves(MoveMap<GooGooDollsEntity, State> moves) {
+        // TODO Arna
     }
 
     public enum State implements StandAnimationState<GooGooDollsEntity> {
@@ -47,10 +54,5 @@ public class GooGooDollsEntity extends StandEntity<GooGooDollsEntity, GooGooDoll
     @Override
     public State getBlockState() {
         return State.BLOCK;
-    }
-
-    @Override
-    protected void registerMoves(MoveMap<GooGooDollsEntity, State> moves) {
-        // TODO Arna
     }
 }

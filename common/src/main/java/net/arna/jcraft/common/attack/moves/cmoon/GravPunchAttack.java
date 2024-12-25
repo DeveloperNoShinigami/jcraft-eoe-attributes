@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.cmoon;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
@@ -17,6 +20,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 public final class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack, CMoonEntity> {
@@ -48,6 +53,11 @@ public final class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack,
     }
 
     @Override
+    public @NotNull MoveType<GravPunchAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
     protected @NonNull GravPunchAttack getThis() {
         return this;
     }
@@ -56,5 +66,14 @@ public final class GravPunchAttack extends AbstractSimpleAttack<GravPunchAttack,
     public @NonNull GravPunchAttack copy() {
         return copyExtras(new GravPunchAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<GravPunchAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<GravPunchAttack>, GravPunchAttack> buildCodec(RecordCodecBuilder.Instance<GravPunchAttack> instance) {
+            return attackDefault(instance, GravPunchAttack::new);
+        }
     }
 }

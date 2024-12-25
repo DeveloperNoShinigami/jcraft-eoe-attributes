@@ -495,9 +495,8 @@ public class ClientPacketHandler {
         }
 
         switch (state) {
-            case START ->
-                    TimeAccelStatePacket.accelerations.put(mih.getId(), new TimeAccelStatePacket.TimeAcceleration(buf.readVarInt(), mih.getId()));
-            case STOP -> TimeAccelStatePacket.accelerations.remove(mih.getId());
+            case START -> TimeAccelStatePacket.addAcceleration(buf.readVarInt(), mih.getId());
+            case STOP -> TimeAccelStatePacket.removeAcceleration(mih.getId());
         }
     }
 

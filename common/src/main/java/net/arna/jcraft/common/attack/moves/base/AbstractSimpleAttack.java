@@ -1,13 +1,16 @@
 package net.arna.jcraft.common.attack.moves.base;
 
+import com.mojang.datafixers.Products;
+import com.mojang.datafixers.kinds.App;
+import com.mojang.datafixers.util.*;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.BlockableType;
-import net.arna.jcraft.common.attack.core.HitBoxData;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.StunType;
+import net.arna.jcraft.common.attack.core.*;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.core.data.ExtraProducts;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -27,8 +30,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * An attack with just one hit box.
@@ -39,13 +46,12 @@ import java.util.function.Predicate;
  * @param <T>
  * @param <A>
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 @Getter
 public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>, A extends IAttacker<? extends A, ?>> extends AbstractMove<T, A> {
-    private final List<TargetProcessor<? super A>> targetProcessors = new ArrayList<>();
-    private final List<TargetProcessor<? super A>> targetPostProcessors = new ArrayList<>();
     private final Set<HitBoxData> extraHitBoxes = new HashSet<>();
     private float damage;
+    @NonNull
     private StunType stunType = StunType.BURSTABLE;
     private int stun;
     private float hitboxSize;
@@ -55,12 +61,13 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     private boolean lift = true, canBackstab = true;
     private int blockStun = -1;
     private boolean staticY;
+    private boolean doShockwaves = false;
     private @Nullable CommonHitPropertyComponent.HitAnimation hitAnimation = CommonHitPropertyComponent.HitAnimation.MID;
-    private BlockableType blockableType = BlockableType.BLOCKABLE;
+    private @NonNull BlockableType blockableType = BlockableType.BLOCKABLE;
     protected @Nullable JParticleType hitSpark = JParticleType.HIT_SPARK_1;
 
-    protected AbstractSimpleAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage,
-                                   final int stun, final float hitboxSize, final float knockback, final float offset) {
+    protected AbstractSimpleAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
+                                   final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance);
         this.damage = damage;
         this.stun = stun;
@@ -137,7 +144,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param type The type of stun to apply
      * @return This attack
      */
-    public T withStunType(final StunType type) {
+    public T withStunType(@NonNull final StunType type) {
         this.stunType = type;
         return getThis();
     }
@@ -282,17 +289,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      */
     public T withLaunch() {
         withLaunchNoShockwave();
-        withAction(((attacker, user, ctx, targets) -> {
-            if (targets.isEmpty()) {
-                return;
-            }
-            LivingEntity attackerEntity = attacker.getBaseEntity();
-            Vec3 shockwavePos = attackerEntity.position();
-            shockwavePos = shockwavePos.add(attackerEntity.getLookAngle());
-            shockwavePos = shockwavePos.add(RotationUtil.vecPlayerToWorld(new Vec3(0, attackerEntity.getBbHeight() / 2.0 - offset, 0), GravityChangerAPI.getGravityDirection(user)));
-            JComponentPlatformUtils.getShockwaveHandler(attacker.getEntityWorld())
-                    .addShockwave(shockwavePos, attackerEntity.getLookAngle(), damage / 2.5f);
-        }));
+        withShockwaves();
         return getThis();
     }
 
@@ -300,6 +297,15 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
         stunType = StunType.LAUNCH;
         overrideStun = true;
         hitAnimation = CommonHitPropertyComponent.HitAnimation.LAUNCH;
+        return getThis();
+    }
+
+    public T withShockwaves() {
+        return withShockwaves(true);
+    }
+
+    public T withShockwaves(final boolean shockwaves) {
+        this.doShockwaves = shockwaves;
         return getThis();
     }
 
@@ -314,26 +320,8 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
         return getThis();
     }
 
-    /**
-     * Adds a new target processor to this attack.
-     *
-     * @param targetProcessor The target processor to add
-     * @return This attack
-     */
-    public T withTargetProcessor(final TargetProcessor<? super A> targetProcessor) {
-        targetProcessors.add(targetProcessor);
-        return getThis();
-    }
-
-    /**
-     * Adds a new target post-processor to this attack.
-     *
-     * @param targetProcessor The target processor to add
-     * @return This attack
-     */
-    public T withTargetPostProcessor(final TargetProcessor<? super A> targetProcessor) {
-        targetPostProcessors.add(targetProcessor);
-        return getThis();
+    public AttackMoveExtras getAttackExtras() {
+        return AttackMoveExtras.fromMove(getThis());
     }
 
     public int getBlockStun() {
@@ -485,6 +473,12 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
         final Set<AABB> boxes = calculateBoxes(attacker, user, rotVec, upVec, hPos, fPos);
         final DamageSource damageSource = attacker.getDamageSource();
         final Set<LivingEntity> targets = attackBoxes(attacker, boxes, damageSource, fPos);
+
+        // Do shockwaves
+        if (doShockwaves && !targets.isEmpty()) {
+            createShockwaves(attacker, user);
+        }
+
         performHook(attacker, targets, boxes, damageSource, fPos, rotVec, ctx);
         return targets;
     }
@@ -499,7 +493,23 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
      * @param rotationVector The attacker's rotation unit vector
      * @param ctx            The attacker's MoveContext instance
      */
-    public void performHook(final A attacker, final Set<LivingEntity> targets, final Set<AABB> boxes, final DamageSource damageSource, final Vec3 forwardPos, final Vec3 rotationVector, final MoveContext ctx) {
+    protected void performHook(final A attacker, final Set<LivingEntity> targets, final Set<AABB> boxes,final DamageSource damageSource,
+                               final Vec3 forwardPos, final Vec3 rotationVector, final MoveContext ctx) {
+    }
+
+    /**
+     * Spawns shockwaves for the given attacker and user.
+     * Can be overridden to change shockwave behavior.
+     * @param attacker The attacker
+     * @param user The user of the attacker
+     */
+    protected void createShockwaves(A attacker, LivingEntity user) {
+        LivingEntity attackerEntity = attacker.getBaseEntity();
+        Vec3 shockwavePos = attackerEntity.position();
+        shockwavePos = shockwavePos.add(attackerEntity.getLookAngle());
+        shockwavePos = shockwavePos.add(RotationUtil.vecPlayerToWorld(new Vec3(0, attackerEntity.getBbHeight() / 2.0 - offset, 0), GravityChangerAPI.getGravityDirection(user)));
+        JComponentPlatformUtils.getShockwaveHandler(attacker.getEntityWorld())
+                .addShockwave(shockwavePos, attackerEntity.getLookAngle(), damage / 2.5f);
     }
 
     /**
@@ -538,11 +548,12 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     protected final Set<LivingEntity> attackBoxes(final A attacker, final Set<AABB> boxes, final DamageSource damageSource, final Vec3 center) {
         JUtils.displayHitboxes(attacker.getEntityWorld(), boxes);
 
-        final Set<LivingEntity> targets = findHits(attacker, boxes, damageSource, mayHitUser);
+        Set<LivingEntity> targets = findHits(attacker, boxes, damageSource, mayHitUser);
         if (targets.isEmpty()) {
             return Set.of();
         }
 
+        targets = validateTargets(attacker, targets);
         final ServerLevel serverWorld = (ServerLevel) attacker.getEntityWorld();
 
         // Particles
@@ -552,7 +563,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
         // Process targets
         final Vec3 rotVec = getRotVec(attacker);
         final Vec3 kbVec = rotVec.scale(knockback).add(new Vec3(0.0, Math.abs(knockback) / 4, 0.0));
-        for (LivingEntity target : validateTargets(attacker, targets)) {
+        for (LivingEntity target : targets) {
             final Vec3 pos = target.position().add(GravityChangerAPI.getEyeOffset(target).scale(0.65)).subtract(rotVec.scale(0.65));
             final boolean blocking = JUtils.isBlocking(target);
             if (blocking) {
@@ -565,19 +576,9 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
                         pos.y + random.nextGaussian() * 0.25,
                         pos.z + random.nextGaussian() * 0.25,
                         hitSpark);
-
-                anyHit = true;
             }
 
-            targetProcessors.forEach(processor -> processor.processTarget(attacker, target, kbVec, damageSource, blocking));
             processTarget(attacker, target, kbVec, damageSource);
-            final boolean blockingAfter = JUtils.isBlocking(target);
-            targetPostProcessors.forEach(processor -> processor.processTarget(attacker, target, kbVec, damageSource, blockingAfter));
-        }
-
-        // Sounds
-        if (anyHit) {
-            getImpactSounds().forEach(sound -> attacker.playAttackerSound(sound, 1f, 1f));
         }
 
         return targets;
@@ -609,8 +610,6 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     @Override
     protected @NonNull T copyExtras(final @NonNull T base) {
         AbstractSimpleAttack<T, A> cast = super.copyExtras(base);
-        cast.targetProcessors.addAll(targetProcessors);
-        cast.targetPostProcessors.addAll(targetPostProcessors);
         cast.extraHitBoxes.addAll(extraHitBoxes);
         cast.stunType = stunType;
         cast.overrideStun = overrideStun;
@@ -627,5 +626,187 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
     @FunctionalInterface
     public interface TargetProcessor<A extends IAttacker<? extends A, ?>> {
         void processTarget(A attacker, LivingEntity target, Vec3 kbVec, DamageSource damageSource, boolean blocking);
+    }
+
+    protected abstract static class Type<M extends AbstractSimpleAttack<? extends M, ?>> extends AbstractMove.Type<M> {
+        protected RecordCodecBuilder<M, AttackMoveExtras> attackExtras() {
+            return AttackMoveExtras.CODEC.fieldOf("attack_extras").forGetter(AbstractSimpleAttack::getAttackExtras);
+        }
+
+        protected RecordCodecBuilder<M, Float> damage() {
+            return Codec.FLOAT.fieldOf("damage").forGetter(AbstractSimpleAttack::getDamage);
+        }
+
+        protected RecordCodecBuilder<M, Integer> stun() {
+            return Codec.INT.fieldOf("stun").forGetter(AbstractSimpleAttack::getStun);
+        }
+
+        protected RecordCodecBuilder<M, Float> hitboxSize() {
+            return Codec.FLOAT.fieldOf("hitbox_size").forGetter(AbstractSimpleAttack::getHitboxSize);
+        }
+
+        protected RecordCodecBuilder<M, Float> knockback() {
+            return Codec.FLOAT.fieldOf("knockback").forGetter(AbstractSimpleAttack::getKnockback);
+        }
+
+        protected RecordCodecBuilder<M, Float> offset() {
+            return Codec.FLOAT.fieldOf("offset").forGetter(AbstractSimpleAttack::getOffset);
+        }
+
+        protected BiFunction<BaseMoveExtras, AttackMoveExtras, M> applyAttackExtras(Supplier<M> function) {
+            return (extras, attackExtras) ->
+                    attackExtras.apply(extras.apply(function.get()));
+        }
+
+        protected <T1> Function3<BaseMoveExtras, AttackMoveExtras, T1, M> applyAttackExtras(Function<T1, M> function) {
+            return (extras, attackExtras, t1) ->
+                    attackExtras.apply(extras.apply(function.apply(t1)));
+        }
+
+        protected <T1, T2> Function4<BaseMoveExtras, AttackMoveExtras, T1, T2, M>
+        applyAttackExtras(BiFunction<T1, T2, M> function) {
+            return (extras, attackExtras, t1, t2) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2)));
+        }
+
+        protected <T1, T2, T3> Function5<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, M>
+        applyAttackExtras(Function3<T1, T2, T3, M> function) {
+            return (extras, attackExtras, t1, t2, t3) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3)));
+        }
+
+        protected <T1, T2, T3, T4> Function6<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, M>
+        applyAttackExtras(Function4<T1, T2, T3, T4, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4)));
+        }
+
+        protected <T1, T2, T3, T4, T5> Function7<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, M>
+        applyAttackExtras(Function5<T1, T2, T3, T4, T5, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6> Function8<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, M>
+        applyAttackExtras(Function6<T1, T2, T3, T4, T5, T6, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7> Function9<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, M>
+        applyAttackExtras(Function7<T1, T2, T3, T4, T5, T6, T7, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7) -> attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8> Function10<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, M>
+        applyAttackExtras(Function8<T1, T2, T3, T4, T5, T6, T7, T8, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7, t8) -> attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9> Function11<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, M>
+        applyAttackExtras(Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7, t8, t9) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>
+        Function12<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, M>
+        applyAttackExtras(Function10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7, t8, t9, t10) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>
+        Function13<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, M>
+        applyAttackExtras(Function11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7, t8, t9, t10, t11) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>
+        Function14<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, M>
+        applyAttackExtras(Function12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7, t8, t9, t10, t11, t12) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>
+        Function15<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, M>
+        applyAttackExtras(Function13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7, t8, t9, t10, t11, t12, t13) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>
+        Function16<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, M>
+        applyAttackExtras(Function14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7, t8, t9, t10, t11, t12, t13, t14) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>
+        ExtraProducts.P17.Function17<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, M>
+        applyAttackExtras(Function15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7, t8, t9, t10, t11, t12, t13, t14, t15) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>
+        ExtraProducts.P18.Function18<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, M>
+        applyAttackExtras(Function16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7, t8, t9, t10, t11, t12, t13, t14, t15, t16) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>
+        ExtraProducts.P19.Function19<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, M>
+        applyAttackExtras(ExtraProducts.P17.Function17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17)));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>
+        ExtraProducts.P20.Function20<BaseMoveExtras, AttackMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, M>
+        applyAttackExtras(ExtraProducts.P18.Function18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, M> function) {
+            return (extras, attackExtras, t1, t2, t3, t4, t5, t6,
+                    t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18) ->
+                    attackExtras.apply(extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18)));
+        }
+
+        /**
+         * Creates the default attack codec base.
+         * Can be used as a base to extend upon or as a standalone codec.
+         * (see {@link #attackDefault(RecordCodecBuilder.Instance, Function9)}).
+         * @param instance The instance to create the codec with
+         * @return The default attack codec base
+         */
+        protected Products.P11<RecordCodecBuilder.Mu<M>, BaseMoveExtras, AttackMoveExtras, Integer, Integer, Integer, Float, Float, Integer, Float, Float, Float>
+        attackDefault(RecordCodecBuilder.Instance<M> instance) {
+            return instance.group(extras(), attackExtras(), cooldown(), windup(), duration(), moveDistance(), damage(),
+                    stun(), hitboxSize(), knockback(), offset());
+        }
+
+        /**
+         * Creates the default attack codec.
+         * Can be used directly as a return value of {@link #buildCodec(RecordCodecBuilder.Instance)}
+         * @param instance The instance to create the codec with
+         * @param function The constructor function used to create a new instance of the move
+         * @return The default attack codec
+         */
+        protected App<RecordCodecBuilder.Mu<M>, M> attackDefault(RecordCodecBuilder.Instance<M> instance, Function9<Integer,
+                Integer, Integer, Float, Float, Integer, Float, Float, Float, M> function) {
+            return attackDefault(instance).apply(instance, applyAttackExtras(function));
+        }
     }
 }

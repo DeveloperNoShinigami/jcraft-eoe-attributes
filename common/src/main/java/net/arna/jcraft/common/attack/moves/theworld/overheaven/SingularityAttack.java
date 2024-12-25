@@ -1,7 +1,12 @@
 package net.arna.jcraft.common.attack.moves.theworld.overheaven;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -11,6 +16,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
+@Getter
 public final class SingularityAttack extends AbstractSimpleAttack<SingularityAttack, TheWorldOverHeavenEntity> {
     private final boolean blockBypass;
 
@@ -34,6 +40,11 @@ public final class SingularityAttack extends AbstractSimpleAttack<SingularityAtt
     }
 
     @Override
+    public @NonNull MoveType<SingularityAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
     protected @NonNull SingularityAttack getThis() {
         return this;
     }
@@ -42,5 +53,17 @@ public final class SingularityAttack extends AbstractSimpleAttack<SingularityAtt
     public @NonNull SingularityAttack copy() {
         return copyExtras(new SingularityAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(),
                 getDamage(), getStun(), getHitboxSize(), getKnockback(), getOffset(), blockBypass));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<SingularityAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SingularityAttack>, SingularityAttack> buildCodec(RecordCodecBuilder.Instance<SingularityAttack> instance) {
+            return instance.group(extras(), attackExtras(), cooldown(), windup(), duration(), moveDistance(), damage(),
+                    stun(), hitboxSize(), knockback(), offset(),
+                    Codec.BOOL.fieldOf("block_bypass").forGetter(SingularityAttack::isBlockBypass))
+                    .apply(instance, applyAttackExtras(SingularityAttack::new));
+        }
     }
 }

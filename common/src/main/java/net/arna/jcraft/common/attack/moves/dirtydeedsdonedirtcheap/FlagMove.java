@@ -1,10 +1,13 @@
 package net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
-import net.arna.jcraft.common.attack.MobilityType;
+import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -15,6 +18,11 @@ public final class FlagMove extends AbstractMove<FlagMove, D4CEntity> {
     public FlagMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         mobilityType = MobilityType.HIGHJUMP;
+    }
+
+    @Override
+    public @NonNull MoveType<FlagMove> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -50,5 +58,14 @@ public final class FlagMove extends AbstractMove<FlagMove, D4CEntity> {
     @Override
     public @NonNull FlagMove copy() {
         return copyExtras(new FlagMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<FlagMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<FlagMove>, FlagMove> buildCodec(RecordCodecBuilder.Instance<FlagMove> instance) {
+            return baseDefault(instance, FlagMove::new);
+        }
     }
 }

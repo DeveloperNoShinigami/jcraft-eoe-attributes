@@ -7,10 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
@@ -35,6 +36,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -42,7 +44,9 @@ import java.util.Objects;
  * Used to handle stand-off attacks.
  */
 @Getter
-public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnimationState<A>> implements IAttacker<A, S> {
+public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnimationState<A>>
+        implements IAttacker<A, S>, MoveSet.ReloadListener<A, S> {
+    private MoveSet<A, S> moveSet;
     private final MoveMap<A, S> moveMap = new MoveMap<>();
     private final MoveContext moveContext = new MoveContext();
     private final SpecType type;
@@ -72,9 +76,13 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         } else {
             this.player = null;
         }
-        registerMoves(moveMap);
-        moveMap.freeze();
-        moveMap.forEach(entry -> entry.getMove().registerContextEntries(moveContext));
+
+        this.moveSet = MoveSet.get(type, "default");
+        if (this.moveSet == null) {
+            throw new NoSuchElementException("No 'default' move set found for spec " + type);
+        }
+
+        moveSet.registerListener(this);
     }
 
     @Override
@@ -125,18 +133,56 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
                 volume, pitch);
     }
 
-    protected abstract void registerMoves(MoveMap<A, S> moves);
+    @Override
+    public void onMoveSetReload(MoveSet<A, S> moveSet) {
+        if (!this.moveSet.getName().equals(moveSet.getName())) return;
 
-    public boolean initMove(MoveType type) {
-        return handleMove(type);
+        switchMoveSet(moveSet);
+    }
+
+    /**
+     * Switches the move set to a different, registered move set.
+     * @param name The name of the move set to switch to.
+     */
+    public void switchMoveSet(String name) {
+        MoveSet<A, S> moveSet = MoveSet.get(getType(), name);
+        if (moveSet == null) {
+            JCraft.LOGGER.error("Move set '{}' not found for {}", name, getType());
+            return;
+        }
+
+        switchMoveSet(moveSet);
+    }
+
+    private void switchMoveSet(MoveSet<A, S> moveSet) {
+        this.moveSet = moveSet;
+        moveSet.registerListener(this); // implementation uses a set, so this is fine
+        moveMap.copyFrom(moveSet.getMoveMap());
+        moveContext.clear();
+        moveMap.forEach(entry -> entry.getMove().registerContextEntries(moveContext));
+    }
+
+    public boolean initMove(MoveClass moveClass) {
+        if (getCurrentMove() != null) {
+            if (getCurrentMove().onInitMove(getThis(), moveClass)) {
+                return true;
+            }
+
+            if (getCurrentMove().getFollowup() != null && getCurrentMove().getFollowupFrame().isPresent() &&
+                    getCurrentMove().getMoveClass() == moveClass && getMoveStun() <= getCurrentMove().getFollowupFrame().getAsInt()) {
+                moveMap.initiateFollowup(getThis(), getCurrentMove(), false, 0);
+            }
+        }
+
+        return handleMove(moveClass);
     }
 
     public boolean canHoldMove(@Nullable MoveInputType type) {
-        if (type == null || type.getMoveType() == null) {
+        if (type == null || type.getMoveClass() == null) {
             return false;
         }
 
-        MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(type.getMoveType(), getThis());
+        MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(type.getMoveClass(), getThis());
         return entry == null ? type.isHoldable() : MoreObjects.firstNonNull(entry.getMove().getIsHoldable(), type.isHoldable());
     }
 
@@ -148,11 +194,11 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         return moveStun <= 0 && !JUtils.isAffectedByTimeStop(user) && !user.hasEffect(JStatusRegistry.DAZED.get());
     }
 
-    public boolean handleMove(MoveType type) {
+    public boolean handleMove(MoveClass type) {
         return handleMove(type, 1f);
     }
 
-    public boolean handleMove(MoveType type, float animationSpeed) {
+    public boolean handleMove(MoveClass type, float animationSpeed) {
         MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(type, getThis());
         if (entry == null) {
             return false;
@@ -173,8 +219,6 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     public boolean handleMove(AbstractMove<?, ? super A> move, CooldownType cooldownType, @Nullable S state, float animationSpeed) {
-        move = moveMap.getRegisteredMoveFor(move);
-
         if (!move.canBeInitiated(getThis())) {
             return false;
         }
@@ -301,7 +345,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             armorPoints = 0;
 
             if (queuedMove != null) {
-                initMove(queuedMove.getMoveType());
+                initMove(queuedMove.getMoveClass());
                 queuedMove = null;
             }
 
@@ -311,6 +355,8 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             return;
         }
 
+        moveMap.tickMoves(getThis());
+
         //JCraft.LOGGER.info("SERVER: Movestun is " + moveStun);
 
         // Process attack
@@ -318,7 +364,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         moveStun--;
         if (move != null) {
             // Make sure the correct holding type is set
-            MoveInputType curMoveInputType = MoveInputType.fromMoveType(move.getMoveType());
+            MoveInputType curMoveInputType = MoveInputType.fromMoveClass(move.getMoveClass());
             if (canHoldMove(curMoveInputType) && getHoldingType() != curMoveInputType) {
                 setHoldingType(curMoveInputType);
                 //setHolding(true);

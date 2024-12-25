@@ -1,28 +1,28 @@
 package net.arna.jcraft.common.entity.stand;
 
+import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.common.attack.actions.EffectAction;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.common.attack.core.data.StateContainer;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.attack.moves.starplatinum.theworld.GroundSlamAttack;
+import net.arna.jcraft.common.attack.moves.starplatinum.theworld.SPTWGroundSlamAttack;
+import net.arna.jcraft.common.attack.moves.starplatinum.theworld.TimeStrikeAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -30,13 +30,16 @@ import java.util.function.Consumer;
  * @see StandType#STAR_PLATINUM_THE_WORLD
  * @see net.arna.jcraft.client.model.entity.stand.StarPlatinumModel StarPlatinumModel
  * @see net.arna.jcraft.client.renderer.entity.stands.SPTWRenderer SPTWRenderer
- * @see GroundSlamAttack
+ * @see SPTWGroundSlamAttack
  */
 public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPTWEntity.State> {
-    public static final GroundSlamAttack GROUND_SLAM = new GroundSlamAttack(20, 12, 19,
+    public static final MoveSet<SPTWEntity, State> MOVE_SET = MoveSet.create(StandType.STAR_PLATINUM_THE_WORLD,
+            SPTWEntity::registerMoves, State.class);
+
+    public static final SPTWGroundSlamAttack GROUND_SLAM = new SPTWGroundSlamAttack(20, 12, 19,
             0.75f, 7f, 11, 1.8f, 0f, 0.8f)
             .withAnim(State.GROUND_SLAM)
-            .withImpactSound(JSoundRegistry.IMPACT_8.get())
+            .withImpactSound(JSoundRegistry.IMPACT_8)
             .withLaunchNoShockwave()
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -46,7 +49,7 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
     public static final SimpleAttack<SPTWEntity> LIGHT_FOLLOWUP = new SimpleAttack<SPTWEntity>(
             0, 5, 14, 0.75f, 6, 12, 1.5f, 1f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
             .withBlockStun(4)
             .withExtraHitBox(0, 0.25, 1)
@@ -59,21 +62,21 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
                     0.75f, 5f, 10, 0.2f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(GROUND_SLAM)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withInfo(
                     Component.translatable("jcraft.starplatinum.m1"),
                     Component.literal("quick combo starter, low knockback")
             );
     public static final MainBarrageAttack<SPTWEntity> BARRAGE = new MainBarrageAttack<SPTWEntity>(280, 0,
             40, 0.75f, 1f, 30, 2f, 0.25f, 0f, 3, Blocks.OBSIDIAN.defaultDestroyTime())
-            .withSound(JSoundRegistry.STAR_PLATINUM_BARRAGE.get())
+            .withSound(JSoundRegistry.STAR_PLATINUM_BARRAGE)
             .withInfo(
                     Component.translatable("jcraft.generic.barrage"),
                     Component.literal("fast reliable combo starter/extender, high stun")
             );
-    public static final SimpleAttack<SPTWEntity> TIME_STRIKE = new SimpleAttack<SPTWEntity>(300, 7,
+    public static final TimeStrikeAttack TIME_STRIKE = new TimeStrikeAttack(300, 7,
             11, 0.75f, 5f, 12, 1.5f, 0.6f, -0.25f)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withExtraHitBox(1f)
             .withInfo(
                     Component.translatable("jcraft.sptw.sp1"),
@@ -83,8 +86,8 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
             );
     public static final SimpleAttack<SPTWEntity> BACKHAND = new SimpleAttack<SPTWEntity>(240, 7, 12,
             0.75f, 6f, 20, 1.5f, 0.25f, 0f)
-            .withSound(JSoundRegistry.SPTW_BACKHAND.get())
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withSound(JSoundRegistry.SPTW_BACKHAND)
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withExtraHitBox(1f)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -94,8 +97,8 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
             );
     public static final KnockdownAttack<SPTWEntity> GRAB_SLAM = new KnockdownAttack<SPTWEntity>(0,
             16, 24, 1f, 9f, 10, 1.75f, 0.4f, 0f, 25)
-            .withSound(JSoundRegistry.SPTW_UPPERCUT.get())
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withSound(JSoundRegistry.SPTW_UPPERCUT)
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHyperArmor()
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_3)
@@ -104,19 +107,19 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
                     Component.empty()
             );
     public static final GrabAttack<SPTWEntity, State> GRAB2 = new GrabAttack<>(280, 8, 20,
-            1f, 2f, 20, 1.5f, 0.1f, 0f, GRAB_SLAM, State.GRAB_HIT2)
-            .withSound(JSoundRegistry.SPTW_GRAB.get())
-            .withImpactSound(JSoundRegistry.SPTW_GRABHIT.get())
+            1f, 2f, 20, 1.5f, 0.1f, 0f, GRAB_SLAM, StateContainer.of(State.GRAB_HIT2))
+            .withSound(JSoundRegistry.SPTW_GRAB)
+            .withImpactSound(JSoundRegistry.SPTW_GRABHIT)
             .withHitAnimation(null)
             .withInfo(
                     Component.translatable("jcraft.sptw.sp3"),
                     Component.literal("grab, high damage combo-finishing knockdown")
             );
-    public static final EffectInflictingAttack<SPTWEntity> GRAB_HIT = new EffectInflictingAttack<SPTWEntity>(0,
-            16, 24, 1f, 6f, 20, 1.75f, 0.4f, 0f,
-            List.of(new MobEffectInstance(MobEffects.LEVITATION, 5, 10, true, false)))
-            .withSound(JSoundRegistry.SPTW_UPPERCUT.get())
-            .withImpactSound(JSoundRegistry.IMPACT_6.get())
+    public static final SimpleAttack<SPTWEntity> GRAB_HIT = new SimpleAttack<SPTWEntity>(0,
+            16, 24, 1f, 6f, 20, 1.75f, 0.4f, 0f)
+            .withSound(JSoundRegistry.SPTW_UPPERCUT)
+            .withImpactSound(JSoundRegistry.IMPACT_6)
+            .withAction(EffectAction.inflict(MobEffects.LEVITATION, 5, 10, true, false))
             .withLaunch()
             .withHyperArmor()
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
@@ -126,29 +129,28 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
                     Component.empty()
             );
     public static final GrabAttack<SPTWEntity, State> GRAB = new GrabAttack<>(280, 8, 20,
-            1f, 2f, 20, 1.5f, 0.1f, 0f, GRAB_HIT, State.GRAB_HIT)
+            1f, 2f, 20, 1.5f, 0.1f, 0f, GRAB_HIT, StateContainer.of(State.GRAB_HIT))
             .withCrouchingVariant(GRAB2)
-            .withSound(JSoundRegistry.SPTW_GRAB.get())
-            .withImpactSound(JSoundRegistry.SPTW_GRABHIT.get())
+            .withSound(JSoundRegistry.SPTW_GRAB)
+            .withImpactSound(JSoundRegistry.SPTW_GRABHIT)
             .withHitAnimation(null)
             .withInfo(
                     Component.translatable("jcraft.sptw.sp3"),
                     Component.literal("grab, combo-starting uppercut")
             );
     public static final TimeStopMove<SPTWEntity> TIME_STOP = new TimeStopMove<SPTWEntity>(600, 5, 10,
-            JServerConfig.SPTW_TIME_STOP_DURATION::getValue)
-            .withSound(JSoundRegistry.STAR_PLATINUM_THE_WORLD.get())
+            Either.right(JServerConfig.SPTW_TIME_STOP_DURATION))
+            .withSound(JSoundRegistry.STAR_PLATINUM_THE_WORLD)
             .withInfo(
                     Component.translatable("jcraft.generic.ts"),
                     Component.literal("1.75 seconds, extremely low windup")
             );
     public static final TimeSkipMove<SPTWEntity> TIME_SKIP = new TimeSkipMove<SPTWEntity>(300, 14)
-            .withSound(JSoundRegistry.STAR_PLATINUM_TIMESKIP.get())
+            .withSound(JSoundRegistry.STAR_PLATINUM_TIMESKIP)
             .withInfo(
                     Component.translatable("jcraft.generic.tp"),
                     Component.literal("14m range")
             );
-    private boolean turnAround;
 
     public SPTWEntity(Level worldIn) {
         super(StandType.STAR_PLATINUM_THE_WORLD, worldIn);
@@ -160,7 +162,6 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
 
         freespace = """
                 BNBs:
-                                        
                     -the superman
                     Punch>cr.Time Strike>Backhand>What an Ugly Watch>delay Punch>Timestop~Star Breaker>dash/Timeskip>Barrage>Light""";
 
@@ -172,19 +173,18 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
         };
     }
 
-    @Override
-    protected void registerMoves(MoveMap<SPTWEntity, State> moves) {
-        moves.registerImmediate(MoveType.LIGHT, PUNCH, State.PUNCH);
+    private static void registerMoves(MoveMap<SPTWEntity, State> moves) {
+        moves.registerImmediate(MoveClass.LIGHT, PUNCH, State.PUNCH);
 
-        moves.register(MoveType.HEAVY, STAR_BREAKER, State.HEAVY).withCrouchingVariant(State.GROUND_BREAKER);
-        moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
+        moves.register(MoveClass.HEAVY, STAR_BREAKER, State.HEAVY).withCrouchingVariant(State.GROUND_BREAKER);
+        moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
 
-        moves.register(MoveType.SPECIAL1, TIME_STRIKE, State.TIME_STRIKE);
-        moves.register(MoveType.SPECIAL2, BACKHAND, State.BACKHAND);
-        moves.register(MoveType.SPECIAL3, GRAB, State.GRAB).withCrouchingVariant(State.GRAB);
-        moves.register(MoveType.ULTIMATE, TIME_STOP, State.TIME_STOP);
+        moves.register(MoveClass.SPECIAL1, TIME_STRIKE, State.TIME_STRIKE);
+        moves.register(MoveClass.SPECIAL2, BACKHAND, State.BACKHAND);
+        moves.register(MoveClass.SPECIAL3, GRAB, State.GRAB).withCrouchingVariant(State.GRAB);
+        moves.register(MoveClass.ULTIMATE, TIME_STOP, State.TIME_STOP);
 
-        moves.register(MoveType.UTILITY, TIME_SKIP, State.TIME_SKIP);
+        moves.register(MoveClass.UTILITY, TIME_SKIP, State.TIME_SKIP);
     }
 
     @Override
@@ -193,41 +193,6 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
             return;
         }
         super.desummon();
-    }
-
-    @Override
-    public boolean initMove(MoveType type) {
-        if (!tryFollowUp(type, MoveType.LIGHT)) {
-            boolean s = super.initMove(type);
-            if (type == MoveType.SPECIAL1) {
-                turnAround = getUserOrThrow().isShiftKeyDown();
-            }
-            return s;
-        }
-
-        return true;
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        if (level().isClientSide || !hasUser() || getCurrentMove() == null || getCurrentMove().getOriginalMove() != TIME_STRIKE || getMoveStun() != 7) {
-            return;
-        }
-
-        /*
-            NbtCompound userData = ((IEntityDataSaver)user).getPersistentData();
-            if (userData.getInt(JCraft.utilCD) < 200)
-                userData.putInt(JCraft.utilCD, 200);
-             */
-
-        final LivingEntity user = getUserOrThrow();
-        final Vec3 prevPos = user.getEyePosition();
-
-        TimeSkipMove.doTimeSkip(this, user, 2.5, List.of(JSoundRegistry.STAR_PLATINUM_TIMESKIP.get()));
-        if (turnAround) {
-            user.lookAt(EntityAnchorArgument.Anchor.EYES, prevPos);
-        }
     }
 
     @Override

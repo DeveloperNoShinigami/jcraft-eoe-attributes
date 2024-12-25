@@ -4,16 +4,15 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.moves.shared.GrabAttack;
-import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
-import net.arna.jcraft.common.attack.moves.shared.NoOpMove;
-import net.arna.jcraft.common.attack.moves.shared.PilotModeMove;
-import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
-import net.arna.jcraft.common.attack.moves.shared.UppercutAttack;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.common.attack.core.data.StateContainer;
+import net.arna.jcraft.common.attack.moves.purplehaze.BackhandAttack;
+import net.arna.jcraft.common.attack.moves.purplehaze.PHRekkaAttack;
+import net.arna.jcraft.common.attack.moves.purplehaze.distortion.DistortionMove;
+import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -32,13 +31,16 @@ import java.util.function.Consumer;
  * @see net.arna.jcraft.client.renderer.entity.stands.PurpleHazeDistortionRenderer PurpleHazeDistortionRenderer
  */
 public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<PurpleHazeDistortionEntity, PurpleHazeDistortionEntity.State> {
+    public static final MoveSet<PurpleHazeDistortionEntity, State> MOVE_SET = MoveSet.create(StandType.PURPLE_HAZE_DISTORTION,
+            PurpleHazeDistortionEntity::registerMoves, State.class);
+
     private static final @NonNull KnockdownAttack<AbstractPurpleHazeEntity<?, ?>> CROUCHING_LIGHT_FOLLOWUP_ATTACK = BACKHAND_FOLLOWUP.copy().withAnim(State.BACKHAND_FOLLOWUP);
-    private static final @NonNull UppercutAttack<AbstractPurpleHazeEntity<?, ?>> CROUCHING_LIGHT_ATTACK = BACKHAND.copy().withFollowup(CROUCHING_LIGHT_FOLLOWUP_ATTACK);
+    private static final @NonNull BackhandAttack CROUCHING_LIGHT_ATTACK = BACKHAND.copy().withFollowup(CROUCHING_LIGHT_FOLLOWUP_ATTACK);
     private static final @NonNull SimpleAttack<AbstractPurpleHazeEntity<?, ?>> LIGHT_FOLLOWUP_ATTACK = LIGHT_FOLLOWUP.copy().withAnim(State.LIGHT_FOLLOWUP);
     private static final @NonNull SimpleAttack<AbstractPurpleHazeEntity<?, ?>> LIGHT_ATTACK = LIGHT.copy().withFollowup(LIGHT_FOLLOWUP_ATTACK).withCrouchingVariant(CROUCHING_LIGHT_ATTACK);
     private static final @NonNull KnockdownAttack<AbstractPurpleHazeEntity<?, ?>> REKKA_3 = REKKA3.copy().withAnim(State.REKKA3);
     private static final @NonNull SimpleAttack<AbstractPurpleHazeEntity<?, ?>> REKKA_2 = REKKA2.copy().withAnim(State.REKKA2).withFollowup(REKKA_3);
-    private static final @NonNull SimpleAttack<AbstractPurpleHazeEntity<?, ?>> REKKA_1 = REKKA1.copy().withAnim(State.REKKA1).withFollowup(REKKA_2);
+    private static final @NonNull PHRekkaAttack REKKA_1 = REKKA1.copy().withAnim(State.REKKA1).withFollowup(REKKA_2);
 
     public static final PilotModeMove<PurpleHazeDistortionEntity> PILOT_MODE = new PilotModeMove<PurpleHazeDistortionEntity>(20)
             .withInfo(
@@ -46,8 +48,7 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
                     Component.literal("5m range")
             );
 
-    public static final NoOpMove<PurpleHazeDistortionEntity> DISTORTION = new NoOpMove<PurpleHazeDistortionEntity>(20, 0, 0)
-            .withInitAction((attacker, user, ctx) -> attacker.nextPoisonType())
+    public static final DistortionMove DISTORTION = new DistortionMove(20)
             .withCrouchingVariant(PILOT_MODE)
             .withInfo(
                     Component.literal("Distortion"),
@@ -60,7 +61,7 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> GRAB_HIT_FINAL = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(0, 27,
             34, 0.75f, 4f, 8, 2f, 1.25f, 0f)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
@@ -69,7 +70,7 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
             );
     public static final SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>> GRAB_HIT = new SimpleMultiHitAttack<AbstractPurpleHazeEntity<?, ?>>(0,
             34, 0.75f, 1f, 10, 2f, 0f, 0f, IntSet.of(6, 8, 10, 12, 14, 16, 18))
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withStunType(StunType.UNBURSTABLE)
             .withFinisher(19, GRAB_HIT_FINAL)
             .withInfo(
@@ -78,10 +79,10 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
             );
     public static final GrabAttack<PurpleHazeDistortionEntity, State> GRAB = new GrabAttack<>(
             280, 12, 24, 0.75f, 0f, 45, 1.5f, 0f, 0f,
-            GRAB_HIT, State.GRAB_HIT, 25, 1)
+            GRAB_HIT, StateContainer.of(State.GRAB_HIT), 25, 1)
             .withCrouchingVariant(GROUND_SLAM)
-            .withSound(JSoundRegistry.D4C_THROW.get())
-            .withImpactSound(JSoundRegistry.PH_GRAB_HIT.get())
+            .withSound(JSoundRegistry.D4C_THROW)
+            .withImpactSound(JSoundRegistry.PH_GRAB_HIT)
             .withInfo(
                     Component.literal("Grab"),
                     Component.literal("unblockable, combo finisher")
@@ -108,22 +109,21 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
         };
     }
 
-    @Override
-    protected void registerMoves(MoveMap<PurpleHazeDistortionEntity, State> moves) {
-        MoveMap.Entry<PurpleHazeDistortionEntity, State> light = moves.register(MoveType.LIGHT, LIGHT_ATTACK, State.PUNCH);
-        light.withFollowUp(State.LIGHT_FOLLOWUP);
-        light.withCrouchingVariant(State.BACKHAND).withFollowUp(State.BACKHAND_FOLLOWUP);
+    private static void registerMoves(MoveMap<PurpleHazeDistortionEntity, State> moves) {
+        MoveMap.Entry<PurpleHazeDistortionEntity, State> light = moves.register(MoveClass.LIGHT, LIGHT_ATTACK, State.PUNCH);
+        light.withFollowup(State.LIGHT_FOLLOWUP);
+        light.withCrouchingVariant(State.BACKHAND).withFollowup(State.BACKHAND_FOLLOWUP);
 
-        moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
-        moves.register(MoveType.HEAVY, HEAVY, State.HEAVY);
+        moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
+        moves.register(MoveClass.HEAVY, HEAVY, State.HEAVY);
 
-        moves.register(MoveType.SPECIAL1, LAUNCH_CAPSULE, State.LAUNCH).withCrouchingVariant(State.LAUNCH2);
-        moves.register(MoveType.SPECIAL2, REKKA_1, State.REKKA1);
-        moves.register(MoveType.SPECIAL3, GRAB, State.GRAB).withCrouchingVariant(State.GROUND_SLAM);
+        moves.register(MoveClass.SPECIAL1, LAUNCH_CAPSULE, State.LAUNCH).withCrouchingVariant(State.LAUNCH2);
+        moves.register(MoveClass.SPECIAL2, REKKA_1, State.REKKA1);
+        moves.register(MoveClass.SPECIAL3, GRAB, State.GRAB).withCrouchingVariant(State.GROUND_SLAM);
 
-        moves.register(MoveType.ULTIMATE, FULL_RELEASE, State.FULL_RELEASE);
+        moves.register(MoveClass.ULTIMATE, FULL_RELEASE, State.FULL_RELEASE);
 
-        moves.register(MoveType.UTILITY, DISTORTION).withCrouchingVariant(CooldownType.UTILITY, null);
+        moves.register(MoveClass.UTILITY, DISTORTION).withCrouchingVariant(CooldownType.UTILITY, null);
     }
 
     @Override

@@ -1,15 +1,16 @@
 package net.arna.jcraft.common.entity.stand;
 
+import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.actions.EffectAction;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.madeinheaven.*;
-import net.arna.jcraft.common.attack.moves.shared.EffectInflictingAttack;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -57,12 +58,14 @@ import java.util.function.Consumer;
  * @see TimeAccelerationMove
  */
 public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHeavenEntity.State> {
-    public static final EffectInflictingAttack<MadeInHeavenEntity> SPEED_CHOP = new EffectInflictingAttack<MadeInHeavenEntity>(
-            JCraft.LIGHT_COOLDOWN, 6, 11, 0.75f, 3f, 8, 1.5f, 0.5f, -0.1f,
-            List.of(new MobEffectInstance(JStatusRegistry.BLEEDING.get(), 80, 1, true, false, true)))
+    public static final MoveSet<MadeInHeavenEntity, State> MOVE_SET = MoveSet.create(StandType.MADE_IN_HEAVEN,
+            MadeInHeavenEntity::registerMoves, State.class);
+
+    public static final SimpleAttack<MadeInHeavenEntity> SPEED_CHOP = new SimpleAttack<MadeInHeavenEntity>(
+            JCraft.LIGHT_COOLDOWN, 6, 11, 0.75f, 3f, 8, 1.5f, 0.5f, -0.1f)
             .withAnim(State.SPEED_CHOP)
+            .withAction(EffectAction.inflict(JStatusRegistry.BLEEDING.get(), 80, 1, true, false, true))
             .withImpactSound(SoundEvents.TRIDENT_HIT)
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Component.literal("Speed Chop"),
@@ -71,11 +74,10 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     public static final SimpleAttack<MadeInHeavenEntity> LIGHT_FOLLOWUP = new SimpleAttack<MadeInHeavenEntity>(
             0, 6, 12, 0.75f, 5, 8, 1.5f, 1f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
             .withBlockStun(4)
             .withExtraHitBox(0, 0.25, 1)
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withInfo(
                     Component.literal("Kick"),
                     Component.literal("quick combo finisher")
@@ -85,14 +87,12 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(SPEED_CHOP)
             .withImpactSound(SoundEvents.TRIDENT_HIT)
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withInfo(
                     Component.literal("Slice"),
                     Component.literal("quick combo starter")
             );
     public static final SimpleAttack<MadeInHeavenEntity> BARRAGE_FINISHER = new SimpleAttack<MadeInHeavenEntity>(0,
             6, 9, 0.85f, 1f, 10, 1.5f, 1.1f, 0f)
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
@@ -102,26 +102,23 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     public static final MainBarrageAttack<MadeInHeavenEntity> BARRAGE = new MainBarrageAttack<MadeInHeavenEntity>(200,
             0, 32, 0.85f, 1f, 10, 2f, 0.1f, 0f, 2, Blocks.OAK_PLANKS.defaultDestroyTime())
             .withFinisher(23, BARRAGE_FINISHER)
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
-            .withSound(JSoundRegistry.MIH_BARRAGE.get())
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withSound(JSoundRegistry.MIH_BARRAGE)
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("short, knocks back")
             );
     public static final SpeedSliceAttack SPEED_SLICE = new SpeedSliceAttack(300, 10, 11,
             1.25f, 6f, 1.5f, 1f)
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
-            .withSound(JSoundRegistry.MIH_SPEEDSLICE.get())
+            .withSound(JSoundRegistry.MIH_SPEEDSLICE)
             .withInfo(
                     Component.literal("Speed Slice"),
                     Component.literal("short windup, harming teleport with hitstun and light knockback")
             );
     public static final KnockdownAttack<MadeInHeavenEntity> LEG_CRUSHER = new KnockdownAttack<MadeInHeavenEntity>(
             80, 9, 19, 0.85f, 7f, 22, 1.5f, 0.35f, 0.2f, 45)
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
-            .withSound(JSoundRegistry.MIH_LEGCRUSHER.get())
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
+            .withSound(JSoundRegistry.MIH_LEGCRUSHER)
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT)
             .withExtraHitBox(0, -0.5, 1)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -131,10 +128,9 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             );
     public static final SimpleAttack<MadeInHeavenEntity> LOW_KICK = new SimpleAttack<MadeInHeavenEntity>(80,
             8, 17, 0.85f, 6f, 26, 1.5f, 0.25f, 0.2f)
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
             .withCrouchingVariant(LEG_CRUSHER)
-            .withSound(JSoundRegistry.MIH_LEGCRUSHER.get())
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withSound(JSoundRegistry.MIH_LEGCRUSHER)
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withExtraHitBox(0, -0.5, 1)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -144,9 +140,8 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             );
     public static final FuryChopAttack FURY_CHOP = new FuryChopAttack(200, 15, 24, 0.85f,
             7f, 20, 1.6f, 0.25f, 0.2f)
-            .withSound(JSoundRegistry.MIH_FURYCHOP.get())
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
+            .withSound(JSoundRegistry.MIH_FURYCHOP)
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -155,9 +150,8 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
             );
     public static final SimpleAttack<MadeInHeavenEntity> DONUT = new SimpleAttack<MadeInHeavenEntity>(200,
             26, 32, 0.75f, 8.5f, 40, 2f, -0.2f, 0.2f)
-            .withSound(JSoundRegistry.STAND_DESUMMON.get())
-            .withImpactSound(JSoundRegistry.IMPACT_7.get())
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
+            .withSound(JSoundRegistry.STAND_DESUMMON)
+            .withImpactSound(JSoundRegistry.IMPACT_7)
             .withHyperArmor()
             .withBlockStun(4)
             .withHitSpark(JParticleType.HIT_SPARK_3)
@@ -167,9 +161,8 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                     Component.literal("feigns stand desummon, uninterruptible combo starter")
             );
     public static final TimeAccelerationMove TIME_ACCELERATION = new TimeAccelerationMove(1400, 20,
-            40, 1f, JServerConfig.MIH_TIME_ACCELERATION_DURATION::getValue)
-            .withSound(JSoundRegistry.MIH_TACCEL.get())
-            .withAction((attacker, user, ctx, targets) -> attacker.speedometer = 0) // Clear speedometer
+            40, 1f, Either.right(JServerConfig.MIH_TIME_ACCELERATION_DURATION))
+            .withSound(JSoundRegistry.MIH_TACCEL)
             .withInfo(
                     Component.literal("Time Acceleration"),
                     Component.literal("""
@@ -178,8 +171,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                             the speedometer impacts the level of speed and haste granted by Time Acceleration
                             if the speedometer is full and the charging period finishes, enemies become standless for 15s"""));
     public static final CircleAttack CIRCLE = new CircleAttack(400, 13, 14, 1.25f)
-            .withSound(JSoundRegistry.MIH_CIRCLE.get())
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
+            .withSound(JSoundRegistry.MIH_CIRCLE)
             .withInfo(
                     Component.literal("Heaven's Judgement"),
                     Component.literal("rapidly circles a looked-at target within 4m at a radius of 7m")
@@ -187,8 +179,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
 
     public static final JudgementAttack JUDGEMENT = new JudgementAttack(300, 20, 60, 1.25f, 2)
             .withCrouchingVariant(CIRCLE)
-            .withAction(MadeInHeavenEntity::tryIncrementSpeedometer)
-            .withSound(JSoundRegistry.MIH_JUDGEMENT.get())
+            .withSound(JSoundRegistry.MIH_JUDGEMENT)
             .withInfo(
                     Component.literal("Divine Severance"),
                     Component.literal("Made in Heaven rapidly speed slices an area, then finishes with a large, launching slice")
@@ -219,11 +210,11 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         freespace =
                 """
                         PASSIVE: Speed I
-                                        
+                        
                         BNBs:
                             -the flashbang
                             (Donut>Light>)Speed Slice>Low Kick>Fury Chop>Light>Barrage>dash>Light~Light
-                            
+                        
                             -""";
 
         auraColors = new Vector3f[]{
@@ -234,28 +225,32 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         };
     }
 
-    @Override
-    protected void registerMoves(MoveMap<MadeInHeavenEntity, State> moves) {
-        moves.registerImmediate(MoveType.LIGHT, SLICE, State.SLICE);
+    private static void registerMoves(MoveMap<MadeInHeavenEntity, State> moves) {
+        moves.registerImmediate(MoveClass.LIGHT, SLICE, State.SLICE);
 
-        moves.register(MoveType.HEAVY, DONUT, State.DONUT);
-        moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
+        moves.register(MoveClass.HEAVY, DONUT, State.DONUT);
+        moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
 
-        moves.register(MoveType.SPECIAL1, LOW_KICK, State.LOW_KICK).withCrouchingVariant(State.LEG_CRUSHER);
-        moves.register(MoveType.SPECIAL2, FURY_CHOP, State.FURY_CHOP);
-        moves.register(MoveType.SPECIAL3, JUDGEMENT, State.JUDGEMENT).withCrouchingVariant(State.CIRCLE_STARTUP);
-        moves.register(MoveType.ULTIMATE, TIME_ACCELERATION, State.TIME_ACCELERATION);
+        moves.register(MoveClass.SPECIAL1, LOW_KICK, State.LOW_KICK).withCrouchingVariant(State.LEG_CRUSHER);
+        moves.register(MoveClass.SPECIAL2, FURY_CHOP, State.FURY_CHOP);
+        moves.register(MoveClass.SPECIAL3, JUDGEMENT, State.JUDGEMENT).withCrouchingVariant(State.CIRCLE_STARTUP);
+        moves.register(MoveClass.ULTIMATE, TIME_ACCELERATION, State.TIME_ACCELERATION);
 
-        moves.register(MoveType.UTILITY, SPEED_SLICE, State.SPEED_SLICE);
+        moves.register(MoveClass.UTILITY, SPEED_SLICE, State.SPEED_SLICE);
     }
 
     @Override
-    public boolean initMove(MoveType type) {
-        if (!tryFollowUp(type, MoveType.LIGHT)) {
+    public boolean initMove(MoveClass type) {
+        if (!tryFollowUp(type, MoveClass.LIGHT)) {
             return super.initMove(type);
         }
 
         return true;
+    }
+
+    @Override
+    public void onPerform(AbstractMove<?, ? super MadeInHeavenEntity> move, Set<LivingEntity> targets) {
+        tryIncrementSpeedometer(targets);
     }
 
     public int getAccelTime() {
@@ -283,7 +278,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
      * Tracks the speedometer value every tick, for actual addition see incrementSpeedometer()
      */
     public void setSpeedometer(int speedometer) {
-        entityData.set(SPEEDOMETER, speedometer);
+        entityData.set(SPEEDOMETER, this.speedometer = speedometer);
     }
 
     public boolean getAfterimage() {
@@ -332,9 +327,9 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         return true;
     }
 
-    private static void tryIncrementSpeedometer(MadeInHeavenEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
-        if (attacker.getAccelTime() > 0 && !targets.isEmpty()) {
-            attacker.incrementSpeedometer();
+    private void tryIncrementSpeedometer(Set<LivingEntity> targets) {
+        if (getAccelTime() > 0 && !targets.isEmpty()) {
+            incrementSpeedometer();
         }
     }
 
@@ -356,11 +351,6 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
         final LivingEntity user = getUserOrThrow();
         final int aTime = getAccelTime();
 
-        // Circling
-        CIRCLE.tickCircle(this);
-
-        // Time Accel handling
-        TIME_ACCELERATION.tickTimeAcceleration(this);
 
         if (!user.hasEffect(JStatusRegistry.DAZED.get())) {
             if (aTime > 0) {

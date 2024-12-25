@@ -1,37 +1,53 @@
 package net.arna.jcraft.common.attack.moves.base;
 
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.config.IntOption;
+import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import java.util.Set;
-import java.util.function.IntSupplier;
 
+import java.util.Set;
+import java.util.function.Function;
+
+@Setter
 @Getter
 public abstract class AbstractTimeStopMove<T extends AbstractTimeStopMove<T, A>, A extends StandEntity<? extends A, ?>> extends AbstractMove<T, A> {
-    @Setter
-    protected IntSupplier timeStopDuration;
+    protected Either<Integer, IntOption> timeStopDuration;
     private static final MobEffectInstance tsBlind = new MobEffectInstance(MobEffects.BLINDNESS, 19, 0, true, false, false);
 
-    protected AbstractTimeStopMove(final int cooldown, final int windup, final int duration, final float moveDistance, final IntSupplier timeStopDuration) {
+    protected AbstractTimeStopMove(final int cooldown, final int windup, final int duration, final float moveDistance,
+                                   final Either<Integer, IntOption> timeStopDuration) {
         super(cooldown, windup, duration, moveDistance);
         this.timeStopDuration = timeStopDuration;
     }
 
     @Override
     public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
-        attacker.setTsTime(timeStopDuration.getAsInt());
+        int duration = timeStopDuration.map(Function.identity(), IntOption::getValue);
+        attacker.setTsTime(duration);
         //attacker.setCurrentMove(null);
 
         user.addEffect(new MobEffectInstance(tsBlind));
 
-        JCraft.beginTimestop(user, attacker.position(), (ServerLevel) attacker.level(), timeStopDuration.getAsInt());
+        JCraft.beginTimestop(user, attacker.position(), (ServerLevel) attacker.level(), duration);
         return Set.of();
+    }
+
+    protected abstract static class Type<M extends AbstractTimeStopMove<? extends M, ?>> extends AbstractMove.Type<M> {
+        protected RecordCodecBuilder<M, Either<Integer, IntOption>> timeStopDuration() {
+            return Codec.either(ExtraCodecs.POSITIVE_INT, JServerConfig.INT_OPTION_CODEC).fieldOf("time_stop_duration")
+                    .forGetter(AbstractTimeStopMove::getTimeStopDuration);
+        }
     }
 }

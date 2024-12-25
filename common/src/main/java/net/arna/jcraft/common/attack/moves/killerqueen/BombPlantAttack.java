@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.killerqueen;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
@@ -16,16 +19,24 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 public final class BombPlantAttack extends AbstractSimpleAttack<BombPlantAttack, AbstractKillerQueenEntity<?, ?>> {
-    public BombPlantAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final int stun, final float hitboxSize, final float offset) {
-        super(cooldown, windup, duration, attackDistance, 0f, stun, hitboxSize, 0f, offset);
+    public BombPlantAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
+                           final int stun, final float hitboxSize, final float offset) {
+        super(cooldown, windup, duration, moveDistance, 0f, stun, hitboxSize, 0f, offset);
     }
 
     private static final Vec3 halfBox = new Vec3(0.5, 0.5, 0.5);
+
+    @Override
+    public @NotNull MoveType<BombPlantAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
 
     @Override
     public @NonNull Set<LivingEntity> perform(final AbstractKillerQueenEntity<?, ?> attacker, final LivingEntity user, final MoveContext ctx) {
@@ -73,7 +84,17 @@ public final class BombPlantAttack extends AbstractSimpleAttack<BombPlantAttack,
 
     @Override
     public @NonNull BombPlantAttack copy() {
-        return copyExtras(new BombPlantAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getStun(), getHitboxSize(),
-                getOffset()));
+        return copyExtras(new BombPlantAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getStun(),
+                getHitboxSize(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<BombPlantAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<BombPlantAttack>, BombPlantAttack> buildCodec(RecordCodecBuilder.Instance<BombPlantAttack> instance) {
+            return instance.group(extras(), attackExtras(), cooldown(), windup(), duration(), moveDistance(), stun(), hitboxSize(), offset())
+                    .apply(instance, applyAttackExtras(BombPlantAttack::new));
+        }
     }
 }

@@ -1,7 +1,11 @@
 package net.arna.jcraft.common.attack.moves.starplatinum;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
@@ -29,6 +33,11 @@ public final class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumE
     public InhaleAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final int inhaleDuration) {
         super(cooldown, windup, duration, moveDistance);
         this.inhaleDuration = inhaleDuration;
+    }
+
+    @Override
+    public @NonNull MoveType<InhaleAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -117,5 +126,15 @@ public final class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumE
     @Override
     public @NonNull InhaleAttack copy() {
         return copyExtras(new InhaleAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getInhaleDuration()));
+    }
+
+    public static class Type extends AbstractMove.Type<InhaleAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<InhaleAttack>, InhaleAttack> buildCodec(RecordCodecBuilder.Instance<InhaleAttack> instance) {
+            return baseDefault(instance).and(Codec.INT.fieldOf("inhale_duration").forGetter(InhaleAttack::getInhaleDuration))
+                    .apply(instance, applyExtras(InhaleAttack::new));
+        }
     }
 }

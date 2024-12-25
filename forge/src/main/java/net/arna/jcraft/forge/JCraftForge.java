@@ -1,11 +1,17 @@
 package net.arna.jcraft.forge;
 
+import com.mojang.serialization.Codec;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.forge.EventBuses;
+import lombok.Getter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.argumenttype.AttackArgumentType;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
+import net.arna.jcraft.common.attack.core.data.MoveActionType;
+import net.arna.jcraft.common.attack.core.data.MoveConditionType;
+import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.events.EntityTickEvent;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;
@@ -21,11 +27,19 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryBuilder;
 
 import static net.arna.jcraft.JCraft.MOD_ID;
 
 @Mod(MOD_ID)
 public final class JCraftForge {
+    @Getter
+    private static Codec<MoveType<?>> moveTypeCodec;
+    @Getter
+    private static Codec<MoveConditionType<?>> moveConditionTypeCodec;
+    @Getter
+    private static Codec<MoveActionType<?>> moveActionTypeCodec;
 
     public JCraftForge() {
         var modBus = Mod.EventBusSubscriber.Bus.MOD.bus().get();
@@ -43,6 +57,10 @@ public final class JCraftForge {
 
         //DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> JCraftClient::init);
         JNetworkingForge.initServer();
+
+        registerMoveTypes();
+        registerMoveConditionTypes();
+        registerMoveActionTypes();
 
         EntityTickEvent.ENTITY_PRE.register(JCraftForge::tickEntityCaps);
         TickEvent.ServerLevelTick.SERVER_LEVEL_POST.register(JCraftForge::tickWorldCaps);
@@ -73,5 +91,29 @@ public final class JCraftForge {
 
             VampireCapability.getCapability(living).tick();
         }
+    }
+
+    private void registerMoveTypes() {
+        DeferredRegister<MoveType<?>> register = DeferredRegister.create(JCraft.id("move_type"), MOD_ID);
+        MoveSetLoader.registerMoves(register::register);
+
+        register.makeRegistry(() -> RegistryBuilder.<MoveType<?>>of()
+                .onCreate((r, m) -> moveTypeCodec = r.getCodec()));
+    }
+
+    private void registerMoveConditionTypes() {
+        DeferredRegister<MoveConditionType<?>> register = DeferredRegister.create(JCraft.id("move_condition_type"), MOD_ID);
+        MoveSetLoader.registerConditions(register::register);
+
+        register.makeRegistry(() -> RegistryBuilder.<MoveConditionType<?>>of()
+                .onCreate((r, m) -> moveConditionTypeCodec = r.getCodec()));
+    }
+
+    private void registerMoveActionTypes() {
+        DeferredRegister<MoveActionType<?>> register = DeferredRegister.create(JCraft.id("move_action_type"), MOD_ID);
+        MoveSetLoader.registerActions(register::register);
+
+        register.makeRegistry(() -> RegistryBuilder.<MoveActionType<?>>of()
+                .onCreate((r, m) -> moveActionTypeCodec = r.getCodec()));
     }
 }

@@ -1,8 +1,11 @@
 package net.arna.jcraft.common.attack.moves.goldexperience.requiem;
 
 import com.google.common.reflect.TypeToken;
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
@@ -18,17 +21,21 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREntity> {
-    public static final MoveVariable<Map<Entity, CompoundTag>> ENTITY_DATA = new MoveVariable<>(new TypeToken<>() {
-    });
-    public static final MoveVariable<List<ReturnData>> RETURN_INFO = new MoveVariable<>(new TypeToken<>() {
-    });
+    public static final MoveVariable<Map<Entity, CompoundTag>> ENTITY_DATA = new MoveVariable<>(new TypeToken<>() {});
+    private static final MoveVariable<List<ReturnData>> RETURN_INFO = new MoveVariable<>(new TypeToken<>() {});
 
     public ReturnToZeroMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public @NotNull MoveType<ReturnToZeroMove> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -104,7 +111,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(ENTITY_DATA, new WeakHashMap<>());
         ctx.register(RETURN_INFO, new ArrayList<>());
     }
@@ -121,5 +128,14 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
 
     record ReturnData(Vec3 originalPos, Entity entity) {
         // nothing else needed
+    }
+
+    public static class Type extends AbstractMove.Type<ReturnToZeroMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<ReturnToZeroMove>, ReturnToZeroMove> buildCodec(RecordCodecBuilder.Instance<ReturnToZeroMove> instance) {
+            return baseDefault(instance, ReturnToZeroMove::new);
+        }
     }
 }

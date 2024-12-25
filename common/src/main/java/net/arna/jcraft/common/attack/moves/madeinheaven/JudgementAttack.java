@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.madeinheaven;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
@@ -8,6 +11,7 @@ import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.Set;
 
 // This being a barrage is really just for the interval-based performing logic.
@@ -17,6 +21,11 @@ public final class JudgementAttack extends AbstractBarrageAttack<JudgementAttack
 
     public JudgementAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final int interval) {
         super(cooldown, windup, duration, moveDistance, 0, 0, 0, 0, 0, interval);
+    }
+
+    @Override
+    public @NonNull MoveType<JudgementAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -47,7 +56,7 @@ public final class JudgementAttack extends AbstractBarrageAttack<JudgementAttack
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(INIT_POS, Vec3.ZERO);
         ctx.register(INIT_ROT, Vec3.ZERO);
     }
@@ -60,5 +69,15 @@ public final class JudgementAttack extends AbstractBarrageAttack<JudgementAttack
     @Override
     public @NonNull JudgementAttack copy() {
         return copyExtras(new JudgementAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getInterval()));
+    }
+
+    public static class Type extends AbstractBarrageAttack.Type<JudgementAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<JudgementAttack>, JudgementAttack> buildCodec(RecordCodecBuilder.Instance<JudgementAttack> instance) {
+            return instance.group(extras(), attackExtras(), cooldown(), windup(), duration(), moveDistance(), interval())
+                    .apply(instance, applyAttackExtras(JudgementAttack::new));
+        }
     }
 }

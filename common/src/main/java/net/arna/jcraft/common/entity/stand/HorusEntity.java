@@ -4,42 +4,32 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.actions.PlaySoundAction;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.attack.moves.horus.HorusBarrageAttack;
-import net.arna.jcraft.common.attack.moves.horus.HorusDivekickAttack;
-import net.arna.jcraft.common.attack.moves.shared.EffectInflictingAttack;
-import net.arna.jcraft.common.attack.moves.shared.HoldableMove;
+import net.arna.jcraft.common.attack.moves.horus.*;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
+import net.arna.jcraft.common.attack.moves.shared.SimpleHoldableMove;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.entity.projectile.IceBranchProjectile;
-import net.arna.jcraft.common.entity.projectile.IcicleProjectile;
 import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JParticleType;
-import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.List;
+import java.lang.ref.WeakReference;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -53,10 +43,12 @@ import java.util.function.Consumer;
  * @see HorusDivekickAttack
  */
 public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
+    public static final MoveSet<HorusEntity, State> MOVE_SET = MoveSet.create(StandType.HORUS, HorusEntity::registerMoves, State.class);
+
     public static final SimpleAttack<HorusEntity> LIGHT_CROUCHING_FOLLOWUP = new SimpleAttack<HorusEntity>(
             0, 15, 25, 0.75f, 7f, 25, 1.85f, 1.5f, 0.2f)
             .withAnim(State.IMPALE)
-            .withImpactSound(JSoundRegistry.IMPACT_9.get())
+            .withImpactSound(JSoundRegistry.IMPACT_9)
             .withBlockStun(25)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -68,7 +60,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             0, 9, 13, 0.75f, 6f, 10, 1.5f, 1f, 0.2f)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withCrouchingVariant(LIGHT_CROUCHING_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withLaunch()
             .withBlockStun(4)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -79,7 +71,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     public static final SimpleAttack<HorusEntity> LIGHT_LOW = new SimpleAttack<HorusEntity>(JCraft.LIGHT_COOLDOWN,
                     5, 9, 0.95f, 4f, 8, 1.25f, 0.25f, 0.5f)
             //.withFollowup(LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_9.get())
+            .withImpactSound(JSoundRegistry.IMPACT_9)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(
                     Component.literal("Low Claw"),
@@ -88,7 +80,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     public static final SimpleAttack<HorusEntity> LIGHT_AIR = SimpleAttack.<HorusEntity>lightAttack(
                     6, 11, 0.75f, 5f, 12, 0.25f, 0.5f)
             //.withFollowup(LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withInfo(
                     Component.literal("Downward Claw"),
                     Component.literal("quick combo starter, meant for air-to-ground")
@@ -98,44 +90,39 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(LIGHT_LOW)
             .withAerialVariant(LIGHT_AIR)
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withInfo(
                     Component.literal("Slash"),
                     Component.literal("quick combo starter, has a standing and crouching followup")
             );
-    public static final HorusBarrageAttack BARRAGE = new HorusBarrageAttack(
-            240, 5, 80, 0.75f, 0, 0, 0, 0, 0, 5
-    )
+    public static final HorusBarrageAttack BARRAGE = new HorusBarrageAttack(240, 5, 80,
+            0.75f, 0, 0, 0, 0, 0, 5)
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("4s max duration, can be held")
             )
-            .withAction(HorusEntity::fireIcicle)
-            .withAction((attacker, user, ctx, targets) -> attacker.playSound(JSoundRegistry.HORUS_BARRAGE_FIRE.get()));
-    public static final SimpleAttack<HorusEntity> DETONATE = new SimpleAttack<HorusEntity>(
-            0, 10, 12, 0.75f, 0, 0, 0, 0, 0)
+            .withAction(PlaySoundAction.playSound(JSoundRegistry.HORUS_BARRAGE_FIRE.get()));
+    public static final HorusDetonateAttack DETONATE = new HorusDetonateAttack(0, 10, 12, 0.75f)
             .withAnim(State.DETONATE)
             .withInfo(
                     Component.literal("Detonate"),
                     Component.empty()
-            )
-            .withAction(HorusEntity::detonate);
-    public static final SimpleAttack<HorusEntity> STOMP = new SimpleAttack<HorusEntity>(
-            140, 11, 22, 0.75f, 9f, 12, 1.3f, 0.6f, 0.4f)
+            );
+    public static final StompAttack STOMP = new StompAttack(140, 11, 22, 0.75f,
+            9f, 12, 1.3f, 0.6f, 0.4f)
             .withFollowup(DETONATE)
-            .withAnim(State.STOMP)
-            .withSound(JSoundRegistry.HORUS_STOMP.get())
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withSound(JSoundRegistry.HORUS_STOMP)
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Component.literal("Stomp"),
                     Component.literal("summons a large icicle, press Heavy again to detonate it")
-            ).withAction(HorusEntity::heavyIcicle);
+            );
     // Utility
     public static final HorusDivekickAttack DIVEKICK = new HorusDivekickAttack(
-            280, 8, 25, 8, 6f, 19, 1.5f, 0.23f, 0.3f, State.DIVEKICK_HIT)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            280, 8, 25, 8, 6f, 19, 1.5f, 0.23f, 0.3f)
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -146,8 +133,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             Removes fall damage.""")
             );
     // Special 1
-    public static final SimpleAttack<HorusEntity> LANCE = new SimpleAttack<HorusEntity>(
-            100, 18, 24, 0.75f, 0, 0, 0, 0, 0)
+    public static final IceLanceAttack LANCE = new IceLanceAttack(100, 18, 24, 0.75f)
             .withAnim(State.LANCE)
             .withInfo(
                     Component.literal("Ice Lance"),
@@ -155,36 +141,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             Also slow, slightly higher cooldown.
                             Fires a large icicle that detonates after 2s.""")
             )
-            .withSound(JSoundRegistry.HORUS_LANCE_CHARGE.get())
-            .markRanged()
-            .withAction(HorusEntity::iceLance);
-
-    private static void iceLance(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
-        final AbstractMove<?, ? super HorusEntity> move = attacker.getCurrentMove();
-        if (move == null) return;
-
-        attacker.lastLargeIcicle = new LargeIcicleProjectile(attacker.level(), user);
-
-        final Vec3i gravity = GravityChangerAPI.getGravityDirection(user).getNormal();
-        final Vec3 velocity = user.getLookAngle();
-        final double e = velocity.x, f = velocity.y, g = velocity.z;
-        final double l = velocity.horizontalDistance();
-        attacker.lastLargeIcicle.moveTo(
-                attacker.getX() - gravity.getX() * 1.5,
-                attacker.getY() - gravity.getY() * 1.5,
-                attacker.getZ() - gravity.getZ() * 1.5,
-                (float) (Mth.atan2(-e, -g) * 57.2957763671875),
-                (float) (Mth.atan2(f, l) * 57.2957763671875)
-        );
-        attacker.lastLargeIcicle.setDeltaMovement(velocity.scale(1.75));
-        attacker.lastLargeIcicle.markProjectile();
-        attacker.lastLargeIcicle.lock();
-
-        attacker.level().addFreshEntity(attacker.lastLargeIcicle);
-        // attacker.playSound(JSoundRegistry.HORUS_LANCE_THROW.get());
-    }
-    public static final SimpleAttack<HorusEntity> SCATTER = new SimpleAttack<HorusEntity>(
-            60, 16, 20, 0.75f, 0, 0, 0, 0, 0)
+            .withSound(JSoundRegistry.HORUS_LANCE_CHARGE.get());
+    public static final ScatterAttack SCATTER = new ScatterAttack(60, 16, 20, 0.75f)
             .withCrouchingVariant(LANCE)
             .withInfo(
                     Component.literal("Scatter"),
@@ -192,22 +150,16 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                                     Relatively slow, very low cooldown.
                                     Fires 6 icicles that bounce off walls.""")
             )
-            .markRanged()
-            .withSound(JSoundRegistry.HORUS_SCATTER.get())
-            .withAction(HorusEntity::scatter);
+            .withSound(JSoundRegistry.HORUS_SCATTER.get());
     // Special 2
-    private int icicleChargeTime = 0;
-    public static final SimpleAttack<HorusEntity> CHARGE_FIRE = new SimpleAttack<HorusEntity>(
-            0, 0, 10, 0.75f, 0, 0, 0, 0, 0)
+    public static final IcicleFireAttack CHARGE_FIRE = new IcicleFireAttack(0, 0, 10, 0.75f)
             .withInfo(
                     Component.literal("Icicle Fire"),
                     Component.empty()
-            )
-            .withInitAction(HorusEntity::fireChargedIcicle);
-    public static int MAX_ICICLE_CHARGE_TIME = 30;
-    public static final HoldableMove<HorusEntity, State> CHARGE_ICICLE = new HoldableMove<>(
-            100, MAX_ICICLE_CHARGE_TIME + 1, MAX_ICICLE_CHARGE_TIME, 0.75f, CHARGE_FIRE, State.CHARGE_FIRE, 9)
-            .withInitAction((attacker, user, ctx) -> attacker.icicleChargeTime = 0)
+            );
+    public static final SimpleHoldableMove<HorusEntity> CHARGE_ICICLE = new SimpleHoldableMove<HorusEntity>(
+            100, IcicleFireAttack.MAX_ICICLE_CHARGE_TIME + 1, IcicleFireAttack.MAX_ICICLE_CHARGE_TIME, 0.75f, 9)
+            .withFollowup(CHARGE_FIRE)
             .withArmor(3)
             .withInfo(
                     Component.literal("Icicle Charge"),
@@ -217,19 +169,14 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             If charged fully, attack becomes unblockable and launches far."""
                     ));
     // Special 3
-    public static final SimpleAttack<HorusEntity> PLACE = new SimpleAttack<HorusEntity>(
-            200, 8, 14, 0.75f, 0, 0, 0, 0, 0)
+    public static final ChasingFreezeAttack PLACE = new ChasingFreezeAttack(200, 8, 14, 0.75f)
             .withInfo(
                     Component.literal("Chasing Freeze"),
                     Component.empty()
             )
-            .markRanged()
-            .withSound(JSoundRegistry.HORUS_PlACE_CREEPING_ICE.get())
-            .withAction(HorusEntity::placeIceBranch);
-    public static final EffectInflictingAttack<HorusEntity> PERFECT_FREEZE = new EffectInflictingAttack<HorusEntity>(50 * 20,
-            14, 30, 0f, 4f, 10, 2.5f, 0.3f, 0,
-            List.of(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 0, false, true))
-    )
+            .withSound(JSoundRegistry.HORUS_PlACE_CREEPING_ICE.get());
+    public static final PerfectFreezeAttack PERFECT_FREEZE = new PerfectFreezeAttack(50 * 20, 14, 30,
+            0f, 4f, 10, 2.5f, 0.3f, 0)
             .withInfo(
                     Component.literal("Perfect Freeze"),
                     Component.literal("""
@@ -237,27 +184,9 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             summons 3 ice branches to chase opponents
                             stops all nearby projectiles""")
             )
-            .withSound(JSoundRegistry.HORUS_PlACE_CREEPING_ICE.get())
-            .withAction(HorusEntity::perfectFreeze);
+            .withSound(JSoundRegistry.HORUS_PlACE_CREEPING_ICE.get());
 
-    private static void perfectFreeze(HorusEntity attacker, LivingEntity livingEntity, MoveContext context, Set<LivingEntity> livingEntities) {
-        final int NUM_BRANCHES = 3;
-        for (int i = 0; i < NUM_BRANCHES; i++) {
-            final IceBranchProjectile iceBranch = placeIceBranch(attacker, livingEntity, context, livingEntities);
-            iceBranch.setYRot(iceBranch.getYRot() + (360.0F * i) / NUM_BRANCHES);
-        }
-        attacker.level().getEntitiesOfClass(Projectile.class, attacker.getBoundingBox().inflate(5.0)).forEach(
-                p -> JUtils.setVelocity(p, 0, 0, 0)
-        );
-        JCraft.createParticle((ServerLevel) attacker.level(), attacker.getX(), attacker.getY(), attacker.getZ(), JParticleType.FLASH);
-    }
-
-    private static IceBranchProjectile placeIceBranch(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
-        final IceBranchProjectile iceBranchProjectile = new IceBranchProjectile(attacker.level(), user, 0);
-        iceBranchProjectile.moveTo(attacker.getX(), attacker.getY(), attacker.getZ(), -attacker.getYRot() + 180, -attacker.getXRot());
-        attacker.level().addFreshEntity(iceBranchProjectile);
-        return iceBranchProjectile;
-    }
+    private WeakReference<LargeIcicleProjectile> lastLargeIcicle = new WeakReference<>(null);
 
     public HorusEntity(Level world) {
         super(StandType.HORUS, world, JSoundRegistry.HORUS_SUMMON.get());
@@ -269,8 +198,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                 BNBs:
                     -bad birdie
                     Light~Light>dash>crouch.Light
-                    
-                    """;
+                
+                """;
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.2f, 0.5f, 0.8f),
@@ -280,43 +209,47 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         };
     }
 
+    public LargeIcicleProjectile getLastLargeIcicle() {
+        return lastLargeIcicle.get();
+    }
+
+    public void setLastLargeIcicle(LargeIcicleProjectile icicle) {
+        lastLargeIcicle = new WeakReference<>(icicle);
+    }
+
     @Override
     public @Nullable SoundEvent getSummonSound() {
         return JSoundRegistry.HORUS_SUMMON.get();
     }
 
-    private static void detonate(HorusEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
-        attacker.lastLargeIcicle.detonate();
-    }
-
-    @Override
-    protected void registerMoves(MoveMap<HorusEntity, HorusEntity.State> moves) {
-        MoveMap.Entry<HorusEntity, State> light = moves.register(MoveType.LIGHT, LIGHT, State.LIGHT);
-        light.withFollowUp(State.LIGHT_FOLLOWUP).withCrouchingVariant(State.IMPALE);
+    private static void registerMoves(MoveMap<HorusEntity, HorusEntity.State> moves) {
+        MoveMap.Entry<HorusEntity, State> light = moves.register(MoveClass.LIGHT, LIGHT, State.LIGHT);
+        light.withFollowup(State.LIGHT_FOLLOWUP).withCrouchingVariant(State.IMPALE);
         light.withCrouchingVariant(State.LIGHT_LOW);
         light.withAerialVariant(State.LIGHT_AIR);
 
-        moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
-        moves.register(MoveType.HEAVY, STOMP, State.STOMP);
+        moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
+        moves.register(MoveClass.HEAVY, STOMP, State.STOMP);
 
-        moves.registerImmediate(MoveType.SPECIAL1, SCATTER, State.SCATTER);
-        moves.register(MoveType.SPECIAL2, CHARGE_ICICLE, State.CHARGE_ICICLE);
-        moves.register(MoveType.SPECIAL3, PLACE, State.PLACE);
+        moves.registerImmediate(MoveClass.SPECIAL1, SCATTER, State.SCATTER);
+        moves.register(MoveClass.SPECIAL2, CHARGE_ICICLE, State.CHARGE_ICICLE).withFollowup(State.CHARGE_FIRE);
+        moves.register(MoveClass.SPECIAL3, PLACE, State.PLACE);
 
-        moves.register(MoveType.ULTIMATE, PERFECT_FREEZE, State.ULTIMATE);
+        moves.register(MoveClass.ULTIMATE, PERFECT_FREEZE, State.ULTIMATE);
 
-        moves.register(MoveType.UTILITY, DIVEKICK, State.DIVEKICK);
+        moves.register(MoveClass.UTILITY, DIVEKICK, State.DIVEKICK);
     }
 
     @Override
-    public boolean initMove(MoveType type) {
-        if (tryFollowUp(type, MoveType.HEAVY)) {
+    public boolean initMove(MoveClass type) {
+        if (tryFollowUp(type, MoveClass.HEAVY)) {
             return true;
-        } else if (type == MoveType.LIGHT && getCurrentMove() != null && getCurrentMove().getMoveType() == MoveType.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
+        } else if (type == MoveClass.LIGHT && getCurrentMove() != null && getCurrentMove().getMoveClass() == MoveClass.LIGHT &&
+                getMoveStun() < getCurrentMove().getWindupPoint()) {
             AbstractMove<?, ? super HorusEntity> followup = getCurrentMove().getFollowup();
             if (followup != null) {
                 if (getUserOrThrow().isDiscrete()) followup = followup.getCrouchingVariant();
-                setMove(followup, (State) followup.getAnimation());
+                setMove(followup, (State) Objects.requireNonNull(followup).getAnimation());
             }
             return true;
         }
@@ -325,139 +258,53 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     }
 
     private static void scatter(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> livingEntities) {
-        for (int batch = 0; batch < 2; batch++) {
-            final float offset = batch == 0 ? 10.0F : -10.0F;
-            for (int i = 1; i < 4; i++) {
-                final IcicleProjectile icicle = new IcicleProjectile(attacker.level(), user);
-                final float pitch = user.getXRot();
-                final float yaw = user.getYRot() + i * offset;
-                Vec3 rotVec = RotationUtil.vecPlayerToWorld(RotationUtil.rotToVec(yaw, pitch), GravityChangerAPI.getGravityDirection(user));
-                icicle.shoot(rotVec.x, rotVec.y, rotVec.z, 1.75F, 0.1F);
 
-                Vec3 upVec = GravityChangerAPI.getEyeOffset(attacker.getUserOrThrow());
-                Vec3 heightOffset = upVec.scale(0.75);
-                icicle.setPos(attacker.getBaseEntity().position().add(heightOffset));
-                icicle.withReflect();
-
-                attacker.level().addFreshEntity(icicle);
-            }
-        }
-    }
-
-    private static void fireIcicle(HorusEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
-        final IcicleProjectile icicle = new IcicleProjectile(attacker.level(), user);
-        icicle.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, 1.75F, 0.1F);
-
-        final Vec3 heightOffset = GravityChangerAPI.getEyeOffset(user).scale(0.75);
-        icicle.setPos(attacker.getBaseEntity().position().add(heightOffset).add(
-                attacker.getRandom().nextGaussian() / 3,
-                attacker.getRandom().nextGaussian() / 3,
-                attacker.getRandom().nextGaussian() / 3
-        ));
-        //icicle.withReflect();
-
-        attacker.level().addFreshEntity(icicle);
-    }
-
-    private LargeIcicleProjectile lastLargeIcicle;
-    private static void heavyIcicle(HorusEntity attacker, LivingEntity user, MoveContext context, Set<LivingEntity> targets) {
-        attacker.lastLargeIcicle = new LargeIcicleProjectile(attacker.level(), user);
-
-        // Shoot slightly upwards
-        final Direction gravity = GravityChangerAPI.getGravityDirection(user);
-        final Vec3 velocity = attacker.isFree() || !user.onGround() ?
-                attacker.getLookAngle()
-                        .add(RotationUtil.vecPlayerToWorld(new Vec3(0, -1, 0), gravity))
-                        .scale(0.01)
-                :
-                user.getLookAngle()
-                        .add(RotationUtil.vecPlayerToWorld(new Vec3(0, 1, 0), gravity))
-                        .scale(0.01);
-        final double e = velocity.x, f = velocity.y, g = velocity.z;
-        final double l = velocity.horizontalDistance();
-        attacker.lastLargeIcicle.moveTo(attacker.getX(), attacker.getY(), attacker.getZ(),
-                (float) (Mth.atan2(-e, -g) * 57.2957763671875),
-                (float) (Mth.atan2(f, l) * 57.2957763671875)
-        );
-        attacker.lastLargeIcicle.setDeltaMovement(velocity);
-        attacker.lastLargeIcicle.lock();
-
-        attacker.level().addFreshEntity(attacker.lastLargeIcicle);
-        attacker.playSound(JSoundRegistry.HORUS_STOMP_SLAM.get());
-    }
-
-    private static void fireChargedIcicle(HorusEntity attacker, LivingEntity user, MoveContext context) {
-        final LargeIcicleProjectile instantIcicle = new LargeIcicleProjectile(attacker.level(), user);
-        float scale = attacker.icicleChargeTime / (MAX_ICICLE_CHARGE_TIME - 2.0f);
-        if (scale < 0.1f) scale = 0.1f;
-        if (scale > 1.0f) scale = 1.0f;
-        instantIcicle.setScale(scale);
-        instantIcicle.setInstant(true);
-
-        final Vec3 heightOffset = GravityChangerAPI.getEyeOffset(user).scale(0.75);
-
-        final Vec3 velocity = user.getLookAngle().scale(0.01);
-        final double e = velocity.x, f = velocity.y, g = velocity.z;
-        final double l = velocity.horizontalDistance();
-
-        instantIcicle.moveTo(attacker.getX() + heightOffset.x, attacker.getY() + heightOffset.y, attacker.getZ() + heightOffset.z,
-                (float) (Mth.atan2(-e, -g) * 57.2957763671875),
-                (float) (Mth.atan2(f, l) * 57.2957763671875)
-        );
-        instantIcicle.setDeltaMovement(velocity);
-        instantIcicle.lock();
-
-        attacker.level().addFreshEntity(instantIcicle);
     }
 
     @Override
     public void tick() {
         super.tick();
         final int moveStun = getMoveStun();
-        if (moveStun <= MAX_ICICLE_CHARGE_TIME + 1) {
-            if (level().isClientSide()) {
-                if (getState() == State.CHARGE_ICICLE) {
-                    double completion = moveStun / (MAX_ICICLE_CHARGE_TIME + 1.0);
-                    Vec3 direction = getLookAngle().add(GravityChangerAPI.getEyeOffset(this).scale(0.75));
-                    if (random.nextDouble() >= completion) { // More often the more complete
-                        Vec3 offset = new Vec3( // Closer in the more complete
-                                random.nextGaussian() * completion,
-                                random.nextGaussian() * completion,
-                                random.nextGaussian() * completion
-                        );
-                        level().addParticle(ParticleTypes.SNOWFLAKE,
-                                getX() + direction.x + offset.x,
-                                getY() + direction.y + offset.y,
-                                getZ() + direction.z + offset.z,
-                                -offset.x / 6,
-                                -offset.y / 6,
-                                -offset.z / 6
-                        );
-                    }
-                    level().addParticle(random.nextBoolean() ? ParticleTypes.SPIT : LargeIcicleProjectile.ICE_PARTICLE,
-                            getX() + direction.x,
-                            getY() + direction.y,
-                            getZ() + direction.z,
-                            0, 0, 0
-                    );
-                } else if (getState() == State.ULTIMATE && getMoveStun() == PERFECT_FREEZE.getWindupPoint()) {
-                    for (int i = 0; i < 64; i++) {
-                        level().addParticle(ParticleTypes.SNOWFLAKE,
-                                getX() + random.nextGaussian(),
-                                getY() + random.nextGaussian(),
-                                getZ() + random.nextGaussian(),
-                                random.nextGaussian(), random.nextGaussian(), random.nextGaussian()
-                        );
-                        level().addParticle(random.nextBoolean() ? ParticleTypes.SPIT : LargeIcicleProjectile.ICE_PARTICLE,
-                                getX() + random.nextGaussian(),
-                                getY() + random.nextGaussian(),
-                                getZ() + random.nextGaussian(),
-                                random.nextGaussian(), random.nextGaussian(), random.nextGaussian()
-                        );
-                    }
-                }
-            } else if (getCurrentMove() != null) {
-                if (getCurrentMove().getOriginalMove() == CHARGE_ICICLE) icicleChargeTime++;
+        if (moveStun > IcicleFireAttack.MAX_ICICLE_CHARGE_TIME + 1 || !level().isClientSide()) return;
+
+        if (getState() == State.CHARGE_ICICLE) {
+            double completion = moveStun / (IcicleFireAttack.MAX_ICICLE_CHARGE_TIME + 1.0);
+            Vec3 direction = getLookAngle().add(GravityChangerAPI.getEyeOffset(this).scale(0.75));
+            if (random.nextDouble() >= completion) { // More often the more complete
+                Vec3 offset = new Vec3( // Closer in the more complete
+                        random.nextGaussian() * completion,
+                        random.nextGaussian() * completion,
+                        random.nextGaussian() * completion
+                );
+                level().addParticle(ParticleTypes.SNOWFLAKE,
+                        getX() + direction.x + offset.x,
+                        getY() + direction.y + offset.y,
+                        getZ() + direction.z + offset.z,
+                        -offset.x / 6,
+                        -offset.y / 6,
+                        -offset.z / 6
+                );
+            }
+            level().addParticle(random.nextBoolean() ? ParticleTypes.SPIT : LargeIcicleProjectile.ICE_PARTICLE,
+                    getX() + direction.x,
+                    getY() + direction.y,
+                    getZ() + direction.z,
+                    0, 0, 0
+            );
+        } else if (getState() == State.ULTIMATE && getMoveStun() == PERFECT_FREEZE.getWindupPoint()) {
+            for (int i = 0; i < 64; i++) {
+                level().addParticle(ParticleTypes.SNOWFLAKE,
+                        getX() + random.nextGaussian(),
+                        getY() + random.nextGaussian(),
+                        getZ() + random.nextGaussian(),
+                        random.nextGaussian(), random.nextGaussian(), random.nextGaussian()
+                );
+                level().addParticle(random.nextBoolean() ? ParticleTypes.SPIT : LargeIcicleProjectile.ICE_PARTICLE,
+                        getX() + random.nextGaussian(),
+                        getY() + random.nextGaussian(),
+                        getZ() + random.nextGaussian(),
+                        random.nextGaussian(), random.nextGaussian(), random.nextGaussian()
+                );
             }
         }
     }

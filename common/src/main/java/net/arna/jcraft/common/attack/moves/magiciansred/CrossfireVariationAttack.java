@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.magiciansred;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
@@ -14,6 +17,11 @@ public final class CrossfireVariationAttack extends AbstractMove<CrossfireVariat
     public CrossfireVariationAttack(final int cooldown, final int windup, final int moveStunTicks, final float moveDistance) {
         super(cooldown, windup, moveStunTicks, moveDistance);
         ranged = true;
+    }
+
+    @Override
+    public @NonNull MoveType<CrossfireVariationAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -40,5 +48,14 @@ public final class CrossfireVariationAttack extends AbstractMove<CrossfireVariat
     @Override
     public @NonNull CrossfireVariationAttack copy() {
         return copyExtras(new CrossfireVariationAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<CrossfireVariationAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<CrossfireVariationAttack>, CrossfireVariationAttack> buildCodec(RecordCodecBuilder.Instance<CrossfireVariationAttack> instance) {
+            return baseDefault(instance, CrossfireVariationAttack::new);
+        }
     }
 }

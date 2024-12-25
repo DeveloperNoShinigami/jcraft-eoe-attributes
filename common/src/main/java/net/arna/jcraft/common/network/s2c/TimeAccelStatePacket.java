@@ -26,7 +26,7 @@ import java.util.Map;
  * Also sent to clients who joined during the use of the ult. (Or at least, it should be)
  */
 public class TimeAccelStatePacket {
-    public static final Int2ObjectMap<TimeAcceleration> accelerations = new Int2ObjectOpenHashMap<>();
+    private static final Int2ObjectMap<TimeAcceleration> accelerations = new Int2ObjectOpenHashMap<>();
     public static long lastUpdate = 0;
     private static final Object lock = new Object();
 
@@ -54,6 +54,18 @@ public class TimeAccelStatePacket {
             double acceleration = getAcceleration(world);
             world.setDayTime((long) (world.getDayTime() + acceleration * 0.05));
         });
+    }
+
+    public static void addAcceleration(final int mihEntityId, final int duration) {
+        synchronized (lock) {
+            accelerations.put(mihEntityId, new TimeAcceleration(duration, mihEntityId));
+        }
+    }
+
+    public static void removeAcceleration(final int mihEntityId) {
+        synchronized (lock) {
+            accelerations.remove(mihEntityId);
+        }
     }
 
     public static void sendStart(@NonNull final MadeInHeavenEntity mih, int duration) {

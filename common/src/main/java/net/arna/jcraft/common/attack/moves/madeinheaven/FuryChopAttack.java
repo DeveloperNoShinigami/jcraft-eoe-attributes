@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.madeinheaven;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
@@ -17,6 +20,11 @@ public final class FuryChopAttack extends AbstractSimpleAttack<FuryChopAttack, M
                           final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         hitSpark = JParticleType.HIT_SPARK_2;
+    }
+
+    @Override
+    public @NonNull MoveType<FuryChopAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -46,5 +54,14 @@ public final class FuryChopAttack extends AbstractSimpleAttack<FuryChopAttack, M
     public @NonNull FuryChopAttack copy() {
         return copyExtras(new FuryChopAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<FuryChopAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<FuryChopAttack>, FuryChopAttack> buildCodec(RecordCodecBuilder.Instance<FuryChopAttack> instance) {
+            return attackDefault(instance, FuryChopAttack::new);
+        }
     }
 }

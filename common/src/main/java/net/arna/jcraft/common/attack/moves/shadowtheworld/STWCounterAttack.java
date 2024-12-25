@@ -1,8 +1,12 @@
 package net.arna.jcraft.common.attack.moves.shadowtheworld;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
+import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.ShadowTheWorldEntity;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
@@ -25,6 +29,11 @@ public final class STWCounterAttack extends AbstractCounterAttack<STWCounterAtta
 
     public STWCounterAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public @NonNull MoveType<STWCounterAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -87,5 +96,14 @@ public final class STWCounterAttack extends AbstractCounterAttack<STWCounterAtta
     @Override
     public @NonNull STWCounterAttack copy() {
         return copyExtras(new STWCounterAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<STWCounterAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<STWCounterAttack>, STWCounterAttack> buildCodec(RecordCodecBuilder.Instance<STWCounterAttack> instance) {
+            return baseDefault(instance, STWCounterAttack::new);
+        }
     }
 }

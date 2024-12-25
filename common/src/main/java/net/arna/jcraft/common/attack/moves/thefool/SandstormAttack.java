@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.thefool;
 
 import com.google.common.reflect.TypeToken;
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
@@ -22,15 +25,18 @@ import java.util.List;
 import java.util.Set;
 
 public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFoolEntity> {
-
     public static final MoveVariable<LivingEntity> SUPER_TARGET = new MoveVariable<>(LivingEntity.class);
+    public static final MoveVariable<List<FallingBlockEntity>> SANDS = new MoveVariable<>(new TypeToken<>() {});
 
-    public static final MoveVariable<List<FallingBlockEntity>> SANDS = new MoveVariable<>(new TypeToken<>() {
-    });
-
-    public SandstormAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
+    public SandstormAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
+                           final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         hitSpark = JParticleType.HIT_SPARK_3;
+    }
+
+    @Override
+    public @NonNull MoveType<SandstormAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -127,7 +133,7 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(SUPER_TARGET);
         ctx.register(SANDS, new ArrayList<>());
     }
@@ -141,5 +147,14 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
     public @NonNull SandstormAttack copy() {
         return copyExtras(new SandstormAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<SandstormAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SandstormAttack>, SandstormAttack> buildCodec(RecordCodecBuilder.Instance<SandstormAttack> instance) {
+            return attackDefault(instance, SandstormAttack::new);
+        }
     }
 }

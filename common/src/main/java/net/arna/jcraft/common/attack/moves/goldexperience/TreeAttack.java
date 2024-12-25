@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.goldexperience;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.GETreeEntity;
@@ -12,14 +15,20 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
 public final class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExperienceEntity> {
-    public TreeAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun, final float hitboxSize,
+    public TreeAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize,
                       final float knockback, final float offset) {
-        super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);
+        super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         hitSpark = JParticleType.HIT_SPARK_2;
+    }
+
+    @Override
+    public @NotNull MoveType<TreeAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -55,5 +64,14 @@ public final class TreeAttack extends AbstractSimpleAttack<TreeAttack, GoldExper
     public @NonNull TreeAttack copy() {
         return copyExtras(new TreeAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(), getStun(),
                 getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<TreeAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<TreeAttack>, TreeAttack> buildCodec(RecordCodecBuilder.Instance<TreeAttack> instance) {
+            return attackDefault(instance, TreeAttack::new);
+        }
     }
 }

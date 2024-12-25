@@ -14,10 +14,12 @@ import java.util.Set;
 @Getter
 public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, S>, A extends StandEntity<A, S>, S extends Enum<S> & StandAnimationState<A>>
         extends AbstractSimpleAttack<T, A> {
+    // Specific to implementation and not customizable. No need to serialize in codec.
     protected final S hitAnimState;
 
-    protected AbstractChargeAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
-                                   final float hitboxSize, final float knockback, final float offset, final S hitAnimState) {
+    protected AbstractChargeAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
+                                   final float damage, final int stun, final float hitboxSize, final float knockback,
+                                   final float offset, final S hitAnimState) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
 
         this.hitAnimState = hitAnimState;
@@ -48,8 +50,8 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
     }
 
     @Override
-    public void tick(final A attacker, final int moveStun) {
-        super.tick(attacker, moveStun);
+    public void activeTick(final A attacker, final int moveStun) {
+        super.activeTick(attacker, moveStun);
 
         tickChargeAttack(attacker, shouldPerform(attacker, moveStun), getMoveDistance(), getWindupPoint());
     }
@@ -74,7 +76,7 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
         attacker.setPos(user.position());
         attacker.setYHeadRot(user.getYHeadRot());
         attacker.setYBodyRot(user.getYHeadRot());
-        attacker.setRotationOffset(attacker.attackRotation);
+        attacker.setRotationOffset(attacker.ATTACK_ROTATION);
     }
 
     @Override

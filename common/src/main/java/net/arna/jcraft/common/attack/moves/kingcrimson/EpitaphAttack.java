@@ -1,8 +1,12 @@
 package net.arna.jcraft.common.attack.moves.kingcrimson;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
+import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.arna.jcraft.common.util.JUtils;
@@ -19,6 +23,11 @@ public final class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, Ki
 
     public EpitaphAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public @NonNull MoveType<EpitaphAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -63,5 +72,14 @@ public final class EpitaphAttack extends AbstractCounterAttack<EpitaphAttack, Ki
     @Override
     public @NonNull EpitaphAttack copy() {
         return copyExtras(new EpitaphAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<EpitaphAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<EpitaphAttack>, EpitaphAttack> buildCodec(RecordCodecBuilder.Instance<EpitaphAttack> instance) {
+            return baseDefault(instance, EpitaphAttack::new);
+        }
     }
 }

@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.anubis;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.spec.AnubisSpec;
@@ -15,12 +18,19 @@ public class Rekka3Attack extends AbstractMultiHitAttack<Rekka3Attack, AnubisSpe
     }
 
     @Override
+    public @NonNull MoveType<Rekka3Attack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final AnubisSpec attacker, final LivingEntity user, final MoveContext ctx) {
         if (attacker.getAttackSpeedMult() == 1 && getBlow(attacker) == 1) {
             attacker.curMove = getFollowup();
         }
 
-        return super.perform(attacker, user, ctx);
+        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        attacker.tryIncrementBloodlust(targets);
+        return targets;
     }
 
     @Override
@@ -32,5 +42,14 @@ public class Rekka3Attack extends AbstractMultiHitAttack<Rekka3Attack, AnubisSpe
     public @NonNull Rekka3Attack copy() {
         return copyExtras(new Rekka3Attack(getCooldown(), getDuration(), getMoveDistance(), getDamage(), getStun(), getHitboxSize(),
                 getKnockback(), getOffset(), getHitMoments()));
+    }
+
+    public static class Type extends AbstractMultiHitAttack.Type<Rekka3Attack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<Rekka3Attack>, Rekka3Attack> buildCodec(RecordCodecBuilder.Instance<Rekka3Attack> instance) {
+            return multiHitDefault(instance, Rekka3Attack::new);
+        }
     }
 }

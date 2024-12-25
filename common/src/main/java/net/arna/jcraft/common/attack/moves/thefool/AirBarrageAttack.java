@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.thefool;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,8 +15,13 @@ public final class AirBarrageAttack extends AbstractBarrageAttack<AirBarrageAtta
     }
 
     @Override
-    public void tick(final TheFoolEntity attacker, final int moveStun) {
-        super.tick(attacker, moveStun);
+    public @NonNull MoveType<AirBarrageAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
+    public void activeTick(final TheFoolEntity attacker, final int moveStun) {
+        super.activeTick(attacker, moveStun);
 
         if (!attacker.hasUser()) {
             return;
@@ -33,5 +41,14 @@ public final class AirBarrageAttack extends AbstractBarrageAttack<AirBarrageAtta
     public @NonNull AirBarrageAttack copy() {
         return copyExtras(new AirBarrageAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(),
                 getDamage(), getStun(), getHitboxSize(), getKnockback(), getOffset(), getInterval()));
+    }
+
+    public static class Type extends AbstractBarrageAttack.Type<AirBarrageAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<AirBarrageAttack>, AirBarrageAttack> buildCodec(RecordCodecBuilder.Instance<AirBarrageAttack> instance) {
+            return barrageDefault(instance, AirBarrageAttack::new);
+        }
     }
 }

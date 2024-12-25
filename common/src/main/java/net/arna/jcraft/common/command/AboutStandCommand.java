@@ -4,8 +4,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.ChatFormatting;
@@ -76,7 +76,7 @@ public class AboutStandCommand {
                 .append(Component.literal("\n"));
 
         MoveMap<?, ?> moveMap = stand.getMoveMap();
-        for (MoveType type : MoveType.values()) {
+        for (MoveClass type : MoveClass.values()) {
             for (MoveMap.Entry<?, ?> entry : moveMap.getEntries(type)) {
                 // Move itself
                 appendMove(entry, moves, Component.literal("● ").withStyle(ChatFormatting.GREEN), false);
@@ -108,10 +108,10 @@ public class AboutStandCommand {
         moves
                 .append(base
                         .append(isVariant ? Component.empty() : Component.empty()
-                                .append(entry.getType().getFriendlyName())
+                                .append(entry.getMoveClass().getFriendlyName())
                                 .append(Component.empty()
                                         .append(Component.literal(" ("))
-                                        .append(entry.getType().getKey().copy().withStyle(ChatFormatting.AQUA))
+                                        .append(entry.getMoveClass().getKey().copy().withStyle(ChatFormatting.AQUA))
                                         .append(Component.literal(")")))))
                 .append(Component.literal(" - "))
                 .append(entry.getMove().getName().copy().withStyle(ChatFormatting.DARK_PURPLE))

@@ -1,20 +1,30 @@
 package net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.killerqueen.DetonateAttack;
+import net.arna.jcraft.common.attack.moves.killerqueen.KQDetonateAttack;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 public final class BTDGrabHitAttack extends AbstractMultiHitAttack<BTDGrabHitAttack, KQBTDEntity> {
-    public BTDGrabHitAttack(final int cooldown, final int duration, final float attackDistance, final float damage, final int stun, final float hitboxSize,
+    public BTDGrabHitAttack(final int cooldown, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize,
                             final float knockback, final float offset, final @NonNull IntCollection hitMoments) {
-        super(cooldown, duration, attackDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);
+        super(cooldown, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);
+    }
+
+    @Override
+    public @NotNull MoveType<BTDGrabHitAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -26,7 +36,7 @@ public final class BTDGrabHitAttack extends AbstractMultiHitAttack<BTDGrabHitAtt
                     ent.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 40, 0, true, false, true));
                 }
             }
-            case 2 -> DetonateAttack.explode(attacker, user, attacker.position().subtract(0, .5, 0));
+            case 2 -> KQDetonateAttack.explode(attacker, user, attacker.position().subtract(0, .5, 0));
         }
 
         return targets;
@@ -41,5 +51,14 @@ public final class BTDGrabHitAttack extends AbstractMultiHitAttack<BTDGrabHitAtt
     public @NonNull BTDGrabHitAttack copy() {
         return copyExtras(new BTDGrabHitAttack(getCooldown(), getDuration(), getMoveDistance(), getDamage(), getStun(), getHitboxSize(),
                 getKnockback(), getOffset(), getHitMoments()));
+    }
+
+    public static class Type extends AbstractMultiHitAttack.Type<BTDGrabHitAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<BTDGrabHitAttack>, BTDGrabHitAttack> buildCodec(RecordCodecBuilder.Instance<BTDGrabHitAttack> instance) {
+            return multiHitDefault(instance, BTDGrabHitAttack::new);
+        }
     }
 }

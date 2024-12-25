@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.shared;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,6 +20,11 @@ public final class CounterMissMove<A extends IAttacker<? extends A, ?>> extends 
     }
 
     @Override
+    public @NonNull MoveType<CounterMissMove<A>> getMoveType() {
+        return Type.INSTANCE.cast();
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
         return Set.of();
     }
@@ -29,5 +37,14 @@ public final class CounterMissMove<A extends IAttacker<? extends A, ?>> extends 
     @Override
     public @NonNull CounterMissMove<A> copy() {
         return copyExtras(new CounterMissMove<>(getDuration()));
+    }
+
+    public static class Type extends AbstractMove.Type<CounterMissMove<?>> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<CounterMissMove<?>>, CounterMissMove<?>> buildCodec(RecordCodecBuilder.Instance<CounterMissMove<?>> instance) {
+            return instance.group(extras(), duration()).apply(instance, applyExtras(CounterMissMove::new));
+        }
     }
 }

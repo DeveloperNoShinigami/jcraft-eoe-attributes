@@ -54,6 +54,7 @@ import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2f;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -475,10 +476,8 @@ public final class JUtils {
     }
 
     public static boolean isAffectedByTimeStop(Entity entity) {
-        if (JComponentPlatformUtils.getTimeStopData(entity).isPresent()) {
-            return JComponentPlatformUtils.getTimeStopData(entity).get().getTicks() > 0;
-        }
-         return false;
+        return JComponentPlatformUtils.getTimeStopData(entity)
+                .map(data -> data.getTicks() > 0).orElse(false);
     }
 
     public static boolean canDamage(DamageSource damageSource, Entity ent) {
@@ -699,5 +698,26 @@ public final class JUtils {
         }
 
         throw new IllegalArgumentException("Only supported on server worlds!");
+    }
+
+    public static Vector2f getLookPY(Vec3 origin, Vec3 target) {
+        final double d = target.x - origin.x, e = target.y - origin.y, f = target.z - origin.z;
+        final double g = Math.sqrt(d * d + f * f);
+
+        final float yaw = Mth.wrapDegrees((float) (Mth.atan2(-f, -d) * 57.2957763671875) - 90.0F); // deg; X, Z
+        final float pitch = Mth.wrapDegrees((float) (Mth.atan2(-e, -g) * 57.2957763671875)); // deg; Y, len
+
+        return new Vector2f(pitch, yaw);
+    }
+
+    public static Vec3 getLookVector(Vec3 origin, Vec3 target) {
+        Vector2f pitchYaw = getLookPY(origin, target);
+        final float pitch = pitchYaw.x, yaw = pitchYaw.y;
+
+        return new Vec3(
+                -Mth.sin(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F),
+                -Mth.sin((pitch) * 0.017453292F),
+                Mth.cos(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F)
+        );
     }
 }

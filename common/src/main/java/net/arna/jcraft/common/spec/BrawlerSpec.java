@@ -1,12 +1,13 @@
 package net.arna.jcraft.common.spec;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
-import net.arna.jcraft.common.attack.moves.shared.UppercutAttack;
+import net.arna.jcraft.common.attack.moves.shared.SimpleUppercutAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
@@ -16,39 +17,41 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 
 public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
-    public static final UppercutAttack<BrawlerSpec> HEAVY = new UppercutAttack<BrawlerSpec>(30, 10,
+    public static final MoveSet<BrawlerSpec, State> MOVE_SET = MoveSet.create(SpecType.BRAWLER, BrawlerSpec::registerMoves, State.class);
+
+    public static final SimpleUppercutAttack<BrawlerSpec> HEAVY = new SimpleUppercutAttack<BrawlerSpec>(30, 10,
             21, 1f, 6f, 15, 1.5f, 0.3f, 0f, 0.3f)
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(Component.literal("Uppercut"), Component.literal("medium speed"));
     public static final SimpleAttack<BrawlerSpec> TORNADO = new SimpleAttack<BrawlerSpec>(280, 12,
             20, 1f, 7f, 20, 1.6f, 0.4f, -0.1f)
             .withCrouchingVariant(HEAVY)
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withArmor(3)
             .withInfo(Component.literal("Tornado Kick"), Component.literal("3 points of armor, high stun"));
     public static final SimpleMultiHitAttack<BrawlerSpec> COMBO = new SimpleMultiHitAttack<BrawlerSpec>(360,
             26, 1f, 4, 15, 1.5f, 0.2f, -0.1f, IntSet.of(5, 10, 19))
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withBlockStun(5)
             .withInfo(Component.literal("Combo"), Component.literal("hits 3 times, combo starter/extender"));
     public static final SimpleAttack<BrawlerSpec> GUT = new SimpleAttack<BrawlerSpec>(120, 11, 18,
             1f, 6f, 16, 1.5f, 0.4f, 0f)
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(Component.literal("Gut Punch"), Component.literal("good stun"));
     public static final KnockdownAttack<BrawlerSpec> SWEEP = new KnockdownAttack<BrawlerSpec>(30, 11, 18,
             1f, 5f, 16, 1.5f, 0.6f, 0.85f, 25)
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withStaticY()
             .withInfo(Component.literal("SWEEP"), Component.literal("knocks down"));
     public static final SimpleAttack<BrawlerSpec> LOW_KICK = new SimpleAttack<BrawlerSpec>(30, 6, 11,
             1f, 4f, 10, 1.25f, 0.15f, 0.35f)
             .withCrouchingVariant(SWEEP)
-            .withImpactSound(JSoundRegistry.IMPACT_6.get())
+            .withImpactSound(JSoundRegistry.IMPACT_6)
             .withExtraHitBox(0.25, 0, 1)
             .withStaticY()
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
@@ -58,12 +61,11 @@ public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
         super(SpecType.BRAWLER, livingEntity);
     }
 
-    @Override
-    protected void registerMoves(MoveMap<BrawlerSpec, State> moves) {
-        moves.register(MoveType.HEAVY, TORNADO, CooldownType.HEAVY, State.TORNADO).withCrouchingVariant(State.HEAVY);
-        moves.register(MoveType.BARRAGE, COMBO, CooldownType.BARRAGE, State.COMBO);
-        moves.register(MoveType.SPECIAL1, LOW_KICK, CooldownType.SPECIAL1, State.LOW_KICK).withCrouchingVariant(State.SWEEP);
-        moves.register(MoveType.SPECIAL2, GUT, CooldownType.SPECIAL2, State.GUT);
+    private static void registerMoves(MoveMap<BrawlerSpec, State> moves) {
+        moves.register(MoveClass.HEAVY, TORNADO, CooldownType.HEAVY, State.TORNADO).withCrouchingVariant(State.HEAVY);
+        moves.register(MoveClass.BARRAGE, COMBO, CooldownType.BARRAGE, State.COMBO);
+        moves.register(MoveClass.SPECIAL1, LOW_KICK, CooldownType.SPECIAL1, State.LOW_KICK).withCrouchingVariant(State.SWEEP);
+        moves.register(MoveClass.SPECIAL2, GUT, CooldownType.SPECIAL2, State.GUT);
     }
 
     @Override

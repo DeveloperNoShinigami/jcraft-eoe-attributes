@@ -1,12 +1,17 @@
 package net.arna.jcraft.common.attack.moves.kingcrimson;
 
 import com.google.common.reflect.TypeToken;
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -25,14 +30,24 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.*;
 
 public final class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEntity> {
-    public static final MoveVariable<Map<Entity, Vec3>> PREDICTION_INFO = new MoveVariable<>(new TypeToken<>() {
-    });
+    public static final MoveVariable<Map<Entity, Vec3>> PREDICTION_INFO = new MoveVariable<>(new TypeToken<>() {});
 
     public PredictionMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public @NonNull MoveType<PredictionMove> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
+    public boolean canBeQueued(KingCrimsonEntity attacker) {
+        return false;
     }
 
     @Override
@@ -49,25 +64,39 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     }
 
     @Override
-    public void tick(final KingCrimsonEntity attacker, final int moveStun) {
-        super.tick(attacker, moveStun);
+    public void activeTick(final KingCrimsonEntity attacker, final int moveStun) {
+        super.activeTick(attacker, moveStun);
 
         if (moveStun == getWindupPoint()) {
             beginPrediction(attacker); // Clientside prediction, serverside is in specialAttack()
         }
 
-        if (attacker.tickCount % 2 == 0) {
-            tickPredictions(attacker);
-            if (attacker.hasUser()) {
-                attacker.getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
-                        10, 2, true, false));
-            }
+        if (attacker.tickCount % 2 != 0) return;
+
+        tickPredictions(attacker);
+        if (attacker.hasUser()) {
+            attacker.getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,
+                    10, 2, true, false));
         }
     }
 
     @Override
     public @NonNull Set<LivingEntity> perform(final KingCrimsonEntity attacker, final LivingEntity user, final MoveContext ctx) {
         return Set.of();
+    }
+
+    @Override
+    public boolean onInitMove(KingCrimsonEntity attacker, MoveClass moveClass) {
+        if (moveClass != getMoveClass() || !attacker.hasUser()) return false;
+
+        LivingEntity user = attacker.getUserOrThrow();
+        final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
+        if (cooldowns.getCooldown(moveClass.getDefaultCooldownType()) <= 0) {
+            cooldowns.setCooldown(moveClass.getDefaultCooldownType(), 400);
+            finishPrediction(attacker);
+        }
+
+        return false; // Don't consume event
     }
 
     public void beginPrediction(final KingCrimsonEntity attacker) {
@@ -207,7 +236,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(PREDICTION_INFO, new WeakHashMap<>());
     }
 
@@ -219,5 +248,14 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     @Override
     public @NonNull PredictionMove copy() {
         return copyExtras(new PredictionMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<PredictionMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<PredictionMove>, PredictionMove> buildCodec(RecordCodecBuilder.Instance<PredictionMove> instance) {
+            return baseDefault(instance, PredictionMove::new);
+        }
     }
 }

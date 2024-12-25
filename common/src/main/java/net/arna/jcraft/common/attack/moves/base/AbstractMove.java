@@ -1,16 +1,27 @@
 package net.arna.jcraft.common.attack.moves.base;
 
+import com.mojang.datafixers.Products;
+import com.mojang.datafixers.kinds.App;
+import com.mojang.datafixers.util.*;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.architectury.platform.Platform;
+import dev.architectury.registry.registries.RegistrySupplier;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.actions.PlaySoundAction;
+import net.arna.jcraft.common.attack.core.*;
+import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.core.data.ExtraProducts;
+import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.arna.jcraft.common.attack.MobilityType;
-import net.arna.jcraft.platform.JPlatformUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -21,18 +32,22 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
+@SuppressWarnings("UnusedReturnValue")
 @Getter
 public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAttacker<? extends A, ?>> {
-    private final List<SoundEvent> sounds = new ArrayList<>(), impactSounds = new ArrayList<>();
-    private final List<Predicate<? super A>> conditions = new ArrayList<>();
-    private final List<InitAction<? super A>> initActions = new ArrayList<>();
-    private final List<MoveAction<? super A>> actions = new ArrayList<>();
-    private MoveType moveType;
+    // Used to store the time this move was charged for, if any.
+    // Set when this move is initiated using a charge time.
+    @Getter(AccessLevel.PRIVATE) // shouldn't be used directly
+    private final IntMoveVariable CHARGE_TIME = new IntMoveVariable();
+    private final List<MoveCondition<?, ? super A>> conditions = new ArrayList<>();
+    private final List<MoveAction<?, ? super A>> actions = new ArrayList<>(), initActions = new ArrayList<>();
+    private MoveClass moveClass;
     private int cooldown, windup;
     private int duration;
     private float moveDistance;
@@ -43,18 +58,13 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     private Enum<?> animation;
     @NonNull
     private Component name = Component.empty(), description = Component.empty();
-    /**
-     * The move this move was copied from.
-     * Defaults to {@code this}.
-     */
-    private T originalMove = getThis();
     private @Nullable AbstractMove<?, ? super A> crouchingVariant, aerialVariant, followup;
     private boolean isCrouchingVariant, isAerialVariant, isFollowup;
     private int armor;
     private IntObjectPair<AbstractMove<?, ? super A>> finisher;
     protected MobilityType mobilityType;
-    @Getter
     private Boolean isHoldable;
+    private OptionalInt followupFrame = OptionalInt.empty();
     // Used to help AI know how and when to use this attack.
     protected boolean ranged, barrage, multiHit, charge, counter, dash, grab;
     protected boolean copyOnUse;
@@ -73,7 +83,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Sets the cooldown of this move.
      * This is how many ticks the user has to wait to be able to use this attack again.
-     * Should be set via the constructor, this is only to modify copies.
+     * This should be set via the constructor; this is only to modify copies.
      *
      * @param cooldown The cooldown of this move in ticks
      * @return This move
@@ -218,30 +228,6 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     }
 
     /**
-     * Adds a sound to play when this move is performed.
-     * Can be called multiple times.
-     *
-     * @param sound A sound to play when this move is performed.
-     * @return This move
-     */
-    public T withSound(final SoundEvent sound) {
-        sounds.add(sound);
-        return getThis();
-    }
-
-    /**
-     * Adds a sound to play when this move hits something.
-     * Can be called multiple times.
-     *
-     * @param sound A sound to play when this move hits something.
-     * @return This move
-     */
-    public T withImpactSound(final SoundEvent sound) {
-        impactSounds.add(sound);
-        return getThis();
-    }
-
-    /**
      * Sets the number of hits this attack can withstand before breaking.
      *
      * @param armor The number of hits this attack can withstand
@@ -260,43 +246,6 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      */
     public T withHyperArmor() {
         return withArmor(Integer.MAX_VALUE);
-    }
-
-    /**
-     * Adds a new condition to the list of conditions.
-     * All conditions must be met for a move to be allowed to be initiated.
-     * If any return {@code false}, the move is not initiated.
-     *
-     * @param condition The condition to add
-     * @return This move
-     */
-    public T withCondition(final Predicate<? super A> condition) {
-        conditions.add(condition);
-        return getThis();
-    }
-
-    /**
-     * Adds a new init action to this move.
-     * Init actions are called at the end of {@link #onInitiate(IAttacker)}.
-     *
-     * @param action An action
-     * @return This move
-     */
-    public T withInitAction(final InitAction<? super A> action) {
-        initActions.add(action);
-        return getThis();
-    }
-
-    /**
-     * Adds an action to this move.
-     * Actions are called after {@link #perform(IAttacker, LivingEntity, MoveContext)} is called.
-     *
-     * @param action An action
-     * @return This move
-     */
-    public T withAction(final MoveAction<? super A> action) {
-        actions.add(action);
-        return getThis();
     }
 
     /**
@@ -321,15 +270,121 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     }
 
     /**
-     * Forces move handling to copy this move when initiated.
+     * Adds a new condition to this move.
+     * @param condition The condition to add
+     * @return This move
      */
-    public T withCopyOnUse() {
-        this.copyOnUse = true;
+    public T withCondition(final MoveCondition<?, ? super A> condition) {
+        conditions.add(condition);
         return getThis();
     }
 
-    public boolean shouldCopyOnUse() {
-        return copyOnUse;
+    /**
+     * Adds multiple conditions to this move.
+     * @param conditions The conditions to add
+     * @return This move
+     */
+    public T withConditions(final Collection<MoveCondition<?, ? super A>> conditions) {
+        this.conditions.addAll(conditions);
+        return getThis();
+    }
+
+    @ApiStatus.Internal
+    @SuppressWarnings({"unchecked", "RedundantCast", "rawtypes"})
+    public T withConditionsRaw(final Collection<MoveCondition<?, ?>> conditions) {
+        this.conditions.addAll((Collection<? extends MoveCondition<?,? super A>>) (Collection) conditions);
+        return getThis();
+    }
+
+    /**
+     * Adds a new action to this move.
+     * @param action The action to add
+     * @return This move
+     */
+    public T withAction(final MoveAction<?, ? super A> action) {
+        actions.add(action);
+        return getThis();
+    }
+
+    /**
+     * Adds multiple actions to this move.
+     * @param actions The actions to add
+     * @return This move
+     */
+    public T withActions(final Collection<MoveAction<?, ? super A>> actions) {
+        this.actions.addAll(actions);
+        return getThis();
+    }
+
+    @ApiStatus.Internal
+    @SuppressWarnings({"unchecked", "RedundantCast", "rawtypes"})
+    public T withActionsRaw(final Collection<MoveAction<?, ?>> actions) {
+        this.actions.addAll((Collection<? extends MoveAction<?,? super A>>) (Collection) actions);
+        return getThis();
+    }
+
+    /**
+     * Adds a new action to this move that is performed when this move is initiated.
+     * @param action The action to add
+     * @return This move
+     */
+
+    public T withInitAction(final MoveAction<?, ? super A> action) {
+        initActions.add(action);
+        return getThis();
+    }
+
+    /**
+     * Adds multiple actions to this move that are performed when this move is initiated.
+     * @param actions The actions to add
+     * @return This move
+     */
+    public T withInitActions(final Collection<MoveAction<?, ? super A>> actions) {
+        this.initActions.addAll(actions);
+        return getThis();
+    }
+
+    @ApiStatus.Internal
+    @SuppressWarnings({"unchecked", "RedundantCast", "rawtypes"})
+    public T withInitActionsRaw(final Collection<MoveAction<?, ?>> actions) {
+        this.initActions.addAll((Collection<? extends MoveAction<?,? super A>>) (Collection) actions);
+        return getThis();
+    }
+
+    /**
+     * Adds a sound to play when this move is initiated.
+     * @param sound The sound to play
+     * @return This move
+     */
+    public T withSound(final RegistrySupplier<SoundEvent> sound) {
+        return withInitAction(PlaySoundAction.playSound(sound));
+    }
+
+    /**
+     * Adds a sound to play when this move is initiated.
+     * @param sound The sound to play
+     * @return This move
+     */
+    public T withSound(final SoundEvent sound) {
+        return withInitAction(PlaySoundAction.playSound(sound));
+    }
+
+    /**
+     * Adds a sound to play when this move hits something.
+     * @param sound The sound to play
+     * @return This move
+     */
+    public T withImpactSound(final RegistrySupplier<SoundEvent> sound) {
+        return withAction(PlaySoundAction.playImpactSound(sound));
+    }
+
+    /**
+     * Adds a sound to play when this move hits something.
+     * @param sound The sound to play
+     * @return This move
+     */
+    public T withImpactSound(final SoundEvent sound) {
+        return withAction(PlaySoundAction.playImpactSound(sound));
     }
 
     /**
@@ -368,6 +423,29 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         return getThis();
     }
 
+    /**
+     * If this move is re-initiated within the given frame,
+     * the followup will be initiated immediately <b>after</b> checking conditions.
+     * Frame is the number of ticks from the end of the move (so movestun <= frame).
+     * @param frame Ticks from the end of the move to initiate the followup in.
+     * @return This move
+     */
+    public T withFollowupFrame(final int frame) {
+        return withFollowupFrame(OptionalInt.of(frame));
+    }
+
+    /**
+     * If this move is re-initiated within the given frame,
+     * the followup will be initiated immediately <b>after</b> checking conditions.
+     * Frame is the number of ticks from the end of the move (so movestun <= frame).
+     * @param frame Ticks from the end of the move to initiate the followup in.
+     * @return This move
+     */
+    public T withFollowupFrame(final OptionalInt frame) {
+        followupFrame = frame;
+        return getThis();
+    }
+
     // Lombok does not understand these variable names already start with 'is'.
     public boolean isCrouchingVariant() {
         return isCrouchingVariant;
@@ -385,46 +463,76 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * Called when this move is registered to a {@link net.arna.jcraft.common.attack.core.MoveMap MoveMap}.
      * Not supposed to be called anywhere else.
      *
-     * @param type The MoveType this move is registered as
+     * @param moveClass The MoveClass this move is registered as
      */
     @ApiStatus.Internal
-    public final void onRegister(final MoveType type) {
-        moveType = type;
+    public final void onRegister(final MoveClass moveClass) {
+        this.moveClass = moveClass;
 
         if (crouchingVariant != null) {
-            crouchingVariant.onRegister(type);
+            crouchingVariant.onRegister(moveClass);
         }
         if (aerialVariant != null) {
-            aerialVariant.onRegister(type);
+            aerialVariant.onRegister(moveClass);
         }
         if (followup != null) {
-            followup.onRegister(type);
+            followup.onRegister(moveClass);
         }
         if (finisher != null) {
-            finisher.right().onRegister(type);
+            finisher.right().onRegister(moveClass);
         }
 
         // TODO convert these to actual tests
         // THATS TOO BAD!
         // lmao
-        if (!JPlatformUtils.isDevelopmentEnvironment()) {
-            return;
-        }
+        if (!Platform.isDevelopmentEnvironment()) return;
+
         testCopy();
         assert getThis() == this;
+
+        //noinspection ConstantValue // that's the point
+        if (getMoveType() == null) {
+            throw new IllegalStateException("MoveType not set for " + this);
+        }
     }
+
+    public BaseMoveExtras getExtras() {
+        return BaseMoveExtras.fromMove(getThis());
+    }
+
+    /**
+     * Gets the type of this move. Holds the codec used to serialize and deserialize this move. <br>
+     * <b>MUST BE REGISTERED IN {@link MoveSetLoader#registerMoves(BiConsumer)}.</b>
+     * @return The type of this move
+     */
+    @NonNull
+    public abstract MoveType<T> getMoveType();
 
     // Logic methods
 
     /**
      * Whether this attack may be initiated.
+     * If you wish to add checks, consider overriding {@link #conditionsMet(IAttacker)} instead.
      *
      * @param attacker The attacker to check for
      * @return Whether this attack may be initiated
      */
-    public boolean canBeInitiated(final A attacker) {
+    public final boolean canBeInitiated(final A attacker) {
         // Followups generally don't check canAttack() cuz they require that move-stun > 0 while canAttack() requires the opposite.
-        return (isFollowup() || attacker.canAttack()) && conditions.stream().allMatch(condition -> condition.test(attacker));
+        return (isFollowup() || attacker.canAttack()) && conditionsMet(attacker);
+    }
+
+    /**
+     * Checks whether all conditions are met for this move to be initiated.
+     * Required to be {@code true} for {@link #canBeInitiated(IAttacker)} to return {@code true} and
+     * checked to find the first valid entry when attempting to initiate a move.
+     * Overrides should call {@code super.conditionsMet(attacker)} to ensure all conditions are checked.
+     *
+     * @param attacker The attacker to check for
+     * @return Whether all conditions are met for this move to be initiated
+     */
+    public boolean conditionsMet(final A attacker) {
+        return conditions.stream().allMatch(condition -> condition.test(attacker));
     }
 
     /**
@@ -432,21 +540,32 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * By default, only plays the sound(s) and invokes the init actions, if any.
      */
     public void onInitiate(final A attacker) {
-        initActions.forEach(action -> action.perform(attacker, attacker.getUser(), attacker.getMoveContext()));
-        sounds.forEach(sound -> attacker.playAttackerSound(sound, 1f, 1f));
+        LivingEntity user = attacker.getUser();
+        Set<LivingEntity> targets = Set.of(); // Obviously none yet
+        initActions.forEach(a -> a.perform(attacker, user, attacker.getMoveContext(), targets));
     }
 
     /**
      * Called when this move is canceled. Does nothing by default.
      */
-    public void onCancel(final A attacker) {
-    }
+    public void onCancel(final A attacker) {}
 
     /**
      * Whether this attack should be allowed to move onto its finisher.
-     * Certain attacks shouldn't always be able to, see: {@link net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack#canFinish(IAttacker)}
+     * Certain attacks shouldn't always be able to, see:
+     * {@link net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack#canFinish(IAttacker) MainBarageAttack#canFinish(IAttacker)}
      */
     public boolean canFinish(final A attacker) {
+        return true;
+    }
+
+    /**
+     * Whether this move is allowed to be queued when initiated while another move is active.
+     * Most moves should be able to be queued, but some moves may not be able to be queued (like KC prediction).
+     * @param attacker The attacker to check for
+     * @return Whether this move is allowed to be queued
+     */
+    public boolean canBeQueued(final A attacker) {
         return true;
     }
 
@@ -458,7 +577,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      *
      * @param attacker The attacker to tick for.
      */
-    public void tick(final A attacker, final int moveStun) {
+    public void activeTick(final A attacker, final int moveStun) {
         if (finisher != null && canFinish(attacker) && finisher.leftInt() <= getDuration() - moveStun) {
             attacker.setCurrentMove(finisher.right());
         }
@@ -467,6 +586,15 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
             doPerform(attacker);
         }
     }
+
+    /**
+     * Called every tick when the move map this move is registered to is ticked.
+     * Called regardless of whether this move is active.
+     * Should be used to apply effects or do some things based on values of context variables.
+     * (Example is Vampire's Night Vision move)
+     * @param attacker The attacker to tick for.
+     */
+    public void tick(final A attacker) {}
 
     /**
      * Returns whether {@link #perform(IAttacker, LivingEntity, MoveContext)} should be called this tick.
@@ -480,7 +608,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     }
 
     /**
-     * Invokes all {@link #withAction(MoveAction) actions} and calls {@link #perform(IAttacker, LivingEntity, MoveContext)}.
+     * Calls {@link #perform(IAttacker, LivingEntity, MoveContext)}.
      *
      * @param attacker The attacker that will be performing this move.
      */
@@ -489,7 +617,8 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         MoveContext ctx = attacker.getMoveContext();
 
         Set<LivingEntity> targets = perform(attacker, user, ctx);
-        actions.forEach(action -> action.perform(attacker, user, ctx, targets));
+        actions.forEach(a -> a.perform(attacker, user, ctx, targets));
+        attacker.onPerform(this, targets);
     }
 
     /**
@@ -499,17 +628,21 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker that will be performing this move.
      * @param user     The user of the attacker. Will never be null.
      * @param ctx      The move context in which to store data.
-     * @return A set of all targeted entities.
+     * @return A set of all targeted entities. Should be empty if no entities were (directly) targeted.
      */
     public abstract @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx);
+
+    public final void registerContextEntries(final MoveContext ctx) {
+        ctx.register(CHARGE_TIME);
+        registerExtraContextEntries(ctx);
+    }
 
     /**
      * Register entries in the move context of an attacker to be used by this move.
      *
      * @param ctx The context in which to register entries.
      */
-    public void registerContextEntries(final MoveContext ctx) {
-    }
+    protected void registerExtraContextEntries(final MoveContext ctx) {}
 
     /**
      * Gets the current blow this move is at.
@@ -583,7 +716,8 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     }
 
     protected boolean mayGrief(final LivingEntity user) {
-        return user instanceof Player || user.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
+        return (user instanceof Player || user.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) &&
+                user.level().getGameRules().getBoolean(JCraft.STAND_GRIEFING);
     }
 
     /**
@@ -594,7 +728,63 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param pressed       Whether the move was pressed or released.
      * @param moveInitiated Whether the move was initiated (or rejected because of e.g., a cooldown).
      */
-    public void onUserMoveInput(final A attacker, final MoveInputType type, final boolean pressed, final boolean moveInitiated) {
+    public void onUserMoveInput(final A attacker, final MoveInputType type, final boolean pressed, final boolean moveInitiated) {}
+
+    /**
+     * Sets for how long this move was charged before being initiated.
+     * @param attacker The attacker to set the charge time for
+     * @param chargeTime The charge time to set
+     */
+    public void setChargeTime(final A attacker, final int chargeTime) {
+        attacker.getMoveContext().setInt(CHARGE_TIME, chargeTime);
+    }
+
+    /**
+     * Gets for how long this move was charged before being initiated.
+     * @param attacker The attacker to get the charge time for
+     * @return The charge time of this move
+     */
+    protected int getChargeTime(final A attacker) {
+        return attacker.getMoveContext().getInt(CHARGE_TIME);
+    }
+
+    /**
+     * If this move is the current move, this move may dictate how AIs should use it.
+     * @param mob The user of the attacker (mob)
+     * @param target The entity the mob is targeting
+     * @param stunTicks The amount of stun ticks the target currently has.
+     * @param enemyMoveStun The move stun the target has.
+     * @param distance The distance between the mob and the target.
+     * @param enemyStand The stand of the target.
+     * @param enemyAttack The attack the target is currently performing (if any).
+     * @return The result of the move selection criterion. Pass by default.
+     * @see StandEntity.MoveSelectionResult
+     */
+    public StandEntity.MoveSelectionResult specificMoveSelectionCriterion(A attacker, LivingEntity mob, LivingEntity target, int stunTicks,
+                                                                          int enemyMoveStun, double distance,
+                                                                          StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
+        return StandEntity.MoveSelectionResult.PASS;
+    }
+
+    /**
+     * Called when a move is attempted to be initiated while this move is the current move.
+     * Can be used to do some kind of selection logic (like D4C's clone spawn move).
+     * @param attacker The attacker that is attempting to initiate this move.
+     * @param moveClass The move class of the move that is being initiated.
+     * @return {@code true} if the event was consumed and the move
+     * should not be initiated/queued, {@code false} otherwise.
+     */
+    public boolean onInitMove(A attacker, MoveClass moveClass) {
+        return false;
+    }
+
+    /**
+     * Whether this move being active prevents the user from performing another move.
+     * Returns {@code true} by default.
+     * @return Whether this move prevents the user from performing another move.
+     */
+    public boolean preventsMoves() {
+        return true;
     }
 
     /**
@@ -621,17 +811,16 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      */
     protected @NonNull T copyExtras(final @NonNull T base) {
         AbstractMove<T, A> cast = base; // Required to access private fields
-        cast.sounds.addAll(sounds);
-        cast.impactSounds.addAll(impactSounds);
-        cast.conditions.addAll(conditions);
-        cast.initActions.addAll(initActions);
-        cast.actions.addAll(actions);
-        cast.moveType = moveType;
+        cast.moveClass = moveClass;
         cast.name = name;
         cast.description = description;
         cast.followup = followup == null ? null : followup.copy();
         cast.crouchingVariant = crouchingVariant == null ? null : crouchingVariant.copy();
         cast.aerialVariant = aerialVariant == null ? null : aerialVariant.copy();
+        cast.conditions.addAll(conditions);
+        cast.actions.addAll(actions);
+        cast.initActions.addAll(initActions);
+        cast.followupFrame = followupFrame;
         cast.ranged = ranged;
         cast.isCrouchingVariant = isCrouchingVariant;
         cast.isAerialVariant = isAerialVariant;
@@ -641,7 +830,6 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         cast.copyOnUse = copyOnUse;
         cast.finisher = finisher == null ? null : IntObjectPair.of(finisher.leftInt(), finisher.right().copy());
         cast.mobilityType = mobilityType;
-        cast.originalMove = originalMove; // Set the original move to this move
         cast.animation = animation;
         cast.mayHitUser = mayHitUser;
         copiedExtras = true;
@@ -659,7 +847,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * Ensures the copy method does not return {@code null} and calls {@link #copyExtras(AbstractMove)}
      * (and the override calls the super method if applicable).
      * This is to prevent mistakes that are easily made and easily fixed but can have devastating consequences.
-     * Called in {@link #onRegister(MoveType)}.
+     * Called in {@link #onRegister(MoveClass)}.
      */
     private void testCopy() {
         copiedExtras = false;
@@ -682,15 +870,192 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         if (followup != null) {
             followup.testCopy();
         }
+        if (finisher != null) {
+            finisher.right().testCopy();
+        }
     }
 
-    @FunctionalInterface
-    public interface InitAction<A extends IAttacker<? extends A, ?>> {
-        void perform(final A attacker, final LivingEntity user, final MoveContext ctx);
-    }
+    protected abstract static class Type<M extends AbstractMove<? extends M, ?>> implements MoveType<M> {
+        @Getter(lazy = true)
+        private final Codec<M> codec = RecordCodecBuilder.create(this::buildCodec);
 
-    @FunctionalInterface
-    public interface MoveAction<A extends IAttacker<? extends A, ?>> {
-        void perform(final A attacker, final LivingEntity user, final MoveContext ctx, final Set<LivingEntity> targets);
+        protected RecordCodecBuilder<M, BaseMoveExtras> extras() {
+            return BaseMoveExtras.CODEC.get().fieldOf("extras").forGetter(AbstractMove::getExtras);
+        }
+
+        protected RecordCodecBuilder<M, Integer> cooldown() {
+            return Codec.INT.fieldOf("cooldown").forGetter(AbstractMove::getCooldown);
+        }
+
+        protected RecordCodecBuilder<M, Integer> windup() {
+            return Codec.INT.fieldOf("windup").forGetter(AbstractMove::getWindup);
+        }
+
+        protected RecordCodecBuilder<M, Integer> duration() {
+            return Codec.INT.fieldOf("duration").forGetter(AbstractMove::getDuration);
+        }
+
+        protected RecordCodecBuilder<M, Float> moveDistance() {
+            return Codec.FLOAT.fieldOf("move_distance").forGetter(AbstractMove::getMoveDistance);
+        }
+
+        /**
+         * Builds the codec for this move type.
+         * See the methods in this class that return {@link RecordCodecBuilder} for fields that can be used.
+         * Not all fields have to be used, moves may have default/hardcoded values for some of them.
+         * <br><br>
+         * Example implementation (from {@link SimpleAttack}):
+         * <pre>{@code
+         * @Override
+         * protected App<RecordCodecBuilder.Mu<SimpleAttack<?>>, SimpleAttack<?>> buildCodec(RecordCodecBuilder.Instance<SimpleAttack<?>> instance) {
+         *     return instance.group(
+         *         extras(), attackExtras(), cooldown(), windup(), duration(),
+         *         moveDistance(), damage(), stun(), hitboxSize(), knockback(), offset()
+         *     ).apply(instance, SimpleAttack::new);
+         * }
+         * }</pre>
+         * <br><br>
+         * <b>NOTE:</b>
+         * If the above implementation example suits your needs,
+         * it is likely you can use a default method instead.
+         * Each base move has a Type class
+         * that has a <code>&lt;move&gt;Default(RecordCodecBuilder.Instance, Function)</code> method.
+         * <br>
+         * (For example {@link #baseDefault(RecordCodecBuilder.Instance, Function4)})
+         *
+         * @param instance The instance to build the codec with
+         * @return The codec for this move type
+         */
+        @NonNull
+        protected abstract App<RecordCodecBuilder.Mu<M>, M> buildCodec(final RecordCodecBuilder.Instance<M> instance);
+
+        protected Function<BaseMoveExtras, M> applyExtras(Supplier<M> function) {
+            return extras -> extras.apply(function.get());
+        }
+
+        protected <T1> BiFunction<BaseMoveExtras, T1, M> applyExtras(Function<T1, M> function) {
+            return (extras, t1) -> extras.apply(function.apply(t1));
+        }
+
+        protected <T1, T2> Function3<BaseMoveExtras, T1, T2, M> applyExtras(BiFunction<T1, T2, M> function) {
+            return (extras, t1,  t2) -> extras.apply(function.apply(t1, t2));
+        }
+
+        protected <T1, T2, T3> Function4<BaseMoveExtras, T1, T2, T3, M> applyExtras(Function3<T1, T2, T3, M> function) {
+            return (extras, t1, t2, t3) -> extras.apply(function.apply(t1, t2, t3));
+        }
+
+        protected <T1, T2, T3, T4> Function5<BaseMoveExtras, T1, T2, T3, T4, M>
+        applyExtras(Function4<T1, T2, T3, T4, M> function) {
+            return (extras, t1, t2, t3, t4) -> extras.apply(function.apply(t1, t2, t3, t4));
+        }
+
+        protected <T1, T2, T3, T4, T5> Function6<BaseMoveExtras, T1, T2, T3, T4, T5, M>
+        applyExtras(Function5<T1, T2, T3, T4, T5, M> function) {
+            return (extras, t1, t2, t3, t4, t5) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6> Function7<BaseMoveExtras, T1, T2, T3, T4, T5, T6, M>
+        applyExtras(Function6<T1, T2, T3, T4, T5, T6, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7> Function8<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, M>
+        applyExtras(Function7<T1, T2, T3, T4, T5, T6, T7, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8> Function9<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, M>
+        applyExtras(Function8<T1, T2, T3, T4, T5, T6, T7, T8, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9> Function10<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, M>
+        applyExtras(Function9<T1, T2, T3, T4, T5, T6, T7, T8, T9, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8, t9) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> Function11<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, M>
+        applyExtras(Function10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>
+        Function12<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, M>
+        applyExtras(Function11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>
+        Function13<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, M>
+        applyExtras(Function12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>
+        Function14<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, M>
+        applyExtras(Function13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>
+        Function15<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, M>
+        applyExtras(Function14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15>
+        Function16<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, M>
+        applyExtras(Function15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16>
+        ExtraProducts.P17.Function17<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, M>
+        applyExtras(Function16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17>
+        ExtraProducts.P18.Function18<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, M>
+        applyExtras(ExtraProducts.P17.Function17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18>
+        ExtraProducts.P19.Function19<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, M>
+        applyExtras(ExtraProducts.P18.Function18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18));
+        }
+
+        protected <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19>
+        ExtraProducts.P20.Function20<BaseMoveExtras, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, M>
+        applyExtras(ExtraProducts.P19.Function19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, M> function) {
+            return (extras, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19) ->
+                    extras.apply(function.apply(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19));
+        }
+
+        protected Products.P5<RecordCodecBuilder.Mu<M>, BaseMoveExtras, Integer, Integer, Integer, Float> baseDefault(RecordCodecBuilder.Instance<M> instance) {
+            return instance.group(extras(), cooldown(), windup(), duration(), moveDistance());
+        }
+
+        protected App<RecordCodecBuilder.Mu<M>, M> baseDefault(RecordCodecBuilder.Instance<M> instance,
+                                                               Function4<Integer, Integer, Integer, Float, M> function) {
+            return baseDefault(instance).apply(instance, applyExtras(function));
+        }
     }
 }

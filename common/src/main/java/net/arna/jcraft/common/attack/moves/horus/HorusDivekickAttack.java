@@ -1,30 +1,39 @@
 package net.arna.jcraft.common.attack.moves.horus;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
+import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.HorusEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.common.attack.MobilityType;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekickAttack, HorusEntity, HorusEntity.State> {
+    private static final MoveVariable<Vec3> LOOK_DIR = new MoveVariable<>(Vec3.class);
+    private static final MobEffectInstance LEVITATE = new MobEffectInstance(MobEffects.SLOW_FALLING, 9, 4, true, false);
 
-    public static final MoveVariable<Vec3> LOOK_DIR = new MoveVariable<>(Vec3.class);
-
-    public HorusDivekickAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback, final float offset, final HorusEntity.State hitAnimState) {
-        super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitAnimState);
+    public HorusDivekickAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
+                               final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
+        super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, HorusEntity.State.DIVEKICK_HIT);
         withMobilityType(MobilityType.FLIGHT);
     }
 
-    private static final MobEffectInstance LEVITATE = new MobEffectInstance(MobEffects.SLOW_FALLING, 9, 4, true, false);
+    @Override
+    public @NotNull MoveType<HorusDivekickAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
 
     @Override
     public void onInitiate(final HorusEntity attacker) {
@@ -38,7 +47,7 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
         if (duration < getWindup()) duration = getWindup();
         withDuration(duration);
 
-        user.addEffect(LEVITATE);
+        user.addEffect(new MobEffectInstance(LEVITATE));
     }
 
     @Override
@@ -71,7 +80,7 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(LOOK_DIR);
     }
 
@@ -83,6 +92,15 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
     @Override
     public @NonNull HorusDivekickAttack copy() {
         return copyExtras(new HorusDivekickAttack(getCooldown(), getWindup(), getDuration(),
-                getMoveDistance(), getDamage(), getStun(), getHitboxSize(), getKnockback(), getOffset(), getHitAnimState()));
+                getMoveDistance(), getDamage(), getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<HorusDivekickAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<HorusDivekickAttack>, HorusDivekickAttack> buildCodec(RecordCodecBuilder.Instance<HorusDivekickAttack> instance) {
+            return attackDefault(instance, HorusDivekickAttack::new);
+        }
     }
 }

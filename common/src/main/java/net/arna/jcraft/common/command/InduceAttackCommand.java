@@ -2,8 +2,8 @@ package net.arna.jcraft.common.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.arna.jcraft.common.argumenttype.AttackArgumentType;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
@@ -28,7 +28,7 @@ public class InduceAttackCommand {
                                                 context.getSource(),
                                                 EntityArgument.getEntities(context, "ents"),
                                                 true,
-                                                context.getArgument("attack", MoveType.class)
+                                                context.getArgument("attack", MoveClass.class)
                                         )
                                 ))
                         )
@@ -38,7 +38,7 @@ public class InduceAttackCommand {
                                                 context.getSource(),
                                                 EntityArgument.getEntities(context, "ents"),
                                                 false,
-                                                context.getArgument("attack", MoveType.class)
+                                                context.getArgument("attack", MoveClass.class)
                                         )
                                 ))
                         )
@@ -46,9 +46,9 @@ public class InduceAttackCommand {
         );
     }
 
-    public static int runAttack(final CommandSourceStack source, final Collection<? extends Entity> targets, final boolean stand, final MoveType type) {
+    public static int runAttack(final CommandSourceStack source, final Collection<? extends Entity> targets, final boolean stand, final MoveClass moveClass) {
         int flag = 0;
-        String typeName = type.toString();
+        String typeName = moveClass.toString();
 
         if (stand) {
             for (Entity entity : targets) {
@@ -57,11 +57,11 @@ public class InduceAttackCommand {
                     StandEntity<?, ?> standEntity = JComponentPlatformUtils.getStandData(living).getStand();
 
                     if (standEntity != null) {
-                        if (standEntity.initMove(type)) {
+                        if (standEntity.initMove(moveClass)) {
                             source.sendSuccess(() -> Component.literal("Initiating stand attack " + typeName + " for " + living.getName().getString()), true);
                         } else {
                             source.sendSuccess(() -> Component.literal("Queueing stand attack " + typeName + " for " + living.getName().getString()), true);
-                            standEntity.queueMove(MoveInputType.fromMoveType(type));
+                            standEntity.queueMove(MoveInputType.fromMoveClass(moveClass));
                         }
 
                         flag = 1;
@@ -77,11 +77,11 @@ public class InduceAttackCommand {
                 JSpec<?, ?> spec = JUtils.getSpec(player);
 
                 if (spec != null) {
-                    if (spec.initMove(type)) {
+                    if (spec.initMove(moveClass)) {
                         source.sendSuccess(() -> Component.literal("Initiating spec attack " + typeName + " for " + entity.getName().getString()), true);
                     } else {
                         source.sendSuccess(() -> Component.literal("Queueing spec attack " + typeName + " for " + entity.getName().getString()), true);
-                        spec.queuedMove = MoveInputType.fromMoveType(type);
+                        spec.queuedMove = MoveInputType.fromMoveClass(moveClass);
                     }
 
                     flag = 1;

@@ -1,12 +1,11 @@
 package net.arna.jcraft.common.entity.stand;
 
 import net.arna.jcraft.common.attack.core.BlockableType;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.killerqueen.BombPlantAttack;
-import net.arna.jcraft.common.attack.moves.killerqueen.DetonateAttack;
 import net.arna.jcraft.common.attack.moves.killerqueen.ExplosiveDashAttack;
+import net.arna.jcraft.common.attack.moves.killerqueen.KQDetonateAttack;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
@@ -23,35 +22,34 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQueenEntity<E, S>, S extends Enum<S> & StandAnimationState<E>> extends StandEntity<E, S>
         permits KillerQueenEntity, KQBTDEntity {
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LOW = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
             0, 8, 13, 0.85f, 4f, 10, 1.5f, 0.25f, 0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withInfo(
                     Component.literal("Low Punch"),
                     Component.literal("frametrap tool, low stun")
             );
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT_FOLLOWUP = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
             0, 6, 13, 0.8f, 3f, 20, 1.5f, 0.5f, 0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             // implemented in class: .withFollowup(LOW)
             .withInfo(
                     Component.literal("Second Punch"),
                     Component.literal("frametrap tool")
             );
-    public static final DetonateAttack DETONATE = new DetonateAttack(20, 5, 6, 1f)
+    public static final KQDetonateAttack DETONATE = new KQDetonateAttack(20, 5, 6, 1f)
             .withInfo(
                     Component.literal("Detonate"),
                     Component.literal("tiny windup, move queueing is disabled while Detonate is active")
             );
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
             30, 6, 10, 0.75f, 3f, 10, 1.5f, 0.25f, 0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_6.get())
+            .withImpactSound(JSoundRegistry.IMPACT_6)
             .withCrouchingVariant(DETONATE)
             // implemented in class: .withFollowup(LIGHT_FOLLOWUP)
             .withInfo(
@@ -60,8 +58,8 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             );
     public static final MainBarrageAttack<AbstractKillerQueenEntity<?, ?>> BARRAGE = new MainBarrageAttack<AbstractKillerQueenEntity<?, ?>>(
             240, 0, 40, 0.75f, 1f, 20, 2f, 0.1f, 0, 3, Blocks.DEEPSLATE.defaultDestroyTime())
-            .withSound(JSoundRegistry.KQ_BARRAGE.get())
-            .withImpactSound(JSoundRegistry.IMPACT_4.get())
+            .withSound(JSoundRegistry.KQ_BARRAGE)
+            .withImpactSound(JSoundRegistry.IMPACT_4)
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, medium stun")
@@ -91,15 +89,9 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
                 BNBs:
                     -Standard bomb plant confirm and SHA setup
                     Light~Light>Barrage>Bomb plant>Detonate(>Sheer Heart Attack)
-                    
+                
                     -Confirm while bomb plant is on cd
                     Light~Light>Barrage>Heavy(>Sheer Heart Attack)""";
-    }
-
-    @Override
-    protected void registerMoves(MoveMap<E, S> moves) {
-        moves.register(MoveType.BARRAGE, BARRAGE, getBarrageState());
-        moves.register(MoveType.UTILITY, EXPLOSIVE_DASH); // No special state for this one.
     }
 
     protected void detonate() {
@@ -110,9 +102,9 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
     // Moveset
     @Override
     @SuppressWarnings("unchecked") // we checked :)
-    public boolean initMove(MoveType type) {
+    public boolean initMove(MoveClass moveClass) {
         final LivingEntity user = getUserOrThrow();
-        switch (type) {
+        switch (moveClass) {
             case LIGHT -> {
                 boolean idling = getMoveStun() <= 0;
                 if (getCurrentMove() == null || getCurrentMove().getFollowup() == null) {
@@ -120,7 +112,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
                         if (user.isShiftKeyDown()) {
                             detonate();
                         } else {
-                            return super.initMove(MoveType.LIGHT);
+                            return super.initMove(MoveClass.LIGHT);
                         }
                     }
                 } else if (getMoveStun() < getCurrentMove().getWindupPoint()) {
@@ -147,12 +139,12 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
 
                     return true;
                 } else {
-                    return handleMove(MoveType.SPECIAL1);
+                    return handleMove(MoveClass.SPECIAL1);
                 }
             }
 
             default -> {
-                return super.initMove(type);
+                return super.initMove(moveClass);
             }
         }
     }
@@ -171,9 +163,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
         if (enemyStand != null && enemyStand.blocking) {
             return MoveSelectionResult.STOP;
         }
-        final Vec3 bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
-        return bombPos != null && attack == DETONATE && target.distanceToSqr(bombPos) < 9.0D ?
-                MoveSelectionResult.USE : MoveSelectionResult.PASS;
+        return super.specificMoveSelectionCriterion(attack, mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
     }
 
     @Override
@@ -181,7 +171,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
         super.tick();
 
         if (hasUser()) {
-            if (getCurrentMove() instanceof DetonateAttack) {
+            if (getCurrentMove() instanceof KQDetonateAttack) {
                 queuedMove = null;
             }
         }
@@ -189,8 +179,4 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
 
     // Animation code
     protected abstract S getDetonateState();
-
-    protected abstract S getLightState();
-
-    protected abstract S getBarrageState();
 }

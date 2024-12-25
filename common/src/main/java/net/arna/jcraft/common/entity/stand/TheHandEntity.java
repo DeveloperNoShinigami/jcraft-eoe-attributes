@@ -5,42 +5,29 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.MobilityType;
+import net.arna.jcraft.common.attack.actions.PlaySoundAction;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.common.attack.core.data.StateContainer;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.attack.moves.thehand.EraseAttack;
-import net.arna.jcraft.common.attack.moves.thehand.MultiHitEraseAttack;
+import net.arna.jcraft.common.attack.moves.thehand.EraseGroundAttack;
+import net.arna.jcraft.common.attack.moves.thehand.EraseSpaceAttack;
+import net.arna.jcraft.common.attack.moves.thehand.RageAttack;
+import net.arna.jcraft.common.attack.moves.thehand.SimpleEraseAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
-import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.arna.jcraft.registry.JStatusRegistry;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -50,25 +37,25 @@ import java.util.function.Consumer;
  * @see net.arna.jcraft.client.renderer.entity.stands.TheHandRenderer TheHandRenderer
  */
 public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.State> {
+    public static final MoveSet<TheHandEntity, State> MOVE_SET = MoveSet.create(StandType.THE_HAND,
+            TheHandEntity::registerMoves, State.class);
 
-    public static final UppercutAttack<TheHandEntity> CROUCHING_LIGHT_FOLLOWUP = new UppercutAttack<TheHandEntity>(0,
+    public static final SimpleUppercutAttack<TheHandEntity> CROUCHING_LIGHT_FOLLOWUP = new SimpleUppercutAttack<TheHandEntity>(0,
             13, 20, 0.6f, 6f, 15, 1.75f, 0.3f, 0.4f, -0.3f)
             .withAnim(State.CROUCHING_LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withExtraHitBox(0, 0, 1)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Component.literal("Stomp (Second Hit)"),
-                    Component.literal("Lifts knocked down enemies off the ground."))
-            .withAction(
-                    TheHandEntity::offTheGround
+                    Component.literal("Lifts knocked down enemies off the ground.")
             );
     public static final SimpleAttack<TheHandEntity> CROUCHING_LIGHT = new SimpleAttack<TheHandEntity>((int) (JCraft.LIGHT_COOLDOWN * 2.0),
             9, 14, 0.5f, 5f, 15, 1.5f, 0.25f, 0.4f)
             .withFollowup(CROUCHING_LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withBlockStun(12)
             .withInfo(
@@ -78,10 +65,10 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                                             Shorter range.
                                             High blockstun.""")
             );
-    public static final UppercutAttack<TheHandEntity> LIGHT_FOLLOWUP = new UppercutAttack<TheHandEntity>(
+    public static final SimpleUppercutAttack<TheHandEntity> LIGHT_FOLLOWUP = new SimpleUppercutAttack<TheHandEntity>(
             0, 9, 14, 0.75f, 6f, 8, 1.6f, 0.3f, -0.1f, 0.3f)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withBlockStun(4)
             .withExtraHitBox(0, 0, 1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -92,7 +79,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             5, 10, 0.75f, 4f, 12, 1.5f, 0.25f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(CROUCHING_LIGHT)
-            .withImpactSound(JSoundRegistry.IMPACT_6.get())
+            .withImpactSound(JSoundRegistry.IMPACT_6)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Component.literal("Punch"),
@@ -100,8 +87,8 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
 
     public static final KnockdownAttack<TheHandEntity> STOMP_BARRAGE_FINISHER = new KnockdownAttack<TheHandEntity>(0,
             6, 10, 1.0f, 6f, 6, 1.75f, 0.5f, 0.3f, 35)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withExtraHitBox(0, 0, 1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -110,8 +97,8 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             );
     public static final SimpleMultiHitAttack<TheHandEntity> STOMP_BARRAGE = new SimpleMultiHitAttack<TheHandEntity>(180,
             33, 1.0f, 1.0f, 10, 1.5f, 0.3f, 0.2f, IntSet.of(6, 9, 13, 16, 19, 22))
-            .withSound(JSoundRegistry.THE_HAND_KICK_BARRAGE.get())
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withSound(JSoundRegistry.THE_HAND_KICK_BARRAGE)
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withFinisher(23, STOMP_BARRAGE_FINISHER)
             .withInfo(
                     Component.literal("Stomp Barrage"),
@@ -122,8 +109,8 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
 
     public static final MainBarrageAttack<TheHandEntity> BARRAGE = new MainBarrageAttack<TheHandEntity>(240, 0,
             40, 0.75f, 0.8f, 30, 2f, 0.25f, 0f, 3, Blocks.DEEPSLATE.defaultDestroyTime())
-            .withSound(JSoundRegistry.D4C_BARRAGE.get())
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withSound(JSoundRegistry.D4C_BARRAGE)
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, high stun")
@@ -131,19 +118,19 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
 
     public static final KnockdownAttack<TheHandEntity> SWEEP = new KnockdownAttack<TheHandEntity>(100, 13, 18, 1.0f,
             9f, 15, 1.6f, 0.4f, 0.3f, 35)
-            .withSound(JSoundRegistry.D4C_LIGHT.get())
+            .withSound(JSoundRegistry.D4C_LIGHT)
             .withAnim(State.SWEEP)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withInfo(
                     Component.literal("Sweep"),
                     Component.literal("Can be comboed out of with cr.M1~M1>...")
             );
-    public static final UppercutAttack<TheHandEntity> KICK = new UppercutAttack<TheHandEntity>(100, 13, 24, 0.75f,
+    public static final SimpleUppercutAttack<TheHandEntity> KICK = new SimpleUppercutAttack<TheHandEntity>(100, 13, 24, 0.75f,
             9f, 12, 2f, 1.1f, 0.1f, 0.3f)
-            .withSound(JSoundRegistry.D4C_LIGHT.get())
+            .withSound(JSoundRegistry.D4C_LIGHT)
             .withCrouchingVariant(SWEEP)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHyperArmor()
             .withLaunch()
@@ -151,11 +138,11 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                     Component.literal("Home Run!"),
                     Component.literal("Uninterruptible launcher.")
             );
-    public static final EraseAttack ERASE_GROUND = new EraseAttack(120, 18,
-            29, 0.75f, 8.0f, 14, 2.0f, 0, 0.35f)
-            .withSound(JSoundRegistry.THE_HAND_SWIPE.get())
+    public static final EraseGroundAttack ERASE_GROUND = new EraseGroundAttack(120, 18, 29, 0.75f,
+            8.0f, 14, 2.0f, 0, 0.35f)
+            .withSound(JSoundRegistry.THE_HAND_SWIPE)
             .withAnim(State.ERASE_GROUND)
-            .withImpactSound(JSoundRegistry.IMPACT_12.get())
+            .withImpactSound(JSoundRegistry.IMPACT_12)
             .withInfo(
                     Component.literal("Erase"),
                     Component.literal("""
@@ -165,15 +152,14 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                             Works on any non-indestructible block.""")
             )
             .withStaticY()
-            .withInitAction(TheHandEntity::trySetArmor)
-            .withAction(TheHandEntity::eraseGround);
-    public static final EraseAttack ERASE = new EraseAttack(120, 18,
-            29, 0.75f, 8.0f, 14, 2.0f, 0, 0)
-            .withSound(JSoundRegistry.THE_HAND_SWIPE.get())
+            .withArmor(2);
+    public static final SimpleEraseAttack ERASE = new SimpleEraseAttack(120, 18, 29, 0.75f,
+            8.0f, 14, 2.0f, 0, 0)
+            .withSound(JSoundRegistry.THE_HAND_SWIPE)
             .withAnim(State.ERASE)
             .withCrouchingVariant(ERASE_GROUND)
-            .withImpactSound(JSoundRegistry.IMPACT_12.get())
-            .withInitAction(TheHandEntity::trySetArmor)
+            .withImpactSound(JSoundRegistry.IMPACT_12)
+            .withArmor(2)
             .withInfo(
                     Component.literal("Erase"),
                     Component.literal("""
@@ -183,57 +169,33 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             );
     public static final SimpleAttack<TheHandEntity> GRAB_HIT = new SimpleAttack<TheHandEntity>(0, 14, 16,
             0.75f, 8f, 5, 1.75f, 1.5f, 0f)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Component.literal("Grab (Hit)"),
                     Component.empty());
     public static final GrabAttack<TheHandEntity, State> GRAB = new GrabAttack<>(300, 10, 20,
-            0.75f, 0f, 16, 1.5f, 0f, 0f, GRAB_HIT, State.GRAB_HIT)
-            .withSound(JSoundRegistry.THE_HAND_GRAB.get())
+            0.75f, 0f, 16, 1.5f, 0f, 0f, GRAB_HIT, StateContainer.of(State.GRAB_HIT))
+            .withSound(JSoundRegistry.THE_HAND_GRAB)
             .withInfo(
                     Component.literal("Grab"),
                     Component.literal("unblockable, knocks back"));
-    public static final EraseAttack ERASE_SPACE = new EraseAttack(300, 12,
+    public static final EraseSpaceAttack ERASE_SPACE = new EraseSpaceAttack(300, 12,
             20, 0.75f, 4.0f, 6, 2.0f, -0.5f, 0.0f)
-            .withSound(JSoundRegistry.THE_HAND_SWIPE_QUICK.get())
+            .withSound(JSoundRegistry.THE_HAND_SWIPE_QUICK)
             .withAnim(State.ERASE_GROUND)
-            .withImpactSound(JSoundRegistry.IMPACT_12.get())
+            .withImpactSound(JSoundRegistry.IMPACT_12)
             .withInfo(
                     Component.literal("Erase Space"),
                     Component.literal("""
                             Brings any looked at entity.
                             If not looking at anything, will bring you forward.""")
-            )
-            .withMobilityType(MobilityType.DASH)
-            .withAction(TheHandEntity::eraseSpace);
-
-    public static final EraseAttack RAGE_FINISHER = new EraseAttack(0,
-            41, 50, 0.74f, 6.0f, 12, 2.0f, 2.0f, 0.0f)
-            .withSound(JSoundRegistry.D4C_LIGHT.get())
-            .withImpactSound(JSoundRegistry.IMPACT_12.get())
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
-            .withExtraHitBox(1.5)
-            .withInfo(
-                    Component.literal("Rage (Finisher)"),
-                    Component.empty()
-            )
-            .withLaunch();
-
-    public static final BarrageAttack<TheHandEntity> RAGE_FOLLOWUP = new BarrageAttack<TheHandEntity>(0,
-            9, 50, 0.75f, 1.0f, 13, 1.75f, 0.2f, 0.0f, 2)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
-            .withInfo(
-                    Component.literal("Rage (Barrage)"),
-                    Component.empty()
-            )
-            .withFinisher(29, RAGE_FINISHER);
-
-    public static final MultiHitEraseAttack RAGE = new MultiHitEraseAttack(30 * 20,
+            );
+    public static final RageAttack RAGE = new RageAttack(30 * 20,
             57, 0.75f, 6.0f, 20, 2.0f, 0.2f, 0.0f, IntSet.of(26, 40))
-            .withSound(JSoundRegistry.THE_HAND_RAGE.get())
-            .withImpactSound(JSoundRegistry.IMPACT_12.get())
+            .withSound(JSoundRegistry.THE_HAND_RAGE)
+            .withImpactSound(JSoundRegistry.IMPACT_12)
             .withHyperArmor()
             .withInfo(
                     Component.literal("Rage"),
@@ -241,8 +203,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                             First two hits are uninterruptible.
                             If the second hit makes contact, The Hand will beat the opponent down.
                             """)
-            )
-            .withAction(TheHandEntity::rage);
+            );
 
     public TheHandEntity(final Level world) {
         super(StandType.THE_HAND, world, JSoundRegistry.THE_HAND_SUMMON.get());
@@ -255,7 +216,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                         BNBs:
                             -the stand up comedian
                             Light>Barrage>Sweep>cr.M1~M1>Stomp Barrage
-                            
+                        
                             -the st. louis devastator
                             (Sweep>)cr.M1~M1>Barrage>Rage""";
 
@@ -267,109 +228,28 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
         };
     }
 
-    private static void trySetArmor(TheHandEntity stand, LivingEntity user, MoveContext context) {
-        final AbstractMove<?, ? super TheHandEntity> move = stand.getCurrentMove();
-        if (move == null || move.getMoveType() != MoveType.SPECIAL2) {
-            stand.armorPoints = 2;
-        }
-    }
+    private static void registerMoves(final MoveMap<TheHandEntity, State> moves) {
+        var light = moves.register(MoveClass.LIGHT, LIGHT, State.LIGHT);
+        light.withFollowup(State.LIGHT_FOLLOWUP);
+        light.withCrouchingVariant(State.CROUCHING_LIGHT).withFollowup(State.CROUCHING_LIGHT_FOLLOWUP);
 
-    private static void eraseGround(TheHandEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
-        final Level level = user.level();
-        if (level.getGameRules().getBoolean(JCraft.STAND_GRIEFING)) {
-            final Vec3 rotVec = attacker.getLookAngle();
-            final Vec3i rotVecI = new Vec3i((int) Math.round(rotVec.x), (int) Math.round(rotVec.y), (int) Math.round(rotVec.z));
+        moves.registerImmediate(MoveClass.HEAVY, KICK, State.KICK);
+        moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
+        moves.registerImmediate(MoveClass.SPECIAL1, ERASE, State.ERASE);
+        moves.register(MoveClass.SPECIAL2, STOMP_BARRAGE, State.STOMP_BARRAGE);
+        moves.registerImmediate(MoveClass.SPECIAL3, GRAB, State.GRAB);
 
-            /*
-            PATTERN:
-            [][][]
-            [][]
-            WHERE TOP LEFT IS ATTACKER STANDING BLOCK POSITION, AND RIGHT IS ATTACKER FORWARD
-             */
+        moves.register(MoveClass.ULTIMATE, RAGE, State.RAGE);
 
-            final Vec3i gravityNormal = GravityChangerAPI.getGravityDirection(user).getNormal();
-
-            final BlockPos lowBlock1 = attacker.getOnPos();
-            final BlockPos lowBlock2 = lowBlock1.offset(rotVecI);
-            final BlockPos block1 = lowBlock1.subtract(gravityNormal);
-            final BlockPos block2 = block1.offset(rotVecI);
-            final BlockPos block3 = block2.offset(rotVecI);
-            eraseBlock(level, lowBlock1);
-            eraseBlock(level, lowBlock2);
-            eraseBlock(level, block1);
-            eraseBlock(level, block2);
-            eraseBlock(level, block3);
-        }
-    }
-
-    private static void eraseBlock(final Level level, final BlockPos lookedBlock) {
-        if (level.getBlockState(lookedBlock).getBlock().defaultDestroyTime() <= 0.0f) return;
-        level.setBlock(lookedBlock, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-    }
-
-    private static void eraseSpace(final TheHandEntity attacker, final LivingEntity user, final MoveContext ctx, final Set<LivingEntity> targets) {
-        final Vec3 rotVec = user.getLookAngle();
-        final Vec3 eyePos = user.position().add(GravityChangerAPI.getEyeOffset(user));
-        final HitResult hitResult = JUtils.raycastAll(attacker,
-                eyePos,
-                eyePos.add(rotVec.scale(16.0)),
-                ClipContext.Fluid.NONE);
-
-        if (hitResult.getType() == HitResult.Type.ENTITY) {
-            final Entity hitEntity = JUtils.getUserIfStand(((EntityHitResult) hitResult).getEntity());
-            JUtils.addVelocity(hitEntity, rotVec.scale(-1.25));
-            hitEntity.setOnGround(false);
-
-            if (hitEntity instanceof LivingEntity living) {
-                living.addEffect(
-                        new MobEffectInstance(MobEffects.LEVITATION, 5, 0, true, false)
-                );
-            }
-        } else {
-            JUtils.addVelocity(user, rotVec.scale(1.25));
-        }
-    }
-
-    private static void offTheGround(final TheHandEntity attacker, final LivingEntity user, final MoveContext ctx, final Set<LivingEntity> targets) {
-        JComponentPlatformUtils.getShockwaveHandler(attacker.level())
-                .addShockwave(attacker.position().add(user.getLookAngle()), new Vec3(GravityChangerAPI.getGravityDirection(attacker).step()), 2.5f);
-
-        targets.forEach(livingEntity -> livingEntity.removeEffect(JStatusRegistry.KNOCKDOWN.get()));
-    }
-
-    private static void rage(TheHandEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
-        if (targets.isEmpty()) return;
-        final AbstractMove<?, ? super TheHandEntity> attack = attacker.getCurrentMove();
-        if (attack instanceof final MultiHitEraseAttack multiHitEraseAttack) {
-            if (multiHitEraseAttack.getBlow(attacker) == 1) {
-                attacker.setMove(RAGE_FOLLOWUP, State.RAGE_FOLLOWUP);
-            }
-        }
+        moves.register(MoveClass.UTILITY, ERASE_SPACE, State.ERASE_SPACE);
     }
 
     @Override
-    protected void registerMoves(final MoveMap<TheHandEntity, State> moves) {
-        var light = moves.register(MoveType.LIGHT, LIGHT, State.LIGHT);
-        light.withFollowUp(State.LIGHT_FOLLOWUP);
-        light.withCrouchingVariant(State.CROUCHING_LIGHT).withFollowUp(State.CROUCHING_LIGHT_FOLLOWUP);
-
-        moves.registerImmediate(MoveType.HEAVY, KICK, State.KICK);
-        moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
-        moves.registerImmediate(MoveType.SPECIAL1, ERASE, State.ERASE);
-        moves.register(MoveType.SPECIAL2, STOMP_BARRAGE, State.STOMP_BARRAGE);
-        moves.registerImmediate(MoveType.SPECIAL3, GRAB, State.GRAB);
-
-        moves.register(MoveType.ULTIMATE, RAGE, State.RAGE);
-
-        moves.register(MoveType.UTILITY, ERASE_SPACE, State.ERASE_SPACE);
-    }
-
-    @Override
-    public boolean initMove(final MoveType type) {
-        if (tryFollowUp(type, MoveType.LIGHT)) return true;
-        if (type == MoveType.SPECIAL1
+    public boolean initMove(final MoveClass type) {
+        if (tryFollowUp(type, MoveClass.LIGHT)) return true;
+        if (type == MoveClass.SPECIAL1
                 && getCurrentMove() != null
-                && getCurrentMove().getMoveType() == MoveType.SPECIAL1
+                && getCurrentMove().getMoveClass() == MoveClass.SPECIAL1
                 && getMoveStun() < 4
         ) {
             final AbstractMove<?, ? super TheHandEntity> repeat = getCurrentMove();
@@ -385,7 +265,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
     public void queueMove(final MoveInputType type) {
         if (type == MoveInputType.SPECIAL1
                 && getCurrentMove() != null
-                && getCurrentMove().getMoveType() == MoveType.SPECIAL1) {
+                && getCurrentMove().getMoveClass() == MoveClass.SPECIAL1) {
             return;
         }
         super.queueMove(type);

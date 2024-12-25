@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.util;
 
+import com.mojang.serialization.Codec;
 import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.Getter;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
@@ -27,6 +28,7 @@ public enum JParticleType {
     STUN_SLASH(JParticleTypeRegistry.STUN_SLASH),
     STUN_PIERCE(JParticleTypeRegistry.STUN_PIERCE);
 
+    public static final Codec<JParticleType> CODEC = JCodecUtils.createEnumCodec(JParticleType.class);
     private final SimpleParticleType particleType;
 
     JParticleType(SimpleParticleType particleType) {

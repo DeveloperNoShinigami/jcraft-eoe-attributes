@@ -1,10 +1,13 @@
 package net.arna.jcraft.common.attack.moves.thefool;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
-import net.arna.jcraft.common.attack.MobilityType;
+import net.arna.jcraft.common.attack.core.MobilityType;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,8 +21,13 @@ public final class GlideMove extends AbstractMove<GlideMove, TheFoolEntity> {
     }
 
     @Override
-    public void tick(final TheFoolEntity attacker, final int moveStun) {
-        super.tick(attacker, moveStun);
+    public @NonNull MoveType<GlideMove> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
+    public void activeTick(final TheFoolEntity attacker, final int moveStun) {
+        super.activeTick(attacker, moveStun);
 
         final LivingEntity user = attacker.getUser();
         if (user == null) {
@@ -40,6 +48,11 @@ public final class GlideMove extends AbstractMove<GlideMove, TheFoolEntity> {
     }
 
     @Override
+    public boolean preventsMoves() {
+        return false;
+    }
+
+    @Override
     protected @NonNull GlideMove getThis() {
         return this;
     }
@@ -47,5 +60,14 @@ public final class GlideMove extends AbstractMove<GlideMove, TheFoolEntity> {
     @Override
     public @NonNull GlideMove copy() {
         return copyExtras(new GlideMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<GlideMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<GlideMove>, GlideMove> buildCodec(RecordCodecBuilder.Instance<GlideMove> instance) {
+            return baseDefault(instance, GlideMove::new);
+        }
     }
 }

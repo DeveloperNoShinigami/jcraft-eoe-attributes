@@ -6,21 +6,12 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import net.arna.jcraft.common.attack.core.MoveInputType;
+import net.arna.jcraft.common.attack.actions.EffectAction;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.kingcrimson.BloodThrowAttack;
-import net.arna.jcraft.common.attack.moves.kingcrimson.EpitaphAttack;
-import net.arna.jcraft.common.attack.moves.kingcrimson.KCDonutAttack;
-import net.arna.jcraft.common.attack.moves.kingcrimson.PredictionMove;
-import net.arna.jcraft.common.attack.moves.kingcrimson.TimeEraseMove;
-import net.arna.jcraft.common.attack.moves.shared.BarrageAttack;
-import net.arna.jcraft.common.attack.moves.shared.EffectInflictingAttack;
-import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
-import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
-import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
-import net.arna.jcraft.common.attack.moves.shared.TimeSkipMove;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.common.attack.moves.kingcrimson.*;
+import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
@@ -43,7 +34,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -54,7 +44,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -69,10 +58,13 @@ import java.util.function.Consumer;
  * @see TimeEraseMove
  */
 public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimsonEntity.State> {
+    public static final MoveSet<KingCrimsonEntity, State> MOVE_SET = MoveSet.create(StandType.KING_CRIMSON,
+            KingCrimsonEntity::registerMoves, State.class);
+
     public static final KnockdownAttack<KingCrimsonEntity> SWEEP = new KnockdownAttack<KingCrimsonEntity>(40,
             10, 20, 0.85f, 5f, 20, 1.5f, 0.4f, 0.3f, 35)
             .withAnim(State.SWEEP)
-            .withImpactSound(JSoundRegistry.IMPACT_4.get())
+            .withImpactSound(JSoundRegistry.IMPACT_4)
             .withBlockStun(6)
             .withExtraHitBox(1)
             .withInfo(
@@ -82,16 +74,16 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     public static final SimpleMultiHitAttack<KingCrimsonEntity> DUAL_CHOP = new SimpleMultiHitAttack<KingCrimsonEntity>(
             40, 23, 0.85f, 4f, 21, 1.5f, 0.2f, -0.1f,
             IntSet.of(10, 16))
-            .withSound(JSoundRegistry.KC_DUAL_CHOP.get())
+            .withSound(JSoundRegistry.KC_DUAL_CHOP)
             .withCrouchingVariant(SWEEP)
-            .withImpactSound(JSoundRegistry.IMPACT_4.get())
+            .withImpactSound(JSoundRegistry.IMPACT_4)
             .withInfo(
                     Component.literal("Dual Chop"),
                     Component.literal("quick combo starter")
             );
     public static final BarrageAttack<KingCrimsonEntity> BARRAGE_FINISHER = new BarrageAttack<KingCrimsonEntity>(0,
             0, 50, 0.85f, 1f, 10, 1.5f, 1.1f, 0f, 3)
-            .withImpactSound(JSoundRegistry.IMPACT_6.get())
+            .withImpactSound(JSoundRegistry.IMPACT_6)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
@@ -101,14 +93,14 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     public static final MainBarrageAttack<KingCrimsonEntity> BARRAGE = new MainBarrageAttack<KingCrimsonEntity>(280,
             0, 40, 0.85f, 1f, 20, 1.5f, 0.1f, 0f, 3, Blocks.OBSIDIAN.defaultDestroyTime())
             .withFinisher(36, BARRAGE_FINISHER)
-            .withSound(JSoundRegistry.KC_BARRAGE.get())
+            .withSound(JSoundRegistry.KC_BARRAGE)
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender/finisher, medium stun, knocks back")
             );
     public static final KnockdownAttack<KingCrimsonEntity> OVERHEAD_HOOK = new KnockdownAttack<KingCrimsonEntity>(160,
             22, 32, 0.85f, 9f, 11, 2f, 1.5f, 0f, 35)
-            .withSound(JSoundRegistry.KC_HEAVY2.get())
+            .withSound(JSoundRegistry.KC_HEAVY2)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withBlockStun(10)
             .withHyperArmor()
@@ -120,8 +112,9 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     public static final SimpleAttack<KingCrimsonEntity> VERTICAL_CHOP = new SimpleAttack<KingCrimsonEntity>(240,
             12, 19, 0.85f, 6f, 25, 1.5f, 0.6f, 0f)
             .withFollowup(OVERHEAD_HOOK)
-            .withSound(JSoundRegistry.KC_HEAVY.get())
-            .withImpactSound(JSoundRegistry.IMPACT_9.get())
+            .withFollowupFrame(7)
+            .withSound(JSoundRegistry.KC_HEAVY)
+            .withImpactSound(JSoundRegistry.IMPACT_9)
             .withExtraHitBox(0, 0.5, 1)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -134,12 +127,12 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                     Component.literal("Blood Throw"),
                     Component.literal("throws a stunning, blinding blood projectile, crouch while it comes out for higher speed")
             );
-    public static final EffectInflictingAttack<KingCrimsonEntity> EYE_CHOP = new EffectInflictingAttack<KingCrimsonEntity>(
-            280, 20, 29, 1f, 9f, 27, 1.75f, 0.7f, -0.3f,
-            List.of(new MobEffectInstance(MobEffects.BLINDNESS, 200, 0)))
+    public static final SimpleAttack<KingCrimsonEntity> EYE_CHOP = new SimpleAttack<KingCrimsonEntity>(
+            280, 20, 29, 1f, 9f, 27, 1.75f, 0.7f, -0.3f)
             .withCrouchingVariant(BLOOD_THROW)
-            .withSound(JSoundRegistry.KC_EYE_CHOP.get())
-            .withImpactSound(JSoundRegistry.IMPACT_9.get())
+            .withSound(JSoundRegistry.KC_EYE_CHOP)
+            .withImpactSound(JSoundRegistry.IMPACT_9)
+            .withAction(EffectAction.inflict(MobEffects.BLINDNESS, 200, 0))
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withExtraHitBox(0, 0.5, 1)
             .withBlockStun(4)
@@ -150,8 +143,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             );
     public static final KCDonutAttack DONUT = new KCDonutAttack(260, 30, 48, 1f,
             14f, 10, 1.75f, 1.5f, 0.1f)
-            .withSound(JSoundRegistry.KC_DONUT.get())
-            .withImpactSound(JSoundRegistry.IMPACT_7.get())
+            .withSound(JSoundRegistry.KC_DONUT)
+            .withImpactSound(JSoundRegistry.IMPACT_7)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHyperArmor()
             .withLaunch()
@@ -166,7 +159,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             );
     public static final PredictionMove PREDICTION = new PredictionMove(600, 4, 104, -1f)
             .withCrouchingVariant(EPITAPH)
-            .withSound(JSoundRegistry.KC_EPITAPH.get())
+            .withSound(JSoundRegistry.KC_EPITAPH)
             .withInfo(
                     Component.literal("Prediction/Move Cancel"),
                     Component.literal("""
@@ -181,8 +174,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                     Component.literal("6 seconds duration, cancellable by doing anything with King Crimson")
             );
     public static final TimeSkipMove<KingCrimsonEntity> TIME_SKIP = new TimeSkipMove<KingCrimsonEntity>(300, 16)
-            .withSound(JSoundRegistry.TE_TP.get())
-            .withInitAction((attacker, user, ctx) -> attacker.spawnTimeSkipParticles())
+            .withSound(JSoundRegistry.TE_TP)
+            .withParticles()
             .withInfo(
                     Component.literal("Timeskip"),
                     Component.literal("16m range")
@@ -204,13 +197,13 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 BNBs:
                     -the gamer (THE bnb)
                     Light>Barrage>delay.Move Cancel>Light>Heavy~Overhead
-                    
+                
                     -the loop zoopler (sub optimal damage for a setup that kills them if you guess right)
                     Eye Chop>Donut>Light>Heavy~Overhead>Time Erase
-                    
+                
                     -hits like a firetruck (death)
                     Donut>Move Cancel>Timeskip>Barrage>Move Cancel>Light>Heavy>Move Cancel>Eye Chop>Sweep
-                    """;
+                """;
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0F, 0.0F, 0.0F),
@@ -232,18 +225,17 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         entityData.set(TIME_ERASE_TIME, teTime);
     }
 
-    @Override
-    protected void registerMoves(MoveMap<KingCrimsonEntity, State> moves) {
-        moves.register(MoveType.LIGHT, DUAL_CHOP, State.DUAL_CHOP).withCrouchingVariant(State.SWEEP);
-        moves.register(MoveType.HEAVY, VERTICAL_CHOP, State.HEAVY).withFollowUp(State.OVERHEAD);
-        moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
+    private static void registerMoves(MoveMap<KingCrimsonEntity, State> moves) {
+        moves.register(MoveClass.LIGHT, DUAL_CHOP, State.DUAL_CHOP).withCrouchingVariant(State.SWEEP);
+        moves.register(MoveClass.HEAVY, VERTICAL_CHOP, State.HEAVY).withFollowup(State.OVERHEAD);
+        moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
 
-        moves.register(MoveType.SPECIAL1, EYE_CHOP, State.EYE_CHOP).withCrouchingVariant(State.BLOOD_THROW);
-        moves.register(MoveType.SPECIAL2, DONUT, State.DONUT);
-        moves.register(MoveType.SPECIAL3, PREDICTION, State.PREDICT).withCrouchingVariant(State.EPITAPH);
-        moves.register(MoveType.ULTIMATE, TIME_ERASE, State.TIME_ERASE);
+        moves.register(MoveClass.SPECIAL1, EYE_CHOP, State.EYE_CHOP).withCrouchingVariant(State.BLOOD_THROW);
+        moves.register(MoveClass.SPECIAL2, DONUT, State.DONUT);
+        moves.register(MoveClass.SPECIAL3, PREDICTION, State.PREDICT).withCrouchingVariant(State.EPITAPH);
+        moves.register(MoveClass.ULTIMATE, TIME_ERASE, State.TIME_ERASE);
 
-        moves.register(MoveType.UTILITY, TIME_SKIP, State.TIME_SKIP);
+        moves.register(MoveClass.UTILITY, TIME_SKIP, State.TIME_SKIP);
     }
 
     @Override
@@ -253,31 +245,9 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     }
 
     @Override
-    public boolean initMove(MoveType type) {
+    public boolean initMove(MoveClass type) {
         switch (type) {
-            case HEAVY -> {
-                boolean idling = getMoveStun() <= 0;
-
-                if (getCurrentMove() == null || getCurrentMove().getOriginalMove() != VERTICAL_CHOP) {
-                    if (idling) {
-                        return super.initMove(type);
-                    } else {
-                        return false;
-                    }
-                } else if (getMoveStun() < 7) {
-                    setMove(OVERHEAD_HOOK, State.OVERHEAD);
-                }
-            }
             case ULTIMATE -> {
-                // If predicting, and Time Erase isn't on cooldown
-                if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == PREDICTION && hasUser()) {
-                    final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(getUser());
-                    if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) <= 0) {
-                        cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 400);
-                        PredictionMove.finishPrediction(this);
-                    }
-                }
-
                 // If not predicting, do other Time Erase logic
                 if (!canAttack()) {
                     return false;
@@ -340,23 +310,6 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         return true;
     }
 
-    private void spawnTimeSkipParticles() {
-        final LivingEntity user = getUserOrThrow();
-
-        final Vec3 pos = user.position();
-        final AABB bBox = user.getBoundingBox();
-
-        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        buf.writeShort(2);
-        buf.writeDouble(pos.x);
-        buf.writeDouble(pos.y);
-        buf.writeDouble(pos.z);
-        buf.writeDouble(bBox.getXsize());
-        buf.writeDouble(bBox.getYsize());
-        buf.writeDouble(bBox.getZsize());
-        ServerChannelFeedbackPacket.send(JUtils.around((ServerLevel) level(), pos, 128), buf);
-    }
-
     public void moveCancel() {
         // Epitaph
         PredictionMove.cancelPrediction(this);
@@ -410,14 +363,6 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
         if (level().isClientSide() || !hasUser()) return;
         TIME_ERASE.tickTimeErase(this);
-    }
-
-    @Override
-    public void queueMove(MoveInputType type) {
-        if (type == MoveInputType.SPECIAL3) {
-            return;
-        }
-        super.queueMove(type);
     }
 
     @Override

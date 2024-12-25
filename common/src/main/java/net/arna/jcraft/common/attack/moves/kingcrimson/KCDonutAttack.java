@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.kingcrimson;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,6 +24,11 @@ public final class KCDonutAttack extends AbstractSimpleAttack<KCDonutAttack, Kin
     }
 
     @Override
+    public @NonNull MoveType<KCDonutAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
     protected @NonNull KCDonutAttack getThis() {
         return this;
     }
@@ -29,5 +37,14 @@ public final class KCDonutAttack extends AbstractSimpleAttack<KCDonutAttack, Kin
     public @NonNull KCDonutAttack copy() {
         return copyExtras(new KCDonutAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<KCDonutAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<KCDonutAttack>, KCDonutAttack> buildCodec(RecordCodecBuilder.Instance<KCDonutAttack> instance) {
+            return attackDefault(instance, KCDonutAttack::new);
+        }
     }
 }

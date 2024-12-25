@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.BooleanMoveVariable;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
@@ -12,6 +15,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +33,11 @@ public final class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> 
 
     public ItemPlaceMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public @NotNull MoveType<ItemPlaceMove> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -60,7 +70,7 @@ public final class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> 
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(PLACING_FIRST_STACK, true);
         ctx.register(PLACING);
     }
@@ -73,5 +83,14 @@ public final class ItemPlaceMove extends AbstractMove<ItemPlaceMove, D4CEntity> 
     @Override
     public @NonNull ItemPlaceMove copy() {
         return copyExtras(new ItemPlaceMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static final class Type extends AbstractMove.Type<ItemPlaceMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<ItemPlaceMove>, ItemPlaceMove> buildCodec(final RecordCodecBuilder.Instance<ItemPlaceMove> instance) {
+            return baseDefault(instance, ItemPlaceMove::new);
+        }
     }
 }

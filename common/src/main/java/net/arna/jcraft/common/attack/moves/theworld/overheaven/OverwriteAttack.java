@@ -1,9 +1,12 @@
 package net.arna.jcraft.common.attack.moves.theworld.overheaven;
 
 import com.google.common.reflect.TypeToken;
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
@@ -20,8 +23,7 @@ import java.util.List;
 
 public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack, TheWorldOverHeavenEntity> {
     public static final MoveVariable<IntList> OVERWRITE_TIMES = new MoveVariable<>(IntList.class);
-    public static final MoveVariable<List<LivingEntity>> OVERWRITE_TARGETS = new MoveVariable<>(new TypeToken<>() {
-    });
+    public static final MoveVariable<List<LivingEntity>> OVERWRITE_TARGETS = new MoveVariable<>(new TypeToken<>() {});
 
     public OverwriteAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
                            final float hitboxSize, final float knockback, final float offset) {
@@ -61,7 +63,12 @@ public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack,
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public @NonNull MoveType<OverwriteAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(OVERWRITE_TIMES, new IntArrayList());
         ctx.register(OVERWRITE_TARGETS, new ArrayList<>());
     }
@@ -75,5 +82,14 @@ public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack,
     public @NonNull OverwriteAttack copy() {
         return copyExtras(new OverwriteAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(),
                 getDamage(), getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<OverwriteAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<OverwriteAttack>, OverwriteAttack> buildCodec(RecordCodecBuilder.Instance<OverwriteAttack> instance) {
+            return attackDefault(instance, OverwriteAttack::new);
+        }
     }
 }

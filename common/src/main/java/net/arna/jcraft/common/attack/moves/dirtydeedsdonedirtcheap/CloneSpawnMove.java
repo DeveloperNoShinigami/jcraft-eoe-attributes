@@ -1,7 +1,11 @@
 package net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.MoveClass;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
@@ -17,6 +21,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity> {
@@ -38,6 +44,11 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
     public CloneSpawnMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
+    }
+
+    @Override
+    public @NotNull MoveType<CloneSpawnMove> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -67,7 +78,7 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
             final Mob newMob = (Mob) entityType.create(attacker.level());
 
             if (newMob == null) {
-                JCraft.LOGGER.error("Failed to create D4C clone mob of type " + entityType + " in world " + attacker.level());
+                JCraft.LOGGER.error("Failed to create D4C clone mob of type {} in world {}", entityType, attacker.level());
                 return Set.of();
             }
 
@@ -90,8 +101,23 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(CLONE_TYPE, CloneType.SWORD);
+    }
+
+    @Override
+    public boolean onInitMove(D4CEntity attacker, MoveClass moveClass) {
+        MoveContext ctx = attacker.getMoveContext();
+        switch (moveClass) {
+            case SPECIAL1 -> ctx.set(CLONE_TYPE, CloneType.AXE);
+            case SPECIAL2 -> ctx.set(CLONE_TYPE, CloneType.BOW);
+            case SPECIAL3 -> ctx.set(CLONE_TYPE, CloneType.EMPTY);
+            default -> {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -102,5 +128,14 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
     @Override
     public @NonNull CloneSpawnMove copy() {
         return copyExtras(new CloneSpawnMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<CloneSpawnMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<CloneSpawnMove>, CloneSpawnMove> buildCodec(RecordCodecBuilder.Instance<CloneSpawnMove> instance) {
+            return baseDefault(instance, CloneSpawnMove::new);
+        }
     }
 }

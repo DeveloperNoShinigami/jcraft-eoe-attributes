@@ -1,7 +1,14 @@
 package net.arna.jcraft.common.attack.moves.base;
 
+import com.mojang.datafixers.Products;
+import com.mojang.datafixers.kinds.App;
+import com.mojang.datafixers.util.Function10;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.AttackMoveExtras;
+import net.arna.jcraft.common.attack.core.BaseMoveExtras;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -19,6 +26,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.Set;
 
 /**
@@ -32,8 +40,9 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
     private final int interval;
     protected boolean inflictsSlowness = true;
 
-    protected AbstractBarrageAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage,
-                                    final int stun, final float hitboxSize, final float knockback, final float offset, final int interval) {
+    protected AbstractBarrageAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
+                                    final float damage, final int stun, final float hitboxSize, final float knockback,
+                                    final float offset, final int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         barrage = true;
         this.interval = interval;
@@ -66,8 +75,8 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
     }
 
     @Override
-    public void tick(final A attacker, final int moveStun) {
-        super.tick(attacker, moveStun);
+    public void activeTick(final A attacker, final int moveStun) {
+        super.activeTick(attacker, moveStun);
 
         // Consider replacing the isRemote() with isFree()?
         if (attacker.hasUser() && inflictsSlowness && !attacker.isRemote()) {
@@ -128,24 +137,20 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
         return tick <= getWindup() ? 0 : (tick - getWindup()) / getInterval();
     }
 
-    public T withBarrageShockwaves() {
-        return this.withAction(((attacker, user, ctx, targets) -> {
-            if (targets.isEmpty()) {
-                return;
-            }
-            final LivingEntity attackerEntity = attacker.getBaseEntity();
-            final RandomSource random = attackerEntity.getRandom();
-            Vec3 shockwavePos = attackerEntity.position().add(
-                    random.nextGaussian() / 3.0,
-                    random.nextGaussian() / 3.0,
-                    random.nextGaussian() / 3.0
-            );
-            final Vec3 rotVec = user.getLookAngle();
-            shockwavePos = shockwavePos.add(rotVec);
-            shockwavePos = shockwavePos.add(RotationUtil.vecPlayerToWorld(new Vec3(0, attackerEntity.getBbHeight() / 1.8 - getOffset(), 0), GravityChangerAPI.getGravityDirection(user)));
-            JComponentPlatformUtils.getShockwaveHandler(attacker.getEntityWorld())
-                    .addShockwave(shockwavePos, user.getLookAngle(), getDamage() / 1.5f);
-        }));
+    @Override
+    protected void createShockwaves(A attacker, LivingEntity user) {
+        final LivingEntity attackerEntity = attacker.getBaseEntity();
+        final RandomSource random = attackerEntity.getRandom();
+        Vec3 shockwavePos = attackerEntity.position().add(
+                random.nextGaussian() / 3.0,
+                random.nextGaussian() / 3.0,
+                random.nextGaussian() / 3.0
+        );
+        final Vec3 rotVec = user.getLookAngle();
+        shockwavePos = shockwavePos.add(rotVec);
+        shockwavePos = shockwavePos.add(RotationUtil.vecPlayerToWorld(new Vec3(0, attackerEntity.getBbHeight() / 1.8 - getOffset(), 0), GravityChangerAPI.getGravityDirection(user)));
+        JComponentPlatformUtils.getShockwaveHandler(attacker.getEntityWorld())
+                .addShockwave(shockwavePos, user.getLookAngle(), getDamage() / 1.5f);
     }
 
     @Override
@@ -153,5 +158,33 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
         AbstractBarrageAttack<T, A> cast = super.copyExtras(base);
         cast.inflictsSlowness = inflictsSlowness;
         return base;
+    }
+
+    protected abstract static class Type<M extends AbstractBarrageAttack<? extends M, ?>> extends AbstractSimpleAttack.Type<M> {
+        protected RecordCodecBuilder<M, Integer> interval() {
+            return Codec.INT.fieldOf("interval").forGetter(AbstractBarrageAttack::getInterval);
+        }
+
+        protected RecordCodecBuilder<M, Boolean> inflictsSlowness() {
+            return Codec.BOOL.optionalFieldOf("inflicts_slowness", true).forGetter(AbstractBarrageAttack::isInflictsSlowness);
+        }
+
+        protected Products.P13<RecordCodecBuilder.Mu<M>, BaseMoveExtras, AttackMoveExtras, Integer, Integer, Integer,
+                Float, Float, Integer, Float, Float, Float, Integer, Boolean> barrageDefault(final RecordCodecBuilder.Instance<M> instance) {
+            return instance.group(extras(), attackExtras(), cooldown(), windup(), duration(), moveDistance(), damage(),
+                    stun(), hitboxSize(), knockback(), offset(), interval(), inflictsSlowness());
+        }
+
+        protected App<RecordCodecBuilder.Mu<M>, M> barrageDefault(final RecordCodecBuilder.Instance<M> instance, Function10<
+                        Integer, Integer, Integer, Float, Float, Integer, Float, Float, Float, Integer, M> function) {
+            return barrageDefault(instance).apply(instance, applyAttackExtras((cooldown, windup, duration,
+                                                                               moveDistance, damage, stun,
+                                                                               hitboxSize, knockback, offset,
+                                                                               interval, inflictsSlowness) -> {
+                M move = function.apply(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval);
+                if (!inflictsSlowness) move.withoutSlowness();
+                return move;
+            }));
+        }
     }
 }
