@@ -17,7 +17,7 @@ import java.util.Set;
  * @param <A> The type of the class implementing this interface
  * @param <S> The type of the animation state enum
  */
-public interface IAttacker<A extends IAttacker<? extends A, S>, S> {
+public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?>> {
     MoveContext getMoveContext();
 
     boolean hasUser();

@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @NoArgsConstructor
-public class MoveMap<A extends IAttacker<? extends A, S>, S> implements Iterable<MoveMap.Entry<A, S>> {
+public class MoveMap<A extends IAttacker<? extends A, S>, S extends Enum<?>> implements Iterable<MoveMap.Entry<A, S>> {
     private final ListMultimap<MoveClass, Entry<A, S>> entries = MultimapBuilder.enumKeys(MoveClass.class).arrayListValues().build();
     private List<AbstractMove<?, ? super A>> allMoves;
     @Getter
@@ -215,7 +215,7 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S> implements Iterable
     }
 
     @Data
-    public static class Entry<A extends IAttacker<? extends A, S>, S> {
+    public static class Entry<A extends IAttacker<? extends A, S>, S extends Enum<?>> {
         private final MoveClass moveClass;
         private final AbstractMove<?, ? super A> move;
         private final CooldownType cooldownType;
@@ -247,6 +247,7 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S> implements Iterable
                      @Nullable Entry<A, S> crouchingVariant, @Nullable Entry<A, S> aerialVariant, @Nullable Entry<A, S> followup) {
             this.moveClass = moveClass;
             this.move = (AbstractMove<?, ? super A>) move;
+            this.move.withAnim(animState);
             this.cooldownType = cooldownType;
             this.animState = animState;
             this.crouchingVariant = crouchingVariant;
@@ -300,7 +301,7 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S> implements Iterable
          *
          * @param animState The animation state to use for the crouching variant of this move
          * @return The crouching variant entry
-         * @see #withCrouchingVariant(CooldownType, Object)
+         * @see #withCrouchingVariant(CooldownType, Enum)
          */
         public Entry<A, S> withCrouchingVariant(final S animState) {
             return withCrouchingVariant(cooldownType, animState);
@@ -316,7 +317,7 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S> implements Iterable
          * @param cooldownType The cooldown type to use for the crouching variant of this move
          * @param animState    The animation state to use for the crouching variant of this move
          * @return The crouching variant entry
-         * @see #withCrouchingVariant(Object)
+         * @see #withCrouchingVariant(Enum)
          */
         public Entry<A, S> withCrouchingVariant(final CooldownType cooldownType, final S animState) {
             if (move.getCrouchingVariant() == null) {
@@ -336,7 +337,7 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S> implements Iterable
          *
          * @param animState The animation state to use for the aerial variant of this move
          * @return The aerial variant entry
-         * @see #withAerialVariant(CooldownType, Object)
+         * @see #withAerialVariant(CooldownType, Enum)
          */
         public Entry<A, S> withAerialVariant(final S animState) {
             return withAerialVariant(cooldownType, animState);
@@ -352,7 +353,7 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S> implements Iterable
          * @param cooldownType The cooldown type to use for the aerial variant of this move
          * @param animState    The animation state to use for the aerial variant of this move
          * @return The aerial variant entry
-         * @see #withAerialVariant(Object)
+         * @see #withAerialVariant(Enum)
          */
         public Entry<A, S> withAerialVariant(final CooldownType cooldownType, final S animState) {
             if (move.getAerialVariant() == null) {
@@ -372,7 +373,7 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S> implements Iterable
          *
          * @param animState The animation state to use for the crouching variant of this move
          * @return The followup entry
-         * @see #withFollowup(CooldownType, Object)
+         * @see #withFollowup(CooldownType, Enum)
          */
         public Entry<A, S> withFollowup(final S animState) {
             return withFollowup(cooldownType, animState);
@@ -388,7 +389,7 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S> implements Iterable
          * @param cooldownType The cooldown type to use for the follow-up of this move
          * @param animState    The animation state to use for the follow-up of this move
          * @return The followup entry
-         * @see #withFollowup(CooldownType, Object)
+         * @see #withFollowup(CooldownType, Enum)
          */
         public Entry<A, S> withFollowup(final CooldownType cooldownType, final S animState) {
             if (move.getFollowup() == null) {
