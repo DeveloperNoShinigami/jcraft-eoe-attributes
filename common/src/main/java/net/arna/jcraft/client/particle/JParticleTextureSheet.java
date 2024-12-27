@@ -15,6 +15,8 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 @SuppressWarnings("deprecation") // Minecraft uses it too
@@ -41,11 +43,11 @@ public class JParticleTextureSheet {
     };
 
     public static final ParticleRenderType INVERSION_SHEET = new ParticleRenderType() {
-        public void begin(final BufferBuilder builder, final TextureManager textureManager) {
+        public void begin(final BufferBuilder builder, final @NotNull TextureManager textureManager) {
             // Doesn't seem to work by using a blend function, so we'll use a shader instead.
             // Think that is because of the render order, but I'm not sure.
             InversionShaderHandler.getToInvertBuffer().copyDepthFrom(Minecraft.getInstance().getMainRenderTarget()); // Copy depth buffer
-            InversionShaderHandler.getToInvertBuffer().beginWrite(true); // Render to inversion buffer
+            InversionShaderHandler.getToInvertBuffer().bindWrite(true); // Render to inversion buffer
 
             RenderSystem.disableBlend();
             RenderSystem.enableDepthTest();

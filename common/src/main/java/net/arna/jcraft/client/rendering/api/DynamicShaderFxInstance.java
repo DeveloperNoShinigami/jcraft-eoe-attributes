@@ -1,17 +1,22 @@
 package net.arna.jcraft.client.rendering.api;
 
+import lombok.Getter;
+
 import java.util.function.BiConsumer;
 
+@Getter
 public abstract class DynamicShaderFxInstance {
+    /**
+     * The time since update was called for the first time.
+     */
     private float time = 0F;
-
     private boolean removed;
 
     /**
      * Called every frame (before the effect is rendered)
      */
     public void update(final double deltaTime) {
-        time += deltaTime / 20F;
+        time += (float) (deltaTime / 20F);
     }
 
     /**
@@ -23,16 +28,5 @@ public abstract class DynamicShaderFxInstance {
 
     public final void remove() {
         removed = true;
-    }
-
-    public final boolean isRemoved() {
-        return removed;
-    }
-
-    /**
-     * @return the time since update() was called for the first time (in seconds)
-     */
-    public final float getTime() {
-        return time;
     }
 }

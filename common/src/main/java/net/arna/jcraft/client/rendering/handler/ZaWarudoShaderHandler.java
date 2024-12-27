@@ -1,15 +1,11 @@
 package net.arna.jcraft.client.rendering.handler;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.architectury.event.events.client.ClientTickEvent;
-import ladysnake.satin.api.event.PostWorldRenderCallbackV2;
-import ladysnake.satin.api.event.ShaderEffectRenderCallback;
-import ladysnake.satin.api.experimental.ReadableDepthFramebuffer;
-import ladysnake.satin.api.managed.ManagedShaderEffect;
-import ladysnake.satin.api.managed.ShaderEffectManager;
-import ladysnake.satin.api.util.GlMatrices;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.client.rendering.api.PostEffect;
+import net.arna.jcraft.mixin_logic.StillDepthHolder;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 public class ZaWarudoShaderHandler extends StandShaderHandler {
     public static ZaWarudoShaderHandler INSTANCE = new ZaWarudoShaderHandler();
@@ -28,81 +25,82 @@ public class ZaWarudoShaderHandler extends StandShaderHandler {
 
     public @Nullable LivingEntity shaderSourceEntity = null;
 
-    private final ManagedShaderEffect SHADER = ShaderEffectManager.getInstance().manage(SHADER_ID, this::setup);
+    private final PostEffect EFFECT = new PostEffect(SHADER_ID, this::setup);
 
-    private void setup(final ManagedShaderEffect managedShaderEffect) {
+    private void setup(final PostEffect effect) {
         Minecraft mc = Minecraft.getInstance();
-        SHADER.setSamplerUniform("DepthSampler", ((ReadableDepthFramebuffer) mc.getMainRenderTarget()).getStillDepthMap());
-        SHADER.setUniformValue("ViewPort", 0, 0, mc.getWindow().getWidth(), mc.getWindow().getHeight());
+        effect.setSampler("DepthSampler", ((StillDepthHolder) mc.getMainRenderTarget()).jcraft$getDepthTexture());
+        effect.getUniform("ViewPort").set(0, 0, mc.getWindow().getWidth(), mc.getWindow().getHeight());
     }
 
     @Override
     public void onWorldRendered(final @NonNull PoseStack matrices, final @NonNull Camera camera, final float tickDelta, final long nanoTime) {
         if (renderingEffect) {
-            SHADER.setUniformValue("InverseTransformMatrix", GlMatrices.getInverseTransformMatrix(projectionMatrix));
+            EFFECT.getUniform("InverseTransformMatrix").set(getInverseTransformMatrix(projectionMatrix));
             Vec3 cameraPos = camera.getPosition();
-            SHADER.setUniformValue("CameraPosition", (float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
+            EFFECT.getUniform("CameraPosition").set((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z);
             if (shaderSourceEntity != null) {
-                SHADER.setUniformValue(
-                        "Center",
+                EFFECT.getUniform("Center").set(
                         lerp(shaderSourceEntity.getX(), shaderSourceEntity.xo, tickDelta),
                         lerp(shaderSourceEntity.getY() + shaderSourceEntity.getBbHeight() / 2, shaderSourceEntity.yo + shaderSourceEntity.getBbHeight() / 2, tickDelta),
                         lerp(shaderSourceEntity.getZ(), shaderSourceEntity.zo, tickDelta)
                 );
             }
-            SHADER.setUniformValue("Radius", Math.max(0f, lerp(radius, prevRadius, tickDelta)));
-            //SHADER.render(tickDelta);
+            EFFECT.getUniform("Radius").set(Math.max(0f, lerp(radius, prevRadius, tickDelta)));
         }
     }
 
     @Override
     public void tick(final Minecraft client) {
-
-       if (shouldRender) {
-            if (!renderingEffect) {
-                SHADER.setUniformValue("OuterSat", 1f);
-                ticks = 0;
-                radius = 0f;
-                renderingEffect = true;
-            }
-            ticks++;
-            prevRadius = radius;
-            float expansionRate = 4f;
-            int inversion = 100 / (int) expansionRate;
-            if (ticks < inversion) {
-                radius += expansionRate;
-            } else if (ticks == inversion) {
-                SHADER.setUniformValue("OuterSat", 0.3f);
-            } else if (ticks < 2 * inversion) {
-                radius -= 2 * expansionRate;
-            }
-            if (hasFinishedAnimation()) {
-                renderingEffect = false;
-                shouldRender = false;
-            }
-        } else {
+        if (!shouldRender) {
             renderingEffect = false;
+            return;
         }
-    }
 
-    private float lerp(final double n, final double prevN, final float tickDelta) {
-        return (float) Mth.lerp(tickDelta, prevN, n);
-    }
+        if (!renderingEffect) {
+            EFFECT.getUniform("OuterSat").set(1f);
+            ticks = 0;
+            radius = 0f;
+            renderingEffect = true;
+        }
 
-    private boolean hasFinishedAnimation() {
-        return ticks > effectLength;
-    }
+        ticks++;
+        prevRadius = radius;
+        float expansionRate = 4f;
+        int inversion = 100 / (int) expansionRate;
 
-    public void init() {
-        PostWorldRenderCallbackV2.EVENT.register(this);
-        ClientTickEvent.CLIENT_POST.register(this);
-        ShaderEffectRenderCallback.EVENT.register(this);
+        if (ticks < inversion) {
+            radius += expansionRate;
+        } else if (ticks == inversion) {
+            EFFECT.getUniform("OuterSat").set(0.3f);
+        } else if (ticks < 2 * inversion) {
+            radius -= 2 * expansionRate;
+        }
+
+        if (ticks > effectLength) { // effect is done
+            renderingEffect = false;
+            shouldRender = false;
+        }
     }
 
     @Override
-    public void renderShaderEffects(final float tickDelta) {
-        if (this.renderingEffect) {
-            SHADER.render(tickDelta);
-        }
+    public void renderEffect(final float tickDelta) {
+        if (!this.renderingEffect) return;
+
+        EFFECT.render(tickDelta);
+    }
+
+    private static Matrix4f getInverseTransformMatrix(Matrix4f outMat) {
+        Matrix4f projection = RenderSystem.getProjectionMatrix();
+        Matrix4f modelView = RenderSystem.getModelViewMatrix();
+        outMat.identity();
+        outMat.mul(projection);
+        outMat.mul(modelView);
+        outMat.invert();
+        return outMat;
+    }
+
+    private static float lerp(final double n, final double prevN, final float tickDelta) {
+        return (float) Mth.lerp(tickDelta, prevN, n);
     }
 }

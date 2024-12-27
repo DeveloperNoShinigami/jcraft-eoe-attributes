@@ -1,31 +1,30 @@
 package net.arna.jcraft.client.rendering.handler;
 
-import ladysnake.satin.api.event.ShaderEffectRenderCallback;
-import ladysnake.satin.api.managed.ManagedFramebuffer;
-import ladysnake.satin.api.managed.ManagedShaderEffect;
-import ladysnake.satin.api.managed.ShaderEffectManager;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.client.rendering.api.PostEffect;
+import net.arna.jcraft.client.rendering.api.callbacks.PostShaderRenderCallback;
 
-public class InversionShaderHandler implements ShaderEffectRenderCallback {
+public class InversionShaderHandler implements PostShaderRenderCallback {
     public static final InversionShaderHandler INSTANCE = new InversionShaderHandler();
-    private static final ManagedShaderEffect SHADER = ShaderEffectManager.getInstance().manage(JCraft.id("shaders/post/inversion.json"), InversionShaderHandler::setup);
+    private static final PostEffect SHADER = new PostEffect(JCraft.id("shaders/post/inversion.json"), InversionShaderHandler::setup);
     @Getter
-    private static ManagedFramebuffer toInvertBuffer;
+    private static RenderTarget toInvertBuffer;
 
     private InversionShaderHandler() {}
 
-    private static void setup(final ManagedShaderEffect managedShaderEffect) {
-        toInvertBuffer = SHADER.getTarget("to_invert");
+    private static void setup(final PostEffect managedShaderEffect) {
+        toInvertBuffer = SHADER.getRenderTarget("to_invert");
     }
 
     @Override
-    public void renderShaderEffects(final float tickDelta) {
+    public void renderEffect(final float tickDelta) {
         SHADER.render(tickDelta);
-        toInvertBuffer.clear(); // Clear for the next round.
+        toInvertBuffer.clear(true); // Clear for the next round.
     }
 
     public void init() {
-        ShaderEffectRenderCallback.EVENT.register(this);
+        PostShaderRenderCallback.EVENT.register(this);
     }
 }
