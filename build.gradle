@@ -50,9 +50,6 @@ subprojects {
             name = "Modrinth"
             url = "https://api.modrinth.com/maven"
         }
-        flatDir {
-            dirs("lib")
-        }
     }
 
     dependencies {
