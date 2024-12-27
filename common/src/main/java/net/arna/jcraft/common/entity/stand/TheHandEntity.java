@@ -12,10 +12,7 @@ import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.attack.core.data.StateContainer;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.attack.moves.thehand.EraseGroundAttack;
-import net.arna.jcraft.common.attack.moves.thehand.EraseSpaceAttack;
-import net.arna.jcraft.common.attack.moves.thehand.RageAttack;
-import net.arna.jcraft.common.attack.moves.thehand.SimpleEraseAttack;
+import net.arna.jcraft.common.attack.moves.thehand.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -38,7 +35,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
     public static final MoveSet<TheHandEntity, State> MOVE_SET = MoveSet.create(StandType.THE_HAND,
             TheHandEntity::registerMoves, State.class);
 
-    public static final SimpleUppercutAttack<TheHandEntity> CROUCHING_LIGHT_FOLLOWUP = new SimpleUppercutAttack<TheHandEntity>(0,
+    public static final Stomp2Attack CROUCHING_LIGHT_FOLLOWUP = new Stomp2Attack(0,
             13, 20, 0.6f, 6f, 15, 1.75f, 0.3f, 0.4f, -0.3f)
             .withAnim(State.CROUCHING_LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_1)

@@ -12,7 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 public class BackhandAttack extends AbstractUppercutAttack<BackhandAttack, AbstractPurpleHazeEntity<?, ?>> {
-    public BackhandAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun, float hitboxSize, float knockback, float offset, float strength) {
+    public BackhandAttack(int cooldown, int windup, int duration, float moveDistance, float damage, int stun,
+                          float hitboxSize, float knockback, float offset, float strength) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, strength);
     }
 
