@@ -36,9 +36,6 @@ dependencies {
     //Cloth
     modApi "me.shedaniel.cloth:cloth-config:11.1.118"
 
-    //Satin
-    modImplementation("org.ladysnake:satin-common-${satin_version}")
-
     //modImplementation "com.fusionflux:gravity_api-common-${gravity_api_version}"
 
     // JUnit for testing
