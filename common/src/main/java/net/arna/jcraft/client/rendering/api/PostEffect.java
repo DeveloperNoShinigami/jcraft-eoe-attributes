@@ -85,6 +85,7 @@ public class PostEffect implements DisplayResizeCallback {
         postChain.close();
         postChain = null;
 
+        INSTANCES.remove(this);
         DisplayResizeCallback.EVENT.unregister(this);
     }
 
