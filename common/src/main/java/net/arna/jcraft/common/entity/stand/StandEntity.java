@@ -1899,10 +1899,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
         MoveClass moveClass = type.getMoveClass();
         if (moveClass != null) {
-            boolean canBeQueued = moveMap.getEntries(moveClass).stream()
-                    .anyMatch(entry -> !entry.getMove().canBeQueued(getThis()));
-            if (!canBeQueued) {
-                return;
+            for (MoveMap.Entry<E, S> entry : moveMap.getEntries(moveClass)) {
+                if (!entry.getMove().canBeQueued(getThis())) {
+                    return;
+                }
             }
         }
 
