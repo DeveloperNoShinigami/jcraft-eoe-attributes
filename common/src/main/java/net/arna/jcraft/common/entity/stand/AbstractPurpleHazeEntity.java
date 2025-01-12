@@ -171,9 +171,9 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean initMove(MoveClass type) {
-        if (tryFollowUp(type, MoveClass.LIGHT)) return true;
-        if (type == MoveClass.SPECIAL2) {
+    public boolean initMove(MoveClass moveClass) {
+        if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
+        if (moveClass == MoveClass.SPECIAL2) {
             final LivingEntity user = getUserOrThrow();
             if (user.hasEffect(JStatusRegistry.DAZED.get())) {
                 return false;
@@ -191,7 +191,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             }
             return true;
         }
-        return super.handleMove(type);
+        return super.handleMove(moveClass);
     }
 
     @Override

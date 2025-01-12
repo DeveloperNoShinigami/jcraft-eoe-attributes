@@ -48,7 +48,8 @@ public class FireSunBeamAttack extends AbstractMove<FireSunBeamAttack, TheSunEnt
     @Override
     public boolean shouldPerform(TheSunEntity attacker, int moveStun) {
         // If beams = 3, executes at tick windup, windup + 4 and windup + 8.
-        return super.shouldPerform(attacker, moveStun) && (getDuration() - moveStun - getWindup()) / 4 < beams;
+        return attacker.hasUser() && moveStun <= getWindupPoint() &&
+                (getWindupPoint() - moveStun) / 4 < beams && (getWindupPoint() - moveStun) % 4 == 0;
     }
 
     @Override

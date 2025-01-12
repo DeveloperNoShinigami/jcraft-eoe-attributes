@@ -110,7 +110,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                             Amount of meteors changes proportional to the size of The Sun.""")
             );
 
-    private static final FireSunBeamAttack FIRE_BEAM = new FireSunBeamAttack(200, 8, 24, 3, 2.5f)
+    private static final FireSunBeamAttack INCINERATING_SUNSHINE = new FireSunBeamAttack(200, 8, 24, 3, 2.5f)
             .withInfo(
                     Component.nullToEmpty("Incinerating Sunshine"),
                     Component.nullToEmpty("Fires 3 sunbeams.")
@@ -198,7 +198,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
 
         moves.register(MoveClass.SPECIAL1, STARBURST, null);
         moves.register(MoveClass.SPECIAL2, METEOR_SHOWER, null);
-        moves.register(MoveClass.SPECIAL3, FIRE_BEAM, null);
+        moves.register(MoveClass.SPECIAL3, INCINERATING_SUNSHINE, null);
 
         moves.register(MoveClass.ULTIMATE, CHANGE_SIZE, null);
 

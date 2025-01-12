@@ -289,23 +289,23 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        switch (type) {
+    public boolean initMove(MoveClass moveClass) {
+        switch (moveClass) {
             case ULTIMATE -> {
                 if (tsTime <= 0) {
-                    return super.initMove(type);
+                    return super.initMove(moveClass);
                 } else if (hasUser()) {
                     JCraft.stopTimestop(getUserOrThrow());
                     tsTime = 0;
                 }
             }
             case LIGHT -> {
-                if (!tryFollowUp(type, MoveClass.LIGHT)) {
-                    return super.initMove(type);
+                if (!tryFollowUp(moveClass, MoveClass.LIGHT)) {
+                    return super.initMove(moveClass);
                 }
             }
             default -> {
-                return super.initMove(type);
+                return super.initMove(moveClass);
             }
         }
 

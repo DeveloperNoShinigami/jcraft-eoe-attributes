@@ -237,11 +237,11 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        if (tryFollowUp(type, MoveClass.LIGHT)) {
+    public boolean initMove(MoveClass moveClass) {
+        if (tryFollowUp(moveClass, MoveClass.LIGHT)) {
             return true;
         } else {
-            return super.initMove(type);
+            return super.initMove(moveClass);
         }
     }
 

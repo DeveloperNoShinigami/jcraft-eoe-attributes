@@ -338,8 +338,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        return tryFollowUp(type, MoveClass.LIGHT) || super.initMove(type);
+    public boolean initMove(MoveClass moveClass) {
+        return tryFollowUp(moveClass, MoveClass.LIGHT) || super.initMove(moveClass);
     }
 
     @Override

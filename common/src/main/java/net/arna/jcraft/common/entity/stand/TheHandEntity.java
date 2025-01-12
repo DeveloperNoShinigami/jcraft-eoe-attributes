@@ -240,9 +240,9 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
     }
 
     @Override
-    public boolean initMove(final MoveClass type) {
-        if (tryFollowUp(type, MoveClass.LIGHT)) return true;
-        if (type == MoveClass.SPECIAL1
+    public boolean initMove(final MoveClass moveClass) {
+        if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
+        if (moveClass == MoveClass.SPECIAL1
                 && getCurrentMove() != null
                 && getCurrentMove().getMoveClass() == MoveClass.SPECIAL1
                 && getMoveStun() < 4
@@ -253,7 +253,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                 return true;
             }
         }
-        return super.initMove(type);
+        return super.initMove(moveClass);
     }
 
     @Override

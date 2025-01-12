@@ -245,8 +245,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        switch (type) {
+    public boolean initMove(MoveClass moveClass) {
+        switch (moveClass) {
             case ULTIMATE -> {
                 // If not predicting, do other Time Erase logic
                 if (!canAttack()) {
@@ -258,14 +258,14 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                     return true;
                 }
 
-                return super.initMove(type);
+                return super.initMove(moveClass);
             }
             case SPECIAL3 -> {
                 final LivingEntity user = getUserOrThrow();
                 final boolean start = getMoveStun() <= 0;
 
                 if (start) {
-                    return super.initMove(type);
+                    return super.initMove(moveClass);
                 }
 
                 // When used during a move, cancels it and puts time erase on cooldown
@@ -300,10 +300,10 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 if (getTETime() > 0) {
                     cancelTE();
                 }
-                return super.initMove(type);
+                return super.initMove(moveClass);
             }
             default -> {
-                return super.initMove(type);
+                return super.initMove(moveClass);
             }
         }
 

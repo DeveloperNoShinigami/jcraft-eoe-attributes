@@ -190,8 +190,8 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        switch (type) {
+    public boolean initMove(MoveClass moveClass) {
+        switch (moveClass) {
             case ULTIMATE -> {
                 // TODO is this necessary? Seems like it just restarts the dim hop move?
                 if (getCurrentMove() instanceof DimensionalHopMove) {
@@ -200,11 +200,11 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                 }
             }
             case LIGHT -> {
-                if (tryFollowUp(type, MoveClass.LIGHT)) return true;
+                if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
             }
         }
 
-        return super.initMove(type);
+        return super.initMove(moveClass);
     }
 
     @Override

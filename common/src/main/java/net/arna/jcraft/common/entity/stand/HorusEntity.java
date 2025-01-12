@@ -232,10 +232,10 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        if (tryFollowUp(type, MoveClass.HEAVY)) {
+    public boolean initMove(MoveClass moveClass) {
+        if (tryFollowUp(moveClass, MoveClass.HEAVY)) {
             return true;
-        } else if (type == MoveClass.LIGHT && getCurrentMove() != null && getCurrentMove().getMoveClass() == MoveClass.LIGHT &&
+        } else if (moveClass == MoveClass.LIGHT && getCurrentMove() != null && getCurrentMove().getMoveClass() == MoveClass.LIGHT &&
                 getMoveStun() < getCurrentMove().getWindupPoint()) {
             AbstractMove<?, ? super HorusEntity> followup = getCurrentMove().getFollowup();
             if (followup != null) {
@@ -245,7 +245,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             return true;
         }
 
-        return super.initMove(type);
+        return super.initMove(moveClass);
     }
 
     @Override

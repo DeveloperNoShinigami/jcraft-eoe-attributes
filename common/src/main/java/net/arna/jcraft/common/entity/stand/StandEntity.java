@@ -831,24 +831,24 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     // Special handling should be done in some kind of preInit method (or just onInitiate) in AbstractMove,
     // rather than in the stand entity itself.
     /**
-     * Initiates a move of the specified type.
+     * Initiates a move of the specified moveClass.
      *
-     * @param type The type of move to initiate.
+     * @param moveClass The moveClass of move to initiate.
      * @return Whether the move was initiated.
      */
-    public boolean initMove(MoveClass type) {
+    public boolean initMove(MoveClass moveClass) {
         if (getCurrentMove() != null) {
-            if (getCurrentMove().onInitMove(getThis(), type)) {
+            if (getCurrentMove().onInitMove(getThis(), moveClass)) {
                 return true;
             }
 
             if (getCurrentMove().getFollowup() != null && getCurrentMove().getFollowupFrame().isPresent() &&
-                    getCurrentMove().getMoveClass() == type && getMoveStun() <= getCurrentMove().getFollowupFrame().getAsInt()) {
+                    getCurrentMove().getMoveClass() == moveClass && getMoveStun() <= getCurrentMove().getFollowupFrame().getAsInt()) {
                 moveMap.initiateFollowup(getThis(), getCurrentMove(), false, 0);
             }
         }
 
-        return handleMove(type);
+        return handleMove(moveClass);
     }
 
     public boolean canHoldMove(@Nullable MoveInputType type) {

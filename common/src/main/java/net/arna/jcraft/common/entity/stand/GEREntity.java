@@ -225,14 +225,14 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        if (type == MoveClass.ULTIMATE && !moveContext.get(ReturnToZeroMove.ENTITY_DATA).isEmpty()) {
+    public boolean initMove(MoveClass moveClass) {
+        if (moveClass == MoveClass.ULTIMATE && !moveContext.get(ReturnToZeroMove.ENTITY_DATA).isEmpty()) {
             RETURN_TO_ZERO.returnToZero(this);
             return true;
-        } else if (tryFollowUp(type, MoveClass.LIGHT)) {
+        } else if (tryFollowUp(moveClass, MoveClass.LIGHT)) {
             return true;
         } else {
-            return super.initMove(type);
+            return super.initMove(moveClass);
         }
     }
 

@@ -219,9 +219,9 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        if (tryFollowUp(type, MoveClass.LIGHT)) return true;
-        return super.initMove(type);
+    public boolean initMove(MoveClass moveClass) {
+        if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
+        return super.initMove(moveClass);
     }
 
     @Override

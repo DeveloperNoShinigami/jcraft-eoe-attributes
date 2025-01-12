@@ -206,8 +206,8 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
 
     // Moveset
     @Override
-    public boolean initMove(MoveClass type) {
-        switch (type) {
+    public boolean initMove(MoveClass moveClass) {
+        switch (moveClass) {
             case SPECIAL2 -> {
                 final LivingEntity user = getUserOrThrow();
                 if (user.hasEffect(JStatusRegistry.DAZED.get())) {
@@ -243,12 +243,12 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                 return handleMove(MoveClass.SPECIAL3);
             }
             case LIGHT -> {
-                if (!tryFollowUp(type, MoveClass.LIGHT)) {
-                    return super.initMove(type);
+                if (!tryFollowUp(moveClass, MoveClass.LIGHT)) {
+                    return super.initMove(moveClass);
                 }
             }
         }
-        return super.initMove(type);
+        return super.initMove(moveClass);
     }
 
     @Override

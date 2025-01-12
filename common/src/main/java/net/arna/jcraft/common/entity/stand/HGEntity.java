@@ -243,10 +243,10 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
+    public boolean initMove(MoveClass moveClass) {
         final LivingEntity user = getUserOrThrow();
-        if (!tryFollowUp(type, MoveClass.LIGHT)) {
-            if (type == MoveClass.SPECIAL1 && user.isShiftKeyDown()) {
+        if (!tryFollowUp(moveClass, MoveClass.LIGHT)) {
+            if (moveClass == MoveClass.SPECIAL1 && user.isShiftKeyDown()) {
                 if (!JUtils.canAct(user)) {
                     return false;
                 }
@@ -271,7 +271,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     }
                 }
             } else {
-                return super.initMove(type);
+                return super.initMove(moveClass);
             }
         }
 

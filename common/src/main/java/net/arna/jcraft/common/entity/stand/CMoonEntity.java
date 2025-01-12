@@ -218,15 +218,15 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        switch (type) {
+    public boolean initMove(MoveClass moveClass) {
+        switch (moveClass) {
             case SPECIAL2 -> {
                 if (hasUser() && getUserOrThrow().isShiftKeyDown()) {
                     level().getEntitiesOfClass(BlockProjectile.class,
                                     getBoundingBox().inflate(16), p -> p.isAlive() && p.getMaster() == getUser())
                             .forEach(BlockProjectile::markRefresh);
                 } else {
-                    return super.initMove(type);
+                    return super.initMove(moveClass);
                 }
                 return true;
             }
@@ -235,18 +235,18 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                 if (shiftComponent.isActive()) {
                     shiftComponent.swapRadialType();
                 } else {
-                    return super.initMove(type);
+                    return super.initMove(moveClass);
                 }
                 return true;
             }
             case LIGHT -> {
-                if (!tryFollowUp(type, MoveClass.LIGHT)) {
-                    return super.initMove(type);
+                if (!tryFollowUp(moveClass, MoveClass.LIGHT)) {
+                    return super.initMove(moveClass);
                 }
                 return true;
             }
             default -> {
-                return super.initMove(type);
+                return super.initMove(moveClass);
             }
         }
     }

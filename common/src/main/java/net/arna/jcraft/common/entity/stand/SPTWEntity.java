@@ -188,6 +188,12 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
     }
 
     @Override
+    public boolean initMove(final MoveClass moveClass) {
+        if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
+        return super.initMove(moveClass);
+    }
+
+    @Override
     public void desummon() {
         if (tsTime > 0) {
             return;

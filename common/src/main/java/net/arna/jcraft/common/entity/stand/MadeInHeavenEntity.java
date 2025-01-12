@@ -240,9 +240,9 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        if (!tryFollowUp(type, MoveClass.LIGHT)) {
-            return super.initMove(type);
+    public boolean initMove(MoveClass moveClass) {
+        if (!tryFollowUp(moveClass, MoveClass.LIGHT)) {
+            return super.initMove(moveClass);
         }
 
         return true;

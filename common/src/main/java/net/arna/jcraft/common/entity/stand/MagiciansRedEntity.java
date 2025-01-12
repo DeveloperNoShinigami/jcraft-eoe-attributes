@@ -197,14 +197,14 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        if (type == MoveClass.LIGHT && getCurrentMove() != null && getCurrentMove().getMoveClass() == MoveClass.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
+    public boolean initMove(MoveClass moveClass) {
+        if (moveClass == MoveClass.LIGHT && getCurrentMove() != null && getCurrentMove().getMoveClass() == MoveClass.LIGHT && getMoveStun() < getCurrentMove().getWindupPoint()) {
             AbstractMove<?, ? super MagiciansRedEntity> followup = getCurrentMove().getFollowup();
             if (followup != null) {
                 setMove(followup, (State) followup.getAnimation());
             }
         } else {
-            return super.initMove(type);
+            return super.initMove(moveClass);
         }
 
         return true;

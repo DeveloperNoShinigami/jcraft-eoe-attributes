@@ -259,24 +259,24 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     }
 
     @Override
-    public boolean initMove(MoveClass type) {
-        switch (type) {
+    public boolean initMove(MoveClass moveClass) {
+        switch (moveClass) {
             case SPECIAL2, SPECIAL3 -> {
-                boolean s = super.initMove(type);
-                if (type == MoveClass.SPECIAL2 && !getUserOrThrow().onGround() || type == MoveClass.SPECIAL3) {
+                boolean s = super.initMove(moveClass);
+                if (moveClass == MoveClass.SPECIAL2 && !getUserOrThrow().onGround() || moveClass == MoveClass.SPECIAL3) {
                     setSand(true);
                 }
 
                 return s;
             }
             case LIGHT -> {
-                if (!tryFollowUp(type, MoveClass.LIGHT)) {
-                    return super.initMove(type);
+                if (!tryFollowUp(moveClass, MoveClass.LIGHT)) {
+                    return super.initMove(moveClass);
                 }
             }
         }
 
-        return super.initMove(type);
+        return super.initMove(moveClass);
     }
 
     public boolean isSand() {
