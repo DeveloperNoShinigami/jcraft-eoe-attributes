@@ -37,13 +37,17 @@ public class PostEffect implements DisplayResizeCallback {
     }
 
     public static void initAll() {
-        INSTANCES.forEach(effect -> {
+        // Copy is to prevent conc mod error when doing F3+T.
+        Set<PostEffect> copy = new HashSet<>(INSTANCES);
+        copy.forEach(effect -> {
             try {
                 effect.initialize();
             } catch (IOException e) {
                 JCraft.LOGGER.error("Failed to initialize post effect {}", effect.getLocation(), e);
             }
         });
+        INSTANCES.clear();
+        INSTANCES.addAll(copy);
     }
 
     public void initialize() throws IOException {
