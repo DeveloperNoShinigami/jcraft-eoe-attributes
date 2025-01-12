@@ -21,15 +21,15 @@ import java.util.Set;
 public class LungeAction extends MoveAction<LungeAction, IAttacker<?, ?>> {
     @Getter
     private final float factor, verticalFactor;
-    private boolean onGround = false, isFree = false;
+    private boolean onGround = false, notFree = false;
 
     public LungeAction onGround() {
         this.onGround = true;
         return this;
     }
 
-    public LungeAction isFree() {
-        this.isFree = true;
+    public LungeAction isNotFree() {
+        this.notFree = true;
         return this;
     }
 
@@ -37,13 +37,13 @@ public class LungeAction extends MoveAction<LungeAction, IAttacker<?, ?>> {
         return onGround;
     }
 
-    public boolean requireFree() {
-        return isFree;
+    public boolean requireNotFree() {
+        return notFree;
     }
 
     @Override
     public void perform(IAttacker<?, ?> attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
-        if (onGround && !user.onGround() || isFree && attacker instanceof StandEntity<?, ?> stand && !stand.isFree()) return;
+        if (onGround && !user.onGround() || notFree && attacker instanceof StandEntity<?, ?> stand && stand.isFree()) return;
 
         JUtils.addVelocity(user, attacker.getBaseEntity().getLookAngle().scale(factor).add(0.0, verticalFactor, 0.0));
     }
@@ -62,7 +62,7 @@ public class LungeAction extends MoveAction<LungeAction, IAttacker<?, ?>> {
                     Codec.FLOAT.fieldOf("factor").forGetter(LungeAction::getFactor),
                     Codec.FLOAT.fieldOf("vertical_factor").forGetter(LungeAction::getVerticalFactor),
                     Codec.BOOL.optionalFieldOf("on_ground", false).forGetter(LungeAction::requireOnGround),
-                    Codec.BOOL.optionalFieldOf("is_free", false).forGetter(LungeAction::requireFree)
+                    Codec.BOOL.optionalFieldOf("not_free", false).forGetter(LungeAction::requireNotFree)
             ).apply(instance, LungeAction::new));
         }
     }

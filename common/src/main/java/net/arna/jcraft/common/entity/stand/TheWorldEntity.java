@@ -134,7 +134,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
     public static final SimpleAttack<TheWorldEntity> LUNGE = new SimpleAttack<TheWorldEntity>(160, 9, 14,
             1f, 5f, 12, 1.5f, 0.6f, 0.2f)
             .withExtraHitBox(1)
-            .withInitAction(LungeAction.lunge(0.75f, 0f).isFree())
+            .withInitAction(LungeAction.lunge(0.75f, 0f).isNotFree())
             .withSound(JSoundRegistry.TW_KICK)
             .withImpactSound(JSoundRegistry.TW_KICK_HIT)
             .withHitSpark(JParticleType.HIT_SPARK_2)

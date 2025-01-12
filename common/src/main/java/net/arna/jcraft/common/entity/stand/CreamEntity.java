@@ -8,7 +8,6 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.actions.EffectAction;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
@@ -77,7 +76,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             .withAction(EffectAction.inflict(MobEffects.MOVEMENT_SLOWDOWN, 40, 1))
             .withAnim(State.BITE)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
-            .withAction(PlaySoundAction.playSound(SoundEvents.EVOKER_FANGS_ATTACK))
+            .withSound(SoundEvents.EVOKER_FANGS_ATTACK)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Component.literal("Bite"),

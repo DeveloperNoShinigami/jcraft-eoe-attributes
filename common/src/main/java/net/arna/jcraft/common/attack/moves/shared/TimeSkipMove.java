@@ -160,7 +160,7 @@ public final class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends Abs
 
     @Override
     public @NonNull TimeSkipMove<A> copy() {
-        return copyExtras(new TimeSkipMove<>(getCooldown(), distance));
+        return copyExtras(new TimeSkipMove<A>(getCooldown(), distance).withParticles(particles).withSounds(sounds));
     }
 
     public static class Type extends AbstractMove.Type<TimeSkipMove<?>> {

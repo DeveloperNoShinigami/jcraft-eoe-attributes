@@ -35,7 +35,7 @@ public class BaseMoveExtras {
                     Codec.INT.fieldOf("tick").forGetter(IntObjectPair::leftInt),
                     MoveSetLoader.MOVE_CODEC.get().fieldOf("move").forGetter(IntObjectPair::right)
             ).apply(i1, IntObjectPair::of)).optionalFieldOf("finisher").forGetter(BaseMoveExtras::getFinisher),
-            Codec.INT.optionalFieldOf("followup_frame")
+            ExtraCodecs.POSITIVE_INT.optionalFieldOf("followup_frame")
                     .xmap(i -> i.map(OptionalInt::of).orElseGet(OptionalInt::empty),
                             i -> i.isEmpty() ? Optional.empty() : Optional.of(i.getAsInt()))
                     .forGetter(BaseMoveExtras::getFollowupFrame)

@@ -48,7 +48,7 @@ public final class BallChargeAttack extends AbstractMove<BallChargeAttack, Cream
         // If we're on the server side, voiding and charging and the user and charge direction are not null
         // and the attacker is not free (not doing surprise move), we will update the charge direction.
         LivingEntity user = attacker.getUser();
-        if (!attacker.level().isClientSide() && attacker.getVoidTime() > 0 && user != null &&
+        if (downward && !attacker.level().isClientSide() && attacker.getVoidTime() > 0 && user != null &&
                 attacker.isCharging() && attacker.getChargeDir() != null && !attacker.isFree()) {
             attacker.setChargeDir(attacker.getChargeDir().add(
                     new Vec3(GravityChangerAPI.getGravityDirection(user).step()).scale(0.1)

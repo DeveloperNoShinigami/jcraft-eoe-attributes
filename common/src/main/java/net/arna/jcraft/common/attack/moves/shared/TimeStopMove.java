@@ -37,7 +37,8 @@ public final class TimeStopMove<A extends StandEntity<? extends A, ?>> extends A
 
         @Override
         protected @NotNull App<RecordCodecBuilder.Mu<TimeStopMove<?>>, TimeStopMove<?>> buildCodec(RecordCodecBuilder.Instance<TimeStopMove<?>> instance) {
-            return instance.group(cooldown(), windup(), duration(), timeStopDuration()).apply(instance, TimeStopMove::new);
+            return instance.group(extras(), cooldown(), windup(), duration(), timeStopDuration())
+                    .apply(instance, applyExtras(TimeStopMove::new));
         }
     }
 }

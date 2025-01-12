@@ -47,6 +47,14 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     private final IntMoveVariable CHARGE_TIME = new IntMoveVariable();
     private final List<MoveCondition<?, ? super A>> conditions = new ArrayList<>();
     private final List<MoveAction<?, ? super A>> actions = new ArrayList<>(), initActions = new ArrayList<>();
+    /**
+     * Be VERY careful when using this.
+     * There's NO connection between static moves defined in fields
+     * and moves that are actually executed (because of (de)serialization).
+     * This is for internal use only.
+     */
+    @Getter
+    private T originalMove = getThis();
     private MoveClass moveClass;
     private int cooldown, windup;
     private int duration;
@@ -811,6 +819,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      */
     protected @NonNull T copyExtras(final @NonNull T base) {
         AbstractMove<T, A> cast = base; // Required to access private fields
+        cast.originalMove = originalMove;
         cast.moveClass = moveClass;
         cast.name = name;
         cast.description = description;

@@ -423,8 +423,6 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             setMode(Mode.REGULAR);
             setNormalDesc();
         }
-
-        ARMOR_OFF.tickArmor(this);
     }
 
     @Override

@@ -134,20 +134,20 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S extends Enum<?>> imp
     @Nullable
     public Entry<A, S> getEntry(final AbstractMove<?, ? super A> move) {
         return Streams.stream(this)
-                .filter(entry -> entry.getMove() == move)
+                .filter(entry -> entry.getMove().getOriginalMove() == move)
                 .findFirst()
                 .orElse(null);
     }
 
     public void initiateFollowup(final A attacker, AbstractMove<?, ? super A> move, boolean setMoveStun, int chargeTime) {
-        Entry<A, S> entry = getEntry(move);
+        Entry<A, S> entry = getEntry(move.getOriginalMove());
         if (entry == null || entry.getFollowup() == null) {
             return;
         }
         entry = entry.getFollowup();
 
         // Check conditions
-        if (!entry.getMove().getConditions().stream().allMatch(c -> c.test(attacker))) {
+        if (!entry.getMove().conditionsMet(attacker)) {
             return;
         }
 

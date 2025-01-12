@@ -38,10 +38,7 @@ import net.arna.jcraft.common.attack.moves.starplatinum.InhaleAttack;
 import net.arna.jcraft.common.attack.moves.starplatinum.theworld.SPTWGroundSlamAttack;
 import net.arna.jcraft.common.attack.moves.starplatinum.theworld.TimeStrikeAttack;
 import net.arna.jcraft.common.attack.moves.thefool.*;
-import net.arna.jcraft.common.attack.moves.thehand.EraseGroundAttack;
-import net.arna.jcraft.common.attack.moves.thehand.EraseSpaceAttack;
-import net.arna.jcraft.common.attack.moves.thehand.RageAttack;
-import net.arna.jcraft.common.attack.moves.thehand.SimpleEraseAttack;
+import net.arna.jcraft.common.attack.moves.thehand.*;
 import net.arna.jcraft.common.attack.moves.thesun.FireMeteorAttack;
 import net.arna.jcraft.common.attack.moves.thesun.FireSunBeamAttack;
 import net.arna.jcraft.common.attack.moves.thesun.MeteorShowerAttack;
@@ -320,6 +317,7 @@ public class MoveSetLoader {
         registrar.accept("thehand_erase_ground_attack", () -> EraseGroundAttack.Type.INSTANCE);
         registrar.accept("thehand_erase_space_attack", () -> EraseSpaceAttack.Type.INSTANCE);
         registrar.accept("thehand_rage_attack", () -> RageAttack.Type.INSTANCE);
+        registrar.accept("thehand_stomp2", () -> Stomp2Attack.Type.INSTANCE);
 
         registrar.accept("thesun_fire_meteor_attack", () -> FireMeteorAttack.Type.INSTANCE);
         registrar.accept("thesun_fire_sun_beam_attack", () -> FireSunBeamAttack.Type.INSTANCE);

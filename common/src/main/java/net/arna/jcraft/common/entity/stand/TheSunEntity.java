@@ -165,7 +165,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         proCount = 2;
         conCount = 2;
 
-        freespace = "Cannot buffer moves.\n Must stay within " + MAX_DISTANCE + " of the user, otherwise it loses size and disappears.\nGrace period of 1 second before heat field activates after summoning.\nHeat field applies Nausea > Weakness > Slowness > Burning as entities get closer.\n";
+        freespace = "Cannot buffer moves.\n Must stay within " + MAX_DISTANCE + " blocks of the user, otherwise it loses size and disappears.\n" +
+                "Grace period of 1 second before heat field activates after summoning.\n" +
+                "Heat field applies Nausea > Weakness > Slowness > Burning as entities get closer.";
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0f, 0.8f, 0.4f),
