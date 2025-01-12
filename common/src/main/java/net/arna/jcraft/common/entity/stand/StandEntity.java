@@ -1114,7 +1114,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                     doQueuedMove(userPlayer);
                 } else if (!idleOverride) {
                     // Process idle
-                    setCurrentMove(null);
+                    if (curMove != null) setCurrentMove(null);
 
                     setStandGauge(Mth.clamp(this.getStandGauge() + 0.5f, 0, maxStandGauge));
 
@@ -1130,7 +1130,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 }
             } else if (blocking) { // Process block
                 if (wantToBlock) {
-                    setCurrentMove(null);
+                    if (curMove != null) setCurrentMove(null);
 
                     if (moveStun < 1) {
                         setMoveStun(1);

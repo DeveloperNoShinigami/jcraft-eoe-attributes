@@ -70,7 +70,7 @@ public abstract class AbstractHoldableMove<T extends AbstractHoldableMove<T, A>,
         ctx.register(CHARGE_TIME);
     }
 
-    public void onRelease(final A attacker) {
+    protected void onRelease(final A attacker) {
         if (attacker.getMoveStun() <= getDuration() - minimumCharge) {
             followUp(attacker);
         }

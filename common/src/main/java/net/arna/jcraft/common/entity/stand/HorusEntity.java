@@ -148,7 +148,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             )
             .withSound(JSoundRegistry.HORUS_SCATTER);
     // Special 2
-    public static final IcicleFireAttack CHARGE_FIRE = new IcicleFireAttack(0, 0, 10, 0.75f)
+    public static final IcicleFireAttack CHARGE_FIRE = new IcicleFireAttack(0, 1, 11, 0.75f)
             .withInfo(
                     Component.literal("Icicle Fire"),
                     Component.empty()
