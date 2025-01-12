@@ -615,6 +615,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
         cast.overrideStun = overrideStun;
         cast.lift = lift;
         cast.canBackstab = canBackstab;
+        cast.doShockwaves = doShockwaves;
         cast.blockStun = blockStun;
         cast.staticY = staticY;
         cast.blockableType = blockableType;
