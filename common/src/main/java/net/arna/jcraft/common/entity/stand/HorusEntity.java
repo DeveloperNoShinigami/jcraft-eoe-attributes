@@ -220,7 +220,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
         light.withAerialVariant(State.LIGHT_AIR);
 
         moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
-        moves.register(MoveClass.HEAVY, STOMP, State.STOMP);
+        moves.register(MoveClass.HEAVY, STOMP, State.STOMP).withFollowup(State.DETONATE);
 
         moves.registerImmediate(MoveClass.SPECIAL1, SCATTER, State.SCATTER);
         moves.register(MoveClass.SPECIAL2, CHARGE_ICICLE, State.CHARGE_ICICLE).withFollowup(State.CHARGE_FIRE);
@@ -240,7 +240,9 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             AbstractMove<?, ? super HorusEntity> followup = getCurrentMove().getFollowup();
             if (followup != null) {
                 if (getUserOrThrow().isDiscrete()) followup = followup.getCrouchingVariant();
-                setMove(followup, (State) Objects.requireNonNull(followup).getAnimation());
+                if (followup != null) {
+                    setMove(followup, (State) Objects.requireNonNull(followup).getAnimation());
+                }
             }
             return true;
         }

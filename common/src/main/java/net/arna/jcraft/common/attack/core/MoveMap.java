@@ -46,17 +46,25 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S extends Enum<?>> imp
      * Registers a move and its immediate followup and variants.
      * Sub-moves must have an assigned animation state.
      */
-    @SuppressWarnings("unchecked")
     public void registerImmediate(final @NonNull MoveClass type, final @NonNull AbstractMove<?, ? super A> move, final @Nullable S animState) {
         final Entry<A, S> entry = register(type, move, animState);
+        copyAnims(entry);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void copyAnims(Entry<A, S> entry) {
+        final AbstractMove<?, ? super A> move = entry.getMove();
         if (move.getCrouchingVariant() != null) {
-            entry.withCrouchingVariant((S) move.getCrouchingVariant().getAnimation());
+            Entry<A, S> cr = entry.withCrouchingVariant((S) move.getCrouchingVariant().getAnimation());
+            copyAnims(cr);
         }
         if (move.getAerialVariant() != null) {
-            entry.withAerialVariant((S) move.getAerialVariant().getAnimation());
+            Entry<A, S> ae = entry.withAerialVariant((S) move.getAerialVariant().getAnimation());
+            copyAnims(ae);
         }
         if (move.getFollowup() != null) {
-            entry.withFollowup((S) move.getFollowup().getAnimation());
+            Entry<A, S> fw = entry.withFollowup((S) move.getFollowup().getAnimation());
+            copyAnims(fw);
         }
     }
 

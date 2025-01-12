@@ -282,7 +282,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
 
         moves.register(MoveClass.SPECIAL1, SMITE, State.SMITE);
         moves.register(MoveClass.SPECIAL2, DIVINE_FINISHER, State.AIR_KNIVES).withAerialVariant(State.THROW);
-        moves.register(MoveClass.SPECIAL3, CHARGE_OVERWRITE, State.CHARGE_OVERWRITE);
+        moves.register(MoveClass.SPECIAL3, CHARGE_OVERWRITE, State.CHARGE_OVERWRITE).withFollowup(State.OVERWRITE);
         moves.register(MoveClass.ULTIMATE, TIME_STOP, State.TIME_STOP);
 
         moves.register(MoveClass.UTILITY, TIME_SKIP, State.TIME_SKIP);
