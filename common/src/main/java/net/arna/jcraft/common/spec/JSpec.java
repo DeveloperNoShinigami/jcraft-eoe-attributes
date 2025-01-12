@@ -230,13 +230,15 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         }
         cooldowns.setCooldown(cooldownType, move.getCooldown());
 
-        move.onInitiate(getThis());
-
         //JCraft.LOGGER.info("SERVER: Handling spec attack: " + attack + " in world: " + serverWorld);
 
         curMove = move.copy()
                 .withDuration((int) (move.getDuration() / animationSpeed))
                 .withWindup((int) (move.getWindup() / animationSpeed));
+
+        curMove.registerContextEntries(moveContext);
+        curMove.onInitiate(getThis());
+
         moveStun = curMove.getDuration();
 
         if (curMove instanceof AbstractMultiHitAttack<?, ?> multiHitAttack) {
