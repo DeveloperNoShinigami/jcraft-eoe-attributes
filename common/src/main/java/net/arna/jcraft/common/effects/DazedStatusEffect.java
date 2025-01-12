@@ -1,7 +1,5 @@
 package net.arna.jcraft.common.effects;
 
-import java.util.Objects;
-import java.util.UUID;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -9,7 +7,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Objects;
+import java.util.UUID;
 
 public class DazedStatusEffect extends MobEffect {
     private static final UUID slowUUID = UUID.fromString("778B48FC-485B-5BA7-58C7-E0D755CE354D");
@@ -72,6 +74,10 @@ public class DazedStatusEffect extends MobEffect {
         }
 
         entity.setDeltaMovement(eVel.x * horizontalMult, yVel, eVel.z * horizontalMult);
+
+        if (entity instanceof Player player && !player.isCreative() && !player.isSpectator()) {
+            player.getAbilities().flying = false;
+        }
 
         if (amplifier == 2) {
             return; // Blockstun should not disable targetting

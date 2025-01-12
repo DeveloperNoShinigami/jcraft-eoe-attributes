@@ -54,9 +54,14 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
             return;
         }
 
+        // Taking damage when unprotected from sunlight.
         if (world.isDay() && !(entity.getItemBySlot(EquipmentSlot.HEAD).is(JTagRegistry.PROTECTS_FROM_SUN)) && world.canSeeSky(entity.blockPosition())) {
             entity.setSecondsOnFire(1);
+            entity.hurt(world.damageSources().dryOut(), 2.0F);
         }
+
+        // Vampires do not have to breathe.
+        entity.setAirSupply(entity.getMaxAirSupply());
 
         if (blood < 1 && --starveTick < 1) {
             // Starve

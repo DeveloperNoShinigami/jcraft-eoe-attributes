@@ -44,7 +44,7 @@ public abstract class RandomStrollGoalMixin {
                     cir.setReturnValue(false);
                 }
 
-                if (this.mob.getRandom().nextInt(reducedTickDelay(this.interval)) != 0) {
+                if (this.mob.getRandom().nextInt(copyOf$reducedTickDelay(this.interval)) != 0) {
                     cir.setReturnValue(false);
                 }
             }
@@ -72,7 +72,7 @@ public abstract class RandomStrollGoalMixin {
     }
 
     @Unique
-    private static int reducedTickDelay(int reduction) {
+    private static int copyOf$reducedTickDelay(int reduction) {
         return Mth.positiveCeilDiv(reduction, 2);
     }
 }
