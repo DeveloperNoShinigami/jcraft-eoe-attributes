@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.stand;
 
+import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
@@ -80,7 +81,8 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                             Fires a sunbeam with perfect precision.""")
             );
 
-    private static final FireMeteorAttack FIRE_METEOR = new FireMeteorAttack(20, 5, 10, 1, 1, true)
+    private static final FireMeteorAttack FIRE_METEOR = new FireMeteorAttack(20, 10, 1, 1,
+            2.5f, 0f, true, IntSet.of(5))
             .withCrouchingVariant(FIRE_SUNBEAM)
             .withInfo(
                     Component.nullToEmpty("Fire Meteor"),
@@ -89,7 +91,8 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                             At max size, the meteor is explosive.""")
             );
 
-    private static final FireMeteorAttack STARBURST = new FireMeteorAttack(100, 8, 24, 3, 2.5f, false)
+    private static final FireMeteorAttack STARBURST = new FireMeteorAttack(100, 24, 3, 1.75f,
+            2.5f, 10f, false, IntSet.of(8, 16, 24))
             .withInfo(
                     Component.nullToEmpty("Starburst"),
                     Component.nullToEmpty("""

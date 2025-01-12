@@ -3,6 +3,9 @@ package net.arna.jcraft.common.attack.moves.thesun;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.ints.IntCollection;
+import it.unimi.dsi.fastutil.ints.IntImmutableList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.data.MoveType;
@@ -12,31 +15,45 @@ import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class FireMeteorAttack extends AbstractMove<FireMeteorAttack, TheSunEntity> {
     @Getter
     private final int meteors;
     @Getter
-    private final float meteorVelocity;
+    private final float meteorVelocity, meteorSpeed, meteorDivergence;
     @Getter
     private final boolean explosiveIfMax;
+    @Getter
+    @NonNull
+    private final IntCollection hitMoments;
     private Vec3 targetPosition;
 
-    public FireMeteorAttack(int cooldown, int windup, int duration, int meteors, float meteorVelocity, boolean explosiveIfMax) {
-        super(cooldown, windup, duration, 0);
+    public FireMeteorAttack(int cooldown, int duration, int meteors, float meteorVelocity, float meteorSpeed, float meteorDivergence,
+                            boolean explosiveIfMax, @NonNull IntCollection hitMoments) {
+        super(cooldown, hitMoments.intStream().min().orElse(duration + 1), duration, 0);
         this.meteors = meteors;
         this.meteorVelocity = meteorVelocity;
+        this.meteorSpeed = meteorSpeed;
+        this.meteorDivergence = meteorDivergence;
         this.explosiveIfMax = explosiveIfMax;
+        this.hitMoments = new IntImmutableList(hitMoments.intStream().sorted().toArray());
         ranged = true;
     }
 
     @Override
     public @NonNull MoveType<FireMeteorAttack> getMoveType() {
         return Type.INSTANCE;
+    }
+
+    @Override
+    public boolean shouldPerform(final TheSunEntity attacker, final int moveStun) {
+        return attacker.hasUser() && hitMoments.contains(getDuration() - attacker.getMoveStun());
     }
 
     @Override
@@ -51,7 +68,7 @@ public class FireMeteorAttack extends AbstractMove<FireMeteorAttack, TheSunEntit
         Vec3 pos = attacker.randomPos();
         for (int i = 0; i < meteors; i++) {
             MeteorProjectile meteor = fireMeteor(attacker, user, pos, JUtils.getLookVector(pos, targetPosition).scale(meteorVelocity),
-                    2.5f, 0f);
+                    meteorSpeed, meteorDivergence);
             meteor.setNoGravity(true);
 
             if (explosiveIfMax && attacker.getRawScale() == TheSunEntity.MAX_SCALE) {
@@ -88,7 +105,8 @@ public class FireMeteorAttack extends AbstractMove<FireMeteorAttack, TheSunEntit
 
     @Override
     public @NonNull FireMeteorAttack copy() {
-        return copyExtras(new FireMeteorAttack(getCooldown(), getWindup(), getDuration(), meteors, meteorVelocity, explosiveIfMax));
+        return copyExtras(new FireMeteorAttack(getCooldown(), getDuration(), meteors, meteorVelocity, meteorSpeed,
+                meteorDivergence, explosiveIfMax, hitMoments));
     }
 
     public static class Type extends AbstractMove.Type<FireMeteorAttack> {
@@ -96,10 +114,15 @@ public class FireMeteorAttack extends AbstractMove<FireMeteorAttack, TheSunEntit
 
         @Override
         protected @NonNull App<RecordCodecBuilder.Mu<FireMeteorAttack>, FireMeteorAttack> buildCodec(RecordCodecBuilder.Instance<FireMeteorAttack> instance) {
-            return instance.group(extras(), cooldown(), windup(), duration(),
+            return instance.group(extras(), cooldown(), duration(),
                     Codec.INT.fieldOf("meteors").forGetter(FireMeteorAttack::getMeteors),
                     Codec.FLOAT.fieldOf("meteor_velocity").forGetter(FireMeteorAttack::getMeteorVelocity),
-                    Codec.BOOL.fieldOf("explosive_if_max").forGetter(FireMeteorAttack::isExplosiveIfMax)
+                    Codec.FLOAT.fieldOf("meteor_speed").forGetter(FireMeteorAttack::getMeteorSpeed),
+                    Codec.FLOAT.fieldOf("meteor_divergence").forGetter(FireMeteorAttack::getMeteorDivergence),
+                    Codec.BOOL.fieldOf("explosive_if_max").forGetter(FireMeteorAttack::isExplosiveIfMax),
+                    ExtraCodecs.NON_NEGATIVE_INT.listOf()
+                            .<IntCollection>xmap(IntOpenHashSet::new, ArrayList::new)
+                            .fieldOf("hit_moments").forGetter(FireMeteorAttack::getHitMoments)
                     ).apply(instance, applyExtras(FireMeteorAttack::new));
         }
     }
