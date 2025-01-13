@@ -118,7 +118,7 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
         moves.register(MoveClass.HEAVY, HEAVY, State.HEAVY);
 
         moves.register(MoveClass.SPECIAL1, LAUNCH_CAPSULE, State.LAUNCH).withCrouchingVariant(State.LAUNCH2);
-        moves.register(MoveClass.SPECIAL2, REKKA_1, State.REKKA1);
+        moves.register(MoveClass.SPECIAL2, REKKA_1, State.REKKA1).withFollowup(State.REKKA2).withFollowup(State.REKKA3);
         moves.register(MoveClass.SPECIAL3, GRAB, State.GRAB).withCrouchingVariant(State.GROUND_SLAM);
 
         moves.register(MoveClass.ULTIMATE, FULL_RELEASE, State.FULL_RELEASE);
