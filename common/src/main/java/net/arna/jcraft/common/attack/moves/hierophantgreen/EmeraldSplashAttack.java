@@ -10,14 +10,9 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.entity.projectile.EmeraldProjectile;
-import net.arna.jcraft.common.entity.projectile.HGNetEntity;
 import net.arna.jcraft.common.entity.stand.HGEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.arna.jcraft.common.util.IOwnable;
-import net.arna.jcraft.common.util.JUtils;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,26 +45,6 @@ public final class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSpl
     @Override
     public @NotNull MoveType<EmeraldSplashAttack> getMoveType() {
         return Type.INSTANCE;
-    }
-
-    @Override
-    public void onInitiate(HGEntity attacker) {
-        super.onInitiate(attacker);
-
-        LivingEntity user = attacker.getUser();
-        if (user == null) return;
-        LivingEntity shooter = attacker.isRemote() ? attacker.getBaseEntity() : user;
-
-        Vec3 upVec = GravityChangerAPI.getEyeOffset(shooter);
-        Vec3 heightOffset = upVec.scale(0.5);
-        Vec3 eyePos = shooter.position().add(heightOffset);
-        Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
-                (entity -> !(entity instanceof IOwnable ownable) || ownable.getMaster() != user)).getLocation();
-
-        user.level().getEntitiesOfClass(HGNetEntity.class, user.getBoundingBox().inflate(96), EntitySelector.LIVING_ENTITY_STILL_ALIVE)
-                .stream()
-                .filter(hgNetEntity -> hgNetEntity.getMaster() == user)
-                .forEach(hgNetEntity -> hgNetEntity.tryFireAt(pos, true));
     }
 
     @Override

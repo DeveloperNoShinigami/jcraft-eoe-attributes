@@ -233,7 +233,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         moves.register(MoveClass.HEAVY, SENDOFF, State.SENDOFF);
         moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
 
-        moves.register(MoveClass.SPECIAL1, EMERALD_CHARGE, State.EMERALD_CHARGE);
+        moves.register(MoveClass.SPECIAL1, EMERALD_CHARGE, State.EMERALD_CHARGE).withFollowup(State.EMERALD_SPLASH);
         moves.register(MoveClass.SPECIAL2, EXTEND_UP, State.EXTEND_UP).withCrouchingVariant(State.EXTEND_FORWARD);
         moves.register(MoveClass.SPECIAL3, NET_SET, State.NET_SET);
 
@@ -245,34 +245,34 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
     @Override
     public boolean initMove(MoveClass moveClass) {
         final LivingEntity user = getUserOrThrow();
-        if (!tryFollowUp(moveClass, MoveClass.LIGHT)) {
-            if (moveClass == MoveClass.SPECIAL1 && user.isShiftKeyDown()) {
-                if (!JUtils.canAct(user)) {
-                    return false;
-                }
+        if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
 
-                List<HGNetEntity> nets = level().getEntitiesOfClass(HGNetEntity.class,
-                        getBoundingBox().inflate(64), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+        if (moveClass != MoveClass.SPECIAL1 || !user.isShiftKeyDown()) {
+            return super.initMove(moveClass);
+        }
 
-                final LivingEntity shooter = isRemote() ? this : user;
+        if (!JUtils.canAct(user)) {
+            return false;
+        }
 
-                final Vec3 heightOffset = GravityChangerAPI.getEyeOffset(shooter).scale(0.5);
-                final Vec3 eyePos = shooter.position().add(heightOffset);
+        List<HGNetEntity> nets = level().getEntitiesOfClass(HGNetEntity.class,
+                getBoundingBox().inflate(64), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
-                if (!nets.isEmpty()) {
-                    final Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
-                            (entity -> !(entity instanceof IOwnable ownable) || ownable.getMaster() != user)).getLocation();
+        final LivingEntity shooter = isRemote() ? this : user;
 
-                    for (HGNetEntity net : nets) {
-                        if (net.getMaster() != user) {
-                            continue;
-                        }
-                        net.tryFireAt(pos, false);
-                    }
-                }
-            } else {
-                return super.initMove(moveClass);
+        final Vec3 heightOffset = GravityChangerAPI.getEyeOffset(shooter).scale(0.5);
+        final Vec3 eyePos = shooter.position().add(heightOffset);
+
+        if (nets.isEmpty()) return true;
+
+        final Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
+                (entity -> !(entity instanceof IOwnable ownable) || ownable.getMaster() != user)).getLocation();
+
+        for (HGNetEntity net : nets) {
+            if (net.getMaster() != user) {
+                continue;
             }
+            net.tryFireAt(pos, false);
         }
 
         return true;

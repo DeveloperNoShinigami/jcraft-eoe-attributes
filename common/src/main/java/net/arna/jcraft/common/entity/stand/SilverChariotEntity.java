@@ -334,7 +334,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(HAS_RAPIER, true);
-        entityData.define(MODE, 1);
+        entityData.define(MODE, Mode.REGULAR.ordinal());
     }
 
     @Override

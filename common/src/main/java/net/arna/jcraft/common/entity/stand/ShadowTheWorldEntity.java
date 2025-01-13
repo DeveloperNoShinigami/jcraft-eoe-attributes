@@ -108,7 +108,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                     Component.literal("3 Hit Combo"),
                     Component.literal("knocks down")
             );
-    public static final ImpalingThrustAttack IMPALING_THRUST_HIT = new ImpalingThrustAttack(0, 0, 10, 0.8f);
+    public static final ImpalingThrustAttack IMPALING_THRUST_HIT = new ImpalingThrustAttack(0, 1, 11, 0.8f);
     public static final SimpleHoldableMove<ShadowTheWorldEntity> IMPALING_THRUST = new SimpleHoldableMove<ShadowTheWorldEntity>(200,
             61, 60, 0.75f, 10)
             .withFollowup(IMPALING_THRUST_HIT)
