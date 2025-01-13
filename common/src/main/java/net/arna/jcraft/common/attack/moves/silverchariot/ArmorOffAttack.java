@@ -39,7 +39,7 @@ public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, S
         tickArmor(attacker);
     }
 
-    public void tickArmor(final SilverChariotEntity stand) {
+    private static void tickArmor(final SilverChariotEntity stand) {
         if (stand.getMode() != SilverChariotEntity.Mode.ARMORLESS) {
             return;
         }

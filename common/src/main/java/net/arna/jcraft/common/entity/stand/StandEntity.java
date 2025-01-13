@@ -620,7 +620,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     public void onSyncedDataUpdated(@NotNull EntityDataAccessor<?> key) {
         super.onSyncedDataUpdated(key);
 
-        if (key != MOVE_SET || !level().isClientSide()) return;
+        if (!MOVE_SET.equals(key) || !level().isClientSide()) return;
         // Update move set on client when it changes
         switchMoveSet(entityData.get(MOVE_SET));
     }
@@ -982,7 +982,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             playSummonAnim = false;
         }
 
-        moveMap.tickMoves(getThis());
+        if (!level().isClientSide())
+            moveMap.tickMoves(getThis());
 
         final boolean isFree = isFree();
         final boolean isRemote = isRemote();

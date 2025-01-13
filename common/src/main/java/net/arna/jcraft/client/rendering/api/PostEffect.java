@@ -37,21 +37,17 @@ public class PostEffect implements DisplayResizeCallback {
     }
 
     public static void initAll() {
-        // Copy is to prevent conc mod error when doing F3+T.
-        Set<PostEffect> copy = new HashSet<>(INSTANCES);
-        copy.forEach(effect -> {
+        INSTANCES.forEach(effect -> {
             try {
                 effect.initialize();
             } catch (IOException e) {
                 JCraft.LOGGER.error("Failed to initialize post effect {}", effect.getLocation(), e);
             }
         });
-        INSTANCES.clear();
-        INSTANCES.addAll(copy);
     }
 
     public void initialize() throws IOException {
-        release(); // Release the old shader if it exists
+        release(false); // Release the old shader if it exists
 
         Minecraft mc = Minecraft.getInstance();
         postChain = new PostChain(mc.getTextureManager(), mc.getResourceManager(), mc.getMainRenderTarget(), location);
@@ -84,12 +80,16 @@ public class PostEffect implements DisplayResizeCallback {
     }
 
     public void release() {
+        release(true);
+    }
+
+    private void release(boolean remove) {
         if (!this.isInitialized()) return;
 
         postChain.close();
         postChain = null;
 
-        INSTANCES.remove(this);
+        if (remove) INSTANCES.remove(this);
         DisplayResizeCallback.EVENT.unregister(this);
     }
 
