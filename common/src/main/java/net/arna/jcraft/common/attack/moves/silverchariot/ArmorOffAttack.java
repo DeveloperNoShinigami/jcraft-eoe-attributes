@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.silverchariot;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
@@ -11,8 +14,14 @@ import java.util.Set;
 public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, SilverChariotEntity> {
     public static final IntMoveVariable ARMOR_TIME = new IntMoveVariable();
 
-    public ArmorOffAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
+    public ArmorOffAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
+                          final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
+    }
+
+    @Override
+    public @NonNull MoveType<ArmorOffAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -25,7 +34,12 @@ public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, S
         return targets;
     }
 
-    public void tickArmor(final SilverChariotEntity stand) {
+    @Override
+    public void tick(final SilverChariotEntity attacker) {
+        tickArmor(attacker);
+    }
+
+    private static void tickArmor(final SilverChariotEntity stand) {
         if (stand.getMode() != SilverChariotEntity.Mode.ARMORLESS) {
             return;
         }
@@ -39,7 +53,7 @@ public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, S
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(ARMOR_TIME);
     }
 
@@ -52,5 +66,14 @@ public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, S
     public @NonNull ArmorOffAttack copy() {
         return copyExtras(new ArmorOffAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<ArmorOffAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<ArmorOffAttack>, ArmorOffAttack> buildCodec(RecordCodecBuilder.Instance<ArmorOffAttack> instance) {
+            return attackDefault(instance, ArmorOffAttack::new);
+        }
     }
 }

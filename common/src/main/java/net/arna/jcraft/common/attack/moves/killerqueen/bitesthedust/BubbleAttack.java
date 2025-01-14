@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
@@ -9,6 +12,8 @@ import net.arna.jcraft.common.entity.stand.KQBTDEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 public final class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> {
@@ -17,6 +22,11 @@ public final class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> 
     public BubbleAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
+    }
+
+    @Override
+    public @NotNull MoveType<BubbleAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -42,7 +52,7 @@ public final class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> 
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(BUBBLE_PROJECTILE);
     }
 
@@ -54,5 +64,14 @@ public final class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> 
     @Override
     public @NonNull BubbleAttack copy() {
         return copyExtras(new BubbleAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<BubbleAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<BubbleAttack>, BubbleAttack> buildCodec(RecordCodecBuilder.Instance<BubbleAttack> instance) {
+            return baseDefault(instance, BubbleAttack::new);
+        }
     }
 }

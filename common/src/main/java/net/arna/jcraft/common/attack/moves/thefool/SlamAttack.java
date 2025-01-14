@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.thefool;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
@@ -16,6 +19,21 @@ public final class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEn
     public SlamAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
                       final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
+    }
+
+    @Override
+    public @NonNull MoveType<SlamAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
+    public void activeTick(TheFoolEntity attacker, int moveStun) {
+        super.activeTick(attacker, moveStun);
+
+        int slamType = attacker.getMoveContext().getInt(SlamAttack.VARIANT);
+        if (slamType != 1) {
+            attacker.setQueuedMove(null);
+        }
     }
 
     @Override
@@ -49,7 +67,7 @@ public final class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEn
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(VARIANT);
     }
 
@@ -62,5 +80,14 @@ public final class SlamAttack extends AbstractSimpleAttack<SlamAttack, TheFoolEn
     public @NonNull SlamAttack copy() {
         return copyExtras(new SlamAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<SlamAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SlamAttack>, SlamAttack> buildCodec(RecordCodecBuilder.Instance<SlamAttack> instance) {
+            return attackDefault(instance, SlamAttack::new);
+        }
     }
 }

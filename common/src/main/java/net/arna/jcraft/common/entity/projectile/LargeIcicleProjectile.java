@@ -38,6 +38,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Set;
 
 public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
+    public static final BlockParticleOption ICE_PARTICLE = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.ICE.defaultBlockState());
     private int ticksInAir;
     private LivingEntity livingOwner;
     private boolean projectile = false;
@@ -96,8 +97,6 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
         if (lockVelocity) return;
         super.setDeltaMovement(deltaMovement);
     }
-
-    public static final BlockParticleOption ICE_PARTICLE = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.ICE.defaultBlockState());
 
     @Override
     public void tick() {
@@ -287,9 +286,7 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     private boolean cantAttack(LivingEntity living) {
         if (living == livingOwner)
             return true;
-        if (livingOwner != null && JComponentPlatformUtils.getStandData(livingOwner).getStand() == living)
-            return true;
-        return false;
+        return livingOwner != null && JComponentPlatformUtils.getStandData(livingOwner).getStand() == living;
     }
 
     @Override

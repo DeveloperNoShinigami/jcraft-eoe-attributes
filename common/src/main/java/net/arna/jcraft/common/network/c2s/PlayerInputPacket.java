@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.events.JServerPlayerInputEvent;
@@ -311,7 +311,7 @@ public class PlayerInputPacket {
                     } else {
                         StandEntity<?, ?> stand2 = JCraft.summon(world, player);
                         if (stand2 != null) {
-                            s = stand2.initMove(MoveType.UTILITY);
+                            s = stand2.initMove(MoveClass.UTILITY);
                         } else {
                             s = false;
                         }
@@ -336,7 +336,7 @@ public class PlayerInputPacket {
                 return false;
             }
 
-            if (spec.initMove(type.getMoveType())) {
+            if (spec.initMove(type.getMoveClass())) {
                 return true;
             }
             if (spec.moveStun > 0 && spec.moveStun < SPEC_QUEUE_MOVESTUN_LIMIT) {
@@ -351,7 +351,7 @@ public class PlayerInputPacket {
         if (!stand.blocking) {
             int moveStun = stand.getMoveStun();
 
-            if (stand.initMove(type.getMoveType())) {
+            if (stand.initMove(type.getMoveClass())) {
                 return true;
             }
             if (moveStun > 0 && moveStun < QUEUE_MOVESTUN_LIMIT) {

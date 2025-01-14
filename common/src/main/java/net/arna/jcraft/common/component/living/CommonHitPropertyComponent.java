@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.component.living;
 
+import com.mojang.serialization.Codec;
 import net.arna.jcraft.common.component.JComponent;
+import net.arna.jcraft.common.util.JCodecUtils;
 import net.minecraft.world.phys.Vec3;
 
 public interface CommonHitPropertyComponent extends JComponent {
@@ -19,6 +21,8 @@ public interface CommonHitPropertyComponent extends JComponent {
         LOW,
         CRUSH,
         LAUNCH,
-        ROLL
+        ROLL;
+
+        public static final Codec<HitAnimation> CODEC = JCodecUtils.createEnumCodec(HitAnimation.class);
     }
 }

@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.thefool;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.SandTornadoEntity;
@@ -13,6 +16,11 @@ public final class SandTornadoMove extends AbstractMove<SandTornadoMove, TheFool
     public SandTornadoMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
+    }
+
+    @Override
+    public @NonNull MoveType<SandTornadoMove> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -33,5 +41,14 @@ public final class SandTornadoMove extends AbstractMove<SandTornadoMove, TheFool
     @Override
     public @NonNull SandTornadoMove copy() {
         return copyExtras(new SandTornadoMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<SandTornadoMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SandTornadoMove>, SandTornadoMove> buildCodec(RecordCodecBuilder.Instance<SandTornadoMove> instance) {
+            return baseDefault(instance, SandTornadoMove::new);
+        }
     }
 }

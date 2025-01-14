@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.theworld.overheaven;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
@@ -17,6 +20,11 @@ public final class AerialDivineFinisherAttack extends AbstractSimpleAttack<Aeria
                                       final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         ranged = true;
+    }
+
+    @Override
+    public @NonNull MoveType<AerialDivineFinisherAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -50,5 +58,14 @@ public final class AerialDivineFinisherAttack extends AbstractSimpleAttack<Aeria
     public @NonNull AerialDivineFinisherAttack copy() {
         return copyExtras(new AerialDivineFinisherAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(),
                 getDamage(), getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<AerialDivineFinisherAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<AerialDivineFinisherAttack>, AerialDivineFinisherAttack> buildCodec(RecordCodecBuilder.Instance<AerialDivineFinisherAttack> instance) {
+            return attackDefault(instance, AerialDivineFinisherAttack::new);
+        }
     }
 }

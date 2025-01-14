@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
@@ -149,11 +150,8 @@ public final class JCraft {
         PARTICLES.register();
 
         ENTITY_TYPE_REGISTRY.register();
-
         BLOCK_REGISTRY.register();
-
         ITEM_REGISTRY.register();
-
         BLOCK_ENTITY_TYPE_REGISTRY.register();
 
         JTagRegistry.init();
@@ -194,6 +192,8 @@ public final class JCraft {
         MoveTickQueue.registerMoveTickQueue();
 
         GravityChannel.registerReceivers();
+
+        MoveSetLoader.init();
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);

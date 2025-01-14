@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.util;
 
+import com.mojang.serialization.Codec;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
 
@@ -27,6 +28,8 @@ public enum CooldownType {
     COMBO_BREAKER(Category.UNIVERSAL, 1200, true, true),  // 60s
     COOLDOWN_CANCEL(Category.UNIVERSAL, 900, true, true), // 45s
     DASH(Category.UNIVERSAL, JCraft.DASH_COOLDOWN, true, true);
+
+    public static final Codec<CooldownType> CODEC = JCodecUtils.createEnumCodec(CooldownType.class);
 
     private final Category category;
     private final int duration;

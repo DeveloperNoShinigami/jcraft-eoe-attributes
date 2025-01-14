@@ -3,6 +3,8 @@ package net.arna.jcraft.common.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import lombok.SneakyThrows;
 import lombok.Synchronized;
 import net.arna.jcraft.JCraft;
@@ -16,6 +18,20 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 public class JServerConfig {
+    public static final Codec<IntOption> INT_OPTION_CODEC = Codec.STRING.comapFlatMap(
+            DataResult.partialGet(s -> (IntOption) ConfigOption.getOption(s, ConfigOption.Type.INTEGER), () -> "Unknown option: "),
+            ConfigOption::getKey);
+    public static final Codec<FloatOption> FLOAT_OPTION_CODEC = Codec.STRING.comapFlatMap(
+            DataResult.partialGet(s -> (FloatOption) ConfigOption.getOption(s, ConfigOption.Type.FLOAT), () -> "Unknown option: "),
+            ConfigOption::getKey);
+    public static final Codec<BooleanOption> BOOLEAN_OPTION_CODEC = Codec.STRING.comapFlatMap(
+            DataResult.partialGet(s -> (BooleanOption) ConfigOption.getOption(s, ConfigOption.Type.BOOLEAN), () -> "Unknown option: "),
+            ConfigOption::getKey);
+    public static final Codec<EnumOption<?>> ENUM_OPTION_CODEC = Codec.STRING.comapFlatMap(
+            DataResult.partialGet(s -> (EnumOption<?>) ConfigOption.getOption(s, ConfigOption.Type.ENUM), () -> "Unknown option: "),
+            ConfigOption::getKey);
+
+
     // TODO fix the default values
     // Balance options
     private static final String BALANCE = "balance";
@@ -102,6 +118,7 @@ public class JServerConfig {
         try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE,
                 StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
             gson.toJson(data, writer);
+            writer.flush();
         }
     }
 }

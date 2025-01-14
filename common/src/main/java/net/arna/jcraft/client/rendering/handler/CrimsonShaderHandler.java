@@ -1,9 +1,6 @@
 package net.arna.jcraft.client.rendering.handler;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.architectury.event.events.client.ClientTickEvent;
-import ladysnake.satin.api.event.PostWorldRenderCallbackV2;
-import ladysnake.satin.api.event.ShaderEffectRenderCallback;
 import lombok.NonNull;
 import net.arna.jcraft.client.rendering.skybox.CrimsonSkyBoxCool;
 import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
@@ -23,7 +20,6 @@ import java.util.List;
 
 public class CrimsonShaderHandler extends StandShaderHandler {
     public static final CrimsonShaderHandler INSTANCE = new CrimsonShaderHandler();
-
     public long effectLength = 0;
     public List<BlockInfo> list = new ArrayList<>();
 
@@ -31,34 +27,29 @@ public class CrimsonShaderHandler extends StandShaderHandler {
     public void onWorldRendered(final @NonNull PoseStack matrices, final @NonNull Camera camera, final float tickDelta, final long nanoTime) {
         if (renderingEffect) {
             final Level world = camera.getEntity().level();
-            if(list.isEmpty()){
+            if (list.isEmpty()) {
                 list = JUtils.collectBlockInfo(world, camera.getBlockPosition(), 8);
             }
             final BlockRenderDispatcher manager = Minecraft.getInstance().getBlockRenderer();
 
 
             final MultiBufferSource.BufferSource consumer = Minecraft.getInstance().renderBuffers().bufferSource();
-            for (final BlockInfo info : list){
-
-
+            for (final BlockInfo info : list) {
                 matrices.pushPose();
-                matrices.translate(info.pos().getX() - camera.getPosition().x, info.pos().getY() - camera.getPosition().y, info.pos().getZ() - camera.getPosition().z);
+                matrices.translate(info.pos().getX() - camera.getPosition().x,
+                        info.pos().getY() - camera.getPosition().y,
+                        info.pos().getZ() - camera.getPosition().z);
 
                 manager.getModelRenderer().tesselateBlock(
-                        world,
-                        manager.getBlockModel(info.state()),
-                        info.state(),
-                        info.pos(),
-                        matrices,
+                        world, manager.getBlockModel(info.state()),
+                        info.state(), info.pos(), matrices,
                         consumer.getBuffer(ItemBlockRenderTypes.getChunkRenderType(info.state())),
-                        true,
-                        RandomSource.create(),
-                        info.state().getSeed(info.pos()),
+                        true, RandomSource.create(), info.state().getSeed(info.pos()),
                         OverlayTexture.NO_OVERLAY
                 );
+
                 matrices.popPose();
             }
-
         }
     }
 
@@ -95,13 +86,7 @@ public class CrimsonShaderHandler extends StandShaderHandler {
     }
 
     @Override
-    public void renderShaderEffects(final float tickDelta) {
-
-    }
-
-    public void init() {
-        PostWorldRenderCallbackV2.EVENT.register(this);
-        ClientTickEvent.CLIENT_POST.register(this);
-        ShaderEffectRenderCallback.EVENT.register(this);
+    public void renderEffect(float tickDelta) {
+        // NO-OP
     }
 }

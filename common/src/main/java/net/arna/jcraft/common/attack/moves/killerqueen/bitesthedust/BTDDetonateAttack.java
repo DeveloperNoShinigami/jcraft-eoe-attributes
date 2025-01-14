@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.AbstractKillerQueenEntity;
@@ -14,12 +17,19 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Set;
 
 public final class BTDDetonateAttack extends AbstractMove<BTDDetonateAttack, AbstractKillerQueenEntity<?, ?>> {
     public BTDDetonateAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public @NotNull MoveType<BTDDetonateAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -65,5 +75,14 @@ public final class BTDDetonateAttack extends AbstractMove<BTDDetonateAttack, Abs
     @Override
     public @NonNull BTDDetonateAttack copy() {
         return copyExtras(new BTDDetonateAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<BTDDetonateAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<BTDDetonateAttack>, BTDDetonateAttack> buildCodec(RecordCodecBuilder.Instance<BTDDetonateAttack> instance) {
+            return baseDefault(instance, BTDDetonateAttack::new);
+        }
     }
 }

@@ -1,9 +1,12 @@
 package net.arna.jcraft.common.attack.moves.silverchariot;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
-import net.arna.jcraft.common.attack.MobilityType;
+import net.arna.jcraft.common.attack.core.MobilityType;
 import net.minecraft.world.entity.LivingEntity;
 
 public final class RayDartAttack extends AbstractSimpleAttack<RayDartAttack, SilverChariotEntity> {
@@ -12,6 +15,11 @@ public final class RayDartAttack extends AbstractSimpleAttack<RayDartAttack, Sil
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         ranged = true;
         mobilityType = MobilityType.DASH;
+    }
+
+    @Override
+    public @NonNull MoveType<RayDartAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -34,5 +42,14 @@ public final class RayDartAttack extends AbstractSimpleAttack<RayDartAttack, Sil
     public @NonNull RayDartAttack copy() {
         return copyExtras(new RayDartAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<RayDartAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<RayDartAttack>, RayDartAttack> buildCodec(RecordCodecBuilder.Instance<RayDartAttack> instance) {
+            return attackDefault(instance, RayDartAttack::new);
+        }
     }
 }

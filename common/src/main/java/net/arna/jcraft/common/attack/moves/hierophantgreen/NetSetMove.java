@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.hierophantgreen;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.HGNetEntity;
@@ -9,12 +12,18 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.Gravity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
 public final class NetSetMove extends AbstractMove<NetSetMove, HGEntity> {
-    public NetSetMove(final int cooldown, final int windup, final int duration, final float attackDistance) {
-        super(cooldown, windup, duration, attackDistance);
+    public NetSetMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
+        super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public @NotNull MoveType<NetSetMove> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -48,5 +57,14 @@ public final class NetSetMove extends AbstractMove<NetSetMove, HGEntity> {
     @Override
     public @NonNull NetSetMove copy() {
         return copyExtras(new NetSetMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<NetSetMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<NetSetMove>, NetSetMove> buildCodec(RecordCodecBuilder.Instance<NetSetMove> instance) {
+            return baseDefault(instance, NetSetMove::new);
+        }
     }
 }

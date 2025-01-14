@@ -27,6 +27,7 @@ classes/
 *.ipr
 *.iws
 !.idea/icon.png
+!.idea/fileTemplates
 
 # vscode
 

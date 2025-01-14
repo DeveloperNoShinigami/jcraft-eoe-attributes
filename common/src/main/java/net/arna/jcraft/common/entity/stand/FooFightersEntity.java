@@ -3,6 +3,7 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import net.arna.jcraft.common.attack.core.MoveMap;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -14,9 +15,15 @@ import org.jetbrains.annotations.Nullable;
  * @see net.arna.jcraft.client.renderer.entity.stands.FooFightersRenderer FooFightersRenderer
  */
 public class FooFightersEntity extends StandEntity<FooFightersEntity, FooFightersEntity.State> {
+    public static final MoveSet<FooFightersEntity, State> MOVE_SET = MoveSet.create(StandType.FOO_FIGHTERS,
+            FooFightersEntity::registerMoves, State.class);
 
     public FooFightersEntity(Level world) {
         super(StandType.FOO_FIGHTERS, world);
+    }
+
+    private static void registerMoves(MoveMap<FooFightersEntity, State> moves) {
+        // TODO Arna
     }
 
     public enum State implements StandAnimationState<FooFightersEntity> {
@@ -24,7 +31,7 @@ public class FooFightersEntity extends StandEntity<FooFightersEntity, FooFighter
         BLOCK;
 
         @Override
-        public void playAnimation(FooFightersEntity attacker, AnimationState state) {
+        public void playAnimation(FooFightersEntity attacker, AnimationState<FooFightersEntity> state) {
             // TODO Arna
         }
     }
@@ -47,10 +54,5 @@ public class FooFightersEntity extends StandEntity<FooFightersEntity, FooFighter
     @Override
     public State getBlockState() {
         return State.BLOCK;
-    }
-
-    @Override
-    protected void registerMoves(MoveMap<FooFightersEntity, State> moves) {
-        // TODO Arna
     }
 }

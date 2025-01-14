@@ -3,12 +3,11 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.common.attack.actions.PlaySoundAction;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.killerqueen.CoinTossAttack;
-import net.arna.jcraft.common.attack.moves.killerqueen.KQGrabAttack;
-import net.arna.jcraft.common.attack.moves.killerqueen.KQGrabHitAttack;
-import net.arna.jcraft.common.attack.moves.killerqueen.SheerHeartAttackAttack;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.common.attack.moves.killerqueen.*;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -25,20 +24,23 @@ import java.util.function.Consumer;
  * @see net.arna.jcraft.client.model.entity.stand.KillerQueenModel KillerQueenModel
  * @see net.arna.jcraft.client.renderer.entity.stands.KillerQueenRenderer KillerQueenRenderer
  * @see net.arna.jcraft.common.attack.moves.killerqueen.BombPlantAttack BombPlantAttack
- * @see CoinTossAttack
- * @see net.arna.jcraft.common.attack.moves.killerqueen.DetonateAttack DetonateAttack
+ * @see CoinTossMove
+ * @see KQDetonateAttack DetonateAttack
  * @see net.arna.jcraft.common.attack.moves.killerqueen.ExplosiveDashAttack ExplosiveDashAttack
  * @see KQGrabAttack
  * @see KQGrabAttack
  * @see SheerHeartAttackAttack
  */
 public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQueenEntity, KillerQueenEntity.State> {
+    public static final MoveSet<KillerQueenEntity, State> MOVE_SET = MoveSet.create(StandType.KILLER_QUEEN,
+            KillerQueenEntity::registerMoves, State.class);
+
     public static final SimpleAttack<KillerQueenEntity> HEAVY = new SimpleAttack<KillerQueenEntity>(
             200, 16, 24, 0.75f, 9f, 10, 2f, 1.75f, 0f)
             .withHitSpark(JParticleType.HIT_SPARK_3)
-            .withSound(JSoundRegistry.KQ_UPPERCUT.get())
-            .withSound(JSoundRegistry.KQ_HEAVY.get())
-            .withImpactSound(JSoundRegistry.IMPACT_4.get())
+            .withSound(JSoundRegistry.KQ_UPPERCUT)
+            .withSound(JSoundRegistry.KQ_HEAVY)
+            .withImpactSound(JSoundRegistry.IMPACT_4)
             .withHyperArmor()
             .withLaunch()
             .withInfo(
@@ -57,12 +59,12 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
                     Component.empty()
             );
     public static final KQGrabAttack GRAB = new KQGrabAttack(300, 12, 20, 0.75f,
-            0f, 20, 1.75f, 0.1f, 0f, GRAB_HIT, State.GRAB_HIT)
+            0f, 20, 1.75f, 0.1f, 0f, GRAB_HIT)
             .withInfo(
                     Component.literal("Grab"),
                     Component.literal("grabs opponent by the face, then detonates them, launching them upwards")
             );
-    public static final CoinTossAttack COIN_TOSS = new CoinTossAttack(240);
+    public static final CoinTossMove COIN_TOSS = new CoinTossMove(240);
 
     // Light chain implementation
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LOW = AbstractKillerQueenEntity.LOW.copy().withAnim(KQBTDEntity.State.LOW);
@@ -80,30 +82,29 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
         };
     }
 
-    @Override
-    protected void registerMoves(MoveMap<KillerQueenEntity, State> moves) {
-        super.registerMoves(moves);
+    private static void registerMoves(MoveMap<KillerQueenEntity, State> moves) {
+        moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
+        moves.register(MoveClass.UTILITY, EXPLOSIVE_DASH); // No special state for this one.
 
-        // Barrage and util are registered by the super class.
-        moves.registerImmediate(MoveType.LIGHT, LIGHT, getLightState());
+        moves.registerImmediate(MoveClass.LIGHT, LIGHT, State.LIGHT);
 
-        moves.register(MoveType.HEAVY, HEAVY, State.HEAVY);
-        moves.register(MoveType.SPECIAL1, BOMB_PLANT, State.BOMB_PLANT);
-        moves.register(MoveType.SPECIAL2, GRAB, State.GRAB);
-        moves.register(MoveType.SPECIAL3, COIN_TOSS); // No special state
-        moves.register(MoveType.ULTIMATE, SHEER_HEART_ATTACK, State.SHA);
+        moves.register(MoveClass.HEAVY, HEAVY, State.HEAVY);
+        moves.register(MoveClass.SPECIAL1, BOMB_PLANT, State.BOMB_PLANT);
+        moves.register(MoveClass.SPECIAL2, GRAB, State.GRAB);
+        moves.register(MoveClass.SPECIAL3, COIN_TOSS); // No special state
+        moves.register(MoveClass.ULTIMATE, SHEER_HEART_ATTACK, State.SHA);
     }
 
     // Move-set
     @Override
-    public boolean initMove(MoveType type) {
-        if (type == MoveType.SPECIAL1) {
+    public boolean initMove(MoveClass moveClass) {
+        if (moveClass == MoveClass.SPECIAL1) {
             if (coin != null) {
                 coin.discard();
             }
         }
 
-        return super.initMove(type);
+        return super.initMove(moveClass);
     }
 
     @Override
@@ -153,16 +154,6 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
     @Override
     public State getBlockState() {
         return State.BLOCK;
-    }
-
-    @Override
-    protected State getLightState() {
-        return State.LIGHT;
-    }
-
-    @Override
-    protected State getBarrageState() {
-        return State.BARRAGE;
     }
 
     @Override

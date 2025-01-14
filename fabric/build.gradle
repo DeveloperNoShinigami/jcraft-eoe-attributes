@@ -78,9 +78,6 @@ dependencies {
     //Modmenu
     modApi "com.terraformersmc:modmenu:7.2.2"
 
-    //Satin
-    include modImplementation("org.ladysnake:satin-fabric-${satin_version}")
-
     //modImplementation "com.fusionflux:gravity_api-fabric-${gravity_api_version}"
 
     modRuntimeOnly "com.ptsmods:devlogin:3.5"

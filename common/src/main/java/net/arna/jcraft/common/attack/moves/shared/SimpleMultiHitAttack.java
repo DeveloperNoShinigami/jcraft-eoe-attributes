@@ -1,8 +1,11 @@
 package net.arna.jcraft.common.attack.moves.shared;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 
 /**
@@ -34,6 +37,11 @@ public final class SimpleMultiHitAttack<A extends IAttacker<? extends A, ?>> ext
     }
 
     @Override
+    public @NonNull MoveType<SimpleMultiHitAttack<A>> getMoveType() {
+        return Type.INSTANCE.cast();
+    }
+
+    @Override
     protected @NonNull SimpleMultiHitAttack<A> getThis() {
         return this;
     }
@@ -42,5 +50,14 @@ public final class SimpleMultiHitAttack<A extends IAttacker<? extends A, ?>> ext
     public @NonNull SimpleMultiHitAttack<A> copy() {
         return copyExtras(new SimpleMultiHitAttack<>(getCooldown(), getDuration(), getMoveDistance(), getDamage(), getStun(), getHitboxSize(),
                 getKnockback(), getOffset(), getHitMoments()));
+    }
+
+    public static class Type extends AbstractMultiHitAttack.Type<SimpleMultiHitAttack<?>> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SimpleMultiHitAttack<?>>, SimpleMultiHitAttack<?>> buildCodec(RecordCodecBuilder.Instance<SimpleMultiHitAttack<?>> instance) {
+            return multiHitDefault(instance, SimpleMultiHitAttack::new);
+        }
     }
 }

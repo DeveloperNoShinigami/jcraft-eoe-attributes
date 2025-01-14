@@ -3,6 +3,7 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import net.arna.jcraft.common.attack.core.MoveMap;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -14,9 +15,15 @@ import org.jetbrains.annotations.Nullable;
  * @see net.arna.jcraft.client.renderer.entity.stands.DragonsDreamRenderer DragonsDreamRenderer
  */
 public class DragonsDreamEntity extends StandEntity<DragonsDreamEntity, DragonsDreamEntity.State> {
+    public static final MoveSet<DragonsDreamEntity, State> MOVE_SET = MoveSet.create(StandType.DRAGONS_DREAM,
+            DragonsDreamEntity::registerMoves, State.class);
 
     public DragonsDreamEntity(Level world) {
         super(StandType.DRAGONS_DREAM, world);
+    }
+
+    private static void registerMoves(MoveMap<DragonsDreamEntity, State> moves) {
+        // TODO Arna
     }
 
     public enum State implements StandAnimationState<DragonsDreamEntity> {
@@ -24,7 +31,7 @@ public class DragonsDreamEntity extends StandEntity<DragonsDreamEntity, DragonsD
         BLOCK;
 
         @Override
-        public void playAnimation(DragonsDreamEntity attacker, AnimationState state) {
+        public void playAnimation(DragonsDreamEntity attacker, AnimationState<DragonsDreamEntity> state) {
             // TODO Arna
         }
     }
@@ -47,10 +54,5 @@ public class DragonsDreamEntity extends StandEntity<DragonsDreamEntity, DragonsD
     @Override
     public State getBlockState() {
         return State.BLOCK;
-    }
-
-    @Override
-    protected void registerMoves(MoveMap<DragonsDreamEntity, State> moves) {
-        // TODO Arna
     }
 }

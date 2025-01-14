@@ -3,6 +3,7 @@ package net.arna.jcraft.common.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -27,14 +28,19 @@ public class SetSpecCommand {
     }
 
     public static int run(final CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        final SpecType specType = context.getArgument("spec", SpecType.class);
-        final Collection<? extends Player> targets = EntityArgument.getPlayers(context, "players");
+        try {
+            final SpecType specType = context.getArgument("spec", SpecType.class);
+            final Collection<? extends Player> targets = EntityArgument.getPlayers(context, "players");
 
-        if (targets.isEmpty()) {
+            if (targets.isEmpty()) {
+                return 0;
+            }
+            for (Player player : targets) {
+                JComponentPlatformUtils.getSpecData(player).setType(specType);
+            }
+        } catch (Exception e) {
+            JCraft.LOGGER.error("Failed to set spec", e);
             return 0;
-        }
-        for (Player player : targets) {
-            JComponentPlatformUtils.getSpecData(player).setType(specType);
         }
 
         return 1;

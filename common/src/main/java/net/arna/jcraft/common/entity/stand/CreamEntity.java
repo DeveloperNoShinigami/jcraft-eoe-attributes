@@ -7,21 +7,14 @@ import lombok.Setter;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.core.BlockableType;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.cream.BallChargeAttack;
-import net.arna.jcraft.common.attack.moves.cream.BallModeMove;
-import net.arna.jcraft.common.attack.moves.cream.ConsumeAttack;
-import net.arna.jcraft.common.attack.moves.cream.CreamComboAttack;
-import net.arna.jcraft.common.attack.moves.cream.DestroyAttack;
-import net.arna.jcraft.common.attack.moves.cream.SurpriseMove;
-import net.arna.jcraft.common.attack.moves.shared.ChargeBarrageAttack;
-import net.arna.jcraft.common.attack.moves.shared.EffectInflictingAttack;
-import net.arna.jcraft.common.attack.moves.shared.GrabAttack;
-import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
-import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.common.attack.core.data.StateContainer;
+import net.arna.jcraft.common.attack.moves.cream.*;
+import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
@@ -51,7 +44,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
@@ -59,25 +51,29 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static net.arna.jcraft.common.attack.moves.cream.SurpriseMove.OUT_DIR;
-import static net.arna.jcraft.common.attack.moves.cream.SurpriseMove.OUT_POS;
-
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Cream">Cream</a>.
  * @see StandType#CREAM
  * @see net.arna.jcraft.client.model.entity.stand.CreamModel CreamModel
  * @see net.arna.jcraft.client.renderer.entity.stands.CreamRenderer CreamRenderer
  * @see BallChargeAttack
- * @see BallModeMove
+ * @see BallModeExitMove
  * @see ConsumeAttack
  * @see CreamComboAttack
  * @see DestroyAttack
- * @see SurpriseMove
+ * @see AbstractSurpriseMove
  */
+@Getter
+@SuppressWarnings("LombokSetterMayBeUsed") // no
 public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
-    public static final EffectInflictingAttack<CreamEntity> BITE = new EffectInflictingAttack<CreamEntity>(20,
-            7, 13, 0.75f, 6f, 20, 1.75f, 0.75f, 0.3f,
-            List.of(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 1)))
+    public static final MoveSet<CreamEntity, CreamEntity.State> DEFAULT_MOVE_SET = MoveSet.create(StandType.CREAM,
+            CreamEntity::registerDefaultMoves, State.class);
+    public static final MoveSet<CreamEntity, CreamEntity.State> HALF_BALL_MOVE_SET = MoveSet.create(StandType.CREAM,
+            "half_ball", CreamEntity::registerHalfBallMoves, State.class);
+
+    public static final SimpleAttack<CreamEntity> BITE = new SimpleAttack<CreamEntity>(20,
+            7, 13, 0.75f, 6f, 20, 1.75f, 0.75f, 0.3f)
+            .withAction(EffectAction.inflict(MobEffects.MOVEMENT_SLOWDOWN, 40, 1))
             .withAnim(State.BITE)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withSound(SoundEvents.EVOKER_FANGS_ATTACK)
@@ -88,7 +84,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     public static final SimpleAttack<CreamEntity> LIGHT_FOLLOWUP = new SimpleAttack<CreamEntity>(
             0, 7, 14, 0.75f, 6f, 8, 1.75f, 1.1f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withLaunch()
             .withBlockStun(4)
             .withExtraHitBox(0, 0.25, 1)
@@ -100,14 +96,14 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                     0.75f, 5f, 20, 0.3f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(BITE)
-            .withImpactSound(JSoundRegistry.IMPACT_4.get())
+            .withImpactSound(JSoundRegistry.IMPACT_4)
             .withInfo(
                     Component.literal("Backhand"),
                     Component.literal("quick combo starter"));
     public static final SimpleAttack<CreamEntity> VERTICAL_CHOP = new SimpleAttack<CreamEntity>(200, 20,
             30, 1f, 8f, 40, 1.5f, 0.8f, 0f)
-            .withSound(JSoundRegistry.CREAM_HEAVY.get())
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withSound(JSoundRegistry.CREAM_HEAVY)
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHyperArmor()
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
@@ -116,44 +112,28 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                     Component.literal("slow, uninterruptible combo starter"));
     public static final CreamComboAttack COMBO = new CreamComboAttack(280, 36, 0.75f,
             5f, 20, 2f, 0.2f, 0f, IntSet.of(10, 17, 25))
-            .withSound(JSoundRegistry.CREAM_COMBO.get())
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withSound(JSoundRegistry.CREAM_COMBO)
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Component.literal("Assault"),
                     Component.literal("medium windup, good stun"));
     public static final SimpleAttack<CreamEntity> GRAB_HIT = new SimpleAttack<CreamEntity>(0, 13, 20,
             1f, 6f, 5, 2f, 1.5f, 0f)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Component.literal("Grab (Hit)"),
                     Component.empty());
     public static final GrabAttack<CreamEntity, State> GRAB = new GrabAttack<>(320, 8, 20,
-            1f, 3f, 30, 1.5f, 0f, 0f, GRAB_HIT, State.GRAB_HIT)
-            .withSound(JSoundRegistry.CREAM_GRAB.get())
+            1f, 3f, 30, 1.5f, 0f, 0f, GRAB_HIT, StateContainer.of(State.GRAB_HIT))
+            .withSound(JSoundRegistry.CREAM_GRAB)
             .withInfo(
                     Component.literal("Grab"),
                     Component.literal("unblockable, knocks back"));
     public static final SurpriseMove SURPRISE = new SurpriseMove(300, 14, 24, 1f)
-            .withSound(JSoundRegistry.CREAM_SUMMON.get())
-            .withInitAction((attacker, user, ctx) -> {
-                Vec3 rotVec = user.getLookAngle();
-                if (user.isShiftKeyDown()) {
-                    attacker.getMoveContext().set(OUT_POS, user.position().add(rotVec).toVector3f());
-                } else {
-                    final Vec3 eyePos = user.getEyePosition();
-                    HitResult hitResult = attacker.level().clip(new ClipContext(eyePos, eyePos.add(rotVec.scale(16)),
-                            ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
-                    attacker.getMoveContext().set(OUT_POS, hitResult.getLocation().toVector3f());
-                }
-            })
-            .withAction((attacker, user, ctx, targets) -> {
-                final Vector3f outDir = GravityChangerAPI.getGravityDirection(attacker).step();
-                outDir.mul(-1f);
-                ctx.set(OUT_DIR, outDir);
-            })
+            .withSound(JSoundRegistry.CREAM_SUMMON)
             .withInfo(
                     Component.literal("Surprise"),
                     Component.literal("""
@@ -162,25 +142,19 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                             """));
     public static final ChargeBarrageAttack<CreamEntity> CHARGE = new ChargeBarrageAttack<CreamEntity>(200, 15, 30,
             4f, 2f, 10, 1.5f, 0.5f, 0f, 3, false)
-            .withAction(
-                    (attacker, user, ctx, targets) ->
-                            targets.forEach(target -> target.addEffect(
-                                    new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 25, 0, true, false)
-                                    )
-                            )
-
-            )
+            .withAction(EffectAction.inflict(JStatusRegistry.KNOCKDOWN, 25, 0, true, false))
             .withLaunchNoShockwave()
-            .withImpactSound(JSoundRegistry.IMPACT_5.get())
+            .withImpactSound(JSoundRegistry.IMPACT_5)
             .withBlockableType(BlockableType.NON_BLOCKABLE)
             .withInfo(
                     Component.literal("Charge"),
-                    Component.literal("4 block range, unblockable knockdown"));
+                    Component.literal("4 block range, unblockable knockdown")
+            );
     public static final DestroyAttack DESTROY = new DestroyAttack(320, 21, 30, 1f,
-            8f, 5, 2f, 1.25f, 0f)
+            8f, 5, 2f, 1.25f, 0f, 35)
             .withCrouchingVariant(CHARGE)
-            .withSound(JSoundRegistry.CREAM_OVERHEAD.get())
-            .withImpactSound(JSoundRegistry.IMPACT_5.get())
+            .withSound(JSoundRegistry.CREAM_OVERHEAD)
+            .withImpactSound(JSoundRegistry.IMPACT_5)
             .withLaunch()
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE)
@@ -189,31 +163,31 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                     Component.literal("slow, uninterruptible, unblockable knockdown"));
     public static final ConsumeAttack CONSUME = new ConsumeAttack(640, 35, 40, 1f,
             2f, 0, 2f, 0f, 0f)
-            .withSound(JSoundRegistry.CREAM_CONSUME.get())
+            .withSound(JSoundRegistry.CREAM_CONSUME)
             .withInfo(
                     Component.literal("Void"),
                     Component.literal("high windup, 6 seconds"));
-    public static final BallModeMove ENTER = new BallModeMove(40, 10, 15, 0f, true)
-            .withSound(JSoundRegistry.CREAM_ENTER.get())
+    public static final BallModeEnterMove ENTER = new BallModeEnterMove(40, 10, 15, 0f)
+            .withSound(JSoundRegistry.CREAM_ENTER)
             .withInfo(
                     Component.literal("Enter Cream"),
                     Component.literal("Cream consumes itself and the user halfway, increasing mobility and decreasing defense"));
-    public static final BallModeMove EXIT = new BallModeMove(40, 5, 15, 0f, false)
-            .withSound(JSoundRegistry.CREAM_EXIT.get())
+    public static final BallModeExitMove EXIT = new BallModeExitMove(40, 5, 15, 0f)
+            .withSound(JSoundRegistry.CREAM_EXIT)
             .withInfo(
                     Component.literal("Exit Cream"),
                     Component.literal("Cream and its user return from the void"));
     public static final SimpleAttack<CreamEntity> SWIPE = new SimpleAttack<CreamEntity>(20, 7,
             14, 0.5f, 5f, 20, 2f, 0.75f, 0.2f)
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Component.literal("Swipe"),
                     Component.literal("quick air-to-ground poke"));
     public static final KnockdownAttack<CreamEntity> OVERHEAD_SMASH = new KnockdownAttack<CreamEntity>(160,
             14, 20, 0.5f, 9f, 15, 2f, 1.25f, 0.3f, 35)
-            .withSound(JSoundRegistry.CREAM_SMASH.get())
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
+            .withSound(JSoundRegistry.CREAM_SMASH)
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHyperArmor()
             .withLaunch()
@@ -222,31 +196,27 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                     Component.literal("slow, uninterruptible launcher"));
     public static final SimpleMultiHitAttack<CreamEntity> BALL_COMBO = new SimpleMultiHitAttack<CreamEntity>(200,
             36, 0.5f, 7f, 15, 2f, 0.1f, 0.3f, IntSet.of(10, 17, 25))
-            .withSound(JSoundRegistry.CREAM_COMBO.get())
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withSound(JSoundRegistry.CREAM_COMBO)
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Component.literal("Aerial Assault"),
                     Component.literal("less stun than grounded version"));
-    public static final BallChargeAttack BALL_CHARGE = new BallChargeAttack(300, 13, 28, 1f)
-            .withSound(JSoundRegistry.CREAM_BALLDASH.get())
+    public static final BallChargeAttack BALL_CHARGE = new BallChargeAttack(300, 13, 28, 1f, false)
+            .withSound(JSoundRegistry.CREAM_BALLDASH)
             .withInfo(
                     Component.literal("Void Charge"),
                     Component.literal("Cream quickly transforms into a black hole and charges in the pointed direction"));
-    public static final SurpriseMove DETACH_CHARGE = new SurpriseMove(300, 13, 28, 1f)
-            .withSound(JSoundRegistry.CREAM_BALLDASH.get())
-            .withInitAction((attacker, user, ctx) -> {
-                attacker.endHalfBall();
-                attacker.getMoveContext().set(OUT_POS, user.position().toVector3f());
-                ctx.set(OUT_DIR, user.getLookAngle().scale(0.75).toVector3f());
-            })
+    public static final DetachChargeMove DETACH_CHARGE = new DetachChargeMove(300, 13, 28, 1f)
+            .withSound(JSoundRegistry.CREAM_BALLDASH)
             .withInfo(
                     Component.literal("Detaching Void Charge"),
                     Component.literal("""
                             Cream quickly transforms into a black hole and charges in the pointed direction.
-                            The user exits cream upon performing this move."""));
-    public static final BallChargeAttack BALL_DESTROY = new BallChargeAttack(300, 13, 28, 1f)
-            .withSound(JSoundRegistry.CREAM_BALLDASH.get())
+                            The user exits cream upon performing this move.""")
+            );
+    public static final BallChargeAttack BALL_DESTROY = new BallChargeAttack(300, 13, 28, 1f, true)
+            .withSound(JSoundRegistry.CREAM_BALLDASH)
             .withInfo(
                     Component.literal("Destroy"),
                     Component.literal("Cream quickly transforms into a black hole and charges in a downward curve"));
@@ -255,7 +225,6 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     private static final EntityDataAccessor<Boolean> HALF_BALL;
     @Setter
     private Vec3 chargeDir;
-    @Getter
     @Setter
     private boolean charging = false;
 
@@ -265,7 +234,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     }
 
     public CreamEntity(Level worldIn) {
-        super(StandType.CREAM, worldIn, JSoundRegistry.CREAM_SUMMON.get());
+        super(StandType.CREAM, worldIn, JSoundRegistry.CREAM_SUMMON);
 
         idleRotation = 220f;
 
@@ -301,7 +270,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
         blockDistance = 0f;
         maxStandGauge = 45f;
 
-        registerMoves();
+        switchMoveSet(HALF_BALL_MOVE_SET.getName());
     }
 
     public void endHalfBall() {
@@ -310,7 +279,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
         blockDistance = 0.75f;
         maxStandGauge = 90f;
 
-        registerMoves();
+        switchMoveSet(DEFAULT_MOVE_SET.getName());
     }
 
     public boolean isHalfBall() {
@@ -328,39 +297,40 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
         }
     }
 
-    @Override
-    protected void registerMoves(MoveMap<CreamEntity, State> moves) {
-        if (isHalfBall()) {
-            moves.register(MoveType.LIGHT, SWIPE, State.BALL_LIGHT);
+    private static void registerHalfBallMoves(MoveMap<CreamEntity, State> moves) {
+        moves.register(MoveClass.LIGHT, SWIPE, State.BALL_LIGHT);
 
-            moves.register(MoveType.HEAVY, OVERHEAD_SMASH, State.BALL_HEAVY);
-            moves.register(MoveType.BARRAGE, BALL_COMBO, State.BALL_COMBO);
+        moves.register(MoveClass.HEAVY, OVERHEAD_SMASH, State.BALL_HEAVY);
+        moves.register(MoveClass.BARRAGE, BALL_COMBO, State.BALL_COMBO);
 
-            moves.register(MoveType.SPECIAL1, BALL_CHARGE, State.BALL_CONSUME);
-            moves.register(MoveType.SPECIAL2, DETACH_CHARGE, State.BALL_CONSUME);
-            moves.register(MoveType.SPECIAL3, BALL_DESTROY, State.BALL_CONSUME);
+        moves.register(MoveClass.SPECIAL1, BALL_CHARGE, State.BALL_CONSUME);
+        moves.register(MoveClass.SPECIAL2, DETACH_CHARGE, State.BALL_CONSUME);
+        moves.register(MoveClass.SPECIAL3, BALL_DESTROY, State.BALL_CONSUME);
 
-            moves.register(MoveType.UTILITY, EXIT, State.EXIT);
-        } else {
-            moves.registerImmediate(MoveType.LIGHT, PUNCH, State.LIGHT);
+        moves.register(MoveClass.UTILITY, EXIT, State.EXIT);
 
-            moves.register(MoveType.HEAVY, VERTICAL_CHOP, State.HEAVY);
-            moves.register(MoveType.BARRAGE, COMBO, State.COMBO);
+        moves.register(MoveClass.ULTIMATE, CONSUME, State.CONSUME);
+    }
 
-            moves.register(MoveType.SPECIAL1, GRAB, State.GRAB);
-            moves.register(MoveType.SPECIAL2, SURPRISE, State.SURPRISE);
-            moves.register(MoveType.SPECIAL3, DESTROY, State.DESTROY).withCrouchingVariant(State.CHARGE);
+    private static void registerDefaultMoves(MoveMap<CreamEntity, State> moves) {
+        moves.registerImmediate(MoveClass.LIGHT, PUNCH, State.LIGHT);
 
-            moves.register(MoveType.UTILITY, ENTER, State.ENTER);
-        }
+        moves.register(MoveClass.HEAVY, VERTICAL_CHOP, State.HEAVY);
+        moves.register(MoveClass.BARRAGE, COMBO, State.COMBO);
 
-        moves.register(MoveType.ULTIMATE, CONSUME, State.CONSUME);
+        moves.register(MoveClass.SPECIAL1, GRAB, State.GRAB);
+        moves.register(MoveClass.SPECIAL2, SURPRISE, State.SURPRISE);
+        moves.register(MoveClass.SPECIAL3, DESTROY, State.DESTROY).withCrouchingVariant(State.CHARGE);
+
+        moves.register(MoveClass.UTILITY, ENTER, State.ENTER);
+
+        moves.register(MoveClass.ULTIMATE, CONSUME, State.CONSUME);
     }
 
     @Override
-    public boolean initMove(MoveType type) {
-        if (tryFollowUp(type, MoveType.LIGHT)) return true;
-        return super.initMove(type);
+    public boolean initMove(MoveClass moveClass) {
+        if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
+        return super.initMove(moveClass);
     }
 
     @Override
@@ -473,17 +443,14 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                 if (level().getGameRules().getBoolean(JCraft.STAND_GRIEFING)) {
                     final BlockPos blockPos = blockPosition();
                     // Unfun 3x4x3 void code
-                    for (int x = -1; x < 2; x++) {
-                        for (int y = -1; y < 3; y++) {
-                            for (int z = -1; z < 2; z++) {
-                                final BlockPos curPos = blockPos.offset(x, y, z);
-                                if (level().getBlockState(curPos).getBlock().getExplosionResistance() > 100.1f) {
-                                    continue;
-                                }
-                                level().setBlockAndUpdate(curPos, Block.stateById(0));
-                            }
+                    BlockPos from = blockPos.offset(-1, -1, -1);
+                    BlockPos to = blockPos.offset(1, 2, 1);
+                    BlockPos.betweenClosed(from, to).forEach(p -> {
+                        if (level().getBlockState(p).getBlock().getExplosionResistance() > 100.1f) {
+                            return;
                         }
-                    }
+                        level().setBlockAndUpdate(p, Block.stateById(0));
+                    });
                 }
 
                 // Blind normal players while in void
@@ -494,7 +461,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                 if (charging) {
                     if (isFree()) { // Surprise move
                         final Vector3f newPos = getFreePos();
-                        newPos.add(getMoveContext().get(SurpriseMove.OUT_DIR));
+                        newPos.add(getMoveContext().get(AbstractSurpriseMove.OUT_DIR));
                         setFreePos(newPos);
                         if (getMoveStun() == 1) {
                             setFree(false);
@@ -504,12 +471,6 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                         user.hurtMarked = true;
                         if (user instanceof ServerPlayer player) {
                             player.connection.send(new ClientboundSetEntityMotionPacket(user));
-                        }
-
-                        if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == BALL_DESTROY) {
-                            chargeDir = chargeDir.add(
-                                    new Vec3(GravityChangerAPI.getGravityDirection(user).step()).scale(0.1)
-                            ).normalize().scale(0.5);
                         }
                     }
                 } else { // Ultimate

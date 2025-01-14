@@ -51,6 +51,10 @@ public class MoveContext {
         entry.setValue(value);
     }
 
+    public void incrementInt(final IntMoveVariable variable) {
+        incrementInt(variable, 1);
+    }
+
     public void incrementInt(final IntMoveVariable variable, final int increment) {
         final IntMoveVariable.IntEntry entry = (IntMoveVariable.IntEntry) getEntry(variable);
         entry.setValue(entry.getIntValue() + increment);
@@ -68,28 +72,41 @@ public class MoveContext {
         return (Entry<T>) entry;
     }
 
-    public <T> void register(final @NonNull MoveVariable<T> variable) {
+    public void clear() {
+        entries.clear();
+    }
+
+    public <T> boolean register(final @NonNull MoveVariable<T> variable) {
+        if (entries.containsKey(variable)) {
+            return false;
+        }
+
         entries.put(variable, variable.createEntry());
+        return true;
     }
 
     public <T> void register(final @NonNull MoveVariable<T> variable, final T initialValue) {
-        register(variable);
-        set(variable, initialValue);
+        if (register(variable)) {
+            set(variable, initialValue);
+        }
     }
 
     public void register(@NonNull IntMoveVariable variable, int initialValue) {
-        register(variable);
-        setInt(variable, initialValue);
+        if (register(variable)) {
+            setInt(variable, initialValue);
+        }
     }
 
     public void register(@NonNull FloatMoveVariable variable, float initialValue) {
-        register(variable);
-        setFloat(variable, initialValue);
+        if (register(variable)) {
+            setFloat(variable, initialValue);
+        }
     }
 
     public void register(@NonNull BooleanMoveVariable variable, boolean initialValue) {
-        register(variable);
-        setBoolean(variable, initialValue);
+        if (register(variable)) {
+            setBoolean(variable, initialValue);
+        }
     }
 
     @Getter

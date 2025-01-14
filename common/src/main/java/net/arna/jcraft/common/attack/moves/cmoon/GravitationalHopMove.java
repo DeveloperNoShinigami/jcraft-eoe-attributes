@@ -1,14 +1,19 @@
 package net.arna.jcraft.common.attack.moves.cmoon;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
-import net.arna.jcraft.common.attack.MobilityType;
+import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 public final class GravitationalHopMove extends AbstractMove<GravitationalHopMove, CMoonEntity> {
@@ -18,8 +23,8 @@ public final class GravitationalHopMove extends AbstractMove<GravitationalHopMov
     }
 
     @Override
-    public void onInitiate(final CMoonEntity attacker) {
-        getInitActions().forEach(action -> action.perform(attacker, attacker.getUser(), attacker.getMoveContext()));
+    public @NotNull MoveType<GravitationalHopMove> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -46,5 +51,14 @@ public final class GravitationalHopMove extends AbstractMove<GravitationalHopMov
     @Override
     public @NonNull GravitationalHopMove copy() {
         return copyExtras(new GravitationalHopMove(getCooldown()));
+    }
+
+    public static class Type extends AbstractMove.Type<GravitationalHopMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<GravitationalHopMove>, GravitationalHopMove> buildCodec(RecordCodecBuilder.Instance<GravitationalHopMove> instance) {
+            return instance.group(extras(), cooldown()).apply(instance, applyExtras(GravitationalHopMove::new));
+        }
     }
 }

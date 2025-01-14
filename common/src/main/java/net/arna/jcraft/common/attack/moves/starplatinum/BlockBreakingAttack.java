@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.starplatinum;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.AbstractStarPlatinumEntity;
@@ -20,22 +23,25 @@ import java.util.Set;
 import static net.minecraft.world.level.block.Block.getId;
 
 public final class BlockBreakingAttack extends AbstractSimpleAttack<BlockBreakingAttack, AbstractStarPlatinumEntity<?, ?>> {
-    public BlockBreakingAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
+    public BlockBreakingAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
+                               final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    public void performHook(final AbstractStarPlatinumEntity<?, ?> attacker, final Set<LivingEntity> targets, final Set<AABB> boxes, final DamageSource damageSource, final Vec3 forwardPos, final Vec3 rotationVector, final MoveContext ctx) {
+    public void performHook(final AbstractStarPlatinumEntity<?, ?> attacker, final Set<LivingEntity> targets,
+                            final Set<AABB> boxes, final DamageSource damageSource, final Vec3 forwardPos,
+                            final Vec3 rotationVector, final MoveContext ctx) {
         Level world = attacker.level();
         if (world.getGameRules().getBoolean(JCraft.STAND_GRIEFING)) {
-            BlockPos bPos = attacker.blockPosition().offset((int) rotationVector.x * 1, (int) rotationVector.y * 1, (int) rotationVector.z * 1);
+            BlockPos bPos = attacker.blockPosition().offset((int) rotationVector.x, (int) rotationVector.y, (int) rotationVector.z);
             for (int x = -1; x < 2; x++) {
                 for (int y = -1; y < 2; y++) {
                     for (int z = -1; z < 2; z++) {
                         BlockPos curPos = bPos.offset(x, y, z);
                         BlockState curState = world.getBlockState(curPos);
                         Block block = curState.getBlock();
-                        
+
                         if (block.defaultDestroyTime() < 0 || block.getExplosionResistance() > 10f || curState.isAir()) {
                             continue;
                         }
@@ -54,6 +60,11 @@ public final class BlockBreakingAttack extends AbstractSimpleAttack<BlockBreakin
     }
 
     @Override
+    public @NonNull MoveType<BlockBreakingAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
     protected @NonNull BlockBreakingAttack getThis() {
         return this;
     }
@@ -62,5 +73,14 @@ public final class BlockBreakingAttack extends AbstractSimpleAttack<BlockBreakin
     public @NonNull BlockBreakingAttack copy() {
         return copyExtras(new BlockBreakingAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(), getStun(),
                 getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<BlockBreakingAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<BlockBreakingAttack>, BlockBreakingAttack> buildCodec(RecordCodecBuilder.Instance<BlockBreakingAttack> instance) {
+            return attackDefault(instance, BlockBreakingAttack::new);
+        }
     }
 }

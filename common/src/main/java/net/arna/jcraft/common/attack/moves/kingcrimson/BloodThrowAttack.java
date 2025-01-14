@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.kingcrimson;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.BloodProjectile;
@@ -13,6 +16,11 @@ public final class BloodThrowAttack extends AbstractMove<BloodThrowAttack, KingC
     public BloodThrowAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
+    }
+
+    @Override
+    public @NonNull MoveType<BloodThrowAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -41,5 +49,14 @@ public final class BloodThrowAttack extends AbstractMove<BloodThrowAttack, KingC
     @Override
     public @NonNull BloodThrowAttack copy() {
         return copyExtras(new BloodThrowAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<BloodThrowAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<BloodThrowAttack>, BloodThrowAttack> buildCodec(RecordCodecBuilder.Instance<BloodThrowAttack> instance) {
+            return baseDefault(instance, BloodThrowAttack::new);
+        }
     }
 }

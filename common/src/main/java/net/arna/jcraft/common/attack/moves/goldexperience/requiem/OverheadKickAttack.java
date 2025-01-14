@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.goldexperience.requiem;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.GEREntity;
 import net.arna.jcraft.common.util.JParticleType;
@@ -10,6 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public final class OverheadKickAttack extends AbstractSimpleAttack<OverheadKickAttack, GEREntity> {
     public OverheadKickAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
@@ -27,6 +31,11 @@ public final class OverheadKickAttack extends AbstractSimpleAttack<OverheadKickA
     }
 
     @Override
+    public @NotNull MoveType<OverheadKickAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
     protected @NonNull OverheadKickAttack getThis() {
         return this;
     }
@@ -35,5 +44,14 @@ public final class OverheadKickAttack extends AbstractSimpleAttack<OverheadKickA
     public @NonNull OverheadKickAttack copy() {
         return copyExtras(new OverheadKickAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<OverheadKickAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<OverheadKickAttack>, OverheadKickAttack> buildCodec(RecordCodecBuilder.Instance<OverheadKickAttack> instance) {
+            return attackDefault(instance, OverheadKickAttack::new);
+        }
     }
 }

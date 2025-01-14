@@ -34,14 +34,18 @@ public class MetallicaRenderer extends StandEntityRenderer<MetallicaEntity> {
     private static final ItemStack IRON_NUGGET = Items.IRON_NUGGET.getDefaultInstance();
 
     @Override
-    public void actuallyRender(final PoseStack matrixStack, final MetallicaEntity animatable, final BakedGeoModel model, final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
+    public void actuallyRender(final PoseStack matrixStack, final MetallicaEntity animatable, final BakedGeoModel model,
+                               final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer,
+                               final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay,
+                               final float red, final float green, final float blue, final float alpha) {
         final float a = StandEntityRenderer.getAlpha(animatable, partialTick);
         super.actuallyRender(matrixStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, a);
 
         if (!animatable.hasUser()) return;
         if (animatable.getState() == MetallicaEntity.State.HARVEST) {
-            final BlockPos siphonPos = animatable.getSiphonPos();
-            if (siphonPos == MetallicaEntity.NO_SIPHON) return;
+            final BlockPos siphonPos = animatable.getSiphonPos().orElse(null);
+            if (siphonPos == null) return;
+
             final LivingEntity user = animatable.getUserOrThrow();
             final Vec3 eyeOffset = GravityChangerAPI.getEyeOffset(user).scale(0.75);
             final Vec3 midPos = new Vec3(

@@ -36,14 +36,6 @@ ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.jcraft]]
-modId = "satin"
-mandatory = true
-versionRange = "[1.18.5,)"
-ordering = "AFTER"
-side = "BOTH"
-
-
-[[dependencies.jcraft]]
 modId = "azurelib"
 mandatory = true
 versionRange = "[1.0.34,)"

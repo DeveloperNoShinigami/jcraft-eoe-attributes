@@ -8,6 +8,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Set;
+
 /**
  * Anything that can use moves must implement this interface.
  * It provides basic functionality that moves need.
@@ -15,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  * @param <A> The type of the class implementing this interface
  * @param <S> The type of the animation state enum
  */
-public interface IAttacker<A extends IAttacker<? extends A, S>, S> {
+public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?>> {
     MoveContext getMoveContext();
 
     boolean hasUser();
@@ -38,7 +40,9 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S> {
 
     DamageSource getDamageSource();
 
-    boolean initMove(final MoveType type);
+    MoveMap<A, S> getMoveMap();
+
+    boolean initMove(final MoveClass type);
 
     boolean canHoldMove(final @Nullable MoveInputType type);
 
@@ -84,6 +88,13 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S> {
     default void playAttackerSound(final SoundEvent sound, final float volume, final float pitch) {
         getBaseEntity().playSound(sound, volume, pitch);
     }
+
+    /**
+     * Called when a move is performed.
+     * @param move The move that was performed. Should probably not be used.
+     * @param targets The targets that were hit by the move. May be empty.
+     */
+    default void onPerform(AbstractMove<?, ? super A> move, Set<LivingEntity> targets) {}
 
     void setPerformedThisTick(final boolean b);
     boolean performedThisTick();

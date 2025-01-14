@@ -34,7 +34,7 @@ public abstract class AbstractCounterAttack<T extends AbstractCounterAttack<T, A
 
     /**
      * Called when this counter-attack hit.
-     * Typically, resets the user's attack, but can also somehow reward them for it.
+     * Typically, it resets the user's attack, but can also somehow reward them for it.
      *
      * @param attacker              The stand that hit
      * @param countered             The entity whose attack was countered

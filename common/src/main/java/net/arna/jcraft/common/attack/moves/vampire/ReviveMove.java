@@ -1,9 +1,12 @@
 package net.arna.jcraft.common.attack.moves.vampire;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.common.spec.VampireSpec;
 import net.arna.jcraft.common.tickable.Revivables;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.server.MinecraftServer;
@@ -13,15 +16,21 @@ import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+
 import java.util.Set;
 
-public final class ReviveMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<ReviveMove<A>, A> {
+public final class ReviveMove extends AbstractMove<ReviveMove, VampireSpec> {
     public ReviveMove(final int cooldown, final int windup, final int duration, final float reviveDistance) {
         super(cooldown, windup, duration, reviveDistance);
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull MoveType<ReviveMove> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
+    public @NonNull Set<LivingEntity> perform(final VampireSpec attacker, final LivingEntity user, final MoveContext ctx) {
         MinecraftServer server = user.getServer();
         assert server != null;
         ServerLevel serverWorld = server.getLevel(user.level().dimension());
@@ -58,17 +67,26 @@ public final class ReviveMove<A extends IAttacker<? extends A, ?>> extends Abstr
     }
 
     public static boolean isBoss(final LivingEntity living) {
-        //todo: find a better way to check if smth is a boss
+        //todo: find a better way to check if smth is a boss (possibly using ServerBossEvent)
         return living.getMaxHealth() >= 80.0f;
     }
 
     @Override
-    protected @NonNull ReviveMove<A> getThis() {
+    protected @NonNull ReviveMove getThis() {
         return this;
     }
 
     @Override
-    public @NonNull ReviveMove<A> copy() {
-        return copyExtras(new ReviveMove<>(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    public @NonNull ReviveMove copy() {
+        return copyExtras(new ReviveMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<ReviveMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<ReviveMove>, ReviveMove> buildCodec(RecordCodecBuilder.Instance<ReviveMove> instance) {
+            return baseDefault(instance, ReviveMove::new);
+        }
     }
 }

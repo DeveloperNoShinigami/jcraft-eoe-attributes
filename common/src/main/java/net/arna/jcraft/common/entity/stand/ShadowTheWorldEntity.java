@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
+import com.mojang.datafixers.util.Either;
 import it.unimi.dsi.fastutil.ints.IntSet;
+import lombok.Getter;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
@@ -8,49 +10,30 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.MobilityType;
+import net.arna.jcraft.common.attack.core.MobilityType;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.common.attack.moves.shadowtheworld.ImpalingThrustAttack;
+import net.arna.jcraft.common.attack.moves.shadowtheworld.STWChargeAttack;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.STWCounterAttack;
-import net.arna.jcraft.common.attack.moves.shared.ChargeAttack;
-import net.arna.jcraft.common.attack.moves.shared.HoldableMove;
-import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
-import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
-import net.arna.jcraft.common.attack.moves.shared.TimeSkipMove;
-import net.arna.jcraft.common.attack.moves.shared.TimeStopMove;
-import net.arna.jcraft.common.attack.moves.shared.UppercutAttack;
+import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.theworld.overheaven.LungeAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JParticleType;
-import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -61,11 +44,15 @@ import java.util.function.Consumer;
  * @see net.arna.jcraft.client.renderer.entity.stands.ShadowTheWorldRenderer ShadowTheWorldRenderer
  * @see STWCounterAttack
  */
+@Getter
 public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowTheWorldEntity, ShadowTheWorldEntity.State> {
-    public static final UppercutAttack<ShadowTheWorldEntity> UPPERCUT = new UppercutAttack<ShadowTheWorldEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),
+    public static final MoveSet<ShadowTheWorldEntity, State> MOVE_SET = MoveSet.create(StandType.SHADOW_THE_WORLD,
+            ShadowTheWorldEntity::registerMoves, State.class);
+
+    public static final SimpleUppercutAttack<ShadowTheWorldEntity> UPPERCUT = new SimpleUppercutAttack<ShadowTheWorldEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),
             10, 16, 0.75f, 6f, 20, 1.5f, 0.25f, -0.6f, 1.0f)
             .withAnim(State.UPPERCUT)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withExtraHitBox(0, 0.35, 1.25)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -74,7 +61,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
             );
     public static final SimpleAttack<ShadowTheWorldEntity> LIGHT = SimpleAttack.<ShadowTheWorldEntity>lightAttack(
                     5, 7, 0.75f, 5, 10, 0.1f, -0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             // .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(UPPERCUT)
             .withInfo(
@@ -85,8 +72,8 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
             10, 16, 0.75f, 7f, 12, 1.75f, 2f, 0f, 25)
             .withAnim(State.GUARD_CANCEL)
             .withHyperArmor()
-            .withSound(JSoundRegistry.STW_WARBLE.get())
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
+            .withSound(JSoundRegistry.STW_WARBLE)
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withLaunch()
             .withInfo(
@@ -96,8 +83,8 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     public static final LungeAttack LUNGE = new LungeAttack(40, 14, 20, 0.75f,
             8f, 19, 1.6f, 2f, 0f, 10, 6)
             .withCrouchingVariant(GUARD_CANCEL)
-            .withSound(JSoundRegistry.STW_WARBLE.get())
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
+            .withSound(JSoundRegistry.STW_WARBLE)
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
@@ -106,7 +93,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
             );
     public static final KnockdownAttack<ShadowTheWorldEntity> KNOCKDOWN = new KnockdownAttack<ShadowTheWorldEntity>(0,
             2, 4, 0.85f, 5f, 20, 1.75f, 2f, 0, 35)
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
@@ -116,27 +103,26 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     public static final SimpleMultiHitAttack<ShadowTheWorldEntity> THREE_HIT = new SimpleMultiHitAttack<ShadowTheWorldEntity>(100,
             24, 0.85f, 4f, 15, 1.5f, 0.35f, 0.2f, IntSet.of(6, 14))
             .withFinisher(20, KNOCKDOWN)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withInfo(
                     Component.literal("3 Hit Combo"),
                     Component.literal("knocks down")
             );
-    public static final SimpleAttack<ShadowTheWorldEntity> IMPALING_THRUST_HIT = new SimpleAttack<ShadowTheWorldEntity>(0,
-            0, 10, 0.8f, 0, 0, 0, 0, 0)
-            .withInitAction(ShadowTheWorldEntity::impalingThrust);
-    public static final HoldableMove<ShadowTheWorldEntity, State> IMPALING_THRUST = new HoldableMove<>(200,
-            61, 60, 0.75f, IMPALING_THRUST_HIT, State.IMPALING_THRUST_HIT, 10)
+    public static final ImpalingThrustAttack IMPALING_THRUST_HIT = new ImpalingThrustAttack(0, 1, 11, 0.8f);
+    public static final SimpleHoldableMove<ShadowTheWorldEntity> IMPALING_THRUST = new SimpleHoldableMove<ShadowTheWorldEntity>(200,
+            61, 60, 0.75f, 10)
+            .withFollowup(IMPALING_THRUST_HIT)
             .withInfo(
                     Component.literal("Impaling Thrust"),
                     Component.literal("chargeable attack, Shadow The World prepares an attack, then stops time and hits everything between the start and end")
             )
             .markRanged()
             .withMobilityType(MobilityType.TELEPORT);
-    public static final ChargeAttack<ShadowTheWorldEntity, ShadowTheWorldEntity.State> CHARGE = new ChargeAttack<>(
-            280, 5, 19, 5.0f, 5f, 20, 1.5f, 0.25f, 0, State.CHARGE_HIT)
-            .withSound(JSoundRegistry.TW_CHARGE.get())
-            .withSound(JSoundRegistry.STW_WARBLE.get())
-            .withImpactSound(JSoundRegistry.TW_CHARGE_HIT.get())
+    public static final STWChargeAttack CHARGE = new STWChargeAttack(
+            280, 5, 19, 5.0f, 5f, 20, 1.5f, 0.25f, 0)
+            .withSound(JSoundRegistry.TW_CHARGE)
+            .withSound(JSoundRegistry.STW_WARBLE)
+            .withImpactSound(JSoundRegistry.TW_CHARGE_HIT)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withBlockStun(11)
@@ -145,15 +131,15 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                     Component.literal("The World detaches from the user and lunges forward, combo starter")
             );
     public static final TimeSkipMove<ShadowTheWorldEntity> TIME_SKIP = new TimeSkipMove<ShadowTheWorldEntity>(200, 7)
-            .withSound(JSoundRegistry.TIME_SKIP.get())
-            .withSound(JSoundRegistry.STW_ZAP.get())
+            .withSound(JSoundRegistry.TIME_SKIP)
+            .withSound(JSoundRegistry.STW_ZAP)
             .withInfo(
                     Component.literal("Timeskip"),
                     Component.literal("7m range")
             );
     public static final TimeStopMove<ShadowTheWorldEntity> TIME_STOP = new TimeStopMove<ShadowTheWorldEntity>(1400,
-            20, 30, JServerConfig.STW_TIME_STOP_DURATION::getValue)
-            .withSound(JSoundRegistry.STW_TS.get())
+            20, 30, Either.right(JServerConfig.STW_TIME_STOP_DURATION))
+            .withSound(JSoundRegistry.STW_TS)
             .withInfo(
                     Component.literal("Timestop"),
                     Component.literal("2.5 seconds")
@@ -167,10 +153,10 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                                             """)
             );
     private int desummonTime = 6;
-    private static final EntityDataAccessor<Boolean> DESUMMONING;
-    static { DESUMMONING = SynchedEntityData.defineId(ShadowTheWorldEntity.class, EntityDataSerializers.BOOLEAN); }
+    private static final EntityDataAccessor<Boolean> DESUMMONING = SynchedEntityData.defineId(ShadowTheWorldEntity.class, EntityDataSerializers.BOOLEAN);
+
     public ShadowTheWorldEntity(Level worldIn) {
-        super(StandType.SHADOW_THE_WORLD, worldIn, JSoundRegistry.STW_WARBLE.get());
+        super(StandType.SHADOW_THE_WORLD, worldIn, JSoundRegistry.STW_WARBLE);
 
         freespace = """
                 The user is allowed to use spec moves as soon as Shadow The World is performing one.
@@ -190,60 +176,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     }
 
     private static void impalingThrust(ShadowTheWorldEntity attacker, LivingEntity user, MoveContext ctx) {
-        final ServerLevel world = (ServerLevel) attacker.level();
-        final CommonShockwaveHandlerComponent shockwaveHandler = JComponentPlatformUtils.getShockwaveHandler(world);
 
-        final Vec3 start = user.getEyePosition(), end = user.getEyePosition().add(user.getLookAngle().scale(8));
-        HitResult hitResult = world.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
-        final Vec3 pos2 = hitResult.getLocation();
-        final Vec3 towardsVec = pos2.subtract(start);
-
-        final DamageSource playerSource = world.damageSources().mobAttack(user);
-
-        user.teleportToWithTicket(pos2.x, pos2.y, pos2.z);
-
-        final double count = Math.round(start.distanceTo(pos2));
-
-        boolean hitAny = false;
-        Set<LivingEntity> processed = new HashSet<>();
-        for (int i = 0; i < count; i++) {
-            final Vec3 curPos = start.add(towardsVec.scale(i / count));
-            if (i % 3 == 0) shockwaveHandler.addShockwave(curPos, towardsVec, 2.25f);
-
-            final Vec3 vec1 = curPos.add(-1, -1, -1);
-            final Vec3 vec2 = curPos.add(1, 1, 1);
-
-            JUtils.displayHitbox(world, vec1, vec2);
-
-            final List<LivingEntity> hurt = world.getEntitiesOfClass(LivingEntity.class, new AABB(vec1, vec2),
-                    EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != user));
-            hurt.removeIf(processed::contains);
-            if (processed.addAll(hurt)) {
-                hitAny = true;
-                JCraft.createParticle(world,
-                        curPos.x + attacker.random.nextGaussian(),
-                        curPos.y + attacker.random.nextGaussian(),
-                        curPos.z + attacker.random.nextGaussian(),
-                        JParticleType.HIT_SPARK_2
-                );
-                for (LivingEntity ent : hurt) {
-                    final LivingEntity target = JUtils.getUserIfStand(ent);
-                    // +6 on hit/-4 on block launcher
-                    // +0 if you count STW desummon not letting you block
-                    StandEntity.damageLogic(world, target,
-                            target.position().subtract(curPos).normalize(), 10 + attacker.desummonTime, 3, false,
-                            8.0f, true, 12, playerSource, user, CommonHitPropertyComponent.HitAnimation.LAUNCH);
-                    target.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0, true, false));
-                }
-            }
-        }
-
-        if (hitAny) {
-            attacker.playSound(JSoundRegistry.IMPACT_1.get(), 1.0f, 1.0f);
-        }
-
-        attacker.playSound(JSoundRegistry.TIME_SKIP.get(), 1f, 1f);
-        attacker.playSound(JSoundRegistry.STW_ZAP.get(), 1f, 1f);
     }
 
     private static final Vector3f INVIS_AURA = new Vector3f(0, 0, 0);
@@ -263,19 +196,18 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         entityData.define(DESUMMONING, false);
     }
 
-    @Override
-    protected void registerMoves(MoveMap<ShadowTheWorldEntity, State> moves) {
-        moves.registerImmediate(MoveType.LIGHT, LIGHT, State.LIGHT);
-        moves.registerImmediate(MoveType.HEAVY, LUNGE, State.LUNGE);
-        moves.register(MoveType.BARRAGE, THREE_HIT, State.THREE_HIT);
+    private static void registerMoves(MoveMap<ShadowTheWorldEntity, State> moves) {
+        moves.registerImmediate(MoveClass.LIGHT, LIGHT, State.LIGHT);
+        moves.registerImmediate(MoveClass.HEAVY, LUNGE, State.LUNGE);
+        moves.register(MoveClass.BARRAGE, THREE_HIT, State.THREE_HIT);
 
-        moves.register(MoveType.SPECIAL1, COUNTER, State.COUNTER);
-        moves.register(MoveType.SPECIAL2, CHARGE, State.CHARGE);
-        moves.register(MoveType.SPECIAL3, IMPALING_THRUST, State.IMPALING_THRUST_CHARGE);
+        moves.register(MoveClass.SPECIAL1, COUNTER, State.COUNTER);
+        moves.register(MoveClass.SPECIAL2, CHARGE, State.CHARGE);
+        moves.register(MoveClass.SPECIAL3, IMPALING_THRUST, State.IMPALING_THRUST_CHARGE).withFollowup(State.IMPALING_THRUST_HIT);
 
-        moves.register(MoveType.ULTIMATE, TIME_STOP, State.TIME_STOP);
+        moves.register(MoveClass.ULTIMATE, TIME_STOP, State.TIME_STOP);
 
-        moves.register(MoveType.UTILITY, TIME_SKIP, State.IDLE);
+        moves.register(MoveClass.UTILITY, TIME_SKIP, State.IDLE);
     }
 
     public void startAnimatedDesummon() {
@@ -295,7 +227,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
         if (isAnimatedDesummoning()) return false;
         if (getState() == State.CHARGE_HIT) return false;
         final boolean noMove = getCurrentMove() == null;
-        return noMove || getCurrentMove().getMoveType() == MoveType.SPECIAL3;
+        return noMove || getCurrentMove().getMoveClass() == MoveClass.SPECIAL3;
     }
 
     @Override

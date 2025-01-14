@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
@@ -14,12 +17,18 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class D4CCounterAttack extends AbstractCounterAttack<D4CCounterAttack, D4CEntity> {
     private final CounterMissMove<D4CEntity> counterMiss = new CounterMissMove<>(10);
 
     public D4CCounterAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public @NotNull MoveType<D4CCounterAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -62,5 +71,14 @@ public class D4CCounterAttack extends AbstractCounterAttack<D4CCounterAttack, D4
     @Override
     public @NonNull D4CCounterAttack copy() {
         return copyExtras(new D4CCounterAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractCounterAttack.Type<D4CCounterAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<D4CCounterAttack>, D4CCounterAttack> buildCodec(RecordCodecBuilder.Instance<D4CCounterAttack> instance) {
+            return baseDefault(instance, D4CCounterAttack::new);
+        }
     }
 }

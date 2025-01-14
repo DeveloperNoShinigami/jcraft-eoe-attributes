@@ -33,12 +33,12 @@ public class MoveTickQueue {
     public static <A extends IAttacker<? extends A, ?>> void queueTick(A attacker, AbstractMove<?, ? super A> move, int moveStun) {
         //queue.add(new MoveTick<>(attacker, move, moveStun));
         attacker.setPerformedThisTick(false);
-        move.tick(attacker, moveStun);
+        move.activeTick(attacker, moveStun);
     }
 
     private record MoveTick<A extends IAttacker<? extends A, ?>>(A attacker, AbstractMove<?, ? super A> move, int moveStun) {
         public void tick() {
-            move.tick(attacker, moveStun);
+            move.activeTick(attacker, moveStun);
         }
     }
 }

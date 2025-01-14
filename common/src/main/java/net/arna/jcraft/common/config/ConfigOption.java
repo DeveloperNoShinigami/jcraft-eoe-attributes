@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.minecraft.network.FriendlyByteBuf;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 
 public abstract class ConfigOption {
@@ -25,9 +27,18 @@ public abstract class ConfigOption {
         this.key = key;
         this.category = category;
 
-        if (options.put(key, this) != null) {
+        if (options.containsKey(key)) {
             throw new IllegalArgumentException("Option with the given key already exists: " + key);
         }
+
+        options.put(key, this);
+    }
+
+    public static @Nullable ConfigOption getOption(final String key, final Type type) {
+        ConfigOption option = getImmutableOptions().get(key);
+        if (option == null || option.getType() != type) return null;
+
+        return option;
     }
 
     @NonNull

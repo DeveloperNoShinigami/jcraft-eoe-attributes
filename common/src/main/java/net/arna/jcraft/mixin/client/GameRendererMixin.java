@@ -1,11 +1,14 @@
 package net.arna.jcraft.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.arna.jcraft.client.rendering.api.PostEffect;
 import net.arna.jcraft.client.rendering.api.PostProcessHandler;
+import net.arna.jcraft.client.rendering.api.callbacks.PostShaderRenderCallback;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import static org.spongepowered.asm.mixin.injection.At.Shift.AFTER;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
@@ -36,5 +41,19 @@ public class GameRendererMixin {
         if (entity instanceof CreamEntity cream && cream.isHalfBall() && JUtils.getStand(Minecraft.getInstance().player) == cream) {
             cir.setReturnValue(false);
         }
+    }
+
+    // Right after the world has been rendered, just before the post-effect and GUI rendering.
+    @Inject(
+            method = "render",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/LevelRenderer;doEntityOutline()V", shift = AFTER)
+    )
+    private void hookShaderRender(float tickDelta, long nanoTime, boolean renderLevel, CallbackInfo info) {
+        PostShaderRenderCallback.EVENT.invoker().renderEffect(tickDelta);
+    }
+
+    @Inject(method = "reloadShaders", at = @At("RETURN"))
+    private void loadShaders(ResourceProvider resourceProvider, CallbackInfo ci) {
+        PostEffect.initAll();
     }
 }

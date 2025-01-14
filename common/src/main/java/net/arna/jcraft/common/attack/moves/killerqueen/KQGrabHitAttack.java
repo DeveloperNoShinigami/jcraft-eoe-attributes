@@ -1,8 +1,12 @@
 package net.arna.jcraft.common.attack.moves.killerqueen;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
@@ -19,6 +23,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 @Getter
@@ -28,6 +34,11 @@ public final class KQGrabHitAttack extends AbstractMove<KQGrabHitAttack, KillerQ
     public KQGrabHitAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final int stun) {
         super(cooldown, windup, duration, moveDistance);
         this.stun = stun;
+    }
+
+    @Override
+    public @NotNull MoveType<KQGrabHitAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -63,5 +74,15 @@ public final class KQGrabHitAttack extends AbstractMove<KQGrabHitAttack, KillerQ
     @Override
     public @NonNull KQGrabHitAttack copy() {
         return copyExtras(new KQGrabHitAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getStun()));
+    }
+
+    public static class Type extends AbstractMove.Type<KQGrabHitAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<KQGrabHitAttack>, KQGrabHitAttack> buildCodec(RecordCodecBuilder.Instance<KQGrabHitAttack> instance) {
+            return baseDefault(instance).and(Codec.INT.fieldOf("stun").forGetter(KQGrabHitAttack::getStun))
+                    .apply(instance, applyExtras(KQGrabHitAttack::new));
+        }
     }
 }

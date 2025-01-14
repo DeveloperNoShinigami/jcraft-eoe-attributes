@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.cmoon;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.BlockProjectile;
@@ -11,6 +14,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -20,6 +24,11 @@ public final class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoon
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         ranged = true;
         hitSpark = JParticleType.HIT_SPARK_2;
+    }
+
+    @Override
+    public @NotNull MoveType<LaunchAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -54,5 +63,14 @@ public final class LaunchAttack extends AbstractSimpleAttack<LaunchAttack, CMoon
     public @NonNull LaunchAttack copy() {
         return copyExtras(new LaunchAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<LaunchAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<LaunchAttack>, LaunchAttack> buildCodec(RecordCodecBuilder.Instance<LaunchAttack> instance) {
+            return attackDefault(instance, LaunchAttack::new);
+        }
     }
 }

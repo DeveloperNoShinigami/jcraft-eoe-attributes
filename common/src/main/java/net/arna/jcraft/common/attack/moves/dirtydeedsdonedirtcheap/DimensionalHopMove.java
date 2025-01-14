@@ -1,8 +1,11 @@
 package net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
@@ -25,6 +28,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.lighting.DataLayerStorageMap;
 import net.minecraft.world.level.lighting.LevelLightEngine;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -33,8 +37,19 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove, D4CEntity> {
-    public DimensionalHopMove(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
+    public DimensionalHopMove(final int cooldown, final int windup, final int duration, final float moveDistance,
+                              final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
+    }
+
+    @Override
+    public @NotNull MoveType<DimensionalHopMove> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
+    public boolean conditionsMet(D4CEntity attacker) {
+        return super.conditionsMet(attacker) || attacker.level().dimension().equals(JDimensionRegistry.AU_DIMENSION_KEY);
     }
 
     @Override
@@ -221,5 +236,14 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
     public @NonNull DimensionalHopMove copy() {
         return copyExtras(new DimensionalHopMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<DimensionalHopMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<DimensionalHopMove>, DimensionalHopMove> buildCodec(RecordCodecBuilder.Instance<DimensionalHopMove> instance) {
+            return attackDefault(instance, DimensionalHopMove::new);
+        }
     }
 }

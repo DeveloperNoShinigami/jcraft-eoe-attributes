@@ -1,8 +1,13 @@
 package net.arna.jcraft.common.attack.moves.shared;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
@@ -19,6 +24,7 @@ import static net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack.prep
 
 public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> extends AbstractBarrageAttack<ChargeBarrageAttack<A>, A> {
     private final float originalMoveDistance;
+    @Getter
     private final boolean quadraticMovement;
 
     public ChargeBarrageAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
@@ -27,11 +33,16 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
         this.originalMoveDistance = moveDistance;
         this.quadraticMovement = quadraticMovement;
 
-        withCopyOnUse();
         withStunType(StunType.BURSTABLE);
+        copyOnUse = true;
         charge = true;
         ranged = true;
         inflictsSlowness = false;
+    }
+
+    @Override
+    public @NonNull MoveType<ChargeBarrageAttack<A>> getMoveType() {
+        return Type.INSTANCE.cast();
     }
 
     @Override
@@ -41,13 +52,13 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
     }
 
     @Override
-    public void tick(final A attacker, final int moveStun) {
-        super.tick(attacker, moveStun);
+    public void activeTick(final A attacker, final int moveStun) {
+        super.activeTick(attacker, moveStun);
         final Entity attackerEntity = attacker.getBaseEntity();
         if (attackerEntity instanceof StandEntity<?, ?> stand) {
             tickChargeBarrageAttack(stand, moveStun < getWindupPoint(), getMoveDistance(), getWindupPoint(), moveStun);
         } else {
-            JCraft.LOGGER.error("Trying to tick ChargeBarrageAttack on non-stand entity; " + attackerEntity);
+            JCraft.LOGGER.error("Trying to tick ChargeBarrageAttack on non-stand entity; {}", attackerEntity);
         }
     }
 
@@ -109,5 +120,17 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
     public @NonNull ChargeBarrageAttack<A> copy() {
         return copyExtras(new ChargeBarrageAttack<>(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset(), getInterval(), quadraticMovement));
+    }
+
+    public static class Type extends AbstractBarrageAttack.Type<ChargeBarrageAttack<?>> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<ChargeBarrageAttack<?>>, ChargeBarrageAttack<?>> buildCodec(RecordCodecBuilder.Instance<ChargeBarrageAttack<?>> instance) {
+            return instance.group(extras(), attackExtras(), cooldown(), windup(), duration(), moveDistance(), damage(),
+                            stun(), hitboxSize(), knockback(), offset(), interval(),
+                            Codec.BOOL.fieldOf("quadratic_movement").forGetter(ChargeBarrageAttack::isQuadraticMovement))
+                    .apply(instance, applyAttackExtras(ChargeBarrageAttack::new));
+        }
     }
 }

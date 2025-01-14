@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.whitesnake;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
@@ -18,16 +21,22 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Set;
 
 public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, WhiteSnakeEntity> {
-    public GiveStandAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final int stun, final float hitboxSize, final float knockback, final float offset) {
+    public GiveStandAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
+                           final int stun, final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, 0, stun, hitboxSize, knockback, offset);
     }
 
     @Override
-    public boolean canBeInitiated(final WhiteSnakeEntity attacker) {
+    public @NonNull MoveType<GiveStandAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
+    public boolean conditionsMet(final WhiteSnakeEntity attacker) {
         if (!attacker.hasUser()) {
             return false;
         }
-        return super.canBeInitiated(attacker) && attacker.getUserOrThrow().getOffhandItem().getItem() == JItemRegistry.STAND_DISC.get();
+        return super.conditionsMet(attacker) && attacker.getUserOrThrow().getOffhandItem().getItem() == JItemRegistry.STAND_DISC.get();
     }
 
     @Override
@@ -91,5 +100,15 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
         return copyExtras(new GiveStandAttack(
                 getCooldown(), getWindup(), getDuration(), getMoveDistance(), getStun(), getHitboxSize(), getKnockback(), getOffset()
         ));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<GiveStandAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<GiveStandAttack>, GiveStandAttack> buildCodec(RecordCodecBuilder.Instance<GiveStandAttack> instance) {
+            return instance.group(extras(), attackExtras(), cooldown(), windup(), duration(), moveDistance(), stun(),
+                    hitboxSize(), knockback(), offset()).apply(instance, applyAttackExtras(GiveStandAttack::new));
+        }
     }
 }

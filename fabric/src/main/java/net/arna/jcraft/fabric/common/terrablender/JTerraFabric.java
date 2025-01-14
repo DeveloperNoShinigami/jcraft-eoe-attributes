@@ -23,6 +23,7 @@ public class JTerraFabric implements TerraBlenderApi {
             registerSurfaceRules();
     }
 
+    // Requires both JCraft and TerraBlender to be initialized
     private static void registerSurfaceRules() {
         SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, JCraft.MOD_ID, MaterialRulesFabric.makeRules());
     }

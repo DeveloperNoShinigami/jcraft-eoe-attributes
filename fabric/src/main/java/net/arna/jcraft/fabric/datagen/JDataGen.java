@@ -1,9 +1,16 @@
 package net.arna.jcraft.fabric.datagen;
 
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.common.spec.SpecType;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
+
+import java.util.Arrays;
 
 public final class JDataGen implements DataGeneratorEntrypoint {
     @Override
@@ -19,6 +26,28 @@ public final class JDataGen implements DataGeneratorEntrypoint {
         pack.addProvider(JAdvancementProvider::new);
         pack.addProvider(JRecipeProvider::new);
         pack.addProvider(JWorldProvider::new);
+
+        Arrays.stream(StandType.values())
+                .filter(t -> t != StandType.NONE)
+                .forEach(type -> {
+                    if (!MoveSet.hasMoveSets(type)) {
+                        JCraft.LOGGER.error("No move sets found for stand type {}", type);
+                        return;
+                    }
+
+                    pack.addProvider((FabricDataOutput output) -> new JStandMoveSetProvider<>(output, type));
+                });
+
+        Arrays.stream(SpecType.values())
+                .filter(t -> t != SpecType.NONE)
+                .forEach(type -> {
+                    if (!MoveSet.hasMoveSets(type)) {
+                        JCraft.LOGGER.error("No move sets found for spec type {}", type);
+                        return;
+                    }
+
+                    pack.addProvider((FabricDataOutput output) -> new JSpecMoveSetProvider<>(output, type));
+                });
     }
 
     @Override

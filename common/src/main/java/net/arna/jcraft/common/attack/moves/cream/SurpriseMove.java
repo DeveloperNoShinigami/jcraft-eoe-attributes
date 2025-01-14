@@ -1,57 +1,59 @@
 package net.arna.jcraft.common.attack.moves.cream;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
-import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.Set;
 
-public final class SurpriseMove extends AbstractMove<SurpriseMove, CreamEntity> {
-    public static final MoveVariable<Vector3f> OUT_POS = new MoveVariable<>(Vector3f.class);
-    public static final MoveVariable<Vector3f> OUT_DIR = new MoveVariable<>(Vector3f.class);
-
-    public SurpriseMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
+public class SurpriseMove extends AbstractSurpriseMove<SurpriseMove> {
+    public SurpriseMove(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
-    public void onInitiate(final CreamEntity attacker) {
+    public @NonNull MoveType<SurpriseMove> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
+    public void onInitiate(CreamEntity attacker) {
         super.onInitiate(attacker);
 
-        // OUT_POS are set in .withInitAction() in CreamEntity.java
+        LivingEntity user = attacker.getUser();
+        if (user == null) {
+            return;
+        }
 
-        attacker.setFree(true);
-        attacker.setFreePos(attacker.getUserOrThrow().position().toVector3f());
+        Vec3 rotVec = user.getLookAngle();
+        if (user.isShiftKeyDown()) {
+            attacker.getMoveContext().set(OUT_POS, user.position().add(rotVec).toVector3f());
+        } else {
+            final Vec3 eyePos = user.getEyePosition();
+            HitResult hitResult = attacker.level().clip(new ClipContext(eyePos, eyePos.add(rotVec.scale(16)),
+                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
+            attacker.getMoveContext().set(OUT_POS, hitResult.getLocation().toVector3f());
+        }
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final CreamEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        attacker.setCharging(true);
+    public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user, MoveContext ctx) {
+        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
 
-        // OUT_DIR is set in .withAction() in CreamEntity.java
+        final Vector3f outDir = GravityChangerAPI.getGravityDirection(attacker).step();
+        outDir.mul(-1f);
+        ctx.set(OUT_DIR, outDir);
 
-        ctx.get(OUT_POS).sub(ctx.get(OUT_DIR));
-        final Vector3f outPos = ctx.get(OUT_POS);
-        attacker.setPos(new Vec3(outPos.x(), outPos.y(), outPos.z()));
-        attacker.setFreePos(outPos);
-
-        attacker.setVoidTime(getWindupPoint());
-
-        attacker.playSound(JSoundRegistry.IMPACT_5.get(), 1, 0.75f);
-
-        return Set.of();
-    }
-
-    @Override
-    public void registerContextEntries(final MoveContext ctx) {
-        ctx.register(OUT_POS, new Vector3f());
-        ctx.register(OUT_DIR, new Vector3f());
+        return targets;
     }
 
     @Override
@@ -62,5 +64,14 @@ public final class SurpriseMove extends AbstractMove<SurpriseMove, CreamEntity> 
     @Override
     public @NonNull SurpriseMove copy() {
         return copyExtras(new SurpriseMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractSurpriseMove.Type<SurpriseMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SurpriseMove>, SurpriseMove> buildCodec(RecordCodecBuilder.Instance<SurpriseMove> instance) {
+            return baseDefault(instance, SurpriseMove::new);
+        }
     }
 }

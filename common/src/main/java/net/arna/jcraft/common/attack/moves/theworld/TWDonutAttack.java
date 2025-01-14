@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.theworld;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheWorldEntity;
@@ -14,6 +17,11 @@ public final class TWDonutAttack extends AbstractSimpleAttack<TWDonutAttack, The
                          final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         hitSpark = JParticleType.HIT_SPARK_3;
+    }
+
+    @Override
+    public @NonNull MoveType<TWDonutAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -42,5 +50,14 @@ public final class TWDonutAttack extends AbstractSimpleAttack<TWDonutAttack, The
     public @NonNull TWDonutAttack copy() {
         return copyExtras(new TWDonutAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<TWDonutAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<TWDonutAttack>, TWDonutAttack> buildCodec(RecordCodecBuilder.Instance<TWDonutAttack> instance) {
+            return attackDefault(instance, TWDonutAttack::new);
+        }
     }
 }

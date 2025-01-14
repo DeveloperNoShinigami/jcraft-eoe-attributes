@@ -1,10 +1,13 @@
 package net.arna.jcraft.common.attack.moves.goldexperience.requiem;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.MobilityType;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.GEREntity;
-import net.arna.jcraft.common.attack.MobilityType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.CombatEntry;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -13,12 +16,19 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
     public FlightMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         mobilityType = MobilityType.FLIGHT;
+    }
+
+    @Override
+    public @NotNull MoveType<FlightMove> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -79,5 +89,14 @@ public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
     @Override
     public @NonNull FlightMove copy() {
         return copyExtras(new FlightMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<FlightMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<FlightMove>, FlightMove> buildCodec(RecordCodecBuilder.Instance<FlightMove> instance) {
+            return baseDefault(instance, FlightMove::new);
+        }
     }
 }

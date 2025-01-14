@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.magiciansred;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.RedBindEntity;
@@ -14,9 +17,14 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class RedBindAttack extends AbstractSimpleAttack<RedBindAttack, MagiciansRedEntity> {
-    public RedBindAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun,
+    public RedBindAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
                          final float hitboxSize, final float knockback, final float offset) {
-        super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);
+        super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
+    }
+
+    @Override
+    public @NonNull MoveType<RedBindAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -63,5 +71,14 @@ public final class RedBindAttack extends AbstractSimpleAttack<RedBindAttack, Mag
     public @NonNull RedBindAttack copy() {
         return copyExtras(new RedBindAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(), getStun(),
                 getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<RedBindAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<RedBindAttack>, RedBindAttack> buildCodec(RecordCodecBuilder.Instance<RedBindAttack> instance) {
+            return attackDefault(instance, RedBindAttack::new);
+        }
     }
 }

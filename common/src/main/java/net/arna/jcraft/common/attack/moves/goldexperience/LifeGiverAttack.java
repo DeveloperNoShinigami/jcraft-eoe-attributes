@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.goldexperience;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
@@ -14,6 +17,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Set;
 
 public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienceEntity> {
@@ -22,6 +27,11 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
     public LifeGiverAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
+    }
+
+    @Override
+    public @NotNull MoveType<LifeGiverAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -66,11 +76,11 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
                 butterfly.setMaster(user);
                 animal = butterfly;
             }
-            default -> JCraft.LOGGER.error("Attempted to create Life Giver entity with invalid LifeGiverType: " + this);
+            default -> JCraft.LOGGER.error("Attempted to create Life Giver entity with invalid LifeGiverType: {}", this);
         }
 
         if (animal == null) {
-            JCraft.LOGGER.error("Failed to create animal of type " + ctx.get(TYPE_TO_SUMMON) + " from item " + animalItem);
+            JCraft.LOGGER.error("Failed to create animal of type {} from item {}", ctx.get(TYPE_TO_SUMMON), animalItem);
             return Set.of();
         }
         item.shrink(1);
@@ -82,7 +92,7 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(TYPE_TO_SUMMON);
     }
 
@@ -100,5 +110,14 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
         SNAKE,
         FROG,
         BUTTERFLY
+    }
+
+    public static class Type extends AbstractMove.Type<LifeGiverAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<LifeGiverAttack>, LifeGiverAttack> buildCodec(RecordCodecBuilder.Instance<LifeGiverAttack> instance) {
+            return baseDefault(instance, LifeGiverAttack::new);
+        }
     }
 }

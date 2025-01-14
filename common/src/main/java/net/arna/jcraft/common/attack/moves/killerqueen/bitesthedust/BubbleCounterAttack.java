@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
@@ -11,12 +14,18 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
 public final class BubbleCounterAttack extends AbstractCounterAttack<BubbleCounterAttack, KQBTDEntity> {
     private static final CounterMissMove<KQBTDEntity> missAttack = new CounterMissMove<>(15);
 
     public BubbleCounterAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public @NotNull MoveType<BubbleCounterAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -49,5 +58,14 @@ public final class BubbleCounterAttack extends AbstractCounterAttack<BubbleCount
     @Override
     public @NonNull BubbleCounterAttack copy() {
         return copyExtras(new BubbleCounterAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractCounterAttack.Type<BubbleCounterAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<BubbleCounterAttack>, BubbleCounterAttack> buildCodec(RecordCodecBuilder.Instance<BubbleCounterAttack> instance) {
+            return baseDefault(instance, BubbleCounterAttack::new);
+        }
     }
 }

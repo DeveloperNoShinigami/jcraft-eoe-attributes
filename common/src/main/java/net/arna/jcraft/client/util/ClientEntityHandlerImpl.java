@@ -109,7 +109,7 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
             if (stand.distanceToSqr(client.player) > 6400) {
                 return; // 5 chunk aura render distance
             }
-            if (user.isInvisible()) {
+            if (user.isInvisible() || stand.isInvisible()) {
                 return;
             }
 

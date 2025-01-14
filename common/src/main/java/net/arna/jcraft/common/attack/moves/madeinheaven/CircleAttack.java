@@ -1,12 +1,15 @@
 package net.arna.jcraft.common.attack.moves.madeinheaven;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.*;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.common.attack.MobilityType;
+import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.util.RandomSource;
@@ -25,6 +28,11 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
         mobilityType = MobilityType.DASH;
+    }
+
+    @Override
+    public @NonNull MoveType<CircleAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -50,6 +58,13 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
     }
 
     @Override
+    public void tick(MadeInHeavenEntity attacker) {
+        super.tick(attacker);
+
+        tickCircle(attacker);
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         ctx.setInt(CIRCLING_TIME, 100);
         attacker.setAfterimage(true);
@@ -68,7 +83,7 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
         }
     }
 
-    public void tickCircle(final MadeInHeavenEntity attacker) {
+    private void tickCircle(final MadeInHeavenEntity attacker) {
         MoveContext ctx = attacker.getMoveContext();
         int circlingTime = ctx.getInt(CIRCLING_TIME);
         if (circlingTime <= 0 || !attacker.hasUser()) {
@@ -86,7 +101,7 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
             float orbitProg = ctx.getFloat(ORBIT_PROG);
             ctx.setFloat(ORBIT_PROG, orbitProg += 0.15f);
 
-            boolean toExit = attacker.getCurrentMove() != null && attacker.getCurrentMove().getOriginalMove() != this;
+            boolean toExit = attacker.getCurrentMove() != null && attacker.getCurrentMove() != this;
             Vec3 rotVec = user.getLookAngle();
             Vec3 exitVel = Vec3.ZERO;
             double side = attacker.getRemoteSideInput();
@@ -137,7 +152,7 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(CIRCLING_TIME);
         ctx.register(ORBIT_PROG);
         ctx.register(TARGET);
@@ -151,5 +166,14 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
     @Override
     public @NonNull CircleAttack copy() {
         return copyExtras(new CircleAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<CircleAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<CircleAttack>, CircleAttack> buildCodec(RecordCodecBuilder.Instance<CircleAttack> instance) {
+            return baseDefault(instance, CircleAttack::new);
+        }
     }
 }

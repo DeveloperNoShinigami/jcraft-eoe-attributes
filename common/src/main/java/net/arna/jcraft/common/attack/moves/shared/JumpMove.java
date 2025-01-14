@@ -1,13 +1,17 @@
 package net.arna.jcraft.common.attack.moves.shared;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.common.attack.MobilityType;
+import net.arna.jcraft.common.attack.core.MobilityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;
@@ -23,8 +27,13 @@ public final class JumpMove<A extends IAttacker<? extends A, ?>> extends Abstrac
     }
 
     @Override
-    public boolean canBeInitiated(final A attacker) {
-        return super.canBeInitiated(attacker) && attacker.getUser().onGround();
+    public @NonNull MoveType<JumpMove<A>> getMoveType() {
+        return Type.INSTANCE.cast();
+    }
+
+    @Override
+    public boolean conditionsMet(final A attacker) {
+        return super.conditionsMet(attacker) && attacker.getUser().onGround();
     }
 
     @Override
@@ -46,5 +55,15 @@ public final class JumpMove<A extends IAttacker<? extends A, ?>> extends Abstrac
     @Override
     public @NonNull JumpMove<A> copy() {
         return copyExtras(new JumpMove<>(getCooldown(), getWindup(), getDuration(), getMoveDistance(), strength));
+    }
+
+    public static class Type extends AbstractMove.Type<JumpMove<?>> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<JumpMove<?>>, JumpMove<?>> buildCodec(RecordCodecBuilder.Instance<JumpMove<?>> instance) {
+            return baseDefault(instance).and(Codec.FLOAT.fieldOf("strength").forGetter(JumpMove::getStrength))
+                    .apply(instance, applyExtras(JumpMove::new));
+        }
     }
 }

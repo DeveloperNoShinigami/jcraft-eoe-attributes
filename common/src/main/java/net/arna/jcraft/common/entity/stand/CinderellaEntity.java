@@ -3,8 +3,10 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.common.attack.actions.PlaySoundAction;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -23,13 +25,15 @@ import java.util.function.Consumer;
  * @see net.arna.jcraft.common.entity.npc.AyaTsujiEntity AyaTsujiEntity
  */
 public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEntity.State> {
+    public static final MoveSet<CinderellaEntity, State> MOVE_SET = MoveSet.create(StandType.CINDERELLA,
+            CinderellaEntity::registerMoves, State.class);
 
     public static final SimpleAttack<CinderellaEntity> LIGHT = SimpleAttack.<CinderellaEntity>lightAttack(
                     7, 11, 0.75f, 4f, 11, 0.15f, 0.2f)
             // .withFollowup(LIGHT_FOLLOWUP)
             // .withCrouchingVariant(CROUCHING_LIGHT)
             // .withAerialVariant(AIR_LIGHT)
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withInfo(
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")
@@ -39,9 +43,8 @@ public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEn
         super(StandType.CINDERELLA, world);
     }
 
-    @Override
-    protected void registerMoves(MoveMap<CinderellaEntity, State> moves) {
-        moves.registerImmediate(MoveType.LIGHT, LIGHT, State.LIGHT);
+    private static void registerMoves(MoveMap<CinderellaEntity, State> moves) {
+        moves.registerImmediate(MoveClass.LIGHT, LIGHT, State.LIGHT);
     }
 
     @Override

@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.silverchariot;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
@@ -15,6 +18,11 @@ public final class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAt
     public SpinBarrageAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
                              final float hitboxSize, final float knockback, final float offset, final int interval) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, interval);
+    }
+
+    @Override
+    public @NonNull MoveType<SpinBarrageAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -43,11 +51,11 @@ public final class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAt
     }
 
     @Override
-    public void tick(final SilverChariotEntity attacker, final int moveStun) {
+    public void activeTick(final SilverChariotEntity attacker, final int moveStun) {
         if (moveStun == 1) {
             giveBack(attacker);
         }
-        super.tick(attacker, moveStun);
+        super.activeTick(attacker, moveStun);
     }
 
     private void giveBack(final SilverChariotEntity attacker) {
@@ -77,5 +85,14 @@ public final class SpinBarrageAttack extends AbstractBarrageAttack<SpinBarrageAt
     public @NonNull SpinBarrageAttack copy() {
         return copyExtras(new SpinBarrageAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(), getStun(),
                 getHitboxSize(), getKnockback(), getOffset(), getInterval()));
+    }
+
+    public static class Type extends AbstractBarrageAttack.Type<SpinBarrageAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SpinBarrageAttack>, SpinBarrageAttack> buildCodec(RecordCodecBuilder.Instance<SpinBarrageAttack> instance) {
+            return barrageDefault(instance, SpinBarrageAttack::new);
+        }
     }
 }

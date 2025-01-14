@@ -5,31 +5,23 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.MoveInputType;
+import net.arna.jcraft.common.attack.actions.LungeAction;
+import net.arna.jcraft.common.attack.actions.PlaySoundAction;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
 import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.CloneSpawnMove;
-import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.D4CCounterAttack;
-import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.D4CGrabAttack;
-import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.DimensionalHopMove;
-import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.FlagMove;
-import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.GiveGunMove;
-import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.ItemPlaceMove;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.*;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
-import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.registry.JDimensionRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -50,6 +42,8 @@ import java.util.function.Consumer;
  * @see ItemPlaceMove
  */
 public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
+    public static final MoveSet<D4CEntity, State> MOVE_SET = MoveSet.create(StandType.D4C, D4CEntity::registerMoves, State.class);
+
     public static final ItemPlaceMove ITEM_PLACE = new ItemPlaceMove(JCraft.LIGHT_COOLDOWN, 8, 12, 0.75f)
             .withAnim(State.ITEM_PLACE)
             .withInfo(
@@ -58,8 +52,8 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
     public static final SimpleAttack<D4CEntity> LIGHT_FOLLOWUP = new SimpleAttack<D4CEntity>(
             0, 9, 14, 0.75f, 7f, 8, 1.75f, 1.25f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withSound(JSoundRegistry.D4C_LIGHT.get())
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withSound(JSoundRegistry.D4C_LIGHT)
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
             .withBlockStun(4)
             .withExtraHitBox(0, 0, 1)
@@ -71,23 +65,23 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             9, 15, 0.75f, 5f, 20, 1.5f, 0.25f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(ITEM_PLACE)
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Component.literal("Chop"),
                     Component.literal("relatively quick combo starter"));
     public static final MainBarrageAttack<D4CEntity> BARRAGE = new MainBarrageAttack<D4CEntity>(240, 0,
             40, 0.75f, 0.8f, 30, 2f, 0.25f, 0f, 3, Blocks.DEEPSLATE.defaultDestroyTime())
-            .withSound(JSoundRegistry.D4C_BARRAGE.get())
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withSound(JSoundRegistry.D4C_BARRAGE)
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, high stun"));
     public static final SimpleAttack<D4CEntity> CHARGE = new SimpleAttack<D4CEntity>(200, 14, 25,
             1f, 8f, 12, 2f, 1.5f, -0.2f)
-            .withInitAction(D4CEntity::doCharge)
-            .withSound(JSoundRegistry.D4C_HEAVY.get())
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withInitAction(LungeAction.lunge(0.75f, 0.15f).onGround())
+            .withSound(JSoundRegistry.D4C_HEAVY)
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHyperArmor()
             .withLaunch()
@@ -96,20 +90,19 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                     Component.literal("user & stand charge forward, uninterruptible launcher"));
     public static final DimensionalHopMove DIM_HOP = new DimensionalHopMove(1200, 40, 60,
             1f, 0f, 0, 1.75f, 0f, 0f)
-            .withSound(JSoundRegistry.D4C_DIMHOP.get())
+            .withSound(JSoundRegistry.D4C_DIMHOP)
             .withInfo(
                     Component.literal("Dimensional Hop"),
                     Component.literal("travels to a random dimension at exact coordinates, " +
                             "if user was hit in the last 30s, he is forced back, certified death button"));
     public static final GiveGunMove GIVE_GUN = new GiveGunMove(280, 10, 14, 0.75f)
-            .withSound(JSoundRegistry.D4C_THROW.get())
-            .withInitAction(D4CEntity::equipRevolver)
+            .withSound(JSoundRegistry.D4C_THROW)
             .withInfo(
                     Component.literal("Summon Gun"),
                     Component.literal("gives the user a revolver"));
     public static final SimpleAttack<D4CEntity> GRAB_HIT_FINAL = new SimpleAttack<D4CEntity>(0, 26,
             34, 0.75f, 4f, 9, 2f, 1.2f, 0f)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withLaunch()
             .withInfo(
@@ -117,19 +110,18 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                     Component.empty());
     public static final SimpleMultiHitAttack<D4CEntity> GRAB_HIT = new SimpleMultiHitAttack<D4CEntity>(0,
             34, 0.75f, 4f, 10, 2f, 0f, 0f, IntSet.of(11, 17, 26))
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             // Play sound regardless of whether something hit.
-            .withAction((attacker, user, ctx, targets) -> attacker.playSound(JSoundRegistry.REVOLVER_FIRE.get(), 1, 1))
+            .withAction(PlaySoundAction.playSound(JSoundRegistry.REVOLVER_FIRE))
             .withStunType(StunType.UNBURSTABLE)
             .withFinisher(17, GRAB_HIT_FINAL)
             .withInfo(
                     Component.literal("Grab (Final Hit)"),
                     Component.empty());
     public static final D4CGrabAttack GRAB = new D4CGrabAttack(280, 12, 21, 0.75f,
-            0f, 40, 1.5f, 0f, 0f, GRAB_HIT, State.THROW_HIT, 25, 1)
+            0f, 40, 1.5f, 0f, 0f, GRAB_HIT, 25, 1)
             .withCrouchingVariant(GIVE_GUN)
-            .withSound(JSoundRegistry.D4C_THROW.get())
-            .withInitAction(D4CEntity::equipRevolver)
+            .withSound(JSoundRegistry.D4C_THROW)
             .withInfo(
                     Component.literal("Grab"),
                     Component.literal("unblockable, combo finisher"));
@@ -138,7 +130,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                     Component.literal("Counter"),
                     Component.literal("0.25s startup, 1.5s duration, high damage, knocks back when hit"));
     public static final CloneSpawnMove CLONE_SPAWN = new CloneSpawnMove(400, 40, 50, 1f)
-            .withSound(JSoundRegistry.D4C_DIMHOP.get())
+            .withSound(JSoundRegistry.D4C_DIMHOP)
             .withInfo(
                     Component.literal("Dimensional Clone"),
                     Component.literal("""
@@ -149,13 +141,13 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                             SPECIAL 2 - Bow
                             SPECIAL 3 - None"""));
     public static final FlagMove FLAG = new FlagMove(280, 10, 60, 0f)
-            .withSound(JSoundRegistry.D4C_UTILITY.get())
+            .withSound(JSoundRegistry.D4C_UTILITY)
             .withInfo(
                     Component.literal("Dimensional Phase"),
                     Component.literal("hides in a flag in an un-stunnable, floating state"));
 
     public D4CEntity(Level worldIn) {
-        super(StandType.D4C, worldIn, JSoundRegistry.D4C_SUMMON.get(), true);
+        super(StandType.D4C, worldIn, JSoundRegistry.D4C_SUMMON, true);
 
         idleRotation = -45f;
 
@@ -167,7 +159,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                         BNBs:
                             -the lazy zoner
                             Light>Barrage>Light>Grab/Charge
-                            
+                        
                             -the western
                             Light>Summon Gun>Barrage>Light~stand.OFF>M2>M2>M2>~s.ON+Light>Charge""";
 
@@ -179,64 +171,40 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
         };
     }
 
-    @Override
-    protected void registerMoves(MoveMap<D4CEntity, State> moves) {
-        moves.registerImmediate(MoveType.LIGHT, CHOP, State.LIGHT);
+    private static void registerMoves(MoveMap<D4CEntity, State> moves) {
+        moves.registerImmediate(MoveClass.LIGHT, CHOP, State.LIGHT);
 
-        moves.register(MoveType.HEAVY, CHARGE, State.HEAVY);
-        moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
+        moves.register(MoveClass.HEAVY, CHARGE, State.HEAVY);
+        moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
 
-        moves.register(MoveType.SPECIAL1, CLONE_SPAWN, State.DIM_HOP);
-        moves.register(MoveType.SPECIAL2, GRAB, State.THROW).withCrouchingVariant(State.GIVE_GUN);
-        moves.register(MoveType.SPECIAL3, COUNTER, State.COUNTER);
-        moves.register(MoveType.ULTIMATE, DIM_HOP, State.DIM_HOP);
+        moves.register(MoveClass.SPECIAL1, CLONE_SPAWN, State.DIM_HOP);
+        moves.register(MoveClass.SPECIAL2, GRAB, State.THROW).withCrouchingVariant(State.GIVE_GUN);
+        moves.register(MoveClass.SPECIAL3, COUNTER, State.COUNTER);
+        moves.register(MoveClass.ULTIMATE, DIM_HOP, State.DIM_HOP);
 
-        moves.register(MoveType.UTILITY, FLAG, State.FLAG);
+        moves.register(MoveClass.UTILITY, FLAG, State.FLAG);
     }
 
-    private static void doCharge(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        if (!user.onGround()) {
-            return;
-        }
-        JUtils.addVelocity(user, attacker.getLookAngle().scale(0.75).add(0.0, 0.15, 0.0));
-    }
-
-    private static void equipRevolver(D4CEntity attacker, LivingEntity user, MoveContext ctx) {
-        attacker.setItemSlot(EquipmentSlot.MAINHAND, JItemRegistry.FV_REVOLVER.get().getDefaultInstance());
+    public void equipRevolver() {
+        setItemSlot(EquipmentSlot.MAINHAND, JItemRegistry.FV_REVOLVER.get().getDefaultInstance());
     }
 
     @Override
-    public boolean initMove(MoveType type) {
-        switch (type) {
-            case SPECIAL1 -> getMoveContext().set(CloneSpawnMove.CLONE_TYPE, CloneSpawnMove.CloneType.AXE);
-            case SPECIAL2 -> getMoveContext().set(CloneSpawnMove.CLONE_TYPE, CloneSpawnMove.CloneType.BOW);
-            case SPECIAL3 -> getMoveContext().set(CloneSpawnMove.CLONE_TYPE, CloneSpawnMove.CloneType.EMPTY);
+    public boolean initMove(MoveClass moveClass) {
+        switch (moveClass) {
             case ULTIMATE -> {
-                if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == DIM_HOP) {
+                // TODO is this necessary? Seems like it just restarts the dim hop move?
+                if (getCurrentMove() instanceof DimensionalHopMove) {
                     setMoveStun(0);
                     setCurrentMove(null);
                 }
-
-                if (level().dimension().equals(JDimensionRegistry.AU_DIMENSION_KEY)) {
-                    setMove(DIM_HOP, State.DIM_HOP);
-                    playSound(JSoundRegistry.D4C_DIMHOP.get(), 1, 1);
-                    return true;
-                }
             }
             case LIGHT -> {
-                if (tryFollowUp(type, MoveType.LIGHT)) return true;
+                if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
             }
         }
 
-        return super.initMove(type);
-    }
-
-    @Override
-    public void queueMove(MoveInputType type) {
-        if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == CLONE_SPAWN) {
-            return;
-        }
-        super.queueMove(type);
+        return super.initMove(moveClass);
     }
 
     @Override

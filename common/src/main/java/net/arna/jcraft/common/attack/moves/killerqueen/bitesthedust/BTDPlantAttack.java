@@ -1,11 +1,16 @@
 package net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
+import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,6 +20,8 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Set;
 
@@ -22,8 +29,13 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
     public static final MoveVariable<LivingEntity> BTD_ENTITY = new MoveVariable<>(LivingEntity.class);
     public static final MoveVariable<Vec3> BTD_POS = new MoveVariable<>(Vec3.class);
 
-    public BTDPlantAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final int stun, final float hitboxSize, final float offset) {
-        super(cooldown, windup, duration, attackDistance, 0f, stun, hitboxSize, 0f, offset);
+    public BTDPlantAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final int stun, final float hitboxSize, final float offset) {
+        super(cooldown, windup, duration, moveDistance, 0f, stun, hitboxSize, 0f, offset);
+    }
+
+    @Override
+    public @NotNull MoveType<BTDPlantAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -111,9 +123,21 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(BTD_ENTITY);
         ctx.register(BTD_POS);
+    }
+
+    @Override
+    public StandEntity.MoveSelectionResult specificMoveSelectionCriterion(KQBTDEntity attacker, LivingEntity mob,
+                                                                          LivingEntity target, int stunTicks, int enemyMoveStun,
+                                                                          double distance, StandEntity<?, ?> enemyStand,
+                                                                          AbstractMove<?, ?> enemyAttack) {
+        if (attacker.getMoveContext().get(BTDPlantAttack.BTD_ENTITY) != null) {
+            return StandEntity.MoveSelectionResult.USE;
+        }
+
+        return StandEntity.MoveSelectionResult.PASS;
     }
 
     @Override
@@ -123,7 +147,17 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
 
     @Override
     public @NonNull BTDPlantAttack copy() {
-        return copyExtras(new BTDPlantAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getStun(), getHitboxSize(),
-                getOffset()));
+        return copyExtras(new BTDPlantAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getStun(),
+                getHitboxSize(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<BTDPlantAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<BTDPlantAttack>, BTDPlantAttack> buildCodec(RecordCodecBuilder.Instance<BTDPlantAttack> instance) {
+            return instance.group(extras(), attackExtras(), cooldown(), windup(), duration(), moveDistance(), stun(), hitboxSize(), offset())
+                    .apply(instance, applyAttackExtras(BTDPlantAttack::new));
+        }
     }
 }

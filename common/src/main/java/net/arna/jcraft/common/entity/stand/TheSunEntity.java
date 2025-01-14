@@ -4,17 +4,15 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.attack.moves.shared.BarrageAttack;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.NoOpMove;
-import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
+import net.arna.jcraft.common.attack.moves.thesun.FireMeteorAttack;
+import net.arna.jcraft.common.attack.moves.thesun.FireSunBeamAttack;
+import net.arna.jcraft.common.attack.moves.thesun.MeteorShowerAttack;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
-import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
-import net.arna.jcraft.common.entity.projectile.SunBeamProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -48,8 +46,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.Collection;
@@ -64,6 +62,9 @@ import java.util.function.Consumer;
  * @see net.arna.jcraft.client.renderer.entity.stands.SunRenderer SunRenderer
  */
 public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.State> {
+    public static final MoveSet<TheSunEntity, State> MOVE_SET = MoveSet.create(StandType.THE_SUN,
+            TheSunEntity::registerMoves, State.class);
+
     private static final EntityDataAccessor<Boolean> PASSIVE;
     private static final EntityDataAccessor<Float> SCALE;
     // Only used for rendering. Ensures the scale doesn't change halfway during a tick cuz of syncing.
@@ -71,31 +72,18 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     public static final float MAX_SCALE = 3.0F, MIN_SCALE = 1.0F;
     public static final double MAX_DISTANCE = 64.0, AIMING_DISTANCE = 128.0;
     private int overextensionTime = 0;
-    private Vec3 desiredPosition, targetPosition;
+    private Vec3 desiredPosition;
 
-    private static final SimpleAttack<TheSunEntity> FIRE_SUNBEAM = new SimpleAttack<TheSunEntity>(20, 5, 10, 0, 0, 0, 0, 0, 0)
-            .withInitAction((attacker, user, ctx) -> attacker.setTargetPosition(user))
-            .withAction((attacker, user, ctx, targets) -> fireSunBeam(attacker, user, 0.0f))
-            .markRanged()
+    private static final FireSunBeamAttack FIRE_SUNBEAM = new FireSunBeamAttack(20, 5, 10, 1, 0)
             .withInfo(
                     Component.nullToEmpty("Fire Sunbeam"),
                     Component.nullToEmpty("""
                             Fires a sunbeam with perfect precision.""")
             );
 
-    private static final SimpleAttack<TheSunEntity> FIRE_METEOR = new SimpleAttack<TheSunEntity>(20, 5, 10, 0, 0, 0, 0, 0, 0)
+    private static final FireMeteorAttack FIRE_METEOR = new FireMeteorAttack(20, 10, 1, 1,
+            2.5f, 0f, true, IntSet.of(5))
             .withCrouchingVariant(FIRE_SUNBEAM)
-            .withInitAction((attacker, user, ctx) -> attacker.setTargetPosition(user))
-            .withAction((attacker, user, ctx, targets) -> {
-                Vec3 pos = attacker.randomPos();
-                MeteorProjectile meteor = fireMeteor(attacker, user, pos, getLookVector(pos, attacker.targetPosition), 2.5f, 0f);
-                meteor.setNoGravity(true);
-
-                if (attacker.getRawScale() == MAX_SCALE) {
-                    meteor.setExplosive(true);
-                }
-            })
-            .markRanged()
             .withInfo(
                     Component.nullToEmpty("Fire Meteor"),
                     Component.nullToEmpty("""
@@ -103,12 +91,8 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                             At max size, the meteor is explosive.""")
             );
 
-    private static final SimpleMultiHitAttack<TheSunEntity> FIRE_METEORS_1 = new SimpleMultiHitAttack<TheSunEntity>(
-            100, 24, 0, 0, 0, 0, 0, 0, IntSet.of(8, 16, 24)
-    )
-            .withInitAction((attacker, user, ctx) -> attacker.setTargetPosition(user))
-            .withAction((attacker, user, ctx, targets) -> fireMeteors1(attacker, user))
-            .markRanged()
+    private static final FireMeteorAttack STARBURST = new FireMeteorAttack(100, 24, 3, 1.75f,
+            2.5f, 10f, false, IntSet.of(8, 16, 24))
             .withInfo(
                     Component.nullToEmpty("Starburst"),
                     Component.nullToEmpty("""
@@ -116,17 +100,9 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                             Amount of meteors changes proportional to the size of The Sun.""")
             );
 
-    private static final BarrageAttack<TheSunEntity> FIRE_METEORS_2 = new BarrageAttack<TheSunEntity>(
-            100, 10, 110, 0, 0, 0, 0, 0, 0, 2
-    )
-            .withAction((attacker, user, ctx, targets) -> {
-                for (int i = 0; i < attacker.getRawScale(); i++) {
-                    fireMeteor(attacker, user, attacker.randomPos(), JUtils.randUnitVec(attacker.random), 1.25f, 0f);
-                }
-            })
-            .withSound(JSoundRegistry.SUN_SHOWER.get())
+    private static final MeteorShowerAttack METEOR_SHOWER = new MeteorShowerAttack(100, 10, 110, 2)
+            .withSound(JSoundRegistry.SUN_SHOWER)
             .withoutSlowness()
-            .markRanged()
             .withInfo(
                     Component.nullToEmpty("Meteor Shower"),
                     Component.nullToEmpty("""
@@ -134,12 +110,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                             Amount of meteors changes proportional to the size of The Sun.""")
             );
 
-    private static final SimpleMultiHitAttack<TheSunEntity> FIRE_BEAM = new SimpleMultiHitAttack<TheSunEntity>(
-            200, 24, 0, 0, 0, 0, 0, 0, IntSet.of(8, 12, 16)
-    )
-            .withInitAction((attacker, user, ctx) -> attacker.setTargetPosition(user))
-            .withAction((attacker, user, ctx, targets) -> fireSunBeam(attacker, user, 2.5f))
-            .markRanged()
+    private static final FireSunBeamAttack INCINERATING_SUNSHINE = new FireSunBeamAttack(200, 8, 24, 3, 2.5f)
             .withInfo(
                     Component.nullToEmpty("Incinerating Sunshine"),
                     Component.nullToEmpty("Fires 3 sunbeams.")
@@ -172,7 +143,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                             Passive mode - allows usage of spec moves while keeping the Sun summoned.""")
             );
 
-    private Vec3 randomPos() {
+    public Vec3 randomPos() {
         return randomPos(getRawScale());
     }
 
@@ -184,89 +155,22 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         );
     }
 
-    private static Vector2f getLookPY(Vec3 origin, Vec3 target) {
-        final double d = target.x - origin.x, e = target.y - origin.y, f = target.z - origin.z;
-        final double g = Math.sqrt(d * d + f * f);
-
-        final float yaw = Mth.wrapDegrees((float) (Mth.atan2(-f, -d) * 57.2957763671875) - 90.0F); // deg; X, Z
-        final float pitch = Mth.wrapDegrees((float) (Mth.atan2(-e, -g) * 57.2957763671875)); // deg; Y, len
-
-        return new Vector2f(pitch, yaw);
-    }
-    private static Vec3 getLookVector(Vec3 origin, Vec3 target) {
-        Vector2f pitchYaw = getLookPY(origin, target);
-        final float pitch = pitchYaw.x, yaw = pitchYaw.y;
-
-        return new Vec3(
-                -Mth.sin(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F),
-                -Mth.sin((pitch) * 0.017453292F),
-                Mth.cos(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F)
-        );
-    }
-
-    private static MeteorProjectile fireMeteor(TheSunEntity attacker, @NonNull LivingEntity user, Vec3 pos, Vec3 velocity) {
-        return fireMeteor(attacker, user, pos, velocity, 1.25f, 10f);
-    }
-
-    private static MeteorProjectile fireMeteor(TheSunEntity attacker, @NonNull LivingEntity user, Vec3 pos, Vec3 velocity, float speed, float divergence) {
-        final MeteorProjectile meteor = new MeteorProjectile(attacker.level(), user, attacker);
-        meteor.setSkin(attacker.getSkin());
-        meteor.setPos(pos);
-        meteor.shoot(velocity.x, velocity.y, velocity.z, speed, divergence);
-
-        attacker.level().addFreshEntity(meteor);
-        final AbstractMove<?, ? super TheSunEntity> move = attacker.getCurrentMove();
-        if (move != null && !move.isBarrage()) {
-            attacker.playSound(JSoundRegistry.SUN_METEOR_FIRE.get(), 1f, 1f);
-        }
-
-        return meteor;
-    }
-
-    private static void fireSunBeam(TheSunEntity attacker, @NonNull LivingEntity user, float divergence) {
-        final Vec3 pos = attacker.randomPos();
-
-        final SunBeamProjectile sunBeam = new SunBeamProjectile(attacker.level(), user, attacker);
-        sunBeam.setSkin(attacker.getSkin());
-        sunBeam.setPos(pos);
-
-        final Vector2f pitchYaw = getLookPY(pos, attacker.targetPosition);
-        final float pitch = pitchYaw.x, yaw = pitchYaw.y;
-        final Vec3 lookVec = new Vec3(
-                -Mth.sin(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F),
-                -Mth.sin((pitch) * 0.017453292F),
-                Mth.cos(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F)
-        );
-
-        sunBeam.setXRot(pitch + (attacker.random.nextFloat() - 0.5f) * divergence);
-        sunBeam.setYRot(yaw + (attacker.random.nextFloat() - 0.5f) * divergence);
-        sunBeam.shoot(lookVec.x, lookVec.y, lookVec.z, 0.01f, divergence);
-
-        attacker.level().addFreshEntity(sunBeam);
-        attacker.playSound(JSoundRegistry.SUN_BEAM_RAY.get(), 1f, 1f);
-    }
-
-    private static void fireMeteors1(TheSunEntity attacker, LivingEntity user) {
-        for (int i = 0; i < 3 * attacker.getRawScale(); i++) {
-            Vec3 pos = attacker.randomPos();
-            fireMeteor(attacker, user, pos, getLookVector(pos, attacker.targetPosition).scale(1.75)).setNoGravity(true);
-        }
-    }
-
     static {
         PASSIVE = SynchedEntityData.defineId(TheSunEntity.class, EntityDataSerializers.BOOLEAN);
         SCALE = SynchedEntityData.defineId(TheSunEntity.class, EntityDataSerializers.FLOAT);
     }
 
     public TheSunEntity(Level worldIn) {
-        super(StandType.THE_SUN, worldIn, JSoundRegistry.SUN_SUMMON.get());
+        super(StandType.THE_SUN, worldIn, JSoundRegistry.SUN_SUMMON);
 
         idleRotation = 0;
 
         proCount = 2;
         conCount = 2;
 
-        freespace = "Cannot buffer moves.\n Must stay within " + MAX_DISTANCE + " of the user, otherwise it loses size and disappears.\nGrace period of 1 second before heat field activates after summoning.\nHeat field applies Nausea > Weakness > Slowness > Burning as entities get closer.\n";
+        freespace = "Cannot buffer moves.\n Must stay within " + MAX_DISTANCE + " blocks of the user, otherwise it loses size and disappears.\n" +
+                "Grace period of 1 second before heat field activates after summoning.\n" +
+                "Heat field applies Nausea > Weakness > Slowness > Burning as entities get closer.";
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0f, 0.8f, 0.4f),
@@ -289,17 +193,16 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         return type == MoveInputType.ULTIMATE;
     }
 
-    @Override
-    protected void registerMoves(MoveMap<TheSunEntity, State> moves) {
-        moves.register(MoveType.HEAVY, FIRE_METEOR, null).withCrouchingVariant(null);
+    private static void registerMoves(MoveMap<TheSunEntity, State> moves) {
+        moves.register(MoveClass.HEAVY, FIRE_METEOR, null).withCrouchingVariant(null);
 
-        moves.register(MoveType.SPECIAL1, FIRE_METEORS_1, null);
-        moves.register(MoveType.SPECIAL2, FIRE_METEORS_2, null);
-        moves.register(MoveType.SPECIAL3, FIRE_BEAM, null);
+        moves.register(MoveClass.SPECIAL1, STARBURST, null);
+        moves.register(MoveClass.SPECIAL2, METEOR_SHOWER, null);
+        moves.register(MoveClass.SPECIAL3, INCINERATING_SUNSHINE, null);
 
-        moves.register(MoveType.ULTIMATE, CHANGE_SIZE, null);
+        moves.register(MoveClass.ULTIMATE, CHANGE_SIZE, null);
 
-        moves.register(MoveType.UTILITY, TOGGLE_PASSIVE, null).withCrouchingVariant(null);
+        moves.register(MoveClass.UTILITY, TOGGLE_PASSIVE, null).withCrouchingVariant(null);
     }
 
     @Override
@@ -310,7 +213,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     @Override
-    public boolean handleMove(MoveType type) {
+    public boolean handleMove(MoveClass type) {
         LivingEntity user = getUserOrThrow();
         boolean sneaking = user.isShiftKeyDown();
 
@@ -361,9 +264,10 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         return true;
     }
 
-    private void setTargetPosition(LivingEntity user) {
+    public Vec3 acquireTargetPosition() {
+        final LivingEntity user = getUser();
         if (user == null) {
-            return;
+            return null;
         }
 
         final Vec3 eP = user.getEyePosition();
@@ -374,13 +278,15 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                 AIMING_DISTANCE * AIMING_DISTANCE
         );
 
-        targetPosition = Objects.requireNonNullElseGet(eHit, () -> user.level().clip(new ClipContext(eP, eP.add(rangeMod),
+        Vec3 targetPosition = Objects.requireNonNullElseGet(eHit, () -> user.level().clip(new ClipContext(eP, eP.add(rangeMod),
                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user))).getLocation();
 
         if (user instanceof ServerPlayer serverPlayer) {
             serverPlayer.connection.send(new ClientboundLevelParticlesPacket(JParticleTypeRegistry.SUN_LOCK_ON.get(), true,
                     targetPosition.x, targetPosition.y, targetPosition.z, 0, 0, 0, 0, 1));
         }
+
+        return targetPosition;
     }
 
     @Override
@@ -403,7 +309,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
+    public boolean hurt(@NotNull DamageSource source, float amount) {
         if (source.is(DamageTypeTags.IS_FIRE) || source.is(DamageTypes.IN_WALL)) {
             return false;
         }
@@ -440,35 +346,31 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
      * @param entity The entity to push away.
      */
     @Override
-    public void push(Entity entity) {
-        if (!isPassengerOfSameVehicle(entity)) {
-            if (!entity.noPhysics && !this.noPhysics) {
-                double d = entity.getX() - getX();
-                double e = entity.getZ() - getZ();
-                double f = Mth.absMax(d, e);
-                if (f >= 0.001) {
-                    f = Math.sqrt(f);
-                    d /= f;
-                    e /= f;
-                    double g = 1.0 / f;
-                    if (g > 1.0) {
-                        g = 1.0;
-                    }
+    public void push(@NotNull Entity entity) {
+        if (isPassengerOfSameVehicle(entity) || entity.noPhysics || this.noPhysics || !entity.isPushable()) return;
 
-                    d *= g;
-                    e *= g;
-                    d *= 0.1;
-                    e *= 0.1;
+        double d = entity.getX() - getX();
+        double e = entity.getZ() - getZ();
+        double f = Mth.absMax(d, e);
+        if (f < 0.001) return;
 
-                    if (entity.isPushable()) {
-                        entity.push(d, 0.0, e);
-                    }
-                }
-            }
+        f = Math.sqrt(f);
+        d /= f;
+        e /= f;
+        double g = 1.0 / f;
+        if (g > 1.0) {
+            g = 1.0;
         }
+
+        d *= g;
+        e *= g;
+        d *= 0.1;
+        e *= 0.1;
+
+        entity.push(d, 0.0, e);
     }
 
-    public boolean canCollideWith(Entity other) {
+    public boolean canCollideWith(@NotNull Entity other) {
         return other.canBeCollidedWith() && !this.isPassengerOfSameVehicle(other);
     }
 
@@ -516,7 +418,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                 if (user instanceof Mob) {
                     // Periodically increase size
                     // Not a real combat strategy, but it does show off the possibility and change his damage output
-                    if (Mth.sin(tickCount / 100.0f) > 1.0f) initMove(MoveType.ULTIMATE);
+                    if (Mth.sin(tickCount / 100.0f) > 1.0f) initMove(MoveClass.ULTIMATE);
 
                     // Stay as close as possible to user without harming them
                     Direction gravity = GravityChangerAPI.getGravityDirection(user);

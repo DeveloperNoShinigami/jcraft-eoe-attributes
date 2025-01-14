@@ -1,9 +1,13 @@
 package net.arna.jcraft.common.attack.moves.shared;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import org.jetbrains.annotations.NotNull;
 
 public final class SimpleAttack<A extends IAttacker<? extends A, ?>> extends AbstractSimpleAttack<SimpleAttack<A>, A> {
     /**
@@ -18,8 +22,8 @@ public final class SimpleAttack<A extends IAttacker<? extends A, ?>> extends Abs
      * @param knockback    The strength of the knock-back.
      * @param offset       The amount the hitbox is offset by.
      */
-    public SimpleAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
-                        final float hitboxSize, final float knockback, final float offset) {
+    public SimpleAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
+                        final float damage, final int stun,final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
     }
 
@@ -32,9 +36,15 @@ public final class SimpleAttack<A extends IAttacker<? extends A, ?>> extends Abs
      * @param damage       The damage this attack deals.
      * @param offset       The amount the hitbox is offset by.
      */
-    public static <A extends IAttacker<? extends A, ?>> SimpleAttack<A> lightAttack(final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+    public static <A extends IAttacker<? extends A, ?>> SimpleAttack<A> lightAttack(final int windup, final int duration,
+                                                                                    final float moveDistance, final float damage, final int stun,
                                                                                     final float knockback, final float offset) {
         return new SimpleAttack<>(JCraft.LIGHT_COOLDOWN, windup, duration, moveDistance, damage, stun, 1.5f, knockback, offset);
+    }
+
+    @Override
+    public @NotNull MoveType<SimpleAttack<A>> getMoveType() {
+        return Type.INSTANCE.cast();
     }
 
     @Override
@@ -46,5 +56,14 @@ public final class SimpleAttack<A extends IAttacker<? extends A, ?>> extends Abs
     public @NonNull SimpleAttack<A> copy() {
         return copyExtras(new SimpleAttack<>(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
                 getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<SimpleAttack<?>> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NotNull App<RecordCodecBuilder.Mu<SimpleAttack<?>>, SimpleAttack<?>> buildCodec(RecordCodecBuilder.Instance<SimpleAttack<?>> instance) {
+            return attackDefault(instance, SimpleAttack::new);
+        }
     }
 }

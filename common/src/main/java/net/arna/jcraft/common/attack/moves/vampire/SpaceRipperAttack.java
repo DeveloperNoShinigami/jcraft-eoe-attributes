@@ -1,32 +1,42 @@
 package net.arna.jcraft.common.attack.moves.vampire;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.LaserProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.spec.VampireSpec;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.registry.JSoundRegistry;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.Set;
 
 public final class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, VampireSpec> {
-    public static final IntMoveVariable CHARGE_TIME = new IntMoveVariable();
-
-    public SpaceRipperAttack(final int cooldown, final int windup, final int duration, final float attackDistance) {
-        super(cooldown, windup, duration, attackDistance);
+    public SpaceRipperAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
+        super(cooldown, windup, duration, moveDistance);
         ranged = true;
+    }
+
+    @Override
+    public @NonNull MoveType<SpaceRipperAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
     public @NonNull Set<LivingEntity> perform(final VampireSpec attacker, final LivingEntity user, final MoveContext ctx) {
         final Vec3 rotVec = user.getLookAngle();
 
-        int chargeTime = ctx.getInt(CHARGE_TIME);
+        int chargeTime = getChargeTime(attacker);
 
+        //noinspection ConstantValue // what??
         for (int i = -1; i < 3; i += 2) {
             LaserProjectile laser = new LaserProjectile(attacker.getEntityWorld(), user);
             laser.setDeltaMovement(getRotVec(attacker).scale(2 + (chargeTime - 15) / 10.0));
@@ -45,12 +55,8 @@ public final class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, Vam
             JComponentPlatformUtils.getShockwaveHandler(user.level()).addShockwave(offsetHeightPos, rotVec, 2);
         }
 
+        JUtils.serverPlaySound(JSoundRegistry.VAMPIRE_LASER_FIRE.get(), (ServerLevel) user.level(), user.position(), 96);
         return Set.of();
-    }
-
-    @Override
-    public void registerContextEntries(final MoveContext ctx) {
-        ctx.register(CHARGE_TIME);
     }
 
     @Override
@@ -61,5 +67,14 @@ public final class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, Vam
     @Override
     public @NonNull SpaceRipperAttack copy() {
         return copyExtras(new SpaceRipperAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<SpaceRipperAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SpaceRipperAttack>, SpaceRipperAttack> buildCodec(RecordCodecBuilder.Instance<SpaceRipperAttack> instance) {
+            return baseDefault(instance, SpaceRipperAttack::new);
+        }
     }
 }

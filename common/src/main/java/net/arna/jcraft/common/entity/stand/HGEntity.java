@@ -5,8 +5,9 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.EmeraldSplashAttack;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.NetSetMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
@@ -31,8 +32,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static net.arna.jcraft.common.attack.moves.hierophantgreen.EmeraldSplashAttack.CHARGE_TIME;
-
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Hierophant_Green">Hierophant Green</a>.
  * @see StandType#HIEROPHANT_GREEN
@@ -42,19 +41,22 @@ import static net.arna.jcraft.common.attack.moves.hierophantgreen.EmeraldSplashA
  * @see NetSetMove
  */
 public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
-    public static final UppercutAttack<HGEntity> AIR_LIGHT = new UppercutAttack<HGEntity>(
+    public static final MoveSet<HGEntity, State> MOVE_SET = MoveSet.create(StandType.HIEROPHANT_GREEN,
+            HGEntity::registerMoves, State.class);
+
+    public static final SimpleUppercutAttack<HGEntity> AIR_LIGHT = new SimpleUppercutAttack<HGEntity>(
             JCraft.LIGHT_COOLDOWN, 7, 14, 0.75f, 5f, 15, 1.5f, 0.4f, -0.3f, 0.4f)
             .withAnim(State.AIR_LIGHT)
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withInfo(
                     Component.literal("Backward Flip Kick"),
                     Component.literal("launches up")
             );
     public static final KnockdownAttack<HGEntity> CROUCHING_LIGHT_FOLLOWUP = new KnockdownAttack<HGEntity>(
             0, 9, 16, 0.75f, 6f, 13, 1.75f, 0.75f, 0.4f, 35)
-            .withSound(JSoundRegistry.HG_CROUCH_LIGHT.get())
+            .withSound(JSoundRegistry.HG_CROUCH_LIGHT)
             .withAnim(State.CROUCHING_LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Component.literal("Sweep"),
@@ -64,17 +66,17 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     7, 11, 0.75f, 5f, 12, 0.15f, 0.3f)
             .withAnim(State.CROUCHING_LIGHT)
             .withFollowup(CROUCHING_LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_4.get())
+            .withImpactSound(JSoundRegistry.IMPACT_4)
             .withInfo(
                     Component.literal("Low Punch"),
                     Component.literal("quick combo starter")
             );
 
-    public static final UppercutAttack<HGEntity> LIGHT_FOLLOWUP = new UppercutAttack<HGEntity>(
+    public static final SimpleUppercutAttack<HGEntity> LIGHT_FOLLOWUP = new SimpleUppercutAttack<HGEntity>(
             0, 10, 15, 0.75f, 6f, 13, 1.75f, 0.5f, -0.2f, 0.4f)
-            .withSound(JSoundRegistry.HG_LIGHT_FOLLOWUP.get())
+            .withSound(JSoundRegistry.HG_LIGHT_FOLLOWUP)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withBlockStun(4)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -86,15 +88,15 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(CROUCHING_LIGHT)
             .withAerialVariant(AIR_LIGHT)
-            .withImpactSound(JSoundRegistry.IMPACT_4.get())
+            .withImpactSound(JSoundRegistry.IMPACT_4)
             .withInfo(
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")
             );
     public static final SimpleAttack<HGEntity> SENDOFF = new SimpleAttack<HGEntity>(
             180, 11, 20, 1, 8f, 16, 2f, 1.5f, 0)
-            .withSound(JSoundRegistry.WS_DONUT.get())
-            .withImpactSound(JSoundRegistry.IMPACT_1.get())
+            .withSound(JSoundRegistry.WS_DONUT)
+            .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withLaunch()
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
@@ -106,8 +108,8 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
     public static final SimpleMultiHitAttack<HGEntity> BARRAGE = new SimpleMultiHitAttack<HGEntity>(
             200, 28, 1, 2f, 20, 2f, 0.3f, 0.25f,
             IntSet.of(3, 9, 15, 17, 25))
-            .withSound(JSoundRegistry.HG_BARRAGE.get())
-            .withImpactSound(JSoundRegistry.IMPACT_3.get())
+            .withSound(JSoundRegistry.HG_BARRAGE)
+            .withImpactSound(JSoundRegistry.IMPACT_3)
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, medium stun")
@@ -125,7 +127,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
     public static final SimpleAttack<HGEntity> EXTEND_FORWARD = new SimpleAttack<HGEntity>(
             100, 10, 21, 1f, 5, 15, 1.5f, 0.7f, 0.2f)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
-            .withSound(JSoundRegistry.HG_EXTEND.get())
+            .withSound(JSoundRegistry.HG_EXTEND)
             .withExtraHitBox(2, -0.1, 1.5)
             .withFinisher(12, EXTEND_FORWARD_SECOND)
             .withInfo(
@@ -146,7 +148,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             100, 10, 21, 1f, 5, 15, 1.5f, 0.7f, -0.2f)
             .withCrouchingVariant(EXTEND_FORWARD)
 
-            .withSound(JSoundRegistry.HG_EXTEND.get())
+            .withSound(JSoundRegistry.HG_EXTEND)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withExtraHitBox(2, 0.1, 1.5)
             .withFinisher(12, EXTEND_UP_SECOND)
@@ -155,18 +157,15 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.literal("Hierophant extends its arm upward in a far-reaching attack")
             );
 
-    public static final EmeraldSplashAttack EMERALD_SPLASH = new EmeraldSplashAttack(0, 12, 1, 0, 0, 0, 0,
-            IntSet.of(1, 3, 5), 1.5f)
-            .withSound(JSoundRegistry.HG_SPLASH.get())
+    public static final EmeraldSplashAttack EMERALD_SPLASH = new EmeraldSplashAttack(0, 12,
+            1, 0, 0, 0, 0, IntSet.of(1, 3, 5), 1.5f, false)
+            .withSound(JSoundRegistry.HG_SPLASH)
             .withInfo(
                     Component.literal("Emerald Splash (Fire)"),
                     Component.empty()
             );
-    public static final HoldableMove<HGEntity, State> EMERALD_CHARGE = new HoldableMove<>(100, 0, 40, 1,
-            EMERALD_SPLASH, State.EMERALD_SPLASH, 7)
-            .withInitAction(
-                    (attacker, user, ctx) -> ctx.setInt(CHARGE_TIME, 0)
-            )
+    public static final SimpleHoldableMove<HGEntity> EMERALD_CHARGE = new SimpleHoldableMove<HGEntity>(100, 0, 40, 1, 7)
+            .withFollowup(EMERALD_SPLASH)
             .withInfo(
                     Component.literal("Emerald Splash"),
                     Component.literal("""
@@ -174,7 +173,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                             Bursts contain 3-6 emeralds depending on how long you hold."""));
 
     public static final NetSetMove NET_SET = new NetSetMove(200, 9, 15, 1f)
-            .withSound(JSoundRegistry.HG_NET_SET.get())
+            .withSound(JSoundRegistry.HG_NET_SET)
             .withInfo(
                     Component.literal("Tentacle Place"),
                     Component.literal("""
@@ -189,29 +188,10 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.empty()
             );
 
-    public static final EmeraldSplashAttack EMERALD_SUPER = new EmeraldSplashAttack(500, 40, 1, 0, 0, 0, 0,
-            IntSet.of(12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32), 2f)
-            .withInitAction(
-                    (attacker, user, ctx) -> ctx.setInt(CHARGE_TIME, 0)
-            )
-            .withInitAction(
-                    (attacker, user, ctx) -> {
-                        LivingEntity shooter = attacker.isRemote() ? attacker : user;
-
-                        Vec3 upVec = GravityChangerAPI.getEyeOffset(shooter);
-                        Vec3 heightOffset = upVec.scale(0.5);
-                        Vec3 eyePos = shooter.position().add(heightOffset);
-                        Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
-                                (entity -> !(entity instanceof IOwnable ownable) || ownable.getMaster() != user)).getLocation();
-
-                        user.level().getEntitiesOfClass(HGNetEntity.class, user.getBoundingBox().inflate(96), EntitySelector.LIVING_ENTITY_STILL_ALIVE)
-                                .stream()
-                                .filter(hgNetEntity -> hgNetEntity.getMaster() == user)
-                                .forEach(hgNetEntity -> hgNetEntity.tryFireAt(pos, true));
-                    }
-            )
+    public static final EmeraldSplashAttack EMERALD_SUPER = new EmeraldSplashAttack(500, 40,
+            1, 0, 0, 0, 0, IntSet.of(12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32), 2f, true)
             .withReflect()
-            .withSound(JSoundRegistry.HG_SPLASH.get())
+            .withSound(JSoundRegistry.HG_SPLASH)
             .withInfo(
                     Component.literal("All-Consuming Emerald Splash"),
                     Component.literal("""
@@ -221,7 +201,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                             """));
 
     public HGEntity(Level worldIn) {
-        super(StandType.HIEROPHANT_GREEN, worldIn, JSoundRegistry.HG_SUMMON.get());
+        super(StandType.HIEROPHANT_GREEN, worldIn, JSoundRegistry.HG_SUMMON);
         idleRotation = 220f;
 
         proCount = 3;
@@ -243,57 +223,56 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         };
     }
 
-    @Override
-    protected void registerMoves(MoveMap<HGEntity, State> moves) {
-        MoveMap.Entry<HGEntity, State> light = moves.register(MoveType.LIGHT, LIGHT, State.LIGHT);
-        light.withFollowUp(State.LIGHT_FOLLOWUP);
+    private static void registerMoves(MoveMap<HGEntity, State> moves) {
+        MoveMap.Entry<HGEntity, State> light = moves.register(MoveClass.LIGHT, LIGHT, State.LIGHT);
+        light.withFollowup(State.LIGHT_FOLLOWUP);
         MoveMap.Entry<HGEntity, State> crouchingLight = light.withCrouchingVariant(State.CROUCHING_LIGHT);
-        crouchingLight.withFollowUp(State.CROUCHING_LIGHT_FOLLOWUP);
+        crouchingLight.withFollowup(State.CROUCHING_LIGHT_FOLLOWUP);
         light.withAerialVariant(State.AIR_LIGHT);
 
-        moves.register(MoveType.HEAVY, SENDOFF, State.SENDOFF);
-        moves.register(MoveType.BARRAGE, BARRAGE, State.BARRAGE);
+        moves.register(MoveClass.HEAVY, SENDOFF, State.SENDOFF);
+        moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
 
-        moves.register(MoveType.SPECIAL1, EMERALD_CHARGE, State.EMERALD_CHARGE);
-        moves.register(MoveType.SPECIAL2, EXTEND_UP, State.EXTEND_UP).withCrouchingVariant(State.EXTEND_FORWARD);
-        moves.register(MoveType.SPECIAL3, NET_SET, State.NET_SET);
+        moves.register(MoveClass.SPECIAL1, EMERALD_CHARGE, State.EMERALD_CHARGE).withFollowup(State.EMERALD_SPLASH);
+        moves.register(MoveClass.SPECIAL2, EXTEND_UP, State.EXTEND_UP).withCrouchingVariant(State.EXTEND_FORWARD);
+        moves.register(MoveClass.SPECIAL3, NET_SET, State.NET_SET);
 
-        moves.register(MoveType.ULTIMATE, EMERALD_SUPER, State.EMERALD_SUPER);
+        moves.register(MoveClass.ULTIMATE, EMERALD_SUPER, State.EMERALD_SUPER);
 
-        moves.register(MoveType.UTILITY, PILOT_MODE);
+        moves.register(MoveClass.UTILITY, PILOT_MODE);
     }
 
     @Override
-    public boolean initMove(MoveType type) {
+    public boolean initMove(MoveClass moveClass) {
         final LivingEntity user = getUserOrThrow();
-        if (!tryFollowUp(type, MoveType.LIGHT)) {
-            if (type == MoveType.SPECIAL1 && user.isShiftKeyDown()) {
-                if (!JUtils.canAct(user)) {
-                    return false;
-                }
+        if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
 
-                List<HGNetEntity> nets = level().getEntitiesOfClass(HGNetEntity.class,
-                        getBoundingBox().inflate(64), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
+        if (moveClass != MoveClass.SPECIAL1 || !user.isShiftKeyDown()) {
+            return super.initMove(moveClass);
+        }
 
-                final LivingEntity shooter = isRemote() ? this : user;
+        if (!JUtils.canAct(user)) {
+            return false;
+        }
 
-                final Vec3 heightOffset = GravityChangerAPI.getEyeOffset(shooter).scale(0.5);
-                final Vec3 eyePos = shooter.position().add(heightOffset);
+        List<HGNetEntity> nets = level().getEntitiesOfClass(HGNetEntity.class,
+                getBoundingBox().inflate(64), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
-                if (!nets.isEmpty()) {
-                    final Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
-                            (entity -> !(entity instanceof IOwnable ownable) || ownable.getMaster() != user)).getLocation();
+        final LivingEntity shooter = isRemote() ? this : user;
 
-                    for (HGNetEntity net : nets) {
-                        if (net.getMaster() != user) {
-                            continue;
-                        }
-                        net.tryFireAt(pos, false);
-                    }
-                }
-            } else {
-                return super.initMove(type);
+        final Vec3 heightOffset = GravityChangerAPI.getEyeOffset(shooter).scale(0.5);
+        final Vec3 eyePos = shooter.position().add(heightOffset);
+
+        if (nets.isEmpty()) return true;
+
+        final Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
+                (entity -> !(entity instanceof IOwnable ownable) || ownable.getMaster() != user)).getLocation();
+
+        for (HGNetEntity net : nets) {
+            if (net.getMaster() != user) {
+                continue;
             }
+            net.tryFireAt(pos, false);
         }
 
         return true;
@@ -301,18 +280,12 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
 
     public void togglePilotMode() {
         setRemote(!isRemote());
-        registerMoves(); // To switch the ultimate with the proper one.
+        switchMoveSet(MOVE_SET.getName()); // To switch the ultimate with the proper one.
     }
 
     @Override
     public void tick() {
         super.tick();
-
-        if (!level().isClientSide) {
-            if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == EMERALD_CHARGE) {
-                getMoveContext().incrementInt(CHARGE_TIME, 1);
-            }
-        }
 
         final boolean isRemote = isRemote();
         setNoGravity(isRemote);

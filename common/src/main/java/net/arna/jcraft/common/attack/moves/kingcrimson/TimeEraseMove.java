@@ -1,8 +1,12 @@
 package net.arna.jcraft.common.attack.moves.kingcrimson;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.core.ctx.WeakMoveVariable;
@@ -36,6 +40,11 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
     public TimeEraseMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int erasureDuration) {
         super(cooldown, windup, duration, moveDistance);
         this.erasureDuration = erasureDuration;
+    }
+
+    @Override
+    public @NonNull MoveType<TimeEraseMove> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -170,7 +179,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
     }
 
     @Override
-    public void registerContextEntries(final MoveContext ctx) {
+    public void registerExtraContextEntries(final MoveContext ctx) {
         ctx.register(DOPPELGANGER);
     }
 
@@ -182,5 +191,15 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
     @Override
     public @NonNull TimeEraseMove copy() {
         return copyExtras(new TimeEraseMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getErasureDuration()));
+    }
+
+    public static class Type extends AbstractMove.Type<TimeEraseMove> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<TimeEraseMove>, TimeEraseMove> buildCodec(RecordCodecBuilder.Instance<TimeEraseMove> instance) {
+            return baseDefault(instance).and(Codec.INT.fieldOf("erasure_duration").forGetter(TimeEraseMove::getErasureDuration))
+                    .apply(instance, applyExtras(TimeEraseMove::new));
+        }
     }
 }

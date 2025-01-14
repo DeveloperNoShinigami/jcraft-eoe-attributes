@@ -1,12 +1,16 @@
 package net.arna.jcraft.common.attack.moves.magiciansred;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.common.attack.MobilityType;
+import net.arna.jcraft.common.attack.core.MobilityType;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
@@ -18,6 +22,11 @@ public final class RedirectAttack extends AbstractMove<RedirectAttack, Magicians
     public RedirectAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         mobilityType = MobilityType.TELEPORT; // this is a LIE, it just tells the AI to use it at a range of >3m
+    }
+
+    @Override
+    public @NonNull MoveType<RedirectAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -43,6 +52,14 @@ public final class RedirectAttack extends AbstractMove<RedirectAttack, Magicians
     }
 
     @Override
+    public StandEntity.MoveSelectionResult specificMoveSelectionCriterion(MagiciansRedEntity attacker, LivingEntity mob,
+                                                                          LivingEntity target, int stunTicks, int enemyMoveStun,
+                                                                          double distance, StandEntity<?, ?> enemyStand,
+                                                                          AbstractMove<?, ?> enemyAttack) {
+        return attacker.getRandom().nextFloat() > 0.05 ? StandEntity.MoveSelectionResult.STOP : StandEntity.MoveSelectionResult.PASS;
+    }
+
+    @Override
     protected @NonNull RedirectAttack getThis() {
         return this;
     }
@@ -50,5 +67,14 @@ public final class RedirectAttack extends AbstractMove<RedirectAttack, Magicians
     @Override
     public @NonNull RedirectAttack copy() {
         return copyExtras(new RedirectAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractMove.Type<RedirectAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<RedirectAttack>, RedirectAttack> buildCodec(RecordCodecBuilder.Instance<RedirectAttack> instance) {
+            return baseDefault(instance, RedirectAttack::new);
+        }
     }
 }

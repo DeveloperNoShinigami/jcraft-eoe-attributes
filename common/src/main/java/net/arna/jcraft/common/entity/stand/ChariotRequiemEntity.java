@@ -3,6 +3,7 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import net.arna.jcraft.common.attack.core.MoveMap;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -14,13 +15,14 @@ import org.jetbrains.annotations.Nullable;
  * @see net.arna.jcraft.client.renderer.entity.stands.ChariotRequiemRenderer ChariotRequiemRenderer
  */
 public class ChariotRequiemEntity extends StandEntity<ChariotRequiemEntity, ChariotRequiemEntity.State> {
+    public static final MoveSet<ChariotRequiemEntity, State> MOVE_SET = MoveSet.create(StandType.CHARIOT_REQUIEM,
+            ChariotRequiemEntity::registerMoves, State.class);
 
     public ChariotRequiemEntity(Level world) {
         super(StandType.CHARIOT_REQUIEM, world);
     }
 
-    @Override
-    protected void registerMoves(MoveMap<ChariotRequiemEntity, State> moves) {
+    private static void registerMoves(MoveMap<ChariotRequiemEntity, State> moves) {
         // TODO Arna
     }
 
@@ -34,7 +36,7 @@ public class ChariotRequiemEntity extends StandEntity<ChariotRequiemEntity, Char
         BLOCK;
 
         @Override
-        public void playAnimation(ChariotRequiemEntity attacker, AnimationState state) {
+        public void playAnimation(ChariotRequiemEntity attacker, AnimationState<ChariotRequiemEntity> state) {
             // TODO Arna
         }
     }

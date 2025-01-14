@@ -1,0 +1,64 @@
+package net.arna.jcraft.common.attack.moves.starplatinum.theworld;
+
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
+import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.common.entity.stand.SPTWEntity;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
+import java.util.Set;
+
+public final class SPTWGroundSlamAttack extends AbstractSimpleAttack<SPTWGroundSlamAttack, SPTWEntity> {
+    public SPTWGroundSlamAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
+                                final float hitboxSize, final float knockback, final float offset) {
+        super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
+    }
+
+    @Override
+    public @NonNull MoveType<SPTWGroundSlamAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
+    public @NonNull Set<LivingEntity> perform(final SPTWEntity attacker, final LivingEntity user, final MoveContext ctx) {
+        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+
+        Vec3 pos = user.position();
+        for (LivingEntity target : targets) {
+            Vec3 launchVec = target.position().subtract(pos).normalize().scale(1.3);
+            target.push(launchVec.x, launchVec.y + 0.4, launchVec.z);
+
+            target.hurtMarked = true;
+            if (target instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+            }
+        }
+
+        return targets;
+    }
+
+    @Override
+    protected @NonNull SPTWGroundSlamAttack getThis() {
+        return this;
+    }
+
+    @Override
+    public @NonNull SPTWGroundSlamAttack copy() {
+        return copyExtras(new SPTWGroundSlamAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
+                getStun(), getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<SPTWGroundSlamAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SPTWGroundSlamAttack>, SPTWGroundSlamAttack> buildCodec(RecordCodecBuilder.Instance<SPTWGroundSlamAttack> instance) {
+            return attackDefault(instance, SPTWGroundSlamAttack::new);
+        }
+    }
+}

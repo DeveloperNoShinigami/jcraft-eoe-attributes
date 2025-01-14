@@ -1,6 +1,9 @@
 package net.arna.jcraft.common.attack.moves.whitesnake;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.WSAcidProjectile;
@@ -18,6 +21,11 @@ public final class ChargedSpewAttack extends AbstractSimpleAttack<ChargedSpewAtt
                              final float hitboxSize, final float knockback, final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         this.ranged = true;
+    }
+
+    @Override
+    public @NonNull MoveType<ChargedSpewAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -47,5 +55,14 @@ public final class ChargedSpewAttack extends AbstractSimpleAttack<ChargedSpewAtt
     public @NonNull ChargedSpewAttack copy() {
         return copyExtras(new ChargedSpewAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(), getStun(),
                 getHitboxSize(), getKnockback(), getOffset()));
+    }
+
+    public static class Type extends AbstractSimpleAttack.Type<ChargedSpewAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<ChargedSpewAttack>, ChargedSpewAttack> buildCodec(RecordCodecBuilder.Instance<ChargedSpewAttack> instance) {
+            return attackDefault(instance, ChargedSpewAttack::new);
+        }
     }
 }

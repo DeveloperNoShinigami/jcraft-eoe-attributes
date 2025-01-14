@@ -3,6 +3,7 @@ package net.arna.jcraft.common.attack.moves.shared;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.GoldExperienceEntity;
@@ -24,9 +25,9 @@ public final class RekkaAttack<A extends IAttacker<A, S> & GeoEntity, S extends 
     private final int switchStart;
     private final StandAnimationState<A> nextState;
 
-    public RekkaAttack(final int cooldown, final int windup, final int duration, final float attackDistance, final float damage, final int stun, final float hitboxSize,
+    public RekkaAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun, final float hitboxSize,
                        final float knockback, final float offset, final int rekkaLevel, final int switchStart, final RekkaAttack<A, S> next, final StandAnimationState<A> nextState) {
-        super(cooldown, windup, duration, attackDistance, damage, stun, hitboxSize, knockback, offset);
+        super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
         if (rekkaLevel > 1) {
             hitSpark = JParticleType.HIT_SPARK_2;
         }
@@ -34,6 +35,12 @@ public final class RekkaAttack<A extends IAttacker<A, S> & GeoEntity, S extends 
         this.switchStart = switchStart;
         this.next = next;
         this.nextState = nextState;
+    }
+
+    @Override
+    public @NonNull MoveType<RekkaAttack<A, S>> getMoveType() {
+        //noinspection DataFlowIssue
+        return null; // Class is unused and making a type for this is impossible (sort of).
     }
 
     @Override

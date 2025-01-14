@@ -1,14 +1,18 @@
 package net.arna.jcraft.common.attack.moves.madeinheaven;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.common.attack.MobilityType;
+import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySelector;
@@ -38,12 +42,19 @@ public final class SpeedSliceAttack extends AbstractMove<SpeedSliceAttack, MadeI
     }
 
     @Override
+    public @NonNull MoveType<SpeedSliceAttack> getMoveType() {
+        return Type.INSTANCE;
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
         return doSpeedSlice(attacker, user.getEyePosition(), user.getEyePosition().add(user.getLookAngle().scale(8)),
                 getDamage(), getKnockback(), getHitboxSize(), 20, 1);
     }
 
-    public static Set<LivingEntity> doSpeedSlice(final MadeInHeavenEntity attacker, final Vec3 start, final Vec3 end, final float damage, final float knockback, final float size, final int stunTicks, final int stunType) {
+    public static Set<LivingEntity> doSpeedSlice(final MadeInHeavenEntity attacker, final Vec3 start, final Vec3 end,
+                                                 final float damage, final float knockback, final float size,
+                                                 final int stunTicks, final int stunType) {
         final Level world = attacker.level();
         final LivingEntity user = attacker.getUserOrThrow();
         final HitResult hitResult = world.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
@@ -98,5 +109,18 @@ public final class SpeedSliceAttack extends AbstractMove<SpeedSliceAttack, MadeI
     public @NonNull SpeedSliceAttack copy() {
         return copyExtras(new SpeedSliceAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance(),
                 getDamage(), getHitboxSize(), getKnockback()));
+    }
+
+    public static class Type extends AbstractMove.Type<SpeedSliceAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SpeedSliceAttack>, SpeedSliceAttack> buildCodec(RecordCodecBuilder.Instance<SpeedSliceAttack> instance) {
+            return baseDefault(instance).and(instance.group(
+                    Codec.FLOAT.fieldOf("damage").forGetter(SpeedSliceAttack::getDamage),
+                    Codec.FLOAT.fieldOf("hitbox_size").forGetter(SpeedSliceAttack::getHitboxSize),
+                    Codec.FLOAT.fieldOf("knockback").forGetter(SpeedSliceAttack::getKnockback)
+            )).apply(instance, applyExtras(SpeedSliceAttack::new));
+        }
     }
 }

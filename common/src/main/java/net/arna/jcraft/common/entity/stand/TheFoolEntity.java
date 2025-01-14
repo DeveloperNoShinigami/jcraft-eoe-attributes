@@ -2,23 +2,24 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
+import mod.azure.azurelib.core.animation.AnimationState;
+import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.core.BlockableType;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.attack.moves.shared.EffectInflictingAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
 import net.arna.jcraft.common.attack.moves.thefool.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
-import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -41,8 +42,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -64,6 +63,9 @@ import java.util.function.Consumer;
  * @see TFComboAttack
  */
 public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.State> {
+    public static final MoveSet<TheFoolEntity, State> MOVE_SET = MoveSet.create(StandType.THE_FOOL,
+            TheFoolEntity::registerMoves, State.class);
+
     public static final SimpleMultiHitAttack<TheFoolEntity> DRILL = new SimpleMultiHitAttack<TheFoolEntity>(
             20, 14, 1.5f, 2.5f, 7, 1.5f, 0.2f, 0.25f, IntSet.of(5, 8, 11))
             .withAnim(State.DRILL)
@@ -77,7 +79,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public static final SimpleAttack<TheFoolEntity> LIGHT_FOLLOWUP = new SimpleAttack<TheFoolEntity>(
             0, 9, 16, 1.5f, 6f, 9, 2f, 1.5f, 0)
             .withAnim(State.LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withLaunch()
             .withBlockStun(4)
             .withExtraHitBox(0, 0.25, 1)
@@ -88,7 +90,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             );
     public static final SimpleAttack<TheFoolEntity> LIGHT = new SimpleAttack<TheFoolEntity>(30, 7,
             14, 1.5f, 6, 15, 2, 0.5f, -0.1f)
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withExtraHitBox(0, 0.25, 1)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(DRILL)
@@ -106,16 +108,15 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public static final TFComboAttack COMBO = new TFComboAttack(200, 29, 1.5f, 4.5f,
             20, 1.75f, 0.1f, -0.1f, IntSet.of(6, 14, 18, 19))
             .withAerialVariant(AIR_BARRAGE)
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withExtraHitBox(0.5, 0, 1.25)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Component.literal("3-hit Combo"), Component.literal("fast knockdown provider"));
-    public static final EffectInflictingAttack<TheFoolEntity> LAUNCH = new EffectInflictingAttack<TheFoolEntity>(240,
-            16, 20, 1.25f, 8f, 25, 2f, 0.5f, -0.3f,
-            List.of(new MobEffectInstance(MobEffects.LEVITATION, 5, 19, true, false)))
-            .withSound(JSoundRegistry.FOOL_LAUNCH.get())
-            .withInitAction((attacker, user, ctx) -> attacker.setSand(true))
+    public static final TFLaunchAttack LAUNCH = new TFLaunchAttack(240, 16, 20,
+            1.25f, 8f, 25, 2f, 0.5f, -0.3f)
+            .withSound(JSoundRegistry.FOOL_LAUNCH)
+            .withAction(EffectAction.inflict(MobEffects.LEVITATION, 5, 19, true, false))
             .withExtraHitBox(1.5)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withHyperArmor()
@@ -127,8 +128,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public static final SlamAttack SLAM = new SlamAttack(0, 4, 10, 1.25f, 4f,
             24, 2f, 0.2f, 0.1f)
             .withBlockStun(5)
-            .withSound(JSoundRegistry.FOOL_BARK1.get())
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withSound(JSoundRegistry.FOOL_BARK1)
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -138,8 +139,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
     public static final PoundAttack POUND = new PoundAttack(220, 7, 22, 1.25f,
             4f, 25, 1.5f, 0.1f, -0.1f)
             .withFollowup(SLAM)
-            .withSound(JSoundRegistry.FOOL_BARK2.get())
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            .withSound(JSoundRegistry.FOOL_BARK2)
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withLift(false)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -155,13 +156,13 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Component.literal("creates a blinding sand cloud, then a clone or (if crouching) circles of sand")
             );
     public static final GlideMove GLIDE = new GlideMove(300, 5, 125, 0f)
-            .withSound(JSoundRegistry.FOOL_GLIDE.get())
+            .withSound(JSoundRegistry.FOOL_GLIDE)
             .withInfo(
                     Component.literal("Glider"),
                     Component.literal("turns The Fool into a glider for 6s")
             );
     public static final SandWaveAttack SAND_WAVE = new SandWaveAttack(340, 0, 80, 0f,
-            1f, 0, 2f, 0.1f, 0f, 3)
+            1f, 0, 2f, 0.1f, 0f, 3, 15)
             .withAerialVariant(GLIDE)
             .withBackstab(false)
             .withInfo(
@@ -169,15 +170,15 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Component.literal("The Fool turns into a quick sandwave that knocks anything it touches down")
             );
     public static final SandTornadoMove SAND_TORNADO = new SandTornadoMove(280, 12, 13, 1f)
-            .withSound(JSoundRegistry.FOOL_LAUNCH.get())
+            .withSound(JSoundRegistry.FOOL_LAUNCH)
             .withInfo(
                     Component.literal("Sand Tornado"),
                     Component.literal("summons a slow, stunning sand tornado")
             );
     public static final TFChargeAttack CHARGE = new TFChargeAttack(220, 5, 20, 7f,
-            6f, 10, 1.5f, 1.2f, 0f, State.CHARGE_HIT)
-            .withSound(JSoundRegistry.FOOL_CHARGE.get())
-            .withImpactSound(JSoundRegistry.IMPACT_2.get())
+            6f, 10, 1.5f, 1.2f, 0f)
+            .withSound(JSoundRegistry.FOOL_CHARGE)
+            .withImpactSound(JSoundRegistry.IMPACT_2)
             .withAerialVariant(SAND_TORNADO)
             .withLaunch()
             .withBackstab(false)
@@ -188,8 +189,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             );
     public static final SandstormAttack SANDSTORM = new SandstormAttack(800, 28, 41, 1.5f,
             7f, 20, 2f, 0.1f, 0f)
-            .withSound(JSoundRegistry.FOOL_ULT.get())
-            .withImpactSound(JSoundRegistry.TW_KICK_HIT.get())
+            .withSound(JSoundRegistry.FOOL_ULT)
+            .withImpactSound(JSoundRegistry.TW_KICK_HIT)
             .withExtraHitBox(1.5)
             .withHyperArmor()
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
@@ -219,7 +220,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         freespace =
                 """
                         CROUCHING reduces attack distance by half, allowing better space control
-                                                
+                        
                         BNBs:
                             Light>Pound~Slam>Launch>Light>Burn Rubber>Finisher*
                             Burn Rubber>Light>Pound~Slam>Launch>Finisher*
@@ -243,56 +244,39 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         };
     }
 
-    @Override
-    protected void registerMoves(MoveMap<TheFoolEntity, State> moves) {
-        moves.registerImmediate(MoveType.LIGHT, LIGHT, State.SWIPE);
+    private static void registerMoves(MoveMap<TheFoolEntity, State> moves) {
+        moves.registerImmediate(MoveClass.LIGHT, LIGHT, State.SWIPE);
 
-        moves.register(MoveType.HEAVY, LAUNCH, State.LAUNCH);
-        moves.register(MoveType.BARRAGE, COMBO, State.COMBO).withAerialVariant(State.AIR_BARRAGE);
+        moves.register(MoveClass.HEAVY, LAUNCH, State.LAUNCH);
+        moves.register(MoveClass.BARRAGE, COMBO, State.COMBO).withAerialVariant(State.AIR_BARRAGE);
 
-        moves.register(MoveType.SPECIAL1, POUND, State.POUND_UP);
-        moves.register(MoveType.SPECIAL2, CHARGE, State.CHARGE).withAerialVariant(State.TORNADO);
-        moves.register(MoveType.SPECIAL3, SAND_CLONE, State.CREATE);
-        moves.register(MoveType.ULTIMATE, SANDSTORM, State.SANDSTORM);
+        moves.register(MoveClass.SPECIAL1, POUND, State.POUND_UP);
+        moves.register(MoveClass.SPECIAL2, CHARGE, State.CHARGE).withAerialVariant(State.TORNADO);
+        moves.register(MoveClass.SPECIAL3, SAND_CLONE, State.CREATE);
+        moves.register(MoveClass.ULTIMATE, SANDSTORM, State.SANDSTORM);
 
-        moves.register(MoveType.UTILITY, SAND_WAVE, State.SAND_WAVE).withAerialVariant(State.GLIDE);
+        moves.register(MoveClass.UTILITY, SAND_WAVE, State.SAND_WAVE).withAerialVariant(State.GLIDE);
     }
 
     @Override
-    public boolean initMove(MoveType type) {
-        switch (type) {
-            case SPECIAL1, SPECIAL2, SPECIAL3 -> {
-                if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == POUND && getMoveStun() <= 11) {
-                    initSlam(switch (type) {
-                        default -> 1;
-                        case SPECIAL2 -> 2;
-                        case SPECIAL3 -> 3;
-                    });
-
-                    return true;
-                }
-
-                boolean s = super.initMove(type);
-                if (type == MoveType.SPECIAL2 && !getUserOrThrow().onGround() || type == MoveType.SPECIAL3) {
+    public boolean initMove(MoveClass moveClass) {
+        switch (moveClass) {
+            case SPECIAL2, SPECIAL3 -> {
+                boolean s = super.initMove(moveClass);
+                if (moveClass == MoveClass.SPECIAL2 && !getUserOrThrow().onGround() || moveClass == MoveClass.SPECIAL3) {
                     setSand(true);
                 }
 
                 return s;
             }
             case LIGHT -> {
-                if (!tryFollowUp(type, MoveType.LIGHT)) {
-                    return super.initMove(type);
+                if (!tryFollowUp(moveClass, MoveClass.LIGHT)) {
+                    return super.initMove(moveClass);
                 }
             }
         }
 
-        return super.initMove(type);
-    }
-
-    private void initSlam(int type) {
-        getMoveContext().setInt(SlamAttack.VARIANT, type);
-        setMove(SLAM, State.POUND_DOWN);
-        playSound(JSoundRegistry.FOOL_BARK1.get(), 1, 1);
+        return super.initMove(moveClass);
     }
 
     public boolean isSand() {
@@ -360,21 +344,6 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             return false;
         }
         return super.shouldOffsetHeight();
-    }
-
-    @Override
-    public boolean canAttack() {
-        if (hasUser()) {
-            LivingEntity user = getUserOrThrow();
-            if (JUtils.isAffectedByTimeStop(user) || user.hasEffect(JStatusRegistry.DAZED.get())) {
-                return false;
-            }
-            if (getCurrentMove() != null && getCurrentMove().getOriginalMove() == GLIDE) {
-                return true;
-            }
-            return getMoveStun() <= 0;
-        }
-        return false;
     }
 
     @Override
@@ -446,12 +415,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
         if (lastRemoteInputTime - tickCount > 4) {
             updateRemoteInputs(0, 0, false, false);
         }
-        if (move != null) {
-            int slamType = moveContext.getInt(SlamAttack.VARIANT);
-            if (move.getOriginalMove() == SLAM && slamType != 1) {
-                queuedMove = null;
-            }
-        } else if (!blocking && getMoveStun() < 1) { // If idle, reset back to normal material
+        if (move == null && !blocking && getMoveStun() < 1) { // If idle, reset back to normal material
             setSand(false);
             setWave(false);
         }

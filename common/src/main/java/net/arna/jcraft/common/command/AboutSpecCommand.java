@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.util.JUtils;
@@ -54,7 +54,7 @@ public class AboutSpecCommand {
                 .append(Component.literal("\n"));
 
         MoveMap<?, ?> moveMap = spec.getMoveMap();
-        for (MoveType type : MoveType.values()) {
+        for (MoveClass type : MoveClass.values()) {
             for (MoveMap.Entry<?, ?> entry : moveMap.getEntries(type)) {
                 // Move itself
                 appendMove(entry, moves, Component.literal("● ").withStyle(ChatFormatting.GREEN), false);

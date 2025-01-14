@@ -1,7 +1,10 @@
 package net.arna.jcraft.common.attack.moves.silverchariot;
 
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
@@ -16,6 +19,11 @@ public final class SCCounterAttack extends AbstractCounterAttack<SCCounterAttack
 
     public SCCounterAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
+    }
+
+    @Override
+    public @NonNull MoveType<SCCounterAttack> getMoveType() {
+        return Type.INSTANCE;
     }
 
     @Override
@@ -43,5 +51,14 @@ public final class SCCounterAttack extends AbstractCounterAttack<SCCounterAttack
     @Override
     public @NonNull SCCounterAttack copy() {
         return copyExtras(new SCCounterAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    }
+
+    public static class Type extends AbstractCounterAttack.Type<SCCounterAttack> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<SCCounterAttack>, SCCounterAttack> buildCodec(RecordCodecBuilder.Instance<SCCounterAttack> instance) {
+            return baseDefault(instance, SCCounterAttack::new);
+        }
     }
 }

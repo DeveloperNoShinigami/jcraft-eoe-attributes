@@ -11,7 +11,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.arna.jcraft.common.attack.core.MoveType;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.minecraft.network.chat.Component;
 
 import java.util.*;
@@ -19,21 +19,21 @@ import java.util.concurrent.CompletableFuture;
 
 @Getter
 @RequiredArgsConstructor(staticName = "attack")
-public class AttackArgumentType implements ArgumentType<MoveType> {
+public class AttackArgumentType implements ArgumentType<MoveClass> {
     private static final SimpleCommandExceptionType NOT_FOUND = new SimpleCommandExceptionType(Component.literal("That attack type does not exist"));
-    private static final Map<String, MoveType> suggestions = Arrays.stream(MoveType.values()).collect(
+    private static final Map<String, MoveClass> suggestions = Arrays.stream(MoveClass.values()).collect(
             ImmutableMap.toImmutableMap(type -> type.name().toLowerCase(Locale.ROOT), type -> type));
     private final Collection<String> examples = ImmutableList.of("RANDOM", "LIGHT", "BARRAGE", "UTILITY");
 
     @Override
-    public MoveType parse(final StringReader reader) throws CommandSyntaxException {
+    public MoveClass parse(final StringReader reader) throws CommandSyntaxException {
         final String name = reader.readUnquotedString();
 
         if ("RANDOM".equals(name.toUpperCase(Locale.ROOT))) {
-            return MoveType.randomMoveType();
+            return MoveClass.randomMoveType();
         }
         try {
-            return MoveType.valueOf(name.toUpperCase(Locale.ROOT));
+            return MoveClass.valueOf(name.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             throw NOT_FOUND.createWithContext(reader);
         }
@@ -45,7 +45,7 @@ public class AttackArgumentType implements ArgumentType<MoveType> {
         suggestions.entrySet().stream()
                 .filter(e -> e.getKey().startsWith(input))
                 .map(Map.Entry::getValue)
-                .map(MoveType::name)
+                .map(MoveClass::name)
                 .forEach(builder::suggest);
 
         if ("random".startsWith(input)) {
