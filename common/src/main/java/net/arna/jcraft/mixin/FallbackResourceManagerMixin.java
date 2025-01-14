@@ -28,7 +28,8 @@ public class FallbackResourceManagerMixin {
         if (!Platform.isDevelopmentEnvironment() ||
                 !JCraft.MOD_ID.equals(location.getNamespace()) || !location.getPath().startsWith("movesets/")) return;
 
-        Path p = Path.of("./../../common/src/main/generated/data/" + location.getNamespace() + "/" + location.getPath());//.toAbsolutePath();
-        cir.setReturnValue(new Resource(source, () -> Files.newInputStream(p), metadataSupplier));
+        Path p = Path.of("./../../common/src/main/generated/data/" + location.getNamespace() + "/" + location.getPath());
+        if (Files.exists(p)) // Just to be sure.
+            cir.setReturnValue(new Resource(source, () -> Files.newInputStream(p), metadataSupplier));
     }
 }
