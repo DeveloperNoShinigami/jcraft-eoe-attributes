@@ -2,12 +2,14 @@ package net.arna.jcraft.common.attack.moves.goldexperience.requiem;
 
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.GEREntity;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.CombatEntry;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -20,9 +22,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
+@Getter
 public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
-    public FlightMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
+    private final int flightTime;
+
+    public FlightMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int flightTime) {
         super(cooldown, windup, duration, moveDistance);
+        this.flightTime = flightTime;
         mobilityType = MobilityType.FLIGHT;
     }
 
@@ -33,7 +39,7 @@ public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
 
     @Override
     public @NonNull Set<LivingEntity> perform(final GEREntity attacker, final LivingEntity user, final MoveContext ctx) {
-        attacker.setFlightTime(20);
+        attacker.setFlightTime(flightTime);
         return Set.of();
     }
 
@@ -88,7 +94,7 @@ public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
 
     @Override
     public @NonNull FlightMove copy() {
-        return copyExtras(new FlightMove(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+        return copyExtras(new FlightMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getFlightTime()));
     }
 
     public static class Type extends AbstractMove.Type<FlightMove> {
@@ -96,7 +102,8 @@ public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
 
         @Override
         protected @NotNull App<RecordCodecBuilder.Mu<FlightMove>, FlightMove> buildCodec(RecordCodecBuilder.Instance<FlightMove> instance) {
-            return baseDefault(instance, FlightMove::new);
+            return baseDefault(instance).and(ExtraCodecs.NON_NEGATIVE_INT.fieldOf("flight_time").forGetter(FlightMove::getFlightTime))
+                    .apply(instance, applyExtras(FlightMove::new));
         }
     }
 }

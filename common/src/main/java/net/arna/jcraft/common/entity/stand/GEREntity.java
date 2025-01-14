@@ -4,7 +4,6 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.data.MoveSet;
@@ -169,7 +168,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     Component.literal("initial press: saves the state of " +
                             "every entity in a 4 chunk radius, second press: reverts all states except users\nDoesn't affect player inventories")
             );
-    public static final FlightMove FLIGHT = new FlightMove(320, 1, 0, 0f)
+    public static final FlightMove FLIGHT = new FlightMove(320, 1, 0, 0f, 20)
             .withSound(JSoundRegistry.GER_FLY)
             .withInfo(
                     Component.literal("Flight"),
