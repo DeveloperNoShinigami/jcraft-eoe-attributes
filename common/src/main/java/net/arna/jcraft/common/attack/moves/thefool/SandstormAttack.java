@@ -40,6 +40,12 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
     }
 
     @Override
+    public void tick(final TheFoolEntity attacker) {
+        if (attacker.hasUser())
+            tickSandstorm(attacker);
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (targets.isEmpty()) {

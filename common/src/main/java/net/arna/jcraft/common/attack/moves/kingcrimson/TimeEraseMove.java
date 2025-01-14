@@ -58,6 +58,12 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
     }
 
     @Override
+    public void tick(final KingCrimsonEntity attacker) {
+        if (!attacker.hasUser()) return;
+        tickTimeErase(attacker);
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final KingCrimsonEntity attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.setTETime(erasureDuration);
 

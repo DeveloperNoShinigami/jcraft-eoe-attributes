@@ -39,6 +39,12 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
     }
 
     @Override
+    public void tick(final KQBTDEntity attacker) {
+        if (attacker.hasUser())
+            tickBomb(attacker);
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
         if (targets.isEmpty()) {

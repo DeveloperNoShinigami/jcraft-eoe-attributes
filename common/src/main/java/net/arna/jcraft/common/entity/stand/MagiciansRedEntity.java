@@ -250,6 +250,7 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
             return;
         }
 
+        // TODO client ticking system for moves
         if (level().isClientSide && getState() == State.BARRAGE && FLAMETHROWER.hasWindupPassed(this)) {
             Vec3 rotVec = getLookAngle();
             Vec3 mouthPos = getEyePosition().add(rotVec);
@@ -270,7 +271,6 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
         }
 
         getUserOrThrow().addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20, 0, true, false));
-        CROSSFIRE_HURRICANE.tickHurricane(this);
     }
 
     @Override

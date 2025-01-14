@@ -169,15 +169,6 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-        if (level().isClientSide() || !hasUser()) return;
-        BUBBLE.tickBubble(this);
-        BTD_PLANT.tickBomb(this);
-    }
-
-    @Override
     @NonNull
     public KQBTDEntity getThis() {
         return this;

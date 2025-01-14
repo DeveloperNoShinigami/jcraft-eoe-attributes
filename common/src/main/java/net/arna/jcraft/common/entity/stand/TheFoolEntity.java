@@ -419,9 +419,6 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             setSand(false);
             setWave(false);
         }
-
-        SANDSTORM.tickSandstorm(this);
-        SAND_CLONE.tickClone(this);
     }
 
     @Override

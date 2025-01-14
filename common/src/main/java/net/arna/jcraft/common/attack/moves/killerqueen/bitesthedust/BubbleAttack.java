@@ -30,6 +30,12 @@ public final class BubbleAttack extends AbstractMove<BubbleAttack, KQBTDEntity> 
     }
 
     @Override
+    public void tick(final KQBTDEntity attacker) {
+        if (attacker.hasUser())
+            tickBubble(attacker);
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final BubbleProjectile bubbleProjectile = new BubbleProjectile(attacker.level(), user);
         bubbleProjectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;

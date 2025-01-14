@@ -358,14 +358,6 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-        if (level().isClientSide() || !hasUser()) return;
-        TIME_ERASE.tickTimeErase(this);
-    }
-
-    @Override
     @NonNull
     public KingCrimsonEntity getThis() {
         return this;

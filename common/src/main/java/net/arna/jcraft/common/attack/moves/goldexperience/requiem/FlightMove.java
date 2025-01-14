@@ -38,6 +38,11 @@ public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
     }
 
     @Override
+    public void tick(final GEREntity attacker) {
+        tickFlight(attacker);
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final GEREntity attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.setFlightTime(flightTime);
         return Set.of();

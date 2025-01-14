@@ -4,7 +4,6 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
@@ -222,13 +221,6 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
     public boolean initMove(MoveClass moveClass) {
         if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
         return super.initMove(moveClass);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        INHALE.tickInhale(this);
     }
 
     @Override

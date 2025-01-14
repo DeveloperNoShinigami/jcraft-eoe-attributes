@@ -43,6 +43,11 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
     }
 
     @Override
+    public void tick(final MagiciansRedEntity attacker) {
+        tickHurricane(attacker);
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user, final MoveContext ctx) {
         ctx.setInt(HURRICANE_TIME, 50);
         ctx.set(HURRICANE_POS, attacker.position());

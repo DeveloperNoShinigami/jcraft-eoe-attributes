@@ -268,6 +268,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
         }
         super.tick();
 
+        // TODO client move ticker
         if (level().isClientSide) {
             // Fully charged life beam particle effect
             if (getState() == State.LASER && getMoveStun() == (LIFE_BEAM_CHARGE.getDuration() - 18)) {
@@ -278,8 +279,6 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                 }
             }
         }
-        FLIGHT.tickFlight(this);
-        RETURN_TO_ZERO.tickReturnInfo(this);
     }
 
     @Override

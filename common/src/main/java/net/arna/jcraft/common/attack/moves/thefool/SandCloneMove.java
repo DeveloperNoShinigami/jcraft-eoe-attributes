@@ -45,6 +45,13 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
     }
 
     @Override
+    public void tick(final TheFoolEntity attacker) {
+        if (attacker.hasUser()) {
+            tickClone(attacker);
+        }
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
         final Vec3 pos = user.getEyePosition();
 

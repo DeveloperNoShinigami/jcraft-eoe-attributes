@@ -39,6 +39,11 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
     }
 
     @Override
+    public void tick(final GEREntity attacker) {
+        tickReturnInfo(attacker);
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final GEREntity attacker, final LivingEntity user, final MoveContext ctx) {
         final List<Entity> toReturn = attacker.level().getEntitiesOfClass(Entity.class, attacker.getBoundingBox().inflate(64),
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != user));

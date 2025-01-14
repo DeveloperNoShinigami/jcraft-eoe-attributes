@@ -41,6 +41,11 @@ public final class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumE
     }
 
     @Override
+    public void tick(final StarPlatinumEntity attacker) {
+        tickInhale(attacker);
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final StarPlatinumEntity attacker, final LivingEntity user, final MoveContext ctx) {
         attacker.setInhaleTime(inhaleDuration);
         return Set.of();
