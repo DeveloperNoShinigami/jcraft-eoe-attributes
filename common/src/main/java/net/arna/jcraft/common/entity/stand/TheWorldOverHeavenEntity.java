@@ -1,7 +1,6 @@
 package net.arna.jcraft.common.entity.stand;
 
 import com.mojang.datafixers.util.Either;
-import it.unimi.dsi.fastutil.ints.IntList;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
@@ -18,24 +17,15 @@ import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -312,79 +302,10 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
         return true;
     }
 
-    private void initOverwrite(int type) {
-        setOverwriteType(type);
-        setMove(OVERWRITE, State.OVERWRITE);
-        playSound(JSoundRegistry.TWOH_OVERWRITE.get(), 1, 1);
-    }
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(OVERWRITE_TYPE, 0);
-    }
-
-    public static final double NO_LOOK_RANGE = 512.0;
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (!hasUser()) {
-            return;
-        }
-
-        if (level().isClientSide) {
-            return;
-        }
-
-        final IntList overwriteTimes = moveContext.get(OverwriteAttack.OVERWRITE_TIMES);
-        final List<LivingEntity> overwriteTargets = moveContext.get(OverwriteAttack.OVERWRITE_TARGETS);
-        final LivingEntity user = getUserOrThrow();
-
-        // Mob TW:OH users normally don't swing after charging overwrite. This fixes that.
-        if (user instanceof Mob && getState() == State.CHARGE_OVERWRITE && random.nextBoolean()) {
-            initMove(random.nextBoolean() ? MoveClass.SPECIAL1 : MoveClass.SPECIAL2);
-        }
-
-        final int moveStun = getMoveStun();
-        if (moveStun <= 0 && getOverwriteType() != 0) {
-            setOverwriteType(0);
-        }
-
-        for (int i = 0; i < overwriteTimes.size(); i++) {
-            int time = overwriteTimes.getInt(i);
-            overwriteTimes.set(i, time - 1);
-
-            if (time < 1) {
-                overwriteTimes.removeInt(i);
-                overwriteTargets.remove(i);
-                i--;
-            } else {
-                // Inability to look at master
-                final LivingEntity entity = overwriteTargets.get(i);
-                final AABB box = entity
-                        .getBoundingBox()
-                        .expandTowards(entity.getViewVector(1.0F).scale(NO_LOOK_RANGE))
-                        .inflate(1.0D);
-                final EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(
-                        entity, entity.getEyePosition(),
-                        entity.getEyePosition().add(entity.getLookAngle().scale(NO_LOOK_RANGE)),
-                        box, EntitySelector.NO_CREATIVE_OR_SPECTATOR, NO_LOOK_RANGE);
-
-                if (hitResult == null) {
-                    continue;
-                }
-                final Entity lookEntity = hitResult.getEntity();
-
-                if (lookEntity != user && lookEntity != this) {
-                    continue;
-                }
-                entity.lookAt(EntityAnchorArgument.Anchor.EYES, getEyePosition().add(
-                        random.nextInt() * 10,
-                        random.nextInt() * 10,
-                        random.nextInt() * 10));
-            }
-        }
     }
 
     @Override

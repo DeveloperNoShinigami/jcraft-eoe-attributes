@@ -368,6 +368,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                 lookAtWithoutReset(user, EntityAnchorArgument.Anchor.EYES, clientCircleTarget.getEyePosition());
             }
 
+            // TODO move-related client ticking
             if (getAccelTime() > 1) { // Updating on the client, to make sure all is smooth
                 CircleAttack.createSpeedParticles(this, this);
 
