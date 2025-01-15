@@ -15,6 +15,7 @@ import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.minecraft.core.Vec3i;
@@ -87,16 +88,16 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
 
     @Override
     public boolean onInitMove(KingCrimsonEntity attacker, MoveClass moveClass) {
-        if (moveClass != getMoveClass() || !attacker.hasUser()) return false;
+        if (moveClass != MoveClass.ULTIMATE || !attacker.hasUser()) return false;
 
         LivingEntity user = attacker.getUserOrThrow();
         final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
-        if (cooldowns.getCooldown(moveClass.getDefaultCooldownType()) <= 0) {
-            cooldowns.setCooldown(moveClass.getDefaultCooldownType(), 400);
+        if (cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) <= 0) {
+            cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, 400);
             finishPrediction(attacker);
         }
 
-        return false; // Don't consume event
+        return true;
     }
 
     public void beginPrediction(final KingCrimsonEntity attacker) {

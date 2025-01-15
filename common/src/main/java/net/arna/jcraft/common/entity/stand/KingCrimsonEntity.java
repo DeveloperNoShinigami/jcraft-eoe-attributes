@@ -248,17 +248,16 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
     public boolean initMove(MoveClass moveClass) {
         switch (moveClass) {
             case ULTIMATE -> {
-                // If not predicting, do other Time Erase logic
-                if (!canAttack()) {
-                    return false;
+                if (super.initMove(moveClass)) {
+                    return true;
                 }
 
-                if (getTETime() > 0) {
+                if (canAttack() && getTETime() > 0) {
                     cancelTE();
                     return true;
                 }
 
-                return super.initMove(moveClass);
+                return false;
             }
             case SPECIAL3 -> {
                 final LivingEntity user = getUserOrThrow();
