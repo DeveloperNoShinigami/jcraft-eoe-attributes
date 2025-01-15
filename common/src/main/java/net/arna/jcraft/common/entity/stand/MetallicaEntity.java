@@ -255,7 +255,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                             5m max range.
                             Cannot be queued.""")
             );
-    public static final BisectAttack BISECT = new BisectAttack(0, 0, 10, 0.75f)
+    public static final BisectAttack BISECT = new BisectAttack(0, 1, 11, 0.75f)
             .withInitAction(UserAnimationAction.play("mtl.bsc_fire"));
     public static final BisectChargeMove BISECT_CHARGE = new BisectChargeMove(30 * 20, 81, 80, 0.75f, 12)
             .withInfo(
