@@ -53,61 +53,62 @@ public class FrameDataRequests {
             final ServerPlayer player = entry.getKey();
             final FrameData frameData = entry.getValue();
 
-            if (player.isAlive()) {
-                boolean wasActive = false;
-                final IAttacker<?, ?> attacker;
-                final AbstractMove<?, ? super IAttacker<?, ?>> move;
-                if (frameData.getType() == FrameDataType.STAND) {
-                    StandEntity<?, ?> stand = JComponentPlatformUtils.getStandData(player).getStand();
-                    attacker = stand;
-                    if (stand != null) {
-                        move = (AbstractMove<?, ? super IAttacker<?, ?>>) stand.getCurrentMove();
-                    } else {
-                        move = null;
-                    }
-                } else {
-                    JSpec<?, ?> spec = JComponentPlatformUtils.getSpecData(player).getSpec();
-                    attacker = spec;
-                    if (spec != null && spec.moveStun > 0) { // Spec moves persist after use
-                        move = (AbstractMove<?, ? super IAttacker<?, ?>>) spec.getCurrentMove();
-                    } else {
-                        move = null;
-                    }
-                }
-
-                // todo: find out why Anubis + Silver Chariot's God of Death only registers every second move here
-                if (attacker == null) return;
-                if (move != null) wasActive = move.shouldPerform(attacker, attacker.getMoveStun());
-                if (frameData.lastMove != null || move != null) frameData.ticks.add(new Tick(wasActive));
-
-                final int moveStun = attacker.getMoveStun();
-                if (moveStun > 0) { // If acting
-                    if (frameData.lastMove != move) {
-                        if (move != null) {
-                            player.displayClientMessage(
-                                    Component.literal("New move in sequence: " + move.getName().getString()), false
-                            );
-                        }
-                    } else if (move == null) {
-                        // No move left, but still attacker is still acting
-                        // sendFrameData(player, frameData.ticks);
-                        frameData.ticks.add(new Tick(false));
-                        //iter.remove();
-                    }
-                } else if (frameData.lastMove != null || (frameData.lastMove == null && move == null && !frameData.ticks.isEmpty())) { // If not acting
-                    sendFrameData(player, frameData.lastMove, frameData.ticks);
-                    iter.remove();
-                }
-
-                frameData.lastMove = move;
-            } else {
+            if (!player.isAlive()) {
                 iter.remove();
                 player.displayClientMessage(Component.translatable("jcraft.framedata.death"), false);
+                return;
             }
+
+            boolean wasActive = false;
+            final IAttacker<?, ?> attacker;
+            final AbstractMove<?, ? super IAttacker<?, ?>> move;
+            if (frameData.getType() == FrameDataType.STAND) {
+                StandEntity<?, ?> stand = JComponentPlatformUtils.getStandData(player).getStand();
+                attacker = stand;
+                if (stand != null) {
+                    move = (AbstractMove<?, ? super IAttacker<?, ?>>) stand.getCurrentMove();
+                } else {
+                    move = null;
+                }
+            } else {
+                JSpec<?, ?> spec = JComponentPlatformUtils.getSpecData(player).getSpec();
+                attacker = spec;
+                if (spec != null && spec.moveStun > 0) { // Spec moves persist after use
+                    move = (AbstractMove<?, ? super IAttacker<?, ?>>) spec.getCurrentMove();
+                } else {
+                    move = null;
+                }
+            }
+
+            // todo: find out why Anubis + Silver Chariot's God of Death only registers every second move here
+            if (attacker == null) return;
+            if (move != null) wasActive = move.shouldPerform(attacker, attacker.getMoveStun());
+            if (frameData.lastMove != null || move != null) frameData.ticks.add(new Tick(wasActive));
+
+            final int moveStun = attacker.getMoveStun();
+            if (moveStun > 0) { // If acting
+                if (frameData.lastMove != move) {
+                    if (move != null) {
+                        player.displayClientMessage(
+                                Component.literal("New move in sequence: " + move.getName().getString()), false
+                        );
+                    }
+                } else if (move == null) {
+                    // No move left, but still attacker is still acting
+                    // sendFrameData(player, frameData.ticks);
+                    frameData.ticks.add(new Tick(false));
+                    //iter.remove();
+                }
+            } else if (frameData.lastMove != null || (frameData.lastMove == null && move == null && !frameData.ticks.isEmpty())) { // If not acting
+                sendFrameData(player, frameData.lastMove, frameData.ticks);
+                iter.remove();
+            }
+
+            frameData.lastMove = move;
         });
     }
 
-    private static void sendFrameData(@NonNull final ServerPlayer recipient, @NonNull final AbstractMove<?, ?> move, @NonNull  final Queue<Tick> ticks) {
+    private static void sendFrameData(@NonNull final ServerPlayer recipient, final AbstractMove<?, ?> move, @NonNull  final Queue<Tick> ticks) {
         final StringBuilder builder = new StringBuilder();
         boolean first = true;
         boolean isStartup = true;
@@ -177,7 +178,7 @@ public class FrameDataRequests {
                     Component.literal("Recovery: §a" + recovery + "§r ticks\n").setStyle(RECOVERY_STYLE)
             );
         }
-        sendMoveInfo(recipient, move, recovery);
+        if (move != null) sendMoveInfo(recipient, move, recovery);
         recipient.displayClientMessage(frameDataStats, false);
     }
 
