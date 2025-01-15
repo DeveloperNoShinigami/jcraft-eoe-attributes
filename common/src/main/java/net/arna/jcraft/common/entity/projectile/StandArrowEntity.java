@@ -12,7 +12,6 @@ import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -59,8 +58,10 @@ public class StandArrowEntity extends AbstractArrow implements GeoEntity {
                 mob.unRide();
                 JCraft.summon(mob.level(), mob);
             } else {
-                final ItemStack arrowItemStack = new ItemStack(JItemRegistry.STAND_ARROW.get());
-                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), arrowItemStack));
+                // Bounce off the entity
+                setDeltaMovement(getDeltaMovement().scale(-0.1));
+                setYRot(getYRot() + 180.0f);
+                yRotO += 180.0f;
             }
         }
     }
