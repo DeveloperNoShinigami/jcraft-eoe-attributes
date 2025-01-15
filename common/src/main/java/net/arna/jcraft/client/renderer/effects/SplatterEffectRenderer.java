@@ -37,7 +37,6 @@ public class SplatterEffectRenderer {
             RenderSystem.setShaderTexture(0, splatter.getType().getTexture());
 
             matrices.pushPose();
-            matrices.translate(-camPos.x, -camPos.y, -camPos.z);
 
             final Tesselator tess = Tesselator.getInstance();
             final BufferBuilder buf = tess.getBuilder();
@@ -46,7 +45,7 @@ public class SplatterEffectRenderer {
 
             for (SplatterSection section : splatter.getSections()) {
                 if (!section.isRemoved()) {
-                    renderSection(section, buf, matrices, alpha, splatter.getOffset());
+                    renderSection(section, buf, matrices, camPos, alpha, splatter.getOffset());
                 }
             }
 
@@ -60,7 +59,8 @@ public class SplatterEffectRenderer {
     }
 
     @SuppressWarnings("DuplicatedCode") // I do not care how similar the different directions' code are. (vased)
-    private static void renderSection(final SplatterSection section, final BufferBuilder buf, final PoseStack matrices, final float alpha, final float offset) {
+    private static void renderSection(final SplatterSection section, final BufferBuilder buf, final PoseStack matrices,
+                                      final Vec3 camPos, final float alpha, final float offset) {
         matrices.pushPose();
         final Vector3f offsetVec = section.getDirection().step();
         offsetVec.mul(offset, offset, offset); // Prevent z-fighting with anchor block and other splatters.
@@ -74,9 +74,9 @@ public class SplatterEffectRenderer {
         final Vec2 minUv = section.getMinUv();
         final Vec2 maxUv = section.getMaxUv();
 
-        final Vector3f min = section.getMinPos();
+        final Vector3f min = section.getMinPos().sub((float) camPos.x(), (float) camPos.y(), (float) camPos.z());
         final float minX = min.x(), minY = min.y(), minZ = min.z();
-        final Vector3f max = section.getMaxPos();
+        final Vector3f max = section.getMaxPos().sub((float) camPos.x(), (float) camPos.y(), (float) camPos.z());
         final float maxX = max.x(), maxY = max.y(), maxZ = max.z();
 
         switch (section.getDirection()) {

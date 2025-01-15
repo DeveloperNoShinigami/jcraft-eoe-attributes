@@ -3,12 +3,7 @@ package net.arna.jcraft.client.renderer.effects;
 import com.google.common.collect.EvictingQueue;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.longs.LongLongPair;
 import lombok.Synchronized;
@@ -58,19 +53,19 @@ public class AttackHitboxEffectRenderer {
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         matrices.pushPose();
-        matrices.translate(-camPos.x, -camPos.y, -camPos.z);
 
-        renderBoxes(consumerProvider, matrices, hitboxes);
-        renderBoxes(consumerProvider, matrices, highPriorityBoxes);
+        renderBoxes(consumerProvider, matrices, camPos, hitboxes);
+        renderBoxes(consumerProvider, matrices, camPos, highPriorityBoxes);
 
         matrices.popPose();
     }
 
-    private static void renderBoxes(final MultiBufferSource consumerProvider, final PoseStack matrices, final Collection<Pair<LongLongPair, AABB>> boxes) {
+    private static void renderBoxes(final MultiBufferSource consumerProvider, final PoseStack matrices, final Vec3 camPos,
+                                    final Collection<Pair<LongLongPair, AABB>> boxes) {
         final Iterator<Pair<LongLongPair, AABB>> iterator = boxes.iterator();
         while (iterator.hasNext()) {
             final Pair<LongLongPair, AABB> pair = iterator.next();
-            renderBox(consumerProvider, pair.right(), matrices);
+            renderBox(consumerProvider, pair.right(), matrices, camPos);
             if (Util.getEpochMillis() - pair.left().leftLong() > pair.left().rightLong()) {
                 iterator.remove();
             }
@@ -78,7 +73,7 @@ public class AttackHitboxEffectRenderer {
     }
 
     @SuppressWarnings("DuplicatedCode") // Don't care
-    private static void renderBox(final MultiBufferSource consumerProvider, final AABB box, final PoseStack matrices) {
+    private static void renderBox(final MultiBufferSource consumerProvider, final AABB box, final PoseStack matrices, final Vec3 camPos) {
         // Draw faces
         final Tesselator tess = Tesselator.getInstance();
         final BufferBuilder quadsVc = tess.getBuilder();
@@ -91,12 +86,12 @@ public class AttackHitboxEffectRenderer {
 
         final int c = 0x54FF0000;
 
-        final float minX = (float) box.minX;
-        final float minY = (float) box.minY;
-        final float minZ = (float) box.minZ;
-        final float maxX = (float) box.maxX;
-        final float maxY = (float) box.maxY;
-        final float maxZ = (float) box.maxZ;
+        final float minX = (float) (box.minX - camPos.x);
+        final float minY = (float) (box.minY - camPos.y);
+        final float minZ = (float) (box.minZ - camPos.z);
+        final float maxX = (float) (box.maxX - camPos.x);
+        final float maxY = (float) (box.maxY - camPos.y);
+        final float maxZ = (float) (box.maxZ - camPos.z);
 
         final Matrix4f m = matrices.last().pose();
 
