@@ -278,6 +278,10 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     level().addParticle(ParticleTypes.WITCH, x, y, z, random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
                 }
             }
+
+            if (getUser() instanceof Player player && !player.isCreative() && !player.isSpectator()) {
+                player.getAbilities().flying = (getFlightTime() > 1);
+            }
         }
     }
 
