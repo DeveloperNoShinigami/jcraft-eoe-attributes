@@ -296,7 +296,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
 
         moves.register(MoveClass.ULTIMATE, ARMOR_OFF, State.ARMOR_OFF);
 
-        moves.register(MoveClass.UTILITY, CIRCLE_CHARGE, State.CIRCLE_CHARGE);
+        moves.register(MoveClass.UTILITY, CIRCLE_CHARGE, State.CIRCLE_CHARGE).withFollowup(State.CIRCLE_SLASH);
     }
 
     private static void registerPossessedMoves(MoveMap<SilverChariotEntity, State> moves) {
@@ -311,7 +311,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
 
         moves.register(MoveClass.ULTIMATE, GOD_OF_DEATH, State.BEAT_DOWN_START);
 
-        moves.register(MoveClass.UTILITY, CIRCLE_CHARGE, State.CIRCLE_CHARGE);
+        moves.register(MoveClass.UTILITY, CIRCLE_CHARGE, State.CIRCLE_CHARGE).withFollowup(State.CIRCLE_SLASH);
     }
 
     public Mode getMode() {
