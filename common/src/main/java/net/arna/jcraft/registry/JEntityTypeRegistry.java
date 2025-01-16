@@ -11,31 +11,7 @@ import net.arna.jcraft.common.entity.npc.AyaTsujiEntity;
 import net.arna.jcraft.common.entity.npc.DarbyOlderEntity;
 import net.arna.jcraft.common.entity.npc.DarbyYoungerEntity;
 import net.arna.jcraft.common.entity.npc.PetshopEntity;
-import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
-import net.arna.jcraft.common.entity.projectile.BisectProjectile;
-import net.arna.jcraft.common.entity.projectile.BlockProjectile;
-import net.arna.jcraft.common.entity.projectile.BloodProjectile;
-import net.arna.jcraft.common.entity.projectile.BubbleProjectile;
-import net.arna.jcraft.common.entity.projectile.BulletProjectile;
-import net.arna.jcraft.common.entity.projectile.EmeraldProjectile;
-import net.arna.jcraft.common.entity.projectile.GETreeEntity;
-import net.arna.jcraft.common.entity.projectile.HGNetEntity;
-import net.arna.jcraft.common.entity.projectile.IceBranchProjectile;
-import net.arna.jcraft.common.entity.projectile.IcicleProjectile;
-import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
-import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
-import net.arna.jcraft.common.entity.projectile.LaserProjectile;
-import net.arna.jcraft.common.entity.projectile.LifeDetectorEntity;
-import net.arna.jcraft.common.entity.projectile.MetallicaForksEntity;
-import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
-import net.arna.jcraft.common.entity.projectile.PHCapsuleProjectile;
-import net.arna.jcraft.common.entity.projectile.RapierProjectile;
-import net.arna.jcraft.common.entity.projectile.RedBindEntity;
-import net.arna.jcraft.common.entity.projectile.SandTornadoEntity;
-import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
-import net.arna.jcraft.common.entity.projectile.StandArrowEntity;
-import net.arna.jcraft.common.entity.projectile.SunBeamProjectile;
-import net.arna.jcraft.common.entity.projectile.WSAcidProjectile;
+import net.arna.jcraft.common.entity.projectile.*;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
 import net.arna.jcraft.common.entity.stand.AtumEntity;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
@@ -355,6 +331,16 @@ public interface JEntityTypeRegistry {
                     .clientTrackingRange(6)
                     .updateInterval(20)
                     .build("scalpel")
+    );
+
+    RegistrySupplier<EntityType<RazorProjectile>> RAZOR = ENTITY_TYPE_REGISTRY.register(JCraft.id("razor"),
+            () -> EntityType.Builder.of(
+                            WorldOnlyEntityFactory.from(RazorProjectile::new),
+                            MobCategory.MISC
+                    ).sized(0.25f, 0.25f)
+                    .clientTrackingRange(6)
+                    .updateInterval(10)
+                    .build("razor")
     );
 
     RegistrySupplier<EntityType<BisectProjectile>> BISECT = ENTITY_TYPE_REGISTRY.register(JCraft.id("bisect"),

@@ -84,6 +84,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     @Override
     public void actuallyRender(final PoseStack poseStack, final T animatable, final BakedGeoModel model, RenderType renderType, final MultiBufferSource bufferSource,
                                VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
+        if (animatable == null) return;
         poseStack.pushPose();
 
         final boolean shouldSit = animatable.isPassenger() && (animatable.getVehicle() != null);

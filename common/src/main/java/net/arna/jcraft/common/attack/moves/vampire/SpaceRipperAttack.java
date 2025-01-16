@@ -39,7 +39,7 @@ public final class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, Vam
         //noinspection ConstantValue // what??
         for (int i = -1; i < 3; i += 2) {
             LaserProjectile laser = new LaserProjectile(attacker.getEntityWorld(), user);
-            laser.setDeltaMovement(getRotVec(attacker).scale(2 + (chargeTime - 15) / 10.0));
+            laser.setDeltaMovement(attacker.getBaseEntity().getLookAngle().scale(2 + (chargeTime - 15) / 10.0));
 
             final Vec3 sideOffset = rotVec.yRot(1.57079632679f * i).scale(0.125);
             final Vec3 offset = RotationUtil.vecPlayerToWorld(sideOffset.x, sideOffset.y + (double) user.getEyeHeight(), sideOffset.z, GravityChangerAPI.getGravityDirection(user));

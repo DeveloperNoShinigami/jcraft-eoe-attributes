@@ -91,6 +91,7 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.BLOCK_PROJECTILE, BlockProjectileRenderer::new),
             new RendererData<>(JEntityTypeRegistry.KNIFE, KnifeRenderer::new),
             new RendererData<>(JEntityTypeRegistry.SCALPEL, ScalpelRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.RAZOR, RazorRenderer::new),
             new RendererData<>(JEntityTypeRegistry.ANKH, AnkhRenderer::new),
             new RendererData<>(JEntityTypeRegistry.BUBBLE, BubbleRenderer::new),
             new RendererData<>(JEntityTypeRegistry.LIFE_DETECTOR, LifeDetectorRenderer::new),

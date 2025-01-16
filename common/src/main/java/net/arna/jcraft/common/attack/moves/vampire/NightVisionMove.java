@@ -37,7 +37,7 @@ public class NightVisionMove extends AbstractMove<NightVisionMove, VampireSpec> 
     }
 
     @Override
-    public void tick(VampireSpec attacker) {
+    public void tick(final VampireSpec attacker) {
         LivingEntity user = attacker.getUser();
         if (user == null || !attacker.getMoveContext().getBoolean(ACTIVE)) return;
 

@@ -196,7 +196,8 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.literal("Internal Attack"),
                     Component.literal("""
                             12 meter range.
-                            Uses the opponent's own iron to create a deadly remote attack.
+                            Uses the opponent's own iron to make them vomit razor blades, which may damage them if stepped on.
+                            The razors may be collected by Metallica's user for iron.
                             Applies Hypoxia for 3 seconds.
                             Cannot attack hypoxic targets.
                             This attack does not interrupt other moves.""")
@@ -240,11 +241,11 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.literal("Invisibility"),
                     Component.literal("""
                             Projects a field of iron particles that reflect light away from the user.
-                            Uses 10 iron per second.
+                            Uses 5 iron per second.
                             Cannot be queued.""")
             )
             .withInitAction(UserAnimationAction.play("mtl.ivs"))
-            .withCondition(MetallicaIronCondition.atLeast(10.0f));
+            .withCondition(MetallicaIronCondition.atLeast(5.0f));
     public static final HarvestMove HARVEST = new HarvestMove(60 * 20, 0.75f, 3)
             .withCrouchingVariant(GO_INVISIBLE)
             .withInfo(
