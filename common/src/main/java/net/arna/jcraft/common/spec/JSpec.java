@@ -223,12 +223,14 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             return false;
         }
 
-        CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
-        int cd = cooldowns.getCooldown(cooldownType);
-        if (cd > 0) {
-            return false;
+        if (cooldownType != null && move.getCooldown() > 0) {
+            CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
+            int cd = cooldowns.getCooldown(cooldownType);
+            if (cd > 0) {
+                return false;
+            }
+            if (move.isManualCooldown()) cooldowns.setCooldown(cooldownType, move.getCooldown());
         }
-        cooldowns.setCooldown(cooldownType, move.getCooldown());
 
         //JCraft.LOGGER.info("SERVER: Handling spec attack: " + attack + " in world: " + serverWorld);
 

@@ -73,10 +73,16 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     protected MobilityType mobilityType;
     private Boolean isHoldable;
     private OptionalInt followupFrame = OptionalInt.empty();
+
+    // Properties that are NOT serialized (usually set in constructor)
     // Used to help AI know how and when to use this attack.
     protected boolean ranged, barrage, multiHit, charge, counter, dash, grab;
     protected boolean copyOnUse;
     protected boolean mayHitUser;
+    /**
+     * If true, the move handles setting cooldown itself rather than the attacker.
+     */
+    protected boolean manualCooldown;
     private boolean copiedExtras; // See #testCopy()
 
     protected AbstractMove(int cooldown, int windup, int duration, float moveDistance) {

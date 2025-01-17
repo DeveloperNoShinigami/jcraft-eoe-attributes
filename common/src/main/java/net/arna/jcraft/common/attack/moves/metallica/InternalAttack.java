@@ -14,7 +14,6 @@ import net.arna.jcraft.common.entity.projectile.RazorProjectile;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -40,6 +39,7 @@ public class InternalAttack extends AbstractMove<InternalAttack, MetallicaEntity
 
     public InternalAttack(int cooldown, int windup, int duration) {
         super(cooldown, windup, duration, 0);
+        manualCooldown = true;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class InternalAttack extends AbstractMove<InternalAttack, MetallicaEntity
 
                 StandEntity.damage(3.5f, serverWorld.damageSources().sting(user), target);
                 target.addEffect(new MobEffectInstance(JStatusRegistry.HYPOXIA.get(), 60, 0, false, true));
-                JComponentPlatformUtils.getCooldowns(user).setCooldown(CooldownType.STAND_SP2, 200);
+                JComponentPlatformUtils.getCooldowns(user).setCooldown(getMoveClass().getDefaultCooldownType(), getCooldown());
 
                 attacker.getMoveContext().set(RAZOR_TARGET, target);
                 attacker.getMoveContext().set(RAZOR_TIME, RAZOR_VOMIT_DURATION);

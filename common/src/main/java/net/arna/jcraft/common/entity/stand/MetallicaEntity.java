@@ -190,7 +190,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.sfk"))
             .withCondition(MetallicaIronCondition.atLeast(MetallicaForksEntity.IRON_COST));
-    public static final InternalAttack INTERNAL_ATTACK = new InternalAttack(0, 10, 15)
+    public static final InternalAttack INTERNAL_ATTACK = new InternalAttack(200, 10, 15)
             .withCrouchingVariant(SUMMON_FORKS)
             .withInfo(
                     Component.literal("Internal Attack"),
