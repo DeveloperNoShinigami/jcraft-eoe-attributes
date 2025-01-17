@@ -41,7 +41,7 @@ public class NightVisionMove extends AbstractMove<NightVisionMove, VampireSpec> 
         LivingEntity user = attacker.getUser();
         if (user == null || !attacker.getMoveContext().getBoolean(ACTIVE)) return;
 
-        user.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 400, 0, true, false));
+        user.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 410, 0, true, false));
     }
 
     @Override

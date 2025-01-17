@@ -982,9 +982,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             playSummonAnim = false;
         }
 
-        if (!level().isClientSide())
-            moveMap.tickMoves(getThis());
-
         final boolean isFree = isFree();
         final boolean isRemote = isRemote();
 
@@ -1027,127 +1024,131 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
         if (client) {
             JCraft.getClientEntityHandler().standEntityClientTick(this);
-        } else {
-            ServerPlayer userPlayer = null;
-            if (user instanceof ServerPlayer serverPlayerEntity) {
-                userPlayer = serverPlayerEntity;
-            }
+            return;
+        }
 
-            // Reset samestate
-            if (isSameState()) {
-                setSameState(false);
-            }
+        ServerPlayer userPlayer = null;
+        if (user instanceof ServerPlayer serverPlayerEntity) {
+            userPlayer = serverPlayerEntity;
+        }
 
-            // Make sure the user is using this stand
-            if (JUtils.getStand(user) != this) {
-                discard();
-            }
+        // Reset samestate
+        if (isSameState()) {
+            setSameState(false);
+        }
 
-            // Block break / Guard crush check
-            if (getStandGauge() < 1) {
-                user.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), 40, 2));
-                playSound(SoundEvents.TOTEM_USE, 1, 0.5f);
-                blocking = false;
-                kill();
-            }
+        // Make sure the user is using this stand
+        if (JUtils.getStand(user) != this) {
+            discard();
+        }
 
-            AbstractMove<?, ? super E> move = this.getCurrentMove();
-            if (defaultToNear() && moveStun <= 0) {
-                if (move == null) {
-                    if (this.queuedMove == null) {
-                        setFree(false);
-                    }
-                } else if (move.isCounter()) { //noinspection unchecked // not an issue here
-                    ((AbstractCounterAttack<?, ? super E>) move).whiff(getThis(), user);
-                    moveStun = 1;
-                }
-            }
+        // Tick moves
+        moveMap.tickMoves(getThis());
 
-            final boolean isRemoteAndControllable = isRemote && remoteControllable();
+        // Block break / Guard crush check
+        if (getStandGauge() < 1) {
+            user.addEffect(new MobEffectInstance(JStatusRegistry.DAZED.get(), 40, 2));
+            playSound(SoundEvents.TOTEM_USE, 1, 0.5f);
+            blocking = false;
+            kill();
+        }
 
-            // Rotate with user (provided user controls the stand)
-            if (!isFree || isRemoteAndControllable) {
-                setYHeadRot(user.getYHeadRot());
-                setRot(user.getYRot(), user.getXRot());
-            }
-
-            // Remote mode users cannot move while controlling
-            if (isRemoteAndControllable) {
-                user.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 5, 9, true, false));
-            }
-
-            // Attack logic
-            if (move != null) {
-                MoveTickQueue.queueTick(getThis(), move, getMoveStun());
-
-                // Make sure the correct holding type is set
-                MoveInputType curMoveInputType = MoveInputType.fromMoveClass(move.getMoveClass());
-                if (canHoldMove(curMoveInputType) && getHoldingType() != curMoveInputType) {
-                    setHoldingType(curMoveInputType);
-                    //setHolding(true);
-                }
-
-                if (moveStun >= 0 && !blocking) {
-                    final float attackDist = move.getMoveDistance();
-
-                    if (!move.isCharge()) {
-                        if (!isRemote) {
-                            // TODO: find a cleaner way to slow down the users attack speed
-                            user.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 5, 4, true, false));
-                        }
-
-                        setAttackRotationOffset();
-                        setDistanceOffset(attackDist);
-                    }
-                }
-            }
-
-            if (wantToBlock && canBlock()) {
-                if (isFree() && !isRemote()) {
+        AbstractMove<?, ? super E> move = this.getCurrentMove();
+        if (defaultToNear() && moveStun <= 0) {
+            if (move == null) {
+                if (this.queuedMove == null) {
                     setFree(false);
                 }
-                tryBlock();
+            } else if (move.isCounter()) { //noinspection unchecked // not an issue here
+                ((AbstractCounterAttack<?, ? super E>) move).whiff(getThis(), user);
+                moveStun = 1;
             }
-
-            if (moveStun <= 0 && !blocking) {
-                // Attack buffering
-                if (queuedMove != null) {
-                    doQueuedMove(userPlayer);
-                } else if (!idleOverride) {
-                    // Process idle
-                    if (curMove != null) setCurrentMove(null);
-
-                    setStandGauge(Mth.clamp(this.getStandGauge() + 0.5f, 0, maxStandGauge));
-
-                    if (getRawState() != 0 || isReset()) {
-                        setRawState(0);
-                        setReset(false);
-
-                        setDistanceOffset(idleDistance);
-                        setRotationOffset(idleRotation);
-                    }
-                } else {
-                    idleOverride();
-                }
-            } else if (blocking) { // Process block
-                if (wantToBlock) {
-                    if (curMove != null) setCurrentMove(null);
-
-                    if (moveStun < 1) {
-                        setMoveStun(1);
-                    }
-
-                    setDistanceOffset(blockDistance);
-                    setRotationOffset(ATTACK_ROTATION);
-                    standBlock();
-                    setStateNoReset(getBlockState()); // Set after standBlock() so blocking logic can account for previous state
-                } else {
-                    tryUnblock();
-                }
-            }
-
-            tsTime--;
         }
+
+        final boolean isRemoteAndControllable = isRemote && remoteControllable();
+
+        // Rotate with user (provided user controls the stand)
+        if (!isFree || isRemoteAndControllable) {
+            setYHeadRot(user.getYHeadRot());
+            setRot(user.getYRot(), user.getXRot());
+        }
+
+        // Remote mode users cannot move while controlling
+        if (isRemoteAndControllable) {
+            user.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 5, 9, true, false));
+        }
+
+        // Attack logic
+        if (move != null) {
+            MoveTickQueue.queueTick(getThis(), move, getMoveStun());
+
+            // Make sure the correct holding type is set
+            MoveInputType curMoveInputType = MoveInputType.fromMoveClass(move.getMoveClass());
+            if (canHoldMove(curMoveInputType) && getHoldingType() != curMoveInputType) {
+                setHoldingType(curMoveInputType);
+                //setHolding(true);
+            }
+
+            if (moveStun >= 0 && !blocking) {
+                final float attackDist = move.getMoveDistance();
+
+                if (!move.isCharge()) {
+                    if (!isRemote) {
+                        // TODO: find a cleaner way to slow down the users attack speed
+                        user.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 5, 4, true, false));
+                    }
+
+                    setAttackRotationOffset();
+                    setDistanceOffset(attackDist);
+                }
+            }
+        }
+
+        if (wantToBlock && canBlock()) {
+            if (isFree() && !isRemote()) {
+                setFree(false);
+            }
+            tryBlock();
+        }
+
+        if (moveStun <= 0 && !blocking) {
+            // Attack buffering
+            if (queuedMove != null) {
+                doQueuedMove(userPlayer);
+            } else if (!idleOverride) {
+                // Process idle
+                if (curMove != null) setCurrentMove(null);
+
+                setStandGauge(Mth.clamp(this.getStandGauge() + 0.5f, 0, maxStandGauge));
+
+                if (getRawState() != 0 || isReset()) {
+                    setRawState(0);
+                    setReset(false);
+
+                    setDistanceOffset(idleDistance);
+                    setRotationOffset(idleRotation);
+                }
+            } else {
+                idleOverride();
+            }
+        } else if (blocking) { // Process block
+            if (wantToBlock) {
+                if (curMove != null) setCurrentMove(null);
+
+                if (moveStun < 1) {
+                    setMoveStun(1);
+                }
+
+                setDistanceOffset(blockDistance);
+                setRotationOffset(ATTACK_ROTATION);
+                standBlock();
+                setStateNoReset(getBlockState()); // Set after standBlock() so blocking logic can account for previous state
+            } else {
+                tryUnblock();
+            }
+        }
+
+        tsTime--;
 
         // JCraft.LOGGER.info( "State: " + this.getState() + " Movestun: " + curMoveStun + " Currently attacking: " + (this.curAttack != null)); // Massive debug log
 

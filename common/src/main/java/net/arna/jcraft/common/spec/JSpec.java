@@ -234,14 +234,21 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
         //JCraft.LOGGER.info("SERVER: Handling spec attack: " + attack + " in world: " + serverWorld);
 
-        curMove = move.copy()
+        move = animationSpeed == 1 ? move : move.copy()
                 .withDuration((int) (move.getDuration() / animationSpeed))
                 .withWindup((int) (move.getWindup() / animationSpeed));
 
-        curMove.registerContextEntries(moveContext);
-        curMove.onInitiate(getThis());
+        move.registerContextEntries(moveContext);
+        move.onInitiate(getThis());
 
-        moveStun = curMove.getDuration();
+        // If the move has a duration of 0, perform it instantly.
+        if (move.getDuration() == 0) {
+            move.perform(getThis(), getUserOrThrow(), getMoveContext());
+            return true;
+        }
+
+        curMove = move;
+        moveStun = move.getDuration();
 
         if (curMove instanceof AbstractMultiHitAttack<?, ?> multiHitAttack) {
             multiHitAttack.withHitMoments(IntSet.of(multiHitAttack.getHitMoments().intStream()
@@ -249,10 +256,10 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
                     .toArray()));
         }
 
-        var finisher = curMove.getFinisher();
+        var finisher = move.getFinisher();
         if (finisher != null) {
             int finisherSwapTick = (int) (finisher.leftInt() / animationSpeed);
-            curMove.modifyFinisherTime(finisherSwapTick);
+            move.modifyFinisherTime(finisherSwapTick);
             // Ensure the finisher will happen
             int finisherWindupTime = finisher.right().getWindup() + 1;
             if (moveStun < finisherWindupTime) {
@@ -345,6 +352,8 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             return;
         }
 
+        moveMap.tickMoves(getThis());
+
         if (moveStun <= 0) {
             armorPoints = 0;
 
@@ -358,8 +367,6 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             }
             return;
         }
-
-        moveMap.tickMoves(getThis());
 
         //JCraft.LOGGER.info("SERVER: Movestun is " + moveStun);
 
