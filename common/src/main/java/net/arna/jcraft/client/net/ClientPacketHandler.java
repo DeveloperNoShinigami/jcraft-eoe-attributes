@@ -487,7 +487,7 @@ public class ClientPacketHandler {
     }
 
     public static void handleTimeAccelState(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
-        final TimeAccelStatePacket.State state = TimeAccelStatePacket.State.values()[buf.readVarInt()];
+        final TimeAccelStatePacket.State state = buf.readEnum(TimeAccelStatePacket.State.class);
         final Entity e = client.level == null ? null : client.level.getEntity(buf.readVarInt());
 
         if (!(e instanceof final MadeInHeavenEntity mih) || !mih.isAlive()) {
@@ -495,7 +495,11 @@ public class ClientPacketHandler {
         }
 
         switch (state) {
-            case START -> TimeAccelStatePacket.addAcceleration(buf.readVarInt(), mih.getId());
+            case START -> {
+                final int duration = buf.readVarInt();
+                final long startTime = buf.readLong();
+                TimeAccelStatePacket.addAcceleration(mih.getId(), (int) (duration - (System.currentTimeMillis() - startTime) / 50), startTime);
+            }
             case STOP -> TimeAccelStatePacket.removeAcceleration(mih.getId());
         }
     }

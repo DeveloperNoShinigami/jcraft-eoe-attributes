@@ -1,22 +1,26 @@
 package net.arna.jcraft.common.network.s2c;
 
+import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.networking.NetworkManager;
+import dev.architectury.platform.Platform;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import lombok.Data;
 import lombok.NonNull;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.registry.JPacketRegistry;
-import net.minecraft.Util;
+import net.fabricmc.api.EnvType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 
-import java.util.Map;
+import java.util.Objects;
+import java.util.WeakHashMap;
+import java.util.function.Consumer;
 
 // TODO: fix time sync between server and client so it doesn't jump at the end
 
@@ -27,23 +31,17 @@ import java.util.Map;
  */
 public class TimeAccelStatePacket {
     private static final Int2ObjectMap<TimeAcceleration> accelerations = new Int2ObjectOpenHashMap<>();
-    public static long lastUpdate = 0;
     private static final Object lock = new Object();
+    private static final WeakHashMap<Level, Long> startDayTime = new WeakHashMap<>();
 
-    static {
+    public static void init() {
         // Decrease all durations.
-        TickEvent.SERVER_POST.register(server -> {
-            // Avoid thread-safety issues by locking on our lock.
-            synchronized (lock) {
-                new IntOpenHashSet(accelerations.keySet()).forEach(id -> {
-                    if (accelerations.get(id).getDuration() <= 0) {
-                        accelerations.remove(id);
-                    } else {
-                        accelerations.get(id).decrementDuration();
-                    }
-                });
-            }
-        });
+        TickEvent.SERVER_POST.register(TimeAccelStatePacket::tick);
+        if (Platform.getEnv() == EnvType.CLIENT) {
+            ClientTickEvent.CLIENT_POST.register(c -> {
+                if (!c.hasSingleplayerServer()) tick(c);
+            });
+        }
 
         // Handle acceleration on server.
         TickEvent.SERVER_LEVEL_POST.register(world -> {
@@ -51,14 +49,13 @@ public class TimeAccelStatePacket {
                 return;
             }
 
-            double acceleration = getAcceleration(world);
-            world.setDayTime((long) (world.getDayTime() + acceleration * 0.05));
+            applyAcceleration(world, world::setDayTime);
         });
     }
 
-    public static void addAcceleration(final int mihEntityId, final int duration) {
+    public static void addAcceleration(final int mihEntityId, final int duration, final long startTime) {
         synchronized (lock) {
-            accelerations.put(mihEntityId, new TimeAcceleration(duration, mihEntityId));
+            accelerations.put(mihEntityId, new TimeAcceleration(duration, mihEntityId, startTime));
         }
     }
 
@@ -69,43 +66,85 @@ public class TimeAccelStatePacket {
     }
 
     public static void sendStart(@NonNull final MadeInHeavenEntity mih, int duration) {
-        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        buf.writeVarInt(State.START.ordinal());
-        buf.writeVarInt(mih.getId());
-        buf.writeVarInt(duration);
+        final long time = System.currentTimeMillis();
 
-        NetworkManager.sendToPlayers(((ServerLevel) mih.level()).players(), JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
+        // On singleplayer, the accelerations map is used for client stuff too.
+        if (Objects.requireNonNull(mih.getEntityWorld().getServer()).isDedicatedServer()) {
+            final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            buf.writeEnum(State.START);
+            buf.writeVarInt(mih.getId());
+            buf.writeVarInt(duration);
+            buf.writeLong(time); // for time syncing
+
+            NetworkManager.sendToPlayers(((ServerLevel) mih.level()).players(), JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
+        }
 
         synchronized (lock) {
-            accelerations.put(mih.getId(), new TimeAcceleration(duration, mih.getId()));
+            accelerations.put(mih.getId(), new TimeAcceleration(duration, mih.getId(), time));
         }
     }
 
     public static void sendStop(@NonNull final MadeInHeavenEntity mih) {
-        final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        buf.writeVarInt(State.STOP.ordinal());
-        buf.writeVarInt(mih.getId());
+        if (Objects.requireNonNull(mih.getServer()).isDedicatedServer()) {
+            final FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            buf.writeEnum(State.STOP);
+            buf.writeVarInt(mih.getId());
 
-        NetworkManager.sendToPlayers(((ServerLevel) mih.level()).players(), JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
+            NetworkManager.sendToPlayers(((ServerLevel) mih.level()).players(), JPacketRegistry.S2C_TIME_ACCELERATION_STATE, buf);
+        }
 
         synchronized (lock) {
             accelerations.remove(mih.getId());
         }
     }
 
+    @SuppressWarnings("unused")
     private static double someBsArnaPutTogetherInDesmos(double x) {
         return Math.sqrt(1 - Math.pow(2 * x * x - 1, 2));
     }
 
-    public static double getAcceleration(Level world) {
+    private static double integralOfSomeBsArnaPutTogetherInDesmos(double x) {
+        double x2 = x * x;
+        return (x2 - 1) * Math.sqrt(1 - x2) + 1;
+    }
+
+    public static void applyAcceleration(Level world, Consumer<Long> dayTimeSetter) {
+        if (accelerations.isEmpty()) {
+            startDayTime.put(world, -1L);
+            return;
+        }
+
+        long start = startDayTime.getOrDefault(world, -1L);
+        if (start < 0) {
+            startDayTime.put(world, start = world.getDayTime());
+        }
+
+        long total = accelerations.values().stream()
+                .filter(ta -> ta.isValid(world))
+                .mapToLong(ta -> (long) Mth.lerp(integralOfSomeBsArnaPutTogetherInDesmos(Math.min(1,
+                        (System.currentTimeMillis() - ta.getStartTime()) / (ta.getInitialDuration() * 50d))), 0, 240000))
+                .sum();
+
+        dayTimeSetter.accept(start + total);
+    }
+
+    private static void tick(Object o) {
+        // Avoid thread-safety issues by locking on our lock.
         synchronized (lock) {
-            return accelerations.int2ObjectEntrySet().stream()
-                    // Ensure entity exists in this world
-                    .filter(e -> e.getValue().isValid(world))
-                    .map(Map.Entry::getValue)
-                    .mapToDouble(a -> someBsArnaPutTogetherInDesmos((Util.getMillis() - a.getStartTime()) /
-                            (a.getInitialDuration() * 50d)))
-                    .sum() * 24000;
+            if (accelerations.isEmpty()) return;
+
+            boolean done = accelerations.values().stream()
+                    .allMatch(ta -> {
+                        if (ta.getDuration() > 0) {
+                            ta.decrementDuration();
+                        }
+
+                        return ta.getDuration() <= 0;
+                    });
+
+            if (done) {
+                accelerations.clear();
+            }
         }
     }
 
@@ -118,16 +157,17 @@ public class TimeAccelStatePacket {
         private int duration;
         private double lastAcceleration;
         private final int initialDuration;
-        private final long startTime = Util.getMillis();
+        private final long startTime;
         private final int entityId;
 
-        public TimeAcceleration(int duration, int entityId) {
+        public TimeAcceleration(int duration, int entityId, long startTime) {
             this.duration = this.initialDuration = duration;
             this.entityId = entityId;
+            this.startTime = startTime;
         }
 
         public boolean isValid(Level world) {
-            return duration > 0 && world.getEntity(entityId) instanceof MadeInHeavenEntity;
+            return world.getEntity(entityId) instanceof MadeInHeavenEntity;
         }
 
         public void decrementDuration() {

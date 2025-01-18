@@ -23,10 +23,7 @@ import net.arna.jcraft.common.gravity.util.GravityChannel;
 import net.arna.jcraft.common.loot.JLootTableHelper;
 import net.arna.jcraft.common.network.RemoteStandInteractPacket;
 import net.arna.jcraft.common.network.c2s.*;
-import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
-import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
-import net.arna.jcraft.common.network.s2c.ShaderDeactivationPacket;
-import net.arna.jcraft.common.network.s2c.TimeStopStatePacket;
+import net.arna.jcraft.common.network.s2c.*;
 import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
 import net.arna.jcraft.common.tickable.PastDimensions;
@@ -182,6 +179,8 @@ public final class JCraft {
         ENCHANTMENT.register();
 
         JLootTableHelper.registerLootTables();
+
+        TimeAccelStatePacket.init(); // register event handlers for time acceleration
 
         // TODO: Loot Table registration is currently only finalized on Fabric, which @Ayutac needs to fix
 
