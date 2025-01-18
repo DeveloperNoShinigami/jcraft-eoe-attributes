@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import lombok.Getter;
 import lombok.NonNull;
+import net.arna.jcraft.common.util.NameHolder;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -21,7 +22,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 // do NOT change the order in this enum, only append new stands AT THE END
-public enum StandType {
+public enum StandType implements NameHolder {
     NONE(),
     STAR_PLATINUM(JEntityTypeRegistry.STAR_PLATINUM, StarPlatinumEntity::new, "starplatinum",
             Component.literal("Manga"), Component.literal("Arcade"), Component.literal("OVA")),
@@ -223,5 +224,10 @@ public enum StandType {
 
     public int getSkinCount() {
         return skinNames.size() + 1;
+    }
+
+    @Override
+    public Component getName() {
+        return nameText;
     }
 }

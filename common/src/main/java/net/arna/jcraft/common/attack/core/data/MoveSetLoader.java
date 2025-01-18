@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.attack.core.data;
 
 import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import net.arna.jcraft.common.attack.actions.*;
 import net.arna.jcraft.common.attack.conditions.HoldingAnubisCondition;
@@ -60,6 +61,7 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -361,6 +363,16 @@ public class MoveSetLoader {
         registrar.accept("lunge", () -> LungeAction.Type.INSTANCE);
         registrar.accept("cmoon_inversion", () -> CMoonInversionAction.Type.INSTANCE);
         registrar.accept("user_animation", () -> UserAnimationAction.Type.INSTANCE);
+    }
+
+    public static Map<Enum<?>, Map<String, MoveSet<?, ?>>> getMoveSets() {
+        return moveSets.entrySet().stream()
+                .map(e -> Map.entry(e.getKey(), Collections.unmodifiableMap(e.getValue())))
+                .collect(
+                        ImmutableMap::<Enum<?>, Map<String, MoveSet<?, ?>>>builder,
+                        ImmutableMap.Builder::put,
+                        (b1, b2) -> b1.putAll(b2.build()))
+                .build();
     }
 
     /**

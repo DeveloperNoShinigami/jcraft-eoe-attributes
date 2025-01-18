@@ -350,6 +350,16 @@ public class MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
     }
 
     /**
+     * Writes the modified move set (including datapack changes) using the given dynamic ops.
+     * @param ops The dynamic ops to use. Such as {@link com.mojang.serialization.JsonOps#INSTANCE JsonOps}
+     * @return The result of the save operation.
+     * @param <T> The type of the element to save to. Such as JsonElement.
+     */
+    public <T> DataResult<T> writeModified(DynamicOps<T> ops) {
+        return codec.encodeStart(ops, moveMap);
+    }
+
+    /**
      * Register a listener for changes made to the move set.
      * Held with weak references, so safe to be an instance of StandEntity or JSpec.
      * Immediately notifies the listener of the current move set if it is already initialized.

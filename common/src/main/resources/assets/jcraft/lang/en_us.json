@@ -379,8 +379,19 @@
   "jcraft.cinderella_mask.enchdesc": "Needs an §9enchantment§r.",
   "jcraft.cinderella_mask.usedesc": "Use with a full Stand Disc in an Anvil to get a skin.",
   "jcraft.sunprotection.desc": "Protects from the Sun.",
+
   "jcraft.commands.error.nospec": "No spec found!",
   "jcraft.commands.error.nostand": "No stand found!",
+
+  "jcraft.commands.changes.looking": "Looking for changes...",
+  "jcraft.commands.changes.type": "Changes for %s:",
+  "jcraft.commands.changes.no_changes": "No changes",
+  "jcraft.commands.changes.move_set": "Move set %s",
+  "jcraft.commands.changes.property": "%s %s:",
+  "jcraft.commands.changes.change": "%s -> %s",
+  "jcraft.commands.changes.too_long": "Change is too long to display",
+  "jcraft.commands.changes.addition": "+ %s",
+  "jcraft.commands.changes.removal": "- %s",
 
   "jcraft.await.move": "Awaiting moves...",
   "jcraft.framedata.definition": "Click for definition",

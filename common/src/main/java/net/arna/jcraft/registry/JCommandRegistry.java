@@ -20,5 +20,6 @@ public interface JCommandRegistry {
         GravityCommand.register(dispatcher);
         JConfigCommand.register(dispatcher);
         JCraftHelpCommand.register(dispatcher);
+        JCraftChangesCommand.register(dispatcher);
     }
 }

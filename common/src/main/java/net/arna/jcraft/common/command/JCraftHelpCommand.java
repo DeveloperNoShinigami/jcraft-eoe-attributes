@@ -8,7 +8,6 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.server.level.ServerPlayer;
 
 public class JCraftHelpCommand {
     public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -25,9 +24,7 @@ public class JCraftHelpCommand {
             .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://trello.com/b/B5Q7ZthB/jcraft-eyes-of-ender-community-trello"));
 
     public static int run(final CommandContext<CommandSourceStack> ctx) {
-        ServerPlayer serverPlayer = ctx.getSource().getPlayer();
-        if (serverPlayer == null) return 0;
-        serverPlayer.displayClientMessage(
+        ctx.getSource().sendSuccess(() ->
                 Component.literal("""
                         §c/stand about§r
                         Displays all relevant Stand information, if your stand is SUMMONED
@@ -52,10 +49,8 @@ public class JCraftHelpCommand {
                         """), false
         );
         // https://trello.com/b/B5Q7ZthB/jcraft-eyes-of-ender-community-trello
-        serverPlayer.displayClientMessage(
-                Component.translatable("jcraft.trello.link").withStyle(trelloStyle)
-                , false
-        );
+        ctx.getSource().sendSuccess(() -> Component.translatable("jcraft.trello.link")
+                .withStyle(trelloStyle), false);
         return 1;
     }
 }

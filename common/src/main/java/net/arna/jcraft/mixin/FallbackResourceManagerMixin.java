@@ -25,7 +25,7 @@ public class FallbackResourceManagerMixin {
     private static void createDirectResource(PackResources source, ResourceLocation location,
                                              IoSupplier<InputStream> streamSupplier, IoSupplier<ResourceMetadata> metadataSupplier,
                                              CallbackInfoReturnable<Resource> cir) {
-        if (!Platform.isDevelopmentEnvironment() ||
+        if (Platform.isDevelopmentEnvironment() ||
                 !JCraft.MOD_ID.equals(location.getNamespace()) || !location.getPath().startsWith("movesets/")) return;
 
         Path p = Path.of("./../../common/src/main/generated/data/" + location.getNamespace() + "/" + location.getPath());
