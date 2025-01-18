@@ -64,6 +64,7 @@ public class JServerConfig {
 
     // Interaction options
     private static final String INTERACTION = "interaction";
+    public static final BooleanOption MINING_BARRAGE = new BooleanOption("miningBarrage", INTERACTION, true);
     /*
     public static final BooleanOption UNIVERSAL_ABILITIES = new BooleanOption("universalAbilities", INTERACTION, true);
     public static final BooleanOption EXCLUSIVE_STANDS = new BooleanOption("exclusiveStands", INTERACTION, false);

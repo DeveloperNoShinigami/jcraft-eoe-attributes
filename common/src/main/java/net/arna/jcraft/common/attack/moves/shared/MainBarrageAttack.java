@@ -5,13 +5,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.core.ctx.BooleanMoveVariable;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
+import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -51,8 +51,9 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
 
     @Override
     public void onInitiate(final A attacker) {
-        boolean breakBlocks = attacker.getUserOrThrow().isShiftKeyDown();
-        if (breakBlocks && !attacker.getEntityWorld().getGameRules().getBoolean(JCraft.STAND_GRIEFING) && !(attacker.getUserOrThrow() instanceof Player)) {
+        boolean breakBlocks = attacker.getUserOrThrow().isShiftKeyDown() && JServerConfig.MINING_BARRAGE.getValue();
+        if (breakBlocks && !mayGrief(attacker.getUser()) && !(attacker.getUser() instanceof Player) ||
+                attacker instanceof Player player && !player.mayBuild()) {
             breakBlocks = false;
         }
         withDuration(breakBlocks ? MINING_BARRAGE_TIME : baseDuration);

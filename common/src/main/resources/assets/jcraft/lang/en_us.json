@@ -462,6 +462,7 @@
   "jcraft.serverconfig.option.shaSearchRadius": "Sheer Heart Attack search radius",
   "jcraft.serverconfig.option.mihAccelerateTicks": "Made in Heaven time accel duration",
   "jcraft.serverconfig.option.useFoolishSand": "Use Foolish Sand",
+  "jcraft.serverconfig.option.miningBarrage": "Enable Barrage Mining",
 
   "jcraft.generic.barrage": "Barrage",
   "jcraft.generic.ts": "Timestop",
