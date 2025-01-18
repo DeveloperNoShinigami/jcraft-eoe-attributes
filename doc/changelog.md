@@ -1,30 +1,13 @@
 # Changelog
-## Further stabilized Forge Multiplayer
 ### General
-* Stand damage now only considers armor values up to Netherite level
-* Stand Arrows can now be fired out of bows
-* Coffins now drop themselves upon being broken
-* Replaced Lingering Potion in Diary Page recipe with Eye of Ender
-* Narrator can now be disabled in the client settings (due to potential conflicts with JCraft binds, and a Mojang not adding the option)
-* Mining Barrages now have extended range
-### Commands
-* /movedata was merged into **/framedata**
-### Structures
-* Cinderella's parlor has floors, filling the previously empty space
-* Cinderella's parlor is now about as rare as a village
+
 ### NPCs & Stands
-* **Added The Hand**
-* NPC Stand users now wander around
-* Taught NPC Stand users to not try to block unblockable moves
-* Taught NPC Metallica users to harvest iron
-* Adjusted Aya Tsuji's mask prices
-* Updated King Crimson's model
+* Metallica
+  * Added Razor vomiting to Internal Attack
+  * Added a crouching M1, which gives the user a throwable Scalpel
+  * Increased iron gain rate from Harvest on non-metallic blocks
 ### Bug Fixes
-* Fixed crash with MmmMmmMmmMmm Dummy Mod
-* Fixed crash with Dave's Potioneering
-* Resolved crash with Jaden's Nether Expansion
-* Fixed Gravity changes crashing Forge multiplayer
-* Fixed infinite creative flight achieved by swapping GE:R and Cream while flying
+
 
 ### Known Bugs
 ## Common

@@ -47,6 +47,8 @@ public interface JItemRegistry {
 
     RegistrySupplier<Item> KNIFE = register("knife", () -> new KnifeItem(settings()));
 
+    RegistrySupplier<Item> SCALPEL = register("scalpel", () -> new ScalpelItem(settings()));
+
     RegistrySupplier<Item> KNIFEBUNDLE = register("knife_bundle", () -> new KnifeBundleItem(settings().stacksTo(1)));
 
     RegistrySupplier<Item> ANUBIS = register("anubis", () -> new AnubisItem(settings().rarity(Rarity.RARE).stacksTo(1)));

@@ -242,6 +242,7 @@ public class MoveSetLoader {
         registrar.accept("magiciansred_red_bind_attack", () -> RedBindAttack.Type.INSTANCE);
         registrar.accept("magiciansred_redirect_attack", () -> RedirectAttack.Type.INSTANCE);
 
+        registrar.accept("metallica_give_scalpel_move", () -> GiveScalpelMove.Type.INSTANCE);
         registrar.accept("metallica_bisect_attack", () -> BisectAttack.Type.INSTANCE);
         registrar.accept("metallica_bisect_charge_move", () -> BisectChargeMove.Type.INSTANCE);
         registrar.accept("metallica_fan_toss_attack", () -> FanTossAttack.Type.INSTANCE);

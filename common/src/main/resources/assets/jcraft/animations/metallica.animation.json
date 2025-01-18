@@ -2220,6 +2220,106 @@
 					}
 				}
 			}
+		},
+		"animation.metallica.give_scalpel": {
+			"animation_length": 0.44,
+			"bones": {
+				"base": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"lowbase": {
+					"rotation": {
+						"vector": [0, -90, 0]
+					}
+				},
+				"shield": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"scalpel": {
+					"rotation": {
+						"0.16": {
+							"vector": [0, 0, 0]
+						},
+						"0.44": {
+							"vector": [0, 0, 65]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.32": {
+							"vector": [-13, 17, 0],
+							"easing": "easeOutSine"
+						},
+						"0.44": {
+							"vector": [0, 26, 0]
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.32": {
+							"vector": [1, 1, 1],
+							"easing": "easeOutSine"
+						},
+						"0.44": {
+							"vector": [1, 0, 0],
+							"easing": "easeOutBack"
+						}
+					}
+				},
+				"blur": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"scalpel2": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"blur2": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"scalpel3": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"blur3": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"cleaver": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"cleaver2": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"scalpel4": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"scalpel5": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
 		}
 	},
 	"geckolib_format_version": 2

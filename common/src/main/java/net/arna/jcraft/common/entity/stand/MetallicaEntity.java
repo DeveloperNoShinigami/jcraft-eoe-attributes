@@ -67,6 +67,13 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     public static final EntityDataAccessor<Boolean> INVISIBLE = SynchedEntityData.defineId(MetallicaEntity.class, EntityDataSerializers.BOOLEAN);
     public static final float IRON_MAX = 80.0f;
 
+    public static final GiveScalpelMove GIVE_SCALPEL = new GiveScalpelMove(0, 8, 9, 0)
+            .withInfo(
+                    Component.literal("Give Scalpel"),
+                    Component.empty()
+            )
+            .withInitAction(UserAnimationAction.play("mtl.gsl"))
+            .withCondition(MetallicaIronCondition.atLeast(ScalpelProjectile.IRON_COST));
     public static final SimpleAttack<MetallicaEntity> LIGHT_LAUNCH = new SimpleAttack<MetallicaEntity>(0,
             18, 22, 0.75f, 5f, 6,1.7f,  1.25f, 0.2f)
             .withLaunch()
@@ -96,7 +103,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     public static final SimpleAttack<MetallicaEntity> LIGHT = SimpleAttack.<MetallicaEntity>lightAttack(
                     6, 10, 0.75f, 4f, 11, 0.15f, 0.2f)
             .withFollowup(LIGHT_FOLLOWUP)
-            // .withCrouchingVariant(CROUCHING_LIGHT)
+            .withCrouchingVariant(GIVE_SCALPEL)
             // .withAerialVariant(AIR_LIGHT)
             .withImpactSound(SoundEvents.PLAYER_ATTACK_SWEEP)
             .withInfo(
@@ -307,6 +314,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     private static void registerMoves(MoveMap<MetallicaEntity, MetallicaEntity.State> moves) {
         var light = moves.register(MoveClass.LIGHT, LIGHT, State.LIGHT);
         light.withFollowup(State.LIGHT_FOLLOWUP).withFollowup(State.LIGHT_FINAL);
+        light.withCrouchingVariant(State.GIVE_SCALPEL);
         moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
         var heavy = moves.register(MoveClass.HEAVY, SMASH, State.SMASH);
         heavy.withFollowup(State.CLEAVE);
@@ -434,6 +442,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.sweep"))),
         GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.grab_hit"))),
         BISECT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.bisect"))),
+        GIVE_SCALPEL(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.give_scalpel"))),
         ;
 
         private final Consumer<AnimationState<MetallicaEntity>> animator;
