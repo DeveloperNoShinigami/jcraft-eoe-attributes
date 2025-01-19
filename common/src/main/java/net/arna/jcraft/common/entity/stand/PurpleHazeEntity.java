@@ -172,8 +172,8 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
         super.queueMove(type);
     }
 
-    public boolean handleMove(MoveClass type) {
-        MoveMap.Entry<PurpleHazeEntity, State> entry = getMoveMap().getFirstValidEntry(type, getThis());
+    public boolean handleMove(MoveClass moveClass) {
+        MoveMap.Entry<PurpleHazeEntity, State> entry = getFirstValidEntry(moveClass);
         if (entry == null) {
             return false;
         }

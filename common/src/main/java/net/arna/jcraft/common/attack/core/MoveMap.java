@@ -123,8 +123,27 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S extends Enum<?>> imp
      * @return The first valid entry for the given type, or null if none are found.
      */
     @Nullable
-    public Entry<A, S> getFirstValidEntry(final MoveClass type, final A attacker) {
+    public Entry<A, S> getFirstValidEntry(final MoveClass type, final A attacker, final boolean crouching, final boolean aerial) {
         return getEntries(type).stream()
+                .map(entry -> {
+                    if (crouching && entry.getCrouchingVariant() != null) {
+                        entry = entry.getCrouchingVariant();
+                        if (aerial && entry.getAerialVariant() != null) {
+                            return entry.getAerialVariant();
+                        }
+
+                        return entry;
+                    } else if (aerial && entry.getAerialVariant() != null) {
+                        entry = entry.getAerialVariant();
+                        if (crouching && entry.getCrouchingVariant() != null) {
+                            return entry.getCrouchingVariant();
+                        }
+
+                        return entry;
+                    } else {
+                        return entry;
+                    }
+                })
                 .filter(entry -> entry.getMove().conditionsMet(attacker))
                 .findFirst()
                 .orElse(null);

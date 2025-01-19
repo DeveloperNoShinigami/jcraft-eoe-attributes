@@ -658,26 +658,20 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return getState().ordinal() > 0;
     }
 
-    public boolean handleMove(MoveClass type) {
-        MoveMap.Entry<E, S> entry = getMoveMap().getFirstValidEntry(type, getThis());
+    public boolean handleMove(MoveClass moveClass) {
+        MoveMap.Entry<E, S> entry = getFirstValidEntry(moveClass);
         if (entry == null) {
             return false;
         }
 
-        if (hasUser() && !getUserOrThrow().onGround() && entry.getAerialVariant() != null) {
-            entry = entry.getAerialVariant();
-        }
-        // This means crouching aerial variants are also supported. :O
-        if (hasUser() && getUserOrThrow().isShiftKeyDown() && entry.getCrouchingVariant() != null) {
-            entry = entry.getCrouchingVariant();
-        }
-        // Ensure a crouching variant of an aerial variant and an aerial variant of a crouching variant both work.
-        if (hasUser() && !getUserOrThrow().onGround() && entry.getAerialVariant() != null) {
-            entry = entry.getAerialVariant();
-        }
-
         AbstractMove<?, ? super E> move = entry.getMove();
         return handleMove(move.isCopyOnUse() ? move.copy() : move, entry.getCooldownType(), entry.getAnimState());
+    }
+
+    protected @Nullable MoveMap.Entry<E, S> getFirstValidEntry(final MoveClass moveClass) {
+        boolean crouching = hasUser() && getUserOrThrow().isCrouching();
+        boolean aerial = hasUser() && !getUserOrThrow().onGround();
+        return getMoveMap().getFirstValidEntry(moveClass, getThis(), crouching, aerial);
     }
 
     /**
@@ -856,7 +850,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return false;
         }
 
-        MoveMap.Entry<E, S> entry = moveMap.getFirstValidEntry(type.getMoveClass(), getThis());
+        MoveMap.Entry<E, S> entry = getFirstValidEntry(type.getMoveClass());
         return entry == null ? type.isHoldable() : MoreObjects.firstNonNull(entry.getMove().getIsHoldable(), type.isHoldable());
     }
 
@@ -1957,9 +1951,9 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
         int movesOnCooldown = 0;
 
-        MoveMap.Entry<E, S> lightEntry = getMoveMap().getFirstValidEntry(MoveClass.LIGHT, getThis());
+        MoveMap.Entry<E, S> lightEntry = getFirstValidEntry(MoveClass.LIGHT);
         if (lightEntry == null) {
-            MoveMap.Entry<E, S> heavyEntry = getMoveMap().getFirstValidEntry(MoveClass.HEAVY, getThis());
+            MoveMap.Entry<E, S> heavyEntry = getFirstValidEntry(MoveClass.HEAVY);
             if (heavyEntry == null) {
                 JCraft.LOGGER.warn("Couldn't find light or heavy attack entry while running selectAttack on stand: {}", this);
                 return null;

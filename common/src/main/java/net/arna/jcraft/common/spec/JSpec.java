@@ -182,7 +182,9 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             return false;
         }
 
-        MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(type.getMoveClass(), getThis());
+        boolean crouching = hasUser() && user.isCrouching();
+        boolean aerial = hasUser() && !user.onGround();
+        MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(type.getMoveClass(), getThis(), crouching, aerial);
         return entry == null ? type.isHoldable() : MoreObjects.firstNonNull(entry.getMove().getIsHoldable(), type.isHoldable());
     }
 
@@ -194,12 +196,14 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         return moveStun <= 0 && !JUtils.isAffectedByTimeStop(user) && !user.hasEffect(JStatusRegistry.DAZED.get());
     }
 
-    public boolean handleMove(MoveClass type) {
-        return handleMove(type, 1f);
+    public boolean handleMove(MoveClass moveClass) {
+        return handleMove(moveClass, 1f);
     }
 
-    public boolean handleMove(MoveClass type, float animationSpeed) {
-        MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(type, getThis());
+    public boolean handleMove(MoveClass moveClass, float animationSpeed) {
+        boolean crouching = hasUser() && user.isCrouching();
+        boolean aerial = hasUser() && !user.onGround();
+        MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(moveClass, getThis(), crouching, aerial);
         if (entry == null) {
             return false;
         }

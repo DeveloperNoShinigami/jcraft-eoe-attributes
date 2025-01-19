@@ -213,11 +213,11 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
     }
 
     @Override
-    public boolean handleMove(MoveClass type) {
+    public boolean handleMove(MoveClass moveClass) {
         LivingEntity user = getUserOrThrow();
         boolean sneaking = user.isShiftKeyDown();
 
-        switch (type) {
+        switch (moveClass) {
             case ULTIMATE -> {
                 boolean shrink = user.isShiftKeyDown();
                 float newScale = getRawScale() + (shrink ? -0.05f : 0.05f);
@@ -258,7 +258,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                 }
             }
             default -> {
-                return super.handleMove(type);
+                return super.handleMove(moveClass);
             }
         }
         return true;

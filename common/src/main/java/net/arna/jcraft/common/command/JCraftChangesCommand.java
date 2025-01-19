@@ -37,7 +37,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class JCraftChangesCommand {
-    private static Map<? extends NameHolder, ? extends List<? extends Pair<String, ? extends List<? extends Pair<? extends Component, MapDifference<String, Object>>>>>> CHANGES;
+    private static Map<NameHolder, List<Pair<String, List<Pair<Component, MapDifference<String, Object>>>>>> CHANGES;
 
     public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("jcraft")
@@ -71,20 +71,20 @@ public class JCraftChangesCommand {
     }
 
     private static void sendChanges(final CommandContext<CommandSourceStack> ctx, final NameHolder type,
-                                    List<? extends Pair<String, ? extends List<? extends Pair<? extends Component, MapDifference<String, Object>>>>> changes) {
+                                    List<Pair<String, List<Pair<Component, MapDifference<String, Object>>>>> changes) {
         ctx.getSource().sendSuccess(() -> Component.translatable("jcraft.commands.changes.type", type.getName()), true);
 
         if (noChanges(changes)) {
             ctx.getSource().sendSuccess(() -> Component.empty().append("    ")
-                    .append(Component.translatable("jcraft.commands.changes.no_changes")), true);
+                    .append(Component.translatable("jcraft.commands.changes.no_changes").withStyle(ChatFormatting.ITALIC)), true);
             return;
         }
 
-        for (Pair<String, ? extends List<? extends Pair<? extends Component, MapDifference<String, Object>>>> moveSet : changes) {
+        for (Pair<String, List<Pair<Component, MapDifference<String, Object>>>> moveSet : changes) {
             ctx.getSource().sendSuccess(() -> Component.empty().append("    ")
                     .append(Component.translatable("jcraft.commands.changes.move_set", moveSet.getFirst())), true);
 
-            for (Pair<? extends Component, MapDifference<String, Object>> moveChanges : moveSet.getSecond()) {
+            for (Pair<Component, MapDifference<String, Object>> moveChanges : moveSet.getSecond()) {
                 MapDifference<String, Object> diff = moveChanges.getSecond();
 
                 Map<String, MapDifference.ValueDifference<Object>> propsChanged = diff.entriesDiffering();
@@ -97,7 +97,7 @@ public class JCraftChangesCommand {
 
                     if (String.valueOf(change.leftValue()).length() > 50 || String.valueOf(change.rightValue()).length() > 50) {
                         ctx.getSource().sendSuccess(() -> Component.empty().append("            ")
-                                .append(Component.translatable("jcraft.commands.changes.too_long")), true);
+                                .append(Component.translatable("jcraft.commands.changes.too_long").withStyle(ChatFormatting.ITALIC)), true);
                     } else {
                         ctx.getSource().sendSuccess(() -> Component.empty().append("            ")
                                 .append(Component.translatable("jcraft.commands.changes.change",
@@ -110,7 +110,7 @@ public class JCraftChangesCommand {
                             .append(Component.translatable("jcraft.commands.changes.property", moveChanges.getFirst(), prop)), true);
                     ctx.getSource().sendSuccess(() -> Component.empty().append("            ")
                             .append(Component.translatable("jcraft.commands.changes.addition",
-                                    Component.literal(String.valueOf(value)).withStyle(ChatFormatting.WHITE))
+                                            Component.literal(String.valueOf(value)).withStyle(ChatFormatting.WHITE))
                                     .withStyle(ChatFormatting.GREEN)), true);
                 });
 
@@ -126,7 +126,7 @@ public class JCraftChangesCommand {
         }
     }
 
-    private static boolean noChanges(final List<? extends Pair<String, ? extends List<? extends Pair<? extends Component, MapDifference<String, Object>>>>> changes) {
+    private static boolean noChanges(final List<Pair<String, List<Pair<Component, MapDifference<String, Object>>>>> changes) {
         return changes.stream().allMatch(p -> p.getSecond().stream()
                 .allMatch(p1 -> p1.getSecond().areEqual()));
     }
