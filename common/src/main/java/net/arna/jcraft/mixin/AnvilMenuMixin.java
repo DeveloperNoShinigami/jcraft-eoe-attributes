@@ -97,9 +97,10 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         // If this is a skin recipe, the base cost is 5.
         if (inputSlots.getItem(1).is(JItemRegistry.CINDERELLA_MASK.get())) {
             i.set(5);
+            return cost + 5;
         }
 
-        return cost + 5;
+        return cost;
     }
 
     @ModifyExpressionValue(
