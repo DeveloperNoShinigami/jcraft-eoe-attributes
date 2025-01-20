@@ -441,7 +441,7 @@ public final class JUtils {
         }
 
         Explosion explosion = new Explosion(world, entity, x, y, z, power,
-                MoreObjects.firstNonNull(modifier.getCreateFire(), false), modifier.getDestructionType());
+                MoreObjects.firstNonNull(modifier.getCreateFire(), false), modifier.getBlockInteraction());
         ((IJExplosion) explosion).jcraft$setModifier(modifier);
         explosion.explode();
         explosion.finalizeExplosion(true);

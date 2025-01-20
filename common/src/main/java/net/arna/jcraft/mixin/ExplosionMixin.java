@@ -1,5 +1,7 @@
 package net.arna.jcraft.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.arna.jcraft.common.util.IJExplosion;
 import net.arna.jcraft.common.util.JExplosionModifier;
 import net.minecraft.core.particles.ParticleOptions;
@@ -23,9 +25,6 @@ public class ExplosionMixin implements IJExplosion {
     private boolean fire;
     @Shadow
     @Final
-    private Explosion.BlockInteraction blockInteraction;
-    @Shadow
-    @Final
     private Level level;
     private @Unique JExplosionModifier modifier;
 
@@ -36,13 +35,13 @@ public class ExplosionMixin implements IJExplosion {
     }
 
     // Functionality
-    /* TODO
-    @WrapOperation(method = "affectWorld", at = @At(value = "FIELD", target = "Lnet/minecraft/world/explosion/Explosion;destructionType:Lnet/minecraft/world/explosion/Explosion$DestructionType;"), require = 2)
-    private Explosion.DestructionType overrideDestructionType(Explosion instance, Operation<Explosion.DestructionType> original) {
-        return modifier == null || modifier.getDestructionType() == null ? original.call(instance) : modifier.getDestructionType();
+    @WrapOperation(
+            method = { "finalizeExplosion", "interactsWithBlocks" },
+            at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/Explosion;blockInteraction:Lnet/minecraft/world/level/Explosion$BlockInteraction;")
+    )
+    private Explosion.BlockInteraction overrideBlockInteraction(Explosion instance, Operation<Explosion.BlockInteraction> original) {
+        return modifier == null || modifier.getBlockInteraction() == null ? original.call(instance) : modifier.getBlockInteraction();
     }
-
-     */
 
     @Redirect(method = "finalizeExplosion", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/Explosion;fire:Z"))
     private boolean overrideCreateFire(Explosion thiz) {

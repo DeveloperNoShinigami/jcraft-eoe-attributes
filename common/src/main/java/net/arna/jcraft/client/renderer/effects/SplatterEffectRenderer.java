@@ -13,6 +13,7 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 public class SplatterEffectRenderer {
@@ -58,7 +59,7 @@ public class SplatterEffectRenderer {
         RenderSystem.depthMask(true);
     }
 
-    @SuppressWarnings("DuplicatedCode") // I do not care how similar the different directions' code are. (vased)
+    @SuppressWarnings("DuplicatedCode") // I do not care how similar the different directions' code is. (vased)
     private static void renderSection(final SplatterSection section, final BufferBuilder buf, final PoseStack matrices,
                                       final Vec3 camPos, final float alpha, final float offset) {
         matrices.pushPose();
@@ -74,10 +75,10 @@ public class SplatterEffectRenderer {
         final Vec2 minUv = section.getMinUv();
         final Vec2 maxUv = section.getMaxUv();
 
-        final Vector3f min = section.getMinPos().sub((float) camPos.x(), (float) camPos.y(), (float) camPos.z());
-        final float minX = min.x(), minY = min.y(), minZ = min.z();
-        final Vector3f max = section.getMaxPos().sub((float) camPos.x(), (float) camPos.y(), (float) camPos.z());
-        final float maxX = max.x(), maxY = max.y(), maxZ = max.z();
+        final Vector3d min = new Vector3d(section.getMinPos()).sub(camPos.x(), camPos.y(), camPos.z());
+        final float minX = (float) min.x(), minY = (float) min.y(), minZ = (float) min.z();
+        final Vector3d max = new Vector3d(section.getMaxPos()).sub(camPos.x(), camPos.y(), camPos.z());
+        final float maxX = (float) max.x(), maxY = (float) max.y(), maxZ = (float) max.z();
 
         switch (section.getDirection()) {
             case UP -> {

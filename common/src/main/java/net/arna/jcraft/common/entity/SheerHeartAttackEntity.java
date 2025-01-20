@@ -206,7 +206,7 @@ public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
     public void Explode() {
         JUtils.explode(level(), this, getX(), getY(), getZ(), 1.8f,
                 JExplosionModifier.builder().particle(JParticleTypeRegistry.BOOM_1.get())
-                        .destructionType(
+                        .blockInteraction(
                                 level().getGameRules().getBoolean(JCraft.STAND_GRIEFING) ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP)
                         .particleVelocity(Vec3.ZERO)
                         .build());

@@ -20,7 +20,7 @@ import java.util.function.Function;
 @Builder(builderClassName = "Builder")
 public class JExplosionModifier {
     private final Boolean createFire; // Has to be nullable to indicate no change.
-    private final Explosion.BlockInteraction destructionType;
+    private final Explosion.BlockInteraction blockInteraction;
     private final SimpleParticleType particle;
     private final Vec3 particleVelocity;
     private final SoundEvent sound;
@@ -29,7 +29,7 @@ public class JExplosionModifier {
 
     public void write(FriendlyByteBuf buf, RandomSource random) {
         write(createFire, buf, FriendlyByteBuf::writeBoolean);
-        write(destructionType, buf, (b, dt) -> b.writeVarInt(dt.ordinal()));
+        write(blockInteraction, buf, (b, dt) -> b.writeVarInt(dt.ordinal()));
         write(particle, buf, (b, p) -> b.writeResourceKey(BuiltInRegistries.PARTICLE_TYPE.getResourceKey(p).orElseThrow()));
         write(particleVelocity, buf, (b, v) -> {
             b.writeDouble(v.x);
@@ -51,9 +51,9 @@ public class JExplosionModifier {
     }
 
     public static JExplosionModifier read(FriendlyByteBuf buf) {
-        net.arna.jcraft.common.util.JExplosionModifier.Builder builder = JExplosionModifier.builder()
+        JExplosionModifier.Builder builder = JExplosionModifier.builder()
                 .createFire(read(buf, FriendlyByteBuf::readBoolean))
-                .destructionType(read(buf, b -> Explosion.BlockInteraction.values()[b.readVarInt()]))
+                .blockInteraction(read(buf, b -> Explosion.BlockInteraction.values()[b.readVarInt()]))
                 .particle(read(buf, b -> (SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(b.readResourceKey(Registries.PARTICLE_TYPE))))
                 .particleVelocity(read(buf, b -> new Vec3(b.readDouble(), b.readDouble(), b.readDouble())))
                 .sound(read(buf, b -> BuiltInRegistries.SOUND_EVENT.get(b.readResourceKey(Registries.SOUND_EVENT))))

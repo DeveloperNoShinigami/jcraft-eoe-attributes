@@ -139,6 +139,7 @@ public class AttackHitboxEffectRenderer {
 
         // Draw lines
         final VertexConsumer linesVc = Objects.requireNonNull(consumerProvider).getBuffer(RenderType.LINES);
-        LevelRenderer.renderLineBox(matrices, linesVc, box, 1f, 0f, 0f, 1f);
+        final AABB newBox = new AABB(minX, minY, minZ, maxX, maxY, maxZ);
+        LevelRenderer.renderLineBox(matrices, linesVc, newBox, 1f, 0f, 0f, 1f);
     }
 }
