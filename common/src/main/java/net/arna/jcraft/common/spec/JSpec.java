@@ -182,7 +182,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             return false;
         }
 
-        boolean crouching = hasUser() && user.isCrouching();
+        boolean crouching = hasUser() && user.isShiftKeyDown();
         boolean aerial = hasUser() && !user.onGround();
         MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(type.getMoveClass(), getThis(), crouching, aerial);
         return entry == null ? type.isHoldable() : MoreObjects.firstNonNull(entry.getMove().getIsHoldable(), type.isHoldable());
@@ -201,7 +201,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     public boolean handleMove(MoveClass moveClass, float animationSpeed) {
-        boolean crouching = hasUser() && user.isCrouching();
+        boolean crouching = hasUser() && user.isShiftKeyDown();
         boolean aerial = hasUser() && !user.onGround();
         MoveMap.Entry<A, S> entry = moveMap.getFirstValidEntry(moveClass, getThis(), crouching, aerial);
         if (entry == null) {

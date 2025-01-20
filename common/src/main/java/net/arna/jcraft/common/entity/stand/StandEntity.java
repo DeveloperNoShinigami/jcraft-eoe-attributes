@@ -669,7 +669,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     protected @Nullable MoveMap.Entry<E, S> getFirstValidEntry(final MoveClass moveClass) {
-        boolean crouching = hasUser() && getUserOrThrow().isCrouching();
+        boolean crouching = hasUser() && getUserOrThrow().isShiftKeyDown();
         boolean aerial = hasUser() && !getUserOrThrow().onGround();
         return getMoveMap().getFirstValidEntry(moveClass, getThis(), crouching, aerial);
     }
