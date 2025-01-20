@@ -233,7 +233,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             if (cd > 0) {
                 return false;
             }
-            if (move.isManualCooldown()) cooldowns.setCooldown(cooldownType, move.getCooldown());
+            if (!move.isManualCooldown()) cooldowns.setCooldown(cooldownType, move.getCooldown());
         }
 
         //JCraft.LOGGER.info("SERVER: Handling spec attack: " + attack + " in world: " + serverWorld);
