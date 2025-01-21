@@ -316,6 +316,7 @@
   "entity.jcraft.darby_younger": "D'arby Younger",
   "entity.jcraft.atum": "Atum",
   "entity.jcraft.atum.info.desc": "Undescribed",
+
   "effect.jcraft.dazed_effect": "Dazed",
   "effect.jcraft.ws_poison": "Melting",
   "effect.jcraft.standless": "Standless",
@@ -324,6 +325,8 @@
   "effect.jcraft.weightless": "Weightless",
   "effect.jcraft.jbleeding": "Bleeding",
   "effect.jcraft.phpoison": "Purple Haze",
+  "effect.jcraft.hypoxia": "Hypoxia",
+
   "gamerule.showHitboxes": "Show JCraft hitboxes",
   "gamerule.kingCrimsonTeleportEffect": "King Crimson's teleport displacement",
   "gamerule.comboCounter": "Show combo counter",

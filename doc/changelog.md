@@ -1,17 +1,21 @@
 # Changelog
 ### General
-
+* Upgraded the underlying system for Data-driven movesets
 ### NPCs & Stands
 * Metallica
-  * Added Razor vomiting to Internal Attack
-  * Added a crouching M1, which gives the user a throwable Scalpel
-  * Increased iron gain rate from Harvest on non-metallic blocks
+  * Removed Summon Forks, and replaced it with Create Magnetic Field
+  * Internal Attack reworked to be an AOE which hits everything inside the user's Magnetic Fields
+  * Hypoxia doesn't immediately drown, but also applies other effects before drowning:
+    * I. -20% attack strength reduction
+    * II. -20% movement speed reduction
+    * III. -20% attack speed reduction + drowning
+### Commands
+
 ### Bug Fixes
+* ?
 
 
 ### Known Bugs
-## Common
-* Splatter rendering gets extremely fucked at higher coordinates (~1mil and above)
 this is probably due to:
 ```java
     /// SplatterEffectRenderer

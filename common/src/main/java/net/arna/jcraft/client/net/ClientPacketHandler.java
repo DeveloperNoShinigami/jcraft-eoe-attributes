@@ -63,20 +63,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_COMBO_COUNTER;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_EPITAPH_STATE;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_J_EXPLOSION;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_PLAYER_ANIMATION;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_PREDICTION_UPDATE;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_SERVER_CHANNEL_FEEDBACK;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_SERVER_CONFIG;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_SHADER_ACTIVATION;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_SHADER_DEACTIVATION;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_SPLATTER;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_STAND_HURT;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_TIME_ACCELERATION_STATE;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_TIME_ERASE_PREDICTION_STATE;
-import static net.arna.jcraft.registry.JPacketRegistry.S2C_TIME_STOP;
+import static net.arna.jcraft.registry.JPacketRegistry.*;
 
 /**
  * Packets sent to players must be sent with the appropriate method;
@@ -102,6 +89,43 @@ public class ClientPacketHandler {
         register(S2C_SPLATTER, ClientPacketHandler::handleSplatter);
         register(S2C_STAND_HURT, ClientPacketHandler::handleStandHurt);
         register(S2C_PREDICTION_UPDATE, ClientPacketHandler::handlePrediction);
+        register(S2C_MAGNETIC_FIELD_PARTICLE, ClientPacketHandler::handleMagneticFieldParticle);
+    }
+
+    private static final int
+            NUM_MAGNETIC_CIRCLES = 16,
+            NUM_MAGNETIC_PARTICLES = 32;
+    private static void handleMagneticFieldParticle(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
+        final double strength = buf.readDouble();
+
+        final Vec3 pos = new Vec3(
+                buf.readDouble(),
+                buf.readDouble(),
+                buf.readDouble()
+        );
+
+        client.execute(() -> {
+            for (int i = 0; i < NUM_MAGNETIC_CIRCLES; i++) {
+                final double phi = i * Math.PI * 2 / NUM_MAGNETIC_CIRCLES;
+                final Vec3 direction = new Vec3(Math.cos(phi), 0, Math.sin(phi));
+
+                final Vec3 basePos = pos.add(direction.scale(strength / 2.0));
+
+                for (int j = 0; j < NUM_MAGNETIC_PARTICLES; j++) {
+                    final double phi_2 = j * Math.PI * 2 / NUM_MAGNETIC_PARTICLES;
+                    final Vec3 horizontalOffset = direction.scale(Math.cos(phi_2));
+                    final double verticalOffset = Math.sin(phi_2);
+
+                    client.level.addParticle(
+                            ParticleTypes.ENCHANTED_HIT,
+                            basePos.x + horizontalOffset.x,
+                            basePos.y + horizontalOffset.y + verticalOffset * strength / 2.0,
+                            basePos.z + horizontalOffset.z,
+                            0.0, 0.0, 0.0
+                    );
+                }
+            }
+        });
     }
 
     private static void handlePrediction(final @NonNull Minecraft client, final FriendlyByteBuf buf) {

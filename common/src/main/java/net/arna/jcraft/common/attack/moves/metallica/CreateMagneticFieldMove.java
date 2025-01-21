@@ -6,12 +6,13 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.entity.projectile.MetallicaForksEntity;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.common.tickable.MagneticFields;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
@@ -20,13 +21,13 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
-public class SummonForksAttack extends AbstractMove<SummonForksAttack, MetallicaEntity> {
-    public SummonForksAttack(int cooldown, int windup, int duration) {
+public class CreateMagneticFieldMove extends AbstractMove<CreateMagneticFieldMove, MetallicaEntity> {
+    public CreateMagneticFieldMove(int cooldown, int windup, int duration) {
         super(cooldown, windup, duration, 0);
     }
 
     @Override
-    public @NonNull MoveType<SummonForksAttack> getMoveType() {
+    public @NonNull MoveType<CreateMagneticFieldMove> getMoveType() {
         return Type.INSTANCE;
     }
 
@@ -38,35 +39,48 @@ public class SummonForksAttack extends AbstractMove<SummonForksAttack, Metallica
         // JCraft.createParticle((ServerLevel) user.level(), hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z, JParticleType.STUN_PIERCE);
         if (hitResult.getType() == HitResult.Type.MISS) return Set.of();
 
+        final Vec3 hitPos = hitResult.getLocation();
+
+        /*
         final MetallicaForksEntity forks = MetallicaForksEntity.fromMetallica(attacker);
         if (forks == null) return Set.of();
-
-        final Vec3 hitPos = hitResult.getLocation();
         forks.moveTo(hitPos.x, hitPos.y, hitPos.z, user.getYRot(), user.getXRot());
         forks.setOnGround(hitResult.getType() == HitResult.Type.BLOCK);
         GravityChangerAPI.setDefaultGravityDirection(forks, GravityChangerAPI.getGravityDirection(user));
         attacker.level().addFreshEntity(forks);
-        JComponentPlatformUtils.getCooldowns(user).setCooldown(CooldownType.SPECIAL2, 200);
+         */
+
+        JComponentPlatformUtils.getCooldowns(user).setCooldown(CooldownType.SPECIAL2, 400);
+
+        MagneticFields.createField(
+                (ServerLevel) user.level(),
+                user,
+                hitPos.subtract(
+                        Vec3.atLowerCornerOf(
+                                GravityChangerAPI.getGravityDirection(user).getNormal()
+                        ).scale(3.0)
+                )
+        );
 
         return Set.of();
     }
 
     @Override
-    protected @NonNull SummonForksAttack getThis() {
+    protected @NonNull CreateMagneticFieldMove getThis() {
         return this;
     }
 
     @Override
-    public @NonNull SummonForksAttack copy() {
-        return copyExtras(new SummonForksAttack(getCooldown(), getWindup(), getDuration()));
+    public @NonNull CreateMagneticFieldMove copy() {
+        return copyExtras(new CreateMagneticFieldMove(getCooldown(), getWindup(), getDuration()));
     }
 
-    public static class Type extends AbstractMove.Type<SummonForksAttack> {
+    public static class Type extends AbstractMove.Type<CreateMagneticFieldMove> {
         public static final Type INSTANCE = new Type();
 
         @Override
-        protected @NonNull App<RecordCodecBuilder.Mu<SummonForksAttack>, SummonForksAttack> buildCodec(RecordCodecBuilder.Instance<SummonForksAttack> instance) {
-            return instance.group(extras(), cooldown(), windup(), duration()).apply(instance, applyExtras(SummonForksAttack::new));
+        protected @NonNull App<RecordCodecBuilder.Mu<CreateMagneticFieldMove>, CreateMagneticFieldMove> buildCodec(RecordCodecBuilder.Instance<CreateMagneticFieldMove> instance) {
+            return instance.group(extras(), cooldown(), windup(), duration()).apply(instance, applyExtras(CreateMagneticFieldMove::new));
         }
     }
 }

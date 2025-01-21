@@ -92,6 +92,8 @@ public class JServerEvents {
         Revivables.tick(server);
         JEnemies.tick(server);
         FrameDataRequests.tick();
+        MagneticFields.tick();
+        RazorCoughs.tick();
 
         // Player logic (cooldown handling and DamageTimer counting)
         for (ServerPlayer player : JUtils.all(server)) {

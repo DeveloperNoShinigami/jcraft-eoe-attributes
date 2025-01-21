@@ -20,6 +20,7 @@ import net.arna.jcraft.common.splatter.JSplatterManager;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
+import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -719,5 +720,16 @@ public final class JUtils {
                 -Mth.sin((pitch) * 0.017453292F),
                 Mth.cos(yaw * 0.017453292F) * Mth.cos(pitch * 0.017453292F)
         );
+    }
+
+    public static boolean isFerrous(@Nullable Entity entity) {
+        if (entity == null) return false;
+
+        if (entity.getType().is(JTagRegistry.FERROUS_ENTITIES)) {
+            return true;
+        }
+
+        final String stringName = entity.getName().toString();
+        return stringName.contains("iron") || stringName.contains("ferro");
     }
 }

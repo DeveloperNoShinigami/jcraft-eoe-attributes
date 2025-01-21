@@ -121,6 +121,32 @@ public class JTagProviders {
             canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.EVOKER));
             canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PILLAGER));
             canHaveStandBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WITCH));
+
+            // ferromagnetic entities
+            TagBuilder ferrousEntitiesBuilder = getOrCreateRawBuilder(JTagRegistry.FERROUS_ENTITIES);
+
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.IRON_GOLEM));
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.FISHING_BOBBER));
+
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.MINECART));
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.CHEST_MINECART));
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.FURNACE_MINECART));
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.HOPPER_MINECART));
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.COMMAND_BLOCK_MINECART));
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.TNT_MINECART));
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.SPAWNER_MINECART));
+
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.TRIDENT));
+
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(JEntityTypeRegistry.KNIFE.get()));
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(JEntityTypeRegistry.SCALPEL.get()));
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(JEntityTypeRegistry.BISECT.get()));
+
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ARROW));
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.SPECTRAL_ARROW));
+
+            ferrousEntitiesBuilder.addElement(BuiltInRegistries.ENTITY_TYPE.getKey(JEntityTypeRegistry.STAND_ARROW_PROJECTILE.get()));
+
             // impossible to stun
             getOrCreateRawBuilder(JTagRegistry.CANNOT_BE_STUNNED).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WARDEN));
         }

@@ -20,7 +20,6 @@ import net.arna.jcraft.common.attack.moves.metallica.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.component.living.CommonMiscComponent;
-import net.arna.jcraft.common.entity.projectile.MetallicaForksEntity;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
@@ -188,17 +187,27 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.pt"))
             .withCondition(MetallicaIronCondition.atLeast(ScalpelProjectile.IRON_COST));
-    public static final SummonForksAttack SUMMON_FORKS = new SummonForksAttack(0, 5, 15)
+
+    public static final RazorCoughAttack RAZOR_COUGH_ATTACK = new RazorCoughAttack(140, 10, 20)
             .withInfo(
-                    Component.literal("Summon Pitchforks"),
+                    Component.literal("Internal Attack"),
+                    Component.literal("""
+                            All living entities within magnetic fields will begin to vomit razors on the ground.
+                            Increases Hypoxia for all affected entities.""")
+            )
+            .withInitAction(UserAnimationAction.play("mtl.rca"));
+    public static final CreateMagneticFieldMove CREATE_MAGNETIC_FIELD = new CreateMagneticFieldMove(200, 5, 15)
+            .withCrouchingVariant(RAZOR_COUGH_ATTACK)
+            .withInfo(
+                    Component.literal("Place Magnetic Field"),
                     Component.literal("""
                             12 meter range.
-                            Summons pitchforks from the ground that are guaranteed to knock down the opponent.""")
+                            Must be pointed at a block.
+                            Summons an attractive ferromagnetic field which lasts for 1 minute.""")
             )
-            .withInitAction(UserAnimationAction.play("mtl.sfk"))
-            .withCondition(MetallicaIronCondition.atLeast(MetallicaForksEntity.IRON_COST));
-    public static final InternalAttack INTERNAL_ATTACK = new InternalAttack(200, 10, 15)
-            .withCrouchingVariant(SUMMON_FORKS)
+            .withInitAction(UserAnimationAction.play("mtl.sfk"));
+    /* public static final InternalAttack INTERNAL_ATTACK = new InternalAttack(200, 10, 15)
+            .withCrouchingVariant(CREATE_MAGNETIC_FIELD)
             .withInfo(
                     Component.literal("Internal Attack"),
                     Component.literal("""
@@ -209,7 +218,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                             Cannot attack hypoxic targets.
                             This attack does not interrupt other moves.""")
             )
-            .withInitAction(UserAnimationAction.play("mtl.ita"));
+            .withInitAction(UserAnimationAction.play("mtl.ita")); */
     public static final SimpleAttack<MetallicaEntity> GRAB_HIT_FINAL = new SimpleAttack<MetallicaEntity>(0,
             18, 24, 0.5f, 4f, 9, 2f, 1.2f, 0f)
             // .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -308,6 +317,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         super.setUser(user);
         if (user == null) return;
         miscComponent = JComponentPlatformUtils.getMiscData(getUser());
+        if (miscComponent == null) return;
         setIron(miscComponent.getMetallicaIron());
     }
 
@@ -321,7 +331,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         heavy.withCrouchingVariant(State.SWEEP);
 
         moves.register(MoveClass.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS).withCrouchingVariant(State.FAN_TOSS);
-        moves.register(MoveClass.SPECIAL2, INTERNAL_ATTACK, State.NONE).withCrouchingVariant(State.NONE);
+        moves.register(MoveClass.SPECIAL2, CREATE_MAGNETIC_FIELD, State.NONE).withCrouchingVariant(State.NONE);
         moves.register(MoveClass.SPECIAL3, GRAB, State.NONE);
 
         moves.register(MoveClass.ULTIMATE, BISECT_CHARGE, State.BISECT).withFollowup(State.NONE);
@@ -362,6 +372,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
 
     public void setIron(float iron) {
         entityData.set(IRON, iron);
+        if (miscComponent == null) return;
         miscComponent.setMetallicaIron(iron);
     }
 
@@ -413,7 +424,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
 
     @Override
     public boolean isInvisible() {
-        return entityData.get(INVISIBLE);
+        return entityData.get(INVISIBLE) && (isIdle() || isBlocking());
     }
 
     @Override

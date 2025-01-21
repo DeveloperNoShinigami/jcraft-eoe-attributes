@@ -268,6 +268,9 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> THE_HAND_GRAB = register("thgrab");
     RegistrySupplier<SoundEvent> THE_HAND_RAGE = register("thrage");
 
+    // Metallica
+    RegistrySupplier<SoundEvent> METALLICA_RAZOR_VOMIT_PREPARE = register("mrazorvomitprepare");
+
     //// SPECS
     // Brawler
 

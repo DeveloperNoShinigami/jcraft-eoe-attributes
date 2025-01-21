@@ -1025,6 +1025,11 @@
       "jcraft:stands/the_hand/rage"
     ]
   },
+  "mrazorvomitprepare": {
+    "sounds": [
+      "jcraft:stand/metallica/razor_vomit_prepare"
+    ]
+  },
   "anubisslash": {
     "sounds": [
       "jcraft:specs/anubis/slash"
