@@ -254,6 +254,7 @@ public class MoveSetLoader {
         registrar.accept("metallica_precise_toss_atack", () -> PreciseTossAtack.Type.INSTANCE);
         registrar.accept("metallica_create_magnetic_field_move", () -> CreateMagneticFieldMove.Type.INSTANCE);
         registrar.accept("metallica_razor_cough_attack", () -> RazorCoughAttack.Type.INSTANCE);
+        registrar.accept("metallica_remote_scalpel_move", () -> RemoteScalpelMove.Type.INSTANCE);
 
         registrar.accept("purplehaze_backhand_attack", () -> BackhandAttack.Type.INSTANCE);
         registrar.accept("purplehaze_full_release_attack", () -> FullReleaseAttack.Type.INSTANCE);

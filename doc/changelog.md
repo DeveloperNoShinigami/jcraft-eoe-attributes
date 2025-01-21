@@ -1,6 +1,7 @@
 # Changelog
 ### General
 * Upgraded the underlying system for Data-driven movesets
+* Added `jcraft:ferrous_entities`, for entities that are ferromagnetic
 ### NPCs & Stands
 * Metallica
   * Removed Summon Forks, and replaced it with Create Magnetic Field
@@ -9,6 +10,9 @@
     * I. -20% attack strength reduction
     * II. -20% movement speed reduction
     * III. -20% attack speed reduction + drowning
+  * Aura is now shown while doing stand actions while invisible
+  * Scalpel Toss (Wide) is now the Aerial variant to Scalpel Toss (Precise)
+  * Added Scalpel Toss (Remote), the replacement Crouching variant to Scalpel Toss (Precise)
 ### Commands
 
 ### Bug Fixes

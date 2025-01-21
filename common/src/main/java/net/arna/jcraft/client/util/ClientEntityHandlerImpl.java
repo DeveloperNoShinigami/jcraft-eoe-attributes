@@ -6,10 +6,7 @@ import net.arna.jcraft.client.particle.AuraArcParticle;
 import net.arna.jcraft.client.particle.AuraBlobParticle;
 import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
 import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
-import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
-import net.arna.jcraft.common.entity.stand.HGEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
+import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.IClientEntityHandler;
@@ -132,18 +129,35 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
             if ((!isOwnerAndFP || stand.isFree())
                     && !(stand.isRemoteAndControllable() && isFP)
                     && random.nextBoolean()) {
-                displayAuraParticles(clientWorld, random, stand, RotationUtil.vecPlayerToWorld(stand.getBbWidth(), stand.getBbHeight(), stand.getBbWidth(), gravity), gravity, auraColor);
+                displayAuraParticles(clientWorld,
+                        random,
+                        stand,
+                        RotationUtil.vecPlayerToWorld(stand.getBbWidth(), stand.getBbHeight(), stand.getBbWidth(), gravity),
+                        gravity,
+                        auraColor
+                );
             }
             if (!isOwnerAndFP && random.nextBoolean() && !JClientUtils.shouldNotRender(user)) {
-                displayAuraParticles(clientWorld, random, user, RotationUtil.vecPlayerToWorld(user.getBbWidth(), user.getBbHeight(), user.getBbWidth(), gravity), gravity, auraColor);
+                displayAuraParticles(clientWorld,
+                        random,
+                        user,
+                        RotationUtil.vecPlayerToWorld(user.getBbWidth(), user.getBbHeight(), user.getBbWidth(), gravity),
+                        gravity,
+                        auraColor
+                );
             }
         }
     }
 
     private static final double metersPerTickSquared = 9.81 / 400;
 
-    private void displayAuraParticles(final ClientLevel clientWorld, final RandomSource random, final Entity entity, final Vector3f maxBox, final Direction gravity, final Vector3f color) {
-        if (JClientUtils.shouldNotRender(entity)) {
+    private void displayAuraParticles(final ClientLevel clientWorld, final RandomSource random, final Entity entity,
+                                      final Vector3f maxBox, final Direction gravity, final Vector3f color) {
+        displayAuraParticles(clientWorld, random, entity, maxBox, gravity, color, false);
+    }
+    private void displayAuraParticles(final ClientLevel clientWorld, final RandomSource random, final Entity entity,
+                                            final Vector3f maxBox, final Direction gravity, final Vector3f color, final boolean overrideNoRender) {
+        if (!overrideNoRender && JClientUtils.shouldNotRender(entity)) {
             return;
         }
 
@@ -173,6 +187,25 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
                 pos.y + maxBox.y() * random.triangle(0.5, 0.5),
                 pos.z + maxBox.z() * random.triangle(0, 1),
                 vel.x, vel.y, vel.z);
+    }
+
+    @Override
+    public void displayMetallicaAura(MetallicaEntity metallica) {
+        final LivingEntity user = metallica.getUser();
+        if (user == null) return;
+
+        final Direction gravity = GravityChangerAPI.getGravityDirection(metallica);
+        final Vector3f auraColor = metallica.getAuraColor();
+
+        displayAuraParticles(
+                (ClientLevel) metallica.level(),
+                metallica.getRandom(),
+                metallica,
+                RotationUtil.vecPlayerToWorld(user.getBbWidth(), user.getBbHeight(), user.getBbWidth(), gravity),
+                gravity,
+                auraColor,
+                true
+        );
     }
 
     @Override

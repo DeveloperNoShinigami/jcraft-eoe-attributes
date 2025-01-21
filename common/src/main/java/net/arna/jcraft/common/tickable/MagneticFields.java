@@ -1,12 +1,14 @@
 package net.arna.jcraft.common.tickable;
 
 import lombok.NonNull;
+import net.arna.jcraft.common.entity.projectile.RazorProjectile;
 import net.arna.jcraft.common.network.s2c.MagneticFieldParticlePacket;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,7 @@ public class MagneticFields {
                 final double distanceSqr = entity.distanceToSqr(pos);
                 double attraction = (strength - Math.cbrt(distanceSqr)) / 35.0;
 
+                if (entity instanceof RazorProjectile) attraction /= 2.0;
                 // Hard linear cutoff outside range
                 if (distanceSqr > strength * strength) attraction -= Math.sqrt(distanceSqr) / strength;
 
@@ -75,6 +78,17 @@ public class MagneticFields {
             if (field.level != owner.level()) continue;
             consumer.accept(field);
         }
+    }
+
+    public static @Nullable MagneticField nearestTo(@NonNull Vec3 pos) {
+        if (fields.isEmpty()) return null;
+        return fields.stream().min(
+                (a, b) -> {
+                    final double aDist = pos.distanceToSqr(a.pos);
+                    final double bDist = pos.distanceToSqr(b.pos);
+                    return Double.compare(aDist, bDist);
+                }
+        ).get();
     }
 
     public static void createField(ServerLevel level, Entity owner, Vec3 pos) {

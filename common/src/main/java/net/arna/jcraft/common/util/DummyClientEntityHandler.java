@@ -29,10 +29,16 @@ public class DummyClientEntityHandler implements IClientEntityHandler {
     }
 
     @Override
+    public void displayMetallicaAura(MetallicaEntity metallica) {
+    }
+
+    @Override
     public void bombTrackerParticleTick(Entity entity, CommonBombTrackerComponent.BombData bombData) {
     }
 
     @Override
     public void standEntityClientTick(StandEntity<?, ?> stand) {
     }
+
+
 }

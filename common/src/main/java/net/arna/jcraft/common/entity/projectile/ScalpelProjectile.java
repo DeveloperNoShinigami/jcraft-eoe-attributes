@@ -9,6 +9,7 @@ import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.common.tickable.MagneticFields;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
@@ -26,6 +27,7 @@ import net.minecraft.world.phys.Vec3;
 public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
     public static final float IRON_COST = 5.0f;
     private final IntOpenHashSet pierced = new IntOpenHashSet(4);
+    private boolean tempNoGrav = false;
 
     public ScalpelProjectile(Level world) {
         super(JEntityTypeRegistry.SCALPEL.get(), world);
@@ -42,10 +44,33 @@ public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
         return null;
     }
 
+    public void setTempNoGrav() {
+        this.tempNoGrav = true;
+        setNoGravity(true);
+    }
+
     @Override
     public void tick() {
         super.tick();
-        if (!level().isClientSide() && inGroundTime >= 300) discard();
+        if (level().isClientSide()) return;
+        if (tempNoGrav) {
+            if (tickCount > 3) {
+                if (tickCount == 4) {
+                    final MagneticFields.MagneticField field = MagneticFields.nearestTo(position());
+                    if (field != null && field.pos.distanceToSqr(position()) < field.getStrength() * field.getStrength()) {
+                        setDeltaMovement(field.pos
+                                .subtract(position())
+                                .normalize()
+                                .scale(2.0)
+                        );
+                    }
+                }
+                if (isNoGravity()) setNoGravity(false);
+            } else {
+                setDeltaMovement(getDeltaMovement().scale(0.1));
+            }
+        }
+        if (inGroundTime >= 300) discard();
     }
 
     @Override

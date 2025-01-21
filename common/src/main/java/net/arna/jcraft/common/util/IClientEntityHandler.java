@@ -17,4 +17,6 @@ public interface IClientEntityHandler {
     void purpleHazeRemoteClientTick(AbstractPurpleHazeEntity<?, ?> purpleHazeEntity);
 
     void sheerHeartAttackEntityTick(SheerHeartAttackEntity sHAEntity);
+
+    void displayMetallicaAura(MetallicaEntity metallica);
 }

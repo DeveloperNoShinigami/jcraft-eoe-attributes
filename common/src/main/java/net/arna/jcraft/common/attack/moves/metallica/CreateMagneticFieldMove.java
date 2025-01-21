@@ -58,7 +58,7 @@ public class CreateMagneticFieldMove extends AbstractMove<CreateMagneticFieldMov
                 hitPos.subtract(
                         Vec3.atLowerCornerOf(
                                 GravityChangerAPI.getGravityDirection(user).getNormal()
-                        ).scale(3.0)
+                        ).scale(2.0)
                 )
         );
 

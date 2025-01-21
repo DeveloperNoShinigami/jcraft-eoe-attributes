@@ -5,6 +5,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.actions.CancelSpecMoveAction;
 import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.actions.MetallicaAddIronAction;
@@ -167,9 +168,19 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.sms"))
             .withCondition(MetallicaIronCondition.atLeast(IRON_MAX / 2.0f));
+    public static final RemoteScalpelMove REMOTE_SCALPEL_MOVE = new RemoteScalpelMove(60, 7, 12, 0)
+            .withInfo(
+                    Component.literal("Scalpel Toss (Remote)"),
+                    Component.literal("""
+                                    Decently fast, very low cooldown.
+                                    Creates 3 scalpels at the pointed location.
+                                    They will only fire if in the presence of a magnetic field.""")
+            )
+            .withInitAction(UserAnimationAction.play("mtl.rs"))
+            .withCondition(MetallicaIronCondition.atLeast(ScalpelProjectile.IRON_COST));
     public static final FanTossAttack FAN_TOSS = new FanTossAttack(60, 7, 12, 0.75f)
             .withInfo(
-                    Component.literal("Scalpel Toss (Precise)"),
+                    Component.literal("Scalpel Toss (Wide)"),
                     Component.literal("""
                                     Decently fast, very low cooldown.
                                     Fires 5 scalpels in a fan pattern.""")
@@ -177,7 +188,8 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             .withInitAction(UserAnimationAction.play("mtl.ft"))
             .withCondition(MetallicaIronCondition.atLeast(ScalpelProjectile.IRON_COST));
     public static final PreciseTossAtack PRECISE_TOSS = new PreciseTossAtack(60, 7, 12, 0.75f)
-            .withCrouchingVariant(FAN_TOSS)
+            .withCrouchingVariant(REMOTE_SCALPEL_MOVE)
+            .withAerialVariant(FAN_TOSS)
             .withInfo(
                     Component.literal("Scalpel Toss (Precise)"),
                     Component.literal("""
@@ -308,7 +320,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
 
     @Override
     public Vector3f getAuraColor() {
-        if (isInvisible()) return new Vector3f(0.0f, 0.0f, 0.0f);
+        if (isInvisible() && (isIdle() || blocking)) return new Vector3f(0.0f, 0.0f, 0.0f);
         return super.getAuraColor();
     }
 
@@ -325,12 +337,17 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
         var light = moves.register(MoveClass.LIGHT, LIGHT, State.LIGHT);
         light.withFollowup(State.LIGHT_FOLLOWUP).withFollowup(State.LIGHT_FINAL);
         light.withCrouchingVariant(State.GIVE_SCALPEL);
+
         moves.register(MoveClass.BARRAGE, BARRAGE, State.BARRAGE);
+
         var heavy = moves.register(MoveClass.HEAVY, SMASH, State.SMASH);
         heavy.withFollowup(State.CLEAVE);
         heavy.withCrouchingVariant(State.SWEEP);
 
-        moves.register(MoveClass.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS).withCrouchingVariant(State.FAN_TOSS);
+        var sp1 = moves.register(MoveClass.SPECIAL1, PRECISE_TOSS, State.PRECISE_TOSS);
+        sp1.withCrouchingVariant(State.NONE);
+        sp1.withAerialVariant(State.FAN_TOSS);
+
         moves.register(MoveClass.SPECIAL2, CREATE_MAGNETIC_FIELD, State.NONE).withCrouchingVariant(State.NONE);
         moves.register(MoveClass.SPECIAL3, GRAB, State.NONE);
 
@@ -391,6 +408,12 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     public void tick() {
         super.tick();
 
+        if (!level().isClientSide()) return;
+
+        if (isInvisible() && !isIdle() && !isBlocking()) {
+            JCraft.getClientEntityHandler().displayMetallicaAura(this);
+        }
+
         if (getState() != State.GRAB_HIT) return;
 
         final Vec3 toUser = getUserOrThrow().position().subtract(position()).normalize().scale(0.5);
@@ -424,7 +447,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
 
     @Override
     public boolean isInvisible() {
-        return entityData.get(INVISIBLE) && (isIdle() || isBlocking());
+        return entityData.get(INVISIBLE);
     }
 
     @Override
