@@ -206,24 +206,12 @@ public final class JCraft {
 
     public static void postInit() {
         initBlockPostLoad();
-        initStandIOMaps();
+        EvolutionItemHandler.init();
         initDispenserBehaviors();
     }
 
     private static void initBlockPostLoad() {
         CoffinBlock.init();
-    }
-
-    private static void initStandIOMaps() {
-        JItemRegistry.DIARY_PAGE.get().standIOMap.put(StandType.SHADOW_THE_WORLD, StandType.THE_WORLD);
-        JItemRegistry.GREEN_BABY.get().standIOMap.put(StandType.WHITE_SNAKE, StandType.C_MOON);
-        JItemRegistry.DIOS_DIARY.get().standIOMap.put(StandType.C_MOON, StandType.MADE_IN_HEAVEN);
-        JItemRegistry.DIOS_DIARY.get().standIOMap.put(StandType.THE_WORLD, StandType.THE_WORLD_OVER_HEAVEN);
-
-        JItemRegistry.LIVING_ARROW.get().standIOMap.put(StandType.KILLER_QUEEN, StandType.KILLER_QUEEN_BITES_THE_DUST);
-        JItemRegistry.LIVING_ARROW.get().standIOMap.put(StandType.STAR_PLATINUM, StandType.STAR_PLATINUM_THE_WORLD);
-
-        JItemRegistry.REQUIEM_ARROW.get().standIOMap.put(StandType.GOLD_EXPERIENCE, StandType.GOLD_EXPERIENCE_REQUIEM);
     }
 
     private static void initDispenserBehaviors() {

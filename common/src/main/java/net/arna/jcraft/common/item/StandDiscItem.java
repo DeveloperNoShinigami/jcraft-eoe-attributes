@@ -49,14 +49,11 @@ public class StandDiscItem extends Item {
         }
 
         if (JCraft.wasRecentlyAttacked(user.getCombatTracker())) {
-            user.sendSystemMessage(Component.translatable("jcraft.disc.error"));
+            user.displayClientMessage(Component.translatable("jcraft.disc.combat"), true);
             return InteractionResultHolder.fail(itemStack);
         }
 
-        // 1s usage cooldown to prevent overuse
-        user.getCooldowns().addCooldown(this, 20);
-
-        // Get NBT and swap stands
+        // Get NBT
         StandType itemStand = null;
         int itemSkin = 0;
 
@@ -68,9 +65,21 @@ public class StandDiscItem extends Item {
             itemSkin = data.getInt("Skin");
         }
 
+        //noinspection ConstantValue // not true
+        if (itemStand != null && JComponentPlatformUtils.getMutexStands(world).isStandUsed(itemStand)) {
+            user.displayClientMessage(Component.translatable("jcraft.disc.stand_in_use"), true);
+            return InteractionResultHolder.fail(itemStack);
+        }
+
         final CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
         final StandType userStand = standData.getType();
         final int userSkin = standData.getSkin();
+
+        if (itemStand == userStand && (itemStand == null || itemSkin == userSkin)) {
+            if (itemStand != null) user.displayClientMessage(Component.translatable("jcraft.disc.same_stand"), true);
+            return InteractionResultHolder.fail(itemStack);
+        }
+
         standData.setTypeAndSkin(itemStand, itemSkin);
         data.putInt("StandID", userStand == null ? 0 : userStand.ordinal());
         data.putInt("Skin", userSkin);
@@ -80,6 +89,9 @@ public class StandDiscItem extends Item {
             stand.discard();
         }
         JCraft.summon(world, user);
+
+        // 1s usage cooldown to prevent overuse
+        user.getCooldowns().addCooldown(this, 20);
 
         return InteractionResultHolder.success(itemStack);
     }

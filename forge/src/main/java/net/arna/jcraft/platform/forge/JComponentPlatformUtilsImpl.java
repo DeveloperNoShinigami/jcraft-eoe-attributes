@@ -5,6 +5,7 @@ import net.arna.jcraft.common.component.entity.CommonGrabComponent;
 import net.arna.jcraft.common.component.living.*;
 import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
+import net.arna.jcraft.common.component.world.CommonMutexStandsComponent;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.arna.jcraft.common.component.world.CommonTexasHoldEmComponent;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
@@ -13,6 +14,7 @@ import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.player.PhCapability;
 import net.arna.jcraft.forge.capability.impl.player.SpecCapability;
+import net.arna.jcraft.forge.capability.impl.world.MutexStandsCapability;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.arna.jcraft.forge.capability.impl.world.TexasHoldEmCapability;
 import net.minecraft.world.entity.Entity;
@@ -84,5 +86,9 @@ public class JComponentPlatformUtilsImpl {
 
     public static CommonVampireComponent getVampirism(LivingEntity living) {
         return VampireCapability.getCapability(living);
+    }
+
+    public static CommonMutexStandsComponent getMutexStands(final Level world) {
+        return MutexStandsCapability.getCapability(world);
     }
 }

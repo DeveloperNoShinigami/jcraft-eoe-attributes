@@ -31,9 +31,9 @@ public class ConfigUpdatePacket {
             return;
         }
 
-        JServerConfig.save(server);
-
+        // Apply changes and save.
         Set<ConfigOption> changedOptions = ConfigOption.readOptions(buf);
+        JServerConfig.save(server);
 
         // Broadcast changes to everyone except the person who made them.
         final FriendlyByteBuf clientChangesBuf = writeClientChanges(changedOptions);

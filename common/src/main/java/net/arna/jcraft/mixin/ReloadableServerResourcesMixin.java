@@ -1,6 +1,7 @@
 package net.arna.jcraft.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.arna.jcraft.common.util.EvolutionItemHandler;
 import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.command.JCraftChangesCommand;
 import net.minecraft.server.ReloadableServerResources;
@@ -19,6 +20,7 @@ public class ReloadableServerResourcesMixin {
         List<PreparableReloadListener> listeners = new ArrayList<>(original);
         listeners.add(MoveSetLoader::onReload);
         listeners.add(JCraftChangesCommand::onReload);
+        listeners.add(EvolutionItemHandler::onReload);
         return listeners;
     }
 }

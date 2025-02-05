@@ -1,10 +1,12 @@
 package net.arna.jcraft.common.entity.stand;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import lombok.Getter;
 import lombok.NonNull;
+import net.arna.jcraft.common.util.JCodecUtils;
 import net.arna.jcraft.common.util.NameHolder;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.network.chat.Component;
@@ -83,6 +85,8 @@ public enum StandType implements NameHolder {
     THE_HAND(JEntityTypeRegistry.THE_HAND, TheHandEntity::new, "the_hand", false, true,
             Component.literal("Shift"), Component.literal("Inverted"), Component.literal("Deletion")),
     ;
+
+    public static final Codec<StandType> CODEC = JCodecUtils.createEnumCodec(StandType.class);
 
     /**
      * @deprecated only use to work with legacy IDs; this will be removed in 1.0.0

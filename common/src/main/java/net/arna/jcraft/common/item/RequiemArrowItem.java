@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.item;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class RequiemArrowItem extends StandObtainmentItem {
+public class RequiemArrowItem extends Item {
     public RequiemArrowItem(Properties settings) {
         super(settings);
     }
