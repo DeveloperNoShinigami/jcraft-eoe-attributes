@@ -66,7 +66,7 @@ public class StandDiscItem extends Item {
         }
 
         //noinspection ConstantValue // not true
-        if (itemStand != null && JComponentPlatformUtils.getMutexStands(world).isStandUsed(itemStand)) {
+        if (itemStand != null && JComponentPlatformUtils.getExclusiveStands(world).isStandUsed(itemStand)) {
             user.displayClientMessage(Component.translatable("jcraft.disc.stand_in_use"), true);
             return InteractionResultHolder.fail(itemStack);
         }

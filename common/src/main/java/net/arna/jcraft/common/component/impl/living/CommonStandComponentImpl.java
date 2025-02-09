@@ -29,7 +29,7 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     @Override
     public void setTypeAndSkin(final @Nullable StandType type, final int skin) {
         //noinspection ConstantValue
-        if (entity instanceof Player && !JComponentPlatformUtils.getMutexStands(entity.level()).switchStand(this.type, type))
+        if (entity instanceof Player && !JComponentPlatformUtils.getExclusiveStands(entity.level()).switchStand(this.type, type))
             return;
 
         this.type = type;

@@ -3,7 +3,7 @@ package net.arna.jcraft.common.component.world;
 import net.arna.jcraft.common.entity.stand.StandType;
 import org.jetbrains.annotations.Nullable;
 
-public interface CommonMutexStandsComponent {
+public interface CommonExclusiveStandsComponent {
     /**
      * Returns whether the stand is used.
      * @param standType stand type
