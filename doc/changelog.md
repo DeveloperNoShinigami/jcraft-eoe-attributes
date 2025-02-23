@@ -4,19 +4,20 @@
 * Added `jcraft:ferrous_entities`, for entities that are ferromagnetic
 ### NPCs & Stands
 * Metallica
-  * Removed Summon Forks, and replaced it with Create Magnetic Field
-  * Internal Attack reworked to be an AOE which hits everything inside the user's Magnetic Fields
-  * Hypoxia doesn't immediately drown, but also applies other effects before drowning:
-    * I. -20% attack strength reduction
-    * II. -20% movement speed reduction
-    * III. -20% attack speed reduction + drowning
-  * Aura is now shown while doing stand actions while invisible
-  * Scalpel Toss (Wide) is now the Aerial variant to Scalpel Toss (Precise)
-  * Added Scalpel Toss (Remote), the replacement Crouching variant to Scalpel Toss (Precise)
+  * Create Magnetic Field no longer fails when trying to place out of range
+  * Invisibility drains iron slower, but heavily nerfs Harvest while active
+  * Darkened all skin auras
 ### Commands
 
 ### Bug Fixes
 * ?
+* not marginally slower invisibility iron drain -> nerfs harvest, too
+* no MISS = fail for the 2 remote moves
+* small not-owned pole on the user while invisible
+* sounds
+
+* small stars (stun -d efault off)
+
 
 
 ### Known Bugs

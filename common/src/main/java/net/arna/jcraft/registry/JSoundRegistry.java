@@ -269,7 +269,11 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> THE_HAND_RAGE = register("thrage");
 
     // Metallica
+    RegistrySupplier<SoundEvent> METALLICA_BARRAGE = register("mbarrage");
+    RegistrySupplier<SoundEvent> METALLICA_SCALPEL_SUMMON = register("mscalpelsummon");
+    RegistrySupplier<SoundEvent> METALLICA_INVISIBILITY = register("minvisibility");
     RegistrySupplier<SoundEvent> METALLICA_RAZOR_VOMIT_PREPARE = register("mrazorvomitprepare");
+    RegistrySupplier<SoundEvent> METALLICA_BLADE_SWIPE = register("mbladeswipe");
 
     //// SPECS
     // Brawler

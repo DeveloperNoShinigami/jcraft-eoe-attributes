@@ -67,7 +67,11 @@ public class HarvestMove extends AbstractBarrageAttack<HarvestMove, MetallicaEnt
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             final BlockPos hitPos = hitResult.getBlockPos();
             attacker.getEntityData().set(SIPHON_POS, Optional.of(hitPos));
-            attacker.addIron(user.level().getBlockState(hitPos).is(JTagRegistry.IRON_BLOCKS) ? 3f : 1.5f);
+
+            float gain = user.level().getBlockState(hitPos).is(JTagRegistry.IRON_BLOCKS) ? 3f : 1.5f;
+            if (attacker.getEntityData().get(MetallicaEntity.INVISIBLE)) gain /= 2.0f;
+
+            attacker.addIron(gain);
         } else {
             attacker.getEntityData().set(SIPHON_POS, Optional.empty());
         }

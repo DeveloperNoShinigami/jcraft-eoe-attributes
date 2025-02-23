@@ -5,6 +5,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.projectile.StandArrowEntity;
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.resources.ResourceKey;
@@ -62,10 +63,16 @@ public class StandArrowItem extends ArrowItem {
             user.hurt(JDamageSources.create(world, STAND_ARROW, user), damage);
         }
 
-        // Roll for stand (can't roll the same one twice)
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             final CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
 
+            final StandEntity<?, ?> oldStand = standData.getStand();
+            if (oldStand != null) {
+                oldStand.desummon(); // Does any extra desummoning logic, like disabling flight
+                oldStand.discard(); // Actually removes the stand
+            }
+
+            // Roll for stand (can't roll the same one twice)
             final RandomSource random = RandomSource.create();
             final StandType oldType = standData.getType();
             StandType newType;
@@ -74,7 +81,6 @@ public class StandArrowItem extends ArrowItem {
             } while (newType == oldType);
 
             standData.setType(newType);
-            user.unRide();
             JCraft.summon(world, user);
 
             user.awardStat(Stats.ITEM_USED.get(this));

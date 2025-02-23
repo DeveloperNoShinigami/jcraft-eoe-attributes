@@ -197,7 +197,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                             Memory Disk>Light>Barrage>Leg Crusher>Stand Disk>Light~Light
                         
                             -the gazebo (optimal damage without disk)
-                            Light>Barrage>Leg Crusher>Donut>Light~Light
+                            Light>Barrage>Leg Crusher>Gut Punch>Light~Light
                         
                             -the protein shake (sets up mixups)
                             Light>Barrage>Leg Crusher>Charged Spew""";

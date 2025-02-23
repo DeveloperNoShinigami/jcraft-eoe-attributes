@@ -1025,9 +1025,29 @@
       "jcraft:stands/the_hand/rage"
     ]
   },
+  "mbarrage": {
+    "sounds": [
+      "jcraft:stands/metallica/barrage"
+    ]
+  },
+  "mscalpelsummon": {
+    "sounds": [
+      "jcraft:stands/metallica/scalpel_summon"
+    ]
+  },
+  "mbladeswipe": {
+    "sounds": [
+      "jcraft:stands/metallica/blade_swipe"
+    ]
+  },
+  "minvisibility": {
+    "sounds": [
+      "jcraft:stands/metallica/invisibility"
+    ]
+  },
   "mrazorvomitprepare": {
     "sounds": [
-      "jcraft:stand/metallica/razor_vomit_prepare"
+      "jcraft:stands/metallica/razor_vomit_prepare"
     ]
   },
   "anubisslash": {

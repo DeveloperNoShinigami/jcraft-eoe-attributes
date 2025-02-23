@@ -374,11 +374,11 @@
 						},
 						"0.24": {
 							"vector": [-90, 42.5, 0],
-							"easing": "easeOutSine"
+							"easing": "easeOutQuad"
 						},
 						"0.52": {
 							"vector": [-90, -20, 0],
-							"easing": "easeOutSine"
+							"easing": "easeOutBack"
 						}
 					},
 					"position": {
