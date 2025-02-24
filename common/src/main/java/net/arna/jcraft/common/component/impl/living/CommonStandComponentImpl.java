@@ -6,11 +6,13 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class CommonStandComponentImpl implements CommonStandComponent {
@@ -26,6 +28,10 @@ public class CommonStandComponentImpl implements CommonStandComponent {
 
     @Override
     public void setTypeAndSkin(final @Nullable StandType type, final int skin) {
+        //noinspection ConstantValue
+        if (entity instanceof Player && !JComponentPlatformUtils.getMutexStands(entity.level()).switchStand(this.type, type))
+            return;
+
         this.type = type;
         this.skin = skin;
         sync(entity);

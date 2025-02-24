@@ -78,6 +78,10 @@ public class JServerConfig {
     public static final BooleanOption USE_FOOLISH_SAND = new BooleanOption("useFoolishSand", INTERACTION, true);
      */
 
+    // Misc options
+    private static final String GAMEPLAY = "gameplay";
+    public static final BooleanOption MUTEX_STANDS = new BooleanOption("mutexStands", GAMEPLAY, false);
+
     // TODO list options
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 

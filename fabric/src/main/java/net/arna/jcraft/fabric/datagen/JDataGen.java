@@ -26,6 +26,7 @@ public final class JDataGen implements DataGeneratorEntrypoint {
         pack.addProvider(JAdvancementProvider::new);
         pack.addProvider(JRecipeProvider::new);
         pack.addProvider(JWorldProvider::new);
+        pack.addProvider(JEvolutionProvider::new);
 
         Arrays.stream(StandType.values())
                 .filter(t -> t != StandType.NONE)

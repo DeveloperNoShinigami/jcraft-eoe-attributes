@@ -10,6 +10,7 @@ import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.player.PhCapability;
 import net.arna.jcraft.forge.capability.impl.player.SpecCapability;
+import net.arna.jcraft.forge.capability.impl.world.MutexStandsCapability;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
@@ -65,7 +66,12 @@ public class RuntimeEvents {
 
     @SubscribeEvent
     public static void attachWorldCapability(AttachCapabilitiesEvent<Level> event) {
-        event.addCapability(JCraft.id("shock_capability"), new JCapabilityProvider<>(ShockwaveHandlerCapability.CAPABILITY, () -> new ShockwaveHandlerCapability(event.getObject())));
+        Level level = event.getObject();
+        event.addCapability(JCraft.id("shock_capability"), new JCapabilityProvider<>(ShockwaveHandlerCapability.CAPABILITY, () -> new ShockwaveHandlerCapability(level)));
+
+        if (level.isClientSide() || level.dimension().equals(Level.OVERWORLD)) {
+            event.addCapability(JCraft.id("mutex_stands"), new JCapabilityProvider<>(MutexStandsCapability.CAPABILITY, MutexStandsCapability::new));
+        }
     }
 
     @SubscribeEvent

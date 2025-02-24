@@ -2,6 +2,7 @@ package net.arna.jcraft.common.util;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonParseException;
 import com.mojang.datafixers.Products;
 import com.mojang.datafixers.kinds.K1;
 import com.mojang.datafixers.util.Pair;
@@ -10,9 +11,11 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.registry.registries.RegistrySupplier;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.effect.MobEffectInstance;
 
 import java.util.Map;
@@ -35,6 +38,14 @@ public class JCodecUtils {
             loc -> () -> BuiltInRegistries.SOUND_EVENT.get(loc),
             s -> s instanceof RegistrySupplier<SoundEvent> rs ? rs.getId() :
             BuiltInRegistries.SOUND_EVENT.getKey(s.get()));
+    public static final Codec<ItemPredicate> ITEM_PREDICATE_CODEC = ExtraCodecs.JSON.comapFlatMap(
+            input -> {
+                try {
+                    return DataResult.success(ItemPredicate.fromJson(input));
+                } catch (JsonParseException e) {
+                    return DataResult.error(() -> "Failed to parse item predicate: " + e.getMessage());
+                }
+            }, ItemPredicate::serializeToJson);
 
     public static <E extends Enum<?>> Codec<E> createEnumCodec(Class<E> enumClass) {
         Map<String, E> constants = Stream.of(enumClass.getEnumConstants())
