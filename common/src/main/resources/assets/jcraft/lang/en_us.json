@@ -341,6 +341,7 @@
   "gamerule.creamBlackHoleErasesBlocks": "Allow creams black hole to erase blocks",
   "gamerule.defaultSpec": "Default Spec",
   "gamerule.stand_arrow_base_damage": "Stand Arrow Base Damage",
+  "gamerule.doFallingMeteors": "Make meteors fall from the sky",
   "subtitles.jcraft.twts": "Time, stop!",
   "subtitles.jcraft.timeerase": "King Crimson!",
   "subtitles.jcraft.sptw": "Star Platinum: The World!",
