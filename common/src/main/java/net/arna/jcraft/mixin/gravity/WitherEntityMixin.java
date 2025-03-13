@@ -124,10 +124,14 @@ public abstract class WitherEntityMixin {
 
     @Inject(at = @At("TAIL"), method = "<clinit>")
     private static void dont_attack_player_stands_in_creative(CallbackInfo ci) {
-        LIVING_ENTITY_SELECTOR = LIVING_ENTITY_SELECTOR.and((arg) -> {
+        final Predicate<LivingEntity> oldSelector = LIVING_ENTITY_SELECTOR;
+        LIVING_ENTITY_SELECTOR = oldSelector.and((arg) -> {
             final LivingEntity maybeUser = JUtils.getUserIfStand(arg);
             if (maybeUser instanceof Player player) {
                 return !player.isCreative();
+            }
+            else if (maybeUser != arg) {
+                return oldSelector.test(maybeUser);
             }
             return true;
         });
