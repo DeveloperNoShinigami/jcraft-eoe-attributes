@@ -25,7 +25,7 @@ public class SetStandCommand {
             Component.literal("The given stand only has " + s + " skins."));
 
     public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
-        RandomSource rng = RandomSource.create();
+        final RandomSource rng = RandomSource.create();
         dispatcher.register(Commands.literal("stand")
                 .then(Commands.literal("set")
                         .requires(source -> source.hasPermission(2) || "Arna57".equals(source.getTextName()) || "MrSterner".equals(source.getTextName()))
@@ -35,24 +35,37 @@ public class SetStandCommand {
                                         .then(Commands.argument("skin", IntegerArgumentType.integer(0, 3))
                                                 .executes(ctx -> executeSet(ctx, ctx.getArgument("stand", StandType.class), ctx.getArgument("skin", Integer.class)))))
                                 .then(Commands.literal("random")
-                                        .executes(ctx -> executeSet(ctx, StandType.getRandom(rng), 0)))
+                                        .executes(ctx -> executeSet(ctx, 0, rng)))
                         )));
     }
 
-    private static int executeSet(final CommandContext<CommandSourceStack> ctx, StandType type, int skin) throws CommandSyntaxException {
+    private static int executeSet(final CommandContext<CommandSourceStack> ctx, final int skin, final RandomSource rng) throws CommandSyntaxException {
+        return executeSet(ctx, null, skin, rng);
+    }
+
+    private static int executeSet(final CommandContext<CommandSourceStack> ctx, final StandType type, final int skin) throws CommandSyntaxException {
+        return executeSet(ctx, type, skin, null);
+    }
+
+    private static int executeSet(final CommandContext<CommandSourceStack> ctx, final StandType type, final int skin, final RandomSource rng) throws CommandSyntaxException {
         final Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
-        if (targets.isEmpty()) {
+        if (targets.isEmpty() || (type == null && rng == null)) {
             return 0;
         }
 
-        if (skin >= type.getSkinCount()) {
+        if (type != null && skin >= type.getSkinCount()) {
             throw INVALID_SKIN.create(type.getSkinCount());
         }
 
-        for (Entity entity : targets) {
+        for (final Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
-                CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
-                standData.setTypeAndSkin(type, skin);
+                final CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
+                if (type != null) {
+                    standData.setTypeAndSkin(type, skin);
+                }
+                else { // i.e. rng != null
+                    standData.setType(StandType.getRandom(rng));
+                }
 
                 livingEntity.unRide();
                 summon(entity.level(), livingEntity);
