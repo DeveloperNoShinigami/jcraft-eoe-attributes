@@ -34,7 +34,7 @@ public class SHAAttackGoal extends Goal {
     public boolean canContinueToUse() {
         if (!target.isAlive() || target.isRemoved()) {
             return false;
-        } else if (target instanceof Player player && player.isCreative()) {
+        } else if (target instanceof Player player && (player.isCreative() || player.isSpectator())) {
             return false;
         } else if (sha.distanceToSqr(target) > 1024.0D) {
             return false;

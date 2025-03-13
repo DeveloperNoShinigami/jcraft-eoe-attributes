@@ -258,7 +258,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                     }
 
                     LivingEntity target = getTarget();
-                    if ((target != null && !target.isAlive()) || (target instanceof Player player && player.isCreative())) {
+                    if ((target != null && !target.isAlive()) || (target instanceof Player player && (player.isCreative() || player.isSpectator()))) {
                         target = null;
                     }
                     // else if (target instanceof StandEntity<?,?> standTarget && standTarget.hasUser()) { setTarget(standTarget.getUserOrThrow()); }

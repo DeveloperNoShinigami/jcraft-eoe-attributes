@@ -128,7 +128,7 @@ public abstract class WitherEntityMixin {
         LIVING_ENTITY_SELECTOR = oldSelector.and((arg) -> {
             final LivingEntity maybeUser = JUtils.getUserIfStand(arg);
             if (maybeUser instanceof Player player) {
-                return !player.isCreative();
+                return !player.isCreative() && !player.isSpectator();
             }
             else if (maybeUser != arg) {
                 return oldSelector.test(maybeUser);
