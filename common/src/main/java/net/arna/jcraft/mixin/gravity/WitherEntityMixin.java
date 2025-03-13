@@ -4,10 +4,12 @@ package net.arna.jcraft.mixin.gravity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -121,7 +123,14 @@ public abstract class WitherEntityMixin {
     }
 
     @Inject(at = @At("TAIL"), method = "<clinit>")
-    private static void dont_attack_stands(CallbackInfo ci) {
-        LIVING_ENTITY_SELECTOR = LIVING_ENTITY_SELECTOR.and((arg) -> !(arg instanceof StandEntity<?,?>));
+    private static void dont_attack_player_stands_in_creative(CallbackInfo ci) {
+        LIVING_ENTITY_SELECTOR = LIVING_ENTITY_SELECTOR.and((arg) -> {
+            final LivingEntity maybeUser = JUtils.getUserIfStand(arg);
+            if (maybeUser instanceof Player player) {
+                return !player.isCreative();
+            }
+            return true;
+        });
+        WitherBoss.TARGETING_CONDITIONS.selector(LIVING_ENTITY_SELECTOR);
     }
 }
