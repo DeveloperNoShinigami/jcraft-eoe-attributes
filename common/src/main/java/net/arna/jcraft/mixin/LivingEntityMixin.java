@@ -14,7 +14,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,6 +26,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements IDamageScaler {
+    @Shadow protected int lastHurtByPlayerTime;
+    @Shadow @Nullable protected Player lastHurtByPlayer;
     // Damage scaling
     @Unique
     private float damageScaling = 1.00f;
@@ -86,6 +91,17 @@ public abstract class LivingEntityMixin implements IDamageScaler {
             cir.setReturnValue(-0.5D); // Reduce jump
         }
          */
+    }
+
+    @Inject(at = @At("RETURN"), method = "hurt")
+    private void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValueZ() && source.getEntity() instanceof StandEntity<?,?> stand && stand.hasUser()) {
+            final LivingEntity user = stand.getUser();
+            if (user instanceof Player player) {
+                this.lastHurtByPlayerTime = 100;
+                this.lastHurtByPlayer = player;
+            }
+        }
     }
 
     // Counter hook - Living entity
