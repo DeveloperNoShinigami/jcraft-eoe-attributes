@@ -29,5 +29,7 @@ accessible field net/minecraft/server/level/ChunkMap entityMap Lit/unimi/dsi/fas
 accessible method net/minecraft/world/level/block/BedBlock kickVillagerOutOfBed (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z
 accessible field net/minecraft/client/gui/Gui overlayMessageTime I
 accessible field net/minecraft/world/level/storage/loot/LootContext params Lnet/minecraft/world/level/storage/loot/LootParams;
+accessible field net/minecraft/world/entity/boss/wither/WitherBoss LIVING_ENTITY_SELECTOR Ljava/util/function/Predicate;
+mutable field net/minecraft/world/entity/boss/wither/WitherBoss LIVING_ENTITY_SELECTOR Ljava/util/function/Predicate;
 
 accessible field net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder builder Ljava/util/Map;
