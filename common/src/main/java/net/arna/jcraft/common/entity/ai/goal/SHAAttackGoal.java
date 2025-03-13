@@ -5,6 +5,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.player.Player;
+
 import java.util.EnumSet;
 
 public class SHAAttackGoal extends Goal {
@@ -31,6 +33,8 @@ public class SHAAttackGoal extends Goal {
 
     public boolean canContinueToUse() {
         if (!target.isAlive() || target.isRemoved()) {
+            return false;
+        } else if (target instanceof Player player && player.isCreative()) {
             return false;
         } else if (sha.distanceToSqr(target) > 1024.0D) {
             return false;
