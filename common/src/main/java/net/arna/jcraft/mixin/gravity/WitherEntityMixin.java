@@ -122,6 +122,6 @@ public abstract class WitherEntityMixin {
 
     @Inject(at = @At("TAIL"), method = "<clinit>")
     private static void dont_attack_stands(CallbackInfo ci) {
-        LIVING_ENTITY_SELECTOR = WitherBoss.LIVING_ENTITY_SELECTOR.and((arg) -> !(arg instanceof StandEntity<?,?>));
+        LIVING_ENTITY_SELECTOR = LIVING_ENTITY_SELECTOR.and((arg) -> !(arg instanceof StandEntity<?,?>));
     }
 }
