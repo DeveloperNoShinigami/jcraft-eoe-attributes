@@ -70,7 +70,7 @@ public class RuntimeEvents {
         event.addCapability(JCraft.id("shock_capability"), new JCapabilityProvider<>(ShockwaveHandlerCapability.CAPABILITY, () -> new ShockwaveHandlerCapability(level)));
 
         if (level.isClientSide() || level.dimension().equals(Level.OVERWORLD)) {
-            event.addCapability(JCraft.id("mutex_stands"), new JCapabilityProvider<>(ExclusiveStandsCapability.CAPABILITY, ExclusiveStandsCapability::new));
+            event.addCapability(JCraft.id("exclusive_stands"), new JCapabilityProvider<>(ExclusiveStandsCapability.CAPABILITY, ExclusiveStandsCapability::new));
         }
     }
 
