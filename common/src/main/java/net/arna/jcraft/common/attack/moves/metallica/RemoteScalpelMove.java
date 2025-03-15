@@ -10,6 +10,8 @@ import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.registry.JSoundRegistry;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
@@ -38,6 +40,8 @@ public class RemoteScalpelMove extends AbstractMove<RemoteScalpelMove, Metallica
 
         final Vec3 hitPos = hitResult.getLocation();
         final Vec3 upVec = GravityChangerAPI.getEyeOffset(user);
+
+        attacker.level().playSound(null, hitPos.x, hitPos.y, hitPos.z, JSoundRegistry.METALLICA_SCALPEL_SUMMON.get(), SoundSource.PLAYERS, 1.0f, 1.0f);
 
         for (int i = 1; i < 4; i++) {
             final ScalpelProjectile scalpel = ScalpelProjectile.fromMetallica(attacker);

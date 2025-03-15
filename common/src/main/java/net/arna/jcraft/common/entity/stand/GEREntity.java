@@ -15,9 +15,12 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -254,9 +257,15 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
 
     @Override
     public void remove(@NonNull RemovalReason reason) {
-        if (reason == RemovalReason.DISCARDED && hasUser() && getUserOrThrow() instanceof Player player
-            && player.getAbilities().flying && !player.isCreative() && !player.isSpectator()) {
-            player.getAbilities().flying = false;
+        if (getUser() instanceof Player player && player.getAbilities().flying && !player.isCreative() && !player.isSpectator()) {
+            final Abilities abilities = player.getAbilities();
+
+            abilities.flying = false;
+            abilities.mayfly = false;
+
+            if (player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundPlayerAbilitiesPacket(abilities));
+            }
         }
         super.remove(reason);
     }

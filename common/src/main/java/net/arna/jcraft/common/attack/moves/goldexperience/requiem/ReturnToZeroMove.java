@@ -61,6 +61,14 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
         return Set.of();
     }
 
+    private void applyModernNBT(final CompoundTag receiver, final CompoundTag sender, final Set<String> identifiers) {
+        for (String identifier : identifiers) {
+            if (sender.contains(identifier)) {
+                receiver.put(identifier, sender.get(identifier));
+            }
+        }
+    }
+
     public void returnToZero(final GEREntity attacker) {
         final MoveContext ctx = attacker.getMoveContext();
         final Map<Entity, CompoundTag> entityData = ctx.get(ENTITY_DATA);
@@ -81,6 +89,10 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
                 serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(ent));
                 ListTag list = nbt.getList("Pos", 6);
                 serverPlayer.teleportToWithTicket(list.getDouble(0), list.getDouble(1), list.getDouble(2));
+            } else {
+                final CompoundTag modernNbt = new CompoundTag();
+                ent.saveWithoutId(modernNbt);
+                applyModernNBT(nbt, modernNbt, Set.of("Items", "Inventory", "HandItems", "ArmorItems"));
             }
 
             ent.load(nbt);

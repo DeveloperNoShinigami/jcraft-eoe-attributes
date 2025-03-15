@@ -21,13 +21,13 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
-public class CreateMagneticFieldMove extends AbstractMove<CreateMagneticFieldMove, MetallicaEntity> {
-    public CreateMagneticFieldMove(int cooldown, int windup, int duration) {
+public class ExplodeMagneticFieldMove extends AbstractMove<ExplodeMagneticFieldMove, MetallicaEntity> {
+    public ExplodeMagneticFieldMove(int cooldown, int windup, int duration) {
         super(cooldown, windup, duration, 0);
     }
 
     @Override
-    public @NonNull MoveType<CreateMagneticFieldMove> getMoveType() {
+    public @NonNull MoveType<ExplodeMagneticFieldMove> getMoveType() {
         return Type.INSTANCE;
     }
 
@@ -35,22 +35,13 @@ public class CreateMagneticFieldMove extends AbstractMove<CreateMagneticFieldMov
     public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user, MoveContext ctx) {
         final Vec3 eyePos = user.position().add(GravityChangerAPI.getEyeOffset(user));
         final Vec3 rotVec = user.getLookAngle();
-        final HitResult hitResult = JUtils.raycastAll(user, eyePos, eyePos.add(rotVec.scale(12.0)), ClipContext.Fluid.NONE, EntitySelector.LIVING_ENTITY_STILL_ALIVE);
-        // JCraft.createParticle((ServerLevel) user.level(), hitResult.getLocation().x, hitResult.getLocation().y, hitResult.getLocation().z, JParticleType.STUN_PIERCE);
+        final HitResult hitResult = JUtils.raycastAll(user, eyePos, eyePos.add(rotVec.scale(64.0)), ClipContext.Fluid.NONE, EntitySelector.LIVING_ENTITY_STILL_ALIVE);
 
         final Vec3 hitPos = hitResult.getLocation();
 
-        /*
-        final MetallicaForksEntity forks = MetallicaForksEntity.fromMetallica(attacker);
-        if (forks == null) return Set.of();
-        forks.moveTo(hitPos.x, hitPos.y, hitPos.z, user.getYRot(), user.getXRot());
-        forks.setOnGround(hitResult.getType() == HitResult.Type.BLOCK);
-        GravityChangerAPI.setDefaultGravityDirection(forks, GravityChangerAPI.getGravityDirection(user));
-        attacker.level().addFreshEntity(forks);
-         */
-
         JComponentPlatformUtils.getCooldowns(user).setCooldown(CooldownType.SPECIAL2, 400);
 
+        MagneticFields.nearestOfOwnerTo(user, hitPos);
         MagneticFields.createField(
                 (ServerLevel) user.level(),
                 user,
@@ -65,21 +56,21 @@ public class CreateMagneticFieldMove extends AbstractMove<CreateMagneticFieldMov
     }
 
     @Override
-    protected @NonNull CreateMagneticFieldMove getThis() {
+    protected @NonNull ExplodeMagneticFieldMove getThis() {
         return this;
     }
 
     @Override
-    public @NonNull CreateMagneticFieldMove copy() {
-        return copyExtras(new CreateMagneticFieldMove(getCooldown(), getWindup(), getDuration()));
+    public @NonNull ExplodeMagneticFieldMove copy() {
+        return copyExtras(new ExplodeMagneticFieldMove(getCooldown(), getWindup(), getDuration()));
     }
 
-    public static class Type extends AbstractMove.Type<CreateMagneticFieldMove> {
-        public static final Type INSTANCE = new Type();
+    public static class Type extends AbstractMove.Type<ExplodeMagneticFieldMove> {
+        public static final ExplodeMagneticFieldMove.Type INSTANCE = new ExplodeMagneticFieldMove.Type();
 
         @Override
-        protected @NonNull App<RecordCodecBuilder.Mu<CreateMagneticFieldMove>, CreateMagneticFieldMove> buildCodec(RecordCodecBuilder.Instance<CreateMagneticFieldMove> instance) {
-            return instance.group(extras(), cooldown(), windup(), duration()).apply(instance, applyExtras(CreateMagneticFieldMove::new));
+        protected @NonNull App<RecordCodecBuilder.Mu<ExplodeMagneticFieldMove>, ExplodeMagneticFieldMove> buildCodec(RecordCodecBuilder.Instance<ExplodeMagneticFieldMove> instance) {
+            return instance.group(extras(), cooldown(), windup(), duration()).apply(instance, applyExtras(ExplodeMagneticFieldMove::new));
         }
     }
 }

@@ -310,7 +310,7 @@ public class PlayerInputPacket {
                         s = initStandMove(stand, MoveInputType.UTILITY);
                     } else {
                         StandEntity<?, ?> stand2 = JCraft.summon(world, player);
-                        if (stand2 != null) {
+                        if (stand2 != null && !stand2.wantToBlock) {
                             s = stand2.initMove(MoveClass.UTILITY);
                         } else {
                             s = false;

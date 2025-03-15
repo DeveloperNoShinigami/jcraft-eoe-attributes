@@ -25,6 +25,7 @@ import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -39,6 +40,7 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -383,9 +385,15 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
     @Override
     public void remove(@NonNull RemovalReason reason) {
-        if (reason == RemovalReason.DISCARDED && hasUser() && getUserOrThrow() instanceof Player player
-                && player.getAbilities().flying && !player.isCreative() && !player.isSpectator()) {
-            player.getAbilities().flying = false;
+        if (getUser() instanceof Player player && player.getAbilities().flying && !player.isCreative() && !player.isSpectator()) {
+            final Abilities abilities = player.getAbilities();
+
+            abilities.flying = false;
+            abilities.mayfly = false;
+
+            if (player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundPlayerAbilitiesPacket(abilities));
+            }
         }
         super.remove(reason);
     }

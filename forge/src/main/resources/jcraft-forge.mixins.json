@@ -6,6 +6,7 @@
     "EntityMixin",
     "ServerPlayerEntityMixin",
     "TimestopBlockMixin",
+    "WalkNodeEvaluatorMixin",
     "gravity.EntityMixin",
     "gravity.ServerPlayerEntityMixin"
   ],

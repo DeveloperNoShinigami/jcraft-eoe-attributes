@@ -19,7 +19,7 @@ public class MagneticFields {
         public static final int TICKS_TO_LIVE = 60 * 20;
 
         public int time = TICKS_TO_LIVE;
-        public final Vec3 pos;
+        public Vec3 pos;
         private final double baseStrength, additiveStrength;
         private final ServerLevel level;
         private final Entity owner;
@@ -80,18 +80,38 @@ public class MagneticFields {
         }
     }
 
-    public static @Nullable MagneticField nearestTo(@NonNull Vec3 pos) {
+    public static @Nullable MagneticField nearestOfOwnerTo(@NonNull final Entity owner, @NonNull final Vec3 pos) {
         if (fields.isEmpty()) return null;
-        return fields.stream().min(
-                (a, b) -> {
-                    final double aDist = pos.distanceToSqr(a.pos);
-                    final double bDist = pos.distanceToSqr(b.pos);
-                    return Double.compare(aDist, bDist);
-                }
-        ).get();
+        return fields.stream()
+                .filter(field -> field.owner == owner)
+                .min(
+                        (a, b) -> {
+                            final double aDist = pos.distanceToSqr(a.pos);
+                            final double bDist = pos.distanceToSqr(b.pos);
+                            return Double.compare(aDist, bDist);
+                        }
+                ).orElse(null);
     }
 
-    public static void createField(ServerLevel level, Entity owner, Vec3 pos) {
-        fields.add(new MagneticField(level, owner, 5.0f, 10.0f, pos));
+    public static @Nullable MagneticField nearestTo(@NonNull final Vec3 pos) {
+        if (fields.isEmpty()) return null;
+        return fields.stream()
+                .min(
+                        (a, b) -> {
+                            final double aDist = pos.distanceToSqr(a.pos);
+                            final double bDist = pos.distanceToSqr(b.pos);
+                            return Double.compare(aDist, bDist);
+                        }
+                ).get();
+    }
+
+    public static MagneticField createField(final ServerLevel level, final Entity owner, final Vec3 pos) {
+        return createField(level, owner, pos, 5.0f, 10.0f);
+    }
+
+    public static MagneticField createField(final ServerLevel level, final Entity owner, final Vec3 pos, final float baseStrength, final float peakStrength) {
+        MagneticField field = new MagneticField(level, owner, baseStrength, peakStrength, pos);
+        fields.add(field);
+        return field;
     }
 }

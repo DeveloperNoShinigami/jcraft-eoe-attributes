@@ -1,18 +1,28 @@
 package net.arna.jcraft.mixin.gravity;
 
 
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.function.Predicate;
 
 @Mixin(WitherBoss.class)
 public abstract class WitherEntityMixin {
+    @Shadow public static Predicate<LivingEntity> LIVING_ENTITY_SELECTOR;
+
     @Redirect(
             method = "performRangedAttack(ILnet/minecraft/world/entity/LivingEntity;)V",
             at = @At(
@@ -40,7 +50,7 @@ public abstract class WitherEntityMixin {
     private double redirect_shootSkullAt_getY_0(LivingEntity target) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
-            return target.getX();
+            return target.getY();
         }
 
         return target.position().add(RotationUtil.vecPlayerToWorld(0.0D, target.getEyeHeight() * 0.5D, 0.0D, gravityDirection)).y - target.getEyeHeight() * 0.5D;
@@ -57,7 +67,7 @@ public abstract class WitherEntityMixin {
     private double redirect_shootSkullAt_getZ_0(LivingEntity target) {
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(target);
         if (gravityDirection == Direction.DOWN) {
-            return target.getX();
+            return target.getZ();
         }
 
         return target.position().add(RotationUtil.vecPlayerToWorld(0.0D, target.getEyeHeight() * 0.5D, 0.0D, gravityDirection)).z;
@@ -110,5 +120,21 @@ public abstract class WitherEntityMixin {
         }
 
         return entity.getEyePosition().z;
+    }
+
+    @Inject(at = @At("TAIL"), method = "<clinit>")
+    private static void dont_attack_player_stands_in_creative(CallbackInfo ci) {
+        final Predicate<LivingEntity> oldSelector = LIVING_ENTITY_SELECTOR;
+        LIVING_ENTITY_SELECTOR = oldSelector.and((arg) -> {
+            final LivingEntity maybeUser = JUtils.getUserIfStand(arg);
+            if (maybeUser instanceof Player player) {
+                return !player.isCreative() && !player.isSpectator();
+            }
+            else if (maybeUser != arg) {
+                return oldSelector.test(maybeUser);
+            }
+            return true;
+        });
+        WitherBoss.TARGETING_CONDITIONS.selector(LIVING_ENTITY_SELECTOR);
     }
 }
