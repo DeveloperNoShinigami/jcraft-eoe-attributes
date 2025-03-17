@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.component.impl.world;
 
-import net.arna.jcraft.common.component.world.CommonMutexStandsComponent;
+import net.arna.jcraft.common.component.world.CommonExclusiveStandsComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.nbt.CompoundTag;
@@ -13,17 +13,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class CommonMutexStandsComponentImpl implements CommonMutexStandsComponent {
+public class CommonExclusiveStandsComponentImpl implements CommonExclusiveStandsComponent {
     protected final Set<StandType> usedStands = EnumSet.noneOf(StandType.class);
 
     @Override
     public boolean isStandUsed(final StandType standType) {
-        return JServerConfig.MUTEX_STANDS.getValue() && usedStands.contains(standType);
+        return JServerConfig.EXCLUSIVE_STANDS.getValue() && usedStands.contains(standType);
     }
 
     @Override
     public boolean switchStand(final @Nullable StandType prev, final @Nullable StandType curr) {
-        if (!JServerConfig.MUTEX_STANDS.getValue()) {
+        if (!JServerConfig.EXCLUSIVE_STANDS.getValue()) {
             return true;
         }
 

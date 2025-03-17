@@ -565,20 +565,27 @@ public class JServerEvents {
     public static void serverLevelPostTick(ServerLevel serverLevel) {
         final DimensionType dimensionType = serverLevel.dimensionType();
         if (dimensionType.hasCeiling() || !serverLevel.getGameRules().getBoolean(FALLING_METEORS)) return;
-        for (ServerPlayer serverPlayer : serverLevel.getPlayers(ServerPlayer::isAlive)) {
-            if (serverLevel.random.nextFloat() < 0.00001f) { // 0.001% chance per tick, i.e. 0.02% chance per second
-                final Vec3 randomPos = new Vec3(
-                        serverPlayer.getX() + serverLevel.random.nextDouble() * 128.0 - 64.0,
-                        Math.min(242, serverLevel.getMaxBuildHeight() - 1),
-                        serverPlayer.getZ() + serverLevel.random.nextDouble() * 128.0 - 64.0
-                );
-                final BlockPos randomBlockPos = BlockPos.containing(randomPos);
-                if (serverLevel.isLoaded(randomBlockPos) && serverLevel.getBiome(randomBlockPos).is(JTagRegistry.METEORS_CAN_FALL)) {
-                    final StandMeteorEntity meteor = new StandMeteorEntity(serverLevel);
-                    meteor.setPos(randomPos);
-                    serverLevel.addFreshEntity(meteor);
-                }
-            }
+
+        List<ServerPlayer> players = serverLevel.getPlayers(LivingEntity::isAlive);
+        if (players.isEmpty()) return;
+
+        // Chance is percentage per second, so normalize it and divide by 20 to get per tick.
+        double chance = JServerConfig.METEOR_SPAWN_RATE.getValue() / 100d / 20d;
+        if (serverLevel.random.nextDouble() >= chance) return;
+
+        // Pick a random player to target
+        ServerPlayer player = players.get(serverLevel.random.nextInt(players.size()));
+
+        final Vec3 randomPos = new Vec3(
+                player.getX() + serverLevel.random.nextDouble() * 128.0 - 64.0,
+                Math.min(242, serverLevel.getMaxBuildHeight() - 1),
+                player.getZ() + serverLevel.random.nextDouble() * 128.0 - 64.0
+        );
+        final BlockPos randomBlockPos = BlockPos.containing(randomPos);
+        if (serverLevel.isLoaded(randomBlockPos) && serverLevel.getBiome(randomBlockPos).is(JTagRegistry.METEORS_CAN_FALL)) {
+            final StandMeteorEntity meteor = new StandMeteorEntity(serverLevel);
+            meteor.setPos(randomPos);
+            serverLevel.addFreshEntity(meteor);
         }
     }
 }

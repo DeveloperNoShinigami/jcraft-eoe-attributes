@@ -7,7 +7,7 @@ import net.arna.jcraft.common.component.entity.CommonTimeStopComponent;
 import net.arna.jcraft.common.component.living.*;
 import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
-import net.arna.jcraft.common.component.world.CommonMutexStandsComponent;
+import net.arna.jcraft.common.component.world.CommonExclusiveStandsComponent;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.arna.jcraft.common.component.world.CommonTexasHoldEmComponent;
 import net.minecraft.world.entity.Entity;
@@ -95,7 +95,7 @@ public class JComponentPlatformUtils {
     }
 
     @ExpectPlatform
-    public static CommonMutexStandsComponent getMutexStands(Level world) {
+    public static CommonExclusiveStandsComponent getExclusiveStands(Level world) {
         throw new AssertionError();
     }
 }

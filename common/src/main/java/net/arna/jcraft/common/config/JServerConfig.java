@@ -65,11 +65,9 @@ public class JServerConfig {
     // Interaction options
     private static final String INTERACTION = "interaction";
     public static final BooleanOption MINING_BARRAGE = new BooleanOption("miningBarrage", INTERACTION, true);
+    public static final FloatOption METEOR_SPAWN_RATE = new FloatOption("meteorSpawnRate", INTERACTION, 0.02f, 0f, 1f);
     /*
     public static final BooleanOption UNIVERSAL_ABILITIES = new BooleanOption("universalAbilities", INTERACTION, true);
-    public static final BooleanOption EXCLUSIVE_STANDS = new BooleanOption("exclusiveStands", INTERACTION, false);
-    public static final BooleanOption BARRAGE_MINING = new BooleanOption("barrageMining", INTERACTION, false);
-    public static final FloatOption BARRAGE_MINING_SPEED = new FloatOption("barrageMiningSpeed", INTERACTION, 1f, 0f, 10f);
     public static final BooleanOption STAND_GRIEFING = new BooleanOption("standGriefing", INTERACTION, true);
     public static final BooleanOption SPTW_IGNITE_CAMPFIRES = new BooleanOption("sptwIgniteCampfires", INTERACTION, true);
     public static final BooleanOption WS_STEAL_STANDS = new BooleanOption("wsStealStands", INTERACTION, false);
@@ -80,7 +78,7 @@ public class JServerConfig {
 
     // Misc options
     private static final String GAMEPLAY = "gameplay";
-    public static final BooleanOption MUTEX_STANDS = new BooleanOption("mutexStands", GAMEPLAY, false);
+    public static final BooleanOption EXCLUSIVE_STANDS = new BooleanOption("exclusiveStands", GAMEPLAY, false);
 
     // TODO list options
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -93,7 +91,21 @@ public class JServerConfig {
 
     @SneakyThrows
     public static void load(final MinecraftServer server) {
+        // Try to read from world directory.
         Path path = server.getWorldPath(LevelResource.ROOT).resolve("jcraft.json");
+
+        // On dedicated servers, the preferred location is the config directory.
+        if (server.isDedicatedServer()) {
+            Path newPath = Path.of("./config/jconfig.json");
+            if (!Files.exists(newPath)) {
+                Files.move(path, newPath);
+            } else if (Files.exists(path)) {
+                Files.delete(path);
+            }
+
+            path = newPath;
+        }
+
         if (!Files.exists(path)) {
             save(server);
             return;
