@@ -1,41 +1,171 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.jotarooutfit.moving": {
-			"loop": true,
-			"animation_length": 0.48,
+		"animation.jotarocoat.moving": {
+			"animation_length": 0.5,
 			"bones": {
-				"rightLeg": {
+				"chain": {
 					"rotation": {
 						"0.0": {
-							"vector": [28.99769, 12.60652, 21.24074]
+							"vector": [-12.50173, -9.02365, -4.49526],
+							"easing": "linear"
 						},
-						"0.24": {
-							"vector": [37.04385, 8.4372, 26.96126]
+						"0.25": {
+							"vector": [-17.5, -10, -10],
+							"easing": "linear"
 						},
-						"0.48": {
-							"vector": [28.99769, 12.60652, 21.24074]
+						"0.5": {
+							"vector": [-12.50173, -9.02365, -4.49526],
+							"easing": "easeInSine"
+						}
+					}
+				},
+				"chain2": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, -12.5],
+							"easing": "easeInSine"
+						},
+						"0.25": {
+							"vector": [22.5, 0, -15],
+							"easing": "easeOutSine"
+						},
+						"0.5": {
+							"vector": [0, 0, -12.5],
+							"easing": "easeInSine"
+						}
+					}
+				},
+				"rightLeg": {
+					"rotation": {
+						"0.0417": {
+							"vector": [26.90126, 1.65761, 9.75146],
+							"easing": "linear"
+						},
+						"0.2917": {
+							"vector": [34.38583, -0.40544, 8.33927],
+							"easing": "easeOutSine"
+						},
+						"0.5": {
+							"vector": [26.90126, 1.65761, 9.75146],
+							"easing": "easeInSine"
+						}
+					},
+					"position": {
+						"0.0417": {
+							"vector": [0.225, 0.25, 0],
+							"easing": "linear"
+						},
+						"0.2917": {
+							"vector": [0.22, 0.55, 0],
+							"easing": "easeOutSine"
+						},
+						"0.5": {
+							"vector": [0.225, 0.25, 0],
+							"easing": "easeInSine"
 						}
 					}
 				},
 				"leftLeg": {
 					"rotation": {
 						"0.0": {
-							"vector": [28.99769, -12.60652, -21.24074]
+							"vector": [26.90126, -1.65761, -9.75146],
+							"easing": "linear"
 						},
-						"0.24": {
-							"vector": [37.04385, -8.4372, -26.96126]
+						"0.2083": {
+							"vector": [34.38583, 0.40544, -8.33927],
+							"easing": "easeOutSine"
 						},
-						"0.48": {
-							"vector": [28.99769, -12.60652, -21.24074]
+						"0.4583": {
+							"vector": [26.90126, -1.65761, -9.75146],
+							"easing": "easeInSine"
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [-0.225, 0.25, 0],
+							"easing": "linear"
+						},
+						"0.2083": {
+							"vector": [-0.22, 0.55, 0],
+							"easing": "easeOutSine"
+						},
+						"0.4583": {
+							"vector": [-0.225, 0.25, 0],
+							"easing": "easeInSine"
 						}
 					}
 				}
 			}
 		},
-		"animation.jotarooutfit.idle": {
-			"loop": true,
-			"animation_length": 5
+		"animation.jotarocoat.idle": {
+			"animation_length": 5,
+			"bones": {
+				"chain": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, -3.5],
+							"easing": "easeInSine"
+						},
+						"2.2917": {
+							"vector": [0, 0, 3.5],
+							"easing": "easeInSine"
+						},
+						"4.6667": {
+							"vector": [0, 0, -3.5],
+							"easing": "easeInSine"
+						}
+					}
+				},
+				"chain2": {
+					"rotation": {
+						"0.625": {
+							"vector": [0, 0, -10],
+							"easing": "linear"
+						},
+						"2.7917": {
+							"vector": [0, 0, 2.5],
+							"easing": "easeInOutSine"
+						},
+						"5.0": {
+							"vector": [0, 0, -10],
+							"easing": "easeInSine"
+						}
+					}
+				},
+				"rightLeg": {
+					"rotation": {
+						"0.0": {
+							"vector": [7.5, 0, 0],
+							"easing": "linear"
+						},
+						"2.5": {
+							"vector": [15, 0, 0],
+							"easing": "easeOutSine"
+						},
+						"5.0": {
+							"vector": [7.5, 0, 0],
+							"easing": "easeInSine"
+						}
+					}
+				},
+				"leftLeg": {
+					"rotation": {
+						"0.0": {
+							"vector": [7.5, 0, 0],
+							"easing": "linear"
+						},
+						"2.5": {
+							"vector": [15, 0, 0],
+							"easing": "easeOutSine"
+						},
+						"5.0": {
+							"vector": [7.5, 0, 0],
+							"easing": "easeInSine"
+						}
+					}
+				}
+			}
 		}
 	},
 	"azurelib_format_version": 2
