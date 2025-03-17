@@ -22,13 +22,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class DIOJacketItem extends ArmorItem implements GeoItem {
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     public DIOJacketItem(ArmorMaterial materialIn, Type slot, Properties builder) {
         super(materialIn, slot, builder);
     }
-
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     @Override
     public void createRenderer(Consumer<Object> consumer) {
@@ -43,11 +40,13 @@ public class DIOJacketItem extends ArmorItem implements GeoItem {
             }});
     }
 
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+
     @Override
     public Supplier<Object> getRenderProvider() {
         return this.renderProvider;
     }
-
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {

@@ -80,7 +80,7 @@ public interface JItemRegistry {
     RegistrySupplier<Item> SHIV = register("shiv", () -> new ShivItem(Tiers.IRON, settings()));
 
     RegistrySupplier<Item> JOTARO_CAP = register("jotaro_cap", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> JOTARO_JACKET = register("jotaro_jacket", () -> new JotaroCoatItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> JOTARO_JACKET = register("jotaro_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
     RegistrySupplier<Item> JOTARO_PANTS = register("jotaro_pants", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
     RegistrySupplier<Item> JOTARO_BOOTS = register("jotaro_boots", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 

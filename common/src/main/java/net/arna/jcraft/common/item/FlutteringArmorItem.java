@@ -13,7 +13,7 @@ import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.client.renderer.armor.DIOCapeRenderer;
-import net.arna.jcraft.client.renderer.armor.JotaroArmorRenderer;
+import net.arna.jcraft.client.renderer.armor.JotaroCoatRenderer;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.client.model.HumanoidModel;
@@ -69,7 +69,7 @@ public class FlutteringArmorItem extends ArmorItem implements GeoItem {
                     if (itemStack.is(JItemRegistry.DIO_CAPE.get())) {
                         this.renderer = new DIOCapeRenderer();
                     } else {
-                        this.renderer = new JotaroArmorRenderer();
+                        this.renderer = new JotaroCoatRenderer();
                     }
                 }
                 renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
