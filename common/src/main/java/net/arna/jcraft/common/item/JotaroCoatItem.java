@@ -10,7 +10,8 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.client.renderer.armor.DIOArmorRenderer;
+import net.arna.jcraft.client.renderer.armor.DIOJacketRenderer;
+import net.arna.jcraft.client.renderer.armor.JotaroCoatRenderer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,10 +22,10 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class DIOArmorItem extends ArmorItem implements GeoItem {
+public class JotaroCoatItem extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
-    public DIOArmorItem(ArmorMaterial materialIn, Type slot, Properties builder) {
+    public JotaroCoatItem(ArmorMaterial materialIn, Type slot, Properties builder) {
         super(materialIn, slot, builder);
     }
 
@@ -37,7 +38,7 @@ public class DIOArmorItem extends ArmorItem implements GeoItem {
             @SuppressWarnings("unchecked")
             @Override public @NonNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
                     LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
-                if (renderer == null) renderer = new DIOArmorRenderer();
+                if (renderer == null) renderer = new JotaroCoatRenderer();
                 renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                 return renderer;
             }});
@@ -54,7 +55,7 @@ public class DIOArmorItem extends ArmorItem implements GeoItem {
         controllers.add(new AnimationController<>(this, "controller", 20, this::predicate));
     }
 
-    private PlayState predicate(AnimationState<DIOArmorItem> animationState) {
+    private PlayState predicate(AnimationState<JotaroCoatItem> animationState) {
         return PlayState.STOP;
     }
 

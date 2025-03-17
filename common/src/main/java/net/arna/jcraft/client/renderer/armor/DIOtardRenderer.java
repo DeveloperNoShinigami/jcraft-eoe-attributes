@@ -1,12 +1,13 @@
 package net.arna.jcraft.client.renderer.armor;
 
 import net.arna.jcraft.client.model.armor.JArmorModel;
-import net.arna.jcraft.common.item.FlutteringArmorItem;
+import net.arna.jcraft.common.item.DIOJacketItem;
 import net.minecraft.world.entity.EquipmentSlot;
 
-public class JotaroArmorRenderer extends JArmor<FlutteringArmorItem> {
-    public JotaroArmorRenderer() {
-        super(new JArmorModel<>("jotaroclothes"));
+//renders leotard and boots
+public class DIOtardRenderer extends JArmor<DIOJacketItem> {
+    public DIOtardRenderer() {
+        super(new JArmorModel<>("diotard"));
     }
 
     @Override
@@ -21,9 +22,6 @@ public class JotaroArmorRenderer extends JArmor<FlutteringArmorItem> {
         else if (currentSlot == EquipmentSlot.FEET) {
             setBoneVisible(this.leftBoot, true);
             setBoneVisible(this.rightBoot, true);
-        }
-        else if (currentSlot == EquipmentSlot.HEAD) {
-            setBoneVisible(this.head, true);
         }
     }
 }

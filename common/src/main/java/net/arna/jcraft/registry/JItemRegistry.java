@@ -65,10 +65,10 @@ public interface JItemRegistry {
 
     RegistrySupplier<LivingArrowItem> LIVING_ARROW = register("living_arrow", () -> new LivingArrowItem(settings().rarity(Rarity.RARE).fireResistant()));
 
-    RegistrySupplier<Item> DIO_HEADBAND = register("dio_headband", () -> new DIOArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> DIO_JACKET = register("dio_jacket", () -> new DIOArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> DIO_PANTS = register("dio_pants", () -> new DIOArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> DIO_BOOTS = register("dio_boots", () -> new DIOArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> DIO_HEADBAND = register("dio_headband", () -> new DIOJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> DIO_JACKET = register("dio_jacket", () -> new DIOJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> DIO_PANTS = register("dio_pants", () -> new DIOtardItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> DIO_BOOTS = register("dio_boots", () -> new DIOtardItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
     RegistrySupplier<Item> DIO_CAPE = register("dio_cape", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
 
@@ -79,10 +79,10 @@ public interface JItemRegistry {
     RegistrySupplier<Item> STONE_MASK = register("stone_mask", () -> new StoneMaskItem(ArmorMaterials.CHAIN, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> SHIV = register("shiv", () -> new ShivItem(Tiers.IRON, settings()));
 
-    RegistrySupplier<Item> JOTARO_CAP = register("jotaro_cap", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> JOTARO_JACKET = register("jotaro_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> JOTARO_PANTS = register("jotaro_pants", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> JOTARO_BOOTS = register("jotaro_boots", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> JOTARO_CAP = register("jotaro_cap", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> JOTARO_JACKET = register("jotaro_jacket", () -> new JotaroCoatItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> JOTARO_PANTS = register("jotaro_pants", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> JOTARO_BOOTS = register("jotaro_boots", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
     RegistrySupplier<Item> CINDERELLA_MASK = register("cinderella_mask", CinderellaMaskItem::new);
 
