@@ -14,7 +14,6 @@ import dev.architectury.event.CompoundEventResult;
 import dev.architectury.event.events.common.InteractionEvent;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.component.world.CommonExclusiveStandsComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -56,7 +55,6 @@ public class EvolutionItemHandler {
 
         ItemStack handStack = player.getItemInHand(hand);
         Item item = handStack.getItem();
-        CommonExclusiveStandsComponent exclusiveStands = JComponentPlatformUtils.getExclusiveStands(player.level());
 
         if (!evolutions.containsKey(item)) {
             return CompoundEventResult.pass();
@@ -80,11 +78,6 @@ public class EvolutionItemHandler {
                 .orElse(fallback);
 
         if (evolution == null) return CompoundEventResult.pass();
-
-        // Check if target stand is already in use.
-        if (exclusiveStands.isStandUsed(evolution.target())) {
-            return CompoundEventResult.pass();
-        }
 
         if (!player.isCreative()) handStack.shrink(1);
 

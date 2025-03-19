@@ -7,7 +7,6 @@ import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.component.living.*;
 import net.arna.jcraft.common.component.player.CommonPhComponent;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
-import net.arna.jcraft.common.component.world.CommonExclusiveStandsComponent;
 import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
 import net.arna.jcraft.common.component.world.CommonTexasHoldEmComponent;
 import net.arna.jcraft.fabric.common.component.JComponents;
@@ -91,15 +90,5 @@ public class JComponentPlatformUtilsImpl {
 
     public static CommonVampireComponent getVampirism(LivingEntity living) {
         return JComponents.VAMPIRE.get(living);
-    }
-
-    public static CommonExclusiveStandsComponent getExclusiveStands(final Level level) {
-        Level target = Objects.requireNonNull(level.getServer()).getLevel(Level.OVERWORLD);
-        if (target == null) {
-            JCraft.LOGGER.warn("Overworld does not exist, exclusive stands will likely not work.");
-            target = level;
-        }
-
-        return JComponents.EXCLUSIVE_STANDS.get(target);
     }
 }

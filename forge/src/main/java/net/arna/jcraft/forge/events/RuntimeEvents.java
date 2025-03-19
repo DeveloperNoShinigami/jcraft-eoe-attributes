@@ -10,11 +10,11 @@ import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.player.PhCapability;
 import net.arna.jcraft.forge.capability.impl.player.SpecCapability;
-import net.arna.jcraft.forge.capability.impl.world.ExclusiveStandsCapability;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -66,12 +66,7 @@ public class RuntimeEvents {
 
     @SubscribeEvent
     public static void attachWorldCapability(AttachCapabilitiesEvent<Level> event) {
-        Level level = event.getObject();
-        event.addCapability(JCraft.id("shock_capability"), new JCapabilityProvider<>(ShockwaveHandlerCapability.CAPABILITY, () -> new ShockwaveHandlerCapability(level)));
-
-        if (level.isClientSide() || level.dimension().equals(Level.OVERWORLD)) {
-            event.addCapability(JCraft.id("exclusive_stands"), new JCapabilityProvider<>(ExclusiveStandsCapability.CAPABILITY, ExclusiveStandsCapability::new));
-        }
+        event.addCapability(JCraft.id("shock_capability"), new JCapabilityProvider<>(ShockwaveHandlerCapability.CAPABILITY, () -> new ShockwaveHandlerCapability(event.getObject())));
     }
 
     @SubscribeEvent

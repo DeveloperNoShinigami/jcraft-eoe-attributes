@@ -7,7 +7,6 @@ import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;
 import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.player.PhCapability;
 import net.arna.jcraft.forge.capability.impl.player.SpecCapability;
-import net.arna.jcraft.forge.capability.impl.world.ExclusiveStandsCapability;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,7 +39,6 @@ public class SetupEvents {
 
         //World
         event.register(ShockwaveHandlerCapability.class);
-        event.register(ExclusiveStandsCapability.class);
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)

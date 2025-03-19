@@ -63,8 +63,7 @@
       "jcraft:shockwave_handler",
       "jcraft:gravity_shift",
       "jcraft:vampire",
-      "jcraft:texas_hold_em",
-      "jcraft:exclusive_stands"
+      "jcraft:texas_hold_em"
     ]
   }
 }
