@@ -65,9 +65,21 @@ public class StandDiscItem extends Item {
             itemSkin = data.getInt("Skin");
         }
 
+        if (itemStand != null && JCraft.getExclusiveStandsData().isStandUsed(itemStand)) {
+            user.displayClientMessage(Component.translatable("jcraft.disc.stand_in_use"), true);
+            return InteractionResultHolder.fail(itemStack);
+        }
+
         final CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
         final StandType userStand = standData.getType();
         final int userSkin = standData.getSkin();
+
+        if (itemStand == userStand && (itemStand == null || itemSkin == userSkin)) {
+            if (itemStand != null) {
+                user.displayClientMessage(Component.translatable("jcraft.disc.same_stand"), true);
+            }
+            return InteractionResultHolder.fail(itemStack);
+        }
 
         standData.setTypeAndSkin(itemStand, itemSkin);
         data.putInt("StandID", userStand == null ? 0 : userStand.ordinal());

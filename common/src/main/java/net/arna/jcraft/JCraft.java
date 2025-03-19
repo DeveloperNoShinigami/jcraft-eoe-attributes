@@ -24,6 +24,7 @@ import net.arna.jcraft.common.loot.JLootTableHelper;
 import net.arna.jcraft.common.network.RemoteStandInteractPacket;
 import net.arna.jcraft.common.network.c2s.*;
 import net.arna.jcraft.common.network.s2c.*;
+import net.arna.jcraft.common.saveddata.ExclusiveStandsData;
 import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
 import net.arna.jcraft.common.tickable.PastDimensions;
@@ -135,6 +136,10 @@ public final class JCraft {
     @Getter
     @Setter
     private static IClientEntityHandler clientEntityHandler = DummyClientEntityHandler.INSTANCE;
+
+    @Getter
+    @Setter
+    private static ExclusiveStandsData exclusiveStandsData = null;
 
     public static void init() {
         /*  NAMING PATTERN:
