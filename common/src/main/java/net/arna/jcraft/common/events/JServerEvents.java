@@ -79,7 +79,7 @@ public class JServerEvents {
         JCraft.setExclusiveStandsData(ExclusiveStandsData.fromDefaultFile(server));
     }
 
-    public static void finishSaving(final MinecraftServer server) {
+    public static void saveExclusives(final MinecraftServer server) {
         JCraft.getExclusiveStandsData().saveToDefaultFile(server);
     }
 

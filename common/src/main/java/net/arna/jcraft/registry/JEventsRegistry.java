@@ -27,6 +27,6 @@ public interface JEventsRegistry {
 
         LifecycleEvent.SERVER_STARTING.register(JServerConfig::load);
         LifecycleEvent.SERVER_STARTED.register(JServerEvents::finishLoading);
-        LifecycleEvent.SERVER_STOPPED.register(JServerEvents::finishSaving);
+        LifecycleEvent.SERVER_STOPPED.register(JServerEvents::saveExclusives);
     }
 }
