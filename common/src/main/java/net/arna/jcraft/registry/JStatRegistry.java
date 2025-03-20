@@ -9,16 +9,16 @@ import net.minecraft.stats.Stats;
 public interface JStatRegistry {
 
     // alphabetic order
-    RegistrySupplier<ResourceLocation> BLOOD_SUCKED = registerCustomStat("bloodSucked");
+    RegistrySupplier<ResourceLocation> BLOOD_SUCKED = registerCustomStat("blood_sucked");
     RegistrySupplier<ResourceLocation> DASHES = registerCustomStat("dashes");
-    RegistrySupplier<ResourceLocation> RAW_DAMAGE = registerCustomStat("rawDamage");
-    RegistrySupplier<ResourceLocation> SPECS_CHANGED = registerCustomStat("specsChanged");
-    RegistrySupplier<ResourceLocation> STAND_EVOLVED = registerCustomStat("standsEvolved");
-    RegistrySupplier<ResourceLocation> STAND_SUMMONED = registerCustomStat("standsSummoned");
-    RegistrySupplier<ResourceLocation> STAND_USERS_KILLED = registerCustomStat("standUsersKilled");
-    RegistrySupplier<ResourceLocation> TIME_STOPPED = registerCustomStat("timeStopped");
-    RegistrySupplier<ResourceLocation> VAMPIRE_LASER = registerCustomStat("vampireLaser");
-    RegistrySupplier<ResourceLocation> VAMPIRE_REVIVES = registerCustomStat("vampireRevives");
+    RegistrySupplier<ResourceLocation> RAW_DAMAGE = registerCustomStat("raw_damage");
+    RegistrySupplier<ResourceLocation> SPECS_CHANGED = registerCustomStat("specs_changed");
+    RegistrySupplier<ResourceLocation> STAND_EVOLVED = registerCustomStat("stands_evolved");
+    RegistrySupplier<ResourceLocation> STAND_SUMMONED = registerCustomStat("stands_summoned");
+    RegistrySupplier<ResourceLocation> STAND_USERS_KILLED = registerCustomStat("stand_users_killed");
+    RegistrySupplier<ResourceLocation> TIME_STOPPED = registerCustomStat("time_stopped");
+    RegistrySupplier<ResourceLocation> VAMPIRE_LASER = registerCustomStat("vampire_laser");
+    RegistrySupplier<ResourceLocation> VAMPIRE_REVIVES = registerCustomStat("vampire_revives");
 
     private static RegistrySupplier<ResourceLocation> registerCustomStat(final String id) {
         final ResourceLocation jcraftId = JCraft.id(id);
