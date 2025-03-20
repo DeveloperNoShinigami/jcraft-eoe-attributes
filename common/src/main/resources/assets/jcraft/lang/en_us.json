@@ -351,7 +351,7 @@
   "subtitles.jcraft.twohts": "The World: Over Heaven!",
   "subtitles.jcraft.backstab": "BACKSTAB!",
   "subtitles.jcraft.armoredhit": "ARMORED HIT!",
-  "stat.jcraft.bloodSucked": "Blood Sucks performed",
+  "stat.jcraft.blood_sucked": "Blood Sucks performed",
   "stat.jcraft.dashes": "Dashes performed",
   "stat.jcraft.raw_damage": "Damage done with Stands",
   "stat.jcraft.specs_changed": "Specs changed",
