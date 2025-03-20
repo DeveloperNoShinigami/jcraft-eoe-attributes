@@ -7,6 +7,8 @@
   * Create Magnetic Field no longer fails when trying to place out of range
   * Invisibility drains iron slower, but heavily nerfs Harvest while active
   * Darkened all skin auras
+* Horus
+  * Has Frost Walker ability now
 ### Commands
 
 ### Bug Fixes
