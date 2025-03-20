@@ -259,6 +259,10 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     public void tick() {
         super.tick();
         final int moveStun = getMoveStun();
+        final LivingEntity user = JUtils.getUserIfStand(this);
+        if (user != null) {
+            FrostWalkerEnchantment.onEntityMoved(user, level(), this.getOnPos(), 2);
+        }
         if (moveStun > IcicleFireAttack.MAX_ICICLE_CHARGE_TIME + 1 || !level().isClientSide()) return;
 
         if (getState() == State.CHARGE_ICICLE) {
@@ -300,10 +304,6 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                         random.nextGaussian(), random.nextGaussian(), random.nextGaussian()
                 );
             }
-        }
-        final LivingEntity user = JUtils.getUserIfStand(this);
-        if (user != null) {
-            FrostWalkerEnchantment.onEntityMoved(user, level(), this.getOnPos(), 2);
         }
     }
 
