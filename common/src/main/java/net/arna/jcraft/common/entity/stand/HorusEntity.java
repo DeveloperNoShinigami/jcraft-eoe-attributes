@@ -16,11 +16,13 @@ import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.Level;
@@ -299,7 +301,10 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                 );
             }
         }
-        FrostWalkerEnchantment.onEntityMoved(this, level(), this.getOnPos().above(), 2);
+        final LivingEntity user = JUtils.getUserIfStand(this);
+        if (user != null) {
+            FrostWalkerEnchantment.onEntityMoved(user, level(), this.getOnPos(), 2);
+        }
     }
 
     @Override
