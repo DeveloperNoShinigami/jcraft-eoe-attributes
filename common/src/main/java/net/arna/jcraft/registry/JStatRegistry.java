@@ -37,7 +37,7 @@ public interface JStatRegistry {
         Stats.CUSTOM.get(STAND_EVOLVED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(STAND_SUMMONED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(STAND_USERS_KILLED.get(), StatFormatter.DEFAULT);
-        Stats.CUSTOM.get(TIME_STOPPED.get(), StatFormatter.TIME);
+        Stats.CUSTOM.get(TIME_STOPPED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(VAMPIRE_LASER.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(VAMPIRE_REVIVES.get(), StatFormatter.DEFAULT);
     }
