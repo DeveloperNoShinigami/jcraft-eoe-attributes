@@ -1,20 +1,25 @@
 package net.arna.jcraft.registry;
 
+import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.stats.StatType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.stats.StatFormatter;
+import net.minecraft.stats.Stats;
 
-// UNUSED
-@Deprecated()
-public class JStatRegistry {
-    //public static StatType<Item> TEST;
+public interface JStatRegistry {
 
-    private static <T> StatType<T> registerType(String id, Registry<T> registry) {
-        return Registry.register(BuiltInRegistries.STAT_TYPE, JCraft.id(id), new StatType<>(registry));
+    RegistrySupplier<ResourceLocation> STAND_SUMMONED = registerCustomStat("stand_summoned");
+
+    private static RegistrySupplier<ResourceLocation> registerCustomStat(final String id) {
+        final ResourceLocation jcraftId = JCraft.id(id);
+        return JCraft.STATS.register(id, () -> jcraftId);
     }
 
-    public static void registerStatistics() {
-        //TEST = registerType("test", Registry.ITEM);
+    static void init() {
+        // left empty on purpose
+    }
+
+    static void initFormatters() {
+        Stats.CUSTOM.get(STAND_SUMMONED.get(), StatFormatter.DEFAULT);
     }
 }

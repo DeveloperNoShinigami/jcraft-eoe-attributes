@@ -27,9 +27,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin implements IComboCounter {
 
-    @Shadow
-    public abstract void awardStat(Stat<?> stat, int amount);
-
     // Combo tracking
     @Unique
     private int comboCount = 1;

@@ -40,6 +40,7 @@ import net.arna.jcraft.mixin.LivingEntityInvoker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStatRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -962,10 +963,13 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return;
         }
 
+        final boolean client = level().isClientSide;
         if (tickCount == 1) {
             playSummonSound();
+            if (!client && getUser() instanceof Player player) {
+                player.awardStat(JStatRegistry.STAND_SUMMONED.get());
+            }
         }
-        final boolean client = level().isClientSide;
         prevAlpha = getAlphaOverride();
 
         int moveStun = getMoveStun();
