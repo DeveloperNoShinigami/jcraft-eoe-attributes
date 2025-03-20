@@ -40,7 +40,7 @@ public abstract class AbstractTimeStopMove<T extends AbstractTimeStopMove<T, A>,
         attacker.setTsTime(duration);
         //attacker.setCurrentMove(null);
         if (user instanceof final Player player && !player.level().isClientSide()) {
-            player.awardStat(JStatRegistry.TIME_STOPPED.get());
+            player.awardStat(JStatRegistry.TIME_STOPPED.get(), duration/20);
         }
 
         user.addEffect(new MobEffectInstance(tsBlind));
