@@ -42,6 +42,9 @@ public abstract class SpecObtainmentItem extends Item {
                 }
                 return setSpec(player);
             }
+            else {
+                return false;
+            }
         }
         return setSpec(player);
     }
