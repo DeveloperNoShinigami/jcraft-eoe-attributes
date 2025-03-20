@@ -299,7 +299,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                 );
             }
         }
-        FrostWalkerEnchantment.onEntityMoved(this, level(), this.getOnPos(), 2);
+        FrostWalkerEnchantment.onEntityMoved(this, level(), this.getOnPos().above(), 2);
     }
 
     @Override
