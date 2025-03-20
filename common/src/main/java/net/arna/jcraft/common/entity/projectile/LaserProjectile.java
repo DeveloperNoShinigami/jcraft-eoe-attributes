@@ -10,9 +10,11 @@ import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.registry.JStatRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -32,6 +34,9 @@ public class LaserProjectile extends AbstractArrow implements GeoEntity {
 
     public LaserProjectile(Level world, LivingEntity owner) {
         super(JEntityTypeRegistry.LASER_PROJECTILE.get(), owner, world);
+        if (owner instanceof final Player player && !player.level().isClientSide()) {
+            player.awardStat(JStatRegistry.VAMPIRE_LASER.get());
+        }
     }
 
     @Override

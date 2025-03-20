@@ -40,6 +40,7 @@ import net.arna.jcraft.mixin.LivingEntityInvoker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStatRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -739,7 +740,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * @param damageSource source of damage
      * @param ent          entity to harm
      */
-    public static void damage(float damage, DamageSource damageSource, LivingEntity ent) {
+    public static void damage(final @Nullable Entity attacker, float damage, final DamageSource damageSource, final LivingEntity ent) {
         if (!JUtils.canDamage(damageSource, ent)) {
             return;
         }
@@ -747,6 +748,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         float scaling = ((IDamageScaler) ent).jcraft$getDamageScaling();
         //JCraft.LOGGER.info("Damaging entity: " + ent + " with damage: " + damage + " and scaling: " + scaling);
         damage *= scaling;
+
+        // raw damage goes into statistics
+        if (JUtils.getUserIfStand(attacker) instanceof final Player player && !player.level().isClientSide()) {
+            player.awardStat(JStatRegistry.RAW_DAMAGE.get(), (int)damage);
+        }
 
         // All stands ignore 10% of armor & armor toughness
         damage = JUtils.getDamageThroughArmor(damage, (float) ent.getArmorValue() * 0.9f, (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 0.9f);
@@ -962,10 +968,13 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return;
         }
 
+        final boolean client = level().isClientSide;
         if (tickCount == 1) {
             playSummonSound();
+            if (!client && getUser() instanceof Player player) {
+                player.awardStat(JStatRegistry.STAND_SUMMONED.get());
+            }
         }
-        final boolean client = level().isClientSide;
         prevAlpha = getAlphaOverride();
 
         int moveStun = getMoveStun();
@@ -1319,7 +1328,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         boolean hit = true;
         boolean tsHit = JUtils.isAffectedByTimeStop(ent);
 
-        StandEntity<?, ?> stand = JUtils.getStand(ent);
+        final StandEntity<?, ?> stand = JUtils.getStand(ent);
         if (stand != null) {
             AbstractMove<?, ?> standAttack = stand.getCurrentMove();
             if (standAttack != null) {
@@ -1436,11 +1445,15 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                     ));
         }
 
-        damage(damage, source, ent);
+        damage(attacker, damage, source, ent);
         if ((ent.isDeadOrDying() || ent.getHealth() <= 0f) && attacker instanceof final LivingEntity livingAttacker) {
             final StandEntity<?, ?> standAttacker = JUtils.getStand(livingAttacker);
             if (standAttacker != null) {
                 standAttacker.freshKill(ent);
+            }
+            if (stand != null && stand.hasUser() && // if killed entity was a using a stand
+                    (standAttacker != null ? standAttacker.getUser() : livingAttacker) instanceof final Player player && !player.level().isClientSide()) {
+                player.awardStat(JStatRegistry.STAND_USERS_KILLED.get());
             }
         }
 

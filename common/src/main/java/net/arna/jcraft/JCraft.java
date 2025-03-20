@@ -99,6 +99,7 @@ public final class JCraft {
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(MOD_ID, Registries.MOB_EFFECT);
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(MOD_ID, Registries.SOUND_EVENT);
     public static final DeferredRegister<Enchantment> ENCHANTMENT = DeferredRegister.create(MOD_ID, Registries.ENCHANTMENT);
+    public static final DeferredRegister<ResourceLocation> STATS = DeferredRegister.create(MOD_ID, Registries.CUSTOM_STAT);
     public static final DeferredRegister<MenuType<?>> MENU_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.MENU);
 
     // Gamerules
@@ -186,7 +187,8 @@ public final class JCraft {
 
         JServerConfig.init();
 
-        // JStatRegistry.registerStatistics(); // EMPTY
+        JStatRegistry.init();
+        STATS.register();
 
         MoveTickQueue.registerMoveTickQueue();
 
@@ -208,6 +210,7 @@ public final class JCraft {
         initBlockPostLoad();
         EvolutionItemHandler.init();
         initDispenserBehaviors();
+        JStatRegistry.initFormatters();
     }
 
     private static void initBlockPostLoad() {

@@ -6,6 +6,7 @@ import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.registry.JStatRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -72,8 +73,9 @@ public class DashData {
         JCraft.dashes.put(entity, new DashData(rotVec.normalize().scale(dashSpeed), entity));
 
         // Syncs dash anim (unless already attacking with a spec) with every player in the vicinity
-        if (entity instanceof ServerPlayer player) {
-            JSpec<?, ?> spec = JUtils.getSpec(player);
+        if (entity instanceof final ServerPlayer player) {
+            player.awardStat(JStatRegistry.DASHES.get());
+            final JSpec<?, ?> spec = JUtils.getSpec(player);
 
             if (spec == null || spec.moveStun < 1) {
                 String dashAnim = forward >= 0 ? "dash" : "bdash";
@@ -82,7 +84,7 @@ public class DashData {
                         dashAnim = "vm." + dashAnim;
                     }
                 }
-                for (ServerPlayer recipient : JUtils.around((ServerLevel) entity.level(), entity.position(), 96)) {
+                for (final ServerPlayer recipient : JUtils.around((ServerLevel) entity.level(), entity.position(), 96)) {
                     PlayerAnimPacket.send(player, recipient, dashAnim);
                 }
             }

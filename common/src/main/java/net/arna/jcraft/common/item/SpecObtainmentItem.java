@@ -4,6 +4,7 @@ import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.registry.JStatRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -23,6 +24,9 @@ public abstract class SpecObtainmentItem extends Item {
         }
 
         JComponentPlatformUtils.getSpecData(player).setType(switchTo);
+        if (!player.level().isClientSide()) {
+            player.awardStat(JStatRegistry.SPECS_CHANGED.get());
+        }
         warned = false;
         return true;
     }
@@ -34,14 +38,11 @@ public abstract class SpecObtainmentItem extends Item {
                 if (!warned) {
                     player.sendSystemMessage(Component.translatable("warning.jcraft.spec.change"));
                     warned = true;
-                } else {
-                    return setSpec(player);
+                    return false;
                 }
+                return setSpec(player);
             }
-        } else {
-            return setSpec(player);
         }
-
-        return false;
+        return setSpec(player);
     }
 }
