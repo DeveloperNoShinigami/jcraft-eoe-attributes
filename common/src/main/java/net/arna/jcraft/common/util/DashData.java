@@ -74,7 +74,7 @@ public class DashData {
 
         // Syncs dash anim (unless already attacking with a spec) with every player in the vicinity
         if (entity instanceof final ServerPlayer player) {
-            player.awardStat(JStatRegistry.DASHS.get());
+            player.awardStat(JStatRegistry.DASHES.get());
             final JSpec<?, ?> spec = JUtils.getSpec(player);
 
             if (spec == null || spec.moveStun < 1) {

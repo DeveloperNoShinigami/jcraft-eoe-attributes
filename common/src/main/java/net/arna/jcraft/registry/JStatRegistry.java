@@ -10,11 +10,12 @@ public interface JStatRegistry {
 
     // alphabetic order
     RegistrySupplier<ResourceLocation> BLOOD_SUCKED = registerCustomStat("bloodSucked");
-    RegistrySupplier<ResourceLocation> DASHS = registerCustomStat("dashs");
+    RegistrySupplier<ResourceLocation> DASHES = registerCustomStat("dashes");
     RegistrySupplier<ResourceLocation> STAND_EVOLVED = registerCustomStat("standsEvolved");
     RegistrySupplier<ResourceLocation> STAND_SUMMONED = registerCustomStat("standsSummoned");
     RegistrySupplier<ResourceLocation> TIME_STOPPED = registerCustomStat("timeStopped");
     RegistrySupplier<ResourceLocation> VAMPIRE_LASER = registerCustomStat("vampireLaser");
+    RegistrySupplier<ResourceLocation> VAMPIRE_REVIVES = registerCustomStat("vampireRevives");
 
     private static RegistrySupplier<ResourceLocation> registerCustomStat(final String id) {
         final ResourceLocation jcraftId = JCraft.id(id);
@@ -27,10 +28,11 @@ public interface JStatRegistry {
 
     static void initFormatters() {
         Stats.CUSTOM.get(BLOOD_SUCKED.get(), StatFormatter.DEFAULT);
-        Stats.CUSTOM.get(DASHS.get(), StatFormatter.DEFAULT);
+        Stats.CUSTOM.get(DASHES.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(STAND_EVOLVED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(STAND_SUMMONED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(TIME_STOPPED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(VAMPIRE_LASER.get(), StatFormatter.DEFAULT);
+        Stats.CUSTOM.get(VAMPIRE_REVIVES.get(), StatFormatter.DEFAULT);
     }
 }
