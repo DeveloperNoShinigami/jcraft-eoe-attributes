@@ -11,11 +11,13 @@ import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.config.IntOption;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.registry.JStatRegistry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Set;
 import java.util.function.Function;
@@ -37,6 +39,9 @@ public abstract class AbstractTimeStopMove<T extends AbstractTimeStopMove<T, A>,
         int duration = timeStopDuration.map(Function.identity(), IntOption::getValue);
         attacker.setTsTime(duration);
         //attacker.setCurrentMove(null);
+        if (user instanceof final Player player && !player.level().isClientSide()) {
+            player.awardStat(JStatRegistry.TIME_STOPPED.get());
+        }
 
         user.addEffect(new MobEffectInstance(tsBlind));
 
