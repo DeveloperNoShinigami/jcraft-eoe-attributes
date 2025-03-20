@@ -17,6 +17,7 @@ import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.registry.JStatRegistry;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -82,6 +83,7 @@ public class EvolutionItemHandler {
         if (!player.isCreative()) handStack.shrink(1);
 
         standData.setTypeAndSkin(evolution.target(), standData.getSkin());
+        player.awardStat(JStatRegistry.STAND_EVOLVED.get());
 
         // Re-summon users stand
         StandEntity<?, ?> stand = standData.getStand();

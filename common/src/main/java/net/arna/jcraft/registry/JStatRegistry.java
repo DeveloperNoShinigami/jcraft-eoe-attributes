@@ -8,7 +8,8 @@ import net.minecraft.stats.Stats;
 
 public interface JStatRegistry {
 
-    RegistrySupplier<ResourceLocation> STAND_SUMMONED = registerCustomStat("stand_summoned");
+    RegistrySupplier<ResourceLocation> STAND_SUMMONED = registerCustomStat("stands_summoned");
+    RegistrySupplier<ResourceLocation> STAND_EVOLVED = registerCustomStat("stands_evolved");
 
     private static RegistrySupplier<ResourceLocation> registerCustomStat(final String id) {
         final ResourceLocation jcraftId = JCraft.id(id);
@@ -21,5 +22,6 @@ public interface JStatRegistry {
 
     static void initFormatters() {
         Stats.CUSTOM.get(STAND_SUMMONED.get(), StatFormatter.DEFAULT);
+        Stats.CUSTOM.get(STAND_EVOLVED.get(), StatFormatter.DEFAULT);
     }
 }
