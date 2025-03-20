@@ -11,6 +11,7 @@ public interface JStatRegistry {
     RegistrySupplier<ResourceLocation> STAND_SUMMONED = registerCustomStat("stands_summoned");
     RegistrySupplier<ResourceLocation> STAND_EVOLVED = registerCustomStat("stands_evolved");
     RegistrySupplier<ResourceLocation> TIME_STOPPED = registerCustomStat("time_stopped");
+    RegistrySupplier<ResourceLocation> DASHS = registerCustomStat("dashs");
 
     private static RegistrySupplier<ResourceLocation> registerCustomStat(final String id) {
         final ResourceLocation jcraftId = JCraft.id(id);
@@ -25,5 +26,6 @@ public interface JStatRegistry {
         Stats.CUSTOM.get(STAND_SUMMONED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(STAND_EVOLVED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(TIME_STOPPED.get(), StatFormatter.DEFAULT);
+        Stats.CUSTOM.get(DASHS.get(), StatFormatter.DEFAULT);
     }
 }
