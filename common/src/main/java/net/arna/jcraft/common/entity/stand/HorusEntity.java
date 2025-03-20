@@ -20,6 +20,9 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -296,6 +299,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                 );
             }
         }
+        FrostWalkerEnchantment.onEntityMoved(this, level(), this.getOnPos(), 2);
     }
 
     @Override
