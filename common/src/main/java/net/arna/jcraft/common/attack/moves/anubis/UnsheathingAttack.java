@@ -24,7 +24,7 @@ public class UnsheathingAttack extends AbstractSimpleAttack<UnsheathingAttack, A
 
     @Override
     public boolean conditionsMet(AnubisSpec attacker) {
-        return super.conditionsMet(attacker) && attacker.isHoldingAnubis();
+        return super.conditionsMet(attacker) && attacker.isHoldingSheathedAnubis();
     }
 
     @Override

@@ -1330,6 +1330,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
         final StandEntity<?, ?> stand = JUtils.getStand(ent);
         if (stand != null) {
+            // If a stand wants to block and can, but didn't get the chance to due to execution order, prompt blocking here.
+            if (stand.wantToBlock && stand.canBlock()) {
+                stand.tryBlock();
+            }
+
             AbstractMove<?, ?> standAttack = stand.getCurrentMove();
             if (standAttack != null) {
                 // Counter check
@@ -1345,11 +1350,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 } else {
                     JComponentPlatformUtils.getMiscData(ent).displayArmoredHit();
                 }
-            }
-
-            // If a stand wants to block and can, but didn't get the chance to due to execution order, prompt blocking here.
-            if (stand.wantToBlock && stand.canBlock()) {
-                stand.tryBlock();
             }
 
             if (stand.blocking && !stand.isRemote()) {

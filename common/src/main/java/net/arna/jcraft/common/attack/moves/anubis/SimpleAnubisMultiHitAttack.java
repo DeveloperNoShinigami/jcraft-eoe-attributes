@@ -35,7 +35,7 @@ public class SimpleAnubisMultiHitAttack extends AbstractMultiHitAttack<SimpleAnu
 
     @Override
     public boolean conditionsMet(AnubisSpec attacker) {
-        return super.conditionsMet(attacker) && attacker.isHoldingAnubis();
+        return super.conditionsMet(attacker) && unsheatheSweep ? attacker.isHoldingSheathedAnubis() : attacker.isHoldingAnubis();
     }
 
     @Override
