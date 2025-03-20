@@ -1328,7 +1328,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         boolean hit = true;
         boolean tsHit = JUtils.isAffectedByTimeStop(ent);
 
-        StandEntity<?, ?> stand = JUtils.getStand(ent);
+        final StandEntity<?, ?> stand = JUtils.getStand(ent);
         if (stand != null) {
             AbstractMove<?, ?> standAttack = stand.getCurrentMove();
             if (standAttack != null) {
@@ -1450,6 +1450,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             final StandEntity<?, ?> standAttacker = JUtils.getStand(livingAttacker);
             if (standAttacker != null) {
                 standAttacker.freshKill(ent);
+            }
+            if (stand != null && stand.hasUser() && // if killed entity was a using a stand
+                    (standAttacker != null ? standAttacker.getUser() : livingAttacker) instanceof final Player player && !player.level().isClientSide()) {
+                player.awardStat(JStatRegistry.STAND_USERS_KILLED.get());
             }
         }
 
