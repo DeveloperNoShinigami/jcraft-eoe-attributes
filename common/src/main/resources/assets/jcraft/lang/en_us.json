@@ -354,6 +354,7 @@
   "stat.jcraft.bloodSucked": "Blood Sucks performed",
   "stat.jcraft.dashes": "Dashes performed",
   "stat.jcraft.rawDamage": "Damage done with Stands",
+  "stat.jcraft.specsChanged": "Specs changed",
   "stat.jcraft.standsEvolved": "Stands evolved",
   "stat.jcraft.standsSummoned": "Stands summoned",
   "stat.jcraft.standUsersKilled": "Stand Users retired",

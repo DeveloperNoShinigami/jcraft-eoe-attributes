@@ -12,6 +12,7 @@ public interface JStatRegistry {
     RegistrySupplier<ResourceLocation> BLOOD_SUCKED = registerCustomStat("bloodSucked");
     RegistrySupplier<ResourceLocation> DASHES = registerCustomStat("dashes");
     RegistrySupplier<ResourceLocation> RAW_DAMAGE = registerCustomStat("rawDamage");
+    RegistrySupplier<ResourceLocation> SPECS_CHANGED = registerCustomStat("specsChanged");
     RegistrySupplier<ResourceLocation> STAND_EVOLVED = registerCustomStat("standsEvolved");
     RegistrySupplier<ResourceLocation> STAND_SUMMONED = registerCustomStat("standsSummoned");
     RegistrySupplier<ResourceLocation> STAND_USERS_KILLED = registerCustomStat("standUsersKilled");
@@ -32,6 +33,7 @@ public interface JStatRegistry {
         Stats.CUSTOM.get(BLOOD_SUCKED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(DASHES.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(RAW_DAMAGE.get(), StatFormatter.DEFAULT);
+        Stats.CUSTOM.get(SPECS_CHANGED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(STAND_EVOLVED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(STAND_SUMMONED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(STAND_USERS_KILLED.get(), StatFormatter.DEFAULT);
