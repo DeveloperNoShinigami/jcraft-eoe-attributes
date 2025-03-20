@@ -9,6 +9,7 @@ import net.minecraft.stats.Stats;
 public interface JStatRegistry {
 
     // alphabetic order
+    RegistrySupplier<ResourceLocation> BLOOD_SUCKED = registerCustomStat("bloodSucked");
     RegistrySupplier<ResourceLocation> DASHS = registerCustomStat("dashs");
     RegistrySupplier<ResourceLocation> STAND_EVOLVED = registerCustomStat("standsEvolved");
     RegistrySupplier<ResourceLocation> STAND_SUMMONED = registerCustomStat("standsSummoned");
@@ -25,6 +26,7 @@ public interface JStatRegistry {
     }
 
     static void initFormatters() {
+        Stats.CUSTOM.get(BLOOD_SUCKED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(DASHS.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(STAND_EVOLVED.get(), StatFormatter.DEFAULT);
         Stats.CUSTOM.get(STAND_SUMMONED.get(), StatFormatter.DEFAULT);

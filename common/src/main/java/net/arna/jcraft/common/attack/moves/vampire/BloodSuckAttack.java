@@ -9,8 +9,10 @@ import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractSpecGrabAttack;
 import net.arna.jcraft.common.spec.VampireSpec;
+import net.arna.jcraft.registry.JStatRegistry;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +53,11 @@ public final class BloodSuckAttack extends AbstractSpecGrabAttack<BloodSuckAttac
         super.performHook(attacker, targets, boxes, damageSource, forwardPos, rotationVector, ctx);
         if (!targets.isEmpty()) {
             ctx.set(TARGET, targets.stream().findFirst().get());
+            if (attacker != null && attacker.getUser() instanceof final Player player && !player.level().isClientSide()) {
+                player.awardStat(JStatRegistry.BLOOD_SUCKED.get());
+            }
         }
+
     }
 
     @Override
