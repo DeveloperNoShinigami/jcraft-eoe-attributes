@@ -46,6 +46,7 @@ Modify the hitboxes to match the models of:
 * move the move names from literals to translatables
 
 ### Misc
+* refactor tryDash (Ayutac)
 
 ### Arch port
 https://trello.com/b/GFOQk6nR/arch-port-1201
