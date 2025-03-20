@@ -30,6 +30,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -277,6 +278,14 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                             (Light>)Charge~Barrage>God of Death""";
 
         switchMoveSet(POSSESSED_MOVE_SET.getName());
+    }
+
+    @Override
+    protected void switchMoveSet(String name) {
+        final Vec3 lookDir = moveContext.hasEntry(SCChargeAttack.LOOK_DIR) ? moveContext.get(SCChargeAttack.LOOK_DIR) : null;
+        super.switchMoveSet(name);
+        if (!moveContext.hasEntry(SCChargeAttack.LOOK_DIR)) moveContext.register(SCChargeAttack.LOOK_DIR, lookDir);
+        else moveContext.set(SCChargeAttack.LOOK_DIR, lookDir);
     }
 
     @Override
