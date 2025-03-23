@@ -10,6 +10,7 @@ import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.common.entity.vehicle.AbstractGroundVehicleEntity;
 import net.arna.jcraft.common.events.JServerPlayerInputEvent;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.spec.JSpec;
@@ -92,6 +93,10 @@ public class PlayerInputPacket {
                 StandEntity<?, ?> stand = JUtils.getStand(player);
                 if (stand != null) {
                     stand.updateRemoteInputs(forward, side, sm.jumping, sm.sneaking);
+                }
+
+                if (player.getVehicle() instanceof AbstractGroundVehicleEntity groundVehicle) {
+                    groundVehicle.updateInputs(forward, side, sm.jumping, sm.sneaking);
                 }
 
                 if (sm.dashing) {

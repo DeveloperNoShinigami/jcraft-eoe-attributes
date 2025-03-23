@@ -1,0 +1,219 @@
+package net.arna.jcraft.common.entity.vehicle;
+
+import lombok.Getter;
+import lombok.NonNull;
+import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
+import mod.azure.azurelib.util.AzureLibUtil;
+import net.arna.jcraft.JCraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.WaterlilyBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+
+public abstract class AbstractGroundVehicleEntity extends Entity implements GeoEntity {
+    // Movement Inputs
+    protected boolean
+    left = false,
+    right = false,
+    forward = false,
+    back = false,
+
+    space = false,
+    sneak = false;
+
+    @Getter
+    protected float maxHealth = 40.0f;
+
+    @Getter
+    protected float oldYRot = 0.0f;
+
+    private static final EntityDataAccessor<Float> DAMAGE;
+    private static final EntityDataAccessor<Integer> HURT_TIME;
+    private static final EntityDataAccessor<Boolean> TURN_LEFT, TURN_RIGHT, MOVE_FORWARD, MOVE_BACK;
+    static {
+        DAMAGE = SynchedEntityData.defineId(AbstractGroundVehicleEntity.class, EntityDataSerializers.FLOAT);
+
+        TURN_LEFT = SynchedEntityData.defineId(AbstractGroundVehicleEntity.class, EntityDataSerializers.BOOLEAN);
+        TURN_RIGHT = SynchedEntityData.defineId(AbstractGroundVehicleEntity.class, EntityDataSerializers.BOOLEAN);
+        MOVE_FORWARD = SynchedEntityData.defineId(AbstractGroundVehicleEntity.class, EntityDataSerializers.BOOLEAN);
+        MOVE_BACK = SynchedEntityData.defineId(AbstractGroundVehicleEntity.class, EntityDataSerializers.BOOLEAN);
+
+        HURT_TIME = SynchedEntityData.defineId(AbstractGroundVehicleEntity.class, EntityDataSerializers.INT);
+    }
+
+    public AbstractGroundVehicleEntity(EntityType<?> entityType, Level level) {
+        super(entityType, level);
+    }
+
+    @Override
+    protected float getEyeHeight(Pose pose, EntityDimensions dimensions) {
+        return dimensions.height;
+    }
+
+    @Override
+    protected Entity.MovementEmission getMovementEmission() {
+        return MovementEmission.EVENTS;
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        entityData.define(DAMAGE, 0.0F);
+
+        entityData.define(TURN_LEFT, false);
+        entityData.define(TURN_RIGHT, false);
+        entityData.define(MOVE_FORWARD, false);
+        entityData.define(MOVE_BACK, false);
+
+        entityData.define(HURT_TIME, 0);
+    }
+
+    @Override
+    public boolean canCollideWith(@NonNull Entity entity) { return Boat.canVehicleCollide(this, entity); }
+    @Override
+    public boolean canBeCollidedWith() {
+        return true;
+    }
+    @Override
+    public boolean isPushable() {
+        return true;
+    }
+
+    @Override
+    public boolean isPickable() { return isAlive(); } // Makes it selectable by players
+    public boolean isAlive() { return !isRemoved(); }
+
+    public void updateInputs(int forward, int left, boolean jump, boolean sneak) {
+        if (forward == 0) { this.forward = false; this.back = false; }
+        if (forward > 0) { this.forward = true; this.back = false; }
+        if (forward < 0) { this.forward = false; this.back = true; }
+        if (left == 0) { this.left = false; this.right = false; }
+        if (left > 0) { this.left = true; this.right = false; }
+        if (left < 0) { this.left = false; this.right = true; }
+
+        entityData.set(TURN_LEFT, this.left);
+        entityData.set(TURN_RIGHT, this.right);
+        entityData.set(MOVE_FORWARD, this.forward);
+        entityData.set(MOVE_BACK, this.back);
+
+        this.space = jump;
+        this.sneak = sneak;
+    }
+
+    public final boolean steeringLeft() { return entityData.get(TURN_LEFT); }
+    public final boolean steeringRignt() { return entityData.get(TURN_RIGHT); }
+    public final boolean movingForward() { return entityData.get(MOVE_FORWARD); }
+    public final boolean movingBack() { return entityData.get(MOVE_BACK); }
+
+    public final float getDamage() { return entityData.get(DAMAGE); }
+    public final void setDamage(float damage) { entityData.set(DAMAGE, damage); }
+
+    public final int getHurtTime() { return entityData.get(HURT_TIME); }
+    public final void setHurtTime(int time) { entityData.set(HURT_TIME, time); }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (level().isClientSide()) JCraft.getClientEntityHandler().vehicleMovementTick(this);
+        else movementTick(forward, left, back, right, space, sneak);
+
+        move(MoverType.SELF, getDeltaMovement());
+        checkInsideBlocks();
+
+        final int hurtTime = getHurtTime();
+        if (hurtTime > 0) setHurtTime(hurtTime - 1);
+
+        oldYRot = getYRot();
+    }
+
+    public abstract void movementTick(final boolean w, final boolean a, final boolean s, final boolean d, final boolean space, final boolean sneak);
+
+    @Override
+    public boolean hurt(final @NonNull DamageSource source, float amount) {
+        if (isInvulnerableTo(source)) return false;
+
+        if (!level().isClientSide() && !isRemoved()) {
+            setDamage(getDamage() + amount);
+            markHurt();
+            setHurtTime(5);
+            gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
+            boolean bl = source.getEntity() instanceof Player && ((Player)source.getEntity()).getAbilities().instabuild;
+            if (bl || getDamage() > maxHealth) {
+                if (!bl && level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+                    destroy(source);
+                }
+
+                discard();
+            }
+        }
+        return true;
+    }
+
+    public float getGroundFriction() { // Lifted from Boat.getGroundFriction()
+        AABB aABB = getBoundingBox();
+        AABB aABB2 = new AABB(aABB.minX, aABB.minY - 0.001, aABB.minZ, aABB.maxX, aABB.minY, aABB.maxZ);
+        int i = Mth.floor(aABB2.minX) - 1;
+        int j = Mth.ceil(aABB2.maxX) + 1;
+        int k = Mth.floor(aABB2.minY) - 1;
+        int l = Mth.ceil(aABB2.maxY) + 1;
+        int m = Mth.floor(aABB2.minZ) - 1;
+        int n = Mth.ceil(aABB2.maxZ) + 1;
+        VoxelShape voxelShape = Shapes.create(aABB2);
+        float f = 0.0F;
+        int o = 0;
+        BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+
+        for(int p = i; p < j; ++p) {
+            for(int q = m; q < n; ++q) {
+                int r = (p != i && p != j - 1 ? 0 : 1) + (q != m && q != n - 1 ? 0 : 1);
+                if (r != 2) {
+                    for(int s = k; s < l; ++s) {
+                        if (r <= 0 || s != k && s != l - 1) {
+                            mutableBlockPos.set(p, s, q);
+                            BlockState blockState = this.level().getBlockState(mutableBlockPos);
+                            if (!(blockState.getBlock() instanceof WaterlilyBlock) && Shapes.joinIsNotEmpty(blockState.getCollisionShape(level(), mutableBlockPos).move(p, s, q), voxelShape, BooleanOp.AND)) {
+                                f += blockState.getBlock().getFriction();
+                                ++o;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return f / (float)o;
+    }
+
+    protected void destroy(final DamageSource damageSource) {}
+
+    @Nullable
+    public LivingEntity getControllingPassenger() {
+        if (getFirstPassenger() instanceof LivingEntity livingEntity) return livingEntity;
+        return null;
+    }
+
+    // Animations
+    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+
+    @Override
+    public final AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    // Subclasses must implement registerControllers
+}

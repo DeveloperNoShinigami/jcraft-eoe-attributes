@@ -7,6 +7,7 @@ import net.arna.jcraft.client.particle.AuraBlobParticle;
 import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
 import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
 import net.arna.jcraft.common.entity.stand.*;
+import net.arna.jcraft.common.entity.vehicle.AbstractGroundVehicleEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.IClientEntityHandler;
@@ -298,6 +299,24 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
         }
         if (ownerId.equals(client.player.getUUID()) && sHAEntity.tickCount <= 300) {
             sHAEntity.setCustomName(Component.literal(15 - sHAEntity.tickCount / 20 + "s"));
+        }
+    }
+
+    @Override
+    public void vehicleMovementTick(final AbstractGroundVehicleEntity vehicle) {
+        final Minecraft client = Minecraft.getInstance();
+        if (client.player == vehicle.getFirstPassenger()) {
+            final Options options = client.options;
+
+            final boolean
+                    w = options.keyUp.isDown(),
+                    a = options.keyLeft.isDown(),
+                    s = options.keyDown.isDown(),
+                    d = options.keyRight.isDown(),
+                    jump = options.keyJump.isDown(),
+                    sneak = options.keyShift.isDown();
+
+            vehicle.movementTick(w, a, s, d, jump, sneak);
         }
     }
 }

@@ -8,6 +8,7 @@ import net.arna.jcraft.client.renderer.entity.*;
 import net.arna.jcraft.client.renderer.entity.npc.*;
 import net.arna.jcraft.client.renderer.entity.projectiles.*;
 import net.arna.jcraft.client.renderer.entity.stands.*;
+import net.arna.jcraft.client.renderer.entity.vehicles.RoadRollerRenderer;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -106,6 +107,8 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.PURPLE_HAZE_CLOUD, JEntityRendererRegister::createEmpty),
             new RendererData<>(JEntityTypeRegistry.METALLICA_FORKS, MetallicaForksRenderer::new),
             new RendererData<>(JEntityTypeRegistry.STAND_ARROW_PROJECTILE, StandArrowRenderer::new),
+
+            new RendererData<>(JEntityTypeRegistry.ROAD_ROLLER, RoadRollerRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.PETSHOP, PetshopRenderer::new),
             new RendererData<>(JEntityTypeRegistry.AYA_TSUJI, AyaTsujiRenderer::new),

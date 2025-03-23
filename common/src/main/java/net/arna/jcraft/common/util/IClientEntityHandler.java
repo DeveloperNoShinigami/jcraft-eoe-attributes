@@ -3,6 +3,7 @@ package net.arna.jcraft.common.util;
 import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
 import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
 import net.arna.jcraft.common.entity.stand.*;
+import net.arna.jcraft.common.entity.vehicle.AbstractGroundVehicleEntity;
 import net.minecraft.world.entity.Entity;
 
 public interface IClientEntityHandler {
@@ -19,4 +20,6 @@ public interface IClientEntityHandler {
     void sheerHeartAttackEntityTick(SheerHeartAttackEntity sHAEntity);
 
     void displayMetallicaAura(MetallicaEntity metallica);
+
+    void vehicleMovementTick(AbstractGroundVehicleEntity vehicle);
 }
