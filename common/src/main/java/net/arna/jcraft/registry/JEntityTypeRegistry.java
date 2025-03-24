@@ -741,6 +741,10 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(THE_HAND, TheHandEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(STAND_METEOR, StandMeteorEntity::createMobAttributes);
+
+        EntityAttributeRegistry.register(ROAD_ROLLER, () -> RoadRollerEntity.createLivingAttributes()
+                .add(Attributes.MAX_HEALTH, 40)
+                .add(Attributes.ARMOR, 2));
     }
 
     static void init() {

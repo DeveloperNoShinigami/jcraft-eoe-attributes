@@ -2,6 +2,7 @@ package net.arna.jcraft.common.entity.vehicle;
 
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.util.AzureLibUtil;
@@ -13,20 +14,20 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WaterlilyBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractGroundVehicleEntity extends Entity implements GeoEntity {
+import java.util.Collections;
+
+public abstract class AbstractGroundVehicleEntity extends LivingEntity implements GeoEntity {
     // Movement Inputs
     protected boolean
     left = false,
@@ -38,10 +39,10 @@ public abstract class AbstractGroundVehicleEntity extends Entity implements GeoE
     sneak = false;
 
     @Getter
-    protected float maxHealth = 40.0f;
-
-    @Getter
     protected float oldYRot = 0.0f;
+
+    @Getter @Setter
+    private Entity owner;
 
     private static final EntityDataAccessor<Float> DAMAGE;
     private static final EntityDataAccessor<Integer> HURT_TIME;
@@ -57,13 +58,8 @@ public abstract class AbstractGroundVehicleEntity extends Entity implements GeoE
         HURT_TIME = SynchedEntityData.defineId(AbstractGroundVehicleEntity.class, EntityDataSerializers.INT);
     }
 
-    public AbstractGroundVehicleEntity(EntityType<?> entityType, Level level) {
+    public AbstractGroundVehicleEntity(EntityType<? extends LivingEntity> entityType, Level level) {
         super(entityType, level);
-    }
-
-    @Override
-    protected float getEyeHeight(Pose pose, EntityDimensions dimensions) {
-        return dimensions.height;
     }
 
     @Override
@@ -73,6 +69,8 @@ public abstract class AbstractGroundVehicleEntity extends Entity implements GeoE
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
+
         entityData.define(DAMAGE, 0.0F);
 
         entityData.define(TURN_LEFT, false);
@@ -91,7 +89,7 @@ public abstract class AbstractGroundVehicleEntity extends Entity implements GeoE
     }
     @Override
     public boolean isPushable() {
-        return true;
+        return false;
     }
 
     @Override
@@ -128,12 +126,13 @@ public abstract class AbstractGroundVehicleEntity extends Entity implements GeoE
 
     @Override
     public void tick() {
-        super.tick();
         if (level().isClientSide()) JCraft.getClientEntityHandler().vehicleMovementTick(this);
         else movementTick(forward, left, back, right, space, sneak);
 
-        move(MoverType.SELF, getDeltaMovement());
-        checkInsideBlocks();
+        super.tick();
+
+        // move(MoverType.SELF, getDeltaMovement());
+        // checkInsideBlocks();
 
         final int hurtTime = getHurtTime();
         if (hurtTime > 0) setHurtTime(hurtTime - 1);
@@ -145,23 +144,12 @@ public abstract class AbstractGroundVehicleEntity extends Entity implements GeoE
 
     @Override
     public boolean hurt(final @NonNull DamageSource source, float amount) {
-        if (isInvulnerableTo(source)) return false;
-
-        if (!level().isClientSide() && !isRemoved()) {
-            setDamage(getDamage() + amount);
-            markHurt();
+        if (super.hurt(source, amount)) {
             setHurtTime(5);
-            gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
-            boolean bl = source.getEntity() instanceof Player && ((Player)source.getEntity()).getAbilities().instabuild;
-            if (bl || getDamage() > maxHealth) {
-                if (!bl && level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-                    destroy(source);
-                }
-
-                discard();
-            }
+            return true;
         }
-        return true;
+
+        return false;
     }
 
     public float getGroundFriction() { // Lifted from Boat.getGroundFriction()
@@ -199,7 +187,19 @@ public abstract class AbstractGroundVehicleEntity extends Entity implements GeoE
         return f / (float)o;
     }
 
-    protected void destroy(final DamageSource damageSource) {}
+    @Override
+    public Iterable<ItemStack> getArmorSlots() { return Collections.emptyList(); }
+    @Override
+    public ItemStack getItemBySlot(EquipmentSlot slot) { return ItemStack.EMPTY; }
+    @Override
+    public void setItemSlot(EquipmentSlot slot, ItemStack stack) { }
+    @Override
+    public HumanoidArm getMainArm() { return HumanoidArm.RIGHT; }
+
+    @Override
+    public boolean shouldShowName() {
+        return false;
+    }
 
     @Nullable
     public LivingEntity getControllingPassenger() {

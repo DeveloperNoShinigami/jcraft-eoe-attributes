@@ -6,6 +6,8 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
+import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
@@ -16,12 +18,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Set;
+
 public class RoadRollerEntity extends AbstractGroundVehicleEntity {
-    public RoadRollerEntity(Level level) {
+    public RoadRollerEntity(final Level level) {
         super(JEntityTypeRegistry.ROAD_ROLLER.get(), level);
     }
 
@@ -53,9 +59,6 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
 
                 addDeltaMovement(getForward().scale(inline));
             }
-        } else {
-            final double gravity = isNoGravity() ? 0.0 : -0.04;
-            addDeltaMovement(new Vec3(0, gravity, 0));
         }
 
         setDeltaMovement(getDeltaMovement().scale(drag));
@@ -78,22 +81,45 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
 
     @Override
     public void resetFallDistance() {
+        final Level level = level();
+        final boolean client = level.isClientSide();
+        final Direction gravity = GravityChangerAPI.getGravityDirection(this);
+
         if (fallDistance > 6.0) {
-            // stomp
-            final Level level = level();
-            if (level.isClientSide()) {
+            if (client) {
                 final Vec3 pos = position();
-                final Direction gravity = GravityChangerAPI.getGravityDirection(this);
                 for (int i = 0; i < 360; i++) {
                     final Vec3 dir = RotationUtil.vecPlayerToWorld(Math.sin(JUtils.DEG_TO_RAD * i), 0, Math.cos(JUtils.DEG_TO_RAD * i), gravity);
                     level.addParticle(ParticleTypes.POOF, pos.x, pos.y, pos.z, dir.x, dir.y, dir.z);
                 }
+            } else {
+                final DamageSource ds = level().damageSources().cramming();
+                final Set<LivingEntity> hurt = JUtils.generateHitbox(level(), position(), 3.5, Set.of(this));
+
+                for (LivingEntity living : hurt) {
+                    if (!JUtils.canDamage(ds, living)) {
+                        continue;
+                    }
+
+                    final LivingEntity target = JUtils.getUserIfStand(living);
+                    if (getOwner() != target) {
+                        StandEntity.damageLogic(level(), target, target.position().subtract(position()), 25, 3,
+                                false, 12.0f, false, 21, ds, getOwner(), CommonHitPropertyComponent.HitAnimation.CRUSH, false);
+                    }
+                }
 
                 playSound(SoundEvents.GENERIC_EXPLODE, 1.0f, 0.3f);
-            } else {
-                // damage + hitbox
             }
         }
+
+        /*
+        if (!client && verticalCollision && fallDistance > 0.5) {
+            final Vec3 bounceVel = getDeltaMovement().scale(0.3);
+            if (gravity.getAxis() == Direction.Axis.Y) setDeltaMovement(bounceVel.x, -bounceVel.y, bounceVel.z);
+            else if (gravity.getAxis() == Direction.Axis.X) setDeltaMovement(-bounceVel.x, bounceVel.y, bounceVel.z);
+            else if (gravity.getAxis() == Direction.Axis.Z) setDeltaMovement(bounceVel.x, bounceVel.y, -bounceVel.z);
+        }
+         */
 
         super.resetFallDistance();
     }
@@ -103,9 +129,9 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {}
+    public void readAdditionalSaveData(CompoundTag compound) {}
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {}
+    public void addAdditionalSaveData(CompoundTag compound) {}
 
     // Animations
     @Override

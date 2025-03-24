@@ -1,7 +1,6 @@
 package net.arna.jcraft.client.renderer.entity.vehicles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import lombok.NonNull;
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.arna.jcraft.client.model.entity.RoadRollerModel;
@@ -16,7 +15,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
@@ -41,21 +39,19 @@ public class RoadRollerRenderer extends GeoEntityRenderer<RoadRollerEntity> {
     private final Random random = new Random();
     @Override
     public void render(final RoadRollerEntity entity, final float yaw, final float partialTick, final PoseStack matrixStack, final @NonNull MultiBufferSource vertexConsumerProvider, final int i) {
-        matrixStack.pushPose();
-
-        float lerpYaw = Mth.rotLerp(partialTick, entity.yRotO, entity.getYRot());
-        matrixStack.mulPose(Axis.YN.rotationDegrees(lerpYaw));
-
         if (entity.isVehicle()) {
             if (!Minecraft.getInstance().isPaused()) {
                 model.getBone("exhaust").ifPresent(bone -> {
                     final Direction gravity = GravityChangerAPI.getGravityDirection(entity);
 
-                    Vector3d localPos = bone.getLocalPosition();
-                    localPos = localPos.rotateAxis(lerpYaw * JUtils.DEG_TO_RAD, gravity.getStepX(), gravity.getStepY(), gravity.getStepZ());
+                    final Vector3d localPos = bone
+                            .getLocalPosition()
+                            .sub(random.nextDouble() * 0.6 - 0.3, 0, 0)
+                            ;
+                            //.rotateAxis(yaw * JUtils.DEG_TO_RAD, gravity.getStepX(), gravity.getStepY(), gravity.getStepZ());
 
-                    Vector3d localRot = bone.getRotationVector().mul(0.1d);
-                    localRot = localRot.rotateAxis(lerpYaw * JUtils.DEG_TO_RAD, gravity.getStepX(), gravity.getStepY(), gravity.getStepZ());
+                    final Vector3d localRot = new Vector3d(0, -0.1, -0.2)
+                            .rotateAxis(yaw * JUtils.DEG_TO_RAD, gravity.getStepX(), gravity.getStepY(), gravity.getStepZ());
 
                     final Vec3 worldPos = RotationUtil.vecWorldToPlayer(
                                     localPos.x, localPos.y, localPos.z,
@@ -65,15 +61,19 @@ public class RoadRollerRenderer extends GeoEntityRenderer<RoadRollerEntity> {
 
                     entity.getCommandSenderWorld().addParticle(ParticleTypes.SMOKE,
                             worldPos.x, worldPos.y, worldPos.z,
-                            localRot.x + random.nextDouble() * 0.05d - 0.025d,
-                            localRot.y + random.nextDouble() * 0.05d - 0.025d,
-                            localRot.z + random.nextDouble() * 0.05d - 0.025d
+                            localRot.x + random.nextDouble() * 0.05 - 0.025,
+                            localRot.y + random.nextDouble() * 0.05 - 0.025,
+                            localRot.z + random.nextDouble() * 0.05 - 0.025
                     );
                 });
             }
         }
 
         super.render(entity, yaw, partialTick, matrixStack, vertexConsumerProvider, i);
-        matrixStack.popPose();
+    }
+
+    @Override
+    public boolean shouldShowName(final RoadRollerEntity animatable) {
+        return animatable.shouldShowName() && super.shouldShowName(animatable); // why the fuck is shouldShowName ignored when the target isn't a Mob???
     }
 }
