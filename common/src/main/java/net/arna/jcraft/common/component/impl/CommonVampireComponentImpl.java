@@ -55,7 +55,7 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
         }
 
         // Taking damage when unprotected from sunlight.
-        if (world.isDay() && !world.isThundering() && !(entity.getItemBySlot(EquipmentSlot.HEAD).is(JTagRegistry.PROTECTS_FROM_SUN)) && world.canSeeSky(entity.blockPosition())) {
+        if (world.isDay() && !world.isRaining() && !world.isThundering() && !(entity.getItemBySlot(EquipmentSlot.HEAD).is(JTagRegistry.PROTECTS_FROM_SUN)) && world.canSeeSky(entity.blockPosition())) {
             entity.setSecondsOnFire(1);
             entity.hurt(world.damageSources().dryOut(), 2.0F);
         }
