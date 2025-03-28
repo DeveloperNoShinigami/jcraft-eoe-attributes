@@ -6,24 +6,33 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
+import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Map;
 import java.util.Set;
 
 public class RoadRollerEntity extends AbstractGroundVehicleEntity {
@@ -32,6 +41,9 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     }
 
     private static final double INLINE_SPEED = 0.1d, TURN_RATE = 5.0d;
+    private static final Map<BlockState, BlockState> flattenedBlockStates = Map.ofEntries(
+            Map.entry(Blocks.DIRT.defaultBlockState(), Blocks.FARMLAND.defaultBlockState())
+    );
     @Override
     public void movementTick(boolean w, boolean a, boolean s, boolean d, boolean space, boolean sneak) {
         double drag = 0.99;
@@ -58,6 +70,29 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
                 }
 
                 addDeltaMovement(getForward().scale(inline));
+            }
+        }
+
+        if (level() instanceof ServerLevel serverLevel) {
+            for (int x = -1; x < 2; x++) {
+                for (int z = -1; z < 2; z++) {
+                    Vec3 offset = new Vec3(x, -0.1, z);
+                    offset = RotationUtil.vecPlayerToWorld(offset, GravityChangerAPI.getGravityDirection(this));
+
+                    final BlockPos blockPos = blockPosition().offset(
+                            Mth.floor(offset.x),
+                            Mth.floor(offset.y),
+                            Mth.floor(offset.z)
+                    );
+
+                    JCraft.createParticle(serverLevel, blockPos.getX(), blockPos.getY(), blockPos.getZ(), JParticleType.BACK_STAB);
+
+                    final BlockState state = serverLevel.getBlockState(blockPos);
+                    if (flattenedBlockStates.containsKey(state))
+                        serverLevel.setBlock(blockPos, flattenedBlockStates.get(state), Block.UPDATE_ALL);
+                    else if (state.canBeReplaced())
+                        serverLevel.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                }
             }
         }
 
