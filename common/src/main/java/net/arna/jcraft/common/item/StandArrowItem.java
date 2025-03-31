@@ -30,7 +30,7 @@ public class StandArrowItem extends ArrowItem {
     // private static final DamageType DAMAGE_TYPE = new DamageType("stand_arrow", DamageScaling.NEVER, 0f, DamageEffects.HURT);
     public static final ResourceKey<DamageType> STAND_ARROW = JDamageSources.createDamageType("stand_arrow");
 
-    private boolean warned = false;
+    protected boolean warned = false;
 
     public StandArrowItem(Properties settings) {
         super(settings);
@@ -48,8 +48,10 @@ public class StandArrowItem extends ArrowItem {
 
         if (oldStand != null) { // If the player already has a stand
             if (!warned) {
-                user.sendSystemMessage(Component.translatable("warning.jcraft.stand.change"));
-                warned = true;
+                if (!world.isClientSide()) {
+                    user.sendSystemMessage(Component.translatable("warning.jcraft.stand.change"));
+                    warned = true;
+                }
                 return InteractionResultHolder.fail(itemStack);
             }
         }
@@ -77,8 +79,8 @@ public class StandArrowItem extends ArrowItem {
             user.hurt(JDamageSources.create(world, STAND_ARROW, user), damage);
         }
 
-        warned = false;
         if (!world.isClientSide()) {
+            warned = false;
             if (oldStand != null) {
                 oldStand.desummon(); // Does any extra desummoning logic, like disabling flight
                 oldStand.discard(); // Actually removes the stand
