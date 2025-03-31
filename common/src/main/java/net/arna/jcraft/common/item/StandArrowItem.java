@@ -50,7 +50,7 @@ public class StandArrowItem extends ArrowItem {
             if (!warned) {
                 user.sendSystemMessage(Component.translatable("warning.jcraft.stand.change"));
                 warned = true;
-                return InteractionResultHolder.pass(itemStack);
+                return InteractionResultHolder.fail(itemStack);
             }
         }
 
