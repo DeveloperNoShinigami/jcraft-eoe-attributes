@@ -77,6 +77,7 @@ public class StandArrowItem extends ArrowItem {
             user.hurt(JDamageSources.create(world, STAND_ARROW, user), damage);
         }
 
+        warned = false;
         if (!world.isClientSide()) {
             if (oldStand != null) {
                 oldStand.desummon(); // Does any extra desummoning logic, like disabling flight
