@@ -46,7 +46,7 @@ public class StandArrowItem extends ArrowItem {
         final StandEntity<?, ?> oldStand = standData.getStand();
         final ItemStack itemStack = user.getItemInHand(hand);
 
-        if (oldStand != null) { // If the player already has a stand
+        if (standData.getType() != StandType.NONE) { // If the player already has a stand
             if (!warned) {
                 if (!world.isClientSide()) {
                     user.sendSystemMessage(Component.translatable("warning.jcraft.stand.change"));
