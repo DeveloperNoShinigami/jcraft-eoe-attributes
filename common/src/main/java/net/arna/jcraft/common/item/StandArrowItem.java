@@ -8,6 +8,7 @@ import net.arna.jcraft.common.entity.projectile.StandArrowEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -29,6 +30,8 @@ public class StandArrowItem extends ArrowItem {
     // private static final DamageType DAMAGE_TYPE = new DamageType("stand_arrow", DamageScaling.NEVER, 0f, DamageEffects.HURT);
     public static final ResourceKey<DamageType> STAND_ARROW = JDamageSources.createDamageType("stand_arrow");
 
+    protected boolean warned = false;
+
     public StandArrowItem(Properties settings) {
         super(settings);
     }
@@ -39,8 +42,21 @@ public class StandArrowItem extends ArrowItem {
 
     @Override
     public @NonNull InteractionResultHolder<ItemStack> use(@NonNull final Level world, final Player user, @NonNull final InteractionHand hand) {
-        // Remove 1 from item stack
+        final CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
+        final StandEntity<?, ?> oldStand = standData.getStand();
         final ItemStack itemStack = user.getItemInHand(hand);
+
+        if (standData.getType() != StandType.NONE) { // If the player already has a stand
+            if (!warned) {
+                if (!world.isClientSide()) {
+                    user.sendSystemMessage(Component.translatable("warning.jcraft.stand.change"));
+                    warned = true;
+                }
+                return InteractionResultHolder.fail(itemStack);
+            }
+        }
+
+        // Remove 1 from item stack
         if (!user.isCreative()) {
             itemStack.shrink(1);
         }
@@ -64,9 +80,7 @@ public class StandArrowItem extends ArrowItem {
         }
 
         if (!world.isClientSide()) {
-            final CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
-
-            final StandEntity<?, ?> oldStand = standData.getStand();
+            warned = false;
             if (oldStand != null) {
                 oldStand.desummon(); // Does any extra desummoning logic, like disabling flight
                 oldStand.discard(); // Actually removes the stand

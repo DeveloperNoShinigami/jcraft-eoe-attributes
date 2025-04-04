@@ -123,6 +123,7 @@ public interface JCreativeMenuTabRegistry {
                     // stand drops
                     entries.accept(JItemRegistry.FV_REVOLVER.get());
                     entries.accept(JItemRegistry.BULLET.get());
+                    entries.accept(JItemRegistry.SCALPEL.get());
                     entries.accept(JItemRegistry.KQ_COIN.get());
                     entries.accept(JItemRegistry.FOOLISH_SAND_BLOCK.get());
                     // misc

@@ -433,6 +433,7 @@
 
   "jcraft.trim_material.stellar_iron": "Stellar Iron Material",
   "warning.jcraft.spec.change": "Using this will change your spec, are you sure?",
+  "warning.jcraft.stand.change": "Using this will change your stand, are you sure?",
   "death.attack.jcraft.stand": "%1$s was retired",
   "death.attack.jcraft.stand.item": "%1$s was retired by %2$s while wielding %3$s",
   "death.attack.jcraft.stand.player": "%1$s was retired by %2$s",

@@ -330,7 +330,7 @@ public class JServerEvents {
             }
 
             // Create new stand user mobs
-            if (mob.tickCount > 0) {
+            if (standData.isTagged()) {
                 return EventResult.pass();
             }
             if (standData.getType() != null) {
@@ -343,6 +343,7 @@ public class JServerEvents {
             Random random = new Random();
             GameRules gameRules = world.getGameRules();
 
+            standData.setTagged(true);
             // STAND
             if (100 - random.nextInt(0, 100) > gameRules.getInt(CHANCE_MOB_SPAWNS_WITH_STAND)) {
                 return EventResult.pass();

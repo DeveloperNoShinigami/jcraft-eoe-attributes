@@ -19,6 +19,10 @@ public interface CommonStandComponent extends JComponent {
 
     void setSkin(final int skin);
 
+    boolean isTagged();
+
+    void setTagged(boolean tagged);
+
     @Nullable
     StandEntity<?, ?> getStand();
 
