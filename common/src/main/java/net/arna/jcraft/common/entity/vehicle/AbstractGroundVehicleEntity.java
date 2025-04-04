@@ -126,13 +126,11 @@ public abstract class AbstractGroundVehicleEntity extends LivingEntity implement
 
     @Override
     public void tick() {
-        if (level().isClientSide()) JCraft.getClientEntityHandler().vehicleMovementTick(this);
-        else movementTick(forward, left, back, right, space, sneak);
-
         super.tick();
 
-        // move(MoverType.SELF, getDeltaMovement());
-        // checkInsideBlocks();
+        if (level().isClientSide()) JCraft.getClientEntityHandler().vehicleMovementTick(this);
+        else movementTick(forward, left, back, right, space, sneak);
+        if (isControlledByLocalInstance()) move(MoverType.SELF, getDeltaMovement());
 
         final int hurtTime = getHurtTime();
         if (hurtTime > 0) setHurtTime(hurtTime - 1);

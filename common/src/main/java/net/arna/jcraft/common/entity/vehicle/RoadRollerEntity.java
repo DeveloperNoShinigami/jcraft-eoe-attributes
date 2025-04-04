@@ -6,18 +6,18 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class RoadRollerEntity extends AbstractGroundVehicleEntity {
@@ -47,18 +48,35 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     @Override
     public void movementTick(boolean w, boolean a, boolean s, boolean d, boolean space, boolean sneak) {
         double drag = 0.99;
-
+        final Level level = level();
+        final Direction gravity = GravityChangerAPI.getGravityDirection(this);
         oldYRot = getYRot();
 
-        if (onGround()) {
+        Vec3 movement = getDeltaMovement();
+        if (Double.isNaN(movement.x)) movement = new Vec3(0, movement.y, movement.z);
+        if (Double.isNaN(movement.y)) movement = new Vec3(movement.x, 0, movement.z);
+        if (Double.isNaN(movement.z)) movement = new Vec3(movement.x, movement.y, 0);
+
+        boolean grounded = onGround();
+        if (grounded) {
             drag = getGroundFriction();
+        } else { // Edge case coverage
+            Optional<BlockPos> supporting = level.findSupportingBlock(this, getBoundingBox().inflate(0.1));
+            if (supporting.isPresent()) {
+                grounded = true;
+                drag = level.getBlockState(supporting.get()).getBlock().getFriction();
+            }
+            // setOnGround(grounded);
+        }
+
+        if (grounded) {
             if (w || s) {
                 double inline;
                 if (w) inline = INLINE_SPEED;
                 else inline = -INLINE_SPEED;
 
                 if (a || d) {
-                    double movementSpeed = getDeltaMovement().length(); // blocks per tick
+                    double movementSpeed = movement.length(); // blocks per tick
                     if (Double.isNaN(movementSpeed)) movementSpeed = 0.0d;
 
                     float turnCW = 0.0f;
@@ -69,29 +87,38 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
                     setYRot(oldYRot + turnCW);
                 }
 
-                addDeltaMovement(getForward().scale(inline));
+                setDeltaMovement(
+                        movement.add(getForward().scale(inline))
+                );
             }
+        } else if (movement.lengthSqr() == 0) { // Weird edge-case from standing on entities
+            setDeltaMovement(
+                    movement.add(RotationUtil.vecPlayerToWorld(new Vec3(0, -0.02, 0), gravity))
+            );
         }
 
-        if (level() instanceof ServerLevel serverLevel) {
-            for (int x = -1; x < 2; x++) {
-                for (int z = -1; z < 2; z++) {
-                    Vec3 offset = new Vec3(x, -0.1, z);
-                    offset = RotationUtil.vecPlayerToWorld(offset, GravityChangerAPI.getGravityDirection(this));
+        if (level instanceof ServerLevel serverLevel) {
+            for (int x = -2; x < 4; x++) {
+                for (int y = 0; y < 3; y++) {
+                    for (int z = -2; z < 4; z++) {
+                        Vec3 offset = new Vec3(x, -0.1 * y, z);
+                        offset = RotationUtil.vecPlayerToWorld(offset, gravity);
+                        final BlockPos blockPos = blockPosition().offset(
+                                Mth.floor(offset.x),
+                                Mth.floor(offset.y),
+                                Mth.floor(offset.z)
+                        );
 
-                    final BlockPos blockPos = blockPosition().offset(
-                            Mth.floor(offset.x),
-                            Mth.floor(offset.y),
-                            Mth.floor(offset.z)
-                    );
+                        // JCraft.createParticle(serverLevel, blockPos.getX(), blockPos.getY(), blockPos.getZ(), y == 0 ? JParticleType.BACK_STAB : JParticleType.GO);
 
-                    JCraft.createParticle(serverLevel, blockPos.getX(), blockPos.getY(), blockPos.getZ(), JParticleType.BACK_STAB);
-
-                    final BlockState state = serverLevel.getBlockState(blockPos);
-                    if (flattenedBlockStates.containsKey(state))
-                        serverLevel.setBlock(blockPos, flattenedBlockStates.get(state), Block.UPDATE_ALL);
-                    else if (state.canBeReplaced())
-                        serverLevel.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                        final BlockState state = serverLevel.getBlockState(blockPos);
+                        if (flattenedBlockStates.containsKey(state))
+                            serverLevel.setBlock(blockPos, flattenedBlockStates.get(state), Block.UPDATE_ALL);
+                        else if (state.canBeReplaced()) {
+                            serverLevel.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                            serverLevel.levelEvent(null, 2001, blockPos, Block.getId(state)); // Particles
+                        }
+                    }
                 }
             }
         }
@@ -117,17 +144,8 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     @Override
     public void resetFallDistance() {
         final Level level = level();
-        final boolean client = level.isClientSide();
-        final Direction gravity = GravityChangerAPI.getGravityDirection(this);
-
-        if (fallDistance > 6.0) {
-            if (client) {
-                final Vec3 pos = position();
-                for (int i = 0; i < 360; i++) {
-                    final Vec3 dir = RotationUtil.vecPlayerToWorld(Math.sin(JUtils.DEG_TO_RAD * i), 0, Math.cos(JUtils.DEG_TO_RAD * i), gravity);
-                    level.addParticle(ParticleTypes.POOF, pos.x, pos.y, pos.z, dir.x, dir.y, dir.z);
-                }
-            } else {
+        if (!level.isClientSide()) {
+            if (fallDistance > 6.0) {
                 final DamageSource ds = level().damageSources().cramming();
                 final Set<LivingEntity> hurt = JUtils.generateHitbox(level(), position(), 3.5, Set.of(this));
 
@@ -143,19 +161,26 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
                     }
                 }
 
+                JComponentPlatformUtils.getShockwaveHandler(level).addShockwave(
+                        position(),
+                        Vec3.atLowerCornerOf(GravityChangerAPI.getGravityDirection(this).getNormal()),
+                        4.5f
+                        );
+
+                final var poofPacket = new ClientboundLevelParticlesPacket(
+                        ParticleTypes.POOF, false,
+                        getX(), getY(), getZ(),
+                        0.2f, 0.2f, 0.2f,
+                        0.3f, 32
+                );
+
+                JUtils.tracking(this).forEach(
+                        serverPlayer -> serverPlayer.connection.send(poofPacket)
+                );
+
                 playSound(SoundEvents.GENERIC_EXPLODE, 1.0f, 0.3f);
             }
         }
-
-        /*
-        if (!client && verticalCollision && fallDistance > 0.5) {
-            final Vec3 bounceVel = getDeltaMovement().scale(0.3);
-            if (gravity.getAxis() == Direction.Axis.Y) setDeltaMovement(bounceVel.x, -bounceVel.y, bounceVel.z);
-            else if (gravity.getAxis() == Direction.Axis.X) setDeltaMovement(-bounceVel.x, bounceVel.y, bounceVel.z);
-            else if (gravity.getAxis() == Direction.Axis.Z) setDeltaMovement(bounceVel.x, bounceVel.y, -bounceVel.z);
-        }
-         */
-
         super.resetFallDistance();
     }
 
