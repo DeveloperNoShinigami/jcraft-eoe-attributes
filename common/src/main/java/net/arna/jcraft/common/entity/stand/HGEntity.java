@@ -242,20 +242,8 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         moves.register(MoveClass.UTILITY, PILOT_MODE);
     }
 
-    @Override
-    public boolean initMove(MoveClass moveClass) {
-        final LivingEntity user = getUserOrThrow();
-        if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
-
-        if (moveClass != MoveClass.SPECIAL1 || !user.isShiftKeyDown()) {
-            return super.initMove(moveClass);
-        }
-
-        if (!JUtils.canAct(user)) {
-            return false;
-        }
-
-        List<HGNetEntity> nets = level().getEntitiesOfClass(HGNetEntity.class,
+    private void fireNearbyNets(@NonNull final LivingEntity user, boolean isSuper) {
+        final List<HGNetEntity> nets = level().getEntitiesOfClass(HGNetEntity.class,
                 getBoundingBox().inflate(64), EntitySelector.NO_CREATIVE_OR_SPECTATOR);
 
         final LivingEntity shooter = isRemote() ? this : user;
@@ -263,7 +251,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
         final Vec3 heightOffset = GravityChangerAPI.getEyeOffset(shooter).scale(0.5);
         final Vec3 eyePos = shooter.position().add(heightOffset);
 
-        if (nets.isEmpty()) return true;
+        if (nets.isEmpty()) return;
 
         final Vec3 pos = JUtils.raycastAll(shooter, eyePos, eyePos.add(user.getLookAngle().scale(96)), ClipContext.Fluid.NONE,
                 (entity -> !(entity instanceof IOwnable ownable) || ownable.getMaster() != user)).getLocation();
@@ -272,9 +260,31 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             if (net.getMaster() != user) {
                 continue;
             }
-            net.tryFireAt(pos, false);
+            net.tryFireAt(pos, isSuper);
+        }
+    }
+
+    @Override
+    public boolean initMove(MoveClass moveClass) {
+        final LivingEntity user = getUserOrThrow();
+        if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
+
+        if (moveClass != MoveClass.SPECIAL1 || !user.isShiftKeyDown()) {
+            // Ultimate Remote Fire
+            if (moveClass == MoveClass.ULTIMATE) {
+                if (super.initMove(MoveClass.ULTIMATE)) {
+                    fireNearbyNets(user, true);
+                    return true;
+                }
+                return false;
+            }
+
+            return super.initMove(moveClass);
         }
 
+        // cr.SP1 Remote Fire
+        if (!JUtils.canAct(user)) return false;
+        fireNearbyNets(user, false);
         return true;
     }
 
