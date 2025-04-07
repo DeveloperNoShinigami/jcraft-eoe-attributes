@@ -749,13 +749,22 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         //JCraft.LOGGER.info("Damaging entity: " + ent + " with damage: " + damage + " and scaling: " + scaling);
         damage *= scaling;
 
+        float armor = ent.getArmorValue();
+        float toughness = (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+
         // raw damage goes into statistics
-        if (JUtils.getUserIfStand(attacker) instanceof final Player player && !player.level().isClientSide()) {
+        if (JUtils.getUserIfStand(attacker) instanceof final Player player) {
             player.awardStat(JStatRegistry.RAW_DAMAGE.get(), (int)damage);
         }
 
+        // Players are hit as if they have unenchanted netherite
+        if (ent instanceof Player) {
+            armor = 20.0f;
+            toughness = 12.0f;
+        }
+
         // All stands ignore 10% of armor & armor toughness
-        damage = JUtils.getDamageThroughArmor(damage, (float) ent.getArmorValue() * 0.9f, (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 0.9f);
+        damage = JUtils.getDamageThroughArmor(damage, armor * 0.9f, toughness * 0.9f);
         damage = ((LivingEntityInvoker) ent).invokeModifyAppliedDamage(damageSource, damage);
 
         // Apply absorption
