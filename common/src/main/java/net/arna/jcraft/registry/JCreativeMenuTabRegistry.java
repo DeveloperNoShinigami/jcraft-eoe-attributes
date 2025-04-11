@@ -156,6 +156,8 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.DIO_CAPE.get());
                     entries.accept(JItemRegistry.DIO_PANTS.get());
                     entries.accept(JItemRegistry.DIO_BOOTS.get());
+                    // vehicles
+                    entries.accept(JItemRegistry.ROAD_ROLLER.get());
                     // blood bottles
                     for (int i = 16; i >= 0; i--) {
                         final ItemStack stack = new ItemStack(JItemRegistry.BLOOD_BOTTLE.get());
