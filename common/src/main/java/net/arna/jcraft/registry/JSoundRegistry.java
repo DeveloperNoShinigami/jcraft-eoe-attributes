@@ -298,6 +298,12 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> BULLET_RICOCHET = register("bulletricochet");
     RegistrySupplier<SoundEvent> BULLET_PENETRATE = register("bulletpenetrate");
 
+    // ROAD ROLLER
+    RegistrySupplier<SoundEvent> ROAD_ROLLER_HIT = register("rrhit");
+    RegistrySupplier<SoundEvent> ROAD_ROLLER_SLAM = register("rrslam");
+    RegistrySupplier<SoundEvent> ROAD_ROLLER_IGNITION = register("rrignition");
+    RegistrySupplier<SoundEvent> ROAD_ROLLER_ACTIVE = register("rractive");
+
     static void init() {
         // intentionally left empty
     }

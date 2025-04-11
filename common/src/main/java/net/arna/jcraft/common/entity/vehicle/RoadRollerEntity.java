@@ -13,24 +13,30 @@ import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +45,95 @@ import java.util.Set;
 public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     public RoadRollerEntity(final Level level) {
         super(JEntityTypeRegistry.ROAD_ROLLER.get(), level);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return JSoundRegistry.ROAD_ROLLER_HIT.get();
+    }
+
+    @Override
+    protected void addPassenger(Entity passenger) {
+        super.addPassenger(passenger);
+        if (passenger == getFirstPassenger()) playSound(JSoundRegistry.ROAD_ROLLER_IGNITION.get());
+    }
+
+    private int ridingTicks = 0;
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (level().isClientSide()) {
+            if (isVehicle()) {
+                if ((ridingTicks - 52) % 82 == 0)
+                    level().playLocalSound(getX(), getY(), getZ(), JSoundRegistry.ROAD_ROLLER_ACTIVE.get(), SoundSource.NEUTRAL, 1.0f, 1.0f, true);
+                ridingTicks++;
+
+                final Direction gravity = GravityChangerAPI.getGravityDirection(this);
+
+                final float yaw = yRotO + 90.0f;
+                final Vec3 down = new Vec3(gravity.getStepX(), gravity.getStepY(), gravity.getStepZ());
+                final Vec3 forward = new Vec3(
+                        Mth.cos(yaw * Mth.DEG_TO_RAD),
+                        0,
+                        Mth.sin(yaw * Mth.DEG_TO_RAD)
+                );
+                final Vec3 right = new Vec3(
+                        Mth.cos((yaw + 90.0f) * Mth.DEG_TO_RAD),
+                        0,
+                        Mth.sin((yaw + 90.0f) * Mth.DEG_TO_RAD)
+                );
+
+                final Vec3 localPos = new Vec3(
+                        -forward.x * 2.65 - right.x * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.x * 2.2,
+                        -forward.y * 2.65 - right.y * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.y * 2.2,
+                        -forward.z * 2.65 - right.z * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.z * 2.2
+                );
+                //.rotateAxis(yaw * JUtils.DEG_TO_RAD, gravity.getStepX(), gravity.getStepY(), gravity.getStepZ());
+
+                final Vec3 worldPos = RotationUtil.vecWorldToPlayer(
+                        localPos.x,
+                        localPos.y,
+                        localPos.z,
+                        gravity
+                ).add(position());
+
+                level().addParticle(ParticleTypes.SMOKE,
+                        worldPos.x,
+                        worldPos.y,
+                        worldPos.z,
+                        down.x * 0.03 - forward.x * 0.06 + random.nextDouble() * 0.05 - 0.025,
+                        down.y * 0.03 - forward.y * 0.06 + random.nextDouble() * 0.05 - 0.025,
+                        down.z * 0.03 - forward.z * 0.06 + random.nextDouble() * 0.05 - 0.025
+                );
+            } else {
+                ridingTicks = 0;
+            }
+        }
+    }
+
+    @Override
+    protected void tickDeath() {
+        super.tickDeath();
+        if (deathTime == 1) {
+            final Level level = level();
+            final Vec3 pos = position();
+
+            if (level.isClientSide()) {
+
+            } else {
+                level.explode(this,
+                        pos.x,
+                        pos.y,
+                        pos.z,
+                        2.0f,
+                        level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) ?
+                                Level.ExplosionInteraction.MOB :
+                                Level.ExplosionInteraction.NONE
+                );
+            }
+        }
     }
 
     private static final double INLINE_SPEED = 0.1d, TURN_RATE = 5.0d;
@@ -178,7 +273,7 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
                         serverPlayer -> serverPlayer.connection.send(poofPacket)
                 );
 
-                playSound(SoundEvents.GENERIC_EXPLODE, 1.0f, 0.3f);
+                playSound(JSoundRegistry.ROAD_ROLLER_SLAM.get());
             }
         }
         super.resetFallDistance();
@@ -196,6 +291,8 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     // Animations
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "death", 0, this::deathPredicate));
+
         controllers.add(new AnimationController<>(this, "shake", 0, this::shakePredicate));
         controllers.add(new AnimationController<>(this, "movement", 5, this::movePredicate));
         controllers.add(new AnimationController<>(this, "steering", 5, this::steerPredicate));
@@ -228,6 +325,12 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     private static final RawAnimation HIT = RawAnimation.begin().thenLoop("hit");
     private <T extends GeoAnimatable> PlayState hitPredicate(AnimationState<T> state) {
         if (getHurtTime() > 0) return state.setAndContinue(HIT);
+        return PlayState.STOP;
+    }
+
+    private static final RawAnimation DEATH = RawAnimation.begin().thenLoop("explode");
+    private <T extends GeoAnimatable> PlayState deathPredicate(AnimationState<T> state) {
+        if (deathTime > 0) return state.setAndContinue(DEATH);
         return PlayState.STOP;
     }
 }

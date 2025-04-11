@@ -317,7 +317,7 @@ public interface JEntityTypeRegistry {
     RegistrySupplier<EntityType<RoadRollerEntity>> ROAD_ROLLER = ENTITY_TYPE_REGISTRY.register(JCraft.id("roadroller"),
             () -> EntityType.Builder.of(
                             (EntityType<RoadRollerEntity> entityType, Level world) -> new RoadRollerEntity(world), MobCategory.MISC)
-                    .sized(3.5f, 2.5f)
+                    .sized(3.5f, 2.0f)
                     .build("roadroller")
     );
 

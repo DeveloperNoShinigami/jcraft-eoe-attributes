@@ -26,6 +26,7 @@
   "item.jcraft.scalpel": "Scalpel",
   "item.jcraft.anubis": "Anubis",
   "item.jcraft.anubis_sheathed": "Sheathed Anubis",
+  "item.jcraft.road_roller": "Road Roller",
   "item.jcraft.cinderella_mask": "Cinderella Mask",
   "item.jcraft.mock_item": "Mock Item",
   "item.jcraft.blood_bottle": "Blood Bottle",
@@ -322,6 +323,8 @@
   "entity.jcraft.darby_younger": "D'arby Younger",
   "entity.jcraft.atum": "Atum",
   "entity.jcraft.atum.info.desc": "Undescribed",
+
+  "entity.jcraft.roadroller": "Road Roller",
 
   "effect.jcraft.dazed_effect": "Dazed",
   "effect.jcraft.ws_poison": "Melting",

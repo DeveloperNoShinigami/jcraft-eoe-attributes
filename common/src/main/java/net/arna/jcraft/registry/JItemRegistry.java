@@ -4,6 +4,7 @@ import dev.architectury.core.item.ArchitecturySpawnEggItem;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.entity.vehicle.RoadRollerEntity;
 import net.arna.jcraft.common.item.*;
 import net.arna.jcraft.common.spec.SpecType;
 import net.minecraft.core.registries.Registries;
@@ -58,6 +59,11 @@ public interface JItemRegistry {
 
     RegistrySupplier<Item> BOXING_GLOVES = register("boxing_gloves", () -> new BoxingGlovesItem(settings().stacksTo(1), SpecType.BRAWLER));
 
+    // Vehicles
+    RegistrySupplier<Item> ROAD_ROLLER = register("road_roller", () -> new VehicleItem<>(
+            settings().rarity(Rarity.RARE).stacksTo(1),
+            (level, owner) -> new RoadRollerEntity(level)
+    ));
 
     RegistrySupplier<Item> REQUIEM_RUBY = register("requiem_ruby", () -> new Item(settings().rarity(Rarity.EPIC).fireResistant()));
 

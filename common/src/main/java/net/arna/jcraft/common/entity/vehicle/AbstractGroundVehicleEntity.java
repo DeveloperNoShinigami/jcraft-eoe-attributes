@@ -134,8 +134,6 @@ public abstract class AbstractGroundVehicleEntity extends LivingEntity implement
 
         final int hurtTime = getHurtTime();
         if (hurtTime > 0) setHurtTime(hurtTime - 1);
-
-        oldYRot = getYRot();
     }
 
     public abstract void movementTick(final boolean w, final boolean a, final boolean s, final boolean d, final boolean space, final boolean sneak);
