@@ -397,5 +397,17 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .requires(JItemRegistry.KNIFE.get(), 9)
                 .unlockedBy("has_knife", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KNIFE.get()))
                 .save(exporter);
+        // road roller
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, JItemRegistry.ROAD_ROLLER.get())
+                .pattern("BYY")
+                .pattern("III")
+                .pattern("GFG")
+                .define('B', Items.IRON_BARS)
+                .define('I', Items.IRON_BLOCK)
+                .define('Y', Items.YELLOW_DYE)
+                .define('F', Items.BLAST_FURNACE)
+                .define('G', Items.GRINDSTONE)
+                .unlockedBy("has_iron_block", InventoryChangeTrigger.TriggerInstance.hasItems(Items.IRON_BLOCK))
+                .save(exporter);
     }
 }
