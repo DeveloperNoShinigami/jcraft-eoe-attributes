@@ -60,8 +60,10 @@ public interface JItemRegistry {
     RegistrySupplier<Item> BOXING_GLOVES = register("boxing_gloves", () -> new BoxingGlovesItem(settings().stacksTo(1), SpecType.BRAWLER));
 
     // Vehicles
-    RegistrySupplier<Item> ROAD_ROLLER = register("road_roller", () -> new VehicleItem<RoadRollerEntity>(settings().rarity(Rarity.RARE).stacksTo(1)));
-
+    RegistrySupplier<Item> ROAD_ROLLER = register("road_roller", () -> new VehicleItem<>(
+            settings().rarity(Rarity.RARE).stacksTo(1),
+            (level, owner) -> new RoadRollerEntity(level)
+    ));
 
     RegistrySupplier<Item> REQUIEM_RUBY = register("requiem_ruby", () -> new Item(settings().rarity(Rarity.EPIC).fireResistant()));
 

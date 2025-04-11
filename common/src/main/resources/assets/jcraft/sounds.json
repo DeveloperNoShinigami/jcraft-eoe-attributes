@@ -1124,5 +1124,30 @@
     "sounds": [
       "jcraft:sheerheartattack/sha_tread"
     ]
+  },
+  "rrhit": {
+    "sounds": [
+      "jcraft:vehicles/roadroller/hit"
+    ]
+  },
+  "rrengineidle": {
+    "sounds": [
+      "jcraft:vehicles/roadroller/engineidle"
+    ]
+  },
+  "rractive": {
+    "sounds": [
+      "jcraft:vehicles/roadroller/active"
+    ]
+  },
+  "rrslam": {
+    "sounds": [
+      "jcraft:vehicles/roadroller/slam"
+    ]
+  },
+  "rrignition": {
+    "sounds": [
+      "jcraft:vehicles/roadroller/ignition"
+    ]
   }
 }
