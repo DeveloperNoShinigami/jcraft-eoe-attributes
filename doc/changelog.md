@@ -1,22 +1,31 @@
 # Changelog
 ### General
+* Players now always take JCraft damage as if wearing unenchanted Netherite
 * Upgraded the underlying system for Data-driven movesets
 * Added `jcraft:ferrous_entities`, for entities that are ferromagnetic
+* Added various statistics
 ### NPCs & Stands
+* Star Platinum
+  * Re-tuned Inhale's pulling power
+* The World
+  * Updated texture and model
 * Metallica
   * Create Magnetic Field no longer fails when trying to place out of range
-  * Invisibility drains iron slower, but heavily nerfs Harvest while active
+  * Invisibility drains iron slower, heavily nerfs Harvest while active, and surrounds the user in a Magnetic Field
   * Darkened all skin auras
 * Horus
   * Has Frost Walker ability now
+* The World: Over Heaven
+  * Updated texture and model
+* Gold Experience: Requiem
+  * Updated texture and model
+### Items
+* Added the Road Roller, a craftable vehicle
+* Updated visuals for armor items
 ### Commands
 
 ### Bug Fixes
-* ?
-* not marginally slower invisibility iron drain -> nerfs harvest, too
-* no MISS = fail for the 2 remote moves
-* small not-owned pole on the user while invisible
-* sounds
+* Fixed small mistakes in moves caused by Data-driven moveset rewrite
 
 * small stars (stun -d efault off)
 
@@ -51,7 +60,7 @@ this is probably due to:
 * MR barrage fire :)
 * Fix AI stand users having clientside head rotation that completely throws off players
 * Timestop should stop stand anims
-* CRAZY DIAMOND, THE HAND, Hermit Purple, Yellow Temperance
+* CRAZY DIAMOND, Hermit Purple, Yellow Temperance
 * Stand NBT serialization
 * Internationalization
 * Actually use effect keyframes in animations

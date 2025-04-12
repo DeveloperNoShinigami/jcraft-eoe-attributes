@@ -226,7 +226,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             .withInitAction(UserAnimationAction.play("mtl.rca"));
     public static final CreateMagneticFieldMove CREATE_MAGNETIC_FIELD = new CreateMagneticFieldMove(200, 5, 15)
             .withCrouchingVariant(RAZOR_COUGH_ATTACK)
-            .withAerialVariant(EXPLODE_MAGNETIC_FIELD)
+            // .withAerialVariant(EXPLODE_MAGNETIC_FIELD)
             .withInfo(
                     Component.literal("Place Magnetic Field"),
                     Component.literal("""
