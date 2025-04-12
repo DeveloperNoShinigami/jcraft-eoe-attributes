@@ -572,6 +572,8 @@ public final class JUtils {
             Map.entry(EntityType.IRON_GOLEM, 0.0f),
             Map.entry(EntityType.SNOW_GOLEM, 0.0f),
 
+            Map.entry(JEntityTypeRegistry.ROAD_ROLLER.get(), 0.0f),
+
             Map.entry(JEntityTypeRegistry.SHEER_HEART_ATTACK.get(), 0.0f)
     );
 

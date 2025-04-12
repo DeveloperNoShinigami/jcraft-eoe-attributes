@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.vehicle;
 
+import lombok.NonNull;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
@@ -14,6 +15,7 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -27,6 +29,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -57,6 +63,12 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     protected void addPassenger(Entity passenger) {
         super.addPassenger(passenger);
         if (passenger == getFirstPassenger()) playSound(JSoundRegistry.ROAD_ROLLER_IGNITION.get());
+    }
+
+    @Override
+    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
+        if (effectInstance.getEffect() == JStatusRegistry.KNOCKDOWN.get()) return false;
+        return super.addEffect(effectInstance, entity);
     }
 
     private int ridingTicks = 0;
@@ -234,6 +246,17 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
         }
 
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public boolean hurt(@NonNull DamageSource source, float amount) {
+        if (source.is(DamageTypes.SWEET_BERRY_BUSH) ||
+            source.is(DamageTypes.STING) ||
+            source.is(DamageTypes.THORNS) ||
+            source.is(DamageTypes.STARVE)
+        ) return false;
+
+        return super.hurt(source, amount);
     }
 
     @Override
