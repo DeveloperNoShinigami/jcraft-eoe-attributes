@@ -7,7 +7,10 @@ import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -20,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WaterlilyBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -44,7 +48,8 @@ public abstract class AbstractGroundVehicleEntity extends LivingEntity implement
     @Getter @Setter
     private Entity owner;
 
-    public boolean stopsWithoutDriver = true;
+    protected boolean stopsWithoutDriver = true;
+    protected boolean pushBelow = true;
 
     private static final EntityDataAccessor<Float> DAMAGE;
     private static final EntityDataAccessor<Integer> HURT_TIME;
@@ -130,12 +135,28 @@ public abstract class AbstractGroundVehicleEntity extends LivingEntity implement
     public void tick() {
         super.tick();
 
-        if (stopsWithoutDriver && !isVehicle()) left = right = forward = back = space = sneak = false;
+        final Level level = level();
+        final boolean client = level.isClientSide();
 
-        if (level().isClientSide()) JCraft.getClientEntityHandler().vehicleMovementTick(this);
+        if (stopsWithoutDriver && !isVehicle()) updateInputs(0, 0, false, false);
+
+        if (client) JCraft.getClientEntityHandler().vehicleMovementTick(this);
         else movementTick(forward, left, back, right, space, sneak);
 
         if (isControlledByLocalInstance()) move(MoverType.SELF, getDeltaMovement());
+
+        // Soft collisions beneath, hard collisions elsewhere.
+        if (pushBelow && !client) {
+            final Direction gravity = GravityChangerAPI.getGravityDirection(this);
+            final Vec3 down = new Vec3(gravity.getStepX(), gravity.getStepY(), gravity.getStepZ());
+
+            final AABB beneathBox = getBoundingBox().move(down);
+            for (final Entity entity : level.getEntities(this, beneathBox)) {
+                if (entity.isPushable()) {
+                    JUtils.addVelocity(entity, entity.position().subtract(position()).normalize().scale(0.1));
+                }
+            }
+        }
 
         final int hurtTime = getHurtTime();
         if (hurtTime > 0) setHurtTime(hurtTime - 1);
