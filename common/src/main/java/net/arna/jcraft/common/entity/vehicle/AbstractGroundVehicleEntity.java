@@ -44,6 +44,8 @@ public abstract class AbstractGroundVehicleEntity extends LivingEntity implement
     @Getter @Setter
     private Entity owner;
 
+    public boolean stopsWithoutDriver = true;
+
     private static final EntityDataAccessor<Float> DAMAGE;
     private static final EntityDataAccessor<Integer> HURT_TIME;
     private static final EntityDataAccessor<Boolean> TURN_LEFT, TURN_RIGHT, MOVE_FORWARD, MOVE_BACK;
@@ -128,8 +130,11 @@ public abstract class AbstractGroundVehicleEntity extends LivingEntity implement
     public void tick() {
         super.tick();
 
+        if (stopsWithoutDriver && !isVehicle()) left = right = forward = back = space = sneak = false;
+
         if (level().isClientSide()) JCraft.getClientEntityHandler().vehicleMovementTick(this);
         else movementTick(forward, left, back, right, space, sneak);
+
         if (isControlledByLocalInstance()) move(MoverType.SELF, getDeltaMovement());
 
         final int hurtTime = getHurtTime();

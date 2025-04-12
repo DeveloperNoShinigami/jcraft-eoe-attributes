@@ -74,14 +74,8 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     public void tick() {
         super.tick();
 
-        final boolean isVehicle = isVehicle();
-
-        if (!isVehicle) {
-            left = right = forward = back = space = sneak = false;
-        }
-
         if (level().isClientSide()) {
-            if (isVehicle) {
+            if (isVehicle()) {
                 if ((ridingTicks - 52) % 82 == 0)
                     level().playLocalSound(getX(), getY(), getZ(), JSoundRegistry.ROAD_ROLLER_ACTIVE.get(), SoundSource.NEUTRAL, 1.0f, 1.0f, true);
                 ridingTicks++;
@@ -225,9 +219,9 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
                         // JCraft.createParticle(serverLevel, blockPos.getX(), blockPos.getY(), blockPos.getZ(), y == 0 ? JParticleType.BACK_STAB : JParticleType.GO);
 
                         final BlockState state = serverLevel.getBlockState(blockPos);
-                        if (y == 0) JCraft.LOGGER.info(state.getBlock().getExplosionResistance());
                         if (flattenedBlockStates.containsKey(state))
                             serverLevel.setBlock(blockPos, flattenedBlockStates.get(state), Block.UPDATE_ALL);
+                        // Break replaceable blocks or ones under a certain resistance on the same height level as the Road Roller
                         else if (state.canBeReplaced() || (y == 0 && state.getBlock().getExplosionResistance() <= 3.0f)) {
                             serverLevel.destroyBlock(blockPos, true);
                         }

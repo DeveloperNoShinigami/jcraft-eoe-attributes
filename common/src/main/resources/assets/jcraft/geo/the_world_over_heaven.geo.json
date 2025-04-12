@@ -13,7 +13,7 @@
 			"bones": [
 				{
 					"name": "base",
-					"pivot": [0, 0.25, 0]
+					"pivot": [0, 19.25, 0]
 				},
 				{
 					"name": "TheWorldOverHeaven",
@@ -192,8 +192,8 @@
 					"parent": "upperBody",
 					"pivot": [-5.3, 25.05, 0.2],
 					"cubes": [
-						{"origin": [-8.5, 20.25, -2], "size": [4, 6, 4], "pivot": [-6, 23.25, 0], "rotation": [0, 0, 0], "uv": [48, 55]},
-						{"origin": [-8.5, 20.25, -2], "size": [4, 6, 4], "inflate": 0.3, "pivot": [-6, 23.25, 0], "rotation": [0, 0, 0], "uv": [57, 15]},
+						{"origin": [-8.5, 20.25, -2], "size": [4, 6, 4], "uv": [48, 55]},
+						{"origin": [-8.5, 20.25, -2], "size": [4, 6, 4], "inflate": 0.3, "uv": [57, 15]},
 						{"origin": [-7.7, 19.25, 1.9], "size": [1, 1, 1], "pivot": [-6.2, 20.25, 2.4], "rotation": [0, 0, 45], "uv": [64, 58]},
 						{"origin": [-6.7, 19.25, 1.9], "size": [1, 2, 1], "pivot": [-6.2, 20.25, 2.4], "rotation": [0, 0, 45], "uv": [64, 47]}
 					]
@@ -255,8 +255,8 @@
 					"parent": "upperBody",
 					"pivot": [5.55, 25.05, 0.2],
 					"cubes": [
-						{"origin": [4.75, 20.25, -2], "size": [4, 6, 4], "pivot": [6.25, 23.25, 0], "rotation": [0, 0, 0], "uv": [48, 55], "mirror": true},
-						{"origin": [4.75, 20.25, -2], "size": [4, 6, 4], "inflate": 0.3, "pivot": [6.25, 23.25, 0], "rotation": [0, 0, 0], "uv": [57, 15], "mirror": true},
+						{"origin": [4.75, 20.25, -2], "size": [4, 6, 4], "uv": [48, 55], "mirror": true},
+						{"origin": [4.75, 20.25, -2], "size": [4, 6, 4], "inflate": 0.3, "uv": [57, 15], "mirror": true},
 						{"origin": [6.95, 19.25, 1.9], "size": [1, 1, 1], "pivot": [6.45, 20.25, 2.4], "rotation": [0, 0, -45], "uv": [64, 58], "mirror": true},
 						{"origin": [5.95, 19.25, 1.9], "size": [1, 2, 1], "pivot": [6.45, 20.25, 2.4], "rotation": [0, 0, -45], "uv": [64, 47], "mirror": true}
 					]

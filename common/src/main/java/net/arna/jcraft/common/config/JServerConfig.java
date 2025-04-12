@@ -95,7 +95,7 @@ public class JServerConfig {
         Path path = server.getWorldPath(LevelResource.ROOT).resolve("jcraft.json");
 
         // On dedicated servers, the preferred location is the config directory.
-        if (server.isDedicatedServer()) {
+        if (server.isDedicatedServer() && Files.exists(path)) {
             Path newPath = Path.of("./config/jconfig.json");
             if (!Files.exists(newPath)) {
                 Files.move(path, newPath);
