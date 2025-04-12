@@ -2,6 +2,7 @@
 ### General
 * Players now always take JCraft damage as if wearing unenchanted Netherite
 * Upgraded the underlying system for Data-driven movesets
+* Added a config option to disable Mining Barrages
 * Added `jcraft:ferrous_entities`, for entities that are ferromagnetic
 * Added various statistics
 ### NPCs & Stands
@@ -22,12 +23,13 @@
 ### Items
 * Added the Road Roller, a craftable vehicle
 * Updated visuals for armor items
-### Commands
-
 ### Bug Fixes
 * Fixed small mistakes in moves caused by Data-driven moveset rewrite
+* Fixed Sheer Heart Attack creating ghost blocks when it explodes
 
 * small stars (stun -d efault off)
+
+### Commands
 
 
 
