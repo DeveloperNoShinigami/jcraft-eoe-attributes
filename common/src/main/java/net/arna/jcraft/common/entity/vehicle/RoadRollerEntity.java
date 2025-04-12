@@ -7,6 +7,7 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -23,14 +24,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -76,8 +74,14 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     public void tick() {
         super.tick();
 
+        final boolean isVehicle = isVehicle();
+
+        if (!isVehicle) {
+            left = right = forward = back = space = sneak = false;
+        }
+
         if (level().isClientSide()) {
-            if (isVehicle()) {
+            if (isVehicle) {
                 if ((ridingTicks - 52) % 82 == 0)
                     level().playLocalSound(getX(), getY(), getZ(), JSoundRegistry.ROAD_ROLLER_ACTIVE.get(), SoundSource.NEUTRAL, 1.0f, 1.0f, true);
                 ridingTicks++;
@@ -98,9 +102,9 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
                 );
 
                 final Vec3 localPos = new Vec3(
-                        -forward.x * 2.65 - right.x * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.x * 2.2,
-                        -forward.y * 2.65 - right.y * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.y * 2.2,
-                        -forward.z * 2.65 - right.z * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.z * 2.2
+                        -forward.x * 2.62 - right.x * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.x * 2.25,
+                        -forward.y * 2.62 - right.y * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.y * 2.25,
+                        -forward.z * 2.62 - right.z * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.z * 2.25
                 );
                 //.rotateAxis(yaw * JUtils.DEG_TO_RAD, gravity.getStepX(), gravity.getStepY(), gravity.getStepZ());
 
@@ -132,9 +136,7 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
             final Level level = level();
             final Vec3 pos = position();
 
-            if (level.isClientSide()) {
-
-            } else {
+            if (!level.isClientSide()) {
                 level.explode(this,
                         pos.x,
                         pos.y,
@@ -150,7 +152,11 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
 
     private static final double INLINE_SPEED = 0.1d, TURN_RATE = 5.0d;
     private static final Map<BlockState, BlockState> flattenedBlockStates = Map.ofEntries(
-            Map.entry(Blocks.DIRT.defaultBlockState(), Blocks.FARMLAND.defaultBlockState())
+            Map.entry(Blocks.DIRT.defaultBlockState(), Blocks.FARMLAND.defaultBlockState()),
+            Map.entry(Blocks.GRASS_BLOCK.defaultBlockState(), Blocks.DIRT_PATH.defaultBlockState()),
+            Map.entry(Blocks.COBBLESTONE.defaultBlockState(), Blocks.STONE.defaultBlockState()),
+            Map.entry(Blocks.COBBLED_DEEPSLATE.defaultBlockState(), Blocks.DEEPSLATE.defaultBlockState()),
+            Map.entry(Blocks.SANDSTONE.defaultBlockState(), Blocks.SMOOTH_SANDSTONE.defaultBlockState())
     );
     @Override
     public void movementTick(boolean w, boolean a, boolean s, boolean d, boolean space, boolean sneak) {
@@ -205,9 +211,9 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
         }
 
         if (level instanceof ServerLevel serverLevel) {
-            for (int x = -2; x < 4; x++) {
-                for (int y = 0; y < 3; y++) {
-                    for (int z = -2; z < 4; z++) {
+            for (int x = -1; x < 2; x++) {
+                for (int y = 0; y < 2; y++) {
+                    for (int z = -1; z < 2; z++) {
                         Vec3 offset = new Vec3(x, -0.1 * y, z);
                         offset = RotationUtil.vecPlayerToWorld(offset, gravity);
                         final BlockPos blockPos = blockPosition().offset(
@@ -219,11 +225,11 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
                         // JCraft.createParticle(serverLevel, blockPos.getX(), blockPos.getY(), blockPos.getZ(), y == 0 ? JParticleType.BACK_STAB : JParticleType.GO);
 
                         final BlockState state = serverLevel.getBlockState(blockPos);
+                        if (y == 0) JCraft.LOGGER.info(state.getBlock().getExplosionResistance());
                         if (flattenedBlockStates.containsKey(state))
                             serverLevel.setBlock(blockPos, flattenedBlockStates.get(state), Block.UPDATE_ALL);
-                        else if (state.canBeReplaced()) {
-                            serverLevel.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                            serverLevel.levelEvent(null, 2001, blockPos, Block.getId(state)); // Particles
+                        else if (state.canBeReplaced() || (y == 0 && state.getBlock().getExplosionResistance() <= 3.0f)) {
+                            serverLevel.destroyBlock(blockPos, true);
                         }
                     }
                 }
