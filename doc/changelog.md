@@ -1,33 +1,10 @@
 # Changelog
 ### General
-* Players now always take JCraft damage as if wearing unenchanted Netherite
-* Upgraded the underlying system for Data-driven movesets
-* Added a config option to disable Mining Barrages
-* Added `jcraft:ferrous_entities`, for entities that are ferromagnetic
-* Added various statistics
-### NPCs & Stands
-* Star Platinum
-  * Re-tuned Inhale's pulling power
-* The World
-  * Updated texture and model
-* Metallica
-  * Create Magnetic Field no longer fails when trying to place out of range
-  * Invisibility drains iron slower, heavily nerfs Harvest while active, and surrounds the user in a Magnetic Field
-  * Darkened all skin auras
-* Horus
-  * Has Frost Walker ability now
-* The World: Over Heaven
-  * Updated texture and model
-* Gold Experience: Requiem
-  * Updated texture and model
-### Items
-* Added the Road Roller, a craftable vehicle
-* Updated visuals for armor items
+* Stand User Ownable entities (like pets) no longer aggro onto their owner upon being hit
+* Road Roller is now immune to damage-over-time potion effects
 ### Bug Fixes
-* Fixed small mistakes in moves caused by Data-driven moveset rewrite
-* Fixed Sheer Heart Attack creating ghost blocks when it explodes
-
-* small stars (stun -d efault off)
+* Fixed broken Barrage animation for GE:R
+* Fixed Mining Barrages originating at the Stand User when in Remote mode
 
 ### Commands
 

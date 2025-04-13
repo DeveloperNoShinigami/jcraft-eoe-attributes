@@ -8,9 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.CombatEntry;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
@@ -79,6 +77,7 @@ public class JEnemies {
                                         .findFirst()
                                         .ifPresentOrElse(
                                                 selectedTarget -> {
+                                                    if (enemy instanceof OwnableEntity ownable && ownable.getOwner() == selectedTarget) return;
                                                     enemy.setTarget(selectedTarget);
                                                     standUserCombatAI(enemy, selectedTarget, stand);
                                                 },

@@ -7,7 +7,6 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -30,7 +29,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -49,24 +50,6 @@ import java.util.Set;
 public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     public RoadRollerEntity(final Level level) {
         super(JEntityTypeRegistry.ROAD_ROLLER.get(), level);
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return JSoundRegistry.ROAD_ROLLER_HIT.get();
-    }
-
-    @Override
-    protected void addPassenger(Entity passenger) {
-        super.addPassenger(passenger);
-        if (passenger == getFirstPassenger()) playSound(JSoundRegistry.ROAD_ROLLER_IGNITION.get());
-    }
-
-    @Override
-    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
-        if (effectInstance.getEffect() == JStatusRegistry.KNOCKDOWN.get()) return false;
-        return super.addEffect(effectInstance, entity);
     }
 
     private int ridingTicks = 0;
@@ -246,6 +229,30 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
         }
 
         return InteractionResult.PASS;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return JSoundRegistry.ROAD_ROLLER_HIT.get();
+    }
+
+    @Override
+    protected void addPassenger(Entity passenger) {
+        super.addPassenger(passenger);
+        if (passenger == getFirstPassenger()) playSound(JSoundRegistry.ROAD_ROLLER_IGNITION.get());
+    }
+
+    @Override
+    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
+        final MobEffect effect = effectInstance.getEffect();
+        if (effect == JStatusRegistry.KNOCKDOWN.get() ||
+            effect == JStatusRegistry.BLEEDING.get() ||
+            effect == MobEffects.POISON ||
+            effect == MobEffects.WITHER
+        ) return false;
+
+        return super.addEffect(effectInstance, entity);
     }
 
     @Override
