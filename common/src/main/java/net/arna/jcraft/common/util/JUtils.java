@@ -731,7 +731,7 @@ public final class JUtils {
             return true;
         }
 
-        final String stringName = entity.getName().toString();
+        final String stringName = entity.getName().toString().toLowerCase(Locale.ROOT);
         return stringName.contains("iron") || stringName.contains("ferro");
     }
 }

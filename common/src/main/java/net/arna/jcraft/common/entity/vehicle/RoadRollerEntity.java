@@ -14,6 +14,7 @@ import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
@@ -34,7 +35,11 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -48,8 +53,19 @@ import java.util.Optional;
 import java.util.Set;
 
 public class RoadRollerEntity extends AbstractGroundVehicleEntity {
+    private static boolean recipeChecked = false;
+    private static Recipe<?> recipe = null; // lazy-loaded (allows dynamic loading in case someone is trying to replace our recipe)
     public RoadRollerEntity(final Level level) {
         super(JEntityTypeRegistry.ROAD_ROLLER.get(), level);
+        if (!recipeChecked) {
+            var maybe = level.getRecipeManager()
+                    .getRecipes()
+                    .stream()
+                    .filter(r -> r.getResultItem(level.registryAccess()).is(JItemRegistry.ROAD_ROLLER.get()))
+                    .findFirst();
+            maybe.ifPresent(value -> recipe = value);
+            recipeChecked = true;
+        }
     }
 
     private int ridingTicks = 0;
@@ -123,6 +139,16 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
                                 Level.ExplosionInteraction.MOB :
                                 Level.ExplosionInteraction.NONE
                 );
+
+                for (Ingredient ingredient : recipe.getIngredients()) {
+                    final ItemStack[] items = ingredient.getItems();
+                    for (ItemStack stack : items) {
+                        final ItemEntity drop = new ItemEntity(level, pos.x, pos.y, pos.z, stack);
+                        drop.setPickUpDelay(40);
+                        drop.setDeltaMovement(JUtils.randUnitVec(random));
+                        level.addFreshEntity(drop);
+                    }
+                }
             }
         }
     }
@@ -202,10 +228,13 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
                         // JCraft.createParticle(serverLevel, blockPos.getX(), blockPos.getY(), blockPos.getZ(), y == 0 ? JParticleType.BACK_STAB : JParticleType.GO);
 
                         final BlockState state = serverLevel.getBlockState(blockPos);
+                        final Block block = state.getBlock();
                         if (flattenedBlockStates.containsKey(state))
                             serverLevel.setBlock(blockPos, flattenedBlockStates.get(state), Block.UPDATE_ALL);
                         // Break replaceable blocks or ones under a certain resistance on the same height level as the Road Roller
-                        else if (state.canBeReplaced() || (y == 0 && state.getBlock().getExplosionResistance() <= 3.0f)) {
+                        else if (block != Blocks.DIRT_PATH &&
+                                (state.canBeReplaced() || (y == 0 && block.getExplosionResistance() <= 3.0f))
+                        ) {
                             serverLevel.destroyBlock(blockPos, true);
                         }
                     }
