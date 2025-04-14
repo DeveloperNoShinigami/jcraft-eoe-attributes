@@ -321,7 +321,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     private CommonMiscComponent miscComponent;
 
     public MetallicaEntity(Level worldIn) {
-        super(StandType.METALLICA, worldIn, JSoundRegistry.STAND_SUMMON);
+        super(StandType.METALLICA, worldIn, JSoundRegistry.METALLICA_SUMMON);
 
         freespace = """
                 Contains up to 80 units of iron.
