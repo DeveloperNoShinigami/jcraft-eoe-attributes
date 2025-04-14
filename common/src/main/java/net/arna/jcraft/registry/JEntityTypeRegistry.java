@@ -744,7 +744,9 @@ public interface JEntityTypeRegistry {
 
         EntityAttributeRegistry.register(ROAD_ROLLER, () -> RoadRollerEntity.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 40)
-                .add(Attributes.ARMOR, 2));
+                .add(Attributes.ARMOR, 2)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.9)
+        );
     }
 
     static void init() {

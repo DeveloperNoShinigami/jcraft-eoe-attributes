@@ -23,16 +23,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -51,24 +50,6 @@ import java.util.Set;
 public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     public RoadRollerEntity(final Level level) {
         super(JEntityTypeRegistry.ROAD_ROLLER.get(), level);
-    }
-
-    @Nullable
-    @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return JSoundRegistry.ROAD_ROLLER_HIT.get();
-    }
-
-    @Override
-    protected void addPassenger(Entity passenger) {
-        super.addPassenger(passenger);
-        if (passenger == getFirstPassenger()) playSound(JSoundRegistry.ROAD_ROLLER_IGNITION.get());
-    }
-
-    @Override
-    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
-        if (effectInstance.getEffect() == JStatusRegistry.KNOCKDOWN.get()) return false;
-        return super.addEffect(effectInstance, entity);
     }
 
     private int ridingTicks = 0;
@@ -98,9 +79,9 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
                 );
 
                 final Vec3 localPos = new Vec3(
-                        -forward.x * 2.65 - right.x * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.x * 2.2,
-                        -forward.y * 2.65 - right.y * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.y * 2.2,
-                        -forward.z * 2.65 - right.z * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.z * 2.2
+                        -forward.x * 2.62 - right.x * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.x * 2.25,
+                        -forward.y * 2.62 - right.y * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.y * 2.25,
+                        -forward.z * 2.62 - right.z * (0.65 + random.nextDouble() / 5.0 - 0.1) - down.z * 2.25
                 );
                 //.rotateAxis(yaw * JUtils.DEG_TO_RAD, gravity.getStepX(), gravity.getStepY(), gravity.getStepZ());
 
@@ -132,9 +113,7 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
             final Level level = level();
             final Vec3 pos = position();
 
-            if (level.isClientSide()) {
-
-            } else {
+            if (!level.isClientSide()) {
                 level.explode(this,
                         pos.x,
                         pos.y,
@@ -150,7 +129,11 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
 
     private static final double INLINE_SPEED = 0.1d, TURN_RATE = 5.0d;
     private static final Map<BlockState, BlockState> flattenedBlockStates = Map.ofEntries(
-            Map.entry(Blocks.DIRT.defaultBlockState(), Blocks.FARMLAND.defaultBlockState())
+            Map.entry(Blocks.DIRT.defaultBlockState(), Blocks.FARMLAND.defaultBlockState()),
+            Map.entry(Blocks.GRASS_BLOCK.defaultBlockState(), Blocks.DIRT_PATH.defaultBlockState()),
+            Map.entry(Blocks.COBBLESTONE.defaultBlockState(), Blocks.STONE.defaultBlockState()),
+            Map.entry(Blocks.COBBLED_DEEPSLATE.defaultBlockState(), Blocks.DEEPSLATE.defaultBlockState()),
+            Map.entry(Blocks.SANDSTONE.defaultBlockState(), Blocks.SMOOTH_SANDSTONE.defaultBlockState())
     );
     @Override
     public void movementTick(boolean w, boolean a, boolean s, boolean d, boolean space, boolean sneak) {
@@ -205,9 +188,9 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
         }
 
         if (level instanceof ServerLevel serverLevel) {
-            for (int x = -2; x < 4; x++) {
-                for (int y = 0; y < 3; y++) {
-                    for (int z = -2; z < 4; z++) {
+            for (int x = -1; x < 2; x++) {
+                for (int y = 0; y < 2; y++) {
+                    for (int z = -1; z < 2; z++) {
                         Vec3 offset = new Vec3(x, -0.1 * y, z);
                         offset = RotationUtil.vecPlayerToWorld(offset, gravity);
                         final BlockPos blockPos = blockPosition().offset(
@@ -221,9 +204,9 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
                         final BlockState state = serverLevel.getBlockState(blockPos);
                         if (flattenedBlockStates.containsKey(state))
                             serverLevel.setBlock(blockPos, flattenedBlockStates.get(state), Block.UPDATE_ALL);
-                        else if (state.canBeReplaced()) {
-                            serverLevel.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                            serverLevel.levelEvent(null, 2001, blockPos, Block.getId(state)); // Particles
+                        // Break replaceable blocks or ones under a certain resistance on the same height level as the Road Roller
+                        else if (state.canBeReplaced() || (y == 0 && state.getBlock().getExplosionResistance() <= 3.0f)) {
+                            serverLevel.destroyBlock(blockPos, true);
                         }
                     }
                 }
@@ -246,6 +229,30 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
         }
 
         return InteractionResult.PASS;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return JSoundRegistry.ROAD_ROLLER_HIT.get();
+    }
+
+    @Override
+    protected void addPassenger(Entity passenger) {
+        super.addPassenger(passenger);
+        if (passenger == getFirstPassenger()) playSound(JSoundRegistry.ROAD_ROLLER_IGNITION.get());
+    }
+
+    @Override
+    public boolean addEffect(MobEffectInstance effectInstance, @Nullable Entity entity) {
+        final MobEffect effect = effectInstance.getEffect();
+        if (effect == JStatusRegistry.KNOCKDOWN.get() ||
+            effect == JStatusRegistry.BLEEDING.get() ||
+            effect == MobEffects.POISON ||
+            effect == MobEffects.WITHER
+        ) return false;
+
+        return super.addEffect(effectInstance, entity);
     }
 
     @Override

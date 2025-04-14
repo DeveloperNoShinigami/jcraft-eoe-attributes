@@ -5498,6 +5498,11 @@
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
+				},
+				"head": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
 				}
 			}
 		},
@@ -5756,6 +5761,11 @@
 					}
 				},
 				"TheWorldOverHeaven": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"head": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
@@ -6021,6 +6031,11 @@
 					}
 				},
 				"TheWorldOverHeaven": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"head": {
 					"rotation": {
 						"vector": [0, 0, 0]
 					}
