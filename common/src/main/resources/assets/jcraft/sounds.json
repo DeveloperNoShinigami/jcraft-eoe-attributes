@@ -1025,6 +1025,11 @@
       "jcraft:stands/the_hand/rage"
     ]
   },
+  "msummon": {
+    "sounds": [
+      "jcraft:stands/metallica/summon"
+    ]
+  },
   "mbarrage": {
     "sounds": [
       "jcraft:stands/metallica/barrage"

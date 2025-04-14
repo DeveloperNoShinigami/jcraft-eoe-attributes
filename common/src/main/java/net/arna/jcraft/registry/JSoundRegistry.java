@@ -269,6 +269,7 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> THE_HAND_RAGE = register("thrage");
 
     // Metallica
+    RegistrySupplier<SoundEvent> METALLICA_SUMMON = register("msummon");
     RegistrySupplier<SoundEvent> METALLICA_BARRAGE = register("mbarrage");
     RegistrySupplier<SoundEvent> METALLICA_SCALPEL_SUMMON = register("mscalpelsummon");
     RegistrySupplier<SoundEvent> METALLICA_INVISIBILITY = register("minvisibility");
