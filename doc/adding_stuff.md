@@ -96,6 +96,12 @@
 6. Run datagen.
 7. Test your addition.
 
+## Adding a stat
+1. Add the stat to `JStatRegistry`.
+2. Use `Player#awardStat(…)` on server-side wherever appropriate.
+3. Add an English translation of the stat to `en_us.json`.
+4. Test your addition.
+
 ## Persisting something in the world
 1. Add `CommonMyComponent` (replacing `My` with whatever is appropriate of course) interface to `net.arna.jcraft.common.component.world` and add the method signatures you need.
 2. Add `CommonMyComponentImpl` class to `net.arna.jcraft.common.component.impl.world` and implement the methods.

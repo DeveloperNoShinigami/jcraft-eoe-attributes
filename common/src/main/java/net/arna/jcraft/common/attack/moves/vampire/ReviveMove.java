@@ -9,6 +9,7 @@ import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.spec.VampireSpec;
 import net.arna.jcraft.common.tickable.Revivables;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.registry.JStatRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,10 +32,14 @@ public final class ReviveMove extends AbstractMove<ReviveMove, VampireSpec> {
 
     @Override
     public @NonNull Set<LivingEntity> perform(final VampireSpec attacker, final LivingEntity user, final MoveContext ctx) {
-        MinecraftServer server = user.getServer();
-        assert server != null;
-        ServerLevel serverWorld = server.getLevel(user.level().dimension());
-        assert serverWorld != null;
+        final MinecraftServer server = user.getServer();
+        if (server == null) {
+            return Set.of();
+        }
+        final ServerLevel serverWorld = server.getLevel(user.level().dimension());
+        if (serverWorld == null) {
+            return Set.of();
+        }
 
         for (Revivables.ReviveData revivable : Revivables.getAround(user.position(), getMoveDistance())) {
             EntityType<?> entityType = revivable.getType();
@@ -49,17 +54,19 @@ public final class ReviveMove extends AbstractMove<ReviveMove, VampireSpec> {
             }
 
             Entity entity = entityType.create(serverWorld);
-            if (entity instanceof LivingEntity living) {
+            if (entity instanceof final LivingEntity living) {
+                if (isBoss(living)) {
+                    continue;
+                }
                 if (living.isInvertedHealAndHarm()) {
                     entity.setPos(revivable.getPos());
                     entity.tickCount = 1;
-                    if (user instanceof ServerPlayer serverPlayer) {
+                    if (user instanceof final ServerPlayer serverPlayer) {
                         JComponentPlatformUtils.getMiscData(living).setSlavedTo(serverPlayer.getUUID());
+                        serverPlayer.awardStat(JStatRegistry.VAMPIRE_REVIVES.get());
                     }
-                    if (!isBoss(living)) {
-                        serverWorld.addFreshEntity(entity);
-                        Revivables.removeRevivable(revivable);
-                    }
+                    serverWorld.addFreshEntity(entity);
+                    Revivables.removeRevivable(revivable);
                 }
             }
         }

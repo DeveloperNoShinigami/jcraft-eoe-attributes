@@ -40,6 +40,7 @@ import net.arna.jcraft.mixin.LivingEntityInvoker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStatRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -739,7 +740,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * @param damageSource source of damage
      * @param ent          entity to harm
      */
-    public static void damage(float damage, DamageSource damageSource, LivingEntity ent) {
+    public static void damage(final @Nullable Entity attacker, float damage, final DamageSource damageSource, final LivingEntity ent) {
         if (!JUtils.canDamage(damageSource, ent)) {
             return;
         }
@@ -748,8 +749,22 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         //JCraft.LOGGER.info("Damaging entity: " + ent + " with damage: " + damage + " and scaling: " + scaling);
         damage *= scaling;
 
+        float armor = ent.getArmorValue();
+        float toughness = (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+
+        // raw damage goes into statistics
+        if (JUtils.getUserIfStand(attacker) instanceof final Player player) {
+            player.awardStat(JStatRegistry.RAW_DAMAGE.get(), (int)damage);
+        }
+
+        // Players are hit as if they have unenchanted netherite
+        if (ent instanceof Player) {
+            armor = 20.0f;
+            toughness = 12.0f;
+        }
+
         // All stands ignore 10% of armor & armor toughness
-        damage = JUtils.getDamageThroughArmor(damage, (float) ent.getArmorValue() * 0.9f, (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 0.9f);
+        damage = JUtils.getDamageThroughArmor(damage, armor * 0.9f, toughness * 0.9f);
         damage = ((LivingEntityInvoker) ent).invokeModifyAppliedDamage(damageSource, damage);
 
         // Apply absorption
@@ -962,10 +977,13 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return;
         }
 
+        final boolean client = level().isClientSide;
         if (tickCount == 1) {
             playSummonSound();
+            if (!client && getUser() instanceof Player player) {
+                player.awardStat(JStatRegistry.STAND_SUMMONED.get());
+            }
         }
-        final boolean client = level().isClientSide;
         prevAlpha = getAlphaOverride();
 
         int moveStun = getMoveStun();
@@ -1319,8 +1337,13 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         boolean hit = true;
         boolean tsHit = JUtils.isAffectedByTimeStop(ent);
 
-        StandEntity<?, ?> stand = JUtils.getStand(ent);
+        final StandEntity<?, ?> stand = JUtils.getStand(ent);
         if (stand != null) {
+            // If a stand wants to block and can, but didn't get the chance to due to execution order, prompt blocking here.
+            if (stand.wantToBlock && stand.canBlock()) {
+                stand.tryBlock();
+            }
+
             AbstractMove<?, ?> standAttack = stand.getCurrentMove();
             if (standAttack != null) {
                 // Counter check
@@ -1336,11 +1359,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 } else {
                     JComponentPlatformUtils.getMiscData(ent).displayArmoredHit();
                 }
-            }
-
-            // If a stand wants to block and can, but didn't get the chance to due to execution order, prompt blocking here.
-            if (stand.wantToBlock && stand.canBlock()) {
-                stand.tryBlock();
             }
 
             if (stand.blocking && !stand.isRemote()) {
@@ -1436,11 +1454,15 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                     ));
         }
 
-        damage(damage, source, ent);
+        damage(attacker, damage, source, ent);
         if ((ent.isDeadOrDying() || ent.getHealth() <= 0f) && attacker instanceof final LivingEntity livingAttacker) {
             final StandEntity<?, ?> standAttacker = JUtils.getStand(livingAttacker);
             if (standAttacker != null) {
                 standAttacker.freshKill(ent);
+            }
+            if (stand != null && stand.hasUser() && // if killed entity was a using a stand
+                    (standAttacker != null ? standAttacker.getUser() : livingAttacker) instanceof final Player player && !player.level().isClientSide()) {
+                player.awardStat(JStatRegistry.STAND_USERS_KILLED.get());
             }
         }
 
@@ -1472,7 +1494,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     public void stopRiding() {
         if (tickCount == 0 && getRemovalReason() == null) {
             // This may be necessary because the packet that sets passengers arrives early on Forge
-            JCraft.LOGGER.warn("Prevented stopRiding() call for recently created {}", this);
+            // JCraft.LOGGER.warn("Prevented stopRiding() call for recently created {}", this);
             return;
         }
         if (getVehicle() == null) {

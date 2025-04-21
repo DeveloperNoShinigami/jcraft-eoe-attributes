@@ -88,7 +88,7 @@ public class InternalAttack extends AbstractMove<InternalAttack, MetallicaEntity
                     );
                 }
 
-                StandEntity.damage(3.5f, serverWorld.damageSources().sting(user), target);
+                StandEntity.damage(attacker, 3.5f, serverWorld.damageSources().sting(user), target);
                 target.addEffect(new MobEffectInstance(JStatusRegistry.HYPOXIA.get(), 60, 0, false, true));
                 JComponentPlatformUtils.getCooldowns(user).setCooldown(getMoveClass().getDefaultCooldownType(), getCooldown());
 

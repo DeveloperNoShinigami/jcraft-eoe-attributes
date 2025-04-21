@@ -286,7 +286,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
 
             if (time < 1) {
                 final LivingEntity entity = inversion.getEntity();
-                damage(inversion.getDamage(), level().damageSources().mobAttack(user), entity);
+                damage(this, inversion.getDamage(), level().damageSources().mobAttack(user), entity);
                 inversions.remove(i);
 
                 if (inversion.doSlow) {

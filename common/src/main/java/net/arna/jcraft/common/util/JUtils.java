@@ -572,6 +572,8 @@ public final class JUtils {
             Map.entry(EntityType.IRON_GOLEM, 0.0f),
             Map.entry(EntityType.SNOW_GOLEM, 0.0f),
 
+            Map.entry(JEntityTypeRegistry.ROAD_ROLLER.get(), 0.0f),
+
             Map.entry(JEntityTypeRegistry.SHEER_HEART_ATTACK.get(), 0.0f)
     );
 
@@ -729,7 +731,7 @@ public final class JUtils {
             return true;
         }
 
-        final String stringName = entity.getName().toString();
+        final String stringName = entity.getName().toString().toLowerCase(Locale.ROOT);
         return stringName.contains("iron") || stringName.contains("ferro");
     }
 }

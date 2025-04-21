@@ -269,6 +269,7 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> THE_HAND_RAGE = register("thrage");
 
     // Metallica
+    RegistrySupplier<SoundEvent> METALLICA_SUMMON = register("msummon");
     RegistrySupplier<SoundEvent> METALLICA_BARRAGE = register("mbarrage");
     RegistrySupplier<SoundEvent> METALLICA_SCALPEL_SUMMON = register("mscalpelsummon");
     RegistrySupplier<SoundEvent> METALLICA_INVISIBILITY = register("minvisibility");
@@ -297,6 +298,12 @@ public interface JSoundRegistry {
     //// OTHER
     RegistrySupplier<SoundEvent> BULLET_RICOCHET = register("bulletricochet");
     RegistrySupplier<SoundEvent> BULLET_PENETRATE = register("bulletpenetrate");
+
+    // ROAD ROLLER
+    RegistrySupplier<SoundEvent> ROAD_ROLLER_HIT = register("rrhit");
+    RegistrySupplier<SoundEvent> ROAD_ROLLER_SLAM = register("rrslam");
+    RegistrySupplier<SoundEvent> ROAD_ROLLER_IGNITION = register("rrignition");
+    RegistrySupplier<SoundEvent> ROAD_ROLLER_ACTIVE = register("rractive");
 
     static void init() {
         // intentionally left empty

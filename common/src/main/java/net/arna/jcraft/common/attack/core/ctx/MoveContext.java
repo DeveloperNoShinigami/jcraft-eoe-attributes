@@ -60,6 +60,10 @@ public class MoveContext {
         entry.setValue(entry.getIntValue() + increment);
     }
 
+    public boolean hasEntry(final MoveVariable<?> variable) {
+        return entries.get(variable) != null;
+    }
+
     @SuppressWarnings("unchecked")
     @NonNull
     private <T> Entry<T> getEntry(final MoveVariable<T> variable) {

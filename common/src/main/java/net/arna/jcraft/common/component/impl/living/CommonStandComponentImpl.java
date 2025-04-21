@@ -6,13 +6,11 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class CommonStandComponentImpl implements CommonStandComponent {
@@ -21,6 +19,8 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     private StandType type;
     @Getter
     private int skin;
+    @Getter
+    private boolean tagged;
 
     public CommonStandComponentImpl(final Entity entity) {
         this.entity = entity;
@@ -77,6 +77,12 @@ public class CommonStandComponentImpl implements CommonStandComponent {
         return stand;
     }
 
+    @Override
+    public void setTagged(boolean tagged) {
+        this.tagged = tagged;
+        sync(entity);
+    }
+
     public void sync(Entity entity) {
     }
 
@@ -84,11 +90,13 @@ public class CommonStandComponentImpl implements CommonStandComponent {
         int rawType = tag.getInt("Type");
         type = rawType == 0 ? null : StandType.fromIdOrOrdinal(rawType);
         skin = tag.getInt("Skin");
+        tagged = tag.getBoolean("Tagged");
     }
 
     public void writeToNbt(final @NonNull CompoundTag tag) {
         tag.putInt("Type", type == null ? 0 : type.ordinal());
         tag.putInt("Skin", skin);
+        tag.putBoolean("Tagged", tagged);
     }
 
     /**

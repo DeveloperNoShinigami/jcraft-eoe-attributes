@@ -1,22 +1,12 @@
 # Changelog
 ### General
-* Upgraded the underlying system for Data-driven movesets
-* Added `jcraft:ferrous_entities`, for entities that are ferromagnetic
-### NPCs & Stands
-* Metallica
-  * Create Magnetic Field no longer fails when trying to place out of range
-  * Invisibility drains iron slower, but heavily nerfs Harvest while active
-  * Darkened all skin auras
-### Commands
-
+* Stand User Ownable entities (like pets) no longer aggro onto their owner upon being hit
+* Road Roller is now immune to damage-over-time potion effects
 ### Bug Fixes
-* ?
-* not marginally slower invisibility iron drain -> nerfs harvest, too
-* no MISS = fail for the 2 remote moves
-* small not-owned pole on the user while invisible
-* sounds
+* Fixed broken Barrage animation for GE:R
+* Fixed Mining Barrages originating at the Stand User when in Remote mode
 
-* small stars (stun -d efault off)
+### Commands
 
 
 
@@ -49,7 +39,7 @@ this is probably due to:
 * MR barrage fire :)
 * Fix AI stand users having clientside head rotation that completely throws off players
 * Timestop should stop stand anims
-* CRAZY DIAMOND, THE HAND, Hermit Purple, Yellow Temperance
+* CRAZY DIAMOND, Hermit Purple, Yellow Temperance
 * Stand NBT serialization
 * Internationalization
 * Actually use effect keyframes in animations

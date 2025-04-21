@@ -15,6 +15,7 @@ import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
@@ -97,7 +98,8 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
             final ServerLevel serverWorld = (ServerLevel) user.level();
             final Vec3 lookDirection = user.getLookAngle();
             final Vec3 localUp = GravityChangerAPI.getEyeOffset(user);
-            final Vec3 baseLookPos = user.position().add(lookDirection);
+            final Entity miner = attacker.isRemote() ? attacker.getBaseEntity() : user;
+            final Vec3 baseLookPos = miner.position().add(lookDirection);
 
             /* PATTERN:
             [][]

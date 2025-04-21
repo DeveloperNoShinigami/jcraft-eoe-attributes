@@ -123,6 +123,7 @@ public interface JCreativeMenuTabRegistry {
                     // stand drops
                     entries.accept(JItemRegistry.FV_REVOLVER.get());
                     entries.accept(JItemRegistry.BULLET.get());
+                    entries.accept(JItemRegistry.SCALPEL.get());
                     entries.accept(JItemRegistry.KQ_COIN.get());
                     entries.accept(JItemRegistry.FOOLISH_SAND_BLOCK.get());
                     // misc
@@ -155,6 +156,8 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.DIO_CAPE.get());
                     entries.accept(JItemRegistry.DIO_PANTS.get());
                     entries.accept(JItemRegistry.DIO_BOOTS.get());
+                    // vehicles
+                    entries.accept(JItemRegistry.ROAD_ROLLER.get());
                     // blood bottles
                     for (int i = 16; i >= 0; i--) {
                         final ItemStack stack = new ItemStack(JItemRegistry.BLOOD_BOTTLE.get());

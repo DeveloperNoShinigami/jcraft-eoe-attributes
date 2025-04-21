@@ -16,10 +16,15 @@ import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -254,6 +259,10 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     public void tick() {
         super.tick();
         final int moveStun = getMoveStun();
+        final LivingEntity user = JUtils.getUserIfStand(this);
+        if (user != null) {
+            FrostWalkerEnchantment.onEntityMoved(user, level(), this.getOnPos().above(), 2);
+        }
         if (moveStun > IcicleFireAttack.MAX_ICICLE_CHARGE_TIME + 1 || !level().isClientSide()) return;
 
         if (getState() == State.CHARGE_ICICLE) {

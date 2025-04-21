@@ -97,8 +97,10 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
     }
 
     protected void detonate() {
-        setMove(DETONATE, getDetonateState());
-        playSound(JSoundRegistry.KQ_DETONATE.get(), 1, 1);
+        if (canAttack()) {
+            setMove(DETONATE, getDetonateState());
+            playSound(JSoundRegistry.KQ_DETONATE.get(), 1, 1);
+        }
     }
 
     // Moveset

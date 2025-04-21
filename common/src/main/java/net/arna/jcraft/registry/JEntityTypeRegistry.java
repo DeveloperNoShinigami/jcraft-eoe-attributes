@@ -46,6 +46,7 @@ import net.arna.jcraft.common.entity.stand.TheSunEntity;
 import net.arna.jcraft.common.entity.stand.TheWorldEntity;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
+import net.arna.jcraft.common.entity.vehicle.RoadRollerEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -311,6 +312,13 @@ public interface JEntityTypeRegistry {
                             (EntityType<PlayerCloneEntity> entityType, Level world) -> new PlayerCloneEntity(world), MobCategory.CREATURE)
                     .sized(0.6f, 1.8f)
                     .build("playerclone")
+    );
+
+    RegistrySupplier<EntityType<RoadRollerEntity>> ROAD_ROLLER = ENTITY_TYPE_REGISTRY.register(JCraft.id("roadroller"),
+            () -> EntityType.Builder.of(
+                            (EntityType<RoadRollerEntity> entityType, Level world) -> new RoadRollerEntity(world), MobCategory.MISC)
+                    .sized(3.5f, 2.0f)
+                    .build("roadroller")
     );
 
     // Take note of the extra <KnifeProjectile> and tracked values
@@ -733,6 +741,12 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(THE_HAND, TheHandEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(STAND_METEOR, StandMeteorEntity::createMobAttributes);
+
+        EntityAttributeRegistry.register(ROAD_ROLLER, () -> RoadRollerEntity.createLivingAttributes()
+                .add(Attributes.MAX_HEALTH, 40)
+                .add(Attributes.ARMOR, 2)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.9)
+        );
     }
 
     static void init() {

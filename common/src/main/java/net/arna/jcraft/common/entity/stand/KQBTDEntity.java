@@ -12,7 +12,6 @@ import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.arna.jcraft.common.attack.core.data.StateContainer;
 import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.*;
-import net.arna.jcraft.common.attack.moves.shared.BarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.GrabAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.CooldownType;
@@ -49,14 +48,6 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
             .withInfo(
                     Component.literal("Elbow"),
                     Component.literal("fast, short-range knockback")
-            );
-    public static final BarrageAttack<KQBTDEntity> BARRAGE = new BarrageAttack<KQBTDEntity>(240, 0,
-            40, 0.75f, 1f, 20, 1.5f, 0.1f, 0, 3)
-            .withSound(JSoundRegistry.KQ_BARRAGE)
-            .withImpactSound(JSoundRegistry.IMPACT_4)
-            .withInfo(
-                    Component.literal("Barrage"),
-                    Component.literal("fast reliable combo starter/extender, medium stun")
             );
     public static final BubbleCounterAttack BUBBLE_COUNTER = new BubbleCounterAttack(480, 5, 20, 1f)
             .withInfo(

@@ -65,6 +65,7 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.SINNERS_SOUL.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.STAND_ARROW.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(JItemRegistry.STAND_ARROWHEAD.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.ROAD_ROLLER.get(), ModelTemplates.FLAT_ITEM);
 
         generateStandDiscModel(generator);
 
