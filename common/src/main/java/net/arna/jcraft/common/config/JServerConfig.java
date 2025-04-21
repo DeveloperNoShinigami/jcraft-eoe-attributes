@@ -78,7 +78,7 @@ public class JServerConfig {
 
     // Misc options
     private static final String GAMEPLAY = "gameplay";
-    // public static final BooleanOption EXCLUSIVE_STANDS = new BooleanOption("exclusiveStands", GAMEPLAY, false);
+    public static final BooleanOption EXCLUSIVE_STANDS = new BooleanOption("exclusiveStands", GAMEPLAY, false);
 
     // TODO list options
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
