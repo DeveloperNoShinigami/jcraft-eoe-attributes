@@ -23,9 +23,11 @@ public class ConfigUpdatePacket {
         ServerPlayer player = (ServerPlayer) context.getPlayer();
         MinecraftServer server = context.getPlayer().getServer();
 
+        if (server == null) return; // should not be possible.
+
         // Only operators can send this packet
-        if (server.getProfilePermissions(player.getGameProfile()) < 2 && !server.isSingleplayer()) {
-            JCraft.LOGGER.warn("Player {} send a config update packet while not having permission to do so.",
+        if (!player.hasPermissions(2) && !server.isSingleplayer()) {
+            JCraft.LOGGER.warn("Player {} sent a config update packet while not having permission to do so.",
                     player.getGameProfile().getName());
             player.connection.disconnect(Component.literal("You do not have permission to update the JCraft server config."));
             return;
