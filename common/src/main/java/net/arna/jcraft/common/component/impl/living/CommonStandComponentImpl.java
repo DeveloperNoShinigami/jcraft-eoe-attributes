@@ -29,7 +29,9 @@ public class CommonStandComponentImpl implements CommonStandComponent {
 
     @Override
     public void setTypeAndSkin(final @Nullable StandType type, final int skin) {
-        if (entity instanceof Player && !JCraft.getExclusiveStandsData().switchStand(this.type, type)) {
+        // Exclusive stand check
+        if (!entity.level().isClientSide && entity instanceof Player &&
+                !JCraft.getExclusiveStandsData().switchStand(this.type, type)) {
             return;
         }
         this.type = type;
