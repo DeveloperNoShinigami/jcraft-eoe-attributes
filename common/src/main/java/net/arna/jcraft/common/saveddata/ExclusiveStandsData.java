@@ -2,6 +2,8 @@ package net.arna.jcraft.common.saveddata;
 
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.mixin.LevelStorageAccessAccessor;
+import net.arna.jcraft.mixin.MinecraftServerAccessor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.server.MinecraftServer;
@@ -60,7 +62,8 @@ public class ExclusiveStandsData extends SavedData {
     }
 
     public static File getDefaultFileLocation(final MinecraftServer server) {
-        return server.storageSource.levelDirectory.path().resolve(ExclusiveStandsData.DEFAULT_FILE_LOCATION).toFile();
+        return ((LevelStorageAccessAccessor) ((MinecraftServerAccessor) server).getStorageSource()).getLevelDirectory()
+                .path().resolve(ExclusiveStandsData.DEFAULT_FILE_LOCATION).toFile();
     }
 
     @NotNull
