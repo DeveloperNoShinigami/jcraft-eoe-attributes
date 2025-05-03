@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.util;
 
 import com.google.common.base.Suppliers;
+import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonParseException;
 import com.mojang.datafixers.Products;
@@ -261,6 +262,25 @@ public class JCodecUtils {
 
     public static <A> Codec<A> recursive(final String name, final Function<Codec<A>, Codec<A>> function) {
         return new RecursiveCodec<>(name, function);
+    }
+
+    public static <K, V> Codec<V> codecFromMap(final Codec<K> keyCodec, final BiMap<K, V> map) {
+        return keyCodec.flatXmap(
+            key -> {
+                if (map.containsKey(key)) {
+                    return DataResult.success(map.get(key));
+                } else {
+                    return DataResult.error(() -> "Unknown key: " + key);
+                }
+            },
+            value -> {
+                if (map.inverse().containsKey(value)) {
+                    return DataResult.success(map.inverse().get(value));
+                } else {
+                    return DataResult.error(() -> "Unknown value: " + value);
+                }
+            }
+        );
     }
 
     // From newer Minecraft version

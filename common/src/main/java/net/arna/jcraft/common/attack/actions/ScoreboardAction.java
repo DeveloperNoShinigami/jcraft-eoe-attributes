@@ -48,15 +48,16 @@ public class ScoreboardAction extends MoveAction<ScoreboardAction, IAttacker<?, 
         return Type.INSTANCE;
     }
 
-    public static class Type implements MoveActionType<ScoreboardAction> {
+    public static class Type extends MoveActionType<ScoreboardAction> {
         public static final Type INSTANCE = new Type();
         @Getter
         private final Codec<ScoreboardAction> codec = RecordCodecBuilder.create(instance ->
                 instance.group(
+                        runMoment(),
                         Codec.STRING.fieldOf("objective").forGetter(ScoreboardAction::getObjective),
                         JCodecUtils.createEnumCodec(ScoreboardActionType.class).fieldOf("actionType").forGetter(ScoreboardAction::getActionType),
                         Codec.INT.fieldOf("value").forGetter(ScoreboardAction::getValue)
-                ).apply(instance, ScoreboardAction::of));
+                ).apply(instance, apply(ScoreboardAction::of)));
     }
 
     @Getter

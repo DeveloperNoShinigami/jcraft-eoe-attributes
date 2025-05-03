@@ -2,7 +2,6 @@ package net.arna.jcraft.common.attack.actions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +14,9 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(staticName = "addIron")
 public class MetallicaAddIronAction extends MoveAction<MetallicaAddIronAction, MetallicaEntity> {
     private final float iron;
-
-    public static MetallicaAddIronAction addIron(float iron) {
-        return new MetallicaAddIronAction(iron);
-    }
 
     @Override
     public void perform(MetallicaEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
@@ -33,14 +28,15 @@ public class MetallicaAddIronAction extends MoveAction<MetallicaAddIronAction, M
         return Type.INSTANCE;
     }
 
-    public static class Type implements MoveActionType<MetallicaAddIronAction> {
+    public static class Type extends MoveActionType<MetallicaAddIronAction> {
         public static final Type INSTANCE = new Type();
 
         @Override
         public Codec<MetallicaAddIronAction> getCodec() {
             return RecordCodecBuilder.create(instance -> instance.group(
-                Codec.FLOAT.fieldOf("iron").forGetter(MetallicaAddIronAction::getIron)
-            ).apply(instance, MetallicaAddIronAction::new));
+                    runMoment(),
+                    Codec.FLOAT.fieldOf("iron").forGetter(MetallicaAddIronAction::getIron)
+            ).apply(instance, apply(MetallicaAddIronAction::addIron)));
         }
     }
 }

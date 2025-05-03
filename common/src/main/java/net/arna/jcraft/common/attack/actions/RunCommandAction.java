@@ -52,14 +52,15 @@ public class RunCommandAction extends MoveAction<RunCommandAction, IAttacker<?, 
         return Type.INSTANCE;
     }
 
-    public static class Type implements MoveActionType<RunCommandAction> {
+    public static class Type extends MoveActionType<RunCommandAction> {
         public static final Type INSTANCE = new Type();
 
         @Override
         public Codec<RunCommandAction> getCodec() {
             return RecordCodecBuilder.create(instance -> instance.group(
+                    runMoment(),
                     Codec.STRING.fieldOf("command").forGetter(RunCommandAction::getCommand)
-            ).apply(instance, RunCommandAction::run));
+            ).apply(instance, apply(RunCommandAction::run)));
         }
     }
 }

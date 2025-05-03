@@ -108,15 +108,16 @@ public class EffectAction extends MoveAction<EffectAction, IAttacker<?, ?>> {
         }
     }
 
-    public static class Type implements MoveActionType<EffectAction> {
+    public static class Type extends MoveActionType<EffectAction> {
         public static final Type INSTANCE = new Type();
 
         @Override
         public Codec<EffectAction> getCodec() {
             return RecordCodecBuilder.create(instance -> instance.group(
+                    runMoment(),
                     JCodecUtils.MOB_EFFECT_INSTANCE_CODEC.listOf().fieldOf("effects").forGetter(a ->
                             a.getEffects().stream().map(Supplier::get).toList())
-            ).apply(instance, effects -> inflict(effects.toArray(MobEffectInstance[]::new))));
+            ).apply(instance, apply(effects -> inflict(effects.toArray(MobEffectInstance[]::new)))));
         }
     }
 }

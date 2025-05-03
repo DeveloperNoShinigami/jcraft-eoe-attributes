@@ -627,12 +627,16 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker that will be performing this move.
      */
     public final void doPerform(final A attacker) {
+        // TODO strike actions
+
         LivingEntity user = attacker.getUserOrThrow();
         MoveContext ctx = attacker.getMoveContext();
 
         Set<LivingEntity> targets = perform(attacker, user, ctx);
         actions.forEach(a -> a.perform(attacker, user, ctx, targets));
         attacker.onPerform(this, targets);
+
+        // TODO hit actions (if targets is not empty)
     }
 
     /**

@@ -100,19 +100,20 @@ public class PlaySoundAction extends MoveAction<PlaySoundAction, IAttacker<?, ?>
         return Type.INSTANCE;
     }
 
-    public static class Type implements MoveActionType<PlaySoundAction> {
+    public static class Type extends MoveActionType<PlaySoundAction> {
         public static final Type INSTANCE = new Type();
 
         @Override
         public Codec<PlaySoundAction> getCodec() {
             return RecordCodecBuilder.create(instance -> instance.group(
+                    runMoment(),
                     JCodecUtils.SOUND_EVENT_SUPPLIER_CODEC.fieldOf("sound").forGetter(PlaySoundAction::getSound),
                     Codec.FLOAT.optionalFieldOf("min_vol", 1f).forGetter(PlaySoundAction::getMinVol),
                     Codec.FLOAT.optionalFieldOf("max_vol", 1f).forGetter(PlaySoundAction::getMaxVol),
                     Codec.FLOAT.optionalFieldOf("min_pitch", 1f).forGetter(PlaySoundAction::getMinPitch),
                     Codec.FLOAT.optionalFieldOf("max_pitch", 1f).forGetter(PlaySoundAction::getMaxPitch),
                     Codec.BOOL.optionalFieldOf("on_impact", false).forGetter(PlaySoundAction::isOnImpact)
-            ).apply(instance, PlaySoundAction::new));
+            ).apply(instance, apply(PlaySoundAction::new)));
         }
     }
 }
