@@ -531,5 +531,8 @@
   "jcraft.sptw.sp2": "Backhand",
   "jcraft.sptw.sp3": "What an Ugly Watch",
   "jcraft.sptw.sp3hit": "What an Ugly Watch (Uppercut)",
-  "jcraft.sptw.crsp3hit": "What an Ugly Watch (Slam)"
+  "jcraft.sptw.crsp3hit": "What an Ugly Watch (Slam)",
+
+  "argument.entity.options.jcraft_timestopped": "Timestopped entities",
+  "argument.entity.options.jcraft_stand": "Entities with stand"
 }

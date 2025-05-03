@@ -49,6 +49,7 @@
     "EndCrystalEntityMixin",
     "EndPortalBlockMixin",
     "EntityMixin",
+    "EntitySelectorOptionsMixin",
     "EntityTypeMixin",
     "ExplosionMixin",
     "FallbackResourceManagerMixin",

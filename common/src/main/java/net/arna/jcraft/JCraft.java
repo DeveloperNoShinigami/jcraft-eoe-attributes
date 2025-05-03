@@ -1,5 +1,6 @@
 package net.arna.jcraft;
 
+import com.mojang.brigadier.StringReader;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -9,6 +10,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
@@ -32,6 +34,7 @@ import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.*;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
@@ -39,6 +42,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -232,6 +236,47 @@ public final class JCraft {
                 return knife;
             }
         });
+    }
+
+    public static void registerEntitySelectorOptions(EntitySelectorOptionsRegistrar registrar) {
+        registrar.register("jcraft_timestopped", parser -> {
+            parser.setSuggestions((builder, consumer) ->
+                    SharedSuggestionProvider.suggest(Arrays.asList("true", "false"), builder));
+
+            boolean invert = parser.shouldInvertValue();
+            StringReader reader = parser.getReader();
+            boolean value = reader.readBoolean() && !invert;
+
+            parser.addPredicate(e -> JUtils.isAffectedByTimeStop(e) == value);
+        }, p -> true, Component.translatable("argument.entity.options.jcraft_timestopped"));
+
+        registrar.register("jcraft_stand", parser -> {
+            StringReader reader = parser.getReader();
+            int cursor = reader.getCursor();
+            String standName = reader.readUnquotedString();
+            StandType standType;
+
+            parser.setSuggestions((builder, consumer) ->
+                    SharedSuggestionProvider.suggest(StandType.getAllStandTypes().stream()
+                                    .map(StandType::name),
+                            builder));
+
+            try {
+                standType = StandType.valueOf(standName.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                reader.setCursor(cursor);
+                throw StandArgumentType.NOT_FOUND.createWithContext(reader);
+            }
+
+            parser.addPredicate(e -> {
+                if (!(e instanceof LivingEntity entity)) {
+                    return false;
+                }
+
+                CommonStandComponent standData = JComponentPlatformUtils.getStandData(entity);
+                return standData.getType() == standType;
+            });
+        }, p -> true, Component.translatable("argument.entity.options.jcraft_stand"));
     }
 
     public static void markItemOfInterest(@NonNull Entity entity, @NonNull EntityInterest interest) {

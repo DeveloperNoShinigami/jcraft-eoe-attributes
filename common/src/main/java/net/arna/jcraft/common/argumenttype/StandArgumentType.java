@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 @NoArgsConstructor(staticName = "stand")
 public class StandArgumentType implements ArgumentType<StandType> {
-    private static final SimpleCommandExceptionType NOT_FOUND = new SimpleCommandExceptionType(Component.literal("That stand was not found"));
+    public static final SimpleCommandExceptionType NOT_FOUND = new SimpleCommandExceptionType(Component.literal("That stand was not found"));
     private static final Map<String, StandType> suggestions = StandType.getAllStandTypes().stream()
             .collect(ImmutableMap.toImmutableMap(type -> type.name().toLowerCase(Locale.ROOT).replaceAll("_", ""), type -> type));
     @Getter // implements ArgumentType#getExamples()
