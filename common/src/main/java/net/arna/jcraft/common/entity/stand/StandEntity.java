@@ -320,7 +320,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     public int getSkin() {
-        return entityData.get(SKIN);
+        return Mth.clamp(entityData.get(SKIN), 0, getStandType().getSkinCount());
     }
 
     public void setSkin(int skin) {
