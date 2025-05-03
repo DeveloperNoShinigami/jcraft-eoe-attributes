@@ -86,6 +86,7 @@ public class JServerConfig {
 
     // TODO list options
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static final Path GLOBAL_DEFAULT = Path.of("./config/jconfig.json");
 
     // Empty method to force class initialization.
     // Not doing this breaks the /jconfig command (cuz this class won't be initialized on clients).
@@ -98,8 +99,17 @@ public class JServerConfig {
         Path path = getPath(server);
 
         if (!Files.exists(path)) {
-            save(server);
-            return;
+            // No config file yet, check if there's a default in the config folder.
+            Path defaultPath = GLOBAL_DEFAULT;
+            if (Files.exists(defaultPath)) {
+                // There's a default config file, copy it to the world folder and load it instead.
+                Files.copy(defaultPath, path, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                save(server);
+
+                // No need to load anything, we're using the defaults.
+                return;
+            }
         }
 
         try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -136,7 +146,7 @@ public class JServerConfig {
 
         // On dedicated servers, the preferred location is the config directory.
         if (server.isDedicatedServer()) {
-            Path newPath = Path.of("./config/jconfig.json");
+            Path newPath = GLOBAL_DEFAULT;
             if (Files.exists(path)) {
                 // If the old path exists, move the file.
                 JCraft.LOGGER.warn("Moving jcraft.json to config directory.");
