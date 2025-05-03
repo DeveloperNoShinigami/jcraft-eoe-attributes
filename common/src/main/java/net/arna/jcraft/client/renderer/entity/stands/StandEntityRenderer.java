@@ -9,6 +9,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.model.data.EntityModelData;
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
+import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.client.Minecraft;
@@ -208,6 +209,15 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     protected int getSkyLightLevel(final T stand, final BlockPos pos) {
         return stand.hasUser() ? stand.level().getBrightness(LightLayer.SKY, stand.getUserOrThrow().blockPosition()) :
                 super.getSkyLightLevel(stand, pos);
+    }
+
+    @Override
+    public boolean firePreRenderEvent(final PoseStack poseStack, final BakedGeoModel model, final MultiBufferSource bufferSource, final float partialTick, final int packedLight) {
+        if (!JClientUtils.shouldRenderStands()) {
+            return false;
+        }
+
+        return super.firePreRenderEvent(poseStack, model, bufferSource, partialTick, packedLight);
     }
 
     public static boolean shouldApplyAlpha(final StandEntity<?, ?> stand) {

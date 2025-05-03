@@ -103,7 +103,7 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
         final Minecraft client = Minecraft.getInstance();
 
         // Stand Auras
-        if (JClientConfig.getInstance().isStandAuras()) {
+        if (JClientConfig.getInstance().isStandAuras() && JClientUtils.shouldRenderStands()) {
             if (stand.distanceToSqr(client.player) > 6400) {
                 return; // 5 chunk aura render distance
             }
@@ -193,7 +193,7 @@ public class ClientEntityHandlerImpl implements IClientEntityHandler {
     @Override
     public void displayMetallicaAura(MetallicaEntity metallica) {
         final LivingEntity user = metallica.getUser();
-        if (user == null) return;
+        if (user == null || !JClientUtils.shouldRenderStands()) return;
 
         final Direction gravity = GravityChangerAPI.getGravityDirection(metallica);
         final Vector3f auraColor = metallica.getAuraColor();

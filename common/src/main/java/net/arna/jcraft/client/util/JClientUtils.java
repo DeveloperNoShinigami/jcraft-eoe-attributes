@@ -6,6 +6,7 @@ import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.util.DimensionData;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -257,5 +258,9 @@ public class JClientUtils {
 
             }
         }
+    }
+
+    public static boolean shouldRenderStands() {
+        return JUtils.shouldRenderStandsFor(Minecraft.getInstance().player);
     }
 }

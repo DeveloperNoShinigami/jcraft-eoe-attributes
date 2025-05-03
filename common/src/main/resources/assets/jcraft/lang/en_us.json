@@ -505,6 +505,7 @@
   "jcraft.serverconfig.option.useFoolishSand": "Use Foolish Sand",
   "jcraft.serverconfig.category.gameplay": "Gameplay",
   "jcraft.serverconfig.option.exclusiveStands": "Exclusive Stands",
+  "jcraft.serverconfig.option.standUserSight": "Stand User Sight",
 
   "jcraft.generic.barrage": "Barrage",
   "jcraft.generic.ts": "Timestop",
