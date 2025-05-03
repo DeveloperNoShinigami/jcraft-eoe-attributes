@@ -1,5 +1,6 @@
 package net.arna.jcraft.mixin;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.config.JServerConfig;
@@ -11,14 +12,12 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stat;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -85,6 +84,12 @@ public abstract class PlayerEntityMixin implements IComboCounter {
         }
     }
      */
+
+    @WrapWithCondition(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;touch(Lnet/minecraft/world/entity/Entity;)V"))
+    public boolean dontHandleTouchInTimestop(final Player player, final Entity entity) {
+        // If the entity is timestopped, ignore the touch event
+        return !JUtils.isAffectedByTimeStop(entity);
+    }
 
     @Inject(at = @At("TAIL"), method = "tick")
     public void jcraft$playerTickTail(CallbackInfo info) {
