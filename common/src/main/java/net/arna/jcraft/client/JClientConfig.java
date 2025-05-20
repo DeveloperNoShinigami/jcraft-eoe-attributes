@@ -20,6 +20,7 @@ public class JClientConfig implements ConfigData {
     private boolean clientsidePrediction = false;
     private int horizontalHudOffset = 0;
     private int verticalHudOffset = 0;
+    private boolean iconHudPeekAllMoves = true;
     private boolean iconHud = true;
     private boolean standAuras = true;
     private boolean disableNarrator = true;

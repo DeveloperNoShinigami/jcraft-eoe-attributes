@@ -34,5 +34,7 @@ mutable field net/minecraft/world/entity/boss/wither/WitherBoss LIVING_ENTITY_SE
 accessible field net/minecraft/world/entity/boss/wither/WitherBoss TARGETING_CONDITIONS Lnet/minecraft/world/entity/ai/targeting/TargetingConditions;
 accessible field net/minecraft/server/MinecraftServer storageSource Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;
 accessible field net/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess levelDirectory Lnet/minecraft/world/level/storage/LevelStorageSource$LevelDirectory;
+accessible method net/minecraft/world/entity/LivingEntity dismountVehicle (Lnet/minecraft/world/entity/Entity;)V
 
 accessible field net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder builder Ljava/util/Map;
+

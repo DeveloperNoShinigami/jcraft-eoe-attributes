@@ -10,10 +10,12 @@ import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.common.util.ColorUtils;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
@@ -22,6 +24,8 @@ import net.minecraft.util.Mth;
 
 import java.util.Locale;
 import java.util.Map;
+
+import static net.arna.jcraft.client.JCraftClient.*;
 
 @UtilityClass
 public class JCraftAbilityHud {
@@ -116,6 +120,8 @@ public class JCraftAbilityHud {
             return;
         }
 
+        timeSinceNoCooldowns++;
+
         final boolean isMid = JClientConfig.getInstance().getUiPosition() == JClientConfig.UIPos.MIDDLE;
         final boolean useIcons = JClientConfig.getInstance().isIconHud();
         final StandEntity<?, ?> stand = JUtils.getStand(player);
@@ -138,6 +144,23 @@ public class JCraftAbilityHud {
         }
     }
 
+    public static String cooldownTypeToKeybind(CooldownType type, boolean makeShort) {
+        return switch (type) {
+            case STAND_LIGHT ->                 "M1";
+            case HEAVY, STAND_HEAVY ->          generateName(heavyKey.getParent(), makeShort);
+            case BARRAGE, STAND_BARRAGE ->      generateName(barrageKey.getParent(), makeShort);
+            case ULTIMATE, STAND_ULTIMATE ->    generateName(ultKey.getParent(), makeShort);
+            case SPECIAL1, STAND_SP1 ->         generateName(special1Key.getParent(), makeShort);
+            case SPECIAL2, STAND_SP2 ->         generateName(special2Key.getParent(), makeShort);
+            case SPECIAL3, STAND_SP3 ->         generateName(special3Key.getParent(), makeShort);
+            case UTILITY ->                     generateName(utility.getParent(), makeShort);
+            case COMBO_BREAKER ->               makeShort ? "CB" : "Combo Breaker";
+            case COOLDOWN_CANCEL ->             generateName(cooldownCancel.getParent(), makeShort);
+            case DASH ->                        generateName(dash.getParent(), makeShort);
+        };
+    }
+
+    static int timeSinceNoCooldowns = 100;
     /**
      * Renders specified list of icons.
      *
@@ -147,19 +170,44 @@ public class JCraftAbilityHud {
      * @param type      decides which resource folder is loaded when rendering icons
      */
     private static void renderIcons(final GuiGraphics ctx, final Map<CooldownType, IconPos> icons, final int selectedX, final int selectedY, final String type) {
-        icons.forEach((cooldownType, iconPos) -> {
+        final Font textRenderer = Minecraft.getInstance().gui.getFont();
+
+        for (Map.Entry<CooldownType, IconPos> entry : icons.entrySet()) {
+            final CooldownType cooldownType = entry.getKey();
+            final IconPos iconPos = entry.getValue();
             final int iconX = iconPos.x() + selectedX;
             final int iconY = iconPos.y() + selectedY;
 
-            double cd = getCooldownProgress(cooldownType);
-            if (cd < 0) {
-                return;
+            final double cd = getCooldownProgress(cooldownType);
+            final boolean coolingDown = cd > 0.0d;
+
+            float alpha = JClientConfig.getInstance().isIconHudPeekAllMoves() ? 0.1f : 0.0f;
+
+            if (coolingDown) {
+                timeSinceNoCooldowns = 0;
+                alpha = 1.0f;
             }
 
+            if (timeSinceNoCooldowns >= 100) continue;
+
+            if (alpha <= 0.0f) continue;
+
+            RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
             renderBorder(ctx, iconX, iconY);
             renderIcon(ctx, iconX, iconY, type, iconPos.name());
-            renderCooldown(ctx, cd, iconX, iconY);
-        });
+            if (coolingDown) renderCooldown(ctx, cd, iconX, iconY);
+            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+
+            final String finalText = cooldownTypeToKeybind(cooldownType, true);
+
+            ctx.drawString(
+                    textRenderer,
+                    finalText,
+                    iconX,
+                    iconY,
+                    ColorUtils.HSBAtoRGBA(0.3f - (float) cd * 10f / 720f, (cd < 1.6) ? 0.0f : 1.0f, 1.0f, alpha * 2.0f)
+            );
+        }
     }
 
     public static void renderIcon(final GuiGraphics ctx, final int x, final int y, final String type, final String icon) {
@@ -175,7 +223,7 @@ public class JCraftAbilityHud {
             texture = JCraft.id("textures/gui/ability_icons/fallback/" + fallback + ".png");
         }
 
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        // RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.enableBlend();
         ctx.blit(texture, x + 2, y + 2, 0, 0, 18, 18, 18, 18);
 
@@ -187,7 +235,7 @@ public class JCraftAbilityHud {
     public static void renderBorder(final GuiGraphics ctx, final int x, final int y) {
         final PoseStack matrices = ctx.pose();
         matrices.pushPose();
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        // RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.enableBlend();
         ctx.blit(BORDER, x, y, 0, 0, 22, 22, 22, 22);
         RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
@@ -218,7 +266,7 @@ public class JCraftAbilityHud {
     }
 
     public static void renderCooldown(final GuiGraphics ctx, final double cd, final int x, final int y) {
-        final  PoseStack matrices = ctx.pose();
+        final PoseStack matrices = ctx.pose();
         matrices.pushPose();
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.enableBlend();

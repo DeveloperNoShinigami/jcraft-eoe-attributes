@@ -40,6 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static net.arna.jcraft.client.JCraftClient.*;
+import static net.arna.jcraft.client.gui.hud.JCraftAbilityHud.cooldownTypeToKeybind;
 import static net.arna.jcraft.client.gui.hud.JCraftAbilityHud.getHudX;
 import static net.arna.jcraft.client.util.JClientUtils.activeTimestops;
 
@@ -121,19 +122,7 @@ public class JClientEvents {
 
                 // These are (mainly) based off of keybindings which are client-only and thus have
                 // to be done here and cannot be done in CooldownType.
-                final String keyBindText = switch (type) {
-                    case STAND_LIGHT -> "M1";
-                    case HEAVY, STAND_HEAVY -> generateName(heavyKey.getParent());
-                    case BARRAGE, STAND_BARRAGE -> generateName(barrageKey.getParent());
-                    case ULTIMATE, STAND_ULTIMATE -> generateName(ultKey.getParent());
-                    case SPECIAL1, STAND_SP1 -> generateName(special1Key.getParent());
-                    case SPECIAL2, STAND_SP2 -> generateName(special2Key.getParent());
-                    case SPECIAL3, STAND_SP3 -> generateName(special3Key.getParent());
-                    case UTILITY -> generateName(utility.getParent());
-                    case COMBO_BREAKER -> "Combo Breaker";
-                    case COOLDOWN_CANCEL -> generateName(cooldownCancel.getParent());
-                    case DASH -> generateName(dash.getParent());
-                };
+                final String keyBindText = cooldownTypeToKeybind(type, false);
 
                 CooldownType.Category category = type.getCategory();
 
@@ -205,10 +194,12 @@ public class JClientEvents {
             return;
         }
 
+        /*
         if (menuKey.consumeClick()) {
             NetworkManager.sendToServer(JPacketRegistry.C2S_MENU_CALL, new FriendlyByteBuf(Unpooled.buffer()));
             return;
         }
+         */
 
         final StandEntity<?, ?> stand = JUtils.getStand(player);
 

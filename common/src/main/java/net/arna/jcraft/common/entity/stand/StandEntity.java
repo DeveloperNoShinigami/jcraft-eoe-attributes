@@ -749,6 +749,15 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         //JCraft.LOGGER.info("Damaging entity: " + ent + " with damage: " + damage + " and scaling: " + scaling);
         damage *= scaling;
 
+        if (JServerConfig.HEALTH_TO_DAMAGE_SCALING.getValue()) {
+            float healthRatio = ent.getMaxHealth() / 20.0f;
+            float damageAdjustment = healthRatio - 1.0f;
+
+            if (damageAdjustment > 0.0f) {
+                damage *= (1.0f + damageAdjustment / 5.0f);
+            }
+        }
+
         float armor = ent.getArmorValue();
         float toughness = (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
 
@@ -761,9 +770,15 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (ent instanceof Player) {
             armor = 20.0f;
             toughness = 12.0f;
+        } else if ( // Standless non-players have received damage multiplied
+                !(ent instanceof StandEntity<?,?>)
+                && JUtils.getStand(ent) == null
+        ) {
+            damage *= JServerConfig.VS_STANDLESS_DAMAGE_MULTIPLIER.getValue();
         }
 
         // All stands ignore 10% of armor & armor toughness
+        // Armor and toughness considerations are also capped in here at netherite levels
         damage = JUtils.getDamageThroughArmor(damage, armor * 0.9f, toughness * 0.9f);
         damage = ((LivingEntityInvoker) ent).invokeModifyAppliedDamage(damageSource, damage);
 

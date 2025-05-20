@@ -3,6 +3,8 @@
 * Stand User Ownable entities (like pets) no longer aggro onto their owner upon being hit
 * Road Roller is now immune to damage-over-time potion effects
 * Road Roller now explodes into its ingredients when killed
+* Added a config to have JCraft damage scale with the opponent's maximum health. ON by default.
+* Added a config which multiplies JCraft damage against standless non-player opponents. 2x by default.
 ### Bug Fixes
 * Fixed being able to jump while stunned
 * Fixed broken Barrage animation for GE:R

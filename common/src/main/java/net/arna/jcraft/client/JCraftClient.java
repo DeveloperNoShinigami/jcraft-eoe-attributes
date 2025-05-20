@@ -77,7 +77,7 @@ public class JCraftClient {
     @Getter(lazy = true)
     private static final TrackedKeyBinding trackedUseKey = TrackedKeyBinding.wrap(Minecraft.getInstance().options.keyUse);
     public static Supplier<DecimalFormat> decimalFormat = Suppliers.memoize(JCraftClient::createDecimalFormat);
-    public static KeyMapping menuKey;
+    // public static KeyMapping menuKey;
     public static boolean comboStarted = false;
     public static int framesSinceComboStarted = 0;
 
@@ -138,7 +138,7 @@ public class JCraftClient {
                 GLFW.GLFW_MOUSE_BUTTON_4, "key.category.jcraft", register);
 
         // todo: actually finish jcraft menu
-        menuKey = new KeyMapping("key.jcraft.menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_KP_DIVIDE, "key.category.jcraft");
+        // menuKey = new KeyMapping("key.jcraft.menu", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_KP_DIVIDE, "key.category.jcraft");
         // register.accept(menuKey);
     }
 
@@ -170,14 +170,22 @@ public class JCraftClient {
     /**
      * @return a cleaned-up version of TranslatableText name of button
      */
-    public static String generateName(final KeyMapping keyBinding) {
+    public static String generateName(final KeyMapping keyBinding, boolean makeShort) {
         final String str = keyBinding.saveString();
         final String[] components = str.split("\\.");
-        final String last = components[components.length - 1];
+
+        String last = components[components.length - 1];
         String secondLast = components[components.length - 2] + " ";
+
         if (components[components.length - 2].equals("keyboard")) {
             secondLast = "";
         }
+
+        if (makeShort) {
+            if (secondLast.length() > 0) secondLast = secondLast.substring(0, 1);
+            if (last.length() > 0) last = last.substring(0, 1);
+        }
+
         return StringUtils.capitalize(secondLast) + StringUtils.capitalize(last);
     }
 
