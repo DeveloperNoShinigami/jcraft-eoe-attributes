@@ -11,7 +11,6 @@ import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -77,13 +76,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     @Inject(cancellable = true, method = "getJumpBoostPower", at = @At("HEAD"))
     public void jcraft$getJumpBoostVelocityModifier(CallbackInfoReturnable<Float> cir) {
         LivingEntity entity = ((LivingEntity) (Object) this);
-        StandEntity<?, ?> stand = JUtils.getStand(entity);
-        MobEffectInstance stun = entity.getEffect(JStatusRegistry.DAZED.get());
-        if (
-                entity.hasEffect(JStatusRegistry.KNOCKDOWN.get()) || // Knocked down
-                        (stun != null && stun.getAmplifier() != 2) || // Stunned (not blocking)
-                        (stand != null && stand.isRemoteAndControllable()) // Stand ON in controllable remote mode
-        ) {
+        if (!JUtils.canJump(entity)) {
             cir.setReturnValue(-1.0f); // Nullify jump
         }
         /*
@@ -91,6 +84,14 @@ public abstract class LivingEntityMixin implements IDamageScaler {
             cir.setReturnValue(-0.5D); // Reduce jump
         }
          */
+    }
+
+    @Inject(cancellable = true, method = "jumpFromGround", at = @At("HEAD"))
+    public void jcraft$jumpFromGround(CallbackInfo ci) {
+        LivingEntity entity = ((LivingEntity) (Object) this);
+        if (!JUtils.canJump(entity)) {
+            ci.cancel();
+        }
     }
 
     @Inject(at = @At("RETURN"), method = "hurt")

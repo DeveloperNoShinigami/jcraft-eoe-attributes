@@ -2,9 +2,14 @@
 ### General
 * Stand User Ownable entities (like pets) no longer aggro onto their owner upon being hit
 * Road Roller is now immune to damage-over-time potion effects
+* Road Roller now explodes into its ingredients when killed
 ### Bug Fixes
+* Fixed being able to jump while stunned
 * Fixed broken Barrage animation for GE:R
 * Fixed Mining Barrages originating at the Stand User when in Remote mode
+### NPCs & Stands
+* Metallica
+  * Given a unique, much quieter stand summoning sound
 
 ### Commands
 
@@ -21,6 +26,7 @@ this is probably due to:
         this.translate((float)x, (float)y, (float)z);
     }
 ```
+* stands shouldnt block arrows 24/7
 * Managed to get the "right" key to register as constantly pressed, screwing with dashes
   * i assume this works for any direction
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)

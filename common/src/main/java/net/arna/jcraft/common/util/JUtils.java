@@ -109,6 +109,14 @@ public final class JUtils {
         return stun == null || stun.getAmplifier() == 2;
     }
 
+    public static boolean canJump(LivingEntity living) {
+        if (!canAct(living)) return false;
+        if (living.hasEffect(JStatusRegistry.KNOCKDOWN.get())) return false;
+
+        StandEntity<?, ?> stand = JUtils.getStand(living);
+        return (stand == null || !stand.isRemoteAndControllable());
+    }
+
     public static void displayHitbox(Level world, Vec3 min, Vec3 max) {
         displayHitbox(world, new AABB(min, max));
     }

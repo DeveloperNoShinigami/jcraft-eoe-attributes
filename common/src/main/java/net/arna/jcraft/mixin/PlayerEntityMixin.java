@@ -11,14 +11,12 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stat;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -160,6 +158,14 @@ public abstract class PlayerEntityMixin implements IComboCounter {
             //stand.counter(source.getAttacker(), source); // Initiate counter
             player.removeEffect(JStatusRegistry.DAZED.get());
             info.cancel();
+        }
+    }
+
+    @Inject(cancellable = true, method = "jumpFromGround", at = @At("HEAD"))
+    public void jcraft$jumpFromGround(CallbackInfo ci) {
+        LivingEntity entity = ((LivingEntity) (Object) this);
+        if (!JUtils.canJump(entity)) {
+            ci.cancel();
         }
     }
 
