@@ -10,11 +10,14 @@ import lombok.Synchronized;
 import net.arna.jcraft.JCraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.LevelResource;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 
 public class JServerConfig {
@@ -78,10 +81,12 @@ public class JServerConfig {
 
     // Misc options
     private static final String GAMEPLAY = "gameplay";
-    // public static final BooleanOption EXCLUSIVE_STANDS = new BooleanOption("exclusiveStands", GAMEPLAY, false);
+    public static final BooleanOption EXCLUSIVE_STANDS = new BooleanOption("exclusiveStands", GAMEPLAY, false);
+    public static final BooleanOption STAND_USER_SIGHT = new BooleanOption("standUserSight", GAMEPLAY, false);
 
     // TODO list options
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static final Path GLOBAL_DEFAULT = Path.of("./config/jconfig.json");
 
     // Empty method to force class initialization.
     // Not doing this breaks the /jconfig command (cuz this class won't be initialized on clients).
@@ -91,24 +96,20 @@ public class JServerConfig {
 
     @SneakyThrows
     public static void load(final MinecraftServer server) {
-        // Try to read from world directory.
-        Path path = server.getWorldPath(LevelResource.ROOT).resolve("jcraft.json");
-
-        // On dedicated servers, the preferred location is the config directory.
-        if (server.isDedicatedServer() && Files.exists(path)) {
-            Path newPath = Path.of("./config/jconfig.json");
-            if (!Files.exists(newPath)) {
-                Files.move(path, newPath);
-            } else if (Files.exists(path)) {
-                Files.delete(path);
-            }
-
-            path = newPath;
-        }
+        Path path = getPath(server);
 
         if (!Files.exists(path)) {
-            save(server);
-            return;
+            // No config file yet, check if there's a default in the config folder.
+            Path defaultPath = GLOBAL_DEFAULT;
+            if (Files.exists(defaultPath)) {
+                // There's a default config file, copy it to the world folder and load it instead.
+                Files.copy(defaultPath, path, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                save(server);
+
+                // No need to load anything, we're using the defaults.
+                return;
+            }
         }
 
         try (BufferedReader reader = Files.newBufferedReader(path)) {
@@ -127,7 +128,7 @@ public class JServerConfig {
     @Synchronized
     @SneakyThrows
     public static void save(final MinecraftServer server) {
-        Path path = server.getWorldPath(LevelResource.ROOT).resolve("jcraft.json");
+        Path path = getPath(server);
 
         JsonObject data = new JsonObject();
         ConfigOption.getImmutableOptions().forEach((key, option) -> data.add(key, option.write()));
@@ -137,5 +138,23 @@ public class JServerConfig {
             gson.toJson(data, writer);
             writer.flush();
         }
+    }
+
+    private static @NotNull Path getPath(final MinecraftServer server) throws IOException {
+        // Try to read from world directory.
+        Path path = server.getWorldPath(LevelResource.ROOT).resolve("jcraft.json");
+
+        // On dedicated servers, the preferred location is the config directory.
+        if (server.isDedicatedServer()) {
+            Path newPath = GLOBAL_DEFAULT;
+            if (Files.exists(path)) {
+                // If the old path exists, move the file.
+                JCraft.LOGGER.warn("Moving jcraft.json to config directory.");
+                Files.move(path, newPath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            path = newPath;
+        }
+        return path;
     }
 }

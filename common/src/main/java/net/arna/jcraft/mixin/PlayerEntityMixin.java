@@ -1,5 +1,6 @@
 package net.arna.jcraft.mixin;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.config.JServerConfig;
@@ -83,6 +84,12 @@ public abstract class PlayerEntityMixin implements IComboCounter {
         }
     }
      */
+
+    @WrapWithCondition(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;touch(Lnet/minecraft/world/entity/Entity;)V"))
+    public boolean dontHandleTouchInTimestop(final Player player, final Entity entity) {
+        // If the entity is timestopped, ignore the touch event
+        return !JUtils.isAffectedByTimeStop(entity);
+    }
 
     @Inject(at = @At("TAIL"), method = "tick")
     public void jcraft$playerTickTail(CallbackInfo info) {

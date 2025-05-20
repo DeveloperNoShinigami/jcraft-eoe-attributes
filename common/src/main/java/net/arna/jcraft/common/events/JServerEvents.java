@@ -15,6 +15,7 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.MockItem;
+import net.arna.jcraft.common.saveddata.ExclusiveStandsData;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.tickable.*;
 import net.arna.jcraft.common.util.*;
@@ -73,8 +74,13 @@ public class JServerEvents {
             List.of(Items.AIR, Items.GOLDEN_HELMET, Items.CHAINMAIL_HELMET, Items.IRON_HELMET, Items.DIAMOND_HELMET, Items.NETHERITE_HELMET)
     );
 
-    public static void finishLoading(MinecraftServer server) {
+    public static void finishLoading(final MinecraftServer server) {
         JCraft.auWorld = server.getLevel(JDimensionRegistry.AU_DIMENSION_KEY);
+        JCraft.setExclusiveStandsData(ExclusiveStandsData.fromDefaultFile(server));
+    }
+
+    public static void saveExclusives(final MinecraftServer server) {
+        JCraft.getExclusiveStandsData().saveToDefaultFile(server);
     }
 
     private static final int PREDICTION_RADIUS = 6 * 16;

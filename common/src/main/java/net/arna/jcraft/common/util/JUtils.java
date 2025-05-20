@@ -7,10 +7,12 @@ import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.projectile.JAttackEntity;
 import net.arna.jcraft.common.entity.spec.JSpecHolder;
 import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.network.s2c.JExplosionPacket;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
@@ -741,5 +743,15 @@ public final class JUtils {
 
         final String stringName = entity.getName().toString().toLowerCase(Locale.ROOT);
         return stringName.contains("iron") || stringName.contains("ferro");
+    }
+
+    public static boolean shouldRenderStandsFor(Player player) {
+        // Don't render stands if stand user sight is enabled and the player doesn't have a stand.
+        if (JServerConfig.STAND_USER_SIGHT.getValue()) {
+            StandType standType = JComponentPlatformUtils.getStandData(player).getType();
+            return standType != null && standType != StandType.NONE;
+        }
+
+        return true;
     }
 }
