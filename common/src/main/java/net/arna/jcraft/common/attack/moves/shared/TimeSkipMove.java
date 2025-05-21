@@ -23,6 +23,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
@@ -143,10 +144,12 @@ public final class TimeSkipMove<A extends IAttacker<? extends A, ?>> extends Abs
         }
 
         if (hasVehicle) {
-            user.getRootVehicle().setPos(tpPos.x, tpPos.y, tpPos.z);
-        } else {
-            user.teleportToWithTicket(tpPos.x, tpPos.y, tpPos.z);
+            final Entity vehicle = user.getVehicle();
+
+            user.dismountVehicle(vehicle);
+            vehicle.setPos(tpPos.x, tpPos.y, tpPos.z);
         }
+        user.teleportToWithTicket(tpPos.x, tpPos.y, tpPos.z);
 
         for (SoundEvent sound : sounds) {
             attacker.getEntityWorld().playSound(null, tpPos.x, tpPos.y, tpPos.z, sound, SoundSource.PLAYERS, 1f, 1f);

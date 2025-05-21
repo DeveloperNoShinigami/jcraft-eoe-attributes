@@ -1555,12 +1555,13 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return false;
         }
 
-        if (blocking && source.is(DamageTypes.MOB_PROJECTILE) || source.is(DamageTypes.ARROW)) {
+        // Perfectly block projectiles
+        if (blocking && (source.is(DamageTypes.MOB_PROJECTILE) || source.is(DamageTypes.ARROW))) {
             return false;
         }
 
-        if (source.is(DamageTypes.MAGIC) || source.is(DamageTypes.EXPLOSION)) // AoE effects have damage nerfed
-        {
+        // AoE effects have damage nerfed
+        if (source.is(DamageTypes.MAGIC) || source.is(DamageTypes.EXPLOSION)) {
             amount /= 2.0F;
         }
 

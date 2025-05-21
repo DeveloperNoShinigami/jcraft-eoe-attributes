@@ -9,6 +9,7 @@
 * Fixed being able to jump while stunned
 * Fixed broken Barrage animation for GE:R
 * Fixed Mining Barrages originating at the Stand User when in Remote mode
+* Fixed stands passively being immune to arrows
 ### NPCs & Stands
 * Metallica
   * Given a unique, much quieter stand summoning sound
@@ -28,7 +29,7 @@ this is probably due to:
         this.translate((float)x, (float)y, (float)z);
     }
 ```
-* stands shouldnt block arrows 24/7
+
 * Managed to get the "right" key to register as constantly pressed, screwing with dashes
   * i assume this works for any direction
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
@@ -42,10 +43,9 @@ this is probably due to:
 * When connected to Forge dedicated server, JCraft commands do not autocomplete correctly
 
 
-#### todo (THIS UPDATE) :)
+#### todo (SOME UPDATE) :D
 * my cawk
 * MR barrage fire :)
-* Fix AI stand users having clientside head rotation that completely throws off players
 * Timestop should stop stand anims
 * CRAZY DIAMOND, Hermit Purple, Yellow Temperance
 * Stand NBT serialization
