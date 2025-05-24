@@ -46,7 +46,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     @Getter(AccessLevel.PRIVATE) // shouldn't be used directly
     private final IntMoveVariable CHARGE_TIME = new IntMoveVariable();
     private final List<MoveCondition<?, ? super A>> conditions = new ArrayList<>();
-    private final List<MoveAction<?, ? super A>> actions = new ArrayList<>(), initActions = new ArrayList<>();
+    private final List<MoveAction<?, ? super A>> actions = new ArrayList<>();
     /**
      * Be VERY careful when using this.
      * There's NO connection between static moves defined in fields
@@ -321,12 +321,33 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     }
 
     /**
+     * Adds a new action to this move.
+     * @param action The action to add
+     * @return This move
+     */
+    public T withAction(final MoveAction<?, ? super A> action, RunMoment runMoment) {
+        action.setRunMoment(runMoment);
+        actions.add(action);
+        return getThis();
+    }
+
+    /**
      * Adds multiple actions to this move.
      * @param actions The actions to add
      * @return This move
      */
     public T withActions(final Collection<MoveAction<?, ? super A>> actions) {
         this.actions.addAll(actions);
+        return getThis();
+    }
+
+    /**
+     * Adds multiple actions to this move.
+     * @param actions The actions to add
+     * @return This move
+     */
+    public T withActions(final Collection<MoveAction<?, ? super A>> actions, RunMoment runMoment) {
+        this.actions.addAll(actions.stream().peek(a -> a.setRunMoment(runMoment)).toList());
         return getThis();
     }
 
@@ -344,8 +365,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      */
 
     public T withInitAction(final MoveAction<?, ? super A> action) {
-        initActions.add(action);
-        return getThis();
+        return withAction(action, RunMoment.AT_INIT);
     }
 
     /**
@@ -354,15 +374,13 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @return This move
      */
     public T withInitActions(final Collection<MoveAction<?, ? super A>> actions) {
-        this.initActions.addAll(actions);
-        return getThis();
+        return withActions(actions, RunMoment.AT_INIT);
     }
 
     @ApiStatus.Internal
     @SuppressWarnings({"unchecked", "RedundantCast", "rawtypes"})
     public T withInitActionsRaw(final Collection<MoveAction<?, ?>> actions) {
-        this.initActions.addAll((Collection<? extends MoveAction<?,? super A>>) (Collection) actions);
-        return getThis();
+        return withInitActions((Collection<MoveAction<?,? super A>>) (Collection) actions);
     }
 
     /**
@@ -460,19 +478,6 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         return getThis();
     }
 
-    // Lombok does not understand these variable names already start with 'is'.
-    public boolean isCrouchingVariant() {
-        return isCrouchingVariant;
-    }
-
-    public boolean isAerialVariant() {
-        return isAerialVariant;
-    }
-
-    public boolean isFollowup() {
-        return isFollowup;
-    }
-
     /**
      * Called when this move is registered to a {@link net.arna.jcraft.common.attack.core.MoveMap MoveMap}.
      * Not supposed to be called anywhere else.
@@ -556,7 +561,11 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     public void onInitiate(final A attacker) {
         LivingEntity user = attacker.getUser();
         Set<LivingEntity> targets = Set.of(); // Obviously none yet
-        initActions.forEach(a -> a.perform(attacker, user, attacker.getMoveContext(), targets));
+        for (final MoveAction<?, ? super A> action : actions) {
+            if (action.getRunMoment() == RunMoment.AT_INIT) {
+                action.perform(attacker, user, attacker.getMoveContext(), targets);
+            }
+        }
     }
 
     /**
@@ -592,6 +601,15 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker to tick for.
      */
     public void activeTick(final A attacker, final int moveStun) {
+        Set<LivingEntity> targets = Set.of();
+        for (final MoveAction<?, ? super A> action : actions) {
+            if (action.getRunMoment() == RunMoment.EVERY_TICK ||
+                    (action.getRunMoment() == RunMoment.AT_END && moveStun == 0) ||
+                    action.getRunMoment().shouldRun(getThis(), attacker, attacker.getUser(), getDuration() - moveStun, targets)) {
+                action.perform(attacker, attacker.getUserOrThrow(), attacker.getMoveContext(), targets);
+            }
+        }
+
         if (finisher != null && canFinish(attacker) && finisher.leftInt() <= getDuration() - moveStun) {
             attacker.setCurrentMove(finisher.right());
         }
@@ -627,7 +645,11 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param attacker The attacker that will be performing this move.
      */
     public final void doPerform(final A attacker) {
-        // TODO strike actions
+        for (final MoveAction<?, ? super A> action : actions) {
+            if (action.getRunMoment() == RunMoment.ON_STRIKE) {
+                action.perform(attacker, attacker.getUserOrThrow(), attacker.getMoveContext(), Set.of());
+            }
+        }
 
         LivingEntity user = attacker.getUserOrThrow();
         MoveContext ctx = attacker.getMoveContext();
@@ -636,7 +658,13 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         actions.forEach(a -> a.perform(attacker, user, ctx, targets));
         attacker.onPerform(this, targets);
 
-        // TODO hit actions (if targets is not empty)
+        if (targets.isEmpty()) return;
+
+        for (final MoveAction<?, ? super A> action : actions) {
+            if (action.getRunMoment() == RunMoment.ON_HIT) {
+                action.perform(attacker, attacker.getUserOrThrow(), attacker.getMoveContext(), Set.of());
+            }
+        }
     }
 
     /**
@@ -838,7 +866,6 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         cast.aerialVariant = aerialVariant == null ? null : aerialVariant.copy();
         cast.conditions.addAll(conditions);
         cast.actions.addAll(actions);
-        cast.initActions.addAll(initActions);
         cast.followupFrame = followupFrame;
         cast.ranged = ranged;
         cast.isCrouchingVariant = isCrouchingVariant;
