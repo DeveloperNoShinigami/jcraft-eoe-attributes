@@ -21,18 +21,14 @@ public abstract class RunMoment {
     public static RunMoment NEVER, AT_INIT, ON_STRIKE, ON_HIT, AT_END, EVERY_TICK;
 
     static {
-        NEVER = create("never", RunMomentType.unit(() -> NEVER),
-                (move, attacker, user, tick, targets) -> false);
-        AT_INIT = create("at_init", RunMomentType.unit(() -> AT_INIT), // Special case
-                (move, attacker, user, tick, targets) -> tick == 0);
-        ON_STRIKE = create("on_strike", RunMomentType.unit(() -> ON_STRIKE),
-                (move, attacker, user, tick, targets) -> tick == move.getWindup() && targets == null);
-        ON_HIT = create("on_hit", RunMomentType.unit(() -> ON_HIT),
-                (move, attacker, user, tick, targets) -> tick == move.getWindup() && targets != null && !targets.isEmpty());
-        AT_END = create("on_end", RunMomentType.unit(() -> AT_END),
-                (move, attacker, user, tick, targets) -> tick == move.getDuration());
-        EVERY_TICK = create("every_tick", RunMomentType.unit(() -> EVERY_TICK),
-                (move, attacker, user, tick, targets) -> true);
+        // All of these have special handling (see usages in AbstractMove).
+        // The shouldRun method is only used for atTick run moments.
+        NEVER = create("never", RunMomentType.unit(() -> NEVER));
+        AT_INIT = create("at_init", RunMomentType.unit(() -> AT_INIT));
+        ON_STRIKE = create("on_strike", RunMomentType.unit(() -> ON_STRIKE));
+        ON_HIT = create("on_hit", RunMomentType.unit(() -> ON_HIT));
+        AT_END = create("on_end", RunMomentType.unit(() -> AT_END));
+        EVERY_TICK = create("every_tick", RunMomentType.unit(() -> EVERY_TICK));
     }
 
     private static final BiMap<String, RunMomentType<?>> BY_NAME = HashBiMap.create();
@@ -42,6 +38,10 @@ public abstract class RunMoment {
 
     @Getter
     private final RunMomentType<?> type;
+
+    private static RunMoment create(String name, RunMomentType<?> type) {
+        return create(name, type, (move, attacker, user, tick, targets) -> false);
+    }
 
     private static RunMoment create(String name, RunMomentType<?> type, RunMomentFunc func) {
         RunMoment runMoment = new RunMoment(type) {
