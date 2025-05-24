@@ -124,9 +124,10 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
             return;
         }
         if (tickCount == 1) {
-            final Vec3 rotVec = calculateViewVector(getXRot(), -getYRot()); // No-clipping projectiles have inverted yaw
+            final Vec3 rotVec = calculateViewVector(getXRot(), -getYRot()); // No-clipping projectiles have inverted yaw when rendering
             final Vec3 pos = position();
-            final Set<LivingEntity> hurt = JUtils.generateHitbox(level(), pos.add(rotVec.scale(-0.25)), 1.25, e -> true);
+            final Level level = level();
+            final Set<LivingEntity> hurt = JUtils.generateHitbox(level, pos.add(rotVec.scale(-0.25)), 1.25, e -> true);
             boolean hit = false;
             for (LivingEntity living : hurt) {
                 if (!canAttack(living)) continue;
@@ -134,16 +135,16 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
 
                 LivingEntity target = JUtils.getUserIfStand(living);
 
-                StandEntity.damageLogic(level(), target, Vec3.ZERO,
-                        30 - 10 * chainIndex / MAX_CHAIN_LENGTH, 0, false, 4f - 3f * (float)(chainIndex / MAX_CHAIN_LENGTH), true,
-                        10, level().damageSources().mobAttack(livingOwner), livingOwner,
+                StandEntity.damageLogic(level, target, Vec3.ZERO,
+                        30 - 10 * chainIndex / MAX_CHAIN_LENGTH, 0, false, 4f, true,
+                        10, level.damageSources().mobAttack(livingOwner), livingOwner,
                         CommonHitPropertyComponent.HitAnimation.MID);
             }
             if (hit) {
                 final Vec3 frontPos = pos.add(rotVec.scale(-0.5));
                 playSound(SoundEvents.PLAYER_HURT_FREEZE, 1, 1);
 
-                final ServerLevel serverWorld = (ServerLevel) level();
+                final ServerLevel serverWorld = (ServerLevel) level;
                 JCraft.createParticle(serverWorld,
                         frontPos.x + random.nextGaussian() * 0.25,
                         frontPos.y + random.nextGaussian() * 0.25,
@@ -160,7 +161,7 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
             }
         } else if (chainIndex < MAX_CHAIN_LENGTH && !grown && tickCount == 10) {
             final ServerLevel serverWorld = (ServerLevel) level();
-            final Vec3 rotVec = calculateViewVector(getXRot(), -getYRot()); // Noclipping projectiles have inverted yaw
+            final Vec3 rotVec = calculateViewVector(getXRot(), -getYRot()); // No-clipping projectiles have inverted yaw when rendering
             final Vec3 initialPos = position().add(rotVec.scale(-LENGTH));
 
             final Optional<LivingEntity> target = serverWorld.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(32.0), EntitySelector.NO_CREATIVE_OR_SPECTATOR)
@@ -169,27 +170,45 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
                     .min(distanceComparator);
 
             boolean shouldSplit = chainIndex % 4 == 2;
-            double inaccuracy = shouldSplit ? 10 : 1;
+            float inaccuracy = shouldSplit ? 25.0f : 0.0f;
             for (int i = 0; i < (shouldSplit ? 2 : 1); i++) {
                 IceBranchProjectile next = new IceBranchProjectile(level(), livingOwner, chainIndex + 1);
 
                 if (target.isPresent()) {
                     final LivingEntity nearestTarget = target.get();
-                    final Vec3 toTarget = nearestTarget.position()
-                            .subtract(initialPos)
-                            .add(
-                                    random.nextGaussian() * inaccuracy,
-                                    random.nextGaussian() * inaccuracy,
-                                    random.nextGaussian() * inaccuracy
-                            ).normalize();
-                    final double e = toTarget.x,f = toTarget.y, g = toTarget.z, l = toTarget.horizontalDistance();
-                    next.setYRot((float) (Mth.atan2(-e, -g) * 57.2957763671875));
-                    next.setXRot((float) (Mth.atan2(f, l) * 57.2957763671875));
-                    next.setPos(initialPos.add(toTarget.scale(LENGTH)));
+
+                    float currentXRot = getXRot();
+                    float currentYRot = getYRot();
+
+                    Vec3 toTargetVec = nearestTarget.position()
+                            .subtract(position());
+                    double dx = toTargetVec.x;
+                    double dy = toTargetVec.y;
+                    double dz = toTargetVec.z;
+
+                    double flatDist = Math.sqrt(dx * dx + dz * dz);
+                    float targetXRot = (float) (Mth.atan2(dy, flatDist) * (180F / Math.PI));
+                    float targetYRot = (float) -(Mth.atan2(dz, dx) * (180F / Math.PI)) - 90.0F;
+
+                    float clampedXRot = Mth.approachDegrees(currentXRot, targetXRot, 25.0F) + (float) random.nextGaussian() * inaccuracy;
+                    float clampedYRot = -Mth.approachDegrees(currentYRot, targetYRot, 25.0F) + (float) random.nextGaussian() * inaccuracy;
+
+                    Vec3 toTarget = calculateViewVector(clampedXRot, clampedYRot).normalize();
+
+                    next.setXRot(clampedXRot);
+                    next.setYRot(-clampedYRot);
+
+                    next.setPos(initialPos.add(toTarget.scale(-LENGTH)));
                 } else {
-                    next.setXRot(getXRot() + random.nextFloat() * 60.0F - 30.0F);
-                    next.setYRot(getYRot() + random.nextFloat() * 60.0F - 30.0F);
-                    next.setPos(initialPos.add(rotVec.scale(-LENGTH)));
+                    float xRot = getXRot() + random.nextFloat() * 60.0F - 30.0F;
+                    float yRot = getYRot() + random.nextFloat() * 60.0F - 30.0F;
+
+                    Vec3 newRotVec = calculateViewVector(xRot, yRot).normalize();
+
+                    next.setXRot(xRot);
+                    next.setYRot(-yRot);
+
+                    next.setPos(initialPos.add(newRotVec.scale(-LENGTH)));
                 }
 
                 next.xRotO = next.getXRot();

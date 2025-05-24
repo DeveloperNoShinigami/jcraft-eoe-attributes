@@ -13,6 +13,8 @@
 ### NPCs & Stands
 * Metallica
   * Given a unique, much quieter stand summoning sound
+* Horus
+  * Ice branches now turn much slower, but have consistent damage on hit
 
 ### Commands
 
