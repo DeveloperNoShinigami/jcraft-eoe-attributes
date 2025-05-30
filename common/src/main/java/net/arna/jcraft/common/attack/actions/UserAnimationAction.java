@@ -34,15 +34,16 @@ public class UserAnimationAction extends MoveAction<UserAnimationAction, IAttack
         return Type.INSTANCE;
     }
 
-    public static class Type implements MoveActionType<UserAnimationAction> {
+    public static class Type extends MoveActionType<UserAnimationAction> {
         public static final Type INSTANCE = new Type();
 
         @Override
         public Codec<UserAnimationAction> getCodec() {
             return RecordCodecBuilder.create(instance -> instance.group(
+                    runMoment(),
                     Codec.STRING.fieldOf("animation").forGetter(UserAnimationAction::getAnimation),
                     Codec.BOOL.optionalFieldOf("force", false).forGetter(UserAnimationAction::isForce)
-            ).apply(instance, UserAnimationAction::new));
+            ).apply(instance, apply((anim, force) -> new UserAnimationAction(anim, force))));
         }
     }
 }

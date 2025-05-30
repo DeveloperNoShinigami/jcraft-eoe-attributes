@@ -30,16 +30,17 @@ public class CMoonInversionAction extends MoveAction<CMoonInversionAction, CMoon
         return Type.INSTANCE;
     }
 
-    public static class Type implements MoveActionType<CMoonInversionAction> {
+    public static class Type extends MoveActionType<CMoonInversionAction> {
         public static final Type INSTANCE = new Type();
 
         @Override
         public Codec<CMoonInversionAction> getCodec() {
             return RecordCodecBuilder.create(instance -> instance.group(
+                    runMoment(),
                     Codec.INT.fieldOf("time").forGetter(CMoonInversionAction::getTime),
                     Codec.FLOAT.fieldOf("damage").forGetter(CMoonInversionAction::getDamage),
                     Codec.BOOL.fieldOf("slow").forGetter(CMoonInversionAction::isSlow)
-            ).apply(instance, CMoonInversionAction::addInversion));
+            ).apply(instance, apply(CMoonInversionAction::addInversion)));
         }
     }
 }

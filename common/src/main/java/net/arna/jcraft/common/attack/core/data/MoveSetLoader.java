@@ -366,6 +366,8 @@ public class MoveSetLoader {
         registrar.accept("lunge", () -> LungeAction.Type.INSTANCE);
         registrar.accept("cmoon_inversion", () -> CMoonInversionAction.Type.INSTANCE);
         registrar.accept("user_animation", () -> UserAnimationAction.Type.INSTANCE);
+        registrar.accept("run_command", () -> RunCommandAction.Type.INSTANCE);
+        registrar.accept("scoreboard", () -> ScoreboardAction.Type.INSTANCE);
     }
 
     public static Map<Enum<?>, Map<String, MoveSet<?, ?>>> getMoveSets() {

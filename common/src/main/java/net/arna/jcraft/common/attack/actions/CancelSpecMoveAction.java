@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.attack.actions;
 
 import com.mojang.serialization.Codec;
-import lombok.AccessLevel;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.common.attack.core.MoveAction;
@@ -14,11 +14,8 @@ import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Set;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(staticName = "cancelSpecMove")
 public class CancelSpecMoveAction extends MoveAction<CancelSpecMoveAction, StandEntity<?, ?>> {
-    public static CancelSpecMoveAction cancelSpecMove() {
-        return new CancelSpecMoveAction();
-    }
 
     @Override
     public void perform(StandEntity<?, ?> attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
@@ -33,12 +30,14 @@ public class CancelSpecMoveAction extends MoveAction<CancelSpecMoveAction, Stand
         return Type.INSTANCE;
     }
 
-    public static class Type implements MoveActionType<CancelSpecMoveAction> {
+    public static class Type extends MoveActionType<CancelSpecMoveAction> {
         public static final Type INSTANCE = new Type();
 
         @Override
         public Codec<CancelSpecMoveAction> getCodec() {
-            return Codec.unit(new CancelSpecMoveAction());
+            return RecordCodecBuilder.create(instance -> instance.group(
+                    runMoment()
+            ).apply(instance, apply(CancelSpecMoveAction::new)));
         }
     }
 }
