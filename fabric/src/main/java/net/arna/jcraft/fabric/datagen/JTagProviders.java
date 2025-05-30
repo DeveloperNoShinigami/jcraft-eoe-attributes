@@ -6,6 +6,7 @@ import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.BlockTags;
@@ -13,6 +14,7 @@ import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagBuilder;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
@@ -84,6 +86,87 @@ public class JTagProviders {
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.KARS_HEADWRAP.getId());
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.RED_HAT.getId());
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.PUCCIS_HAT.getId());
+
+            final var sandBlocks = getOrCreateTagBuilder(JTagRegistry.SAND_BLOCKS);
+            sandBlocks.forceAddTag(ItemTags.SAND);
+            sandBlocks.add(Items.SANDSTONE);
+            sandBlocks.add(Items.SANDSTONE_STAIRS);
+            sandBlocks.add(Items.SANDSTONE_SLAB);
+            sandBlocks.add(Items.SANDSTONE_WALL);
+            sandBlocks.add(Items.CHISELED_SANDSTONE);
+            sandBlocks.add(Items.SMOOTH_SANDSTONE);
+            sandBlocks.add(Items.SMOOTH_SANDSTONE_STAIRS);
+            sandBlocks.add(Items.SMOOTH_SANDSTONE_SLAB);
+            sandBlocks.add(Items.CUT_SANDSTONE);
+            sandBlocks.add(Items.CUT_STANDSTONE_SLAB);
+            sandBlocks.add(Items.RED_SANDSTONE);
+            sandBlocks.add(Items.RED_SANDSTONE_STAIRS);
+            sandBlocks.add(Items.RED_SANDSTONE_SLAB);
+            sandBlocks.add(Items.RED_SANDSTONE_WALL);
+            sandBlocks.add(Items.CHISELED_RED_SANDSTONE);
+            sandBlocks.add(Items.SMOOTH_RED_SANDSTONE);
+            sandBlocks.add(Items.SMOOTH_RED_SANDSTONE_STAIRS);
+            sandBlocks.add(Items.SMOOTH_RED_SANDSTONE_SLAB);
+            sandBlocks.add(Items.CUT_RED_SANDSTONE);
+            sandBlocks.add(Items.CUT_RED_SANDSTONE_SLAB);
+
+            final var blindsOnImpact = getOrCreateTagBuilder(JTagRegistry.BLINDS_ON_IMPACT);
+            blindsOnImpact.add(Items.PACKED_MUD);
+            blindsOnImpact.addTag(JTagRegistry.SAND_BLOCKS);
+            blindsOnImpact.add(Items.SEA_LANTERN);
+            blindsOnImpact.addOptional(ConventionalItemTags.GLASS_BLOCKS.location());
+            blindsOnImpact.addOptional(ConventionalItemTags.GLASS_PANES.location());
+            blindsOnImpact.add(Items.GRASS_BLOCK);
+            blindsOnImpact.add(Items.PODZOL);
+            blindsOnImpact.add(Items.DIRT);
+            blindsOnImpact.add(Items.COARSE_DIRT);
+            // not rooted dirt, it wouldn't fall apart on impact
+            blindsOnImpact.add(Items.MUD);
+            blindsOnImpact.add(Items.CLAY);
+            blindsOnImpact.add(Items.GRAVEL);
+            blindsOnImpact.add(Items.SNOW_BLOCK);
+            blindsOnImpact.add(Items.CRIMSON_NYLIUM);
+            blindsOnImpact.add(Items.WARPED_NYLIUM);
+            blindsOnImpact.add(Items.SOUL_SAND);
+            blindsOnImpact.add(Items.SOUL_SOIL);
+            blindsOnImpact.add(JItemRegistry.SOUL_BLOCK.getId());
+            blindsOnImpact.add(Items.NETHERRACK);
+            blindsOnImpact.add(Items.GLOWSTONE);
+            blindsOnImpact.add(Items.SHROOMLIGHT);
+            blindsOnImpact.add(JItemRegistry.DIO_CAPE.getId());
+
+            final var burnsOnImpact = getOrCreateTagBuilder(JTagRegistry.BURNS_ON_IMPACT);
+            burnsOnImpact.add(Items.MAGMA_BLOCK);
+            burnsOnImpact.add(Items.CAMPFIRE);
+            burnsOnImpact.add(Items.SOUL_CAMPFIRE);
+            burnsOnImpact.add(Items.LAVA_BUCKET);
+            burnsOnImpact.add(Items.FIRE_CHARGE);
+
+            final var poisonsOnImpact = getOrCreateTagBuilder(JTagRegistry.POISONS_ON_IMPACT);
+            poisonsOnImpact.add(Items.PUFFERFISH);
+            poisonsOnImpact.add(Items.PUFFERFISH_BUCKET);
+
+            final var explodesOnImpact = getOrCreateTagBuilder(JTagRegistry.EXPLODES_ON_IMPACT);
+            explodesOnImpact.add(Items.END_CRYSTAL);
+            explodesOnImpact.add(Items.TNT);
+
+            final var heavyImpact = getOrCreateTagBuilder(JTagRegistry.HEAVY_IMPACT);
+            heavyImpact.add(JItemRegistry.METEORITE_BLOCK.getId());
+            heavyImpact.add(JItemRegistry.POLISHED_METEORITE_BLOCK.getId());
+            heavyImpact.add(Items.IRON_BLOCK);
+            heavyImpact.add(JItemRegistry.STELLAR_IRON_BLOCK.getId());
+            heavyImpact.add(Items.GOLD_BLOCK);
+            heavyImpact.add(Items.DIAMOND_BLOCK);
+            heavyImpact.add(Items.NETHERITE_BLOCK);
+            heavyImpact.add(Items.RAW_IRON_BLOCK);
+            heavyImpact.add(Items.RAW_GOLD_BLOCK);
+            heavyImpact.add(Items.BLAST_FURNACE);
+            heavyImpact.add(Items.ANVIL);
+            heavyImpact.add(Items.CHIPPED_ANVIL);
+            heavyImpact.add(Items.DAMAGED_ANVIL);
+            heavyImpact.add(Items.OBSIDIAN);
+            heavyImpact.add(Items.CRYING_OBSIDIAN);
+            heavyImpact.add(Items.RESPAWN_ANCHOR);
         }
     }
 
