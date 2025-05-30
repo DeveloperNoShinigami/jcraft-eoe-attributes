@@ -30,6 +30,8 @@ public abstract class RunMoment {
         ON_HIT = create("on_hit", RunMomentType.unit(() -> ON_HIT));
         AT_END = create("on_end", RunMomentType.unit(() -> AT_END));
         EVERY_TICK = create("every_tick", RunMomentType.unit(() -> EVERY_TICK));
+
+        BY_NAME.put("at_tick", TickRunMomentType.INSTANCE); // Special case for atTick, which is handled differently.
     }
 
     public static MapCodec<RunMoment> CODEC = JCodecUtils.codecFromMap(Codec.STRING, BY_NAME)
