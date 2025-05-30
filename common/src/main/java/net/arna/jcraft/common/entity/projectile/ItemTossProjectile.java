@@ -42,7 +42,7 @@ public class ItemTossProjectile extends AbstractArrow {
         }
     }
 
-    protected ItemStack getItem() {
+    public ItemStack getItem() {
         return this.entityData.get(ITEM);
     }
 
