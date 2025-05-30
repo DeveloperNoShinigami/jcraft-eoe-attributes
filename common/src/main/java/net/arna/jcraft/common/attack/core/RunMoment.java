@@ -89,7 +89,7 @@ public abstract class RunMoment {
         @Override
         public boolean shouldRun(final AbstractMove<?, ?> move, final IAttacker<?, ?> attacker, final LivingEntity user,
                                  final int tick, final @Nullable Set<LivingEntity> targets) {
-            return tick == this.tick;
+            return tick < 0 ? attacker.getMoveStun() == -tick - 1 : tick == this.tick;
         }
     }
 
