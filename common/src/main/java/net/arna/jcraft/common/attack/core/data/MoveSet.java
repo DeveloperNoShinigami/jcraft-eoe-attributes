@@ -325,7 +325,8 @@ public class MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
         this.moveMap.copyFrom(moveMap);
 
         initialized = true;
-        gameExecutor.execute(() -> listeners.forEach(listener -> listener.onMoveSetReload(this)));
+        gameExecutor.execute(() -> new HashSet<>(listeners).forEach(listener ->
+                listener.onMoveSetReload(this)));
     }
 
     /**
