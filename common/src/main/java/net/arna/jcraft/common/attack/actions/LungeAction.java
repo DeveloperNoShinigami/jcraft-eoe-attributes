@@ -64,7 +64,8 @@ public class LungeAction extends MoveAction<LungeAction, IAttacker<?, ?>> {
                     Codec.FLOAT.fieldOf("vertical_factor").forGetter(LungeAction::getVerticalFactor),
                     Codec.BOOL.optionalFieldOf("on_ground", false).forGetter(LungeAction::requireOnGround),
                     Codec.BOOL.optionalFieldOf("not_free", false).forGetter(LungeAction::requireNotFree)
-            ).apply(instance, apply(LungeAction::new)));
+            ).apply(instance, apply((factor, verticalFactor, onGround, notFree) ->
+                    new LungeAction(factor, verticalFactor))));
         }
     }
 }

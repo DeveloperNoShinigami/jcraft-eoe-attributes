@@ -53,7 +53,6 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * and moves that are actually executed (because of (de)serialization).
      * This is for internal use only.
      */
-    @Getter
     private T originalMove = getThis();
     private MoveClass moveClass;
     private int cooldown, windup;
@@ -62,7 +61,6 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * This move's assigned animation
      */
-    @Getter
     private Enum<?> animation;
     @NonNull
     private Component name = Component.empty(), description = Component.empty();
@@ -476,6 +474,25 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     public T withFollowupFrame(final OptionalInt frame) {
         followupFrame = frame;
         return getThis();
+    }
+
+    // Lombok does not understand these variable names already start with 'is',
+    // even though IntelliJ thinks it does.
+    // Also, for some reason, suppressing the warning gives a warning about the suppression being redundant,
+    // even though it is not.
+    @SuppressWarnings({"LombokGetterMayBeUsed", "RedundantSuppression"})
+    public boolean isCrouchingVariant() {
+        return isCrouchingVariant;
+    }
+
+    @SuppressWarnings({"LombokGetterMayBeUsed", "RedundantSuppression"})
+    public boolean isAerialVariant() {
+        return isAerialVariant;
+    }
+
+    @SuppressWarnings({"LombokGetterMayBeUsed", "RedundantSuppression"})
+    public boolean isFollowup() {
+        return isFollowup;
     }
 
     /**

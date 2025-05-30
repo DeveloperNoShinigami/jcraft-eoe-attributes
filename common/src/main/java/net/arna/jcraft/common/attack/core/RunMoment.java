@@ -94,11 +94,15 @@ public abstract class RunMoment {
 
     private static class TickRunMomentType implements RunMomentType<TickRunMoment> {
         public static final TickRunMomentType INSTANCE = new TickRunMomentType();
-        @Getter
         private static final Codec<TickRunMoment> codec = RecordCodecBuilder.create(instance ->
                 instance.group(
                         Codec.INT.fieldOf("tick").forGetter(runMoment -> runMoment.tick)
                 ).apply(instance, TickRunMoment::new)
         );
+
+        @Override
+        public Codec<TickRunMoment> getCodec() {
+            return codec;
+        }
     }
 }
