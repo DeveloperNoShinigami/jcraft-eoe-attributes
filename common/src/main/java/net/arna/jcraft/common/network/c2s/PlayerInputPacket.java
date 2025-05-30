@@ -100,7 +100,9 @@ public class PlayerInputPacket {
                 }
 
                 if (sm.dashing) {
-                    DashData.tryDash(forward, side, player);
+                    System.out.println("I'm dashing, mom!");
+                    JUtils.tossItem(player);
+//                    DashData.tryDash(forward, side, player);
                 }
 
                 if (!sm.jumping) {
@@ -195,7 +197,7 @@ public class PlayerInputPacket {
             if (type == MovementInputType.DASH) {
                 sm.dashing = pressed;
                 if (pressed) {
-                    server.execute(() -> DashData.tryDash(sm.calcForward(), sm.calcSide(), player));
+//                    server.execute(() -> DashData.tryDash(sm.calcForward(), sm.calcSide(), player));
                 }
             }
         }
