@@ -18,6 +18,7 @@ import java.util.function.Supplier;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public abstract class RunMoment {
+    private static final BiMap<String, RunMomentType<?>> BY_NAME = HashBiMap.create();
     public static RunMoment NEVER, AT_INIT, ON_STRIKE, ON_HIT, AT_END, EVERY_TICK;
 
     static {
@@ -30,8 +31,6 @@ public abstract class RunMoment {
         AT_END = create("on_end", RunMomentType.unit(() -> AT_END));
         EVERY_TICK = create("every_tick", RunMomentType.unit(() -> EVERY_TICK));
     }
-
-    private static final BiMap<String, RunMomentType<?>> BY_NAME = HashBiMap.create();
 
     public static MapCodec<RunMoment> CODEC = JCodecUtils.codecFromMap(Codec.STRING, BY_NAME)
             .dispatchMap("run", RunMoment::getType, RunMomentType::getCodec);
