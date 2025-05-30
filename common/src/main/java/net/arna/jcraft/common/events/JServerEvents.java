@@ -19,6 +19,7 @@ import net.arna.jcraft.common.saveddata.ExclusiveStandsData;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.tickable.*;
 import net.arna.jcraft.common.util.*;
+import net.arna.jcraft.mixin_logic.EntityAddon;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.*;
 import net.minecraft.core.BlockPos;
@@ -351,6 +352,10 @@ public class JServerEvents {
 
             standData.setTagged(true);
             // STAND
+            if (!JServerConfig.SPAWNER_STANDS.getValue() && ((EntityAddon) mob).jcraft$isFromSpawner()) {
+                return EventResult.pass();
+            }
+
             if (100 - random.nextInt(0, 100) > gameRules.getInt(CHANCE_MOB_SPAWNS_WITH_STAND)) {
                 return EventResult.pass();
             }
