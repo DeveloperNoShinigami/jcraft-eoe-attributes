@@ -16,11 +16,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -166,15 +171,23 @@ public class ItemTossProjectile extends AbstractArrow {
         // hit the ground
         final ItemStack item = getItem();
         // blocks get placed if possible
+        final BlockPos pos = result.getBlockPos().relative(result.getDirection());
+        final BlockState prevBlock = level().getBlockState(pos);
         if (item.getItem() instanceof BlockItem block) {
-            final BlockPos pos = result.getBlockPos().relative(result.getDirection());
-            final BlockState prevBlock = level().getBlockState(pos);
             if (prevBlock.isAir() || prevBlock.liquid()) {
                 level().setBlockAndUpdate(pos, block.getBlock().defaultBlockState());
             }
             else {
                 dropItem(result.getLocation());
             }
+        }
+        // buckets empty their content if any
+        else if (item.getItem() instanceof BucketItem bucket && bucket.content != Fluids.EMPTY) {
+            if (bucket.emptyContents(null, level(), result.getBlockPos(), result)) {
+                bucket.checkExtraContent(null, level(), item, pos);
+                setItem(Items.BUCKET.getDefaultInstance());
+            }
+            dropItem(result.getLocation());
         }
         // non blocks just get dropped
         else {
