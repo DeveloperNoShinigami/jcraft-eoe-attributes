@@ -167,6 +167,43 @@ public class JTagProviders {
             heavyImpact.add(Items.OBSIDIAN);
             heavyImpact.add(Items.CRYING_OBSIDIAN);
             heavyImpact.add(Items.RESPAWN_ANCHOR);
+
+            final var brittle = getOrCreateTagBuilder(JTagRegistry.BRITTLE);
+            brittle.add(Items.GLASS);
+            brittle.add(Items.TINTED_GLASS);
+            brittle.add(Items.WHITE_STAINED_GLASS);
+            brittle.add(Items.LIGHT_GRAY_STAINED_GLASS);
+            brittle.add(Items.GRAY_STAINED_GLASS);
+            brittle.add(Items.BLACK_STAINED_GLASS);
+            brittle.add(Items.BROWN_STAINED_GLASS);
+            brittle.add(Items.RED_STAINED_GLASS);
+            brittle.add(Items.ORANGE_STAINED_GLASS);
+            brittle.add(Items.YELLOW_STAINED_GLASS);
+            brittle.add(Items.LIME_STAINED_GLASS);
+            brittle.add(Items.GREEN_STAINED_GLASS);
+            brittle.add(Items.CYAN_STAINED_GLASS);
+            brittle.add(Items.LIGHT_BLUE_STAINED_GLASS);
+            brittle.add(Items.BLUE_STAINED_GLASS);
+            brittle.add(Items.PURPLE_STAINED_GLASS);
+            brittle.add(Items.MAGENTA_STAINED_GLASS);
+            brittle.add(Items.PINK_STAINED_GLASS);
+            brittle.add(Items.GLASS_PANE);
+            brittle.add(Items.WHITE_STAINED_GLASS_PANE);
+            brittle.add(Items.LIGHT_GRAY_STAINED_GLASS_PANE);
+            brittle.add(Items.GRAY_STAINED_GLASS_PANE);
+            brittle.add(Items.BLACK_STAINED_GLASS_PANE);
+            brittle.add(Items.BROWN_STAINED_GLASS_PANE);
+            brittle.add(Items.RED_STAINED_GLASS_PANE);
+            brittle.add(Items.ORANGE_STAINED_GLASS_PANE);
+            brittle.add(Items.YELLOW_STAINED_GLASS_PANE);
+            brittle.add(Items.LIME_STAINED_GLASS_PANE);
+            brittle.add(Items.GREEN_STAINED_GLASS_PANE);
+            brittle.add(Items.CYAN_STAINED_GLASS_PANE);
+            brittle.add(Items.LIGHT_BLUE_STAINED_GLASS_PANE);
+            brittle.add(Items.BLUE_STAINED_GLASS_PANE);
+            brittle.add(Items.PURPLE_STAINED_GLASS_PANE);
+            brittle.add(Items.MAGENTA_STAINED_GLASS_PANE);
+            brittle.add(Items.PINK_STAINED_GLASS_PANE);
         }
     }
 

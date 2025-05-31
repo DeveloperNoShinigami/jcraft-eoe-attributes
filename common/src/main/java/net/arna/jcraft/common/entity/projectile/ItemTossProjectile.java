@@ -172,9 +172,16 @@ public class ItemTossProjectile extends AbstractArrow {
         final ItemStack item = getItem();
         // blocks get placed if possible
         final BlockPos pos = result.getBlockPos().relative(result.getDirection());
+        double hardness = level().getBlockState(result.getBlockPos()).getBlock().defaultDestroyTime();
+        if (hardness < 0d) { // unbreakable
+            hardness = Double.MAX_VALUE;
+        }
         final BlockState prevBlock = level().getBlockState(pos);
         if (item.getItem() instanceof BlockItem block) {
-            if (prevBlock.isAir() || prevBlock.liquid()) {
+            if (item.is(JTagRegistry.BRITTLE) && hardness >= Blocks.STONE.defaultDestroyTime()) {
+                // brittle things get destroyed
+            }
+            else if (prevBlock.isAir() || prevBlock.liquid()) {
                 level().setBlockAndUpdate(pos, block.getBlock().defaultBlockState());
             }
             else {
@@ -189,7 +196,7 @@ public class ItemTossProjectile extends AbstractArrow {
             }
             dropItem(result.getLocation());
         }
-        // non blocks just get dropped
+        // rest just get dropped
         else {
             dropItem(result.getLocation());
         }
