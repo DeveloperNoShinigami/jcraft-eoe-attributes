@@ -2,9 +2,11 @@ package net.arna.jcraft.common.entity.projectile;
 
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.Containers;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -13,9 +15,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -83,7 +89,13 @@ public class ItemTossProjectile extends AbstractArrow {
 
     @Override
     protected void onHit(HitResult result) {
-        super.onHit(result);
+        final HitResult.Type type = result.getType();
+        if (type == HitResult.Type.ENTITY) {
+            this.onHitEntity((EntityHitResult)result);
+        } else if (type == HitResult.Type.BLOCK) {
+            BlockHitResult blockHitResult = (BlockHitResult)result;
+            this.onHitBlock(blockHitResult);
+        }
         if (!this.level().isClientSide && getItem().is(JTagRegistry.EXPLODES_ON_IMPACT)) {
             final boolean grief = this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
             this.level().explode(this, this.getX(), this.getY(), this.getZ(), 1, grief, Level.ExplosionInteraction.MOB);
@@ -92,7 +104,7 @@ public class ItemTossProjectile extends AbstractArrow {
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult result) {
+    protected void onHitEntity(final EntityHitResult result) {
         // this part has been heavily inspired by AbstractArrow
         Entity entity = result.getEntity();
         Entity entity2 = this.getOwner();
@@ -143,5 +155,42 @@ public class ItemTossProjectile extends AbstractArrow {
         if (this.getPierceLevel() <= 0) {
             this.discard();
         }
+    }
+
+    @Override
+    protected void onHitBlock(final BlockHitResult result) {
+        BlockState blockstate = this.level().getBlockState(result.getBlockPos());
+        // notify the block it has been hit with something
+        blockstate.onProjectileHit(this.level(), blockstate, result, this);
+
+        // hit the ground
+        final ItemStack item = getItem();
+        // blocks get placed if possible
+        if (item.getItem() instanceof BlockItem block) {
+            final BlockPos pos = result.getBlockPos().relative(result.getDirection());
+            final BlockState prevBlock = level().getBlockState(pos);
+            if (prevBlock.isAir() || prevBlock.liquid()) {
+                level().setBlockAndUpdate(pos, block.getBlock().defaultBlockState());
+            }
+            else {
+                dropItem(result.getLocation());
+            }
+        }
+        // non blocks just get dropped
+        else {
+            dropItem(result.getLocation());
+        }
+        inGround = true;
+        discard();
+    }
+
+    /**
+     * Drops the item behind this projectile at the specified location. Does NOT discard this projectile.
+     */
+    private void dropItem(final Vec3 pos) {
+        final Vec3 vec3 = pos.subtract(getX(), getY(), getZ());
+        setDeltaMovement(vec3);
+        final Vec3 vecN = vec3.normalize().scale(0.05d);
+        Containers.dropItemStack(level(), getX() - vecN.x, getY() - vecN.y, getZ() - vecN.z, getItem());
     }
 }
