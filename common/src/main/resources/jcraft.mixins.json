@@ -44,6 +44,7 @@
   ],
   "mixins": [
     "AnvilMenuMixin",
+    "BaseSpawnerMixin",
     "BedBlockMixin",
     "ChunkLightProviderAccessor",
     "EndCrystalEntityMixin",

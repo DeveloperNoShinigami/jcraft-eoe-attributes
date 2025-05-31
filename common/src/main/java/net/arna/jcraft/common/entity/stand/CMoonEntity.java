@@ -158,7 +158,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                             affected entities lose the gravity shift if they move 100m away from the user
                             """)
             );
-    public static final GravitationalHopMove GRAVITATIONAL_HOP = new GravitationalHopMove(340)
+    public static final GravitationalHopMove GRAVITATIONAL_HOP = new GravitationalHopMove(340, 200, 60)
             .withInfo(
                     Component.literal("Gravitational Hop/Local Gravity Change"),
                     Component.literal("if used mid air, jumps up and grants 2s slow falling/otherwise changes your gravitational direction")

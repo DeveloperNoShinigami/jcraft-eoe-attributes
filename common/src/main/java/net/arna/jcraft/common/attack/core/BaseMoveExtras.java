@@ -25,7 +25,6 @@ public class BaseMoveExtras {
             ExtraCodecs.COMPONENT.optionalFieldOf("description", Component.empty()).forGetter(BaseMoveExtras::getDescription),
             MoveSetLoader.MOVE_CONDITION_CODEC.get().listOf().optionalFieldOf("conditions", new ArrayList<>()).forGetter(BaseMoveExtras::getConditions),
             MoveSetLoader.MOVE_ACTION_CODEC.get().listOf().optionalFieldOf("actions", new ArrayList<>()).forGetter(BaseMoveExtras::getActions),
-            MoveSetLoader.MOVE_ACTION_CODEC.get().listOf().optionalFieldOf("init_actions", new ArrayList<>()).forGetter(BaseMoveExtras::getInitActions),
             ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("armor", 0).forGetter(BaseMoveExtras::getArmor),
             MobilityType.CODEC.optionalFieldOf("mobility_type").forGetter(BaseMoveExtras::getMobilityType),
             Codec.BOOL.optionalFieldOf("is_holdable").forGetter(BaseMoveExtras::getIsHoldable),
@@ -53,7 +52,7 @@ public class BaseMoveExtras {
     private OptionalInt followupFrame = OptionalInt.empty();
 
     private BaseMoveExtras(final Component name, final Component description, final List<MoveCondition<?, ?>> conditions,
-                           final List<MoveAction<?, ?>> actions, final List<MoveAction<?, ?>> initActions,
+                           final List<MoveAction<?, ?>> actions,
                            final int armor, Optional<MobilityType> mobilityType, final Optional<Boolean> isHoldable, final boolean ranged,
                            final boolean mayHitUser, final Optional<IntObjectPair<AbstractMove<?, ?>>> finisher,
                            final OptionalInt followupFrame) {
@@ -61,7 +60,6 @@ public class BaseMoveExtras {
         this.description = description;
         this.conditions.addAll(conditions);
         this.actions.addAll(actions);
-        this.initActions.addAll(initActions);
         this.armor = armor;
         this.mobilityType = mobilityType;
         this.isHoldable = isHoldable;
@@ -74,7 +72,7 @@ public class BaseMoveExtras {
     @SuppressWarnings({"unchecked", "RedundantCast", "rawtypes"})
     public static <A extends IAttacker<? extends A, ?>> BaseMoveExtras fromMove(final AbstractMove<?, A> move) {
         return new BaseMoveExtras(move.getName(), move.getDescription(), (List<MoveCondition<?, ?>>) (List) move.getConditions(),
-                (List<MoveAction<?, ?>>) (List) move.getActions(), (List<MoveAction<?, ?>>) (List) move.getInitActions(),
+                (List<MoveAction<?, ?>>) (List) move.getActions(),
                 move.getArmor(), Optional.ofNullable(move.getMobilityType()), Optional.ofNullable(move.getIsHoldable()),
                 move.isRanged(), move.isMayHitUser(), Optional.ofNullable((IntObjectPair<AbstractMove<?, ?>>) (IntObjectPair) move.getFinisher()),
                 move.getFollowupFrame());

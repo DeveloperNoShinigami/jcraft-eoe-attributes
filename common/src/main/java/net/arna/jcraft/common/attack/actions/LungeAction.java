@@ -53,17 +53,19 @@ public class LungeAction extends MoveAction<LungeAction, IAttacker<?, ?>> {
         return Type.INSTANCE;
     }
 
-    public static class Type implements MoveActionType<LungeAction> {
+    public static class Type extends MoveActionType<LungeAction> {
         public static final Type INSTANCE = new Type();
 
         @Override
         public Codec<LungeAction> getCodec() {
             return RecordCodecBuilder.create(instance -> instance.group(
+                    runMoment(),
                     Codec.FLOAT.fieldOf("factor").forGetter(LungeAction::getFactor),
                     Codec.FLOAT.fieldOf("vertical_factor").forGetter(LungeAction::getVerticalFactor),
                     Codec.BOOL.optionalFieldOf("on_ground", false).forGetter(LungeAction::requireOnGround),
                     Codec.BOOL.optionalFieldOf("not_free", false).forGetter(LungeAction::requireNotFree)
-            ).apply(instance, LungeAction::new));
+            ).apply(instance, apply((factor, verticalFactor, onGround, notFree) ->
+                    new LungeAction(factor, verticalFactor))));
         }
     }
 }
