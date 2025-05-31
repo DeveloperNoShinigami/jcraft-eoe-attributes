@@ -1,36 +1,47 @@
 package net.arna.jcraft.common.entity.projectile;
 
+import com.mojang.datafixers.util.Pair;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.common.component.living.CommonStandComponent;
+import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.LingeringPotionItem;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -38,6 +49,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class ItemTossProjectile extends AbstractArrow {
 
@@ -141,15 +154,39 @@ public class ItemTossProjectile extends AbstractArrow {
             return;
         }
 
-        // TODO stand disks on enemies
-
-        // TODO armor on enemies
+        // force stand on target
+        if (entity instanceof LivingEntity livingEntity && (livingEntity instanceof ServerPlayer || livingEntity.getType().is(JTagRegistry.CAN_HAVE_STAND)) && getItem().is(JItemRegistry.STAND_DISC.get())) {
+            // get NBT
+            StandType itemStand = null;
+            int itemSkin = 0;
+            final CompoundTag data = getItem().getOrCreateTag();
+            if (data.contains("StandID", Tag.TAG_INT)) {
+                itemStand = StandType.fromIdOrOrdinal(data.getInt("StandID"));
+            }
+            if (data.contains("Skin", Tag.TAG_INT)) {
+                itemSkin = data.getInt("Skin");
+            }
+            // apply stand
+            if (itemStand != null && !JCraft.getExclusiveStandsData().isStandUsed(itemStand)) {
+                final CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
+                if (standData.getType() == null) { // don't override current stand
+                    standData.setTypeAndSkin(itemStand, itemSkin);
+                    JCraft.summon(level(), livingEntity);
+                }
+            }
+        }
+        // force equip thrown stuff
+        if (entity instanceof Mob mob && getItem().is(JTagRegistry.EQUIPABLES)) {
+            mob.equipItemIfPossible(getItem());
+        }
 
         // TODO spec obtainment items
 
         // TODO stand upgrade items
 
         // TODO food fights
+
+        // TODO also, what about throwing a sword, bone meal, fire charge, flint and steal, shears,
 
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity)entity;
@@ -216,6 +253,24 @@ public class ItemTossProjectile extends AbstractArrow {
             }
             dropItem(result.getLocation());
         }
+        // hoe get used
+        else if (item.getItem() instanceof HoeItem hoe) {
+            final UseOnContext context = new UseOnContext(level(), null, InteractionHand.MAIN_HAND, item, result);
+            final Pair<Predicate<UseOnContext>, Consumer<UseOnContext>> pair = HoeItem.TILLABLES.get(level().getBlockState(result.getBlockPos()).getBlock());
+            if (pair != null) {
+                Predicate<UseOnContext> predicate = pair.getFirst();
+                Consumer<UseOnContext> consumer =    pair.getSecond();
+                if (predicate.test(context)) { // check if tilling is possible
+                    if (!level().isClientSide) {
+                        consumer.accept(context); // actual tilling happening
+                        context.getItemInHand().hurtAndBreak(1, (LivingEntity) getOwner(), owner -> {});
+                    }
+                }
+            }
+            dropItem(result.getLocation());
+        }
+        // TODO flint and steel
+        // TODO spawn eggs
         // buckets empty their content if any
         else if (item.getItem() instanceof BucketItem bucket && bucket.content != Fluids.EMPTY) {
             if (bucket.emptyContents(null, level(), result.getBlockPos(), result)) {
@@ -226,6 +281,7 @@ public class ItemTossProjectile extends AbstractArrow {
         }
         // arrows get flinged
         // TODO implement
+        // TODO XP bottles
         // potions get activated
         else if (item.getItem() instanceof PotionItem potion) {
             final ThrownPotion thrown = new ThrownPotion(level(), result.getLocation().x, result.getLocation().y, result.getLocation().z);
