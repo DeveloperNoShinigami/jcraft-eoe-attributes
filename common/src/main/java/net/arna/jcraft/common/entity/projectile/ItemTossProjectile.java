@@ -15,10 +15,13 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.LingeringPotionItem;
+import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -188,6 +191,9 @@ public class ItemTossProjectile extends AbstractArrow {
                 dropItem(result.getLocation());
             }
         }
+        else if (item.getItem() instanceof AxeItem) {
+            //if (level().getBlockState())
+        }
         // buckets empty their content if any
         else if (item.getItem() instanceof BucketItem bucket && bucket.content != Fluids.EMPTY) {
             if (bucket.emptyContents(null, level(), result.getBlockPos(), result)) {
@@ -195,6 +201,15 @@ public class ItemTossProjectile extends AbstractArrow {
                 setItem(Items.BUCKET.getDefaultInstance());
             }
             dropItem(result.getLocation());
+        }
+        // potions get activated
+        else if (item.getItem() instanceof PotionItem potion) {
+            if (potion instanceof LingeringPotionItem lingering) {
+                // TODO apply lingering potion effect
+            }
+            else {
+                // TODO apply splash potion effect
+            }
         }
         // rest just get dropped
         else {
