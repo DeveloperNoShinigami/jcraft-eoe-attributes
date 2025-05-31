@@ -15,6 +15,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,11 +25,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.Saddleable;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
@@ -154,6 +159,26 @@ public class ItemTossProjectile extends AbstractArrow {
             return;
         }
 
+        if (entity instanceof LivingEntity) {
+            LivingEntity livingEntity = (LivingEntity)entity;
+            // handle knockback
+            if (this.getKnockback() > 0) {
+                double d = Math.max(0, 1f - livingEntity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
+                Vec3 vec3 = this.getDeltaMovement().multiply(1f, 0f, 1f).normalize().scale(getKnockback() * 0.6 * d);
+                if (vec3.lengthSqr() > 0) {
+                    livingEntity.push(vec3.x, 0.1, vec3.z);
+                }
+            }
+//            if (!this.level().isClientSide && entity2 instanceof LivingEntity) {
+//                EnchantmentHelper.doPostHurtEffects(livingEntity, entity2);
+//                EnchantmentHelper.doPostDamageEffects((LivingEntity)entity2, livingEntity);
+//            }
+            this.doPostHurtEffects(livingEntity);
+//            if (entity2 != null && livingEntity != entity2 && livingEntity instanceof Player && entity2 instanceof ServerPlayer && !this.isSilent()) {
+//                ((ServerPlayer)entity2).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
+//            }
+        }
+
         // force stand on target
         if (entity instanceof LivingEntity livingEntity && (livingEntity instanceof ServerPlayer || livingEntity.getType().is(JTagRegistry.CAN_HAVE_STAND)) && getItem().is(JItemRegistry.STAND_DISC.get())) {
             // get NBT
@@ -184,29 +209,39 @@ public class ItemTossProjectile extends AbstractArrow {
 
         // TODO stand upgrade items
 
-        // TODO food fights
+        // force feed
+        if (entity instanceof LivingEntity livingEntity && getItem().isEdible()) {
+            livingEntity.eat(level(), getItem());
+            if (getItem().getItem() instanceof BowlFoodItem) {
+                setItem(Items.BOWL.getDefaultInstance());
+                dropItem(result.getLocation()); // FIXME doesn't work?
+            }
+        }
+
+        // slab iron on iron golem
+        if (entity instanceof IronGolem golem && getItem().is(Items.IRON_INGOT)) {
+            float prevHealHealth = golem.getHealth();
+            golem.heal(25.0F);
+            if (golem.getHealth() != prevHealHealth) {
+                float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
+                this.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0F, g);
+            }
+        }
+
+        // force equip saddles
+        if (entity instanceof Saddleable saddleable && getItem().is(Items.SADDLE)) {
+            saddleable.equipSaddle(null);float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
+            this.playSound(saddleable.getSaddleSoundEvent(), 1.0F, g);
+        }
+
+        // force equip horse armor
+        if (entity instanceof AbstractHorse horse && horse.isArmor(getItem())) {
+            // this is needed because the equipArmor method of the horse wants a player
+            horse.inventory.setItem(1, getItem());
+        }
 
         // TODO also, what about throwing a sword, bone meal, fire charge, flint and steal, shears,
 
-        if (entity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity)entity;
-            // handle knockback
-            if (this.getKnockback() > 0) {
-                double d = Math.max(0, 1f - livingEntity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
-                Vec3 vec3 = this.getDeltaMovement().multiply(1f, 0f, 1f).normalize().scale(getKnockback() * 0.6 * d);
-                if (vec3.lengthSqr() > 0) {
-                    livingEntity.push(vec3.x, 0.1, vec3.z);
-                }
-            }
-//            if (!this.level().isClientSide && entity2 instanceof LivingEntity) {
-//                EnchantmentHelper.doPostHurtEffects(livingEntity, entity2);
-//                EnchantmentHelper.doPostDamageEffects((LivingEntity)entity2, livingEntity);
-//            }
-            this.doPostHurtEffects(livingEntity);
-//            if (entity2 != null && livingEntity != entity2 && livingEntity instanceof Player && entity2 instanceof ServerPlayer && !this.isSilent()) {
-//                ((ServerPlayer)entity2).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
-//            }
-        }
         // end of inspired part
         if (!this.level().isClientSide && getItem().is(JTagRegistry.EXPLODES_ON_IMPACT)) {
             entity.hurt(this.damageSources().arrow(this, entity2), 6f);
