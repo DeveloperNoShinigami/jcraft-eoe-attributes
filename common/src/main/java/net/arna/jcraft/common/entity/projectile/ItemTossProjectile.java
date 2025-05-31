@@ -15,6 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
@@ -22,6 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.LingeringPotionItem;
 import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -33,6 +36,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Optional;
 
 public class ItemTossProjectile extends AbstractArrow {
 
@@ -136,6 +141,16 @@ public class ItemTossProjectile extends AbstractArrow {
             return;
         }
 
+        // TODO stand disks on enemies
+
+        // TODO armor on enemies
+
+        // TODO spec obtainment items
+
+        // TODO stand upgrade items
+
+        // TODO food fights
+
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity)entity;
             // handle knockback
@@ -191,8 +206,15 @@ public class ItemTossProjectile extends AbstractArrow {
                 dropItem(result.getLocation());
             }
         }
-        else if (item.getItem() instanceof AxeItem) {
-            //if (level().getBlockState())
+        // axe get used
+        else if (item.getItem() instanceof AxeItem axe) {
+            BlockState blockState = level().getBlockState(result.getBlockPos());
+            Optional<BlockState> stripped = axe.getStripped(blockState);
+            if (stripped.isPresent()) {
+                level().setBlockAndUpdate(result.getBlockPos(), stripped.get());
+                item.hurtAndBreak(1, (LivingEntity)getOwner(), owner -> {/* do nothing */});
+            }
+            dropItem(result.getLocation());
         }
         // buckets empty their content if any
         else if (item.getItem() instanceof BucketItem bucket && bucket.content != Fluids.EMPTY) {
@@ -202,14 +224,21 @@ public class ItemTossProjectile extends AbstractArrow {
             }
             dropItem(result.getLocation());
         }
+        // arrows get flinged
+        // TODO implement
         // potions get activated
         else if (item.getItem() instanceof PotionItem potion) {
-            if (potion instanceof LingeringPotionItem lingering) {
-                // TODO apply lingering potion effect
+            final ThrownPotion thrown = new ThrownPotion(level(), result.getLocation().x, result.getLocation().y, result.getLocation().z);
+            final Potion effect = PotionUtils.getPotion(item);
+            thrown.setItem(item);
+            if (potion instanceof LingeringPotionItem) {
+                thrown.makeAreaOfEffectCloud(item, effect);
             }
             else {
-                // TODO apply splash potion effect
+                thrown.applySplash(PotionUtils.getMobEffects(item), null);
             }
+            int i = effect.hasInstantEffects() ? 2007 : 2002;
+            this.level().levelEvent(i, this.blockPosition(), PotionUtils.getColor(item));
         }
         // rest just get dropped
         else {
