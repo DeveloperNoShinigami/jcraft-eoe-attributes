@@ -4,12 +4,14 @@ import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -56,13 +58,14 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -71,8 +74,11 @@ public class ItemTossProjectile extends AbstractArrow {
 
     protected static final EntityDataAccessor<ItemStack> ITEM;
 
+    protected static final EntityDataAccessor<Integer> RICOCHETS;
+
     static {
         ITEM = SynchedEntityData.defineId(ItemTossProjectile.class, EntityDataSerializers.ITEM_STACK);
+        RICOCHETS = SynchedEntityData.defineId(ItemTossProjectile.class, EntityDataSerializers.INT);
     }
 
     public ItemTossProjectile(final Level level) {
@@ -97,8 +103,16 @@ public class ItemTossProjectile extends AbstractArrow {
         return this.entityData.get(ITEM);
     }
 
-    protected void setItem(ItemStack item) {
+    protected void setItem(@NotNull ItemStack item) {
         this.entityData.set(ITEM, item.copyWithCount(1));
+    }
+
+    public int getRicochets() {
+        return this.entityData.get(RICOCHETS);
+    }
+
+    protected void incrementRicochets() {
+        this.entityData.set(RICOCHETS, getRicochets() + 1);
     }
 
     @Override
@@ -110,6 +124,7 @@ public class ItemTossProjectile extends AbstractArrow {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(ITEM, ItemStack.EMPTY);
+        this.entityData.define(RICOCHETS, 0);
     }
 
     @Override
@@ -264,19 +279,45 @@ public class ItemTossProjectile extends AbstractArrow {
 
     @Override
     protected void onHitBlock(final BlockHitResult result) {
-        BlockState blockstate = this.level().getBlockState(result.getBlockPos());
+        final BlockState blockstate = level().getBlockState(result.getBlockPos());
         // notify the block it has been hit with something
-        blockstate.onProjectileHit(this.level(), blockstate, result, this);
+        blockstate.onProjectileHit(level(), blockstate, result, this);
 
-        // hit the ground
-        final ItemStack item = getItem();
-        // blocks get placed if possible
-        final BlockPos pos = result.getBlockPos().relative(result.getDirection());
         final BlockState hitBlock = level().getBlockState(result.getBlockPos());
         double hardness = hitBlock.getBlock().defaultDestroyTime();
         if (hardness < 0d) { // unbreakable
             hardness = Double.MAX_VALUE;
         }
+
+        // ricochet
+        incrementRicochets();
+        if (getRicochets() <= maxRicochets()) {
+            // calculate penetrative value and decide if it should land
+            final Vec3i intNormal = result.getDirection().getNormal();
+            final Vec3 normal = new Vec3(intNormal.getX(), intNormal.getY(), intNormal.getZ());
+            final Vec3 impactVec = getDeltaMovement();
+
+            // a*b = |a|*|b|*cos(φ) , a*b = a.dotProduct(b)
+            final double impactAngleRad = Math.acos(normal.dot(impactVec.normalize())) - Math.PI / 2.0;
+            final double impactAngleDeg = Math.toDegrees(impactAngleRad);
+
+            // Ek = mv^2/2
+            final double kineticEnergy = mass() * impactVec.lengthSqr() / 2;
+            final double penAngle = penetrationAngle() + hardness * 5; // This is bs but so is minecraft physics
+
+            final boolean lowEnergy = kineticEnergy < 0.001;
+            if (impactAngleDeg <= penAngle && !lowEnergy) { // If penetrated or ran out of energy
+                setDeltaMovement(impactVec.add(normal).scale(0.5 / hardness));
+            }
+
+            // don't hit the ground
+            return;
+        }
+
+        // hit the ground
+        final ItemStack item = getItem();
+        // blocks get placed if possible
+        final BlockPos pos = result.getBlockPos().relative(result.getDirection());
         if (item.getItem() instanceof BlockItem block) {
             if (item.is(JTagRegistry.BRITTLE) && hardness >= Blocks.STONE.defaultDestroyTime()) {
                 // brittle things get destroyed
@@ -366,5 +407,26 @@ public class ItemTossProjectile extends AbstractArrow {
         setDeltaMovement(vec3);
         final Vec3 vecN = vec3.normalize().scale(0.05d);
         Containers.dropItemStack(level(), getX() - vecN.x, getY() - vecN.y, getZ() - vecN.z, getItem());
+    }
+
+    /**
+     * Maximal number of ricocheting this projectile can do.
+     */
+    public int maxRicochets() {
+        if (getItem().is(Items.SLIME_BALL)) {
+            return 15;
+        }
+        return 0;
+    }
+
+    public double penetrationAngle() {
+        return 45d; // ??? what does it mean?
+    }
+
+    /**
+     * Mass of the projectile.
+     */
+    public double mass() {
+        return 1d;
     }
 }
