@@ -38,6 +38,14 @@ public interface JStandTypeRegistry {
     RegistrySupplier<StandType2> PURPLE_HAZE_DISTORTION = register("purple_haze_distortion", JEntityTypeRegistry.PURPLE_HAZE_DISTORTION);
     RegistrySupplier<StandType2> HORUS = register("horus", JEntityTypeRegistry.HORUS);
     RegistrySupplier<StandType2> CINDERELLA = register("cinderella", JEntityTypeRegistry.CINDERELLA);
+    RegistrySupplier<StandType2> OSIRIS = register("osiris", JEntityTypeRegistry.OSIRIS);
+    RegistrySupplier<StandType2> ATUM = register("atum", JEntityTypeRegistry.ATUM);
+    RegistrySupplier<StandType2> CHARIOT_REQUIEM = register("chariot_requiem", JEntityTypeRegistry.CHARIOT_REQUIEM);
+    RegistrySupplier<StandType2> DIVER_DOWN = register("diver_down", JEntityTypeRegistry.DIVER_DOWN);
+    RegistrySupplier<StandType2> DRAGONS_DREAM = register("dragons_dream", JEntityTypeRegistry.DRAGONS_DREAM);
+    RegistrySupplier<StandType2> FOO_FIGHTERS = register("foo_fighters", JEntityTypeRegistry.FOO_FIGHTERS);
+    RegistrySupplier<StandType2> GOO_GOO_DOLLS = register("goo_goo_dolls", JEntityTypeRegistry.GOO_GOO_DOLLS);
+    RegistrySupplier<StandType2> SHADOW_THE_WORLD = register("shadow_the_world", JEntityTypeRegistry.SHADOW_THE_WORLD);
     RegistrySupplier<StandType2> METALLICA = register("metallica", JEntityTypeRegistry.METALLICA);
     RegistrySupplier<StandType2> THE_HAND = register("the_hand", JEntityTypeRegistry.THE_HAND);
 
