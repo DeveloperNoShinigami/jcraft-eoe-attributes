@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.component.living;
 
 import net.arna.jcraft.common.component.JComponent;
-import net.arna.jcraft.common.data.StandType2;
+import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import org.jetbrains.annotations.Nullable;
 

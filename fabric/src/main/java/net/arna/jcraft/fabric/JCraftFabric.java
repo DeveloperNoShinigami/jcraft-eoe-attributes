@@ -11,7 +11,7 @@ import net.arna.jcraft.common.attack.core.data.MoveActionType;
 import net.arna.jcraft.common.attack.core.data.MoveConditionType;
 import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.data.StandType2;
+import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.events.JServerEvents;
 import net.arna.jcraft.fabric.common.terrablender.JTerraFabric;
 import net.arna.jcraft.registry.JBlockRegistry;

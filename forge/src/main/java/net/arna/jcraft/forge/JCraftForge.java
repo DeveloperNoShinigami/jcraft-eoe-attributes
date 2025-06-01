@@ -12,7 +12,7 @@ import net.arna.jcraft.common.attack.core.data.MoveActionType;
 import net.arna.jcraft.common.attack.core.data.MoveConditionType;
 import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.data.StandType2;
+import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.events.EntityTickEvent;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;

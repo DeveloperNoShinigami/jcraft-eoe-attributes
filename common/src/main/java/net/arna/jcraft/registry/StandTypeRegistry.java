@@ -3,7 +3,7 @@ package net.arna.jcraft.registry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.data.StandType2;
+import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;

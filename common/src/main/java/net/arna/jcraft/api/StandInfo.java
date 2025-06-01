@@ -1,4 +1,4 @@
-package net.arna.jcraft.common.data;
+package net.arna.jcraft.api;
 
 import lombok.*;
 import net.minecraft.network.chat.Component;
