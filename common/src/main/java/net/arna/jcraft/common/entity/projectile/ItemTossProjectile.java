@@ -4,11 +4,9 @@ import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandType;
-import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
-import net.arna.jcraft.registry.JSoundRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -20,6 +18,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -57,8 +56,10 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.JukeboxBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -336,7 +337,7 @@ public class ItemTossProjectile extends AbstractArrow {
             dropItem(result.getLocation());
         }
         // hoe get used
-        else if (item.getItem() instanceof HoeItem hoe) {
+        else if (item.getItem() instanceof HoeItem) {
             final UseOnContext context = new UseOnContext(level(), null, InteractionHand.MAIN_HAND, item, result);
             final Pair<Predicate<UseOnContext>, Consumer<UseOnContext>> pair = HoeItem.TILLABLES.get(level().getBlockState(result.getBlockPos()).getBlock());
             if (pair != null) {
@@ -358,6 +359,22 @@ public class ItemTossProjectile extends AbstractArrow {
                 setItem(Items.BUCKET.getDefaultInstance());
             }
             dropItem(result.getLocation());
+        }
+        // music disks fling into a jukebox
+        else if (item.is(ItemTags.MUSIC_DISCS)) {
+            final BlockState box = level().getBlockState(result.getBlockPos());
+            if (box.is(Blocks.JUKEBOX) && !box.getValue(JukeboxBlock.HAS_RECORD)) {
+                BlockEntity blockEntity = level().getBlockEntity(result.getBlockPos());
+                if (blockEntity instanceof JukeboxBlockEntity boxEntity) {
+                    boxEntity.setFirstItem(item.copy());
+                }
+                else { // shouldn't happen, but who knows?
+                    dropItem(result.getLocation());
+                }
+            }
+            else {
+                dropItem(result.getLocation());
+            }
         }
         // arrows get flinged
         // TODO implement
