@@ -70,7 +70,6 @@
     "PersistentEntitySectionManagerMixin",
     "PlayerEntityMixin",
     "RandomStrollGoalMixin",
-    "ReloadableServerResourcesMixin",
     "RespawnAnchorBlockMixin",
     "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin",
