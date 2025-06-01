@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JCodecUtils;
@@ -307,16 +307,16 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S extends Enum<?>> imp
             return JCodecUtils.recursive("MoveMap.Entry", self ->
                     RecordCodecBuilder.create(instance -> instance.group(
                             MoveClass.CODEC.fieldOf("class").forGetter(Entry::getMoveClass),
-                            MoveSetLoader.MOVE_CODEC.get().fieldOf("move").forGetter(Entry::getMove),
+                            JRegistries.MOVE_CODEC.fieldOf("move").forGetter(Entry::getMove),
                             CooldownType.CODEC.fieldOf("cooldown_type").forGetter(Entry::getCooldownType),
                             stateCodec.optionalFieldOf("anim_state").forGetter(e -> Optional.ofNullable(e.getAnimState())),
                             self.optionalFieldOf("crouching_variant").forGetter(e -> Optional.ofNullable(e.getCrouchingVariant())),
                             self.optionalFieldOf("aerial_variant").forGetter(e -> Optional.ofNullable(e.getAerialVariant())),
                             self.optionalFieldOf("followup").forGetter(e -> Optional.ofNullable(e.getFollowup()))
-                ).apply(instance, (moveClass, move, cooldownType,
-                                   animState, crouchingVariant, aerialVariant, followup) ->
-                        new Entry<>(moveClass, move, cooldownType, animState.orElse(null),
-                                crouchingVariant.orElse(null), aerialVariant.orElse(null), followup.orElse(null)))));
+                    ).apply(instance, (moveClass, move, cooldownType,
+                                       animState, crouchingVariant, aerialVariant, followup) ->
+                            new Entry<>(moveClass, move, cooldownType, animState.orElse(null),
+                                    crouchingVariant.orElse(null), aerialVariant.orElse(null), followup.orElse(null)))));
         }
 
         /**

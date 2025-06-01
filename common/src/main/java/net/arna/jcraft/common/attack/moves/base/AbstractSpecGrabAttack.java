@@ -7,12 +7,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.common.attack.core.AttackMoveExtras;
 import net.arna.jcraft.common.attack.core.BaseMoveExtras;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.StunType;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
@@ -89,7 +89,7 @@ public abstract class AbstractSpecGrabAttack<T extends AbstractSpecGrabAttack<T,
     protected abstract static class Type<M extends AbstractSpecGrabAttack<? extends M, ?, ?>> extends AbstractSimpleAttack.Type<M> {
         @SuppressWarnings("unchecked")
         protected <A extends IAttacker<? extends A, ?>> RecordCodecBuilder<M, AbstractMove<?, A>> hitMove() {
-            return MoveSetLoader.MOVE_CODEC.get()
+            return JRegistries.MOVE_CODEC
                     .fieldOf("hit_move")
                     .<AbstractMove<?, A>>xmap(m -> (AbstractMove<?, A>) m, m -> m)
                     .forGetter(m -> (AbstractMove<?, A>) m.getHitMove());

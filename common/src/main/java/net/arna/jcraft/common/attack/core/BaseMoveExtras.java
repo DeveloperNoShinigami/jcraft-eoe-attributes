@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ExtraCodecs;
@@ -23,8 +23,8 @@ public class BaseMoveExtras {
     public static final Supplier<Codec<BaseMoveExtras>> CODEC = () -> RecordCodecBuilder.create(instance -> instance.group(
             ExtraCodecs.COMPONENT.optionalFieldOf("name", Component.empty()).forGetter(BaseMoveExtras::getName),
             ExtraCodecs.COMPONENT.optionalFieldOf("description", Component.empty()).forGetter(BaseMoveExtras::getDescription),
-            MoveSetLoader.MOVE_CONDITION_CODEC.get().listOf().optionalFieldOf("conditions", new ArrayList<>()).forGetter(BaseMoveExtras::getConditions),
-            MoveSetLoader.MOVE_ACTION_CODEC.get().listOf().optionalFieldOf("actions", new ArrayList<>()).forGetter(BaseMoveExtras::getActions),
+            JRegistries.MOVE_CONDITION_CODEC.listOf().optionalFieldOf("conditions", new ArrayList<>()).forGetter(BaseMoveExtras::getConditions),
+            JRegistries.MOVE_ACTION_CODEC.listOf().optionalFieldOf("actions", new ArrayList<>()).forGetter(BaseMoveExtras::getActions),
             ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("armor", 0).forGetter(BaseMoveExtras::getArmor),
             MobilityType.CODEC.optionalFieldOf("mobility_type").forGetter(BaseMoveExtras::getMobilityType),
             Codec.BOOL.optionalFieldOf("is_holdable").forGetter(BaseMoveExtras::getIsHoldable),
@@ -32,7 +32,7 @@ public class BaseMoveExtras {
             Codec.BOOL.optionalFieldOf("may_hit_user", false).forGetter(BaseMoveExtras::isMayHitUser),
             RecordCodecBuilder.<IntObjectPair<AbstractMove<?, ?>>>create(i1 -> i1.group(
                     Codec.INT.fieldOf("tick").forGetter(IntObjectPair::leftInt),
-                    MoveSetLoader.MOVE_CODEC.get().fieldOf("move").forGetter(IntObjectPair::right)
+                    JRegistries.MOVE_CODEC.fieldOf("move").forGetter(IntObjectPair::right)
             ).apply(i1, IntObjectPair::of)).optionalFieldOf("finisher").forGetter(BaseMoveExtras::getFinisher),
             ExtraCodecs.POSITIVE_INT.optionalFieldOf("followup_frame")
                     .xmap(i -> i.map(OptionalInt::of).orElseGet(OptionalInt::empty),

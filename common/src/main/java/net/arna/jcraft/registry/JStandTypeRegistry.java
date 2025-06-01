@@ -3,18 +3,16 @@ package net.arna.jcraft.registry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.function.Supplier;
 
-public interface StandTypeRegistry {
-    ResourceKey<Registry<StandType2>> REGISTRY_KEY = ResourceKey.createRegistryKey(JCraft.id("stand_type"));
-    DeferredRegister<StandType2> STAND_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, REGISTRY_KEY);
+public interface JStandTypeRegistry {
+    DeferredRegister<StandType2> STAND_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, JRegistries.STAND_TYPE_REGISTRY_KEY);
 
     RegistrySupplier<StandType2> NONE = register("none", () -> null);
     RegistrySupplier<StandType2> STAR_PLATINUM = register("star_platinum", JEntityTypeRegistry.STAR_PLATINUM);

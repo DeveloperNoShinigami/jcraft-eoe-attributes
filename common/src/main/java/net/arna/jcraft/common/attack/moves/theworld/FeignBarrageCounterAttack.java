@@ -5,8 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
@@ -95,7 +95,7 @@ public final class FeignBarrageCounterAttack extends AbstractCounterAttack<Feign
         @SuppressWarnings("unchecked")
         @Override
         protected @NonNull App<RecordCodecBuilder.Mu<FeignBarrageCounterAttack>, FeignBarrageCounterAttack> buildCodec(RecordCodecBuilder.Instance<FeignBarrageCounterAttack> instance) {
-            return baseDefault(instance).and(MoveSetLoader.MOVE_CODEC.get()
+            return baseDefault(instance).and(JRegistries.MOVE_CODEC.get()
                     .fieldOf("hit_move")
                     .<AbstractMove<?, ? super TheWorldEntity>>xmap(m -> (AbstractMove<?, ? super TheWorldEntity>) m, m -> m)
                     .forGetter(FeignBarrageCounterAttack::getHitMove))

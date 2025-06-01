@@ -1,18 +1,11 @@
 package net.arna.jcraft.forge;
 
-import com.mojang.serialization.Codec;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.forge.EventBuses;
-import lombok.Getter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.argumenttype.AttackArgumentType;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
-import net.arna.jcraft.common.attack.core.data.MoveActionType;
-import net.arna.jcraft.common.attack.core.data.MoveConditionType;
-import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.events.EntityTickEvent;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;
@@ -20,10 +13,8 @@ import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.arna.jcraft.forge.events.ClientSetupEvents;
 import net.arna.jcraft.forge.loot.JForgeLootModifiers;
-import net.arna.jcraft.registry.StandTypeRegistry;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
-import net.minecraft.core.Registry;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -31,25 +22,11 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryBuilder;
 
 import static net.arna.jcraft.JCraft.MOD_ID;
 
 @Mod(MOD_ID)
 public final class JCraftForge {
-    private static final DeferredRegister<MoveType<?>> MOVE_TYPE_REGISTER = DeferredRegister.create(JCraft.id("move_type"), MOD_ID);
-    private static final DeferredRegister<MoveConditionType<?>> MOVE_CONDITION_TYPE_REGISTER = DeferredRegister.create(JCraft.id("move_condition_type"), MOD_ID);
-    private static final DeferredRegister<MoveActionType<?>> MOVE_ACTION_TYPE_REGISTER = DeferredRegister.create(JCraft.id("move_action_type"), MOD_ID);
-    private static final DeferredRegister<StandType2> STAND_TYPE_REGISTER = DeferredRegister.create(StandTypeRegistry.REGISTRY_KEY.location(), MOD_ID);
-    @Getter
-    private static Registry<StandType2> standTypeRegistry;
-    @Getter
-    private static Codec<MoveType<?>> moveTypeCodec;
-    @Getter
-    private static Codec<MoveConditionType<?>> moveConditionTypeCodec;
-    @Getter
-    private static Codec<MoveActionType<?>> moveActionTypeCodec;
 
     public JCraftForge() {
         IEventBus modBus = Mod.EventBusSubscriber.Bus.MOD.bus().get();
@@ -67,11 +44,6 @@ public final class JCraftForge {
 
         //DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> JCraftClient::init);
         JNetworkingForge.initServer();
-
-        registerMoveTypes(modBus);
-        registerMoveConditionTypes(modBus);
-        registerMoveActionTypes(modBus);
-        registerStandTypes(modBus);
 
         EntityTickEvent.ENTITY_PRE.register(JCraftForge::tickEntityCaps);
         TickEvent.ServerLevelTick.SERVER_LEVEL_POST.register(JCraftForge::tickWorldCaps);
@@ -102,38 +74,5 @@ public final class JCraftForge {
 
             VampireCapability.getCapability(living).tick();
         }
-    }
-
-    private void registerMoveTypes(IEventBus modBus) {
-        MoveSetLoader.registerMoves(MOVE_TYPE_REGISTER::register);
-
-        MOVE_TYPE_REGISTER.makeRegistry(() -> RegistryBuilder.<MoveType<?>>of()
-                .onCreate((r, m) -> moveTypeCodec = r.getCodec()));
-        MOVE_TYPE_REGISTER.register(modBus);
-    }
-
-    private void registerMoveConditionTypes(IEventBus modBus) {
-        MoveSetLoader.registerConditions(MOVE_CONDITION_TYPE_REGISTER::register);
-
-        MOVE_CONDITION_TYPE_REGISTER.makeRegistry(() -> RegistryBuilder.<MoveConditionType<?>>of()
-                .onCreate((r, m) -> moveConditionTypeCodec = r.getCodec()));
-        MOVE_CONDITION_TYPE_REGISTER.register(modBus);
-    }
-
-    private void registerMoveActionTypes(IEventBus modBus) {
-        MoveSetLoader.registerActions(MOVE_ACTION_TYPE_REGISTER::register);
-
-        MOVE_ACTION_TYPE_REGISTER.makeRegistry(() -> RegistryBuilder.<MoveActionType<?>>of()
-                .onCreate((r, m) -> moveActionTypeCodec = r.getCodec()));
-        MOVE_ACTION_TYPE_REGISTER.register(modBus);
-    }
-
-    private void registerStandTypes(IEventBus modBus) {
-        // TODO register the stand types here
-
-        STAND_TYPE_REGISTER.makeRegistry(() -> RegistryBuilder.<StandType2>of()
-                .onCreate((r, m) ->
-                        standTypeRegistry = new ForgeRegistryWrapper<>(r)));
-        STAND_TYPE_REGISTER.register(modBus);
     }
 }

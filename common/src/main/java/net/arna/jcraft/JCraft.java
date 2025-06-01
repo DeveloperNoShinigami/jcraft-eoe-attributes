@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.block.CoffinBlock;
@@ -84,7 +85,10 @@ import static net.arna.jcraft.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY_TYP
 import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
 import static net.arna.jcraft.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JItemRegistry.ITEM_REGISTRY;
-import static net.arna.jcraft.registry.StandTypeRegistry.STAND_TYPE_REGISTRY;
+import static net.arna.jcraft.registry.JMoveActionTypeRegistry.MOVE_ACTION_TYPE_REGISTRY;
+import static net.arna.jcraft.registry.JMoveConditionTypeRegistry.MOVE_CONDITION_TYPE_REGISTRY;
+import static net.arna.jcraft.registry.JMoveTypeRegistry.MOVE_TYPE_REGISTRY;
+import static net.arna.jcraft.registry.JStandTypeRegistry.STAND_TYPE_REGISTRY;
 import static net.minecraft.world.level.GameRules.*;
 
 public final class JCraft {
@@ -154,6 +158,8 @@ public final class JCraft {
                 JThingRegistry.registerThings() - for interfaces/classes with a NON-EMPTY registerThings() method
          */
 
+        JRegistries.init();
+
         // Particle registration (serverside)
         JParticleTypeRegistry.init();
         PARTICLES.register();
@@ -162,7 +168,12 @@ public final class JCraft {
         BLOCK_REGISTRY.register();
         ITEM_REGISTRY.register();
         BLOCK_ENTITY_TYPE_REGISTRY.register();
+
+        // Custom registries
         STAND_TYPE_REGISTRY.register();
+        MOVE_ACTION_TYPE_REGISTRY.register();
+        MOVE_CONDITION_TYPE_REGISTRY.register();
+        MOVE_TYPE_REGISTRY.register();
 
         JTagRegistry.init();
 
@@ -381,7 +392,7 @@ public final class JCraft {
         }
         CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(user);
         StandType2 type = standData.getType();
-        if (type == StandTypeRegistry.NONE.get()) {
+        if (type == JStandTypeRegistry.NONE.get()) {
             return null;
         }
         StandEntity<?, ?> stand = type == null ? null : type.createEntity(world);

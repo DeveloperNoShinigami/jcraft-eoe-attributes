@@ -5,9 +5,9 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.JRegistryHolder;
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.StandData;
-import net.arna.jcraft.registry.StandTypeRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
@@ -72,7 +72,7 @@ public class StandDataLoader {
                     path.substring("stands/".length(), path.length() - ".json".length()));
 
             // Check if a stand type with this id exists in the registry
-            if (!JRegistryHolder.getStandTypeRegistry().containsKey(location)) {
+            if (!JRegistries.STAND_TYPE_REGISTRY.contains(location)) {
                 JCraft.LOGGER.warn("Found stand data for non-existent stand {}. Skipping...", location);
                 continue;
             }
@@ -105,8 +105,8 @@ public class StandDataLoader {
         }
 
         // Iterate through the StandType registry to ensure all stand types have data.
-        for (ResourceLocation id : JRegistryHolder.getStandTypeRegistry().keySet()) {
-            if (id.equals(StandTypeRegistry.NONE.getId())) {
+        for (ResourceLocation id : JRegistries.STAND_TYPE_REGISTRY.getIds()) {
+            if (id.equals(JStandTypeRegistry.NONE.getId())) {
                 // Ignore the NONE stand type, as it has no data.
                 continue;
             }
