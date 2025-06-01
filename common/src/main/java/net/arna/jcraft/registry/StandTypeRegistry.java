@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public interface StandTypeRegistry {
     ResourceKey<Registry<StandType2>> REGISTRY_KEY = ResourceKey.createRegistryKey(JCraft.id("stand_type"));
-    DeferredRegister<StandType2> REGISTRY = DeferredRegister.create(JCraft.MOD_ID, REGISTRY_KEY);
+    DeferredRegister<StandType2> STAND_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, REGISTRY_KEY);
 
     RegistrySupplier<StandType2> NONE = register("none", () -> null);
     RegistrySupplier<StandType2> STAR_PLATINUM = register("star_platinum", JEntityTypeRegistry.STAR_PLATINUM);
@@ -58,6 +58,6 @@ public interface StandTypeRegistry {
         ResourceLocation id = JCraft.id(name);
         // The '::get' part is to satisfy the compiler (generic type parameter issue).
         StandType2 standType = StandType2.of(id, entityTypeSupplier::get);
-        return REGISTRY.register(name, () -> standType);
+        return STAND_TYPE_REGISTRY.register(name, () -> standType);
     }
 }

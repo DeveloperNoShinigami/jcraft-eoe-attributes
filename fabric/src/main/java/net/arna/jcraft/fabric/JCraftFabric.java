@@ -24,8 +24,8 @@ import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.registry.LandPathNodeTypesRegistry;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
-import net.minecraft.core.DefaultedMappedRegistry;
 import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -35,6 +35,8 @@ import java.util.function.Consumer;
 import static net.arna.jcraft.common.loot.JLootTableHelper.modifications;
 
 public final class JCraftFabric implements ModInitializer {
+    @Getter
+    private static Registry<StandType2> standTypeRegistry;
     @Getter
     private static Codec<MoveType<?>> moveTypeCodec;
     @Getter
@@ -63,6 +65,7 @@ public final class JCraftFabric implements ModInitializer {
         registerMoveTypes();
         registerMoveConditions();
         registerMoveActions();
+        registerStandTypes();
 
         // make mobs avoid the hot sand
         LandPathNodeTypesRegistry.register(JBlockRegistry.HOT_SAND_BLOCK.get(), (state, neighbor) -> neighbor ? BlockPathTypes.WALKABLE : BlockPathTypes.DAMAGE_OTHER);
@@ -105,8 +108,8 @@ public final class JCraftFabric implements ModInitializer {
                 JCraft.id(id)), supplier.get(), Lifecycle.stable()));
     }
 
-    private void registerStandData() {
-        DefaultedMappedRegistry<StandType2> registry = FabricRegistryBuilder
+    private void registerStandTypes() {
+        standTypeRegistry = FabricRegistryBuilder
                 .createDefaulted(StandTypeRegistry.REGISTRY_KEY, JCraft.id("none"))
                 .attribute(RegistryAttribute.SYNCED)
                 .attribute(RegistryAttribute.MODDED)

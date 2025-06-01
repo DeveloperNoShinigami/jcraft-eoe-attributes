@@ -16,6 +16,7 @@ import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
+import net.arna.jcraft.common.data.StandType2;
 import net.arna.jcraft.common.effects.DazedStatusEffect;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -83,6 +84,7 @@ import static net.arna.jcraft.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY_TYP
 import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
 import static net.arna.jcraft.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JItemRegistry.ITEM_REGISTRY;
+import static net.arna.jcraft.registry.StandTypeRegistry.STAND_TYPE_REGISTRY;
 import static net.minecraft.world.level.GameRules.*;
 
 public final class JCraft {
@@ -160,6 +162,7 @@ public final class JCraft {
         BLOCK_REGISTRY.register();
         ITEM_REGISTRY.register();
         BLOCK_ENTITY_TYPE_REGISTRY.register();
+        STAND_TYPE_REGISTRY.register();
 
         JTagRegistry.init();
 
@@ -377,11 +380,11 @@ public final class JCraft {
             return null;
         }
         CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(user);
-        StandType type = standData.getType();
-        if (type == StandType.NONE) {
+        StandType2 type = standData.getType();
+        if (type == StandTypeRegistry.NONE.get()) {
             return null;
         }
-        StandEntity<?, ?> stand = type == null ? null : type.createNew(world);
+        StandEntity<?, ?> stand = type == null ? null : type.createEntity(world);
 
         if (stand == null) {
             return null;

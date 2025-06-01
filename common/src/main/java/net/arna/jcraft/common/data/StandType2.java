@@ -6,6 +6,7 @@ import lombok.ToString;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 
 import java.util.function.Supplier;
 
@@ -28,5 +29,14 @@ public class StandType2 {
 
     public StandData getData() {
         return StandData.EMPTY; // TODO get the corresponding StandData from the registry
+    }
+
+    /**
+     * Creates a new StandEntity of this type in the given level.
+     * @param level The level in which to create the entity.
+     * @return A new StandEntity of this type in the given level.
+     */
+    public StandEntity<?, ?> createEntity(Level level) {
+        return getEntityType().create(level);
     }
 }
