@@ -9,11 +9,13 @@ import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Containers;
@@ -23,8 +25,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.Saddleable;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -35,13 +39,16 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.ExperienceBottleItem;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.LingeringPotionItem;
 import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -53,6 +60,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -305,7 +313,6 @@ public class ItemTossProjectile extends AbstractArrow {
             dropItem(result.getLocation());
         }
         // TODO flint and steel
-        // TODO spawn eggs
         // buckets empty their content if any
         else if (item.getItem() instanceof BucketItem bucket && bucket.content != Fluids.EMPTY) {
             if (bucket.emptyContents(null, level(), result.getBlockPos(), result)) {
@@ -316,7 +323,6 @@ public class ItemTossProjectile extends AbstractArrow {
         }
         // arrows get flinged
         // TODO implement
-        // TODO XP bottles
         // potions get activated
         else if (item.getItem() instanceof PotionItem potion) {
             final ThrownPotion thrown = new ThrownPotion(level(), result.getLocation().x, result.getLocation().y, result.getLocation().z);
@@ -329,7 +335,22 @@ public class ItemTossProjectile extends AbstractArrow {
                 thrown.applySplash(PotionUtils.getMobEffects(item), null);
             }
             int i = effect.hasInstantEffects() ? 2007 : 2002;
-            this.level().levelEvent(i, this.blockPosition(), PotionUtils.getColor(item));
+            this.level().levelEvent(i, pos, PotionUtils.getColor(item));
+        }
+        // XP bottle gets activated
+        else if (item.getItem() instanceof ExperienceBottleItem) {
+            if (!level().isClientSide()) {
+                level().levelEvent(2002, pos, PotionUtils.getColor(Potions.WATER));
+                int amount = 3 + level().random.nextInt(5) + level().random.nextInt(5);
+                ExperienceOrb.award((ServerLevel)level(), result.getLocation(), amount);
+            }
+        }
+        // spawn eggs get activated
+        else if (item.getItem() instanceof SpawnEggItem egg) {
+            final EntityType<?> entityType2 = egg.getType(item.getTag());
+            if (!level().isClientSide()) {
+                entityType2.spawn((ServerLevel)level(), item, null, pos, MobSpawnType.SPAWN_EGG, true, false);
+            }
         }
         // rest just get dropped
         else {
