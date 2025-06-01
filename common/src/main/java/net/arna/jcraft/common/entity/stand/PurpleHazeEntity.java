@@ -142,7 +142,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     @Override
     public void desummon() {
         if (toEvolve && hasUser()) {
-            JComponentPlatformUtils.getStandData(getUserOrThrow()).setType(StandType.PURPLE_HAZE_DISTORTION);
+            JComponentPlatformUtils.getStandComponent(getUserOrThrow()).setType(StandType.PURPLE_HAZE_DISTORTION);
             JCraft.summon(level(), getUserOrThrow());
         }
 
@@ -363,7 +363,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     @Override
     public void freshKill(@Nullable LivingEntity entity) {
         super.freshKill(entity);
-        if (!StandType.isNone(JComponentPlatformUtils.getStandData(entity).getType())) {
+        if (!StandType.isNone(JComponentPlatformUtils.getStandComponent(entity).getType())) {
             flowerable = true;
         }
     }

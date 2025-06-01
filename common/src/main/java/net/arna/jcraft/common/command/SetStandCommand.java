@@ -81,7 +81,7 @@ public class SetStandCommand {
 
         for (final Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
-                final CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
+                final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(livingEntity);
                 if (type != null) {
                     standData.setTypeAndSkin(type, skin);
                 }

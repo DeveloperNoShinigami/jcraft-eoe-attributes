@@ -135,7 +135,7 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
         if (clone == null) {
             return;
         }
-        JComponentPlatformUtils.getStandData(clone).setType(StandType.NONE);
+        JComponentPlatformUtils.getStandComponent(clone).setType(StandType.NONE);
         applySandCloneModifiers(clone);
     }
 

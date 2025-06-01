@@ -11,9 +11,11 @@ import net.arna.jcraft.common.attack.core.data.MoveActionType;
 import net.arna.jcraft.common.attack.core.data.MoveConditionType;
 import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.attack.core.data.MoveType;
+import net.arna.jcraft.common.data.StandType2;
 import net.arna.jcraft.common.events.JServerEvents;
 import net.arna.jcraft.fabric.common.terrablender.JTerraFabric;
 import net.arna.jcraft.registry.JBlockRegistry;
+import net.arna.jcraft.registry.StandTypeRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
@@ -22,6 +24,7 @@ import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.registry.LandPathNodeTypesRegistry;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
+import net.minecraft.core.DefaultedMappedRegistry;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
@@ -100,5 +103,13 @@ public final class JCraftFabric implements ModInitializer {
 
         MoveSetLoader.registerActions((id, supplier) -> registry.register(ResourceKey.create(registry.key(),
                 JCraft.id(id)), supplier.get(), Lifecycle.stable()));
+    }
+
+    private void registerStandData() {
+        DefaultedMappedRegistry<StandType2> registry = FabricRegistryBuilder
+                .createDefaulted(StandTypeRegistry.REGISTRY_KEY, JCraft.id("none"))
+                .attribute(RegistryAttribute.SYNCED)
+                .attribute(RegistryAttribute.MODDED)
+                .buildAndRegister();
     }
 }

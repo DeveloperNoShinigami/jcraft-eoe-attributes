@@ -21,7 +21,7 @@ public class DarbyOlderEntity extends PathfinderMob implements GeoEntity {
 
     public DarbyOlderEntity(Level world) {
         super(JEntityTypeRegistry.DARBY_OLDER.get(), world);
-        final CommonStandComponent standData = JComponentPlatformUtils.getStandData(this);
+        final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(this);
         standData.setType(StandType.OSIRIS);
         standData.setSkin(0);
 

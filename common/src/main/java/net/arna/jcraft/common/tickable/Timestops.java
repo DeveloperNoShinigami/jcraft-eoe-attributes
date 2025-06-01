@@ -49,7 +49,7 @@ public class Timestops {
             if (living instanceof StandEntity<?,?> livingStand) {
                 stand = livingStand;
             } else {
-                CommonStandComponent standComponent = JComponentPlatformUtils.getStandData(living);
+                CommonStandComponent standComponent = JComponentPlatformUtils.getStandComponent(living);
                 if (standComponent.getStand() != null) stand = standComponent.getStand();
             }
 

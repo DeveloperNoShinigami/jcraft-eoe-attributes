@@ -24,7 +24,7 @@ import java.util.Optional;
 public class JComponentPlatformUtils {
 
     @ExpectPlatform
-    public static CommonStandComponent getStandData(LivingEntity entity) {
+    public static CommonStandComponent getStandComponent(LivingEntity entity) {
         throw new AssertionError();
     }
 

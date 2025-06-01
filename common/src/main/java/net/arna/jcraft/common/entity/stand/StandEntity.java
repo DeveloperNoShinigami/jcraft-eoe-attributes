@@ -29,6 +29,9 @@ import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
+import net.arna.jcraft.common.data.StandData;
+import net.arna.jcraft.common.data.StandType2;
+import net.arna.jcraft.common.data.SummonData;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
@@ -78,7 +81,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.Supplier;
+import java.util.Objects;
 
 import static net.arna.jcraft.JCraft.comboBreak;
 import static net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
@@ -132,12 +135,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     private boolean holding = false;
     protected boolean idleOverride = false;
 
-    // In meters and degrees
-    protected float idleDistance = 1.25f;
-    @Getter
-    protected float idleRotation = -45f;
     public static final float ATTACK_ROTATION = 90f;
-    protected float blockDistance = 0.75f;
 
     protected float maxStandGauge = 90f;
 
@@ -149,13 +147,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     public int armorPoints;
     private boolean performedThisTick;
 
-    // Info
-    @Getter
-    protected int proCount;
-    @Getter
-    protected int conCount;
-    public String freespace;
-
     // Player Movement Input
     public int lastRemoteInputTime;
     public Vec3 remoteSpeed = Vec3.ZERO;
@@ -166,32 +157,17 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     @Setter
     private boolean remoteJumpInput = false, remoteSneakInput = false;
 
-    // Summoning
-    @Nullable
-    private final Supplier<SoundEvent> summonSound;
-    private final boolean playGenericSummonSound;
-    protected int summonAnimDuration = 19;
     private boolean playSummonAnim = true;
     @Setter
-    private boolean playSummonSound = true;
-    @Setter
-    private boolean playDesummonSound = true;
+    private boolean playSummonSound = true, playDesummonSound = true;
 
     // Data
     @Getter
-    private final StandType standType;
+    private final StandType2 standType;
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     protected Vector3f[] auraColors = {new Vector3f(), new Vector3f(1f, 0f, 0f), new Vector3f(0f, 1f, 0f), new Vector3f(0f, 0f, 1f)};
 
-    protected StandEntity(StandType type, Level world) {
-        this(type, world, null, true);
-    }
-
-    protected StandEntity(StandType type, Level world, @Nullable Supplier<SoundEvent> summonSound) {
-        this(type, world, summonSound, false);
-    }
-
-    protected StandEntity(StandType type, Level world, @Nullable Supplier<SoundEvent> summonSound, boolean playGenericSummonSound) {
+    protected StandEntity(StandType2 type, Level world) {
         super(type.getEntityType(), world);
         this.moveSet = MoveSet.get(type, "default");
         if (this.moveSet == null) {
@@ -202,8 +178,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         noPhysics = true;
         standType = type;
         this.noCulling = true;
-        this.summonSound = summonSound;
-        this.playGenericSummonSound = playGenericSummonSound;
 
         assert getThis() == this;
     }
@@ -244,6 +218,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             throw new NullPointerException("No user set");
         }
         return user;
+    }
+
+    public StandData getStandData() {
+        return getStandType().getData();
     }
 
     public boolean hasUser() {
@@ -320,11 +298,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     public int getSkin() {
-        return Mth.clamp(entityData.get(SKIN), 0, getStandType().getSkinCount());
+        return Mth.clamp(entityData.get(SKIN), 0, getStandData().getInfo().getSkinCount());
     }
 
     public void setSkin(int skin) {
-        if (skin < 0 || skin >= getStandType().getSkinCount()) {
+        if (skin < 0 || skin >= getStandData().getInfo().getSkinCount()) {
             skin = 0;
         }
         entityData.set(SKIN, skin);
@@ -1005,7 +983,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (moveStun > 0 && !(blocking && wantToBlock && moveStun == 1)) {
             setMoveStun(--moveStun); // Counting down animation time or similar
         }
-        if (playSummonAnim && (moveStun > 0 || tickCount > summonAnimDuration || getState() == getBlockState())) {
+        if (playSummonAnim && (moveStun > 0 || tickCount > getStandData().getSummonData().getAnimDuration() || getState() == getBlockState())) {
             playSummonAnim = false;
         }
 
@@ -1024,7 +1002,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             if (isPassenger()) {
                 unRide();
             }
-            if (user.isAlive()) {
+            if (Objects.requireNonNull(user).isAlive()) {
                 // Clientside rotational sync for controllable remote mode
                 if (remoteControllable()) {
                     user.setYBodyRot(user.getYHeadRot());
@@ -1036,7 +1014,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 discard();
             }
         } else if (!isPassenger() && !isFree()) {
-            startRiding(user, true);
+            startRiding(Objects.requireNonNull(user), true);
         }
 
         /*
@@ -1152,8 +1130,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                     setRawState(0);
                     setReset(false);
 
-                    setDistanceOffset(idleDistance);
-                    setRotationOffset(idleRotation);
+                    setDistanceOffset(getStandData().getIdleDistance());
+                    setRotationOffset(getStandData().getIdleRotation());
                 }
             } else {
                 idleOverride();
@@ -1166,7 +1144,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                     setMoveStun(1);
                 }
 
-                setDistanceOffset(blockDistance);
+                setDistanceOffset(getStandData().getBlockDistance());
                 setRotationOffset(ATTACK_ROTATION);
                 standBlock();
                 setStateNoReset(getBlockState()); // Set after standBlock() so blocking logic can account for previous state
@@ -1497,10 +1475,12 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return;
         }
 
+        SummonData summonData = getStandData().getSummonData();
+        SoundEvent summonSound = summonData.getSound();
         if (summonSound != null) {
-            playSound(summonSound.get(), 1f, 1f);
+            playSound(summonSound, 1f, 1f);
         }
-        if (summonSound == null || playGenericSummonSound) {
+        if (summonSound == null || summonData.isPlayGenericSound()) {
             playSound(JSoundRegistry.STAND_SUMMON.get(), 1f, 1f);
         }
     }
@@ -1531,9 +1511,9 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
         setSkin(nbt.getInt("Skin"));
         if (getVehicle() instanceof LivingEntity livingEntity) {
-            final CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
-            if (standData.getType() == standType) {
-                standData.setStand(this);
+            final CommonStandComponent standComp = JComponentPlatformUtils.getStandComponent(livingEntity);
+            if (standComp.getType() == standType) {
+                standComp.setStand(this);
             }
         }
     }

@@ -34,7 +34,7 @@ public class StandBlockCommand {
         }
         for (Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
-                StandEntity<?, ?> stand = JComponentPlatformUtils.getStandData(livingEntity).getStand();
+                StandEntity<?, ?> stand = JComponentPlatformUtils.getStandComponent(livingEntity).getStand();
 
                 if (stand == null) {
                     continue;

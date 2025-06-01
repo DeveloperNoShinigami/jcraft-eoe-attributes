@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 import java.util.Optional;
 
 public class JComponentPlatformUtilsImpl {
-    public static CommonStandComponent getStandData(LivingEntity entity) {
+    public static CommonStandComponent getStandComponent(LivingEntity entity) {
         return StandCapability.getCapability(entity);
     }
 

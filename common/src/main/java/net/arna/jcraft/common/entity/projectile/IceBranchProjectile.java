@@ -228,7 +228,7 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
     private boolean canAttack(LivingEntity living) {
         if (living == livingOwner)
             return false;
-        if (livingOwner != null && JComponentPlatformUtils.getStandData(livingOwner).getStand() == living)
+        if (livingOwner != null && JComponentPlatformUtils.getStandComponent(livingOwner).getStand() == living)
             return false;
         return true;
     }

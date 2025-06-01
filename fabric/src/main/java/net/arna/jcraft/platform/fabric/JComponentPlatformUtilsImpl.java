@@ -1,7 +1,6 @@
 package net.arna.jcraft.platform.fabric;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.entity.CommonGrabComponent;
 import net.arna.jcraft.common.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.component.living.*;
@@ -16,12 +15,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class JComponentPlatformUtilsImpl {
 
-    public static CommonStandComponent getStandData(LivingEntity entity) {
+    public static CommonStandComponent getStandComponent(LivingEntity entity) {
         return JComponents.STAND.get(entity);
     }
 

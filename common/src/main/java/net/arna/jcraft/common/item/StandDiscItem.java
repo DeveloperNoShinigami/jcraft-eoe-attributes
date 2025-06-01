@@ -70,7 +70,7 @@ public class StandDiscItem extends Item {
             return InteractionResultHolder.fail(itemStack);
         }
 
-        final CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
+        final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(user);
         final StandType userStand = standData.getType();
         final int userSkin = standData.getSkin();
 

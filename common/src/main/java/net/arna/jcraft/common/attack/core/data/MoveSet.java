@@ -208,7 +208,7 @@ public class MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
      */
     public static void loadAll(ResourceManager resourceManager, Executor gameExecutor) {
         Map<ResourceLocation, Resource> resources = resourceManager.listResources("movesets",
-                rl -> JCraft.MOD_ID.equals(rl.getNamespace()) && rl.getPath().endsWith(".json"));
+                rl -> rl.getPath().endsWith(".json"));
 
         // Group resources by move set.
         Map<String, Map<String, Multimap<String, Pair<ResourceLocation, Resource>>>> moveSets = Map.of(

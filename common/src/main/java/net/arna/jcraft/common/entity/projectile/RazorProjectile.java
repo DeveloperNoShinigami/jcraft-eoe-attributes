@@ -102,7 +102,7 @@ public class RazorProjectile extends AbstractArrow implements GeoEntity {
 
     @Override
     protected boolean tryPickup(@NonNull Player player) {
-        if (JComponentPlatformUtils.getStandData(player).getStand() instanceof MetallicaEntity metallica) {
+        if (JComponentPlatformUtils.getStandComponent(player).getStand() instanceof MetallicaEntity metallica) {
             if (metallica.getIron() < MetallicaEntity.IRON_MAX) {
                 metallica.addIron(IRON_COST);
                 return true;

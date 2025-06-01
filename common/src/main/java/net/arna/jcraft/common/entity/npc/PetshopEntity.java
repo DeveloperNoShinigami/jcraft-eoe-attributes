@@ -25,7 +25,7 @@ public class PetshopEntity extends PathfinderMob implements GeoEntity {
 
     public PetshopEntity(Level world) {
         super(JEntityTypeRegistry.PETSHOP.get(), world);
-        final CommonStandComponent standData = JComponentPlatformUtils.getStandData(this);
+        final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(this);
         standData.setType(StandType.HORUS);
         standData.setSkin(0);
 

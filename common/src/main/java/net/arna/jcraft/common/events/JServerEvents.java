@@ -330,7 +330,7 @@ public class JServerEvents {
 
         if (entity instanceof Mob mob) {
             // Mark stand user mobs
-            CommonStandComponent standData = JComponentPlatformUtils.getStandData(mob);
+            CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(mob);
             if (standData.getType() != null && standData.getType() != StandType.NONE) {
                 JEnemies.add(mob);
                 return EventResult.pass();
@@ -446,7 +446,7 @@ public class JServerEvents {
             if (living instanceof ServerPlayer serverPlayer) {
                 GameRules gameRules = serverWorld.getGameRules();
                 if (!gameRules.getBoolean(JCraft.KEEP_STAND)) {
-                    JComponentPlatformUtils.getStandData(living).setTypeAndSkin(StandType.NONE, 0);
+                    JComponentPlatformUtils.getStandComponent(living).setTypeAndSkin(StandType.NONE, 0);
                 }
                 if (!gameRules.getBoolean(JCraft.KEEP_SPEC)) {
                     JComponentPlatformUtils.getSpecData(serverPlayer).setType(SpecType.NONE);

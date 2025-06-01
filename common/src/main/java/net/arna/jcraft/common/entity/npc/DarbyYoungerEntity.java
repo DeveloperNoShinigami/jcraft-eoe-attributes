@@ -21,7 +21,7 @@ public class DarbyYoungerEntity extends PathfinderMob implements GeoEntity {
 
     public DarbyYoungerEntity(Level world) {
         super(JEntityTypeRegistry.DARBY_YOUNGER.get(), world);
-        final CommonStandComponent standData = JComponentPlatformUtils.getStandData(this);
+        final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(this);
         standData.setType(StandType.ATUM);
         standData.setSkin(0);
 

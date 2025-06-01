@@ -44,7 +44,7 @@ public class JEnemies {
             if (enemy.isAlive()) {
                 if (!enemy.isNoAi()) {
                     final ServerLevel world = server.getLevel(enemyData.getValue());
-                    final CommonStandComponent standComponent = JComponentPlatformUtils.getStandData(enemy);
+                    final CommonStandComponent standComponent = JComponentPlatformUtils.getStandComponent(enemy);
                     if (standComponent.getType() != null) {
                         final StandEntity<?, ?> stand = standComponent.getStand();
                         if (stand == null) {

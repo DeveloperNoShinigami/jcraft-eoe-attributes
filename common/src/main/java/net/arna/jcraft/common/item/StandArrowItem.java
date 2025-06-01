@@ -42,7 +42,7 @@ public class StandArrowItem extends ArrowItem {
 
     @Override
     public @NonNull InteractionResultHolder<ItemStack> use(@NonNull final Level world, final Player user, @NonNull final InteractionHand hand) {
-        final CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
+        final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(user);
         final StandEntity<?, ?> oldStand = standData.getStand();
         final ItemStack itemStack = user.getItemInHand(hand);
 

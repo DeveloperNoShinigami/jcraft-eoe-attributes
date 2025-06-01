@@ -38,6 +38,7 @@ public final class JCraftForge {
     private static final DeferredRegister<MoveType<?>> MOVE_TYPE_REGISTER = DeferredRegister.create(JCraft.id("move_type"), MOD_ID);
     private static final DeferredRegister<MoveConditionType<?>> MOVE_CONDITION_TYPE_REGISTER = DeferredRegister.create(JCraft.id("move_condition_type"), MOD_ID);
     private static final DeferredRegister<MoveActionType<?>> MOVE_ACTION_TYPE_REGISTER = DeferredRegister.create(JCraft.id("move_action_type"), MOD_ID);
+    private static final DeferredRegister<MoveActionType<?>> STAND_REGISTER = DeferredRegister.create(JCraft.id("stand"), MOD_ID);
     @Getter
     private static Codec<MoveType<?>> moveTypeCodec;
     @Getter
@@ -119,5 +120,9 @@ public final class JCraftForge {
         MOVE_ACTION_TYPE_REGISTER.makeRegistry(() -> RegistryBuilder.<MoveActionType<?>>of()
                 .onCreate((r, m) -> moveActionTypeCodec = r.getCodec()));
         MOVE_ACTION_TYPE_REGISTER.register(modBus);
+    }
+
+    private void registerStands(IEventBus modBus) {
+
     }
 }

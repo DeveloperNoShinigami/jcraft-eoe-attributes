@@ -58,7 +58,7 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
                     int itemSkin = 0;
 
                     CompoundTag data = itemStack.getOrCreateTag();
-                    CommonStandComponent standData = JComponentPlatformUtils.getStandData(target);
+                    CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(target);
 
                     if (standData.getType() != null) {
                         return; // Can't overwrite other's stands

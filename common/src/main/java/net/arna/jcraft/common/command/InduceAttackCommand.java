@@ -54,7 +54,7 @@ public class InduceAttackCommand {
             for (Entity entity : targets) {
                 if (entity instanceof LivingEntity living) {
                     JComponentPlatformUtils.getCooldowns(living).clear();
-                    StandEntity<?, ?> standEntity = JComponentPlatformUtils.getStandData(living).getStand();
+                    StandEntity<?, ?> standEntity = JComponentPlatformUtils.getStandComponent(living).getStand();
 
                     if (standEntity != null) {
                         if (standEntity.initMove(moveClass)) {

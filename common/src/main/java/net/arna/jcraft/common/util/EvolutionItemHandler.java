@@ -64,7 +64,7 @@ public class EvolutionItemHandler {
         }
 
         Collection<Evolution> evolutions = EvolutionItemHandler.evolutions.get(item);
-        CommonStandComponent standData = JComponentPlatformUtils.getStandData(player);
+        CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(player);
         StandType current = standData.getType();
 
         // If there's a more specific evolution that matches, use that.

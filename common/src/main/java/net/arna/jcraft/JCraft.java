@@ -273,7 +273,7 @@ public final class JCraft {
                     return false;
                 }
 
-                CommonStandComponent standData = JComponentPlatformUtils.getStandData(entity);
+                CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(entity);
                 return standData.getType() == standType;
             });
         }, p -> true, Component.translatable("argument.entity.options.jcraft_stand"));
@@ -376,7 +376,7 @@ public final class JCraft {
         if (user.hasEffect(JStatusRegistry.STANDLESS.get())) {
             return null;
         }
-        CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
+        CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(user);
         StandType type = standData.getType();
         if (type == StandType.NONE) {
             return null;

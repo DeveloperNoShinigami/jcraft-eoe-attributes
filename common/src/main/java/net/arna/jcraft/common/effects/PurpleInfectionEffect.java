@@ -24,7 +24,7 @@ public class PurpleInfectionEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(final LivingEntity entity, final int amplifier) {
-        StandType standType = JComponentPlatformUtils.getStandData(entity).getType();
+        StandType standType = JComponentPlatformUtils.getStandComponent(entity).getType();
         float damage = 0.6666f; // 1/3rd of a heart
         if (standType == StandType.PURPLE_HAZE_DISTORTION) {
             damage /= 3.0f;

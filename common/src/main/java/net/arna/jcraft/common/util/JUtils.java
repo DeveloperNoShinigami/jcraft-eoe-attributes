@@ -483,7 +483,7 @@ public final class JUtils {
 
     @Nullable
     public static StandEntity<?, ?> getStand(LivingEntity entity) {
-        return entity == null ? null : entity instanceof StandEntity<?, ?> stand ? stand : JComponentPlatformUtils.getStandData(entity).getStand();
+        return entity == null ? null : entity instanceof StandEntity<?, ?> stand ? stand : JComponentPlatformUtils.getStandComponent(entity).getStand();
     }
 
     public static boolean isAffectedByTimeStop(Entity entity) {
@@ -748,7 +748,7 @@ public final class JUtils {
     public static boolean shouldRenderStandsFor(Player player) {
         // Don't render stands if stand user sight is enabled and the player doesn't have a stand.
         if (JServerConfig.STAND_USER_SIGHT.getValue()) {
-            StandType standType = JComponentPlatformUtils.getStandData(player).getType();
+            StandType standType = JComponentPlatformUtils.getStandComponent(player).getType();
             return standType != null && standType != StandType.NONE;
         }
 

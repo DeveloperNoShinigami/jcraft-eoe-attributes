@@ -284,7 +284,7 @@ public class PlayerInputPacket {
                     buf2.writeInt(0);
                     ServerChannelFeedbackPacket.send(player, buf2);
 
-                    CommonStandComponent standData = JComponentPlatformUtils.getStandData(player);
+                    CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(player);
                     StandEntity<?, ?> stand = standData.getStand();
                     if (stand != null) {
                         int moveStun = stand.getMoveStun();

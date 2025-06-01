@@ -286,7 +286,7 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     private boolean cantAttack(LivingEntity living) {
         if (living == livingOwner)
             return true;
-        return livingOwner != null && JComponentPlatformUtils.getStandData(livingOwner).getStand() == living;
+        return livingOwner != null && JComponentPlatformUtils.getStandComponent(livingOwner).getStand() == living;
     }
 
     @Override

@@ -72,7 +72,7 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
 
             attacker.level().addFreshEntity(clone);
             clone.setItemSlot(EquipmentSlot.MAINHAND, weapon);
-            JComponentPlatformUtils.getStandData(clone).setType(StandType.NONE);
+            JComponentPlatformUtils.getStandComponent(clone).setType(StandType.NONE);
         } else if (user instanceof final Mob mob) { //Code sourced from MobEntity.class convertTo()
             final EntityType<?> entityType = mob.getType();
             final Mob newMob = (Mob) entityType.create(attacker.level());
@@ -94,7 +94,7 @@ public final class CloneSpawnMove extends AbstractMove<CloneSpawnMove, D4CEntity
 
             attacker.level().addFreshEntity(newMob);
             newMob.setItemSlot(EquipmentSlot.MAINHAND, weapon);
-            JComponentPlatformUtils.getStandData(newMob).setType(StandType.NONE);
+            JComponentPlatformUtils.getStandComponent(newMob).setType(StandType.NONE);
         }
 
         return Set.of();

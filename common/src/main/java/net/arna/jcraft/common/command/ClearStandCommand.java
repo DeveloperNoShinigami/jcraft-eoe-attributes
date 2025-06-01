@@ -28,7 +28,7 @@ public class ClearStandCommand {
 
         for (Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
-                CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
+                CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(livingEntity);
 
                 if (standData.getType() == null) {
                     continue;

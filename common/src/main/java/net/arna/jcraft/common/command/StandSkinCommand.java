@@ -38,7 +38,7 @@ public class StandSkinCommand {
         }
         for (Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
-                CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
+                CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(livingEntity);
                 StandEntity<?, ?> stand = standData.getStand();
 
                 if (stand == null) {

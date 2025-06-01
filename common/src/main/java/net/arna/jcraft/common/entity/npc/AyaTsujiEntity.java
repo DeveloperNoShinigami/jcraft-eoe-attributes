@@ -46,7 +46,7 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
 
     public AyaTsujiEntity(Level world) {
         super(JEntityTypeRegistry.AYA_TSUJI.get(), world);
-        final CommonStandComponent standData = JComponentPlatformUtils.getStandData(this);
+        final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(this);
         standData.setType(StandType.CINDERELLA);
         standData.setSkin(0);
 

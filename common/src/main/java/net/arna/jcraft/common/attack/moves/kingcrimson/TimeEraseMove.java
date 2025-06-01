@@ -122,7 +122,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
 
     private void summonFakeKC(final KingCrimsonEntity attacker) {
         Mob doppelganger = attacker.getMoveContext().get(DOPPELGANGER);
-        CommonStandComponent standData = JComponentPlatformUtils.getStandData(doppelganger);
+        CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(doppelganger);
         standData.setTypeAndSkin(attacker.getStandType(), attacker.getSkin());
 
         StandEntity<?, ?> clone = JCraft.summon(attacker.level(), doppelganger);
