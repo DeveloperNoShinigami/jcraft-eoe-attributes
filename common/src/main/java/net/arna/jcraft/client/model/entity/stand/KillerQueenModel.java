@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.common.entity.stand.KillerQueenEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 
 /**
  * The {@link StandEntityModel} for {@link KillerQueenEntity}.
@@ -9,6 +9,6 @@ import net.arna.jcraft.common.entity.stand.StandType;
  */
 public class KillerQueenModel extends StandEntityModel<KillerQueenEntity> {
     public KillerQueenModel() {
-        super(StandType.KILLER_QUEEN, -0.1745329251f, -0.36f);
+        super(JStandTypeRegistry.KILLER_QUEEN.get(), -0.1745329251f, -0.36f);
     }
 }

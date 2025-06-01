@@ -3,7 +3,7 @@ package net.arna.jcraft.client.model.entity.stand;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.AnimationState;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -14,7 +14,7 @@ import net.minecraft.world.phys.Vec3;
 public class KingCrimsonModel extends StandEntityModel<KingCrimsonEntity> {
 
     public KingCrimsonModel() {
-        super(StandType.KING_CRIMSON);
+        super(JStandTypeRegistry.KING_CRIMSON.get());
     }
 
     @Override

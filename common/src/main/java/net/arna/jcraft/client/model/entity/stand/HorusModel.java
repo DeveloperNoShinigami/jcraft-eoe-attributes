@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.common.entity.stand.HorusEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 
 /**
  * The {@link StandEntityModel} for {@link HorusEntity}.
@@ -9,6 +9,6 @@ import net.arna.jcraft.common.entity.stand.StandType;
  */
 public class HorusModel extends StandEntityModel<HorusEntity> {
     public HorusModel() {
-        super(StandType.HORUS, 0f, 0f);
+        super(JStandTypeRegistry.HORUS.get(), 0f, 0f);
     }
 }

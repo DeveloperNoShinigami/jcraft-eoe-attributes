@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 // do NOT change the order in this enum, only append new stands AT THE END
-public enum StandType implements NameHolder {
+enum StandType implements NameHolder {
     NONE(),
     STAR_PLATINUM(JEntityTypeRegistry.STAR_PLATINUM, StarPlatinumEntity::new, "starplatinum",
             Component.literal("Manga"), Component.literal("Arcade"), Component.literal("OVA")),

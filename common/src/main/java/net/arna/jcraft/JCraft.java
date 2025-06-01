@@ -11,17 +11,16 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
-import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.effects.DazedStatusEffect;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
 import net.arna.jcraft.common.gravity.util.GravityChannel;
 import net.arna.jcraft.common.loot.JLootTableHelper;
@@ -269,16 +268,15 @@ public final class JCraft {
         registrar.register("jcraft_stand", parser -> {
             StringReader reader = parser.getReader();
             int cursor = reader.getCursor();
-            String standName = reader.readUnquotedString();
-            StandType standType;
+            ResourceLocation resourceLocation = ResourceLocation.read(reader);
+            StandType2 standType;
 
             parser.setSuggestions((builder, consumer) ->
-                    SharedSuggestionProvider.suggest(StandType.getAllStandTypes().stream()
-                                    .map(StandType::name),
-                            builder));
+                    SharedSuggestionProvider.suggest(JRegistries.STAND_TYPE_REGISTRY.getIds().stream()
+                                    .map(ResourceLocation::toString), builder));
 
             try {
-                standType = StandType.valueOf(standName.toUpperCase(Locale.ROOT));
+                standType = JRegistries.STAND_TYPE_REGISTRY.get(resourceLocation);
             } catch (IllegalArgumentException e) {
                 reader.setCursor(cursor);
                 throw StandArgumentType.NOT_FOUND.createWithContext(reader);

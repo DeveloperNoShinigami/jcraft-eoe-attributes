@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.model.entity.stand;
 
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 
 /**
  * The {@link StandEntityModel} for {@link TheSunEntity}.
@@ -9,7 +9,7 @@ import net.arna.jcraft.common.entity.stand.TheSunEntity;
  */
 public class TheSunModel extends StandEntityModel<TheSunEntity> {
     public TheSunModel() {
-        super(StandType.THE_SUN);
+        super(JStandTypeRegistry.THE_SUN.get());
     }
 
     @Override
