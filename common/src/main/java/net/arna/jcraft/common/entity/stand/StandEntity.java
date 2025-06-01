@@ -132,6 +132,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     private boolean holding = false;
     protected boolean idleOverride = false;
 
+    @Getter
+    @Setter
+    protected boolean standby = false;
+
     // In meters and degrees
     protected float idleDistance = 1.25f;
     @Getter
