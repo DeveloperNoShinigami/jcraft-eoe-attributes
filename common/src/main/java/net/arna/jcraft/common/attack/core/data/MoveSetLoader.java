@@ -3,6 +3,7 @@ package net.arna.jcraft.common.attack.core.data;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
+import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.attack.actions.*;
 import net.arna.jcraft.common.attack.conditions.HoldingAnubisCondition;
 import net.arna.jcraft.common.attack.conditions.MetallicaIronCondition;
@@ -80,7 +81,7 @@ public class MoveSetLoader {
     public static final Supplier<Codec<MoveAction<?, ?>>> MOVE_ACTION_CODEC = Suppliers.memoize(() -> MOVE_ACTION_TYPE_CODEC.get()
             .dispatch("type", MoveAction::getType, MoveActionType::getCodec));
 
-    static final Map<Enum<?>, Map<String, MoveSet<?, ?>>> moveSets = new HashMap<>();
+    static final Map<IAttackerType, Map<String, MoveSet<?, ?>>> moveSets = new HashMap<>();
 
     public static void init() {
         // Stands

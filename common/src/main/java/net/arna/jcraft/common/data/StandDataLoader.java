@@ -3,8 +3,8 @@ package net.arna.jcraft.common.data;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.JRegistryHolder;
 import net.arna.jcraft.api.StandData;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
@@ -36,11 +36,16 @@ public class StandDataLoader {
     public static CompletableFuture<Void> onReload(PreparableReloadListener.PreparationBarrier preparationBarrier,
                                                    ResourceManager resourceManager, ProfilerFiller preparationsProfiler,
                                                    ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
-        return CompletableFuture.<Void>supplyAsync(() -> null, backgroundExecutor)
+        return CompletableFuture.supplyAsync(() -> loadDataFiles(resourceManager), backgroundExecutor)
                 .thenCompose(preparationBarrier::wait) // Wait for preparations to finish
-                .thenAcceptAsync(v -> MoveSet.loadAll(resourceManager, gameExecutor));
+                .thenAcceptAsync(StandDataLoader::loadStandData);
     }
 
+    /**
+     * Lists all data files and loads them into JSON objects.
+     * @param resourceManager The resource manager used to get data files
+     * @return A map of ResourceLocation to JsonObject, where the ResourceLocation is the stand type id
+     */
     private static Map<ResourceLocation, JsonObject> loadDataFiles(ResourceManager resourceManager) {
         Map<ResourceLocation, Resource> resources = resourceManager.listResources("stands",
                 rl -> rl.getPath().endsWith(".json"));
@@ -55,7 +60,7 @@ public class StandDataLoader {
                     path.substring("stands/".length(), path.length() - ".json".length()));
 
             // Check if a stand type with this id exists in the registry
-            if () {
+            if (!JRegistryHolder.getStandTypeRegistry().containsKey(location)) {
                 JCraft.LOGGER.warn("Found stand data for non-existent stand {}. Skipping...", location);
                 continue;
             }
@@ -70,5 +75,9 @@ public class StandDataLoader {
         }
 
         return data;
+    }
+
+    private static void loadStandData(Map<ResourceLocation, JsonObject> data) {
+        // TODO
     }
 }

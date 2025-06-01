@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 @ToString
 @Getter
 @RequiredArgsConstructor(staticName = "of")
-public class StandType2 {
+public class StandType2 implements IAttackerType {
     private final ResourceLocation id;
     private final Supplier<EntityType<? extends StandEntity<?, ?>>> entityType;
 
@@ -38,5 +38,10 @@ public class StandType2 {
      */
     public StandEntity<?, ?> createEntity(Level level) {
         return getEntityType().create(level);
+    }
+
+    @Override
+    public final String kind() {
+        return "stand";
     }
 }
