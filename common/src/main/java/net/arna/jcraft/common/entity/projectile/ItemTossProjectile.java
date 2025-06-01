@@ -308,10 +308,9 @@ public class ItemTossProjectile extends AbstractArrow {
             final boolean lowEnergy = kineticEnergy < 0.001;
             if (impactAngleDeg <= penAngle && !lowEnergy) { // If penetrated or ran out of energy
                 setDeltaMovement(impactVec.add(normal).scale(0.5 / hardness));
+                // don't hit the ground
+                return;
             }
-
-            // don't hit the ground
-            return;
         }
 
         // hit the ground
