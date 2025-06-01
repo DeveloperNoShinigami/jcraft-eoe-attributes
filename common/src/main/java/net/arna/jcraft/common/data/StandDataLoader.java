@@ -2,9 +2,12 @@ package net.arna.jcraft.common.data;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistryHolder;
 import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.registry.StandTypeRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
@@ -20,6 +23,15 @@ import java.util.concurrent.Executor;
 
 public class StandDataLoader {
     private static final Map<ResourceLocation, StandData> registry = new HashMap<>();
+
+    /**
+     * Gets the StandData for a given stand type id.
+     * @param id The ResourceLocation of the stand type, e.g. "jcraft:star_platinum"
+     * @return An Optional containing the StandData if it exists, or empty if it doesn't.
+     */
+    public static StandData getStandData(ResourceLocation id) {
+        return registry.getOrDefault(id, StandData.EMPTY);
+    }
 
     /**
      * Called upon datapack (re)load.
@@ -78,6 +90,32 @@ public class StandDataLoader {
     }
 
     private static void loadStandData(Map<ResourceLocation, JsonObject> data) {
-        // TODO
+        for (Map.Entry<ResourceLocation, JsonObject> entry : data.entrySet()) {
+            ResourceLocation id = entry.getKey();
+            JsonObject json = entry.getValue();
+
+            // Parse the JSON object into a StandData instance
+            DataResult<StandData> res = StandData.CODEC.parse(JsonOps.INSTANCE, json);
+            if (res.result().isEmpty()) {
+                JCraft.LOGGER.error("Failed to parse stand data for stand {}: {}", id, res.error().orElseThrow());
+                continue;
+            }
+
+            registry.put(id, res.result().get());
+        }
+
+        // Iterate through the StandType registry to ensure all stand types have data.
+        for (ResourceLocation id : JRegistryHolder.getStandTypeRegistry().keySet()) {
+            if (id.equals(StandTypeRegistry.NONE.getId())) {
+                // Ignore the NONE stand type, as it has no data.
+                continue;
+            }
+
+            if (!registry.containsKey(id)) {
+                // If no data is found for a stand type, log a warning
+                JCraft.LOGGER.warn("No stand data found for stand type {}. Using default data.", id);
+                registry.put(id, StandData.EMPTY); // Use default empty data
+            }
+        }
     }
 }

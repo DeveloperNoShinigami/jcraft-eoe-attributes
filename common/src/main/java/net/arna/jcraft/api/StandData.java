@@ -1,5 +1,7 @@
 package net.arna.jcraft.api;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.*;
 import net.minecraft.network.chat.Component;
 
@@ -30,6 +32,14 @@ public class StandData {
      * For players, this and {@code null} are equivalent.
      */
     public static final StandData EMPTY = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.nostand"), Collections.emptyList()));
+
+    public static final Codec<StandData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.FLOAT.fieldOf("idle_distance").forGetter(StandData::getIdleDistance),
+            Codec.FLOAT.fieldOf("idle_rotation").forGetter(StandData::getIdleRotation),
+            Codec.FLOAT.fieldOf("block_distance").forGetter(StandData::getBlockDistance),
+            StandInfo.CODEC.fieldOf("info").forGetter(StandData::getInfo),
+            SummonData.CODEC.optionalFieldOf("summon_data", SummonData.of(() -> null)).forGetter(StandData::getSummonData)
+    ).apply(instance, StandData::new));
 
     /**
      * The distance at which the stand will idle from the player.

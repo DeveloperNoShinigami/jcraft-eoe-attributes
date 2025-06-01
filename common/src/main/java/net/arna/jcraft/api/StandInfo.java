@@ -1,8 +1,11 @@
 package net.arna.jcraft.api;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.util.ExtraCodecs;
 
 import java.util.List;
 
@@ -14,6 +17,14 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 public class StandInfo {
+    public static final Codec<StandInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ExtraCodecs.COMPONENT.fieldOf("name").forGetter(StandInfo::getName),
+            ExtraCodecs.COMPONENT.listOf().fieldOf("skin_names").forGetter(StandInfo::getSkinNames),
+            ExtraCodecs.NON_NEGATIVE_INT.fieldOf("pro_count").forGetter(StandInfo::getProCount),
+            ExtraCodecs.NON_NEGATIVE_INT.fieldOf("con_count").forGetter(StandInfo::getConCount),
+            ExtraCodecs.COMPONENT.optionalFieldOf("free_space", Component.empty()).forGetter(StandInfo::getFreeSpace)
+    ).apply(instance, StandInfo::new));
+
     /**
      * The name of this stand, used for display purposes.
      */

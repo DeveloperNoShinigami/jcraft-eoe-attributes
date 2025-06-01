@@ -1,6 +1,9 @@
 package net.arna.jcraft.api;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.*;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +17,13 @@ import java.util.function.Supplier;
 @ToString
 @EqualsAndHashCode
 public class SummonData {
+    public static final Codec<SummonData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            SoundEvent.CODEC.<Supplier<SoundEvent>>xmap(h -> h::value, s -> BuiltInRegistries.SOUND_EVENT.wrapAsHolder(s.get()))
+                    .fieldOf("sound").forGetter(d -> d.sound),
+            Codec.BOOL.optionalFieldOf("play_generic_sound", false).forGetter(SummonData::isPlayGenericSound),
+            Codec.INT.optionalFieldOf("anim_duration", 19).forGetter(SummonData::getAnimDuration)
+    ).apply(instance, SummonData::new));
+
     /**
      * The sound to play when summoning this stand.
      * This can be a supplier that returns a sound event or null if no sound should be played.
