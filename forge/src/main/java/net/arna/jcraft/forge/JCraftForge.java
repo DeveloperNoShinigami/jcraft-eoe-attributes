@@ -3,9 +3,6 @@ package net.arna.jcraft.forge;
 import dev.architectury.event.events.common.TickEvent;
 import dev.architectury.platform.forge.EventBuses;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.argumenttype.AttackArgumentType;
-import net.arna.jcraft.common.argumenttype.SpecArgumentType;
-import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.events.EntityTickEvent;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;
@@ -13,8 +10,6 @@ import net.arna.jcraft.forge.capability.impl.living.*;
 import net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapability;
 import net.arna.jcraft.forge.events.ClientSetupEvents;
 import net.arna.jcraft.forge.loot.JForgeLootModifiers;
-import net.minecraft.commands.synchronization.ArgumentTypeInfos;
-import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -47,9 +42,6 @@ public final class JCraftForge {
 
         EntityTickEvent.ENTITY_PRE.register(JCraftForge::tickEntityCaps);
         TickEvent.ServerLevelTick.SERVER_LEVEL_POST.register(JCraftForge::tickWorldCaps);
-        ArgumentTypeInfos.registerByClass(StandArgumentType.class,  SingletonArgumentInfo.contextFree(StandArgumentType::stand));
-        ArgumentTypeInfos.registerByClass(SpecArgumentType.class,  SingletonArgumentInfo.contextFree(SpecArgumentType::spec));
-        ArgumentTypeInfos.registerByClass(AttackArgumentType.class,  SingletonArgumentInfo.contextFree(AttackArgumentType::attack));
     }
 
     @SubscribeEvent

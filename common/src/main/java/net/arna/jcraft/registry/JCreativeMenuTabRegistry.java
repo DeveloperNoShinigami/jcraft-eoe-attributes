@@ -62,6 +62,7 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.DIO_CAPE.get(), JItemRegistry.DIO_PANTS.get());
             output.acceptAfter(JItemRegistry.DIO_PANTS.get(), JItemRegistry.DIO_BOOTS.get());
             output.acceptBefore(Items.SHIELD, JItemRegistry.BOXING_GLOVES.get());
+            output.acceptBefore(Items.SHIELD, JItemRegistry.STEEL_BALL.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.STONE_MASK.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.RED_HAT.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.KARS_HEADWRAP.get());
@@ -137,6 +138,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.PRISON_KEY.get());
                     entries.accept(JItemRegistry.PLANKTON_VIAL.get());
                     entries.accept(JItemRegistry.SHIV.get());
+                    entries.accept(JItemRegistry.STEEL_BALL.get());
                     // spec items + related except blood bottles
                     entries.accept(JItemRegistry.ANUBIS_SHEATHED.get());
                     entries.accept(JItemRegistry.ANUBIS.get());
