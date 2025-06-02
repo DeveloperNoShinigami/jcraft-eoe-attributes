@@ -1,11 +1,11 @@
 package net.arna.jcraft.common.attack.core.data;
 
 import com.google.common.collect.ImmutableMap;
-import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.spec.AnubisSpec;
 import net.arna.jcraft.common.spec.BrawlerSpec;
 import net.arna.jcraft.common.spec.VampireSpec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -17,8 +17,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class MoveSetLoader {
-    static final Map<IAttackerType, Map<String, MoveSet<?, ?>>> moveSets = new HashMap<>();
+    static final Map<ResourceLocation, Map<String, MoveSet<?, ?>>> moveSets = new HashMap<>();
 
+    // TODO don't register move sets separately anymore
     public static void init() {
         // Stands
         registerMS(AtumEntity.MOVE_SET);
@@ -65,18 +66,18 @@ public class MoveSetLoader {
     }
 
     private static void registerMS(MoveSet<?, ?> ms) {
-        Map<String, MoveSet<?, ?>> moveSets = MoveSetLoader.moveSets.computeIfAbsent(ms.getType(), k -> new HashMap<>());
+        Map<String, MoveSet<?, ?>> moveSets = MoveSetLoader.moveSets.computeIfAbsent(ms.getType().getId(), k -> new HashMap<>());
         if (moveSets.containsKey(ms.getName())) {
             throw new IllegalArgumentException("Duplicate moveset " + ms.getName() + " for " + ms.getType());
         }
         moveSets.put(ms.getName(), ms);
     }
 
-    public static Map<IAttackerType, Map<String, MoveSet<?, ?>>> getMoveSets() {
+    public static Map<ResourceLocation, Map<String, MoveSet<?, ?>>> getMoveSets() {
         return moveSets.entrySet().stream()
                 .map(e -> Map.entry(e.getKey(), Collections.unmodifiableMap(e.getValue())))
                 .collect(
-                        ImmutableMap::<IAttackerType, Map<String, MoveSet<?, ?>>>builder,
+                        ImmutableMap::<ResourceLocation, Map<String, MoveSet<?, ?>>>builder,
                         ImmutableMap.Builder::put,
                         (b1, b2) -> b1.putAll(b2.build()))
                 .build();

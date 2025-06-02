@@ -10,17 +10,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
+import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.IAttackerType;
-import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.spec.JSpec;
-import net.arna.jcraft.common.spec.SpecType;
-import net.arna.jcraft.common.util.SpecAnimationState;
-import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -34,8 +29,8 @@ import java.util.function.Consumer;
 import static net.arna.jcraft.common.attack.core.data.MoveSetLoader.moveSets;
 
 public class MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
-    @Getter
-    private final IAttackerType type;
+    private static final Map<ResourceLocation, RegistrySupplier<? extends IAttackerType>> types = new HashMap<>();
+    private final RegistrySupplier<? extends IAttackerType> type;
     @Getter
     private final String name;
     private final Consumer<MoveMap<A, S>> register;
@@ -51,7 +46,7 @@ public class MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
     @Getter
     private boolean initialized = false;
 
-    private MoveSet(IAttackerType type, String name, Consumer<MoveMap<A, S>> register, Class<S> stateClass) {
+    private MoveSet(RegistrySupplier<? extends IAttackerType> type, String name, Consumer<MoveMap<A, S>> register, Class<S> stateClass) {
         this.type = type;
         this.name = name;
         this.register = register;
@@ -62,145 +57,71 @@ public class MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
 
     /**
      * Checks if the given stand type has any move sets.
-     * @param standType The stand type to check.
+     * @param type The stand type to check.
      * @return True if the stand type has any move sets, false otherwise.
      */
-    public static boolean hasMoveSets(StandType2 standType) {
-        return !moveSets.getOrDefault(standType, Collections.emptyMap()).isEmpty();
+    public static boolean hasMoveSets(IAttackerType type) {
+        return !moveSets.getOrDefault(type.getId(), Collections.emptyMap()).isEmpty();
     }
 
     /**
-     * Checks if the given spec type has any move sets.
-     * @param specType The spec type to check.
-     * @return True if the spec type has any move sets, false otherwise.
-     */
-    public static boolean hasMoveSets(SpecType specType) {
-        return !moveSets.getOrDefault(specType, Collections.emptyMap()).isEmpty();
-    }
-
-    /**
-     * Gets all move sets for the given stand type.
-     * @param standType The stand type to get the move sets for.
-     * @return A map of move sets for the given stand type.
-     * @param <A> The type of the attacker (stand).
+     * Gets all move sets for the given attacker type.
+     * @param type The attacker type to get the move sets for.
+     * @return A map of move sets for the given attacker type.
+     * @param <A> The type of the attacker.
      * @param <S> The type of the state enum.
      */
-    public static <A extends StandEntity<? extends A, S>, S extends Enum<S> & StandAnimationState<? extends A>>
-    Map<String, MoveSet<A, S>> get(StandType2 standType) {
-        return get((IAttackerType) standType);
-    }
-
-    /**
-     * Gets all move sets for the given stand type.
-     * @param specType The stand type to get the move sets for.
-     * @return A map of move sets for the given stand type.
-     * @param <A> The type of the attacker (stand).
-     * @param <S> The type of the state enum.
-     */
-    public static <A extends JSpec<? extends A, S>, S extends Enum<S> & SpecAnimationState<? extends A>>
-    Map<String, MoveSet<A, S>> get(SpecType specType) {
-        return get((IAttackerType) specType);
-    }
-
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static <A extends IAttacker<? extends A, S>, S extends Enum<S>> Map<String, MoveSet<A, S>> get(IAttackerType type) {
-        return (Map<String, MoveSet<A, S>>) (Map) ImmutableMap.copyOf(moveSets.getOrDefault(type, Collections.emptyMap()));
+    public static <A extends IAttacker<? extends A, S>, S extends Enum<S>> Map<String, MoveSet<A, S>> get(IAttackerType type) {
+        return (Map<String, MoveSet<A, S>>) (Map) ImmutableMap.copyOf(moveSets.getOrDefault(type.getId(), Collections.emptyMap()));
     }
 
     /**
-     * Gets the move set for the given stand type with the given name.
-     * @param type The stand type to get the move set for.
+     * Gets the move set for the given attacker type with the given name.
+     * @param type The attacker type to get the move set for.
      * @param name The name of the move set to get.
-     * @return The move set with the given name for the given stand type.
-     * @param <A> The type of the attacker (stand).
+     * @return The move set with the given name for the given attacker type.
+     * @param <A> The type of the attacker.
      * @param <S> The type of the state enum.
      */
-    public static <A extends StandEntity<? extends A, S>, S extends Enum<S> & StandAnimationState<? extends A>> MoveSet<A, S> get(
-            StandType2 type, String name) {
-        return get((IAttackerType) type, name);
-    }
-
-    /**
-     * Gets the move set for the given spec type with the given name.
-     * @param type The spec type to get the move set for.
-     * @param name The name of the move set to get.
-     * @return The move set with the given name for the given spec type.
-     * @param <A> The type of the attacker (spec).
-     * @param <S> The type of the state enum.
-     */
-    public static <A extends JSpec<? extends A, S>, S extends Enum<S> & SpecAnimationState<? extends A>> MoveSet<A, S> get(
-            SpecType type, String name) {
-        return get((IAttackerType) type, name);
-    }
-
     @SuppressWarnings("unchecked")
-    private static <A extends IAttacker<? extends A, S>, S extends Enum<S>> MoveSet<A, S> get(IAttackerType type, String name) {
-        return (MoveSet<A, S>) moveSets.getOrDefault(type, Collections.emptyMap()).get(name);
+    public static <A extends IAttacker<? extends A, S>, S extends Enum<S>> MoveSet<A, S> get(IAttackerType type, String name) {
+        return (MoveSet<A, S>) moveSets.getOrDefault(type.getId(), Collections.emptyMap()).get(name);
     }
 
     /**
-     * Create a new move set for the given stand type with the name "default".
-     * @param type The stand type to create the move set for.
+     * Create a new move set for the given attacker type with the name "default".
+     * @param type The attacker type to create the move set for.
      * @param register The consumer to register moves with.
-     * @param stateClass The class of the state enum for the stand type.
+     * @param stateClass The class of the state enum for the attacker type.
      * @return The created move set.
-     * @param <A> The type of the attacker (stand).
+     * @param <A> The type of the attacker.
      * @param <S> The type of the state enum.
-     * @see #create(StandType2, String, Consumer, Class)
      */
-    public static <A extends StandEntity<? extends A, S>, S extends Enum<S> & StandAnimationState<? extends A>> MoveSet<A, S> create(
-            StandType2 type, Consumer<MoveMap<A, S>> register, Class<S> stateClass) {
-        return create((IAttackerType) type, "default", register, stateClass);
+    public static <A extends IAttacker<? extends A, S>, S extends Enum<S>> MoveSet<A, S> create(
+            RegistrySupplier<? extends IAttackerType> type, Consumer<MoveMap<A, S>> register, Class<S> stateClass) {
+        return create(type, "default", register, stateClass);
     }
 
     /**
-     * Create a new move set for the given stand type.
-     * @param type The stand type to create the move set for.
-     * @param name The name of the move set.
+     * Create a new move set for the given attacker type with the given name.
+     * @param type The attacker type to create the move set for.
      * @param register The consumer to register moves with.
-     * @param stateClass The class of the state enum for the stand type.
+     * @param stateClass The class of the state enum for the attacker type.
      * @return The created move set.
-     * @param <A> The type of the attacker (stand).
+     * @param <A> The type of the attacker.
      * @param <S> The type of the state enum.
      */
-    public static <A extends StandEntity<? extends A, S>, S extends Enum<S> & StandAnimationState<? extends A>> MoveSet<A, S> create(
-            StandType2 type, String name, Consumer<MoveMap<A, S>> register, Class<S> stateClass) {
-        return create((IAttackerType) type, name, register, stateClass);
-    }
+    public static <A extends IAttacker<? extends A, S>, S extends Enum<S>> MoveSet<A, S> create(
+            RegistrySupplier<? extends IAttackerType> type, String name, Consumer<MoveMap<A, S>> register, Class<S> stateClass) {
+        if (moveSets.getOrDefault(type.getId(), Collections.emptyMap()).containsKey(name)) {
+            throw new IllegalArgumentException("Move set " + name + " for type " + type.getId() + "already exists");
+        }
 
-    /**
-     * Create a new move set for the given spec type with the name "default".
-     * @param type The spec type to create the move set for.
-     * @param register The consumer to register moves with.
-     * @param stateClass The class of the state enum for the spec type.
-     * @return The created move set.
-     * @param <A> The type of the attacker (spec).
-     * @param <S> The type of the state enum.
-     * @see #create(SpecType, String, Consumer, Class)
-     */
-    public static <A extends JSpec<? extends A, S>, S extends Enum<S> & SpecAnimationState<? extends A>> MoveSet<A, S> create(
-            SpecType type, Consumer<MoveMap<A, S>> register, Class<S> stateClass) {
-        return create((IAttackerType) type, "default", register, stateClass);
-    }
-
-    /**
-     * Create a new move set for the given spec type.
-     * @param type The spec type to create the move set for.
-     * @param name The name of the move set.
-     * @param register The consumer to register moves with.
-     * @param stateClass The class of the state enum for the spec type.
-     * @return The created move set.
-     * @param <A> The type of the attacker (spec).
-     * @param <S> The type of the state enum.
-     */
-    public static <A extends JSpec<? extends A, S>, S extends Enum<S> & SpecAnimationState<? extends A>> MoveSet<A, S> create(
-            SpecType type, String name, Consumer<MoveMap<A, S>> register, Class<S> stateClass) {
-        return create((IAttackerType) type, name, register, stateClass);
-    }
-
-    private static <A extends IAttacker<? extends A, S>, S extends Enum<S>> MoveSet<A, S> create(
-            IAttackerType type, String name, Consumer<MoveMap<A, S>> register, Class<S> stateClass) {
-        return new MoveSet<>(type, name, register, stateClass);
+        MoveSet<A, S> moveSet = new MoveSet<>(type, name, register, stateClass);
+        moveSets.computeIfAbsent(type.getId(), k -> new HashMap<>()).put(name, moveSet);
+        types.put(type.getId(), type);
+        return moveSet;
     }
 
     /**
@@ -225,16 +146,17 @@ public class MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
         }
 
         Gson gson = new Gson();
-        MoveSetLoader.moveSets.forEach((type, sets) -> sets.forEach((name, set) -> {
-            Multimap<String, Pair<ResourceLocation, Resource>> typeMoveSets = moveSets.get(type.kind()).get(type.getId());
+        MoveSetLoader.moveSets.forEach((typeLoc, sets) -> sets.forEach((name, set) -> {
+            IAttackerType type = types.get(typeLoc).get();
+            Multimap<String, Pair<ResourceLocation, Resource>> typeMoveSets = moveSets.get(type.kind()).get(typeLoc);
             if (typeMoveSets == null) {
                 // Suppress the error message if the default move set is also empty.
                 if (!set.save().asMovesList().isEmpty()) {
-                    JCraft.LOGGER.error("Missing move set resources for type {}", type.getId());
+                    JCraft.LOGGER.error("Missing move set resources for type {}", typeLoc);
                 }
 
                 // Insert an empty multimap to avoid printing the error message multiple times.
-                moveSets.get(type.kind()).put(type.getId(), MultimapBuilder.hashKeys().arrayListValues().build());
+                moveSets.get(type.kind()).put(typeLoc, MultimapBuilder.hashKeys().arrayListValues().build());
 
                 return;
             }
@@ -244,7 +166,7 @@ public class MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
 
             Collection<Pair<ResourceLocation, Resource>> entries = typeMoveSets.get(set.getName());
             if (entries.isEmpty()) {
-                JCraft.LOGGER.error("Missing move set resources for move set {} for type {}", set.getName(), type.getId());
+                JCraft.LOGGER.error("Missing move set resources for move set {} for type {}", set.getName(), typeLoc);
                 return;
             }
 
@@ -254,7 +176,7 @@ public class MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
                             return e.mapSecond(r -> gson.fromJson(reader, JsonElement.class));
                         } catch (IOException ioException) {
                             JCraft.LOGGER.error("Failed to read file {} for move set {} for type {}",
-                                    e.getFirst(), set.getName(), type.getId(), ioException);
+                                    e.getFirst(), set.getName(), typeLoc, ioException);
                             return null;
                         }
                     })
@@ -263,6 +185,14 @@ public class MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
 
             set.load(JsonOps.INSTANCE, entriesJson, gameExecutor);
         }));
+    }
+
+    /**
+     * Gets the type of the move set.
+     * @return The type of the move set.
+     */
+    public IAttackerType getType() {
+        return type.get();
     }
 
     /**

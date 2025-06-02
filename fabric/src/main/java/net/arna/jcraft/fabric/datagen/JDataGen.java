@@ -27,7 +27,9 @@ public final class JDataGen implements DataGeneratorEntrypoint {
         pack.addProvider(JRecipeProvider::new);
         pack.addProvider(JWorldProvider::new);
         pack.addProvider(JEvolutionProvider::new);
+        pack.addProvider(JStandDataProvider::new);
 
+        // TODO completely remove these two and replace them with manually registered move sets
         Arrays.stream(StandType.values())
                 .filter(t -> t != StandType.NONE)
                 .forEach(type -> {

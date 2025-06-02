@@ -17,6 +17,11 @@ import java.util.function.Supplier;
 @ToString
 @EqualsAndHashCode
 public class SummonData {
+    /**
+     * Default summon data that plays only the generic summon sound (default behavior if no sound is specified)
+     * and assumes a default animation duration of 19 ticks.
+     */
+    public static final SummonData EMPTY = SummonData.of(() -> null);
     public static final Codec<SummonData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             SoundEvent.CODEC.<Supplier<SoundEvent>>xmap(h -> h::value, s -> BuiltInRegistries.SOUND_EVENT.wrapAsHolder(s.get()))
                     .fieldOf("sound").forGetter(d -> d.sound),
@@ -28,6 +33,8 @@ public class SummonData {
      * The sound to play when summoning this stand.
      * This can be a supplier that returns a sound event or null if no sound should be played.
      * The supplier itself is non-null, but the sound event it returns can be null.
+     * In case this supplier returns null, the generic sound will be played regardless
+     * of the value of {@link #playGenericSound}.
      */
     @NonNull
     private Supplier<@Nullable SoundEvent> sound;

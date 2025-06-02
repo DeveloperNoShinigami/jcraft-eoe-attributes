@@ -42,7 +42,9 @@ public class StandInfo {
      * If the list has more entries than the number of skins available,
      * using a skin that does not exist will likely cause a crash.
      */
-    private final List<Component> skinNames;
+    @Singular
+    @NonNull
+    private List<Component> skinNames = List.of();
     /**
      * The number of pros and cons of this stand.
      * Used in /stand about and whatnot.

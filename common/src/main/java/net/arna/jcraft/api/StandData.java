@@ -5,8 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.*;
 import net.minecraft.network.chat.Component;
 
-import java.util.Collections;
-
 /**
  * Represents the data associated with a stand, including its idle distance,
  * rotation, block distance, and other metadata. Should be registered in the registry
@@ -22,16 +20,12 @@ import java.util.Collections;
 @ToString
 @EqualsAndHashCode
 public class StandData {
-    // TODO redo this javadoc, it is not accurate anymore
     /**
-     * The NONE stand type data, used when the mob/player has no stand.
-     * Different from a {@code null} stand type in that mobs with this type
-     * will not get a stand at all, while mobs with a {@code null} stand type
-     * may yet get a stand assigned.
-     * <p>
-     * For players, this and {@code null} are equivalent.
+     * Empty stand data, used when no stand data is available.
+     * This is used as the fallback for when no stand data file could be found.
+     * A warning is printed when this is the case.
      */
-    public static final StandData EMPTY = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.nostand"), Collections.emptyList()));
+    public static final StandData EMPTY = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.nostand")));
 
     public static final Codec<StandData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.FLOAT.fieldOf("idle_distance").forGetter(StandData::getIdleDistance),

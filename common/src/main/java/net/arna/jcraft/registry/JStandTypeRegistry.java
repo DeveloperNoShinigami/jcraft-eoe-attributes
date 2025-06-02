@@ -14,6 +14,14 @@ import java.util.function.Supplier;
 public interface JStandTypeRegistry {
     DeferredRegister<StandType2> STAND_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, JRegistries.STAND_TYPE_REGISTRY_KEY);
 
+    /**
+     * The NONE stand type data, used when the mob/player has no stand.
+     * Different from a {@code null} stand type in that mobs with this type
+     * will not get a stand at all, while mobs with a {@code null} stand type
+     * may yet get a stand assigned.
+     * <p>
+     * For players, this and {@code null} are equivalent.
+     */
     RegistrySupplier<StandType2> NONE = register("none", () -> null);
     RegistrySupplier<StandType2> STAR_PLATINUM = register("star_platinum", JEntityTypeRegistry.STAR_PLATINUM);
     RegistrySupplier<StandType2> THE_WORLD = register("theworld", JEntityTypeRegistry.THE_WORLD);

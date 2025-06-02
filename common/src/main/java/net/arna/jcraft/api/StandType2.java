@@ -3,6 +3,7 @@ package net.arna.jcraft.api;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import net.arna.jcraft.common.data.StandDataLoader;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -27,8 +28,14 @@ public class StandType2 implements IAttackerType {
         return entityType.get();
     }
 
+    /**
+     * Gets the StandData for this StandType.
+     * <p>
+     * <b>Important:</b> if you have a StandEntity instance, use {@link StandEntity#getStandData()} instead.
+     * @return The StandData for this StandType.
+     */
     public StandData getData() {
-        return StandData.EMPTY; // TODO get the corresponding StandData from the registry
+        return StandDataLoader.getStandData(getId());
     }
 
     /**

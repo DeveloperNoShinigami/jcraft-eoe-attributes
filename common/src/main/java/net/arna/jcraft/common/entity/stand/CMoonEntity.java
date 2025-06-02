@@ -5,6 +5,9 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.SummonData;
 import net.arna.jcraft.common.attack.actions.CMoonInversionAction;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
@@ -20,6 +23,7 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -45,7 +49,24 @@ import java.util.function.Consumer;
  * @see LaunchAttack
  */
 public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
-    public static final MoveSet<CMoonEntity, State> MOVE_SET = MoveSet.create(StandType.C_MOON, CMoonEntity::registerMoves, State.class);
+    public static final MoveSet<CMoonEntity, State> MOVE_SET = MoveSet.create(JStandTypeRegistry.C_MOON, CMoonEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(220f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.cmoon"))
+                    .proCount(4)
+                    .conCount(2)
+                    .freeSpace(Component.literal("""
+                Passive: Inversion, all physical hits deal an extra half heart after 2s
+
+                    BNBs:
+                    -going up?
+                    Light>Barrage>jump>Block Launch>Light>Only One Punch>Block Launch (Projectile Hit)>...
+                        ...Grav. Hop>Ground Slam
+                        ...Gut Punch"""))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.CMOON_SUMMON))
+            .build();
 
     public static final int GRAVITY_CHANGE_DURATION = 600; // in ticks
     public static final SimpleAttack<CMoonEntity> INVERSION_PUNCH = SimpleAttack.<CMoonEntity>lightAttack(6, 12,
@@ -166,20 +187,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     private final List<Inversion> inversions = new ArrayList<>();
 
     public CMoonEntity(Level worldIn) {
-        super(StandType.C_MOON, worldIn, JSoundRegistry.CMOON_SUMMON);
-        idleRotation = 220f;
-
-        proCount = 4;
-        conCount = 2;
-
-        freespace = """
-                Passive: Inversion, all physical hits deal an extra half heart after 2s
-
-                    BNBs:
-                    -going up?
-                    Light>Barrage>jump>Block Launch>Light>Only One Punch>Block Launch (Projectile Hit)>...
-                        ...Grav. Hop>Ground Slam
-                        ...Gut Punch""";
+        super(JStandTypeRegistry.C_MOON.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.4f, 1.0f, 0.6f),
