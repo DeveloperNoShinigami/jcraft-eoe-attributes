@@ -4,18 +4,13 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractHoldableMove;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.Set;
 
 public final class TossChargeMove<A extends IAttacker<A, ?>> extends AbstractHoldableMove<TossChargeMove<A>, A> {
 
@@ -29,8 +24,13 @@ public final class TossChargeMove<A extends IAttacker<A, ?>> extends AbstractHol
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public void onInitiate(A attacker) {
+        super.onInitiate(attacker);
         if (attacker instanceof StandEntity<?,?> stand && !stand.level().isClientSide()) {
+            final LivingEntity user = stand.getUser();
+            if (user == null) {
+                return;
+            }
             final ItemStack projectileSource = user.getItemInHand(InteractionHand.OFF_HAND);
             if (!projectileSource.isEmpty()) {
                 final ItemStack oldProjectile = stand.getItemInHand(InteractionHand.MAIN_HAND);
@@ -41,7 +41,6 @@ public final class TossChargeMove<A extends IAttacker<A, ?>> extends AbstractHol
                 projectileSource.shrink(1);
             }
         }
-        return Set.of();
     }
 
     @Override

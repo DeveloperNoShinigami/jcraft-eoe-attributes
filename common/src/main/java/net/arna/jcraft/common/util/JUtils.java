@@ -629,7 +629,7 @@ public final class JUtils {
         JSpec<?, ?> spec;
         return stand != null && stand.canHoldMove(type) ||
                 (spec = JUtils.getSpec(player)) != null && spec.canHoldMove(type) ||
-                type.isHoldable();
+                type.isHoldable(stand != null && stand.isStandby());
     }
 
     /**
@@ -759,12 +759,12 @@ public final class JUtils {
         return true;
     }
 
-    public static void tossItem(final LivingEntity shooter, final Level level, final ItemStack itemStack, boolean decrement) {
+    public static void tossItem(final LivingEntity shooter, final Level level, final ItemStack itemStack, float velocity, boolean decrement) {
         if (level.isClientSide() || itemStack.isEmpty()) {
             return;
         }
         AbstractArrow projectile = new ItemTossProjectile(shooter, level, itemStack);
-        projectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, 1f, 1f);
+        projectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
         level.addFreshEntity(projectile);
         // TODO play sound
         if (decrement) {
@@ -773,6 +773,6 @@ public final class JUtils {
     }
 
     public static void tossItem(final Player player) {
-        tossItem(player, player.level(), player.getItemInHand(InteractionHand.MAIN_HAND), !player.getAbilities().instabuild);
+        tossItem(player, player.level(), player.getItemInHand(InteractionHand.MAIN_HAND), 1f, !player.getAbilities().instabuild);
     }
 }

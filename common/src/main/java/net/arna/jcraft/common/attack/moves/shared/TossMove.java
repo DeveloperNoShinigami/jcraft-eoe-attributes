@@ -30,7 +30,7 @@ public final class TossMove<A extends IAttacker<? extends A, ?>> extends Abstrac
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
         if (attacker instanceof StandEntity<?,?> stand && !stand.level().isClientSide()) {
             final ItemStack projectile = stand.getItemInHand(InteractionHand.MAIN_HAND);
-            JUtils.tossItem(stand, stand.level(), projectile, true);
+            JUtils.tossItem(stand, stand.level(), projectile, getChargeTime(attacker) / 10f, true);
         }
         return Set.of();
     }
