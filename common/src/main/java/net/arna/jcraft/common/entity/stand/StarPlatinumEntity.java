@@ -147,9 +147,9 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             );
     // TODO add move info x2
     // TODO balance x2
-    public static final StandbyActivationMove<StarPlatinumEntity> STANDBY_ON = new StandbyActivationMove<>(1, 1, 1)
+    public static final StandbyActivationMove<StarPlatinumEntity> STANDBY_ON = new StandbyActivationMove<>(0, 1, 1, 0.75f)
             ;
-    public static final StandbyDeactivationMove<StarPlatinumEntity> STANDBY_OFF = new StandbyDeactivationMove<>(1, 1, 1)
+    public static final StandbyDeactivationMove<StarPlatinumEntity> STANDBY_OFF = new StandbyDeactivationMove<>(0, 1, 1, -0.75f)
             ;
     public static final JumpMove<StarPlatinumEntity> JUMP = new JumpMove<StarPlatinumEntity>(300, 5,
             14, 1f, 1.5f)
