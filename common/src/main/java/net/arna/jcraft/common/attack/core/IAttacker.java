@@ -99,9 +99,5 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
     void setPerformedThisTick(final boolean b);
     boolean performedThisTick();
 
-    boolean isStandby();
-
-    void setStandby(final boolean standby);
-
     A getThis();
 }

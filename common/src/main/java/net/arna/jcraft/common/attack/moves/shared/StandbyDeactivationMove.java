@@ -7,6 +7,7 @@ import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.data.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Set;
@@ -24,7 +25,9 @@ public final class StandbyDeactivationMove<A extends IAttacker<? extends A, ?>> 
 
     @Override
     public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
-        attacker.setStandby(false);
+        if (attacker instanceof StandEntity<?,?> stand) {
+            stand.setStandby(false);
+        }
         return Set.of();
     }
 
