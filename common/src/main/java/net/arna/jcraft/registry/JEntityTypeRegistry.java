@@ -541,6 +541,16 @@ public interface JEntityTypeRegistry {
                     .build("standarrowprojectile")
     );
 
+    RegistrySupplier<EntityType<ItemTossProjectile>> ITEM_TOSS_PROJECTILE = ENTITY_TYPE_REGISTRY.register(JCraft.id("item_toss_projectile"),
+            () -> EntityType.Builder.of(
+                            WorldOnlyEntityFactory.from(ItemTossProjectile::new),
+                            MobCategory.MISC
+                    ).sized(0.5f, 0.5f)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("item_toss_projectile")
+    );
+
     RegistrySupplier<EntityType<SunBeamProjectile>> SUN_BEAM = ENTITY_TYPE_REGISTRY.register(JCraft.id("sunbeam"),
             () -> EntityType.Builder.of(
                             (EntityType<SunBeamProjectile> entityType, Level world) -> new SunBeamProjectile(world, null, null),

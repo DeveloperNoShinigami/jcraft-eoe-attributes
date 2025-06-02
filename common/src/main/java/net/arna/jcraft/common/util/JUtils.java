@@ -9,6 +9,7 @@ import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
+import net.arna.jcraft.common.entity.projectile.ItemTossProjectile;
 import net.arna.jcraft.common.entity.projectile.JAttackEntity;
 import net.arna.jcraft.common.entity.spec.JSpecHolder;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -39,6 +40,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -48,8 +50,10 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -625,7 +629,7 @@ public final class JUtils {
         JSpec<?, ?> spec;
         return stand != null && stand.canHoldMove(type) ||
                 (spec = JUtils.getSpec(player)) != null && spec.canHoldMove(type) ||
-                type.isHoldable();
+                type.isHoldable(stand != null && stand.isStandby());
     }
 
     /**
@@ -753,5 +757,22 @@ public final class JUtils {
         }
 
         return true;
+    }
+
+    public static void tossItem(final LivingEntity shooter, final Level level, final ItemStack itemStack, float velocity, boolean decrement) {
+        if (level.isClientSide() || itemStack.isEmpty()) {
+            return;
+        }
+        AbstractArrow projectile = new ItemTossProjectile(shooter, level, itemStack);
+        projectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
+        level.addFreshEntity(projectile);
+        // TODO play sound
+        if (decrement) {
+            itemStack.shrink(1);
+        }
+    }
+
+    public static void tossItem(final Player player) {
+        tossItem(player, player.level(), player.getItemInHand(InteractionHand.MAIN_HAND), 1f, !player.getAbilities().instabuild);
     }
 }
