@@ -1,0 +1,65 @@
+package net.arna.jcraft.common.attack.moves.shared;
+
+import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.NonNull;
+import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.common.attack.core.ctx.MoveContext;
+import net.arna.jcraft.common.attack.core.data.MoveType;
+import net.arna.jcraft.common.attack.moves.base.AbstractHoldableMove;
+import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.Set;
+
+public final class TossChargeMove<A extends IAttacker<A, ?>> extends AbstractHoldableMove<TossChargeMove<A>, A> {
+
+    public TossChargeMove(int cooldown, int windup, int duration, float moveDistance, int minimumCharge) {
+        super(cooldown, windup, duration, moveDistance, minimumCharge);
+    }
+
+    @Override
+    public @NonNull MoveType<TossChargeMove<A>> getMoveType() {
+        return Type.INSTANCE.cast();
+    }
+
+    @Override
+    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+        if (attacker instanceof StandEntity<?,?> stand && !stand.level().isClientSide()) {
+            final ItemStack projectileSource = user.getItemInHand(InteractionHand.OFF_HAND);
+            if (!projectileSource.isEmpty()) {
+                final ItemStack oldProjectile = stand.getItemInHand(InteractionHand.MAIN_HAND);
+                if (!oldProjectile.isEmpty()) {
+                    Containers.dropItemStack(stand.level(), stand.getX(), stand.getY(), stand.getZ(), oldProjectile);
+                }
+                stand.setItemInHand(InteractionHand.MAIN_HAND, projectileSource.copyWithCount(1));
+                projectileSource.shrink(1);
+            }
+        }
+        return Set.of();
+    }
+
+    @Override
+    protected @NonNull TossChargeMove<A> getThis() {
+        return this;
+    }
+
+    @Override
+    public @NonNull TossChargeMove<A> copy() {
+        return copyExtras(new TossChargeMove<>(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getMinimumCharge()));
+    }
+
+    public static class Type extends AbstractHoldableMove.Type<TossChargeMove<?>> {
+        public static final Type INSTANCE = new Type();
+
+        @Override
+        protected @NonNull App<RecordCodecBuilder.Mu<TossChargeMove<?>>, TossChargeMove<?>> buildCodec(RecordCodecBuilder.Instance<TossChargeMove<?>> instance) {
+            return instance.group(cooldown(), windup(), duration(), moveDistance(), minimumCharge()).apply(instance, TossChargeMove::new);
+        }
+    }
+}

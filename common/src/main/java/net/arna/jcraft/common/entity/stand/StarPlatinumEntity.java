@@ -158,6 +158,12 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     Component.literal("jcraft.starplatinum.util"),
                     Component.literal("Jumps in looked direction with slight upward bias, you must stay on the ground until Star Platinum jumps.")
             );
+    // TODO add move info x2
+    // TODO balance x2
+    public static final TossMove<StarPlatinumEntity> TOSS = new TossMove<>(0, 1, 1, 0.75f)
+            ;
+    public static final TossChargeMove<StarPlatinumEntity> TOSS_CHARGE = new TossChargeMove<StarPlatinumEntity>(1, 1, 1, 0.75f, 1)
+            .withFollowup(TOSS);
     public static final InhaleAttack INHALE = new InhaleAttack(800, 5, 5, 1f, 80)
             .withInfo(
                     Component.literal("jcraft.starplatinum.ult"),
@@ -210,7 +216,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
         moves.register(MoveClass.UTILITY, JUMP, State.JUMP).withCrouchingVariant(State.IDLE);
 
         moves.register(MoveClass.STANDBY_OFF, STANDBY_OFF, State.IDLE);
-        //moves.register(MoveClass.TOSS, , State.IDLE); // TODO add throwing state
+        moves.register(MoveClass.TOSS, TOSS_CHARGE, State.IDLE).withFollowup(State.IDLE); // TODO add throwing states
     }
 
     @Override

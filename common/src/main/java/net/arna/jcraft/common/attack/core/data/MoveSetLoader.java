@@ -291,6 +291,8 @@ public class MoveSetLoader {
         registrar.accept("shared_time_stop_move", () -> TimeStopMove.Type.INSTANCE);
         registrar.accept("shared_standby_on_move", () -> StandbyActivationMove.Type.INSTANCE);
         registrar.accept("shared_standby_off_move", () -> StandbyDeactivationMove.Type.INSTANCE);
+        registrar.accept("shared_toss_charge_move", () -> TossChargeMove.Type.INSTANCE);
+        registrar.accept("shared_toss_move", () -> TossMove.Type.INSTANCE);
 
         registrar.accept("silverchariot_armor_off_attack", () -> ArmorOffAttack.Type.INSTANCE);
         registrar.accept("silverchariot_circle_slash_attack", () -> CircleSlashAttack.Type.INSTANCE);
