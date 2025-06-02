@@ -13,7 +13,7 @@ import java.util.Set;
 
 public final class StandbyDeactivationMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<StandbyDeactivationMove<A>, A> {
 
-    protected StandbyDeactivationMove(int cooldown, int windup, int duration) {
+    public StandbyDeactivationMove(int cooldown, int windup, int duration) {
         super(cooldown, windup, duration, 0f);
     }
 

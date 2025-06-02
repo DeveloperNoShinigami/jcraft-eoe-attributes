@@ -358,7 +358,7 @@ public class PlayerInputPacket {
         if (!stand.blocking) {
             int moveStun = stand.getMoveStun();
 
-            if (stand.initMove(type.getMoveClass())) {
+            if (stand.initMove(type.getMoveClass(stand.isStandby()))) {
                 return true;
             }
             if (moveStun > 0 && moveStun < QUEUE_MOVESTUN_LIMIT) {

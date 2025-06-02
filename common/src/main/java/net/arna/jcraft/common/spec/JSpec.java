@@ -424,5 +424,15 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         return performedThisTick;
     }
 
+    @Override
+    public boolean isStandby() {
+        return false;
+    }
+
+    @Override
+    public void setStandby(boolean standby) {
+        // empty on purpose
+    }
+
     public abstract A getThis();
 }
