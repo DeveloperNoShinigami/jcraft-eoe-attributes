@@ -16,13 +16,13 @@
 					"pivot": [0, 19.25, 0]
 				},
 				{
-					"name": "the_hand",
+					"name": "Stand",
 					"parent": "base",
 					"pivot": [0, -0.3, 0]
 				},
 				{
 					"name": "torso",
-					"parent": "the_hand",
+					"parent": "Stand",
 					"pivot": [0, 20.45, 0]
 				},
 				{
