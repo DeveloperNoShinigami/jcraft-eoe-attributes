@@ -293,7 +293,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             .withInitAction(UserAnimationAction.play("mtl.ivs"))
             .withCondition(MetallicaIronCondition.atLeast(5.0f));
     public static final HarvestMove HARVEST = new HarvestMove(60 * 20, 0.75f, 3)
-            .withCrouchingVariant(GO_INVISIBLE)
+            .withAerialVariant(GO_INVISIBLE)
             .withInfo(
                     Component.literal("Harvest Iron"),
                     Component.literal("""
@@ -374,7 +374,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
 
         moves.register(MoveClass.ULTIMATE, BISECT_CHARGE, State.BISECT).withFollowup(State.NONE);
 
-        moves.register(MoveClass.UTILITY, HARVEST, State.HARVEST).withCrouchingVariant(State.NONE);
+        moves.register(MoveClass.UTILITY, HARVEST, State.HARVEST).withAerialVariant(State.NONE);
     }
 
     @Override

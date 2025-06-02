@@ -132,6 +132,10 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     private boolean holding = false;
     protected boolean idleOverride = false;
 
+    @Getter
+    @Setter
+    protected boolean standby = false;
+
     // In meters and degrees
     protected float idleDistance = 1.25f;
     @Getter
@@ -876,12 +880,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     public boolean canHoldMove(@Nullable MoveInputType type) {
-        if (type == null || type.getMoveClass() == null) {
+        if (type == null || type.getMoveClass(standby) == null) {
             return false;
         }
-
-        MoveMap.Entry<E, S> entry = getFirstValidEntry(type.getMoveClass());
-        return entry == null ? type.isHoldable() : MoreObjects.firstNonNull(entry.getMove().getIsHoldable(), type.isHoldable());
+        MoveMap.Entry<E, S> entry = getFirstValidEntry(type.getMoveClass(standby));
+        return entry == null ? type.isHoldable(standby) : MoreObjects.firstNonNull(entry.getMove().getIsHoldable(), type.isHoldable(standby));
     }
 
     /**
@@ -1201,7 +1204,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                     setHoldingType(queuedMove);
                 }
             }
-            initMove(queuedMove.getMoveClass());
+            initMove(queuedMove.getMoveClass(standby));
         }
 
         queuedMove = null;
@@ -1931,7 +1934,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return;
         }
 
-        MoveClass moveClass = type.getMoveClass();
+        MoveClass moveClass = type.getMoveClass(standby);
         if (moveClass != null) {
             for (MoveMap.Entry<E, S> entry : moveMap.getEntries(moveClass)) {
                 if (!entry.getMove().canBeQueued(getThis())) {

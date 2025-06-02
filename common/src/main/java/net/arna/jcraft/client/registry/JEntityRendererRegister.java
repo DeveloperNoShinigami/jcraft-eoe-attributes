@@ -118,7 +118,9 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.METALLICA, MetallicaRenderer::new),
             new RendererData<>(JEntityTypeRegistry.THE_HAND, TheHandRenderer::new),
 
-            new RendererData<>(JEntityTypeRegistry.STAND_METEOR, StandMeteorRenderer::new)
+            new RendererData<>(JEntityTypeRegistry.STAND_METEOR, StandMeteorRenderer::new),
+
+            new RendererData<>(JEntityTypeRegistry.ITEM_TOSS_PROJECTILE, ItemTossProjectileRenderer::new)
     };
 
     static void registerEntityRenderers(Consumer<RendererData<?>> consumer) {

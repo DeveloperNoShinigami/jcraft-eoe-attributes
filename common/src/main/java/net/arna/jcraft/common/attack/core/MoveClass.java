@@ -18,7 +18,10 @@ public enum MoveClass {
     SPECIAL2(CooldownType.STAND_SP2),
     SPECIAL3(CooldownType.STAND_SP3),
     ULTIMATE(CooldownType.STAND_ULTIMATE),
-    UTILITY(CooldownType.UTILITY);
+    UTILITY(CooldownType.UTILITY),
+    //STANDBY_ON(CooldownType.STAND_STANDBY),
+    STANDBY_OFF(CooldownType.STAND_STANDBY),
+    TOSS(CooldownType.STAND_TOSS);
 
     public static final Codec<MoveClass> CODEC = JCodecUtils.createEnumCodec(MoveClass.class);
     private static final Random random = new Random();
