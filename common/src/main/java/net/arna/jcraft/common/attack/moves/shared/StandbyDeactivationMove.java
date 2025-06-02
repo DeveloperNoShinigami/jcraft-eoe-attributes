@@ -13,8 +13,8 @@ import java.util.Set;
 
 public final class StandbyDeactivationMove<A extends IAttacker<? extends A, ?>> extends AbstractMove<StandbyDeactivationMove<A>, A> {
 
-    public StandbyDeactivationMove(int cooldown, int windup, int duration) {
-        super(cooldown, windup, duration, 0f);
+    public StandbyDeactivationMove(int cooldown, int windup, int duration, float moveDistance) {
+        super(cooldown, windup, duration, moveDistance);
     }
 
     @Override
@@ -35,7 +35,7 @@ public final class StandbyDeactivationMove<A extends IAttacker<? extends A, ?>> 
 
     @Override
     public @NonNull StandbyDeactivationMove<A> copy() {
-        return copyExtras(new StandbyDeactivationMove<>(getCooldown(), getWindup(), getDuration()));
+        return copyExtras(new StandbyDeactivationMove<>(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
     }
 
     public static class Type extends AbstractMove.Type<StandbyDeactivationMove<?>> {
@@ -43,7 +43,7 @@ public final class StandbyDeactivationMove<A extends IAttacker<? extends A, ?>> 
 
         @Override
         protected @NonNull App<RecordCodecBuilder.Mu<StandbyDeactivationMove<?>>, StandbyDeactivationMove<?>> buildCodec(RecordCodecBuilder.Instance<StandbyDeactivationMove<?>> instance) {
-            return instance.group(cooldown(), windup(), duration()).apply(instance, StandbyDeactivationMove::new);
+            return instance.group(cooldown(), windup(), duration(), moveDistance()).apply(instance, StandbyDeactivationMove::new);
         }
     }
 }
