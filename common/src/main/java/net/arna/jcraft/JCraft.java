@@ -13,7 +13,6 @@ import lombok.Setter;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
-import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
@@ -217,8 +216,6 @@ public final class JCraft {
         MoveTickQueue.registerMoveTickQueue();
 
         GravityChannel.registerReceivers();
-
-        MoveSetLoader.init();
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);
