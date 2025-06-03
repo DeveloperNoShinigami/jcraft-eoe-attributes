@@ -6,12 +6,14 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import lombok.Setter;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.common.attack.core.data.MoveSetImpl;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
@@ -45,7 +47,7 @@ import java.util.Objects;
  */
 @Getter
 public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnimationState<A>>
-        implements IAttacker<A, S>, MoveSet.ReloadListener<A, S> {
+        implements IAttacker<A, S>, MoveSetImpl.ReloadListener<A, S> {
     private MoveSet<A, S> moveSet;
     private final MoveMap<A, S> moveMap = new MoveMap<>();
     private final MoveContext moveContext = new MoveContext();
@@ -77,7 +79,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             this.player = null;
         }
 
-        this.moveSet = MoveSet.get(type, "default");
+        this.moveSet = MoveSetManager.get(type, "default");
         if (this.moveSet == null) {
             throw new NoSuchElementException("No 'default' move set found for spec " + type);
         }
@@ -145,7 +147,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
      * @param name The name of the move set to switch to.
      */
     public void switchMoveSet(String name) {
-        MoveSet<A, S> moveSet = MoveSet.get(getType(), name);
+        MoveSet<A, S> moveSet = MoveSetManager.get(getType(), name);
         if (moveSet == null) {
             JCraft.LOGGER.error("Move set '{}' not found for {}", name, getType());
             return;

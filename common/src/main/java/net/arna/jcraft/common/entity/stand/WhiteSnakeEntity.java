@@ -4,11 +4,12 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.PilotModeMove;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -46,9 +47,9 @@ import java.util.function.Consumer;
  * @see PoisonSpewAttack
  */
 public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEntity.State> {
-    public static final MoveSet<WhiteSnakeEntity, State> DEFAULT_MOVE_SET = MoveSet.create(StandType.WHITE_SNAKE,
+    public static final MoveSet<WhiteSnakeEntity, State> DEFAULT_MOVE_SET = MoveSetManager.create(StandType.WHITE_SNAKE,
             WhiteSnakeEntity::registerDefaultMoves, State.class);
-    public static final MoveSet<WhiteSnakeEntity, State> REMOTE_MOVE_SET = MoveSet.create(StandType.WHITE_SNAKE,
+    public static final MoveSet<WhiteSnakeEntity, State> REMOTE_MOVE_SET = MoveSetManager.create(StandType.WHITE_SNAKE,
             "remote", WhiteSnakeEntity::registerRemoteMoves, State.class);
 
     public static final SimpleUppercutAttack<WhiteSnakeEntity> UPPERCUT = new SimpleUppercutAttack<WhiteSnakeEntity>(

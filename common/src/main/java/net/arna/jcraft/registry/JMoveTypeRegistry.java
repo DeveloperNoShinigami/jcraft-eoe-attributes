@@ -4,7 +4,7 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.common.attack.core.data.MoveType;
+import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.anubis.*;
 import net.arna.jcraft.common.attack.moves.cmoon.*;
 import net.arna.jcraft.common.attack.moves.cream.*;

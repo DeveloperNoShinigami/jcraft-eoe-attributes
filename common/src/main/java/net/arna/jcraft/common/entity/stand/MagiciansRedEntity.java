@@ -4,10 +4,11 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.magiciansred.*;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
@@ -52,7 +53,7 @@ import java.util.function.Consumer;
  * @see RedirectAttack
  */
 public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, MagiciansRedEntity.State> {
-    public static final MoveSet<MagiciansRedEntity, MagiciansRedEntity.State> MOVE_SET = MoveSet.create(
+    public static final MoveSet<MagiciansRedEntity, MagiciansRedEntity.State> MOVE_SET = MoveSetManager.create(
             StandType.MAGICIANS_RED, "default", MagiciansRedEntity::registerMoves, MagiciansRedEntity.State.class);
 
     public static final RedirectAttack REDIRECT = new RedirectAttack(0, 7, 10, 0.75f)

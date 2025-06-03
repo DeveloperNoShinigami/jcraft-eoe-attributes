@@ -5,12 +5,13 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.util.RenderUtils;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.core.data.StateContainer;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.*;
 import net.arna.jcraft.common.attack.moves.shared.GrabAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -37,7 +38,7 @@ import java.util.function.Consumer;
  * @see ElbowAttack
  */
 public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQBTDEntity.State> {
-    public static final MoveSet<KQBTDEntity, State> MOVE_SET = MoveSet.create(StandType.KILLER_QUEEN_BITES_THE_DUST,
+    public static final MoveSet<KQBTDEntity, State> MOVE_SET = MoveSetManager.create(StandType.KILLER_QUEEN_BITES_THE_DUST,
             KQBTDEntity::registerMoves, State.class);
 
     public static final ElbowAttack ELBOW = new ElbowAttack(60, 5, 9, 0.75f,

@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveType;
+import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.entity.projectile.EmeraldProjectile;
 import net.arna.jcraft.common.entity.stand.HGEntity;

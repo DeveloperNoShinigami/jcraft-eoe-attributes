@@ -4,10 +4,11 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.horus.*;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -21,9 +22,7 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -44,7 +43,7 @@ import java.util.function.Consumer;
  * @see HorusDivekickAttack
  */
 public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
-    public static final MoveSet<HorusEntity, State> MOVE_SET = MoveSet.create(StandType.HORUS, HorusEntity::registerMoves, State.class);
+    public static final MoveSet<HorusEntity, State> MOVE_SET = MoveSetManager.create(StandType.HORUS, HorusEntity::registerMoves, State.class);
 
     public static final SimpleAttack<HorusEntity> LIGHT_CROUCHING_FOLLOWUP = new SimpleAttack<HorusEntity>(
             0, 15, 25, 0.75f, 7f, 25, 1.85f, 1.5f, 0.2f)

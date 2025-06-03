@@ -5,10 +5,11 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.madeinheaven.*;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
@@ -58,7 +59,7 @@ import java.util.function.Consumer;
  * @see TimeAccelerationMove
  */
 public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHeavenEntity.State> {
-    public static final MoveSet<MadeInHeavenEntity, State> MOVE_SET = MoveSet.create(StandType.MADE_IN_HEAVEN,
+    public static final MoveSet<MadeInHeavenEntity, State> MOVE_SET = MoveSetManager.create(StandType.MADE_IN_HEAVEN,
             MadeInHeavenEntity::registerMoves, State.class);
 
     public static final SimpleAttack<MadeInHeavenEntity> SPEED_CHOP = new SimpleAttack<MadeInHeavenEntity>(

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.common.attack.core.data.MoveType;
+import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;

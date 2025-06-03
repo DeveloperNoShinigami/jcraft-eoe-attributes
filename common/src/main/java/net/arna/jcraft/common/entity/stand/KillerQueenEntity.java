@@ -3,10 +3,10 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.killerqueen.*;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.JParticleType;
@@ -32,7 +32,7 @@ import java.util.function.Consumer;
  * @see SheerHeartAttackAttack
  */
 public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQueenEntity, KillerQueenEntity.State> {
-    public static final MoveSet<KillerQueenEntity, State> MOVE_SET = MoveSet.create(StandType.KILLER_QUEEN,
+    public static final MoveSet<KillerQueenEntity, State> MOVE_SET = MoveSetManager.create(StandType.KILLER_QUEEN,
             KillerQueenEntity::registerMoves, State.class);
 
     public static final SimpleAttack<KillerQueenEntity> HEAVY = new SimpleAttack<KillerQueenEntity>(

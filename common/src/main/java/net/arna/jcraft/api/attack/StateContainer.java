@@ -1,6 +1,7 @@
-package net.arna.jcraft.common.attack.core.data;
+package net.arna.jcraft.api.attack;
 
 import com.mojang.serialization.Codec;
+import net.arna.jcraft.common.attack.core.data.MoveSetImpl;
 
 import java.util.Optional;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
  * If any move needs a state, it is required to be of this type and
  * said move must implement {@link StateContainerHolder}.
  * The {@link StateContainerHolder#configureStateContainers(Class)} method is then called
- * by {@link MoveSet} upon deserialization.
+ * by {@link MoveSetImpl} upon deserialization.
  * @param <S>
  */
 public class StateContainer<S extends Enum<S>> {

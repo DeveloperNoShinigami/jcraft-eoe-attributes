@@ -6,7 +6,7 @@ import lombok.*;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveAction;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveActionType;
+import net.arna.jcraft.api.attack.MoveActionType;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.world.entity.LivingEntity;
 

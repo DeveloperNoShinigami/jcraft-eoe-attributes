@@ -6,10 +6,11 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.kingcrimson.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
@@ -58,7 +59,7 @@ import java.util.function.Consumer;
  * @see TimeEraseMove
  */
 public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimsonEntity.State> {
-    public static final MoveSet<KingCrimsonEntity, State> MOVE_SET = MoveSet.create(StandType.KING_CRIMSON,
+    public static final MoveSet<KingCrimsonEntity, State> MOVE_SET = MoveSetManager.create(StandType.KING_CRIMSON,
             KingCrimsonEntity::registerMoves, State.class);
 
     public static final KnockdownAttack<KingCrimsonEntity> SWEEP = new KnockdownAttack<KingCrimsonEntity>(40,

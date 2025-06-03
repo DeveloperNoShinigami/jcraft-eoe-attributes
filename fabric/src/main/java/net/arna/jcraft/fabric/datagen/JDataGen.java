@@ -1,7 +1,7 @@
 package net.arna.jcraft.fabric.datagen;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.spec.SpecType;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -33,7 +33,7 @@ public final class JDataGen implements DataGeneratorEntrypoint {
         Arrays.stream(StandType.values())
                 .filter(t -> t != StandType.NONE)
                 .forEach(type -> {
-                    if (!MoveSet.hasMoveSets(type)) {
+                    if (!MoveSetManager.hasMoveSets(type)) {
                         JCraft.LOGGER.error("No move sets found for stand type {}", type);
                         return;
                     }
@@ -44,7 +44,7 @@ public final class JDataGen implements DataGeneratorEntrypoint {
         Arrays.stream(SpecType.values())
                 .filter(t -> t != SpecType.NONE)
                 .forEach(type -> {
-                    if (!MoveSet.hasMoveSets(type)) {
+                    if (!MoveSetManager.hasMoveSets(type)) {
                         JCraft.LOGGER.error("No move sets found for spec type {}", type);
                         return;
                     }

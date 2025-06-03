@@ -18,7 +18,7 @@ import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.data.ExtraProducts;
 import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
-import net.arna.jcraft.common.attack.core.data.MoveType;
+import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;

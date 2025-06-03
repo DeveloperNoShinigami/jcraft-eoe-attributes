@@ -6,6 +6,7 @@ import lombok.Setter;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.CancelSpecMoveAction;
 import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.actions.MetallicaAddIronAction;
@@ -15,8 +16,8 @@ import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.core.data.StateContainer;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.metallica.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -59,7 +60,7 @@ import java.util.function.Consumer;
  * @see HarvestMove
  */
 public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntity.State> {
-    public static final MoveSet<MetallicaEntity, State> MOVE_SET = MoveSet.create(StandType.METALLICA,
+    public static final MoveSet<MetallicaEntity, State> MOVE_SET = MoveSetManager.create(StandType.METALLICA,
             MetallicaEntity::registerMoves, State.class);
 
     public static final EntityDataAccessor<Optional<BlockPos>> SIPHON_POS = SynchedEntityData.defineId(MetallicaEntity.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);

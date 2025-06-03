@@ -8,11 +8,12 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.StandData;
 import net.arna.jcraft.api.StandInfo;
 import net.arna.jcraft.api.SummonData;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.CMoonInversionAction;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.cmoon.*;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -49,7 +50,7 @@ import java.util.function.Consumer;
  * @see LaunchAttack
  */
 public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
-    public static final MoveSet<CMoonEntity, State> MOVE_SET = MoveSet.create(JStandTypeRegistry.C_MOON, CMoonEntity::registerMoves, State.class);
+    public static final MoveSet<CMoonEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.C_MOON, CMoonEntity::registerMoves, State.class);
     public static final StandData DATA = StandData.builder()
             .idleRotation(220f)
             .info(StandInfo.builder()

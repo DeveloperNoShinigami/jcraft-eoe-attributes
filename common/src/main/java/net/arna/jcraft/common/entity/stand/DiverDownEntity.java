@@ -2,8 +2,9 @@ package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  * @see net.arna.jcraft.client.renderer.entity.stands.DiverDownRenderer DiverDownRenderer
  */
 public class DiverDownEntity extends StandEntity<DiverDownEntity, DiverDownEntity.State> {
-    public static final MoveSet<DiverDownEntity, State> MOVE_SET = MoveSet.create(StandType.DIVER_DOWN,
+    public static final MoveSet<DiverDownEntity, State> MOVE_SET = MoveSetManager.create(StandType.DIVER_DOWN,
             DiverDownEntity::registerMoves, State.class);
 
     public DiverDownEntity(Level world) {

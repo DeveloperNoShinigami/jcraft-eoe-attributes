@@ -4,8 +4,9 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import net.arna.jcraft.api.StandData;
 import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
  * @see net.arna.jcraft.client.renderer.entity.stands.ChariotRequiemRenderer ChariotRequiemRenderer
  */
 public class ChariotRequiemEntity extends StandEntity<ChariotRequiemEntity, ChariotRequiemEntity.State> {
-    public static final MoveSet<ChariotRequiemEntity, State> MOVE_SET = MoveSet.create(JStandTypeRegistry.CHARIOT_REQUIEM,
+    public static final MoveSet<ChariotRequiemEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.CHARIOT_REQUIEM,
             ChariotRequiemEntity::registerMoves, State.class);
     public static final StandData DATA = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.chariot_requiem")));
 

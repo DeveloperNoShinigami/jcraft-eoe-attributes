@@ -4,11 +4,12 @@ import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.core.data.StateContainer;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.starplatinum.theworld.SPTWGroundSlamAttack;
 import net.arna.jcraft.common.attack.moves.starplatinum.theworld.TimeStrikeAttack;
@@ -33,7 +34,7 @@ import java.util.function.Consumer;
  * @see SPTWGroundSlamAttack
  */
 public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPTWEntity.State> {
-    public static final MoveSet<SPTWEntity, State> MOVE_SET = MoveSet.create(StandType.STAR_PLATINUM_THE_WORLD,
+    public static final MoveSet<SPTWEntity, State> MOVE_SET = MoveSetManager.create(StandType.STAR_PLATINUM_THE_WORLD,
             SPTWEntity::registerMoves, State.class);
 
     public static final SPTWGroundSlamAttack GROUND_SLAM = new SPTWGroundSlamAttack(20, 12, 19,

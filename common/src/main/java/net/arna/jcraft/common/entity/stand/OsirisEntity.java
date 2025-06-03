@@ -1,8 +1,9 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -16,7 +17,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
  * @see net.arna.jcraft.common.entity.npc.DarbyOlderEntity DarbyOlderEntity
  */
 public class OsirisEntity extends StandEntity<OsirisEntity, OsirisEntity.State> {
-    public static final MoveSet<OsirisEntity, State> MOVE_SET = MoveSet.create(StandType.OSIRIS, OsirisEntity::registerMoves,
+    public static final MoveSet<OsirisEntity, State> MOVE_SET = MoveSetManager.create(StandType.OSIRIS, OsirisEntity::registerMoves,
             State.class);
 
     public OsirisEntity(Level world) {

@@ -1,9 +1,10 @@
 package net.arna.jcraft.common.spec;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
@@ -17,7 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 
 public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
-    public static final MoveSet<BrawlerSpec, State> MOVE_SET = MoveSet.create(SpecType.BRAWLER, BrawlerSpec::registerMoves, State.class);
+    public static final MoveSet<BrawlerSpec, State> MOVE_SET = MoveSetManager.create(SpecType.BRAWLER, BrawlerSpec::registerMoves, State.class);
 
     public static final SimpleUppercutAttack<BrawlerSpec> HEAVY = new SimpleUppercutAttack<BrawlerSpec>(30, 10,
             21, 1f, 6f, 15, 1.5f, 0.3f, 0f, 0.3f)

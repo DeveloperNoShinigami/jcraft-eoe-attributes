@@ -10,12 +10,13 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.ImpalingThrustAttack;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.STWChargeAttack;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.STWCounterAttack;
@@ -46,7 +47,7 @@ import java.util.function.Consumer;
  */
 @Getter
 public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowTheWorldEntity, ShadowTheWorldEntity.State> {
-    public static final MoveSet<ShadowTheWorldEntity, State> MOVE_SET = MoveSet.create(StandType.SHADOW_THE_WORLD,
+    public static final MoveSet<ShadowTheWorldEntity, State> MOVE_SET = MoveSetManager.create(StandType.SHADOW_THE_WORLD,
             ShadowTheWorldEntity::registerMoves, State.class);
 
     public static final SimpleUppercutAttack<ShadowTheWorldEntity> UPPERCUT = new SimpleUppercutAttack<ShadowTheWorldEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),

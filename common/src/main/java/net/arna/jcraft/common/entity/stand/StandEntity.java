@@ -16,9 +16,11 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.*;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.common.attack.core.data.MoveSetImpl;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
@@ -87,7 +89,7 @@ import static net.arna.jcraft.JCraft.comboBreak;
 import static net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 
 public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S> & StandAnimationState<E>>
-        extends Mob implements GeoEntity, IAttacker<E, S>, ICustomDamageHandler, MoveSet.ReloadListener<E, S> {
+        extends Mob implements GeoEntity, IAttacker<E, S>, ICustomDamageHandler, MoveSetImpl.ReloadListener<E, S> {
 
     // TODO: finish custom player idle poses for all stands
 
@@ -171,7 +173,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     protected StandEntity(StandType2 type, Level world) {
         super(type.getEntityType(), world);
-        this.moveSet = MoveSet.get(type, "default");
+        this.moveSet = MoveSetManager.get(type, "default");
         if (this.moveSet == null) {
             throw new NoSuchElementException("No 'default' move set found for stand" + type);
         }
@@ -383,7 +385,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * @param name The name of the move set to switch to.
      */
     protected void switchMoveSet(String name) {
-        MoveSet<E, S> moveSet = MoveSet.get(getStandType(), name);
+        MoveSet<E, S> moveSet = MoveSetManager.get(getStandType(), name);
         if (moveSet == null) {
             JCraft.LOGGER.error("Move set '{}' not found for {}", name, getStandType());
             return;

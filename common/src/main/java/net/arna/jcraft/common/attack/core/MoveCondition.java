@@ -2,7 +2,7 @@ package net.arna.jcraft.common.attack.core;
 
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveConditionType;
+import net.arna.jcraft.api.attack.MoveConditionType;
 
 @Getter
 public abstract class MoveCondition<C extends MoveCondition<C, A>, A extends IAttacker<? extends A, ?>> {

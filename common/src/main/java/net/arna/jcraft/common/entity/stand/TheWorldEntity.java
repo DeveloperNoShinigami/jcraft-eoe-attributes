@@ -4,10 +4,11 @@ import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.LungeAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.theworld.FeignBarrageCounterAttack;
 import net.arna.jcraft.common.attack.moves.theworld.TWChargeAttack;
@@ -34,7 +35,7 @@ import java.util.function.Consumer;
  * @see TWDonutAttack
  */
 public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity, TheWorldEntity.State> {
-    public static final MoveSet<TheWorldEntity, State> MOVE_SET = MoveSet.create(StandType.THE_WORLD,
+    public static final MoveSet<TheWorldEntity, State> MOVE_SET = MoveSetManager.create(StandType.THE_WORLD,
             TheWorldEntity::registerMoves, State.class);
 
     public static final SimpleAttack<TheWorldEntity> LOW_KICK = new SimpleAttack<TheWorldEntity>(20, 8, 14, 0.75f,

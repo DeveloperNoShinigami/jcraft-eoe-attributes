@@ -3,8 +3,9 @@ package net.arna.jcraft.fabric.datagen;
 import com.mojang.serialization.Codec;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.util.SpecAnimationState;
@@ -38,7 +39,7 @@ public class JSpecMoveSetProvider<A extends JSpec<A, S>, S extends Enum<S> & Spe
     }
 
     private static <A extends JSpec<A, S>, S extends Enum<S> & SpecAnimationState<A>> Codec<MoveMap.Entry<A, S>> getCodec(SpecType type) {
-        return MoveMap.Entry.codecFor(Optional.ofNullable(MoveSet.<A, S>get(type, "default"))
+        return MoveMap.Entry.codecFor(Optional.ofNullable(MoveSetManager.<A, S>get(type, "default"))
                 .orElseThrow(() -> new IllegalArgumentException("No default moveset found for " + type))
                 .getStateClass());
     }
@@ -46,7 +47,7 @@ public class JSpecMoveSetProvider<A extends JSpec<A, S>, S extends Enum<S> & Spe
     @Override
     protected void configure(BiConsumer<ResourceLocation, MoveMap.Entry<A, S>> provider) {
         // Generate a JSON file for each entry in each move set.
-        Map<String, MoveSet<A, S>> moveSets = MoveSet.get(type);
+        Map<String, MoveSet<A, S>> moveSets = MoveSetManager.get(type);
         moveSets.forEach((name, moveSet) ->
                 moveSet.save().getEntries().entries().forEach(e ->
                         provider.accept(JCraft.id(String.format("%s/%s/%s", name, e.getKey().getName(), getMoveName(e.getValue()))),

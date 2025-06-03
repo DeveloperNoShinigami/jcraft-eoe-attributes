@@ -6,10 +6,11 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.Color;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.theworld.overheaven.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -41,7 +42,7 @@ import java.util.function.Consumer;
  * @see SmiteAttack
  */
 public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEntity, TheWorldOverHeavenEntity.State> {
-    public static final MoveSet<TheWorldOverHeavenEntity, State> MOVE_SET = MoveSet.create(StandType.THE_WORLD_OVER_HEAVEN,
+    public static final MoveSet<TheWorldOverHeavenEntity, State> MOVE_SET = MoveSetManager.create(StandType.THE_WORLD_OVER_HEAVEN,
             TheWorldOverHeavenEntity::registerMoves, State.class);
 
     public static final LungeAttack LUNGE = new LungeAttack(0, 10, 16, 0.75f,

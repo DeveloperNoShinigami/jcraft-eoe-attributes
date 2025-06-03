@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import net.arna.jcraft.common.attack.core.MoveCondition;
-import net.arna.jcraft.common.attack.core.data.MoveConditionType;
+import net.arna.jcraft.api.attack.MoveConditionType;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import org.jetbrains.annotations.NotNull;
 

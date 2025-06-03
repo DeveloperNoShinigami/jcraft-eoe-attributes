@@ -6,7 +6,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.common.attack.core.MoveAction;
 import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveActionType;
+import net.arna.jcraft.api.attack.MoveActionType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;

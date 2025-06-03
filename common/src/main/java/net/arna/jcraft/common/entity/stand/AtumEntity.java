@@ -3,8 +3,9 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import net.arna.jcraft.api.StandData;
 import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
@@ -20,7 +21,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
  * @see net.arna.jcraft.common.entity.npc.DarbyYoungerEntity DarbyYoungerEntity
  */
 public class AtumEntity extends StandEntity<AtumEntity, AtumEntity.State> {
-    public static final MoveSet<AtumEntity, State> MOVE_SET = MoveSet.create(JStandTypeRegistry.ATUM, AtumEntity::registerMoves, State.class);
+    public static final MoveSet<AtumEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.ATUM, AtumEntity::registerMoves, State.class);
     public static final StandData DATA = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.atum")));
 
     public AtumEntity(Level world) {

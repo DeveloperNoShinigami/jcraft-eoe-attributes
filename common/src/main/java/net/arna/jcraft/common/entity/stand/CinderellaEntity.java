@@ -5,9 +5,10 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.api.StandData;
 import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
@@ -27,7 +28,7 @@ import java.util.function.Consumer;
  * @see net.arna.jcraft.common.entity.npc.AyaTsujiEntity AyaTsujiEntity
  */
 public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEntity.State> {
-    public static final MoveSet<CinderellaEntity, State> MOVE_SET = MoveSet.create(JStandTypeRegistry.CINDERELLA,
+    public static final MoveSet<CinderellaEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.CINDERELLA,
             CinderellaEntity::registerMoves, State.class);
     public static final StandData DATA = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.cinderella")));
 

@@ -10,12 +10,13 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.StandData;
 import net.arna.jcraft.api.StandInfo;
 import net.arna.jcraft.api.SummonData;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.core.data.StateContainer;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.cream.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -71,9 +72,9 @@ import java.util.function.Consumer;
  */
 @Getter
 public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
-    public static final MoveSet<CreamEntity, CreamEntity.State> DEFAULT_MOVE_SET = MoveSet.create(JStandTypeRegistry.CREAM,
+    public static final MoveSet<CreamEntity, CreamEntity.State> DEFAULT_MOVE_SET = MoveSetManager.create(JStandTypeRegistry.CREAM,
             CreamEntity::registerDefaultMoves, State.class);
-    public static final MoveSet<CreamEntity, CreamEntity.State> HALF_BALL_MOVE_SET = MoveSet.create(JStandTypeRegistry.CREAM,
+    public static final MoveSet<CreamEntity, CreamEntity.State> HALF_BALL_MOVE_SET = MoveSetManager.create(JStandTypeRegistry.CREAM,
             "half_ball", CreamEntity::registerHalfBallMoves, State.class);
     public static final StandData DATA = StandData.builder()
             .idleRotation(220f)

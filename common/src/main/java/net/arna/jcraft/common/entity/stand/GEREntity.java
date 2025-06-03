@@ -4,9 +4,10 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.goldexperience.requiem.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -43,7 +44,7 @@ import static net.arna.jcraft.common.component.living.CommonHitPropertyComponent
  * @see ReturnToZeroMove
  */
 public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
-    public static final MoveSet<GEREntity, State> MOVE_SET = MoveSet.create(StandType.GOLD_EXPERIENCE_REQUIEM,
+    public static final MoveSet<GEREntity, State> MOVE_SET = MoveSetManager.create(StandType.GOLD_EXPERIENCE_REQUIEM,
             GEREntity::registerMoves, State.class);
 
     public static final SimpleAttack<GEREntity> LIGHT_FOLLOWUP = new SimpleAttack<GEREntity>(

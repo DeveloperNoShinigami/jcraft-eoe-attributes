@@ -1,4 +1,4 @@
-package net.arna.jcraft.common.attack.core.data;
+package net.arna.jcraft.api.attack;
 
 import com.mojang.datafixers.util.*;
 import com.mojang.serialization.Codec;

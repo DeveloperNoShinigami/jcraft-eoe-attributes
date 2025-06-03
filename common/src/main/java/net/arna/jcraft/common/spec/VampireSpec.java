@@ -2,10 +2,11 @@ package net.arna.jcraft.common.spec;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.vampire.*;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -20,7 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 @Getter
 public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
-    public static final MoveSet<VampireSpec, State> MOVE_SET = MoveSet.create(SpecType.VAMPIRE, VampireSpec::registerMoves, State.class);
+    public static final MoveSet<VampireSpec, State> MOVE_SET = MoveSetManager.create(SpecType.VAMPIRE, VampireSpec::registerMoves, State.class);
 
     public static final SimpleUppercutAttack<VampireSpec> AIR_KICK = new SimpleUppercutAttack<VampireSpec>(30, 6,
             12, 1f, 5f, 14, 1.5f, 0.2f, 0.5f, -0.5f)

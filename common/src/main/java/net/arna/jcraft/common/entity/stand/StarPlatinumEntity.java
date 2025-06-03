@@ -4,11 +4,12 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.core.data.StateContainer;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.starplatinum.InhaleAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -35,7 +36,7 @@ import java.util.function.Consumer;
  * @see InhaleAttack
  */
 public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPlatinumEntity, StarPlatinumEntity.State> {
-    public static final MoveSet<StarPlatinumEntity, State> MOVE_SET = MoveSet.create(StandType.STAR_PLATINUM,
+    public static final MoveSet<StarPlatinumEntity, State> MOVE_SET = MoveSetManager.create(StandType.STAR_PLATINUM,
             StarPlatinumEntity::registerMoves, State.class);
 
     public static final SimpleUppercutAttack<StarPlatinumEntity> UPPERCUT = new SimpleUppercutAttack<StarPlatinumEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),

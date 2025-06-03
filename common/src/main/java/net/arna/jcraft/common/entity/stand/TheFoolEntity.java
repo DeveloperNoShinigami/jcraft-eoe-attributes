@@ -5,11 +5,12 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
@@ -63,7 +64,7 @@ import java.util.function.Consumer;
  * @see TFComboAttack
  */
 public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.State> {
-    public static final MoveSet<TheFoolEntity, State> MOVE_SET = MoveSet.create(StandType.THE_FOOL,
+    public static final MoveSet<TheFoolEntity, State> MOVE_SET = MoveSetManager.create(StandType.THE_FOOL,
             TheFoolEntity::registerMoves, State.class);
 
     public static final SimpleMultiHitAttack<TheFoolEntity> DRILL = new SimpleMultiHitAttack<TheFoolEntity>(

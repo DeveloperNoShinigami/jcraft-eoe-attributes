@@ -4,10 +4,11 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.NoOpMove;
 import net.arna.jcraft.common.attack.moves.thesun.FireMeteorAttack;
 import net.arna.jcraft.common.attack.moves.thesun.FireSunBeamAttack;
@@ -62,7 +63,7 @@ import java.util.function.Consumer;
  * @see net.arna.jcraft.client.renderer.entity.stands.SunRenderer SunRenderer
  */
 public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.State> {
-    public static final MoveSet<TheSunEntity, State> MOVE_SET = MoveSet.create(StandType.THE_SUN,
+    public static final MoveSet<TheSunEntity, State> MOVE_SET = MoveSetManager.create(StandType.THE_SUN,
             TheSunEntity::registerMoves, State.class);
 
     private static final EntityDataAccessor<Boolean> PASSIVE;

@@ -3,9 +3,10 @@ package net.arna.jcraft.common.spec;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import lombok.Setter;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.anubis.*;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownMultiHitAttack;
 import net.arna.jcraft.common.util.CooldownType;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 
 public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
-    public static final MoveSet<AnubisSpec, State> MOVE_SET = MoveSet.create(SpecType.ANUBIS, AnubisSpec::registerMoves, State.class);
+    public static final MoveSet<AnubisSpec, State> MOVE_SET = MoveSetManager.create(SpecType.ANUBIS, AnubisSpec::registerMoves, State.class);
 
     public static final SimpleAnubisAttack AERIAL_CLEAVE = new SimpleAnubisAttack(100, 9, 15, 1f, 5f,
             15, 1.75f, 0.4f, 0.3f, true, true)

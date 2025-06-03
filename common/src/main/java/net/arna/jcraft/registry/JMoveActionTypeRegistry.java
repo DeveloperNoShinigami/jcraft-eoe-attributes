@@ -5,7 +5,7 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.common.attack.actions.*;
-import net.arna.jcraft.common.attack.core.data.MoveActionType;
+import net.arna.jcraft.api.attack.MoveActionType;
 
 public interface JMoveActionTypeRegistry {
     DeferredRegister<MoveActionType<?>> MOVE_ACTION_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, JRegistries.MOVE_ACTION_TYPE_REGISTRY_KEY);

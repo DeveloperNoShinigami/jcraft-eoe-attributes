@@ -5,12 +5,13 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.LungeAction;
 import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.*;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -42,7 +43,7 @@ import java.util.function.Consumer;
  * @see ItemPlaceMove
  */
 public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
-    public static final MoveSet<D4CEntity, State> MOVE_SET = MoveSet.create(StandType.D4C, D4CEntity::registerMoves, State.class);
+    public static final MoveSet<D4CEntity, State> MOVE_SET = MoveSetManager.create(StandType.D4C, D4CEntity::registerMoves, State.class);
 
     public static final ItemPlaceMove ITEM_PLACE = new ItemPlaceMove(JCraft.LIGHT_COOLDOWN, 8, 12, 0.75f)
             .withAnim(State.ITEM_PLACE)

@@ -5,11 +5,12 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.conditions.HoldingAnubisCondition;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.*;
@@ -54,9 +55,9 @@ import java.util.function.Consumer;
  * @see SpinBarrageAttack
  */
 public class SilverChariotEntity extends StandEntity<SilverChariotEntity, SilverChariotEntity.State> {
-    public static final MoveSet<SilverChariotEntity, State> DEFAULT_MOVE_SET = MoveSet.create(StandType.SILVER_CHARIOT,
+    public static final MoveSet<SilverChariotEntity, State> DEFAULT_MOVE_SET = MoveSetManager.create(StandType.SILVER_CHARIOT,
             SilverChariotEntity::registerDefaultMoves, State.class);
-    public static final MoveSet<SilverChariotEntity, State> POSSESSED_MOVE_SET = MoveSet.create(StandType.SILVER_CHARIOT,
+    public static final MoveSet<SilverChariotEntity, State> POSSESSED_MOVE_SET = MoveSetManager.create(StandType.SILVER_CHARIOT,
             "possessed", SilverChariotEntity::registerPossessedMoves, State.class);
 
     public static final LastShotAttack LAST_SHOT = new LastShotAttack(140, 12, 15, 1f)

@@ -12,10 +12,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.util.NameHolder;
@@ -132,7 +132,7 @@ public class JCraftChangesCommand {
     }
 
     private static @NotNull Map<NameHolder, @NotNull List<Pair<String, List<Pair<Component, MapDifference<String, Object>>>>>> findChanges() {
-        return MoveSetLoader.getMoveSets().entrySet().stream()
+        return MoveSetManager.getMoveSets().entrySet().stream()
                 .map(moveSets -> Pair.of((NameHolder) moveSets.getKey(), moveSets.getValue().values().stream()
                         .map(moveSet -> Pair.of(moveSet.getName(), findChanges(moveSet)))
                         .filter(p -> p.getSecond() != null)

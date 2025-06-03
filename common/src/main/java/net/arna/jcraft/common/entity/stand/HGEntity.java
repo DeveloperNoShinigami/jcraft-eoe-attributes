@@ -5,9 +5,10 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.EmeraldSplashAttack;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.NetSetMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
@@ -41,7 +42,7 @@ import java.util.function.Consumer;
  * @see NetSetMove
  */
 public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
-    public static final MoveSet<HGEntity, State> MOVE_SET = MoveSet.create(StandType.HIEROPHANT_GREEN,
+    public static final MoveSet<HGEntity, State> MOVE_SET = MoveSetManager.create(StandType.HIEROPHANT_GREEN,
             HGEntity::registerMoves, State.class);
 
     public static final SimpleUppercutAttack<HGEntity> AIR_LIGHT = new SimpleUppercutAttack<HGEntity>(

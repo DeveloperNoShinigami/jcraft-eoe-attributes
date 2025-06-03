@@ -6,7 +6,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.common.attack.conditions.HoldingAnubisCondition;
 import net.arna.jcraft.common.attack.conditions.MetallicaIronCondition;
-import net.arna.jcraft.common.attack.core.data.MoveConditionType;
+import net.arna.jcraft.api.attack.MoveConditionType;
 
 public interface JMoveConditionTypeRegistry {
     DeferredRegister<MoveConditionType<?>> MOVE_CONDITION_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, JRegistries.MOVE_CONDITION_TYPE_REGISTRY_KEY);

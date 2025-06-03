@@ -5,7 +5,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveCondition;
-import net.arna.jcraft.common.attack.core.data.MoveConditionType;
+import net.arna.jcraft.api.attack.MoveConditionType;
 import net.arna.jcraft.registry.JItemRegistry;
 
 @RequiredArgsConstructor(staticName = "holdingAnubis")
