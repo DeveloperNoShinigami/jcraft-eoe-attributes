@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.GEREntity;
 import net.minecraft.util.ExtraCodecs;
@@ -43,7 +42,7 @@ public final class FlightMove extends AbstractMove<FlightMove, GEREntity> {
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final GEREntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final GEREntity attacker, final LivingEntity user) {
         attacker.setFlightTime(flightTime);
         return Set.of();
     }

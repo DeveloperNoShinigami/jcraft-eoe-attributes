@@ -4,7 +4,6 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.WSAcidProjectile;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
@@ -24,13 +23,13 @@ public final class PoisonSpewAttack extends AbstractSimpleAttack<PoisonSpewAttac
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user) {
         final WSAcidProjectile acidProjectile = new WSAcidProjectile(attacker.level(), user);
         acidProjectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, 1.33F, 0);
         acidProjectile.setPos(attacker.getEyePosition());
         attacker.level().addFreshEntity(acidProjectile);
 
-        return super.perform(attacker, user, ctx);
+        return super.perform(attacker, user);
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,8 +26,8 @@ public final class CreamComboAttack extends AbstractMultiHitAttack<CreamComboAtt
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final CreamEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final CreamEntity attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
 
         if (getBlow(attacker) == 2) {
             final Vec3 rV = getRotVec(attacker);

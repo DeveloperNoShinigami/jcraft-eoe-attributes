@@ -25,8 +25,8 @@ public class DetachChargeMove extends AbstractSurpriseMove<DetachChargeMove>{
         if (user == null) return;
 
         attacker.endHalfBall();
-        attacker.getMoveContext().set(OUT_POS, user.position().toVector3f());
-        attacker.getMoveContext().set(OUT_DIR, user.getLookAngle().scale(0.75).toVector3f());
+        outPos = user.position().toVector3f();
+        outDir = user.getLookAngle().scale(0.75f).toVector3f();
     }
 
     @Override

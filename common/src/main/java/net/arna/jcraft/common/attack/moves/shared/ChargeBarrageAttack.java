@@ -9,7 +9,6 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -82,8 +81,8 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
         final Entity attackerEntity = attacker.getBaseEntity();
         if (targets.isEmpty() || attackerEntity == null) {
             return targets;

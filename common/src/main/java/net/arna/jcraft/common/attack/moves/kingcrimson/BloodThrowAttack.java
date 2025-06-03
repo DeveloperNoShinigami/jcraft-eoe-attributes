@@ -4,7 +4,6 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.BloodProjectile;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
@@ -31,7 +30,7 @@ public final class BloodThrowAttack extends AbstractMove<BloodThrowAttack, KingC
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final KingCrimsonEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KingCrimsonEntity attacker, final LivingEntity user) {
         final BloodProjectile bloodProjectile = new BloodProjectile(attacker.level(), user);
         bloodProjectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
         bloodProjectile.shootFromRotation(user, user.getXRot(), user.getYRot(), 0, user.isShiftKeyDown() ? 1.33F : 0.66F, 0);

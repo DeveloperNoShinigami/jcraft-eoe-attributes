@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.common.attack.core.*;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.api.attack.StateContainerHolder;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -55,8 +54,8 @@ public abstract class AbstractGrabAttack<T extends AbstractGrabAttack<T, A, S>, 
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
         if (targets.isEmpty()) {
             return targets;
         }

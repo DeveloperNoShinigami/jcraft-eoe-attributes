@@ -91,11 +91,7 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
         this.moveMap.copyFrom(moveMap);
 
         initialized = true;
-        // Make a new hashset to avoid concurrent modification exceptions.
-        // Will not be necessary anymore once MoveContext has been yeeted at which point,
-        // we can replace the onMoveSetReload implementation in StandEntity and JSpec with
-        // one that just calls moveMap.copyFrom(moveMap).
-        gameExecutor.execute(() -> new HashSet<>(listeners).forEach(listener ->
+        gameExecutor.execute(() -> listeners.forEach(listener ->
                 listener.onMoveSetReload(this)));
     }
 

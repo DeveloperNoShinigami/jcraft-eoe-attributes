@@ -6,7 +6,6 @@ import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.tickable.PastDimensions;
@@ -63,8 +62,8 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final     D4CEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final     D4CEntity attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
 
         final ServerLevel world = (ServerLevel) attacker.level();
 

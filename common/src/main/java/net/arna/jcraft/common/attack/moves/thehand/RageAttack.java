@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.BlockableType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.attack.moves.shared.BarrageAttack;
@@ -54,8 +53,8 @@ public final class RageAttack extends AbstractMultiHitAttack<RageAttack, TheHand
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheHandEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(TheHandEntity attacker, LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
 
         if (targets.isEmpty() || getBlow(attacker) != 1) return targets;
 

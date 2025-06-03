@@ -5,8 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
@@ -22,14 +20,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Set;
 
 public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, KQBTDEntity> {
-    public static final MoveVariable<LivingEntity> BTD_ENTITY = new MoveVariable<>(LivingEntity.class);
-    public static final MoveVariable<Vec3> BTD_POS = new MoveVariable<>(Vec3.class);
-
-    public BTDPlantAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final int stun, final float hitboxSize, final float offset) {
+    public BTDPlantAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
+                          final int stun, final float hitboxSize, final float offset) {
         super(cooldown, windup, duration, moveDistance, 0f, stun, hitboxSize, 0f, offset);
     }
 
@@ -45,16 +42,16 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
         if (targets.isEmpty()) {
             return Set.of();
         }
 
         final Entity btdEntity = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
         if (btdEntity instanceof LivingEntity living) {
-            ctx.set(BTD_ENTITY, living);
-            ctx.set(BTD_POS, btdEntity.position());
+            attacker.setBtdEntity(new WeakReference<>(living));
+            attacker.setBtdPos(btdEntity.position());
         }
         return targets;
     }
@@ -66,8 +63,8 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
     }
 
     private void displayBTDParticles(final KQBTDEntity stand, final ServerPlayer playerEntity) {
-        final Entity bombEntity = stand.getMoveContext().get(BTD_ENTITY);
-        final Vec3 bombPos = stand.getMoveContext().get(BTD_POS);
+        final Entity bombEntity = stand.getBtdEntity().get();
+        final Vec3 bombPos = stand.getBtdPos();
         final boolean bombExists = bombEntity != null;
 
         double dX1 = 0;
@@ -129,17 +126,11 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
     }
 
     @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(BTD_ENTITY);
-        ctx.register(BTD_POS);
-    }
-
-    @Override
     public StandEntity.MoveSelectionResult specificMoveSelectionCriterion(KQBTDEntity attacker, LivingEntity mob,
                                                                           LivingEntity target, int stunTicks, int enemyMoveStun,
                                                                           double distance, StandEntity<?, ?> enemyStand,
                                                                           AbstractMove<?, ?> enemyAttack) {
-        if (attacker.getMoveContext().get(BTDPlantAttack.BTD_ENTITY) != null) {
+        if (attacker.getBtdEntity().get() != null) {
             return StandEntity.MoveSelectionResult.USE;
         }
 

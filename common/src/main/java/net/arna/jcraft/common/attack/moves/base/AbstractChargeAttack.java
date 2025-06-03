@@ -2,7 +2,6 @@ package net.arna.jcraft.common.attack.moves.base;
 
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,8 +36,8 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
         if (!targets.isEmpty()) endCharge(attacker);
         return targets;
     }
@@ -76,7 +75,7 @@ public abstract class AbstractChargeAttack<T extends AbstractChargeAttack<T, A, 
         attacker.setPos(user.position());
         attacker.setYHeadRot(user.getYHeadRot());
         attacker.setYBodyRot(user.getYHeadRot());
-        attacker.setRotationOffset(attacker.ATTACK_ROTATION);
+        attacker.setRotationOffset(StandEntity.ATTACK_ROTATION);
     }
 
     @Override

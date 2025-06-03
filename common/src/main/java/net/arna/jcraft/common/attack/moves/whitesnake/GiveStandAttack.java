@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -47,10 +46,10 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user) {
         final ItemStack itemStack = attacker.getOffhandItem();
 
-        super.perform(attacker, user, ctx).stream().findFirst().ifPresent(
+        super.perform(attacker, user).stream().findFirst().ifPresent(
                 (target) -> {
                     if (target instanceof StandEntity<?,?>) return;
 

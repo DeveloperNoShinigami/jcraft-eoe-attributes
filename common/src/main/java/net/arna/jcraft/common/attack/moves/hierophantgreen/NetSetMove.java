@@ -4,7 +4,6 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.HGNetEntity;
 import net.arna.jcraft.common.entity.stand.HGEntity;
@@ -27,7 +26,7 @@ public final class NetSetMove extends AbstractMove<NetSetMove, HGEntity> {
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final HGEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final HGEntity attacker, final LivingEntity user) {
         final Direction gravity = GravityChangerAPI.getGravityDirection(attacker);
 
         final HGNetEntity net = new HGNetEntity(attacker.level());

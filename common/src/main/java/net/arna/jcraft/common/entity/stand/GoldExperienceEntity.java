@@ -239,7 +239,9 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                 } else {
                     toSummon = LifeGiverAttack.LifeGiverType.BUTTERFLY;
                 }
-                moveContext.set(LifeGiverAttack.TYPE_TO_SUMMON, toSummon);
+                final LifeGiverAttack.LifeGiverType finalToSummon = toSummon;
+                getMoveMap().findMoveByType(LifeGiverAttack.class)
+                        .ifPresent(move -> move.setTypeToSummon(finalToSummon));
 
                 return handleMove(MoveClass.SPECIAL3);
             }

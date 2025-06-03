@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.config.IntOption;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -35,7 +34,7 @@ public abstract class AbstractTimeStopMove<T extends AbstractTimeStopMove<T, A>,
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
         int duration = timeStopDuration.map(Function.identity(), IntOption::getValue);
         attacker.setTsTime(duration);
         //attacker.setCurrentMove(null);

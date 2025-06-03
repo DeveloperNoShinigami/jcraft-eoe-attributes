@@ -3,7 +3,6 @@ package net.arna.jcraft.common.attack.moves.metallica;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
@@ -27,7 +26,7 @@ public class FanTossAttack extends AbstractMove<FanTossAttack, MetallicaEntity> 
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user) {
         final float offset = 10.0F;
         int index = 0;
         // 0 -> 1 -> -1 -> 2 -> -2

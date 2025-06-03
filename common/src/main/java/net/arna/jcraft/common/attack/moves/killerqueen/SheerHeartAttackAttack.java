@@ -4,7 +4,6 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
 import net.arna.jcraft.common.entity.stand.KillerQueenEntity;
@@ -25,7 +24,7 @@ public final class SheerHeartAttackAttack extends AbstractMove<SheerHeartAttackA
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final KillerQueenEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KillerQueenEntity attacker, final LivingEntity user) {
         final SheerHeartAttackEntity sha = new SheerHeartAttackEntity(attacker.level());
         sha.setMaster(user);
         sha.moveTo(attacker.getX(), attacker.getY() + 0.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());

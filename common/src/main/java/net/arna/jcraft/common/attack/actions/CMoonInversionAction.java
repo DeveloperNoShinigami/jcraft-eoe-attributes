@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.common.attack.core.MoveAction;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveActionType;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,7 +20,7 @@ public class CMoonInversionAction extends MoveAction<CMoonInversionAction, CMoon
     private final boolean slow;
 
     @Override
-    public void perform(CMoonEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
+    public void perform(CMoonEntity attacker, LivingEntity user, Set<LivingEntity> targets) {
         targets.forEach(t -> attacker.addInversion(t, time, damage, slow));
     }
 

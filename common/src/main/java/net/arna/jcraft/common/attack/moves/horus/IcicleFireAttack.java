@@ -3,7 +3,6 @@ package net.arna.jcraft.common.attack.moves.horus;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
@@ -33,7 +32,7 @@ public class IcicleFireAttack extends AbstractMove<IcicleFireAttack, HorusEntity
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(HorusEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(HorusEntity attacker, LivingEntity user) {
         final LargeIcicleProjectile instantIcicle = new LargeIcicleProjectile(attacker.level(), user);
         float scale = Mth.clamp(getChargeTime(attacker) / (MAX_ICICLE_CHARGE_TIME - 2.0f), 0.1f, 1.0f);
         instantIcicle.setScale(scale);

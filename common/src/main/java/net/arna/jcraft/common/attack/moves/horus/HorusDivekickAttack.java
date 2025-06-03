@@ -3,10 +3,8 @@ package net.arna.jcraft.common.attack.moves.horus;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.MobilityType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.HorusEntity;
@@ -21,8 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekickAttack, HorusEntity, HorusEntity.State> {
-    private static final MoveVariable<Vec3> LOOK_DIR = new MoveVariable<>(Vec3.class);
     private static final MobEffectInstance LEVITATE = new MobEffectInstance(MobEffects.SLOW_FALLING, 9, 4, true, false);
+    private Vec3 lookDir = Vec3.ZERO;
 
     public HorusDivekickAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
                                final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
@@ -41,7 +39,7 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
         final LivingEntity user = attacker.getUserOrThrow();
         if (attacker.isFree()) attacker.setFree(false);
 
-        attacker.getMoveContext().set(LOOK_DIR, user.getLookAngle().scale(0.65));
+        lookDir = user.getLookAngle().scale(0.65);
 
         int duration = 20 + (int)user.getXRot();
         if (duration < getWindup()) duration = getWindup();
@@ -59,9 +57,7 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
 
     @Override
     protected Vec3 advanceChargePos(final StandEntity<?, ?> attacker, final float moveDistance, final int windupPoint) {
-        return attacker.position().add(
-                attacker.getMoveContext().get(LOOK_DIR)
-        );
+        return attacker.position().add(lookDir);
     }
 
     @Override
@@ -72,16 +68,11 @@ public final class HorusDivekickAttack extends AbstractChargeAttack<HorusDivekic
                 endCharge((HorusEntity) attacker);
             } else {
                 final LivingEntity user = attacker.getUserOrThrow();
-                GravityChangerAPI.setWorldVelocity(user, attacker.getMoveContext().get(LOOK_DIR));
+                GravityChangerAPI.setWorldVelocity(user, lookDir);
                 JUtils.syncVelocityUpdate(user);
                 user.resetFallDistance();
             }
         }
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(LOOK_DIR);
     }
 
     @Override

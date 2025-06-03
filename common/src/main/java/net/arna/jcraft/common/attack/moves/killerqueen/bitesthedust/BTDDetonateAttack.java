@@ -5,9 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.entity.stand.AbstractKillerQueenEntity;
+import net.arna.jcraft.common.entity.stand.KQBTDEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.server.level.ServerLevel;
@@ -19,10 +18,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Set;
 
-public final class BTDDetonateAttack extends AbstractMove<BTDDetonateAttack, AbstractKillerQueenEntity<?, ?>> {
+public final class BTDDetonateAttack extends AbstractMove<BTDDetonateAttack, KQBTDEntity> {
     public BTDDetonateAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
     }
@@ -33,9 +33,9 @@ public final class BTDDetonateAttack extends AbstractMove<BTDDetonateAttack, Abs
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final AbstractKillerQueenEntity<?, ?> attacker, final LivingEntity user, final MoveContext ctx) {
-        final LivingEntity btdEntity = ctx.get(BTDPlantAttack.BTD_ENTITY);
-        final Vec3 btdPos = ctx.get(BTDPlantAttack.BTD_POS);
+    public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user) {
+        final LivingEntity btdEntity = attacker.getBtdEntity().get();
+        final Vec3 btdPos = attacker.getBtdPos();
         if (btdEntity == null) {
             return Set.of();
         }
@@ -61,8 +61,8 @@ public final class BTDDetonateAttack extends AbstractMove<BTDDetonateAttack, Abs
         }
 
         btdEntity.teleportToWithTicket(btdPos.x, btdPos.y, btdPos.z);
-        ctx.set(BTDPlantAttack.BTD_ENTITY, null);
-        ctx.set(BTDPlantAttack.BTD_POS, null);
+        attacker.setBtdEntity(new WeakReference<>(null));
+        attacker.setBtdPos(null);
 
         return Set.of();
     }

@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
 import net.arna.jcraft.common.attack.core.MobilityType;
@@ -35,7 +34,7 @@ public final class GravitationalHopMove extends AbstractMove<GravitationalHopMov
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final CMoonEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final CMoonEntity attacker, final LivingEntity user) {
         if (user.onGround()) {
             if (user.hasEffect(JStatusRegistry.WEIGHTLESS.get())) {
                 user.removeEffect(JStatusRegistry.WEIGHTLESS.get());

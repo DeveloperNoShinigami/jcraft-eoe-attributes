@@ -4,7 +4,6 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
@@ -41,7 +40,7 @@ public class ImpalingThrustAttack extends AbstractMove<ImpalingThrustAttack, Sha
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(ShadowTheWorldEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(ShadowTheWorldEntity attacker, LivingEntity user) {
         final ServerLevel world = (ServerLevel) attacker.level();
         final CommonShockwaveHandlerComponent shockwaveHandler = JComponentPlatformUtils.getShockwaveHandler(world);
 

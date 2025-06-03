@@ -229,9 +229,11 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
 
     @Override
     public boolean initMove(MoveClass moveClass) {
-        if (moveClass == MoveClass.ULTIMATE && !moveContext.get(ReturnToZeroMove.ENTITY_DATA).isEmpty()) {
-            RETURN_TO_ZERO.returnToZero(this);
-            return true;
+        if (moveClass == MoveClass.ULTIMATE) {
+            ReturnToZeroMove rtzMove = getMoveMap().findMoveByType(ReturnToZeroMove.class).orElse(null);
+            if (rtzMove != null && rtzMove.returnToZero(this)) {
+                return true;
+            } else return super.initMove(moveClass);
         } else if (tryFollowUp(moveClass, MoveClass.LIGHT)) {
             return true;
         } else {

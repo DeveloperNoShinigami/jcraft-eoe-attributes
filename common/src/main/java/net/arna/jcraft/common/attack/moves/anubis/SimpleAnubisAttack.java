@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.spec.AnubisSpec;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,8 +35,8 @@ public class SimpleAnubisAttack extends AbstractSimpleAttack<SimpleAnubisAttack,
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(AnubisSpec attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(AnubisSpec attacker, LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
         if (incrementBloodlust) attacker.tryIncrementBloodlust(targets);
 
         return targets;

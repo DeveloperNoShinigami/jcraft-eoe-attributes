@@ -7,7 +7,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveAction;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveActionType;
 import net.arna.jcraft.common.util.JCodecUtils;
 import net.minecraft.server.MinecraftServer;
@@ -26,7 +25,7 @@ public class ScoreboardAction extends MoveAction<ScoreboardAction, IAttacker<?, 
     private final int value;
 
     @Override
-    public void perform(final IAttacker<?, ?> attacker, final LivingEntity user, final MoveContext ctx, final Set<LivingEntity> targets) {
+    public void perform(final IAttacker<?, ?> attacker, final LivingEntity user, final Set<LivingEntity> targets) {
         MinecraftServer server = attacker.getEntityWorld().getServer();
         if (server == null) {
             return;

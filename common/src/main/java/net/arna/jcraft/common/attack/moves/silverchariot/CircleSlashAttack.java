@@ -3,7 +3,6 @@ package net.arna.jcraft.common.attack.moves.silverchariot;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
@@ -34,8 +33,8 @@ public final class CircleSlashAttack extends AbstractSimpleAttack<CircleSlashAtt
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final SilverChariotEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final SilverChariotEntity attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
 
         //noinspection IntegerDivisionInFloatingPointContext // intended
         withDamage(originalDamage + (getChargeTime(attacker) / 10) * 0.75f);

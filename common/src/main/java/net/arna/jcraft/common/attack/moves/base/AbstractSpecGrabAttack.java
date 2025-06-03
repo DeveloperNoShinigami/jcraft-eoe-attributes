@@ -12,7 +12,6 @@ import net.arna.jcraft.common.attack.core.AttackMoveExtras;
 import net.arna.jcraft.common.attack.core.BaseMoveExtras;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
@@ -57,8 +56,8 @@ public abstract class AbstractSpecGrabAttack<T extends AbstractSpecGrabAttack<T,
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
         if (targets.isEmpty()) {
             return targets;
         }

@@ -3,7 +3,6 @@ package net.arna.jcraft.common.attack.moves.horus;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.IceBranchProjectile;
@@ -24,7 +23,7 @@ public class ChasingFreezeAttack extends AbstractMove<ChasingFreezeAttack, Horus
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(HorusEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(HorusEntity attacker, LivingEntity user) {
         final IceBranchProjectile iceBranchProjectile = new IceBranchProjectile(attacker.level(), user, 0);
         iceBranchProjectile.moveTo(attacker.getX(), attacker.getY(), attacker.getZ(), -attacker.getYRot() + 180, -attacker.getXRot());
         attacker.level().addFreshEntity(iceBranchProjectile);

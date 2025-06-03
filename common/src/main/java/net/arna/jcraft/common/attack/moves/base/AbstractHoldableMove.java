@@ -10,8 +10,6 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.BaseMoveExtras;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Set;
@@ -19,9 +17,9 @@ import java.util.Set;
 @Getter
 public abstract class AbstractHoldableMove<T extends AbstractHoldableMove<T, A>, A extends IAttacker<A, ?>>
         extends AbstractMove<T, A> {
-    private final IntMoveVariable CHARGE_TIME = new IntMoveVariable();
     protected boolean setMoveStun = false;
     private final int minimumCharge;
+    private int chargeTime = 0;
     // Maximum charge is the end of the move
 
     protected AbstractHoldableMove(final int cooldown, final int windup, final int duration, final float moveDistance,
@@ -40,21 +38,21 @@ public abstract class AbstractHoldableMove<T extends AbstractHoldableMove<T, A>,
     @Override
     public void onInitiate(A attacker) {
         super.onInitiate(attacker);
-        attacker.getMoveContext().setInt(CHARGE_TIME, 0);
+        chargeTime = 0;
     }
 
     @Override
     public void activeTick(final A attacker, final int moveStun) {
         super.activeTick(attacker, moveStun);
         final boolean charged = moveStun <= getDuration() - minimumCharge;
-        attacker.getMoveContext().incrementInt(CHARGE_TIME);
+        chargeTime++;
         if (moveStun == 1 || (charged && (!attacker.isHolding() || attacker.getHoldingType().getMoveClass() != getMoveClass()))) {
             followUp(attacker);
         }
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
         return Set.of();
     }
 
@@ -65,11 +63,6 @@ public abstract class AbstractHoldableMove<T extends AbstractHoldableMove<T, A>,
         }
     }
 
-    @Override
-    protected void registerExtraContextEntries(MoveContext ctx) {
-        ctx.register(CHARGE_TIME);
-    }
-
     protected void onRelease(final A attacker) {
         if (attacker.getMoveStun() <= getDuration() - minimumCharge) {
             followUp(attacker);
@@ -77,7 +70,7 @@ public abstract class AbstractHoldableMove<T extends AbstractHoldableMove<T, A>,
     }
 
     private void followUp(final A attacker) {
-        attacker.getMoveMap().initiateFollowup(attacker, getThis(), setMoveStun, attacker.getMoveContext().getInt(CHARGE_TIME));
+        attacker.getMoveMap().initiateFollowup(attacker, getThis(), setMoveStun, chargeTime);
     }
 
     protected abstract static class Type<M extends AbstractHoldableMove<? extends M, ?>> extends AbstractMove.Type<M> {

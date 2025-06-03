@@ -11,7 +11,6 @@ import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.core.data.MoveSetImpl;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
@@ -249,7 +248,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
         // If the move has a duration of 0, perform it instantly.
         if (move.getDuration() == 0) {
-            move.perform(getThis(), getUserOrThrow(), getMoveContext());
+            move.perform(getThis(), getUserOrThrow());
             return true;
         }
 
@@ -307,7 +306,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     public void cancelMove(boolean offensiveCancel) {
         if (curMove != null) {
             if (offensiveCancel && !performedThisTick && curMove.shouldPerform(getThis(), getMoveStun() - 1)) {
-                curMove.perform(getThis(), getUserOrThrow(), getMoveContext());
+                curMove.perform(getThis(), getUserOrThrow());
             }
             if (curMove != null) {
                 curMove.onCancel(getThis());

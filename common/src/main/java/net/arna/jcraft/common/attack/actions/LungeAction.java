@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.*;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveAction;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveActionType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
@@ -42,7 +41,7 @@ public class LungeAction extends MoveAction<LungeAction, IAttacker<?, ?>> {
     }
 
     @Override
-    public void perform(IAttacker<?, ?> attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
+    public void perform(IAttacker<?, ?> attacker, LivingEntity user, Set<LivingEntity> targets) {
         if (onGround && !user.onGround() || notFree && attacker instanceof StandEntity<?, ?> stand && stand.isFree()) return;
 
         JUtils.addVelocity(user, attacker.getBaseEntity().getLookAngle().scale(factor).add(0.0, verticalFactor, 0.0));

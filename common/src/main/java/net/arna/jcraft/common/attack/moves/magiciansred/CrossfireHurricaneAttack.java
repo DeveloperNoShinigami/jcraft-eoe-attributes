@@ -5,9 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
@@ -30,8 +27,8 @@ import java.util.List;
 import java.util.Set;
 
 public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurricaneAttack, MagiciansRedEntity> {
-    public static final IntMoveVariable HURRICANE_TIME = new IntMoveVariable();
-    public static final MoveVariable<Vec3> HURRICANE_POS = new MoveVariable<>(Vec3.class);
+    private int hurricaneTime = 0;
+    private Vec3 hurricanePos = Vec3.ZERO;
 
     public CrossfireHurricaneAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
@@ -48,17 +45,14 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        ctx.setInt(HURRICANE_TIME, 50);
-        ctx.set(HURRICANE_POS, attacker.position());
+    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user) {
+        hurricaneTime = 50;
+        hurricanePos = attacker.position();
         return Set.of();
     }
 
     public void tickHurricane(final MagiciansRedEntity stand) {
         // Init variables
-        final MoveContext ctx = stand.getMoveContext();
-        int hurricaneTime = ctx.getInt(HURRICANE_TIME);
-        Vec3 hurricanePos = ctx.get(HURRICANE_POS);
         final LivingEntity user = stand.getUserOrThrow();
         final Entity vehicle = user.getVehicle();
         final Level world = stand.level();
@@ -67,7 +61,7 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
         if (stand.tickCount % 4 != 0 || hurricaneTime <= 0) {
             return;
         }
-        ctx.setInt(HURRICANE_TIME, --hurricaneTime);
+        --hurricaneTime;
 
         // Homing
         final List<LivingEntity> nearbyEnts = world.getEntitiesOfClass(LivingEntity.class,
@@ -81,7 +75,7 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
             }
             avgPos = avgPos.scale(1.0 / nearbyEnts.size());
 
-            ctx.set(HURRICANE_POS, hurricanePos = hurricanePos.add(avgPos.subtract(hurricanePos).normalize().scale(0.5)));
+            hurricanePos = hurricanePos.add(avgPos.subtract(hurricanePos).normalize().scale(0.5));
         }
 
         // Damage
@@ -95,7 +89,7 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
                 StandEntity.damageLogic(world, target, new Vec3(Math.sin(stand.tickCount / 10.0) * 3, 0.0, Math.cos(stand.tickCount / 10.0) * 3),
                         10, 1, false, 0.5f, true, 5, JDamageSources.stand(stand), user, CommonHitPropertyComponent.HitAnimation.MID);
                 if (hurricaneTime > 15) {
-                    ctx.setInt(HURRICANE_TIME, 15); // Allows for zoning up until it hits something
+                    hurricaneTime = 15; // Allows for zoning until it hits something
                 }
             } else {
                 target.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 20, 0));
@@ -111,12 +105,6 @@ public final class CrossfireHurricaneAttack extends AbstractMove<CrossfireHurric
         buf.writeDouble(hurricanePos.z);
 
         ServerChannelFeedbackPacket.send(JUtils.around((ServerLevel) world, hurricanePos, 128), buf);
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(HURRICANE_TIME);
-        ctx.register(HURRICANE_POS);
     }
 
     @Override

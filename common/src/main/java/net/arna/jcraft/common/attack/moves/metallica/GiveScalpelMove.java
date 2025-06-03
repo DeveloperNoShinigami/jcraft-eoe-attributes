@@ -3,7 +3,6 @@ package net.arna.jcraft.common.attack.moves.metallica;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
@@ -26,7 +25,7 @@ public final class GiveScalpelMove extends AbstractMove<GiveScalpelMove, Metalli
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user) {
         if (user instanceof final ServerPlayer playerEntity) {
             playerEntity.addItem(JItemRegistry.SCALPEL.get().getDefaultInstance());
             attacker.drainIron(ScalpelProjectile.IRON_COST);

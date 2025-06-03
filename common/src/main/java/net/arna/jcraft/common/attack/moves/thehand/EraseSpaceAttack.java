@@ -4,7 +4,6 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.MobilityType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheHandEntity;
@@ -35,8 +34,8 @@ public class EraseSpaceAttack extends AbstractEraseAttack<EraseSpaceAttack> {
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheHandEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(TheHandEntity attacker, LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
 
         final Vec3 rotVec = user.getLookAngle();
         final Vec3 eyePos = user.position().add(GravityChangerAPI.getEyeOffset(user));

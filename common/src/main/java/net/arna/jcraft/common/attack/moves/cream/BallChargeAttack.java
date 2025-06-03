@@ -6,7 +6,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -32,7 +31,7 @@ public final class BallChargeAttack extends AbstractMove<BallChargeAttack, Cream
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final CreamEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final CreamEntity attacker, final LivingEntity user) {
         attacker.playSound(JSoundRegistry.CREAM_CHARGE.get(), 1, 1);
         attacker.setCharging(true);
         attacker.setChargeDir(user.getLookAngle().scale(0.5));

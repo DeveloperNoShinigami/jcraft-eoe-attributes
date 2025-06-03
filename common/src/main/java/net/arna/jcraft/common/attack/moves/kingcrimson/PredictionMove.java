@@ -1,15 +1,12 @@
 package net.arna.jcraft.common.attack.moves.kingcrimson;
 
-import com.google.common.reflect.TypeToken;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
 import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
@@ -35,7 +32,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.*;
 
 public final class PredictionMove extends AbstractMove<PredictionMove, KingCrimsonEntity> {
-    public static final MoveVariable<Map<Entity, Vec3>> PREDICTION_INFO = new MoveVariable<>(new TypeToken<>() {});
+    private final Map<Entity, Vec3> predictionInfo = new WeakHashMap<>();
 
     public PredictionMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
@@ -55,7 +52,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     public void onInitiate(final KingCrimsonEntity attacker) {
         super.onInitiate(attacker);
 
-        attacker.getMoveContext().get(PREDICTION_INFO).clear();
+        predictionInfo.clear();
 
         // Send epitaph state start
         if (attacker.getUser() instanceof ServerPlayer player) {
@@ -82,7 +79,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final KingCrimsonEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KingCrimsonEntity attacker, final LivingEntity user) {
         return Set.of();
     }
 
@@ -105,7 +102,6 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
             return;
         }
 
-        final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
         for (final Entity entity : getEntitiesToCatch(attacker.level(), attacker, player)) {
             predictionInfo.put(entity, entity.position());
         }
@@ -116,8 +112,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
         NetworkManager.sendToPlayer(player, JPacketRegistry.S2C_TIME_ERASE_PREDICTION_STATE, buf);
     }
 
-    public static void finishPrediction(final KingCrimsonEntity attacker) {
-        final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
+    public void finishPrediction(final KingCrimsonEntity attacker) {
         for (Map.Entry<Entity, Vec3> prediction : predictionInfo.entrySet()) {
             final Entity entity = prediction.getKey();
             if (entity == null) {
@@ -132,8 +127,7 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
         attacker.cancelMove();
     }
 
-    public static void cancelPrediction(final KingCrimsonEntity attacker) {
-        final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
+    public void cancelPrediction(final KingCrimsonEntity attacker) {
         cancelPrediction(attacker, predictionInfo);
     }
 
@@ -147,7 +141,6 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
     }
 
     public void tickPredictions(final KingCrimsonEntity attacker) {
-        final Map<Entity, Vec3> predictionInfo = attacker.getMoveContext().get(PREDICTION_INFO);
         final Map<Entity, Vec3> predictions = new HashMap<>(predictionInfo);
         updatePredictions(predictions, attacker.getMoveStun());
         predictionInfo.clear();
@@ -234,11 +227,6 @@ public final class PredictionMove extends AbstractMove<PredictionMove, KingCrims
         //JCraft.LOGGER.info("Predicted position changed, time left: " + timeLeft);
         BlockHitResult hitResult = world.clip(new ClipContext(currentPos, futurePos, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, entity));
         prediction.setValue(hitResult.getLocation());
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(PREDICTION_INFO, new WeakHashMap<>());
     }
 
     @Override

@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.*;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.data.ExtraProducts;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -453,7 +452,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     // Logic methods
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
         Vec3 userRotVec = user.getLookAngle();
         final Direction gravDir = GravityChangerAPI.getGravityDirection(user);
         if (gravDir == Direction.UP) {
@@ -479,22 +478,21 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
             createShockwaves(attacker, user);
         }
 
-        performHook(attacker, targets, boxes, damageSource, fPos, rotVec, ctx);
+        performHook(attacker, targets, boxes, damageSource, fPos, rotVec);
         return targets;
     }
 
     /**
-     * A hook for processing the attack with more context than {@link #perform(IAttacker, LivingEntity, MoveContext)}
+     * A hook for processing the attack with more context than {@link AbstractMove#perform(IAttacker, LivingEntity)}
      *
      * @param targets        The valid targets found within the attack's hitboxes
      * @param boxes          The attack's hitboxes
      * @param damageSource   The attacker's damageSource
      * @param forwardPos     The offset forward position
      * @param rotationVector The attacker's rotation unit vector
-     * @param ctx            The attacker's MoveContext instance
      */
     protected void performHook(final A attacker, final Set<LivingEntity> targets, final Set<AABB> boxes,final DamageSource damageSource,
-                               final Vec3 forwardPos, final Vec3 rotationVector, final MoveContext ctx) {
+                               final Vec3 forwardPos, final Vec3 rotationVector) {
     }
 
     /**
@@ -514,7 +512,7 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
 
     /**
      * Calculates the boxes for this attack.
-     * Called in {@link #perform(IAttacker, LivingEntity, MoveContext)}
+     * Called in {@link AbstractMove#perform(IAttacker, LivingEntity)}
      *
      * @param attacker The attacker that invoked this attack
      * @param user     The user of the attacker

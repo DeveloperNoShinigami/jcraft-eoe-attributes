@@ -254,7 +254,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 }
 
                 if (canAttack() && getTETime() > 0) {
-                    cancelTE();
+                    getTimeEraseMove().cancelTE(this);
                     return true;
                 }
 
@@ -298,7 +298,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             }
             case UTILITY -> {
                 if (getTETime() > 0) {
-                    cancelTE();
+                    getTimeEraseMove().cancelTE(this);
                 }
                 return super.initMove(moveClass);
             }
@@ -312,7 +312,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
     public void moveCancel() {
         // Epitaph
-        PredictionMove.cancelPrediction(this);
+        getMoveMap().findMoveByType(PredictionMove.class)
+                .ifPresent(m -> m.cancelPrediction(this));
 
         // General
         setCurrentMove(null);
@@ -339,23 +340,15 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         return super.makeBoundingBox();
     }
 
-    public void cancelTE() {
-        final LivingEntity user = getUserOrThrow();
-        final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
-        cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) - getTETime() * 2);
-
-        setTETime(0);
-        final Mob doppelganger = moveContext.get(TimeEraseMove.DOPPELGANGER);
-        if (doppelganger != null) {
-            doppelganger.discard();
-        }
-
-        if (user instanceof ServerPlayer serverPlayer) {
-            ShaderDeactivationPacket.send(serverPlayer, ShaderActivationPacket.Type.CRIMSON);
-            serverPlayer.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(JSoundRegistry.TIME_ERASE_EXIT.get()),
-                    SoundSource.PLAYERS, getX(), getY(), getZ(), 1, 1, 0));
-        }
+    public TimeEraseMove getTimeEraseMove() {
+        return getMoveMap().asMovesList().stream()
+                .filter(m -> m instanceof TimeEraseMove)
+                .findFirst()
+                .map(TimeEraseMove.class::cast)
+                .orElse(null);
     }
+
+
 
     @Override
     @NonNull

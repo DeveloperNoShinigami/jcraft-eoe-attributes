@@ -4,7 +4,6 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.PHCapsuleProjectile;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
@@ -43,7 +42,7 @@ public class LaunchCapsuleAttack extends AbstractMove<LaunchCapsuleAttack, Abstr
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(AbstractPurpleHazeEntity<?, ?> attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(AbstractPurpleHazeEntity<?, ?> attacker, LivingEntity user) {
         final LivingEntity shooter = (attacker.isRemote() && !attacker.remoteControllable()) ? attacker : user;
         LaunchCapsuleAttack.launchCapsule(attacker, shooter, GravityChangerAPI.getGravityDirection(shooter), 0.8F, shooter.getYRot());
 

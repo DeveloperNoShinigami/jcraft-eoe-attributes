@@ -9,7 +9,6 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.MeteorProjectile;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
@@ -64,7 +63,7 @@ public class FireMeteorAttack extends AbstractMove<FireMeteorAttack, TheSunEntit
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheSunEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(TheSunEntity attacker, LivingEntity user) {
         Vec3 pos = attacker.randomPos();
         for (int i = 0; i < meteors; i++) {
             MeteorProjectile meteor = fireMeteor(attacker, user, pos, JUtils.getLookVector(pos, targetPosition).scale(meteorVelocity),

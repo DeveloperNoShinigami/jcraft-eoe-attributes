@@ -3,7 +3,6 @@ package net.arna.jcraft.common.attack.moves.thehand;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractUppercutAttack;
 import net.arna.jcraft.common.entity.stand.TheHandEntity;
@@ -27,8 +26,8 @@ public class Stomp2Attack extends AbstractUppercutAttack<Stomp2Attack, TheHandEn
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheHandEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(TheHandEntity attacker, LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
 
         JComponentPlatformUtils.getShockwaveHandler(attacker.level())
                 .addShockwave(attacker.position().add(user.getLookAngle()), new Vec3(GravityChangerAPI.getGravityDirection(attacker).step()), 2.5f);

@@ -4,8 +4,8 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import lombok.NonNull;
+import lombok.Setter;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.spec.VampireSpec;
 import net.arna.jcraft.common.util.JUtils;
@@ -13,9 +13,13 @@ import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 
+import java.lang.ref.WeakReference;
 import java.util.Set;
 
 public class BloodSuckHitsAttack extends AbstractMultiHitAttack<BloodSuckHitsAttack, VampireSpec> {
+    @Setter
+    private WeakReference<LivingEntity> target;
+
     public BloodSuckHitsAttack(int cooldown, int duration, float moveDistance, float damage, int stun, float hitboxSize,
                                float knockback, float offset, @NonNull IntCollection hitMoments) {
         super(cooldown, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);
@@ -27,10 +31,11 @@ public class BloodSuckHitsAttack extends AbstractMultiHitAttack<BloodSuckHitsAtt
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(VampireSpec attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(VampireSpec attacker, LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
         user.heal(1);
-        float bloodMult = JUtils.getBloodMult(ctx.get(BloodSuckAttack.TARGET));
+        LivingEntity target = this.target.get();
+        float bloodMult = target == null ? 0 : JUtils.getBloodMult(target);
         if (bloodMult <= 0) return targets;
 
         attacker.getVampireComponent().setBlood(attacker.getVampireComponent().getBlood() + 2 * bloodMult);

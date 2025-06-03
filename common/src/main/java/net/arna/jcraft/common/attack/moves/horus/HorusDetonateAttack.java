@@ -3,7 +3,6 @@ package net.arna.jcraft.common.attack.moves.horus;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.HorusEntity;
@@ -27,7 +26,7 @@ public class HorusDetonateAttack extends AbstractMove<HorusDetonateAttack, Horus
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(HorusEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(HorusEntity attacker, LivingEntity user) {
         attacker.getLastLargeIcicle().detonate();
         return Set.of();
     }

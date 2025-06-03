@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.ints.IntCollection;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.killerqueen.KQDetonateAttack;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
 import net.arna.jcraft.registry.JStatusRegistry;
@@ -28,8 +27,8 @@ public final class BTDGrabHitAttack extends AbstractMultiHitAttack<BTDGrabHitAtt
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
         switch (getBlow(attacker)) {
             case 0 -> {
                 for (LivingEntity ent : targets) {

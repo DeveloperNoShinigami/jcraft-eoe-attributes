@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.AbstractStarPlatinumEntity;
 import net.minecraft.core.BlockPos;
@@ -31,7 +30,7 @@ public final class BlockBreakingAttack extends AbstractSimpleAttack<BlockBreakin
     @Override
     public void performHook(final AbstractStarPlatinumEntity<?, ?> attacker, final Set<LivingEntity> targets,
                             final Set<AABB> boxes, final DamageSource damageSource, final Vec3 forwardPos,
-                            final Vec3 rotationVector, final MoveContext ctx) {
+                            final Vec3 rotationVector) {
         Level world = attacker.level();
         if (world.getGameRules().getBoolean(JCraft.STAND_GRIEFING)) {
             BlockPos bPos = attacker.blockPosition().offset((int) rotationVector.x, (int) rotationVector.y, (int) rotationVector.z);

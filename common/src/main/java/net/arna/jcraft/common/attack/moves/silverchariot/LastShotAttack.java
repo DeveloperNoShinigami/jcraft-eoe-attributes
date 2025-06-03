@@ -4,7 +4,6 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.RapierProjectile;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
@@ -23,7 +22,7 @@ public final class LastShotAttack extends AbstractMove<LastShotAttack, SilverCha
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final SilverChariotEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final SilverChariotEntity attacker, final LivingEntity user) {
         if (!attacker.hasRapier()) {
             return Set.of();
         }

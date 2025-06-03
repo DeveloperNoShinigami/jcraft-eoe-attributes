@@ -283,10 +283,12 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
 
     @Override
     protected void switchMoveSet(String name) {
-        final Vec3 lookDir = moveContext.hasEntry(SCChargeAttack.LOOK_DIR) ? moveContext.get(SCChargeAttack.LOOK_DIR) : null;
+        final Vec3 lookDir = getMoveMap().findMoveByType(SCChargeAttack.class)
+                .map(SCChargeAttack::getLookDir)
+                .orElse(null);
         super.switchMoveSet(name);
-        if (!moveContext.hasEntry(SCChargeAttack.LOOK_DIR)) moveContext.register(SCChargeAttack.LOOK_DIR, lookDir);
-        else moveContext.set(SCChargeAttack.LOOK_DIR, lookDir);
+        getMoveMap().findMoveByType(SCChargeAttack.class)
+                .ifPresent(m -> m.setLookDir(lookDir));
     }
 
     @Override

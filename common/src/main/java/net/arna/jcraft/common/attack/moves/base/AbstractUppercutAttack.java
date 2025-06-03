@@ -10,7 +10,6 @@ import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.AttackMoveExtras;
 import net.arna.jcraft.common.attack.core.BaseMoveExtras;
 import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,8 +28,8 @@ public abstract class AbstractUppercutAttack<T extends AbstractUppercutAttack<T,
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
         for (LivingEntity target : targets) {
             final Vec3 upDir = new Vec3(GravityChangerAPI.getGravityDirection(user).step()).scale(-strength);
             JUtils.addVelocity(target, upDir);

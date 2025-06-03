@@ -4,7 +4,6 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.GoldExperienceEntity;
 import net.minecraft.core.BlockPos;
@@ -31,14 +30,14 @@ public final class BerryBushAttack extends AbstractSimpleAttack<BerryBushAttack,
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final GoldExperienceEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final GoldExperienceEntity attacker, final LivingEntity user) {
         final Level world = attacker.level();
         final BlockPos blockPos = attacker.blockPosition();
         if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.below()).canOcclude()) {
             world.setBlockAndUpdate(blockPos, BERRY_BUSH);
         }
 
-        return super.perform(attacker, user, ctx);
+        return super.perform(attacker, user);
     }
 
     @Override

@@ -166,6 +166,19 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S extends Enum<?>> imp
                 .orElse(null);
     }
 
+    /**
+     * Finds a move by its type.
+     * @param moveType The type of move to find.
+     * @return The first move of the given type, or an empty optional if none are found.
+     * @param <M> The type of move to find.
+     */
+    public <M extends AbstractMove<?, ?>> Optional<M> findMoveByType(final Class<M> moveType) {
+        return asMovesList().stream()
+                .filter(moveType::isInstance)
+                .map(moveType::cast)
+                .findFirst();
+    }
+
     public void initiateFollowup(final A attacker, AbstractMove<?, ? super A> move, boolean setMoveStun, int chargeTime) {
         Entry<A, S> entry = getEntry(move.getOriginalMove());
         if (entry == null || entry.getFollowup() == null) {
@@ -179,7 +192,7 @@ public class MoveMap<A extends IAttacker<? extends A, S>, S extends Enum<?>> imp
         }
 
         move = entry.getMove();
-        move.setChargeTime(attacker, chargeTime);
+        move.setChargeTime(chargeTime);
         attacker.setMove(move.isCopyOnUse() ? move.copy() : move, entry.getAnimState());
         if (setMoveStun) {
             attacker.setMoveStun(move.getDuration());

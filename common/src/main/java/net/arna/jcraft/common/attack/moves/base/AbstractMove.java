@@ -8,16 +8,13 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.registries.RegistrySupplier;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.*;
-import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.core.data.ExtraProducts;
-import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -33,7 +30,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -43,8 +39,6 @@ import java.util.function.Supplier;
 public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAttacker<? extends A, ?>> {
     // Used to store the time this move was charged for, if any.
     // Set when this move is initiated using a charge time.
-    @Getter(AccessLevel.PRIVATE) // shouldn't be used directly
-    private final IntMoveVariable CHARGE_TIME = new IntMoveVariable();
     private final List<MoveCondition<?, ? super A>> conditions = new ArrayList<>();
     private final List<MoveAction<?, ? super A>> actions = new ArrayList<>();
     /**
@@ -82,6 +76,12 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      */
     protected boolean manualCooldown;
     private boolean copiedExtras; // See #testCopy()
+
+    // STATE VARIABLES
+
+    // How long this move was charged for, if any.
+    @Getter @Setter
+    private int chargeTime = 0;
 
     protected AbstractMove(int cooldown, int windup, int duration, float moveDistance) {
         this.cooldown = cooldown;
@@ -537,8 +537,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     }
 
     /**
-     * Gets the type of this move. Holds the codec used to serialize and deserialize this move. <br>
-     * <b>MUST BE REGISTERED IN {@link MoveSetLoader#registerMoves(BiConsumer)}.</b>
+     * Gets the type of this move. Holds the codec used to serialize and deserialize this move.
      * @return The type of this move
      */
     @NonNull
@@ -580,7 +579,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         Set<LivingEntity> targets = Set.of(); // Obviously none yet
         for (final MoveAction<?, ? super A> action : actions) {
             if (action.getRunMoment() == RunMoment.AT_INIT) {
-                action.perform(attacker, user, attacker.getMoveContext(), targets);
+                action.perform(attacker, user, targets);
             }
         }
     }
@@ -612,7 +611,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     /**
      * Called every tick so long as this move is active.
      * Called separately for each attacker.
-     * Invokes the {@link #perform(IAttacker, LivingEntity, MoveContext)} method if {@link #shouldPerform(IAttacker, int)}
+     * Invokes the {@link #perform(IAttacker, LivingEntity)} method if {@link #shouldPerform(IAttacker, int)}
      * returns {@code true} by default, but can be overridden to do whatever you want it to.
      *
      * @param attacker The attacker to tick for.
@@ -623,7 +622,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
             if (action.getRunMoment() == RunMoment.EVERY_TICK ||
                     (action.getRunMoment() == RunMoment.AT_END && moveStun == 0) ||
                     action.getRunMoment().shouldRun(getThis(), attacker, attacker.getUser(), getDuration() - moveStun, targets)) {
-                action.perform(attacker, attacker.getUserOrThrow(), attacker.getMoveContext(), targets);
+                action.perform(attacker, attacker.getUserOrThrow(), targets);
             }
         }
 
@@ -646,7 +645,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     public void tick(final A attacker) {}
 
     /**
-     * Returns whether {@link #perform(IAttacker, LivingEntity, MoveContext)} should be called this tick.
+     * Returns whether {@link #perform(IAttacker, LivingEntity)} should be called this tick.
      * Ensures the attacker has a valid user.
      *
      * @param attacker The attacker to check for.
@@ -657,20 +656,19 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     }
 
     /**
-     * Calls {@link #perform(IAttacker, LivingEntity, MoveContext)}.
+     * Calls {@link #perform(IAttacker, LivingEntity)}.
      *
      * @param attacker The attacker that will be performing this move.
      */
     public final void doPerform(final A attacker) {
         LivingEntity user = attacker.getUserOrThrow();
-        MoveContext ctx = attacker.getMoveContext();
 
-        Set<LivingEntity> targets = perform(attacker, user, ctx);
+        Set<LivingEntity> targets = perform(attacker, user);
         boolean hit = !targets.isEmpty();
 
         for (final MoveAction<?, ? super A> action : actions) {
             if (action.getRunMoment() == RunMoment.ON_STRIKE || hit && action.getRunMoment() == RunMoment.ON_HIT) {
-                action.perform(attacker, attacker.getUserOrThrow(), attacker.getMoveContext(), Set.of());
+                action.perform(attacker, attacker.getUserOrThrow(), Set.of());
             }
         }
         attacker.onPerform(this, targets);
@@ -682,22 +680,9 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      *
      * @param attacker The attacker that will be performing this move.
      * @param user     The user of the attacker. Will never be null.
-     * @param ctx      The move context in which to store data.
      * @return A set of all targeted entities. Should be empty if no entities were (directly) targeted.
      */
-    public abstract @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx);
-
-    public final void registerContextEntries(final MoveContext ctx) {
-        ctx.register(CHARGE_TIME);
-        registerExtraContextEntries(ctx);
-    }
-
-    /**
-     * Register entries in the move context of an attacker to be used by this move.
-     *
-     * @param ctx The context in which to register entries.
-     */
-    protected void registerExtraContextEntries(final MoveContext ctx) {}
+    public abstract @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user);
 
     /**
      * Gets the current blow this move is at.
@@ -784,24 +769,6 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param moveInitiated Whether the move was initiated (or rejected because of e.g., a cooldown).
      */
     public void onUserMoveInput(final A attacker, final MoveInputType type, final boolean pressed, final boolean moveInitiated) {}
-
-    /**
-     * Sets for how long this move was charged before being initiated.
-     * @param attacker The attacker to set the charge time for
-     * @param chargeTime The charge time to set
-     */
-    public void setChargeTime(final A attacker, final int chargeTime) {
-        attacker.getMoveContext().setInt(CHARGE_TIME, chargeTime);
-    }
-
-    /**
-     * Gets for how long this move was charged before being initiated.
-     * @param attacker The attacker to get the charge time for
-     * @return The charge time of this move
-     */
-    protected int getChargeTime(final A attacker) {
-        return attacker.getMoveContext().getInt(CHARGE_TIME);
-    }
 
     /**
      * If this move is the current move, this move may dictate how AIs should use it.

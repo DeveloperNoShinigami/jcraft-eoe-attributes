@@ -482,7 +482,10 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                 if (charging) {
                     if (isFree()) { // Surprise move
                         final Vector3f newPos = getFreePos();
-                        newPos.add(getMoveContext().get(AbstractSurpriseMove.OUT_DIR));
+                        // Find outDir
+                        Vector3f outDir = getCurrentMove() instanceof AbstractSurpriseMove<?> surpriseMove ?
+                                surpriseMove.getOutDir() : new Vector3f();
+                        newPos.add(outDir);
                         setFreePos(newPos);
                         if (getMoveStun() == 1) {
                             setFree(false);

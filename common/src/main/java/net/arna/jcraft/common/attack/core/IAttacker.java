@@ -1,6 +1,5 @@
 package net.arna.jcraft.common.attack.core;
 
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -18,8 +17,6 @@ import java.util.Set;
  * @param <S> The type of the animation state enum
  */
 public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?>> {
-    MoveContext getMoveContext();
-
     boolean hasUser();
 
     LivingEntity getUser();

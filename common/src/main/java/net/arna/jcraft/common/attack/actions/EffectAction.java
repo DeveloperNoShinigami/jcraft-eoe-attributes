@@ -10,7 +10,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveAction;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveActionType;
 import net.arna.jcraft.common.util.JCodecUtils;
 import net.minecraft.world.effect.MobEffect;
@@ -79,7 +78,7 @@ public class EffectAction extends MoveAction<EffectAction, IAttacker<?, ?>> {
     }
 
     @Override
-    public void perform(final IAttacker<?, ?> attacker, final LivingEntity user, final MoveContext ctx, final Set<LivingEntity> targets) {
+    public void perform(final IAttacker<?, ?> attacker, final LivingEntity user, final Set<LivingEntity> targets) {
         // Clone effects and add them to the targets
         for (LivingEntity target : targets) effects.stream()
                 .map(Supplier::get)
@@ -103,7 +102,7 @@ public class EffectAction extends MoveAction<EffectAction, IAttacker<?, ?>> {
         }
 
         @Override
-        public void perform(final IAttacker<?, ?> attacker, final LivingEntity user, final MoveContext ctx, final Set<LivingEntity> targets) {
+        public void perform(final IAttacker<?, ?> attacker, final LivingEntity user, final Set<LivingEntity> targets) {
             for (LivingEntity target : targets) target.addEffect(new MobEffectInstance(effect.get()));
         }
     }

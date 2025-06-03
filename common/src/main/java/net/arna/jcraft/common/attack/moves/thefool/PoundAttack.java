@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -25,8 +24,8 @@ public final class PoundAttack extends AbstractSimpleAttack<PoundAttack, TheFool
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
 
         for (LivingEntity target : targets) {
             Vec3 vel = target.getDeltaMovement();
@@ -54,8 +53,9 @@ public final class PoundAttack extends AbstractSimpleAttack<PoundAttack, TheFool
     }
 
     private void initSlam(TheFoolEntity attacker, int type) {
-        attacker.getMoveContext().setInt(SlamAttack.VARIANT, type);
-        attacker.setMove(TheFoolEntity.SLAM, TheFoolEntity.State.POUND_DOWN);
+        SlamAttack slam = TheFoolEntity.SLAM.copy();
+        slam.setVariant(type);
+        attacker.setMove(slam, TheFoolEntity.State.POUND_DOWN);
         attacker.playSound(JSoundRegistry.FOOL_BARK1.get(), 1, 1);
     }
 

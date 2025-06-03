@@ -1,7 +1,9 @@
 package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.util.RenderUtils;
@@ -20,9 +22,12 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
+import java.lang.ref.WeakReference;
 import java.util.function.Consumer;
 
 /**
@@ -96,6 +101,11 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT_FOLLOWUP = AbstractKillerQueenEntity.LIGHT_FOLLOWUP.copy().withAnim(State.LIGHT_FOLLOWUP).withFollowup(LOW);
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = AbstractKillerQueenEntity.LIGHT.copy().withFollowup(LIGHT_FOLLOWUP);
 
+    @Getter @Setter
+    private WeakReference<LivingEntity> btdEntity = new WeakReference<>(null);
+    @Getter @Setter
+    private Vec3 btdPos = Vec3.ZERO;
+
     public KQBTDEntity(Level worldIn) {
         super(StandType.KILLER_QUEEN_BITES_THE_DUST, worldIn, JSoundRegistry.KQBTD_SUMMON);
 
@@ -150,7 +160,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     @Override
     public boolean initMove(MoveClass moveClass) {
         if (moveClass == MoveClass.ULTIMATE) {
-            if (moveContext.get(BTDPlantAttack.BTD_ENTITY) != null) {
+            if (btdEntity.get() != null) {
                 return handleMove(BTD_DETONATE, CooldownType.ULTIMATE, State.DETONATE);
             } else {
                 return handleMove(MoveClass.ULTIMATE);

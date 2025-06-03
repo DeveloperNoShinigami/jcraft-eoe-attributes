@@ -16,10 +16,12 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandType2;
+import net.arna.jcraft.api.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.*;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.core.data.MoveSetImpl;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
@@ -31,9 +33,6 @@ import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
-import net.arna.jcraft.api.StandData;
-import net.arna.jcraft.api.StandType2;
-import net.arna.jcraft.api.SummonData;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
@@ -96,8 +95,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     private MoveSet<E, S> moveSet;
     @Getter
     private final @NonNull MoveMap<E, S> moveMap = new MoveMap<>();
-    @Getter
-    protected final MoveContext moveContext = new MoveContext();
 
     private static final EntityDataAccessor<String> MOVE_SET;
 
@@ -141,6 +138,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     @Setter
     protected boolean standby = false;
 
+    public static final float ATTACK_ROTATION = 90f;
     protected float maxStandGauge = 90f;
 
     @Getter @Setter
@@ -377,7 +375,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     public void onMoveSetReload(MoveSet<E, S> moveSet) {
         if (!this.moveSet.getName().equals(moveSet.getName())) return;
 
-        switchMoveSet(moveSet);
+        moveMap.copyFrom(moveSet.getMoveMap());
     }
 
     /**
@@ -400,8 +398,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         this.moveSet = moveSet;
         moveSet.registerListener(this);
         moveMap.copyFrom(moveSet.getMoveMap());
-        moveContext.clear();
-        moveMap.forEach(entry -> entry.getMove().registerContextEntries(moveContext));
     }
 
     /**
@@ -691,9 +687,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * @param animState int identifier for which state to put the stand into
      */
     public void setMove(AbstractMove<?, ? super E> move, @Nullable S animState) {
-        // Ensure context entries are registered (they may not be if the move was copied).
-        // Registering them twice is fine as it's a no-op if they're already registered.
-        move.registerContextEntries(moveContext);
         move.onInitiate(getThis());
 
         // If the attack has a duration of 0, just perform it immediately.
@@ -924,7 +917,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (curMove != null) {
             if (offensiveCancel && !performedThisTick && curMove.shouldPerform(getThis(), getMoveStun() - 1)) {
                 setPerformedThisTick(true);
-                curMove.perform(getThis(), getUserOrThrow(), getMoveContext());
+                curMove.perform(getThis(), getUserOrThrow());
             }
             if (curMove != null) {
                 curMove.onCancel(getThis());

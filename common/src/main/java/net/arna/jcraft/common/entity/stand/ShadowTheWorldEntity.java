@@ -15,7 +15,6 @@ import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.ImpalingThrustAttack;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.STWChargeAttack;

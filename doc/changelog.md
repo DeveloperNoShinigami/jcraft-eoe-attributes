@@ -55,4 +55,6 @@ this is probably due to:
 * Actually use effect keyframes in animations
 * Fix a ton of shit that gets broken by server restarts
 
+# TODO
+* test Cream surprise move outdir (check if line 486 in CreamEntity.java still works as it should)
 

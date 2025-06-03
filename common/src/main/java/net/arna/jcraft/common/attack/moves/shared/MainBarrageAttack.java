@@ -5,11 +5,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
+import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.ctx.BooleanMoveVariable;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -29,11 +27,11 @@ import java.util.Set;
  * The user may crouch to break blocks.
  */
 public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extends AbstractBarrageAttack<MainBarrageAttack<A>, A> {
-    public static final BooleanMoveVariable BREAK_BLOCKS = new BooleanMoveVariable();
+    private static final int MINING_BARRAGE_TIME = 200;
     @Getter
     private final float mineableHardness;
     private final int baseStun, baseDuration;
-    private static final int MINING_BARRAGE_TIME = 200;
+    private boolean breakBlocks = false;
 
     public MainBarrageAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
                              final float hitboxSize, final float knockback, final float offset, final int interval, final float mineableHardness) {
@@ -52,20 +50,19 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
 
     @Override
     public void onInitiate(final A attacker) {
-        boolean breakBlocks = attacker.getUserOrThrow().isShiftKeyDown() && JServerConfig.MINING_BARRAGE.getValue();
+        breakBlocks = attacker.getUserOrThrow().isShiftKeyDown() && JServerConfig.MINING_BARRAGE.getValue();
         if (breakBlocks && !mayGrief(attacker.getUser()) && !(attacker.getUser() instanceof Player) ||
                 attacker instanceof Player player && !player.mayBuild()) {
             breakBlocks = false;
         }
         withDuration(breakBlocks ? MINING_BARRAGE_TIME : baseDuration);
         super.onInitiate(attacker);
-        attacker.getMoveContext().setBoolean(BREAK_BLOCKS, breakBlocks);
         withStun(breakBlocks ? 1 : baseStun);
     }
 
     @Override
     public boolean canFinish(final A attacker) {
-        if (attacker.getMoveContext().getBoolean(BREAK_BLOCKS)) {
+        if (breakBlocks) {
             return false;
         }
         return super.canFinish(attacker);
@@ -75,7 +72,7 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
     public void onUserMoveInput(final A attacker, final MoveInputType type, final boolean pressed, final boolean moveInitiated) {
         super.onUserMoveInput(attacker, type, pressed, moveInitiated);
         // Mining barrages may be held
-        if (attacker.getMoveContext().getBoolean(BREAK_BLOCKS) && type.getMoveClass() == getMoveClass() && !pressed) {
+        if (breakBlocks && type.getMoveClass() == getMoveClass() && !pressed) {
             attacker.cancelMove();
         }
     }
@@ -86,15 +83,10 @@ public final class MainBarrageAttack<A extends IAttacker<? extends A, ?>> extend
     }
 
     @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(BREAK_BLOCKS, false);
-    }
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
 
-    @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
-
-        if (ctx.getBoolean(BREAK_BLOCKS)) {
+        if (breakBlocks) {
             final ServerLevel serverWorld = (ServerLevel) user.level();
             final Vec3 lookDirection = user.getLookAngle();
             final Vec3 localUp = GravityChangerAPI.getEyeOffset(user);

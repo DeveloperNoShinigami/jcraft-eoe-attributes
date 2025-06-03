@@ -4,9 +4,6 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.core.ctx.WeakMoveVariable;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
@@ -17,10 +14,11 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 
+import java.lang.ref.WeakReference;
 import java.util.Set;
 
 public class InvisibilityMove extends AbstractMove<InvisibilityMove, MetallicaEntity> {
-    public static final MoveVariable<MagneticFields.MagneticField> MAGNETIC_FIELD = new WeakMoveVariable<>(MagneticFields.MagneticField.class);
+    private WeakReference<MagneticFields.MagneticField> magneticField;
 
     public InvisibilityMove(int cooldown, int windup, int duration) {
         super(cooldown, windup, duration, 0f);
@@ -41,12 +39,10 @@ public class InvisibilityMove extends AbstractMove<InvisibilityMove, MetallicaEn
                     new MobEffectInstance(MobEffects.INVISIBILITY, 39, 0, true, false)
             );
 
-            metallica.getMoveContext().set(
-                    MAGNETIC_FIELD,
-                    MagneticFields.createField((ServerLevel) metallica.level(), null, metallica.position(), 3.0f, 5.0f)
-            );
+            magneticField = new WeakReference<>(MagneticFields.createField((ServerLevel) metallica.level(),
+                    null, metallica.position(), 3.0f, 5.0f));
         } else {
-            MagneticFields.MagneticField field = metallica.getMoveContext().get(MAGNETIC_FIELD);
+            MagneticFields.MagneticField field = magneticField == null ? null : magneticField.get();
             if (field == null) {
                 JCraft.LOGGER.warn("Metallica InvisibilityMove#MAGNETIC_FIELD was null when decloaking!");
             } else {
@@ -56,7 +52,7 @@ public class InvisibilityMove extends AbstractMove<InvisibilityMove, MetallicaEn
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user) {
         final boolean newInvis = !attacker.getEntityData().get(MetallicaEntity.INVISIBLE);
         setInvisible(attacker, newInvis);
         return Set.of();
@@ -75,16 +71,13 @@ public class InvisibilityMove extends AbstractMove<InvisibilityMove, MetallicaEn
             setInvisible(attacker, false);
         } else {
             final LivingEntity user = attacker.getUserOrThrow();
-            attacker.getMoveContext().get(MAGNETIC_FIELD).pos = attacker.position().add(GravityChangerAPI.getEyeOffset(user));
+            final MagneticFields.MagneticField field = magneticField == null ? null : magneticField.get();
+            if (field != null)
+                field.pos = attacker.position().add(GravityChangerAPI.getEyeOffset(user));
             user.addEffect(
                     new MobEffectInstance(MobEffects.INVISIBILITY, 21, 0, true, false)
             );
         }
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(MAGNETIC_FIELD, null);
     }
 
     @Override
