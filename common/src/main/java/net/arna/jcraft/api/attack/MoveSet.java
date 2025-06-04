@@ -7,7 +7,6 @@ import com.mojang.serialization.DynamicOps;
 import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSetImpl;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
@@ -78,7 +77,7 @@ public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>>
      *
      * @param listener The listener to register.
      */
-    void registerListener(MoveSetImpl.ReloadListener<A, S> listener);
+    void registerListener(MoveSet.ReloadListener<A, S> listener);
 
     String getName();
 
@@ -86,7 +85,15 @@ public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>>
 
     Codec<MoveMap<A, S>> getCodec();
 
-    Codec<MoveMap.Entry<A, S>> getEntryCodec();
-
     MoveMap<A, S> getMoveMap();
+
+    /**
+     * A listener for changes made to the move set.
+     * Held with weak references, meant to be implemented by StandEntity and JSpec.
+     * @param <A>
+     * @param <S>
+     */
+    interface ReloadListener<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
+        void onMoveSetReload(MoveSet<A, S> moveSet);
+    }
 }

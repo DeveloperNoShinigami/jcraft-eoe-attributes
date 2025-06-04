@@ -27,7 +27,6 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
     private final Class<S> stateClass;
     @Getter
     private final Codec<MoveMap<A, S>> codec;
-    @Getter
     private final Codec<MoveMap.Entry<A, S>> entryCodec;
     private final Set<ReloadListener<A, S>> listeners = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     @Getter
@@ -120,15 +119,5 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
         if (initialized) {
             listener.onMoveSetReload(this);
         }
-    }
-
-    /**
-     * A listener for changes made to the move set.
-     * Held with weak references, meant to be implemented by StandEntity and JSpec.
-     * @param <A>
-     * @param <S>
-     */
-    public interface ReloadListener<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
-        void onMoveSetReload(MoveSet<A, S> moveSet);
     }
 }
