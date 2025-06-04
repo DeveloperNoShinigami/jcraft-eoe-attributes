@@ -41,7 +41,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/C-MOON">C-MOON</a>.
- * @see StandType#C_MOON
+ * @see JStandTypeRegistry#C_MOON
  * @see net.arna.jcraft.client.renderer.entity.stands.CMoonRenderer CMoonRenderer
  * @see GravitationalHopMove
  * @see GravityShiftMove
@@ -53,6 +53,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
     public static final MoveSet<CMoonEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.C_MOON, CMoonEntity::registerMoves, State.class);
     public static final StandData DATA = StandData.builder()
             .idleRotation(220f)
+            .evolution(true)
             .info(StandInfo.builder()
                     .name(Component.translatable("entity.jcraft.cmoon"))
                     .proCount(4)
@@ -65,6 +66,9 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                     Light>Barrage>jump>Block Launch>Light>Only One Punch>Block Launch (Projectile Hit)>...
                         ...Grav. Hop>Ground Slam
                         ...Gut Punch"""))
+                    .skinName(Component.literal("Inversion"))
+                    .skinName(Component.literal("Gravity"))
+                    .skinName(Component.literal("Rose"))
                     .build())
             .summonData(SummonData.of(JSoundRegistry.CMOON_SUMMON))
             .build();

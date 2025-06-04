@@ -6,6 +6,9 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.Color;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.SummonData;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
@@ -18,6 +21,7 @@ import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -31,7 +35,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/The_World">The World Over Heaven</a>.
- * @see StandType#THE_WORLD
+ * @see JStandTypeRegistry#THE_WORLD
  * @see net.arna.jcraft.client.model.entity.stand.TheWorldOverHeavenModel TheWorldOverHeavenModel
  * @see net.arna.jcraft.client.renderer.entity.stands.TheWorldOverHeavenRenderer TheWorldOverHeavenRenderer
  * @see AerialDivineFinisherAttack
@@ -42,8 +46,31 @@ import java.util.function.Consumer;
  * @see SmiteAttack
  */
 public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEntity, TheWorldOverHeavenEntity.State> {
-    public static final MoveSet<TheWorldOverHeavenEntity, State> MOVE_SET = MoveSetManager.create(StandType.THE_WORLD_OVER_HEAVEN,
+    public static final MoveSet<TheWorldOverHeavenEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.THE_WORLD_OVER_HEAVEN,
             TheWorldOverHeavenEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(-45f)
+            .evolution(true)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.twoh"))
+                    .proCount(4)
+                    .conCount(4)
+                    .freeSpace(Component.literal("""
+                            BNBs:
+                                -the ultrakill
+                                Light>Barrage>Light>Knives>Overwrite~S1/S2>dash>Singularity>Smite>Light~Light
+                            
+                                -JUDGE MENT
+                                crouching Light~Light>dash>Barrage>..."""))
+                    .skinName(Component.literal("Shooting Star"))
+                    .skinName(Component.literal("Above the Clouds"))
+                    .skinName(Component.literal("Dirt to Divinity"))
+                    .build())
+            .summonData(SummonData.builder()
+                    .sound(JSoundRegistry.TWOH_SUMMON)
+                    .animDuration(29)
+                    .build())
+            .build();
 
     public static final LungeAttack LUNGE = new LungeAttack(0, 10, 16, 0.75f,
             8f, 10, 1.75f, 1f, 0f, 11, 5)
@@ -209,28 +236,10 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("Timeskip"),
                     Component.literal("14m range")
             );
-    private static final EntityDataAccessor<Integer> OVERWRITE_TYPE;
-
-    static {
-        OVERWRITE_TYPE = SynchedEntityData.defineId(TheWorldOverHeavenEntity.class, EntityDataSerializers.INT);
-    }
+    private static final EntityDataAccessor<Integer> OVERWRITE_TYPE = SynchedEntityData.defineId(TheWorldOverHeavenEntity.class, EntityDataSerializers.INT);
 
     public TheWorldOverHeavenEntity(Level worldIn) {
-        super(StandType.THE_WORLD_OVER_HEAVEN, worldIn, JSoundRegistry.TWOH_SUMMON);
-        idleRotation = -45f;
-        summonAnimDuration = 29;
-
-        proCount = 4;
-        conCount = 4;
-
-        freespace =
-                """
-                        BNBs:
-                            -the ultrakill
-                            Light>Barrage>Light>Knives>Overwrite~S1/S2>dash>Singularity>Smite>Light~Light
-                        
-                            -JUDGE MENT
-                            crouching Light~Light>dash>Barrage>...""";
+        super(JStandTypeRegistry.THE_WORLD_OVER_HEAVEN.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.1f, 0.1f, 0.1f),

@@ -5,6 +5,9 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.SummonData;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.conditions.HoldingAnubisCondition;
 import net.arna.jcraft.common.attack.core.MoveClass;
@@ -22,6 +25,7 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -40,7 +44,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Silver_Chariot">Silver Chariot</a>.
- * @see StandType#SILVER_CHARIOT
+ * @see JStandTypeRegistry#SILVER_CHARIOT
  * @see net.arna.jcraft.client.model.entity.stand.SilverChariotModel SilverChariotModel
  * @see net.arna.jcraft.client.renderer.entity.stands.SilverChariotRenderer SilverChariotRenderer
  * @see ArmorOffAttack
@@ -55,9 +59,9 @@ import java.util.function.Consumer;
  * @see SpinBarrageAttack
  */
 public class SilverChariotEntity extends StandEntity<SilverChariotEntity, SilverChariotEntity.State> {
-    public static final MoveSet<SilverChariotEntity, State> DEFAULT_MOVE_SET = MoveSetManager.create(StandType.SILVER_CHARIOT,
+    public static final MoveSet<SilverChariotEntity, State> DEFAULT_MOVE_SET = MoveSetManager.create(JStandTypeRegistry.SILVER_CHARIOT,
             SilverChariotEntity::registerDefaultMoves, State.class);
-    public static final MoveSet<SilverChariotEntity, State> POSSESSED_MOVE_SET = MoveSetManager.create(StandType.SILVER_CHARIOT,
+    public static final MoveSet<SilverChariotEntity, State> POSSESSED_MOVE_SET = MoveSetManager.create(JStandTypeRegistry.SILVER_CHARIOT,
             "possessed", SilverChariotEntity::registerPossessedMoves, State.class);
 
     public static final LastShotAttack LAST_SHOT = new LastShotAttack(140, 12, 15, 1f)
@@ -230,14 +234,35 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         HAS_RAPIER = SynchedEntityData.defineId(SilverChariotEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(225f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.silverchariot"))
+                    .proCount(4)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                        BNBs:
+                            (Armor ON) Light>Barrage>Light>Cleave>Spinning Blade>Shooting Star>Light
+                            (Armor ON) Shooting Star>Light>Barrage>Impaling Thrust
+                            (Armor OFF) Shooting Star>Light>Spinning Blade>Barrage>Light>Cleave>Impaling Thrust
+                            (Armor OFF) Light>Spinning Blade>Barrage>Shooting Star>Cleave>Light
+                            (Armor OFF) Impaling Thrust>dash>Barrage>...
+                        """))
+                    .skinName(Component.literal("Gold Chariot"))
+                    .skinName(Component.literal("OVA"))
+                    .skinName(Component.literal("Vento"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.SC_SUMMON))
+            .build();
+
+    public static final StandData POSSESSED_DATA = DATA.withInfo(info ->
+            info.freeSpace(Component.literal("""
+                    BNBs:
+                        (Light>)Charge~Barrage>Light>Spinning Blade>Light~Light
+                        (Light>)Charge~Barrage>God of Death""")));
+
     public SilverChariotEntity(Level worldIn) {
-        super(StandType.SILVER_CHARIOT, worldIn, JSoundRegistry.SC_SUMMON);
-        idleRotation = 225f;
-
-        proCount = 4;
-        conCount = 3;
-
-        setNormalDesc();
+        super(JStandTypeRegistry.SILVER_CHARIOT.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.4f, 0.5f, 1f),
@@ -253,32 +278,6 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             return new Vector3f(1.0f, 0f, 0f);
         }
         return super.getAuraColor();
-    }
-
-    private void setNormalDesc() {
-
-        freespace =
-                """
-                        BNBs:
-                            (Armor ON) Light>Barrage>Light>Cleave>Spinning Blade>Shooting Star>Light
-                            (Armor ON) Shooting Star>Light>Barrage>Impaling Thrust
-                            (Armor OFF) Shooting Star>Light>Spinning Blade>Barrage>Light>Cleave>Impaling Thrust
-                            (Armor OFF) Light>Spinning Blade>Barrage>Shooting Star>Cleave>Light
-                            (Armor OFF) Impaling Thrust>dash>Barrage>...
-                        """;
-
-        switchMoveSet(DEFAULT_MOVE_SET.getName());
-    }
-
-    private void setPossessedDesc() {
-
-        freespace =
-                """
-                        BNBs:
-                            (Light>)Charge~Barrage>Light>Spinning Blade>Light~Light
-                            (Light>)Charge~Barrage>God of Death""";
-
-        switchMoveSet(POSSESSED_MOVE_SET.getName());
     }
 
     @Override
@@ -429,11 +428,11 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         if (hasAnubis && mode != Mode.POSSESSED) {
             // Set possession state
             setMode(Mode.POSSESSED);
-            setPossessedDesc();
+            switchMoveSet(POSSESSED_MOVE_SET.getName());
         } else if (!hasAnubis && mode == Mode.POSSESSED) {
             // Reset
             setMode(Mode.REGULAR);
-            setNormalDesc();
+            switchMoveSet(DEFAULT_MOVE_SET.getName());
         }
     }
 

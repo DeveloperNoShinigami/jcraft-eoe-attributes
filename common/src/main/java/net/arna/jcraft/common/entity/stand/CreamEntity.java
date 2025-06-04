@@ -60,7 +60,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Cream">Cream</a>.
- * @see StandType#CREAM
+ * @see JStandTypeRegistry#CREAM
  * @see net.arna.jcraft.client.model.entity.stand.CreamModel CreamModel
  * @see net.arna.jcraft.client.renderer.entity.stands.CreamRenderer CreamRenderer
  * @see BallChargeAttack
@@ -79,6 +79,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     public static final StandData DATA = StandData.builder()
             .idleRotation(220f)
             .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.cream"))
                     .proCount(4)
                     .conCount(3)
                     .freeSpace(Component.literal("""
@@ -87,6 +88,9 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                     i.Light>land+s.OFF>s.ON+Assault>Light>Charge>Grab
                     Chop>Destroy>Surprise
                     Chop>Void"""))
+                    .skinName(Component.literal("Menace"))
+                    .skinName(Component.literal("Eraser"))
+                    .skinName(Component.literal("White Void"))
                     .build())
             .summonData(SummonData.of(JSoundRegistry.CREAM_SUMMON))
             .build();

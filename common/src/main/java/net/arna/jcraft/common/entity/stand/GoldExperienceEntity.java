@@ -3,6 +3,9 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.SummonData;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.*;
 import net.arna.jcraft.api.attack.MoveSet;
@@ -19,6 +22,7 @@ import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,7 +35,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Gold_Experience">Gold Experience</a>.
- * @see StandType#GOLD_EXPERIENCE
+ * @see JStandTypeRegistry#GOLD_EXPERIENCE
  * @see net.arna.jcraft.client.model.entity.stand.GoldenExperienceModel GoldenExperienceModel
  * @see net.arna.jcraft.client.renderer.entity.stands.GoldExperienceRenderer GoldExperienceRenderer
  * @see BerryBushAttack
@@ -40,8 +44,24 @@ import java.util.function.Consumer;
  * @see TreeAttack
  */
 public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, GoldExperienceEntity.State> {
-    public static final MoveSet<GoldExperienceEntity, State> MOVE_SET = MoveSetManager.create(StandType.GOLD_EXPERIENCE,
+    public static final MoveSet<GoldExperienceEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.GOLD_EXPERIENCE,
             GoldExperienceEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(-30f)
+            .info(StandInfo.builder()
+                    .proCount(4)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                BNBs:
+                    -the giogio
+                    Light>Barrage>Light>Tree>Rekka 1~2~3
+                
+                    -the superprince of gaming
+                    Rekka 1~2>Light>Barrage>Light>Tree>Heavy"""))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.GE_SUMMON))
+            .build();
+
     // JCraft.lightCooldown -> 0 | 0.5f -> 0.35f
     public static final BerryBushAttack BERRY_BUSH = new BerryBushAttack(120, 16, 20,
             1.25f, 4f, 5, 1.5f, 0.75f, 0.2f)
@@ -168,20 +188,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             );
 
     public GoldExperienceEntity(Level worldIn) {
-        super(StandType.GOLD_EXPERIENCE, worldIn, JSoundRegistry.GE_SUMMON);
-
-        idleRotation = -30f;
-
-        proCount = 4;
-        conCount = 3;
-
-        freespace = """
-                BNBs:
-                    -the giogio
-                    Light>Barrage>Light>Tree>Rekka 1~2~3
-                    
-                    -the superprince of gaming
-                    Rekka 1~2>Light>Barrage>Light>Tree>Heavy""";
+        super(JStandTypeRegistry.GOLD_EXPERIENCE.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0f, 0.7f, 0.2f),

@@ -7,6 +7,8 @@ import com.mojang.serialization.JsonOps;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandType2;
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -26,8 +28,11 @@ public class StandDataLoader {
 
     /**
      * Gets the StandData for a given stand type id.
+     * <b>Important:</b> this is mostly for internal use only. Consider using
+     * {@link StandType2#getData()} or {@link StandEntity#getStandData()} instead.
+     * The main exception would be if your stand has multiple different data's, and you need a specific one.
      * @param id The ResourceLocation of the stand type, e.g. "jcraft:star_platinum"
-     * @return An Optional containing the StandData if it exists, or empty if it doesn't.
+     * @return The StandData if it exists, or the {@link StandData#EMPTY empty data} if it doesn't.
      */
     public static StandData getStandData(ResourceLocation id) {
         return registry.getOrDefault(id, StandData.EMPTY);

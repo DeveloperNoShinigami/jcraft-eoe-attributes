@@ -2,13 +2,17 @@ package net.arna.jcraft.registry;
 
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public interface JStandTypeRegistry {
@@ -56,6 +60,51 @@ public interface JStandTypeRegistry {
     RegistrySupplier<StandType2> SHADOW_THE_WORLD = register("shadow_the_world", JEntityTypeRegistry.SHADOW_THE_WORLD);
     RegistrySupplier<StandType2> METALLICA = register("metallica", JEntityTypeRegistry.METALLICA);
     RegistrySupplier<StandType2> THE_HAND = register("the_hand", JEntityTypeRegistry.THE_HAND);
+
+    // Maps numeric values (ordinals) of old stand types back from when this was an enum.
+    // Will be deleted in the 1.0 release.
+    Int2ObjectMap<RegistrySupplier<StandType2>> LEGACY_ORDINALS = Util.make(new Int2ObjectArrayMap<>(), map -> {
+        List<RegistrySupplier<StandType2>> entries = List.of(
+                NONE,
+                STAR_PLATINUM,
+                THE_WORLD,
+                KING_CRIMSON,
+                D4C,
+                CREAM,
+                KILLER_QUEEN,
+                WHITE_SNAKE,
+                SILVER_CHARIOT,
+                MAGICIANS_RED,
+                THE_FOOL,
+                GOLD_EXPERIENCE,
+                HIEROPHANT_GREEN,
+                THE_SUN,
+                PURPLE_HAZE,
+                C_MOON,
+                MADE_IN_HEAVEN,
+                THE_WORLD_OVER_HEAVEN,
+                KILLER_QUEEN_BITES_THE_DUST,
+                GOLD_EXPERIENCE_REQUIEM,
+                STAR_PLATINUM_THE_WORLD,
+                PURPLE_HAZE_DISTORTION,
+                HORUS,
+                CINDERELLA,
+                OSIRIS,
+                ATUM,
+                CHARIOT_REQUIEM,
+                DIVER_DOWN,
+                DRAGONS_DREAM,
+                FOO_FIGHTERS,
+                GOO_GOO_DOLLS,
+                SHADOW_THE_WORLD,
+                METALLICA,
+                THE_HAND
+        );
+
+        for (int i = 0; i < entries.size(); i++) {
+            map.put(i, entries.get(i));
+        }
+    });
 
     /**
      * Internal use only.

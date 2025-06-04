@@ -5,6 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.*;
 import net.minecraft.network.chat.Component;
 
+import java.util.function.UnaryOperator;
+
 /**
  * Represents the data associated with a stand, including its idle distance,
  * rotation, block distance, and other metadata. Should be registered in the registry
@@ -28,9 +30,11 @@ public class StandData {
     public static final StandData EMPTY = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.nostand")));
 
     public static final Codec<StandData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.FLOAT.fieldOf("idle_distance").forGetter(StandData::getIdleDistance),
+            Codec.FLOAT.optionalFieldOf("idle_distance", 1.25f).forGetter(StandData::getIdleDistance),
             Codec.FLOAT.fieldOf("idle_rotation").forGetter(StandData::getIdleRotation),
-            Codec.FLOAT.fieldOf("block_distance").forGetter(StandData::getBlockDistance),
+            Codec.FLOAT.optionalFieldOf("block_distance", 0.75f).forGetter(StandData::getBlockDistance),
+            Codec.BOOL.optionalFieldOf("evolution", false).forGetter(StandData::isEvolution),
+            Codec.BOOL.optionalFieldOf("obtainable", true).forGetter(StandData::isObtainable),
             StandInfo.CODEC.fieldOf("info").forGetter(StandData::getInfo),
             SummonData.CODEC.optionalFieldOf("summon_data", SummonData.of(() -> null)).forGetter(StandData::getSummonData)
     ).apply(instance, StandData::new));
@@ -48,6 +52,14 @@ public class StandData {
      * The distance of the stand from the user when blocking.
      */
     private float blockDistance = 0.75f;
+    /**
+     * Whether this stand is an evolution.
+     */
+    private boolean evolution;
+    /**
+     * Whether this stand is obtainable.
+     */
+    private boolean obtainable = true;
 
     /**
      * The info of this stand, containing its name, skin names, and other metadata.
@@ -61,4 +73,24 @@ public class StandData {
      */
     @NonNull
     private SummonData summonData = SummonData.of(() -> null);
+
+    /**
+     * The info of this stand, containing its name, skin names, and other metadata.
+     * This is used for display purposes and to provide information about the stand.
+     * @param newInfo The new stand info
+     * @return The new stand data
+     */
+    public StandData withInfo(StandInfo newInfo) {
+        return new StandData(idleDistance, idleRotation, blockDistance, evolution, obtainable, newInfo, summonData);
+    }
+
+    /**
+     * The info of this stand, containing its name, skin names, and other metadata.
+     * This is used for display purposes and to provide information about the stand.
+     * @param newInfo The new stand info builder
+     * @return The new stand data
+     */
+    public StandData withInfo(UnaryOperator<StandInfo.Builder> newInfo) {
+        return withInfo(newInfo.apply(this.info.toBuilder()).build());
+    }
 }

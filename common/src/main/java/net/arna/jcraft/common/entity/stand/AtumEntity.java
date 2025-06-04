@@ -15,14 +15,15 @@ import mod.azure.azurelib.core.animation.AnimationState;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Atum">Atum</a>.
- * @see StandType#ATUM
+ * @see JStandTypeRegistry#ATUM
  * @see net.arna.jcraft.client.model.entity.stand.AtumModel AtumModel
  * @see net.arna.jcraft.client.renderer.entity.stands.AtumRenderer AtumRenderer
  * @see net.arna.jcraft.common.entity.npc.DarbyYoungerEntity DarbyYoungerEntity
  */
 public class AtumEntity extends StandEntity<AtumEntity, AtumEntity.State> {
     public static final MoveSet<AtumEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.ATUM, AtumEntity::registerMoves, State.class);
-    public static final StandData DATA = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.atum")));
+    public static final StandData DATA = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.atum")))
+            .withObtainable(false);
 
     public AtumEntity(Level world) {
         super(JStandTypeRegistry.ATUM.get(), world);

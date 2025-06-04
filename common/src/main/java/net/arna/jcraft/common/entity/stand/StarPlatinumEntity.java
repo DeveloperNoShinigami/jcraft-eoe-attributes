@@ -4,18 +4,22 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.api.attack.MoveSet;
-import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.starplatinum.InhaleAttack;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -29,15 +33,42 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Star_Platinum">Star Platinum</a>.
- * @see StandType#STAR_PLATINUM
+ * @see JStandTypeRegistry#STAR_PLATINUM
  * @see net.arna.jcraft.client.model.entity.stand.StarPlatinumModel StarPlatinumModel
  * @see net.arna.jcraft.client.renderer.entity.stands.StarPlatinumRenderer StarPlatinumRenderer
  * @see net.arna.jcraft.common.attack.moves.starplatinum.BlockBreakingAttack BlockBreakingAttack
  * @see InhaleAttack
  */
 public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPlatinumEntity, StarPlatinumEntity.State> {
-    public static final MoveSet<StarPlatinumEntity, State> MOVE_SET = MoveSetManager.create(StandType.STAR_PLATINUM,
+    public static final MoveSet<StarPlatinumEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.STAR_PLATINUM,
             StarPlatinumEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(225f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.starplatinum"))
+                    .proCount(3)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                        BNBs:
+                        ~ represents a queued attack
+                        
+                            -the classic
+                            Punch>Barrage>Punch>Knee>Advancing Barrage~Star Finger~Star Breaker
+                        
+                            -the rushdown
+                            Punch~Punch>dash Barrage>cr.Punch>Star Finger>Knee>Punch>Advancing Barrage>Punch~Punch
+                        
+                            -the blowback
+                            Inhale>...>Star Finger>Star Breaker>Barrage>...
+                        
+                            -the poke
+                            Star Finger>Knee>Punch>Advancing Barrage~Punch>Barrage>Punch>Star Breaker"""))
+                    .skinName(Component.literal("Manga"))
+                    .skinName(Component.literal("Arcade"))
+                    .skinName(Component.literal("OVA"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.STAR_PLATINUM_SUMMON))
+            .build();
 
     public static final SimpleUppercutAttack<StarPlatinumEntity> UPPERCUT = new SimpleUppercutAttack<StarPlatinumEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),
             8, 14, 0.75f, 6f, 20, 1.5f, 0.25f, -0.6f, 0.75f)
@@ -170,37 +201,16 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     Component.literal("jcraft.starplatinum.ult"),
                     Component.literal("Vacuums looked entities for 4 seconds.")
             );
-    private static final EntityDataAccessor<Integer> INHALE_TIME;
-
-    static {
-        INHALE_TIME = SynchedEntityData.defineId(StarPlatinumEntity.class, EntityDataSerializers.INT);
-    }
+    private static final EntityDataAccessor<Integer> INHALE_TIME = SynchedEntityData.defineId(StarPlatinumEntity.class, EntityDataSerializers.INT);
 
     public StarPlatinumEntity(Level worldIn) {
-        super(StandType.STAR_PLATINUM, worldIn);
+        super(JStandTypeRegistry.STAR_PLATINUM.get(), worldIn);
         auraColors = new Vector3f[]{
                 new Vector3f(0.8f, 0.5f, 1.0f),
                 new Vector3f(0.6f, 0.2f, 1.0f),
                 new Vector3f(0.2f, 0.8f, 0.6f),
                 new Vector3f(0.1f, 0.3f, 1.0f)
         };
-
-        freespace =
-                """
-                        BNBs:
-                        ~ represents a queued attack
-                        
-                            -the classic
-                            Punch>Barrage>Punch>Knee>Advancing Barrage~Star Finger~Star Breaker
-                        
-                            -the rushdown
-                            Punch~Punch>dash Barrage>cr.Punch>Star Finger>Knee>Punch>Advancing Barrage>Punch~Punch
-                        
-                            -the blowback
-                            Inhale>...>Star Finger>Star Breaker>Barrage>...
-                        
-                            -the poke
-                            Star Finger>Knee>Punch>Advancing Barrage~Punch>Barrage>Punch>Star Breaker""";
     }
 
     private static void registerMoves(MoveMap<StarPlatinumEntity, State> moves) {

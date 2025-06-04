@@ -15,14 +15,15 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Chariot_Requiem">Chariot Requiem</a>.
- * @see StandType#CHARIOT_REQUIEM
+ * @see JStandTypeRegistry#CHARIOT_REQUIEM
  * @see net.arna.jcraft.client.model.entity.stand.ChariotRequiemModel ChariotRequiemModel
  * @see net.arna.jcraft.client.renderer.entity.stands.ChariotRequiemRenderer ChariotRequiemRenderer
  */
 public class ChariotRequiemEntity extends StandEntity<ChariotRequiemEntity, ChariotRequiemEntity.State> {
     public static final MoveSet<ChariotRequiemEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.CHARIOT_REQUIEM,
             ChariotRequiemEntity::registerMoves, State.class);
-    public static final StandData DATA = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.chariot_requiem")));
+    public static final StandData DATA = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.chariot_requiem")))
+            .withObtainable(false);
 
     public ChariotRequiemEntity(Level world) {
         super(JStandTypeRegistry.CHARIOT_REQUIEM.get(), world);

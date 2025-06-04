@@ -4,11 +4,14 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.magiciansred.*;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
@@ -17,6 +20,7 @@ import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -41,7 +45,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Magician%27s_Red">Magician's Red</a>.
- * @see StandType#MAGICIANS_RED
+ * @see JStandTypeRegistry#MAGICIANS_RED
  * @see net.arna.jcraft.client.model.entity.stand.MagiciansRedModel MagiciansRedModel
  * @see net.arna.jcraft.client.renderer.entity.stands.MagiciansRedRenderer MagiciansRedRenderer
  * @see CrossfireAttack
@@ -54,7 +58,33 @@ import java.util.function.Consumer;
  */
 public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, MagiciansRedEntity.State> {
     public static final MoveSet<MagiciansRedEntity, MagiciansRedEntity.State> MOVE_SET = MoveSetManager.create(
-            StandType.MAGICIANS_RED, "default", MagiciansRedEntity::registerMoves, MagiciansRedEntity.State.class);
+            JStandTypeRegistry.MAGICIANS_RED, "default", MagiciansRedEntity::registerMoves, MagiciansRedEntity.State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(225f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.mr"))
+                    .proCount(3)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                PASSIVE: Fire Resistance
+                
+                BNBs:
+                    -the "this move is fire"
+                    Light>Crossfire
+                
+                    -the happy camper
+                    Light>Low Kick>Variation/Life Detector
+                
+                    -the "omg i have setups????"
+                    Light>Hammerfist>dash>Light>Red Bind>
+                    ...Life Detector/Variation>any physical hit
+                    ...Hurricane"""))
+                    .skinName(Component.literal("Purple"))
+                    .skinName(Component.literal("OVA"))
+                    .skinName(Component.literal("Neon"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.MR_SUMMON))
+            .build();
 
     public static final RedirectAttack REDIRECT = new RedirectAttack(0, 7, 10, 0.75f)
             .withAnim(State.REDIRECT)
@@ -153,26 +183,7 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
             );
 
     public MagiciansRedEntity(Level worldIn) {
-        super(StandType.MAGICIANS_RED, worldIn, JSoundRegistry.MR_SUMMON);
-        idleRotation = 225f;
-
-        proCount = 3;
-        conCount = 3;
-
-        freespace = """
-                PASSIVE: Fire Resistance
-                
-                BNBs:
-                    -the "this move is fire"
-                    Light>Crossfire
-                
-                    -the happy camper
-                    Light>Low Kick>Variation/Life Detector
-                
-                    -the "omg i have setups????"
-                    Light>Hammerfist>dash>Light>Red Bind>
-                    ...Life Detector/Variation>any physical hit
-                    ...Hurricane""";
+        super(JStandTypeRegistry.MAGICIANS_RED.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.9f, 0.6f, 0.3f),

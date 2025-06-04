@@ -4,11 +4,14 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.NoOpMove;
 import net.arna.jcraft.common.attack.moves.thesun.FireMeteorAttack;
 import net.arna.jcraft.common.attack.moves.thesun.FireSunBeamAttack;
@@ -19,6 +22,7 @@ import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -58,22 +62,42 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Sun">The Sun</a>.
- * @see StandType#THE_SUN
+ * @see JStandTypeRegistry#THE_SUN
  * @see net.arna.jcraft.client.model.entity.stand.TheSunModel TheSunModel
  * @see net.arna.jcraft.client.renderer.entity.stands.SunRenderer SunRenderer
  */
 public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.State> {
-    public static final MoveSet<TheSunEntity, State> MOVE_SET = MoveSetManager.create(StandType.THE_SUN,
+    public static final MoveSet<TheSunEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.THE_SUN,
             TheSunEntity::registerMoves, State.class);
 
-    private static final EntityDataAccessor<Boolean> PASSIVE;
-    private static final EntityDataAccessor<Float> SCALE;
+    private static final EntityDataAccessor<Boolean> PASSIVE = SynchedEntityData.defineId(TheSunEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> SCALE = SynchedEntityData.defineId(TheSunEntity.class, EntityDataSerializers.FLOAT);
     // Only used for rendering. Ensures the scale doesn't change halfway during a tick cuz of syncing.
     public float prevScale = MIN_SCALE, curScale = MIN_SCALE;
     public static final float MAX_SCALE = 3.0F, MIN_SCALE = 1.0F;
     public static final double MAX_DISTANCE = 64.0, AIMING_DISTANCE = 128.0;
     private int overextensionTime = 0;
     private Vec3 desiredPosition;
+
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(0f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.the_sun"))
+                    .proCount(2)
+                    .conCount(2)
+                    .freeSpace(Component.literal("Cannot buffer moves.\n Must stay within " + MAX_DISTANCE +
+                            " blocks of the user, otherwise it loses size and disappears.\n" +
+                            "Grace period of 1 second before heat field activates after summoning.\n" +
+                            "Heat field applies Nausea > Weakness > Slowness > Burning as entities get closer."))
+                    .skinName(Component.literal(":D"))
+                    .skinName(Component.literal("Neutron Star"))
+                    .skinName(Component.literal("Dark"))
+                    .build())
+            .summonData(SummonData.builder()
+                    .sound(JSoundRegistry.SUN_SUMMON)
+                    .animDuration(40)
+                    .build())
+            .build();
 
     private static final FireSunBeamAttack FIRE_SUNBEAM = new FireSunBeamAttack(20, 5, 10, 1, 0)
             .withInfo(
@@ -156,22 +180,8 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         );
     }
 
-    static {
-        PASSIVE = SynchedEntityData.defineId(TheSunEntity.class, EntityDataSerializers.BOOLEAN);
-        SCALE = SynchedEntityData.defineId(TheSunEntity.class, EntityDataSerializers.FLOAT);
-    }
-
     public TheSunEntity(Level worldIn) {
-        super(StandType.THE_SUN, worldIn, JSoundRegistry.SUN_SUMMON);
-
-        idleRotation = 0;
-
-        proCount = 2;
-        conCount = 2;
-
-        freespace = "Cannot buffer moves.\n Must stay within " + MAX_DISTANCE + " blocks of the user, otherwise it loses size and disappears.\n" +
-                "Grace period of 1 second before heat field activates after summoning.\n" +
-                "Heat field applies Nausea > Weakness > Slowness > Burning as entities get closer.";
+        super(JStandTypeRegistry.THE_SUN.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0f, 0.8f, 0.4f),
@@ -181,8 +191,6 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         };
 
         flyDist = 0.5f;
-
-        summonAnimDuration = 40;
 
         setNoGravity(true);
 

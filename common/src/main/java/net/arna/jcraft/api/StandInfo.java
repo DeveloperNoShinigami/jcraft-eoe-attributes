@@ -28,6 +28,7 @@ public class StandInfo {
     /**
      * The name of this stand, used for display purposes.
      */
+    @NonNull
     private final Component name;
     /**
      * The key of the name, excluding the 'entity.&lt;modname&gt;' part, mainly for internal use (such as data-gen providers).

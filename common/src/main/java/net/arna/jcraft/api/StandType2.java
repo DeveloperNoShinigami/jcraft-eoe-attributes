@@ -24,6 +24,11 @@ public class StandType2 implements IAttackerType {
     private final ResourceLocation id;
     private final Supplier<EntityType<? extends StandEntity<?, ?>>> entityType;
 
+    /**
+     * Gets the entity type associated with this stand type.
+     * Used to create new stand entities of this type.
+     * @return The entity type associated with this stand type
+     */
     public EntityType<? extends StandEntity<?, ?>> getEntityType() {
         return entityType.get();
     }
@@ -31,7 +36,8 @@ public class StandType2 implements IAttackerType {
     /**
      * Gets the StandData for this StandType.
      * <p>
-     * <b>Important:</b> if you have a StandEntity instance, use {@link StandEntity#getStandData()} instead.
+     * <b>Important:</b> if you have a StandEntity instance, use {@link StandEntity#getStandData()} instead
+     * as it may return a different instance based on its state.
      * @return The StandData for this StandType.
      */
     public StandData getData() {

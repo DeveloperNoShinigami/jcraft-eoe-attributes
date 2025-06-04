@@ -4,12 +4,15 @@ import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.api.attack.MoveSet;
-import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.starplatinum.theworld.SPTWGroundSlamAttack;
 import net.arna.jcraft.common.attack.moves.starplatinum.theworld.TimeStrikeAttack;
@@ -18,6 +21,7 @@ import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.Level;
@@ -28,14 +32,31 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Star_Platinum">Star Platinum The World</a>.
- * @see StandType#STAR_PLATINUM_THE_WORLD
+ * @see JStandTypeRegistry#STAR_PLATINUM_THE_WORLD
  * @see net.arna.jcraft.client.model.entity.stand.StarPlatinumModel StarPlatinumModel
  * @see net.arna.jcraft.client.renderer.entity.stands.SPTWRenderer SPTWRenderer
  * @see SPTWGroundSlamAttack
  */
 public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPTWEntity.State> {
-    public static final MoveSet<SPTWEntity, State> MOVE_SET = MoveSetManager.create(StandType.STAR_PLATINUM_THE_WORLD,
+    public static final MoveSet<SPTWEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.STAR_PLATINUM_THE_WORLD,
             SPTWEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(315f)
+            .evolution(true)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.sptw"))
+                    .proCount(4)
+                    .conCount(2)
+                    .freeSpace(Component.literal("""
+                        BNBs:
+                            -the superman
+                            Punch>cr.Time Strike>Backhand>What an Ugly Watch>delay Punch>Timestop~Star Breaker>dash/Timeskip>Barrage>Light"""))
+                    .skinName(Component.literal("Judge, Jury, Executioner"))
+                    .skinName(Component.literal("Diamond"))
+                    .skinName(Component.literal("Over Heaven"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.STAR_PLATINUM_SUMMON))
+            .build();
 
     public static final SPTWGroundSlamAttack GROUND_SLAM = new SPTWGroundSlamAttack(20, 12, 19,
             0.75f, 7f, 11, 1.8f, 0f, 0.8f)
@@ -154,17 +175,7 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
             );
 
     public SPTWEntity(Level worldIn) {
-        super(StandType.STAR_PLATINUM_THE_WORLD, worldIn);
-
-        idleRotation = 315f;
-
-        proCount = 4;
-        conCount = 2;
-
-        freespace = """
-                BNBs:
-                    -the superman
-                    Punch>cr.Time Strike>Backhand>What an Ugly Watch>delay Punch>Timestop~Star Breaker>dash/Timeskip>Barrage>Light""";
+        super(JStandTypeRegistry.STAR_PLATINUM_THE_WORLD.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.8f, 0.6f, 1.0f),

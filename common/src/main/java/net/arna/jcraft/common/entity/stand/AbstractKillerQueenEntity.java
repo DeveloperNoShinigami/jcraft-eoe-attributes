@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.stand;
 
+import net.arna.jcraft.api.StandType2;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
@@ -17,14 +18,10 @@ import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Supplier;
 
 public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQueenEntity<E, S>, S extends Enum<S> & StandAnimationState<E>> extends StandEntity<E, S>
         permits KillerQueenEntity, KQBTDEntity {
@@ -80,20 +77,8 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             );
     protected ItemEntity coin;
 
-    protected AbstractKillerQueenEntity(StandType type, Level worldIn, @Nullable Supplier<SoundEvent> summonSound) {
-        super(type, worldIn, summonSound, true);
-        idleRotation = -30f;
-
-        proCount = 4;
-        conCount = 3;
-
-        freespace = """
-                BNBs:
-                    -Standard bomb plant confirm and SHA setup
-                    Light~Light>Barrage>Bomb plant>Detonate(>Sheer Heart Attack)
-                
-                    -Confirm while bomb plant is on cd
-                    Light~Light>Barrage>Heavy(>Sheer Heart Attack)""";
+    protected AbstractKillerQueenEntity(StandType2 type, Level worldIn) {
+        super(type, worldIn);
     }
 
     protected void detonate() {

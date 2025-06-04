@@ -4,12 +4,15 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.api.attack.MoveSet;
-import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.purplehaze.BackhandAttack;
 import net.arna.jcraft.common.attack.moves.purplehaze.PHRekkaAttack;
 import net.arna.jcraft.common.attack.moves.purplehaze.distortion.DistortionMove;
@@ -18,6 +21,7 @@ import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3f;
@@ -27,13 +31,34 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Purple_Haze_Distortion">Purple Haze Distortion</a>.
- * @see StandType#PURPLE_HAZE_DISTORTION
+ * @see JStandTypeRegistry#PURPLE_HAZE_DISTORTION
  * @see net.arna.jcraft.client.model.entity.stand.PurpleHazeModel PurpleHazeModel
  * @see net.arna.jcraft.client.renderer.entity.stands.PurpleHazeDistortionRenderer PurpleHazeDistortionRenderer
  */
 public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<PurpleHazeDistortionEntity, PurpleHazeDistortionEntity.State> {
-    public static final MoveSet<PurpleHazeDistortionEntity, State> MOVE_SET = MoveSetManager.create(StandType.PURPLE_HAZE_DISTORTION,
+    public static final MoveSet<PurpleHazeDistortionEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.PURPLE_HAZE_DISTORTION,
             PurpleHazeDistortionEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(225f)
+            .evolution(true)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.purple_haze_distortion"))
+                    .proCount(3)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                    PASSIVE: 66% resistance to Purple Haze effect
+                    
+                    BNBs:
+                    Light > Rekka1~Rekka2 > crouching Light > Barrage >...
+                        ...crouching Light~Light
+                        ...Ground Slam
+                        ...Light > Grab"""))
+                    .skinName(Component.literal("Black Knight"))
+                    .skinName(Component.literal("Vintage"))
+                    .skinName(Component.literal("Reversal"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.PH_SUMMON))
+            .build();
 
     private static final @NonNull KnockdownAttack<AbstractPurpleHazeEntity<?, ?>> CROUCHING_LIGHT_FOLLOWUP_ATTACK = BACKHAND_FOLLOWUP.copy().withAnim(State.BACKHAND_FOLLOWUP);
     private static final @NonNull BackhandAttack CROUCHING_LIGHT_ATTACK = BACKHAND.copy().withFollowup(CROUCHING_LIGHT_FOLLOWUP_ATTACK);
@@ -90,17 +115,7 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
             );
 
     public PurpleHazeDistortionEntity(Level worldIn) {
-        super(StandType.PURPLE_HAZE_DISTORTION, worldIn);
-
-        freespace =
-                """
-                    PASSIVE: 66% resistance to Purple Haze effect
-                    
-                    BNBs:
-                    Light > Rekka1~Rekka2 > crouching Light > Barrage >...
-                        ...crouching Light~Light
-                        ...Ground Slam
-                        ...Light > Grab""";
+        super(JStandTypeRegistry.PURPLE_HAZE_DISTORTION.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.8f, 0.2f, 1.0f),

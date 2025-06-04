@@ -4,11 +4,14 @@ import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.LungeAction;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.theworld.FeignBarrageCounterAttack;
 import net.arna.jcraft.common.attack.moves.theworld.TWChargeAttack;
@@ -18,6 +21,7 @@ import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -28,15 +32,34 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/The_World">The World</a>.
- * @see StandType#THE_WORLD
+ * @see JStandTypeRegistry#THE_WORLD
  * @see net.arna.jcraft.client.model.entity.stand.TheWorldModel TheWorldModel
  * @see net.arna.jcraft.client.renderer.entity.stands.TheWorldRenderer TheWorldRenderer
  * @see FeignBarrageCounterAttack
  * @see TWDonutAttack
  */
 public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity, TheWorldEntity.State> {
-    public static final MoveSet<TheWorldEntity, State> MOVE_SET = MoveSetManager.create(StandType.THE_WORLD,
+    public static final MoveSet<TheWorldEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.THE_WORLD,
             TheWorldEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .evolution(true)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.theworld"))
+                    .proCount(4)
+                    .conCount(2)
+                    .freeSpace(Component.literal("""
+                            BNBs:
+                                -the sauce boss
+                                (Light>)Charge>cr.Light>Roundhouse>Barrage>Light>Donut>Roundhouse>Light~Light
+                            
+                                -the afternoon coffee
+                                Donut>Roundhouse>Charge>Light>Barrage>Roundhouse>Light~Light"""))
+                    .skinName(Component.literal("OVA"))
+                    .skinName(Component.literal("Black"))
+                    .skinName(Component.literal("Greatest High"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.TW_SUMMON))
+            .build();
 
     public static final SimpleAttack<TheWorldEntity> LOW_KICK = new SimpleAttack<TheWorldEntity>(20, 8, 14, 0.75f,
             6f, 17, 1.5f, 0.2f, 0.65f)
@@ -165,19 +188,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
             );
 
     public TheWorldEntity(Level worldIn) {
-        super(StandType.THE_WORLD, worldIn, JSoundRegistry.TW_SUMMON);
-
-        proCount = 4;
-        conCount = 2;
-
-        freespace =
-                """
-                        BNBs:
-                            -the sauce boss
-                            (Light>)Charge>cr.Light>Roundhouse>Barrage>Light>Donut>Roundhouse>Light~Light
-                        
-                            -the afternoon coffee
-                            Donut>Roundhouse>Charge>Light>Barrage>Roundhouse>Light~Light""";
+        super(JStandTypeRegistry.THE_WORLD.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0f, 0.7f, 0.3f),

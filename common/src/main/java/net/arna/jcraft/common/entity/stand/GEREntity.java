@@ -4,6 +4,8 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.StandInfo;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
@@ -14,6 +16,7 @@ import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
@@ -36,7 +39,7 @@ import static net.arna.jcraft.common.component.living.CommonHitPropertyComponent
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Gold_Experience_Requiem">Gold Experience Requiem</a>.
- * @see StandType#GOLD_EXPERIENCE_REQUIEM
+ * @see JStandTypeRegistry#GOLD_EXPERIENCE_REQUIEM
  * @see FlightMove
  * @see LifeBeamAttack
  * @see NullificationAttack
@@ -44,8 +47,26 @@ import static net.arna.jcraft.common.component.living.CommonHitPropertyComponent
  * @see ReturnToZeroMove
  */
 public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
-    public static final MoveSet<GEREntity, State> MOVE_SET = MoveSetManager.create(StandType.GOLD_EXPERIENCE_REQUIEM,
+    public static final MoveSet<GEREntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.GOLD_EXPERIENCE_REQUIEM,
             GEREntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(-30f)
+            .evolution(true)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.ger"))
+                    .proCount(5)
+                    .conCount(2)
+                    .freeSpace(Component.literal("""
+                BNBs:
+                -the scorpy patty (sets up stand off transition)
+                (Light>)Barrage>jump>Overhead Kick>Life Beam>Light>Life Beam (second hit)
+                -knockdown experience
+                Light>Barrage>Life Beam>Light~Overhead Smash>Life Beam (second hit)"""))
+                    .skinName(Component.literal("Silver"))
+                    .skinName(Component.literal("Manga"))
+                    .skinName(Component.literal("Cherry Blossom"))
+                    .build())
+            .build();
 
     public static final SimpleAttack<GEREntity> LIGHT_FOLLOWUP = new SimpleAttack<GEREntity>(
             0, 6, 13, 0.75f, 6f, 8, 1.5f, 1f, -0.1f)
@@ -179,26 +200,10 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     Component.literal("1 second of flight")
             );
 
-    private static final EntityDataAccessor<Integer> FLIGHT_TIME;
-
-    static {
-        FLIGHT_TIME = SynchedEntityData.defineId(GEREntity.class, EntityDataSerializers.INT);
-    }
+    private static final EntityDataAccessor<Integer> FLIGHT_TIME = SynchedEntityData.defineId(GEREntity.class, EntityDataSerializers.INT);
 
     public GEREntity(Level worldIn) {
-        super(StandType.GOLD_EXPERIENCE_REQUIEM, worldIn);
-
-        idleRotation = -30f;
-
-        proCount = 5;
-        conCount = 2;
-
-        freespace = """
-                BNBs:
-                -the scorpy patty (sets up stand off transition)
-                (Light>)Barrage>jump>Overhead Kick>Life Beam>Light>Life Beam (second hit)
-                -knockdown experience
-                Light>Barrage>Life Beam>Light~Overhead Smash>Life Beam (second hit)""";
+        super(JStandTypeRegistry.GOLD_EXPERIENCE_REQUIEM.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.7f, 0.8f, 1.0f),
