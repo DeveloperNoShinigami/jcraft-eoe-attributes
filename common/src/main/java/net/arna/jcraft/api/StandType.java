@@ -11,7 +11,6 @@ import net.minecraft.world.level.Level;
 
 import java.util.function.Supplier;
 
-// TODO rename to StandType once we're finished with the migration
 /**
  * A very basic class representing a stand type.
  * Mainly used as a helper class to get the current stand data and
@@ -20,7 +19,7 @@ import java.util.function.Supplier;
 @ToString
 @Getter
 @RequiredArgsConstructor(staticName = "of")
-public class StandType2 implements IAttackerType {
+public class StandType implements IAttackerType {
     private final ResourceLocation id;
     private final Supplier<EntityType<? extends StandEntity<?, ?>>> entityType;
 

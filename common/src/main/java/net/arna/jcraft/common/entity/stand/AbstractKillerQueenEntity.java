@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.stand;
 
-import net.arna.jcraft.api.StandType2;
+import net.arna.jcraft.api.StandType;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
@@ -77,7 +77,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             );
     protected ItemEntity coin;
 
-    protected AbstractKillerQueenEntity(StandType2 type, Level worldIn) {
+    protected AbstractKillerQueenEntity(StandType type, Level worldIn) {
         super(type, worldIn);
     }
 

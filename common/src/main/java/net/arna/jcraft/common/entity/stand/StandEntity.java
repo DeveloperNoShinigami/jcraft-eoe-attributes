@@ -17,7 +17,7 @@ import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.StandData;
-import net.arna.jcraft.api.StandType2;
+import net.arna.jcraft.api.StandType;
 import net.arna.jcraft.api.SummonData;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -165,11 +165,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     // Data
     @Getter
-    private final StandType2 standType;
+    private final StandType standType;
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     protected Vector3f[] auraColors = {new Vector3f(), new Vector3f(1f, 0f, 0f), new Vector3f(0f, 1f, 0f), new Vector3f(0f, 0f, 1f)};
 
-    protected StandEntity(StandType2 type, Level world) {
+    protected StandEntity(StandType type, Level world) {
         super(type.getEntityType(), world);
         this.moveSet = MoveSetManager.get(type, "default");
         if (this.moveSet == null) {

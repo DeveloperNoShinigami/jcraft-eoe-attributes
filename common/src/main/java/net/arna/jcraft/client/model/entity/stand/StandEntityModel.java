@@ -2,10 +2,9 @@ package net.arna.jcraft.client.model.entity.stand;
 
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.model.GeoModel;
-import net.arna.jcraft.api.StandType2;
+import net.arna.jcraft.api.StandType;
 import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
@@ -18,22 +17,22 @@ import java.util.stream.IntStream;
  * @see net.arna.jcraft.client.renderer.entity.stands.StandEntityRenderer StandEntityRenderer
  */
 public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
-    private final StandType2 type;
+    private final StandType type;
     private final ResourceLocation model;
     private final List<ResourceLocation> skins;
     private final ResourceLocation animation;
     private final float torsoPitchOffset, headPitchOffset, velInfluence;
     // public float prevTorsoPitch, prevHeadPitch, prevBasePitch = 0.0f;
 
-    public StandEntityModel(final StandType2 type) {
+    public StandEntityModel(final StandType type) {
         this(type, 0f, 0f);
     }
 
-    public StandEntityModel(final StandType2 type, final float torsoPitchOffset, final float headPitchOffset) {
+    public StandEntityModel(final StandType type, final float torsoPitchOffset, final float headPitchOffset) {
         this(type, torsoPitchOffset, headPitchOffset, 90f);
     }
 
-    public StandEntityModel(final StandType2 type, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
+    public StandEntityModel(final StandType type, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
         this.type = type;
         model = type.getId().withPath(path -> "geo/" + path + ".geo.json");
         skins = IntStream.rangeClosed(0, type.getData().getInfo().getSkinCount())

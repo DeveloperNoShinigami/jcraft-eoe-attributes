@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.api.StandType2;
+import net.arna.jcraft.api.StandType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public interface JStandTypeRegistry {
-    DeferredRegister<StandType2> STAND_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, JRegistries.STAND_TYPE_REGISTRY_KEY);
+    DeferredRegister<StandType> STAND_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, JRegistries.STAND_TYPE_REGISTRY_KEY);
 
     /**
      * The NONE stand type data, used when the mob/player has no stand.
@@ -26,45 +26,45 @@ public interface JStandTypeRegistry {
      * <p>
      * For players, this and {@code null} are equivalent.
      */
-    RegistrySupplier<StandType2> NONE = register("none", () -> null);
-    RegistrySupplier<StandType2> STAR_PLATINUM = register("star_platinum", JEntityTypeRegistry.STAR_PLATINUM);
-    RegistrySupplier<StandType2> THE_WORLD = register("theworld", JEntityTypeRegistry.THE_WORLD);
-    RegistrySupplier<StandType2> KING_CRIMSON = register("kingcrimson", JEntityTypeRegistry.KING_CRIMSON);
-    RegistrySupplier<StandType2> D4C = register("d4c", JEntityTypeRegistry.D4C);
-    RegistrySupplier<StandType2> CREAM = register("cream", JEntityTypeRegistry.CREAM);
-    RegistrySupplier<StandType2> KILLER_QUEEN = register("killerqueen", JEntityTypeRegistry.KILLER_QUEEN);
-    RegistrySupplier<StandType2> WHITE_SNAKE = register("whitesnake", JEntityTypeRegistry.WHITE_SNAKE);
-    RegistrySupplier<StandType2> SILVER_CHARIOT = register("silverchariot", JEntityTypeRegistry.SILVER_CHARIOT);
-    RegistrySupplier<StandType2> MAGICIANS_RED = register("mr", JEntityTypeRegistry.MAGICIANS_RED);
-    RegistrySupplier<StandType2> THE_FOOL = register("thefool", JEntityTypeRegistry.THE_FOOL);
-    RegistrySupplier<StandType2> GOLD_EXPERIENCE = register("goldexperience", JEntityTypeRegistry.GOLD_EXPERIENCE);
-    RegistrySupplier<StandType2> HIEROPHANT_GREEN = register("hierophantgreen", JEntityTypeRegistry.HIEROPHANT_GREEN);
-    RegistrySupplier<StandType2> THE_SUN = register("the_sun", JEntityTypeRegistry.THE_SUN);
-    RegistrySupplier<StandType2> PURPLE_HAZE = register("purple_haze", JEntityTypeRegistry.PURPLE_HAZE);
-    RegistrySupplier<StandType2> C_MOON = register("cmoon", JEntityTypeRegistry.C_MOON);
-    RegistrySupplier<StandType2> MADE_IN_HEAVEN = register("mih", JEntityTypeRegistry.MADE_IN_HEAVEN);
-    RegistrySupplier<StandType2> THE_WORLD_OVER_HEAVEN = register("twoh", JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN);
-    RegistrySupplier<StandType2> KILLER_QUEEN_BITES_THE_DUST = register("kqbtd", JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST);
-    RegistrySupplier<StandType2> GOLD_EXPERIENCE_REQUIEM = register("ger", JEntityTypeRegistry.GER);
-    RegistrySupplier<StandType2> STAR_PLATINUM_THE_WORLD = register("sptw", JEntityTypeRegistry.SPTW);
-    RegistrySupplier<StandType2> PURPLE_HAZE_DISTORTION = register("purple_haze_distortion", JEntityTypeRegistry.PURPLE_HAZE_DISTORTION);
-    RegistrySupplier<StandType2> HORUS = register("horus", JEntityTypeRegistry.HORUS);
-    RegistrySupplier<StandType2> CINDERELLA = register("cinderella", JEntityTypeRegistry.CINDERELLA);
-    RegistrySupplier<StandType2> OSIRIS = register("osiris", JEntityTypeRegistry.OSIRIS);
-    RegistrySupplier<StandType2> ATUM = register("atum", JEntityTypeRegistry.ATUM);
-    RegistrySupplier<StandType2> CHARIOT_REQUIEM = register("chariot_requiem", JEntityTypeRegistry.CHARIOT_REQUIEM);
-    RegistrySupplier<StandType2> DIVER_DOWN = register("diver_down", JEntityTypeRegistry.DIVER_DOWN);
-    RegistrySupplier<StandType2> DRAGONS_DREAM = register("dragons_dream", JEntityTypeRegistry.DRAGONS_DREAM);
-    RegistrySupplier<StandType2> FOO_FIGHTERS = register("foo_fighters", JEntityTypeRegistry.FOO_FIGHTERS);
-    RegistrySupplier<StandType2> GOO_GOO_DOLLS = register("goo_goo_dolls", JEntityTypeRegistry.GOO_GOO_DOLLS);
-    RegistrySupplier<StandType2> SHADOW_THE_WORLD = register("shadow_the_world", JEntityTypeRegistry.SHADOW_THE_WORLD);
-    RegistrySupplier<StandType2> METALLICA = register("metallica", JEntityTypeRegistry.METALLICA);
-    RegistrySupplier<StandType2> THE_HAND = register("the_hand", JEntityTypeRegistry.THE_HAND);
+    RegistrySupplier<StandType> NONE = register("none", () -> null);
+    RegistrySupplier<StandType> STAR_PLATINUM = register("star_platinum", JEntityTypeRegistry.STAR_PLATINUM);
+    RegistrySupplier<StandType> THE_WORLD = register("theworld", JEntityTypeRegistry.THE_WORLD);
+    RegistrySupplier<StandType> KING_CRIMSON = register("kingcrimson", JEntityTypeRegistry.KING_CRIMSON);
+    RegistrySupplier<StandType> D4C = register("d4c", JEntityTypeRegistry.D4C);
+    RegistrySupplier<StandType> CREAM = register("cream", JEntityTypeRegistry.CREAM);
+    RegistrySupplier<StandType> KILLER_QUEEN = register("killerqueen", JEntityTypeRegistry.KILLER_QUEEN);
+    RegistrySupplier<StandType> WHITE_SNAKE = register("whitesnake", JEntityTypeRegistry.WHITE_SNAKE);
+    RegistrySupplier<StandType> SILVER_CHARIOT = register("silverchariot", JEntityTypeRegistry.SILVER_CHARIOT);
+    RegistrySupplier<StandType> MAGICIANS_RED = register("mr", JEntityTypeRegistry.MAGICIANS_RED);
+    RegistrySupplier<StandType> THE_FOOL = register("thefool", JEntityTypeRegistry.THE_FOOL);
+    RegistrySupplier<StandType> GOLD_EXPERIENCE = register("goldexperience", JEntityTypeRegistry.GOLD_EXPERIENCE);
+    RegistrySupplier<StandType> HIEROPHANT_GREEN = register("hierophantgreen", JEntityTypeRegistry.HIEROPHANT_GREEN);
+    RegistrySupplier<StandType> THE_SUN = register("the_sun", JEntityTypeRegistry.THE_SUN);
+    RegistrySupplier<StandType> PURPLE_HAZE = register("purple_haze", JEntityTypeRegistry.PURPLE_HAZE);
+    RegistrySupplier<StandType> C_MOON = register("cmoon", JEntityTypeRegistry.C_MOON);
+    RegistrySupplier<StandType> MADE_IN_HEAVEN = register("mih", JEntityTypeRegistry.MADE_IN_HEAVEN);
+    RegistrySupplier<StandType> THE_WORLD_OVER_HEAVEN = register("twoh", JEntityTypeRegistry.THE_WORLD_OVER_HEAVEN);
+    RegistrySupplier<StandType> KILLER_QUEEN_BITES_THE_DUST = register("kqbtd", JEntityTypeRegistry.KILLER_QUEEN_BITES_THE_DUST);
+    RegistrySupplier<StandType> GOLD_EXPERIENCE_REQUIEM = register("ger", JEntityTypeRegistry.GER);
+    RegistrySupplier<StandType> STAR_PLATINUM_THE_WORLD = register("sptw", JEntityTypeRegistry.SPTW);
+    RegistrySupplier<StandType> PURPLE_HAZE_DISTORTION = register("purple_haze_distortion", JEntityTypeRegistry.PURPLE_HAZE_DISTORTION);
+    RegistrySupplier<StandType> HORUS = register("horus", JEntityTypeRegistry.HORUS);
+    RegistrySupplier<StandType> CINDERELLA = register("cinderella", JEntityTypeRegistry.CINDERELLA);
+    RegistrySupplier<StandType> OSIRIS = register("osiris", JEntityTypeRegistry.OSIRIS);
+    RegistrySupplier<StandType> ATUM = register("atum", JEntityTypeRegistry.ATUM);
+    RegistrySupplier<StandType> CHARIOT_REQUIEM = register("chariot_requiem", JEntityTypeRegistry.CHARIOT_REQUIEM);
+    RegistrySupplier<StandType> DIVER_DOWN = register("diver_down", JEntityTypeRegistry.DIVER_DOWN);
+    RegistrySupplier<StandType> DRAGONS_DREAM = register("dragons_dream", JEntityTypeRegistry.DRAGONS_DREAM);
+    RegistrySupplier<StandType> FOO_FIGHTERS = register("foo_fighters", JEntityTypeRegistry.FOO_FIGHTERS);
+    RegistrySupplier<StandType> GOO_GOO_DOLLS = register("goo_goo_dolls", JEntityTypeRegistry.GOO_GOO_DOLLS);
+    RegistrySupplier<StandType> SHADOW_THE_WORLD = register("shadow_the_world", JEntityTypeRegistry.SHADOW_THE_WORLD);
+    RegistrySupplier<StandType> METALLICA = register("metallica", JEntityTypeRegistry.METALLICA);
+    RegistrySupplier<StandType> THE_HAND = register("the_hand", JEntityTypeRegistry.THE_HAND);
 
     // Maps numeric values (ordinals) of old stand types back from when this was an enum.
     // Will be deleted in the 1.0 release.
-    Int2ObjectMap<RegistrySupplier<StandType2>> LEGACY_ORDINALS = Util.make(new Int2ObjectArrayMap<>(), map -> {
-        List<RegistrySupplier<StandType2>> entries = List.of(
+    Int2ObjectMap<RegistrySupplier<StandType>> LEGACY_ORDINALS = Util.make(new Int2ObjectArrayMap<>(), map -> {
+        List<RegistrySupplier<StandType>> entries = List.of(
                 NONE,
                 STAR_PLATINUM,
                 THE_WORLD,
@@ -117,10 +117,10 @@ public interface JStandTypeRegistry {
      *                   Gotten by registering the stand entity type separately.
      * @return A Supplier that provides the registered StandType instance.
      */
-    static <E extends StandEntity<?, ?>> RegistrySupplier<StandType2> register(String name, Supplier<EntityType<E>> entityTypeSupplier) {
+    static <E extends StandEntity<?, ?>> RegistrySupplier<StandType> register(String name, Supplier<EntityType<E>> entityTypeSupplier) {
         ResourceLocation id = JCraft.id(name);
         // The '::get' part is to satisfy the compiler (generic type parameter issue).
-        StandType2 standType = StandType2.of(id, entityTypeSupplier::get);
+        StandType standType = StandType.of(id, entityTypeSupplier::get);
         return STAND_TYPE_REGISTRY.register(name, () -> standType);
     }
 }

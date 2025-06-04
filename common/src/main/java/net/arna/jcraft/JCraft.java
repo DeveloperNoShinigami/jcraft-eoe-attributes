@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.api.StandType2;
+import net.arna.jcraft.api.StandType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
@@ -266,7 +266,7 @@ public final class JCraft {
             StringReader reader = parser.getReader();
             int cursor = reader.getCursor();
             ResourceLocation resourceLocation = ResourceLocation.read(reader);
-            StandType2 standType;
+            StandType standType;
 
             parser.setSuggestions((builder, consumer) ->
                     SharedSuggestionProvider.suggest(JRegistries.STAND_TYPE_REGISTRY.getIds().stream()
@@ -388,7 +388,7 @@ public final class JCraft {
             return null;
         }
         CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(user);
-        StandType2 type = standData.getType();
+        StandType type = standData.getType();
         if (type == JStandTypeRegistry.NONE.get()) {
             return null;
         }

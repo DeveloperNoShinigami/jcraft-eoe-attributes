@@ -25,7 +25,7 @@ public class JRegistries {
     private static final RegistrarManager manager = RegistrarManager.get(JCraft.MOD_ID);
 
     // Registries
-    public static final Registrar<StandType2> STAND_TYPE_REGISTRY = manager.<StandType2>builder(JCraft.id("stand_type"))
+    public static final Registrar<StandType> STAND_TYPE_REGISTRY = manager.<StandType>builder(JCraft.id("stand_type"))
             .syncToClients()
             .build();
     public static final Registrar<MoveType<?>> MOVE_TYPE_REGISTRY = manager.<MoveType<?>>builder(JCraft.id("move_type"))
@@ -40,7 +40,7 @@ public class JRegistries {
 
 
     // Registry keys
-    public static final ResourceKey<Registry<StandType2>> STAND_TYPE_REGISTRY_KEY = createKey(STAND_TYPE_REGISTRY);
+    public static final ResourceKey<Registry<StandType>> STAND_TYPE_REGISTRY_KEY = createKey(STAND_TYPE_REGISTRY);
     public static final ResourceKey<Registry<MoveType<?>>> MOVE_TYPE_REGISTRY_KEY = createKey(MOVE_TYPE_REGISTRY);
     public static final ResourceKey<Registry<MoveConditionType<?>>> MOVE_CONDITION_TYPE_REGISTRY_KEY = createKey(MOVE_CONDITION_TYPE_REGISTRY);
     public static final ResourceKey<Registry<MoveActionType<?>>> MOVE_ACTION_TYPE_REGISTRY_KEY = createKey(MOVE_ACTION_TYPE_REGISTRY);

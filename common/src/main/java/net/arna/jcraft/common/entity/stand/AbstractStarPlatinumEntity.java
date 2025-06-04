@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.stand;
 
-import net.arna.jcraft.api.StandType2;
+import net.arna.jcraft.api.StandType;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.starplatinum.BlockBreakingAttack;
 import net.arna.jcraft.common.util.JParticleType;
@@ -39,7 +39,7 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
                     Component.literal("slow, uninterruptible launcher")
             );
 
-    protected AbstractStarPlatinumEntity(StandType2 type, Level worldIn) {
+    protected AbstractStarPlatinumEntity(StandType type, Level worldIn) {
         super(type, worldIn);
     }
 
