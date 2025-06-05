@@ -3,9 +3,9 @@ package net.arna.jcraft.common.component.impl.living;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,7 +45,7 @@ public class CommonStandComponentImpl implements CommonStandComponent {
             return;
         }
 
-        this.skin = Mth.clamp(skin, 0, type.getSkinCount() - 1);
+        this.skin = Mth.clamp(skin, 0, type.getData().getInfo().getSkinCount() - 1);
         sync(entity);
     }
 

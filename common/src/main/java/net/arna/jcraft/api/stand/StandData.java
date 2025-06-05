@@ -27,7 +27,8 @@ public class StandData {
      * This is used as the fallback for when no stand data file could be found.
      * A warning is printed when this is the case.
      */
-    public static final StandData EMPTY = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.nostand")));
+    public static final StandData EMPTY = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.nostand")))
+            .withObtainable(false);
 
     public static final Codec<StandData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.FLOAT.optionalFieldOf("idle_distance", 1.25f).forGetter(StandData::getIdleDistance),

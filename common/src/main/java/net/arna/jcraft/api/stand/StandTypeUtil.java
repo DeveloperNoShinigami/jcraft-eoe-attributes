@@ -2,9 +2,9 @@ package net.arna.jcraft.api.stand;
 
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.registry.JStandTypeRegistry;
+import net.minecraft.util.RandomSource;
 
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -38,19 +38,19 @@ public class StandTypeUtil {
      * Gets a random regular (so no evolutions) stand type.
      * @return a random regular stand type.
      */
-    public static StandType getRandomRegular() {
+    public static StandType getRandomRegular(RandomSource random) {
         List<StandType> types = streamAllObtainable()
                 .filter(type -> !type.getData().isEvolution())
                 .toList();
-        return types.get(new Random().nextInt(types.size()));
+        return types.get(random.nextInt(types.size()));
     }
 
     /**
      * Gets a random stand type, may return an evolution type.
      * @return a random stand type.
      */
-    public static StandType getRandom() {
+    public static StandType getRandom(RandomSource random) {
         List<StandType> types = streamAllObtainable().toList();
-        return types.get(new Random().nextInt(types.size()));
+        return types.get(random.nextInt(types.size()));
     }
 }

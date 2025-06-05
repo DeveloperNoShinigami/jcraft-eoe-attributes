@@ -2,11 +2,12 @@ package net.arna.jcraft.common.item;
 
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.projectile.StandArrowEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -26,11 +27,15 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
+
 public class StandArrowItem extends ArrowItem {
     // private static final DamageType DAMAGE_TYPE = new DamageType("stand_arrow", DamageScaling.NEVER, 0f, DamageEffects.HURT);
     public static final ResourceKey<DamageType> STAND_ARROW = JDamageSources.createDamageType("stand_arrow");
 
-    protected boolean warned = false;
+    protected Set<Player> warned = Collections.newSetFromMap(new WeakHashMap<>());
 
     public StandArrowItem(Properties settings) {
         super(settings);
@@ -41,16 +46,17 @@ public class StandArrowItem extends ArrowItem {
     }
 
     @Override
-    public @NonNull InteractionResultHolder<ItemStack> use(@NonNull final Level world, final Player user, @NonNull final InteractionHand hand) {
+    public @NonNull InteractionResultHolder<ItemStack> use(@NonNull final Level world, final @NonNull Player user,
+                                                           @NonNull final InteractionHand hand) {
         final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(user);
         final StandEntity<?, ?> oldStand = standData.getStand();
         final ItemStack itemStack = user.getItemInHand(hand);
 
-        if (standData.getType() != StandType.NONE) { // If the player already has a stand
-            if (!warned) {
+        if (!StandTypeUtil.isNone(standData.getType())) { // If the player already has a stand
+            if (!warned.contains(user)) {
                 if (!world.isClientSide()) {
                     user.sendSystemMessage(Component.translatable("warning.jcraft.stand.change"));
-                    warned = true;
+                    warned.add(user);
                 }
                 return InteractionResultHolder.fail(itemStack);
             }
@@ -80,7 +86,7 @@ public class StandArrowItem extends ArrowItem {
         }
 
         if (!world.isClientSide()) {
-            warned = false;
+            warned.remove(user);
             if (oldStand != null) {
                 oldStand.desummon(); // Does any extra desummoning logic, like disabling flight
                 oldStand.discard(); // Actually removes the stand
@@ -91,7 +97,7 @@ public class StandArrowItem extends ArrowItem {
             final StandType oldType = standData.getType();
             StandType newType;
             do {
-                newType = StandType.getRandomRegular(random);
+                newType = StandTypeUtil.getRandomRegular(random);
             } while (newType == oldType);
 
             standData.setType(newType);
