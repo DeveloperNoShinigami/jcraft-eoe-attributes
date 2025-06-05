@@ -3,7 +3,7 @@ package net.arna.jcraft.fabric.datagen;
 import com.mojang.datafixers.util.Pair;
 import lombok.Getter;
 import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.api.StandData;
+import net.arna.jcraft.api.stand.StandData;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 import net.minecraft.data.PackOutput;

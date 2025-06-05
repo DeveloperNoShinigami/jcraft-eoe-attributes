@@ -2,7 +2,7 @@ package net.arna.jcraft.client.model.entity.stand;
 
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.model.GeoModel;
-import net.arna.jcraft.api.StandType;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.resources.ResourceLocation;

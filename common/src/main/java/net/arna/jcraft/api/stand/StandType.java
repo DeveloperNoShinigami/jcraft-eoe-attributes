@@ -1,8 +1,9 @@
-package net.arna.jcraft.api;
+package net.arna.jcraft.api.stand;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.data.StandDataLoader;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.resources.ResourceLocation;

@@ -1,4 +1,4 @@
-package net.arna.jcraft.api;
+package net.arna.jcraft.api.stand;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

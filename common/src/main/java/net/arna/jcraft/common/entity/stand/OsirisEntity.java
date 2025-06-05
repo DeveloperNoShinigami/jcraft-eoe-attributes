@@ -1,8 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
-import net.arna.jcraft.api.StandData;
-import net.arna.jcraft.api.StandInfo;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;

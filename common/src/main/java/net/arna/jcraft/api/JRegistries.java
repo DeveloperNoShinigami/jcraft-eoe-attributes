@@ -5,6 +5,7 @@ import com.mojang.serialization.DataResult;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrarManager;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.attack.core.MoveAction;
 import net.arna.jcraft.common.attack.core.MoveCondition;
 import net.arna.jcraft.api.attack.MoveActionType;

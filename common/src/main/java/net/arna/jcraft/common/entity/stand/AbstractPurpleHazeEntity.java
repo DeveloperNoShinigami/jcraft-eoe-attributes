@@ -3,7 +3,7 @@ package net.arna.jcraft.common.entity.stand;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.StandType;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;

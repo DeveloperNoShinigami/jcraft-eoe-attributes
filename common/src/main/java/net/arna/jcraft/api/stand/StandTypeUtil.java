@@ -1,5 +1,6 @@
-package net.arna.jcraft.api;
+package net.arna.jcraft.api.stand;
 
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.registry.JStandTypeRegistry;
 
 import java.util.List;

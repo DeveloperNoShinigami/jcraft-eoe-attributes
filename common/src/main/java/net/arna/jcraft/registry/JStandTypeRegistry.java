@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.api.StandType;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;

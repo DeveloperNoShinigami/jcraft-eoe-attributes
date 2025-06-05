@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.api.StandType;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;

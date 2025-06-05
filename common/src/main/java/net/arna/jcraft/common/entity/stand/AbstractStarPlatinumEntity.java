@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.stand;
 
-import net.arna.jcraft.api.StandType;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.starplatinum.BlockBreakingAttack;
 import net.arna.jcraft.common.util.JParticleType;
