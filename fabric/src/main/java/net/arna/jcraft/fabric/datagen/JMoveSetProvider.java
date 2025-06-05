@@ -3,12 +3,10 @@ package net.arna.jcraft.fabric.datagen;
 import com.mojang.serialization.Codec;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.attack.MoveSetManager;
-import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
-import net.arna.jcraft.common.spec.JSpec;
-import net.arna.jcraft.common.spec.SpecType;
-import net.arna.jcraft.common.util.SpecAnimationState;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.common.attack.core.MoveMap;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 import net.minecraft.data.PackOutput;
@@ -21,24 +19,22 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-// Identical to JStandMoveSetProvider, but uses SpecType instead of StandType.
-public class JSpecMoveSetProvider<A extends JSpec<A, S>, S extends Enum<S> & SpecAnimationState<A>>
+public class JMoveSetProvider<A extends IAttacker<A, S>, S extends Enum<S>>
         extends FabricCodecDataProvider<MoveMap.Entry<A, S>> {
     @Getter // implements abstract method
     private final String name;
-    private final SpecType type;
+    private final ResourceLocation type;
 
-    public JSpecMoveSetProvider(FabricDataOutput dataOutput, SpecType type) {
-        super(dataOutput, PackOutput.Target.DATA_PACK, "movesets/spec/" + type.name().toLowerCase(Locale.ROOT),
-                getCodec(type));
+    public JMoveSetProvider(FabricDataOutput dataOutput, ResourceLocation type) {
+        super(dataOutput, PackOutput.Target.DATA_PACK, "movesets/stand/" + type.getPath(), getCodec(type));
         // Turn the type name into camel case
-        name = Arrays.stream(type.name().toLowerCase().split("_"))
+        name = Arrays.stream(type.getPath().split("_"))
                 .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1))
                 .collect(Collectors.joining(" ")) + " Moveset(s)";
         this.type = type;
     }
 
-    private static <A extends JSpec<A, S>, S extends Enum<S> & SpecAnimationState<A>> Codec<MoveMap.Entry<A, S>> getCodec(SpecType type) {
+    private static <A extends IAttacker<A, S>, S extends Enum<S>> Codec<MoveMap.Entry<A, S>> getCodec(ResourceLocation type) {
         return MoveMap.Entry.codecFor(Optional.ofNullable(MoveSetManager.<A, S>get(type, "default"))
                 .orElseThrow(() -> new IllegalArgumentException("No default moveset found for " + type))
                 .getStateClass());
