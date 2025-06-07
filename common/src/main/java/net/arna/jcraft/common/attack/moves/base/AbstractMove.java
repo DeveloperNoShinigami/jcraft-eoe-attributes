@@ -14,7 +14,7 @@ import lombok.Setter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.common.attack.core.*;
-import net.arna.jcraft.common.attack.core.data.ExtraProducts;
+import net.arna.jcraft.common.util.ExtraProducts;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.entity.stand.StandEntity;

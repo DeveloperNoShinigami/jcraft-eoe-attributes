@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.core.*;
-import net.arna.jcraft.common.attack.core.data.ExtraProducts;
+import net.arna.jcraft.common.util.ExtraProducts;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;

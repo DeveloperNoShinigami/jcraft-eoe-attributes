@@ -3,6 +3,7 @@ package net.arna.jcraft.fabric.datagen;
 import com.mojang.serialization.Codec;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.IAttacker;
@@ -26,7 +27,7 @@ public class JMoveSetProvider<A extends IAttacker<A, S>, S extends Enum<S>>
     private final ResourceLocation type;
 
     public JMoveSetProvider(FabricDataOutput dataOutput, ResourceLocation type) {
-        super(dataOutput, PackOutput.Target.DATA_PACK, "movesets/stand/" + type.getPath(), getCodec(type));
+        super(dataOutput, PackOutput.Target.DATA_PACK, String.format("movesets/%s/%s", getKind(type), type.getPath()), getCodec(type));
         // Turn the type name into camel case
         name = Arrays.stream(type.getPath().split("_"))
                 .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1))
@@ -55,5 +56,9 @@ public class JMoveSetProvider<A extends IAttacker<A, S>, S extends Enum<S>>
         return name.toLowerCase(Locale.ROOT)
                 .replace(" ", "_")
                 .replaceAll("[^a-z0-9/._-]", "");
+    }
+
+    private static String getKind(ResourceLocation type) {
+        return JRegistries.SPEC_TYPE_REGISTRY.contains(type) ? "spec" : "stand";
     }
 }

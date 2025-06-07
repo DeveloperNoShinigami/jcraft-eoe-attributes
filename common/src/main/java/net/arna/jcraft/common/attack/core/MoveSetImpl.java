@@ -1,4 +1,4 @@
-package net.arna.jcraft.common.attack.core.data;
+package net.arna.jcraft.common.attack.core;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
@@ -10,8 +10,6 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.StateContainerHolder;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.MoveMap;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;

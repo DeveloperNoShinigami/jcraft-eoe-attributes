@@ -3,6 +3,7 @@ package net.arna.jcraft.common.spec;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.spec.SpecData;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.StunType;
@@ -16,12 +17,21 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.SpecAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JSpecTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 
 @Getter
 public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
-    public static final MoveSet<VampireSpec, State> MOVE_SET = MoveSetManager.create(SpecType.VAMPIRE, VampireSpec::registerMoves, State.class);
+    public static final MoveSet<VampireSpec, State> MOVE_SET = MoveSetManager.create(JSpecTypeRegistry.VAMPIRE, VampireSpec::registerMoves, State.class);
+    public static final SpecData DATA = SpecData.builder()
+            .name(Component.literal("spec.jcraft.vampire"))
+            .description(Component.literal("Supernatural all-ranger"))
+            .details(Component.literal("""
+                    PASSIVES: Burns in sunlight, Replaces hunger with blood, Night vision
+                    Excellent frametraps with Sweep or Axe Kick.
+                    Bloodsuck is extremely rewarding and allows linking into almost any move."""))
+            .build();
 
     public static final SimpleUppercutAttack<VampireSpec> AIR_KICK = new SimpleUppercutAttack<VampireSpec>(30, 6,
             12, 1f, 5f, 14, 1.5f, 0.2f, 0.5f, -0.5f)
@@ -89,7 +99,7 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
     private final CommonVampireComponent vampireComponent;
 
     public VampireSpec(LivingEntity livingEntity) {
-        super(SpecType.VAMPIRE, livingEntity);
+        super(JSpecTypeRegistry.VAMPIRE.get(), livingEntity);
         vampireComponent = JComponentPlatformUtils.getVampirism(livingEntity);
     }
 

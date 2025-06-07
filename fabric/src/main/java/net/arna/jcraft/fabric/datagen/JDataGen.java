@@ -24,6 +24,7 @@ public final class JDataGen implements DataGeneratorEntrypoint {
         pack.addProvider(JWorldProvider::new);
         pack.addProvider(JEvolutionProvider::new);
         pack.addProvider(JStandDataProvider::new);
+        pack.addProvider(JSpecDataProvider::new);
 
         // Each type needs its own MoveSetProvider as they have different state classes
         // and thus different codecs.

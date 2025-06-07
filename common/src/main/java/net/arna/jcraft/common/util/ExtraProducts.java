@@ -1,4 +1,4 @@
-package net.arna.jcraft.common.attack.core.data;
+package net.arna.jcraft.common.util;
 
 import com.mojang.datafixers.kinds.App;
 import com.mojang.datafixers.kinds.Applicative;

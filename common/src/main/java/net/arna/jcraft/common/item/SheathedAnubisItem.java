@@ -1,7 +1,8 @@
 package net.arna.jcraft.common.item;
 
+import dev.architectury.registry.registries.RegistrySupplier;
+import net.arna.jcraft.api.spec.SpecType2;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -15,25 +16,26 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class SheathedAnubisItem extends SpecObtainmentItem {
-    public SheathedAnubisItem(Properties settings, SpecType spec) {
+    public SheathedAnubisItem(Properties settings, RegistrySupplier<SpecType2> spec) {
         super(settings, spec);
     }
 
-    public UseAnim getUseAnimation(ItemStack stack) {
+    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
         return UseAnim.BLOCK;
     }
 
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack) {
         return 72000;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level world, List<Component> tooltip, @NotNull TooltipFlag context) {
         tooltip.add(Component.translatable("jcraft.anubis.namedesc"));
         tooltip.add(Component.translatable("jcraft.anubis.bloodthirstdesc"));
         tooltip.add(Component.translatable("jcraft.anubis.removaldesc"));
@@ -43,7 +45,7 @@ public class SheathedAnubisItem extends SpecObtainmentItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player user, @NotNull InteractionHand hand) {
         ItemStack itemStack = user.getItemInHand(hand);
 
         if (user.isShiftKeyDown()) { // Block
@@ -73,7 +75,7 @@ public class SheathedAnubisItem extends SpecObtainmentItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         if (world.isClientSide) {
             return;

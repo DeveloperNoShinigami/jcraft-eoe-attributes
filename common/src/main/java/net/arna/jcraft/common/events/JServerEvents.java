@@ -17,7 +17,6 @@ import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.MockItem;
 import net.arna.jcraft.common.saveddata.ExclusiveStandsData;
-import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.common.tickable.*;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.mixin_logic.EntityAddon;
@@ -360,7 +359,9 @@ public class JServerEvents {
             if (100 - random.nextInt(0, 100) > gameRules.getInt(CHANCE_MOB_SPAWNS_WITH_STAND)) {
                 return EventResult.pass();
             }
-            final StandType type = gameRules.getBoolean(ALLOW_MOB_EVOLVED_STANDS) ? StandTypeUtil.getRandomObtainable(entity.level().random) : StandTypeUtil.getRandomRegular(entity.level().random);
+            final StandType type = gameRules.getBoolean(ALLOW_MOB_EVOLVED_STANDS)
+                    ? StandTypeUtil.getRandom(entity.level().random)
+                    : StandTypeUtil.getRandomRegular(entity.level().random);
             standData.setType(type);
 
             // ATTRIBUTES
@@ -449,7 +450,8 @@ public class JServerEvents {
                     JComponentPlatformUtils.getStandComponent(living).setTypeAndSkin(JStandTypeRegistry.NONE.get(), 0);
                 }
                 if (!gameRules.getBoolean(JCraft.KEEP_SPEC)) {
-                    JComponentPlatformUtils.getSpecData(serverPlayer).setType(SpecType.NONE);
+                    JComponentPlatformUtils.getSpecData(serverPlayer)
+                            .setType(JSpecTypeRegistry.NONE.get());
                 }
 
                 if (source.getEntity() instanceof LivingEntity killer) {

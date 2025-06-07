@@ -22,7 +22,7 @@ import net.arna.jcraft.api.stand.SummonData;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.*;
-import net.arna.jcraft.common.attack.core.data.MoveSetImpl;
+import net.arna.jcraft.common.attack.core.MoveSetImpl;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;

@@ -1,15 +1,15 @@
 package net.arna.jcraft.common.component.player;
 
 import lombok.NonNull;
+import net.arna.jcraft.api.spec.SpecType2;
 import net.arna.jcraft.common.component.JComponent;
 import net.arna.jcraft.common.spec.JSpec;
-import net.arna.jcraft.common.spec.SpecType;
 import org.jetbrains.annotations.Nullable;
 
 public interface CommonSpecComponent extends JComponent {
-    SpecType getType();
+    SpecType2 getType();
 
-    void setType(final @NonNull SpecType type);
+    void setType(final @NonNull SpecType2 type);
 
     @Nullable
     JSpec<?, ?> getSpec();

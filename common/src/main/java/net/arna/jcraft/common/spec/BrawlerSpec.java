@@ -2,6 +2,7 @@ package net.arna.jcraft.common.spec;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.spec.SpecData;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
@@ -14,11 +15,18 @@ import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.SpecAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JSpecTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 
 public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
-    public static final MoveSet<BrawlerSpec, State> MOVE_SET = MoveSetManager.create(SpecType.BRAWLER, BrawlerSpec::registerMoves, State.class);
+    public static final MoveSet<BrawlerSpec, State> MOVE_SET = MoveSetManager.create(JSpecTypeRegistry.BRAWLER, BrawlerSpec::registerMoves, State.class);
+    public static final SpecData DATA = SpecData.builder()
+            .name(Component.literal("spec.jcraft.brawler"))
+            .description(Component.literal("Close-range pressure and combo extension tool"))
+            .details(Component.literal("""
+                    Important hitconfirm: (any stand move)~stand.OFF>Combo>stand.ON+(any stand move)"""))
+            .build();
 
     public static final SimpleUppercutAttack<BrawlerSpec> HEAVY = new SimpleUppercutAttack<BrawlerSpec>(30, 10,
             21, 1f, 6f, 15, 1.5f, 0.3f, 0f, 0.3f)
@@ -59,7 +67,7 @@ public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
             .withInfo(Component.literal("Right Low Kick"), Component.literal("fast jab"));
 
     public BrawlerSpec(LivingEntity livingEntity) {
-        super(SpecType.BRAWLER, livingEntity);
+        super(JSpecTypeRegistry.BRAWLER.get(), livingEntity);
     }
 
     private static void registerMoves(MoveMap<BrawlerSpec, State> moves) {

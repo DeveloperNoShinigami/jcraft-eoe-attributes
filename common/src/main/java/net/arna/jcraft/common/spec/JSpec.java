@@ -7,12 +7,14 @@ import lombok.Getter;
 import lombok.Setter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.spec.SpecData;
+import net.arna.jcraft.api.spec.SpecType2;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
-import net.arna.jcraft.common.attack.core.data.MoveSetImpl;
+import net.arna.jcraft.common.attack.core.MoveSetImpl;
 import net.arna.jcraft.common.attack.moves.base.AbstractMove;
 import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
@@ -49,8 +51,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         implements IAttacker<A, S>, MoveSetImpl.ReloadListener<A, S> {
     private MoveSet<A, S> moveSet;
     private final MoveMap<A, S> moveMap = new MoveMap<>();
-    private final MoveContext moveContext = new MoveContext();
-    private final SpecType type;
+    private final SpecType2 type;
     public final LivingEntity user;
     public final Player player;
     @Setter
@@ -69,7 +70,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     private boolean holding = false;
     private MoveInputType holdingType = null;
 
-    protected JSpec(SpecType type, LivingEntity livingEntity) {
+    protected JSpec(SpecType2 type, LivingEntity livingEntity) {
         this.type = type;
         this.user = livingEntity;
         if (this.user instanceof Player playerEntity) {
@@ -84,6 +85,10 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         }
 
         moveSet.registerListener(this);
+    }
+
+    public SpecData getSpecData() {
+        return type.getData();
     }
 
     @Override
@@ -125,7 +130,8 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     @Override
     public void setState(S state) {
         if (player == null) return;
-        PlayerAnimPacket.sendSpec(player, JUtils.around((ServerLevel) user.level(), user.position(), JUtils.PLAYER_ANIMATION_DIST), (this.state = state).getKey(getThis()), moveStun, 1f);
+        PlayerAnimPacket.sendSpec(player, JUtils.around((ServerLevel) user.level(), user.position(), JUtils.PLAYER_ANIMATION_DIST),
+                (this.state = state).getKey(getThis()), moveStun, 1f);
     }
 
     @Override
@@ -159,8 +165,6 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         this.moveSet = moveSet;
         moveSet.registerListener(this); // implementation uses a set, so this is fine
         moveMap.copyFrom(moveSet.getMoveMap());
-        moveContext.clear();
-        moveMap.forEach(entry -> entry.getMove().registerContextEntries(moveContext));
     }
 
     public boolean initMove(MoveClass moveClass) {
@@ -243,7 +247,6 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
                 .withDuration((int) (move.getDuration() / animationSpeed))
                 .withWindup((int) (move.getWindup() / animationSpeed));
 
-        move.registerContextEntries(moveContext);
         move.onInitiate(getThis());
 
         // If the move has a duration of 0, perform it instantly.

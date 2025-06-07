@@ -4,8 +4,8 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.spec.JSpec;
-import net.arna.jcraft.common.spec.SpecType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.registry.JSpecTypeRegistry;
 import net.arna.jcraft.registry.JStatRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.server.level.ServerLevel;
@@ -80,7 +80,7 @@ public class DashData {
             if (spec == null || spec.moveStun < 1) {
                 String dashAnim = forward >= 0 ? "dash" : "bdash";
                 if (spec != null) {
-                    if (spec.getType() == SpecType.VAMPIRE) {
+                    if (spec.getType() == JSpecTypeRegistry.VAMPIRE.get()) {
                         dashAnim = "vm." + dashAnim;
                     }
                 }

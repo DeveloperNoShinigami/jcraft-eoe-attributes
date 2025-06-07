@@ -5,7 +5,7 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSetImpl;
+import net.arna.jcraft.common.attack.core.MoveSetImpl;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collections;

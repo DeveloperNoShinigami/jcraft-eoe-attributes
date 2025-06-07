@@ -1,7 +1,7 @@
 package net.arna.jcraft.api.attack;
 
 import com.mojang.serialization.Codec;
-import net.arna.jcraft.common.attack.core.data.MoveSetImpl;
+import net.arna.jcraft.common.attack.core.MoveSetImpl;
 
 import java.util.Optional;
 

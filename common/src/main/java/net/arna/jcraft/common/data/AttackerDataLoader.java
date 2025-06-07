@@ -2,14 +2,16 @@ package net.arna.jcraft.common.data;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import dev.architectury.registry.registries.Registrar;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.api.spec.SpecData;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
@@ -23,8 +25,9 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class StandDataLoader {
-    private static final Map<ResourceLocation, StandData> registry = new HashMap<>();
+public class AttackerDataLoader {
+    private static final Map<ResourceLocation, StandData> standData = new HashMap<>();
+    private static final Map<ResourceLocation, SpecData> specData = new HashMap<>();
 
     /**
      * Gets the StandData for a given stand type id.
@@ -35,7 +38,19 @@ public class StandDataLoader {
      * @return The StandData if it exists, or the {@link StandData#EMPTY empty data} if it doesn't.
      */
     public static StandData getStandData(ResourceLocation id) {
-        return registry.getOrDefault(id, StandData.EMPTY);
+        return standData.getOrDefault(id, StandData.EMPTY);
+    }
+
+    /**
+     * Gets the StandData for a given stand type id.
+     * <b>Important:</b> this is mostly for internal use only. Consider using
+     * {@link net.arna.jcraft.api.spec.SpecType2#()} or {@link StandEntity#getStandData()} instead.
+     * The main exception would be if your stand has multiple different data's, and you need a specific one.
+     * @param id The ResourceLocation of the stand type, e.g. "jcraft:star_platinum"
+     * @return The StandData if it exists, or the {@link StandData#EMPTY empty data} if it doesn't.
+     */
+    public static SpecData getSpecData(ResourceLocation id) {
+        return specData.getOrDefault(id, SpecData.EMPTY);
     }
 
     /**
@@ -55,7 +70,7 @@ public class StandDataLoader {
                                                    ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
         return CompletableFuture.supplyAsync(() -> loadDataFiles(resourceManager), backgroundExecutor)
                 .thenCompose(preparationBarrier::wait) // Wait for preparations to finish
-                .thenAcceptAsync(StandDataLoader::loadStandData);
+                .thenAcceptAsync(AttackerDataLoader::loadAllData);
     }
 
     /**
@@ -63,63 +78,72 @@ public class StandDataLoader {
      * @param resourceManager The resource manager used to get data files
      * @return A map of ResourceLocation to JsonObject, where the ResourceLocation is the stand type id
      */
-    private static Map<ResourceLocation, JsonObject> loadDataFiles(ResourceManager resourceManager) {
-        Map<ResourceLocation, Resource> resources = resourceManager.listResources("stands",
+    private static Map<String, Map<ResourceLocation, JsonObject>> loadDataFiles(ResourceManager resourceManager) {
+        Map<ResourceLocation, Resource> standResources = resourceManager.listResources("stands",
                 rl -> rl.getPath().endsWith(".json"));
+        Map<ResourceLocation, Resource> specResources = resourceManager.listResources("specs",
+                rl -> rl.getPath().endsWith(".json"));
+        Map<ResourceLocation, Resource> resources = new HashMap<>(standResources);
+        resources.putAll(specResources);
 
         Gson gson = new Gson();
-        Map<ResourceLocation, JsonObject> data = new HashMap<>();
+        Map<String, Map<ResourceLocation, JsonObject>> data = new HashMap<>();
         for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
             // Remove the "stands/" prefix and ".json" suffix to get the stand type name
             // Transforms "stands/star_platinum.json" to "star_platinum"
             // MUST correspond to an entry in the StandType registry.
             ResourceLocation location = entry.getKey().withPath(path ->
-                    path.substring("stands/".length(), path.length() - ".json".length()));
-
-            // Check if a stand type with this id exists in the registry
-            if (!JRegistries.STAND_TYPE_REGISTRY.contains(location)) {
-                JCraft.LOGGER.warn("Found stand data for non-existent stand {}. Skipping...", location);
-                continue;
-            }
+                    path.substring(path.indexOf('/') + 1, path.length() - ".json".length()));
+            String kind = entry.getKey().getPath().split("/")[0]; // "stands" or "specs"
 
             // Load the JSON file
             try (BufferedReader reader = entry.getValue().openAsReader()) {
                 JsonObject obj = gson.fromJson(reader, JsonObject.class);
-                data.put(location, obj);
+                data.computeIfAbsent(kind, s -> new HashMap<>()).put(location, obj);
             } catch (IOException e) {
-                JCraft.LOGGER.error("Failed to load stand data for stand {}", location, e);
+                JCraft.LOGGER.error("Failed to load data for {} {}",
+                        "stands".equals(kind) ? "stand" : "spec", location, e);
             }
         }
 
         return data;
     }
 
-    private static void loadStandData(Map<ResourceLocation, JsonObject> data) {
+    private static void loadAllData(Map<String, Map<ResourceLocation, JsonObject>> data) {
+        loadData(data.get("stands"), StandData.CODEC, JRegistries.STAND_TYPE_REGISTRY, standData, "stand", StandData.EMPTY);
+        loadData(data.get("specs"), SpecData.CODEC, JRegistries.SPEC_TYPE_REGISTRY, specData, "spec", SpecData.EMPTY);
+    }
+
+    private static <T> void loadData(Map<ResourceLocation, JsonObject> data, Codec<T> codec, Registrar<?> registry,
+                                     Map<ResourceLocation, T> map, String kind, T fallback) {
+        if (data == null || data.isEmpty()) return;
+
         for (Map.Entry<ResourceLocation, JsonObject> entry : data.entrySet()) {
             ResourceLocation id = entry.getKey();
             JsonObject json = entry.getValue();
 
             // Parse the JSON object into a StandData instance
-            DataResult<StandData> res = StandData.CODEC.parse(JsonOps.INSTANCE, json);
+            DataResult<T> res = codec.parse(JsonOps.INSTANCE, json);
             if (res.result().isEmpty()) {
-                JCraft.LOGGER.error("Failed to parse stand data for stand {}: {}", id, res.error().orElseThrow());
+                JCraft.LOGGER.error("Failed to parse {} data for {} {}: {}", kind, kind, id, res.error()
+                        .map(DataResult.PartialResult::message).orElse(null));
                 continue;
             }
 
-            registry.put(id, res.result().get());
+            map.put(id, res.result().get());
         }
 
         // Iterate through the StandType registry to ensure all stand types have data.
-        for (ResourceLocation id : JRegistries.STAND_TYPE_REGISTRY.getIds()) {
-            if (id.equals(JStandTypeRegistry.NONE.getId())) {
-                // Ignore the NONE stand type, as it has no data.
+        for (ResourceLocation id : registry.getIds()) {
+            if (id.equals(JCraft.id("none"))) {
+                // Ignore the NONE type, as it has no data.
                 continue;
             }
 
-            if (!registry.containsKey(id)) {
+            if (!map.containsKey(id)) {
                 // If no data is found for a stand type, log a warning
-                JCraft.LOGGER.warn("No stand data found for stand type {}. Using default data.", id);
-                registry.put(id, StandData.EMPTY); // Use default empty data
+                JCraft.LOGGER.warn("No {} data found for {} type {}. Using default data.", kind, kind, id);
+                map.put(id, fallback); // Use default empty data
             }
         }
     }

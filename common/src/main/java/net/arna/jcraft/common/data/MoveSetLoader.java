@@ -1,4 +1,4 @@
-package net.arna.jcraft.common.attack.core.data;
+package net.arna.jcraft.common.data;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;

@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import net.arna.jcraft.api.IAttackerType;
-import net.arna.jcraft.common.data.StandDataLoader;
+import net.arna.jcraft.common.data.AttackerDataLoader;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -41,7 +41,7 @@ public class StandType implements IAttackerType {
      * @return The StandData for this StandType.
      */
     public StandData getData() {
-        return StandDataLoader.getStandData(getId());
+        return AttackerDataLoader.getStandData(getId());
     }
 
     /**

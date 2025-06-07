@@ -15,10 +15,10 @@ import com.mojang.serialization.JsonOps;
 import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.spec.SpecType2;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
-import net.arna.jcraft.common.spec.SpecType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -47,7 +47,7 @@ public class JCraftChangesCommand {
                         .then(Commands.argument("stand", StandArgumentType.stand())
                                 .executes(ctx -> run(ctx, ctx.getArgument("stand", StandType.class))))
                         .then(Commands.argument("spec", SpecArgumentType.spec())
-                                .executes(ctx -> run(ctx, ctx.getArgument("spec", SpecType.class))))));
+                                .executes(ctx -> run(ctx, ctx.getArgument("spec", SpecType2.class))))));
     }
 
     private static int run(CommandContext<CommandSourceStack> ctx, IAttackerType type) {
