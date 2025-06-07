@@ -1,15 +1,5 @@
 package net.arna.jcraft.common.entity.npc;
 
-import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.entity.stand.StandType;
-import net.arna.jcraft.common.tickable.JEnemies;
-import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.level.Level;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -18,6 +8,16 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
+import net.arna.jcraft.common.component.living.CommonStandComponent;
+import net.arna.jcraft.common.tickable.JEnemies;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.Level;
 
 public class PetshopEntity extends PathfinderMob implements GeoEntity {
 
@@ -26,7 +26,7 @@ public class PetshopEntity extends PathfinderMob implements GeoEntity {
     public PetshopEntity(Level world) {
         super(JEntityTypeRegistry.PETSHOP.get(), world);
         final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(this);
-        standData.setType(StandType.HORUS);
+        standData.setType(JStandTypeRegistry.HORUS.get());
         standData.setSkin(0);
 
         if (world.isClientSide()) return;

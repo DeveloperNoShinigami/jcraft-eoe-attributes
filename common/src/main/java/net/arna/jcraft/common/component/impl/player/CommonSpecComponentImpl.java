@@ -49,7 +49,7 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     }
 
     public void writeToNbt(final @NonNull CompoundTag tag) {
-        tag.putInt("Type", type.getId());
+        tag.putInt("Type", type.getOldId());
     }
 
     public boolean shouldSyncWith(final ServerPlayer player) {

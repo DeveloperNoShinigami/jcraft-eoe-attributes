@@ -4,7 +4,6 @@ import lombok.Getter;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandType;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 import net.minecraft.data.PackOutput;
@@ -30,9 +29,8 @@ public class JStandDataProvider extends FabricCodecDataProvider<StandData> {
         for (final Map.Entry<ResourceKey<StandType>, StandType> entry : JRegistries.STAND_TYPE_REGISTRY.entrySet()) {
             final ResourceLocation type = entry.getKey().location();
 
-            //noinspection DataFlowIssue
-            @SuppressWarnings("rawtypes") // Adding the types results in an error
-            Class<? extends StandEntity> entityClass = entry.getValue().getEntityType().create(null).getClass();
+            //noinspection DataFlowIssue // We're passing a null level here, but that should be fine.
+            Class<?> entityClass = entry.getValue().getEntityType().create(null).getClass();
 
             for (final Field field : entityClass.getFields()) {
                 if (field.getType() != StandData.class || !Modifier.isStatic(field.getModifiers()))

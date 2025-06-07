@@ -5,8 +5,11 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lombok.AccessLevel;
 import lombok.Getter;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.util.NameHolder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
 
-public enum SpecType implements NameHolder {
+public enum SpecType implements NameHolder, IAttackerType {
     NONE(player -> null, Component.empty(), Component.empty()),
     BRAWLER(BrawlerSpec::new, Component.literal("Close-range pressure and combo extension tool"), Component.literal(
             """
@@ -35,7 +38,7 @@ public enum SpecType implements NameHolder {
     private static final List<SpecType> allSpecTypes = ImmutableList.copyOf(values());
     @Getter(value = AccessLevel.PRIVATE, lazy = true)
     private static final Int2ObjectMap<SpecType> byId = getAllSpecTypes().stream()
-            .collect(Int2ObjectOpenHashMap::new, (map, type) -> map.put(type.getId(), type), Int2ObjectMap::putAll);
+            .collect(Int2ObjectOpenHashMap::new, (map, type) -> map.put(type.getOldId(), type), Int2ObjectMap::putAll);
 
     private final Function<LivingEntity, @Nullable JSpec<?, ?>> specCreator;
     @Getter
@@ -51,8 +54,18 @@ public enum SpecType implements NameHolder {
         this.specCreator = specCreator;
     }
 
-    public int getId() {
+    public int getOldId() {
         return ordinal();
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return JCraft.id(name().toLowerCase(Locale.ROOT));
+    }
+
+    @Override
+    public String kind() {
+        return "spec";
     }
 
     public JSpec<?, ?> createNew(LivingEntity livingEntity) {
