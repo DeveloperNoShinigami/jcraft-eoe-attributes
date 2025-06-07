@@ -5,6 +5,8 @@ import dev.architectury.event.EventResult;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
@@ -12,7 +14,6 @@ import net.arna.jcraft.common.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.StandMeteorEntity;
 import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.MockItem;
 import net.arna.jcraft.common.saveddata.ExclusiveStandsData;
@@ -331,7 +332,7 @@ public class JServerEvents {
         if (entity instanceof Mob mob) {
             // Mark stand user mobs
             CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(mob);
-            if (standData.getType() != null && standData.getType() != StandType.NONE) {
+            if (!StandTypeUtil.isNone(standData.getType())) {
                 JEnemies.add(mob);
                 return EventResult.pass();
             }
@@ -359,8 +360,7 @@ public class JServerEvents {
             if (100 - random.nextInt(0, 100) > gameRules.getInt(CHANCE_MOB_SPAWNS_WITH_STAND)) {
                 return EventResult.pass();
             }
-            List<StandType> types = gameRules.getBoolean(ALLOW_MOB_EVOLVED_STANDS) ? StandType.getAllStandTypes() : StandType.getRegularStandTypes();
-            StandType type = types.get(random.nextInt(types.size()));
+            final StandType type = gameRules.getBoolean(ALLOW_MOB_EVOLVED_STANDS) ? StandTypeUtil.getRandomObtainable(entity.level().random) : StandTypeUtil.getRandomRegular(entity.level().random);
             standData.setType(type);
 
             // ATTRIBUTES
@@ -380,7 +380,7 @@ public class JServerEvents {
 
             NonNullList<ItemStack> handItems = (NonNullList<ItemStack>) mob.getHandSlots(), armorItems = (NonNullList<ItemStack>) mob.getArmorSlots();
             // Silver chariot users may spawn with Anubis (25% chance)
-            if (type == StandType.SILVER_CHARIOT && random.nextInt(5) == 4) {
+            if (type == JStandTypeRegistry.SILVER_CHARIOT.get() && random.nextInt(5) == 4) {
                 handItems.set(0, new ItemStack(JItemRegistry.ANUBIS.get()));
             }
 
@@ -446,7 +446,7 @@ public class JServerEvents {
             if (living instanceof ServerPlayer serverPlayer) {
                 GameRules gameRules = serverWorld.getGameRules();
                 if (!gameRules.getBoolean(JCraft.KEEP_STAND)) {
-                    JComponentPlatformUtils.getStandComponent(living).setTypeAndSkin(StandType.NONE, 0);
+                    JComponentPlatformUtils.getStandComponent(living).setTypeAndSkin(JStandTypeRegistry.NONE.get(), 0);
                 }
                 if (!gameRules.getBoolean(JCraft.KEEP_SPEC)) {
                     JComponentPlatformUtils.getSpecData(serverPlayer).setType(SpecType.NONE);

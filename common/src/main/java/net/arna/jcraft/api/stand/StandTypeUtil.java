@@ -41,6 +41,15 @@ public class StandTypeUtil {
     }
 
     /**
+     * Gets a random obtainable (including evolutions) stand type.
+     * @return a random obtainable stand type.
+     */
+    public static StandType getRandomObtainable(RandomSource random) {
+        List<StandType> types = streamAllObtainable().toList();
+        return types.get(random.nextInt(types.size()));
+    }
+
+    /**
      * Gets a random regular (so no evolutions) stand type.
      * @return a random regular stand type.
      */
