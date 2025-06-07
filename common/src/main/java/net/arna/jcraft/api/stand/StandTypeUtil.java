@@ -1,11 +1,13 @@
 package net.arna.jcraft.api.stand;
 
 import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityType;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -41,6 +43,30 @@ public class StandTypeUtil {
     }
 
     /**
+     * Creates a stream of all regular (non-evolution) stand types.
+     * @return a stream of all regular stand types.
+     */
+    public static Stream<StandType> streamAllRegular() {
+        return streamAllObtainable().filter(type -> !type.getData().isEvolution());
+    }
+
+    /**
+     * Creates a stream of all evolution stand types.
+     * @return a stream of all evolution stand types.
+     */
+    public static Stream<StandType> streamAllEvolutions() {
+        return streamAllObtainable().filter(type -> type.getData().isEvolution());
+    }
+
+    /**
+     * Creates a stream of each stand type's entity type.
+     * @return a stream of each stand type's entity type.
+     */
+    public static Stream<EntityType<? extends StandEntity<?, ?>>> streamEntityTypes() {
+        return streamAll().map(StandType::getEntityType);
+    }
+
+    /**
      * Gets a random regular (so no evolutions) stand type.
      * @return a random regular stand type.
      */
@@ -52,7 +78,7 @@ public class StandTypeUtil {
     }
 
     /**
-     * Gets a random stand type, may return an evolution type.
+     * Gets a random obtainable stand type, may return an evolution type.
      * @return a random stand type.
      */
     public static StandType getRandom(RandomSource random) {
@@ -76,6 +102,9 @@ public class StandTypeUtil {
                     .orElse(null);
         } else if (nbt.contains(key, Tag.TAG_STRING)) {
             String id = nbt.getString(key);
+            if (id.isEmpty()) {
+                return null;
+            }
             return JRegistries.STAND_TYPE_REGISTRY.get(new ResourceLocation(id));
         } else {
             return null;

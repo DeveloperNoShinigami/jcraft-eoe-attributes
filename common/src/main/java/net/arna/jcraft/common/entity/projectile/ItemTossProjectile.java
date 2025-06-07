@@ -3,6 +3,7 @@ package net.arna.jcraft.common.entity.projectile;
 import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
@@ -196,15 +197,15 @@ public class ItemTossProjectile extends AbstractArrow {
             StandType itemStand = null;
             int itemSkin = 0;
             final CompoundTag data = getItem().getOrCreateTag();
-            if (data.contains("StandID", Tag.TAG_INT)) {
-                itemStand = StandType.fromIdOrOrdinal(data.getInt("StandID"));
+            if (data.contains("StandID")) {
+                itemStand = StandTypeUtil.readFromNBT(data, "StandID");
             }
             if (data.contains("Skin", Tag.TAG_INT)) {
                 itemSkin = data.getInt("Skin");
             }
             // apply stand
             if (itemStand != null && !JCraft.getExclusiveStandsData().isStandUsed(itemStand)) {
-                final CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
+                final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(livingEntity);
                 if (standData.getType() == null) { // don't override current stand
                     standData.setTypeAndSkin(itemStand, itemSkin);
                     JCraft.summon(level(), livingEntity);

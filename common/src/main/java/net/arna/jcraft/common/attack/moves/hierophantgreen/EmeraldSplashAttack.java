@@ -48,7 +48,7 @@ public final class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSpl
 
     @Override
     public @NonNull Set<LivingEntity> perform(final HGEntity attacker, final LivingEntity user) {
-        final int emeraldCount = 3 + getChargeTime(attacker) / 10;
+        final int emeraldCount = 3 + getChargeTime() / 10;
 
         for (int i = 0; i < emeraldCount; i++) {
             final EmeraldProjectile emerald = new EmeraldProjectile(attacker.level(), user);

@@ -37,6 +37,11 @@ public class StandInfo {
     @Getter(lazy = true)
     private final String nameKey = name.getContents() instanceof TranslatableContents tc ? tc.getKey() : "entity.jcraft.unknown";
     /**
+     * Same as {@link #getNameKey()}, but reduced to the last part of the key. (Excluding the 'entity.&lt;modid&gt;.' prefix)
+     */
+    @Getter(lazy = true)
+    private final String reducedNameKey = getNameKey().split("\\.", 3)[2];
+    /**
      * The name of each of the skins available for this stand.
      * The number of entries in this list is the number of skins available for this stand.
      * If the list has more entries than the number of skins available,

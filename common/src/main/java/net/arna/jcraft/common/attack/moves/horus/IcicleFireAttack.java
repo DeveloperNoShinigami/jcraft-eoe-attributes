@@ -34,7 +34,7 @@ public class IcicleFireAttack extends AbstractMove<IcicleFireAttack, HorusEntity
     @Override
     public @NonNull Set<LivingEntity> perform(HorusEntity attacker, LivingEntity user) {
         final LargeIcicleProjectile instantIcicle = new LargeIcicleProjectile(attacker.level(), user);
-        float scale = Mth.clamp(getChargeTime(attacker) / (MAX_ICICLE_CHARGE_TIME - 2.0f), 0.1f, 1.0f);
+        float scale = Mth.clamp(getChargeTime() / (MAX_ICICLE_CHARGE_TIME - 2.0f), 0.1f, 1.0f);
         instantIcicle.setScale(scale);
         instantIcicle.setInstant(true);
 

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.nbt.CompoundTag;
@@ -90,14 +91,13 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     }
 
     public void readFromNbt(final @NonNull CompoundTag tag) {
-        int rawType = tag.getInt("Type");
-        type = rawType == 0 ? null : StandType.fromIdOrOrdinal(rawType);
+        type = StandTypeUtil.readFromNBT(tag, "Type");
         skin = tag.getInt("Skin");
         tagged = tag.getBoolean("Tagged");
     }
 
     public void writeToNbt(final @NonNull CompoundTag tag) {
-        tag.putInt("Type", type == null ? 0 : type.ordinal());
+        tag.putString("Type", type == null ? "" : type.getId().toString());
         tag.putInt("Skin", skin);
         tag.putBoolean("Tagged", tagged);
     }

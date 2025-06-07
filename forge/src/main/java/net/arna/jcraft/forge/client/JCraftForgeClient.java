@@ -4,13 +4,14 @@ import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.networking.NetworkManager;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.particle.*;
 import net.arna.jcraft.client.registry.JModelPredicateProviderRegistry;
 import net.arna.jcraft.client.renderer.block.CoffinTileRenderer;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.forge.JCraftForge;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;
@@ -26,6 +27,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -176,12 +178,14 @@ public class JCraftForgeClient {
 
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, STAND_S2C, (buf, context) -> {
             int id = buf.readInt();
-            int standType = buf.readInt();
+            boolean noStand = buf.readBoolean();
+            ResourceLocation standTypeId = noStand ? null : buf.readResourceLocation();
+            StandType standType = standTypeId == null ? null : JRegistries.STAND_TYPE_REGISTRY.get(standTypeId);
             int skin = buf.readInt();
 
             if (Minecraft.getInstance().level != null && Minecraft.getInstance().level.getEntity(id) instanceof LivingEntity livingEntity) {
                 StandCapability.getCapabilityOptional(livingEntity).ifPresent(c -> {
-                    c.setTypeAndSkin(StandType.fromOrdinal(standType), skin);
+                    c.setTypeAndSkin(standType, skin);
                     c.applySyncPacket(buf);
                 });
             }

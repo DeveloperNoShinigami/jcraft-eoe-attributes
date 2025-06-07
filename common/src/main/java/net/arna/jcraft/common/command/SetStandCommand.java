@@ -7,10 +7,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -42,7 +43,8 @@ public class SetStandCommand {
                                 .then(Commands.argument("stand", StandArgumentType.stand())
                                         .executes(ctx -> executeSet(ctx, ctx.getArgument("stand", StandType.class), 0))
                                         .then(Commands.argument("skin", IntegerArgumentType.integer(0, 3))
-                                                .executes(ctx -> executeSet(ctx, ctx.getArgument("stand", StandType.class), ctx.getArgument("skin", Integer.class)))))
+                                                .executes(ctx -> executeSet(ctx,
+                                                        ctx.getArgument("stand", StandType.class), ctx.getArgument("skin", Integer.class)))))
                                 .then(Commands.literal("random")
                                         .executes(ctx -> executeSet(ctx, 0, rng)))
                         )));
@@ -62,8 +64,8 @@ public class SetStandCommand {
             return 0;
         }
 
-        if (type != null && skin >= type.getSkinCount()) {
-            throw INVALID_SKIN.create(type.getSkinCount());
+        if (type != null && skin >= type.getData().getInfo().getSkinCount()) {
+            throw INVALID_SKIN.create(type.getData().getInfo().getSkinCount());
         }
 
         // Check if the player is allowed to use the stand
@@ -86,7 +88,7 @@ public class SetStandCommand {
                     standData.setTypeAndSkin(type, skin);
                 }
                 else { // i.e. rng != null
-                    standData.setType(StandType.getRandom(rng));
+                    standData.setType(StandTypeUtil.getRandom(rng));
                 }
 
                 livingEntity.unRide();

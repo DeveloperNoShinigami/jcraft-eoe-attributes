@@ -33,7 +33,7 @@ public final class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, Vam
     public @NonNull Set<LivingEntity> perform(final VampireSpec attacker, final LivingEntity user) {
         final Vec3 rotVec = user.getLookAngle();
 
-        int chargeTime = getChargeTime(attacker);
+        int chargeTime = getChargeTime();
 
         //noinspection ConstantValue // what??
         for (int i = -1; i < 3; i += 2) {

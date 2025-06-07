@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 /**
- * The {@link GeoEntityRenderer} for stands of any {@link net.arna.jcraft.common.entity.stand.StandType StandType}.
+ * The {@link GeoEntityRenderer} for stands of any {@link net.arna.jcraft.api.stand.StandType StandType}.
  * @param <T> the entity to render
  * @see StandEntityModel
  */

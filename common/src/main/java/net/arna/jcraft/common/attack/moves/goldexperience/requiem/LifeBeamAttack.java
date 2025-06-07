@@ -30,7 +30,7 @@ public final class LifeBeamAttack extends AbstractMove<LifeBeamAttack, GEREntity
     @Override
     public @NonNull Set<LivingEntity> perform(final GEREntity attacker, final LivingEntity user) {
         final GERScorpionEntity scorpion = new GERScorpionEntity(JEntityTypeRegistry.GER_SCORPION.get(), attacker.level());
-        if (getChargeTime(attacker) >= 18) {
+        if (getChargeTime() >= 18) {
             scorpion.charge();
         }
         scorpion.setInitialVel(user.getLookAngle().scale(2));

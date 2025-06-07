@@ -86,7 +86,8 @@ public final class FeignBarrageCounterAttack extends AbstractCounterAttack<Feign
 
     @Override
     public float getAttackRotationOffset(StandEntity<?, ?> attacker) {
-        return attacker.getMoveStun() > getWindupPoint() ? attacker.getIdleRotation() : StandEntity.ATTACK_ROTATION;
+        return attacker.getMoveStun() > getWindupPoint() ?
+                attacker.getStandData().getIdleRotation() : StandEntity.ATTACK_ROTATION;
     }
 
     public static class Type extends AbstractCounterAttack.Type<FeignBarrageCounterAttack> {
@@ -95,7 +96,7 @@ public final class FeignBarrageCounterAttack extends AbstractCounterAttack<Feign
         @SuppressWarnings("unchecked")
         @Override
         protected @NonNull App<RecordCodecBuilder.Mu<FeignBarrageCounterAttack>, FeignBarrageCounterAttack> buildCodec(RecordCodecBuilder.Instance<FeignBarrageCounterAttack> instance) {
-            return baseDefault(instance).and(JRegistries.MOVE_CODEC.get()
+            return baseDefault(instance).and(JRegistries.MOVE_CODEC
                     .fieldOf("hit_move")
                     .<AbstractMove<?, ? super TheWorldEntity>>xmap(m -> (AbstractMove<?, ? super TheWorldEntity>) m, m -> m)
                     .forGetter(FeignBarrageCounterAttack::getHitMove))

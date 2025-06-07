@@ -2,7 +2,8 @@ package net.arna.jcraft.registry;
 
 import dev.architectury.registry.CreativeTabRegistry;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.item.StandDiscItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -180,13 +181,13 @@ public interface JCreativeMenuTabRegistry {
                         entries.accept(stack);
                     }
                     // stand discs
-                    for (final StandType standType : StandType.getRegularStandTypes()) {
-                        for (int skin = 0; skin < standType.getSkinCount(); skin++) {
+                    for (final StandType standType : StandTypeUtil.streamAllRegular().toList()) {
+                        for (int skin = 0; skin < standType.getData().getInfo().getSkinCount(); skin++) {
                             entries.accept(StandDiscItem.createDiscStack(standType, skin));
                         }
                     }
-                    for (final StandType standType : StandType.getEvoStandTypes()) {
-                        for (int skin = 0; skin < standType.getSkinCount(); skin++) {
+                    for (final StandType standType : StandTypeUtil.streamAllRegular().toList()) {
+                        for (int skin = 0; skin < standType.getData().getInfo().getSkinCount(); skin++) {
                             entries.accept(StandDiscItem.createDiscStack(standType, skin));
                         }
                     }

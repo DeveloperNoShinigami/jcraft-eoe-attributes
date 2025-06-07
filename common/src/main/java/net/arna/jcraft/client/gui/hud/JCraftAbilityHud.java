@@ -22,7 +22,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Mth;
 
-import java.util.Locale;
 import java.util.Map;
 
 import static net.arna.jcraft.client.JCraftClient.*;
@@ -134,13 +133,13 @@ public class JCraftAbilityHud {
             if (stand == null) {
                 // Render cooldown HUD for specs
                 if (spec != null) {
-                    renderIcons(ctx, SPEC_ICONS, selectedX, selectedY, spec.getType().getInternalName().toLowerCase(Locale.ROOT));
+                    renderIcons(ctx, SPEC_ICONS, selectedX, selectedY, spec.getType().getId());
                 }
             } else {
                 // Render cooldown HUD for stands
-                renderIcons(ctx, isMid ? STAND_ICONS_MID : STAND_ICONS, selectedX, selectedY, stand.getType().toShortString());
+                renderIcons(ctx, isMid ? STAND_ICONS_MID : STAND_ICONS, selectedX, selectedY, stand.getStandType().getId());
             }
-            renderIcons(ctx, UNIVERSAL_ICONS, selectedX, selectedY, "universal");
+            renderIcons(ctx, UNIVERSAL_ICONS, selectedX, selectedY, JCraft.id("universal"));
         }
     }
 
@@ -169,7 +168,8 @@ public class JCraftAbilityHud {
      * @param selectedY y offset (in pixels) accounting for player's config choice
      * @param type      decides which resource folder is loaded when rendering icons
      */
-    private static void renderIcons(final GuiGraphics ctx, final Map<CooldownType, IconPos> icons, final int selectedX, final int selectedY, final String type) {
+    private static void renderIcons(final GuiGraphics ctx, final Map<CooldownType, IconPos> icons, final int selectedX,
+                                    final int selectedY, final ResourceLocation type) {
         final Font textRenderer = Minecraft.getInstance().gui.getFont();
 
         for (Map.Entry<CooldownType, IconPos> entry : icons.entrySet()) {
@@ -210,12 +210,12 @@ public class JCraftAbilityHud {
         }
     }
 
-    public static void renderIcon(final GuiGraphics ctx, final int x, final int y, final String type, final String icon) {
-        final ResourceLocation texture = JCraft.id("textures/gui/ability_icons/" + type + "/" + icon + ".png");
-        renderIcon(ctx, x, y, texture, icon);
+    public static void renderIcon(final GuiGraphics ctx, final int x, final int y, final ResourceLocation type, final String icon) {
+        final ResourceLocation texture = type.withPath(p -> "textures/gui/ability_icons/" + p + "/" + icon + ".png");
+        renderAbsIcon(ctx, x, y, texture, icon);
     }
 
-    public static void renderIcon(final GuiGraphics ctx, final int x, final int y, ResourceLocation texture, final String fallback) {
+    public static void renderAbsIcon(final GuiGraphics ctx, final int x, final int y, ResourceLocation texture, final String fallback) {
         final PoseStack matrices = ctx.pose();
         matrices.pushPose();
 

@@ -37,7 +37,7 @@ public final class CircleSlashAttack extends AbstractSimpleAttack<CircleSlashAtt
         final Set<LivingEntity> targets = super.perform(attacker, user);
 
         //noinspection IntegerDivisionInFloatingPointContext // intended
-        withDamage(originalDamage + (getChargeTime(attacker) / 10) * 0.75f);
+        withDamage(originalDamage + (getChargeTime() / 10) * 0.75f);
         double launchMultiplier = getDamage() / 5; // damage [6.5 to 11]
 
         for (LivingEntity living : targets) {
