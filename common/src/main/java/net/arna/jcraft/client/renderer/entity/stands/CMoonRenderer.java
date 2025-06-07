@@ -5,10 +5,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -28,7 +28,7 @@ public class CMoonRenderer extends StandEntityRenderer<CMoonEntity> {
     private static final ParticleOptions chargeParticle = new DustParticleOptions(new Vector3f(0.8f, 0.2f, 1.0f), 2.0f);
 
     public CMoonRenderer(final EntityRendererProvider.Context context) {
-        super(context, new StandEntityModel<>(StandType.C_MOON));
+        super(context, new StandEntityModel<>(JStandTypeRegistry.C_MOON.get()));
     }
 
     @Override

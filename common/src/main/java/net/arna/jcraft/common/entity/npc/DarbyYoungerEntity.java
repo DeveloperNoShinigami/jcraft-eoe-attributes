@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.entity.npc;
 
 import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -22,7 +22,7 @@ public class DarbyYoungerEntity extends PathfinderMob implements GeoEntity {
     public DarbyYoungerEntity(Level world) {
         super(JEntityTypeRegistry.DARBY_YOUNGER.get(), world);
         final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(this);
-        standData.setType(StandType.ATUM);
+        standData.setType(JStandTypeRegistry.ATUM.get());
         standData.setSkin(0);
 
         if (world.isClientSide()) return;
