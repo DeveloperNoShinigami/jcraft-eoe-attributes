@@ -12,17 +12,18 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import net.arna.jcraft.api.IAttackerType;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
-import net.arna.jcraft.api.attack.MoveSet;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.spec.SpecType;
-import net.arna.jcraft.common.util.NameHolder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.ExtraCodecs;
@@ -37,7 +38,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class JCraftChangesCommand {
-    private static Map<NameHolder, List<Pair<String, List<Pair<Component, MapDifference<String, Object>>>>>> CHANGES;
+    private static Map<ResourceLocation, List<Pair<String, List<Pair<Component, MapDifference<String, Object>>>>>> CHANGES;
 
     public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("jcraft")
@@ -49,7 +50,7 @@ public class JCraftChangesCommand {
                                 .executes(ctx -> run(ctx, ctx.getArgument("spec", SpecType.class))))));
     }
 
-    private static int run(CommandContext<CommandSourceStack> ctx, NameHolder type) {
+    private static int run(CommandContext<CommandSourceStack> ctx, IAttackerType type) {
         if (CHANGES == null) ctx.getSource().sendSuccess(() -> Component.translatable("jcraft.commands.changes.looking"), true);
 
         (CHANGES == null ? CompletableFuture.supplyAsync(JCraftChangesCommand::findChanges) : CompletableFuture.completedFuture(CHANGES))
@@ -57,7 +58,7 @@ public class JCraftChangesCommand {
                     CHANGES = changes;
 
                     if (type != null) {
-                        sendChanges(ctx, type, changes.get(type));
+                        sendChanges(ctx, type.getId(), changes.get(type.getId()));
                         return;
                     }
 
@@ -70,9 +71,9 @@ public class JCraftChangesCommand {
         return 1;
     }
 
-    private static void sendChanges(final CommandContext<CommandSourceStack> ctx, final NameHolder type,
+    private static void sendChanges(final CommandContext<CommandSourceStack> ctx, final ResourceLocation type,
                                     List<Pair<String, List<Pair<Component, MapDifference<String, Object>>>>> changes) {
-        ctx.getSource().sendSuccess(() -> Component.translatable("jcraft.commands.changes.type", type.getName()), true);
+        ctx.getSource().sendSuccess(() -> Component.translatable("jcraft.commands.changes.type", type), true);
 
         if (noChanges(changes)) {
             ctx.getSource().sendSuccess(() -> Component.empty().append("    ")
@@ -131,9 +132,9 @@ public class JCraftChangesCommand {
                 .allMatch(p1 -> p1.getSecond().areEqual()));
     }
 
-    private static @NotNull Map<NameHolder, @NotNull List<Pair<String, List<Pair<Component, MapDifference<String, Object>>>>>> findChanges() {
+    private static @NotNull Map<ResourceLocation, @NotNull List<Pair<String, List<Pair<Component, MapDifference<String, Object>>>>>> findChanges() {
         return MoveSetManager.getMoveSets().entrySet().stream()
-                .map(moveSets -> Pair.of((NameHolder) moveSets.getKey(), moveSets.getValue().values().stream()
+                .map(moveSets -> Pair.of(moveSets.getKey(), moveSets.getValue().values().stream()
                         .map(moveSet -> Pair.of(moveSet.getName(), findChanges(moveSet)))
                         .filter(p -> p.getSecond() != null)
                         .toList()))
