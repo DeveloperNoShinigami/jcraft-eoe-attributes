@@ -14,12 +14,12 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.List;
 
 @Builder
-public record CustomPoseModifier(@Singular List<ModifierCondition> conditions, ModifierOperation type,
+public record CustomPoseModifier(@Singular List<ModifierCondition> conditions, ModifierOperation operation,
                                  HumanoidModelPart part, ModelPartProperty property, float value) implements IPoseModifier {
     public static final String ID = "custom";
     public static final Codec<CustomPoseModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ModifierCondition.CODEC.listOf().optionalFieldOf("conditions", List.of()).forGetter(CustomPoseModifier::conditions),
-            ModifierOperation.CODEC.fieldOf("type").forGetter(CustomPoseModifier::type),
+            ModifierOperation.CODEC.fieldOf("operation").forGetter(CustomPoseModifier::operation),
             HumanoidModelPart.CODEC.fieldOf("part").forGetter(CustomPoseModifier::part),
             ModelPartProperty.CODEC.fieldOf("property").forGetter(CustomPoseModifier::property),
             Codec.FLOAT.fieldOf("value").forGetter(CustomPoseModifier::value)
@@ -35,6 +35,6 @@ public record CustomPoseModifier(@Singular List<ModifierCondition> conditions, M
             return; // Skip if any condition is not met
         }
 
-        type.apply(part.getPart(model), property, value);
+        operation.apply(part.getPart(model), property, value);
     }
 }
