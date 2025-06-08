@@ -33,21 +33,21 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             .modifier(PoseModifierGroup.builder()
                     .condition(ModifierCondition.USER_NOT_MOVING)
                     .modifier(PoseModifiers.parse("""
-                                                leftArm.yRot += 15deg;
-                                                leftArm.xRot -= 15deg;
-                                                leftArm.zRot += 45deg;
-                                                """, ModifierCondition.LEFT_ARM_EMPTY))
+                            leftArm.yRot += 15deg;
+                            leftArm.xRot -= 15deg;
+                            leftArm.zRot += 45deg;
+                            """, ModifierCondition.LEFT_ARM_EMPTY))
                     .modifier(PoseModifiers.parse("""
-                                                rightArm.yRot -= 15deg;
-                                                rightArm.xRot -= 15deg;
-                                                rightArm.zRot += 45deg;
-                                                """, ModifierCondition.RIGHT_ARM_EMPTY))
+                            rightArm.yRot -= 15deg;
+                            rightArm.xRot -= 15deg;
+                            rightArm.zRot += 45deg;
+                            """, ModifierCondition.RIGHT_ARM_EMPTY))
                     .build())
             .modifier(PoseModifiers.parse("""
-                                        body.xRot -= 5deg;
-                                        leftLeg.z -= 1;
-                                        rightLeg.z -= 1;
-                                        """))
+                    body.xRot -= 5deg;
+                    leftLeg.z -= 1;
+                    rightLeg.z -= 1;
+                    """))
             .build();
 
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LOW = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(

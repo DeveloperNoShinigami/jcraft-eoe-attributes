@@ -67,26 +67,26 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
     // Arms near hips, the DIO pose in HFTF
     public static final IPoseModifier POSE = PoseModifierGroup.builder()
             .modifier(PoseModifiers.parse("""
-                                leftArm.yRot = 15deg;
-                                leftArm.zRot = 2deg;
-                                """, ModifierCondition.LEFT_ARM_EMPTY))
+                    leftArm.yRot = 15deg;
+                    leftArm.zRot = 2deg;
+                    """, ModifierCondition.LEFT_ARM_EMPTY))
             .modifier(PoseModifiers.parse("""
-                                rightArm.yRot = -15deg;
-                                rightArm.zRot = -2deg;
-                                """, ModifierCondition.RIGHT_ARM_EMPTY))
+                    rightArm.yRot = -15deg;
+                    rightArm.zRot = -2deg;
+                    """, ModifierCondition.RIGHT_ARM_EMPTY))
             .modifier(PoseModifiers.parse("""
-                                leftArm.xRot -= 10deg;
-                                rightArm.xRot -= 10deg;
-                                body.xRot -= 10deg;
-                                
-                                leftLeg.z -= 2;
-                                rightLeg.z -= 2;
-                                
-                                leftArm.z += 0.25;
-                                rightArm.z += 0.25;
-                                leftArm.x += 0.5;
-                                rightArm.x -= 0.5;
-                                """, ModifierCondition.USER_NOT_SPRINTING))
+                    leftArm.xRot -= 10deg;
+                    rightArm.xRot -= 10deg;
+                    body.xRot -= 10deg;
+                    
+                    leftLeg.z -= 2;
+                    rightLeg.z -= 2;
+                    
+                    leftArm.z += 0.25;
+                    rightArm.z += 0.25;
+                    leftArm.x += 0.5;
+                    rightArm.x -= 0.5;
+                    """, ModifierCondition.USER_NOT_SPRINTING))
             .build();
 
     public static final SimpleAttack<TheWorldEntity> LOW_KICK = new SimpleAttack<TheWorldEntity>(20, 8, 14, 0.75f,

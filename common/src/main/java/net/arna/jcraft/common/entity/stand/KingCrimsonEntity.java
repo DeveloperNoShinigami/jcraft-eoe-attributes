@@ -91,19 +91,19 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             .condition(ModifierCondition.USER_NOT_MOVING)
             .modifier(PoseModifiers.parse("body.yRot += 30deg"))
             .modifier(PoseModifiers.parse("""
-                                        leftArm.yRot += 30deg;
-                                        leftArm.z -= 2.1;
-                                        """, ModifierCondition.LEFT_ARM_EMPTY))
+                    leftArm.yRot += 30deg;
+                    leftArm.z -= 2.1;
+                    """, ModifierCondition.LEFT_ARM_EMPTY))
             .modifier(PoseModifiers.parse("""
-                                        rightArm.yRot += 30deg;
-                                        rightArm.z -= 2.1;
-                                        """, ModifierCondition.RIGHT_ARM_EMPTY_OR_ITEM))
+                    rightArm.yRot += 30deg;
+                    rightArm.z -= 2.1;
+                    """, ModifierCondition.RIGHT_ARM_EMPTY_OR_ITEM))
             .modifier(PoseModifiers.parse("""
-                                        leftLeg.z -= 1;
-                                        rightLeg.z += 1.5;
-                                        
-                                        rightLeg.yRot += 45deg;
-                                        """))
+                    leftLeg.z -= 1;
+                    rightLeg.z += 1.5;
+                    
+                    rightLeg.yRot += 45deg;
+                    """))
             .build();
 
     public static final KnockdownAttack<KingCrimsonEntity> SWEEP = new KnockdownAttack<KingCrimsonEntity>(40,

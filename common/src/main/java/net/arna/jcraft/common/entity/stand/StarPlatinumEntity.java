@@ -75,14 +75,14 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .build();
     public static final IPoseModifier POSE = PoseModifierGroup.builder()
             .modifier(PoseModifiers.parse("""
-                                        leftArm.xRot = 0;
-                                        leftArm.yRot = -15deg;
-                                        leftArm.zRot = 5deg;
-                                        """, ModifierCondition.LEFT_ARM_EMPTY))
+                    leftArm.xRot = 0;
+                    leftArm.yRot = -15deg;
+                    leftArm.zRot = 5deg;
+                    """, ModifierCondition.LEFT_ARM_EMPTY))
             .modifier(PoseModifiers.parse("""
-                                        rightArm.zRot = 15deg;
-                                        rightArm.xRot *= 0.5;
-                                        """, ModifierCondition.RIGHT_ARM_EMPTY))
+                    rightArm.zRot = 15deg;
+                    rightArm.xRot *= 0.5;
+                    """, ModifierCondition.RIGHT_ARM_EMPTY))
             .build();
 
     public static final SimpleUppercutAttack<StarPlatinumEntity> UPPERCUT = new SimpleUppercutAttack<StarPlatinumEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),
