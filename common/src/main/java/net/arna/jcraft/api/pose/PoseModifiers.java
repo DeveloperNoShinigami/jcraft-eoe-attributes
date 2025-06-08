@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class PoseModifiers {
     private static final Pattern modifierPattern = Pattern.compile(
-            "(head|hat|body|right_?Arm|left_?Arm|right_?Leg|left_?Leg)" + // Model part
+            "([a-zA-Z_\\d]+)" + // Model part
                     "\\.(x|y|z|x_?Rot|y_?Rot|z_?Rot|x_?Scale|y_?Scale|z_?Scale)" + // Property
                     "\\s*(=|\\+=|-=|\\*=|/=)\\s*" + // Operator
                     "((?:-?|\\+?)\\d+(?:\\.\\d+)?)\\s*(deg)?$", // Integer or decimal number with optional 'deg' suffix
