@@ -28,7 +28,7 @@ public class JPoseProvider extends FabricCodecDataProvider<IPoseModifier> {
                 throw new IllegalArgumentException("Pose " + id + " is not supported by model type " + modelType);
             }
 
-            ResourceLocation absId = id.withPath(p -> modelType.getName() + "/" + p);
+            ResourceLocation absId = id.withPath(p -> p + "/" + modelType.getName());
             provider.accept(absId, pose);
         });
     }
