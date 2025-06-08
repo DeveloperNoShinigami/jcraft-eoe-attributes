@@ -86,6 +86,7 @@ import static net.arna.jcraft.registry.JItemRegistry.ITEM_REGISTRY;
 import static net.arna.jcraft.registry.JMoveActionTypeRegistry.MOVE_ACTION_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JMoveConditionTypeRegistry.MOVE_CONDITION_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JMoveTypeRegistry.MOVE_TYPE_REGISTRY;
+import static net.arna.jcraft.registry.JSpecTypeRegistry.SPEC_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JStandTypeRegistry.STAND_TYPE_REGISTRY;
 import static net.minecraft.world.level.GameRules.*;
 
@@ -169,6 +170,7 @@ public final class JCraft {
 
         // Custom registries
         STAND_TYPE_REGISTRY.register();
+        SPEC_TYPE_REGISTRY.register();
         MOVE_ACTION_TYPE_REGISTRY.register();
         MOVE_CONDITION_TYPE_REGISTRY.register();
         MOVE_TYPE_REGISTRY.register();

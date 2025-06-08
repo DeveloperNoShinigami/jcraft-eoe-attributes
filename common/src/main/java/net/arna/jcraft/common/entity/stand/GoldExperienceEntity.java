@@ -49,6 +49,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
     public static final StandData DATA = StandData.builder()
             .idleRotation(-30f)
             .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.goldexperience"))
                     .proCount(4)
                     .conCount(3)
                     .freeSpace(Component.literal("""
