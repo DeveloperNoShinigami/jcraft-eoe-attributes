@@ -44,7 +44,6 @@ public class JEvolutionProvider extends FabricCodecDataProvider<EvolutionItemHan
             return evolution.target().getData().getInfo().getReducedNameKey();
         }
 
-        return evolution.stand().getData().getInfo().getReducedNameKey() + "_to_" +
-                evolution.target().getData().getInfo().getReducedNameKey();
+        return evolution.stand().getId().getPath() + "_to_" + evolution.target().getId().getPath();
     }
 }
