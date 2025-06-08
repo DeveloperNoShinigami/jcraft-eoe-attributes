@@ -79,25 +79,16 @@ public class PoseModifiers {
         }
 
         // Extract parts from the regex groups
-        String rawPart = matcher.group(1).toLowerCase(Locale.ROOT); // Model part
-        String rawProp = matcher.group(2).toLowerCase(Locale.ROOT); // Property
+        String rawPart = matcher.group(1); // Model part
+        String rawProp = matcher.group(2); // Property
         String rawOp = matcher.group(3); // Operator
         String valueStr = matcher.group(4); // Value
         boolean isDeg = matcher.group(5) != null; // Is value in degrees
 
-        // Parse parts
-        HumanoidModelPart part = switch (rawPart) {
-            case "head" -> HumanoidModelPart.HEAD;
-            case "hat" -> HumanoidModelPart.HAT;
-            case "body" -> HumanoidModelPart.BODY;
-            case "rightarm", "right_arm" -> HumanoidModelPart.RIGHT_ARM;
-            case "leftarm", "left_arm" -> HumanoidModelPart.LEFT_ARM;
-            case "rightleg", "right_leg" -> HumanoidModelPart.RIGHT_LEG;
-            case "leftleg", "left_leg" -> HumanoidModelPart.LEFT_LEG;
-            default -> throw new IllegalArgumentException("Unknown model part: " + rawPart);
-        };
+        // Parse components
+        ModelPartGetter part = new ModelPartGetter(rawPart);
 
-        ModelPartProperty prop = switch (rawProp) {
+        ModelPartProperty prop = switch (rawProp.toLowerCase(Locale.ROOT)) {
             case "x" -> ModelPartProperty.X;
             case "y" -> ModelPartProperty.Y;
             case "z" -> ModelPartProperty.Z;

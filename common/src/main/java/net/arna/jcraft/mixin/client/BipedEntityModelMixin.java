@@ -1,6 +1,7 @@
 package net.arna.jcraft.mixin.client;
 
-import net.arna.jcraft.client.rendering.StandUserPose;
+import net.arna.jcraft.api.pose.ModelType;
+import net.arna.jcraft.client.rendering.StandUserPoseLoader;
 import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -9,7 +10,6 @@ import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
@@ -43,12 +43,6 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
     @Shadow
     @Final
     public ModelPart leftLeg;
-    @Shadow
-    public
-    HumanoidModel.ArmPose leftArmPose;
-    @Shadow
-    public
-    HumanoidModel.ArmPose rightArmPose;
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/model/geom/ModelPart;copyFrom(Lnet/minecraft/client/model/geom/ModelPart;)V",
@@ -70,8 +64,8 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
             JClientUtils.resetPartAngles(body);
 
             if (livingEntity.getFirstPassenger() instanceof StandEntity<?, ?> stand) {
-                ResourceLocation poseId = stand.getUserPose();
-                StandUserPose.getPose(poseId).apply((HumanoidModel<?>) (Object) this, livingEntity, age);
+                StandUserPoseLoader.getPose(ModelType.HUMANOID, stand.getUserPose())
+                        .apply((HumanoidModel<?>) (Object) this, livingEntity, age);
             }
         }
     }

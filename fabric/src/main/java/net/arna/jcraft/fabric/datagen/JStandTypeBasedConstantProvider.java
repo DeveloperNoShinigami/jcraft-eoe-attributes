@@ -15,10 +15,10 @@ import net.minecraft.world.entity.EntityType;
 import java.lang.reflect.Modifier;
 
 @Getter
-public abstract class JStandTypeBasedProvider<T> extends JAttackerDataProvider<StandType, T> {
-    public JStandTypeBasedProvider(FabricDataOutput dataOutput, PackOutput.Target outputType, String directoryName,
-                                   Codec<T> codec, Registrar<StandType> typeRegistry, Class<? extends T> clazz,
-                                   @NonNull String fieldName) {
+public abstract class JStandTypeBasedConstantProvider<T> extends JAttackerDataProvider<StandType, T> {
+    public JStandTypeBasedConstantProvider(FabricDataOutput dataOutput, PackOutput.Target outputType, String directoryName,
+                                           Codec<T> codec, Registrar<StandType> typeRegistry, Class<? extends T> clazz,
+                                           @NonNull String fieldName) {
         super(dataOutput, outputType, directoryName, codec, typeRegistry, clazz, fieldName);
     }
 

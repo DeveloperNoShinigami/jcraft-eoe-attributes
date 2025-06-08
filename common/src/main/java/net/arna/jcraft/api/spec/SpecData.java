@@ -23,7 +23,9 @@ public class SpecData {
     ).apply(instance, SpecData::new));
 
     private final Component name;
+    @lombok.Builder.Default
     private Component description = Component.empty();
+    @lombok.Builder.Default
     private Component details = Component.empty();
 
     /**

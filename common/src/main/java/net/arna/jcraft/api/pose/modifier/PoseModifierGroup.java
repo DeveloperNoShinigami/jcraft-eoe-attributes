@@ -4,9 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Builder;
 import lombok.Singular;
+import net.arna.jcraft.api.pose.ModelType;
 import net.arna.jcraft.api.pose.ModifierCondition;
 import net.arna.jcraft.api.pose.PoseModifiers;
-import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.Model;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
@@ -26,7 +27,12 @@ public record PoseModifierGroup(@Singular List<ModifierCondition> conditions,
     }
 
     @Override
-    public void apply(HumanoidModel<?> model, LivingEntity user, float age) {
+    public boolean isModelSupported(ModelType<?> modelType) {
+        return modifiers.stream().allMatch(modifier -> modifier.isModelSupported(modelType));
+    }
+
+    @Override
+    public void apply(Model model, LivingEntity user, float age) {
         if (ModifierCondition.anyFails(conditions, model, user)) {
             return; // Skip if any condition is not met
         }

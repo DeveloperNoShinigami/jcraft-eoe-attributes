@@ -13,7 +13,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.pose.PoseModifiers;
-import net.arna.jcraft.client.rendering.StandUserPose;
+import net.arna.jcraft.client.rendering.StandUserPoseLoader;
 import net.arna.jcraft.client.gravity.util.GravityChannelClient;
 import net.arna.jcraft.client.gui.hud.JCraftAbilityHud;
 import net.arna.jcraft.client.net.ClientPacketHandler;
@@ -90,7 +90,7 @@ public class JCraftClient {
         JClientConfig.load();
 
         ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, new DecimalFormatUpdater());
-        ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, StandUserPose::onReload);
+        ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, StandUserPoseLoader::onReload);
 
         GravityChannelClient.init();
 

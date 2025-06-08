@@ -3,8 +3,10 @@ package net.arna.jcraft.api.pose.modifier;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.*;
+import net.arna.jcraft.api.pose.ModelType;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.Model;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -36,44 +38,51 @@ public class LevitationPoseModifier implements IPoseModifier {
     }
 
     @Override
-    public void apply(HumanoidModel<?> model, LivingEntity user, float age) {
+    public boolean isModelSupported(ModelType<?> modelType) {
+        return modelType == ModelType.HUMANOID;
+    }
+
+    @Override
+    public void apply(Model model, LivingEntity user, float age) {
+        HumanoidModel<?> hModel = (HumanoidModel<?>) model;
+
         // Bobbing up and down while floating
         float wave = Mth.sin(age * getMultiplier() - user.getId());
         float heightOffset = verticalShift + wave * amplitude;
-        model.head.y -= heightOffset;
-        model.body.y -= heightOffset;
+        hModel.head.y -= heightOffset;
+        hModel.body.y -= heightOffset;
 
-        model.leftArm.y -= heightOffset;
-        model.rightArm.y -= heightOffset;
+        hModel.leftArm.y -= heightOffset;
+        hModel.rightArm.y -= heightOffset;
 
-        model.leftLeg.y -= heightOffset;
-        model.rightLeg.y -= heightOffset;
+        hModel.leftLeg.y -= heightOffset;
+        hModel.rightLeg.y -= heightOffset;
 
         // Leaning while moving
         double velocity = JUtils.deltaPos(user).horizontalDistance();
         float speedInfluence = (float) (Math.tanh(velocity) * 90f * DEG_TO_RAD);
 
-        model.body.xRot += speedInfluence;
+        hModel.body.xRot += speedInfluence;
 
-        model.leftLeg.y -= 1f + Mth.sin(speedInfluence) * 6f;
-        model.leftLeg.z += Mth.sin(speedInfluence) * 12f - 2f;
-        model.rightLeg.y -= Mth.sin(speedInfluence) * 6f;
-        model.rightLeg.z += Mth.sin(speedInfluence) * 12f;
+        hModel.leftLeg.y -= 1f + Mth.sin(speedInfluence) * 6f;
+        hModel.leftLeg.z += Mth.sin(speedInfluence) * 12f - 2f;
+        hModel.rightLeg.y -= Mth.sin(speedInfluence) * 6f;
+        hModel.rightLeg.z += Mth.sin(speedInfluence) * 12f;
 
-        model.rightLeg.xRot = speedInfluence;
-        model.leftLeg.xRot = 15 * DEG_TO_RAD + speedInfluence;
+        hModel.rightLeg.xRot = speedInfluence;
+        hModel.leftLeg.xRot = 15 * DEG_TO_RAD + speedInfluence;
 
-        model.leftArm.xRot *= 0.25f;
-        model.rightArm.xRot *= 0.25f;
+        hModel.leftArm.xRot *= 0.25f;
+        hModel.rightArm.xRot *= 0.25f;
 
         // One arm stretched out
-        if (model.leftArmPose == HumanoidModel.ArmPose.EMPTY) {
-            model.leftArm.zRot = -45 * DEG_TO_RAD + wave * amplitude / 8f;
-            model.leftArm.xRot = speedInfluence;
+        if (hModel.leftArmPose == HumanoidModel.ArmPose.EMPTY) {
+            hModel.leftArm.zRot = -45 * DEG_TO_RAD + wave * amplitude / 8f;
+            hModel.leftArm.xRot = speedInfluence;
         }
 
-        if (model.rightArmPose == HumanoidModel.ArmPose.EMPTY) {
-            model.rightArm.xRot = speedInfluence;
+        if (hModel.rightArmPose == HumanoidModel.ArmPose.EMPTY) {
+            hModel.rightArm.xRot = speedInfluence;
         }
     }
 }

@@ -47,7 +47,7 @@ public class StandInfo {
      */
     @Singular
     @NonNull
-    private List<Component> skinNames = List.of();
+    private List<Component> skinNames;
     /**
      * The number of pros and cons of this stand.
      * Used in /stand about and whatnot.

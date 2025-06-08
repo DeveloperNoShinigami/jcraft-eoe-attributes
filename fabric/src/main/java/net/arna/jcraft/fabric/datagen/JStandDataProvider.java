@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.PackOutput;
 
 @Getter
-public class JStandDataProvider extends JStandTypeBasedProvider<StandData> {
+public class JStandDataProvider extends JStandTypeBasedConstantProvider<StandData> {
     private final String name = "Stand Data";
 
     public JStandDataProvider(FabricDataOutput dataOutput) {

@@ -4,23 +4,20 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Builder;
 import lombok.Singular;
-import net.arna.jcraft.api.pose.HumanoidModelPart;
-import net.arna.jcraft.api.pose.ModelPartProperty;
-import net.arna.jcraft.api.pose.ModifierCondition;
-import net.arna.jcraft.api.pose.ModifierOperation;
-import net.minecraft.client.model.HumanoidModel;
+import net.arna.jcraft.api.pose.*;
+import net.minecraft.client.model.Model;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
 
 @Builder
 public record CustomPoseModifier(@Singular List<ModifierCondition> conditions, ModifierOperation operation,
-                                 HumanoidModelPart part, ModelPartProperty property, float value) implements IPoseModifier {
+                                 ModelPartGetter part, ModelPartProperty property, float value) implements IPoseModifier {
     public static final String ID = "custom";
     public static final Codec<CustomPoseModifier> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ModifierCondition.CODEC.listOf().optionalFieldOf("conditions", List.of()).forGetter(CustomPoseModifier::conditions),
             ModifierOperation.CODEC.fieldOf("operation").forGetter(CustomPoseModifier::operation),
-            HumanoidModelPart.CODEC.fieldOf("part").forGetter(CustomPoseModifier::part),
+            ModelPartGetter.CODEC.fieldOf("part").forGetter(CustomPoseModifier::part),
             ModelPartProperty.CODEC.fieldOf("property").forGetter(CustomPoseModifier::property),
             Codec.FLOAT.fieldOf("value").forGetter(CustomPoseModifier::value)
     ).apply(instance, CustomPoseModifier::new));
@@ -30,7 +27,12 @@ public record CustomPoseModifier(@Singular List<ModifierCondition> conditions, M
         return ID;
     }
 
-    public void apply(HumanoidModel<?> model, LivingEntity user, float age) {
+    @Override
+    public boolean isModelSupported(ModelType<?> modelType) {
+        return modelType.hasPart(part.partName());
+    }
+
+    public void apply(Model model, LivingEntity user, float age) {
         if (ModifierCondition.anyFails(conditions, model, user)) {
             return; // Skip if any condition is not met
         }
