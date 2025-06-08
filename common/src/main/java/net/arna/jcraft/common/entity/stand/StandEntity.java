@@ -16,13 +16,12 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.SummonData;
-import net.arna.jcraft.api.attack.MoveSet;
-import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.core.*;
-import net.arna.jcraft.common.attack.core.MoveSetImpl;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
 import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
@@ -52,6 +51,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -117,6 +117,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     private static final EntityDataAccessor<Boolean> FREE;
     private static final EntityDataAccessor<Boolean> REMOTE;
+
+    private static final EntityDataAccessor<String> USER_POSE;
 
     @Setter
     protected int tsTime = 0;
@@ -208,6 +210,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         FREEX = SynchedEntityData.defineId(StandEntity.class, EntityDataSerializers.FLOAT);
         FREEY = SynchedEntityData.defineId(StandEntity.class, EntityDataSerializers.FLOAT);
         FREEZ = SynchedEntityData.defineId(StandEntity.class, EntityDataSerializers.FLOAT);
+
+        USER_POSE = SynchedEntityData.defineId(StandEntity.class, EntityDataSerializers.STRING);
     }
 
     public boolean allowMoveHandling() {
@@ -517,6 +521,27 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         this.entityData.set(FREEZ, freePos.z());
     }
 
+    /**
+     * Sets the pose that will be applied to the user when the stand is summoned.
+     * If not set, defaults to the pose corresponding to the stand type's ID.
+     * <p>
+     * If the given pose does not exist, no pose will be applied.
+     * @param poseId The ID of the pose to apply to the user when the stand is summoned.
+     */
+    public void setUserPose(@NonNull ResourceLocation poseId) {
+        entityData.set(USER_POSE, poseId.toString());
+    }
+
+    /**
+     * Gets the pose that will be applied to the user when the stand is summoned.
+     * If not set, defaults to the pose corresponding to the stand type's ID.
+     * @return The ID of the pose to apply to the user when the stand is summoned.
+     */
+    public @NotNull ResourceLocation getUserPose() {
+        String pose = entityData.get(USER_POSE);
+        return pose.isEmpty() ? standType.getId() : new ResourceLocation(pose);
+    }
+
     @Override
     public LivingEntity getBaseEntity() {
         return this;
@@ -593,6 +618,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         entityData.define(FREEX, 0f);
         entityData.define(FREEY, 0f);
         entityData.define(FREEZ, 0f);
+
+        entityData.define(USER_POSE, "");
     }
 
     @Override

@@ -49,7 +49,6 @@ public class JRegistries {
             .syncToClients()
             .build();
 
-
     // Registry keys
     public static final ResourceKey<Registry<StandType>> STAND_TYPE_REGISTRY_KEY = createKey(STAND_TYPE_REGISTRY);
     public static final ResourceKey<Registry<SpecType2>> SPEC_TYPE_REGISTRY_KEY = createKey(SPEC_TYPE_REGISTRY);

@@ -3,6 +3,7 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.pose.modifier.IPoseModifier;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.attack.MoveSet;
@@ -55,6 +56,7 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
                     .skinName(Component.literal("1999"))
                     .build())
             .build();
+    public static final IPoseModifier POSE = AbstractKillerQueenEntity.POSE;
 
     public static final SimpleAttack<KillerQueenEntity> HEAVY = new SimpleAttack<KillerQueenEntity>(
             200, 16, 24, 0.75f, 9f, 10, 2f, 1.75f, 0f)

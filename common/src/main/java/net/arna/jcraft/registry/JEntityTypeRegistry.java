@@ -53,6 +53,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
@@ -767,7 +768,7 @@ public interface JEntityTypeRegistry {
         private final Function<Level, T> ctor;
 
         @Override
-        public @NonNull T create(@NonNull EntityType<T> type, @NonNull Level world) {
+        public @NonNull T create(@NonNull EntityType<T> type, @NotNull Level world) {
             return ctor.apply(world);
         }
     }

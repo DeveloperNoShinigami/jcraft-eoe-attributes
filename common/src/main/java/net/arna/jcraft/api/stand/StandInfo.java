@@ -12,8 +12,6 @@ import java.util.List;
 @Getter
 @Builder(toBuilder = true, builderClassName = "Builder")
 @With
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@RequiredArgsConstructor(staticName = "of")
 @ToString
 @EqualsAndHashCode
 public class StandInfo {
@@ -59,7 +57,12 @@ public class StandInfo {
      * The free space in the stand info, used for displaying additional information.
      */
     @NonNull
+    @lombok.Builder.Default
     private Component freeSpace = Component.empty();
+
+    public static StandInfo of(@NonNull Component name) {
+        return builder().name(name).build();
+    }
 
     /**
      * Returns the number of skins available for this stand.

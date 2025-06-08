@@ -62,16 +62,18 @@ public final class JCraftFabricClient implements ClientModInitializer {
             TimeErasePredictionEffectRenderer.render(context.matrixStack(), context.camera().getPosition(), context.world(), context.tickDelta(), context.consumers());
         });
 
-        ResourceLocation itemId = JItemRegistry.ITEMS.get(JItemRegistry.DEBUG_WAND);
-        BigItemRenderer itemRenderer = new BigItemRenderer(itemId);
+        if (JItemRegistry.DEBUG_WAND != null) {
+            ResourceLocation itemId = JItemRegistry.ITEMS.get(JItemRegistry.DEBUG_WAND);
+            BigItemRenderer itemRenderer = new BigItemRenderer(itemId);
 
 
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(itemRenderer);
-        BuiltinItemRendererRegistry.INSTANCE.register(JItemRegistry.DEBUG_WAND.get(), itemRenderer);
+            ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(itemRenderer);
+            BuiltinItemRendererRegistry.INSTANCE.register(JItemRegistry.DEBUG_WAND.get(), itemRenderer);
 
-        ModelLoadingPlugin.register(ctx -> ctx.addModels(
-                new ModelResourceLocation(new ResourceLocation(itemId + "_gui"), "inventory"),
-                new ModelResourceLocation(new ResourceLocation(itemId + "_handheld"), "inventory")));
+            ModelLoadingPlugin.register(ctx -> ctx.addModels(
+                    new ModelResourceLocation(new ResourceLocation(itemId + "_gui"), "inventory"),
+                    new ModelResourceLocation(new ResourceLocation(itemId + "_handheld"), "inventory")));
+        }
 
         JItemPropertiesRegistry.registerItemProperties();
         JCraftClient.registerKeyBindings(null);

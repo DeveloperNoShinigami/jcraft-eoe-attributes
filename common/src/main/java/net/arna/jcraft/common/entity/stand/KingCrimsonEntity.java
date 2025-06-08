@@ -6,6 +6,10 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.pose.ModifierCondition;
+import net.arna.jcraft.api.pose.PoseModifiers;
+import net.arna.jcraft.api.pose.modifier.IPoseModifier;
+import net.arna.jcraft.api.pose.modifier.PoseModifierGroup;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.stand.SummonData;
@@ -82,6 +86,24 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                     .skinName(Component.literal("Nightshade"))
                     .build())
             .summonData(SummonData.of(JSoundRegistry.KC_SUMMON))
+            .build();
+    public static final IPoseModifier POSE = PoseModifierGroup.builder()
+            .condition(ModifierCondition.USER_NOT_MOVING)
+            .modifier(PoseModifiers.parse("body.yRot += 30deg"))
+            .modifier(PoseModifiers.parse("""
+                                        leftArm.yRot += 30deg;
+                                        leftArm.z -= 2.1;
+                                        """, ModifierCondition.LEFT_ARM_EMPTY))
+            .modifier(PoseModifiers.parse("""
+                                        rightArm.yRot += 30deg;
+                                        rightArm.z -= 2.1;
+                                        """, ModifierCondition.RIGHT_ARM_EMPTY_OR_ITEM))
+            .modifier(PoseModifiers.parse("""
+                                        leftLeg.z -= 1;
+                                        rightLeg.z += 1.5;
+                                        
+                                        rightLeg.yRot += 45deg;
+                                        """))
             .build();
 
     public static final KnockdownAttack<KingCrimsonEntity> SWEEP = new KnockdownAttack<KingCrimsonEntity>(40,

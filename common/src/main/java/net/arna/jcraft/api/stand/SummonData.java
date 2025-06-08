@@ -12,8 +12,6 @@ import java.util.function.Supplier;
 @Getter
 @Builder(toBuilder = true, builderClassName = "Builder")
 @With
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@RequiredArgsConstructor(staticName = "of")
 @ToString
 @EqualsAndHashCode
 public class SummonData {
@@ -47,7 +45,12 @@ public class SummonData {
     /**
      * The duration of this stand's summoning animation in ticks.
      */
+    @lombok.Builder.Default
     private int animDuration = 19;
+
+    public static SummonData of(Supplier<@Nullable SoundEvent> sound) {
+        return builder().sound(sound).build();
+    }
 
     /**
      * Returns the summoning sound of this stand.

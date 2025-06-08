@@ -186,7 +186,7 @@ public interface JCreativeMenuTabRegistry {
                             entries.accept(StandDiscItem.createDiscStack(standType, skin));
                         }
                     }
-                    for (final StandType standType : StandTypeUtil.streamAllRegular().toList()) {
+                    for (final StandType standType : StandTypeUtil.streamAllEvolutions().toList()) {
                         for (int skin = 0; skin < standType.getData().getInfo().getSkinCount(); skin++) {
                             entries.accept(StandDiscItem.createDiscStack(standType, skin));
                         }

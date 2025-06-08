@@ -6,6 +6,8 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.Color;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.pose.modifier.IPoseModifier;
+import net.arna.jcraft.api.pose.modifier.LevitationPoseModifier;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.stand.SummonData;
@@ -71,6 +73,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     .animDuration(29)
                     .build())
             .build();
+    public static final IPoseModifier POSE = new LevitationPoseModifier();
 
     public static final LungeAttack LUNGE = new LungeAttack(0, 10, 16, 0.75f,
             8f, 10, 1.75f, 1f, 0f, 11, 5)

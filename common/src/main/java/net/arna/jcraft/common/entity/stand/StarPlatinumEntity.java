@@ -4,12 +4,16 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.stand.StandData;
-import net.arna.jcraft.api.stand.StandInfo;
-import net.arna.jcraft.api.stand.SummonData;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.attack.StateContainer;
+import net.arna.jcraft.api.pose.ModifierCondition;
+import net.arna.jcraft.api.pose.PoseModifiers;
+import net.arna.jcraft.api.pose.modifier.IPoseModifier;
+import net.arna.jcraft.api.pose.modifier.PoseModifierGroup;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.SummonData;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
@@ -68,6 +72,17 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     .skinName(Component.literal("OVA"))
                     .build())
             .summonData(SummonData.of(JSoundRegistry.STAR_PLATINUM_SUMMON))
+            .build();
+    public static final IPoseModifier POSE = PoseModifierGroup.builder()
+            .modifier(PoseModifiers.parse("""
+                                        leftArm.xRot = 0;
+                                        leftArm.yRot = -15deg;
+                                        leftArm.zRot = 5deg;
+                                        """, ModifierCondition.LEFT_ARM_EMPTY))
+            .modifier(PoseModifiers.parse("""
+                                        rightArm.zRot = 15deg;
+                                        rightArm.xRot *= 0.5;
+                                        """, ModifierCondition.RIGHT_ARM_EMPTY))
             .build();
 
     public static final SimpleUppercutAttack<StarPlatinumEntity> UPPERCUT = new SimpleUppercutAttack<StarPlatinumEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),

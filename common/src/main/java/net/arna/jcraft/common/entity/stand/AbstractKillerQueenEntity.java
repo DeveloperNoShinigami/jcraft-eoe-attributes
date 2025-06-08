@@ -1,5 +1,9 @@
 package net.arna.jcraft.common.entity.stand;
 
+import net.arna.jcraft.api.pose.ModifierCondition;
+import net.arna.jcraft.api.pose.PoseModifiers;
+import net.arna.jcraft.api.pose.modifier.IPoseModifier;
+import net.arna.jcraft.api.pose.modifier.PoseModifierGroup;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.attack.core.BlockableType;
 import net.arna.jcraft.common.attack.core.MoveClass;
@@ -25,6 +29,27 @@ import net.minecraft.world.level.block.Blocks;
 
 public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQueenEntity<E, S>, S extends Enum<S> & StandAnimationState<E>> extends StandEntity<E, S>
         permits KillerQueenEntity, KQBTDEntity {
+    public static final IPoseModifier POSE = PoseModifierGroup.builder()
+            .modifier(PoseModifierGroup.builder()
+                    .condition(ModifierCondition.USER_NOT_MOVING)
+                    .modifier(PoseModifiers.parse("""
+                                                leftArm.yRot += 15deg;
+                                                leftArm.xRot -= 15deg;
+                                                leftArm.zRot += 45deg;
+                                                """, ModifierCondition.LEFT_ARM_EMPTY))
+                    .modifier(PoseModifiers.parse("""
+                                                rightArm.yRot -= 15deg;
+                                                rightArm.xRot -= 15deg;
+                                                rightArm.zRot += 45deg;
+                                                """, ModifierCondition.RIGHT_ARM_EMPTY))
+                    .build())
+            .modifier(PoseModifiers.parse("""
+                                        body.xRot -= 5deg;
+                                        leftLeg.z -= 1;
+                                        rightLeg.z -= 1;
+                                        """))
+            .build();
+
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LOW = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
             0, 8, 13, 0.85f, 4f, 10, 1.5f, 0.25f, 0.1f)
             .withImpactSound(JSoundRegistry.IMPACT_1)

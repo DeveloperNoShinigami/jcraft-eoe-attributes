@@ -7,6 +7,7 @@ import lombok.Setter;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.util.RenderUtils;
+import net.arna.jcraft.api.pose.modifier.IPoseModifier;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.stand.SummonData;
@@ -71,6 +72,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
                     .playGenericSound(true)
                     .build())
             .build();
+    public static final IPoseModifier POSE = AbstractKillerQueenEntity.POSE;
 
     public static final ElbowAttack ELBOW = new ElbowAttack(60, 5, 9, 0.75f,
             7.5f, 10, 1f, 1.1f, 0f)

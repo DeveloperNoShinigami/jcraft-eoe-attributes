@@ -3,6 +3,7 @@ package net.arna.jcraft.api.stand;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.*;
+import lombok.experimental.Tolerate;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.UnaryOperator;
@@ -17,8 +18,6 @@ import java.util.function.UnaryOperator;
 @Getter
 @Builder(toBuilder = true, builderClassName = "Builder")
 @With
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@RequiredArgsConstructor(staticName = "of")
 @ToString
 @EqualsAndHashCode
 public class StandData {
@@ -44,14 +43,17 @@ public class StandData {
      * The distance at which the stand will idle from the player.
      * This is used for the idle animation and positioning.
      */
+    @lombok.Builder.Default
     private float idleDistance = 1.25f;
     /**
      * The angle at which the idle position will be calculated.
      */
+    @lombok.Builder.Default
     private float idleRotation = -45f;
     /**
      * The distance of the stand from the user when blocking.
      */
+    @lombok.Builder.Default
     private float blockDistance = 0.75f;
     /**
      * Whether this stand is an evolution.
@@ -60,6 +62,7 @@ public class StandData {
     /**
      * Whether this stand is obtainable.
      */
+    @lombok.Builder.Default
     private boolean obtainable = true;
 
     /**
@@ -73,16 +76,11 @@ public class StandData {
      * This includes sound effects, animation duration, and whether to play the animation.
      */
     @NonNull
+    @lombok.Builder.Default
     private SummonData summonData = SummonData.of(() -> null);
 
-    /**
-     * The info of this stand, containing its name, skin names, and other metadata.
-     * This is used for display purposes and to provide information about the stand.
-     * @param newInfo The new stand info
-     * @return The new stand data
-     */
-    public StandData withInfo(StandInfo newInfo) {
-        return new StandData(idleDistance, idleRotation, blockDistance, evolution, obtainable, newInfo, summonData);
+    public static StandData of(@NonNull StandInfo info) {
+        return builder().info(info).build();
     }
 
     /**
@@ -91,6 +89,7 @@ public class StandData {
      * @param newInfo The new stand info builder
      * @return The new stand data
      */
+    @Tolerate
     public StandData withInfo(UnaryOperator<StandInfo.Builder> newInfo) {
         return withInfo(newInfo.apply(this.info.toBuilder()).build());
     }

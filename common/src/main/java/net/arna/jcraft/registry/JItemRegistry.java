@@ -1,6 +1,7 @@
 package net.arna.jcraft.registry;
 
 import dev.architectury.core.item.ArchitecturySpawnEggItem;
+import dev.architectury.platform.Platform;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
@@ -19,7 +20,7 @@ public interface JItemRegistry {
     DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.ITEM);
     Map<RegistrySupplier<? extends Item>, ResourceLocation> ITEMS = new LinkedHashMap<>();
 
-    RegistrySupplier<Item> DEBUG_WAND = register("debug_wand", () -> new DebugWand(settings()));
+    RegistrySupplier<Item> DEBUG_WAND = Platform.isDevelopmentEnvironment() ? register("debug_wand", () -> new DebugWand(settings())) : null;
 
     RegistrySupplier<Item> STAND_ARROW = register("stand_arrow", () -> new StandArrowItem(settings().rarity(Rarity.RARE).fireResistant()));
 
