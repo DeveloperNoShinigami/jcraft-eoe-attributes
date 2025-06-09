@@ -27,8 +27,6 @@ public abstract class ModelBakeryMixin {
 
     @Shadow @Final private Map<ResourceLocation, UnbakedModel> topLevelModels;
 
-    @Shadow public abstract UnbakedModel getModel(ResourceLocation modelLocation);
-
     // Adds stand disc models to the top-level models in ModelBakery to ensure they can be used in item rendering.
     @Inject(method = "<init>", at = @At("RETURN"))
     private void injectStandDiscsIntoTopLevel(BlockColors blockColors, ProfilerFiller profilerFiller,
@@ -44,7 +42,8 @@ public abstract class ModelBakeryMixin {
                     // Add the model to the top-level models, so it can be used in item rendering.
                     ModelResourceLocation modelVariantId = new ModelResourceLocation(modelId, "inventory");
                     this.loadTopLevel(modelVariantId);
-                    this.topLevelModels.get(modelVariantId).resolveParents(this::getModel);
+                    this.topLevelModels.get(modelVariantId).resolveParents(id ->
+                            ((ModelBakery) (Object) this).getModel(id));
                 });
 
         profilerFiller.pop();
