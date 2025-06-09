@@ -21,7 +21,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 /**
  * Simple class that holds the registries used by JCraft.
@@ -103,7 +105,8 @@ public class JRegistries {
      * @return the parsed registry entry, or null if not found
      * @param <T> the type of the registry entry
      */
-    public static <T> @Nullable T parseRegistryEntry(Registrar<T> registry, StringReader reader) {
+    public static <T> @Nullable T parseRegistryEntry(Registrar<T> registry, StringReader reader,
+                                                     Predicate<T> filter) {
         int i = reader.getCursor();
         while (reader.canRead() && ResourceLocation.isAllowedInResourceLocation(reader.peek())) {
             reader.skip();
@@ -119,7 +122,13 @@ public class JRegistries {
         }
 
         ResourceLocation id = new ResourceLocation(namespace, path);
-        return registry.get(id);
+        T t = registry.get(id);
+        if (t == null || !filter.test(t)) {
+            reader.setCursor(i);
+            return null; // Not found or does not match filter
+        }
+
+        return t;
     }
 
     /**
@@ -128,10 +137,14 @@ public class JRegistries {
      * @param builder the SuggestionsBuilder to submit suggestions to
      * @return a CompletableFuture that will complete with the suggestions
      */
-    public static CompletableFuture<Suggestions> listSuggestions(Registrar<?> registry, SuggestionsBuilder builder) {
+    public static <T> CompletableFuture<Suggestions> listSuggestions(Registrar<T> registry, SuggestionsBuilder builder,
+                                                                     Predicate<T> filter) {
         final String input = builder.getRemainingLowerCase();
 
-        registry.getIds().stream()
+        registry.entrySet().stream()
+                .filter(entry -> filter.test(entry.getValue()))
+                .map(Map.Entry::getKey)
+                .map(ResourceKey::location)
                 .filter(id -> JCraft.MOD_ID.equals(id.getNamespace()) && id.getPath().startsWith(input) ||
                         id.toString().startsWith(input))
                 .map(ResourceLocation::toString)

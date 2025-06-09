@@ -25,7 +25,7 @@ public class SpecArgumentType implements ArgumentType<SpecType2> {
 
     @Override
     public SpecType2 parse(final StringReader reader) throws CommandSyntaxException {
-        SpecType2 specType = JRegistries.parseRegistryEntry(JRegistries.SPEC_TYPE_REGISTRY, reader);
+        SpecType2 specType = JRegistries.parseRegistryEntry(JRegistries.SPEC_TYPE_REGISTRY, reader, s -> true);
         if (specType == null) {
             throw NOT_FOUND.createWithContext(reader);
         }
@@ -34,6 +34,6 @@ public class SpecArgumentType implements ArgumentType<SpecType2> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
-        return JRegistries.listSuggestions(JRegistries.SPEC_TYPE_REGISTRY, builder);
+        return JRegistries.listSuggestions(JRegistries.SPEC_TYPE_REGISTRY, builder, s -> true);
     }
 }

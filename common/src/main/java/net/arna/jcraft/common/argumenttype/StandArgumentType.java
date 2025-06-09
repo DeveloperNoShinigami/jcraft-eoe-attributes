@@ -25,7 +25,8 @@ public class StandArgumentType implements ArgumentType<StandType> {
 
     @Override
     public StandType parse(final StringReader reader) throws CommandSyntaxException {
-        StandType type = JRegistries.parseRegistryEntry(JRegistries.STAND_TYPE_REGISTRY, reader);
+        StandType type = JRegistries.parseRegistryEntry(JRegistries.STAND_TYPE_REGISTRY, reader,
+                t -> t.getData().isObtainable());
         if (type == null) {
             throw NOT_FOUND.createWithContext(reader);
         }
@@ -35,6 +36,7 @@ public class StandArgumentType implements ArgumentType<StandType> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
-        return JRegistries.listSuggestions(JRegistries.STAND_TYPE_REGISTRY, builder);
+        return JRegistries.listSuggestions(JRegistries.STAND_TYPE_REGISTRY, builder,
+                type -> type.getData().isObtainable());
     }
 }
