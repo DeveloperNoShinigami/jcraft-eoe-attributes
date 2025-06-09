@@ -30,7 +30,7 @@ public abstract class JCraftMoveSetProvider<A extends IAttacker<A, S>, S extends
     protected final void configure(BiConsumer<ResourceLocation, MoveMap.Entry<A, S>> provider) {
         configureMoveSets(set -> {
             IAttackerType type = set.getType();
-            ResourceLocation base = type.getId().withPath(p -> String.format("%s/%s", type.kind(), p));
+            ResourceLocation base = type.getId().withPath(p -> String.format("%s/%s/%s", type.kind(), p, set.getName()));
             MoveMap<A, S> map = set.save();
 
             for (Map.Entry<MoveClass, MoveMap.Entry<A, S>> entry : map.getEntries().entries()) {
