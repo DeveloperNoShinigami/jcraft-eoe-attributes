@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.arna.jcraft.api.spec.SpecData;
-import net.arna.jcraft.api.spec.SpecType2;
+import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.spec.JSpec;
@@ -37,7 +37,7 @@ public class AboutSpecCommand {
             return 0;
         }
 
-        SpecType2 specType = spec.getType();
+        SpecType specType = spec.getType();
         SpecData data = spec.getSpecData();
         MutableComponent text = Component.empty();
 

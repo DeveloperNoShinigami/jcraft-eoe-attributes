@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.item;
 
 import dev.architectury.registry.registries.RegistrySupplier;
-import net.arna.jcraft.api.spec.SpecType2;
+import net.arna.jcraft.api.spec.SpecType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class BoxingGlovesItem extends SpecObtainmentItem {
-    public BoxingGlovesItem(Properties settings, RegistrySupplier<SpecType2> spec) {
+    public BoxingGlovesItem(Properties settings, RegistrySupplier<SpecType> spec) {
         super(settings, spec);
     }
 

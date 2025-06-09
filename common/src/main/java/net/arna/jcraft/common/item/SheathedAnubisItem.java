@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.item;
 
 import dev.architectury.registry.registries.RegistrySupplier;
-import net.arna.jcraft.api.spec.SpecType2;
+import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JItemRegistry;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SheathedAnubisItem extends SpecObtainmentItem {
-    public SheathedAnubisItem(Properties settings, RegistrySupplier<SpecType2> spec) {
+    public SheathedAnubisItem(Properties settings, RegistrySupplier<SpecType> spec) {
         super(settings, spec);
     }
 

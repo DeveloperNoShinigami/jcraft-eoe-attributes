@@ -9,6 +9,7 @@ import dev.architectury.registry.registries.Registrar;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.spec.SpecData;
+import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.entity.stand.StandEntity;
@@ -44,7 +45,7 @@ public class AttackerDataLoader {
     /**
      * Gets the StandData for a given stand type id.
      * <b>Important:</b> this is mostly for internal use only. Consider using
-     * {@link net.arna.jcraft.api.spec.SpecType2#()} or {@link StandEntity#getStandData()} instead.
+     * {@link SpecType#()} or {@link StandEntity#getStandData()} instead.
      * The main exception would be if your stand has multiple different data's, and you need a specific one.
      * @param id The ResourceLocation of the stand type, e.g. "jcraft:star_platinum"
      * @return The StandData if it exists, or the {@link StandData#EMPTY empty data} if it doesn't.

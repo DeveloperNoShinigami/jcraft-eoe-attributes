@@ -8,7 +8,7 @@ import lombok.Setter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.spec.SpecData;
-import net.arna.jcraft.api.spec.SpecType2;
+import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveClass;
 import net.arna.jcraft.common.attack.core.MoveInputType;
@@ -51,7 +51,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         implements IAttacker<A, S>, MoveSetImpl.ReloadListener<A, S> {
     private MoveSet<A, S> moveSet;
     private final MoveMap<A, S> moveMap = new MoveMap<>();
-    private final SpecType2 type;
+    private final SpecType type;
     public final LivingEntity user;
     public final Player player;
     @Setter
@@ -70,7 +70,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     private boolean holding = false;
     private MoveInputType holdingType = null;
 
-    protected JSpec(SpecType2 type, LivingEntity livingEntity) {
+    protected JSpec(SpecType type, LivingEntity livingEntity) {
         this.type = type;
         this.user = livingEntity;
         if (this.user instanceof Player playerEntity) {

@@ -119,8 +119,6 @@ public interface JStandTypeRegistry {
      */
     static <E extends StandEntity<?, ?>> RegistrySupplier<StandType> register(String name, Supplier<EntityType<E>> entityTypeSupplier) {
         ResourceLocation id = JCraft.id(name);
-        // The '::get' part is to satisfy the compiler (generic type parameter issue).
-        StandType standType = StandType.of(id, entityTypeSupplier::get);
-        return STAND_TYPE_REGISTRY.register(name, () -> standType);
+        return STAND_TYPE_REGISTRY.register(name, () -> StandType.of(id, entityTypeSupplier));
     }
 }

@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor(staticName = "of")
 public class StandType implements IAttackerType {
     private final ResourceLocation id;
-    private final Supplier<EntityType<? extends StandEntity<?, ?>>> entityType;
+    private final Supplier<? extends EntityType<? extends StandEntity<?, ?>>> entityType;
 
     /**
      * Gets the entity type associated with this stand type.

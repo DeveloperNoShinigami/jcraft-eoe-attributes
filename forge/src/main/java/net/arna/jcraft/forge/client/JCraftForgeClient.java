@@ -55,6 +55,7 @@ import static net.arna.jcraft.forge.capability.impl.world.ShockwaveHandlerCapabi
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD, modid = JCraft.MOD_ID)
 public class JCraftForgeClient {
+
     @SubscribeEvent
     public static void handleClientSetup(final FMLClientSetupEvent event) {
         JCraftClient.init();

@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.spec.SpecType2;
+import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.common.argumenttype.SpecArgumentType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.CommandSourceStack;
@@ -30,7 +30,7 @@ public class SetSpecCommand {
 
     public static int run(final CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         try {
-            final SpecType2 specType = context.getArgument("spec", SpecType2.class);
+            final SpecType specType = context.getArgument("spec", SpecType.class);
             final Collection<? extends Player> targets = EntityArgument.getPlayers(context, "players");
 
             if (targets.isEmpty()) {

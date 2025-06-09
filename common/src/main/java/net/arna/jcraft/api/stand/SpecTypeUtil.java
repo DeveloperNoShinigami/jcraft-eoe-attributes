@@ -1,7 +1,7 @@
 package net.arna.jcraft.api.stand;
 
 import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.api.spec.SpecType2;
+import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.registry.JSpecTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class SpecTypeUtil {
-    public static Stream<SpecType2> streamAll() {
+    public static Stream<SpecType> streamAll() {
         return StreamSupport.stream(JRegistries.SPEC_TYPE_REGISTRY.spliterator(), false);
     }
 
@@ -26,7 +26,7 @@ public class SpecTypeUtil {
      * @return the stand type, or {@code null} if not found or an invalid type was found.
      */
     @Nullable
-    public static SpecType2 readFromNBT(CompoundTag nbt, String key) {
+    public static SpecType readFromNBT(CompoundTag nbt, String key) {
         if (nbt.contains(key, Tag.TAG_INT)) {
             int ordinal = nbt.getInt(key);
             return Optional.ofNullable(JSpecTypeRegistry.LEGACY_ORDINALS.get(ordinal))

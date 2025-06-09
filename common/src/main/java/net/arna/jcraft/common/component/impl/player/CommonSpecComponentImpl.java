@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.component.impl.player;
 
 import lombok.NonNull;
-import net.arna.jcraft.api.spec.SpecType2;
+import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.SpecTypeUtil;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.spec.JSpec;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     protected final LivingEntity user;
-    private SpecType2 type = JSpecTypeRegistry.NONE.get();
+    private SpecType type = JSpecTypeRegistry.NONE.get();
     private JSpec<?, ?> spec;
 
     public CommonSpecComponentImpl(final LivingEntity livingEntity) {
@@ -22,17 +22,17 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     }
 
     @Override
-    public SpecType2 getType() {
+    public SpecType getType() {
         return type;
     }
 
     @Override
-    public void setType(final @NonNull SpecType2 type) {
+    public void setType(final @NonNull SpecType type) {
         setTypeRaw(type);
         sync(user);
     }
 
-    private void setTypeRaw(final SpecType2 type) {
+    private void setTypeRaw(final SpecType type) {
         this.type = type;
         spec = type.createSpec(user);
     }
@@ -47,7 +47,7 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     }
 
     public void readFromNbt(final @NonNull CompoundTag tag) {
-        SpecType2 type = SpecTypeUtil.readFromNBT(tag, "Type");
+        SpecType type = SpecTypeUtil.readFromNBT(tag, "Type");
         if (type != null) setTypeRaw(type);
     }
 

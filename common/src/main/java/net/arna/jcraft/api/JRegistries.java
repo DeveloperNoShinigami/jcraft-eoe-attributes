@@ -8,7 +8,7 @@ import com.mojang.serialization.DataResult;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrarManager;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.spec.SpecType2;
+import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.attack.core.MoveAction;
 import net.arna.jcraft.common.attack.core.MoveCondition;
@@ -38,7 +38,7 @@ public class JRegistries {
     public static final Registrar<StandType> STAND_TYPE_REGISTRY = manager.<StandType>builder(JCraft.id("stand_type"))
             .syncToClients()
             .build();
-    public static final Registrar<SpecType2> SPEC_TYPE_REGISTRY = manager.<SpecType2>builder(JCraft.id("spec_type"))
+    public static final Registrar<SpecType> SPEC_TYPE_REGISTRY = manager.<SpecType>builder(JCraft.id("spec_type"))
             .syncToClients()
             .build();
     public static final Registrar<MoveType<?>> MOVE_TYPE_REGISTRY = manager.<MoveType<?>>builder(JCraft.id("move_type"))
@@ -53,14 +53,14 @@ public class JRegistries {
 
     // Registry keys
     public static final ResourceKey<Registry<StandType>> STAND_TYPE_REGISTRY_KEY = createKey(STAND_TYPE_REGISTRY);
-    public static final ResourceKey<Registry<SpecType2>> SPEC_TYPE_REGISTRY_KEY = createKey(SPEC_TYPE_REGISTRY);
+    public static final ResourceKey<Registry<SpecType>> SPEC_TYPE_REGISTRY_KEY = createKey(SPEC_TYPE_REGISTRY);
     public static final ResourceKey<Registry<MoveType<?>>> MOVE_TYPE_REGISTRY_KEY = createKey(MOVE_TYPE_REGISTRY);
     public static final ResourceKey<Registry<MoveConditionType<?>>> MOVE_CONDITION_TYPE_REGISTRY_KEY = createKey(MOVE_CONDITION_TYPE_REGISTRY);
     public static final ResourceKey<Registry<MoveActionType<?>>> MOVE_ACTION_TYPE_REGISTRY_KEY = createKey(MOVE_ACTION_TYPE_REGISTRY);
 
     // Registry codecs
     public static final Codec<StandType> STAND_TYPE_CODEC = createCodec(STAND_TYPE_REGISTRY);
-    public static final Codec<SpecType2> SPEC_TYPE_CODEC = createCodec(SPEC_TYPE_REGISTRY);
+    public static final Codec<SpecType> SPEC_TYPE_CODEC = createCodec(SPEC_TYPE_REGISTRY);
     public static final Codec<MoveType<?>> MOVE_TYPE_CODEC = createCodec(MOVE_TYPE_REGISTRY);
     public static final Codec<AbstractMove<?, ?>> MOVE_CODEC = MOVE_TYPE_CODEC
             .dispatch("type", AbstractMove::getMoveType, MoveType::getCodec);

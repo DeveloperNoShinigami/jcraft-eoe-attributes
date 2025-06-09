@@ -12,7 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 
 @ToString
 @RequiredArgsConstructor(staticName = "of")
-public class SpecType2 implements IAttackerType {
+public class SpecType implements IAttackerType {
     @Getter
     private final ResourceLocation id;
     private final SpecFactory factory;
