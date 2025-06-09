@@ -52,6 +52,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
             KQBTDEntity::registerMoves, State.class);
     public static final StandData DATA = StandData.builder()
             .idleRotation(-30f)
+            .evolution(true)
             .info(StandInfo.builder()
                     .name(Component.translatable("entity.jcraft.kqbtd"))
                     .proCount(4)
