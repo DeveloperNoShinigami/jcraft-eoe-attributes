@@ -3,12 +3,12 @@ package net.arna.jcraft.fabric.datagen;
 import lombok.Getter;
 import net.arna.jcraft.api.pose.ModelType;
 import net.arna.jcraft.common.entity.stand.*;
-import net.arna.jcraft.fabric.api.PoseProvider;
+import net.arna.jcraft.fabric.api.JCraftPoseProvider;
 import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 @Getter
-public class JPoseProvider extends PoseProvider {
+public class JPoseProvider extends JCraftPoseProvider {
     private final String name = "Poses";
 
     public JPoseProvider(FabricDataOutput dataOutput) {

@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiConsumer;
 
-public abstract class PoseProvider extends FabricCodecDataProvider<IPoseModifier> {
-    protected PoseProvider(FabricDataOutput dataOutput) {
+public abstract class JCraftPoseProvider extends FabricCodecDataProvider<IPoseModifier> {
+    protected JCraftPoseProvider(FabricDataOutput dataOutput) {
         super(dataOutput, PackOutput.Target.RESOURCE_PACK, "poses", PoseModifiers.CODEC);
     }
 

@@ -18,10 +18,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @Getter
-public abstract class MoveSetProvider<A extends IAttacker<A, S>, S extends Enum<S>> extends FabricCodecDataProvider<MoveMap.Entry<A, S>> {
+public abstract class JCraftMoveSetProvider<A extends IAttacker<A, S>, S extends Enum<S>> extends FabricCodecDataProvider<MoveMap.Entry<A, S>> {
     private final ResourceLocation type;
 
-    protected MoveSetProvider(FabricDataOutput dataOutput, Codec<MoveMap.Entry<A, S>> codec, ResourceLocation type) {
+    protected JCraftMoveSetProvider(FabricDataOutput dataOutput, Codec<MoveMap.Entry<A, S>> codec, ResourceLocation type) {
         super(dataOutput, PackOutput.Target.DATA_PACK, "movesets", codec);
         this.type = type;
     }

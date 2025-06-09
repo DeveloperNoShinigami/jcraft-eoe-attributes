@@ -6,8 +6,8 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 import net.minecraft.data.PackOutput;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class SpecDataProvider extends FabricCodecDataProvider<SpecData> {
-    public SpecDataProvider(FabricDataOutput dataOutput) {
+public abstract class JCraftSpecDataProvider extends FabricCodecDataProvider<SpecData> {
+    public JCraftSpecDataProvider(FabricDataOutput dataOutput) {
         super(dataOutput, PackOutput.Target.DATA_PACK, "specs", SpecData.CODEC);
     }
 
