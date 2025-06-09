@@ -6,6 +6,7 @@ import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveSetImpl;
+import net.arna.jcraft.common.data.MoveSetLoader;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collections;
@@ -115,6 +116,9 @@ public class MoveSetManager {
 
         MoveSet<A, S> moveSet = new MoveSetImpl<>(type, name, register, stateClass);
         moveSets.computeIfAbsent(type.getId(), k -> new HashMap<>()).put(name, moveSet);
+
+        // Attempt to load the move set data if there's any pending data for this type and name.
+        MoveSetLoader.attemptLoad(moveSet);
         return moveSet;
     }
 }

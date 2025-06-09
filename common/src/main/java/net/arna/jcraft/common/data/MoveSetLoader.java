@@ -18,12 +18,32 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class MoveSetLoader {
+    private static final Map<ResourceLocation, Map<String, Collection<Pair<ResourceLocation, JsonObject>>>> pendingMoveSetData = new HashMap<>();
+
+    public static void attemptLoad(MoveSet<?, ?> moveSet) {
+        // This method is called when a MoveSet is created.
+        // It will load the move set data if it exists.
+        ResourceLocation typeLoc = moveSet.getType().getId();
+        String moveSetName = moveSet.getName();
+
+        if (pendingMoveSetData.getOrDefault(typeLoc, Collections.emptyMap()).containsKey(moveSetName)) {
+            Map<String, Collection<Pair<ResourceLocation, JsonObject>>> typeMoveSets = pendingMoveSetData.get(typeLoc);
+            moveSet.load(JsonOps.INSTANCE, typeMoveSets.get(moveSetName), null);
+            typeMoveSets.remove(moveSetName);
+
+            if (typeMoveSets.isEmpty()) {
+                pendingMoveSetData.remove(typeLoc);
+            }
+        }
+    }
+
     /**
      * Called upon datapack (re)load.
      * Loads stand movesets from datapacks.
@@ -52,7 +72,7 @@ public class MoveSetLoader {
      */
     private static Map<ResourceLocation, Multimap<String, Pair<ResourceLocation, JsonObject>>> loadFiles(ResourceManager resourceManager) {
         Map<ResourceLocation, Resource> resources = resourceManager.listResources("movesets",
-                rl -> rl.getPath().endsWith(".json"));
+                rl -> rl.getPath().split("/").length >= 4 && rl.getPath().endsWith(".json"));
 
         Gson gson = new Gson();
         // Load resources into JsonObjects and order them by attacker type and move set name.
@@ -86,6 +106,8 @@ public class MoveSetLoader {
      * @param gameExecutor The executor for game tasks.
      */
     private static void loadMoveSets(Map<ResourceLocation, Multimap<String, Pair<ResourceLocation, JsonObject>>> moveSets, Executor gameExecutor) {
+        pendingMoveSetData.clear();
+
         for (final Map.Entry<ResourceLocation, Multimap<String, Pair<ResourceLocation, JsonObject>>> typeEntry : moveSets.entrySet()) {
             ResourceLocation typeLoc = typeEntry.getKey();
             Multimap<String, Pair<ResourceLocation, JsonObject>> sets = typeEntry.getValue();
@@ -94,7 +116,10 @@ public class MoveSetLoader {
                 String moveSetName = moveSetEntry.getKey();
                 MoveSet<?, ?> moveSet = MoveSetManager.get(typeLoc, moveSetName);
                 if (moveSet == null) {
-                    JCraft.LOGGER.error("Move set {} for type {} not found", moveSetName, typeLoc);
+                    // Either this moveset does not exist or the class of the stand entity it corresponds to is not loaded yet.
+                    // We cannot be sure which one it is, so we just store this moveset for later.
+                    pendingMoveSetData.computeIfAbsent(typeLoc, k -> new HashMap<>())
+                            .put(moveSetName, moveSetEntry.getValue());
                     continue;
                 }
 

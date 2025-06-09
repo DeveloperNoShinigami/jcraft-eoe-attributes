@@ -21,7 +21,6 @@ import org.joml.Vector3d;
  */
 public class GoldExperienceRenderer extends StandEntityRenderer<GoldExperienceEntity> {
     private int currentTick = -1;
-    private static final int overclockWindupPoint = GoldExperienceEntity.OVERCLOCK.getWindupPoint();
     private static final ParticleOptions chargeParticle = ParticleTypes.COMPOSTER;
 
     public GoldExperienceRenderer(final EntityRendererProvider.Context context) {
@@ -29,10 +28,15 @@ public class GoldExperienceRenderer extends StandEntityRenderer<GoldExperienceEn
     }
 
     @Override
-    public void actuallyRender(final PoseStack poseStack, final GoldExperienceEntity stand, final BakedGeoModel model, final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer, final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay, final float red, final float green, final float blue, final float alpha) {
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, getAlpha(animatable, partialTick));
+    public void actuallyRender(final PoseStack poseStack, final GoldExperienceEntity stand, final BakedGeoModel model,
+                               final RenderType renderType, final MultiBufferSource bufferSource, final VertexConsumer buffer,
+                               final boolean isReRender, final float partialTick, final int packedLight, final int packedOverlay,
+                               final float red, final float green, final float blue, final float alpha) {
+        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick,
+                packedLight, packedOverlay, red, green, blue, getAlpha(animatable, partialTick));
 
-        if (stand.getState() == GoldExperienceEntity.State.OVERCLOCK && stand.getMoveStun() > overclockWindupPoint) {
+        if (stand.getState() == GoldExperienceEntity.State.OVERCLOCK && stand.getCurrentMove() != null &&
+                stand.getMoveStun() > stand.getCurrentMove().getWindupPoint()) {
             if (currentTick < 0 || currentTick != stand.tickCount) {
                 this.currentTick = stand.tickCount;
                 model.getBone("lowerleft").ifPresent(bone -> {

@@ -8,6 +8,7 @@ import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.concurrent.Executor;
@@ -28,10 +29,11 @@ public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>>
      *            {@link net.minecraft.nbt.NbtOps#INSTANCE NbtOps}.
      * @param t   The data to load from. ({@link com.google.gson.JsonElement JsonElement} in case of JsonOps,
      *            {@link net.minecraft.nbt.Tag Tag} in case of NbtOps)
+     * @param gameExecutor The executor to run the game logic on. If null, listeners will not be notified.
      * @param <T> The type of the element to load from. Such as JsonElement or Tag.
      * @return The result of the load operation.
      */
-    <T> DataResult<Pair<MoveMap<A, S>, T>> load(DynamicOps<T> ops, T t, Executor gameExecutor);
+    <T> DataResult<Pair<MoveMap<A, S>, T>> load(DynamicOps<T> ops, T t, @Nullable Executor gameExecutor);
 
     /**
      * Loads the move set from a collection of encoded entries paired with their resource location (for error logging).
@@ -40,10 +42,11 @@ public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>>
      * @param ops The dynamic ops to use. Such as {@link com.mojang.serialization.JsonOps#INSTANCE JsonOps} or
      *            {@link net.minecraft.nbt.NbtOps#INSTANCE NbtOps}.
      * @param ts  The collection of encoded entries paired with their resource location.
+     * @param gameExecutor The executor to run the game logic on. If null, listeners will not be notified.
      * @param <T> The type of the element to load from. Such as JsonElement or Tag.
      * @return The loaded move map.
      */
-    <T> MoveMap<A, S> load(DynamicOps<? super T> ops, Collection<Pair<ResourceLocation, T>> ts, Executor gameExecutor);
+    <T> MoveMap<A, S> load(DynamicOps<? super T> ops, Collection<Pair<ResourceLocation, T>> ts, @Nullable Executor gameExecutor);
 
     /**
      * Saves the default move map (made with the register function) to a new move map.

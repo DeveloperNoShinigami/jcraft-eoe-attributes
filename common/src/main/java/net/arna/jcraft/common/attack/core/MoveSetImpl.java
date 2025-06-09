@@ -11,6 +11,7 @@ import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.StateContainerHolder;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.Executor;
@@ -80,7 +81,7 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
     }
 
     @SuppressWarnings("unchecked")
-    private void onLoad(MoveMap<A, S> moveMap, Executor gameExecutor) {
+    private void onLoad(MoveMap<A, S> moveMap, @Nullable Executor gameExecutor) {
         moveMap.asMovesList().stream()
                 .filter(m -> m instanceof StateContainerHolder<?>)
                 .map(m -> (StateContainerHolder<S>) m)
@@ -88,7 +89,7 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
         this.moveMap.copyFrom(moveMap);
 
         initialized = true;
-        gameExecutor.execute(() -> listeners.forEach(listener ->
+        if (gameExecutor != null) gameExecutor.execute(() -> listeners.forEach(listener ->
                 listener.onMoveSetReload(this)));
     }
 
