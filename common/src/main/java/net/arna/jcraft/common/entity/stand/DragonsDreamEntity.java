@@ -22,7 +22,8 @@ import org.jetbrains.annotations.Nullable;
 public class DragonsDreamEntity extends StandEntity<DragonsDreamEntity, DragonsDreamEntity.State> {
     public static final MoveSet<DragonsDreamEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.DRAGONS_DREAM,
             DragonsDreamEntity::registerMoves, State.class);
-    public static final StandData DATA = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.dragons_dream")));
+    public static final StandData DATA = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.dragons_dream")))
+            .withObtainable(false);
 
     public DragonsDreamEntity(Level world) {
         super(JStandTypeRegistry.DRAGONS_DREAM.get(), world);
