@@ -6,6 +6,8 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.spec.SpecType;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.attack.core.IAttacker;
 import net.arna.jcraft.common.attack.core.MoveMap;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -36,9 +38,23 @@ public class JMoveSetProvider<A extends IAttacker<A, S>, S extends Enum<S>>
     }
 
     private static <A extends IAttacker<A, S>, S extends Enum<S>> Codec<MoveMap.Entry<A, S>> getCodec(ResourceLocation type) {
+        ensureClassLoaded(type);
         return MoveMap.Entry.codecFor(Optional.ofNullable(MoveSetManager.<A, S>get(type, "default"))
                 .orElseThrow(() -> new IllegalArgumentException("No default moveset found for " + type))
                 .getStateClass());
+    }
+
+    private static void ensureClassLoaded(ResourceLocation type) {
+        // Ensure the corresponding class is loaded so the move sets have been created.
+        StandType standType = JRegistries.STAND_TYPE_REGISTRY.get(type);
+        if (standType != null) {
+            JDataGen.getEntityClass(standType.getEntityType());
+        } else {
+            SpecType specType = JRegistries.SPEC_TYPE_REGISTRY.get(type);
+            if (specType != null) {
+                JDataGen.getSpecClass(specType);
+            }
+        }
     }
 
     @Override

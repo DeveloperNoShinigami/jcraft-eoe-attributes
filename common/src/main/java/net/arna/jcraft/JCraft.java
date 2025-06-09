@@ -175,8 +175,6 @@ public final class JCraft {
         MOVE_CONDITION_TYPE_REGISTRY.register();
         MOVE_TYPE_REGISTRY.register();
 
-        JReloadListenerRegistry.register();
-
         JTagRegistry.init();
 
         JCreativeMenuTabRegistry.init();

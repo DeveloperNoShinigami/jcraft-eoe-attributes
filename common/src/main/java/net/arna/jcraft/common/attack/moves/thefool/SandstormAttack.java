@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFoolEntity> {
-    private WeakReference<LivingEntity> superTarget;
+    private WeakReference<LivingEntity> superTarget = new WeakReference<>(null);
     private final List<WeakReference<FallingBlockEntity>> sandEntities = new ArrayList<>();
 
     public SandstormAttack(final int cooldown, final int windup, final int duration, final float moveDistance,

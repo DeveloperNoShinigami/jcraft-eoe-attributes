@@ -15,8 +15,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.Bindings;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import static net.arna.jcraft.JCraft.MOD_ID;
 
@@ -24,8 +26,8 @@ import static net.arna.jcraft.JCraft.MOD_ID;
 public final class JCraftForge {
 
     public JCraftForge() {
-        IEventBus modBus = Mod.EventBusSubscriber.Bus.MOD.bus().get();
-        IEventBus forgeBus = Mod.EventBusSubscriber.Bus.FORGE.bus().get();
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus forgeBus = Bindings.getForgeBus().get();
 
         // Submit our event bus to let Architectury API register our content on the right time.
         EventBuses.registerModEventBus(MOD_ID, modBus);
