@@ -35,7 +35,7 @@ public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
     public StandEntityModel(final StandType type, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
         this.type = type;
         model = type.getId().withPath(path -> "geo/" + path + ".geo.json");
-        skins = IntStream.rangeClosed(0, type.getData().getInfo().getSkinCount())
+        skins = IntStream.rangeClosed(0, 3)
                 .mapToObj(i -> type.getId().withPath(path -> String.format("textures/entity/stands/%s/%s.png",
                         path, i == 0 ? "default" : "skin" + i)))
                 .toList();
