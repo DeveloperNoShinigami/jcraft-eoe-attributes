@@ -41,7 +41,7 @@ public class StandUserPoseLoader {
         Gson gson = new Gson();
         Map<ResourceLocation, JsonObject> poseJsons = new HashMap<>();
         Map<ResourceLocation, Resource> resources = resourceManager.listResources("poses",
-                loc -> loc.getPath().endsWith(".json") && loc.getPath().split("/").length == 2);
+                loc -> loc.getPath().endsWith(".json") && loc.getPath().split("/").length == 3);
         for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
             try (BufferedReader reader = entry.getValue().openAsReader()) {
                 JsonObject obj = gson.fromJson(reader, JsonObject.class);
