@@ -138,10 +138,10 @@ public class ItemTossProjectile extends AbstractArrow {
             BlockHitResult blockHitResult = (BlockHitResult)result;
             this.onHitBlock(blockHitResult);
         }
-        if (!this.level().isClientSide && getItem().is(JTagRegistry.EXPLODES_ON_IMPACT)) {
-            final boolean grief = this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
-            this.level().explode(this, this.getX(), this.getY(), this.getZ(), 1, grief, Level.ExplosionInteraction.MOB);
-            this.discard();
+        if (!level().isClientSide && getItem().is(JTagRegistry.EXPLODES_ON_IMPACT)) {
+            final boolean grief = level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
+            level().explode(this, getX(), getY(), getZ(), 1, grief, Level.ExplosionInteraction.MOB);
+            discard();
         }
     }
 
