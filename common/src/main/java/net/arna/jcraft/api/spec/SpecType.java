@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.data.AttackerDataLoader;
-import net.arna.jcraft.common.spec.JSpec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 

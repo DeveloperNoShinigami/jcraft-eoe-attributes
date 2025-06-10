@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.ints.IntCollection;
 import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
+import net.arna.jcraft.api.attack.moves.AbstractMultiHitAttack;
 import net.arna.jcraft.common.spec.VampireSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JSoundRegistry;

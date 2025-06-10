@@ -5,8 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import net.arna.jcraft.common.attack.core.MoveAction;
-import net.arna.jcraft.api.attack.MoveActionType;
+import net.arna.jcraft.api.attack.core.MoveAction;
+import net.arna.jcraft.api.attack.core.MoveActionType;
 import net.arna.jcraft.common.entity.stand.CMoonEntity;
 import net.minecraft.world.entity.LivingEntity;
 

@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
+import net.arna.jcraft.api.attack.moves.AbstractChargeAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JUtils;

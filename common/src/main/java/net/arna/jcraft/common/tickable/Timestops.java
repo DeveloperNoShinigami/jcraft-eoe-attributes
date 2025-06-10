@@ -1,10 +1,10 @@
 package net.arna.jcraft.common.tickable;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.stand.GEREntity;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.DimensionData;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;

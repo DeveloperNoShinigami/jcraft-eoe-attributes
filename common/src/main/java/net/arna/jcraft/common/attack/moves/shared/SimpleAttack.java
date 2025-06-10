@@ -4,9 +4,9 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.api.attack.IAttacker;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import org.jetbrains.annotations.NotNull;
 
 public final class SimpleAttack<A extends IAttacker<? extends A, ?>> extends AbstractSimpleAttack<SimpleAttack<A>, A> {

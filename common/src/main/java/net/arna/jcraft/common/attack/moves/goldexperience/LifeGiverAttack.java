@@ -6,7 +6,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.GEButterflyEntity;
 import net.arna.jcraft.common.entity.GEFrogEntity;
 import net.arna.jcraft.common.entity.GESnakeEntity;

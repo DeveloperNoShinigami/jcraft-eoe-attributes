@@ -6,7 +6,7 @@ import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
+import net.arna.jcraft.api.attack.moves.AbstractCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.CounterMissMove;
 import net.arna.jcraft.common.entity.stand.GEREntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;

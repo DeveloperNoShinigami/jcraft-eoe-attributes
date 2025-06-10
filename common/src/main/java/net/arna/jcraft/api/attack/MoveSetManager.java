@@ -3,8 +3,6 @@ package net.arna.jcraft.api.attack;
 import com.google.common.collect.ImmutableMap;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.api.IAttackerType;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.MoveMap;
 import net.arna.jcraft.common.attack.core.MoveSetImpl;
 import net.arna.jcraft.common.data.MoveSetLoader;
 import net.minecraft.resources.ResourceLocation;

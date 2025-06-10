@@ -8,8 +8,9 @@ import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandType;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.MoveMap;
+import net.arna.jcraft.api.attack.IAttacker;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 import net.minecraft.data.PackOutput;
@@ -39,7 +40,7 @@ public class JMoveSetProvider<A extends IAttacker<A, S>, S extends Enum<S>>
 
     private static <A extends IAttacker<A, S>, S extends Enum<S>> Codec<MoveMap.Entry<A, S>> getCodec(ResourceLocation type) {
         ensureClassLoaded(type);
-        return MoveMap.Entry.codecFor(Optional.ofNullable(MoveSetManager.<A, S>get(type, "default"))
+        return MoveMapImpl.EntryImpl.codecFor(Optional.ofNullable(MoveSetManager.<A, S>get(type, "default"))
                 .orElseThrow(() -> new IllegalArgumentException("No default moveset found for " + type))
                 .getStateClass());
     }

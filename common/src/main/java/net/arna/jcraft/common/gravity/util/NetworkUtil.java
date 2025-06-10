@@ -2,7 +2,7 @@ package net.arna.jcraft.common.gravity.util;
 
 import dev.architectury.networking.NetworkManager;
 import lombok.NonNull;
-import net.arna.jcraft.common.component.entity.CommonGravityComponent;
+import net.arna.jcraft.api.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.api.RotationParameters;
 import net.arna.jcraft.common.util.JUtils;

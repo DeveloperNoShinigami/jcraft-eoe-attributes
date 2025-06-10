@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.effects;
 
-import net.arna.jcraft.common.component.living.CommonMiscComponent;
+import net.arna.jcraft.api.component.living.CommonMiscComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.Gravity;
 import net.arna.jcraft.common.gravity.util.RotationUtil;

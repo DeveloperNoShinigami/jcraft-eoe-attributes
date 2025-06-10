@@ -6,7 +6,7 @@ import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.mixin.ChunkLightProviderAccessor;

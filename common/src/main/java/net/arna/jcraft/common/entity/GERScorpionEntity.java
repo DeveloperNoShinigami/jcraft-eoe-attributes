@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.entity;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
@@ -29,7 +29,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
-import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
+import static net.arna.jcraft.api.stand.StandEntity.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;

@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.data.AttackerDataLoader;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;

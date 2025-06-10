@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity;
 
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.ICustomDamageHandler;
 import net.arna.jcraft.common.util.IOwnable;
 import net.minecraft.world.damagesource.DamageSource;
@@ -13,7 +13,7 @@ import net.minecraft.world.entity.animal.frog.Frog;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
+import static net.arna.jcraft.api.stand.StandEntity.damageLogic;
 
 public class GEFrogEntity extends Frog implements IOwnable, ICustomDamageHandler {
     public GEFrogEntity(EntityType<? extends Animal> entityType, Level world) {

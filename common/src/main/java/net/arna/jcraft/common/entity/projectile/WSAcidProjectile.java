@@ -10,8 +10,8 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.splatter.SplatterType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
@@ -31,7 +31,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
+import static net.arna.jcraft.api.stand.StandEntity.damageLogic;
 
 public class WSAcidProjectile extends AbstractArrow implements GeoEntity {
     private static final EntityDataAccessor<Boolean> MYH; // Melt your Heart variant

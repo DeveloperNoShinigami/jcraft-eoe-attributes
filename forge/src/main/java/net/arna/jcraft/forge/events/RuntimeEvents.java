@@ -2,7 +2,7 @@ package net.arna.jcraft.forge.events;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.block.tile.CoffinTileEntity;
-import net.arna.jcraft.common.component.JComponent;
+import net.arna.jcraft.api.component.JComponent;
 import net.arna.jcraft.forge.capability.api.JCapabilityProvider;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;

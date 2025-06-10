@@ -5,8 +5,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import net.arna.jcraft.api.IAttackerType;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.MoveMap;
+import net.arna.jcraft.api.spec.JSpec;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -93,7 +93,7 @@ public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>>
 
     /**
      * A listener for changes made to the move set.
-     * Held with weak references, meant to be implemented by {@link net.arna.jcraft.common.entity.stand.StandEntity} and {@link net.arna.jcraft.common.spec.JSpec}.
+     * Held with weak references, meant to be implemented by {@link StandEntity} and {@link JSpec}.
      * @param <A>
      * @param <S>
      */

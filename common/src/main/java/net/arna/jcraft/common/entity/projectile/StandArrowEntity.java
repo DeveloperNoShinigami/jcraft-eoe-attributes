@@ -7,7 +7,7 @@ import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandTypeUtil;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;

@@ -1,8 +1,8 @@
 package net.arna.jcraft.common.component.impl;
 
 import lombok.Getter;
-import net.arna.jcraft.common.component.living.CommonVampireComponent;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.component.living.CommonVampireComponent;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.spec.VampireSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JSpecTypeRegistry;

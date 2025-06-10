@@ -1,9 +1,9 @@
 package net.arna.jcraft.common.util;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSpecTypeRegistry;
 import net.arna.jcraft.registry.JStatRegistry;

@@ -3,7 +3,7 @@ package net.arna.jcraft.common.events;
 import dev.architectury.event.Event;
 import dev.architectury.event.EventFactory;
 import dev.architectury.event.EventResult;
-import net.arna.jcraft.common.attack.core.MoveInputType;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.minecraft.server.level.ServerPlayer;
 
 /**

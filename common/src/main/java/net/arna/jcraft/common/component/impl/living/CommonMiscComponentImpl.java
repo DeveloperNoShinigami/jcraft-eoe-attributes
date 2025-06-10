@@ -2,7 +2,7 @@ package net.arna.jcraft.common.component.impl.living;
 
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.component.living.CommonMiscComponent;
+import net.arna.jcraft.api.component.living.CommonMiscComponent;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.nbt.CompoundTag;

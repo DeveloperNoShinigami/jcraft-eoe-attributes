@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.component.impl.entity;
 
 import lombok.NonNull;
-import net.arna.jcraft.common.component.entity.CommonGravityComponent;
+import net.arna.jcraft.api.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.RotationAnimation;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.api.RotationParameters;

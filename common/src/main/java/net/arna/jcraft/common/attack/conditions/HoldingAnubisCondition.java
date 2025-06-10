@@ -3,9 +3,9 @@ package net.arna.jcraft.common.attack.conditions;
 import com.mojang.serialization.Codec;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.MoveCondition;
-import net.arna.jcraft.api.attack.MoveConditionType;
+import net.arna.jcraft.api.attack.IAttacker;
+import net.arna.jcraft.api.attack.core.MoveCondition;
+import net.arna.jcraft.api.attack.core.MoveConditionType;
 import net.arna.jcraft.registry.JItemRegistry;
 
 @RequiredArgsConstructor(staticName = "holdingAnubis")

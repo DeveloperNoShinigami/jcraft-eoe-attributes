@@ -6,8 +6,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.StarPlatinumEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
-import static net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack.createBox;
+import static net.arna.jcraft.api.attack.moves.AbstractSimpleAttack.createBox;
 
 @Getter
 public final class InhaleAttack extends AbstractMove<InhaleAttack, StarPlatinumEntity> {

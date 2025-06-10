@@ -3,7 +3,7 @@ package net.arna.jcraft.common.component.impl.entity;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.entity.CommonGrabComponent;
+import net.arna.jcraft.api.component.entity.CommonGrabComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.minecraft.core.BlockPos;

@@ -2,7 +2,7 @@ package net.arna.jcraft.common.item;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.api.spec.SpecType;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;

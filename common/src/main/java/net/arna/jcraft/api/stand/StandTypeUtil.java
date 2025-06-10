@@ -1,7 +1,6 @@
 package net.arna.jcraft.api.stand;
 
 import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

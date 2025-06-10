@@ -4,10 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import net.arna.jcraft.common.attack.core.MoveAction;
-import net.arna.jcraft.api.attack.MoveActionType;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.attack.core.MoveAction;
+import net.arna.jcraft.api.attack.core.MoveActionType;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.world.entity.LivingEntity;
 

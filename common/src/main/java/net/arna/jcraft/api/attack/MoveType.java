@@ -2,7 +2,7 @@ package net.arna.jcraft.api.attack;
 
 import com.mojang.serialization.Codec;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 
 public interface MoveType<M extends AbstractMove<? extends M, ?>> {
     @NonNull

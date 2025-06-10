@@ -2,7 +2,7 @@ package net.arna.jcraft.common.item;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.api.spec.SpecType;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatRegistry;

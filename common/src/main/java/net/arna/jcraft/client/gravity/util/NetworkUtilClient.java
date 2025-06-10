@@ -1,6 +1,6 @@
 package net.arna.jcraft.client.gravity.util;
 
-import net.arna.jcraft.common.component.entity.CommonGravityComponent;
+import net.arna.jcraft.api.component.entity.CommonGravityComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;

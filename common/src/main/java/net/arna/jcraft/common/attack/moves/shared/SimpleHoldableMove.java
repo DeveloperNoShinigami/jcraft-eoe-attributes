@@ -3,9 +3,9 @@ package net.arna.jcraft.common.attack.moves.shared;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.api.attack.IAttacker;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractHoldableMove;
+import net.arna.jcraft.api.attack.moves.AbstractHoldableMove;
 
 public final class SimpleHoldableMove<A extends IAttacker<A, ?>> extends AbstractHoldableMove<SimpleHoldableMove<A>, A> {
     public SimpleHoldableMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int minimumCharge) {

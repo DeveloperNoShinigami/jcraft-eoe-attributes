@@ -3,7 +3,7 @@ package net.arna.jcraft.client.gui.screen;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.stand.StandTypeUtil;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.menu.MainMenu;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JStandTypeRegistry;

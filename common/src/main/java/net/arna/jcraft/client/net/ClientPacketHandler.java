@@ -25,7 +25,7 @@ import net.arna.jcraft.common.config.ConfigOption;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.network.s2c.TimeAccelStatePacket;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.splatter.Splatter;
 import net.arna.jcraft.common.util.DimensionData;
 import net.arna.jcraft.common.util.IJCraftAnimatedPlayer;

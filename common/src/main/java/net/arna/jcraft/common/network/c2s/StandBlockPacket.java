@@ -2,7 +2,7 @@ package net.arna.jcraft.common.network.c2s;
 
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JItemRegistry;

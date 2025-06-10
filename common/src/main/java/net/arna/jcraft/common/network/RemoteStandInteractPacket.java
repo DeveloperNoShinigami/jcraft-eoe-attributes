@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.network;
 
 import dev.architectury.networking.NetworkManager;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.FakePlayer;

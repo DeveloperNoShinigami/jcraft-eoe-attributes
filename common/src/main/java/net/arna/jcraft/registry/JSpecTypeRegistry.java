@@ -9,7 +9,7 @@ import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.common.spec.AnubisSpec;
 import net.arna.jcraft.common.spec.BrawlerSpec;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.spec.VampireSpec;
 import net.minecraft.Util;
 import net.minecraft.world.entity.LivingEntity;

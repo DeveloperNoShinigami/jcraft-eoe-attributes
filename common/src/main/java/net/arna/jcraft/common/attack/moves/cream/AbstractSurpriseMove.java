@@ -2,7 +2,7 @@ package net.arna.jcraft.common.attack.moves.cream;
 
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.world.entity.LivingEntity;

@@ -11,8 +11,8 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -262,7 +262,7 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
 
     // Animations
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
-    
+
     @Override
     public void registerControllers(final AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));

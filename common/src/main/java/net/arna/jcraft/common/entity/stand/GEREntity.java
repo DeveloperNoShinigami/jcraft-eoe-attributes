@@ -7,10 +7,11 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.pose.modifier.IPoseModifier;
 import net.arna.jcraft.api.pose.modifier.LevitationPoseModifier;
 import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.attack.MoveSetManager;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.goldexperience.requiem.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
@@ -36,8 +37,8 @@ import org.joml.Vector3f;
 
 import java.util.function.Consumer;
 
-import static net.arna.jcraft.common.component.living.CommonHitPropertyComponent.HitAnimation.CRUSH;
-import static net.arna.jcraft.common.component.living.CommonHitPropertyComponent.HitAnimation.HIGH;
+import static net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation.CRUSH;
+import static net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation.HIGH;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Gold_Experience_Requiem">Gold Experience Requiem</a>.

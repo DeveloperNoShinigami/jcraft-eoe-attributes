@@ -6,7 +6,7 @@ import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.PlayerCloneEntity;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;

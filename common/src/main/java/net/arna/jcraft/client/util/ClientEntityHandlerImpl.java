@@ -1,10 +1,11 @@
 package net.arna.jcraft.client.util;
 
 import lombok.NonNull;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.particle.AuraArcParticle;
 import net.arna.jcraft.client.particle.AuraBlobParticle;
-import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
+import net.arna.jcraft.api.component.living.CommonBombTrackerComponent;
 import net.arna.jcraft.common.entity.SheerHeartAttackEntity;
 import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.entity.vehicle.AbstractGroundVehicleEntity;

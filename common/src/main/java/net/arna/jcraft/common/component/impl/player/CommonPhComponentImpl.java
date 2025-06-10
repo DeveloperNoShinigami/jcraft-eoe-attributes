@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.component.impl.player;
 
 import lombok.NonNull;
-import net.arna.jcraft.common.component.player.CommonPhComponent;
+import net.arna.jcraft.api.component.player.CommonPhComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;

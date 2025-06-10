@@ -5,7 +5,7 @@ import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.PurpleHazeCloudEntity;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
 import net.arna.jcraft.common.util.JUtils;

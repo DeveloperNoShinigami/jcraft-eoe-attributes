@@ -4,7 +4,7 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractUppercutAttack;
+import net.arna.jcraft.api.attack.moves.AbstractUppercutAttack;
 import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.world.damagesource.DamageSource;

@@ -8,8 +8,10 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.IAttackerType;
+import net.arna.jcraft.api.attack.IAttacker;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.StateContainerHolder;
+import net.arna.jcraft.api.attack.MoveMap;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +31,7 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
     private final Codec<MoveMap.Entry<A, S>> entryCodec;
     private final Set<ReloadListener<A, S>> listeners = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     @Getter
-    private final MoveMap<A, S> moveMap = new MoveMap<>();
+    private final MoveMap<A, S> moveMap = new MoveMapImpl<>();
     @Getter
     private boolean initialized = false;
 
@@ -38,8 +40,8 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
         this.name = name;
         this.register = register;
         this.stateClass = stateClass;
-        codec = MoveMap.codecFor(stateClass);
-        entryCodec = MoveMap.Entry.codecFor(stateClass);
+        codec = MoveMapImpl.codecFor(stateClass);
+        entryCodec = MoveMapImpl.EntryImpl.codecFor(stateClass);
     }
 
     @Override
@@ -77,7 +79,7 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
                 .filter(Objects::nonNull)
                 .toList();
 
-        final MoveMap<A, S> moveMap = new MoveMap<>(entries);
+        final MoveMap<A, S> moveMap = new MoveMapImpl<>(entries);
         onLoad(moveMap, gameExecutor);
         return moveMap;
     }
@@ -97,7 +99,7 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
 
     @Override
     public MoveMap<A, S> save() {
-        final MoveMap<A, S> moveMap = new MoveMap<>();
+        final MoveMap<A, S> moveMap = new MoveMapImpl<>();
         register.accept(moveMap);
         return moveMap;
     }

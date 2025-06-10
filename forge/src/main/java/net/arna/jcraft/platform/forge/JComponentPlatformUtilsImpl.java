@@ -1,12 +1,12 @@
 package net.arna.jcraft.platform.forge;
 
 
-import net.arna.jcraft.common.component.entity.CommonGrabComponent;
-import net.arna.jcraft.common.component.living.*;
-import net.arna.jcraft.common.component.player.CommonPhComponent;
-import net.arna.jcraft.common.component.player.CommonSpecComponent;
-import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
-import net.arna.jcraft.common.component.world.CommonTexasHoldEmComponent;
+import net.arna.jcraft.api.component.entity.CommonGrabComponent;
+import net.arna.jcraft.api.component.living.*;
+import net.arna.jcraft.api.component.player.CommonPhComponent;
+import net.arna.jcraft.api.component.player.CommonSpecComponent;
+import net.arna.jcraft.api.component.world.CommonShockwaveHandlerComponent;
+import net.arna.jcraft.api.component.world.CommonTexasHoldEmComponent;
 import net.arna.jcraft.forge.capability.impl.entity.GrabCapability;
 import net.arna.jcraft.forge.capability.impl.entity.GravityCapability;
 import net.arna.jcraft.forge.capability.impl.entity.TimeStopCapability;

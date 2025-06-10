@@ -4,7 +4,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.model.GeoModel;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.util.JClientUtils;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 

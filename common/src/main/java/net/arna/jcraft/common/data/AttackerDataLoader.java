@@ -12,7 +12,7 @@ import net.arna.jcraft.api.spec.SpecData;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandType;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;

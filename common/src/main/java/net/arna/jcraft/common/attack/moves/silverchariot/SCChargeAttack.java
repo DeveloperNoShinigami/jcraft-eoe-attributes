@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack;
+import net.arna.jcraft.api.attack.moves.AbstractChargeAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.minecraft.world.phys.Vec3;
 
 public final class SCChargeAttack extends AbstractChargeAttack<SCChargeAttack, SilverChariotEntity, SilverChariotEntity.State> {

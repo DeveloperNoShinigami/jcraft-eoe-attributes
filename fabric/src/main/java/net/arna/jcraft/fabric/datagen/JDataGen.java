@@ -2,7 +2,7 @@ package net.arna.jcraft.fabric.datagen;
 
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.spec.SpecType;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.mixin.EntityTypeAccessor;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
