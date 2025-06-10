@@ -49,7 +49,7 @@ public class StandType implements IAttackerType {
      * @param level The level in which to create the entity.
      * @return A new StandEntity of this type in the given level.
      */
-    public StandEntity<?, ?> createEntity(Level level) {
+    public StandEntity<?, ?> createEntity(final Level level) {
         return getEntityType().create(level);
     }
 

@@ -215,7 +215,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.ft"))
             .withCondition(MetallicaIronCondition.atLeast(ScalpelProjectile.IRON_COST));
-    public static final PreciseTossAtack PRECISE_TOSS = new PreciseTossAtack(60, 7, 12, 0.75f)
+    public static final PreciseTossAttack PRECISE_TOSS = new PreciseTossAttack(60, 7, 12, 0.75f)
             .withSound(JSoundRegistry.METALLICA_SCALPEL_SUMMON)
             .withCrouchingVariant(REMOTE_SCALPEL_MOVE)
             .withAerialVariant(FAN_TOSS)

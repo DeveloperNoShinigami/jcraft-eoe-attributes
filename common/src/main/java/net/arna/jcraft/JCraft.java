@@ -12,6 +12,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
@@ -389,14 +390,10 @@ public final class JCraft {
         }
         CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(user);
         StandType type = standData.getType();
-        if (type == JStandTypeRegistry.NONE.get()) {
+        if (StandTypeUtil.isNone(type)) {
             return null;
         }
-        StandEntity<?, ?> stand = type == null ? null : type.createEntity(world);
-
-        if (stand == null) {
-            return null;
-        }
+        StandEntity<?, ?> stand = type.createEntity(world);
 
         int skin = standData.getSkin();
         stand.setSkin(skin);

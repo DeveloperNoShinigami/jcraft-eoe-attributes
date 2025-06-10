@@ -21,11 +21,11 @@ import java.util.concurrent.CompletableFuture;
 public class StandArgumentType implements ArgumentType<StandType> {
     public static final SimpleCommandExceptionType NOT_FOUND = new SimpleCommandExceptionType(Component.literal("That stand was not found"));
     @Getter // implements ArgumentType#getExamples()
-    private final Collection<String> examples = ImmutableList.of("jcraft:made_in_heaver", "magicians_red", "jcraft:d4c");
+    private final Collection<String> examples = ImmutableList.of("jcraft:made_in_heaven", "magicians_red", "jcraft:d4c");
 
     @Override
     public StandType parse(final StringReader reader) throws CommandSyntaxException {
-        StandType type = JRegistries.parseRegistryEntry(JRegistries.STAND_TYPE_REGISTRY, reader,
+        final StandType type = JRegistries.parseRegistryEntry(JRegistries.STAND_TYPE_REGISTRY, reader,
                 t -> t.getData().isObtainable());
         if (type == null) {
             throw NOT_FOUND.createWithContext(reader);

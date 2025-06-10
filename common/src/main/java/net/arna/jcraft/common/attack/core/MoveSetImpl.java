@@ -33,7 +33,7 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
     @Getter
     private boolean initialized = false;
 
-    public MoveSetImpl(RegistrySupplier<? extends IAttackerType> type, String name, Consumer<MoveMap<A, S>> register, Class<S> stateClass) {
+    public MoveSetImpl(final RegistrySupplier<? extends IAttackerType> type, final String name, final Consumer<MoveMap<A, S>> register, final Class<S> stateClass) {
         this.type = type;
         this.name = name;
         this.register = register;
@@ -48,17 +48,19 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
     }
 
     @Override
-    public <T> DataResult<Pair<MoveMap<A, S>, T>> load(DynamicOps<T> ops, T t, Executor gameExecutor) {
-        DataResult<Pair<MoveMap<A, S>, T>> res = codec.decode(ops, t);
-        if (res.result().isEmpty()) return res;
+    public <T> DataResult<Pair<MoveMap<A, S>, T>> load(final DynamicOps<T> ops, T t, final Executor gameExecutor) {
+        final DataResult<Pair<MoveMap<A, S>, T>> res = codec.decode(ops, t);
+        if (res.result().isEmpty()) {
+            return res;
+        }
 
         onLoad(res.result().get().getFirst(), gameExecutor);
         return res;
     }
 
     @Override
-    public <T> MoveMap<A, S> load(DynamicOps<? super T> ops, Collection<Pair<ResourceLocation, T>> ts, Executor gameExecutor) {
-        List<MoveMap.Entry<A, S>> entries = ts.stream()
+    public <T> MoveMap<A, S> load(final DynamicOps<? super T> ops, final Collection<Pair<ResourceLocation, T>> ts, final Executor gameExecutor) {
+        final List<MoveMap.Entry<A, S>> entries = ts.stream()
                 // Decode each entry
                 .map(p -> p.mapSecond(t -> entryCodec.decode(ops, t).map(Pair::getFirst)))
                 // Extract results and log errors
@@ -75,13 +77,13 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
                 .filter(Objects::nonNull)
                 .toList();
 
-        MoveMap<A, S> moveMap = new MoveMap<>(entries);
+        final MoveMap<A, S> moveMap = new MoveMap<>(entries);
         onLoad(moveMap, gameExecutor);
         return moveMap;
     }
 
     @SuppressWarnings("unchecked")
-    private void onLoad(MoveMap<A, S> moveMap, @Nullable Executor gameExecutor) {
+    private void onLoad(final MoveMap<A, S> moveMap, final @Nullable Executor gameExecutor) {
         moveMap.asMovesList().stream()
                 .filter(m -> m instanceof StateContainerHolder<?>)
                 .map(m -> (StateContainerHolder<S>) m)
@@ -95,24 +97,24 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
 
     @Override
     public MoveMap<A, S> save() {
-        MoveMap<A, S> moveMap = new MoveMap<>();
+        final MoveMap<A, S> moveMap = new MoveMap<>();
         register.accept(moveMap);
         return moveMap;
     }
 
     @Override
-    public <T> DataResult<T> write(DynamicOps<T> ops) {
-        MoveMap<A, S> moveMap = save();
+    public <T> DataResult<T> write(final DynamicOps<T> ops) {
+        final MoveMap<A, S> moveMap = save();
         return codec.encodeStart(ops, moveMap);
     }
 
     @Override
-    public <T> DataResult<T> writeModified(DynamicOps<T> ops) {
+    public <T> DataResult<T> writeModified(final DynamicOps<T> ops) {
         return codec.encodeStart(ops, moveMap);
     }
 
     @Override
-    public void registerListener(ReloadListener<A, S> listener) {
+    public void registerListener(final ReloadListener<A, S> listener) {
         if (!listeners.add(listener)) return;
 
         if (initialized) {

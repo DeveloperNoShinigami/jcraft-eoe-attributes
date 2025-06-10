@@ -10,15 +10,17 @@ import net.arna.jcraft.common.spec.JSpec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
+import java.util.function.Function;
+
 @ToString
 @RequiredArgsConstructor(staticName = "of")
 public class SpecType implements IAttackerType {
     @Getter
     private final ResourceLocation id;
-    private final SpecFactory factory;
+    private final Function<LivingEntity, JSpec<?,?>> factory;
 
-    public JSpec<?, ?> createSpec(@NonNull LivingEntity user) {
-        return factory.create(user);
+    public JSpec<?, ?> createSpec(final @NonNull LivingEntity user) {
+        return factory.apply(user);
     }
 
     /**
@@ -35,10 +37,5 @@ public class SpecType implements IAttackerType {
     @Override
     public final String kind() {
         return "spec";
-    }
-
-    @FunctionalInterface
-    public interface SpecFactory {
-        JSpec<?, ?> create(LivingEntity user);
     }
 }

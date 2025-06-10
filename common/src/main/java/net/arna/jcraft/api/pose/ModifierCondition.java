@@ -8,6 +8,7 @@ import net.minecraft.client.model.Model;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
+import java.util.function.BiPredicate;
 
 public enum ModifierCondition {
     LEFT_ARM_EMPTY((model, user) -> model instanceof HumanoidModel<?> hModel &&
@@ -23,21 +24,18 @@ public enum ModifierCondition {
 
     public static final Codec<ModifierCondition> CODEC = JCodecUtils.createEnumCodec(ModifierCondition.class);
 
-    private final Condition condition;
+    private final BiPredicate<Model, LivingEntity> condition;
 
-    ModifierCondition(Condition condition) {
+    ModifierCondition(final BiPredicate<Model, LivingEntity> condition) {
         this.condition = condition;
     }
 
-    public static boolean anyFails(List<ModifierCondition> conditions, Model model, LivingEntity user) {
+    public static boolean anyFails(final List<ModifierCondition> conditions, final Model model, final LivingEntity user) {
         return conditions.stream().anyMatch(condition -> !condition.test(model, user));
     }
 
-    public boolean test(Model model, LivingEntity user) {
+    public boolean test(final Model model, final LivingEntity user) {
         return condition.test(model, user);
     }
 
-    private interface Condition {
-        boolean test(Model model, LivingEntity user);
-    }
 }

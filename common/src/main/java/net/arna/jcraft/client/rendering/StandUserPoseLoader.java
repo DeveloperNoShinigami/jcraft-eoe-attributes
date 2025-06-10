@@ -23,24 +23,24 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class StandUserPoseLoader {
-    private static final Map<ResourceLocation, Map<ModelType<?>, IPoseModifier>> poses = new HashMap<>();
+    private static final Map<ResourceLocation, Map<ModelType<?>, IPoseModifier>> POSES = new HashMap<>();
 
-    public static IPoseModifier getPose(ModelType<?> type, ResourceLocation id) {
-        return poses.getOrDefault(id, Collections.emptyMap()).getOrDefault(type, IPoseModifier.EMPTY);
+    public static IPoseModifier getPose(final ModelType<?> type, final ResourceLocation id) {
+        return POSES.getOrDefault(id, Collections.emptyMap()).getOrDefault(type, IPoseModifier.EMPTY);
     }
 
-    public static CompletableFuture<Void> onReload(PreparableReloadListener.PreparationBarrier preparationBarrier,
-                                                    ResourceManager resourceManager, ProfilerFiller profilerFiller,
-                                                    ProfilerFiller profilerFiller1, Executor executor, Executor executor1) {
+    public static CompletableFuture<Void> onReload(final PreparableReloadListener.PreparationBarrier preparationBarrier,
+                                                    final ResourceManager resourceManager, final ProfilerFiller profilerFiller,
+                                                    final ProfilerFiller profilerFiller1, final Executor executor, final Executor executor1) {
         return CompletableFuture.supplyAsync(() -> loadPoses(resourceManager))
                 .thenCompose(preparationBarrier::wait)
                 .thenAcceptAsync(StandUserPoseLoader::parsePoses);
     }
 
-    private static Map<ResourceLocation, JsonObject> loadPoses(ResourceManager resourceManager) {
-        Gson gson = new Gson();
-        Map<ResourceLocation, JsonObject> poseJsons = new HashMap<>();
-        Map<ResourceLocation, Resource> resources = resourceManager.listResources("poses",
+    private static Map<ResourceLocation, JsonObject> loadPoses(final ResourceManager resourceManager) {
+        final Gson gson = new Gson();
+        final Map<ResourceLocation, JsonObject> poseJsons = new HashMap<>();
+        final Map<ResourceLocation, Resource> resources = resourceManager.listResources("poses",
                 loc -> loc.getPath().endsWith(".json") && loc.getPath().split("/").length == 3);
         for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
             try (BufferedReader reader = entry.getValue().openAsReader()) {
@@ -54,32 +54,32 @@ public class StandUserPoseLoader {
         return poseJsons;
     }
 
-    private static void parsePoses(Map<ResourceLocation, JsonObject> poseJsons) {
-        poses.clear();
+    private static void parsePoses(final Map<ResourceLocation, JsonObject> poseJsons) {
+        POSES.clear();
 
-        for (Map.Entry<ResourceLocation, JsonObject> entry : poseJsons.entrySet()) {
-            ResourceLocation id = entry.getKey();
-            JsonObject obj = entry.getValue();
+        for (final Map.Entry<ResourceLocation, JsonObject> entry : poseJsons.entrySet()) {
+            final ResourceLocation id = entry.getKey();
+            final JsonObject obj = entry.getValue();
 
-            ResourceLocation standType = id.withPath(path -> path.split("/")[1]);
+            final ResourceLocation standType = id.withPath(path -> path.split("/")[1]);
 
             // Remove ".json" suffix
-            String typeName = id.getPath().substring(id.getPath().lastIndexOf('/') + 1, id.getPath().length() - 5);
-            ModelType<?> modelType = ModelType.fromName(typeName);
+            final String typeName = id.getPath().substring(id.getPath().lastIndexOf('/') + 1, id.getPath().length() - 5);
+            final ModelType<?> modelType = ModelType.fromName(typeName);
             if (modelType == null) {
                 JCraft.LOGGER.error("Unknown model type {} for pose {}", typeName, id);
                 continue;
             }
 
-            DataResult<IPoseModifier> res = PoseModifiers.CODEC.parse(JsonOps.INSTANCE, obj);
+            final DataResult<IPoseModifier> res = PoseModifiers.CODEC.parse(JsonOps.INSTANCE, obj);
             if (res.error().isPresent()) {
                 JCraft.LOGGER.error("Failed to parse pose {}: {}", id, res.error().get().message());
                 continue;
             }
 
             //noinspection OptionalGetWithoutIsPresent // checked above
-            IPoseModifier pose = res.result().get();
-            poses.computeIfAbsent(standType, t -> new HashMap<>())
+            final IPoseModifier pose = res.result().get();
+            POSES.computeIfAbsent(standType, t -> new HashMap<>())
                     .put(modelType, pose);
         }
     }

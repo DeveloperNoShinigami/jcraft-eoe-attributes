@@ -2,6 +2,7 @@ package net.arna.jcraft.client.gui.screen;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.entity.stand.StandEntity;
 import net.arna.jcraft.common.menu.MainMenu;
 import net.arna.jcraft.common.util.JUtils;
@@ -31,7 +32,7 @@ public class MainMenuScreen extends AbstractContainerScreen<MainMenu> {
     protected void renderLabels(final GuiGraphics guiGraphics, final int mouseX, final int mouseY) {
         int row = 0;
         drawText(guiGraphics, this.title, row++, 0);
-        if (stand == null || stand.getStandType() == JStandTypeRegistry.NONE.get()) {
+        if (stand == null || StandTypeUtil.isNone(stand.getStandType())) {
             drawText(guiGraphics, JStandTypeRegistry.NONE.get().getData().getInfo().getName(), row++, 0);
         }
         else {

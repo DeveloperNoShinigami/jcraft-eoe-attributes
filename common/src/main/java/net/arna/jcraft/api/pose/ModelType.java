@@ -44,7 +44,7 @@ public class ModelType<T extends Model> {
     private final Class<T> modelClass;
     private final Map<String, Function<T, ModelPart>> parts;
 
-    private ModelType(String name, Class<T> modelClass, Map<String, Function<T, ModelPart>> parts) {
+    private ModelType(final String name, final Class<T> modelClass, final Map<String, Function<T, ModelPart>> parts) {
         fromName.put(name, this);
         fromClass.put(modelClass, this);
         this. name = name;
@@ -52,18 +52,18 @@ public class ModelType<T extends Model> {
         this.parts = ImmutableMap.copyOf(parts);
     }
 
-    private static <T extends Model> Class<T> castClass(Class<?> clazz) {
+    private static <T extends Model> Class<T> castClass(final Class<?> clazz) {
         //noinspection unchecked
         return (Class<T>) clazz;
     }
 
     @Nullable
-    public static ModelType<?> fromName(String name) {
+    public static ModelType<?> fromName(final String name) {
         return fromName.get(name);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Model> ModelType<T> fromClass(Class<? extends T> modelClass) {
+    public static <T extends Model> ModelType<T> fromClass(final Class<? extends T> modelClass) {
         ModelType<?> modelType = fromClass.get(modelClass);
         if (modelType != null) {
             return (ModelType<T>) modelType;
@@ -79,12 +79,12 @@ public class ModelType<T extends Model> {
         throw new IllegalArgumentException("Model type for class " + modelClass.getSimpleName() + " not found");
     }
 
-    public boolean hasPart(String partName) {
+    public boolean hasPart(final String partName) {
         return parts.containsKey(partName);
     }
 
-    public ModelPart getPart(T model, String partName) {
-        Function<T, ModelPart> partFunction = parts.get(partName);
+    public ModelPart getPart(final T model, final String partName) {
+        final Function<T, ModelPart> partFunction = parts.get(partName);
         if (partFunction != null) {
             return partFunction.apply(model);
         }

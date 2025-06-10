@@ -71,6 +71,7 @@ public class StandData {
      */
     @NonNull
     private final StandInfo info;
+
     /**
      * The data used when summoning this stand.
      * This includes sound effects, animation duration, and whether to play the animation.
@@ -79,7 +80,7 @@ public class StandData {
     @lombok.Builder.Default
     private SummonData summonData = SummonData.of(() -> null);
 
-    public static StandData of(@NonNull StandInfo info) {
+    public static StandData of(final @NonNull StandInfo info) {
         return builder().info(info).build();
     }
 
@@ -90,7 +91,7 @@ public class StandData {
      * @return The new stand data
      */
     @Tolerate
-    public StandData withInfo(UnaryOperator<StandInfo.Builder> newInfo) {
+    public StandData withInfo(final UnaryOperator<StandInfo.Builder> newInfo) {
         return withInfo(newInfo.apply(this.info.toBuilder()).build());
     }
 }

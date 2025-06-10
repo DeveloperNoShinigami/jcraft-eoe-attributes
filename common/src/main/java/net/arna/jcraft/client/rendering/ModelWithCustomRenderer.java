@@ -16,12 +16,12 @@ import java.util.List;
 public class ModelWithCustomRenderer implements BakedModel {
     private final BakedModel model;
 
-    public ModelWithCustomRenderer(BakedModel model) {
+    public ModelWithCustomRenderer(final BakedModel model) {
         this.model = model;
     }
 
     @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, @NotNull RandomSource random) {
+    public @NotNull List<BakedQuad> getQuads(final @Nullable BlockState state, final @Nullable Direction direction, final @NotNull RandomSource random) {
         return model.getQuads(state, direction, random);
     }
 

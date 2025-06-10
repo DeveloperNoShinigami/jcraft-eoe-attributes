@@ -15,20 +15,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 
 public class StandDiscItemRenderer {
-    public static void render(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack,
-                              MultiBufferSource buffer, int packedLight, int packedOverlay) {
+    public static void render(final ItemStack stack, final ItemDisplayContext displayContext, final PoseStack poseStack,
+                              final MultiBufferSource buffer, final int packedLight, final int packedOverlay) {
         // Pop pose to undo the transformations applied for the stand disc model.
         poseStack.popPose();
         poseStack.pushPose();
-        ItemStack renderStack = new ItemStack(Blocks.DIRT);
+        final ItemStack renderStack = new ItemStack(Blocks.DIRT);
 
-        StandType type = StandDiscItem.getStandType(stack);
+        final StandType type = StandDiscItem.getStandType(stack);
         int skin = StandDiscItem.getSkin(stack);
 
-        ResourceLocation modelLoc = StandTypeUtil.isNone(type) ? JCraft.id("stand_disc") :
+        final ResourceLocation modelLoc = StandTypeUtil.isNone(type) ? JCraft.id("stand_disc") :
                 type.getId().withPath(p -> "stand_disc_%s_%s".formatted(p, skin));
 
-        BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(modelLoc, "inventory"));
+        final BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(modelLoc, "inventory"));
         Minecraft.getInstance().getItemRenderer().render(renderStack, displayContext, false, poseStack, buffer,
                 packedLight, packedOverlay, model);
 

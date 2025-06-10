@@ -48,7 +48,7 @@ public class SummonData {
     @lombok.Builder.Default
     private int animDuration = 19;
 
-    public static SummonData of(Supplier<@Nullable SoundEvent> sound) {
+    public static SummonData of(final Supplier<@Nullable SoundEvent> sound) {
         return builder().sound(sound).build();
     }
 

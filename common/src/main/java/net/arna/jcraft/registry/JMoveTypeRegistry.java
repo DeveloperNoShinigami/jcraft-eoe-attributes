@@ -147,7 +147,7 @@ public interface JMoveTypeRegistry {
     RegistrySupplier<MoveType<?>> METALLICA_HARVEST_MOVE = register("metallica_harvest_move", HarvestMove.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> METALLICA_INTERNAL_ATTACK = register("metallica_internal_attack", InternalAttack.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> METALLICA_INVISIBILITY_MOVE = register("metallica_invisibility_move", InvisibilityMove.Type.INSTANCE);
-    RegistrySupplier<MoveType<?>> METALLICA_PRECISE_TOSS_ATACK = register("metallica_precise_toss_atack", PreciseTossAtack.Type.INSTANCE);
+    RegistrySupplier<MoveType<?>> METALLICA_PRECISE_TOSS_ATACK = register("metallica_precise_toss_atack", PreciseTossAttack.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> METALLICA_CREATE_MAGNETIC_FIELD_MOVE = register("metallica_create_magnetic_field_move", CreateMagneticFieldMove.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> METALLICA_EXPLODE_MAGNETIC_FIELD_MOVE = register("metallica_explode_magnetic_field_move", ExplodeMagneticFieldMove.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> METALLICA_RAZOR_COUGH_ATTACK = register("metallica_razor_cough_attack", RazorCoughAttack.Type.INSTANCE);

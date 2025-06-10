@@ -9,8 +9,12 @@ import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.common.spec.AnubisSpec;
 import net.arna.jcraft.common.spec.BrawlerSpec;
+import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.common.spec.VampireSpec;
 import net.minecraft.Util;
+import net.minecraft.world.entity.LivingEntity;
+
+import java.util.function.Function;
 
 public interface JSpecTypeRegistry {
     DeferredRegister<SpecType> SPEC_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, JRegistries.SPEC_TYPE_REGISTRY_KEY);
@@ -27,7 +31,7 @@ public interface JSpecTypeRegistry {
         map.put(3, VAMPIRE);
     });
 
-    private static RegistrySupplier<SpecType> register(String name, SpecType.SpecFactory factory) {
+    private static RegistrySupplier<SpecType> register(String name, Function<LivingEntity, JSpec<?,?>> factory) {
         return SPEC_TYPE_REGISTRY.register(name, () -> SpecType.of(JCraft.id(name), factory));
     }
 }

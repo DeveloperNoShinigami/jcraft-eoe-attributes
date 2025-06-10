@@ -32,22 +32,22 @@ import java.util.function.Predicate;
  * (See example add-on mod and the registries in net.arna.jcraft.registry package).
  */
 public class JRegistries {
-    private static final RegistrarManager manager = RegistrarManager.get(JCraft.MOD_ID);
+    private static final RegistrarManager MANAGER = RegistrarManager.get(JCraft.MOD_ID);
 
     // Registries
-    public static final Registrar<StandType> STAND_TYPE_REGISTRY = manager.<StandType>builder(JCraft.id("stand_type"))
+    public static final Registrar<StandType> STAND_TYPE_REGISTRY = MANAGER.<StandType>builder(JCraft.id("stand_type"))
             .syncToClients()
             .build();
-    public static final Registrar<SpecType> SPEC_TYPE_REGISTRY = manager.<SpecType>builder(JCraft.id("spec_type"))
+    public static final Registrar<SpecType> SPEC_TYPE_REGISTRY = MANAGER.<SpecType>builder(JCraft.id("spec_type"))
             .syncToClients()
             .build();
-    public static final Registrar<MoveType<?>> MOVE_TYPE_REGISTRY = manager.<MoveType<?>>builder(JCraft.id("move_type"))
+    public static final Registrar<MoveType<?>> MOVE_TYPE_REGISTRY = MANAGER.<MoveType<?>>builder(JCraft.id("move_type"))
             .syncToClients()
             .build();
-    public static final Registrar<MoveConditionType<?>> MOVE_CONDITION_TYPE_REGISTRY = manager.<MoveConditionType<?>>builder(JCraft.id("move_condition_type"))
+    public static final Registrar<MoveConditionType<?>> MOVE_CONDITION_TYPE_REGISTRY = MANAGER.<MoveConditionType<?>>builder(JCraft.id("move_condition_type"))
             .syncToClients()
             .build();
-    public static final Registrar<MoveActionType<?>> MOVE_ACTION_TYPE_REGISTRY = manager.<MoveActionType<?>>builder(JCraft.id("move_action_type"))
+    public static final Registrar<MoveActionType<?>> MOVE_ACTION_TYPE_REGISTRY = MANAGER.<MoveActionType<?>>builder(JCraft.id("move_action_type"))
             .syncToClients()
             .build();
 
@@ -71,20 +71,24 @@ public class JRegistries {
     public static final Codec<MoveAction<?, ?>> MOVE_ACTION_CODEC = MOVE_ACTION_TYPE_CODEC
             .dispatch("type", MoveAction::getType, MoveActionType::getCodec);
 
+    private JRegistries() {
+        // No instantiation.
+    }
+
     public static void init() {
         // Left empty on purpose. Static initializers will register the registries.
     }
 
-    public static <T> Codec<T> createCodec(Registrar<T> registrar) {
+    public static <T> Codec<T> createCodec(final Registrar<T> registrar) {
         return ResourceLocation.CODEC.flatXmap(rl -> {
-            T t = registrar.get(rl);
+            final T t = registrar.get(rl);
             if (t == null) {
                 return DataResult.error(() -> "Could not find " + registrar.key().location() + " with id: " + rl);
             }
 
             return DataResult.success(t);
         }, t -> {
-            ResourceLocation rl = registrar.getId(t);
+            final ResourceLocation rl = registrar.getId(t);
             if (rl == null) {
                 return DataResult.error(() -> "Could not find id for " + registrar.key().location() + ": " + t);
             }
@@ -94,7 +98,7 @@ public class JRegistries {
 
     // For some reason, the Registrar::key() method returns a ResourceKey of
     // something that extends Registry<T>, but not Registry<T> itself, which is problematic.
-    private static <T> ResourceKey<Registry<T>> createKey(Registrar<T> registrar) {
+    private static <T> ResourceKey<Registry<T>> createKey(final Registrar<T> registrar) {
         return ResourceKey.createRegistryKey(registrar.key().location());
     }
 
@@ -105,8 +109,8 @@ public class JRegistries {
      * @return the parsed registry entry, or null if not found
      * @param <T> the type of the registry entry
      */
-    public static <T> @Nullable T parseRegistryEntry(Registrar<T> registry, StringReader reader,
-                                                     Predicate<T> filter) {
+    public static <T> @Nullable T parseRegistryEntry(final Registrar<T> registry, final StringReader reader,
+                                                     final Predicate<T> filter) {
         int i = reader.getCursor();
         while (reader.canRead() && ResourceLocation.isAllowedInResourceLocation(reader.peek())) {
             reader.skip();
@@ -121,8 +125,8 @@ public class JRegistries {
             path = parts[1];
         }
 
-        ResourceLocation id = new ResourceLocation(namespace, path);
-        T t = registry.get(id);
+        final ResourceLocation id = new ResourceLocation(namespace, path);
+        final T t = registry.get(id);
         if (t == null || !filter.test(t)) {
             reader.setCursor(i);
             return null; // Not found or does not match filter
@@ -137,8 +141,8 @@ public class JRegistries {
      * @param builder the SuggestionsBuilder to submit suggestions to
      * @return a CompletableFuture that will complete with the suggestions
      */
-    public static <T> CompletableFuture<Suggestions> listSuggestions(Registrar<T> registry, SuggestionsBuilder builder,
-                                                                     Predicate<T> filter) {
+    public static <T> CompletableFuture<Suggestions> listSuggestions(final Registrar<T> registry, final SuggestionsBuilder builder,
+                                                                     final Predicate<T> filter) {
         final String input = builder.getRemainingLowerCase();
 
         registry.entrySet().stream()

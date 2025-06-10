@@ -4,6 +4,10 @@ import com.mojang.serialization.Codec;
 import net.arna.jcraft.common.util.JCodecUtils;
 import net.minecraft.client.model.geom.ModelPart;
 
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 public enum ModelPartProperty {
     X(p -> p.x, (p, v) -> p.x = v),
     Y(p -> p.y, (p, v) -> p.y = v),
@@ -17,29 +21,19 @@ public enum ModelPartProperty {
 
     public static final Codec<ModelPartProperty> CODEC = JCodecUtils.createEnumCodec(ModelPartProperty.class);
 
-    private final Getter getter;
-    private final Setter setter;
+    private final Function<ModelPart, Float> getter;
+    private final BiConsumer<ModelPart, Float> setter;
 
-    ModelPartProperty(Getter getter, Setter setter) {
+    ModelPartProperty(final Function<ModelPart, Float> getter, final BiConsumer<ModelPart, Float> setter) {
         this.getter = getter;
         this.setter = setter;
     }
 
-    public float get(ModelPart part) {
-        return getter.get(part);
+    public float get(final ModelPart part) {
+        return getter.apply(part);
     }
 
-    public void set(ModelPart part, float value) {
-        setter.set(part, value);
-    }
-
-    @FunctionalInterface
-    private interface Getter {
-        float get(ModelPart part);
-    }
-
-    @FunctionalInterface
-    private interface Setter {
-        void set(ModelPart part, float value);
+    public void set(final ModelPart part, final float value) {
+        setter.accept(part, value);
     }
 }

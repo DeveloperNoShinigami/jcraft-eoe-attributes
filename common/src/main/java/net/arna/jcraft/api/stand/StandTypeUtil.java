@@ -22,7 +22,7 @@ public class StandTypeUtil {
      * @param type The type to check for
      * @return Whether the given type is equivalent to the {@code NONE} type.
      */
-    public static boolean isNone(StandType type) {
+    public static boolean isNone(final StandType type) {
         return type == null || type == JStandTypeRegistry.NONE.get();
     }
 
@@ -70,8 +70,8 @@ public class StandTypeUtil {
      * Gets a random regular (so no evolutions) stand type.
      * @return a random regular stand type.
      */
-    public static StandType getRandomRegular(RandomSource random) {
-        List<StandType> types = streamAllObtainable()
+    public static StandType getRandomRegular(final RandomSource random) {
+        final List<StandType> types = streamAllObtainable()
                 .filter(type -> !type.getData().isEvolution())
                 .toList();
         return types.get(random.nextInt(types.size()));
@@ -81,8 +81,8 @@ public class StandTypeUtil {
      * Gets a random obtainable stand type, may return an evolution type.
      * @return a random stand type.
      */
-    public static StandType getRandom(RandomSource random) {
-        List<StandType> types = streamAllObtainable().toList();
+    public static StandType getRandom(final RandomSource random) {
+        final List<StandType> types = streamAllObtainable().toList();
         return types.get(random.nextInt(types.size()));
     }
 
@@ -94,7 +94,7 @@ public class StandTypeUtil {
      * @return the stand type, or {@code null} if not found or an invalid type was found.
      */
     @Nullable
-    public static StandType readFromNBT(CompoundTag nbt, String key) {
+    public static StandType readFromNBT(final CompoundTag nbt, final String key) {
         if (nbt.contains(key, Tag.TAG_INT)) {
             int ordinal = nbt.getInt(key);
             return Optional.ofNullable(JStandTypeRegistry.LEGACY_ORDINALS.get(ordinal))

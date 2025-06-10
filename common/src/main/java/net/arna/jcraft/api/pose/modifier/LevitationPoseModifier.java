@@ -38,12 +38,12 @@ public class LevitationPoseModifier implements IPoseModifier {
     }
 
     @Override
-    public boolean isModelSupported(ModelType<?> modelType) {
+    public boolean isModelSupported(final ModelType<?> modelType) {
         return modelType == ModelType.HUMANOID;
     }
 
     @Override
-    public void apply(Model model, LivingEntity user, float age) {
+    public void apply(final Model model, final LivingEntity user, final float age) {
         HumanoidModel<?> hModel = (HumanoidModel<?>) model;
 
         // Bobbing up and down while floating

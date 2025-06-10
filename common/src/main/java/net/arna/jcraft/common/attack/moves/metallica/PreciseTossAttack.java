@@ -13,14 +13,14 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
 
-public class PreciseTossAtack extends AbstractMove<PreciseTossAtack, MetallicaEntity> {
-    public PreciseTossAtack(int cooldown, int windup, int duration, float moveDistance) {
+public class PreciseTossAttack extends AbstractMove<PreciseTossAttack, MetallicaEntity> {
+    public PreciseTossAttack(int cooldown, int windup, int duration, float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
         ranged = true;
     }
 
     @Override
-    public @NonNull MoveType<PreciseTossAtack> getMoveType() {
+    public @NonNull MoveType<PreciseTossAttack> getMoveType() {
         return Type.INSTANCE;
     }
 
@@ -40,21 +40,21 @@ public class PreciseTossAtack extends AbstractMove<PreciseTossAtack, MetallicaEn
     }
 
     @Override
-    protected @NonNull PreciseTossAtack getThis() {
+    protected @NonNull PreciseTossAttack getThis() {
         return this;
     }
 
     @Override
-    public @NonNull PreciseTossAtack copy() {
-        return copyExtras(new PreciseTossAtack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
+    public @NonNull PreciseTossAttack copy() {
+        return copyExtras(new PreciseTossAttack(getCooldown(), getWindup(), getDuration(), getMoveDistance()));
     }
 
-    public static class Type extends AbstractMove.Type<PreciseTossAtack> {
+    public static class Type extends AbstractMove.Type<PreciseTossAttack> {
         public static final Type INSTANCE = new Type();
 
         @Override
-        protected @NonNull App<RecordCodecBuilder.Mu<PreciseTossAtack>, PreciseTossAtack> buildCodec(RecordCodecBuilder.Instance<PreciseTossAtack> instance) {
-            return baseDefault(instance, PreciseTossAtack::new);
+        protected @NonNull App<RecordCodecBuilder.Mu<PreciseTossAttack>, PreciseTossAttack> buildCodec(RecordCodecBuilder.Instance<PreciseTossAttack> instance) {
+            return baseDefault(instance, PreciseTossAttack::new);
         }
     }
 }

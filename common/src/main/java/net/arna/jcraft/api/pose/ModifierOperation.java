@@ -1,6 +1,7 @@
 package net.arna.jcraft.api.pose;
 
 import com.mojang.serialization.Codec;
+import it.unimi.dsi.fastutil.floats.FloatBinaryOperator;
 import net.arna.jcraft.common.util.JCodecUtils;
 import net.minecraft.client.model.geom.ModelPart;
 
@@ -11,17 +12,13 @@ public enum ModifierOperation {
 
     public static final Codec<ModifierOperation> CODEC = JCodecUtils.createEnumCodec(ModifierOperation.class);
 
-    private final FloatOp op;
+    private final FloatBinaryOperator op;
 
-    ModifierOperation(FloatOp op) {
+    ModifierOperation(final FloatBinaryOperator op) {
         this.op = op;
     }
 
-    public void apply(ModelPart part, ModelPartProperty property, float value) {
-        property.set(part, op.get(property.get(part), value));
-    }
-
-    private interface FloatOp {
-        float get(float baseValue, float value);
+    public void apply(final ModelPart part, final ModelPartProperty property, final float value) {
+        property.set(part, op.apply(property.get(part), value));
     }
 }

@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.concurrent.Executor;
 
 public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
+
     /**
      * Gets the type of the move set.
      *
@@ -33,7 +34,7 @@ public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>>
      * @param <T> The type of the element to load from. Such as JsonElement or Tag.
      * @return The result of the load operation.
      */
-    <T> DataResult<Pair<MoveMap<A, S>, T>> load(DynamicOps<T> ops, T t, @Nullable Executor gameExecutor);
+    <T> DataResult<Pair<MoveMap<A, S>, T>> load(final DynamicOps<T> ops, T t, final @Nullable Executor gameExecutor);
 
     /**
      * Loads the move set from a collection of encoded entries paired with their resource location (for error logging).
@@ -46,7 +47,7 @@ public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>>
      * @param <T> The type of the element to load from. Such as JsonElement or Tag.
      * @return The loaded move map.
      */
-    <T> MoveMap<A, S> load(DynamicOps<? super T> ops, Collection<Pair<ResourceLocation, T>> ts, @Nullable Executor gameExecutor);
+    <T> MoveMap<A, S> load(final DynamicOps<? super T> ops, final Collection<Pair<ResourceLocation, T>> ts, final @Nullable Executor gameExecutor);
 
     /**
      * Saves the default move map (made with the register function) to a new move map.
@@ -62,7 +63,7 @@ public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>>
      * @param <T> The type of the element to save to. Such as JsonElement.
      * @return The result of the save operation.
      */
-    <T> DataResult<T> write(DynamicOps<T> ops);
+    <T> DataResult<T> write(final DynamicOps<T> ops);
 
     /**
      * Writes the modified move set (including datapack changes) using the given dynamic ops.
@@ -71,7 +72,7 @@ public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>>
      * @param <T> The type of the element to save to. Such as JsonElement.
      * @return The result of the save operation.
      */
-    <T> DataResult<T> writeModified(DynamicOps<T> ops);
+    <T> DataResult<T> writeModified(final DynamicOps<T> ops);
 
     /**
      * Register a listener for changes made to the move set.
@@ -80,7 +81,7 @@ public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>>
      *
      * @param listener The listener to register.
      */
-    void registerListener(MoveSet.ReloadListener<A, S> listener);
+    void registerListener(final MoveSet.ReloadListener<A, S> listener);
 
     String getName();
 
@@ -92,11 +93,11 @@ public interface MoveSet<A extends IAttacker<? extends A, S>, S extends Enum<S>>
 
     /**
      * A listener for changes made to the move set.
-     * Held with weak references, meant to be implemented by StandEntity and JSpec.
+     * Held with weak references, meant to be implemented by {@link net.arna.jcraft.common.entity.stand.StandEntity} and {@link net.arna.jcraft.common.spec.JSpec}.
      * @param <A>
      * @param <S>
      */
     interface ReloadListener<A extends IAttacker<? extends A, S>, S extends Enum<S>> {
-        void onMoveSetReload(MoveSet<A, S> moveSet);
+        void onMoveSetReload(final MoveSet<A, S> moveSet);
     }
 }

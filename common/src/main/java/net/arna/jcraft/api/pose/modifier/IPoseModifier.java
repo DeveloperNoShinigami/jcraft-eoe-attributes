@@ -30,7 +30,7 @@ public interface IPoseModifier {
      * @param modelType The type of the model to check compatibility with
      * @return true if the model is supported, false otherwise
      */
-    default boolean isModelSupported(ModelType<?> modelType) {
+    default boolean isModelSupported(final ModelType<?> modelType) {
         return true;
     }
 
@@ -41,5 +41,5 @@ public interface IPoseModifier {
      * @param user The entity using the model. Can be used for context
      * @param age The age of the entity in ticks. Can be used for animations or time-based effects
      */
-    void apply(Model model, LivingEntity user, float age);
+    void apply(final Model model, final LivingEntity user, final float age);
 }

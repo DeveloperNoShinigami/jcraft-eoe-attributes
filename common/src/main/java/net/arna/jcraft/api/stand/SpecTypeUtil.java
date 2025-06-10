@@ -26,14 +26,14 @@ public class SpecTypeUtil {
      * @return the stand type, or {@code null} if not found or an invalid type was found.
      */
     @Nullable
-    public static SpecType readFromNBT(CompoundTag nbt, String key) {
+    public static SpecType readFromNBT(final CompoundTag nbt, final String key) {
         if (nbt.contains(key, Tag.TAG_INT)) {
-            int ordinal = nbt.getInt(key);
+            final int ordinal = nbt.getInt(key);
             return Optional.ofNullable(JSpecTypeRegistry.LEGACY_ORDINALS.get(ordinal))
                     .map(Supplier::get)
                     .orElse(null);
         } else if (nbt.contains(key, Tag.TAG_STRING)) {
-            String id = nbt.getString(key);
+            final String id = nbt.getString(key);
             return JRegistries.SPEC_TYPE_REGISTRY.get(new ResourceLocation(id));
         } else {
             return null;

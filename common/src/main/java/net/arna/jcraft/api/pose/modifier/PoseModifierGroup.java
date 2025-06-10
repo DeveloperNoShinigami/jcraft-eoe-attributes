@@ -27,12 +27,12 @@ public record PoseModifierGroup(@Singular List<ModifierCondition> conditions,
     }
 
     @Override
-    public boolean isModelSupported(ModelType<?> modelType) {
+    public boolean isModelSupported(final ModelType<?> modelType) {
         return modifiers.stream().allMatch(modifier -> modifier.isModelSupported(modelType));
     }
 
     @Override
-    public void apply(Model model, LivingEntity user, float age) {
+    public void apply(final Model model, final LivingEntity user, final float age) {
         if (ModifierCondition.anyFails(conditions, model, user)) {
             return; // Skip if any condition is not met
         }

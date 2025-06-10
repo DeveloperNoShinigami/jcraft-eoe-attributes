@@ -100,6 +100,8 @@ public class JCraftAbilityHud {
             .put(CooldownType.SPECIAL3, SPEC_SPECIAL_3)
             .build();
 
+    private static final ResourceLocation UNIVERSAL_ID = JCraft.id("universal");
+
     public static int getHudX(final int scaledX, final int rightOffset) {
         return switch (JClientConfig.getInstance().getUiPosition()) {
             case LEFT -> 2;
@@ -139,7 +141,7 @@ public class JCraftAbilityHud {
                 // Render cooldown HUD for stands
                 renderIcons(ctx, isMid ? STAND_ICONS_MID : STAND_ICONS, selectedX, selectedY, stand.getStandType().getId());
             }
-            renderIcons(ctx, UNIVERSAL_ICONS, selectedX, selectedY, JCraft.id("universal"));
+            renderIcons(ctx, UNIVERSAL_ICONS, selectedX, selectedY, UNIVERSAL_ID);
         }
     }
 

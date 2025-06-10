@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PoseModifiers {
-    private static final Pattern modifierPattern = Pattern.compile(
+    private static final Pattern MODIFIER_PATTERN = Pattern.compile(
             "([a-zA-Z_\\d]+)" + // Model part
                     "\\.(x|y|z|x_?Rot|y_?Rot|z_?Rot|x_?Scale|y_?Scale|z_?Scale)" + // Property
                     "\\s*(=|\\+=|-=|\\*=|/=)\\s*" + // Operator
@@ -20,7 +20,7 @@ public class PoseModifiers {
     private static final Map<String, Codec<? extends IPoseModifier>> modifiers = new HashMap<>();
     public static Codec<IPoseModifier> CODEC = Codec.STRING.dispatch(IPoseModifier::getId, modifiers::get);
 
-    public static void register(String id, Codec<? extends IPoseModifier> codec) {
+    public static void register(final String id, final Codec<? extends IPoseModifier> codec) {
         if (modifiers.containsKey(id)) {
             throw new IllegalArgumentException("Modifier with id " + id + " is already registered.");
         }
@@ -38,7 +38,7 @@ public class PoseModifiers {
      *                   Will be applied to the whole group if 'modifiers' contains more than one modifier.
      * @return An instance of {@link IPoseModifier} that represents the parsed modifiers.
      */
-    public static IPoseModifier parse(String modifiers, ModifierCondition... conditions) {
+    public static IPoseModifier parse(final String modifiers, final ModifierCondition... conditions) {
         if (modifiers.isEmpty()) {
             return IPoseModifier.EMPTY;
         }
@@ -67,28 +67,28 @@ public class PoseModifiers {
                 .build();
     }
 
-    private static IPoseModifier parseSingle(String modifier, ModifierCondition... conditions) {
+    private static IPoseModifier parseSingle(String modifier, final ModifierCondition... conditions) {
         modifier = modifier.split("//")[0]; // Remove comments
         if (modifier.trim().isEmpty()) {
             return null; // Ignore empty modifiers
         }
 
-        Matcher matcher = modifierPattern.matcher(modifier.trim());
+        Matcher matcher = MODIFIER_PATTERN.matcher(modifier.trim());
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid modifier format: " + modifier);
         }
 
         // Extract parts from the regex groups
-        String rawPart = matcher.group(1); // Model part
-        String rawProp = matcher.group(2); // Property
-        String rawOp = matcher.group(3); // Operator
-        String valueStr = matcher.group(4); // Value
-        boolean isDeg = matcher.group(5) != null; // Is value in degrees
+        final String rawPart = matcher.group(1); // Model part
+        final String rawProp = matcher.group(2); // Property
+        final String rawOp = matcher.group(3); // Operator
+        final String valueStr = matcher.group(4); // Value
+        final boolean isDeg = matcher.group(5) != null; // Is value in degrees
 
         // Parse components
-        ModelPartGetter part = new ModelPartGetter(rawPart);
+        final ModelPartGetter part = new ModelPartGetter(rawPart);
 
-        ModelPartProperty prop = switch (rawProp.toLowerCase(Locale.ROOT)) {
+        final ModelPartProperty prop = switch (rawProp.toLowerCase(Locale.ROOT)) {
             case "x" -> ModelPartProperty.X;
             case "y" -> ModelPartProperty.Y;
             case "z" -> ModelPartProperty.Z;
@@ -101,13 +101,13 @@ public class PoseModifiers {
             default -> throw new IllegalArgumentException("Unknown property: " + rawProp);
         };
 
-        ModifierOperation operation = switch (rawOp) {
+        final ModifierOperation operation = switch (rawOp) {
             case "=" -> ModifierOperation.SET;
             case "+=", "-=" -> ModifierOperation.ADD;
             case "*=", "/=" -> ModifierOperation.MULTIPLY;
             default -> throw new IllegalArgumentException("Unknown operation: " + rawOp);
         };
-        boolean invertOp = "-=".equals(rawOp) || "/=".equals(rawOp);
+        final boolean invertOp = "-=".equals(rawOp) || "/=".equals(rawOp);
 
         float value = Float.parseFloat(valueStr);
         if (isDeg) {
@@ -122,7 +122,7 @@ public class PoseModifiers {
         return new CustomPoseModifier(List.of(conditions), operation, part, prop, value);
     }
 
-    public static void init() {
+    public static void register() {
         // Register built-in modifiers
         // Add-on mods should call #register to add their own modifiers.
         register("empty", Codec.unit(IPoseModifier.EMPTY));

@@ -38,7 +38,7 @@ public class AttackerDataLoader {
      * @param id The ResourceLocation of the stand type, e.g. "jcraft:star_platinum"
      * @return The StandData if it exists, or the {@link StandData#EMPTY empty data} if it doesn't.
      */
-    public static StandData getStandData(ResourceLocation id) {
+    public static StandData getStandData(final ResourceLocation id) {
         return standData.getOrDefault(id, StandData.EMPTY);
     }
 
@@ -50,7 +50,7 @@ public class AttackerDataLoader {
      * @param id The ResourceLocation of the stand type, e.g. "jcraft:star_platinum"
      * @return The StandData if it exists, or the {@link StandData#EMPTY empty data} if it doesn't.
      */
-    public static SpecData getSpecData(ResourceLocation id) {
+    public static SpecData getSpecData(final ResourceLocation id) {
         return specData.getOrDefault(id, SpecData.EMPTY);
     }
 
@@ -66,9 +66,9 @@ public class AttackerDataLoader {
      * @return A completable future that completes when the reload is done
      * @see net.minecraft.server.ReloadableServerResources
      */
-    public static CompletableFuture<Void> onReload(PreparableReloadListener.PreparationBarrier preparationBarrier,
-                                                   ResourceManager resourceManager, ProfilerFiller preparationsProfiler,
-                                                   ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
+    public static CompletableFuture<Void> onReload(final PreparableReloadListener.PreparationBarrier preparationBarrier,
+                                                   final ResourceManager resourceManager, final ProfilerFiller preparationsProfiler,
+                                                   final ProfilerFiller reloadProfiler, final Executor backgroundExecutor, final Executor gameExecutor) {
         return CompletableFuture.supplyAsync(() -> loadDataFiles(resourceManager), backgroundExecutor)
                 .thenCompose(preparationBarrier::wait) // Wait for preparations to finish
                 .thenAcceptAsync(AttackerDataLoader::loadAllData);
@@ -79,27 +79,27 @@ public class AttackerDataLoader {
      * @param resourceManager The resource manager used to get data files
      * @return A map of ResourceLocation to JsonObject, where the ResourceLocation is the stand type id
      */
-    private static Map<String, Map<ResourceLocation, JsonObject>> loadDataFiles(ResourceManager resourceManager) {
-        Map<ResourceLocation, Resource> standResources = resourceManager.listResources("stands",
+    private static Map<String, Map<ResourceLocation, JsonObject>> loadDataFiles(final ResourceManager resourceManager) {
+        final Map<ResourceLocation, Resource> standResources = resourceManager.listResources("stands",
                 rl -> rl.getPath().endsWith(".json"));
-        Map<ResourceLocation, Resource> specResources = resourceManager.listResources("specs",
+        final Map<ResourceLocation, Resource> specResources = resourceManager.listResources("specs",
                 rl -> rl.getPath().endsWith(".json"));
-        Map<ResourceLocation, Resource> resources = new HashMap<>(standResources);
+        final Map<ResourceLocation, Resource> resources = new HashMap<>(standResources);
         resources.putAll(specResources);
 
-        Gson gson = new Gson();
-        Map<String, Map<ResourceLocation, JsonObject>> data = new HashMap<>();
+        final Gson gson = new Gson();
+        final Map<String, Map<ResourceLocation, JsonObject>> data = new HashMap<>();
         for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
             // Remove the "stands/" prefix and ".json" suffix to get the stand type name
             // Transforms "stands/star_platinum.json" to "star_platinum"
             // MUST correspond to an entry in the StandType registry.
-            ResourceLocation location = entry.getKey().withPath(path ->
+            final ResourceLocation location = entry.getKey().withPath(path ->
                     path.substring(path.indexOf('/') + 1, path.length() - ".json".length()));
-            String kind = entry.getKey().getPath().split("/")[0]; // "stands" or "specs"
+            final String kind = entry.getKey().getPath().split("/")[0]; // "stands" or "specs"
 
             // Load the JSON file
             try (BufferedReader reader = entry.getValue().openAsReader()) {
-                JsonObject obj = gson.fromJson(reader, JsonObject.class);
+                final JsonObject obj = gson.fromJson(reader, JsonObject.class);
                 data.computeIfAbsent(kind, s -> new HashMap<>()).put(location, obj);
             } catch (IOException e) {
                 JCraft.LOGGER.error("Failed to load data for {} {}",
@@ -110,21 +110,23 @@ public class AttackerDataLoader {
         return data;
     }
 
-    private static void loadAllData(Map<String, Map<ResourceLocation, JsonObject>> data) {
+    private static void loadAllData(final Map<String, Map<ResourceLocation, JsonObject>> data) {
         loadData(data.get("stands"), StandData.CODEC, JRegistries.STAND_TYPE_REGISTRY, standData, "stand", StandData.EMPTY);
         loadData(data.get("specs"), SpecData.CODEC, JRegistries.SPEC_TYPE_REGISTRY, specData, "spec", SpecData.EMPTY);
     }
 
-    private static <T> void loadData(Map<ResourceLocation, JsonObject> data, Codec<T> codec, Registrar<?> registry,
-                                     Map<ResourceLocation, T> map, String kind, T fallback) {
-        if (data == null || data.isEmpty()) return;
+    private static <T> void loadData(final Map<ResourceLocation, JsonObject> data, final Codec<T> codec, final Registrar<?> registry,
+                                     final Map<ResourceLocation, T> map, final String kind, final T fallback) {
+        if (data == null || data.isEmpty()) {
+            return;
+        }
 
-        for (Map.Entry<ResourceLocation, JsonObject> entry : data.entrySet()) {
-            ResourceLocation id = entry.getKey();
-            JsonObject json = entry.getValue();
+        for (final Map.Entry<ResourceLocation, JsonObject> entry : data.entrySet()) {
+            final ResourceLocation id = entry.getKey();
+            final JsonObject json = entry.getValue();
 
             // Parse the JSON object into a StandData instance
-            DataResult<T> res = codec.parse(JsonOps.INSTANCE, json);
+            final DataResult<T> res = codec.parse(JsonOps.INSTANCE, json);
             if (res.result().isEmpty()) {
                 JCraft.LOGGER.error("Failed to parse {} data for {} {}: {}", kind, kind, id, res.error()
                         .map(DataResult.PartialResult::message).orElse(null));
@@ -135,7 +137,7 @@ public class AttackerDataLoader {
         }
 
         // Iterate through the StandType registry to ensure all stand types have data.
-        for (ResourceLocation id : registry.getIds()) {
+        for (final ResourceLocation id : registry.getIds()) {
             if (id.equals(JCraft.id("none"))) {
                 // Ignore the NONE type, as it has no data.
                 continue;

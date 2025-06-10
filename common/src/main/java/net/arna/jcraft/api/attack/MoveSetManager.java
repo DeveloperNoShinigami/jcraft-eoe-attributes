@@ -15,11 +15,15 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class MoveSetManager {
-    private static final Map<ResourceLocation, Map<String, MoveSet<?, ?>>> moveSets = new HashMap<>();
+    private static final Map<ResourceLocation, Map<String, MoveSet<?, ?>>> MOVE_SETS = new HashMap<>();
+
+    private MoveSetManager() {
+        // No instantiation
+    }
 
     // Entries are added using MoveSet.create().
     public static Map<ResourceLocation, Map<String, MoveSet<?, ?>>> getMoveSets() {
-        return moveSets.entrySet().stream()
+        return MOVE_SETS.entrySet().stream()
                 .map(e -> Map.entry(e.getKey(), Collections.unmodifiableMap(e.getValue())))
                 .collect(
                         ImmutableMap::<ResourceLocation, Map<String, MoveSet<?, ?>>>builder,
@@ -31,10 +35,10 @@ public class MoveSetManager {
     /**
      * Checks if the given stand type has any move sets.
      * @param type The stand type to check.
-     * @return True if the stand type has any move sets, false otherwise.
+     * @return <code>true</code> if the stand type has any move sets, <code>false</code> otherwise.
      */
-    public static boolean hasMoveSets(IAttackerType type) {
-        return !moveSets.getOrDefault(type.getId(), Collections.emptyMap()).isEmpty();
+    public static boolean hasMoveSets(final IAttackerType type) {
+        return !MOVE_SETS.getOrDefault(type.getId(), Collections.emptyMap()).isEmpty();
     }
 
     /**
@@ -44,7 +48,7 @@ public class MoveSetManager {
      * @param <A> The type of the attacker.
      * @param <S> The type of the state enum.
      */
-    public static <A extends IAttacker<? extends A, S>, S extends Enum<S>> Map<String, MoveSet<A, S>> get(IAttackerType type) {
+    public static <A extends IAttacker<? extends A, S>, S extends Enum<S>> Map<String, MoveSet<A, S>> get(final IAttackerType type) {
         return get(type.getId());
     }
 
@@ -56,8 +60,8 @@ public class MoveSetManager {
      * @param <S> The type of the state enum.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static <A extends IAttacker<? extends A, S>, S extends Enum<S>> Map<String, MoveSet<A, S>> get(ResourceLocation typeLoc) {
-        return (Map<String, MoveSet<A, S>>) (Map) ImmutableMap.copyOf(moveSets.getOrDefault(typeLoc, Collections.emptyMap()));
+    public static <A extends IAttacker<? extends A, S>, S extends Enum<S>> Map<String, MoveSet<A, S>> get(final ResourceLocation typeLoc) {
+        return (Map<String, MoveSet<A, S>>) (Map) ImmutableMap.copyOf(MOVE_SETS.getOrDefault(typeLoc, Collections.emptyMap()));
     }
 
     /**
@@ -82,7 +86,7 @@ public class MoveSetManager {
      */
     @SuppressWarnings("unchecked")
     public static <A extends IAttacker<? extends A, S>, S extends Enum<S>> MoveSet<A, S> get(ResourceLocation typeLoc, String name) {
-        return (MoveSet<A, S>) moveSets.getOrDefault(typeLoc, Collections.emptyMap()).get(name);
+        return (MoveSet<A, S>) MOVE_SETS.getOrDefault(typeLoc, Collections.emptyMap()).get(name);
     }
 
     /**
@@ -109,13 +113,13 @@ public class MoveSetManager {
      * @param <S> The type of the state enum.
      */
     public static <A extends IAttacker<? extends A, S>, S extends Enum<S>> MoveSet<A, S> create(
-            RegistrySupplier<? extends IAttackerType> type, String name, Consumer<MoveMap<A, S>> register, Class<S> stateClass) {
-        if (moveSets.getOrDefault(type.getId(), Collections.emptyMap()).containsKey(name)) {
+            final RegistrySupplier<? extends IAttackerType> type, final String name, final Consumer<MoveMap<A, S>> register, final Class<S> stateClass) {
+        if (MOVE_SETS.getOrDefault(type.getId(), Collections.emptyMap()).containsKey(name)) {
             throw new IllegalArgumentException("Move set " + name + " for type " + type.getId() + "already exists");
         }
 
         MoveSet<A, S> moveSet = new MoveSetImpl<>(type, name, register, stateClass);
-        moveSets.computeIfAbsent(type.getId(), k -> new HashMap<>()).put(name, moveSet);
+        MOVE_SETS.computeIfAbsent(type.getId(), k -> new HashMap<>()).put(name, moveSet);
 
         // Attempt to load the move set data if there's any pending data for this type and name.
         MoveSetLoader.attemptLoad(moveSet);

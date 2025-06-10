@@ -28,17 +28,20 @@ public class StandInfo {
      */
     @NonNull
     private final Component name;
+
     /**
      * The key of the name, mainly for internal use (such as data-gen providers).
      * This will resolve to 'unknown' if the name is not translatable (which it should be).
      */
     @Getter(lazy = true)
     private final String nameKey = name.getContents() instanceof TranslatableContents tc ? tc.getKey() : "entity.jcraft.unknown";
+
     /**
      * Same as {@link #getNameKey()}, but reduced to the last part of the key. (Excluding the 'entity.&lt;modid&gt;.' prefix)
      */
     @Getter(lazy = true)
     private final String reducedNameKey = getNameKey().split("\\.", 3)[2];
+
     /**
      * The name of each of the skins available for this stand.
      * The number of entries in this list is the number of skins available for this stand.
@@ -48,11 +51,13 @@ public class StandInfo {
     @Singular
     @NonNull
     private List<Component> skinNames;
+
     /**
      * The number of pros and cons of this stand.
      * Used in /stand about and whatnot.
      */
     private int proCount, conCount;
+
     /**
      * The free space in the stand info, used for displaying additional information.
      */
@@ -60,7 +65,7 @@ public class StandInfo {
     @lombok.Builder.Default
     private Component freeSpace = Component.empty();
 
-    public static StandInfo of(@NonNull Component name) {
+    public static StandInfo of(final @NonNull Component name) {
         return builder().name(name).build();
     }
 

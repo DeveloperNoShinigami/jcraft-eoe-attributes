@@ -99,7 +99,7 @@ public class JCraftClient {
         RenderHandler.init();
         JClientEventsRegistry.registerClientEvents();
         JCraftAbilityHud.init();
-        PoseModifiers.init();
+        PoseModifiers.register();
 
         InversionShaderHandler.INSTANCE.init();
         ZaWarudoShaderHandler.INSTANCE.init();
