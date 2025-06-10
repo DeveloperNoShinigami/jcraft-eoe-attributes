@@ -42,8 +42,8 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
         this.name = name;
         this.register = register;
         this.stateClass = stateClass;
-        codec = MoveMapImpl.codecFor(stateClass);
-        entryCodec = MoveMapImpl.EntryImpl.codecFor(stateClass);
+        codec = MoveMap.codecFor(stateClass);
+        entryCodec = MoveMap.Entry.codecFor(stateClass);
     }
 
     @Override

@@ -1,19 +1,15 @@
 package net.arna.jcraft.common.attack.core;
 
 import com.google.common.collect.*;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.attack.IAttacker;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.util.CooldownType;
-import net.arna.jcraft.common.util.JCodecUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,12 +26,6 @@ public class MoveMapImpl<A extends IAttacker<? extends A, S>, S extends Enum<?>>
     public MoveMapImpl(Collection<MoveMap.Entry<A, S>> entries) {
         entries.forEach(entry -> this.entries.put(entry.getMoveClass(), entry));
         freeze();
-    }
-
-    public static <A extends IAttacker<? extends A, S>, S extends Enum<? extends S>> Codec<MoveMap<A, S>> codecFor(Class<S> stateEnum) {
-        return RecordCodecBuilder.create(instance -> instance.group(
-                EntryImpl.<A, S>codecFor(stateEnum).listOf().fieldOf("moves").forGetter(m -> List.copyOf(m.getEntries().values()))
-        ).apply(instance, MoveMapImpl::new));
     }
 
     public EntryImpl<A, S> register(final @NonNull MoveClass type, final @NonNull AbstractMove<?, ? super A> move) {
@@ -180,7 +170,7 @@ public class MoveMapImpl<A extends IAttacker<? extends A, S>, S extends Enum<?>>
         private final @Nullable S animState;
         private @Nullable MoveMap.Entry<A, S> crouchingVariant, aerialVariant, followup;
 
-        private EntryImpl(final MoveClass moveClass, final AbstractMove<?, ? super A> move, final CooldownType cooldownType, final @Nullable S animState) {
+        public EntryImpl(final MoveClass moveClass, final AbstractMove<?, ? super A> move, final CooldownType cooldownType, final @Nullable S animState) {
             this.moveClass = moveClass;
             this.move = move;
             this.cooldownType = cooldownType;
@@ -201,7 +191,7 @@ public class MoveMapImpl<A extends IAttacker<? extends A, S>, S extends Enum<?>>
 
         // Constructor for codec
         @SuppressWarnings("unchecked")
-        private EntryImpl(@NonNull MoveClass moveClass, @NonNull AbstractMove<?, ?> move, @NonNull CooldownType cooldownType, @Nullable S animState,
+        public EntryImpl(@NonNull MoveClass moveClass, @NonNull AbstractMove<?, ?> move, @NonNull CooldownType cooldownType, @Nullable S animState,
                           @Nullable MoveMap.Entry<A, S> crouchingVariant, @Nullable MoveMap.Entry<A, S> aerialVariant, @Nullable MoveMap.Entry<A, S> followup) {
             this.moveClass = moveClass;
             this.move = (AbstractMove<?, ? super A>) move;
@@ -225,29 +215,6 @@ public class MoveMapImpl<A extends IAttacker<? extends A, S>, S extends Enum<?>>
             }
 
             this.move.onRegister(moveClass);
-        }
-
-        /**
-         * Creates a codec for an entry with the given state enum.
-         * @param stateEnum The class of the animation state enum
-         * @return A codec for an entry with the given state enum
-         * @param <S> The type of the animation state enum
-         */
-        public static <A extends IAttacker<? extends A, S>, S extends Enum<? extends S>> Codec<MoveMap.Entry<A, S>> codecFor(Class<S> stateEnum) {
-            Codec<S> stateCodec = JCodecUtils.createEnumCodec(stateEnum);
-            return JCodecUtils.recursive("MoveMap.Entry", self ->
-                    RecordCodecBuilder.create(instance -> instance.group(
-                            MoveClass.CODEC.fieldOf("class").forGetter(MoveMap.Entry::getMoveClass),
-                            JRegistries.MOVE_CODEC.fieldOf("move").forGetter(MoveMap.Entry::getMove),
-                            CooldownType.CODEC.fieldOf("cooldown_type").forGetter(MoveMap.Entry::getCooldownType),
-                            stateCodec.optionalFieldOf("anim_state").forGetter(e -> Optional.ofNullable(e.getAnimState())),
-                            self.optionalFieldOf("crouching_variant").forGetter(e -> Optional.ofNullable(e.getCrouchingVariant())),
-                            self.optionalFieldOf("aerial_variant").forGetter(e -> Optional.ofNullable(e.getAerialVariant())),
-                            self.optionalFieldOf("followup").forGetter(e -> Optional.ofNullable(e.getFollowup()))
-                    ).apply(instance, (moveClass, move, cooldownType,
-                                       animState, crouchingVariant, aerialVariant, followup) ->
-                            new EntryImpl<>(moveClass, move, cooldownType, animState.orElse(null),
-                                    crouchingVariant.orElse(null), aerialVariant.orElse(null), followup.orElse(null)))));
         }
 
         @Override

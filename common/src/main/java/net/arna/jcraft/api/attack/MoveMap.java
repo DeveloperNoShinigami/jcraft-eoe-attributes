@@ -2,10 +2,15 @@ package net.arna.jcraft.api.attack;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Streams;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.util.CooldownType;
+import net.arna.jcraft.common.util.JCodecUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -13,6 +18,19 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MoveMap<A extends IAttacker<? extends A, S>, S extends Enum<?>> extends Iterable<MoveMap.Entry<A, S>> {
+
+    /**
+     * Creates a codec for a move map with the given state enum.
+     * @param stateEnum The state enum class to use for the move map.
+     * @return A codec for a move map with the given state enum.
+     * @param <A> The type of attacker that this move map is for, which extends {@link IAttacker}.
+     * @param <S> The type of animation state enum that this move map uses, which extends {@link Enum}.
+     */
+    static <A extends IAttacker<? extends A, S>, S extends Enum<? extends S>> Codec<MoveMap<A, S>> codecFor(Class<S> stateEnum) {
+        return RecordCodecBuilder.create(instance -> instance.group(
+                Entry.<A, S>codecFor(stateEnum).listOf().fieldOf("moves").forGetter(m -> List.copyOf(m.getEntries().values()))
+        ).apply(instance, MoveMapImpl::new));
+    }
 
     /**
      * Registers a move with the given type and move.
@@ -212,6 +230,29 @@ public interface MoveMap<A extends IAttacker<? extends A, S>, S extends Enum<?>>
      * @param <S> The type of animation state enum that this entry uses, which extends {@link Enum}.
      */
     interface Entry<A extends IAttacker<? extends A, S>, S extends Enum<?>> {
+        /**
+         * Creates a codec for an entry with the given state enum.
+         * @param stateEnum The class of the animation state enum
+         * @return A codec for an entry with the given state enum
+         * @param <S> The type of the animation state enum
+         */
+        static <A extends IAttacker<? extends A, S>, S extends Enum<? extends S>> Codec<Entry<A, S>> codecFor(Class<S> stateEnum) {
+            Codec<S> stateCodec = JCodecUtils.createEnumCodec(stateEnum);
+            return JCodecUtils.recursive("MoveMap.Entry", self ->
+                    RecordCodecBuilder.create(instance -> instance.group(
+                            MoveClass.CODEC.fieldOf("class").forGetter(Entry::getMoveClass),
+                            JRegistries.MOVE_CODEC.fieldOf("move").forGetter(Entry::getMove),
+                            CooldownType.CODEC.fieldOf("cooldown_type").forGetter(Entry::getCooldownType),
+                            stateCodec.optionalFieldOf("anim_state").forGetter(e -> Optional.ofNullable(e.getAnimState())),
+                            self.optionalFieldOf("crouching_variant").forGetter(e -> Optional.ofNullable(e.getCrouchingVariant())),
+                            self.optionalFieldOf("aerial_variant").forGetter(e -> Optional.ofNullable(e.getAerialVariant())),
+                            self.optionalFieldOf("followup").forGetter(e -> Optional.ofNullable(e.getFollowup()))
+                    ).apply(instance, (moveClass, move, cooldownType,
+                                       animState, crouchingVariant, aerialVariant, followup) ->
+                            new MoveMapImpl.EntryImpl<>(moveClass, move, cooldownType, animState.orElse(null),
+                                    crouchingVariant.orElse(null), aerialVariant.orElse(null), followup.orElse(null)))));
+        }
+
         MoveClass getMoveClass();
         AbstractMove<?, ? super A> getMove();
         CooldownType getCooldownType();
