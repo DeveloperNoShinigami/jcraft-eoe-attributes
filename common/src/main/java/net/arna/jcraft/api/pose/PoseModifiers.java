@@ -52,7 +52,7 @@ public class PoseModifiers {
 
         if (parts.length == 1) {
             // Single modifier, parse it directly
-            return parseSingle(parts[0].trim(), conditions);
+            return parseSingle(parts[0], conditions);
         }
 
         // Multiple modifiers, create a group
@@ -72,12 +72,12 @@ public class PoseModifiers {
     }
 
     private static IPoseModifier parseSingle(String modifier, final ModifierCondition... conditions) {
-        modifier = modifier.split("//")[0]; // Remove comments
-        if (modifier.trim().isEmpty()) {
+        modifier = modifier.split("//")[0].trim(); // Remove comments and trim whitespace
+        if (modifier.isEmpty()) {
             return null; // Ignore empty modifiers
         }
 
-        Matcher matcher = MODIFIER_PATTERN.matcher(modifier.trim());
+        Matcher matcher = MODIFIER_PATTERN.matcher(modifier);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid modifier format: " + modifier);
         }
