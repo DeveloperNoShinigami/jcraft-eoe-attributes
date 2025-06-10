@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class ModelType<T extends Model> {
-    private static final Map<String, ModelType<?>> fromName = new HashMap<>();
-    private static final Map<Class<? extends Model>, ModelType<?>> fromClass = new HashMap<>();
+    private static final Map<String, ModelType<?>> FROM_NAME = new HashMap<>();
+    private static final Map<Class<? extends Model>, ModelType<?>> FROM_CLASS = new HashMap<>();
 
     public static final ModelType<HumanoidModel<?>> HUMANOID = new ModelType<>("humanoid", castClass(HumanoidModel.class), Map.of(
             "head", m -> m.head,
@@ -29,7 +29,7 @@ public class ModelType<T extends Model> {
 
     public static final Codec<ModelType<?>> CODEC = Codec.STRING.comapFlatMap(
             name -> {
-                ModelType<?> modelType = fromName.get(name);
+                ModelType<?> modelType = FROM_NAME.get(name);
                 if (modelType != null) {
                     return DataResult.success(modelType);
                 }
@@ -45,8 +45,8 @@ public class ModelType<T extends Model> {
     private final Map<String, Function<T, ModelPart>> parts;
 
     private ModelType(final String name, final Class<T> modelClass, final Map<String, Function<T, ModelPart>> parts) {
-        fromName.put(name, this);
-        fromClass.put(modelClass, this);
+        FROM_NAME.put(name, this);
+        FROM_CLASS.put(modelClass, this);
         this. name = name;
         this.modelClass = modelClass;
         this.parts = ImmutableMap.copyOf(parts);
@@ -59,19 +59,19 @@ public class ModelType<T extends Model> {
 
     @Nullable
     public static ModelType<?> fromName(final String name) {
-        return fromName.get(name);
+        return FROM_NAME.get(name);
     }
 
     @SuppressWarnings("unchecked")
     public static <T extends Model> ModelType<T> fromClass(final Class<? extends T> modelClass) {
-        ModelType<?> modelType = fromClass.get(modelClass);
+        ModelType<?> modelType = FROM_CLASS.get(modelClass);
         if (modelType != null) {
             return (ModelType<T>) modelType;
         }
 
-        for (Map.Entry<Class<? extends Model>, ModelType<?>> entry : fromClass.entrySet()) {
+        for (Map.Entry<Class<? extends Model>, ModelType<?>> entry : FROM_CLASS.entrySet()) {
             if (entry.getKey().isAssignableFrom(modelClass)) {
-                fromClass.put(modelClass, entry.getValue());
+                FROM_CLASS.put(modelClass, entry.getValue());
                 return (ModelType<T>) entry.getValue();
             }
         }
