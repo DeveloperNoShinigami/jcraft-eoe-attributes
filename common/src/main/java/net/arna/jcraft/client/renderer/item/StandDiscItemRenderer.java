@@ -31,44 +31,5 @@ public class StandDiscItemRenderer {
         final BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(modelLoc, "inventory"));
         Minecraft.getInstance().getItemRenderer().render(renderStack, displayContext, false, poseStack, buffer,
                 packedLight, packedOverlay, model);
-
-//        if (StandTypeUtil.isNone(type)) return;
-//
-//        Tesselator tess = Tesselator.getInstance();
-//        BufferBuilder buff = tess.getBuilder();
-//        buff.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP);
-//
-//        ResourceLocation overlayTexture = type.getId().withPath(p -> "textures/item/stands/%s_%s.png".formatted(p, skin));
-//        RenderSystem.setShaderTexture(0, overlayTexture);
-//        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-//
-//        model.getTransforms().getTransform(displayContext).apply(false, poseStack);
-//        Matrix4f pose = poseStack.last().pose();
-//
-//        buff.vertex(pose, -0.5f, -0.5f, -1000)
-//                .color(1f, 1f, 1f, 1f)
-//                .uv(0f, 1f)
-//                .uv2(packedLight)
-//                .endVertex();
-//
-//        buff.vertex(pose, 0.5f, -0.5f, -1000)
-//                .color(1f, 1f, 1f, 1f)
-//                .uv(1f, 1f)
-//                .uv2(packedLight)
-//                .endVertex();
-//
-//        buff.vertex(pose, 0.5f, 0.5f, -1000)
-//                .color(1f, 1f, 1f, 1f)
-//                .uv(1f, 0f)
-//                .uv2(packedLight)
-//                .endVertex();
-//
-//        buff.vertex(pose, -0.5f, 0.5f, -1000)
-//                .color(1f, 1f, 1f, 1f)
-//                .uv(0f, 0f)
-//                .uv2(packedLight)
-//                .endVertex();
-//
-//        tess.end();
     }
 }

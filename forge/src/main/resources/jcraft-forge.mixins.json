@@ -12,6 +12,7 @@
   ],
   "client": [
     "client.ForgeGuiMixin",
+    "client.ForgeItemModelShaperMixin",
     "client.GameRendererMixin",
     "client.KeyBindingMixin",
     "client.LevelRendererAccessor",
