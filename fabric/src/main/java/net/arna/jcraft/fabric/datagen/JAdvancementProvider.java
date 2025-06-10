@@ -1,8 +1,15 @@
 package net.arna.jcraft.fabric.datagen;
 
+import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
+import net.arna.jcraft.common.advancements.ObtainedStandTrigger;
 import net.arna.jcraft.registry.JBlockRegistry;
+import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
@@ -10,6 +17,8 @@ import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.network.chat.Component;
+
+import java.util.List;
 import java.util.function.Consumer;
 
 public class JAdvancementProvider extends FabricAdvancementProvider {
@@ -32,20 +41,20 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("has_ore", InventoryChangeTrigger.TriggerInstance.hasItems(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get()))
                 .build(JCraft.id("obtain_meteorite_iron_ore"));
         consumer.accept(obtainMeteoriteIronOre);
-        // obtain stand arrow
-        final Advancement obtainStandArrow = Advancement.Builder.advancement()
+        // obtain stand
+        final Advancement obtainStand = Advancement.Builder.advancement()
                 .display(JItemRegistry.STAND_ARROW.get(),
                         Component.literal("Stand Proud"),
-                        Component.literal("Obtain a Stand Arrow"),
+                        Component.literal("Obtain a Stand"),
                         null,
                         FrameType.TASK,
                         true,
                         false,
                         false)
                 .parent(obtainMeteoriteIronOre)
-                .addCriterion("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_ARROW.get()))
-                .build(JCraft.id("obtain_stand_arrow"));
-        consumer.accept(obtainStandArrow);
+                .addCriterion("has_stand", ObtainedStandTrigger.TriggerInstance.obtainedStand())
+                .build(JCraft.id("obtain_stand"));
+        consumer.accept(obtainStand);
         // obtain stand CD
         final Advancement obtainStandDisc = Advancement.Builder.advancement()
                 .display(JItemRegistry.STAND_DISC.get(),
@@ -56,10 +65,53 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false,
                         false)
-                .parent(obtainStandArrow)
+                .parent(obtainStand)
                 .addCriterion("has_disc", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_DISC.get()))
                 .build(JCraft.id("obtain_stand_disc"));
         consumer.accept(obtainStandDisc);
+        // obtain "all" stands
+        // stand data is not available during datagen so we have to list all stands needed for the achievement
+        final var obtainables = List.of(
+                JStandTypeRegistry.STAR_PLATINUM,
+                JStandTypeRegistry.STAR_PLATINUM_THE_WORLD,
+                JStandTypeRegistry.MAGICIANS_RED,
+                JStandTypeRegistry.THE_WORLD,
+                JStandTypeRegistry.KING_CRIMSON,
+                JStandTypeRegistry.D4C,
+                JStandTypeRegistry.CREAM,
+                JStandTypeRegistry.KILLER_QUEEN,
+                JStandTypeRegistry.WHITE_SNAKE,
+                JStandTypeRegistry.SILVER_CHARIOT,
+                JStandTypeRegistry.THE_FOOL,
+                JStandTypeRegistry.GOLD_EXPERIENCE,
+                JStandTypeRegistry.HIEROPHANT_GREEN,
+                JStandTypeRegistry.THE_SUN,
+                JStandTypeRegistry.PURPLE_HAZE,
+                JStandTypeRegistry.C_MOON,
+                JStandTypeRegistry.MADE_IN_HEAVEN,
+                JStandTypeRegistry.THE_WORLD_OVER_HEAVEN,
+                JStandTypeRegistry.KILLER_QUEEN_BITES_THE_DUST,
+                JStandTypeRegistry.GOLD_EXPERIENCE_REQUIEM,
+                JStandTypeRegistry.PURPLE_HAZE_DISTORTION,
+                JStandTypeRegistry.HORUS,
+                JStandTypeRegistry.SHADOW_THE_WORLD,
+                JStandTypeRegistry.METALLICA,
+                JStandTypeRegistry.THE_HAND
+        );
+        final Advancement.Builder obtainAllStandsBuilder = Advancement.Builder.advancement()
+                .display(JItemRegistry.STAND_DISC.get(),
+                        Component.literal("Roundabout"),
+                        Component.literal("Obtain all Stands"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainStandDisc);
+        for (final RegistrySupplier<StandType> type : obtainables) {
+            obtainAllStandsBuilder.addCriterion("has_" + type.getId().getPath(), ObtainedStandTrigger.TriggerInstance.obtainedStand(type.get()));
+        }
+        consumer.accept(obtainAllStandsBuilder.build(JCraft.id("obtain_all_stands")));
         // obtain living arrow
         final Advancement obtainLivingArrow = Advancement.Builder.advancement()
                 .display(JItemRegistry.LIVING_ARROW.get(),
@@ -70,7 +122,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false,
                         false)
-                .parent(obtainStandArrow)
+                .parent(obtainStand)
                 .addCriterion("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.LIVING_ARROW.get()))
                 .build(JCraft.id("obtain_living_arrow"));
         consumer.accept(obtainLivingArrow);
@@ -84,7 +136,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false,
                         false)
-                .parent(obtainStandArrow)
+                .parent(obtainStand)
                 .addCriterion("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.REQUIEM_ARROW.get()))
                 .build(JCraft.id("obtain_requiem_arrow"));
         consumer.accept(obtainRequiemArrow);

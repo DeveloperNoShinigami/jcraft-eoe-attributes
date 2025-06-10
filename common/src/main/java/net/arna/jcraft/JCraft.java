@@ -177,7 +177,8 @@ public final class JCraft {
         MOVE_TYPE_REGISTRY.register();
 
         JTagRegistry.init();
-
+        JAdvancementTriggerRegistry.init();
+        
         JCreativeMenuTabRegistry.init();
         CREATIVE_TAB_REGISTRY.register();
 

@@ -7,6 +7,7 @@ import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.registry.JAdvancementTriggerRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,6 +35,10 @@ public class CommonStandComponentImpl implements CommonStandComponent {
         if (!entity.level().isClientSide && entity instanceof Player &&
                 !JCraft.getExclusiveStandsData().switchStand(this.type, type)) {
             return;
+        }
+
+        if (!StandTypeUtil.isNone(type) && entity instanceof ServerPlayer player) {
+            JAdvancementTriggerRegistry.OBTAINED_STAND.trigger(player, type);
         }
         this.type = type;
         this.skin = skin;

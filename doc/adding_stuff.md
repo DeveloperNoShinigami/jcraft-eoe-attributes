@@ -55,7 +55,8 @@
 13. Add the different skin PNGs, `my.geo.json` and `my.animation.json` from the `my.bbmodel` file from our modelers.
 14. Let someone take care of the animations.
 15. Add an English translation of the stand and its description to `en_us.json`.
-16. Test your addition.
+16. If the stand is obtainable in survival, add it to the list of obtainables in `JAdvancementProvider`.
+17. Test your addition.
 
 ## Adding an Entity (Type)
 1. Create the class `MyEntity` (replacing `My` with its name of course), subclassing `Entity` or one of its subclasses (like `PathAwareEntity`).
