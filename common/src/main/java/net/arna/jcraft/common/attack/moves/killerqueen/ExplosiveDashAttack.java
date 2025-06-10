@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.killerqueen;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.AbstractKillerQueenEntity;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,7 +26,7 @@ public final class ExplosiveDashAttack extends AbstractMove<ExplosiveDashAttack,
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final AbstractKillerQueenEntity<?, ?> attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final AbstractKillerQueenEntity<?, ?> attacker, final LivingEntity user) {
         final Vec3 lookVec = user.getLookAngle().scale(0.9);
         attacker.level().explode(user,
                 user.getX() - lookVec.x,

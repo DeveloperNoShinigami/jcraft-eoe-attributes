@@ -10,8 +10,8 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -228,7 +228,7 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
     private boolean canAttack(LivingEntity living) {
         if (living == livingOwner)
             return false;
-        if (livingOwner != null && JComponentPlatformUtils.getStandData(livingOwner).getStand() == living)
+        if (livingOwner != null && JComponentPlatformUtils.getStandComponent(livingOwner).getStand() == living)
             return false;
         return true;
     }

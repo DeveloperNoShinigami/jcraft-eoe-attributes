@@ -3,11 +3,10 @@ package net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.StateContainer;
-import net.arna.jcraft.common.attack.moves.base.AbstractGrabAttack;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.StateContainer;
+import net.arna.jcraft.api.attack.moves.AbstractGrabAttack;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
@@ -36,8 +35,8 @@ public class D4CGrabAttack extends AbstractGrabAttack<D4CGrabAttack, D4CEntity, 
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final D4CEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final D4CEntity attacker, final LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
 
         if (targets.isEmpty()) {
             attacker.getMainHandItem().shrink(1);

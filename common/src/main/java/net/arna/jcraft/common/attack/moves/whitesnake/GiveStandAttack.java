@@ -4,20 +4,23 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+
 import java.util.Set;
 
 public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack, WhiteSnakeEntity> {
@@ -47,10 +50,10 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user) {
         final ItemStack itemStack = attacker.getOffhandItem();
 
-        super.perform(attacker, user, ctx).stream().findFirst().ifPresent(
+        super.perform(attacker, user).stream().findFirst().ifPresent(
                 (target) -> {
                     if (target instanceof StandEntity<?,?>) return;
 
@@ -58,13 +61,15 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
                     int itemSkin = 0;
 
                     CompoundTag data = itemStack.getOrCreateTag();
-                    CommonStandComponent standData = JComponentPlatformUtils.getStandData(target);
+                    CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(target);
 
                     if (standData.getType() != null) {
                         return; // Can't overwrite other's stands
                     }
                     if (data.contains("StandID", Tag.TAG_INT)) {
-                        itemStand = StandType.fromIdOrOrdinal(data.getInt("StandID"));
+                        itemStand = JStandTypeRegistry.LEGACY_ORDINALS.get(data.getInt("StandID")).get();
+                    } else if (data.contains("StandID", Tag.TAG_STRING)) {
+                        itemStand = JRegistries.STAND_TYPE_REGISTRY.get(new ResourceLocation(data.getString("StandID")));
                     }
                     if (itemStand == null) {
                         return;
@@ -74,7 +79,7 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
                     }
 
                     standData.setTypeAndSkin(itemStand, itemSkin);
-                    data.putInt("StandID", 0);
+                    data.putString("StandID", null);
                     data.putInt("Skin", 0);
 
                     StandEntity<?, ?> stand = standData.getStand();

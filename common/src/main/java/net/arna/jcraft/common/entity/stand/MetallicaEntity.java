@@ -6,27 +6,33 @@ import lombok.Setter;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.SummonData;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.CancelSpecMoveAction;
 import net.arna.jcraft.common.attack.actions.EffectAction;
 import net.arna.jcraft.common.attack.actions.MetallicaAddIronAction;
 import net.arna.jcraft.common.attack.actions.UserAnimationAction;
 import net.arna.jcraft.common.attack.conditions.MetallicaIronCondition;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.core.data.StateContainer;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.enums.StunType;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.metallica.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.component.living.CommonMiscComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonMiscComponent;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -53,14 +59,29 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Metallica">Metallica</a>.
- * @see StandType#METALLICA
+ * @see JStandTypeRegistry#METALLICA
  * @see net.arna.jcraft.client.model.entity.stand.MetallicaModel MetallicaModel
  * @see net.arna.jcraft.client.renderer.entity.stands.MetallicaRenderer MetallicaRenderer
  * @see HarvestMove
  */
 public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntity.State> {
-    public static final MoveSet<MetallicaEntity, State> MOVE_SET = MoveSet.create(StandType.METALLICA,
+    public static final MoveSet<MetallicaEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.METALLICA,
             MetallicaEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleDistance(0f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.metallica"))
+                    .proCount(3)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                Contains up to 80 units of iron.
+                Requires iron to create objects used in attacks."""))
+                    .skinName(Component.literal("Lead"))
+                    .skinName(Component.literal("Brass"))
+                    .skinName(Component.literal("Hollow"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.METALLICA_SUMMON))
+            .build();
 
     public static final EntityDataAccessor<Optional<BlockPos>> SIPHON_POS = SynchedEntityData.defineId(MetallicaEntity.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     public static final EntityDataAccessor<Float> IRON = SynchedEntityData.defineId(MetallicaEntity.class, EntityDataSerializers.FLOAT);
@@ -195,7 +216,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.ft"))
             .withCondition(MetallicaIronCondition.atLeast(ScalpelProjectile.IRON_COST));
-    public static final PreciseTossAtack PRECISE_TOSS = new PreciseTossAtack(60, 7, 12, 0.75f)
+    public static final PreciseTossAttack PRECISE_TOSS = new PreciseTossAttack(60, 7, 12, 0.75f)
             .withSound(JSoundRegistry.METALLICA_SCALPEL_SUMMON)
             .withCrouchingVariant(REMOTE_SCALPEL_MOVE)
             .withAerialVariant(FAN_TOSS)
@@ -321,15 +342,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     private CommonMiscComponent miscComponent;
 
     public MetallicaEntity(Level worldIn) {
-        super(StandType.METALLICA, worldIn, JSoundRegistry.METALLICA_SUMMON);
-
-        freespace = """
-                Contains up to 80 units of iron.
-                Requires iron to create objects used in attacks.""";
-        idleDistance = 0;
-
-        proCount = 3;
-        conCount = 3;
+        super(JStandTypeRegistry.METALLICA.get(), worldIn);
 
         auraColors = new Vector3f[] {
                 new Vector3f(0.1f, 0.1f, 0.4f),

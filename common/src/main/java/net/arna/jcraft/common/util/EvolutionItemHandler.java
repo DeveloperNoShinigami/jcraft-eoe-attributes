@@ -13,9 +13,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.event.CompoundEventResult;
 import dev.architectury.event.events.common.InteractionEvent;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.saveddata.ExclusiveStandsData;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatRegistry;
@@ -64,7 +65,7 @@ public class EvolutionItemHandler {
         }
 
         Collection<Evolution> evolutions = EvolutionItemHandler.evolutions.get(item);
-        CommonStandComponent standData = JComponentPlatformUtils.getStandData(player);
+        CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(player);
         StandType current = standData.getType();
 
         // If there's a more specific evolution that matches, use that.
@@ -137,8 +138,8 @@ public class EvolutionItemHandler {
         public static final Codec<Evolution> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(Evolution::item),
                 JCodecUtils.ITEM_PREDICATE_CODEC.optionalFieldOf("predicate", ItemPredicate.ANY).forGetter(Evolution::predicate),
-                StandType.CODEC.optionalFieldOf("stand").forGetter(e -> Optional.ofNullable(e.stand())),
-                StandType.CODEC.fieldOf("target").forGetter(Evolution::target)
+                JRegistries.STAND_TYPE_CODEC.optionalFieldOf("stand").forGetter(e -> Optional.ofNullable(e.stand())),
+                JRegistries.STAND_TYPE_CODEC.fieldOf("target").forGetter(Evolution::target)
         ).apply(instance, Evolution::new));
 
         public Evolution(Item item, @Nullable StandType stand, StandType target) {

@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.vampire;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.spec.VampireSpec;
 import net.arna.jcraft.common.tickable.Revivables;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -31,7 +30,7 @@ public final class ReviveMove extends AbstractMove<ReviveMove, VampireSpec> {
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final VampireSpec attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final VampireSpec attacker, final LivingEntity user) {
         final MinecraftServer server = user.getServer();
         if (server == null) {
             return Set.of();

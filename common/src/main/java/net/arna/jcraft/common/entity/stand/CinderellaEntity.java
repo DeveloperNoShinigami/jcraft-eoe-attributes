@@ -3,14 +3,18 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -19,14 +23,16 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Cinderella">Cinderella</a>.
- * @see StandType#CINDERELLA
+ * @see JStandTypeRegistry#CINDERELLA
  * @see net.arna.jcraft.client.model.entity.stand.CinderellaModel CinderellaModel
  * @see net.arna.jcraft.client.renderer.entity.stands.CinderellaRenderer CinderellaRenderer
  * @see net.arna.jcraft.common.entity.npc.AyaTsujiEntity AyaTsujiEntity
  */
 public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEntity.State> {
-    public static final MoveSet<CinderellaEntity, State> MOVE_SET = MoveSet.create(StandType.CINDERELLA,
+    public static final MoveSet<CinderellaEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.CINDERELLA,
             CinderellaEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.cinderella")))
+            .withObtainable(false);
 
     public static final SimpleAttack<CinderellaEntity> LIGHT = SimpleAttack.<CinderellaEntity>lightAttack(
                     7, 11, 0.75f, 4f, 11, 0.15f, 0.2f)
@@ -40,7 +46,7 @@ public class CinderellaEntity extends StandEntity<CinderellaEntity, CinderellaEn
             );
 
     public CinderellaEntity(Level world) {
-        super(StandType.CINDERELLA, world);
+        super(JStandTypeRegistry.CINDERELLA.get(), world);
     }
 
     private static void registerMoves(MoveMap<CinderellaEntity, State> moves) {

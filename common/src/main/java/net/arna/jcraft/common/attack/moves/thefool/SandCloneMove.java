@@ -5,16 +5,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.PlayerCloneEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,11 +26,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Set;
 
 public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEntity> {
-    private static final MoveVariable<Mob> SAND_CLONE = new MoveVariable<>(Mob.class);
+    private WeakReference<Mob> sandClone = new WeakReference<>(null);
 
     public SandCloneMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
@@ -52,7 +51,7 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user) {
         final Vec3 pos = user.getEyePosition();
 
         // Display sand effect
@@ -74,6 +73,7 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
         }
 
         ServerChannelFeedbackPacket.send(nearby, buf);
+        Mob newClone = null;
 
         if (user.isShiftKeyDown()) {
             for (int i = 0; i < 32; i++) {
@@ -103,39 +103,42 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
             playerCloneEntity.setItemSlot(EquipmentSlot.LEGS, user.getItemBySlot(EquipmentSlot.LEGS).copy());
             playerCloneEntity.setItemSlot(EquipmentSlot.FEET, user.getItemBySlot(EquipmentSlot.FEET).copy());
 
-            setSandClone(ctx, playerCloneEntity);
+            setSandClone(newClone = playerCloneEntity);
         } else if (user instanceof Mob mob) {
-            setSandClone(ctx, JUtils.mobCloneOf(mob));
+            setSandClone(newClone = JUtils.mobCloneOf(mob));
         }
 
-        attacker.level().addFreshEntity(ctx.get(SAND_CLONE));
+        if (newClone != null) {
+            attacker.level().addFreshEntity(newClone);
+        }
+
         return Set.of();
     }
 
     public void tickClone(final TheFoolEntity attacker) {
-        final Mob sandClone = attacker.getMoveContext().get(SAND_CLONE);
+        final Mob sandClone = this.sandClone.get();
         if (sandClone != null && sandClone.tickCount > 200) {
-            setSandClone(attacker.getMoveContext(), null);
+            setSandClone(null);
         }
     }
 
     public void discardClone(final TheFoolEntity attacker) {
-        final Mob sandClone = attacker.getMoveContext().get(SAND_CLONE);
-        if (sandClone != null) {
-            sandClone.discard();
+        Mob clone = sandClone.get();
+        if (clone != null) {
+            clone.discard();
         }
     }
 
-    private void setSandClone(MoveContext ctx, Mob clone) {
-        final Mob currentSandClone = ctx.get(SAND_CLONE);
+    private void setSandClone(Mob clone) {
+        Mob currentSandClone = sandClone.get();
         if (currentSandClone != null) {
             currentSandClone.kill();
         }
-        ctx.set(SAND_CLONE, clone);
+        sandClone = new WeakReference<>(clone);
         if (clone == null) {
             return;
         }
-        JComponentPlatformUtils.getStandData(clone).setType(StandType.NONE);
+        JComponentPlatformUtils.getStandComponent(clone).setType(JStandTypeRegistry.NONE.get());
         applySandCloneModifiers(clone);
     }
 
@@ -153,11 +156,6 @@ public final class SandCloneMove extends AbstractMove<SandCloneMove, TheFoolEnti
         maxHealthAttribute.addPermanentModifier(
                 new AttributeModifier("Sand Clone Max Health Modifier", -1.0, AttributeModifier.Operation.MULTIPLY_TOTAL)
         );
-    }
-
-    @Override
-    public void registerExtraContextEntries(MoveContext ctx) {
-        ctx.register(SAND_CLONE);
     }
 
     @Override

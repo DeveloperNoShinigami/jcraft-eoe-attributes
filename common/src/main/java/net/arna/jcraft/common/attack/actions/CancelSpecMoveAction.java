@@ -4,11 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import net.arna.jcraft.common.attack.core.MoveAction;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveActionType;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.attack.core.MoveAction;
+import net.arna.jcraft.api.attack.core.MoveActionType;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -18,7 +17,7 @@ import java.util.Set;
 public class CancelSpecMoveAction extends MoveAction<CancelSpecMoveAction, StandEntity<?, ?>> {
 
     @Override
-    public void perform(StandEntity<?, ?> attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
+    public void perform(StandEntity<?, ?> attacker, LivingEntity user, Set<LivingEntity> targets) {
         JSpec<?, ?> spec = JUtils.getSpec(user);
         if (spec != null && spec.getCurrentMove() != null) {
             spec.cancelMove();

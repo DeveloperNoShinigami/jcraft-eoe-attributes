@@ -10,7 +10,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
@@ -44,7 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
+import static net.arna.jcraft.api.stand.StandEntity.damageLogic;
 import static net.arna.jcraft.common.util.JUtils.canDamage;
 
 public class MeteorProjectile extends AbstractArrow implements GeoEntity {

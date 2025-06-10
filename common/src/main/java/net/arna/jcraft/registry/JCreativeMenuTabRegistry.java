@@ -2,7 +2,8 @@ package net.arna.jcraft.registry;
 
 import dev.architectury.registry.CreativeTabRegistry;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.item.StandDiscItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +19,7 @@ public interface JCreativeMenuTabRegistry {
     @SuppressWarnings("UnstableApiUsage") // we do not care :)
     static void init() {
         JCraft.CREATIVE_TAB_REGISTRY.register("general", JCreativeMenuTabRegistry::createJcraftItemGroup);
+        JCraft.CREATIVE_TAB_REGISTRY.register("stand_discs", JCreativeMenuTabRegistry::createStandDiscItemGroup);
         // building blocks
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.BRICKS, JItemRegistry.METEORITE_BLOCK.get());
@@ -179,17 +181,6 @@ public interface JCreativeMenuTabRegistry {
                         nbt.put("StoredEnchantments", enchantments);
                         entries.accept(stack);
                     }
-                    // stand discs
-                    for (final StandType standType : StandType.getRegularStandTypes()) {
-                        for (int skin = 0; skin < standType.getSkinCount(); skin++) {
-                            entries.accept(StandDiscItem.createDiscStack(standType, skin));
-                        }
-                    }
-                    for (final StandType standType : StandType.getEvoStandTypes()) {
-                        for (int skin = 0; skin < standType.getSkinCount(); skin++) {
-                            entries.accept(StandDiscItem.createDiscStack(standType, skin));
-                        }
-                    }
                     // spawn eggs season 3
                     entries.accept(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get());
                     entries.accept(JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get());
@@ -204,4 +195,25 @@ public interface JCreativeMenuTabRegistry {
                 .build();
     }
 
+    static CreativeModeTab createStandDiscItemGroup() {
+        return CreativeModeTab.builder(CreativeModeTab.Row.TOP, 1)
+                .title(Component.translatable("itemGroup.jcraft.stand_discs"))
+                .icon(() -> JItemRegistry.STAND_DISC.get().getDefaultInstance())
+                // order of the creative tab
+                .displayItems((displayContext, entries) -> {
+                    entries.accept(JItemRegistry.STAND_DISC.get());
+
+                    for (final StandType standType : StandTypeUtil.streamAllRegular().toList()) {
+                        for (int skin = 0; skin < standType.getData().getInfo().getSkinCount(); skin++) {
+                            entries.accept(StandDiscItem.createDiscStack(standType, skin));
+                        }
+                    }
+                    for (final StandType standType : StandTypeUtil.streamAllEvolutions().toList()) {
+                        for (int skin = 0; skin < standType.getData().getInfo().getSkinCount(); skin++) {
+                            entries.accept(StandDiscItem.createDiscStack(standType, skin));
+                        }
+                    }
+                })
+                .build();
+    }
 }

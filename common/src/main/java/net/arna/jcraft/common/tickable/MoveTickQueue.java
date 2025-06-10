@@ -1,8 +1,8 @@
 package net.arna.jcraft.common.tickable;
 
 import dev.architectury.event.events.common.TickEvent;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.IAttacker;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.*;

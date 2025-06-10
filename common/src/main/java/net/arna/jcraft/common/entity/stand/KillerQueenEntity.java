@@ -3,15 +3,20 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import net.arna.jcraft.common.attack.actions.PlaySoundAction;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.pose.modifier.IPoseModifier;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.common.attack.moves.killerqueen.*;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3f;
@@ -20,7 +25,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Killer_Queen">Killer Queen</a>.
- * @see StandType#KILLER_QUEEN
+ * @see JStandTypeRegistry#KILLER_QUEEN
  * @see net.arna.jcraft.client.model.entity.stand.KillerQueenModel KillerQueenModel
  * @see net.arna.jcraft.client.renderer.entity.stands.KillerQueenRenderer KillerQueenRenderer
  * @see net.arna.jcraft.common.attack.moves.killerqueen.BombPlantAttack BombPlantAttack
@@ -32,8 +37,27 @@ import java.util.function.Consumer;
  * @see SheerHeartAttackAttack
  */
 public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQueenEntity, KillerQueenEntity.State> {
-    public static final MoveSet<KillerQueenEntity, State> MOVE_SET = MoveSet.create(StandType.KILLER_QUEEN,
+    public static final MoveSet<KillerQueenEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.KILLER_QUEEN,
             KillerQueenEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(-30f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.killerqueen"))
+                    .proCount(4)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                BNBs:
+                    -Standard bomb plant confirm and SHA setup
+                    Light~Light>Barrage>Bomb plant>Detonate(>Sheer Heart Attack)
+                
+                    -Confirm while bomb plant is on cd
+                    Light~Light>Barrage>Heavy(>Sheer Heart Attack)"""))
+                    .skinName(Component.literal("Gunpowder"))
+                    .skinName(Component.literal("Deadly"))
+                    .skinName(Component.literal("1999"))
+                    .build())
+            .build();
+    public static final IPoseModifier POSE = AbstractKillerQueenEntity.POSE;
 
     public static final SimpleAttack<KillerQueenEntity> HEAVY = new SimpleAttack<KillerQueenEntity>(
             200, 16, 24, 0.75f, 9f, 10, 2f, 1.75f, 0f)
@@ -72,7 +96,7 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = AbstractKillerQueenEntity.LIGHT.copy().withFollowup(LIGHT_FOLLOWUP);
 
     public KillerQueenEntity(Level worldIn) {
-        super(StandType.KILLER_QUEEN, worldIn, null);
+        super(JStandTypeRegistry.KILLER_QUEEN.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.9f, 0.7f, 0.8f),

@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.magiciansred;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.LifeDetectorEntity;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +23,7 @@ public final class LifeDetectorAttack extends AbstractMove<LifeDetectorAttack, M
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user) {
         final LifeDetectorEntity lifeDetector = new LifeDetectorEntity(attacker.level());
         lifeDetector.setMaster(user);
         lifeDetector.moveTo(attacker.getX(), attacker.getY() + 1.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());

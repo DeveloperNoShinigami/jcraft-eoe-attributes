@@ -3,10 +3,9 @@ package net.arna.jcraft.common.attack.moves.shared;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.IAttacker;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
@@ -33,7 +32,7 @@ public final class NoOpMove<A extends IAttacker<? extends A, ?>> extends Abstrac
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
         return Set.of();
     }
 

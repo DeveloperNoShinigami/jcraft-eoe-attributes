@@ -2,8 +2,8 @@ package net.arna.jcraft.forge.capability.impl.living;
 
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.component.impl.living.CommonStandComponentImpl;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.forge.capability.api.JCapability;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -44,7 +44,8 @@ public class StandCapability extends CommonStandComponentImpl implements JCapabi
             StandType standType = standCapability.getType();
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeInt(standUser.getId());
-            buf.writeInt(standType == null ? 0 : standType.ordinal());
+            buf.writeBoolean(standType == null);
+            if (standType != null) buf.writeResourceLocation(standType.getId());
             buf.writeInt(standCapability.getSkin());
             standCapability.writeSyncPacket(buf, serverPlayer);
             NetworkManager.sendToPlayer(serverPlayer, STAND_S2C, buf);

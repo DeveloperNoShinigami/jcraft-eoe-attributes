@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.madeinheaven;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.minecraft.world.damagesource.DamageSource;
@@ -28,8 +27,8 @@ public final class FuryChopAttack extends AbstractSimpleAttack<FuryChopAttack, M
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
 
         // Punish user with mining fatigue on miss, reward with haste on hit.
         user.addEffect(new MobEffectInstance(targets.isEmpty() ? MobEffects.DIG_SLOWDOWN : MobEffects.DIG_SPEED,

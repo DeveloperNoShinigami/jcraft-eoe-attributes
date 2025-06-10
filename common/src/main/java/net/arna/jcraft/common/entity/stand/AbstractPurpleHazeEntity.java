@@ -3,14 +3,16 @@ package net.arna.jcraft.common.entity.stand;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.MobilityType;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.attack.enums.MobilityType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.attack.moves.purplehaze.*;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -162,11 +164,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             );
 
     protected AbstractPurpleHazeEntity(StandType type, Level worldIn) {
-        super(type, worldIn, JSoundRegistry.PH_SUMMON);
-        idleRotation = 225f;
-
-        proCount = 3;
-        conCount = 3;
+        super(type, worldIn);
     }
 
     @Override

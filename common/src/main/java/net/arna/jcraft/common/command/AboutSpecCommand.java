@@ -3,10 +3,11 @@ package net.arna.jcraft.common.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.spec.JSpec;
-import net.arna.jcraft.common.spec.SpecType;
+import net.arna.jcraft.api.spec.SpecData;
+import net.arna.jcraft.api.spec.SpecType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -17,6 +18,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import static net.arna.jcraft.common.command.AboutStandCommand.appendMove;
 
+@SuppressWarnings("removal")
 public class AboutSpecCommand {
     private static final Component newLine = Component.literal("\n");
 
@@ -36,16 +38,17 @@ public class AboutSpecCommand {
         }
 
         SpecType specType = spec.getType();
+        SpecData data = spec.getSpecData();
         MutableComponent text = Component.empty();
 
         // Name
         text.append(Component.empty()
                 .append(Component.literal("Name: "))
-                .append(specType.getTranslatableName().copy().withStyle(ChatFormatting.YELLOW))
+                .append(data.getName().copy().withStyle(ChatFormatting.YELLOW))
                 .append(newLine));
 
         // Description
-        text.append(specType.getDescription().copy().withStyle(ChatFormatting.GREEN));
+        text.append(data.getDescription().copy().withStyle(ChatFormatting.GREEN));
         text.append(Component.empty().append(newLine).append(newLine));
 
         // Attacks
@@ -74,7 +77,7 @@ public class AboutSpecCommand {
 
         // Details
         text.append(Component.literal("\n"));
-        text.append(specType.getDetails());
+        text.append(data.getDetails());
 
         player.sendSystemMessage(text);
         return 1;

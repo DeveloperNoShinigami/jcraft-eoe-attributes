@@ -3,10 +3,9 @@ package net.arna.jcraft.common.attack.moves.horus;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractBarrageAttack;
 import net.arna.jcraft.common.entity.projectile.IcicleProjectile;
 import net.arna.jcraft.common.entity.stand.HorusEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -31,8 +30,8 @@ public final class HorusBarrageAttack extends AbstractBarrageAttack<HorusBarrage
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(HorusEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(HorusEntity attacker, LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
 
         final IcicleProjectile icicle = new IcicleProjectile(attacker.level(), user);
         icicle.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, 1.75F, 0.1F);

@@ -3,11 +3,9 @@ package net.arna.jcraft.common.attack.moves.vampire;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.attack.moves.base.AbstractSpecGrabAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.attack.moves.AbstractSpecGrabAttack;
 import net.arna.jcraft.common.spec.VampireSpec;
 import net.arna.jcraft.registry.JStatRegistry;
 import net.minecraft.world.damagesource.DamageSource;
@@ -17,10 +15,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.ref.WeakReference;
 import java.util.Set;
 
 public final class BloodSuckAttack extends AbstractSpecGrabAttack<BloodSuckAttack, VampireSpec, VampireSpec.State> {
-    public static final MoveVariable<LivingEntity> TARGET = new MoveVariable<>(LivingEntity.class);
+    private WeakReference<LivingEntity> target = null;
 
     public BloodSuckAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
                            final float damage, final int stun, final float hitboxSize, final float knockback,
@@ -43,21 +42,18 @@ public final class BloodSuckAttack extends AbstractSpecGrabAttack<BloodSuckAttac
     }
 
     @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(TARGET, null);
-    }
-
-    @Override
     public void performHook(final VampireSpec attacker, final Set<LivingEntity> targets, final Set<AABB> boxes,
-                            final DamageSource damageSource, final Vec3 forwardPos, final Vec3 rotationVector, final MoveContext ctx) {
-        super.performHook(attacker, targets, boxes, damageSource, forwardPos, rotationVector, ctx);
+                            final DamageSource damageSource, final Vec3 forwardPos, final Vec3 rotationVector) {
+        super.performHook(attacker, targets, boxes, damageSource, forwardPos, rotationVector);
         if (!targets.isEmpty()) {
-            ctx.set(TARGET, targets.stream().findFirst().get());
+            if (getHitMove() instanceof BloodSuckHitsAttack bloodSuckHitsAttack) {
+                bloodSuckHitsAttack.setTarget(new WeakReference<>(targets.stream().findFirst().get()));
+            }
+
             if (attacker != null && attacker.getUser() instanceof final Player player && !player.level().isClientSide()) {
                 player.awardStat(JStatRegistry.BLOOD_SUCKED.get());
             }
         }
-
     }
 
     @Override

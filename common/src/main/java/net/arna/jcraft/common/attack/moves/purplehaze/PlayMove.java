@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.purplehaze;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.PurpleHazeEntity;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -22,7 +21,7 @@ public class PlayMove extends AbstractMove<PlayMove, PurpleHazeEntity> {
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(PurpleHazeEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(PurpleHazeEntity attacker, LivingEntity user) {
         attacker.setCurrentMove(null);
         attacker.setMoveStun(0);
         attacker.desummon();

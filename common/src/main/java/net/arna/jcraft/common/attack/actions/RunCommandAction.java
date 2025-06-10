@@ -7,10 +7,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.MoveAction;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveActionType;
+import net.arna.jcraft.api.attack.IAttacker;
+import net.arna.jcraft.api.attack.core.MoveAction;
+import net.arna.jcraft.api.attack.core.MoveActionType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -25,7 +24,7 @@ public class RunCommandAction extends MoveAction<RunCommandAction, IAttacker<?, 
     private final String command;
 
     @Override
-    public void perform(final IAttacker<?, ?> attacker, final LivingEntity user, final MoveContext ctx, final Set<LivingEntity> targets) {
+    public void perform(final IAttacker<?, ?> attacker, final LivingEntity user, final Set<LivingEntity> targets) {
         MinecraftServer server = attacker.getEntityWorld().getServer();
         if (server == null) {
             return;

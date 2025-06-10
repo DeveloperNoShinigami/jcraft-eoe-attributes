@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.common.entity.stand.GooGooDollsEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 
 /**
  * The {@link StandEntityModel} for {@link GooGooDollsEntity}.
@@ -9,6 +9,6 @@ import net.arna.jcraft.common.entity.stand.StandType;
  */
 public class GooGooDollsModel extends StandEntityModel<GooGooDollsEntity> {
     public GooGooDollsModel() {
-        super(StandType.GOO_GOO_DOLLS);
+        super(JStandTypeRegistry.GOO_GOO_DOLLS.get());
     }
 }

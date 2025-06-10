@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.vampire;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.LaserProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
@@ -31,10 +30,10 @@ public final class SpaceRipperAttack extends AbstractMove<SpaceRipperAttack, Vam
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final VampireSpec attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final VampireSpec attacker, final LivingEntity user) {
         final Vec3 rotVec = user.getLookAngle();
 
-        int chargeTime = getChargeTime(attacker);
+        int chargeTime = getChargeTime();
 
         //noinspection ConstantValue // what??
         for (int i = -1; i < 3; i += 2) {

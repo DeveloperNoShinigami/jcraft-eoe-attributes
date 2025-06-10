@@ -1,25 +1,33 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.util.StandAnimationState;
+import net.arna.jcraft.registry.JStandTypeRegistry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import mod.azure.azurelib.core.animation.AnimationState;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Atum">Atum</a>.
- * @see StandType#ATUM
+ * @see JStandTypeRegistry#ATUM
  * @see net.arna.jcraft.client.model.entity.stand.AtumModel AtumModel
  * @see net.arna.jcraft.client.renderer.entity.stands.AtumRenderer AtumRenderer
  * @see net.arna.jcraft.common.entity.npc.DarbyYoungerEntity DarbyYoungerEntity
  */
 public class AtumEntity extends StandEntity<AtumEntity, AtumEntity.State> {
-    public static final MoveSet<AtumEntity, State> MOVE_SET = MoveSet.create(StandType.ATUM, AtumEntity::registerMoves, State.class);
+    public static final MoveSet<AtumEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.ATUM, AtumEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.of(StandInfo.of(Component.translatable("entity.jcraft.atum")))
+            .withObtainable(false);
 
     public AtumEntity(Level world) {
-        super(StandType.ATUM, world);
+        super(JStandTypeRegistry.ATUM.get(), world);
     }
 
     private static void registerMoves(MoveMap<AtumEntity, State> moves) {

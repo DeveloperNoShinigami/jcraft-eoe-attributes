@@ -5,13 +5,18 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.EmeraldSplashAttack;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.NetSetMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.projectile.HGNetEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.IOwnable;
@@ -19,6 +24,7 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,15 +40,33 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Hierophant_Green">Hierophant Green</a>.
- * @see StandType#HIEROPHANT_GREEN
+ * @see JStandTypeRegistry#HIEROPHANT_GREEN
  * @see net.arna.jcraft.client.model.entity.stand.HGModel HGModel
  * @see net.arna.jcraft.client.renderer.entity.stands.HGRenderer HGRenderer
  * @see EmeraldSplashAttack
  * @see NetSetMove
  */
 public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
-    public static final MoveSet<HGEntity, State> MOVE_SET = MoveSet.create(StandType.HIEROPHANT_GREEN,
+    public static final MoveSet<HGEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.HIEROPHANT_GREEN,
             HGEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(220f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.hierophantgreen"))
+                    .proCount(3)
+                    .conCount(2)
+                    .freeSpace(Component.literal("""
+                        BNBs:
+                            -the calamari
+                            Light>Barrage>Net Set>delay.Emarald Splash>crouch.Emerald Splash>
+                            ...Extend>crouch.Light~Light
+                            ...Sendoff"""))
+                    .skinName(Component.literal("Cold"))
+                    .skinName(Component.literal("Burning"))
+                    .skinName(Component.literal("Seaside"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.HG_SUMMON))
+            .build();
 
     public static final SimpleUppercutAttack<HGEntity> AIR_LIGHT = new SimpleUppercutAttack<HGEntity>(
             JCraft.LIGHT_COOLDOWN, 7, 14, 0.75f, 5f, 15, 1.5f, 0.4f, -0.3f, 0.4f)
@@ -201,19 +225,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                             """));
 
     public HGEntity(Level worldIn) {
-        super(StandType.HIEROPHANT_GREEN, worldIn, JSoundRegistry.HG_SUMMON);
-        idleRotation = 220f;
-
-        proCount = 3;
-        conCount = 2;
-
-        freespace =
-                """
-                        BNBs:
-                            -the calamari
-                            Light>Barrage>Net Set>delay.Emarald Splash>crouch.Emerald Splash>
-                            ...Extend>crouch.Light~Light
-                            ...Sendoff""";
+        super(JStandTypeRegistry.HIEROPHANT_GREEN.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.2f, 0.9f, 0.2f),

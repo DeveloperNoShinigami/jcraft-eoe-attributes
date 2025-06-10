@@ -3,10 +3,9 @@ package net.arna.jcraft.common.attack.actions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.*;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.MoveAction;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveActionType;
+import net.arna.jcraft.api.attack.IAttacker;
+import net.arna.jcraft.api.attack.core.MoveAction;
+import net.arna.jcraft.api.attack.core.MoveActionType;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -24,7 +23,7 @@ public class UserAnimationAction extends MoveAction<UserAnimationAction, IAttack
     }
 
     @Override
-    public void perform(IAttacker<?, ?> attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
+    public void perform(IAttacker<?, ?> attacker, LivingEntity user, Set<LivingEntity> targets) {
         if (force) JUtils.playAnim(user, animation);
         else JUtils.playAnimIfUnoccupied(user, animation);
     }

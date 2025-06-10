@@ -2,7 +2,7 @@ package net.arna.jcraft.common.component.impl.living;
 
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.CommonBombTrackerComponent;
+import net.arna.jcraft.api.component.living.CommonBombTrackerComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;

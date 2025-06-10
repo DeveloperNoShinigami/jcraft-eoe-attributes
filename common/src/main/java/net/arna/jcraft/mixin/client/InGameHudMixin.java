@@ -137,7 +137,7 @@ public abstract class InGameHudMixin {
 
     // Rendered using this mixin rather than HudRenderCallback, so it's behind chat.
     @Inject(method = "render",
-            at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableBlend()V"),
+            at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;enableBlend()V", remap = false),
             slice = @Slice(
                     from = @At(value = "INVOKE",
                             target = "Lnet/minecraft/world/scores/Scoreboard;getPlayersTeam(Ljava/lang/String;)Lnet/minecraft/world/scores/PlayerTeam;")))

@@ -1,14 +1,20 @@
 package net.arna.jcraft.common.entity.stand;
 
-import net.arna.jcraft.common.attack.core.BlockableType;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.pose.ModifierCondition;
+import net.arna.jcraft.api.pose.PoseModifiers;
+import net.arna.jcraft.api.pose.modifier.IPoseModifier;
+import net.arna.jcraft.api.pose.modifier.PoseModifierGroup;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.attack.enums.BlockableType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.attack.moves.killerqueen.BombPlantAttack;
 import net.arna.jcraft.common.attack.moves.killerqueen.ExplosiveDashAttack;
 import net.arna.jcraft.common.attack.moves.killerqueen.KQDetonateAttack;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
@@ -17,17 +23,34 @@ import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Supplier;
 
 public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQueenEntity<E, S>, S extends Enum<S> & StandAnimationState<E>> extends StandEntity<E, S>
         permits KillerQueenEntity, KQBTDEntity {
+    public static final IPoseModifier POSE = PoseModifierGroup.builder()
+            .modifier(PoseModifierGroup.builder()
+                    .condition(ModifierCondition.USER_NOT_MOVING)
+                    .modifier(PoseModifiers.parse("""
+                            leftArm.yRot += 15deg;
+                            leftArm.xRot -= 15deg;
+                            leftArm.zRot += 45deg;
+                            """, ModifierCondition.LEFT_ARM_EMPTY))
+                    .modifier(PoseModifiers.parse("""
+                            rightArm.yRot -= 15deg;
+                            rightArm.xRot -= 15deg;
+                            rightArm.zRot += 45deg;
+                            """, ModifierCondition.RIGHT_ARM_EMPTY))
+                    .build())
+            .modifier(PoseModifiers.parse("""
+                    body.xRot -= 5deg;
+                    leftLeg.z -= 1;
+                    rightLeg.z -= 1;
+                    """))
+            .build();
+
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LOW = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
             0, 8, 13, 0.85f, 4f, 10, 1.5f, 0.25f, 0.1f)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -80,20 +103,8 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             );
     protected ItemEntity coin;
 
-    protected AbstractKillerQueenEntity(StandType type, Level worldIn, @Nullable Supplier<SoundEvent> summonSound) {
-        super(type, worldIn, summonSound, true);
-        idleRotation = -30f;
-
-        proCount = 4;
-        conCount = 3;
-
-        freespace = """
-                BNBs:
-                    -Standard bomb plant confirm and SHA setup
-                    Light~Light>Barrage>Bomb plant>Detonate(>Sheer Heart Attack)
-                
-                    -Confirm while bomb plant is on cd
-                    Light~Light>Barrage>Heavy(>Sheer Heart Attack)""";
+    protected AbstractKillerQueenEntity(StandType type, Level worldIn) {
+        super(type, worldIn);
     }
 
     protected void detonate() {

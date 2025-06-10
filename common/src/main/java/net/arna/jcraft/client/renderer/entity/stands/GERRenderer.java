@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
 import net.arna.jcraft.common.entity.stand.GEREntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
  */
 public class GERRenderer extends StandEntityRenderer<GEREntity> {
     public GERRenderer(final EntityRendererProvider.Context context) {
-        super(context, new StandEntityModel<>(StandType.GOLD_EXPERIENCE_REQUIEM));
+        super(context, new StandEntityModel<>(JStandTypeRegistry.GOLD_EXPERIENCE_REQUIEM.get()));
     }
 
     @Override

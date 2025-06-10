@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.KQBTDEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -28,8 +27,8 @@ public final class ElbowAttack extends AbstractSimpleAttack<ElbowAttack, KQBTDEn
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final KQBTDEntity attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
         for (LivingEntity target : targets) {
             target.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, 4, true, false));
         }

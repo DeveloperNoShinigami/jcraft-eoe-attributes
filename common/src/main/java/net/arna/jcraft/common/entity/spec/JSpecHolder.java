@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.entity.spec;
 
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.util.SpecAnimationState;
 
 public interface JSpecHolder {

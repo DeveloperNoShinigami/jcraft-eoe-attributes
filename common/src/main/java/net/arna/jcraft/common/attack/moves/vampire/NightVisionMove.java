@@ -3,10 +3,8 @@ package net.arna.jcraft.common.attack.moves.vampire;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.BooleanMoveVariable;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.spec.VampireSpec;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -15,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public class NightVisionMove extends AbstractMove<NightVisionMove, VampireSpec> {
-    private static final BooleanMoveVariable ACTIVE = new BooleanMoveVariable();
+    private boolean active = false;
 
     public NightVisionMove(int cooldown) {
         super(cooldown, 0, 0, 0);
@@ -27,9 +25,9 @@ public class NightVisionMove extends AbstractMove<NightVisionMove, VampireSpec> 
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(VampireSpec attacker, LivingEntity user, MoveContext ctx) {
-        ctx.setBoolean(ACTIVE, !ctx.getBoolean(ACTIVE));
-        if (!ctx.getBoolean(ACTIVE)) {
+    public @NonNull Set<LivingEntity> perform(VampireSpec attacker, LivingEntity user) {
+        active = !active;
+        if (!active) {
             user.removeEffect(MobEffects.NIGHT_VISION);
         }
 
@@ -39,14 +37,9 @@ public class NightVisionMove extends AbstractMove<NightVisionMove, VampireSpec> 
     @Override
     public void tick(final VampireSpec attacker) {
         LivingEntity user = attacker.getUser();
-        if (user == null || !attacker.getMoveContext().getBoolean(ACTIVE)) return;
+        if (user == null || !active) return;
 
         user.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 410, 0, true, false));
-    }
-
-    @Override
-    public void registerExtraContextEntries(MoveContext ctx) {
-        ctx.register(ACTIVE, false);
     }
 
     @Override

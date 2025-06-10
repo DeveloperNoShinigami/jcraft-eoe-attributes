@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.horus;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.IcicleProjectile;
 import net.arna.jcraft.common.entity.stand.HorusEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -27,7 +26,7 @@ public class ScatterAttack extends AbstractMove<ScatterAttack, HorusEntity> {
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(HorusEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(HorusEntity attacker, LivingEntity user) {
         for (int batch = 0; batch < 2; batch++) {
             final float offset = batch == 0 ? 10.0F : -10.0F;
             for (int i = 1; i < 4; i++) {

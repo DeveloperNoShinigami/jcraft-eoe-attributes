@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.util;
 
-import net.arna.jcraft.common.attack.core.MoveInputType;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
 
 import java.util.EnumMap;
 

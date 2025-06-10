@@ -1,8 +1,9 @@
 package net.arna.jcraft.common.effects;
 
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,9 +25,9 @@ public class PurpleInfectionEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(final LivingEntity entity, final int amplifier) {
-        StandType standType = JComponentPlatformUtils.getStandData(entity).getType();
+        StandType standType = JComponentPlatformUtils.getStandComponent(entity).getType();
         float damage = 0.6666f; // 1/3rd of a heart
-        if (standType == StandType.PURPLE_HAZE_DISTORTION) {
+        if (standType == JStandTypeRegistry.PURPLE_HAZE_DISTORTION.get()) {
             damage /= 3.0f;
         }
         entity.hurt(JDamageSources.phpoison(entity.level()), damage);

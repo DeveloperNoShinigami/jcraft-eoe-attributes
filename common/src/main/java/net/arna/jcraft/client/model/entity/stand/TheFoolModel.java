@@ -1,8 +1,8 @@
 package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -13,7 +13,7 @@ public class TheFoolModel extends StandEntityModel<TheFoolEntity> {
     private static final ResourceLocation SAND_TEXTURE = JCraft.id("textures/entity/stands/the_fool/sand.png");
 
     public TheFoolModel() {
-        super(StandType.THE_FOOL, 0.7854f, -0.349f, 30f);
+        super(JStandTypeRegistry.THE_FOOL.get(), 0.7854f, -0.349f, 30f);
     }
 
     @Override

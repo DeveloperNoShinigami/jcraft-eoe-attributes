@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.util;
 
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;

@@ -4,9 +4,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -38,15 +37,14 @@ public class StandSkinCommand {
         }
         for (Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
-                CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
+                CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(livingEntity);
                 StandEntity<?, ?> stand = standData.getStand();
 
                 if (stand == null) {
                     continue;
                 }
 
-                StandType type = stand.getStandType();
-                if (skin < type.getSkinCount()) {
+                if (skin < stand.getStandData().getInfo().getSkinCount()) {
                     standData.setSkin(skin);
                 }
 

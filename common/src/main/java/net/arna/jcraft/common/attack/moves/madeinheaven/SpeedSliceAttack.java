@@ -5,14 +5,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.common.attack.core.MobilityType;
+import net.arna.jcraft.api.attack.enums.MobilityType;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySelector;
@@ -47,7 +46,7 @@ public final class SpeedSliceAttack extends AbstractMove<SpeedSliceAttack, MadeI
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user) {
         return doSpeedSlice(attacker, user.getEyePosition(), user.getEyePosition().add(user.getLookAngle().scale(8)),
                 getDamage(), getKnockback(), getHitboxSize(), 20, 1);
     }

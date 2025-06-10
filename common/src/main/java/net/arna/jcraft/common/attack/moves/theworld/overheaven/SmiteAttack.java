@@ -5,10 +5,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
 import net.arna.jcraft.registry.JSoundRegistry;
 import net.minecraft.server.level.ServerLevel;
@@ -24,15 +22,17 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
+import java.lang.ref.WeakReference;
 import java.util.Objects;
 import java.util.Set;
 
 @Getter
 public final class SmiteAttack extends AbstractSimpleAttack<SmiteAttack, TheWorldOverHeavenEntity> {
-    public static final MoveVariable<Vec3> LIGHTNING_POS = new MoveVariable<>(Vec3.class);
-    private static final MoveVariable<LightningBolt> BOLT = new MoveVariable<>(LightningBolt.class);
     private final boolean aerial;
     private final int levitationDuration, levitationAmplifier;
+
+    private Vec3 lightningPos;
+    private WeakReference<LightningBolt> bolt = new WeakReference<>(null);
 
     public SmiteAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
                        final float damage, final int stun, final float hitboxSize, final float knockback,
@@ -55,9 +55,8 @@ public final class SmiteAttack extends AbstractSimpleAttack<SmiteAttack, TheWorl
         super.onInitiate(attacker);
 
         LivingEntity user = attacker.getUserOrThrow();
-        MoveContext ctx = attacker.getMoveContext();
         if (!aerial) {
-            ctx.set(LIGHTNING_POS, user.position());
+            lightningPos = user.position();
         } else {
             Vec3 eP = user.getEyePosition();
             Vec3 rangeMod = user.getLookAngle().scale(24);
@@ -67,15 +66,10 @@ public final class SmiteAttack extends AbstractSimpleAttack<SmiteAttack, TheWorl
                     576 // Squared
             );
 
-            ctx.set(LIGHTNING_POS,
-                    Objects.requireNonNullElseGet(
-                            eHit,
-                            () -> attacker.level().clip(new ClipContext(eP, eP.add(rangeMod), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user))
-                    ).getLocation()
-            );
+            lightningPos = Objects.requireNonNullElseGet(eHit, () -> attacker.level().clip(new ClipContext(eP, eP.add(rangeMod),
+                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user))).getLocation();
         }
 
-        Vec3 lightningPos = ctx.get(LIGHTNING_POS);
         AreaEffectCloud effectCloud = new AreaEffectCloud(attacker.level(),
                 lightningPos.x, lightningPos.y, lightningPos.z);
         effectCloud.setOwner(user);
@@ -90,15 +84,13 @@ public final class SmiteAttack extends AbstractSimpleAttack<SmiteAttack, TheWorl
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final TheWorldOverHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        Vec3 lP = ctx.get(LIGHTNING_POS);
-
+    public @NonNull Set<LivingEntity> perform(final TheWorldOverHeavenEntity attacker, final LivingEntity user) {
         LightningBolt bolt = new LightningBolt(EntityType.LIGHTNING_BOLT, attacker.level());
         bolt.setVisualOnly(true);
-        bolt.setPos(lP);
-        ctx.set(BOLT, bolt);
+        bolt.setPos(lightningPos);
+        this.bolt = new WeakReference<>(bolt);
 
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        Set<LivingEntity> targets = super.perform(attacker, user);
 
         attacker.level().addFreshEntity(bolt);
         return targets;
@@ -106,21 +98,19 @@ public final class SmiteAttack extends AbstractSimpleAttack<SmiteAttack, TheWorl
 
     @Override
     protected Set<AABB> calculateBoxes(final TheWorldOverHeavenEntity attacker, final LivingEntity user, final Vec3 rotVec, final Vec3 upVec, final Vec3 hPos, final Vec3 fPos) {
-        return Set.of(createBox(attacker.getMoveContext().get(LIGHTNING_POS), getHitboxSize()));
+        return Set.of(createBox(lightningPos, getHitboxSize()));
     }
 
     @Override
     protected void processTarget(final TheWorldOverHeavenEntity attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
-        target.thunderHit((ServerLevel) attacker.level(), attacker.getMoveContext().get(BOLT));
-        target.addEffect(new MobEffectInstance(MobEffects.LEVITATION, levitationDuration, levitationAmplifier, true, false));
-    }
+        LightningBolt bolt = this.bolt.get();
 
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(LIGHTNING_POS);
-        ctx.register(BOLT);
+        if (bolt != null) {
+            target.thunderHit((ServerLevel) attacker.level(), bolt);
+            target.addEffect(new MobEffectInstance(MobEffects.LEVITATION, levitationDuration, levitationAmplifier, true, false));
+        }
     }
 
     @Override

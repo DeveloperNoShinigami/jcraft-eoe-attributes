@@ -2,15 +2,13 @@ package net.arna.jcraft.client.model.entity.stand;
 
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.model.GeoModel;
-import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.client.util.JClientUtils;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.IntStream;
 
 /**
@@ -36,12 +34,12 @@ public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
 
     public StandEntityModel(final StandType type, final float torsoPitchOffset, final float headPitchOffset, final float velInfluence) {
         this.type = type;
-        final String typeName = type.name().toLowerCase(Locale.ROOT);
-        model = JCraft.id("geo/" + typeName + ".geo.json");
-        skins = IntStream.rangeClosed(0, type.getSkinCount())
-                .mapToObj(i -> JCraft.id(String.format("textures/entity/stands/%s/%s.png", typeName, i == 0 ? "default" : "skin" + i)))
+        model = type.getId().withPath(path -> "geo/" + path + ".geo.json");
+        skins = IntStream.rangeClosed(0, 3)
+                .mapToObj(i -> type.getId().withPath(path -> String.format("textures/entity/stands/%s/%s.png",
+                        path, i == 0 ? "default" : "skin" + i)))
                 .toList();
-        animation = JCraft.id("animations/" + typeName + ".animation.json");
+        animation = type.getId().withPath(path -> "animations/" + path + ".animation.json");
 
         this.torsoPitchOffset = torsoPitchOffset;
         this.headPitchOffset = headPitchOffset;
@@ -55,7 +53,7 @@ public class StandEntityModel<E extends StandEntity<?, ?>> extends GeoModel<E> {
 
     @Override
     public ResourceLocation getTextureResource(final E entity) {
-        return skins.get(Mth.clamp(entity.getSkin(), 0, type.getSkinCount()));
+        return skins.get(Mth.clamp(entity.getSkin(), 0, type.getData().getInfo().getSkinCount()));
     }
 
     @Override

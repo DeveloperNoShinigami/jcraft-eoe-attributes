@@ -3,8 +3,8 @@ package net.arna.jcraft.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.enchantments.CinderellasKissEnchantment;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.item.StandDiscItem;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.minecraft.world.entity.player.Inventory;
@@ -129,9 +129,6 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
         // The CK level must be at most equal to the amount of skins the stand has
         // and must not be the same as the disc's current skin.
         int level = CinderellasKissEnchantment.getCKLevel(item2);
-        if (level > standType.getSkinCount() - 1 || level == StandDiscItem.getSkin(item1))
-            return false;
-
-        return true;
+        return level <= standType.getData().getInfo().getSkinCount() - 1 && level != StandDiscItem.getSkin(item1);
     }
 }

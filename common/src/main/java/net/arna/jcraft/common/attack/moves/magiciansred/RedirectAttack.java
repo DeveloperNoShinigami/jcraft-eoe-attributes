@@ -3,14 +3,13 @@ package net.arna.jcraft.common.attack.moves.magiciansred;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.AnkhProjectile;
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.common.attack.core.MobilityType;
+import net.arna.jcraft.api.attack.enums.MobilityType;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
@@ -30,7 +29,7 @@ public final class RedirectAttack extends AbstractMove<RedirectAttack, Magicians
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final MagiciansRedEntity attacker, final LivingEntity user) {
         final List<AnkhProjectile> ankhs = attacker.level().getEntitiesOfClass(AnkhProjectile.class,
                 attacker.getBoundingBox().inflate(32), EntitySelector.ENTITY_STILL_ALIVE);
 

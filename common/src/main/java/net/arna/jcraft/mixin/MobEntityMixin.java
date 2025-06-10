@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MobEntityMixin {
     @Inject(method = "getControllingPassenger", at = @At("HEAD"), cancellable = true)
     private void jcraft$dontDisableAI(CallbackInfoReturnable<LivingEntity> cir) {
-        if (JComponentPlatformUtils.getStandData(Mob.class.cast(this)).getStand() != null)
+        if (JComponentPlatformUtils.getStandComponent(Mob.class.cast(this)).getStand() != null)
             cir.setReturnValue(null);
     }
 }

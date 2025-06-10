@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.theworld.overheaven;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,8 +25,8 @@ public final class DivineFinisherAttack extends AbstractSimpleAttack<DivineFinis
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final TheWorldOverHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final TheWorldOverHeavenEntity attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
 
         final Vec3 rotVec = user.getLookAngle();
 

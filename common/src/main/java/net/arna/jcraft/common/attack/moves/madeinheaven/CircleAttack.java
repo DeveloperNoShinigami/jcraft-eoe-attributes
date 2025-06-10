@@ -3,13 +3,12 @@ package net.arna.jcraft.common.attack.moves.madeinheaven;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.*;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.enums.MobilityType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.common.attack.core.MobilityType;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.util.RandomSource;
@@ -17,12 +16,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import java.lang.ref.WeakReference;
 import java.util.Set;
 
 public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenEntity> {
-    public static final IntMoveVariable CIRCLING_TIME = new IntMoveVariable();
-    public static final FloatMoveVariable ORBIT_PROG = new FloatMoveVariable();
-    public static final MoveVariable<LivingEntity> TARGET = new WeakMoveVariable<>(LivingEntity.class);
+    private int circlingTime = 0;
+    private float orbitProg = 0f;
+    private WeakReference<LivingEntity> target = new WeakReference<>(null);
 
     public CircleAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
@@ -46,10 +47,9 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
                 .findFirst()
                 .orElse(null);
 
-        MoveContext ctx = attacker.getMoveContext();
         attacker.setCirclingTarget(target);
-        ctx.set(TARGET, target);
-        ctx.setFloat(ORBIT_PROG, user.getYHeadRot());
+        this.target = new WeakReference<>(target);
+        orbitProg = user.getYHeadRot();
     }
 
     @Override
@@ -65,18 +65,17 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        ctx.setInt(CIRCLING_TIME, 100);
+    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user) {
+        circlingTime = 100;
         attacker.setAfterimage(true);
         attacker.updateRemoteInputs(0, 0, false, false);
-        LivingEntity target = ctx.get(TARGET);
+        LivingEntity target = this.target.get();
         return target == null ? Set.of() : Set.of(target);
     }
 
     public void endCircle(final MadeInHeavenEntity attacker) {
-        MoveContext ctx = attacker.getMoveContext();
-        ctx.setInt(CIRCLING_TIME, 0);
-        ctx.set(TARGET, null);
+        circlingTime = 0;
+        target = new WeakReference<>(null);
         attacker.setCirclingTarget(null);
         if (attacker.getAccelTime() <= 0) {
             attacker.setAfterimage(false);
@@ -84,22 +83,19 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
     }
 
     private void tickCircle(final MadeInHeavenEntity attacker) {
-        MoveContext ctx = attacker.getMoveContext();
-        int circlingTime = ctx.getInt(CIRCLING_TIME);
         if (circlingTime <= 0 || !attacker.hasUser()) {
             return;
         }
 
         LivingEntity user = attacker.getUserOrThrow();
 
-        ctx.setInt(CIRCLING_TIME, --circlingTime);
-        LivingEntity target = ctx.get(TARGET);
+        --circlingTime;
+        LivingEntity target = this.target.get();
 
         if (target == null || !target.isAlive() || target.isRemoved()) {
             circlingTime = 1;
         } else {
-            float orbitProg = ctx.getFloat(ORBIT_PROG);
-            ctx.setFloat(ORBIT_PROG, orbitProg += 0.15f);
+            orbitProg += 0.15f;
 
             boolean toExit = attacker.getCurrentMove() != null && attacker.getCurrentMove() != this;
             Vec3 rotVec = user.getLookAngle();
@@ -149,13 +145,6 @@ public final class CircleAttack extends AbstractMove<CircleAttack, MadeInHeavenE
                     random.nextDouble() * box.getZsize() + box.minZ,
                     0, 0, 0);
         }
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(CIRCLING_TIME);
-        ctx.register(ORBIT_PROG);
-        ctx.register(TARGET);
     }
 
     @Override

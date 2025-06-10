@@ -7,20 +7,26 @@ import lombok.Setter;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.SummonData;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
-import net.arna.jcraft.common.attack.core.BlockableType;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.core.data.StateContainer;
+import net.arna.jcraft.api.attack.enums.BlockableType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.cream.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -55,7 +61,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Cream">Cream</a>.
- * @see StandType#CREAM
+ * @see JStandTypeRegistry#CREAM
  * @see net.arna.jcraft.client.model.entity.stand.CreamModel CreamModel
  * @see net.arna.jcraft.client.renderer.entity.stands.CreamRenderer CreamRenderer
  * @see BallChargeAttack
@@ -66,12 +72,29 @@ import java.util.function.Consumer;
  * @see AbstractSurpriseMove
  */
 @Getter
-@SuppressWarnings("LombokSetterMayBeUsed") // no
 public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
-    public static final MoveSet<CreamEntity, CreamEntity.State> DEFAULT_MOVE_SET = MoveSet.create(StandType.CREAM,
+    public static final MoveSet<CreamEntity, CreamEntity.State> DEFAULT_MOVE_SET = MoveSetManager.create(JStandTypeRegistry.CREAM,
             CreamEntity::registerDefaultMoves, State.class);
-    public static final MoveSet<CreamEntity, CreamEntity.State> HALF_BALL_MOVE_SET = MoveSet.create(StandType.CREAM,
+    public static final MoveSet<CreamEntity, CreamEntity.State> HALF_BALL_MOVE_SET = MoveSetManager.create(JStandTypeRegistry.CREAM,
             "half_ball", CreamEntity::registerHalfBallMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(220f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.cream"))
+                    .proCount(4)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                BNBs (i. - in Cream):
+                    Light>Assault>Light>Grab
+                    i.Light>land+s.OFF>s.ON+Assault>Light>Charge>Grab
+                    Chop>Destroy>Surprise
+                    Chop>Void"""))
+                    .skinName(Component.literal("Menace"))
+                    .skinName(Component.literal("Eraser"))
+                    .skinName(Component.literal("White Void"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.CREAM_SUMMON))
+            .build();
 
     public static final SimpleAttack<CreamEntity> BITE = new SimpleAttack<CreamEntity>(20,
             7, 13, 0.75f, 6f, 20, 1.75f, 0.75f, 0.3f)
@@ -223,32 +246,15 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                     Component.literal("Destroy"),
                     Component.literal("Cream quickly transforms into a black hole and charges in a downward curve"));
 
-    private static final EntityDataAccessor<Integer> VOID_TIME;
-    private static final EntityDataAccessor<Boolean> HALF_BALL;
+    private static final EntityDataAccessor<Integer> VOID_TIME = SynchedEntityData.defineId(CreamEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> HALF_BALL = SynchedEntityData.defineId(CreamEntity.class, EntityDataSerializers.BOOLEAN);
     @Setter
     private Vec3 chargeDir;
     @Setter
     private boolean charging = false;
 
-    static {
-        VOID_TIME = SynchedEntityData.defineId(CreamEntity.class, EntityDataSerializers.INT);
-        HALF_BALL = SynchedEntityData.defineId(CreamEntity.class, EntityDataSerializers.BOOLEAN);
-    }
-
     public CreamEntity(Level worldIn) {
-        super(StandType.CREAM, worldIn, JSoundRegistry.CREAM_SUMMON);
-
-        idleRotation = 220f;
-
-        proCount = 4;
-        conCount = 3;
-
-        freespace = """
-                BNBs (i. - in Cream):
-                    Light>Assault>Light>Grab
-                    i.Light>land+s.OFF>s.ON+Assault>Light>Charge>Grab
-                    Chop>Destroy>Surprise
-                    Chop>Void""";
+        super(JStandTypeRegistry.CREAM.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.5f, 0.1f, 0.3f),
@@ -268,8 +274,6 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
     public void beginHalfBall() {
         entityData.set(HALF_BALL, true);
-        idleDistance = 0f;
-        blockDistance = 0f;
         maxStandGauge = 45f;
 
         switchMoveSet(HALF_BALL_MOVE_SET.getName());
@@ -277,11 +281,25 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
     public void endHalfBall() {
         entityData.set(HALF_BALL, false);
-        idleDistance = 1.25f;
-        blockDistance = 0.75f;
         maxStandGauge = 90f;
 
         switchMoveSet(DEFAULT_MOVE_SET.getName());
+    }
+
+    @Override
+    public StandData getStandData() {
+        StandData data = super.getStandData();
+
+        if (isHalfBall()) {
+            // Cream is the only one that needs this, so this hack is fine.
+            // The getStandData() method is always used to get the StandData,
+            // the StandType#getData() method is never used directly.
+            return data
+                    .withIdleDistance(0f)
+                    .withBlockDistance(0f);
+        }
+
+        return data;
     }
 
     public boolean isHalfBall() {
@@ -469,7 +487,10 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                 if (charging) {
                     if (isFree()) { // Surprise move
                         final Vector3f newPos = getFreePos();
-                        newPos.add(getMoveContext().get(AbstractSurpriseMove.OUT_DIR));
+                        // Find outDir
+                        Vector3f outDir = getCurrentMove() instanceof AbstractSurpriseMove<?> surpriseMove ?
+                                surpriseMove.getOutDir() : new Vector3f();
+                        newPos.add(outDir);
                         setFreePos(newPos);
                         if (getMoveStun() == 1) {
                             setFree(false);

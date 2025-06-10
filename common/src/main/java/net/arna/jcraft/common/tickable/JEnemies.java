@@ -1,8 +1,8 @@
 package net.arna.jcraft.common.tickable;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.*;
 
-import static net.arna.jcraft.common.entity.stand.StandEntity.standUserCombatAI;
+import static net.arna.jcraft.api.stand.StandEntity.standUserCombatAI;
 
 /**
  * Stores and updates all MobEntities that use Stands.
@@ -44,7 +44,7 @@ public class JEnemies {
             if (enemy.isAlive()) {
                 if (!enemy.isNoAi()) {
                     final ServerLevel world = server.getLevel(enemyData.getValue());
-                    final CommonStandComponent standComponent = JComponentPlatformUtils.getStandData(enemy);
+                    final CommonStandComponent standComponent = JComponentPlatformUtils.getStandComponent(enemy);
                     if (standComponent.getType() != null) {
                         final StandEntity<?, ?> stand = standComponent.getStand();
                         if (stand == null) {

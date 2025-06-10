@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.model.entity.stand;
 
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 
 /**
  * The {@link StandEntityModel} for {@link WhiteSnakeEntity}.
@@ -9,6 +9,6 @@ import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
  */
 public class WhiteSnakeModel extends StandEntityModel<WhiteSnakeEntity> {
     public WhiteSnakeModel() {
-        super(StandType.WHITE_SNAKE, -0.10f, -0.10f);
+        super(JStandTypeRegistry.WHITE_SNAKE.get(), -0.10f, -0.10f);
     }
 }

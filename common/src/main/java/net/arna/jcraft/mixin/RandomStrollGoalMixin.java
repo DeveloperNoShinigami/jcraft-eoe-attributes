@@ -1,6 +1,6 @@
 package net.arna.jcraft.mixin;
 
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;

@@ -9,12 +9,12 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -46,8 +46,8 @@ public class AyaTsujiEntity extends PathfinderMob implements GeoEntity, Merchant
 
     public AyaTsujiEntity(Level world) {
         super(JEntityTypeRegistry.AYA_TSUJI.get(), world);
-        final CommonStandComponent standData = JComponentPlatformUtils.getStandData(this);
-        standData.setType(StandType.CINDERELLA);
+        final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(this);
+        standData.setType(JStandTypeRegistry.CINDERELLA.get());
         standData.setSkin(0);
 
         if (world.isClientSide()) return;

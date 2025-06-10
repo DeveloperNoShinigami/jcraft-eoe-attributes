@@ -4,26 +4,30 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.PlaySoundAction;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.attack.moves.horus.*;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleHoldableMove;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -36,7 +40,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Horus">Horus</a>.
- * @see StandType#HORUS
+ * @see JStandTypeRegistry#HORUS
  * @see net.arna.jcraft.client.model.entity.stand.HorusModel HorusModel
  * @see net.arna.jcraft.client.renderer.entity.stands.HorusRenderer HorusRenderer
  * @see net.arna.jcraft.common.entity.npc.PetshopEntity PetshopEntity
@@ -44,7 +48,25 @@ import java.util.function.Consumer;
  * @see HorusDivekickAttack
  */
 public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
-    public static final MoveSet<HorusEntity, State> MOVE_SET = MoveSet.create(StandType.HORUS, HorusEntity::registerMoves, State.class);
+    public static final MoveSet<HorusEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.HORUS,
+            HorusEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.horus"))
+                    .proCount(2)
+                    .conCount(2)
+                    .freeSpace(Component.literal("""
+                BNBs:
+                    -bad birdie
+                    Light~Light>dash>crouch.Light
+                
+                """))
+                    .skinName(Component.literal("Pearl"))
+                    .skinName(Component.literal("Dual"))
+                    .skinName(Component.literal("Evil Incarnation"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.HORUS_SUMMON))
+            .build();
 
     public static final SimpleAttack<HorusEntity> LIGHT_CROUCHING_FOLLOWUP = new SimpleAttack<HorusEntity>(
             0, 15, 25, 0.75f, 7f, 25, 1.85f, 1.5f, 0.2f)
@@ -190,17 +212,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
     private WeakReference<LargeIcicleProjectile> lastLargeIcicle = new WeakReference<>(null);
 
     public HorusEntity(Level world) {
-        super(StandType.HORUS, world, JSoundRegistry.HORUS_SUMMON);
-
-        proCount = 2;
-        conCount = 2;
-
-        freespace = """
-                BNBs:
-                    -bad birdie
-                    Light~Light>dash>crouch.Light
-                
-                """;
+        super(JStandTypeRegistry.HORUS.get(), world);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.2f, 0.5f, 0.8f),

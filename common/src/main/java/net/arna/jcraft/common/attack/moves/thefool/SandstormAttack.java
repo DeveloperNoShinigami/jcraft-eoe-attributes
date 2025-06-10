@@ -1,13 +1,10 @@
 package net.arna.jcraft.common.attack.moves.thefool;
 
-import com.google.common.reflect.TypeToken;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
@@ -20,13 +17,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack, TheFoolEntity> {
-    public static final MoveVariable<LivingEntity> SUPER_TARGET = new MoveVariable<>(LivingEntity.class);
-    public static final MoveVariable<List<FallingBlockEntity>> SANDS = new MoveVariable<>(new TypeToken<>() {});
+    private WeakReference<LivingEntity> superTarget = new WeakReference<>(null);
+    private final List<WeakReference<FallingBlockEntity>> sandEntities = new ArrayList<>();
 
     public SandstormAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
                            final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
@@ -46,16 +46,14 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
         if (targets.isEmpty()) {
             return targets;
         }
 
         final LivingEntity superTarget = JUtils.getUserIfStand(targets.stream().findFirst().orElseThrow());
-        ctx.set(SUPER_TARGET, superTarget);
-
-        final List<FallingBlockEntity> sands = ctx.get(SANDS);
+        this.superTarget = new WeakReference<>(superTarget);
 
         for (int i = 0; i < 8; i++) {
             final FallingBlockEntity sand = FallingBlockEntity.fall(attacker.level(), superTarget.blockPosition(),
@@ -65,27 +63,25 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
             sand.dropItem = false;
             sand.setBoundingBox(new AABB(0, 0, 0, 0, 0, 0));
             sand.setNoGravity(true);
-            sands.add(sand);
+            sandEntities.add(new WeakReference<>(sand));
         }
 
         return targets;
     }
 
     public void tickSandstorm(final TheFoolEntity attacker) {
-        final MoveContext ctx = attacker.getMoveContext();
-
-        final List<FallingBlockEntity> sands = ctx.get(SANDS);
-        final LivingEntity superTarget = ctx.get(SUPER_TARGET);
+        LivingEntity superTarget = this.superTarget.get();
 
         if (superTarget == null) {
             return;
         } else {
-            if (sands.isEmpty()) {
-                ctx.set(SUPER_TARGET, null);
+            if (sandEntities.isEmpty()) {
+                this.superTarget = null;
                 return;
             }
+
             if (!superTarget.isAlive()) {
-                ctx.set(SUPER_TARGET, null);
+                this.superTarget = null;
                 discardSands(attacker);
                 return;
             }
@@ -100,8 +96,19 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
 
         final int age = attacker.tickCount;
         if (age % 20 == 0) {
-            sands.get(0).discard();
-            sands.remove(0);
+            // Remove the oldest sand entity and any that may have been removed or killed.
+            for (int i = 0; i < sandEntities.size(); i++) {
+                WeakReference<FallingBlockEntity> entityRef = sandEntities.get(i);
+                FallingBlockEntity entity = entityRef == null ? null : entityRef.get();
+                if (entity == null || entity.isRemoved()) {
+                    sandEntities.remove(i);
+                    i--;
+                    continue;
+                }
+
+                entity.discard();
+                sandEntities.remove(i);
+            }
         }
 
         final RandomSource random = attacker.getRandom();
@@ -109,10 +116,12 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
 
         int i = 0;
         int j = 1;
-        for (FallingBlockEntity sand : sands) {
+        for (WeakReference<FallingBlockEntity> sandRef : sandEntities) {
+            FallingBlockEntity sand = sandRef == null ? null : sandRef.get();
             if (sand == null || sand.isRemoved()) {
                 continue;
             }
+
             i++;
             j *= -1;
 
@@ -133,15 +142,11 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
     }
 
     public void discardSands(final TheFoolEntity attacker) {
-        final List<FallingBlockEntity> sands = attacker.getMoveContext().get(SANDS);
-        sands.forEach(Entity::discard);
-        sands.clear();
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(SUPER_TARGET);
-        ctx.register(SANDS, new ArrayList<>());
+        sandEntities.stream()
+                .map(WeakReference::get)
+                .filter(Objects::nonNull)
+                .forEach(Entity::discard);
+        sandEntities.clear();
     }
 
     @Override

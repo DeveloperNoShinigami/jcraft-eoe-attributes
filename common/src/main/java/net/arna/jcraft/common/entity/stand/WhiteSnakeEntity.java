@@ -4,11 +4,16 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.SummonData;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
-import net.arna.jcraft.common.attack.core.BlockableType;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.enums.BlockableType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.PilotModeMove;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -17,10 +22,11 @@ import net.arna.jcraft.common.attack.moves.whitesnake.ChargedSpewAttack;
 import net.arna.jcraft.common.attack.moves.whitesnake.GiveStandAttack;
 import net.arna.jcraft.common.attack.moves.whitesnake.MeltYourHeartAttack;
 import net.arna.jcraft.common.attack.moves.whitesnake.PoisonSpewAttack;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
@@ -37,7 +43,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Whitesnake">Whitesnake</a>.
- * @see StandType#WHITE_SNAKE
+ * @see JStandTypeRegistry#WHITE_SNAKE
  * @see net.arna.jcraft.client.model.entity.stand.WhiteSnakeModel WhiteSnakeModel
  * @see net.arna.jcraft.client.renderer.entity.stands.WhiteSnakeRenderer WhiteSnakeRenderer
  * @see ChargedSpewAttack
@@ -46,10 +52,32 @@ import java.util.function.Consumer;
  * @see PoisonSpewAttack
  */
 public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEntity.State> {
-    public static final MoveSet<WhiteSnakeEntity, State> DEFAULT_MOVE_SET = MoveSet.create(StandType.WHITE_SNAKE,
+    public static final MoveSet<WhiteSnakeEntity, State> DEFAULT_MOVE_SET = MoveSetManager.create(JStandTypeRegistry.WHITE_SNAKE,
             WhiteSnakeEntity::registerDefaultMoves, State.class);
-    public static final MoveSet<WhiteSnakeEntity, State> REMOTE_MOVE_SET = MoveSet.create(StandType.WHITE_SNAKE,
+    public static final MoveSet<WhiteSnakeEntity, State> REMOTE_MOVE_SET = MoveSetManager.create(JStandTypeRegistry.WHITE_SNAKE,
             "remote", WhiteSnakeEntity::registerRemoteMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(220f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.whitesnake"))
+                    .proCount(3)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                            BNBs:
+                                -the gimp
+                                Light>Gut Punch>Poison Spew
+                            
+                                -the el mayo (optimal damage with disk moves)
+                                Memory Disk>Light>Barrage>Leg Crusher>Stand Disk>Light~Light
+                            
+                                -the gazebo (optimal damage without disk)
+                                Light>Barrage>Leg Crusher>Gut Punch>Light~Light
+                            
+                                -the protein shake (sets up mixups)
+                                Light>Barrage>Leg Crusher>Charged Spew"""))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.WS_SUMMON))
+            .build();
 
     public static final SimpleUppercutAttack<WhiteSnakeEntity> UPPERCUT = new SimpleUppercutAttack<WhiteSnakeEntity>(
             20, 8, 14, 1, 6f, 16, 1.25f, 0.5f, -0.5f, 0.5f)
@@ -181,26 +209,7 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             );
 
     public WhiteSnakeEntity(Level worldIn) {
-        super(StandType.WHITE_SNAKE, worldIn, JSoundRegistry.WS_SUMMON);
-        idleRotation = 220f;
-
-        proCount = 3;
-        conCount = 3;
-
-        freespace =
-                """
-                        BNBs:
-                            -the gimp
-                            Light>Gut Punch>Poison Spew
-                        
-                            -the el mayo (optimal damage with disk moves)
-                            Memory Disk>Light>Barrage>Leg Crusher>Stand Disk>Light~Light
-                        
-                            -the gazebo (optimal damage without disk)
-                            Light>Barrage>Leg Crusher>Gut Punch>Light~Light
-                        
-                            -the protein shake (sets up mixups)
-                            Light>Barrage>Leg Crusher>Charged Spew""";
+        super(JStandTypeRegistry.WHITE_SNAKE.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(1f, 1f, 1f),

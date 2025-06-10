@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.whitesnake;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.projectile.WSAcidProjectile;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
 import net.arna.jcraft.common.util.JUtils;
@@ -24,8 +23,8 @@ public final class MeltYourHeartAttack extends AbstractSimpleAttack<MeltYourHear
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
 
         for (int i = 0; i < 10; i++) {
             final float yaw = i * 36F - 180F + i * 3.6F;

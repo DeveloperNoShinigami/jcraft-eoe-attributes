@@ -14,9 +14,9 @@ import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.renderer.armor.StoneMaskRenderer;
-import net.arna.jcraft.common.component.player.CommonSpecComponent;
-import net.arna.jcraft.common.spec.SpecType;
+import net.arna.jcraft.api.component.player.CommonSpecComponent;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.arna.jcraft.registry.JSpecTypeRegistry;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -28,6 +28,7 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
         if (slot != EquipmentSlot.HEAD.getIndex()) {
@@ -52,14 +53,14 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
 
         if (entity instanceof Player player && JCraft.wasRecentlyAttacked(player.getCombatTracker())) {
             CommonSpecComponent specComponent = JComponentPlatformUtils.getSpecData(player);
-            if (specComponent.getType() != SpecType.VAMPIRE) {
-                specComponent.setType(SpecType.VAMPIRE);
+            if (specComponent.getType() != JSpecTypeRegistry.VAMPIRE.get()) {
+                specComponent.setType(JSpecTypeRegistry.VAMPIRE.get());
             }
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+    public void appendHoverText(@NotNull ItemStack stack, @Nullable Level world, List<Component> tooltip, @NotNull TooltipFlag context) {
         tooltip.add(Component.translatable("jcraft.stonemask.desc"));
         super.appendHoverText(stack, world, tooltip, context);
     }
@@ -70,7 +71,7 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
     }
 
     private PlayState predicate(AnimationState<StoneMaskItem> state) {
-        Entity entity = (Entity) state.getData(DataTickets.ENTITY);
+        Entity entity = state.getData(DataTickets.ENTITY);
         if (entity instanceof LivingEntity livingEntity) {
             state.getController().setAnimation(RawAnimation.begin().thenLoop(JCraft.wasRecentlyAttacked(livingEntity.getCombatTracker()) ? "animation.stone_mask.clench" : "animation.stone_mask.dormant"));
 

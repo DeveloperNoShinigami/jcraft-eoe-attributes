@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.common.entity.stand.FooFightersEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 
 /**
  * The {@link StandEntityModel} for {@link FooFightersEntity}.
@@ -9,6 +9,6 @@ import net.arna.jcraft.common.entity.stand.StandType;
  */
 public class FooFightersModel extends StandEntityModel<FooFightersEntity> {
     public FooFightersModel() {
-        super(StandType.FOO_FIGHTERS);
+        super(JStandTypeRegistry.FOO_FIGHTERS.get());
     }
 }

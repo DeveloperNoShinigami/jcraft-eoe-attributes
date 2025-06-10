@@ -2,7 +2,7 @@ package net.arna.jcraft.common.entity.damage;
 
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;

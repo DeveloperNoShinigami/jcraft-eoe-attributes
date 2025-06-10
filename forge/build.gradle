@@ -78,6 +78,13 @@ processResources {
     }
 }
 
+sourcesJar {
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE // Ignore duplicate jcraft.accesswidener files
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
 shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"

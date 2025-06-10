@@ -6,16 +6,16 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.core.ctx.WeakMoveVariable;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.common.entity.PlayerCloneEntity;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
+import net.arna.jcraft.common.network.s2c.ShaderDeactivationPacket;
+import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -30,11 +30,13 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.AABB;
+
+import java.lang.ref.WeakReference;
 import java.util.Set;
 
 @Getter
 public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimsonEntity> {
-    public static final MoveVariable<Mob> DOPPELGANGER = new WeakMoveVariable<>(Mob.class);
+    private WeakReference<Mob> doppelganger;
     private final int erasureDuration;
 
     public TimeEraseMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int erasureDuration) {
@@ -64,7 +66,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final KingCrimsonEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final KingCrimsonEntity attacker, final LivingEntity user) {
         attacker.setTETime(erasureDuration);
 
         attacker.setCurrentMove(null);
@@ -87,7 +89,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
             doppelganger = JUtils.mobCloneOf(mob);
         }
 
-        ctx.set(DOPPELGANGER, doppelganger);
+        this.doppelganger = new WeakReference<>(doppelganger);
         if (doppelganger == null) {
             return Set.of();
         }
@@ -121,8 +123,8 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
     }
 
     private void summonFakeKC(final KingCrimsonEntity attacker) {
-        Mob doppelganger = attacker.getMoveContext().get(DOPPELGANGER);
-        CommonStandComponent standData = JComponentPlatformUtils.getStandData(doppelganger);
+        Mob doppelganger = this.doppelganger == null ? null : this.doppelganger.get();
+        CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(doppelganger);
         standData.setTypeAndSkin(attacker.getStandType(), attacker.getSkin());
 
         StandEntity<?, ?> clone = JCraft.summon(attacker.level(), doppelganger);
@@ -142,7 +144,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
             attacker.setTETime(--teTime);
 
             if (attacker.blocking || attacker.getCurrentMove() != null && attacker.getMoveStun() < attacker.getCurrentMove().getWindupPoint() * 3 / 2) {
-                attacker.cancelTE();
+                cancelTE(attacker);
             }
 
             // Invulnerability and invisibility
@@ -171,7 +173,7 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
             }
         }
 
-        Mob doppelganger = attacker.getMoveContext().get(TimeEraseMove.DOPPELGANGER);
+        Mob doppelganger = this.doppelganger == null ? null : this.doppelganger.get();
         if (teTime <= 0 && doppelganger != null) // Doppelgänger disappears at the end of Time Erase
         {
             doppelganger.discard();
@@ -184,9 +186,22 @@ public final class TimeEraseMove extends AbstractMove<TimeEraseMove, KingCrimson
         }
     }
 
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(DOPPELGANGER);
+    public void cancelTE(KingCrimsonEntity attacker) {
+        final LivingEntity user = attacker.getUserOrThrow();
+        final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
+        cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) - attacker.getTETime() * 2);
+
+        attacker.setTETime(0);
+        Mob doppelganger = this.doppelganger == null ? null : this.doppelganger.get();
+        if (doppelganger != null) {
+            doppelganger.discard();
+        }
+
+        if (user instanceof ServerPlayer serverPlayer) {
+            ShaderDeactivationPacket.send(serverPlayer, ShaderActivationPacket.Type.CRIMSON);
+            serverPlayer.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(JSoundRegistry.TIME_ERASE_EXIT.get()),
+                    SoundSource.PLAYERS, attacker.getX(), attacker.getY(), attacker.getZ(), 1, 1, 0));
+        }
     }
 
     @Override

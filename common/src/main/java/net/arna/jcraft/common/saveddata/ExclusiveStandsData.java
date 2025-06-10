@@ -1,11 +1,13 @@
 package net.arna.jcraft.common.saveddata;
 
+import com.google.common.base.MoreObjects;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.config.JServerConfig;
-import net.arna.jcraft.common.entity.stand.StandType;
 import net.arna.jcraft.mixin.LevelStorageAccessAccessor;
 import net.arna.jcraft.mixin.MinecraftServerAccessor;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtIo;
+import net.arna.jcraft.registry.JStandTypeRegistry;
+import net.minecraft.nbt.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.NotNull;
@@ -18,24 +20,30 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class ExclusiveStandsData extends SavedData {
-
     public static final Path DEFAULT_FILE_LOCATION = new File("data", "jcraft_usedStands.dat").toPath();
-
     private static final CompoundTag NO_STANDS = new CompoundTag();
-
     private static final String KEYWORD = "used";
-
-    private final Set<Integer> usedStands = new TreeSet<>();
+    private final Set<ResourceLocation> usedStands = new TreeSet<>();
 
     public ExclusiveStandsData(final @NotNull CompoundTag compoundTag) {
-        final int[] usedStands = compoundTag.getIntArray(KEYWORD);
-        for (final Integer usedStand : usedStands) {
-            this.usedStands.add(usedStand);
+        Tag tag = compoundTag.get(KEYWORD);
+        if (tag == null) return;
+
+        // Legacy support for IntArrayTag
+        if (tag.getType() == IntArrayTag.TYPE) {
+            for (final IntTag i : ((IntArrayTag) tag)) {
+                usedStands.add(JStandTypeRegistry.LEGACY_ORDINALS.get(i.getAsInt()).getId());
+            }
+        } else {
+            usedStands.addAll(((ListTag) tag).stream()
+                    .map(Tag::getAsString)
+                    .map(ResourceLocation::new)
+                    .toList());
         }
     }
 
     public boolean isStandUsed(final StandType standType) {
-        return JServerConfig.EXCLUSIVE_STANDS.getValue() && usedStands.contains(standType.ordinal());
+        return JServerConfig.EXCLUSIVE_STANDS.getValue() && usedStands.contains(standType.getId());
     }
 
     public boolean switchStand(final @Nullable StandType prev, final @Nullable StandType curr) {
@@ -50,11 +58,11 @@ public class ExclusiveStandsData extends SavedData {
 
         // If the previous stand is not null, remove it from the used stands.
         if (prev != null) {
-            usedStands.remove(prev.ordinal());
+            usedStands.remove(prev.getId());
         }
         // If the current stand is not null, add it to the used stands.
         if (curr != null) {
-            usedStands.add(curr.ordinal());
+            usedStands.add(curr.getId());
         }
         setDirty();
 
@@ -69,7 +77,12 @@ public class ExclusiveStandsData extends SavedData {
     @NotNull
     @Override
     public CompoundTag save(final CompoundTag compoundTag) {
-        compoundTag.putIntArray(KEYWORD, usedStands.stream().toList());
+        ListTag tag = new ListTag();
+        tag.addAll(usedStands.stream()
+                .map(ResourceLocation::toString)
+                .map(StringTag::valueOf)
+                .toList());
+        compoundTag.put(KEYWORD, tag);
         return compoundTag;
     }
 
@@ -78,17 +91,14 @@ public class ExclusiveStandsData extends SavedData {
     }
 
     public static ExclusiveStandsData fromFile(final File file) {
-        final CompoundTag compoundTag;
+        CompoundTag compoundTag = null;
         try {
-            compoundTag = (CompoundTag)NbtIo.read(file).get("data");
-        }
-        catch (final NullPointerException | ClassCastException | IOException ex) {
-            return new ExclusiveStandsData(NO_STANDS);
-        }
-        if (compoundTag == null) {
-            return new ExclusiveStandsData(NO_STANDS);
-        }
-        return new ExclusiveStandsData(compoundTag);
+            CompoundTag fileData = NbtIo.read(file);
+            if (fileData != null)
+                compoundTag = (CompoundTag) fileData.get("data");
+        } catch (final NullPointerException | ClassCastException | IOException ignored) {}
+
+        return new ExclusiveStandsData(MoreObjects.firstNonNull(compoundTag, NO_STANDS));
     }
 
     public static ExclusiveStandsData fromDefaultFile(final MinecraftServer server) {

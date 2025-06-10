@@ -2,8 +2,9 @@ package net.arna.jcraft.client.util;
 
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.AnimationProcessor;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.util.DimensionData;
 import net.arna.jcraft.common.util.JUtils;

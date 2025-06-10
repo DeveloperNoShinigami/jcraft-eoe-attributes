@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
+import net.arna.jcraft.api.component.world.CommonShockwaveHandlerComponent;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;

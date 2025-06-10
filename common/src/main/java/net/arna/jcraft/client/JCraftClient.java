@@ -12,6 +12,8 @@ import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.pose.PoseModifiers;
+import net.arna.jcraft.client.rendering.StandUserPoseLoader;
 import net.arna.jcraft.client.gravity.util.GravityChannelClient;
 import net.arna.jcraft.client.gui.hud.JCraftAbilityHud;
 import net.arna.jcraft.client.net.ClientPacketHandler;
@@ -23,8 +25,8 @@ import net.arna.jcraft.client.rendering.RenderHandler;
 import net.arna.jcraft.client.rendering.handler.*;
 import net.arna.jcraft.client.util.ClientEntityHandlerImpl;
 import net.arna.jcraft.client.util.TrackedKeyBinding;
-import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.MovementInputType;
 import net.arna.jcraft.registry.JParticleTypeRegistry;
 import net.fabricmc.api.EnvType;
@@ -88,6 +90,7 @@ public class JCraftClient {
         JClientConfig.load();
 
         ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, new DecimalFormatUpdater());
+        ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, StandUserPoseLoader::onReload);
 
         GravityChannelClient.init();
 
@@ -96,6 +99,7 @@ public class JCraftClient {
         RenderHandler.init();
         JClientEventsRegistry.registerClientEvents();
         JCraftAbilityHud.init();
+        PoseModifiers.register();
 
         InversionShaderHandler.INSTANCE.init();
         ZaWarudoShaderHandler.INSTANCE.init();

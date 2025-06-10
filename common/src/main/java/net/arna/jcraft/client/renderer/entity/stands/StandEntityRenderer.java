@@ -10,7 +10,7 @@ import mod.azure.azurelib.model.data.EntityModelData;
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
 import net.arna.jcraft.client.util.JClientUtils;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 /**
- * The {@link GeoEntityRenderer} for stands of any {@link net.arna.jcraft.common.entity.stand.StandType StandType}.
+ * The {@link GeoEntityRenderer} for stands of any {@link net.arna.jcraft.api.stand.StandType StandType}.
  * @param <T> the entity to render
  * @see StandEntityModel
  */

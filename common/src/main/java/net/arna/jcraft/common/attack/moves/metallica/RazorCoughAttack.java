@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.metallica;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.common.tickable.MagneticFields;
 import net.arna.jcraft.common.tickable.RazorCoughs;
@@ -30,7 +29,7 @@ public class RazorCoughAttack extends AbstractMove<RazorCoughAttack, MetallicaEn
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user) {
         final Set<Entity> filter = new HashSet<>(2);
         filter.add(user);
         filter.add(attacker);

@@ -5,20 +5,21 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.projectile.ItemTossProjectile;
 import net.arna.jcraft.common.entity.projectile.JAttackEntity;
 import net.arna.jcraft.common.entity.spec.JSpecHolder;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.network.s2c.JExplosionPacket;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.splatter.JSplatterManager;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
@@ -69,7 +70,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
+import static net.arna.jcraft.api.stand.StandEntity.damageLogic;
 
 public final class JUtils {
     public static final float DEG_TO_RAD = 0.017453292F;
@@ -487,7 +488,7 @@ public final class JUtils {
 
     @Nullable
     public static StandEntity<?, ?> getStand(LivingEntity entity) {
-        return entity == null ? null : entity instanceof StandEntity<?, ?> stand ? stand : JComponentPlatformUtils.getStandData(entity).getStand();
+        return entity == null ? null : entity instanceof StandEntity<?, ?> stand ? stand : JComponentPlatformUtils.getStandComponent(entity).getStand();
     }
 
     public static boolean isAffectedByTimeStop(Entity entity) {
@@ -752,8 +753,8 @@ public final class JUtils {
     public static boolean shouldRenderStandsFor(Player player) {
         // Don't render stands if stand user sight is enabled and the player doesn't have a stand.
         if (JServerConfig.STAND_USER_SIGHT.getValue()) {
-            StandType standType = JComponentPlatformUtils.getStandData(player).getType();
-            return standType != null && standType != StandType.NONE;
+            StandType standType = JComponentPlatformUtils.getStandComponent(player).getType();
+            return !StandTypeUtil.isNone(standType);
         }
 
         return true;

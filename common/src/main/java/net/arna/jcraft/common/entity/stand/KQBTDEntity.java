@@ -1,16 +1,24 @@
 package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.util.RenderUtils;
-import net.arna.jcraft.common.attack.core.BlockableType;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.core.data.StateContainer;
+import net.arna.jcraft.api.pose.modifier.IPoseModifier;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.SummonData;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.enums.BlockableType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.enums.StunType;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.*;
 import net.arna.jcraft.common.attack.moves.shared.GrabAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -18,15 +26,19 @@ import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
+import java.lang.ref.WeakReference;
 import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Bites_the_Dust">Killer Queen Bites The Dust</a>.
- * @see StandType#KILLER_QUEEN_BITES_THE_DUST
+ * @see JStandTypeRegistry#KILLER_QUEEN_BITES_THE_DUST
  * @see net.arna.jcraft.client.model.entity.stand.KQBTDModel KQBTDModel
  * @see net.arna.jcraft.client.renderer.entity.stands.KQBTDRenderer KQBTDRenderer
  * @see BTDDetonateAttack
@@ -37,8 +49,32 @@ import java.util.function.Consumer;
  * @see ElbowAttack
  */
 public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQBTDEntity.State> {
-    public static final MoveSet<KQBTDEntity, State> MOVE_SET = MoveSet.create(StandType.KILLER_QUEEN_BITES_THE_DUST,
+    public static final MoveSet<KQBTDEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.KILLER_QUEEN_BITES_THE_DUST,
             KQBTDEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(-30f)
+            .evolution(true)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.kqbtd"))
+                    .proCount(4)
+                    .conCount(2)
+                    .freeSpace(Component.literal("""
+                BNBs:
+                -the kitty cat
+                Light~Low>Barrage>Bomb Plant/Bites the Dust Plant
+                
+                -the ol razzle dazzle
+                (Already bomb planted) Light~Low>Barrage>Light>Elbow>Detonate"""))
+                    .skinName(Component.literal("Veiled"))
+                    .skinName(Component.literal("Back from the Dead"))
+                    .skinName(Component.literal("Garf"))
+                    .build())
+            .summonData(SummonData.builder()
+                    .sound(JSoundRegistry.KQBTD_SUMMON)
+                    .playGenericSound(true)
+                    .build())
+            .build();
+    public static final IPoseModifier POSE = AbstractKillerQueenEntity.POSE;
 
     public static final ElbowAttack ELBOW = new ElbowAttack(60, 5, 9, 0.75f,
             7.5f, 10, 1f, 1.1f, 0f)
@@ -95,19 +131,13 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT_FOLLOWUP = AbstractKillerQueenEntity.LIGHT_FOLLOWUP.copy().withAnim(State.LIGHT_FOLLOWUP).withFollowup(LOW);
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = AbstractKillerQueenEntity.LIGHT.copy().withFollowup(LIGHT_FOLLOWUP);
 
+    @Getter @Setter
+    private WeakReference<LivingEntity> btdEntity = new WeakReference<>(null);
+    @Getter @Setter
+    private Vec3 btdPos = Vec3.ZERO;
+
     public KQBTDEntity(Level worldIn) {
-        super(StandType.KILLER_QUEEN_BITES_THE_DUST, worldIn, JSoundRegistry.KQBTD_SUMMON);
-
-        proCount = 4;
-        conCount = 2;
-
-        freespace = """
-                BNBs:
-                -the kitty cat
-                Light~Low>Barrage>Bomb Plant/Bites the Dust Plant
-                
-                -the ol razzle dazzle
-                (Already bomb planted) Light~Low>Barrage>Light>Elbow>Detonate""";
+        super(JStandTypeRegistry.KILLER_QUEEN_BITES_THE_DUST.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.9f, 0.7f, 0.8f),
@@ -149,7 +179,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     @Override
     public boolean initMove(MoveClass moveClass) {
         if (moveClass == MoveClass.ULTIMATE) {
-            if (moveContext.get(BTDPlantAttack.BTD_ENTITY) != null) {
+            if (btdEntity.get() != null) {
                 return handleMove(BTD_DETONATE, CooldownType.ULTIMATE, State.DETONATE);
             } else {
                 return handleMove(MoveClass.ULTIMATE);

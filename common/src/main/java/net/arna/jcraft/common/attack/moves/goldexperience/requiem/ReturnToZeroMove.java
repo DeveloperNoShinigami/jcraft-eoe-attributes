@@ -1,14 +1,11 @@
 package net.arna.jcraft.common.attack.moves.goldexperience.requiem;
 
-import com.google.common.reflect.TypeToken;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.GEREntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.registry.JSoundRegistry;
@@ -26,8 +23,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREntity> {
-    public static final MoveVariable<Map<Entity, CompoundTag>> ENTITY_DATA = new MoveVariable<>(new TypeToken<>() {});
-    private static final MoveVariable<List<ReturnData>> RETURN_INFO = new MoveVariable<>(new TypeToken<>() {});
+    private final Map<Entity, CompoundTag> entityData = new WeakHashMap<>();
+    private final List<ReturnData> returnInfo = new ArrayList<>();
 
     public ReturnToZeroMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
@@ -44,12 +41,9 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final GEREntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final GEREntity attacker, final LivingEntity user) {
         final List<Entity> toReturn = attacker.level().getEntitiesOfClass(Entity.class, attacker.getBoundingBox().inflate(64),
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker && e != user));
-
-        final Map<Entity, CompoundTag> entityData = ctx.get(ENTITY_DATA);
-        final List<ReturnData> returnInfo = ctx.get(RETURN_INFO);
 
         for (Entity e : toReturn) {
             final CompoundTag data = new CompoundTag();
@@ -64,15 +58,13 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
     private void applyModernNBT(final CompoundTag receiver, final CompoundTag sender, final Set<String> identifiers) {
         for (String identifier : identifiers) {
             if (sender.contains(identifier)) {
-                receiver.put(identifier, sender.get(identifier));
+                receiver.put(identifier, Objects.requireNonNull(sender.get(identifier)));
             }
         }
     }
 
-    public void returnToZero(final GEREntity attacker) {
-        final MoveContext ctx = attacker.getMoveContext();
-        final Map<Entity, CompoundTag> entityData = ctx.get(ENTITY_DATA);
-        final List<ReturnData> returnInfo = ctx.get(RETURN_INFO);
+    public boolean returnToZero(final GEREntity attacker) {
+        if (entityData.isEmpty()) return false;
 
         for (Map.Entry<Entity, CompoundTag> data : entityData.entrySet()) {
             final Entity ent = data.getKey();
@@ -102,13 +94,14 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
         returnInfo.clear();
 
         attacker.playSound(JSoundRegistry.GER_RTZ.get(), 1, 1);
+        return true;
     }
 
     public void tickReturnInfo(final GEREntity attacker) {
         if (!(attacker.getUser() instanceof ServerPlayer serverPlayer)) {
             return;
         }
-        for (ReturnData data : attacker.getMoveContext().get(RETURN_INFO)) {
+        for (ReturnData data : returnInfo) {
             final Entity entity = data.entity();
             if (entity == null || !entity.isAlive()) {
                 continue;
@@ -125,12 +118,6 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
 
             ServerChannelFeedbackPacket.send(serverPlayer, buf);
         }
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(ENTITY_DATA, new WeakHashMap<>());
-        ctx.register(RETURN_INFO, new ArrayList<>());
     }
 
     @Override

@@ -2,7 +2,7 @@ package net.arna.jcraft.common.component.impl.world;
 
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
+import net.arna.jcraft.api.component.world.CommonShockwaveHandlerComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;

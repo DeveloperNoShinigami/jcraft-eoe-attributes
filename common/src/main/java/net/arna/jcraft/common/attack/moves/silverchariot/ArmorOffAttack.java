@@ -3,16 +3,15 @@ package net.arna.jcraft.common.attack.moves.silverchariot;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
 import net.minecraft.world.entity.LivingEntity;
+
 import java.util.Set;
 
 public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, SilverChariotEntity> {
-    public static final IntMoveVariable ARMOR_TIME = new IntMoveVariable();
+    private int armorTime = 0;
 
     public ArmorOffAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
                           final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
@@ -25,11 +24,11 @@ public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, S
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final SilverChariotEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final SilverChariotEntity attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
 
         attacker.setMode(SilverChariotEntity.Mode.ARMORLESS);
-        ctx.set(ARMOR_TIME, 500);
+        armorTime = 500;
 
         return targets;
     }
@@ -39,22 +38,14 @@ public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, S
         tickArmor(attacker);
     }
 
-    private static void tickArmor(final SilverChariotEntity stand) {
+    private void tickArmor(final SilverChariotEntity stand) {
         if (stand.getMode() != SilverChariotEntity.Mode.ARMORLESS) {
             return;
         }
 
-        int armorTime = stand.getMoveContext().getInt(ARMOR_TIME);
-        if (--armorTime > 0) {
-            stand.getMoveContext().setInt(ARMOR_TIME, armorTime);
-        } else {
+        if (--armorTime <= 0) {
             stand.setMode(SilverChariotEntity.Mode.REGULAR);
         }
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(ARMOR_TIME);
     }
 
     @Override

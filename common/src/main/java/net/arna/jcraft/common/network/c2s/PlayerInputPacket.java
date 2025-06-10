@@ -6,14 +6,14 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.entity.vehicle.AbstractGroundVehicleEntity;
 import net.arna.jcraft.common.events.JServerPlayerInputEvent;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JStatusRegistry;
@@ -284,7 +284,7 @@ public class PlayerInputPacket {
                     buf2.writeInt(0);
                     ServerChannelFeedbackPacket.send(player, buf2);
 
-                    CommonStandComponent standData = JComponentPlatformUtils.getStandData(player);
+                    CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(player);
                     StandEntity<?, ?> stand = standData.getStand();
                     if (stand != null) {
                         int moveStun = stand.getMoveStun();

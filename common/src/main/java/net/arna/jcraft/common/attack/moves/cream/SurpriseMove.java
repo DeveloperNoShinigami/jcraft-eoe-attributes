@@ -3,15 +3,13 @@ package net.arna.jcraft.common.attack.moves.cream;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveType;
+import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.common.entity.stand.CreamEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 
 import java.util.Set;
 
@@ -36,22 +34,21 @@ public class SurpriseMove extends AbstractSurpriseMove<SurpriseMove> {
 
         Vec3 rotVec = user.getLookAngle();
         if (user.isShiftKeyDown()) {
-            attacker.getMoveContext().set(OUT_POS, user.position().add(rotVec).toVector3f());
+            outPos = user.position().add(rotVec).toVector3f();
         } else {
             final Vec3 eyePos = user.getEyePosition();
             HitResult hitResult = attacker.level().clip(new ClipContext(eyePos, eyePos.add(rotVec.scale(16)),
                     ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user));
-            attacker.getMoveContext().set(OUT_POS, hitResult.getLocation().toVector3f());
+            outPos = hitResult.getLocation().toVector3f();
         }
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(CreamEntity attacker, LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
 
-        final Vector3f outDir = GravityChangerAPI.getGravityDirection(attacker).step();
+        outDir = GravityChangerAPI.getGravityDirection(attacker).step();
         outDir.mul(-1f);
-        ctx.set(OUT_DIR, outDir);
 
         return targets;
     }

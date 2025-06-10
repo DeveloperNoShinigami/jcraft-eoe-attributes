@@ -5,13 +5,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.BlockableType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
+import net.arna.jcraft.api.attack.enums.BlockableType;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMultiHitAttack;
 import net.arna.jcraft.common.attack.moves.shared.BarrageAttack;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.entity.stand.TheHandEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
@@ -54,8 +53,8 @@ public final class RageAttack extends AbstractMultiHitAttack<RageAttack, TheHand
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheHandEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(TheHandEntity attacker, LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
 
         if (targets.isEmpty() || getBlow(attacker) != 1) return targets;
 

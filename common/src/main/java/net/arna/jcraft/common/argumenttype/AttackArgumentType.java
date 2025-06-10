@@ -11,7 +11,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.arna.jcraft.common.attack.core.MoveClass;
+import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.minecraft.network.chat.Component;
 
 import java.util.*;

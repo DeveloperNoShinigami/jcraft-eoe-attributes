@@ -5,10 +5,10 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractTimeStopMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractTimeStopMove;
 import net.arna.jcraft.common.config.IntOption;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import org.jetbrains.annotations.NotNull;
 
 @Getter

@@ -2,10 +2,10 @@ package net.arna.jcraft.common.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.arna.jcraft.common.argumenttype.AttackArgumentType;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.CommandSourceStack;
@@ -54,7 +54,7 @@ public class InduceAttackCommand {
             for (Entity entity : targets) {
                 if (entity instanceof LivingEntity living) {
                     JComponentPlatformUtils.getCooldowns(living).clear();
-                    StandEntity<?, ?> standEntity = JComponentPlatformUtils.getStandData(living).getStand();
+                    StandEntity<?, ?> standEntity = JComponentPlatformUtils.getStandComponent(living).getStand();
 
                     if (standEntity != null) {
                         if (standEntity.initMove(moveClass)) {

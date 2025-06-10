@@ -6,12 +6,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.attack.IAttacker;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.enums.StunType;
+import net.arna.jcraft.api.attack.moves.AbstractBarrageAttack;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,7 +19,7 @@ import org.joml.Vector3f;
 
 import java.util.Set;
 
-import static net.arna.jcraft.common.attack.moves.base.AbstractChargeAttack.prepDetachmentMove;
+import static net.arna.jcraft.api.attack.moves.AbstractChargeAttack.prepDetachmentMove;
 
 public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> extends AbstractBarrageAttack<ChargeBarrageAttack<A>, A> {
     private final float originalMoveDistance;
@@ -82,8 +81,8 @@ public final class ChargeBarrageAttack<A extends IAttacker<? extends A, ?>> exte
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = super.perform(attacker, user);
         final Entity attackerEntity = attacker.getBaseEntity();
         if (targets.isEmpty() || attackerEntity == null) {
             return targets;

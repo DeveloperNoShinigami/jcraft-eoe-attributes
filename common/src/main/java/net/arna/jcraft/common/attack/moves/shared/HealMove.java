@@ -6,10 +6,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.IAttacker;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.util.JCodecUtils;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.core.BlockPos;
@@ -51,8 +50,8 @@ public final class HealMove<A extends IAttacker<? extends A, ?>> extends Abstrac
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user, final MoveContext ctx) {
-        final Set<LivingEntity> targets = target.pickTargets(super.perform(attacker, user, ctx), user);
+    public @NonNull Set<LivingEntity> perform(final A attacker, final LivingEntity user) {
+        final Set<LivingEntity> targets = target.pickTargets(super.perform(attacker, user), user);
         targets.forEach(e -> {
             e.heal(health);
 

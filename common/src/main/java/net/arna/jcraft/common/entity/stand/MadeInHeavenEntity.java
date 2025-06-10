@@ -5,17 +5,22 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.SummonData;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.attack.moves.madeinheaven.*;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.network.s2c.TimeAccelStatePacket;
 import net.arna.jcraft.common.util.CooldownType;
@@ -23,6 +28,7 @@ import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.chat.Component;
@@ -48,7 +54,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Made_in_Heaven">Made In Heaven</a>.
- * @see StandType#MADE_IN_HEAVEN
+ * @see JStandTypeRegistry#MADE_IN_HEAVEN
  * @see net.arna.jcraft.client.model.entity.stand.MadeInHeavenModel MadeInHeavenModel
  * @see net.arna.jcraft.client.renderer.entity.stands.MadeInHeavenRenderer MadeInHeavenRenderer
  * @see CircleAttack
@@ -58,8 +64,28 @@ import java.util.function.Consumer;
  * @see TimeAccelerationMove
  */
 public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHeavenEntity.State> {
-    public static final MoveSet<MadeInHeavenEntity, State> MOVE_SET = MoveSet.create(StandType.MADE_IN_HEAVEN,
+    public static final MoveSet<MadeInHeavenEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.MADE_IN_HEAVEN,
             MadeInHeavenEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(-45f)
+            .evolution(true)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.mih"))
+                    .proCount(4)
+                    .conCount(2)
+                    .freeSpace(Component.literal("""
+                        PASSIVE: Speed I
+                        
+                        BNBs:
+                            -the flashbang
+                            (Donut>Light>)Speed Slice>Low Kick>Fury Chop>Light>Barrage>dash>Light~Light
+                        """))
+                    .skinName(Component.literal("Cruel"))
+                    .skinName(Component.literal("Daft"))
+                    .skinName(Component.literal("Nightmare"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.MIH_SUMMON))
+            .build();
 
     public static final SimpleAttack<MadeInHeavenEntity> SPEED_CHOP = new SimpleAttack<MadeInHeavenEntity>(
             JCraft.LIGHT_COOLDOWN, 6, 11, 0.75f, 3f, 8, 1.5f, 0.5f, -0.1f)
@@ -184,38 +210,17 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                     Component.literal("Divine Severance"),
                     Component.literal("Made in Heaven rapidly speed slices an area, then finishes with a large, launching slice")
             );
-    private static final EntityDataAccessor<Integer> ACCEL_TIME;
-    private static final EntityDataAccessor<Integer> SPEEDOMETER;
-    private static final EntityDataAccessor<Boolean> AFTER_IMAGE;
-    private static final EntityDataAccessor<Integer> CIRCLING_TARGET;
+    private static final EntityDataAccessor<Integer> ACCEL_TIME = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> SPEEDOMETER = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> AFTER_IMAGE = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> CIRCLING_TARGET = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.INT);
 
     public static final int MAXIMUM_SPEEDOMETER = 30;
 
     private int speedometer = 0;
 
-    static {
-        ACCEL_TIME = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.INT);
-        SPEEDOMETER = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.INT);
-        AFTER_IMAGE = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.BOOLEAN);
-        CIRCLING_TARGET = SynchedEntityData.defineId(MadeInHeavenEntity.class, EntityDataSerializers.INT);
-    }
-
     public MadeInHeavenEntity(Level worldIn) {
-        super(StandType.MADE_IN_HEAVEN, worldIn, JSoundRegistry.MIH_SUMMON);
-        idleRotation = -45f;
-
-        proCount = 4;
-        conCount = 2;
-
-        freespace =
-                """
-                        PASSIVE: Speed I
-                        
-                        BNBs:
-                            -the flashbang
-                            (Donut>Light>)Speed Slice>Low Kick>Fury Chop>Light>Barrage>dash>Light~Light
-                        
-                            -""";
+        super(JStandTypeRegistry.MADE_IN_HEAVEN.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.9f, 0.8f, 0.8f),

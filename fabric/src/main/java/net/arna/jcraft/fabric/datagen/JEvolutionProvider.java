@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static net.arna.jcraft.common.entity.stand.StandType.*;
+import static net.arna.jcraft.registry.JStandTypeRegistry.*;
 
 @Getter
 public class JEvolutionProvider extends FabricCodecDataProvider<EvolutionItemHandler.Evolution> {
@@ -25,15 +25,15 @@ public class JEvolutionProvider extends FabricCodecDataProvider<EvolutionItemHan
     @Override
     protected void configure(final BiConsumer<ResourceLocation, EvolutionItemHandler.Evolution> provider) {
         List<EvolutionItemHandler.Evolution> evolutions = List.of(
-                new EvolutionItemHandler.Evolution(JItemRegistry.DIARY_PAGE.get(), SHADOW_THE_WORLD, THE_WORLD),
-                new EvolutionItemHandler.Evolution(JItemRegistry.GREEN_BABY.get(), WHITE_SNAKE, C_MOON),
-                new EvolutionItemHandler.Evolution(JItemRegistry.DIOS_DIARY.get(), C_MOON, MADE_IN_HEAVEN),
-                new EvolutionItemHandler.Evolution(JItemRegistry.DIOS_DIARY.get(), THE_WORLD, THE_WORLD_OVER_HEAVEN),
+                new EvolutionItemHandler.Evolution(JItemRegistry.DIARY_PAGE.get(), SHADOW_THE_WORLD.get(), THE_WORLD.get()),
+                new EvolutionItemHandler.Evolution(JItemRegistry.GREEN_BABY.get(), WHITE_SNAKE.get(), C_MOON.get()),
+                new EvolutionItemHandler.Evolution(JItemRegistry.DIOS_DIARY.get(), C_MOON.get(), MADE_IN_HEAVEN.get()),
+                new EvolutionItemHandler.Evolution(JItemRegistry.DIOS_DIARY.get(), THE_WORLD.get(), THE_WORLD_OVER_HEAVEN.get()),
 
-                new EvolutionItemHandler.Evolution(JItemRegistry.LIVING_ARROW.get(), KILLER_QUEEN, KILLER_QUEEN_BITES_THE_DUST),
-                new EvolutionItemHandler.Evolution(JItemRegistry.LIVING_ARROW.get(), STAR_PLATINUM, STAR_PLATINUM_THE_WORLD),
+                new EvolutionItemHandler.Evolution(JItemRegistry.LIVING_ARROW.get(), KILLER_QUEEN.get(), KILLER_QUEEN_BITES_THE_DUST.get()),
+                new EvolutionItemHandler.Evolution(JItemRegistry.LIVING_ARROW.get(), STAR_PLATINUM.get(), STAR_PLATINUM_THE_WORLD.get()),
 
-                new EvolutionItemHandler.Evolution(JItemRegistry.REQUIEM_ARROW.get(), GOLD_EXPERIENCE, GOLD_EXPERIENCE_REQUIEM)
+                new EvolutionItemHandler.Evolution(JItemRegistry.REQUIEM_ARROW.get(), GOLD_EXPERIENCE.get(), GOLD_EXPERIENCE_REQUIEM.get())
         );
 
         evolutions.forEach(evolution -> provider.accept(JCraft.id(formatName(evolution)), evolution));
@@ -41,9 +41,9 @@ public class JEvolutionProvider extends FabricCodecDataProvider<EvolutionItemHan
 
     private static String formatName(final EvolutionItemHandler.Evolution evolution) {
         if (evolution.stand() == null) {
-            return evolution.target().getNameKey();
+            return evolution.target().getData().getInfo().getReducedNameKey();
         }
 
-        return evolution.stand().getNameKey() + "_to_" + evolution.target().getNameKey();
+        return evolution.stand().getId().getPath() + "_to_" + evolution.target().getId().getPath();
     }
 }

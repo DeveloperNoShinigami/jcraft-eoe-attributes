@@ -6,17 +6,24 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.pose.ModifierCondition;
+import net.arna.jcraft.api.pose.PoseModifiers;
+import net.arna.jcraft.api.pose.modifier.IPoseModifier;
+import net.arna.jcraft.api.pose.modifier.PoseModifierGroup;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.common.attack.moves.kingcrimson.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
-import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
-import net.arna.jcraft.common.network.s2c.ShaderDeactivationPacket;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
@@ -24,19 +31,16 @@ import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JPacketRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -48,7 +52,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/King_Crimson">King Crimson</a>.
- * @see StandType#KING_CRIMSON
+ * @see JStandTypeRegistry#KING_CRIMSON
  * @see net.arna.jcraft.client.model.entity.stand.KingCrimsonModel KingCrimsonModel
  * @see net.arna.jcraft.client.renderer.entity.stands.KingCrimsonRenderer KingCrimsonRenderer
  * @see BloodThrowAttack
@@ -58,8 +62,50 @@ import java.util.function.Consumer;
  * @see TimeEraseMove
  */
 public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimsonEntity.State> {
-    public static final MoveSet<KingCrimsonEntity, State> MOVE_SET = MoveSet.create(StandType.KING_CRIMSON,
+    public static final MoveSet<KingCrimsonEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.KING_CRIMSON,
             KingCrimsonEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleDistance(1f)
+            .idleRotation(-65f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.kingcrimson"))
+                    .proCount(4)
+                    .conCount(4)
+                    .freeSpace(Component.literal("""
+                BNBs:
+                    -the gamer (THE bnb)
+                    Light>Barrage>delay.Move Cancel>Light>Heavy~Overhead
+                
+                    -the loop zoopler (sub optimal damage for a setup that kills them if you guess right)
+                    Eye Chop>Donut>Light>Heavy~Overhead>Time Erase
+                
+                    -hits like a firetruck (death)
+                    Donut>Move Cancel>Timeskip>Barrage>Move Cancel>Light>Heavy>Move Cancel>Eye Chop>Sweep
+                """))
+                    .skinName(Component.literal("Royal"))
+                    .skinName(Component.literal("Manga"))
+                    .skinName(Component.literal("Nightshade"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.KC_SUMMON))
+            .build();
+    public static final IPoseModifier POSE = PoseModifierGroup.builder()
+            .condition(ModifierCondition.USER_NOT_MOVING)
+            .modifier(PoseModifiers.parse("body.yRot += 30deg"))
+            .modifier(PoseModifiers.parse("""
+                    leftArm.yRot += 30deg;
+                    leftArm.z -= 2.1;
+                    """, ModifierCondition.LEFT_ARM_EMPTY))
+            .modifier(PoseModifiers.parse("""
+                    rightArm.yRot += 30deg;
+                    rightArm.z -= 2.1;
+                    """, ModifierCondition.RIGHT_ARM_EMPTY_OR_ITEM))
+            .modifier(PoseModifiers.parse("""
+                    leftLeg.z -= 1;
+                    rightLeg.z += 1.5;
+                    
+                    rightLeg.yRot += 45deg;
+                    """))
+            .build();
 
     public static final KnockdownAttack<KingCrimsonEntity> SWEEP = new KnockdownAttack<KingCrimsonEntity>(40,
             10, 20, 0.85f, 5f, 20, 1.5f, 0.4f, 0.3f, 35)
@@ -183,27 +229,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
     private static final EntityDataAccessor<Integer> TIME_ERASE_TIME;
 
-
     public KingCrimsonEntity(Level worldIn) {
-        super(StandType.KING_CRIMSON, worldIn, JSoundRegistry.KC_SUMMON);
-
-        idleDistance = 1f;
-        idleRotation = -65f;
-
-        proCount = 4;
-        conCount = 4;
-
-        freespace = """
-                BNBs:
-                    -the gamer (THE bnb)
-                    Light>Barrage>delay.Move Cancel>Light>Heavy~Overhead
-                
-                    -the loop zoopler (sub optimal damage for a setup that kills them if you guess right)
-                    Eye Chop>Donut>Light>Heavy~Overhead>Time Erase
-                
-                    -hits like a firetruck (death)
-                    Donut>Move Cancel>Timeskip>Barrage>Move Cancel>Light>Heavy>Move Cancel>Eye Chop>Sweep
-                """;
+        super(JStandTypeRegistry.KING_CRIMSON.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0F, 0.0F, 0.0F),
@@ -253,7 +280,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 }
 
                 if (canAttack() && getTETime() > 0) {
-                    cancelTE();
+                    getTimeEraseMove().cancelTE(this);
                     return true;
                 }
 
@@ -297,7 +324,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
             }
             case UTILITY -> {
                 if (getTETime() > 0) {
-                    cancelTE();
+                    getTimeEraseMove().cancelTE(this);
                 }
                 return super.initMove(moveClass);
             }
@@ -311,7 +338,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
     public void moveCancel() {
         // Epitaph
-        PredictionMove.cancelPrediction(this);
+        getMoveMap().findMoveByType(PredictionMove.class)
+                .ifPresent(m -> m.cancelPrediction(this));
 
         // General
         setCurrentMove(null);
@@ -338,23 +366,15 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
         return super.makeBoundingBox();
     }
 
-    public void cancelTE() {
-        final LivingEntity user = getUserOrThrow();
-        final CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
-        cooldowns.setCooldown(CooldownType.STAND_ULTIMATE, cooldowns.getCooldown(CooldownType.STAND_ULTIMATE) - getTETime() * 2);
-
-        setTETime(0);
-        final Mob doppelganger = moveContext.get(TimeEraseMove.DOPPELGANGER);
-        if (doppelganger != null) {
-            doppelganger.discard();
-        }
-
-        if (user instanceof ServerPlayer serverPlayer) {
-            ShaderDeactivationPacket.send(serverPlayer, ShaderActivationPacket.Type.CRIMSON);
-            serverPlayer.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(JSoundRegistry.TIME_ERASE_EXIT.get()),
-                    SoundSource.PLAYERS, getX(), getY(), getZ(), 1, 1, 0));
-        }
+    public TimeEraseMove getTimeEraseMove() {
+        return getMoveMap().asMovesList().stream()
+                .filter(m -> m instanceof TimeEraseMove)
+                .findFirst()
+                .map(TimeEraseMove.class::cast)
+                .orElse(null);
     }
+
+
 
     @Override
     @NonNull

@@ -3,9 +3,10 @@ package net.arna.jcraft.common.component.impl.living;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,7 +46,7 @@ public class CommonStandComponentImpl implements CommonStandComponent {
             return;
         }
 
-        this.skin = Mth.clamp(skin, 0, type.getSkinCount() - 1);
+        this.skin = Mth.clamp(skin, 0, type.getData().getInfo().getSkinCount() - 1);
         sync(entity);
     }
 
@@ -90,14 +91,13 @@ public class CommonStandComponentImpl implements CommonStandComponent {
     }
 
     public void readFromNbt(final @NonNull CompoundTag tag) {
-        int rawType = tag.getInt("Type");
-        type = rawType == 0 ? null : StandType.fromIdOrOrdinal(rawType);
+        type = StandTypeUtil.readFromNBT(tag, "Type");
         skin = tag.getInt("Skin");
         tagged = tag.getBoolean("Tagged");
     }
 
     public void writeToNbt(final @NonNull CompoundTag tag) {
-        tag.putInt("Type", type == null ? 0 : type.ordinal());
+        tag.putString("Type", type == null ? "" : type.getId().toString());
         tag.putInt("Skin", skin);
         tag.putBoolean("Tagged", tagged);
     }

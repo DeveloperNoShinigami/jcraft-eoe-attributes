@@ -1,6 +1,6 @@
 package net.arna.jcraft.mixin;
 
-import net.arna.jcraft.common.component.living.CommonVampireComponent;
+import net.arna.jcraft.api.component.living.CommonVampireComponent;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;

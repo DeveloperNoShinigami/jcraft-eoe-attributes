@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.common.entity.stand.DiverDownEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 
 /**
  * The {@link StandEntityModel} for {@link DiverDownEntity}.
@@ -9,7 +9,7 @@ import net.arna.jcraft.common.entity.stand.StandType;
  */
 public class DiverDownModel extends StandEntityModel<DiverDownEntity> {
     public DiverDownModel() {
-        super(StandType.DIVER_DOWN);
+        super(JStandTypeRegistry.DIVER_DOWN.get());
     }
 
 }

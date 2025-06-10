@@ -3,9 +3,12 @@ package net.arna.jcraft.common.spec;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import lombok.Setter;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.spec.JSpec;
+import net.arna.jcraft.api.spec.SpecData;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.anubis.*;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownMultiHitAttack;
 import net.arna.jcraft.common.util.CooldownType;
@@ -15,6 +18,7 @@ import net.arna.jcraft.common.util.SpecAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JSpecTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -29,7 +33,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 
 public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
-    public static final MoveSet<AnubisSpec, State> MOVE_SET = MoveSet.create(SpecType.ANUBIS, AnubisSpec::registerMoves, State.class);
+    public static final MoveSet<AnubisSpec, State> MOVE_SET = MoveSetManager.create(JSpecTypeRegistry.ANUBIS, AnubisSpec::registerMoves, State.class);
+    public static final SpecData DATA = SpecData.builder()
+            .name(Component.literal("spec.jcraft.anubis"))
+            .description(Component.literal("Accelerating offense"))
+            .details(Component.literal("""
+                    PASSIVE: Bloodlust
+                    Landing blows on opponents speeds up Anubis' attacks up to 2x, with +0.2x per hit.
+                    Not hitting opponents reduces Bloodlust by one stack every 4 seconds."""))
+            .build();
 
     public static final SimpleAnubisAttack AERIAL_CLEAVE = new SimpleAnubisAttack(100, 9, 15, 1f, 5f,
             15, 1.75f, 0.4f, 0.3f, true, true)
@@ -87,7 +99,7 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
     protected float attackSpeedMult = 1f;
 
     public AnubisSpec(LivingEntity livingEntity) {
-        super(SpecType.ANUBIS, livingEntity);
+        super(JSpecTypeRegistry.ANUBIS.get(), livingEntity);
     }
 
     public void tryIncrementBloodlust(Set<LivingEntity> targets) {

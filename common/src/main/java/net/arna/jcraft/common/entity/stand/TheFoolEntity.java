@@ -5,21 +5,26 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
-import net.arna.jcraft.common.attack.core.BlockableType;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.enums.BlockableType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
 import net.arna.jcraft.common.attack.moves.thefool.*;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -63,8 +68,37 @@ import java.util.function.Consumer;
  * @see TFComboAttack
  */
 public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.State> {
-    public static final MoveSet<TheFoolEntity, State> MOVE_SET = MoveSet.create(StandType.THE_FOOL,
+    public static final MoveSet<TheFoolEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.THE_FOOL,
             TheFoolEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(225f)
+            .idleDistance(2f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.thefool"))
+                    .proCount(5)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                            CROUCHING reduces attack distance by half, allowing better space control
+                            
+                            BNBs:
+                                Light>Pound~Slam>Launch>Light>Burn Rubber>Finisher*
+                                Burn Rubber>Light>Pound~Slam>Launch>Finisher*
+                                Launch>Light>Burn Rubber>Light>Pound~Slam>Finisher*
+    
+                                Stylish:
+                                the social distancing
+                                Light>Pound~Slam>Light>Combo>Charge>Sandwave
+                                the pancake flip
+                                Launch>Pound~Slam>Light>Burn Rubber>Finisher*
+    
+                                *Finisher: Light>...
+                                           Charge/Tornado>...
+                                           Sand Clone/Sandwave"""))
+                    .skinName(Component.literal("Chilled"))
+                    .skinName(Component.literal("OVA"))
+                    .skinName(Component.literal("Neon"))
+                    .build())
+            .build();
 
     public static final SimpleMultiHitAttack<TheFoolEntity> DRILL = new SimpleMultiHitAttack<TheFoolEntity>(
             20, 14, 1.5f, 2.5f, 7, 1.5f, 0.2f, 0.25f, IntSet.of(5, 8, 11))
@@ -200,41 +234,12 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Component.literal("very slow, traps the opponent in a cloud of blinding and slowing sand")
             );
     private static final BlockState sandState = Blocks.SAND.defaultBlockState();
-    private static final EntityDataAccessor<Boolean> IS_SAND;
-    private static final EntityDataAccessor<Boolean> IS_WAVE;
 
-    static {
-        IS_SAND = SynchedEntityData.defineId(TheFoolEntity.class, EntityDataSerializers.BOOLEAN);
-        IS_WAVE = SynchedEntityData.defineId(TheFoolEntity.class, EntityDataSerializers.BOOLEAN);
-    }
+    private static final EntityDataAccessor<Boolean> IS_SAND = SynchedEntityData.defineId(TheFoolEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_WAVE = SynchedEntityData.defineId(TheFoolEntity.class, EntityDataSerializers.BOOLEAN);
 
     public TheFoolEntity(Level worldIn) {
-        super(StandType.THE_FOOL, worldIn);
-        idleRotation = 225f;
-        idleDistance = 2f;
-
-
-        proCount = 5;
-        conCount = 3;
-
-        freespace =
-                """
-                        CROUCHING reduces attack distance by half, allowing better space control
-                        
-                        BNBs:
-                            Light>Pound~Slam>Launch>Light>Burn Rubber>Finisher*
-                            Burn Rubber>Light>Pound~Slam>Launch>Finisher*
-                            Launch>Light>Burn Rubber>Light>Pound~Slam>Finisher*
-
-                            Stylish:
-                            the social distancing
-                            Light>Pound~Slam>Light>Combo>Charge>Sandwave
-                            the pancake flip
-                            Launch>Pound~Slam>Light>Burn Rubber>Finisher*
-
-                            *Finisher: Light>...
-                                       Charge/Tornado>...
-                                       Sand Clone/Sandwave""";
+        super(JStandTypeRegistry.THE_FOOL.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0f, 0.8f, 0.4f),

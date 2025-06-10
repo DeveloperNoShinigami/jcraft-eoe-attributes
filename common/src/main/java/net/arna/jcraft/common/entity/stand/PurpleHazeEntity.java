@@ -5,24 +5,27 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.core.data.StateContainer;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.stand.*;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.enums.StunType;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.StateContainer;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.attack.moves.purplehaze.BackhandAttack;
 import net.arna.jcraft.common.attack.moves.purplehaze.PHGroundSlamAttack;
 import net.arna.jcraft.common.attack.moves.purplehaze.PHRekkaAttack;
 import net.arna.jcraft.common.attack.moves.purplehaze.PlayMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.common.component.player.CommonPhComponent;
+import net.arna.jcraft.api.component.player.CommonPhComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
@@ -50,13 +53,34 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Purple_Haze">Purple Haze</a>.
- * @see StandType#PURPLE_HAZE
+ * @see JStandTypeRegistry#PURPLE_HAZE
  * @see net.arna.jcraft.client.model.entity.stand.PurpleHazeModel PurpleHazeModel
  * @see net.arna.jcraft.client.renderer.entity.stands.PurpleHazeRenderer PurpleHazeRenderer
  */
 public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeEntity, PurpleHazeEntity.State> {
-    public static final MoveSet<PurpleHazeEntity, State> MOVE_SET = MoveSet.create(StandType.PURPLE_HAZE,
+    public static final MoveSet<PurpleHazeEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.PURPLE_HAZE,
             PurpleHazeEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(225f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.purple_haze"))
+                    .proCount(3)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                PASSIVE: Rage
+                Builds up while the stand is summoned.
+                Maxes out after 1 minute. When maxed, aura turns red.
+                Rage decreases by half with each living thing Purple Haze kills.
+                Purple Haze has a chance to target it's own user which increases with rage.
+                
+                EVOLUTION: Give Purple Haze any flower after it has killed a stand user.
+                Doing this 5 times will evolve it into Purple Haze: Distortion."""))
+                    .skinName(Component.literal("Toxin"))
+                    .skinName(Component.literal("Stopping Force"))
+                    .skinName(Component.literal("Reversal"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.PH_SUMMON))
+            .build();
 
     private static final @NonNull KnockdownAttack<AbstractPurpleHazeEntity<?, ?>> CROUCHING_LIGHT_FOLLOWUP_ATTACK = BACKHAND_FOLLOWUP.copy().withAnim(State.BACKHAND_FOLLOWUP).allowHitUser();
     private static final @NonNull BackhandAttack CROUCHING_LIGHT_ATTACK = BACKHAND.copy().withFollowup(CROUCHING_LIGHT_FOLLOWUP_ATTACK).allowHitUser();
@@ -109,19 +133,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     private boolean flowerable = false, hasFlower = false, toEvolve = false;
 
     public PurpleHazeEntity(Level worldIn) {
-        super(StandType.PURPLE_HAZE, worldIn);
-
-        conCount = 2;
-
-        freespace = """
-                PASSIVE: Rage
-                Builds up while the stand is summoned.
-                Maxes out after 1 minute. When maxed, aura turns red.
-                Rage decreases by half with each living thing Purple Haze kills.
-                Purple Haze has a chance to target it's own user which increases with rage.
-                
-                EVOLUTION: Give Purple Haze any flower after it has killed a stand user.
-                Doing this 5 times will evolve it into Purple Haze: Distortion.""";
+        super(JStandTypeRegistry.PURPLE_HAZE.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(1.0f, 0.2f, 0.6f),
@@ -142,7 +154,8 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     @Override
     public void desummon() {
         if (toEvolve && hasUser()) {
-            JComponentPlatformUtils.getStandData(getUserOrThrow()).setType(StandType.PURPLE_HAZE_DISTORTION);
+            JComponentPlatformUtils.getStandComponent(getUserOrThrow())
+                    .setType(JStandTypeRegistry.PURPLE_HAZE_DISTORTION.get());
             JCraft.summon(level(), getUserOrThrow());
         }
 
@@ -363,7 +376,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     @Override
     public void freshKill(@Nullable LivingEntity entity) {
         super.freshKill(entity);
-        if (!StandType.isNone(JComponentPlatformUtils.getStandData(entity).getType())) {
+        if (!StandTypeUtil.isNone(JComponentPlatformUtils.getStandComponent(entity).getType())) {
             flowerable = true;
         }
     }

@@ -1,11 +1,11 @@
 package net.arna.jcraft.common.component.impl;
 
 import lombok.Getter;
-import net.arna.jcraft.common.component.living.CommonVampireComponent;
-import net.arna.jcraft.common.spec.JSpec;
-import net.arna.jcraft.common.spec.SpecType;
+import net.arna.jcraft.api.component.living.CommonVampireComponent;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.spec.VampireSpec;
 import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.registry.JSpecTypeRegistry;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -47,7 +47,7 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
         if (player != null) {
             JSpec<?, ?> spec = JUtils.getSpec(player);
             // FOR NOW, these are intrinsically tied.
-            setVampire(spec != null && spec.getType().equals(SpecType.VAMPIRE));
+            setVampire(spec != null && spec.getType() == JSpecTypeRegistry.VAMPIRE.get());
         }
 
         if (!isVampire) {
@@ -63,23 +63,25 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
         // Vampires do not have to breathe.
         entity.setAirSupply(entity.getMaxAirSupply());
 
-        if (blood < 1 && --starveTick < 1) {
-            // Starve
-            player.hurt(world.damageSources().starve(), 1.0F);
-            starveTick = 80;
-        } else {
-            // Regenerate
-            float health = entity.getHealth();
-            if (health < entity.getMaxHealth() && blood >= MIN_REGEN_BLOOD && --regenTick < 1) {
-                player.heal(1);
+        if (player != null) {
+            if (blood < 1 && --starveTick < 1) {
+                // Starve
+                player.hurt(world.damageSources().starve(), 1.0F);
+                starveTick = 80;
+            } else {
+                // Regenerate
+                float health = entity.getHealth();
+                if (health < entity.getMaxHealth() && blood >= MIN_REGEN_BLOOD && --regenTick < 1) {
+                    player.heal(1);
 
-                // Every third heal takes away a blood unit
-                if (++healCount > 2) {
-                    blood--;
-                    healCount = 0;
+                    // Every third heal takes away a blood unit
+                    if (++healCount > 2) {
+                        blood--;
+                        healCount = 0;
+                    }
+
+                    regenTick = 10;
                 }
-
-                regenTick = 10;
             }
         }
 

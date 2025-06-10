@@ -1,16 +1,12 @@
 package net.arna.jcraft.common.attack.moves.theworld.overheaven;
 
-import com.google.common.reflect.TypeToken;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
+import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -26,13 +22,14 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack, TheWorldOverHeavenEntity> {
     public static final double NO_LOOK_RANGE = 512.0;
-    public static final MoveVariable<IntList> OVERWRITE_TIMES = new MoveVariable<>(IntList.class);
-    public static final MoveVariable<List<LivingEntity>> OVERWRITE_TARGETS = new MoveVariable<>(new TypeToken<>() {});
+    private final List<Overwrite> overwrites = new ArrayList<>();
 
     public OverwriteAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final float damage, final int stun,
                            final float hitboxSize, final float knockback, final float offset) {
@@ -45,8 +42,6 @@ public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack,
             return;
         }
 
-        final IntList overwriteTimes = attacker.getMoveContext().get(OVERWRITE_TIMES);
-        final List<LivingEntity> overwriteTargets = attacker.getMoveContext().get(OVERWRITE_TARGETS);
         final LivingEntity user = attacker.getUserOrThrow();
 
         // Mob TW:OH users normally don't swing after charging overwrite. This fixes that.
@@ -60,19 +55,15 @@ public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack,
             attacker.setOverwriteType(0);
         }
 
-        for (int i = 0; i < overwriteTimes.size(); i++) {
-            int time = overwriteTimes.getInt(i);
-            overwriteTimes.set(i, time - 1);
+        overwrites.removeIf(Overwrite::isInvalid);
 
-            if (time < 1) {
-                overwriteTimes.removeInt(i);
-                overwriteTargets.remove(i);
-                i--;
-                continue;
-            }
+        for (final Overwrite overwrite : overwrites) {
+            overwrite.tick();
+
+            // Make strong reference to the entity, so it doesn't suddenly disappear.
+            LivingEntity entity = overwrite.getEntity();
 
             // Inability to look at master
-            final LivingEntity entity = overwriteTargets.get(i);
             final AABB box = entity
                     .getBoundingBox()
                     .expandTowards(entity.getViewVector(1.0F).scale(NO_LOOK_RANGE))
@@ -101,14 +92,9 @@ public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack,
     protected void processTarget(final TheWorldOverHeavenEntity attacker, final LivingEntity target, final Vec3 kbVec, final DamageSource damageSource) {
         super.processTarget(attacker, target, kbVec, damageSource);
 
-        final MoveContext ctx = attacker.getMoveContext();
-        final IntList overwriteTimes = ctx.get(OVERWRITE_TIMES);
-        final List<LivingEntity> overwriteTargets = ctx.get(OVERWRITE_TARGETS);
-
         switch (attacker.getOverwriteType()) {
             case 1 -> {
-                overwriteTimes.add(200);
-                overwriteTargets.add(target);
+                overwrites.add(new Overwrite(target, 200));
             }
             case 2 -> {
                 target.setSecondsOnFire(5);
@@ -123,8 +109,7 @@ public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack,
                     return;
                 }
                 JComponentPlatformUtils.getMiscData(target).setSlavedTo(attacker.getUserOrThrow().getUUID());
-                overwriteTimes.add(1048576);
-                overwriteTargets.add(target);
+                overwrites.add(new Overwrite(target, 1048576));
             }
         }
     }
@@ -132,12 +117,6 @@ public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack,
     @Override
     public @NonNull MoveType<OverwriteAttack> getMoveType() {
         return Type.INSTANCE;
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(OVERWRITE_TIMES, new IntArrayList());
-        ctx.register(OVERWRITE_TARGETS, new ArrayList<>());
     }
 
     @Override
@@ -157,6 +136,32 @@ public final class OverwriteAttack extends AbstractSimpleAttack<OverwriteAttack,
         @Override
         protected @NonNull App<RecordCodecBuilder.Mu<OverwriteAttack>, OverwriteAttack> buildCodec(RecordCodecBuilder.Instance<OverwriteAttack> instance) {
             return attackDefault(instance, OverwriteAttack::new);
+        }
+    }
+
+    @Getter
+    private static class Overwrite {
+        private final WeakReference<LivingEntity> entity;
+        private int time;
+
+        public Overwrite(final LivingEntity entity, final int time) {
+            this.entity = new WeakReference<>(entity);
+            this.time = time;
+        }
+
+        public void tick() {
+            if (time > 0) {
+                time--;
+            }
+        }
+
+        public LivingEntity getEntity() {
+            return entity.get();
+        }
+
+        public boolean isInvalid() {
+            LivingEntity entity = getEntity();
+            return entity == null || !entity.isAlive() || time <= 0;
         }
     }
 }

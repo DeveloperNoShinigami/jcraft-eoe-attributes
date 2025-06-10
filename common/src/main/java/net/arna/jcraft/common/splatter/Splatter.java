@@ -3,7 +3,7 @@ package net.arna.jcraft.common.splatter;
 import lombok.Data;
 import lombok.Getter;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

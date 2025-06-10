@@ -3,7 +3,7 @@ package net.arna.jcraft.common.component.impl;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.attack.moves.cmoon.GravityShiftMove;
-import net.arna.jcraft.common.component.living.CommonGravityShiftComponent;
+import net.arna.jcraft.api.component.living.CommonGravityShiftComponent;
 import net.arna.jcraft.common.entity.projectile.BlockProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.Gravity;

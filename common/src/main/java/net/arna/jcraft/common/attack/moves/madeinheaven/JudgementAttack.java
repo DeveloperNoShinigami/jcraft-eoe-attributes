@@ -3,10 +3,8 @@ package net.arna.jcraft.common.attack.moves.madeinheaven;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractBarrageAttack;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,8 +14,7 @@ import java.util.Set;
 
 // This being a barrage is really just for the interval-based performing logic.
 public final class JudgementAttack extends AbstractBarrageAttack<JudgementAttack, MadeInHeavenEntity> {
-    public static final MoveVariable<Vec3> INIT_POS = new MoveVariable<>(Vec3.class),
-            INIT_ROT = new MoveVariable<>(Vec3.class);
+    private Vec3 initPos, initRot;
 
     public JudgementAttack(final int cooldown, final int windup, final int duration, final float moveDistance, final int interval) {
         super(cooldown, windup, duration, moveDistance, 0, 0, 0, 0, 0, interval);
@@ -29,10 +26,7 @@ public final class JudgementAttack extends AbstractBarrageAttack<JudgementAttack
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final Vec3 initPos = ctx.get(INIT_POS);
-        final Vec3 initRot = ctx.get(INIT_ROT);
-
+    public @NonNull Set<LivingEntity> perform(final MadeInHeavenEntity attacker, final LivingEntity user) {
         Set<LivingEntity> targets = Set.of();
         if (attacker.getMoveStun() > 1) {
             if (getBlow(attacker) > 0) {
@@ -43,8 +37,8 @@ public final class JudgementAttack extends AbstractBarrageAttack<JudgementAttack
                                 random.triangle(0, 5)),
                         1f, 0.1f, 1.75f, 20, 1);
             } else {
-                ctx.set(INIT_POS, user.position());
-                ctx.set(INIT_ROT, Vec3.directionFromRotation(0, user.getYRot()));
+                initPos = user.position();
+                initRot = Vec3.directionFromRotation(0, user.getYRot());
             }
         } else {
             targets = SpeedSliceAttack.doSpeedSlice(attacker,
@@ -53,12 +47,6 @@ public final class JudgementAttack extends AbstractBarrageAttack<JudgementAttack
         }
 
         return targets;
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(INIT_POS, Vec3.ZERO);
-        ctx.register(INIT_ROT, Vec3.ZERO);
     }
 
     @Override

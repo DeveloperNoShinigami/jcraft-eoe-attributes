@@ -1,5 +1,7 @@
 package net.arna.jcraft.common.entity.stand;
 
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.starplatinum.BlockBreakingAttack;
 import net.arna.jcraft.common.util.JParticleType;
@@ -39,13 +41,7 @@ public abstract sealed class AbstractStarPlatinumEntity<E extends AbstractStarPl
             );
 
     protected AbstractStarPlatinumEntity(StandType type, Level worldIn) {
-        super(type, worldIn, JSoundRegistry.STAR_PLATINUM_SUMMON);
-        idleRotation = 225f;
-
-        proCount = 3;
-        conCount = 3;
-
-        //moves = List.of(light, heavy, barrage, starfinger, inhale, lowkick, starfinger, jump);
+        super(type, worldIn);
     }
 
     @Override

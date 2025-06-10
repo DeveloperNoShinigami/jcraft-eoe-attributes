@@ -1,6 +1,6 @@
 package net.arna.jcraft.mixin;
 
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -30,7 +30,7 @@ public class EntityTypeMixin {
         }
 
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(nbt.getString("id")));
-        if (StandType.getEntityTypes().contains(entityType)) {
+        if (StandTypeUtil.streamEntityTypes().toList().contains(entityType)) {
             cir.setReturnValue(Optional.empty());
         }
     }

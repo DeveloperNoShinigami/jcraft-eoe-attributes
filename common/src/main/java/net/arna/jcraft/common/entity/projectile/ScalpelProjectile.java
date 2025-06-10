@@ -6,9 +6,9 @@ import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.tickable.MagneticFields;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -108,7 +108,7 @@ public class ScalpelProjectile extends AbstractArrow implements GeoEntity {
 
     @Override
     protected boolean tryPickup(@NonNull Player player) {
-        if (JComponentPlatformUtils.getStandData(player).getStand() instanceof MetallicaEntity metallica) {
+        if (JComponentPlatformUtils.getStandComponent(player).getStand() instanceof MetallicaEntity metallica) {
             if (metallica.getIron() < MetallicaEntity.IRON_MAX) {
                 metallica.addIron(IRON_COST);
                 return true;

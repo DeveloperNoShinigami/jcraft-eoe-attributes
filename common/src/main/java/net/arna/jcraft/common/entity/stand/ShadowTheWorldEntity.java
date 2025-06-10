@@ -10,27 +10,30 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.MobilityType;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.enums.MobilityType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.ImpalingThrustAttack;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.STWChargeAttack;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.STWCounterAttack;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.theworld.overheaven.LungeAttack;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3f;
 
@@ -39,15 +42,30 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/The_World">Shadow The World</a>.
- * @see StandType#SHADOW_THE_WORLD
+ * @see JStandTypeRegistry#SHADOW_THE_WORLD
  * @see net.arna.jcraft.client.model.entity.stand.ShadowTheWorldModel ShadowTheWorldModel
  * @see net.arna.jcraft.client.renderer.entity.stands.ShadowTheWorldRenderer ShadowTheWorldRenderer
  * @see STWCounterAttack
  */
 @Getter
 public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowTheWorldEntity, ShadowTheWorldEntity.State> {
-    public static final MoveSet<ShadowTheWorldEntity, State> MOVE_SET = MoveSet.create(StandType.SHADOW_THE_WORLD,
+    public static final MoveSet<ShadowTheWorldEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.SHADOW_THE_WORLD,
             ShadowTheWorldEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(-45f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.shadow_the_world"))
+                    .proCount(5)
+                    .conCount(4)
+                    .freeSpace(Component.literal("""
+                The user is allowed to use spec moves as soon as Shadow The World is performing one.
+                Desummons itself upon finishing a move.
+                """))
+                    .skinName(Component.literal("Contrast"))
+                    .skinName(Component.literal("Frost"))
+                    .skinName(Component.literal("Predator"))
+                    .build())
+            .build();
 
     public static final SimpleUppercutAttack<ShadowTheWorldEntity> UPPERCUT = new SimpleUppercutAttack<ShadowTheWorldEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),
             10, 16, 0.75f, 6f, 20, 1.5f, 0.25f, -0.6f, 1.0f)
@@ -156,16 +174,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
     private static final EntityDataAccessor<Boolean> DESUMMONING = SynchedEntityData.defineId(ShadowTheWorldEntity.class, EntityDataSerializers.BOOLEAN);
 
     public ShadowTheWorldEntity(Level worldIn) {
-        super(StandType.SHADOW_THE_WORLD, worldIn, JSoundRegistry.STW_WARBLE);
-
-        freespace = """
-                The user is allowed to use spec moves as soon as Shadow The World is performing one.
-                Desummons itself upon finishing a move.
-                """;
-        idleRotation = -45f;
-
-        proCount = 5;
-        conCount = 4;
+        super(JStandTypeRegistry.SHADOW_THE_WORLD.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.5f, 0.1f, 0.7f),
@@ -173,10 +182,6 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                 new Vector3f(0.2f, 0.6f, 8.0f),
                 new Vector3f(0.7f, 0.3f, 1.0f)
         };
-    }
-
-    private static void impalingThrust(ShadowTheWorldEntity attacker, LivingEntity user, MoveContext ctx) {
-
     }
 
     private static final Vector3f INVIS_AURA = new Vector3f(0, 0, 0);

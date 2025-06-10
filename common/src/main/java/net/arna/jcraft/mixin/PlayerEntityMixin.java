@@ -1,12 +1,12 @@
 package net.arna.jcraft.mixin;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import net.arna.jcraft.common.attack.moves.base.AbstractCounterAttack;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.moves.AbstractCounterAttack;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.config.JServerConfig;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.network.s2c.ComboCounterPacket;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.util.IComboCounter;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;

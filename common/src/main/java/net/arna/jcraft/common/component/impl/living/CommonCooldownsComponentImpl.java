@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntRBTreeMap;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;

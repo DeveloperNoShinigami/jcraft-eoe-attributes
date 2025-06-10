@@ -5,9 +5,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.SunBeamProjectile;
 import net.arna.jcraft.common.entity.stand.TheSunEntity;
 import net.arna.jcraft.common.util.JUtils;
@@ -53,7 +52,7 @@ public class FireSunBeamAttack extends AbstractMove<FireSunBeamAttack, TheSunEnt
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(TheSunEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(TheSunEntity attacker, LivingEntity user) {
         final Vec3 pos = attacker.randomPos();
 
         final SunBeamProjectile sunBeam = new SunBeamProjectile(attacker.level(), user, attacker);

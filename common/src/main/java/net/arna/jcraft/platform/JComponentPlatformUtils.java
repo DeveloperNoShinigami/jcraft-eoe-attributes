@@ -1,14 +1,14 @@
 package net.arna.jcraft.platform;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.arna.jcraft.common.component.entity.CommonGrabComponent;
-import net.arna.jcraft.common.component.entity.CommonGravityComponent;
-import net.arna.jcraft.common.component.entity.CommonTimeStopComponent;
-import net.arna.jcraft.common.component.living.*;
-import net.arna.jcraft.common.component.player.CommonPhComponent;
-import net.arna.jcraft.common.component.player.CommonSpecComponent;
-import net.arna.jcraft.common.component.world.CommonShockwaveHandlerComponent;
-import net.arna.jcraft.common.component.world.CommonTexasHoldEmComponent;
+import net.arna.jcraft.api.component.entity.CommonGrabComponent;
+import net.arna.jcraft.api.component.entity.CommonGravityComponent;
+import net.arna.jcraft.api.component.entity.CommonTimeStopComponent;
+import net.arna.jcraft.api.component.living.*;
+import net.arna.jcraft.api.component.player.CommonPhComponent;
+import net.arna.jcraft.api.component.player.CommonSpecComponent;
+import net.arna.jcraft.api.component.world.CommonShockwaveHandlerComponent;
+import net.arna.jcraft.api.component.world.CommonTexasHoldEmComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +24,7 @@ import java.util.Optional;
 public class JComponentPlatformUtils {
 
     @ExpectPlatform
-    public static CommonStandComponent getStandData(LivingEntity entity) {
+    public static CommonStandComponent getStandComponent(LivingEntity entity) {
         throw new AssertionError();
     }
 

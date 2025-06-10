@@ -1,7 +1,7 @@
 package net.arna.jcraft.common.component.impl.world;
 
 import lombok.NonNull;
-import net.arna.jcraft.common.component.world.CommonTexasHoldEmComponent;
+import net.arna.jcraft.api.component.world.CommonTexasHoldEmComponent;
 import net.arna.jcraft.common.minigame.card.texasholdem.TexasHoldEm;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

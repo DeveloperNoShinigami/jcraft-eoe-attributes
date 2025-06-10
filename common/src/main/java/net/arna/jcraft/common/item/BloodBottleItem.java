@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.item;
 
-import net.arna.jcraft.common.component.living.CommonVampireComponent;
+import net.arna.jcraft.api.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.advancements.CriteriaTriggers;

@@ -2,7 +2,7 @@ package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.AbstractStarPlatinumEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.resources.ResourceLocation;
 
 /**
@@ -15,7 +15,7 @@ public class StarPlatinumModel extends StandEntityModel<AbstractStarPlatinumEnti
     private static final ResourceLocation MODEL = JCraft.id("geo/star_platinum.geo.json");
 
     public StarPlatinumModel(final boolean theWorld) {
-        super(theWorld ? StandType.STAR_PLATINUM_THE_WORLD : StandType.STAR_PLATINUM);
+        super(theWorld ? JStandTypeRegistry.STAR_PLATINUM_THE_WORLD.get() : JStandTypeRegistry.STAR_PLATINUM.get());
     }
 
     @Override

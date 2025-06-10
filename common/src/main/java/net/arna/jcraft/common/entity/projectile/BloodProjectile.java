@@ -5,7 +5,7 @@ import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.minecraft.sounds.SoundEvents;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import static net.arna.jcraft.common.entity.stand.StandEntity.damageLogic;
+import static net.arna.jcraft.api.stand.StandEntity.damageLogic;
 
 public class BloodProjectile extends AbstractArrow implements GeoEntity {
     public BloodProjectile(final Level world) {

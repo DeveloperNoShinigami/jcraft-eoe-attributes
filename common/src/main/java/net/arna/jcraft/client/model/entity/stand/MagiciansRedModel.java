@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 
 /**
  * The {@link StandEntityModel} for {@link MagiciansRedEntity}.
@@ -9,6 +9,6 @@ import net.arna.jcraft.common.entity.stand.StandType;
  */
 public class MagiciansRedModel extends StandEntityModel<MagiciansRedEntity> {
     public MagiciansRedModel() {
-        super(StandType.MAGICIANS_RED, -0.10f, -0.05f);
+        super(JStandTypeRegistry.MAGICIANS_RED.get(), -0.10f, -0.05f);
     }
 }

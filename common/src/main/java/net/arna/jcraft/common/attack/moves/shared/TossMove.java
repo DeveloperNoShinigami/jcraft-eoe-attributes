@@ -3,11 +3,10 @@ package net.arna.jcraft.common.attack.moves.shared;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.attack.IAttacker;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,10 +26,10 @@ public final class TossMove<A extends IAttacker<? extends A, ?>> extends Abstrac
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(A attacker, LivingEntity user) {
         if (attacker instanceof StandEntity<?,?> stand && !stand.level().isClientSide()) {
             final ItemStack projectile = stand.getItemInHand(InteractionHand.MAIN_HAND);
-            JUtils.tossItem(stand, stand.level(), projectile, getChargeTime(attacker) / 10f, true);
+            JUtils.tossItem(stand, stand.level(), projectile, getChargeTime() / 10f, true);
         }
         return Set.of();
     }

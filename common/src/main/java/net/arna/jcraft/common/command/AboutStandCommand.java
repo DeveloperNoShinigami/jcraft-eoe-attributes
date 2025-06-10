@@ -3,15 +3,18 @@ package net.arna.jcraft.common.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -32,6 +35,10 @@ public class AboutStandCommand {
             return 0;
         }
 
+        StandType type = stand.getStandType();
+        StandData data = stand.getStandData();
+        StandInfo info = data.getInfo();
+
         MutableComponent resp = Component.empty();
 
         // Name
@@ -41,7 +48,8 @@ public class AboutStandCommand {
                 .append(Component.literal("\n")));
 
         // Description
-        resp.append(Component.translatable(String.format("entity.%s.%s%s.info.desc", JCraft.MOD_ID, stand.getStandType().getNameKey(), stand.getModeOrdinal() == 0 ? "" : Integer.toString(stand.getModeOrdinal())))
+        resp.append(Component.translatable(String.format("%s%s.info.desc", info.getNameKey(),
+                                stand.getModeOrdinal() == 0 ? "" : Integer.toString(stand.getModeOrdinal())))
                         .withStyle(ChatFormatting.GREEN))
                 .append(Component.literal("\n"));
 
@@ -49,10 +57,10 @@ public class AboutStandCommand {
         MutableComponent pros = Component.empty()
                 .append(Component.literal("PROS:").withStyle(ChatFormatting.DARK_AQUA))
                 .append(Component.literal("\n"));
-        for (int p = 1; p <= stand.getProCount(); p++) {
+        for (int p = 1; p <= info.getProCount(); p++) {
             pros
                     .append(Component.literal("● ").withStyle(ChatFormatting.DARK_AQUA))
-                    .append(Component.translatable(String.format("entity.%s.%s.info.pro%d", JCraft.MOD_ID, stand.getStandType().getNameKey(), p)))
+                    .append(Component.translatable(String.format("%s.info.pro%d", info.getNameKey(), p)))
                     .append(Component.literal("\n"));
         }
         resp.append(pros);
@@ -60,10 +68,10 @@ public class AboutStandCommand {
         MutableComponent cons = Component.empty()
                 .append(Component.literal("CONS:").withStyle(ChatFormatting.DARK_RED))
                 .append(Component.literal("\n"));
-        for (int c = 1; c <= stand.getConCount(); c++) {
+        for (int c = 1; c <= info.getConCount(); c++) {
             cons
                     .append(Component.literal("● ").withStyle(ChatFormatting.DARK_RED))
-                    .append(Component.translatable(String.format("entity.%s.%s.info.con%d", JCraft.MOD_ID, stand.getStandType().getNameKey(), c)))
+                    .append(Component.translatable(String.format("%s.info.con%d", info.getNameKey(), c)))
                     .append(Component.literal("\n"));
         }
         resp.append(cons);
@@ -76,8 +84,8 @@ public class AboutStandCommand {
                 .append(Component.literal("\n"));
 
         MoveMap<?, ?> moveMap = stand.getMoveMap();
-        for (MoveClass type : MoveClass.values()) {
-            for (MoveMap.Entry<?, ?> entry : moveMap.getEntries(type)) {
+        for (MoveClass moveClass : MoveClass.values()) {
+            for (MoveMap.Entry<?, ?> entry : moveMap.getEntries(moveClass)) {
                 // Move itself
                 appendMove(entry, moves, Component.literal("● ").withStyle(ChatFormatting.GREEN), false);
 
@@ -95,9 +103,9 @@ public class AboutStandCommand {
         resp.append(moves);
 
         // Free Space
-        if (stand.freespace != null) {
+        if (info.getFreeSpace().getContents() != ComponentContents.EMPTY) {
             resp.append(Component.literal("\n"));
-            resp.append(Component.literal(stand.freespace));
+            resp.append(info.getFreeSpace());
         }
 
         context.getSource().sendSuccess(() -> resp, false);

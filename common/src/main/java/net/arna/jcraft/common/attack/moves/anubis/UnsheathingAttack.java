@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.anubis;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.spec.AnubisSpec;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -28,8 +27,8 @@ public class UnsheathingAttack extends AbstractSimpleAttack<UnsheathingAttack, A
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(AnubisSpec attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(AnubisSpec attacker, LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
         attacker.tryIncrementBloodlust(targets);
         attacker.unsheatheAttack(targets);
 

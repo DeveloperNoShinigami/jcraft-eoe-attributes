@@ -4,15 +4,11 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.ctx.IntMoveVariable;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.core.ctx.WeakMoveVariable;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.RazorProjectile;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
@@ -30,12 +26,13 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import java.lang.ref.WeakReference;
 import java.util.Set;
 
 public class InternalAttack extends AbstractMove<InternalAttack, MetallicaEntity> {
-    public static final MoveVariable<LivingEntity> RAZOR_TARGET = new WeakMoveVariable<>(LivingEntity.class);
-    public static final IntMoveVariable RAZOR_TIME = new IntMoveVariable();
     private static final int RAZOR_VOMIT_DURATION = 20;
+    private WeakReference<LivingEntity> razorTarget;
+    private int razorTime;
 
     public InternalAttack(int cooldown, int windup, int duration) {
         super(cooldown, windup, duration, 0);
@@ -49,22 +46,21 @@ public class InternalAttack extends AbstractMove<InternalAttack, MetallicaEntity
 
     @Override
     public void tick(final MetallicaEntity attacker) {
-        final LivingEntity target = attacker.getMoveContext().get(RAZOR_TARGET);
-        final int time = attacker.getMoveContext().getInt(RAZOR_TIME);
-        if (time > 0 && target != null && target.isAlive()) {
-            if (time % 2 == 0) {
+        final LivingEntity target = razorTarget == null ? null : razorTarget.get();
+        if (razorTime > 0 && target != null && target.isAlive()) {
+            if (razorTime % 2 == 0) {
                 RazorProjectile razor = new RazorProjectile(attacker.level(), attacker.getUserOrThrow());
                 razor.setPos(target.position().add(GravityChangerAPI.getEyeOffset(target)));
                 JUtils.shoot(razor, attacker.getUserOrThrow(), target.getXRot(), target.getYRot(), target.getRandom().nextFloat() - 0.5f, 0.5f, 30.0f);
                 attacker.level().addFreshEntity(razor);
             }
 
-            attacker.getMoveContext().setInt(RAZOR_TIME, time - 1);
+            razorTime--;
         }
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user, MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user) {
         final Vec3 eyePos = user.position().add(GravityChangerAPI.getEyeOffset(user));
         final Vec3 rotVec = user.getLookAngle();
         final HitResult hitResult = JUtils.raycastAll(user, eyePos, eyePos.add(rotVec.scale(12.0)), ClipContext.Fluid.NONE, EntitySelector.LIVING_ENTITY_STILL_ALIVE);
@@ -92,18 +88,12 @@ public class InternalAttack extends AbstractMove<InternalAttack, MetallicaEntity
                 target.addEffect(new MobEffectInstance(JStatusRegistry.HYPOXIA.get(), 60, 0, false, true));
                 JComponentPlatformUtils.getCooldowns(user).setCooldown(getMoveClass().getDefaultCooldownType(), getCooldown());
 
-                attacker.getMoveContext().set(RAZOR_TARGET, target);
-                attacker.getMoveContext().set(RAZOR_TIME, RAZOR_VOMIT_DURATION);
+                razorTarget = new WeakReference<>(target);
+                razorTime = RAZOR_VOMIT_DURATION;
             }
         }
 
         return Set.of();
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(RAZOR_TARGET, null);
-        ctx.register(RAZOR_TIME, 0);
     }
 
     @Override

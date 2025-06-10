@@ -3,11 +3,10 @@ package net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
-import net.arna.jcraft.common.attack.core.MobilityType;
+import net.arna.jcraft.api.attack.enums.MobilityType;
 import net.arna.jcraft.registry.JStatusRegistry;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -38,7 +37,7 @@ public final class FlagMove extends AbstractMove<FlagMove, D4CEntity> {
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final D4CEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final D4CEntity attacker, final LivingEntity user) {
         int duration = getWindupPoint();
         user.addEffect(
                 new MobEffectInstance(MobEffects.INVISIBILITY, duration, 0, true, false)

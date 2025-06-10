@@ -5,9 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import net.arna.jcraft.common.attack.core.MoveAction;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveActionType;
+import net.arna.jcraft.api.attack.core.MoveAction;
+import net.arna.jcraft.api.attack.core.MoveActionType;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -19,7 +18,7 @@ public class MetallicaAddIronAction extends MoveAction<MetallicaAddIronAction, M
     private final float iron;
 
     @Override
-    public void perform(MetallicaEntity attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
+    public void perform(MetallicaEntity attacker, LivingEntity user, Set<LivingEntity> targets) {
         attacker.addIron(iron);
     }
 

@@ -6,9 +6,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMultiHitAttack;
 import net.arna.jcraft.common.entity.projectile.EmeraldProjectile;
 import net.arna.jcraft.common.entity.stand.HGEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -48,8 +47,8 @@ public final class EmeraldSplashAttack extends AbstractMultiHitAttack<EmeraldSpl
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final HGEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        final int emeraldCount = 3 + getChargeTime(attacker) / 10;
+    public @NonNull Set<LivingEntity> perform(final HGEntity attacker, final LivingEntity user) {
+        final int emeraldCount = 3 + getChargeTime() / 10;
 
         for (int i = 0; i < emeraldCount; i++) {
             final EmeraldProjectile emerald = new EmeraldProjectile(attacker.level(), user);

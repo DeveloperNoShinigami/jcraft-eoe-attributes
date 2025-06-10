@@ -35,6 +35,7 @@ accessible field net/minecraft/world/entity/boss/wither/WitherBoss TARGETING_CON
 accessible field net/minecraft/server/MinecraftServer storageSource Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;
 accessible field net/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess levelDirectory Lnet/minecraft/world/level/storage/LevelStorageSource$LevelDirectory;
 accessible method net/minecraft/world/entity/LivingEntity dismountVehicle (Lnet/minecraft/world/entity/Entity;)V
+accessible method net/minecraft/core/HolderSet$Named <init> (Lnet/minecraft/core/HolderOwner;Lnet/minecraft/tags/TagKey;)V
 accessible field net/minecraft/world/item/BucketItem content Lnet/minecraft/world/level/material/Fluid;
 accessible method net/minecraft/world/entity/projectile/ThrownPotion applySplash (Ljava/util/List;Lnet/minecraft/world/entity/Entity;)V
 accessible method net/minecraft/world/entity/projectile/ThrownPotion makeAreaOfEffectCloud (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/alchemy/Potion;)V

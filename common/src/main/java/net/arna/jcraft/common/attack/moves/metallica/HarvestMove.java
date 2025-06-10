@@ -3,13 +3,12 @@ package net.arna.jcraft.common.attack.moves.metallica;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractBarrageAttack;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractBarrageAttack;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.MetallicaEntity;
-import net.arna.jcraft.common.entity.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.registry.JTagRegistry;
 import net.minecraft.core.BlockPos;
@@ -61,8 +60,8 @@ public class HarvestMove extends AbstractBarrageAttack<HarvestMove, MetallicaEnt
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user, MoveContext ctx) {
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+    public @NonNull Set<LivingEntity> perform(MetallicaEntity attacker, LivingEntity user) {
+        Set<LivingEntity> targets = super.perform(attacker, user);
         final BlockHitResult hitResult = JUtils.genericBlockRaycast(user.level(), user, 5, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE);
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             final BlockPos hitPos = hitResult.getBlockPos();

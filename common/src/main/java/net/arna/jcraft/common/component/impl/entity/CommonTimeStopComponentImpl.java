@@ -2,7 +2,7 @@ package net.arna.jcraft.common.component.impl.entity;
 
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.component.entity.CommonTimeStopComponent;
+import net.arna.jcraft.api.component.entity.CommonTimeStopComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;

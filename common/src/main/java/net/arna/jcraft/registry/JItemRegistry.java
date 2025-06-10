@@ -1,20 +1,15 @@
 package net.arna.jcraft.registry;
 
 import dev.architectury.core.item.ArchitecturySpawnEggItem;
+import dev.architectury.platform.Platform;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.vehicle.RoadRollerEntity;
 import net.arna.jcraft.common.item.*;
-import net.arna.jcraft.common.spec.SpecType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterials;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,7 +20,7 @@ public interface JItemRegistry {
     DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, Registries.ITEM);
     Map<RegistrySupplier<? extends Item>, ResourceLocation> ITEMS = new LinkedHashMap<>();
 
-    RegistrySupplier<Item> DEBUG_WAND = register("debug_wand", () -> new DebugWand(settings()));
+    RegistrySupplier<Item> DEBUG_WAND = Platform.isDevelopmentEnvironment() ? register("debug_wand", () -> new DebugWand(settings())) : null;
 
     RegistrySupplier<Item> STAND_ARROW = register("stand_arrow", () -> new StandArrowItem(settings().rarity(Rarity.RARE).fireResistant()));
 
@@ -55,9 +50,11 @@ public interface JItemRegistry {
     RegistrySupplier<Item> ANUBIS = register("anubis", () -> new AnubisItem(settings().rarity(Rarity.RARE).stacksTo(1)));
 
     // Spec Obtainment Items
-    RegistrySupplier<Item> ANUBIS_SHEATHED = register("anubis_sheathed", () -> new SheathedAnubisItem(settings().rarity(Rarity.RARE).stacksTo(1), SpecType.ANUBIS));
+    RegistrySupplier<Item> ANUBIS_SHEATHED = register("anubis_sheathed", () -> new SheathedAnubisItem(settings()
+            .rarity(Rarity.RARE).stacksTo(1), JSpecTypeRegistry.ANUBIS));
 
-    RegistrySupplier<Item> BOXING_GLOVES = register("boxing_gloves", () -> new BoxingGlovesItem(settings().stacksTo(1), SpecType.BRAWLER));
+    RegistrySupplier<Item> BOXING_GLOVES = register("boxing_gloves", () -> new BoxingGlovesItem(settings()
+            .stacksTo(1), JSpecTypeRegistry.BRAWLER));
 
     // Vehicles
     RegistrySupplier<Item> ROAD_ROLLER = register("road_roller", () -> new VehicleItem<>(

@@ -3,10 +3,8 @@ package net.arna.jcraft.common.attack.moves.killerqueen;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.KillerQueenEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JItemRegistry;
@@ -17,10 +15,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.ref.WeakReference;
 import java.util.Set;
 
 public final class CoinTossMove extends AbstractMove<CoinTossMove, KillerQueenEntity> {
-    public static final MoveVariable<ItemEntity> COIN = new MoveVariable<>(ItemEntity.class);
+    private WeakReference<ItemEntity> coin = new WeakReference<>(null);
 
     public CoinTossMove(final int cooldown) {
         super(cooldown, 0, 0, 1f);
@@ -33,8 +32,8 @@ public final class CoinTossMove extends AbstractMove<CoinTossMove, KillerQueenEn
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final KillerQueenEntity attacker, final LivingEntity user, final MoveContext ctx) {
-        ItemEntity coin = ctx.get(COIN);
+    public @NonNull Set<LivingEntity> perform(final KillerQueenEntity attacker, final LivingEntity user) {
+        ItemEntity coin = this.coin.get();
         final Vec3 lookVec = user.getLookAngle().scale(0.75);
         if (coin != null) {
             coin.discard();
@@ -49,12 +48,9 @@ public final class CoinTossMove extends AbstractMove<CoinTossMove, KillerQueenEn
 
         attacker.playSound(JSoundRegistry.COIN_TOSS.get(), 1, 1);
 
-        return Set.of();
-    }
+        this.coin = new WeakReference<>(coin);
 
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(COIN);
+        return Set.of();
     }
 
     @Override

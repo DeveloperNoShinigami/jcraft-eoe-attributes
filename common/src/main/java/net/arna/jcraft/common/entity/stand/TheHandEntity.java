@@ -5,18 +5,24 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveInputType;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
-import net.arna.jcraft.common.attack.core.data.StateContainer;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.StateContainer;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.attack.moves.thehand.*;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -27,13 +33,31 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/The_Hand">The Hand</a>.
- * @see StandType#THE_HAND
+ * @see JStandTypeRegistry#THE_HAND
  * @see net.arna.jcraft.client.model.entity.stand.TheHandModel TheHandModel
  * @see net.arna.jcraft.client.renderer.entity.stands.TheHandRenderer TheHandRenderer
  */
 public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.State> {
-    public static final MoveSet<TheHandEntity, State> MOVE_SET = MoveSet.create(StandType.THE_HAND,
+    public static final MoveSet<TheHandEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.THE_HAND,
             TheHandEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.the_hand"))
+                    .proCount(4)
+                    .conCount(2)
+                    .freeSpace(Component.literal("""
+                            BNBs:
+                                -the stand up comedian
+                                Light>Barrage>Sweep>cr.M1~M1>Stomp Barrage
+                            
+                                -the st. louis devastator
+                                (Sweep>)cr.M1~M1>Barrage>Rage"""))
+                    .skinName(Component.literal("Shift"))
+                    .skinName(Component.literal("Inversion"))
+                    .skinName(Component.literal("Deletion"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.THE_HAND_SUMMON))
+            .build();
 
     public static final Stomp2Attack CROUCHING_LIGHT_FOLLOWUP = new Stomp2Attack(0,
             13, 20, 0.6f, 6f, 15, 1.75f, 0.3f, 0.4f, -0.3f)
@@ -201,19 +225,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             );
 
     public TheHandEntity(final Level world) {
-        super(StandType.THE_HAND, world, JSoundRegistry.THE_HAND_SUMMON);
-
-        proCount = 4;
-        conCount = 2;
-
-        freespace =
-                """
-                        BNBs:
-                            -the stand up comedian
-                            Light>Barrage>Sweep>cr.M1~M1>Stomp Barrage
-                        
-                            -the st. louis devastator
-                            (Sweep>)cr.M1~M1>Barrage>Rage""";
+        super(JStandTypeRegistry.THE_HAND.get(), world);
 
         auraColors = new Vector3f[] {
                 new Vector3f(0, 0, 1.0f),

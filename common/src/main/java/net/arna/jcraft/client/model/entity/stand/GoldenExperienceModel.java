@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.common.entity.stand.GoldExperienceEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 
 /**
  * The {@link StandEntityModel} for {@link GoldExperienceEntity}.
@@ -9,6 +9,6 @@ import net.arna.jcraft.common.entity.stand.StandType;
  */
 public class GoldenExperienceModel extends StandEntityModel<GoldExperienceEntity> {
     public GoldenExperienceModel() {
-        super(StandType.GOLD_EXPERIENCE, 0, -0.1f);
+        super(JStandTypeRegistry.GOLD_EXPERIENCE.get(), 0, -0.1f);
     }
 }

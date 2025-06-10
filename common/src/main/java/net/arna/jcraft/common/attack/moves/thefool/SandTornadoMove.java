@@ -3,9 +3,8 @@ package net.arna.jcraft.common.attack.moves.thefool;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.projectile.SandTornadoEntity;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +23,7 @@ public final class SandTornadoMove extends AbstractMove<SandTornadoMove, TheFool
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final TheFoolEntity attacker, final LivingEntity user) {
         final SandTornadoEntity sandTornado = new SandTornadoEntity(attacker.level());
         sandTornado.setMaster(user);
         sandTornado.moveTo(attacker.getX(), attacker.getY() + 1.5, attacker.getZ(), attacker.getYRot(), attacker.getXRot());

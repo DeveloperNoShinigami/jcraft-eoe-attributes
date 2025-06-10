@@ -2,8 +2,9 @@ package net.arna.jcraft.common.entity.projectile;
 
 import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
@@ -25,29 +26,13 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.Saddleable;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BowlFoodItem;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.ExperienceBottleItem;
-import net.minecraft.world.item.HoeItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.LingeringPotionItem;
-import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
@@ -153,10 +138,10 @@ public class ItemTossProjectile extends AbstractArrow {
             BlockHitResult blockHitResult = (BlockHitResult)result;
             this.onHitBlock(blockHitResult);
         }
-        if (!this.level().isClientSide && getItem().is(JTagRegistry.EXPLODES_ON_IMPACT)) {
-            final boolean grief = this.level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
-            this.level().explode(this, this.getX(), this.getY(), this.getZ(), 1, grief, Level.ExplosionInteraction.MOB);
-            this.discard();
+        if (!level().isClientSide && getItem().is(JTagRegistry.EXPLODES_ON_IMPACT)) {
+            final boolean grief = level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
+            level().explode(this, getX(), getY(), getZ(), 1, grief, Level.ExplosionInteraction.MOB);
+            discard();
         }
     }
 
@@ -206,20 +191,21 @@ public class ItemTossProjectile extends AbstractArrow {
         }
 
         // force stand on target
-        if (entity instanceof LivingEntity livingEntity && (livingEntity instanceof ServerPlayer || livingEntity.getType().is(JTagRegistry.CAN_HAVE_STAND)) && getItem().is(JItemRegistry.STAND_DISC.get())) {
+        if (entity instanceof LivingEntity livingEntity && (livingEntity instanceof ServerPlayer ||
+                livingEntity.getType().is(JTagRegistry.CAN_HAVE_STAND)) && getItem().is(JItemRegistry.STAND_DISC.get())) {
             // get NBT
             StandType itemStand = null;
             int itemSkin = 0;
             final CompoundTag data = getItem().getOrCreateTag();
-            if (data.contains("StandID", Tag.TAG_INT)) {
-                itemStand = StandType.fromIdOrOrdinal(data.getInt("StandID"));
+            if (data.contains("StandID")) {
+                itemStand = StandTypeUtil.readFromNBT(data, "StandID");
             }
             if (data.contains("Skin", Tag.TAG_INT)) {
                 itemSkin = data.getInt("Skin");
             }
             // apply stand
             if (itemStand != null && !JCraft.getExclusiveStandsData().isStandUsed(itemStand)) {
-                final CommonStandComponent standData = JComponentPlatformUtils.getStandData(livingEntity);
+                final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(livingEntity);
                 if (standData.getType() == null) { // don't override current stand
                     standData.setTypeAndSkin(itemStand, itemSkin);
                     JCraft.summon(level(), livingEntity);

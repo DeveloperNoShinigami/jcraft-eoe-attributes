@@ -5,11 +5,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.core.MoveAction;
-import net.arna.jcraft.common.attack.core.RunMoment;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.data.MoveActionType;
+import net.arna.jcraft.api.attack.IAttacker;
+import net.arna.jcraft.api.attack.core.MoveAction;
+import net.arna.jcraft.api.attack.core.RunMoment;
+import net.arna.jcraft.api.attack.core.MoveActionType;
 import net.arna.jcraft.common.util.JCodecUtils;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
@@ -96,7 +95,7 @@ public class PlaySoundAction extends MoveAction<PlaySoundAction, IAttacker<?, ?>
     }
 
     @Override
-    public void perform(IAttacker<?, ?> attacker, LivingEntity user, MoveContext ctx, Set<LivingEntity> targets) {
+    public void perform(IAttacker<?, ?> attacker, LivingEntity user, Set<LivingEntity> targets) {
         attacker.playAttackerSound(sound.get(), randomize(attacker.getBaseEntity().getRandom(), minVol, maxVol),
                 randomize(attacker.getBaseEntity().getRandom(), minPitch, maxPitch));
     }

@@ -5,21 +5,27 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.SummonData;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.LungeAction;
 import net.arna.jcraft.common.attack.actions.PlaySoundAction;
-import net.arna.jcraft.common.attack.core.MoveClass;
-import net.arna.jcraft.common.attack.core.MoveMap;
-import net.arna.jcraft.common.attack.core.StunType;
-import net.arna.jcraft.common.attack.core.data.MoveSet;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.enums.StunType;
 import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.*;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
-import net.arna.jcraft.common.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.Level;
@@ -31,7 +37,7 @@ import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Dirty_Deeds_Done_Dirt_Cheap">Dirty Deeds Done Dirt Cheap</a>.
- * @see StandType#D4C
+ * @see JStandTypeRegistry#D4C
  * @see net.arna.jcraft.client.renderer.entity.stands.D4CRenderer D4CRenderer
  * @see CloneSpawnMove
  * @see D4CCounterAttack
@@ -42,7 +48,29 @@ import java.util.function.Consumer;
  * @see ItemPlaceMove
  */
 public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
-    public static final MoveSet<D4CEntity, State> MOVE_SET = MoveSet.create(StandType.D4C, D4CEntity::registerMoves, State.class);
+    public static final MoveSet<D4CEntity, State> MOVE_SET = MoveSetManager.create(JStandTypeRegistry.D4C, D4CEntity::registerMoves, State.class);
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(-45f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.d4c"))
+                    .proCount(4)
+                    .conCount(2)
+                    .freeSpace(Component.literal("""
+                        BNBs:
+                            -the lazy zoner
+                            Light>Barrage>Light>Grab/Charge
+                        
+                            -the western
+                            Light>Summon Gun>Barrage>Light~stand.OFF>M2>M2>M2>~s.ON+Light>Charge"""))
+                    .skinName(Component.literal("Jojoveller"))
+                    .skinName(Component.literal("Teaser"))
+                    .skinName(Component.literal("Spangled"))
+                    .build())
+            .summonData(SummonData.builder()
+                    .sound(JSoundRegistry.D4C_SUMMON)
+                    .playGenericSound(true)
+                    .build())
+            .build();
 
     public static final ItemPlaceMove ITEM_PLACE = new ItemPlaceMove(JCraft.LIGHT_COOLDOWN, 8, 12, 0.75f)
             .withAnim(State.ITEM_PLACE)
@@ -147,21 +175,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                     Component.literal("hides in a flag in an un-stunnable, floating state"));
 
     public D4CEntity(Level worldIn) {
-        super(StandType.D4C, worldIn, JSoundRegistry.D4C_SUMMON, true);
-
-        idleRotation = -45f;
-
-        proCount = 4;
-        conCount = 2;
-
-        freespace =
-                """
-                        BNBs:
-                            -the lazy zoner
-                            Light>Barrage>Light>Grab/Charge
-                        
-                            -the western
-                            Light>Summon Gun>Barrage>Light~stand.OFF>M2>M2>M2>~s.ON+Light>Charge""";
+        super(JStandTypeRegistry.D4C.get(), worldIn);
 
         auraColors = new Vector3f[]{
                 new Vector3f(0.9f, 0.5f, 0.7f),

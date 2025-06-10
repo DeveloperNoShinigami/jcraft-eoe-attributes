@@ -10,16 +10,17 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
-import net.arna.jcraft.common.attack.core.data.MoveSetLoader;
 import net.arna.jcraft.common.block.CoffinBlock;
-import net.arna.jcraft.common.component.living.CommonCooldownsComponent;
-import net.arna.jcraft.common.component.living.CommonStandComponent;
+import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.effects.DazedStatusEffect;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
 import net.arna.jcraft.common.gravity.util.GravityChannel;
 import net.arna.jcraft.common.loot.JLootTableHelper;
@@ -83,6 +84,11 @@ import static net.arna.jcraft.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY_TYP
 import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
 import static net.arna.jcraft.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.registry.JItemRegistry.ITEM_REGISTRY;
+import static net.arna.jcraft.registry.JMoveActionTypeRegistry.MOVE_ACTION_TYPE_REGISTRY;
+import static net.arna.jcraft.registry.JMoveConditionTypeRegistry.MOVE_CONDITION_TYPE_REGISTRY;
+import static net.arna.jcraft.registry.JMoveTypeRegistry.MOVE_TYPE_REGISTRY;
+import static net.arna.jcraft.registry.JSpecTypeRegistry.SPEC_TYPE_REGISTRY;
+import static net.arna.jcraft.registry.JStandTypeRegistry.STAND_TYPE_REGISTRY;
 import static net.minecraft.world.level.GameRules.*;
 
 public final class JCraft {
@@ -152,6 +158,8 @@ public final class JCraft {
                 JThingRegistry.registerThings() - for interfaces/classes with a NON-EMPTY registerThings() method
          */
 
+        JRegistries.init();
+
         // Particle registration (serverside)
         JParticleTypeRegistry.init();
         PARTICLES.register();
@@ -160,6 +168,13 @@ public final class JCraft {
         BLOCK_REGISTRY.register();
         ITEM_REGISTRY.register();
         BLOCK_ENTITY_TYPE_REGISTRY.register();
+
+        // Custom registries
+        STAND_TYPE_REGISTRY.register();
+        SPEC_TYPE_REGISTRY.register();
+        MOVE_ACTION_TYPE_REGISTRY.register();
+        MOVE_CONDITION_TYPE_REGISTRY.register();
+        MOVE_TYPE_REGISTRY.register();
 
         JTagRegistry.init();
 
@@ -202,8 +217,6 @@ public final class JCraft {
         MoveTickQueue.registerMoveTickQueue();
 
         GravityChannel.registerReceivers();
-
-        MoveSetLoader.init();
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT, PlayerInputPacket::handle);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PLAYER_INPUT_HOLD, PlayerInputPacket::handleHold);
@@ -253,16 +266,15 @@ public final class JCraft {
         registrar.register("jcraft_stand", parser -> {
             StringReader reader = parser.getReader();
             int cursor = reader.getCursor();
-            String standName = reader.readUnquotedString();
+            ResourceLocation resourceLocation = ResourceLocation.read(reader);
             StandType standType;
 
             parser.setSuggestions((builder, consumer) ->
-                    SharedSuggestionProvider.suggest(StandType.getAllStandTypes().stream()
-                                    .map(StandType::name),
-                            builder));
+                    SharedSuggestionProvider.suggest(JRegistries.STAND_TYPE_REGISTRY.getIds().stream()
+                                    .map(ResourceLocation::toString), builder));
 
             try {
-                standType = StandType.valueOf(standName.toUpperCase(Locale.ROOT));
+                standType = JRegistries.STAND_TYPE_REGISTRY.get(resourceLocation);
             } catch (IllegalArgumentException e) {
                 reader.setCursor(cursor);
                 throw StandArgumentType.NOT_FOUND.createWithContext(reader);
@@ -273,7 +285,7 @@ public final class JCraft {
                     return false;
                 }
 
-                CommonStandComponent standData = JComponentPlatformUtils.getStandData(entity);
+                CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(entity);
                 return standData.getType() == standType;
             });
         }, p -> true, Component.translatable("argument.entity.options.jcraft_stand"));
@@ -376,16 +388,12 @@ public final class JCraft {
         if (user.hasEffect(JStatusRegistry.STANDLESS.get())) {
             return null;
         }
-        CommonStandComponent standData = JComponentPlatformUtils.getStandData(user);
+        CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(user);
         StandType type = standData.getType();
-        if (type == StandType.NONE) {
+        if (StandTypeUtil.isNone(type)) {
             return null;
         }
-        StandEntity<?, ?> stand = type == null ? null : type.createNew(world);
-
-        if (stand == null) {
-            return null;
-        }
+        StandEntity<?, ?> stand = type.createEntity(world);
 
         int skin = standData.getSkin();
         stand.setSkin(skin);

@@ -4,9 +4,8 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.moves.base.AbstractMultiHitAttack;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMultiHitAttack;
 import net.arna.jcraft.common.spec.AnubisSpec;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
@@ -23,12 +22,12 @@ public class Rekka3Attack extends AbstractMultiHitAttack<Rekka3Attack, AnubisSpe
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final AnubisSpec attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final AnubisSpec attacker, final LivingEntity user) {
         if (attacker.getAttackSpeedMult() == 1 && getBlow(attacker) == 1) {
             attacker.curMove = getFollowup();
         }
 
-        Set<LivingEntity> targets = super.perform(attacker, user, ctx);
+        Set<LivingEntity> targets = super.perform(attacker, user);
         attacker.tryIncrementBloodlust(targets);
         return targets;
     }

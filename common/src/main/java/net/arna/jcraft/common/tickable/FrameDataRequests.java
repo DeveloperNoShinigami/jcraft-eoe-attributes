@@ -2,12 +2,12 @@ package net.arna.jcraft.common.tickable;
 
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.common.attack.core.BlockableType;
-import net.arna.jcraft.common.attack.core.IAttacker;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
-import net.arna.jcraft.common.attack.moves.base.AbstractSimpleAttack;
-import net.arna.jcraft.common.entity.stand.StandEntity;
-import net.arna.jcraft.common.spec.JSpec;
+import net.arna.jcraft.api.attack.enums.BlockableType;
+import net.arna.jcraft.api.attack.IAttacker;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.network.chat.*;
 import net.minecraft.server.level.ServerPlayer;
@@ -63,7 +63,7 @@ public class FrameDataRequests {
             final IAttacker<?, ?> attacker;
             final AbstractMove<?, ? super IAttacker<?, ?>> move;
             if (frameData.getType() == FrameDataType.STAND) {
-                StandEntity<?, ?> stand = JComponentPlatformUtils.getStandData(player).getStand();
+                StandEntity<?, ?> stand = JComponentPlatformUtils.getStandComponent(player).getStand();
                 attacker = stand;
                 if (stand != null) {
                     move = (AbstractMove<?, ? super IAttacker<?, ?>>) stand.getCurrentMove();

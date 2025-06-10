@@ -3,11 +3,10 @@ package net.arna.jcraft.common.attack.moves.goldexperience;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import lombok.Setter;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.common.attack.core.data.MoveType;
-import net.arna.jcraft.common.attack.core.ctx.MoveContext;
-import net.arna.jcraft.common.attack.core.ctx.MoveVariable;
-import net.arna.jcraft.common.attack.moves.base.AbstractMove;
+import net.arna.jcraft.api.attack.MoveType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.GEButterflyEntity;
 import net.arna.jcraft.common.entity.GEFrogEntity;
 import net.arna.jcraft.common.entity.GESnakeEntity;
@@ -22,7 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExperienceEntity> {
-    public static final MoveVariable<LifeGiverType> TYPE_TO_SUMMON = new MoveVariable<>(LifeGiverType.class);
+    @Setter
+    private LifeGiverType typeToSummon;
 
     public LifeGiverAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
         super(cooldown, windup, duration, moveDistance);
@@ -35,7 +35,7 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final GoldExperienceEntity attacker, final LivingEntity user, final MoveContext ctx) {
+    public @NonNull Set<LivingEntity> perform(final GoldExperienceEntity attacker, final LivingEntity user) {
         ItemStack item = user.getOffhandItem(); // Get offhand, or if unavailable main hand stack
         if (item.isEmpty()) {
             item = user.getMainHandItem();
@@ -47,7 +47,7 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
         LivingEntity animal = null;
         final ItemStack animalItem = item.copy();
         animalItem.setCount(1);
-        switch (ctx.get(TYPE_TO_SUMMON)) {
+        switch (typeToSummon) {
             case SNAKE -> {
                 if (item.getMaxStackSize() <= 1) {
                     return Set.of();
@@ -80,7 +80,7 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
         }
 
         if (animal == null) {
-            JCraft.LOGGER.error("Failed to create animal of type {} from item {}", ctx.get(TYPE_TO_SUMMON), animalItem);
+            JCraft.LOGGER.error("Failed to create animal of type {} from item {}", typeToSummon, animalItem);
             return Set.of();
         }
         item.shrink(1);
@@ -89,11 +89,6 @@ public final class LifeGiverAttack extends AbstractMove<LifeGiverAttack, GoldExp
         attacker.level().addFreshEntity(animal);
 
         return Set.of();
-    }
-
-    @Override
-    public void registerExtraContextEntries(final MoveContext ctx) {
-        ctx.register(TYPE_TO_SUMMON);
     }
 
     @Override

@@ -8,7 +8,7 @@ import mod.azure.azurelib.cache.object.GeoBone;
 import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
 import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
-import net.arna.jcraft.common.entity.stand.StandType;
+import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  */
 public class D4CRenderer extends StandEntityRenderer<D4CEntity> {
     public D4CRenderer(final EntityRendererProvider.Context context) {
-        super(context, new StandEntityModel<>(StandType.D4C));
+        super(context, new StandEntityModel<>(JStandTypeRegistry.D4C.get()));
 
         addRenderLayer(new BlockAndItemGeoLayer<>(this) {
 

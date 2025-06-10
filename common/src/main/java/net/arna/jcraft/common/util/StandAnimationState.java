@@ -1,6 +1,6 @@
 package net.arna.jcraft.common.util;
 
-import net.arna.jcraft.common.attack.core.IAttacker;
+import net.arna.jcraft.api.attack.IAttacker;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
