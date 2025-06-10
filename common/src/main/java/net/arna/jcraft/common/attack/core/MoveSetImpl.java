@@ -6,6 +6,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.Getter;
+import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.api.attack.IAttacker;
@@ -35,7 +36,8 @@ public class MoveSetImpl<A extends IAttacker<? extends A, S>, S extends Enum<S>>
     @Getter
     private boolean initialized = false;
 
-    public MoveSetImpl(final RegistrySupplier<? extends IAttackerType> type, final String name, final Consumer<MoveMap<A, S>> register, final Class<S> stateClass) {
+    public MoveSetImpl(@NonNull final RegistrySupplier<? extends IAttackerType> type, @NonNull final String name,
+                       @NonNull final Consumer<MoveMap<A, S>> register, @NonNull final Class<S> stateClass) {
         this.type = type;
         this.name = name;
         this.register = register;
