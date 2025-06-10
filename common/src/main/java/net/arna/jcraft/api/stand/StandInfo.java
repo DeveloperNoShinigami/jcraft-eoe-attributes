@@ -75,6 +75,6 @@ public class StandInfo {
      * @return the number of skins available for this stand.
      */
     public int getSkinCount() {
-        return skinNames.size();
+        return skinNames.size() + 1; // +1 for the default skin
     }
 }

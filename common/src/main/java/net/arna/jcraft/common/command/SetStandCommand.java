@@ -64,7 +64,7 @@ public class SetStandCommand {
             return 0;
         }
 
-        if (type != null && skin > type.getData().getInfo().getSkinCount()) {
+        if (type != null && skin >= type.getData().getInfo().getSkinCount()) {
             throw INVALID_SKIN.create(type.getData().getInfo().getSkinCount());
         }
 

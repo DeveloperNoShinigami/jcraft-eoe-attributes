@@ -7,7 +7,6 @@ import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
-import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -25,7 +24,7 @@ public class SCRapierLayer extends GeoRenderLayer<SilverChariotEntity> {
     public SCRapierLayer(final GeoRenderer<SilverChariotEntity> entityRendererIn) {
         super(entityRendererIn);
 
-        skins = IntStream.rangeClosed(0, JStandTypeRegistry.SILVER_CHARIOT.get().getData().getInfo().getSkinCount())
+        skins = IntStream.rangeClosed(0, 4)
                 .mapToObj(i -> JCraft.id("textures/entity/stands/silver_chariot/rapier_" + (i == 0 ? "default" : "skin" + i) + ".png"))
                 .toList();
     }
