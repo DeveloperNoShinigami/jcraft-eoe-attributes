@@ -1,7 +1,6 @@
-package net.arna.jcraft.api.stand;
+package net.arna.jcraft.api.spec;
 
 import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.registry.JSpecTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

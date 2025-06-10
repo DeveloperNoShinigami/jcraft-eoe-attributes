@@ -2,7 +2,7 @@ package net.arna.jcraft.common.component.impl.player;
 
 import lombok.NonNull;
 import net.arna.jcraft.api.spec.SpecType;
-import net.arna.jcraft.api.stand.SpecTypeUtil;
+import net.arna.jcraft.api.spec.SpecTypeUtil;
 import net.arna.jcraft.common.component.player.CommonSpecComponent;
 import net.arna.jcraft.common.spec.JSpec;
 import net.arna.jcraft.registry.JSpecTypeRegistry;
