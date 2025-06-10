@@ -17,14 +17,18 @@ public class PoseModifiers {
                     "\\s*(=|\\+=|-=|\\*=|/=)\\s*" + // Operator
                     "((?:-?|\\+?)\\d+(?:\\.\\d+)?)\\s*(deg)?$", // Integer or decimal number with optional 'deg' suffix
             Pattern.CASE_INSENSITIVE);
-    private static final Map<String, Codec<? extends IPoseModifier>> modifiers = new HashMap<>();
-    public static Codec<IPoseModifier> CODEC = Codec.STRING.dispatch(IPoseModifier::getId, modifiers::get);
+    private static final Map<String, Codec<? extends IPoseModifier>> MODIFIERS = new HashMap<>();
+    public static Codec<IPoseModifier> CODEC = Codec.STRING.dispatch(IPoseModifier::getId, MODIFIERS::get);
+
+    private PoseModifiers() {
+        // No instantiation
+    }
 
     public static void register(final String id, final Codec<? extends IPoseModifier> codec) {
-        if (modifiers.containsKey(id)) {
+        if (MODIFIERS.containsKey(id)) {
             throw new IllegalArgumentException("Modifier with id " + id + " is already registered.");
         }
-        modifiers.put(id, codec);
+        MODIFIERS.put(id, codec);
     }
 
     /**

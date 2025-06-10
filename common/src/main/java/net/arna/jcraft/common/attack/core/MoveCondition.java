@@ -7,7 +7,6 @@ import net.arna.jcraft.api.attack.MoveConditionType;
 @Getter
 public abstract class MoveCondition<C extends MoveCondition<C, A>, A extends IAttacker<? extends A, ?>> {
 
-
     public abstract boolean test(final A attacker);
 
     public abstract @NonNull MoveConditionType<C> getType();

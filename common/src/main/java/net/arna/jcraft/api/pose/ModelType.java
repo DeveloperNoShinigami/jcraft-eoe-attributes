@@ -69,7 +69,7 @@ public class ModelType<T extends Model> {
             return (ModelType<T>) modelType;
         }
 
-        for (Map.Entry<Class<? extends Model>, ModelType<?>> entry : FROM_CLASS.entrySet()) {
+        for (final Map.Entry<Class<? extends Model>, ModelType<?>> entry : FROM_CLASS.entrySet()) {
             if (entry.getKey().isAssignableFrom(modelClass)) {
                 FROM_CLASS.put(modelClass, entry.getValue());
                 return (ModelType<T>) entry.getValue();
