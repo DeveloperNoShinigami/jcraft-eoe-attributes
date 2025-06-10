@@ -90,7 +90,7 @@ public class JModelProvider extends FabricModelProvider {
             // For now, we assume each stand has 3 skins.
             // This will have to be revamped later when we redo the skin system anyway.
             // If there are fewer than 3 skins, the model will never be used regardless.
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 4; i++) {
                 int fi = i;
                 generator.generateLayeredItem(id.withPath(p -> "item/stand_disc_" + p + "_" + fi),
                         JCraft.id("item/stand_disc"), id.withPath(p -> "item/stands/" + p + "_" + fi));
