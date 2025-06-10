@@ -85,7 +85,8 @@ public abstract class CameraMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/joml/Quaternionf;rotationYXZ(FFF)Lorg/joml/Quaternionf;",
-                    shift = At.Shift.AFTER
+                    shift = At.Shift.AFTER,
+                    remap = false
             )
     )
     private void inject_setRotation(CallbackInfo ci) {
