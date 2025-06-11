@@ -32,6 +32,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -330,7 +331,7 @@ public class JServerEvents {
 
         if (entity instanceof Mob mob) {
             // Mark stand user mobs
-            CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(mob);
+            final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(mob);
             if (!StandTypeUtil.isNone(standData.getType())) {
                 JEnemies.add(mob);
                 return EventResult.pass();
@@ -367,7 +368,9 @@ public class JServerEvents {
             // ATTRIBUTES
             AttributeInstance followRange = mob.getAttribute(Attributes.FOLLOW_RANGE);
             if (followRange != null) {
-                followRange.setBaseValue(128.0);
+                followRange.setBaseValue(Mth.clamp(
+                        128 * entity.level().getCurrentDifficultyAt(entity.blockPosition()).getEffectiveDifficulty() / 10d,
+                        10d, 128d));
             }
             AttributeInstance movementSpeed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
             if (movementSpeed != null && movementSpeed.getBaseValue() < 0.3) {
