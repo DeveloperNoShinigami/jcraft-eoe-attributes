@@ -13,10 +13,12 @@ import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.api.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.config.JServerConfig;
+import net.arna.jcraft.common.data.AttackerDataLoader;
 import net.arna.jcraft.common.entity.StandMeteorEntity;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.MockItem;
+import net.arna.jcraft.common.network.s2c.AttackerDataPacket;
 import net.arna.jcraft.common.saveddata.ExclusiveStandsData;
 import net.arna.jcraft.common.tickable.*;
 import net.arna.jcraft.common.util.*;
@@ -249,6 +251,9 @@ public class JServerEvents {
 
         entitiesOfInterest.clear();
         entitiesOfInterest.putAll(newItemsOfInterest);
+
+        if (AttackerDataLoader.isDirty())
+            AttackerDataPacket.send(server.getPlayerList().getPlayers());
     }
 
     private static void dimensionalExplosion(ServerLevel serverWorld, boolean griefing, Entity one) {

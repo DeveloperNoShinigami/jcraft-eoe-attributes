@@ -22,6 +22,7 @@ import net.arna.jcraft.client.rendering.handler.CrimsonShaderHandler;
 import net.arna.jcraft.client.rendering.handler.ZaWarudoShaderHandler;
 import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.config.ConfigOption;
+import net.arna.jcraft.common.data.AttackerDataLoader;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.network.s2c.TimeAccelStatePacket;
@@ -90,6 +91,11 @@ public class ClientPacketHandler {
         register(S2C_STAND_HURT, ClientPacketHandler::handleStandHurt);
         register(S2C_PREDICTION_UPDATE, ClientPacketHandler::handlePrediction);
         register(S2C_MAGNETIC_FIELD_PARTICLE, ClientPacketHandler::handleMagneticFieldParticle);
+        register(S2C_ATTACKER_DATA, ClientPacketHandler::handleAttackerData);
+    }
+
+    private static void handleAttackerData(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
+        AttackerDataLoader.readFromBuffer(buf);
     }
 
     private static final int

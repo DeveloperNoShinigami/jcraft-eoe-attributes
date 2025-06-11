@@ -6,13 +6,17 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import dev.architectury.registry.registries.Registrar;
+import lombok.Getter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.spec.SpecData;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandData;
-import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
@@ -22,6 +26,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -29,6 +34,8 @@ import java.util.concurrent.Executor;
 public class AttackerDataLoader {
     private static final Map<ResourceLocation, StandData> STAND_DATA = new HashMap<>();
     private static final Map<ResourceLocation, SpecData> SPEC_DATA = new HashMap<>();
+    @Getter // used in server tick to inform clients of changes
+    private static boolean dirty = false;
 
     /**
      * Gets the StandData for a given stand type id.
@@ -113,6 +120,8 @@ public class AttackerDataLoader {
     private static void loadAllData(final Map<String, Map<ResourceLocation, JsonObject>> data) {
         loadData(data.get("stands"), StandData.CODEC, JRegistries.STAND_TYPE_REGISTRY, STAND_DATA, "stand", StandData.EMPTY);
         loadData(data.get("specs"), SpecData.CODEC, JRegistries.SPEC_TYPE_REGISTRY, SPEC_DATA, "spec", SpecData.EMPTY);
+
+        dirty = true; // Mark data as dirty to inform clients of changes
     }
 
     private static <T> void loadData(final Map<ResourceLocation, JsonObject> data, final Codec<T> codec, final Registrar<?> registry,
@@ -148,6 +157,76 @@ public class AttackerDataLoader {
                 JCraft.LOGGER.warn("No {} data found for {} type {}. Using default data.", kind, kind, id);
                 map.put(id, fallback); // Use default empty data
             }
+        }
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static void writeToBuffer(FriendlyByteBuf buf) {
+        List<Map.Entry<ResourceLocation, CompoundTag>> standData = STAND_DATA.entrySet().stream()
+                .map(entry -> Map.entry(entry.getKey(),
+                        StandData.CODEC.encodeStart(NbtOps.INSTANCE, entry.getValue())))
+                .peek(e -> {
+                    if (e.getValue().error().isPresent()) {
+                        JCraft.LOGGER.error("Failed to encode StandData for {}: {}",
+                                e.getKey(), e.getValue().error().get().message());
+                    }
+                })
+                .filter(e -> e.getValue().result().isPresent())
+                .map(e -> Map.entry(e.getKey(), (CompoundTag) e.getValue().result().get()))
+                .toList();
+
+        List<Map.Entry<ResourceLocation, CompoundTag>> specData = SPEC_DATA.entrySet().stream()
+                .map(entry -> Map.entry(entry.getKey(),
+                        SpecData.CODEC.encodeStart(NbtOps.INSTANCE, entry.getValue())))
+                .peek(e -> {
+                    if (e.getValue().error().isPresent()) {
+                        JCraft.LOGGER.error("Failed to encode SpecData for {}: {}",
+                                e.getKey(), e.getValue().error().get().message());
+                    }
+                })
+                .filter(e -> e.getValue().result().isPresent())
+                .map(e -> Map.entry(e.getKey(), (CompoundTag) e.getValue().result().get()))
+                .toList();
+
+        buf.writeVarInt(standData.size());
+        for (Map.Entry<ResourceLocation, CompoundTag> entry : standData) {
+            buf.writeResourceLocation(entry.getKey());
+            buf.writeNbt(entry.getValue());
+        }
+
+        buf.writeVarInt(specData.size());
+        for (Map.Entry<ResourceLocation, CompoundTag> entry : specData) {
+            buf.writeResourceLocation(entry.getKey());
+            buf.writeNbt(entry.getValue());
+        }
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static void readFromBuffer(FriendlyByteBuf buf) {
+        int standDataSize = buf.readVarInt();
+        for (int i = 0; i < standDataSize; i++) {
+            ResourceLocation id = buf.readResourceLocation();
+            CompoundTag data = buf.readNbt();
+            DataResult<StandData> result = StandData.CODEC.parse(NbtOps.INSTANCE, data);
+            if (result.error().isPresent()) {
+                JCraft.LOGGER.error("Failed to decode StandData for {}: {}",
+                        id, result.error().get().message());
+                continue;
+            }
+            STAND_DATA.put(id, result.result().get());
+        }
+
+        int specDataSize = buf.readVarInt();
+        for (int i = 0; i < specDataSize; i++) {
+            ResourceLocation id = buf.readResourceLocation();
+            CompoundTag data = buf.readNbt();
+            DataResult<SpecData> result = SpecData.CODEC.parse(NbtOps.INSTANCE, data);
+            if (result.error().isPresent()) {
+                JCraft.LOGGER.error("Failed to decode SpecData for {}: {}",
+                        id, result.error().get().message());
+                continue;
+            }
+            SPEC_DATA.put(id, result.result().get());
         }
     }
 }
