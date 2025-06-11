@@ -10,12 +10,14 @@ import net.arna.jcraft.registry.JBlockRegistry;
 import net.arna.jcraft.registry.JEntityTypeRegistry;
 import net.arna.jcraft.registry.JItemRegistry;
 import net.arna.jcraft.registry.JStandTypeRegistry;
+import net.arna.jcraft.registry.JTagRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -189,7 +191,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         final Advancement obtainBloodBottle = Advancement.Builder.advancement()
                 .display(JItemRegistry.BLOOD_BOTTLE.get(),
                         Component.literal("Not Kool-Aid"),
-                        Component.literal("Obtain a blood bottle"),
+                        Component.literal("Obtain a Blood Bottle"),
                         null,
                         FrameType.TASK,
                         true,
@@ -199,6 +201,20 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("has_bottle", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.BLOOD_BOTTLE.get()))
                 .build(JCraft.id("obtain_blood_bottle"));
         consumer.accept(obtainBloodBottle);
+        // obtain any cosplay
+        final Advancement obtainCosplay = Advancement.Builder.advancement()
+                .display(JItemRegistry.DIO_CAPE.get(),
+                        Component.literal("Bizarre Outfit"),
+                        Component.literal("Obtain any cosplay piece"),
+                        null,
+                        FrameType.GOAL,
+                        true,
+                        false,
+                        false)
+                .parent(obtainMeteoriteIronOre)
+                .addCriterion("has_cosplay", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(JTagRegistry.COSPLAY).build()))
+                .build(JCraft.id("obtain_cosplay"));
+        consumer.accept(obtainCosplay);
         // obtain Jotaro outfit
         final Advancement obtainJotaroOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOTARO_CAP.get(),
@@ -207,9 +223,9 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         null,
                         FrameType.CHALLENGE,
                         true,
-                        false,
+                        true,
                         false)
-                .parent(obtainMeteoriteIronOre)
+                .parent(obtainCosplay)
                 .addCriterion("has_jotaro_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_CAP.get()))
                 .addCriterion("has_jotaro_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_JACKET.get()))
                 .addCriterion("has_jotaro_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_PANTS.get()))
@@ -225,9 +241,9 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         null,
                         FrameType.CHALLENGE,
                         true,
-                        false,
+                        true,
                         false)
-                .parent(obtainMeteoriteIronOre)
+                .parent(obtainCosplay)
                 .addCriterion("has_johnny_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOHNNY_CAP.get()))
                 .addCriterion("has_johnny_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOHNNY_JACKET.get()))
                 .addCriterion("has_johnny_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOHNNY_PANTS.get()))
@@ -243,9 +259,9 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         null,
                         FrameType.CHALLENGE,
                         true,
-                        false,
+                        true,
                         false)
-                .parent(obtainMeteoriteIronOre)
+                .parent(obtainCosplay)
                 .addCriterion("has_dio_headband", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_HEADBAND.get()))
                 .addCriterion("has_dio_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_JACKET.get()))
                 .addCriterion("has_dio_cape", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_CAPE.get()))

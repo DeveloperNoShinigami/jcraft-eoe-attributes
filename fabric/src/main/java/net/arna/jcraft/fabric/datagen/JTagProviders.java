@@ -159,6 +159,21 @@ public class JTagProviders {
             sandBlocks.add(Items.CUT_RED_SANDSTONE);
             sandBlocks.add(Items.CUT_RED_SANDSTONE_SLAB);
 
+            final var cosplay = getOrCreateTagBuilder(JTagRegistry.COSPLAY);
+            cosplay.add(JItemRegistry.JOTARO_CAP.get());
+            cosplay.add(JItemRegistry.JOTARO_JACKET.get());
+            cosplay.add(JItemRegistry.JOTARO_PANTS.get());
+            cosplay.add(JItemRegistry.JOTARO_BOOTS.get());
+            cosplay.add(JItemRegistry.DIO_HEADBAND.get());
+            cosplay.add(JItemRegistry.DIO_CAPE.get());
+            cosplay.add(JItemRegistry.DIO_JACKET.get());
+            cosplay.add(JItemRegistry.DIO_PANTS.get());
+            cosplay.add(JItemRegistry.DIO_BOOTS.get());
+            cosplay.add(JItemRegistry.JOHNNY_CAP.get());
+            cosplay.add(JItemRegistry.JOHNNY_JACKET.get());
+            cosplay.add(JItemRegistry.JOHNNY_PANTS.get());
+            cosplay.add(JItemRegistry.JOHNNY_BOOTS.get());
+
             final var blindsOnImpact = getOrCreateTagBuilder(JTagRegistry.BLINDS_ON_IMPACT);
             blindsOnImpact.add(Items.PACKED_MUD);
             blindsOnImpact.addTag(JTagRegistry.SAND_BLOCKS);
