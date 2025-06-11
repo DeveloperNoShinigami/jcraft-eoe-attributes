@@ -75,6 +75,9 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                             
                                 -the protein shake (sets up mixups)
                                 Light>Barrage>Leg Crusher>Charged Spew"""))
+                    .skinName(Component.literal("Mamba"))
+                    .skinName(Component.literal("Peppermint"))
+                    .skinName(Component.literal("Radioactive"))
                     .build())
             .summonData(SummonData.of(JSoundRegistry.WS_SUMMON))
             .build();
