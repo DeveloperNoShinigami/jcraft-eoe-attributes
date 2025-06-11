@@ -1,6 +1,7 @@
 package net.arna.jcraft.api.stand;
 
 import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.common.data.AttackerDataLoader;
 import net.arna.jcraft.registry.JStandTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -108,5 +109,14 @@ public class StandTypeUtil {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Gets the stand data with the given id. Used for stands that have multiple.
+     * (I.e. a different StandData based on the stand's state, see
+     * {@link net.arna.jcraft.common.entity.stand.SilverChariotEntity Silver Chariot})
+     */
+    public static StandData getStandData(final ResourceLocation id) {
+        return AttackerDataLoader.getStandData(id);
     }
 }
