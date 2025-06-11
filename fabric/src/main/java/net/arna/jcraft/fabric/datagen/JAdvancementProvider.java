@@ -217,6 +217,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_jotaro_outfit"));
         consumer.accept(obtainJotaroOutfit);
+        // obtain Johnny outfit
+        final Advancement obtainJohnnyOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.JOHNNY_CAP.get(),
+                        Component.literal("No Wavering"),
+                        Component.literal("Obtain all of Johnny's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        false,
+                        false)
+                .parent(obtainMeteoriteIronOre)
+                .addCriterion("has_johnny_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOHNNY_CAP.get()))
+                .addCriterion("has_johnny_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOHNNY_JACKET.get()))
+                .addCriterion("has_johnny_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOHNNY_PANTS.get()))
+                .addCriterion("has_johnny_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOHNNY_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_johnny_outfit"));
+        consumer.accept(obtainJohnnyOutfit);
         // obtain Dio outfit
         final Advancement obtainDioOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIO_HEADBAND.get(),

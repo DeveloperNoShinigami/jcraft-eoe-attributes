@@ -52,6 +52,10 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.JOTARO_CAP.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.JOTARO_JACKET.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.JOTARO_PANTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.JOHNNY_BOOTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.JOHNNY_CAP.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.JOHNNY_JACKET.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.JOHNNY_PANTS.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.KARS_HEADWRAP.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.KNIFE.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(JItemRegistry.SCALPEL.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
