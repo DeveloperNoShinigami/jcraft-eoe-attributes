@@ -369,7 +369,7 @@ public class JServerEvents {
             AttributeInstance followRange = mob.getAttribute(Attributes.FOLLOW_RANGE);
             if (followRange != null) {
                 followRange.setBaseValue(Mth.clamp(
-                        128 * entity.level().getCurrentDifficultyAt(entity.blockPosition()).getEffectiveDifficulty() / 10d,
+                        128 * entity.level().getCurrentDifficultyAt(entity.blockPosition()).getEffectiveDifficulty() / 6.75,
                         10d, 128d));
             }
             AttributeInstance movementSpeed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
