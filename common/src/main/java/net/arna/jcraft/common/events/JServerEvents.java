@@ -252,8 +252,10 @@ public class JServerEvents {
         entitiesOfInterest.clear();
         entitiesOfInterest.putAll(newItemsOfInterest);
 
-        if (AttackerDataLoader.isDirty())
+        if (AttackerDataLoader.isDirty()) {
             AttackerDataPacket.send(server.getPlayerList().getPlayers());
+            AttackerDataLoader.setDirty(false);
+        }
     }
 
     private static void dimensionalExplosion(ServerLevel serverWorld, boolean griefing, Entity one) {

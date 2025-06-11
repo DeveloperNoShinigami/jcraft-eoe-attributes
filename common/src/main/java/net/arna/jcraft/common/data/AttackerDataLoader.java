@@ -7,6 +7,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import dev.architectury.registry.registries.Registrar;
 import lombok.Getter;
+import lombok.Setter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.spec.SpecData;
@@ -34,7 +35,7 @@ import java.util.concurrent.Executor;
 public class AttackerDataLoader {
     private static final Map<ResourceLocation, StandData> STAND_DATA = new HashMap<>();
     private static final Map<ResourceLocation, SpecData> SPEC_DATA = new HashMap<>();
-    @Getter // used in server tick to inform clients of changes
+    @Getter @Setter // used in server tick to inform clients of changes
     private static boolean dirty = false;
 
     /**
