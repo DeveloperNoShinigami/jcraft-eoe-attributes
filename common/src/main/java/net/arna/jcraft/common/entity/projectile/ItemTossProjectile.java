@@ -132,6 +132,16 @@ public class ItemTossProjectile extends AbstractArrow {
         }
     }
 
+    protected boolean maybeExplode() {
+        if (!level().isClientSide && getItem().is(JTagRegistry.EXPLODES_ON_IMPACT)) {
+            final boolean grief = level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
+            level().explode(this, getX(), getY(), getZ(), 1, grief, Level.ExplosionInteraction.MOB);
+            discard();
+            return true;
+        }
+        return false;
+    }
+
     @Override
     protected void onHit(HitResult result) {
         final HitResult.Type type = result.getType();
@@ -140,11 +150,6 @@ public class ItemTossProjectile extends AbstractArrow {
         } else if (type == HitResult.Type.BLOCK) {
             BlockHitResult blockHitResult = (BlockHitResult)result;
             this.onHitBlock(blockHitResult);
-        }
-        if (!level().isClientSide && getItem().is(JTagRegistry.EXPLODES_ON_IMPACT)) {
-            final boolean grief = level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
-            level().explode(this, getX(), getY(), getZ(), 1, grief, Level.ExplosionInteraction.MOB);
-            discard();
         }
     }
 
@@ -191,6 +196,10 @@ public class ItemTossProjectile extends AbstractArrow {
 //            if (entity2 != null && livingEntity != entity2 && livingEntity instanceof Player && entity2 instanceof ServerPlayer && !this.isSilent()) {
 //                ((ServerPlayer)entity2).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
 //            }
+        }
+
+        if (maybeExplode()) {
+            return;
         }
 
         // force stand on target
@@ -277,6 +286,10 @@ public class ItemTossProjectile extends AbstractArrow {
         double hardness = hitBlock.getBlock().defaultDestroyTime();
         if (hardness < 0d) { // unbreakable
             hardness = Double.MAX_VALUE;
+        }
+
+        if (maybeExplode()) {
+            return;
         }
 
         // ricochet
