@@ -38,7 +38,7 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(Items.SOUL_SOIL, JItemRegistry.SOUL_BLOCK.get());
         });
         // functional blocks
-        CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.NATURAL_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
+        CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.FUNCTIONAL_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.CANDLE, JItemRegistry.COFFIN_BLOCK.get());
         });
         // tools
