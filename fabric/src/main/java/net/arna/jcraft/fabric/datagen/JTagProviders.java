@@ -185,6 +185,13 @@ public class JTagProviders {
             blindsOnImpact.add(JItemRegistry.DIO_CAPE.getId());
             blindsOnImpact.add(JItemRegistry.KARS_HEADWRAP.getId());
 
+            final var slowsOnImpact = getOrCreateTagBuilder(JTagRegistry.SLOWS_ON_IMPACT);
+            slowsOnImpact.add(Items.STICK);
+            slowsOnImpact.add(Items.CHAIN);
+            slowsOnImpact.add(Items.COBWEB);
+            slowsOnImpact.add(Items.BONE);
+            slowsOnImpact.add(Items.BLAZE_ROD);
+
             final var burnsOnImpact = getOrCreateTagBuilder(JTagRegistry.BURNS_ON_IMPACT);
             burnsOnImpact.add(Items.MAGMA_BLOCK);
             burnsOnImpact.add(Items.CAMPFIRE);
@@ -212,6 +219,7 @@ public class JTagProviders {
             heavyImpact.add(Items.RAW_IRON_BLOCK);
             heavyImpact.add(Items.RAW_GOLD_BLOCK);
             heavyImpact.add(Items.BLAST_FURNACE);
+            heavyImpact.add(Items.CAULDRON);
             heavyImpact.add(Items.ANVIL);
             heavyImpact.add(Items.CHIPPED_ANVIL);
             heavyImpact.add(Items.DAMAGED_ANVIL);
@@ -221,6 +229,14 @@ public class JTagProviders {
             heavyImpact.add(JItemRegistry.ROAD_ROLLER.get());
 
             final var brittle = getOrCreateTagBuilder(JTagRegistry.BRITTLE);
+            brittle.add(Items.ICE);
+            brittle.add(Items.PACKED_ICE);
+            brittle.add(Items.BLUE_ICE);
+            brittle.add(Items.SMALL_AMETHYST_BUD);
+            brittle.add(Items.MEDIUM_AMETHYST_BUD);
+            brittle.add(Items.LARGE_AMETHYST_BUD);
+            brittle.add(Items.AMETHYST_CLUSTER);
+            brittle.add(Items.GLOWSTONE);
             brittle.add(Items.GLASS);
             brittle.add(Items.TINTED_GLASS);
             brittle.add(Items.WHITE_STAINED_GLASS);

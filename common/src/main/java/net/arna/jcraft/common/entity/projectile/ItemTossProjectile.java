@@ -124,6 +124,9 @@ public class ItemTossProjectile extends AbstractArrow {
         if (getItem().is(JTagRegistry.BLINDS_ON_IMPACT)) {
             target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40));
         }
+        if (getItem().is(JTagRegistry.SLOWS_ON_IMPACT)) {
+            target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60));
+        }
         if (getItem().is(JTagRegistry.POISONS_ON_IMPACT)) {
             target.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
         }
