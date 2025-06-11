@@ -8,6 +8,7 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.api.stand.SummonData;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.conditions.HoldingAnubisCondition;
@@ -64,6 +65,33 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
             SilverChariotEntity::registerDefaultMoves, State.class);
     public static final MoveSet<SilverChariotEntity, State> POSSESSED_MOVE_SET = MoveSetManager.create(JStandTypeRegistry.SILVER_CHARIOT,
             "possessed", SilverChariotEntity::registerPossessedMoves, State.class);
+
+    public static final StandData DATA = StandData.builder()
+            .idleRotation(225f)
+            .info(StandInfo.builder()
+                    .name(Component.translatable("entity.jcraft.silverchariot"))
+                    .proCount(4)
+                    .conCount(3)
+                    .freeSpace(Component.literal("""
+                        BNBs:
+                            (Armor ON) Light>Barrage>Light>Cleave>Spinning Blade>Shooting Star>Light
+                            (Armor ON) Shooting Star>Light>Barrage>Impaling Thrust
+                            (Armor OFF) Shooting Star>Light>Spinning Blade>Barrage>Light>Cleave>Impaling Thrust
+                            (Armor OFF) Light>Spinning Blade>Barrage>Shooting Star>Cleave>Light
+                            (Armor OFF) Impaling Thrust>dash>Barrage>...
+                        """))
+                    .skinName(Component.literal("Gold Chariot"))
+                    .skinName(Component.literal("OVA"))
+                    .skinName(Component.literal("Vento"))
+                    .build())
+            .summonData(SummonData.of(JSoundRegistry.SC_SUMMON))
+            .build();
+
+    public static final StandData POSSESSED_DATA = DATA.withInfo(info ->
+            info.freeSpace(Component.literal("""
+                    BNBs:
+                        (Light>)Charge~Barrage>Light>Spinning Blade>Light~Light
+                        (Light>)Charge~Barrage>God of Death""")));
 
     public static final LastShotAttack LAST_SHOT = new LastShotAttack(140, 12, 15, 1f)
             .withAnim(State.LAST_SHOT)
@@ -235,33 +263,6 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         HAS_RAPIER = SynchedEntityData.defineId(SilverChariotEntity.class, EntityDataSerializers.BOOLEAN);
     }
 
-    public static final StandData DATA = StandData.builder()
-            .idleRotation(225f)
-            .info(StandInfo.builder()
-                    .name(Component.translatable("entity.jcraft.silverchariot"))
-                    .proCount(4)
-                    .conCount(3)
-                    .freeSpace(Component.literal("""
-                        BNBs:
-                            (Armor ON) Light>Barrage>Light>Cleave>Spinning Blade>Shooting Star>Light
-                            (Armor ON) Shooting Star>Light>Barrage>Impaling Thrust
-                            (Armor OFF) Shooting Star>Light>Spinning Blade>Barrage>Light>Cleave>Impaling Thrust
-                            (Armor OFF) Light>Spinning Blade>Barrage>Shooting Star>Cleave>Light
-                            (Armor OFF) Impaling Thrust>dash>Barrage>...
-                        """))
-                    .skinName(Component.literal("Gold Chariot"))
-                    .skinName(Component.literal("OVA"))
-                    .skinName(Component.literal("Vento"))
-                    .build())
-            .summonData(SummonData.of(JSoundRegistry.SC_SUMMON))
-            .build();
-
-    public static final StandData POSSESSED_DATA = DATA.withInfo(info ->
-            info.freeSpace(Component.literal("""
-                    BNBs:
-                        (Light>)Charge~Barrage>Light>Spinning Blade>Light~Light
-                        (Light>)Charge~Barrage>God of Death""")));
-
     public SilverChariotEntity(Level worldIn) {
         super(JStandTypeRegistry.SILVER_CHARIOT.get(), worldIn);
 
@@ -289,6 +290,15 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         super.switchMoveSet(name);
         getMoveMap().findMoveByType(SCChargeAttack.class)
                 .ifPresent(m -> m.setLookDir(lookDir));
+    }
+
+    @Override
+    public StandData getStandData() {
+        if (isPossessed()) {
+            return StandTypeUtil.getStandData(new ResourceLocation("jcraft:silver_chariot_possessed"));
+        }
+
+        return super.getStandData();
     }
 
     @Override
