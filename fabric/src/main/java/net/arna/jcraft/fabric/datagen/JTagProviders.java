@@ -218,6 +218,7 @@ public class JTagProviders {
             heavyImpact.add(Items.OBSIDIAN);
             heavyImpact.add(Items.CRYING_OBSIDIAN);
             heavyImpact.add(Items.RESPAWN_ANCHOR);
+            heavyImpact.add(JItemRegistry.ROAD_ROLLER.get());
 
             final var brittle = getOrCreateTagBuilder(JTagRegistry.BRITTLE);
             brittle.add(Items.GLASS);
