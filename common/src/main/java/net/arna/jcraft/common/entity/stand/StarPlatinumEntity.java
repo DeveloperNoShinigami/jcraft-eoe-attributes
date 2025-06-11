@@ -203,7 +203,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             14, 1f, 1.5f)
             .withCrouchingVariant(STANDBY_ON)
             .withInfo(
-                    Component.literal("jcraft.starplatinum.util"),
+                    Component.translatable("jcraft.starplatinum.util"),
                     Component.literal("Jumps in looked direction with slight upward bias, you must stay on the ground until Star Platinum jumps.")
             );
     // TODO add move info x2
@@ -214,7 +214,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
             .withFollowup(TOSS);
     public static final InhaleAttack INHALE = new InhaleAttack(800, 5, 5, 1f, 80)
             .withInfo(
-                    Component.literal("jcraft.starplatinum.ult"),
+                    Component.translatable("jcraft.starplatinum.ult"),
                     Component.literal("Vacuums looked entities for 4 seconds.")
             );
     private static final EntityDataAccessor<Integer> INHALE_TIME = SynchedEntityData.defineId(StarPlatinumEntity.class, EntityDataSerializers.INT);
