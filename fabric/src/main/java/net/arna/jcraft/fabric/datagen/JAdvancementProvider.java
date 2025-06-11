@@ -107,7 +107,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         true,
                         false)
-                .parent(obtainStandDisc);
+                .parent(obtainStandDisc)
+                .rewards(AdvancementRewards.Builder.experience(1395));
         for (final RegistrySupplier<StandType> type : obtainables) {
             obtainAllStandsBuilder.addCriterion("has_" + type.getId().getPath(), ObtainedStandTrigger.TriggerInstance.obtainedStand(type.get()));
         }
