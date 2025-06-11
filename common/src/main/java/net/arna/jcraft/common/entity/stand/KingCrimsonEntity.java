@@ -49,6 +49,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/King_Crimson">King Crimson</a>.
@@ -88,7 +89,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                     .build())
             .summonData(SummonData.of(JSoundRegistry.KC_SUMMON))
             .build();
-    public static final IPoseModifier POSE = PoseModifierGroup.builder()
+    public static final Supplier<IPoseModifier> POSE = () -> PoseModifierGroup.builder()
             .condition(ModifierCondition.USER_NOT_MOVING)
             .modifier(PoseModifiers.parse("body.yRot += 30deg"))
             .modifier(PoseModifiers.parse("""
