@@ -5,6 +5,7 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -295,7 +296,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     @Override
     public StandData getStandData() {
         if (isPossessed()) {
-            return StandTypeUtil.getStandData(new ResourceLocation("jcraft:silver_chariot_possessed"));
+            return StandTypeUtil.getStandData(JCraft.id("silver_chariot_possessed"));
         }
 
         return super.getStandData();
