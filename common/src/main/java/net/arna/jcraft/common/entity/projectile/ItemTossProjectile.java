@@ -451,6 +451,15 @@ public class ItemTossProjectile extends AbstractArrow {
      * Mass of the projectile.
      */
     public double mass() {
+        if (getItem().is(JTagRegistry.VERY_HEAVY)) {
+            return 50d;
+        }
+        if (getItem().is(JTagRegistry.HEAVY)) {
+            return 10d;
+        }
+        if (getItem().is(JTagRegistry.LIGHT)) {
+            return 0.1;
+        }
         return 1d;
     }
 }
