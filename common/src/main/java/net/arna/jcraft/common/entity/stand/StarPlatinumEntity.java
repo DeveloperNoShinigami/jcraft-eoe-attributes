@@ -243,7 +243,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
         moves.register(MoveClass.UTILITY, JUMP, State.JUMP).withCrouchingVariant(State.IDLE);
 
         moves.register(MoveClass.STANDBY_OFF, STANDBY_OFF, State.IDLE);
-        moves.register(MoveClass.TOSS, TOSS_CHARGE, State.IDLE).withFollowup(State.IDLE); // TODO add throwing states
+        moves.register(MoveClass.TOSS, TOSS_CHARGE, State.ITEM_TOSS_CHARGE).withFollowup(State.ITEM_TOSS);
     }
 
     @Override
@@ -289,7 +289,9 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
         GRAB(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.grab"))),
         GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.grabhit"))),
         UPPERCUT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.uppercut"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.light_followup")));
+        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.light_followup"))),
+        ITEM_TOSS_CHARGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.itemthrow_charge"))),
+        ITEM_TOSS(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.starplatinum.itemthrow")));
 
         private final BiConsumer<StarPlatinumEntity, AnimationState<StarPlatinumEntity>> animator;
 
