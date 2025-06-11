@@ -3,6 +3,8 @@ plugins {
     id 'architectury-plugin' version '3.4-SNAPSHOT'
     id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
     id 'io.freefair.lombok' version '8.13.1'
+    id 'maven-publish'
+    id 'signing'
 }
 
 architectury {
@@ -20,7 +22,8 @@ subprojects {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
     apply plugin: 'maven-publish'
-    apply plugin: "com.github.johnrengelman.shadow"
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'signing'
 
     base {
         // Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
@@ -85,6 +88,7 @@ subprojects {
     // Configure Maven publishing.
     publishing {
         publications {
+            //noinspection GroovyAssignabilityCheck
             mavenJava(MavenPublication) {
                 artifactId = base.archivesName.get()
                 from components.java
@@ -93,7 +97,22 @@ subprojects {
 
         // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
         repositories {
+            maven {
+                name = 'planetMaven'
+                url = 'https://maven.planetteamspeak.dev/releases'
+                allowInsecureProtocol = true
+                credentials(org.gradle.api.credentials.PasswordCredentials)
+                authentication {
+                    //noinspection GroovyAssignabilityCheck
+                    basic(BasicAuthentication)
+                }
+            }
+
             mavenLocal()
         }
+    }
+
+    signing {
+        sign publishing.publications.mavenJava
     }
 }
