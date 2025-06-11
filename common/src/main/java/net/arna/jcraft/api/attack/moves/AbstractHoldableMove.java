@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.attack.core.data.BaseMoveExtras;
 import net.arna.jcraft.api.attack.IAttacker;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
@@ -41,12 +42,22 @@ public abstract class AbstractHoldableMove<T extends AbstractHoldableMove<T, A>,
         chargeTime = 0;
     }
 
+    /**
+     * Checks if the attacker is still using the given move, taking into account if the attacker is a stand in standby mode.
+     */
+    private boolean sameMove(final A attacker, final MoveInputType type) {
+        if (attacker instanceof final StandEntity<?,?> stand) {
+            return type.getMoveClass(stand.isStandby()) == getMoveClass();
+        }
+        return type.getMoveClass() == getMoveClass();
+    }
+
     @Override
     public void activeTick(final A attacker, final int moveStun) {
         super.activeTick(attacker, moveStun);
         final boolean charged = moveStun <= getDuration() - minimumCharge;
         chargeTime++;
-        if (moveStun == 1 || (charged && (!attacker.isHolding() || attacker.getHoldingType().getMoveClass() != getMoveClass()))) {
+        if (moveStun == 1 || (charged && (!attacker.isHolding() || !sameMove(attacker, attacker.getHoldingType())))) {
             followUp(attacker);
         }
     }
@@ -58,7 +69,7 @@ public abstract class AbstractHoldableMove<T extends AbstractHoldableMove<T, A>,
 
     @Override
     public void onUserMoveInput(final A attacker, final MoveInputType type, final boolean pressed, final boolean moveInitiated) {
-        if (!pressed && moveInitiated && type.getMoveClass() == getMoveClass()) {
+        if (!pressed && moveInitiated && sameMove(attacker, type)) {
             onRelease(attacker);
         }
     }
