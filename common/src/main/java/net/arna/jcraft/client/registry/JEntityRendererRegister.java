@@ -9,7 +9,7 @@ import net.arna.jcraft.client.renderer.entity.npc.*;
 import net.arna.jcraft.client.renderer.entity.projectiles.*;
 import net.arna.jcraft.client.renderer.entity.stands.*;
 import net.arna.jcraft.client.renderer.entity.vehicles.RoadRollerRenderer;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRenderer;

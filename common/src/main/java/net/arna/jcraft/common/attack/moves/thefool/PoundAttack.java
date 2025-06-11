@@ -7,7 +7,7 @@ import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
-import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import java.util.Set;

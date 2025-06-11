@@ -7,7 +7,7 @@ import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMultiHitAttack;
 import net.arna.jcraft.common.entity.stand.TheFoolEntity;
-import net.arna.jcraft.registry.JStatusRegistry;
+import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;

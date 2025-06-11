@@ -12,7 +12,7 @@ import net.arna.jcraft.common.entity.stand.StarPlatinumEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;

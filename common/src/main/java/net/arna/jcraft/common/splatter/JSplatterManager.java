@@ -4,7 +4,7 @@ import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.Pair;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.registry.JPacketRegistry;
+import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;

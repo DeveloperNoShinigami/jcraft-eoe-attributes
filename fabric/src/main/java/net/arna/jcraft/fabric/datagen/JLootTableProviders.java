@@ -1,9 +1,9 @@
 package net.arna.jcraft.fabric.datagen;
 
 import com.google.common.collect.Maps;
-import net.arna.jcraft.registry.JBlockRegistry;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JBlockRegistry;
+import net.arna.jcraft.api.registry.JEntityTypeRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;

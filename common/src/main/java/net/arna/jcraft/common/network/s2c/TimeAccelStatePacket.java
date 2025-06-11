@@ -10,7 +10,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lombok.Data;
 import lombok.NonNull;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
-import net.arna.jcraft.registry.JPacketRegistry;
+import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.fabricmc.api.EnvType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;

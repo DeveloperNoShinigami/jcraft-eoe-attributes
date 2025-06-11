@@ -12,7 +12,7 @@ import net.arna.jcraft.common.gravity.util.Gravity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JStatusRegistry;
+import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;

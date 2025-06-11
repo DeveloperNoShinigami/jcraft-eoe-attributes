@@ -3,7 +3,7 @@ package net.arna.jcraft.fabric.datagen;
 import lombok.Getter;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.util.EvolutionItemHandler;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 import net.minecraft.data.PackOutput;
@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static net.arna.jcraft.registry.JStandTypeRegistry.*;
+import static net.arna.jcraft.api.registry.JStandTypeRegistry.*;
 
 @Getter
 public class JEvolutionProvider extends FabricCodecDataProvider<EvolutionItemHandler.Evolution> {

@@ -6,7 +6,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.config.ConfigOption;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.registry.JPacketRegistry;
+import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

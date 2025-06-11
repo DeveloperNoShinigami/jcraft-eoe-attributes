@@ -1,4 +1,4 @@
-package net.arna.jcraft.registry;
+package net.arna.jcraft.api.registry;
 
 import dev.architectury.registry.level.entity.EntityAttributeRegistry;
 import dev.architectury.registry.registries.DeferredRegister;

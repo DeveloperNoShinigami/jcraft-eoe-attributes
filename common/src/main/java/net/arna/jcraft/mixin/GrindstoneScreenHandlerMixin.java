@@ -1,7 +1,7 @@
 package net.arna.jcraft.mixin;
 
 import net.arna.jcraft.common.item.StandDiscItem;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.GrindstoneMenu;

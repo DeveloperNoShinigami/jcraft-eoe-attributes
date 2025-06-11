@@ -11,7 +11,7 @@ import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;

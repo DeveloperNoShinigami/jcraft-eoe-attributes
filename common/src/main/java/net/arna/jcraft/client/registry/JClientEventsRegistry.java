@@ -7,7 +7,7 @@ import dev.architectury.registry.menu.MenuRegistry;
 import net.arna.jcraft.client.events.JClientEvents;
 import net.arna.jcraft.client.gui.screen.MainMenuScreen;
 import net.arna.jcraft.client.rendering.skybox.SkyBoxManager;
-import net.arna.jcraft.registry.JMenuRegistry;
+import net.arna.jcraft.api.registry.JMenuRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

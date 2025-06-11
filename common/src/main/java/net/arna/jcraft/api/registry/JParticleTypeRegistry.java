@@ -1,4 +1,4 @@
-package net.arna.jcraft.registry;
+package net.arna.jcraft.api.registry;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.particles.SimpleParticleType;

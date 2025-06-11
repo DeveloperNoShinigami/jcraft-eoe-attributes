@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.model.entity.stand;
 
 import net.arna.jcraft.common.entity.stand.HGEntity;
-import net.arna.jcraft.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 
 /**
  * The {@link StandEntityModel} for {@link HGEntity}.

@@ -1,7 +1,7 @@
 package net.arna.jcraft.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.arna.jcraft.registry.JServerReloadListenerRegistry;
+import net.arna.jcraft.api.registry.JServerReloadListenerRegistry;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,4 +1,4 @@
-package net.arna.jcraft.registry;
+package net.arna.jcraft.api.registry;
 
 import net.arna.jcraft.JCraft;
 import net.minecraft.resources.ResourceLocation;

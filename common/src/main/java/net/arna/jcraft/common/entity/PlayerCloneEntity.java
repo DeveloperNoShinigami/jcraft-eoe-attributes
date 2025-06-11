@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import lombok.NonNull;
 import net.arna.jcraft.common.entity.ai.goal.CloneAttackGoal;
 import net.arna.jcraft.common.util.IOwnable;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
+import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;

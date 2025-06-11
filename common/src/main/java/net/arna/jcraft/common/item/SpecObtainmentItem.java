@@ -5,7 +5,7 @@ import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JStatRegistry;
+import net.arna.jcraft.api.registry.JStatRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;

@@ -2,8 +2,8 @@ package net.arna.jcraft.common.block;
 
 import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
-import net.arna.jcraft.registry.JBlockEntityTypeRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JBlockEntityTypeRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;

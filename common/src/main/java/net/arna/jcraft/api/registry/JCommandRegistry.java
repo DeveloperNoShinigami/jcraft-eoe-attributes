@@ -1,4 +1,4 @@
-package net.arna.jcraft.registry;
+package net.arna.jcraft.api.registry;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.arna.jcraft.common.command.*;
@@ -9,6 +9,7 @@ import net.minecraft.commands.Commands;
 public interface JCommandRegistry {
     static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess, Commands.CommandSelection environment) {
         InduceAttackCommand.register(dispatcher);
+        //noinspection removal
         AboutStandCommand.register(dispatcher);
         AboutSpecCommand.register(dispatcher);
         SetStandCommand.register(dispatcher);

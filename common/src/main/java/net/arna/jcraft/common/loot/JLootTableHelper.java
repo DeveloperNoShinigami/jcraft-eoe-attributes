@@ -3,7 +3,7 @@ package net.arna.jcraft.common.loot;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import net.arna.jcraft.common.enchantments.CinderellasKissEnchantment;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootPool;

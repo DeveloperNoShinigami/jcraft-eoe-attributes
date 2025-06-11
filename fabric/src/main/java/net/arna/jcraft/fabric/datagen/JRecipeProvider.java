@@ -1,8 +1,8 @@
 package net.arna.jcraft.fabric.datagen;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.registry.JBlockRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JBlockRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;

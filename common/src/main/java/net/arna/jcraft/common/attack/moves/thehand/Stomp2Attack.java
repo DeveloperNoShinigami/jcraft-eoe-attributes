@@ -8,7 +8,7 @@ import net.arna.jcraft.api.attack.moves.AbstractUppercutAttack;
 import net.arna.jcraft.common.entity.stand.TheHandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JStatusRegistry;
+import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 

@@ -1,4 +1,4 @@
-package net.arna.jcraft.registry;
+package net.arna.jcraft.api.registry;
 
 import net.arna.jcraft.common.advancements.ObtainedStandTrigger;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -10,5 +10,4 @@ public interface JAdvancementTriggerRegistry {
     static void init() {
         /* empty on purpose */
     }
-
 }

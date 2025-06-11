@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.api.registry.*;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
@@ -34,7 +35,6 @@ import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.*;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
@@ -80,15 +80,15 @@ import org.jetbrains.annotations.Range;
 
 import java.util.*;
 
-import static net.arna.jcraft.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY_TYPE_REGISTRY;
-import static net.arna.jcraft.registry.JBlockRegistry.BLOCK_REGISTRY;
-import static net.arna.jcraft.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
-import static net.arna.jcraft.registry.JItemRegistry.ITEM_REGISTRY;
-import static net.arna.jcraft.registry.JMoveActionTypeRegistry.MOVE_ACTION_TYPE_REGISTRY;
-import static net.arna.jcraft.registry.JMoveConditionTypeRegistry.MOVE_CONDITION_TYPE_REGISTRY;
-import static net.arna.jcraft.registry.JMoveTypeRegistry.MOVE_TYPE_REGISTRY;
-import static net.arna.jcraft.registry.JSpecTypeRegistry.SPEC_TYPE_REGISTRY;
-import static net.arna.jcraft.registry.JStandTypeRegistry.STAND_TYPE_REGISTRY;
+import static net.arna.jcraft.api.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY_TYPE_REGISTRY;
+import static net.arna.jcraft.api.registry.JBlockRegistry.BLOCK_REGISTRY;
+import static net.arna.jcraft.api.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
+import static net.arna.jcraft.api.registry.JItemRegistry.ITEM_REGISTRY;
+import static net.arna.jcraft.api.registry.JMoveActionTypeRegistry.MOVE_ACTION_TYPE_REGISTRY;
+import static net.arna.jcraft.api.registry.JMoveConditionTypeRegistry.MOVE_CONDITION_TYPE_REGISTRY;
+import static net.arna.jcraft.api.registry.JMoveTypeRegistry.MOVE_TYPE_REGISTRY;
+import static net.arna.jcraft.api.registry.JSpecTypeRegistry.SPEC_TYPE_REGISTRY;
+import static net.arna.jcraft.api.registry.JStandTypeRegistry.STAND_TYPE_REGISTRY;
 import static net.minecraft.world.level.GameRules.*;
 
 public final class JCraft {
@@ -178,7 +178,7 @@ public final class JCraft {
 
         JTagRegistry.init();
         JAdvancementTriggerRegistry.init();
-        
+
         JCreativeMenuTabRegistry.init();
         CREATIVE_TAB_REGISTRY.register();
 

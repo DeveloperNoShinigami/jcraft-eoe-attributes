@@ -10,7 +10,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.config.IntOption;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.registry.JStatRegistry;
+import net.arna.jcraft.api.registry.JStatRegistry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.effect.MobEffectInstance;

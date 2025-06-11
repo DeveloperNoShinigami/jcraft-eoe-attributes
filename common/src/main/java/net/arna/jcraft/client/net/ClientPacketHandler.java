@@ -33,7 +33,7 @@ import net.arna.jcraft.common.util.IJExplosion;
 import net.arna.jcraft.common.util.JExplosionModifier;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.registry.JParticleTypeRegistry;
+import net.arna.jcraft.api.registry.JParticleTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -63,7 +63,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-import static net.arna.jcraft.registry.JPacketRegistry.*;
+import static net.arna.jcraft.api.registry.JPacketRegistry.*;
 
 /**
  * Packets sent to players must be sent with the appropriate method;

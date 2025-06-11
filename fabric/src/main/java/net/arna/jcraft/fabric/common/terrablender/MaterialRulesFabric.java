@@ -1,7 +1,7 @@
 package net.arna.jcraft.fabric.common.terrablender;
 
-import net.arna.jcraft.registry.JBiomeRegistry;
-import net.arna.jcraft.registry.JBlockRegistry;
+import net.arna.jcraft.api.registry.JBiomeRegistry;
+import net.arna.jcraft.api.registry.JBlockRegistry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.SurfaceRules;

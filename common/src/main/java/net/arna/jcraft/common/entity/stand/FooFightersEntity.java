@@ -9,7 +9,7 @@ import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;

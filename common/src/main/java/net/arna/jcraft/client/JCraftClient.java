@@ -28,7 +28,7 @@ import net.arna.jcraft.client.util.TrackedKeyBinding;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.MovementInputType;
-import net.arna.jcraft.registry.JParticleTypeRegistry;
+import net.arna.jcraft.api.registry.JParticleTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.KeyMapping;

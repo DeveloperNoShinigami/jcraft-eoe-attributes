@@ -2,7 +2,7 @@ package net.arna.jcraft.common.network.c2s;
 
 import dev.architectury.networking.NetworkManager;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JStatusRegistry;
+import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 

@@ -5,7 +5,7 @@ import io.netty.buffer.Unpooled;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;

@@ -15,7 +15,7 @@ import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.client.renderer.armor.DIOCapeRenderer;
 import net.arna.jcraft.client.renderer.armor.JotaroCoatRenderer;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;

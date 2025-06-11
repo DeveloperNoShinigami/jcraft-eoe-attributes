@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import net.arna.jcraft.api.attack.IAttacker;
 import net.arna.jcraft.api.attack.core.MoveCondition;
 import net.arna.jcraft.api.attack.core.MoveConditionType;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 
 @RequiredArgsConstructor(staticName = "holdingAnubis")
 public class HoldingAnubisCondition extends MoveCondition<HoldingAnubisCondition, IAttacker<?, ?>> {

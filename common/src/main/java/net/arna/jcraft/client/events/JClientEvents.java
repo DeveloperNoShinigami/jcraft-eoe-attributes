@@ -19,7 +19,7 @@ import net.arna.jcraft.common.network.c2s.StandBlockPacket;
 import net.arna.jcraft.common.tickable.Timestops;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JPacketRegistry;
+import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;

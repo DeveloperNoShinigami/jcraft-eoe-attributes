@@ -12,7 +12,7 @@ import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.mixin.ChunkLightProviderAccessor;
 import net.arna.jcraft.mixin.LightStorageAccessor;
 import net.arna.jcraft.mixin.LightingProviderAccessor;
-import net.arna.jcraft.registry.JDimensionRegistry;
+import net.arna.jcraft.api.registry.JDimensionRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;

@@ -1,4 +1,4 @@
-package net.arna.jcraft.registry;
+package net.arna.jcraft.api.registry;
 
 import dev.architectury.event.events.common.*;
 import net.arna.jcraft.common.config.ConfigOption;

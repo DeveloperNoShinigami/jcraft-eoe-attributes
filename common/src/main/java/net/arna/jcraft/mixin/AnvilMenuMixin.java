@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.enchantments.CinderellasKissEnchantment;
 import net.arna.jcraft.common.item.StandDiscItem;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;

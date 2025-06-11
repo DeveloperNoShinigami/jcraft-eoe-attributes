@@ -3,7 +3,7 @@ package net.arna.jcraft.common.tickable;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.item.FVRevolverItem;
 import net.arna.jcraft.common.util.DimensionData;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;

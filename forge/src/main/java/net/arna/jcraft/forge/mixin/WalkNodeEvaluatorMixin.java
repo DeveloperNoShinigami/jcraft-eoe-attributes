@@ -1,6 +1,6 @@
 package net.arna.jcraft.forge.mixin;
 
-import net.arna.jcraft.registry.JBlockRegistry;
+import net.arna.jcraft.api.registry.JBlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;

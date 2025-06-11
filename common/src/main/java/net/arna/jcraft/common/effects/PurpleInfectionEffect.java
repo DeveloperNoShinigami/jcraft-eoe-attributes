@@ -3,7 +3,7 @@ package net.arna.jcraft.common.effects;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;

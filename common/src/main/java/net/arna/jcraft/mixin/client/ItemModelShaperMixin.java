@@ -1,7 +1,7 @@
 package net.arna.jcraft.mixin.client;
 
 import net.arna.jcraft.client.rendering.ModelWithCustomRenderer;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.Item;

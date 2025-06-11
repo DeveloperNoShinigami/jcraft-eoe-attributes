@@ -1,7 +1,7 @@
 package net.arna.jcraft.api.spec;
 
 import net.arna.jcraft.api.JRegistries;
-import net.arna.jcraft.registry.JSpecTypeRegistry;
+import net.arna.jcraft.api.registry.JSpecTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;

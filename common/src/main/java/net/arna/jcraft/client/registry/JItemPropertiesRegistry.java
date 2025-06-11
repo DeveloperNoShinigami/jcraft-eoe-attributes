@@ -1,7 +1,7 @@
 package net.arna.jcraft.client.registry;
 
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.client.renderer.item.ItemProperties;
 
 import static net.arna.jcraft.common.item.BloodBottleItem.MAX_BLOOD;

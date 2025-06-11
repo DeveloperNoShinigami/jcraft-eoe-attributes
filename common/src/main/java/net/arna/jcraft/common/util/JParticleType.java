@@ -2,7 +2,7 @@ package net.arna.jcraft.common.util;
 
 import com.mojang.serialization.Codec;
 import dev.architectury.registry.registries.RegistrySupplier;
-import net.arna.jcraft.registry.JParticleTypeRegistry;
+import net.arna.jcraft.api.registry.JParticleTypeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 

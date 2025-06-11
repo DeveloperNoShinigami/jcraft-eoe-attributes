@@ -1,9 +1,9 @@
 package net.arna.jcraft.fabric.datagen;
 
-import net.arna.jcraft.registry.JBlockRegistry;
-import net.arna.jcraft.registry.JEntityTypeRegistry;
-import net.arna.jcraft.registry.JItemRegistry;
-import net.arna.jcraft.registry.JTagRegistry;
+import net.arna.jcraft.api.registry.JBlockRegistry;
+import net.arna.jcraft.api.registry.JEntityTypeRegistry;
+import net.arna.jcraft.api.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JTagRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;

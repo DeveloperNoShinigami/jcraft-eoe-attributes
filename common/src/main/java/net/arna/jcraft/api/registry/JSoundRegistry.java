@@ -1,4 +1,4 @@
-package net.arna.jcraft.registry;
+package net.arna.jcraft.api.registry;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
@@ -12,7 +12,7 @@ public interface JSoundRegistry {
         var event = SoundEvent.createVariableRangeEvent(JCraft.id(name));
         return SOUNDS.register(event.getLocation().getPath(), () -> event);
     }
-    
+
 
     // Generic
 

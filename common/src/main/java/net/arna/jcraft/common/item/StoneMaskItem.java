@@ -16,7 +16,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.renderer.armor.StoneMaskRenderer;
 import net.arna.jcraft.api.component.player.CommonSpecComponent;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.registry.JSpecTypeRegistry;
+import net.arna.jcraft.api.registry.JSpecTypeRegistry;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;

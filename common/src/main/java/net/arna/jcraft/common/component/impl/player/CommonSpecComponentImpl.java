@@ -5,7 +5,7 @@ import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.spec.SpecTypeUtil;
 import net.arna.jcraft.api.component.player.CommonSpecComponent;
 import net.arna.jcraft.api.spec.JSpec;
-import net.arna.jcraft.registry.JSpecTypeRegistry;
+import net.arna.jcraft.api.registry.JSpecTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;

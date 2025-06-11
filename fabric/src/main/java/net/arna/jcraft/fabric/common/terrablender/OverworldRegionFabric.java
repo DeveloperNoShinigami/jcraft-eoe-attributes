@@ -1,7 +1,7 @@
 package net.arna.jcraft.fabric.common.terrablender;
 
 import com.mojang.datafixers.util.Pair;
-import net.arna.jcraft.registry.JBiomeRegistry;
+import net.arna.jcraft.api.registry.JBiomeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;

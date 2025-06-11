@@ -2,7 +2,7 @@ package net.arna.jcraft.api.stand;
 
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.common.data.AttackerDataLoader;
-import net.arna.jcraft.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;

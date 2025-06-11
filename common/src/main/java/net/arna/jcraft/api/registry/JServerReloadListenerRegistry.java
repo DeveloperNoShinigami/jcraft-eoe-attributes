@@ -1,4 +1,4 @@
-package net.arna.jcraft.registry;
+package net.arna.jcraft.api.registry;
 
 import net.arna.jcraft.common.command.JCraftChangesCommand;
 import net.arna.jcraft.common.data.AttackerDataLoader;

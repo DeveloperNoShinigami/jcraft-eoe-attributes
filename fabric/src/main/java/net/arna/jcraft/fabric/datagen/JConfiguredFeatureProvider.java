@@ -1,7 +1,7 @@
 package net.arna.jcraft.fabric.datagen;
 
-import net.arna.jcraft.registry.JBlockRegistry;
-import net.arna.jcraft.registry.JConfiguredFeatureRegistry;
+import net.arna.jcraft.api.registry.JBlockRegistry;
+import net.arna.jcraft.api.registry.JConfiguredFeatureRegistry;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Block;

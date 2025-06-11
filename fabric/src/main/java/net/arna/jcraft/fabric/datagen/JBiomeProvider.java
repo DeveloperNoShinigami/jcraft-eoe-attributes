@@ -1,7 +1,7 @@
 package net.arna.jcraft.fabric.datagen;
 
-import net.arna.jcraft.registry.JBiomeRegistry;
-import net.arna.jcraft.registry.JPlacedFeatureRegistry;
+import net.arna.jcraft.api.registry.JBiomeRegistry;
+import net.arna.jcraft.api.registry.JPlacedFeatureRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.world.level.biome.Biome;

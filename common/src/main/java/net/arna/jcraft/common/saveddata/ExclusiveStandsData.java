@@ -5,7 +5,7 @@ import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.mixin.LevelStorageAccessAccessor;
 import net.arna.jcraft.mixin.MinecraftServerAccessor;
-import net.arna.jcraft.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;

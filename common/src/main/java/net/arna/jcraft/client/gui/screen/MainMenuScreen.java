@@ -6,7 +6,7 @@ import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.menu.MainMenu;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
