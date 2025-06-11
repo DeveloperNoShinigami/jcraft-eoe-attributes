@@ -19,6 +19,9 @@ public abstract class DirectionMixin {
             )
     )
     private static float redirect_getEntityFacingOrder_getYaw_0(Entity entity, float tickDelta) {
+        if (entity == null) {
+            return 1f;
+        }
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return entity.getViewYRot(tickDelta);
@@ -35,6 +38,9 @@ public abstract class DirectionMixin {
             )
     )
     private static float redirect_getEntityFacingOrder_getPitch_0(Entity entity, float tickDelta) {
+        if (entity == null) {
+            return 1f;
+        }
         Direction gravityDirection = GravityChangerAPI.getGravityDirection(entity);
         if (gravityDirection == Direction.DOWN) {
             return entity.getViewXRot(tickDelta);
