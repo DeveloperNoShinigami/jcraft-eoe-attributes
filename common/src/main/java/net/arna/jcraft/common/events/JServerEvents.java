@@ -66,10 +66,10 @@ import static net.arna.jcraft.common.util.EntityInterest.blockAttractionInterest
 import static net.arna.jcraft.common.util.EntityInterest.itemAttractionInterest;
 
 public class JServerEvents {
-    private static final List<Enchantment> jcraftArmorEnchants = List.of(
+    private static final List<Enchantment> JCRAFT_ARMOR_ENCHANTS = List.of(
             Enchantments.ALL_DAMAGE_PROTECTION, Enchantments.PROJECTILE_PROTECTION, Enchantments.BLAST_PROTECTION, Enchantments.FIRE_PROTECTION, Enchantments.UNBREAKING);
 
-    private static final List<List<Item>> equipment = List.of(
+    private static final List<List<Item>> EQUIPMENT = List.of(
             List.of(Items.AIR, Items.GOLDEN_BOOTS, Items.CHAINMAIL_BOOTS, Items.IRON_BOOTS, Items.DIAMOND_BOOTS, Items.NETHERITE_BOOTS),
             List.of(Items.AIR, Items.GOLDEN_LEGGINGS, Items.CHAINMAIL_LEGGINGS, Items.IRON_LEGGINGS, Items.DIAMOND_LEGGINGS, Items.NETHERITE_LEGGINGS),
             List.of(Items.AIR, Items.GOLDEN_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE),
@@ -396,12 +396,24 @@ public class JServerEvents {
             Enchantment enchantment;
             ItemStack itemStack;
             int baseArmorLevel = random.nextInt(1, 6);
-            int enchantsSize = jcraftArmorEnchants.size();
+            int enchantsSize = JCRAFT_ARMOR_ENCHANTS.size();
             for (int i = 0; i < 4; i++) {
-                itemStack = new ItemStack(equipment.get(i).get(baseArmorLevel + random.nextInt(-1, 1)));
-                enchantment = jcraftArmorEnchants.get(random.nextInt(enchantsSize));
+                itemStack = new ItemStack(EQUIPMENT.get(i).get(baseArmorLevel + random.nextInt(-1, 1)));
+                enchantment = JCRAFT_ARMOR_ENCHANTS.get(random.nextInt(enchantsSize));
                 itemStack.enchant(enchantment, enchantment.getMaxLevel());
                 armorItems.set(i, itemStack);
+                if (itemStack.is(Items.NETHERITE_HELMET) || itemStack.is(Items.DIAMOND_HELMET)) {
+                    mob.setDropChance(EquipmentSlot.HEAD, 0f);
+                }
+                else if (itemStack.is(Items.NETHERITE_CHESTPLATE) || itemStack.is(Items.DIAMOND_CHESTPLATE)) {
+                    mob.setDropChance(EquipmentSlot.CHEST, 0f);
+                }
+                else if (itemStack.is(Items.NETHERITE_LEGGINGS) || itemStack.is(Items.DIAMOND_LEGGINGS)) {
+                    mob.setDropChance(EquipmentSlot.LEGS, 0f);
+                }
+                else if (itemStack.is(Items.NETHERITE_BOOTS) || itemStack.is(Items.DIAMOND_BOOTS)) {
+                    mob.setDropChance(EquipmentSlot.FEET, 0f);
+                }
             }
 
             JEnemies.add(mob);
