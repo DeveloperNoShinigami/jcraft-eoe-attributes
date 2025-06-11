@@ -107,8 +107,6 @@ subprojects {
                     basic(BasicAuthentication)
                 }
             }
-
-            mavenLocal()
         }
     }
 
