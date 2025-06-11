@@ -431,8 +431,14 @@ public class ItemTossProjectile extends AbstractArrow {
      * Maximal number of ricocheting this projectile can do.
      */
     public int maxRicochets() {
-        if (getItem().is(Items.SLIME_BALL)) {
+        if (getItem().is(JTagRegistry.SUPER_BOUNCY)) {
             return 15;
+        }
+        if (getItem().is(JTagRegistry.BOUNCY)) {
+            return 10;
+        }
+        if (getItem().is(JTagRegistry.SOMEWHAT_BOUNCY)) {
+            return 5;
         }
         return 0;
     }

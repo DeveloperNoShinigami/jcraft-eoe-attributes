@@ -22,6 +22,9 @@ public interface JTagRegistry {
     TagKey<Item> EXPLODES_ON_IMPACT = TagKey.create(Registries.ITEM, JCraft.id("explodes_on_impact"));
     TagKey<Item> HEAVY_IMPACT = TagKey.create(Registries.ITEM, JCraft.id("heavy_impact"));
     TagKey<Item> BRITTLE = TagKey.create(Registries.ITEM, JCraft.id("brittle"));
+    TagKey<Item> SUPER_BOUNCY = TagKey.create(Registries.ITEM, JCraft.id("super_bouncy"));
+    TagKey<Item> BOUNCY = TagKey.create(Registries.ITEM, JCraft.id("bouncy"));
+    TagKey<Item> SOMEWHAT_BOUNCY = TagKey.create(Registries.ITEM, JCraft.id("somewhat_bouncy"));
     TagKey<Item> SOUL_LOG_ITEMS = TagKey.create(Registries.ITEM, JCraft.id("soul_logs"));
 
     TagKey<Block> SOUL_LOG_BLOCKS = TagKey.create(Registries.BLOCK, JCraft.id("soul_logs"));

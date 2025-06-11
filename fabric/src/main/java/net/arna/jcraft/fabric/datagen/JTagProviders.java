@@ -235,7 +235,7 @@ public class JTagProviders {
             heavyImpact.add(Items.RAW_GOLD_BLOCK);
             heavyImpact.add(Items.BLAST_FURNACE);
             heavyImpact.add(Items.CAULDRON);
-            heavyImpact.add(Items.ANVIL);
+            heavyImpact.forceAddTag(ItemTags.ANVIL);
             heavyImpact.add(Items.CHIPPED_ANVIL);
             heavyImpact.add(Items.DAMAGED_ANVIL);
             heavyImpact.add(Items.OBSIDIAN);
@@ -287,6 +287,35 @@ public class JTagProviders {
             brittle.add(Items.PURPLE_STAINED_GLASS_PANE);
             brittle.add(Items.MAGENTA_STAINED_GLASS_PANE);
             brittle.add(Items.PINK_STAINED_GLASS_PANE);
+
+            final var superBouncy = getOrCreateTagBuilder(JTagRegistry.SUPER_BOUNCY);
+            superBouncy.add(Items.SLIME_BALL);
+            superBouncy.add(Items.SLIME_BLOCK);
+
+            final var bouncy = getOrCreateTagBuilder(JTagRegistry.BOUNCY);
+            bouncy.addOptionalTag(ItemTags.BUTTONS);
+            bouncy.add(Items.BAMBOO);
+            bouncy.add(Items.TOTEM_OF_UNDYING);
+            bouncy.add(Items.DISC_FRAGMENT_5);
+            bouncy.add(JItemRegistry.STAND_ARROWHEAD.get());
+            bouncy.add(JItemRegistry.KQ_COIN.get());
+            bouncy.add(JItemRegistry.REQUIEM_ARROW.get());
+
+            final var somewhatBouncy = getOrCreateTagBuilder(JTagRegistry.SOMEWHAT_BOUNCY);
+            somewhatBouncy.forceAddTag(ItemTags.SWORDS);
+            somewhatBouncy.forceAddTag(ItemTags.SHOVELS);
+            somewhatBouncy.forceAddTag(ItemTags.PICKAXES);
+            somewhatBouncy.forceAddTag(ItemTags.AXES);
+            somewhatBouncy.forceAddTag(ItemTags.HOES);
+            somewhatBouncy.add(Items.TRIDENT);
+            somewhatBouncy.add(Items.COBBLESTONE);
+            somewhatBouncy.add(Items.COBBLED_DEEPSLATE);
+            somewhatBouncy.add(Items.BONE);
+            somewhatBouncy.add(Items.GOAT_HORN);
+            somewhatBouncy.add(JItemRegistry.KNIFE.get());
+            somewhatBouncy.add(JItemRegistry.SHIV.get());
+            somewhatBouncy.add(JItemRegistry.SCALPEL.get());
+            somewhatBouncy.add(JItemRegistry.PRISON_KEY.get());
         }
     }
 
