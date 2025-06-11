@@ -27,8 +27,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class AttackerDataLoader {
-    private static final Map<ResourceLocation, StandData> standData = new HashMap<>();
-    private static final Map<ResourceLocation, SpecData> specData = new HashMap<>();
+    private static final Map<ResourceLocation, StandData> STAND_DATA = new HashMap<>();
+    private static final Map<ResourceLocation, SpecData> SPEC_DATA = new HashMap<>();
 
     /**
      * Gets the StandData for a given stand type id.
@@ -39,7 +39,7 @@ public class AttackerDataLoader {
      * @return The StandData if it exists, or the {@link StandData#EMPTY empty data} if it doesn't.
      */
     public static StandData getStandData(final ResourceLocation id) {
-        return standData.getOrDefault(id, StandData.EMPTY);
+        return STAND_DATA.getOrDefault(id, StandData.EMPTY);
     }
 
     /**
@@ -51,7 +51,7 @@ public class AttackerDataLoader {
      * @return The StandData if it exists, or the {@link StandData#EMPTY empty data} if it doesn't.
      */
     public static SpecData getSpecData(final ResourceLocation id) {
-        return specData.getOrDefault(id, SpecData.EMPTY);
+        return SPEC_DATA.getOrDefault(id, SpecData.EMPTY);
     }
 
     /**
@@ -111,8 +111,8 @@ public class AttackerDataLoader {
     }
 
     private static void loadAllData(final Map<String, Map<ResourceLocation, JsonObject>> data) {
-        loadData(data.get("stands"), StandData.CODEC, JRegistries.STAND_TYPE_REGISTRY, standData, "stand", StandData.EMPTY);
-        loadData(data.get("specs"), SpecData.CODEC, JRegistries.SPEC_TYPE_REGISTRY, specData, "spec", SpecData.EMPTY);
+        loadData(data.get("stands"), StandData.CODEC, JRegistries.STAND_TYPE_REGISTRY, STAND_DATA, "stand", StandData.EMPTY);
+        loadData(data.get("specs"), SpecData.CODEC, JRegistries.SPEC_TYPE_REGISTRY, SPEC_DATA, "spec", SpecData.EMPTY);
     }
 
     private static <T> void loadData(final Map<ResourceLocation, JsonObject> data, final Codec<T> codec, final Registrar<?> registry,
