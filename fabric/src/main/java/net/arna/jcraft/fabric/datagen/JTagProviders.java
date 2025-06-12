@@ -495,6 +495,16 @@ public class JTagProviders {
             light.add(Items.REDSTONE);
             light.add(Items.GLOWSTONE_DUST);
             light.add(JItemRegistry.DIARY_PAGE.get());
+
+            final var acute = getOrCreateTagBuilder(JTagRegistry.ACUTE);
+
+            final var obtuse = getOrCreateTagBuilder(JTagRegistry.OBTUSE);
+            obtuse.forceAddTag(ItemTags.SWORDS);
+            obtuse.forceAddTag(ItemTags.SHOVELS);
+            obtuse.forceAddTag(ItemTags.PICKAXES);
+            obtuse.forceAddTag(ItemTags.AXES);
+            obtuse.forceAddTag(ItemTags.HOES);
+            obtuse.add(Items.TRIDENT);
         }
     }
 
