@@ -31,7 +31,10 @@ public final class TossChargeMove<A extends IAttacker<A, ?>> extends AbstractHol
             if (user == null) {
                 return;
             }
-            final ItemStack projectileSource = user.getItemInHand(InteractionHand.OFF_HAND);
+            ItemStack projectileSource = user.getItemInHand(InteractionHand.MAIN_HAND);
+            if (projectileSource.isEmpty()) {
+                projectileSource = user.getItemInHand(InteractionHand.OFF_HAND);
+            }
             if (!projectileSource.isEmpty()) {
                 final ItemStack oldProjectile = stand.getItemInHand(InteractionHand.MAIN_HAND);
                 if (!oldProjectile.isEmpty()) {
