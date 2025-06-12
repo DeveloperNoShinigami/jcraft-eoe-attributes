@@ -460,6 +460,7 @@
   "death.attack.jcraft.phpoison.player": "%1$s was eradicated by the Purple Haze while fighting %2$s",
   "death.attack.jcraft.phpoison.player.item": "%1$s was eradicated by the Purple Haze while fighting %2$s while wielding %3$s",
   "death.attack.jcraft.stand_arrow": "%1$s stabbed themselves to death",
+  "death.attack.player.player": "%1$s was retired",
   "commands.gravity.get.self": "Your gravity is %s",
   "commands.gravity.get.other": "%s's gravity is %s",
   "commands.gravity.set.self": "Set own gravity to %s",
