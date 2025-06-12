@@ -164,6 +164,10 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.DIO_CAPE.get());
                     entries.accept(JItemRegistry.DIO_PANTS.get());
                     entries.accept(JItemRegistry.DIO_BOOTS.get());
+                    entries.accept(JItemRegistry.JOHNNY_CAP.get());
+                    entries.accept(JItemRegistry.JOHNNY_JACKET.get());
+                    entries.accept(JItemRegistry.JOHNNY_PANTS.get());
+                    entries.accept(JItemRegistry.JOHNNY_BOOTS.get());
                     // vehicles
                     entries.accept(JItemRegistry.ROAD_ROLLER.get());
                     // blood bottles
