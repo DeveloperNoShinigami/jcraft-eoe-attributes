@@ -497,14 +497,12 @@ public class JTagProviders {
             light.add(JItemRegistry.DIARY_PAGE.get());
 
             final var acute = getOrCreateTagBuilder(JTagRegistry.ACUTE);
+            acute.forceAddTag(ItemTags.DAMPENS_VIBRATIONS);
+            acute.forceAddTag(ItemTags.ANVIL);
 
             final var obtuse = getOrCreateTagBuilder(JTagRegistry.OBTUSE);
             obtuse.forceAddTag(ItemTags.SWORDS);
-            obtuse.forceAddTag(ItemTags.SHOVELS);
-            obtuse.forceAddTag(ItemTags.PICKAXES);
-            obtuse.forceAddTag(ItemTags.AXES);
-            obtuse.forceAddTag(ItemTags.HOES);
-            obtuse.add(Items.TRIDENT);
+            obtuse.forceAddTag(ItemTags.TOOLS);
         }
     }
 
