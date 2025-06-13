@@ -60,6 +60,10 @@ public interface JStandTypeRegistry {
     RegistrySupplier<StandType> SHADOW_THE_WORLD = register("shadow_the_world", JEntityTypeRegistry.SHADOW_THE_WORLD);
     RegistrySupplier<StandType> METALLICA = register("metallica", JEntityTypeRegistry.METALLICA);
     RegistrySupplier<StandType> THE_HAND = register("the_hand", JEntityTypeRegistry.THE_HAND);
+    RegistrySupplier<StandType> HIGHWAY_STAR = register("highway_star", JEntityTypeRegistry.HIGHWAY_STAR);
+    RegistrySupplier<StandType> MANDOM = register("mandom", JEntityTypeRegistry.MANDOM);
+    RegistrySupplier<StandType> TCB = register("tcb", JEntityTypeRegistry.TCB);
+
 
     // Maps numeric values (ordinals) of old stand types back from when this was an enum.
     // Will be deleted in the 1.0 release.

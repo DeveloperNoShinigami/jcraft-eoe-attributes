@@ -10,6 +10,8 @@ import net.arna.jcraft.client.renderer.entity.projectiles.*;
 import net.arna.jcraft.client.renderer.entity.stands.*;
 import net.arna.jcraft.client.renderer.entity.vehicles.RoadRollerRenderer;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
+import net.arna.jcraft.common.entity.stand.HighwayStarEntity;
+import net.arna.jcraft.common.entity.stand.MandomEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -117,6 +119,10 @@ public interface JEntityRendererRegister {
 
             new RendererData<>(JEntityTypeRegistry.METALLICA, MetallicaRenderer::new),
             new RendererData<>(JEntityTypeRegistry.THE_HAND, TheHandRenderer::new),
+
+            new RendererData<>(JEntityTypeRegistry.HIGHWAY_STAR, HighwayStarRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.MANDOM, MandomRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.TCB, TCBRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.STAND_METEOR, StandMeteorRenderer::new),
 
