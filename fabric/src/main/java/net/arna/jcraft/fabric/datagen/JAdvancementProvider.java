@@ -264,7 +264,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("has_gyro_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GYRO_PANTS.get()))
                 .addCriterion("has_gyro_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GYRO_BOOTS.get()))
                 .rewards(AdvancementRewards.Builder.experience(200))
-                .build(JCraft.id("obtain_johnny_outfit"));
+                .build(JCraft.id("obtain_gyro_outfit"));
         consumer.accept(obtainGyroOutfit);
         // obtain Dio outfit
         final Advancement obtainDioOutfit = Advancement.Builder.advancement()
