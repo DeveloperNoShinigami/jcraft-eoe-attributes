@@ -367,6 +367,51 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('N', Items.NETHERITE_BOOTS)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);
+        // Gyro's hat
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.GYRO_HAT.get())
+                .pattern("SPS")
+                .pattern("YHY")
+                .pattern("B B")
+                .define('B', Items.BROWN_DYE)
+                .define('H', Items.NETHERITE_HELMET)
+                .define('P', Items.GLASS_PANE)
+                .define('S', Items.STRING)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
+        // Gyro's jacket
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.GYRO_SHIRT.get())
+                .pattern("GGG")
+                .pattern("PCP")
+                .pattern("BPB")
+                .define('B', Items.BLUE_DYE)
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('G', Items.GREEN_CARPET)
+                .define('P', Items.PURPLE_DYE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Gyro's pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.GYRO_PANTS.get())
+                .pattern("YIY")
+                .pattern("YLY")
+                .pattern("B B")
+                .define('B', Items.BROWN_DYE)
+                .define('I', Items.IRON_INGOT)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Gyro's boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.GYRO_BOOTS.get())
+                .pattern("I I")
+                .pattern("BNB")
+                .pattern("G G")
+                .define('B', Items.BROWN_DYE)
+                .define('G', Items.GREEN_DYE)
+                .define('I', Items.IRON_NUGGET)
+                .define('N', Items.NETHERITE_BOOTS)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
 
         // hot sand
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.HOT_SAND_BLOCK.get(), 8)

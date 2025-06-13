@@ -67,6 +67,10 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.JOHNNY_CAP.get(), JItemRegistry.JOHNNY_JACKET.get());
             output.acceptAfter(JItemRegistry.JOHNNY_JACKET.get(), JItemRegistry.JOHNNY_PANTS.get());
             output.acceptAfter(JItemRegistry.JOHNNY_PANTS.get(), JItemRegistry.JOHNNY_BOOTS.get());
+            output.acceptAfter(JItemRegistry.JOHNNY_BOOTS.get(), JItemRegistry.GYRO_HAT.get());
+            output.acceptAfter(JItemRegistry.GYRO_HAT.get(), JItemRegistry.GYRO_SHIRT.get());
+            output.acceptAfter(JItemRegistry.GYRO_SHIRT.get(), JItemRegistry.GYRO_PANTS.get());
+            output.acceptAfter(JItemRegistry.GYRO_PANTS.get(), JItemRegistry.GYRO_BOOTS.get());
             output.acceptBefore(Items.SHIELD, JItemRegistry.BOXING_GLOVES.get());
             output.acceptBefore(Items.SHIELD, JItemRegistry.STEEL_BALL.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.STONE_MASK.get());
@@ -168,6 +172,10 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.JOHNNY_JACKET.get());
                     entries.accept(JItemRegistry.JOHNNY_PANTS.get());
                     entries.accept(JItemRegistry.JOHNNY_BOOTS.get());
+                    entries.accept(JItemRegistry.GYRO_HAT.get());
+                    entries.accept(JItemRegistry.GYRO_SHIRT.get());
+                    entries.accept(JItemRegistry.GYRO_PANTS.get());
+                    entries.accept(JItemRegistry.GYRO_BOOTS.get());
                     // vehicles
                     entries.accept(JItemRegistry.ROAD_ROLLER.get());
                     // blood bottles

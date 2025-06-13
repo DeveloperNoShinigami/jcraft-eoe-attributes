@@ -248,6 +248,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_johnny_outfit"));
         consumer.accept(obtainJohnnyOutfit);
+        // obtain Gyro outfit
+        final Advancement obtainGyroOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.GYRO_HAT.get(),
+                        Component.literal("Pizza Mozzarella"),
+                        Component.literal("Obtain all of Gyro's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_gyro_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GYRO_HAT.get()))
+                .addCriterion("has_gyro_shirt", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GYRO_SHIRT.get()))
+                .addCriterion("has_gyro_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GYRO_PANTS.get()))
+                .addCriterion("has_gyro_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GYRO_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_johnny_outfit"));
+        consumer.accept(obtainGyroOutfit);
         // obtain Dio outfit
         final Advancement obtainDioOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIO_HEADBAND.get(),

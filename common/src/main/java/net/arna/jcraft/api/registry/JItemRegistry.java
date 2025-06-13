@@ -92,6 +92,11 @@ public interface JItemRegistry {
     RegistrySupplier<Item> JOHNNY_PANTS = register("johnny_pants", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
     RegistrySupplier<Item> JOHNNY_BOOTS = register("johnny_boots", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
+    RegistrySupplier<Item> GYRO_HAT = register("gyro_hat", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> GYRO_SHIRT = register("gyro_shirt", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> GYRO_PANTS = register("gyro_pants", () -> new GyroBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> GYRO_BOOTS = register("gyro_boots", () -> new GyroBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+
     RegistrySupplier<Item> CINDERELLA_MASK = register("cinderella_mask", CinderellaMaskItem::new);
 
     RegistrySupplier<Item> BLOOD_BOTTLE = register("blood_bottle", () -> new BloodBottleItem(settings().stacksTo(1)));
