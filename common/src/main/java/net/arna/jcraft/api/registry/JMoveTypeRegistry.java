@@ -16,7 +16,6 @@ import net.arna.jcraft.common.attack.moves.goldexperience.TreeAttack;
 import net.arna.jcraft.common.attack.moves.goldexperience.requiem.*;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.EmeraldSplashAttack;
 import net.arna.jcraft.common.attack.moves.hierophantgreen.NetSetMove;
-import net.arna.jcraft.common.attack.moves.highwaystar.*;
 import net.arna.jcraft.common.attack.moves.horus.*;
 import net.arna.jcraft.common.attack.moves.killerqueen.*;
 import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.*;
@@ -25,7 +24,6 @@ import net.arna.jcraft.common.attack.moves.madeinheaven.*;
 import net.arna.jcraft.common.attack.moves.magiciansred.*;
 import net.arna.jcraft.common.attack.moves.mandom.CountdownMove;
 import net.arna.jcraft.common.attack.moves.mandom.RewindMove;
-import net.arna.jcraft.common.attack.moves.mandom.SixSecondRewind;
 import net.arna.jcraft.common.attack.moves.metallica.*;
 import net.arna.jcraft.common.attack.moves.purplehaze.*;
 import net.arna.jcraft.common.attack.moves.purplehaze.distortion.DistortionMove;
@@ -38,7 +36,6 @@ import net.arna.jcraft.common.attack.moves.starplatinum.BlockBreakingAttack;
 import net.arna.jcraft.common.attack.moves.starplatinum.InhaleAttack;
 import net.arna.jcraft.common.attack.moves.starplatinum.theworld.SPTWGroundSlamAttack;
 import net.arna.jcraft.common.attack.moves.starplatinum.theworld.TimeStrikeAttack;
-import net.arna.jcraft.common.attack.moves.tcb.AbsoluteDefenseMove;
 import net.arna.jcraft.common.attack.moves.thefool.*;
 import net.arna.jcraft.common.attack.moves.thehand.*;
 import net.arna.jcraft.common.attack.moves.thesun.FireMeteorAttack;
@@ -257,17 +254,9 @@ public interface JMoveTypeRegistry {
     RegistrySupplier<MoveType<?>> WHITESNAKE_MELT_YOUR_HEART_ATTACK = register("whitesnake_melt_your_heart_attack", MeltYourHeartAttack.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> WHITESNAKE_POISON_SPEW_ATTACK = register("whitesnake_poison_spew_attack", PoisonSpewAttack.Type.INSTANCE);
 
-    RegistrySupplier<MoveType<?>> HIGHWAYSTAR_ANKLE_BREAKER_ATTACK = register("highwaystar_ankle_breaker_attack", AnkleBreakerAttack.Type.INSTANCE);
-    RegistrySupplier<MoveType<?>> HIGHWAYSTAR_HIGH_SPEED_CHASE_MOVE = register("highwaystar_high_speed_chase_move", HighSpeedChaseMove.Type.INSTANCE);
-    RegistrySupplier<MoveType<?>> HIGHWAYSTAR_LEECH_HITS_ATTACK = register("highwaystar_leech_hits_attack", LeechGrabHitAttack.Type.INSTANCE);
-    RegistrySupplier<MoveType<?>> HIGHWAYSTAR_PHASER_ATTACK = register("highwaystar_phaser_attack", PhaserAttack.Type.INSTANCE);
-    RegistrySupplier<MoveType<?>> HIGHWAYSTAR_ROOM_TRAP_ATTACK = register("highwaystar_room_trap_attack", RoomTrapAttack.Type.INSTANCE);
-
-    RegistrySupplier<MoveType<?>> MANDOM_SIX_SECOND_REWIND = register("mandom_six_second_rewind", SixSecondRewind.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> MANDOM_COUNTDOWN_MOVE = register("mandom_countdown_move", CountdownMove.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> MANDOM_REWIND_MOVE = register("mandom_rewind_move", RewindMove.Type.INSTANCE);
 
-    RegistrySupplier<MoveType<?>> TCB_ABSOLUTE_DEFENSE = register("tcb_absolute_defense", AbsoluteDefenseMove.Type.INSTANCE);
 
 
     private static RegistrySupplier<MoveType<?>> register(String id, MoveType<?> type) {

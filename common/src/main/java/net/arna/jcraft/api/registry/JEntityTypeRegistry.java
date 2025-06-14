@@ -647,23 +647,11 @@ public interface JEntityTypeRegistry {
                     MobCategory.CREATURE
             ).sized(0.6f, 1.8f).build("the_hand")
     );
-    RegistrySupplier<EntityType<HighwayStarEntity>> HIGHWAY_STAR = ENTITY_TYPE_REGISTRY.register(JCraft.id("highway_star"),
-            () -> EntityType.Builder.of(
-                    WorldOnlyEntityFactory.from(HighwayStarEntity::new),
-                    MobCategory.CREATURE
-            ).sized(0.6f, 1.8f).build("highway_star")
-    );
     RegistrySupplier<EntityType<MandomEntity>> MANDOM = ENTITY_TYPE_REGISTRY.register(JCraft.id("mandom"),
             () -> EntityType.Builder.of(
                     WorldOnlyEntityFactory.from(MandomEntity::new),
                     MobCategory.CREATURE
             ).sized(0.3f, 0.9f).build("mandom")
-    );
-    RegistrySupplier<EntityType<TCBEntity>> TCB = ENTITY_TYPE_REGISTRY.register(JCraft.id("tcb"),
-            () -> EntityType.Builder.of(
-                    WorldOnlyEntityFactory.from(TCBEntity::new),
-                    MobCategory.CREATURE
-            ).sized(0.3f, 0.9f).build("tcb")
     );
 
 
@@ -682,9 +670,7 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(WHITE_SNAKE, WhiteSnakeEntity::createMobAttributes);
         EntityAttributeRegistry.register(C_MOON, CMoonEntity::createMobAttributes);
 
-        EntityAttributeRegistry.register(HIGHWAY_STAR, HighwayStarEntity::createMobAttributes);
         EntityAttributeRegistry.register(MANDOM, MandomEntity::createMobAttributes);
-        EntityAttributeRegistry.register(TCB, TCBEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(MADE_IN_HEAVEN, MadeInHeavenEntity::createMobAttributes);
         EntityAttributeRegistry.register(SHADOW_THE_WORLD, ShadowTheWorldEntity::createMobAttributes);
