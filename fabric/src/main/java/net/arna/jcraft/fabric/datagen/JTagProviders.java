@@ -87,6 +87,32 @@ public class JTagProviders {
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.RED_HAT.getId());
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.PUCCIS_HAT.getId());
 
+            final var cosplay = getOrCreateTagBuilder(JTagRegistry.COSPLAY);
+            cosplay.add(JItemRegistry.JOTARO_CAP.get());
+            cosplay.add(JItemRegistry.JOTARO_JACKET.get());
+            cosplay.add(JItemRegistry.JOTARO_PANTS.get());
+            cosplay.add(JItemRegistry.JOTARO_BOOTS.get());
+            cosplay.add(JItemRegistry.DIO_HEADBAND.get());
+            cosplay.add(JItemRegistry.DIO_CAPE.get());
+            cosplay.add(JItemRegistry.DIO_JACKET.get());
+            cosplay.add(JItemRegistry.DIO_PANTS.get());
+            cosplay.add(JItemRegistry.DIO_BOOTS.get());
+            cosplay.add(JItemRegistry.JOTARO_P4_CAP.get());
+            cosplay.add(JItemRegistry.JOTARO_P4_JACKET.get());
+            cosplay.add(JItemRegistry.JOTARO_P4_PANTS.get());
+            cosplay.add(JItemRegistry.JOTARO_P4_BOOTS.get());
+            cosplay.add(JItemRegistry.JOHNNY_CAP.get());
+            cosplay.add(JItemRegistry.JOHNNY_JACKET.get());
+            cosplay.add(JItemRegistry.JOHNNY_PANTS.get());
+            cosplay.add(JItemRegistry.JOHNNY_BOOTS.get());
+            cosplay.add(JItemRegistry.GYRO_HAT.get());
+            cosplay.add(JItemRegistry.GYRO_SHIRT.get());
+            cosplay.add(JItemRegistry.GYRO_PANTS.get());
+            cosplay.add(JItemRegistry.GYRO_BOOTS.get());
+            cosplay.add(JItemRegistry.PUCCI_ROBE.get());
+            cosplay.add(JItemRegistry.PUCCI_PANTS.get());
+            cosplay.add(JItemRegistry.PUCCI_BOOTS.get());
+
             final var equipables = getOrCreateTagBuilder(JTagRegistry.EQUIPABLES);
             equipables.add(Items.LEATHER_HELMET);
             equipables.add(Items.LEATHER_CHESTPLATE);
@@ -125,16 +151,7 @@ public class JTagProviders {
             equipables.add(JItemRegistry.STONE_MASK.get());
             equipables.add(JItemRegistry.KARS_HEADWRAP.get());
             equipables.add(JItemRegistry.RED_HAT.get());
-            equipables.add(JItemRegistry.PUCCIS_HAT.get());
-            equipables.add(JItemRegistry.DIO_HEADBAND.get());
-            equipables.add(JItemRegistry.DIO_CAPE.get());
-            equipables.add(JItemRegistry.DIO_JACKET.get());
-            equipables.add(JItemRegistry.DIO_PANTS.get());
-            equipables.add(JItemRegistry.DIO_BOOTS.get());
-            equipables.add(JItemRegistry.JOTARO_CAP.get());
-            equipables.add(JItemRegistry.JOTARO_JACKET.get());
-            equipables.add(JItemRegistry.JOTARO_PANTS.get());
-            equipables.add(JItemRegistry.JOTARO_BOOTS.get());
+            equipables.addTag(JTagRegistry.COSPLAY);
 
             final var sandBlocks = getOrCreateTagBuilder(JTagRegistry.SAND_BLOCKS);
             sandBlocks.forceAddTag(ItemTags.SAND);
@@ -158,28 +175,6 @@ public class JTagProviders {
             sandBlocks.add(Items.SMOOTH_RED_SANDSTONE_SLAB);
             sandBlocks.add(Items.CUT_RED_SANDSTONE);
             sandBlocks.add(Items.CUT_RED_SANDSTONE_SLAB);
-
-            final var cosplay = getOrCreateTagBuilder(JTagRegistry.COSPLAY);
-            cosplay.add(JItemRegistry.JOTARO_CAP.get());
-            cosplay.add(JItemRegistry.JOTARO_JACKET.get());
-            cosplay.add(JItemRegistry.JOTARO_PANTS.get());
-            cosplay.add(JItemRegistry.JOTARO_BOOTS.get());
-            cosplay.add(JItemRegistry.DIO_HEADBAND.get());
-            cosplay.add(JItemRegistry.DIO_CAPE.get());
-            cosplay.add(JItemRegistry.DIO_JACKET.get());
-            cosplay.add(JItemRegistry.DIO_PANTS.get());
-            cosplay.add(JItemRegistry.DIO_BOOTS.get());
-            cosplay.add(JItemRegistry.JOHNNY_CAP.get());
-            cosplay.add(JItemRegistry.JOHNNY_JACKET.get());
-            cosplay.add(JItemRegistry.JOHNNY_PANTS.get());
-            cosplay.add(JItemRegistry.JOHNNY_BOOTS.get());
-            cosplay.add(JItemRegistry.GYRO_HAT.get());
-            cosplay.add(JItemRegistry.GYRO_SHIRT.get());
-            cosplay.add(JItemRegistry.GYRO_PANTS.get());
-            cosplay.add(JItemRegistry.GYRO_BOOTS.get());
-            cosplay.add(JItemRegistry.PUCCI_ROBE.get());
-            cosplay.add(JItemRegistry.PUCCI_PANTS.get());
-            cosplay.add(JItemRegistry.PUCCI_BOOTS.get());
 
             final var blindsOnImpact = getOrCreateTagBuilder(JTagRegistry.BLINDS_ON_IMPACT);
             blindsOnImpact.add(Items.PACKED_MUD);

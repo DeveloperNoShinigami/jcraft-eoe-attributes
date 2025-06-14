@@ -216,7 +216,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         final Advancement obtainJotaroOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOTARO_CAP.get(),
                         Component.literal("ORA ORA"),
-                        Component.literal("Obtain all of Jotaro's clothes"),
+                        Component.literal("Obtain all of Jotaro's clothes from Part 3"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -230,6 +230,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_jotaro_outfit"));
         consumer.accept(obtainJotaroOutfit);
+        // obtain Jotaro P4 outfit
+        final Advancement obtainJotaroP4Outfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.JOTARO_P4_CAP.get(),
+                        Component.literal("Ugly watch"),
+                        Component.literal("Obtain all of Jotaro's clothes from Part 4"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_jotaro_p4_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P4_CAP.get()))
+                .addCriterion("has_jotaro_p4_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P4_JACKET.get()))
+                .addCriterion("has_jotaro_p4_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P4_PANTS.get()))
+                .addCriterion("has_jotaro_p4_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P4_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_jotaro_p4_outfit"));
+        consumer.accept(obtainJotaroP4Outfit);
         // obtain Johnny outfit
         final Advancement obtainJohnnyOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOHNNY_CAP.get(),

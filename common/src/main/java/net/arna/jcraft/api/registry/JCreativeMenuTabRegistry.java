@@ -63,7 +63,11 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.DIO_JACKET.get(), JItemRegistry.DIO_CAPE.get());
             output.acceptAfter(JItemRegistry.DIO_CAPE.get(), JItemRegistry.DIO_PANTS.get());
             output.acceptAfter(JItemRegistry.DIO_PANTS.get(), JItemRegistry.DIO_BOOTS.get());
-            output.acceptAfter(JItemRegistry.DIO_BOOTS.get(), JItemRegistry.JOHNNY_CAP.get());
+            output.acceptAfter(JItemRegistry.DIO_BOOTS.get(), JItemRegistry.JOTARO_P4_CAP.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P4_CAP.get(), JItemRegistry.JOTARO_P4_JACKET.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P4_JACKET.get(), JItemRegistry.JOTARO_P4_PANTS.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P4_PANTS.get(), JItemRegistry.JOTARO_P4_BOOTS.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P4_BOOTS.get(), JItemRegistry.JOHNNY_CAP.get());
             output.acceptAfter(JItemRegistry.JOHNNY_CAP.get(), JItemRegistry.JOHNNY_JACKET.get());
             output.acceptAfter(JItemRegistry.JOHNNY_JACKET.get(), JItemRegistry.JOHNNY_PANTS.get());
             output.acceptAfter(JItemRegistry.JOHNNY_PANTS.get(), JItemRegistry.JOHNNY_BOOTS.get());
@@ -170,6 +174,10 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.DIO_CAPE.get());
                     entries.accept(JItemRegistry.DIO_PANTS.get());
                     entries.accept(JItemRegistry.DIO_BOOTS.get());
+                    entries.accept(JItemRegistry.JOTARO_P4_CAP.get());
+                    entries.accept(JItemRegistry.JOTARO_P4_JACKET.get());
+                    entries.accept(JItemRegistry.JOTARO_P4_PANTS.get());
+                    entries.accept(JItemRegistry.JOTARO_P4_BOOTS.get());
                     entries.accept(JItemRegistry.JOHNNY_CAP.get());
                     entries.accept(JItemRegistry.JOHNNY_JACKET.get());
                     entries.accept(JItemRegistry.JOHNNY_PANTS.get());

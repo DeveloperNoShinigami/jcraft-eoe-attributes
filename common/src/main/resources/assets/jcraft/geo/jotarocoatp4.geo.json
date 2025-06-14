@@ -1,0 +1,85 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.jotarooutfit",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 4.5,
+				"visible_bounds_offset": [0, 1.75, 0]
+			},
+			"bones": [
+				{
+					"name": "bb_main",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-8, 12, -2], "size": [4, 4, 4], "inflate": 0.45, "uv": [16, 28], "mirror": true}
+					]
+				},
+				{
+					"name": "helmet",
+					"pivot": [0, 24, 0]
+				},
+				{
+					"name": "bone",
+					"parent": "helmet",
+					"pivot": [4.23934, 28.1, -0.64645],
+					"rotation": [-3, 0, -11]
+				},
+				{
+					"name": "bone2",
+					"parent": "bone",
+					"pivot": [4.23934, 26.6, -0.64645],
+					"rotation": [-31.10824, 7.71165, 4.08332]
+				},
+				{
+					"name": "chestplate",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-4, 24.3, -3.825], "size": [8, 8, 8], "inflate": 0.51, "pivot": [0, 28.3, 0.175], "rotation": [-2.5, 0, 0], "uv": [18, 48]},
+						{"origin": [-4, 12, -2], "size": [8, 12, 4], "inflate": 0.33, "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "rightBoot",
+					"pivot": [-1.9, 12, 0]
+				},
+				{
+					"name": "leftBoot",
+					"pivot": [1.9, 12, 0]
+				},
+				{
+					"name": "rightLeg",
+					"pivot": [-1.9, 12, 0],
+					"cubes": [
+						{"origin": [-4.11562, 1.9854, -2.125], "size": [4, 10, 4.3], "inflate": 0.32, "uv": [0, 32]}
+					]
+				},
+				{
+					"name": "leftLeg",
+					"pivot": [1.9, 12, 0],
+					"cubes": [
+						{"origin": [0.11562, 1.9854, -2.125], "size": [4, 10, 4.3], "inflate": 0.32, "uv": [0, 32], "mirror": true}
+					]
+				},
+				{
+					"name": "leftArm",
+					"pivot": [5, 22, 0],
+					"cubes": [
+						{"origin": [4, 12, -2], "size": [4, 12, 4], "inflate": 0.32, "uv": [0, 16]},
+						{"origin": [4, 12, -2], "size": [4, 4, 4], "inflate": 0.45, "uv": [16, 28]}
+					]
+				},
+				{
+					"name": "rightArm",
+					"pivot": [-5, 22, 0],
+					"cubes": [
+						{"origin": [-8, 12, -2], "size": [4, 12, 4], "inflate": 0.32, "uv": [0, 16], "mirror": true}
+					]
+				}
+			]
+		}
+	]
+}

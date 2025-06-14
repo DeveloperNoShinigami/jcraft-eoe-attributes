@@ -14,6 +14,7 @@ import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.client.renderer.armor.DIOCapeRenderer;
 import net.arna.jcraft.client.renderer.armor.GyroTopRenderer;
+import net.arna.jcraft.client.renderer.armor.JotaroCoatP4Renderer;
 import net.arna.jcraft.client.renderer.armor.JotaroCoatRenderer;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.api.registry.JItemRegistry;
@@ -71,6 +72,8 @@ public class FlutteringArmorItem extends ArmorItem implements GeoItem {
                         this.renderer = new DIOCapeRenderer();
                     } else if (itemStack.is(JItemRegistry.JOTARO_JACKET.get())) {
                         this.renderer = new JotaroCoatRenderer();
+                    } else if (itemStack.is(JItemRegistry.JOTARO_P4_JACKET.get())) {
+                        this.renderer = new JotaroCoatP4Renderer();
                     } else {
                         this.renderer = new GyroTopRenderer();
                     }
