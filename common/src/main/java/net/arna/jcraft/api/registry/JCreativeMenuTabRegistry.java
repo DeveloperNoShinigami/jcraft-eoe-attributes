@@ -203,7 +203,7 @@ public interface JCreativeMenuTabRegistry {
     }
 
     static CreativeModeTab createJcraftCosplayGroup() {
-        return CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
+        return CreativeModeTab.builder(CreativeModeTab.Row.TOP, 2)
                 .title(Component.translatable("itemGroup.jcraft.cosplay"))
                 .icon(() -> JItemRegistry.DIO_CAPE.get().getDefaultInstance())
                 // order of the creative tab
