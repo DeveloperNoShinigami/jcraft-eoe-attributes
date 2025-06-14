@@ -173,17 +173,17 @@
 			"bones": {
 				"prongs_Left": {
 					"scale": {
-						"vector": [0, 0, 0]
+						"vector": [0, 1, 0]
 					}
 				},
 				"prongs_Right": {
 					"scale": {
-						"vector": [0, 0, 0]
+						"vector": [0, 1, 0]
 					}
 				},
 				"prongs_top": {
 					"scale": {
-						"vector": [0, 0, 0]
+						"vector": [1, 1, 0]
 					}
 				},
 				"triggered": {
