@@ -266,6 +266,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_gyro_outfit"));
         consumer.accept(obtainGyroOutfit);
+        // obtain Pucci outfit
+        final Advancement obtainPucciOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.PUCCIS_HAT.get(),
+                        Component.literal("Count prime numbers"),
+                        Component.literal("Obtain all of Pucci's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_pucci_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.PUCCIS_HAT.get()))
+                .addCriterion("has_pucci_robe", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.PUCCI_ROBE.get()))
+                .addCriterion("has_pucci_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.PUCCI_PANTS.get()))
+                .addCriterion("has_pucci_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.PUCCI_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_pucci_outfit"));
+        consumer.accept(obtainPucciOutfit);
         // obtain Dio outfit
         final Advancement obtainDioOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIO_HEADBAND.get(),

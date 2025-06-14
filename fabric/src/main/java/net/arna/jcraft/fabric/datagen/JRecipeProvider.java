@@ -202,16 +202,6 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('R', Items.RED_DYE)
                 .unlockedBy("has_leather_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER_HELMET))
                 .save(exporter);
-        // pucci's hat
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.PUCCIS_HAT.get())
-                .pattern("BNB")
-                .pattern("LCL")
-                .define('B', Items.BLACK_DYE)
-                .define('C', Items.LEATHER_HELMET)
-                .define('L', Items.LEATHER)
-                .define('N', Items.GOLD_NUGGET)
-                .unlockedBy("has_leather_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER_HELMET))
-                .save(exporter);
         // blood bottle
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.BLOOD_BOTTLE.get())
                 .pattern(" B ")
@@ -409,6 +399,46 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('B', Items.BROWN_DYE)
                 .define('G', Items.GREEN_DYE)
                 .define('I', Items.IRON_NUGGET)
+                .define('N', Items.NETHERITE_BOOTS)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
+        // Pucci's hat
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.PUCCIS_HAT.get())
+                .pattern("BNB")
+                .pattern("LCL")
+                .define('B', Items.BLACK_DYE)
+                .define('C', Items.LEATHER_HELMET)
+                .define('L', Items.LEATHER)
+                .define('N', Items.GOLD_NUGGET)
+                .unlockedBy("has_leather_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER_HELMET))
+                .save(exporter);
+        // Pucci's robe
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.PUCCI_ROBE.get())
+                .pattern("BYB")
+                .pattern("BCB")
+                .pattern("WYW")
+                .define('B', Items.BLACK_DYE)
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('Y', Items.YELLOW_DYE)
+                .define('W', Items.BLACK_CARPET)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Pucci's pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.PUCCI_PANTS.get())
+                .pattern("BBB")
+                .pattern("GLG")
+                .pattern("B B")
+                .define('B', Items.BLACK_DYE)
+                .define('G', Items.GRAY_DYE)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Pucci's boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.PUCCI_BOOTS.get())
+                .pattern("BNB")
+                .pattern("L L")
+                .define('B', Items.BLUE_DYE)
+                .define('L', Items.GRAY_DYE)
                 .define('N', Items.NETHERITE_BOOTS)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);

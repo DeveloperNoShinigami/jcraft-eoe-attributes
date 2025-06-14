@@ -177,6 +177,9 @@ public class JTagProviders {
             cosplay.add(JItemRegistry.GYRO_SHIRT.get());
             cosplay.add(JItemRegistry.GYRO_PANTS.get());
             cosplay.add(JItemRegistry.GYRO_BOOTS.get());
+            cosplay.add(JItemRegistry.PUCCI_ROBE.get());
+            cosplay.add(JItemRegistry.PUCCI_PANTS.get());
+            cosplay.add(JItemRegistry.PUCCI_BOOTS.get());
 
             final var blindsOnImpact = getOrCreateTagBuilder(JTagRegistry.BLINDS_ON_IMPACT);
             blindsOnImpact.add(Items.PACKED_MUD);

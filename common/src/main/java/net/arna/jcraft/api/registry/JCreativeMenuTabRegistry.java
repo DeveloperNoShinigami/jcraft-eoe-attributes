@@ -71,12 +71,15 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.GYRO_HAT.get(), JItemRegistry.GYRO_SHIRT.get());
             output.acceptAfter(JItemRegistry.GYRO_SHIRT.get(), JItemRegistry.GYRO_PANTS.get());
             output.acceptAfter(JItemRegistry.GYRO_PANTS.get(), JItemRegistry.GYRO_BOOTS.get());
+            output.acceptAfter(JItemRegistry.GYRO_BOOTS.get(), JItemRegistry.PUCCIS_HAT.get());
+            output.acceptAfter(JItemRegistry.PUCCIS_HAT.get(), JItemRegistry.PUCCI_ROBE.get());
+            output.acceptAfter(JItemRegistry.PUCCI_ROBE.get(), JItemRegistry.PUCCI_PANTS.get());
+            output.acceptAfter(JItemRegistry.PUCCI_PANTS.get(), JItemRegistry.PUCCI_BOOTS.get());
             output.acceptBefore(Items.SHIELD, JItemRegistry.BOXING_GLOVES.get());
             output.acceptBefore(Items.SHIELD, JItemRegistry.STEEL_BALL.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.STONE_MASK.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.RED_HAT.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.KARS_HEADWRAP.get());
-            output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.PUCCIS_HAT.get());
         });
         // ingredients
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.INGREDIENTS.location()), (flags, output, canUseGameMasterBlocks) -> {
@@ -156,7 +159,6 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.STONE_MASK.get());
                     entries.accept(JItemRegistry.RED_HAT.get());
                     entries.accept(JItemRegistry.KARS_HEADWRAP.get());
-                    entries.accept(JItemRegistry.PUCCIS_HAT.get());
                     entries.accept(JItemRegistry.COFFIN_BLOCK.get());
                     // cosplay
                     entries.accept(JItemRegistry.JOTARO_CAP.get());
@@ -176,6 +178,10 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.GYRO_SHIRT.get());
                     entries.accept(JItemRegistry.GYRO_PANTS.get());
                     entries.accept(JItemRegistry.GYRO_BOOTS.get());
+                    entries.accept(JItemRegistry.PUCCIS_HAT.get());
+                    entries.accept(JItemRegistry.PUCCI_ROBE.get());
+                    entries.accept(JItemRegistry.PUCCI_PANTS.get());
+                    entries.accept(JItemRegistry.PUCCI_BOOTS.get());
                     // vehicles
                     entries.accept(JItemRegistry.ROAD_ROLLER.get());
                     // blood bottles
