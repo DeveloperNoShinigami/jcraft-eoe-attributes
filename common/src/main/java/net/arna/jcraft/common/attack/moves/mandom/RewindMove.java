@@ -9,11 +9,15 @@ import net.arna.jcraft.common.entity.stand.MandomEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.RelativeMovement;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -51,42 +55,73 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
             }
             final CompoundTag nbt = data.getValue();
 
-            // MODIFY NBT rotation data BEFORE loading for LivingEntities
-            if (ent instanceof LivingEntity livingEntity) {
+            if (ent instanceof final ServerPlayer serverPlayer) {
+                // Get saved position from NBT
+                ListTag posList = nbt.getList("Pos", 6);
+                double x = posList.getDouble(0);
+                double y = posList.getDouble(1);
+                double z = posList.getDouble(2);
+
+                // Get saved rotations
+                Float savedYaw = savedUserYaw.get(serverPlayer);
+                Float savedPitch = savedUserPitch.get(serverPlayer);
+
+                if (savedYaw != null && savedPitch != null) {
+                    // Load inventory and ender chest
+                    nbt.put("Inventory", serverPlayer.getInventory().save(new ListTag()));
+                    nbt.put("EnderItems", serverPlayer.getEnderChestInventory().createTag());
+
+                    // Load the NBT data first (for inventory, etc.)
+                    serverPlayer.load(nbt);
+
+                    // Use teleportTo with proper rotation handling
+                    serverPlayer.teleportTo(serverPlayer.serverLevel(), x, y, z,
+                            EnumSet.noneOf(RelativeMovement.class), savedYaw, savedPitch);
+
+                    // Force update head rotation for other players
+                    serverPlayer.setYHeadRot(savedYaw);
+                    serverPlayer.connection.send(new ClientboundRotateHeadPacket(serverPlayer, (byte)((int)(savedYaw * 256.0F / 360.0F))));
+                    serverPlayer.connection.send(new ClientboundTeleportEntityPacket(serverPlayer));
+
+                    // Update motion
+                    serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+                }
+            } else if (ent instanceof LivingEntity livingEntity) {
+                // Get saved position from NBT
+                ListTag posList = nbt.getList("Pos", 6);
+                double x = posList.getDouble(0);
+                double y = posList.getDouble(1);
+                double z = posList.getDouble(2);
+
                 Float savedYaw = savedUserYaw.get(livingEntity);
                 Float savedPitch = savedUserPitch.get(livingEntity);
 
                 if (savedYaw != null && savedPitch != null) {
-                    // Update the NBT rotation data directly - these are the correct NBT keys
-                    nbt.putFloat("yHeadRot", savedYaw);
-                    nbt.putFloat("yHeadRotO", savedYaw);
-                    nbt.putFloat("YRot", savedYaw);
-                    nbt.putFloat("yRotO", savedYaw);
-                    nbt.putFloat("XRot", savedPitch);
-                    nbt.putFloat("xRotO", savedPitch);
+                    // Load the NBT data first
+                    livingEntity.load(nbt);
 
-                    // Also update the Rotation list (used by some entities)
-                    ListTag rotationList = new ListTag();
-                    rotationList.add(net.minecraft.nbt.FloatTag.valueOf(savedYaw));
-                    rotationList.add(net.minecraft.nbt.FloatTag.valueOf(savedPitch));
-                    nbt.put("Rotation", rotationList);
+                    // Teleport with proper rotation
+                    livingEntity.teleportTo(x, y, z);
+
+                    // Set all rotation values
+                    livingEntity.setYRot(savedYaw);
+                    livingEntity.setXRot(savedPitch);
+                    livingEntity.setYHeadRot(savedYaw);
+                    livingEntity.setYBodyRot(savedYaw);
+
+                    // Set previous rotation values for smooth interpolation
+                    livingEntity.yRotO = savedYaw;
+                    livingEntity.xRotO = savedPitch;
+                    livingEntity.yHeadRotO = savedYaw;
+                    livingEntity.yBodyRotO = savedYaw;
                 }
-            }
-
-            if (ent instanceof final ServerPlayer serverPlayer) {
-                nbt.put("Inventory", serverPlayer.getInventory().save(new ListTag()));
-                nbt.put("EnderItems", serverPlayer.getEnderChestInventory().createTag());
-
-                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(ent));
-                ListTag list = nbt.getList("Pos", 6);
-                serverPlayer.teleportToWithTicket(list.getDouble(0), list.getDouble(1), list.getDouble(2));
             } else {
+                // For non-living entities, just load the NBT
                 final CompoundTag modernNbt = new CompoundTag();
                 ent.saveWithoutId(modernNbt);
                 applyModernNBT(nbt, modernNbt, Set.of("Items", "Inventory", "HandItems", "ArmorItems"));
+                ent.load(nbt);
             }
-
-            ent.load(nbt);
         }
 
         // Clean up
