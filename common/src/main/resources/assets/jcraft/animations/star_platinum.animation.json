@@ -12407,8 +12407,14 @@
 			"bones": {
 				"base": {
 					"position": {
-						"vector": [0, 0, 0],
-						"easing": "linear"
+						"0.0": {
+							"vector": [0, 0, 0],
+							"easing": "linear"
+						},
+						"2.0": {
+							"vector": [0, 0, 0],
+							"easing": "linear"
+						}
 					}
 				},
 				"Stand": {
@@ -12586,10 +12592,6 @@
 				"base": {
 					"position": {
 						"0.0": {
-							"vector": [0, 0, 0],
-							"easing": "linear"
-						},
-						"0.5": {
 							"vector": [0, 0, 0],
 							"easing": "linear"
 						},
