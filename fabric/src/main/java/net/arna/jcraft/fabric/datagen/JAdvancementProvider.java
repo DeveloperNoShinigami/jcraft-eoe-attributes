@@ -240,7 +240,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         true,
                         false)
-                .parent(obtainCosplay)
+                .parent(obtainJotaroOutfit)
                 .addCriterion("has_jotaro_p4_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P4_CAP.get()))
                 .addCriterion("has_jotaro_p4_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P4_JACKET.get()))
                 .addCriterion("has_jotaro_p4_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P4_PANTS.get()))
@@ -322,6 +322,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.recipe(JCraft.id("dios_diary")))
                 .build(JCraft.id("obtain_dio_outfit"));
         consumer.accept(obtainDioOutfit);
+        // obtain Heaven Attained outfit
+        final Advancement obtainHeavenAttainedOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.HEAVEN_ATTAINED_WIG.get(),
+                        Component.literal("Heaven attained"),
+                        Component.literal("Obtain all of Heaven attained Dio's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainDioOutfit)
+                .addCriterion("has_heaven_attained_headband", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.HEAVEN_ATTAINED_WIG.get()))
+                .addCriterion("has_heaven_attained_shirt", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.HEAVEN_ATTAINED_SHIRT.get()))
+                .addCriterion("has_heaven_attained_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.HEAVEN_ATTAINED_PANTS.get()))
+                .addCriterion("has_heaven_attained_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.HEAVEN_ATTAINED_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_heaven_attained_outfit"));
+        consumer.accept(obtainHeavenAttainedOutfit);
         // obtain Diary Page
         final Advancement obtainDiaryPage = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIARY_PAGE.get(),

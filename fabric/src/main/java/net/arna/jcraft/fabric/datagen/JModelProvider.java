@@ -45,6 +45,10 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.DIO_HEADBAND.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.DIO_JACKET.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.DIO_PANTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.HEAVEN_ATTAINED_BOOTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.HEAVEN_ATTAINED_WIG.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.HEAVEN_ATTAINED_PANTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.HEAVEN_ATTAINED_SHIRT.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.DIARY_PAGE.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.DIOS_DIARY.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.GREEN_BABY.get(), ModelTemplates.FLAT_ITEM);

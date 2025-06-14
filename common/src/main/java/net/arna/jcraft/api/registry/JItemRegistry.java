@@ -72,8 +72,12 @@ public interface JItemRegistry {
     RegistrySupplier<Item> DIO_JACKET = register("dio_jacket", () -> new DIOJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
     RegistrySupplier<Item> DIO_PANTS = register("dio_pants", () -> new DIOtardItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
     RegistrySupplier<Item> DIO_BOOTS = register("dio_boots", () -> new DIOtardItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
-
     RegistrySupplier<Item> DIO_CAPE = register("dio_cape", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+
+    RegistrySupplier<Item> HEAVEN_ATTAINED_WIG = register("heaven_attained_wig", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> HEAVEN_ATTAINED_SHIRT = register("heaven_attained_shirt", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> HEAVEN_ATTAINED_PANTS = register("heaven_attained_pants", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> HEAVEN_ATTAINED_BOOTS = register("heaven_attained_boots", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
     RegistrySupplier<Item> KARS_HEADWRAP = register("kars_headwrap", () -> new HatItem(ArmorMaterials.IRON, settings()));
     RegistrySupplier<Item> RED_HAT = register("red_hat", () -> new HatItem(ArmorMaterials.IRON, settings()));
