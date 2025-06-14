@@ -1983,6 +1983,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     /**
      * Gets the fallback move to default to when selecting an attack to perform for stand user AI.
+     * If this always returns {@code null}, the AI will not be able to perform any attacks.
      * @return The first valid light attack, or the first valid heavy attack if no light attacks are available.
      */
     protected AbstractMove<?, ? super E> getFallbackMove() {
