@@ -40,6 +40,12 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
             .idleRotation(0f)
             .blockDistance(0f)
             .info(StandInfo.builder()
+                    .freeSpace(Component.literal("""
+                        Mandom is a non-combat stand. its purpose
+                        is to trap and reset things
+                        that happen or maybe what will happen"""))
+
+
                     .name(Component.translatable("entity.jcraft.mandom"))
                     .proCount(2)
                     .conCount(4)
