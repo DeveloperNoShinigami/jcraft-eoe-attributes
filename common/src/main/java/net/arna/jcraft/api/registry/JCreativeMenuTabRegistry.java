@@ -209,7 +209,6 @@ public interface JCreativeMenuTabRegistry {
                 // order of the creative tab
                 .displayItems((displayContext, entries) -> {
                     // cosplay
-                    entries.accept(JItemRegistry.STONE_MASK.get());
                     entries.accept(JItemRegistry.RED_HAT.get());
                     entries.accept(JItemRegistry.KARS_HEADWRAP.get());
                     entries.accept(JItemRegistry.JOTARO_CAP.get());
