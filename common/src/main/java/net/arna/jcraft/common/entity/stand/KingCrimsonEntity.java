@@ -98,7 +98,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                     """, ModifierCondition.LEFT_ARM_EMPTY))
             .modifier(PoseModifiers.parse("""
                     rightArm.yRot += 30deg;
-                    rightArm.z -= 2.1;
+                    rightArm.z += 2.1;
                     """, ModifierCondition.RIGHT_ARM_EMPTY_OR_ITEM))
             .modifier(PoseModifiers.parse("""
                     leftLeg.z -= 1;
