@@ -1,26 +1,26 @@
 package net.arna.jcraft.common.entity.stand;
 
+import net.arna.jcraft.api.attack.enums.BlockableType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.pose.ModifierCondition;
 import net.arna.jcraft.api.pose.PoseModifiers;
 import net.arna.jcraft.api.pose.modifier.IPoseModifier;
 import net.arna.jcraft.api.pose.modifier.PoseModifierGroup;
+import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandType;
-import net.arna.jcraft.api.attack.enums.BlockableType;
-import net.arna.jcraft.api.attack.enums.MoveClass;
-import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.attack.moves.killerqueen.BombPlantAttack;
 import net.arna.jcraft.common.attack.moves.killerqueen.ExplosiveDashAttack;
 import net.arna.jcraft.common.attack.moves.killerqueen.KQDetonateAttack;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,9 +28,11 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.function.Supplier;
+
 public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQueenEntity<E, S>, S extends Enum<S> & StandAnimationState<E>> extends StandEntity<E, S>
         permits KillerQueenEntity, KQBTDEntity {
-    public static final IPoseModifier POSE = PoseModifierGroup.builder()
+    public static final Supplier<IPoseModifier> POSE = () -> PoseModifierGroup.builder()
             .modifier(PoseModifierGroup.builder()
                     .condition(ModifierCondition.USER_NOT_MOVING)
                     .modifier(PoseModifiers.parse("""
@@ -41,7 +43,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
                     .modifier(PoseModifiers.parse("""
                             rightArm.yRot -= 15deg;
                             rightArm.xRot -= 15deg;
-                            rightArm.zRot += 45deg;
+                            rightArm.zRot -= 45deg;
                             """, ModifierCondition.RIGHT_ARM_EMPTY))
                     .build())
             .modifier(PoseModifiers.parse("""

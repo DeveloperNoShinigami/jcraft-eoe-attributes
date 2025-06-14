@@ -6,6 +6,9 @@ import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.events.JEntityEvents;
 import net.arna.jcraft.common.events.JServerEvents;
 import net.arna.jcraft.common.network.c2s.ConfigUpdatePacket;
+import net.arna.jcraft.common.network.s2c.AttackerDataPacket;
+
+import java.util.List;
 
 public interface JEventsRegistry {
     static void registerEvents() {
@@ -23,7 +26,10 @@ public interface JEventsRegistry {
         InteractionEvent.RIGHT_CLICK_BLOCK.register(JServerEvents::rightClickBlock);
 
         // Send initial values of server config options to the player.
-        PlayerEvent.PLAYER_JOIN.register((player) -> ConfigUpdatePacket.sendOptionsToClient(player, ConfigOption.getImmutableOptions().values()));
+        PlayerEvent.PLAYER_JOIN.register((player) -> {
+            ConfigUpdatePacket.sendOptionsToClient(player, ConfigOption.getImmutableOptions().values());
+            AttackerDataPacket.send(List.of(player));
+        });
 
         LifecycleEvent.SERVER_STARTING.register(JServerConfig::load);
         LifecycleEvent.SERVER_STARTED.register(JServerEvents::finishLoading);

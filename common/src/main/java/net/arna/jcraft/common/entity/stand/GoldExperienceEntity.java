@@ -63,6 +63,9 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                 
                     -the superprince of gaming
                     Rekka 1~2>Light>Barrage>Light>Tree>Heavy"""))
+                    .skinName(Component.literal("Anime"))
+                    .skinName(Component.literal("Spectre"))
+                    .skinName(Component.literal("Burning Passion"))
                     .build())
             .summonData(SummonData.of(JSoundRegistry.GE_SUMMON))
             .build();

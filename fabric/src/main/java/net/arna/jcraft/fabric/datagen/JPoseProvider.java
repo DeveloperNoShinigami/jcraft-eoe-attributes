@@ -17,11 +17,12 @@ public class JPoseProvider extends JCraftPoseProvider {
 
     @Override
     protected void registerPoses(PoseRegistrar registrar) {
-        registrar.register(JStandTypeRegistry.GOLD_EXPERIENCE_REQUIEM.getId(), ModelType.HUMANOID, GEREntity.POSE);
-        registrar.register(JStandTypeRegistry.KING_CRIMSON.getId(), ModelType.HUMANOID, KingCrimsonEntity.POSE);
-        registrar.register(JStandTypeRegistry.KILLER_QUEEN_BITES_THE_DUST.getId(), ModelType.HUMANOID, KQBTDEntity.POSE);
-        registrar.register(JStandTypeRegistry.KILLER_QUEEN.getId(), ModelType.HUMANOID, KillerQueenEntity.POSE);
-        registrar.register(JStandTypeRegistry.STAR_PLATINUM.getId(), ModelType.HUMANOID, StarPlatinumEntity.POSE);
-        registrar.register(JStandTypeRegistry.THE_WORLD_OVER_HEAVEN.getId(), ModelType.HUMANOID, TheWorldOverHeavenEntity.POSE);
+        registrar.register(JStandTypeRegistry.GOLD_EXPERIENCE_REQUIEM.getId(), ModelType.HUMANOID, GEREntity.POSE.get());
+        registrar.register(JStandTypeRegistry.KING_CRIMSON.getId(), ModelType.HUMANOID, KingCrimsonEntity.POSE.get());
+        registrar.register(JStandTypeRegistry.KILLER_QUEEN_BITES_THE_DUST.getId(), ModelType.HUMANOID, KQBTDEntity.POSE.get());
+        registrar.register(JStandTypeRegistry.KILLER_QUEEN.getId(), ModelType.HUMANOID, KillerQueenEntity.POSE.get());
+        registrar.register(JStandTypeRegistry.STAR_PLATINUM.getId(), ModelType.HUMANOID, StarPlatinumEntity.POSE.get());
+        registrar.register(JStandTypeRegistry.THE_WORLD.getId(), ModelType.HUMANOID, TheWorldEntity.POSE.get());
+        registrar.register(JStandTypeRegistry.THE_WORLD_OVER_HEAVEN.getId(), ModelType.HUMANOID, TheWorldOverHeavenEntity.POSE.get());
     }
 }

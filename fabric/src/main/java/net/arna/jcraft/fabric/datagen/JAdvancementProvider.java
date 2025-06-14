@@ -216,7 +216,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         final Advancement obtainJotaroOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOTARO_CAP.get(),
                         Component.literal("ORA ORA"),
-                        Component.literal("Obtain all of Jotaro's clothes"),
+                        Component.literal("Obtain all of Jotaro's clothes from Part 3"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -230,6 +230,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_jotaro_outfit"));
         consumer.accept(obtainJotaroOutfit);
+        // obtain Jotaro P4 outfit
+        final Advancement obtainJotaroP4Outfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.JOTARO_P4_CAP.get(),
+                        Component.literal("Ugly watch"),
+                        Component.literal("Obtain all of Jotaro's clothes from Part 4"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainJotaroOutfit)
+                .addCriterion("has_jotaro_p4_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P4_CAP.get()))
+                .addCriterion("has_jotaro_p4_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P4_JACKET.get()))
+                .addCriterion("has_jotaro_p4_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P4_PANTS.get()))
+                .addCriterion("has_jotaro_p4_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P4_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_jotaro_p4_outfit"));
+        consumer.accept(obtainJotaroP4Outfit);
         // obtain Johnny outfit
         final Advancement obtainJohnnyOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOHNNY_CAP.get(),
@@ -248,6 +266,42 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_johnny_outfit"));
         consumer.accept(obtainJohnnyOutfit);
+        // obtain Gyro outfit
+        final Advancement obtainGyroOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.GYRO_HAT.get(),
+                        Component.literal("Pizza Mozzarella"),
+                        Component.literal("Obtain all of Gyro's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_gyro_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GYRO_HAT.get()))
+                .addCriterion("has_gyro_shirt", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GYRO_SHIRT.get()))
+                .addCriterion("has_gyro_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GYRO_PANTS.get()))
+                .addCriterion("has_gyro_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GYRO_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_gyro_outfit"));
+        consumer.accept(obtainGyroOutfit);
+        // obtain Pucci outfit
+        final Advancement obtainPucciOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.PUCCIS_HAT.get(),
+                        Component.literal("Count prime numbers"),
+                        Component.literal("Obtain all of Pucci's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_pucci_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.PUCCIS_HAT.get()))
+                .addCriterion("has_pucci_robe", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.PUCCI_ROBE.get()))
+                .addCriterion("has_pucci_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.PUCCI_PANTS.get()))
+                .addCriterion("has_pucci_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.PUCCI_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_pucci_outfit"));
+        consumer.accept(obtainPucciOutfit);
         // obtain Dio outfit
         final Advancement obtainDioOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIO_HEADBAND.get(),
@@ -268,6 +322,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.recipe(JCraft.id("dios_diary")))
                 .build(JCraft.id("obtain_dio_outfit"));
         consumer.accept(obtainDioOutfit);
+        // obtain Heaven Attained outfit
+        final Advancement obtainHeavenAttainedOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.HEAVEN_ATTAINED_WIG.get(),
+                        Component.literal("Heaven attained"),
+                        Component.literal("Obtain all of Heaven attained Dio's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainDioOutfit)
+                .addCriterion("has_heaven_attained_headband", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.HEAVEN_ATTAINED_WIG.get()))
+                .addCriterion("has_heaven_attained_shirt", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.HEAVEN_ATTAINED_SHIRT.get()))
+                .addCriterion("has_heaven_attained_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.HEAVEN_ATTAINED_PANTS.get()))
+                .addCriterion("has_heaven_attained_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.HEAVEN_ATTAINED_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_heaven_attained_outfit"));
+        consumer.accept(obtainHeavenAttainedOutfit);
         // obtain Diary Page
         final Advancement obtainDiaryPage = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIARY_PAGE.get(),

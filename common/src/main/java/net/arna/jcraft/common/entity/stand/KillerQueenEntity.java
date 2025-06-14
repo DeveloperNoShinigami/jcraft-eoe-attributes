@@ -3,25 +3,26 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import net.arna.jcraft.api.pose.modifier.IPoseModifier;
-import net.arna.jcraft.api.stand.StandData;
-import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.api.stand.StandInfo;
+import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.attack.enums.MoveClass;
-import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.pose.modifier.IPoseModifier;
+import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.stand.StandData;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.common.attack.moves.killerqueen.*;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.api.registry.JSoundRegistry;
-import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3f;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Killer_Queen">Killer Queen</a>.
@@ -57,7 +58,7 @@ public final class KillerQueenEntity extends AbstractKillerQueenEntity<KillerQue
                     .skinName(Component.literal("1999"))
                     .build())
             .build();
-    public static final IPoseModifier POSE = AbstractKillerQueenEntity.POSE;
+    public static final Supplier<IPoseModifier> POSE = AbstractKillerQueenEntity.POSE;
 
     public static final SimpleAttack<KillerQueenEntity> HEAVY = new SimpleAttack<KillerQueenEntity>(
             200, 16, 24, 0.75f, 9f, 10, 2f, 1.75f, 0f)

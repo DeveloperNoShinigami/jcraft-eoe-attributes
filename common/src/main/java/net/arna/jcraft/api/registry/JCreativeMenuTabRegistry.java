@@ -19,6 +19,7 @@ public interface JCreativeMenuTabRegistry {
     @SuppressWarnings("UnstableApiUsage") // we do not care :)
     static void init() {
         JCraft.CREATIVE_TAB_REGISTRY.register("general", JCreativeMenuTabRegistry::createJcraftItemGroup);
+        JCraft.CREATIVE_TAB_REGISTRY.register("cosplay", JCreativeMenuTabRegistry::createJcraftCosplayGroup);
         JCraft.CREATIVE_TAB_REGISTRY.register("stand_discs", JCreativeMenuTabRegistry::createStandDiscItemGroup);
         // building blocks
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
@@ -63,16 +64,31 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.DIO_JACKET.get(), JItemRegistry.DIO_CAPE.get());
             output.acceptAfter(JItemRegistry.DIO_CAPE.get(), JItemRegistry.DIO_PANTS.get());
             output.acceptAfter(JItemRegistry.DIO_PANTS.get(), JItemRegistry.DIO_BOOTS.get());
-            output.acceptAfter(JItemRegistry.DIO_BOOTS.get(), JItemRegistry.JOHNNY_CAP.get());
+            output.acceptAfter(JItemRegistry.DIO_BOOTS.get(), JItemRegistry.HEAVEN_ATTAINED_WIG.get());
+            output.acceptAfter(JItemRegistry.HEAVEN_ATTAINED_WIG.get(), JItemRegistry.HEAVEN_ATTAINED_SHIRT.get());
+            output.acceptAfter(JItemRegistry.HEAVEN_ATTAINED_SHIRT.get(), JItemRegistry.HEAVEN_ATTAINED_PANTS.get());
+            output.acceptAfter(JItemRegistry.HEAVEN_ATTAINED_PANTS.get(), JItemRegistry.HEAVEN_ATTAINED_BOOTS.get());
+            output.acceptAfter(JItemRegistry.HEAVEN_ATTAINED_BOOTS.get(), JItemRegistry.JOTARO_P4_CAP.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P4_CAP.get(), JItemRegistry.JOTARO_P4_JACKET.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P4_JACKET.get(), JItemRegistry.JOTARO_P4_PANTS.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P4_PANTS.get(), JItemRegistry.JOTARO_P4_BOOTS.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P4_BOOTS.get(), JItemRegistry.JOHNNY_CAP.get());
             output.acceptAfter(JItemRegistry.JOHNNY_CAP.get(), JItemRegistry.JOHNNY_JACKET.get());
             output.acceptAfter(JItemRegistry.JOHNNY_JACKET.get(), JItemRegistry.JOHNNY_PANTS.get());
             output.acceptAfter(JItemRegistry.JOHNNY_PANTS.get(), JItemRegistry.JOHNNY_BOOTS.get());
+            output.acceptAfter(JItemRegistry.JOHNNY_BOOTS.get(), JItemRegistry.GYRO_HAT.get());
+            output.acceptAfter(JItemRegistry.GYRO_HAT.get(), JItemRegistry.GYRO_SHIRT.get());
+            output.acceptAfter(JItemRegistry.GYRO_SHIRT.get(), JItemRegistry.GYRO_PANTS.get());
+            output.acceptAfter(JItemRegistry.GYRO_PANTS.get(), JItemRegistry.GYRO_BOOTS.get());
+            output.acceptAfter(JItemRegistry.GYRO_BOOTS.get(), JItemRegistry.PUCCIS_HAT.get());
+            output.acceptAfter(JItemRegistry.PUCCIS_HAT.get(), JItemRegistry.PUCCI_ROBE.get());
+            output.acceptAfter(JItemRegistry.PUCCI_ROBE.get(), JItemRegistry.PUCCI_PANTS.get());
+            output.acceptAfter(JItemRegistry.PUCCI_PANTS.get(), JItemRegistry.PUCCI_BOOTS.get());
             output.acceptBefore(Items.SHIELD, JItemRegistry.BOXING_GLOVES.get());
             output.acceptBefore(Items.SHIELD, JItemRegistry.STEEL_BALL.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.STONE_MASK.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.RED_HAT.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.KARS_HEADWRAP.get());
-            output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.PUCCIS_HAT.get());
         });
         // ingredients
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.INGREDIENTS.location()), (flags, output, canUseGameMasterBlocks) -> {
@@ -150,20 +166,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.ANUBIS.get());
                     entries.accept(JItemRegistry.BOXING_GLOVES.get());
                     entries.accept(JItemRegistry.STONE_MASK.get());
-                    entries.accept(JItemRegistry.RED_HAT.get());
-                    entries.accept(JItemRegistry.KARS_HEADWRAP.get());
-                    entries.accept(JItemRegistry.PUCCIS_HAT.get());
                     entries.accept(JItemRegistry.COFFIN_BLOCK.get());
-                    // cosplay
-                    entries.accept(JItemRegistry.JOTARO_CAP.get());
-                    entries.accept(JItemRegistry.JOTARO_JACKET.get());
-                    entries.accept(JItemRegistry.JOTARO_PANTS.get());
-                    entries.accept(JItemRegistry.JOTARO_BOOTS.get());
-                    entries.accept(JItemRegistry.DIO_HEADBAND.get());
-                    entries.accept(JItemRegistry.DIO_JACKET.get());
-                    entries.accept(JItemRegistry.DIO_CAPE.get());
-                    entries.accept(JItemRegistry.DIO_PANTS.get());
-                    entries.accept(JItemRegistry.DIO_BOOTS.get());
                     // vehicles
                     entries.accept(JItemRegistry.ROAD_ROLLER.get());
                     // blood bottles
@@ -195,6 +198,49 @@ public interface JCreativeMenuTabRegistry {
                     if (JItemRegistry.DEBUG_WAND != null) {
                         entries.accept(JItemRegistry.DEBUG_WAND.get());
                     }
+                })
+                .build();
+    }
+
+    static CreativeModeTab createJcraftCosplayGroup() {
+        return CreativeModeTab.builder(CreativeModeTab.Row.TOP, 2)
+                .title(Component.translatable("itemGroup.jcraft.cosplay"))
+                .icon(() -> JItemRegistry.DIO_CAPE.get().getDefaultInstance())
+                // order of the creative tab
+                .displayItems((displayContext, entries) -> {
+                    // cosplay
+                    entries.accept(JItemRegistry.STONE_MASK.get());
+                    entries.accept(JItemRegistry.RED_HAT.get());
+                    entries.accept(JItemRegistry.KARS_HEADWRAP.get());
+                    entries.accept(JItemRegistry.JOTARO_CAP.get());
+                    entries.accept(JItemRegistry.JOTARO_JACKET.get());
+                    entries.accept(JItemRegistry.JOTARO_PANTS.get());
+                    entries.accept(JItemRegistry.JOTARO_BOOTS.get());
+                    entries.accept(JItemRegistry.DIO_HEADBAND.get());
+                    entries.accept(JItemRegistry.DIO_JACKET.get());
+                    entries.accept(JItemRegistry.DIO_CAPE.get());
+                    entries.accept(JItemRegistry.DIO_PANTS.get());
+                    entries.accept(JItemRegistry.DIO_BOOTS.get());
+                    entries.accept(JItemRegistry.HEAVEN_ATTAINED_WIG.get());
+                    entries.accept(JItemRegistry.HEAVEN_ATTAINED_SHIRT.get());
+                    entries.accept(JItemRegistry.HEAVEN_ATTAINED_PANTS.get());
+                    entries.accept(JItemRegistry.HEAVEN_ATTAINED_BOOTS.get());
+                    entries.accept(JItemRegistry.JOTARO_P4_CAP.get());
+                    entries.accept(JItemRegistry.JOTARO_P4_JACKET.get());
+                    entries.accept(JItemRegistry.JOTARO_P4_PANTS.get());
+                    entries.accept(JItemRegistry.JOTARO_P4_BOOTS.get());
+                    entries.accept(JItemRegistry.JOHNNY_CAP.get());
+                    entries.accept(JItemRegistry.JOHNNY_JACKET.get());
+                    entries.accept(JItemRegistry.JOHNNY_PANTS.get());
+                    entries.accept(JItemRegistry.JOHNNY_BOOTS.get());
+                    entries.accept(JItemRegistry.GYRO_HAT.get());
+                    entries.accept(JItemRegistry.GYRO_SHIRT.get());
+                    entries.accept(JItemRegistry.GYRO_PANTS.get());
+                    entries.accept(JItemRegistry.GYRO_BOOTS.get());
+                    entries.accept(JItemRegistry.PUCCIS_HAT.get());
+                    entries.accept(JItemRegistry.PUCCI_ROBE.get());
+                    entries.accept(JItemRegistry.PUCCI_PANTS.get());
+                    entries.accept(JItemRegistry.PUCCI_BOOTS.get());
                 })
                 .build();
     }

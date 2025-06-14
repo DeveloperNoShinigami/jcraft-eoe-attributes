@@ -4,22 +4,22 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.pose.modifier.IPoseModifier;
 import net.arna.jcraft.api.pose.modifier.LevitationPoseModifier;
+import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
-import net.arna.jcraft.api.attack.MoveSetManager;
-import net.arna.jcraft.api.attack.enums.MoveClass;
-import net.arna.jcraft.api.attack.MoveMap;
-import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.common.attack.moves.goldexperience.requiem.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.api.registry.JSoundRegistry;
-import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
@@ -36,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation.CRUSH;
 import static net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation.HIGH;
@@ -70,7 +71,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     .skinName(Component.literal("Cherry Blossom"))
                     .build())
             .build();
-    public static final IPoseModifier POSE = new LevitationPoseModifier();
+    public static final Supplier<IPoseModifier> POSE = LevitationPoseModifier::new;
 
     public static final SimpleAttack<GEREntity> LIGHT_FOLLOWUP = new SimpleAttack<GEREntity>(
             0, 6, 13, 0.75f, 6f, 8, 1.5f, 1f, -0.1f)

@@ -14,6 +14,7 @@ import net.arna.jcraft.common.attack.actions.PlaySoundAction;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.attack.moves.magiciansred.*;
 import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
@@ -192,12 +193,16 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
                 new Vector3f(1.0f, 0.0f, 0.0f),
                 new Vector3f(1.0f, 0.2f, 0.4f)
         };
+
+        MoveMap<MagiciansRedEntity, State> movemap = new MoveMapImpl<>();
+        registerMoves(movemap);
+        getMoveMap().copyFrom(movemap, true);
     }
 
     private static void registerMoves(MoveMap<MagiciansRedEntity, State> moves) {
-        moves.registerImmediate(MoveClass.LIGHT, LIGHT, State.LIGHT);
-
-        moves.registerImmediate(MoveClass.HEAVY, HAMMERFIST, State.HAMMER);
+//        moves.registerImmediate(MoveClass.LIGHT, LIGHT, State.LIGHT);
+//
+//        moves.registerImmediate(MoveClass.HEAVY, HAMMERFIST, State.HAMMER);
         moves.register(MoveClass.BARRAGE, FLAMETHROWER, State.BARRAGE);
 
         moves.register(MoveClass.SPECIAL1, CROSSFIRE, State.CROSSFIRE);

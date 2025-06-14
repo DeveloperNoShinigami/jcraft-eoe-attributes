@@ -444,7 +444,13 @@ public class ItemTossProjectile extends AbstractArrow {
     }
 
     public double penetrationAngle() {
-        return 45d; // ??? what does it mean?
+        if (getItem().is(JTagRegistry.ACUTE)) {
+            return 15d;
+        }
+        if (getItem().is(JTagRegistry.OBTUSE)) {
+            return 60d;
+        }
+        return 45d;
     }
 
     /**
