@@ -1981,7 +1981,38 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return attack.specificMoveSelectionCriterion(getThis(), mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
     }
 
-    private @Nullable Pair<AbstractMove<?, ?>, Boolean> selectAttack(CommonCooldownsComponent cooldowns, LivingEntity mob,
+    /**
+     * Gets the fallback move to default to when selecting an attack to perform for stand user AI.
+     * @return The first valid light attack, or the first valid heavy attack if no light attacks are available.
+     */
+    protected AbstractMove<?, ? super E> getFallbackMove() {
+        MoveMap.Entry<E, S> lightEntry = getFirstValidEntry(MoveClass.LIGHT);
+        if (lightEntry == null) {
+            MoveMap.Entry<E, S> heavyEntry = getFirstValidEntry(MoveClass.HEAVY);
+            if (heavyEntry == null) {
+                JCraft.LOGGER.warn("Couldn't find light or heavy attack entry while running selectAttack on stand: {}", this);
+                return null;
+            } else {
+                return heavyEntry.getMove();
+            }
+        } else {
+            return lightEntry.getMove();
+        }
+    }
+
+    /**
+     * Selects an attack to perform for stand user AI.
+     * @param cooldowns The cooldowns component of the mob.
+     * @param mob The mob entity using the stand.
+     * @param target The target entity.
+     * @param stunTicks The stun ticks of the mob.
+     * @param enemyMoveStun The move stun of the enemy stand, if any.
+     * @param distance The distance to the target.
+     * @param enemyStand The enemy stand, if any.
+     * @param enemyAttack The current attack of the enemy stand, if any.
+     * @return A Pair containing the selected move and whether it requires crouching, or null if no suitable attack was found.
+     */
+    protected @Nullable Pair<AbstractMove<?, ?>, Boolean> selectAttack(CommonCooldownsComponent cooldowns, LivingEntity mob,
                                                                      LivingEntity target, int stunTicks, int enemyMoveStun,
                                                                      double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
         AbstractMove<?, ? super E> selectedAttack;
@@ -1995,17 +2026,9 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
         int movesOnCooldown = 0;
 
-        MoveMap.Entry<E, S> lightEntry = getFirstValidEntry(MoveClass.LIGHT);
-        if (lightEntry == null) {
-            MoveMap.Entry<E, S> heavyEntry = getFirstValidEntry(MoveClass.HEAVY);
-            if (heavyEntry == null) {
-                JCraft.LOGGER.warn("Couldn't find light or heavy attack entry while running selectAttack on stand: {}", this);
-                return null;
-            } else {
-                selectedAttack = heavyEntry.getMove();
-            }
-        } else {
-            selectedAttack = lightEntry.getMove();
+        selectedAttack = getFallbackMove(); // Fallback to light or heavy attack
+        if (selectedAttack == null) {
+            return null;
         }
 
         int selectedAttackInitTime = selectedAttack.getDuration() - selectedAttack.getWindup();
