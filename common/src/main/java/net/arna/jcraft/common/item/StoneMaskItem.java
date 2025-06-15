@@ -119,8 +119,11 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
     private PlayState predicate(AnimationState<StoneMaskItem> state) {
         Entity entity = state.getData(DataTickets.ENTITY);
         if (entity instanceof LivingEntity livingEntity) {
-            String anim = "animation.stone_mask." + (CLENCH.containsKey(livingEntity.getId()) ? "clench" : "dormant");
-            state.getController().setAnimation(RawAnimation.begin().thenPlayAndHold(anim));
+            RawAnimation anim = CLENCH.containsKey(livingEntity.getId())
+                    ? RawAnimation.begin().thenPlayAndHold("animation.stone_mask.clench")
+                    : RawAnimation.begin().thenLoop("animation.stone_mask.dormant");
+
+            state.getController().setAnimation(anim);
 
         }
         return PlayState.CONTINUE;
