@@ -522,7 +522,7 @@
   "jcraft.serverconfig.option.disableCombatElytra": "Disable Elytra in Combat",
   "jcraft.serverconfig.category.interaction": "Interaction",
   "jcraft.serverconfig.option.universalAbilities": "Universal Abilities",
-  "jcraft.serverconfig.option.barrageMining": "Barrage Mining",
+  "jcraft.serverconfig.option.miningBarrage": "Barrage Mining",
   "jcraft.serverconfig.option.meteorSpawnRate": "Meteor Spawn Rate (%)",
   "jcraft.serverconfig.option.barrageMiningSpeed": "Barrage Mining Speed",
   "jcraft.serverconfig.option.standGriefing": "Stand Griefing",
@@ -535,6 +535,7 @@
   "jcraft.serverconfig.category.gameplay": "Gameplay",
   "jcraft.serverconfig.option.exclusiveStands": "Exclusive Stands",
   "jcraft.serverconfig.option.standUserSight": "Stand User Sight",
+  "jcraft.serverconfig.option.spawnerStands": "Spawner Stands",
 
   "jcraft.generic.barrage": "Barrage",
   "jcraft.generic.ts": "Timestop",
