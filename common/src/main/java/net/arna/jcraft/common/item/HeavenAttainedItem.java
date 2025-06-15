@@ -10,8 +10,8 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.client.renderer.armor.DIOJacketRenderer;
-import net.arna.jcraft.client.renderer.armor.JArmor;
+import net.arna.jcraft.client.renderer.armor.HeavenAttainedArmorRenderer;
+import net.arna.jcraft.client.renderer.armor.JohnnyArmorRenderer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,17 +19,12 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class JArmorItem extends ArmorItem implements GeoItem {
-
-    protected final Supplier<? extends JArmor<?>> rendererSupplier;
-
-    public JArmorItem(final ArmorMaterial materialIn, final Type slot, final Supplier<? extends JArmor<?>> rendererSupplier, final Properties builder) {
+public class HeavenAttainedItem extends ArmorItem implements GeoItem {
+    public HeavenAttainedItem(ArmorMaterial materialIn, Type slot, Properties builder) {
         super(materialIn, slot, builder);
-        this.rendererSupplier = Objects.requireNonNull(rendererSupplier);
     }
 
     @Override
@@ -39,9 +34,7 @@ public class JArmorItem extends ArmorItem implements GeoItem {
             @SuppressWarnings("unchecked")
             @Override public @NonNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
                     LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
-                if (renderer == null) {
-                    renderer = rendererSupplier.get();
-                }
+                if (renderer == null) renderer = new HeavenAttainedArmorRenderer();
                 renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                 return renderer;
             }});
@@ -60,7 +53,7 @@ public class JArmorItem extends ArmorItem implements GeoItem {
         controllers.add(new AnimationController<>(this, "controller", 20, this::predicate));
     }
 
-    private PlayState predicate(AnimationState<JArmorItem> animationState) {
+    private PlayState predicate(AnimationState<HeavenAttainedItem> animationState) {
         return PlayState.STOP;
     }
 

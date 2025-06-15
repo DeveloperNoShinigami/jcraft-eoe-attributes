@@ -5,17 +5,6 @@ import dev.architectury.platform.Platform;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.client.renderer.armor.DIOJacketRenderer;
-import net.arna.jcraft.client.renderer.armor.DIOtardRenderer;
-import net.arna.jcraft.client.renderer.armor.GyroBottomRenderer;
-import net.arna.jcraft.client.renderer.armor.HeavenAttainedArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.JohnnyArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.JotaroArmorP4Renderer;
-import net.arna.jcraft.client.renderer.armor.JotaroArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.PucciArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.PucciRobeRenderer;
-import net.arna.jcraft.client.renderer.armor.RisottoBottomRenderer;
-import net.arna.jcraft.client.renderer.armor.RisottoCapRenderer;
 import net.arna.jcraft.common.entity.vehicle.RoadRollerEntity;
 import net.arna.jcraft.common.item.*;
 import net.minecraft.core.registries.Registries;
@@ -79,16 +68,16 @@ public interface JItemRegistry {
 
     RegistrySupplier<LivingArrowItem> LIVING_ARROW = register("living_arrow", () -> new LivingArrowItem(settings().rarity(Rarity.RARE).fireResistant()));
 
-    RegistrySupplier<Item> DIO_HEADBAND = register("dio_headband", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, DIOJacketRenderer::new, settings()));
-    RegistrySupplier<Item> DIO_JACKET = register("dio_jacket", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, DIOJacketRenderer::new, settings()));
-    RegistrySupplier<Item> DIO_PANTS = register("dio_pants", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, DIOtardRenderer::new, settings()));
-    RegistrySupplier<Item> DIO_BOOTS = register("dio_boots", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, DIOtardRenderer::new, settings()));
+    RegistrySupplier<Item> DIO_HEADBAND = register("dio_headband", () -> new DIOJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> DIO_JACKET = register("dio_jacket", () -> new DIOJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> DIO_PANTS = register("dio_pants", () -> new DIOtardItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> DIO_BOOTS = register("dio_boots", () -> new DIOtardItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
     RegistrySupplier<Item> DIO_CAPE = register("dio_cape", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
 
-    RegistrySupplier<Item> HEAVEN_ATTAINED_WIG = register("heaven_attained_wig", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, HeavenAttainedArmorRenderer::new, settings()));
-    RegistrySupplier<Item> HEAVEN_ATTAINED_SHIRT = register("heaven_attained_shirt", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, HeavenAttainedArmorRenderer::new, settings()));
-    RegistrySupplier<Item> HEAVEN_ATTAINED_PANTS = register("heaven_attained_pants", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, HeavenAttainedArmorRenderer::new, settings()));
-    RegistrySupplier<Item> HEAVEN_ATTAINED_BOOTS = register("heaven_attained_boots", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, HeavenAttainedArmorRenderer::new, settings()));
+    RegistrySupplier<Item> HEAVEN_ATTAINED_WIG = register("heaven_attained_wig", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> HEAVEN_ATTAINED_SHIRT = register("heaven_attained_shirt", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> HEAVEN_ATTAINED_PANTS = register("heaven_attained_pants", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> HEAVEN_ATTAINED_BOOTS = register("heaven_attained_boots", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
     RegistrySupplier<Item> KARS_HEADWRAP = register("kars_headwrap", () -> new HatItem(ArmorMaterials.IRON, settings()));
     RegistrySupplier<Item> RED_HAT = register("red_hat", () -> new HatItem(ArmorMaterials.IRON, settings()));
@@ -97,34 +86,34 @@ public interface JItemRegistry {
     RegistrySupplier<Item> STONE_MASK = register("stone_mask", () -> new StoneMaskItem(ArmorMaterials.CHAIN, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> SHIV = register("shiv", () -> new ShivItem(Tiers.IRON, settings()));
 
-    RegistrySupplier<Item> JOTARO_CAP = register("jotaro_cap", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, JotaroArmorRenderer::new, settings()));
+    RegistrySupplier<Item> JOTARO_CAP = register("jotaro_cap", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> JOTARO_JACKET = register("jotaro_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> JOTARO_PANTS = register("jotaro_pants", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, JotaroArmorRenderer::new, settings()));
-    RegistrySupplier<Item> JOTARO_BOOTS = register("jotaro_boots", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, JotaroArmorRenderer::new, settings()));
+    RegistrySupplier<Item> JOTARO_PANTS = register("jotaro_pants", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> JOTARO_BOOTS = register("jotaro_boots", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
-    RegistrySupplier<Item> JOTARO_P4_CAP = register("jotaro_p4_cap", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, JotaroArmorP4Renderer::new, settings()));
+    RegistrySupplier<Item> JOTARO_P4_CAP = register("jotaro_p4_cap", () -> new JotaroClothesP4Item(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> JOTARO_P4_JACKET = register("jotaro_p4_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> JOTARO_P4_PANTS = register("jotaro_p4_pants", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, JotaroArmorP4Renderer::new, settings()));
-    RegistrySupplier<Item> JOTARO_P4_BOOTS = register("jotaro_p4_boots", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, JotaroArmorP4Renderer::new, settings()));
+    RegistrySupplier<Item> JOTARO_P4_PANTS = register("jotaro_p4_pants", () -> new JotaroClothesP4Item(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> JOTARO_P4_BOOTS = register("jotaro_p4_boots", () -> new JotaroClothesP4Item(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
-    RegistrySupplier<Item> RISOTTO_CAP = register("risotto_cap", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, RisottoCapRenderer::new, settings()));
+    RegistrySupplier<Item> RISOTTO_CAP = register("risotto_cap", () -> new RisottoCapItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> RISOTTO_JACKET = register("risotto_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> RISOTTO_PANTS = register("risotto_pants", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, RisottoBottomRenderer::new, settings()));
-    RegistrySupplier<Item> RISOTTO_BOOTS = register("risotto_boots", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, RisottoBottomRenderer::new, settings()));
+    RegistrySupplier<Item> RISOTTO_PANTS = register("risotto_pants", () -> new RisottoBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> RISOTTO_BOOTS = register("risotto_boots", () -> new RisottoBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
-    RegistrySupplier<Item> JOHNNY_CAP = register("johnny_cap", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, JohnnyArmorRenderer::new, settings()));
-    RegistrySupplier<Item> JOHNNY_JACKET = register("johnny_jacket", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, JohnnyArmorRenderer::new, settings()));
-    RegistrySupplier<Item> JOHNNY_PANTS = register("johnny_pants", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, JohnnyArmorRenderer::new, settings()));
-    RegistrySupplier<Item> JOHNNY_BOOTS = register("johnny_boots", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, JohnnyArmorRenderer::new, settings()));
+    RegistrySupplier<Item> JOHNNY_CAP = register("johnny_cap", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> JOHNNY_JACKET = register("johnny_jacket", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> JOHNNY_PANTS = register("johnny_pants", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> JOHNNY_BOOTS = register("johnny_boots", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
     RegistrySupplier<Item> GYRO_HAT = register("gyro_hat", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> GYRO_SHIRT = register("gyro_shirt", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> GYRO_PANTS = register("gyro_pants", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, GyroBottomRenderer::new, settings()));
-    RegistrySupplier<Item> GYRO_BOOTS = register("gyro_boots", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, GyroBottomRenderer::new, settings()));
+    RegistrySupplier<Item> GYRO_PANTS = register("gyro_pants", () -> new GyroBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> GYRO_BOOTS = register("gyro_boots", () -> new GyroBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
-    RegistrySupplier<Item> PUCCI_ROBE = register("pucci_robe", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, PucciRobeRenderer::new, settings()));
-    RegistrySupplier<Item> PUCCI_PANTS = register("pucci_pants", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, PucciArmorRenderer::new, settings()));
-    RegistrySupplier<Item> PUCCI_BOOTS = register("pucci_boots", () -> new JArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, PucciArmorRenderer::new, settings()));
+    RegistrySupplier<Item> PUCCI_ROBE = register("pucci_robe", () -> new PucciRobeItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> PUCCI_PANTS = register("pucci_pants", () -> new PucciBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> PUCCI_BOOTS = register("pucci_boots", () -> new PucciBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
     RegistrySupplier<Item> CINDERELLA_MASK = register("cinderella_mask", CinderellaMaskItem::new);
 
