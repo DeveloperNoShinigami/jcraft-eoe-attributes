@@ -403,8 +403,8 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .pattern("GGG")
                 .define('B', Items.BLACK_DYE)
                 .define('G', Items.GOLD_NUGGET)
-                .define('H', Items.NETHERITE_HELMET)
-                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .define('H', Items.LEATHER_HELMET)
+                .unlockedBy("has_leather_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER_HELMET))
                 .save(exporter);
         // Risotto's jacket
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.RISOTTO_JACKET.get())
