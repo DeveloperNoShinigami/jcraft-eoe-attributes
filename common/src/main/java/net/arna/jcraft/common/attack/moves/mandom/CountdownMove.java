@@ -2,11 +2,13 @@ package net.arna.jcraft.common.attack.moves.mandom;
 
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.CooldownType;
@@ -91,6 +93,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
         return Set.of();
     }
 
+
     public void tickCountdownInfo(final MandomEntity attacker) {
         if (!(attacker.getUser() instanceof ServerPlayer serverPlayer)) {
             return;
@@ -108,7 +111,6 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             final Vec3 position = data.originalPos();
 
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-            buf.writeShort(8);
 
             buf.writeInt(entity.getId());
             buf.writeDouble(position.x());

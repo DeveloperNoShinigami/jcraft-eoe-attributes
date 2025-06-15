@@ -94,6 +94,7 @@ public class ClientPacketHandler {
         register(S2C_PREDICTION_UPDATE, ClientPacketHandler::handlePrediction);
         register(S2C_MAGNETIC_FIELD_PARTICLE, ClientPacketHandler::handleMagneticFieldParticle);
         register(S2C_ATTACKER_DATA, ClientPacketHandler::handleAttackerData);
+        register(S2C_MANDOM_DATA, ClientPacketHandler::handleMandomData);
     }
 
     private static void handleAttackerData(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
@@ -103,6 +104,7 @@ public class ClientPacketHandler {
     private static final int
             NUM_MAGNETIC_CIRCLES = 16,
             NUM_MAGNETIC_PARTICLES = 32;
+
     private static void handleMagneticFieldParticle(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         final double strength = buf.readDouble();
 
@@ -360,29 +362,6 @@ public class ClientPacketHandler {
                 });
             }
 
-            case (8) -> {
-                final int entID = buf.readInt();
-                final Vec3 originalPos = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
-
-                client.execute(() -> {
-                    final Entity ent = client.level.getEntity(entID);
-                    if (ent == null) {
-                        return;
-                    }
-                    final Vec3 currentPos = ent.getEyePosition();
-                    final Vec3 originalToCurrent = currentPos.subtract(originalPos).normalize();
-                    for (double h = 0; h < currentPos.distanceTo(originalPos); ++h) {
-                        client.level.addParticle(
-                                new DustParticleOptions(new Vector3f(1.0f, 0.2f, 0.6f), 1.0f), // Pink color
-                                originalPos.x + originalToCurrent.x * h,
-                                originalPos.y + originalToCurrent.y * h,
-                                originalPos.z + originalToCurrent.z * h,
-                                -originalToCurrent.x, -originalToCurrent.y, -originalToCurrent.z
-                        );
-                    }
-                });
-            }
-
             // Bites the Dust tracker
             case (9) -> {
                 final double v1x = buf.readDouble();
@@ -474,6 +453,30 @@ public class ClientPacketHandler {
                 });
             }
         }
+    }
+
+    public static void handleMandomData(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
+        final int entID = buf.readInt();
+        final Vec3 originalPos = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+
+        client.execute(() -> {
+            final Entity ent = client.level.getEntity(entID);
+            if (ent == null) {
+                return;
+            }
+            final Vec3 currentPos = ent.getEyePosition();
+            final Vec3 originalToCurrent = currentPos.subtract(originalPos).normalize();
+            System.out.println("distance" + currentPos.distanceTo(originalPos));
+            for (double h = 0; h < currentPos.distanceTo(originalPos); ++h) {
+                client.level.addParticle(
+                        new DustParticleOptions(new Vector3f(1.0f, 0.2f, 0.6f), 1.0f), // Pink color
+                        originalPos.x + originalToCurrent.x * h,
+                        originalPos.y + originalToCurrent.y * h,
+                        originalPos.z + originalToCurrent.z * h,
+                        -originalToCurrent.x, -originalToCurrent.y, -originalToCurrent.z
+                );
+            }
+        });
     }
 
     public static void handleShaderActivation(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
