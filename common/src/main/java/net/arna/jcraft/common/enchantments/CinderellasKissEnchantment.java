@@ -24,6 +24,12 @@ public class CinderellasKissEnchantment extends Enchantment {
         return stack.getItem() == JItemRegistry.CINDERELLA_MASK.get();
     }
 
+    @Override
+    public boolean isDiscoverable() {
+        // Prevent this enchantment from being applied through enchantment tables.
+        return false;
+    }
+
     public static int getCKLevel(final ItemStack stack) {
         return EnchantmentHelper.getItemEnchantmentLevel(INSTANCE, stack);
     }
