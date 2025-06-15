@@ -57,7 +57,7 @@ public class StandDiscItem extends Item {
         }
 
         // Get NBT
-        StandType itemStand = null;
+        StandType itemStand;
         int itemSkin = 0;
 
         final CompoundTag data = itemStack.getOrCreateTag();
@@ -83,12 +83,18 @@ public class StandDiscItem extends Item {
         }
 
         standData.setTypeAndSkin(itemStand, itemSkin);
-        data.putString("StandID", userStand == null ? null : userStand.getId().toString());
-        data.putInt("Skin", userSkin);
+        if (userStand == null) {
+            data.remove("StandID");
+            data.remove("Skin");
+        } else {
+            data.putString("StandID", userStand.getId().toString());
+            data.putInt("Skin", userSkin);
+        }
 
         StandEntity<?, ?> stand = standData.getStand();
         if (stand != null) {
             stand.discard();
+            standData.setStand(null);
         }
         JCraft.summon(world, user);
 

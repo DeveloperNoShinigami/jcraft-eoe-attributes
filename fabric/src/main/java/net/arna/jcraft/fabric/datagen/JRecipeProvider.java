@@ -396,6 +396,46 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('W', Items.WHITE_DYE)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);
+        // Risotto's cap
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.RISOTTO_CAP.get())
+                .pattern("BBB")
+                .pattern("BHB")
+                .pattern("GGG")
+                .define('B', Items.BLACK_DYE)
+                .define('G', Items.GOLD_NUGGET)
+                .define('H', Items.NETHERITE_HELMET)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
+        // Risotto's jacket
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.RISOTTO_JACKET.get())
+                .pattern("BBB")
+                .pattern("BCB")
+                .pattern("XGX")
+                .define('B', Items.BLACK_DYE)
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('G', Items.GOLD_INGOT)
+                .define('X', Items.BLACK_CARPET)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Risotto's pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.RISOTTO_PANTS.get())
+                .pattern("WBW")
+                .pattern("BLB")
+                .pattern("W W")
+                .define('B', Items.BLACK_DYE)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('W', Items.WHITE_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Risotto's boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.RISOTTO_BOOTS.get())
+                .pattern("BNB")
+                .pattern("L L")
+                .define('B', Items.BLACK_DYE)
+                .define('L', Items.LIGHT_GRAY_DYE)
+                .define('N', Items.NETHERITE_BOOTS)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
         // Johnny's cap
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.JOHNNY_CAP.get())
                 .pattern(" L ")

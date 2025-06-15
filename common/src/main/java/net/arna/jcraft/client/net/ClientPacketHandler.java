@@ -24,6 +24,7 @@ import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.common.config.ConfigOption;
 import net.arna.jcraft.common.data.AttackerDataLoader;
 import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
+import net.arna.jcraft.common.item.StoneMaskItem;
 import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.network.s2c.TimeAccelStatePacket;
 import net.arna.jcraft.api.spec.JSpec;
@@ -95,6 +96,17 @@ public class ClientPacketHandler {
         register(S2C_MAGNETIC_FIELD_PARTICLE, ClientPacketHandler::handleMagneticFieldParticle);
         register(S2C_ATTACKER_DATA, ClientPacketHandler::handleAttackerData);
         register(S2C_MANDOM_DATA, ClientPacketHandler::handleMandomData);
+        register(S2C_STONE_MASK_CLENCH, ClientPacketHandler::handleStoneMaskClench);
+    }
+
+    private static void handleStoneMaskClench(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
+        if (client.level == null || client.player == null) {
+            return;
+        }
+
+        Entity entity = client.level.getEntity(buf.readVarInt());
+        if (entity instanceof LivingEntity livingEntity)
+            StoneMaskItem.clench(livingEntity);
     }
 
     private static void handleAttackerData(final @NonNull Minecraft client, final FriendlyByteBuf buf) {

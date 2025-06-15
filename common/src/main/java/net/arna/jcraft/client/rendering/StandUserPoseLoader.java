@@ -8,11 +8,14 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.pose.ModelType;
 import net.arna.jcraft.api.pose.PoseModifiers;
 import net.arna.jcraft.api.pose.modifier.IPoseModifier;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.client.command.JPoseCommand;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,8 +28,27 @@ import java.util.concurrent.Executor;
 public class StandUserPoseLoader {
     private static final Map<ResourceLocation, Map<ModelType<?>, IPoseModifier>> POSES = new HashMap<>();
 
+    public static IPoseModifier getPose(final ModelType<?> type, final LivingEntity entity) {
+        if (entity.getFirstPassenger() instanceof StandEntity<?, ?> stand) {
+            return getPose(type, stand.getUserPose());
+        }
+
+        if (JPoseCommand.hasPose(type)) {
+            return JPoseCommand.getPose();
+        }
+
+        return IPoseModifier.EMPTY;
+    }
+
     public static IPoseModifier getPose(final ModelType<?> type, final ResourceLocation id) {
-        return POSES.getOrDefault(id, Collections.emptyMap()).getOrDefault(type, IPoseModifier.EMPTY);
+        IPoseModifier pose = POSES.getOrDefault(id, Collections.emptyMap()).get(type);
+        if (pose == null) {
+            if (JPoseCommand.hasPose(type))
+                return JPoseCommand.getPose();
+            return IPoseModifier.EMPTY;
+        }
+
+        return pose;
     }
 
     public static CompletableFuture<Void> onReload(final PreparableReloadListener.PreparationBarrier preparationBarrier,

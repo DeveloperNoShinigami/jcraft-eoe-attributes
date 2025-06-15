@@ -88,6 +88,8 @@ public class JTagProviders {
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.PUCCIS_HAT.getId());
 
             final var cosplay = getOrCreateTagBuilder(JTagRegistry.COSPLAY);
+            cosplay.add(JItemRegistry.KARS_HEADWRAP.get());
+            cosplay.add(JItemRegistry.RED_HAT.get());
             cosplay.add(JItemRegistry.JOTARO_CAP.get());
             cosplay.add(JItemRegistry.JOTARO_JACKET.get());
             cosplay.add(JItemRegistry.JOTARO_PANTS.get());
@@ -105,6 +107,10 @@ public class JTagProviders {
             cosplay.add(JItemRegistry.JOTARO_P4_JACKET.get());
             cosplay.add(JItemRegistry.JOTARO_P4_PANTS.get());
             cosplay.add(JItemRegistry.JOTARO_P4_BOOTS.get());
+            cosplay.add(JItemRegistry.RISOTTO_CAP.get());
+            cosplay.add(JItemRegistry.RISOTTO_JACKET.get());
+            cosplay.add(JItemRegistry.RISOTTO_PANTS.get());
+            cosplay.add(JItemRegistry.RISOTTO_BOOTS.get());
             cosplay.add(JItemRegistry.JOHNNY_CAP.get());
             cosplay.add(JItemRegistry.JOHNNY_JACKET.get());
             cosplay.add(JItemRegistry.JOHNNY_PANTS.get());

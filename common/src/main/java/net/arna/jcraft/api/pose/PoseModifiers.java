@@ -74,7 +74,7 @@ public class PoseModifiers {
     private static IPoseModifier parseSingle(String modifier, final ModifierCondition... conditions) {
         modifier = modifier.split("//")[0].trim(); // Remove comments and trim whitespace
         if (modifier.isEmpty()) {
-            return null; // Ignore empty modifiers
+            return IPoseModifier.EMPTY; // Ignore empty modifiers
         }
 
         Matcher matcher = MODIFIER_PATTERN.matcher(modifier);

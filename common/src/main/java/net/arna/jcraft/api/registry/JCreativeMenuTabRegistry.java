@@ -72,7 +72,15 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.JOTARO_P4_CAP.get(), JItemRegistry.JOTARO_P4_JACKET.get());
             output.acceptAfter(JItemRegistry.JOTARO_P4_JACKET.get(), JItemRegistry.JOTARO_P4_PANTS.get());
             output.acceptAfter(JItemRegistry.JOTARO_P4_PANTS.get(), JItemRegistry.JOTARO_P4_BOOTS.get());
-            output.acceptAfter(JItemRegistry.JOTARO_P4_BOOTS.get(), JItemRegistry.JOHNNY_CAP.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P4_BOOTS.get(), JItemRegistry.RISOTTO_CAP.get());
+            output.acceptAfter(JItemRegistry.RISOTTO_CAP.get(), JItemRegistry.RISOTTO_JACKET.get());
+            output.acceptAfter(JItemRegistry.RISOTTO_JACKET.get(), JItemRegistry.RISOTTO_PANTS.get());
+            output.acceptAfter(JItemRegistry.RISOTTO_PANTS.get(), JItemRegistry.RISOTTO_BOOTS.get());
+            output.acceptAfter(JItemRegistry.RISOTTO_BOOTS.get(), JItemRegistry.PUCCIS_HAT.get());
+            output.acceptAfter(JItemRegistry.PUCCIS_HAT.get(), JItemRegistry.PUCCI_ROBE.get());
+            output.acceptAfter(JItemRegistry.PUCCI_ROBE.get(), JItemRegistry.PUCCI_PANTS.get());
+            output.acceptAfter(JItemRegistry.PUCCI_PANTS.get(), JItemRegistry.PUCCI_BOOTS.get());
+            output.acceptAfter(JItemRegistry.PUCCI_BOOTS.get(), JItemRegistry.JOHNNY_CAP.get());
             output.acceptAfter(JItemRegistry.JOHNNY_CAP.get(), JItemRegistry.JOHNNY_JACKET.get());
             output.acceptAfter(JItemRegistry.JOHNNY_JACKET.get(), JItemRegistry.JOHNNY_PANTS.get());
             output.acceptAfter(JItemRegistry.JOHNNY_PANTS.get(), JItemRegistry.JOHNNY_BOOTS.get());
@@ -80,10 +88,6 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.GYRO_HAT.get(), JItemRegistry.GYRO_SHIRT.get());
             output.acceptAfter(JItemRegistry.GYRO_SHIRT.get(), JItemRegistry.GYRO_PANTS.get());
             output.acceptAfter(JItemRegistry.GYRO_PANTS.get(), JItemRegistry.GYRO_BOOTS.get());
-            output.acceptAfter(JItemRegistry.GYRO_BOOTS.get(), JItemRegistry.PUCCIS_HAT.get());
-            output.acceptAfter(JItemRegistry.PUCCIS_HAT.get(), JItemRegistry.PUCCI_ROBE.get());
-            output.acceptAfter(JItemRegistry.PUCCI_ROBE.get(), JItemRegistry.PUCCI_PANTS.get());
-            output.acceptAfter(JItemRegistry.PUCCI_PANTS.get(), JItemRegistry.PUCCI_BOOTS.get());
             output.acceptBefore(Items.SHIELD, JItemRegistry.BOXING_GLOVES.get());
             output.acceptBefore(Items.SHIELD, JItemRegistry.STEEL_BALL.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.STONE_MASK.get());
@@ -209,7 +213,6 @@ public interface JCreativeMenuTabRegistry {
                 // order of the creative tab
                 .displayItems((displayContext, entries) -> {
                     // cosplay
-                    entries.accept(JItemRegistry.STONE_MASK.get());
                     entries.accept(JItemRegistry.RED_HAT.get());
                     entries.accept(JItemRegistry.KARS_HEADWRAP.get());
                     entries.accept(JItemRegistry.JOTARO_CAP.get());
@@ -229,6 +232,14 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.JOTARO_P4_JACKET.get());
                     entries.accept(JItemRegistry.JOTARO_P4_PANTS.get());
                     entries.accept(JItemRegistry.JOTARO_P4_BOOTS.get());
+                    entries.accept(JItemRegistry.RISOTTO_CAP.get());
+                    entries.accept(JItemRegistry.RISOTTO_JACKET.get());
+                    entries.accept(JItemRegistry.RISOTTO_PANTS.get());
+                    entries.accept(JItemRegistry.RISOTTO_BOOTS.get());
+                    entries.accept(JItemRegistry.PUCCIS_HAT.get());
+                    entries.accept(JItemRegistry.PUCCI_ROBE.get());
+                    entries.accept(JItemRegistry.PUCCI_PANTS.get());
+                    entries.accept(JItemRegistry.PUCCI_BOOTS.get());
                     entries.accept(JItemRegistry.JOHNNY_CAP.get());
                     entries.accept(JItemRegistry.JOHNNY_JACKET.get());
                     entries.accept(JItemRegistry.JOHNNY_PANTS.get());
@@ -237,10 +248,6 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.GYRO_SHIRT.get());
                     entries.accept(JItemRegistry.GYRO_PANTS.get());
                     entries.accept(JItemRegistry.GYRO_BOOTS.get());
-                    entries.accept(JItemRegistry.PUCCIS_HAT.get());
-                    entries.accept(JItemRegistry.PUCCI_ROBE.get());
-                    entries.accept(JItemRegistry.PUCCI_PANTS.get());
-                    entries.accept(JItemRegistry.PUCCI_BOOTS.get());
                 })
                 .build();
     }
