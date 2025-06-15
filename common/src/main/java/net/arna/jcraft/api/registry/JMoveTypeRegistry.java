@@ -22,6 +22,8 @@ import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.*;
 import net.arna.jcraft.common.attack.moves.kingcrimson.*;
 import net.arna.jcraft.common.attack.moves.madeinheaven.*;
 import net.arna.jcraft.common.attack.moves.magiciansred.*;
+import net.arna.jcraft.common.attack.moves.mandom.CountdownMove;
+import net.arna.jcraft.common.attack.moves.mandom.RewindMove;
 import net.arna.jcraft.common.attack.moves.metallica.*;
 import net.arna.jcraft.common.attack.moves.purplehaze.*;
 import net.arna.jcraft.common.attack.moves.purplehaze.distortion.DistortionMove;
@@ -251,6 +253,11 @@ public interface JMoveTypeRegistry {
     RegistrySupplier<MoveType<?>> WHITESNAKE_GIVE_STAND_ATTACK = register("whitesnake_give_stand_attack", GiveStandAttack.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> WHITESNAKE_MELT_YOUR_HEART_ATTACK = register("whitesnake_melt_your_heart_attack", MeltYourHeartAttack.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> WHITESNAKE_POISON_SPEW_ATTACK = register("whitesnake_poison_spew_attack", PoisonSpewAttack.Type.INSTANCE);
+
+    RegistrySupplier<MoveType<?>> MANDOM_COUNTDOWN_MOVE = register("mandom_countdown_move", CountdownMove.Type.INSTANCE);
+    RegistrySupplier<MoveType<?>> MANDOM_REWIND_MOVE = register("mandom_rewind_move", RewindMove.Type.INSTANCE);
+
+
 
     private static RegistrySupplier<MoveType<?>> register(String id, MoveType<?> type) {
         return MOVE_TYPE_REGISTRY.register(id, () -> type);

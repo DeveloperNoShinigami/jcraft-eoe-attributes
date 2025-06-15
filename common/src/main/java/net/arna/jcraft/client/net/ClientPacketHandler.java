@@ -39,6 +39,7 @@ import net.arna.jcraft.api.registry.JParticleTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
@@ -56,6 +57,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Objects;
@@ -93,6 +95,7 @@ public class ClientPacketHandler {
         register(S2C_PREDICTION_UPDATE, ClientPacketHandler::handlePrediction);
         register(S2C_MAGNETIC_FIELD_PARTICLE, ClientPacketHandler::handleMagneticFieldParticle);
         register(S2C_ATTACKER_DATA, ClientPacketHandler::handleAttackerData);
+        register(S2C_MANDOM_DATA, ClientPacketHandler::handleMandomData);
         register(S2C_STONE_MASK_CLENCH, ClientPacketHandler::handleStoneMaskClench);
     }
 
@@ -113,6 +116,7 @@ public class ClientPacketHandler {
     private static final int
             NUM_MAGNETIC_CIRCLES = 16,
             NUM_MAGNETIC_PARTICLES = 32;
+
     private static void handleMagneticFieldParticle(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
         final double strength = buf.readDouble();
 
@@ -461,6 +465,30 @@ public class ClientPacketHandler {
                 });
             }
         }
+    }
+
+    public static void handleMandomData(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
+        final int entID = buf.readInt();
+        final Vec3 originalPos = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
+
+        client.execute(() -> {
+            final Entity ent = client.level.getEntity(entID);
+            if (ent == null) {
+                return;
+            }
+            final Vec3 currentPos = ent.getEyePosition();
+            final Vec3 originalToCurrent = currentPos.subtract(originalPos).normalize();
+            System.out.println("distance" + currentPos.distanceTo(originalPos));
+            for (double h = 0; h < currentPos.distanceTo(originalPos); ++h) {
+                client.level.addParticle(
+                        new DustParticleOptions(new Vector3f(1.0f, 0.2f, 0.6f), 1.0f), // Pink color
+                        originalPos.x + originalToCurrent.x * h,
+                        originalPos.y + originalToCurrent.y * h,
+                        originalPos.z + originalToCurrent.z * h,
+                        -originalToCurrent.x, -originalToCurrent.y, -originalToCurrent.z
+                );
+            }
+        });
     }
 
     public static void handleShaderActivation(final @NonNull Minecraft client, final FriendlyByteBuf buf) {

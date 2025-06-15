@@ -12,40 +12,7 @@ import net.arna.jcraft.common.entity.npc.DarbyOlderEntity;
 import net.arna.jcraft.common.entity.npc.DarbyYoungerEntity;
 import net.arna.jcraft.common.entity.npc.PetshopEntity;
 import net.arna.jcraft.common.entity.projectile.*;
-import net.arna.jcraft.common.entity.stand.AbstractPurpleHazeEntity;
-import net.arna.jcraft.common.entity.stand.AtumEntity;
-import net.arna.jcraft.common.entity.stand.CMoonEntity;
-import net.arna.jcraft.common.entity.stand.ChariotRequiemEntity;
-import net.arna.jcraft.common.entity.stand.CinderellaEntity;
-import net.arna.jcraft.common.entity.stand.CreamEntity;
-import net.arna.jcraft.common.entity.stand.D4CEntity;
-import net.arna.jcraft.common.entity.stand.DiverDownEntity;
-import net.arna.jcraft.common.entity.stand.DragonsDreamEntity;
-import net.arna.jcraft.common.entity.stand.FooFightersEntity;
-import net.arna.jcraft.common.entity.stand.GEREntity;
-import net.arna.jcraft.common.entity.stand.GoldExperienceEntity;
-import net.arna.jcraft.common.entity.stand.GooGooDollsEntity;
-import net.arna.jcraft.common.entity.stand.HGEntity;
-import net.arna.jcraft.common.entity.stand.HorusEntity;
-import net.arna.jcraft.common.entity.stand.KQBTDEntity;
-import net.arna.jcraft.common.entity.stand.KillerQueenEntity;
-import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
-import net.arna.jcraft.common.entity.stand.MadeInHeavenEntity;
-import net.arna.jcraft.common.entity.stand.MagiciansRedEntity;
-import net.arna.jcraft.common.entity.stand.MetallicaEntity;
-import net.arna.jcraft.common.entity.stand.OsirisEntity;
-import net.arna.jcraft.common.entity.stand.PurpleHazeDistortionEntity;
-import net.arna.jcraft.common.entity.stand.PurpleHazeEntity;
-import net.arna.jcraft.common.entity.stand.SPTWEntity;
-import net.arna.jcraft.common.entity.stand.ShadowTheWorldEntity;
-import net.arna.jcraft.common.entity.stand.SilverChariotEntity;
-import net.arna.jcraft.common.entity.stand.StarPlatinumEntity;
-import net.arna.jcraft.common.entity.stand.TheFoolEntity;
-import net.arna.jcraft.common.entity.stand.TheHandEntity;
-import net.arna.jcraft.common.entity.stand.TheSunEntity;
-import net.arna.jcraft.common.entity.stand.TheWorldEntity;
-import net.arna.jcraft.common.entity.stand.TheWorldOverHeavenEntity;
-import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
+import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.entity.vehicle.RoadRollerEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
@@ -680,6 +647,13 @@ public interface JEntityTypeRegistry {
                     MobCategory.CREATURE
             ).sized(0.6f, 1.8f).build("the_hand")
     );
+    RegistrySupplier<EntityType<MandomEntity>> MANDOM = ENTITY_TYPE_REGISTRY.register(JCraft.id("mandom"),
+            () -> EntityType.Builder.of(
+                    WorldOnlyEntityFactory.from(MandomEntity::new),
+                    MobCategory.CREATURE
+            ).sized(0.3f, 0.9f).build("mandom")
+    );
+
 
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
@@ -695,6 +669,8 @@ public interface JEntityTypeRegistry {
 
         EntityAttributeRegistry.register(WHITE_SNAKE, WhiteSnakeEntity::createMobAttributes);
         EntityAttributeRegistry.register(C_MOON, CMoonEntity::createMobAttributes);
+
+        EntityAttributeRegistry.register(MANDOM, MandomEntity::createMobAttributes);
 
         EntityAttributeRegistry.register(MADE_IN_HEAVEN, MadeInHeavenEntity::createMobAttributes);
         EntityAttributeRegistry.register(SHADOW_THE_WORLD, ShadowTheWorldEntity::createMobAttributes);

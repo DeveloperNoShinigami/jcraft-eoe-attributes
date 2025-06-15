@@ -276,6 +276,10 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> METALLICA_RAZOR_VOMIT_PREPARE = register("mrazorvomitprepare");
     RegistrySupplier<SoundEvent> METALLICA_BLADE_SWIPE = register("mbladeswipe");
 
+    RegistrySupplier<SoundEvent> MANDOM_REWIND = register("mandomrewind");
+    RegistrySupplier<SoundEvent> MANDOM_SUMMON = register("mandomsummon");
+    RegistrySupplier<SoundEvent> MANDOM_COUNTDOWN = register("mandomcountdown");
+
     //// SPECS
     // Brawler
 

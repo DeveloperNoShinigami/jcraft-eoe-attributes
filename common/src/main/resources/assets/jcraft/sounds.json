@@ -1055,6 +1055,21 @@
       "jcraft:stands/metallica/razor_vomit_prepare"
     ]
   },
+  "mandomcountdown": {
+    "sounds": [
+      "jcraft:stands/mandom/countdown"
+    ]
+  },
+  "mandomrewind": {
+    "sounds": [
+      "jcraft:stands/mandom/rewind"
+    ]
+  },
+  "mandomsummon": {
+    "sounds": [
+      "jcraft:stands/mandom/mandom_summon"
+    ]
+  },
   "anubisslash": {
     "sounds": [
       "jcraft:specs/anubis/slash"

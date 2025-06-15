@@ -324,6 +324,20 @@
   "entity.jcraft.horus.info.pro2": "unblockable move",
   "entity.jcraft.horus.info.con1": "weak defense",
   "entity.jcraft.horus.info.con2": "no fast barrage-like move",
+
+  "entity.jcraft.highway_star": "Highway Star",
+
+  "entity.jcraft.tcb": "20th Century Boy",
+
+  "entity.jcraft.mandom": "Mandom",
+  "entity.jcraft.mandom.info.pro1": "can use specs while stand is active",
+  "entity.jcraft.mandom.info.pro2": "rewind has many capabilities",
+  "entity.jcraft.mandom.info.con1": "0 damage output",
+  "entity.jcraft.mandom.info.con2": "no combat capabilities",
+  "entity.jcraft.mandom.info.con3": "very small moveset",
+  "entity.jcraft.mandom.info.con4": "you cannot block",
+  "entity.jcraft.mandom.info.desc": "Hard-Reset TRAPPER",
+
   "entity.jcraft.metallica": "Metallica",
   "entity.jcraft.metallica.info.pro1": "unpredictable offense",
   "entity.jcraft.metallica.info.pro2": "great ranged coverage",
