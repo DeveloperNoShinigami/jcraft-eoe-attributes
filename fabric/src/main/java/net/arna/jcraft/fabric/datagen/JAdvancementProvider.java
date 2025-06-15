@@ -95,7 +95,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 JStandTypeRegistry.HORUS,
                 JStandTypeRegistry.SHADOW_THE_WORLD,
                 JStandTypeRegistry.METALLICA,
-                JStandTypeRegistry.THE_HAND
+                JStandTypeRegistry.THE_HAND,
+                JStandTypeRegistry.MANDOM
         );
         final Advancement.Builder obtainAllStandsBuilder = Advancement.Builder.advancement()
                 .display(JItemRegistry.STAND_DISC.get(),
