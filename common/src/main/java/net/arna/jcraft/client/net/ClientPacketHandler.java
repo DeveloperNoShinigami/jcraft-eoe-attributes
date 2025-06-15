@@ -478,7 +478,6 @@ public class ClientPacketHandler {
             }
             final Vec3 currentPos = ent.getEyePosition();
             final Vec3 originalToCurrent = currentPos.subtract(originalPos).normalize();
-            System.out.println("distance" + currentPos.distanceTo(originalPos));
             for (double h = 0; h < currentPos.distanceTo(originalPos); ++h) {
                 client.level.addParticle(
                         new DustParticleOptions(new Vector3f(1.0f, 0.2f, 0.6f), 1.0f), // Pink color
