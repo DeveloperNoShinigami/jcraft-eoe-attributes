@@ -4,19 +4,17 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.attack.MoveType;
-import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
-import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
-import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.api.registry.JItemRegistry;
-import net.arna.jcraft.api.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
+import net.arna.jcraft.common.item.StandDiscItem;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -53,42 +51,38 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
     public @NonNull Set<LivingEntity> perform(final WhiteSnakeEntity attacker, final LivingEntity user) {
         final ItemStack itemStack = attacker.getOffhandItem();
 
-        super.perform(attacker, user).stream().findFirst().ifPresent(
-                (target) -> {
-                    if (target instanceof StandEntity<?,?>) return;
+        super.perform(attacker, user).stream().findFirst().ifPresent((target) -> {
+            if (target instanceof StandEntity<?,?> || !itemStack.is(JItemRegistry.STAND_DISC.get())) return;
 
-                    StandType itemStand = null;
-                    int itemSkin = 0;
+            StandType itemStand;
+            int itemSkin = 0;
 
-                    CompoundTag data = itemStack.getOrCreateTag();
-                    CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(target);
+            CompoundTag data = itemStack.getOrCreateTag();
+            CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(target);
 
-                    if (standData.getType() != null) {
-                        return; // Can't overwrite other's stands
-                    }
-                    if (data.contains("StandID", Tag.TAG_INT)) {
-                        itemStand = JStandTypeRegistry.LEGACY_ORDINALS.get(data.getInt("StandID")).get();
-                    } else if (data.contains("StandID", Tag.TAG_STRING)) {
-                        itemStand = JRegistries.STAND_TYPE_REGISTRY.get(new ResourceLocation(data.getString("StandID")));
-                    }
-                    if (itemStand == null) {
-                        return;
-                    }
-                    if (data.contains("Skin", Tag.TAG_INT)) {
-                        itemSkin = data.getInt("Skin");
-                    }
+            if (standData.getType() != null) {
+                return; // Can't overwrite other's stands
+            }
 
-                    standData.setTypeAndSkin(itemStand, itemSkin);
-                    data.putString("StandID", null);
-                    data.putInt("Skin", 0);
+            itemStand = StandDiscItem.getStandType(itemStack);
+            if (itemStand == null) {
+                return;
+            }
 
-                    StandEntity<?, ?> stand = standData.getStand();
-                    if (stand != null) {
-                        stand.discard();
-                    }
-                    JCraft.summon(target.level(), target);
-                }
-        );
+            if (data.contains("Skin", Tag.TAG_INT)) {
+                itemSkin = data.getInt("Skin");
+            }
+
+            standData.setTypeAndSkin(itemStand, itemSkin);
+            data.remove("StandID");
+            data.remove("Skin");
+
+            StandEntity<?, ?> stand = standData.getStand();
+            if (stand != null) {
+                stand.discard();
+            }
+            JCraft.summon(target.level(), target);
+        });
 
         attacker.getUserOrThrow().setItemSlot(EquipmentSlot.OFFHAND, itemStack);
         attacker.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
