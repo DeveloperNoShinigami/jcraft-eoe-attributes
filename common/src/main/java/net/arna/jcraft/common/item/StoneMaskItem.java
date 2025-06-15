@@ -26,7 +26,9 @@ import net.arna.jcraft.client.renderer.armor.StoneMaskRenderer;
 import net.arna.jcraft.common.network.s2c.StoneMaskClenchPacket;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.fabricmc.api.EnvType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -80,7 +82,14 @@ public class StoneMaskItem extends ArmorItem implements GeoItem {
 
         if (Platform.getEnv() == EnvType.CLIENT) {
             CLENCH.put(entity.getId(), CLENCH_DURATION);
-            entity.level().playLocalSound(entity.blockPosition(), JSoundRegistry.VAMPIRE_SPEC_CHANGE.get(), SoundSource.PLAYERS,
+
+            // entity.level() is a server level on singleplayer.
+            ClientLevel level = Minecraft.getInstance().level;
+            if (level == null) {
+                return;
+            }
+
+            level.playLocalSound(entity.blockPosition(), JSoundRegistry.VAMPIRE_SPEC_CHANGE.get(), SoundSource.PLAYERS,
                     1f, 1f, true);
         } else {
             StoneMaskClenchPacket.sendStoneMaskClench((ServerPlayer) entity);
