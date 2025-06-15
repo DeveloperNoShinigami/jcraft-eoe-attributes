@@ -117,7 +117,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             buf.writeDouble(position.y());
             buf.writeDouble(position.z());
 
-            ServerChannelFeedbackPacket.send(serverPlayer, buf);
+            NetworkManager.sendToPlayer(serverPlayer, JPacketRegistry.S2C_MANDOM_DATA, buf);
         }
     }
 
