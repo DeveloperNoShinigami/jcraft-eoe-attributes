@@ -1,12 +1,11 @@
 package net.arna.jcraft.mixin.client;
 
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.pose.ModelType;
+import net.arna.jcraft.api.registry.JItemRegistry;
 import net.arna.jcraft.client.rendering.StandUserPoseLoader;
 import net.arna.jcraft.client.util.JClientUtils;
-import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -63,10 +62,8 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
         if (livingEntity.hasPose(Pose.STANDING)) {
             JClientUtils.resetPartAngles(body);
 
-            if (livingEntity.getFirstPassenger() instanceof StandEntity<?, ?> stand) {
-                StandUserPoseLoader.getPose(ModelType.HUMANOID, stand.getUserPose())
-                        .apply((HumanoidModel<?>) (Object) this, livingEntity, age);
-            }
+            StandUserPoseLoader.getPose(ModelType.HUMANOID, livingEntity)
+                    .apply((HumanoidModel<?>) (Object) this, livingEntity, age);
         }
     }
 }

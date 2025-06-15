@@ -4,12 +4,17 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import lombok.Getter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -45,9 +50,9 @@ public class ModelType<T extends Model> {
     private final Map<String, Function<T, ModelPart>> parts;
 
     private ModelType(final String name, final Class<T> modelClass, final Map<String, Function<T, ModelPart>> parts) {
-        FROM_NAME.put(name, this);
+        FROM_NAME.put(name.toLowerCase(Locale.ROOT), this);
         FROM_CLASS.put(modelClass, this);
-        this. name = name;
+        this.name = name;
         this.modelClass = modelClass;
         this.parts = ImmutableMap.copyOf(parts);
     }
@@ -57,13 +62,34 @@ public class ModelType<T extends Model> {
         return (Class<T>) clazz;
     }
 
+    /**
+     * Checks whether the given entity supports pose modification.
+     * @param entity The entity to check.
+     * @return {@code true} if the entity's model is supported, {@code false} otherwise.
+     */
+    public static boolean isSupported(final LivingEntity entity) {
+        EntityRenderer<? super LivingEntity> renderer = Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entity);
+
+        // Only living entities are supported, all (vanilla) living entities should have a renderer extending this.
+        if (!(renderer instanceof LivingEntityRenderer<?,?> livingRenderer)) {
+            return false;
+        }
+
+        ModelType<?> modelType = fromClassRaw(livingRenderer.getModel().getClass());
+        return modelType != null;
+    }
+
+    public static Map<String, ModelType<?>> getAllModelTypes() {
+        return ImmutableMap.copyOf(FROM_NAME);
+    }
+
     @Nullable
     public static ModelType<?> fromName(final String name) {
-        return FROM_NAME.get(name);
+        return FROM_NAME.get(name.toLowerCase(Locale.ROOT));
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Model> ModelType<T> fromClass(final Class<? extends T> modelClass) {
+    private static <T extends Model> ModelType<T> fromClassRaw(final Class<? extends T> modelClass) {
         ModelType<?> modelType = FROM_CLASS.get(modelClass);
         if (modelType != null) {
             return (ModelType<T>) modelType;
@@ -76,7 +102,17 @@ public class ModelType<T extends Model> {
             }
         }
 
-        throw new IllegalArgumentException("Model type for class " + modelClass.getSimpleName() + " not found");
+        return null;
+    }
+
+    public static <T extends Model> ModelType<T> fromClass(final Class<? extends T> modelClass) {
+        ModelType<T> modelType = fromClassRaw(modelClass);
+
+        if (modelType == null) {
+            throw new IllegalArgumentException("Model type for class " + modelClass.getSimpleName() + " not found");
+        }
+
+        return modelType;
     }
 
     public boolean hasPart(final String partName) {
