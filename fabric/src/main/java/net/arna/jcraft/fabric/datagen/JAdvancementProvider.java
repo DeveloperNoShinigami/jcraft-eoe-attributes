@@ -182,6 +182,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("has_kars_headwrap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KARS_HEADWRAP.get()))
                 .addCriterion("has_red_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.RED_HAT.get()))
                 .addCriterion("has_puccis_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.PUCCIS_HAT.get()))
+                .addCriterion("has_risotto_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.RISOTTO_CAP.get()))
                 .build(JCraft.id("obtain_sun_protection"));
         consumer.accept(obtainSunProtection);
         // obtain blood bottle
