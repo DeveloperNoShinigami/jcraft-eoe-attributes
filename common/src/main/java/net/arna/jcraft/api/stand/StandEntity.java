@@ -1577,6 +1577,19 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return user.hurt(source, amount);
     }
 
+    /**
+     * Gets this StandEntity's instance of a specific move class.
+     */
+    public @Nullable <T extends AbstractMove<T, ?>> T getMove(Class<T> clazz) {
+        for (var move : getMoveMap().asMovesList()) {
+            if (move.getClass().isAssignableFrom(clazz)) {
+                return (T)move;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public boolean isHolding() {
         return holding;
