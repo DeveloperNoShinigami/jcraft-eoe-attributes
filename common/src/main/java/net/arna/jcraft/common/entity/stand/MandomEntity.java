@@ -194,8 +194,6 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
         return this;
     }
 
-    // Remove debug logging since you said it's not needed anymore
-
     public enum State implements StandAnimationState<MandomEntity> {
         IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("summon"))),
         COUNTDOWN(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("timer"))),
