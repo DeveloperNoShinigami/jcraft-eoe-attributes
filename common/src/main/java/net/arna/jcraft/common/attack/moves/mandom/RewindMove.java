@@ -56,65 +56,9 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
             final CompoundTag nbt = data.getValue();
 
             if (ent instanceof final ServerPlayer serverPlayer) {
-                // Get saved position from NBT
-                ListTag posList = nbt.getList("Pos", 6);
-                double x = posList.getDouble(0);
-                double y = posList.getDouble(1);
-                double z = posList.getDouble(2);
-
-                // Get saved rotations
-                Float savedYaw = savedUserYaw.get(serverPlayer);
-                Float savedPitch = savedUserPitch.get(serverPlayer);
-
-                if (savedYaw != null && savedPitch != null) {
-                    // Load inventory and ender chest
-                    nbt.put("Inventory", serverPlayer.getInventory().save(new ListTag()));
-                    nbt.put("EnderItems", serverPlayer.getEnderChestInventory().createTag());
-
-                    // Load the NBT data first (for inventory, etc.)
-                    serverPlayer.load(nbt);
-
-                    // Use teleportTo with proper rotation handling
-                    serverPlayer.teleportTo(serverPlayer.serverLevel(), x, y, z,
-                            EnumSet.noneOf(RelativeMovement.class), savedYaw, savedPitch);
-
-                    // Force update head rotation for other players
-                    serverPlayer.setYHeadRot(savedYaw);
-                    serverPlayer.connection.send(new ClientboundRotateHeadPacket(serverPlayer, (byte)((int)(savedYaw * 256.0F / 360.0F))));
-                    serverPlayer.connection.send(new ClientboundTeleportEntityPacket(serverPlayer));
-
-                    // Update motion
-                    serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
-                }
+                performOnServerPlayer(serverPlayer, nbt, savedUserYaw, savedUserPitch);
             } else if (ent instanceof LivingEntity livingEntity) {
-                // Get saved position from NBT
-                ListTag posList = nbt.getList("Pos", 6);
-                double x = posList.getDouble(0);
-                double y = posList.getDouble(1);
-                double z = posList.getDouble(2);
-
-                Float savedYaw = savedUserYaw.get(livingEntity);
-                Float savedPitch = savedUserPitch.get(livingEntity);
-
-                if (savedYaw != null && savedPitch != null) {
-                    // Load the NBT data first
-                    livingEntity.load(nbt);
-
-                    // Teleport with proper rotation
-                    livingEntity.teleportTo(x, y, z);
-
-                    // Set all rotation values
-                    livingEntity.setYRot(savedYaw);
-                    livingEntity.setXRot(savedPitch);
-                    livingEntity.setYHeadRot(savedYaw);
-                    livingEntity.setYBodyRot(savedYaw);
-
-                    // Set previous rotation values for smooth interpolation
-                    livingEntity.yRotO = savedYaw;
-                    livingEntity.xRotO = savedPitch;
-                    livingEntity.yHeadRotO = savedYaw;
-                    livingEntity.yBodyRotO = savedYaw;
-                }
+                performOnLivingEntity(livingEntity, nbt, savedUserYaw, savedUserPitch);
             } else {
                 // For non-living entities, just load the NBT
                 final CompoundTag modernNbt = new CompoundTag();
@@ -132,6 +76,70 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
         countdownMove.setCountdownActive(false);
 
         return Set.of();
+    }
+
+    private static void performOnServerPlayer(ServerPlayer serverPlayer, CompoundTag nbt, Map<LivingEntity, Float> savedUserYaw, Map<LivingEntity, Float> savedUserPitch) {
+        // Get saved position from NBT
+        ListTag posList = nbt.getList("Pos", 6);
+        double x = posList.getDouble(0);
+        double y = posList.getDouble(1);
+        double z = posList.getDouble(2);
+
+        // Get saved rotations
+        Float savedYaw = savedUserYaw.get(serverPlayer);
+        Float savedPitch = savedUserPitch.get(serverPlayer);
+
+        if (savedYaw != null && savedPitch != null) {
+            // Load inventory and ender chest
+            nbt.put("Inventory", serverPlayer.getInventory().save(new ListTag()));
+            nbt.put("EnderItems", serverPlayer.getEnderChestInventory().createTag());
+
+            // Load the NBT data first (for inventory, etc.)
+            serverPlayer.load(nbt);
+
+            // Use teleportTo with proper rotation handling
+            serverPlayer.teleportTo(serverPlayer.serverLevel(), x, y, z,
+                    EnumSet.noneOf(RelativeMovement.class), savedYaw, savedPitch);
+
+            // Force update head rotation for other players
+            serverPlayer.setYHeadRot(savedYaw);
+            serverPlayer.connection.send(new ClientboundRotateHeadPacket(serverPlayer, (byte)((int)(savedYaw * 256.0F / 360.0F))));
+            serverPlayer.connection.send(new ClientboundTeleportEntityPacket(serverPlayer));
+
+            // Update motion
+            serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+        }
+    }
+
+    private static void performOnLivingEntity(LivingEntity livingEntity, CompoundTag nbt, Map<LivingEntity, Float> savedUserYaw, Map<LivingEntity, Float> savedUserPitch) {
+        // Get saved position from NBT
+        ListTag posList = nbt.getList("Pos", 6);
+        double x = posList.getDouble(0);
+        double y = posList.getDouble(1);
+        double z = posList.getDouble(2);
+
+        Float savedYaw = savedUserYaw.get(livingEntity);
+        Float savedPitch = savedUserPitch.get(livingEntity);
+
+        if (savedYaw != null && savedPitch != null) {
+            // Load the NBT data first
+            livingEntity.load(nbt);
+
+            // Teleport with proper rotation
+            livingEntity.teleportTo(x, y, z);
+
+            // Set all rotation values
+            livingEntity.setYRot(savedYaw);
+            livingEntity.setXRot(savedPitch);
+            livingEntity.setYHeadRot(savedYaw);
+            livingEntity.setYBodyRot(savedYaw);
+
+            // Set previous rotation values for smooth interpolation
+            livingEntity.yRotO = savedYaw;
+            livingEntity.xRotO = savedPitch;
+            livingEntity.yHeadRotO = savedYaw;
+            livingEntity.yBodyRotO = savedYaw;
+        }
     }
 
     private CountdownMove findCountdownMove(MandomEntity attacker) {
