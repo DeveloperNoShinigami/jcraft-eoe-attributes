@@ -72,7 +72,11 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.JOTARO_P4_CAP.get(), JItemRegistry.JOTARO_P4_JACKET.get());
             output.acceptAfter(JItemRegistry.JOTARO_P4_JACKET.get(), JItemRegistry.JOTARO_P4_PANTS.get());
             output.acceptAfter(JItemRegistry.JOTARO_P4_PANTS.get(), JItemRegistry.JOTARO_P4_BOOTS.get());
-            output.acceptAfter(JItemRegistry.JOTARO_P4_BOOTS.get(), JItemRegistry.JOHNNY_CAP.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P4_BOOTS.get(), JItemRegistry.RISOTTO_CAP.get());
+            output.acceptAfter(JItemRegistry.RISOTTO_CAP.get(), JItemRegistry.RISOTTO_JACKET.get());
+            output.acceptAfter(JItemRegistry.RISOTTO_JACKET.get(), JItemRegistry.RISOTTO_PANTS.get());
+            output.acceptAfter(JItemRegistry.RISOTTO_PANTS.get(), JItemRegistry.RISOTTO_BOOTS.get());
+            output.acceptAfter(JItemRegistry.RISOTTO_BOOTS.get(), JItemRegistry.JOHNNY_CAP.get());
             output.acceptAfter(JItemRegistry.JOHNNY_CAP.get(), JItemRegistry.JOHNNY_JACKET.get());
             output.acceptAfter(JItemRegistry.JOHNNY_JACKET.get(), JItemRegistry.JOHNNY_PANTS.get());
             output.acceptAfter(JItemRegistry.JOHNNY_PANTS.get(), JItemRegistry.JOHNNY_BOOTS.get());
@@ -228,6 +232,10 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.JOTARO_P4_JACKET.get());
                     entries.accept(JItemRegistry.JOTARO_P4_PANTS.get());
                     entries.accept(JItemRegistry.JOTARO_P4_BOOTS.get());
+                    entries.accept(JItemRegistry.RISOTTO_CAP.get());
+                    entries.accept(JItemRegistry.RISOTTO_JACKET.get());
+                    entries.accept(JItemRegistry.RISOTTO_PANTS.get());
+                    entries.accept(JItemRegistry.RISOTTO_BOOTS.get());
                     entries.accept(JItemRegistry.JOHNNY_CAP.get());
                     entries.accept(JItemRegistry.JOHNNY_JACKET.get());
                     entries.accept(JItemRegistry.JOHNNY_PANTS.get());

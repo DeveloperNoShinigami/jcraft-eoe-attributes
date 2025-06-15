@@ -248,6 +248,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_jotaro_p4_outfit"));
         consumer.accept(obtainJotaroP4Outfit);
+        // obtain Risotto outfit
+        final Advancement obtainRisottoOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.RISOTTO_CAP.get(),
+                        Component.literal("I know how I'll kill you"),
+                        Component.literal("Obtain all of Risotto's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_risotto_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.RISOTTO_CAP.get()))
+                .addCriterion("has_risotto_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.RISOTTO_JACKET.get()))
+                .addCriterion("has_risotto_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.RISOTTO_PANTS.get()))
+                .addCriterion("has_risotto_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.RISOTTO_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_risotto_outfit"));
+        consumer.accept(obtainRisottoOutfit);
         // obtain Johnny outfit
         final Advancement obtainJohnnyOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOHNNY_CAP.get(),
