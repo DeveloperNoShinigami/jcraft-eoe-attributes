@@ -476,7 +476,7 @@ public class ClientPacketHandler {
             if (ent == null) {
                 return;
             }
-            final Vec3 currentPos = ent.getEyePosition();
+            final Vec3 currentPos = ent.position();
             final Vec3 originalToCurrent = currentPos.subtract(originalPos).normalize();
             for (double h = 0; h < currentPos.distanceTo(originalPos); ++h) {
                 client.level.addParticle(
