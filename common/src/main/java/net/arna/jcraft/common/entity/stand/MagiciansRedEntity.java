@@ -200,9 +200,9 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
     }
 
     private static void registerMoves(MoveMap<MagiciansRedEntity, State> moves) {
-//        moves.registerImmediate(MoveClass.LIGHT, LIGHT, State.LIGHT);
-//
-//        moves.registerImmediate(MoveClass.HEAVY, HAMMERFIST, State.HAMMER);
+        moves.registerImmediate(MoveClass.LIGHT, LIGHT, State.LIGHT);
+
+        moves.registerImmediate(MoveClass.HEAVY, HAMMERFIST, State.HAMMER);
         moves.register(MoveClass.BARRAGE, FLAMETHROWER, State.BARRAGE);
 
         moves.register(MoveClass.SPECIAL1, CROSSFIRE, State.CROSSFIRE);
