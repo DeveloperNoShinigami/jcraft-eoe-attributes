@@ -9,7 +9,7 @@ logoFile= "assets/jcraft/icon.png"
 logoBlur=false
 version = "${version}"
 displayName = "JCraft"
-authors = "jcraft"
+authors = "Arna, Ayutac, PlanetTeamSpeak"
 description = '''
 so yeah we wanted to add jojo stands to mc
 '''
