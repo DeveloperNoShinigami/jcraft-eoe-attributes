@@ -4,13 +4,14 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
-import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -26,12 +27,17 @@ import java.util.*;
 
 public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntity> {
     private static final int COUNTDOWN_COOLDOWN_TICKS = 120; // 6 seconds
-
+    @Getter
     private final Map<Entity, CompoundTag> timeMarkerData = new WeakHashMap<>();
     // Store the USER's head rotation, not the stand's rotation
+    @Getter
     private final Map<LivingEntity, Float> userHeadYawData = new WeakHashMap<>();
+    @Getter
     private final Map<LivingEntity, Float> userHeadPitchData = new WeakHashMap<>();
+    @Getter
     private final List<RewindData> rewindInfo = new ArrayList<>();
+    @Getter
+    @Setter
     private boolean countdownActive = false;
 
     public CountdownMove(final int cooldown, final int windup, final int duration, final float moveDistance) {
@@ -119,31 +125,6 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
             NetworkManager.sendToPlayer(serverPlayer, JPacketRegistry.S2C_MANDOM_DATA, buf);
         }
-    }
-
-    // Getters for RewindMove
-    public Map<Entity, CompoundTag> getTimeMarkerData() {
-        return timeMarkerData;
-    }
-
-    public Map<LivingEntity, Float> getUserHeadYawData() {
-        return userHeadYawData;
-    }
-
-    public Map<LivingEntity, Float> getUserHeadPitchData() {
-        return userHeadPitchData;
-    }
-
-    public List<RewindData> getRewindInfo() {
-        return rewindInfo;
-    }
-
-    public boolean isCountdownActive() {
-        return countdownActive;
-    }
-
-    public void setCountdownActive(boolean active) {
-        this.countdownActive = active;
     }
 
     @Override
