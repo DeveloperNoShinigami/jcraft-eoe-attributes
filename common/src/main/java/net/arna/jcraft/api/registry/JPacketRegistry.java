@@ -23,6 +23,7 @@ public interface JPacketRegistry {
     ResourceLocation S2C_PREDICTION_UPDATE = JCraft.id("prdct");
     ResourceLocation S2C_MAGNETIC_FIELD_PARTICLE = JCraft.id("mfp");
     ResourceLocation S2C_ATTACKER_DATA = JCraft.id("attacker_data");
+    ResourceLocation S2C_STONE_MASK_CLENCH = JCraft.id("stone_mask_clench");
 
     ResourceLocation C2S_STAND_BLOCK = JCraft.id("stnd_blk");
     ResourceLocation C2S_COOLDOWN_CANCEL = JCraft.id("cdc");

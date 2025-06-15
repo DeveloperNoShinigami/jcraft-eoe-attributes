@@ -1115,6 +1115,11 @@
       "jcraft:specs/vampire/reanimate"
     ]
   },
+  "vampirespecchange": {
+    "sounds": [
+      "jcraft:specs/vampire/spec_change"
+    ]
+  },
   "bulletricochet": {
     "sounds": [
       "jcraft:projectiles/bullet/ricochet"

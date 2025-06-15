@@ -294,6 +294,7 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> VAMPIRE_GRAB_HIT = register("vampiregrabhit");
     RegistrySupplier<SoundEvent> VAMPIRE_SUCK = register("vampiresuck");
     RegistrySupplier<SoundEvent> VAMPIRE_REANIMATE = register("vampirereanimate");
+    RegistrySupplier<SoundEvent> VAMPIRE_SPEC_CHANGE = register("vampirespecchange");
 
     //// OTHER
     RegistrySupplier<SoundEvent> BULLET_RICOCHET = register("bulletricochet");
