@@ -69,26 +69,6 @@
 						}
 					}
 				},
-				"helmet": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0],
-							"easing": "easeInOutSine"
-						},
-						"0.25": {
-							"vector": [0, 0, 2],
-							"easing": "easeInOutSine"
-						},
-						"0.4167": {
-							"vector": [0, 0, -3],
-							"easing": "easeInOutSine"
-						},
-						"0.5833": {
-							"vector": [0, 0, 0],
-							"easing": "easeInOutSine"
-						}
-					}
-				},
 				"prongs_top": {
 					"rotation": {
 						"0.3333": {
@@ -159,6 +139,26 @@
 							"easing": "easeInOutSine"
 						}
 					}
+				},
+				"mask": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutSine"
+						},
+						"0.25": {
+							"vector": [0, 0, 2],
+							"easing": "easeInOutSine"
+						},
+						"0.4167": {
+							"vector": [0, 0, -3],
+							"easing": "easeInOutSine"
+						},
+						"0.5833": {
+							"vector": [0, 0, 0],
+							"easing": "easeInOutSine"
+						}
+					}
 				}
 			}
 		},
@@ -189,5 +189,5 @@
 			}
 		}
 	},
-	"geckolib_format_version": 2
+	"azurelib_format_version": 2
 }

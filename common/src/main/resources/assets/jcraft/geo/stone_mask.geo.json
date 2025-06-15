@@ -13,6 +13,11 @@
 			"bones": [
 				{
 					"name": "helmet",
+					"pivot": [0, 24, 0]
+				},
+				{
+					"name": "mask",
+					"parent": "helmet",
 					"pivot": [0, 24, 0],
 					"cubes": [
 						{"origin": [0.60503, 24.71924, -4.5], "size": [1, 1, 0], "pivot": [1.10503, 25.21924, -4.4], "rotation": [151.12411, 26.77783, -52.08349], "uv": [23, 2]},
@@ -23,7 +28,7 @@
 				},
 				{
 					"name": "prongs_Left",
-					"parent": "helmet",
+					"parent": "mask",
 					"pivot": [4.225, 27, -2],
 					"cubes": [
 						{
@@ -72,7 +77,7 @@
 				},
 				{
 					"name": "prongs_Right",
-					"parent": "helmet",
+					"parent": "mask",
 					"pivot": [-4.225, 27, -2],
 					"cubes": [
 						{
@@ -121,7 +126,7 @@
 				},
 				{
 					"name": "prongs_top",
-					"parent": "helmet",
+					"parent": "mask",
 					"pivot": [0, 32, -2],
 					"cubes": [
 						{
@@ -184,7 +189,7 @@
 				},
 				{
 					"name": "triggered",
-					"parent": "helmet",
+					"parent": "mask",
 					"pivot": [0, 28.05, -3],
 					"cubes": [
 						{
