@@ -26,14 +26,6 @@ public class MandomRenderer extends GeoEntityRenderer<MandomEntity> {
                                int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
         float a = getAlpha(animatable, partialTick);
-
-        // Check if we're in first person view
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.options.getCameraType().isFirstPerson() && minecraft.player != null) {
-            // Apply 50% transparency in first person
-            a = Math.min(a, 0.5f);
-        }
-
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick,
                 packedLight, packedOverlay, red, green, blue, a);
     }
