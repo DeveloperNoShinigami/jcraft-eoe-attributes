@@ -160,6 +160,11 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
     }
 
     @Override
+    protected AbstractMove<?, ? super MandomEntity> getFallbackMove() {
+        return null;
+    }
+
+    @Override
     public boolean initMove(MoveClass moveClass) {
         // Special check for ULTIMATE (Rewind) - only allow if countdown is active
         if (moveClass == MoveClass.ULTIMATE) {
