@@ -19,6 +19,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -75,18 +76,21 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
         rewindInfo.clear();
 
         // Follow ReturnToZeroMove pattern for saving entity data
-        for (Entity e : toCapture) {
+        for (final Entity entity : toCapture) {
+            if (entity.getType() == EntityType.ARMOR_STAND) {
+                continue;
+            }
             final CompoundTag data = new CompoundTag();
-            e.saveWithoutId(data);
-            timeMarkerData.put(e, data);
+            entity.saveWithoutId(data);
+            timeMarkerData.put(entity, data);
 
             // Save USER rotation data separately - this is the key fix
-            if (e instanceof LivingEntity livingEntity) {
+            if (entity instanceof LivingEntity livingEntity) {
                 userHeadYawData.put(livingEntity, livingEntity.getYHeadRot());
                 userHeadPitchData.put(livingEntity, livingEntity.getXRot());
             }
 
-            rewindInfo.add(new RewindData(e.getEyePosition(), e));
+            rewindInfo.add(new RewindData(entity.getEyePosition(), entity));
         }
 
         countdownActive = true;
