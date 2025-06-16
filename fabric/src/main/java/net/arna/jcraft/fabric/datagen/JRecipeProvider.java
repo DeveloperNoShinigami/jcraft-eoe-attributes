@@ -247,6 +247,42 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('N', Items.NETHERITE_BOOTS)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);
+        // Kakyoin's wig
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KAKYOIN_WIG.get())
+                .pattern("WRW")
+                .pattern("RHR")
+                .define('H', Items.NETHERITE_HELMET)
+                .define('R', Items.RED_DYE)
+                .define('W', Items.WHEAT)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
+        // Kakyoin's coat
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KAKYOIN_COAT.get())
+                .pattern("GYG")
+                .pattern("GCG")
+                .pattern("GGG")
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('G', Items.GREEN_DYE)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Kakyoin's pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KAKYOIN_PANTS.get())
+                .pattern("GGG")
+                .pattern("GLG")
+                .pattern("G G")
+                .define('G', Items.GREEN_DYE)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Kakyoin's boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KAKYOIN_BOOTS.get())
+                .pattern("BNB")
+                .pattern("B B")
+                .define('B', Items.BROWN_DYE)
+                .define('N', Items.NETHERITE_BOOTS)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
         // Dio's headband
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIO_HEADBAND.get())
                 .pattern("GHG")

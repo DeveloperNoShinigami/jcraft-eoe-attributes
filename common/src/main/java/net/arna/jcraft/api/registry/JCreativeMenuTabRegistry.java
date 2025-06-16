@@ -64,7 +64,11 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.DIO_JACKET.get(), JItemRegistry.DIO_CAPE.get());
             output.acceptAfter(JItemRegistry.DIO_CAPE.get(), JItemRegistry.DIO_PANTS.get());
             output.acceptAfter(JItemRegistry.DIO_PANTS.get(), JItemRegistry.DIO_BOOTS.get());
-            output.acceptAfter(JItemRegistry.DIO_BOOTS.get(), JItemRegistry.HEAVEN_ATTAINED_WIG.get());
+            output.acceptAfter(JItemRegistry.DIO_BOOTS.get(), JItemRegistry.KAKYOIN_WIG.get());
+            output.acceptAfter(JItemRegistry.KAKYOIN_WIG.get(), JItemRegistry.KAKYOIN_COAT.get());
+            output.acceptAfter(JItemRegistry.KAKYOIN_COAT.get(), JItemRegistry.KAKYOIN_PANTS.get());
+            output.acceptAfter(JItemRegistry.KAKYOIN_PANTS.get(), JItemRegistry.KAKYOIN_BOOTS.get());
+            output.acceptAfter(JItemRegistry.KAKYOIN_BOOTS.get(), JItemRegistry.HEAVEN_ATTAINED_WIG.get());
             output.acceptAfter(JItemRegistry.HEAVEN_ATTAINED_WIG.get(), JItemRegistry.HEAVEN_ATTAINED_SHIRT.get());
             output.acceptAfter(JItemRegistry.HEAVEN_ATTAINED_SHIRT.get(), JItemRegistry.HEAVEN_ATTAINED_PANTS.get());
             output.acceptAfter(JItemRegistry.HEAVEN_ATTAINED_PANTS.get(), JItemRegistry.HEAVEN_ATTAINED_BOOTS.get());
@@ -224,6 +228,10 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.DIO_CAPE.get());
                     entries.accept(JItemRegistry.DIO_PANTS.get());
                     entries.accept(JItemRegistry.DIO_BOOTS.get());
+                    entries.accept(JItemRegistry.KAKYOIN_WIG.get());
+                    entries.accept(JItemRegistry.KAKYOIN_COAT.get());
+                    entries.accept(JItemRegistry.KAKYOIN_PANTS.get());
+                    entries.accept(JItemRegistry.KAKYOIN_BOOTS.get());
                     entries.accept(JItemRegistry.HEAVEN_ATTAINED_WIG.get());
                     entries.accept(JItemRegistry.HEAVEN_ATTAINED_SHIRT.get());
                     entries.accept(JItemRegistry.HEAVEN_ATTAINED_PANTS.get());

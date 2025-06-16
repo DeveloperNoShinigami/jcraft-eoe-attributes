@@ -96,6 +96,10 @@ public class JTagProviders {
             cosplay.add(JItemRegistry.JOTARO_JACKET.get());
             cosplay.add(JItemRegistry.JOTARO_PANTS.get());
             cosplay.add(JItemRegistry.JOTARO_BOOTS.get());
+            cosplay.add(JItemRegistry.KAKYOIN_WIG.get());
+            cosplay.add(JItemRegistry.KAKYOIN_COAT.get());
+            cosplay.add(JItemRegistry.KAKYOIN_PANTS.get());
+            cosplay.add(JItemRegistry.KAKYOIN_BOOTS.get());
             cosplay.add(JItemRegistry.DIO_HEADBAND.get());
             cosplay.add(JItemRegistry.DIO_CAPE.get());
             cosplay.add(JItemRegistry.DIO_JACKET.get());

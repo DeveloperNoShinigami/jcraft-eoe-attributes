@@ -250,6 +250,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_jotaro_p4_outfit"));
         consumer.accept(obtainJotaroP4Outfit);
+        // obtain Kakyoin outfit
+        final Advancement obtainKakyoinOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.KAKYOIN_WIG.get(),
+                        Component.literal("I see"),
+                        Component.literal("Obtain all of Kakyoin's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_kakyoin_wig", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KAKYOIN_WIG.get()))
+                .addCriterion("has_kakyoin_coat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KAKYOIN_COAT.get()))
+                .addCriterion("has_kakyoin_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KAKYOIN_PANTS.get()))
+                .addCriterion("has_kakyoin_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KAKYOIN_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_kakyoin_outfit"));
+        consumer.accept(obtainKakyoinOutfit);
         // obtain Risotto outfit
         final Advancement obtainRisottoOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.RISOTTO_CAP.get(),
