@@ -37,11 +37,10 @@ public final class TossChargeMove<A extends IAttacker<A, ?>> extends AbstractHol
             }
             if (!projectileSource.isEmpty()) {
                 final ItemStack oldProjectile = stand.getItemInHand(InteractionHand.MAIN_HAND);
-                if (!oldProjectile.isEmpty()) {
-                    Containers.dropItemStack(stand.level(), stand.getX(), stand.getY(), stand.getZ(), oldProjectile);
+                if (oldProjectile.isEmpty()) {
+                    stand.setItemInHand(InteractionHand.MAIN_HAND, projectileSource.copyWithCount(1));
+                    projectileSource.shrink(1);
                 }
-                stand.setItemInHand(InteractionHand.MAIN_HAND, projectileSource.copyWithCount(1));
-                projectileSource.shrink(1);
             }
         }
     }
