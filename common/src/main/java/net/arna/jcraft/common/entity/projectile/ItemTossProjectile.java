@@ -243,7 +243,7 @@ public class ItemTossProjectile extends AbstractArrow {
 
         // force feed
         if (entity instanceof LivingEntity livingEntity && getItem().isEdible()) {
-            if (getItem().is(JItemRegistry.BLOOD_BOTTLE.get()) && livingEntity instanceof Player player) {
+            if (getItem().getItem() instanceof BloodBottleItem && livingEntity instanceof Player player) {
                 final CommonVampireComponent vampireComponent = JComponentPlatformUtils.getVampirism(player);
                 if (vampireComponent.isVampire()) {
                     final CompoundTag nbt = getItem().getOrCreateTag();
