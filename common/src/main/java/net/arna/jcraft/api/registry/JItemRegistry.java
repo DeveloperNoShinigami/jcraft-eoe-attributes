@@ -106,6 +106,14 @@ public interface JItemRegistry {
     RegistrySupplier<Item> RISOTTO_PANTS = register("risotto_pants", () -> new RisottoBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
     RegistrySupplier<Item> RISOTTO_BOOTS = register("risotto_boots", () -> new RisottoBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
+    RegistrySupplier<Item> DOPPIO_WIG = register("doppio_wig", () -> new DoppioClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> DOPPIO_SHIRT = register("doppio_shirt", () -> new DoppioClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+
+    RegistrySupplier<Item> DIAVOLO_WIG = register("diavolo_wig", () -> new DiavoloClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> DIAVOLO_SHIRT = register("diavolo_shirt", () -> new DiavoloShirtItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> DIAVOLO_PANTS = register("diavolo_pants", () -> new DiavoloClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> DIAVOLO_BOOTS = register("diavolo_boots", () -> new DiavoloClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+
     RegistrySupplier<Item> JOHNNY_CAP = register("johnny_cap", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> JOHNNY_JACKET = register("johnny_jacket", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
     RegistrySupplier<Item> JOHNNY_PANTS = register("johnny_pants", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));

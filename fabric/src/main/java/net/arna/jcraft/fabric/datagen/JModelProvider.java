@@ -68,6 +68,12 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.RISOTTO_CAP.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.RISOTTO_JACKET.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.RISOTTO_PANTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DOPPIO_WIG.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DOPPIO_SHIRT.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DIAVOLO_BOOTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DIAVOLO_WIG.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DIAVOLO_SHIRT.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.DIAVOLO_PANTS.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.JOHNNY_BOOTS.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.JOHNNY_CAP.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.JOHNNY_JACKET.get(), ModelTemplates.FLAT_ITEM);

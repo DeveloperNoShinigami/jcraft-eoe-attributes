@@ -286,6 +286,39 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_risotto_outfit"));
         consumer.accept(obtainRisottoOutfit);
+        // obtain Risotto outfit
+        final Advancement obtainDoppioOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.DOPPIO_WIG.get(),
+                        Component.literal("Ring! Ring!"),
+                        Component.literal("Obtain all of Doppio's clothes"),
+                        null,
+                        FrameType.GOAL,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_doppio_wig", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DOPPIO_WIG.get()))
+                .addCriterion("has_doppio_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DOPPIO_SHIRT.get()))
+                .build(JCraft.id("obtain_doppio_outfit"));
+        consumer.accept(obtainDoppioOutfit);
+        // obtain Diavolo outfit
+        final Advancement obtainDiavoloOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.DIAVOLO_WIG.get(),
+                        Component.literal("This is a test"),
+                        Component.literal("Obtain all of Diavolo's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainDoppioOutfit)
+                .addCriterion("has_diavolo_wig", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIAVOLO_WIG.get()))
+                .addCriterion("has_diavolo_shirt", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIAVOLO_SHIRT.get()))
+                .addCriterion("has_diavolo_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIAVOLO_PANTS.get()))
+                .addCriterion("has_diavolo_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIAVOLO_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_diavolo_outfit"));
+        consumer.accept(obtainDiavoloOutfit);
         // obtain Johnny outfit
         final Advancement obtainJohnnyOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOHNNY_CAP.get(),

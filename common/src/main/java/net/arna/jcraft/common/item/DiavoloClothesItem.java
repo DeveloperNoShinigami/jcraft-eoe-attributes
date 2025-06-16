@@ -10,7 +10,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.client.renderer.armor.KakyoinCoatRenderer;
+import net.arna.jcraft.client.renderer.armor.DiavoloArmorRenderer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,8 +21,8 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class KakyoinCoatItem extends ArmorItem implements GeoItem {
-    public KakyoinCoatItem(ArmorMaterial materialIn, Type slot, Properties builder) {
+public class DiavoloClothesItem extends ArmorItem implements GeoItem {
+    public DiavoloClothesItem(ArmorMaterial materialIn, Type slot, Properties builder) {
         super(materialIn, slot, builder);
     }
 
@@ -33,7 +33,7 @@ public class KakyoinCoatItem extends ArmorItem implements GeoItem {
             @SuppressWarnings("unchecked")
             @Override public @NonNull HumanoidModel<LivingEntity> getHumanoidArmorModel(
                     LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<LivingEntity> original) {
-                if (renderer == null) renderer = new KakyoinCoatRenderer();
+                if (renderer == null) renderer = new DiavoloArmorRenderer();
                 renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                 return renderer;
             }});
@@ -52,7 +52,7 @@ public class KakyoinCoatItem extends ArmorItem implements GeoItem {
         controllers.add(new AnimationController<>(this, "controller", 20, this::predicate));
     }
 
-    private PlayState predicate(AnimationState<KakyoinCoatItem> animationState) {
+    private PlayState predicate(AnimationState<DiavoloClothesItem> animationState) {
         return PlayState.STOP;
     }
 

@@ -472,6 +472,63 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('N', Items.NETHERITE_BOOTS)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);
+        // Doppio's wig
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DOPPIO_WIG.get())
+                .pattern("WPW")
+                .pattern("PHP")
+                .pattern(" W ")
+                .define('H', Items.NETHERITE_HELMET)
+                .define('P', Items.PINK_DYE)
+                .define('W', Items.WHEAT)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
+        // Doppio's shirt
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DOPPIO_SHIRT.get())
+                .pattern("PPP")
+                .pattern("PCP")
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('P', Items.PURPLE_DYE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Diavolo's wig
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIAVOLO_WIG.get())
+                .pattern("WPW")
+                .pattern("PHP")
+                .pattern(" B ")
+                .define('B', Items.BLACK_DYE)
+                .define('H', Items.NETHERITE_HELMET)
+                .define('P', Items.PINK_DYE)
+                .define('W', Items.WHEAT)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
+        // Diavolo's shirt
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIAVOLO_SHIRT.get())
+                .pattern("B B")
+                .pattern(" C ")
+                .pattern("B B")
+                .define('B', Items.BLACK_DYE)
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Diavolo's pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIAVOLO_PANTS.get())
+                .pattern("GGG")
+                .pattern("PLP")
+                .pattern("P P")
+                .define('G', Items.GREEN_DYE)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('P', Items.PURPLE_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Diavolo's boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIAVOLO_BOOTS.get())
+                .pattern("BNB")
+                .pattern("L L")
+                .define('B', Items.BLUE_DYE)
+                .define('N', Items.NETHERITE_BOOTS)
+                .define('L', Items.LIGHT_BLUE_DYE)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
         // Johnny's cap
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.JOHNNY_CAP.get())
                 .pattern(" L ")

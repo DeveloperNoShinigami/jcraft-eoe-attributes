@@ -80,7 +80,13 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.RISOTTO_CAP.get(), JItemRegistry.RISOTTO_JACKET.get());
             output.acceptAfter(JItemRegistry.RISOTTO_JACKET.get(), JItemRegistry.RISOTTO_PANTS.get());
             output.acceptAfter(JItemRegistry.RISOTTO_PANTS.get(), JItemRegistry.RISOTTO_BOOTS.get());
-            output.acceptAfter(JItemRegistry.RISOTTO_BOOTS.get(), JItemRegistry.PUCCIS_HAT.get());
+            output.acceptAfter(JItemRegistry.RISOTTO_BOOTS.get(), JItemRegistry.DOPPIO_WIG.get());
+            output.acceptAfter(JItemRegistry.DOPPIO_WIG.get(), JItemRegistry.DOPPIO_SHIRT.get());
+            output.acceptAfter(JItemRegistry.DOPPIO_SHIRT.get(), JItemRegistry.DIAVOLO_WIG.get());
+            output.acceptAfter(JItemRegistry.DIAVOLO_WIG.get(), JItemRegistry.DIAVOLO_SHIRT.get());
+            output.acceptAfter(JItemRegistry.DIAVOLO_SHIRT.get(), JItemRegistry.DIAVOLO_PANTS.get());
+            output.acceptAfter(JItemRegistry.DIAVOLO_PANTS.get(), JItemRegistry.DIAVOLO_BOOTS.get());
+            output.acceptAfter(JItemRegistry.DIAVOLO_BOOTS.get(), JItemRegistry.PUCCIS_HAT.get());
             output.acceptAfter(JItemRegistry.PUCCIS_HAT.get(), JItemRegistry.PUCCI_ROBE.get());
             output.acceptAfter(JItemRegistry.PUCCI_ROBE.get(), JItemRegistry.PUCCI_PANTS.get());
             output.acceptAfter(JItemRegistry.PUCCI_PANTS.get(), JItemRegistry.PUCCI_BOOTS.get());
@@ -244,6 +250,12 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.RISOTTO_JACKET.get());
                     entries.accept(JItemRegistry.RISOTTO_PANTS.get());
                     entries.accept(JItemRegistry.RISOTTO_BOOTS.get());
+                    entries.accept(JItemRegistry.DOPPIO_WIG.get());
+                    entries.accept(JItemRegistry.DOPPIO_SHIRT.get());
+                    entries.accept(JItemRegistry.DIAVOLO_WIG.get());
+                    entries.accept(JItemRegistry.DIAVOLO_SHIRT.get());
+                    entries.accept(JItemRegistry.DIAVOLO_PANTS.get());
+                    entries.accept(JItemRegistry.DIAVOLO_BOOTS.get());
                     entries.accept(JItemRegistry.PUCCIS_HAT.get());
                     entries.accept(JItemRegistry.PUCCI_ROBE.get());
                     entries.accept(JItemRegistry.PUCCI_PANTS.get());
