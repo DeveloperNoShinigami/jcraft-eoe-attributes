@@ -76,7 +76,11 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.JOTARO_P4_CAP.get(), JItemRegistry.JOTARO_P4_JACKET.get());
             output.acceptAfter(JItemRegistry.JOTARO_P4_JACKET.get(), JItemRegistry.JOTARO_P4_PANTS.get());
             output.acceptAfter(JItemRegistry.JOTARO_P4_PANTS.get(), JItemRegistry.JOTARO_P4_BOOTS.get());
-            output.acceptAfter(JItemRegistry.JOTARO_P4_BOOTS.get(), JItemRegistry.RISOTTO_CAP.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P4_BOOTS.get(), JItemRegistry.GIORNO_WIG.get());
+            output.acceptAfter(JItemRegistry.GIORNO_WIG.get(), JItemRegistry.GIORNO_JACKET.get());
+            output.acceptAfter(JItemRegistry.GIORNO_JACKET.get(), JItemRegistry.GIORNO_PANTS.get());
+            output.acceptAfter(JItemRegistry.GIORNO_PANTS.get(), JItemRegistry.GIORNO_BOOTS.get());
+            output.acceptAfter(JItemRegistry.GIORNO_BOOTS.get(), JItemRegistry.RISOTTO_CAP.get());
             output.acceptAfter(JItemRegistry.RISOTTO_CAP.get(), JItemRegistry.RISOTTO_JACKET.get());
             output.acceptAfter(JItemRegistry.RISOTTO_JACKET.get(), JItemRegistry.RISOTTO_PANTS.get());
             output.acceptAfter(JItemRegistry.RISOTTO_PANTS.get(), JItemRegistry.RISOTTO_BOOTS.get());
@@ -246,6 +250,10 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.JOTARO_P4_JACKET.get());
                     entries.accept(JItemRegistry.JOTARO_P4_PANTS.get());
                     entries.accept(JItemRegistry.JOTARO_P4_BOOTS.get());
+                    entries.accept(JItemRegistry.GIORNO_WIG.get());
+                    entries.accept(JItemRegistry.GIORNO_JACKET.get());
+                    entries.accept(JItemRegistry.GIORNO_PANTS.get());
+                    entries.accept(JItemRegistry.GIORNO_BOOTS.get());
                     entries.accept(JItemRegistry.RISOTTO_CAP.get());
                     entries.accept(JItemRegistry.RISOTTO_JACKET.get());
                     entries.accept(JItemRegistry.RISOTTO_PANTS.get());

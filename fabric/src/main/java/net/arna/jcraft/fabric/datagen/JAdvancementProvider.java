@@ -268,6 +268,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_kakyoin_outfit"));
         consumer.accept(obtainKakyoinOutfit);
+        // obtain Giorno outfit
+        final Advancement obtainGiornoOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.GIORNO_WIG.get(),
+                        Component.literal("I have a dream"),
+                        Component.literal("Obtain all of Giorno's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_giorno_wig", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GIORNO_WIG.get()))
+                .addCriterion("has_giorno_coat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GIORNO_JACKET.get()))
+                .addCriterion("has_giorno_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GIORNO_PANTS.get()))
+                .addCriterion("has_giorno_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.GIORNO_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_giorno_outfit"));
+        consumer.accept(obtainGiornoOutfit);
         // obtain Risotto outfit
         final Advancement obtainRisottoOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.RISOTTO_CAP.get(),
