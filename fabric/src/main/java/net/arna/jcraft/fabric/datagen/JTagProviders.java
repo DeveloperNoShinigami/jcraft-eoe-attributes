@@ -236,6 +236,7 @@ public class JTagProviders {
             explodesOnImpact.add(Items.END_CRYSTAL);
             explodesOnImpact.add(Items.TNT);
             explodesOnImpact.add(Items.TNT_MINECART);
+            explodesOnImpact.add(Items.FIREWORK_ROCKET);
 
             final var heavyImpact = getOrCreateTagBuilder(JTagRegistry.HEAVY_IMPACT);
             heavyImpact.add(JItemRegistry.METEORITE_BLOCK.getId());
