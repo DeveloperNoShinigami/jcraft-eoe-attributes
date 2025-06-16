@@ -7,6 +7,7 @@ import net.arna.jcraft.api.spec.SpecTypeUtil;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.common.entity.stand.AbstractKillerQueenEntity;
 import net.arna.jcraft.common.item.BloodBottleItem;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
@@ -137,7 +138,8 @@ public class ItemTossProjectile extends AbstractArrow {
     }
 
     protected boolean maybeExplode() {
-        if (!level().isClientSide && getItem().is(JTagRegistry.EXPLODES_ON_IMPACT)) {
+        if (!level().isClientSide && (getItem().is(JTagRegistry.EXPLODES_ON_IMPACT) ||
+                (getOwner() instanceof AbstractKillerQueenEntity<?,?>))) {
             final boolean grief = level().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
             level().explode(this, getX(), getY(), getZ(), 1, grief, Level.ExplosionInteraction.MOB);
             discard();
