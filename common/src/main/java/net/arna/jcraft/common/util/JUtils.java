@@ -13,9 +13,13 @@ import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.projectile.ItemTossProjectile;
 import net.arna.jcraft.common.entity.projectile.JAttackEntity;
+import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
+import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.arna.jcraft.common.entity.spec.JSpecHolder;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.common.item.KnifeItem;
+import net.arna.jcraft.common.item.ScalpelItem;
 import net.arna.jcraft.common.network.s2c.JExplosionPacket;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
@@ -54,7 +58,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.projectile.Snowball;
+import net.minecraft.world.entity.projectile.ThrownEgg;
+import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.entity.projectile.ThrownTrident;
+import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.EggItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SnowballItem;
+import net.minecraft.world.item.ThrowablePotionItem;
+import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -760,14 +773,58 @@ public final class JUtils {
         return true;
     }
 
+    /**
+     * Tosses or shoots the specified item.
+     */
     public static void tossItem(final LivingEntity shooter, final Level level, final ItemStack itemStack, float velocity, boolean decrement) {
         if (level.isClientSide() || itemStack.isEmpty()) {
             return;
         }
-        AbstractArrow projectile = new ItemTossProjectile(shooter, level, itemStack);
-        projectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
-        level.addFreshEntity(projectile);
-        // TODO play sound
+        if (itemStack.getItem() instanceof final ArrowItem arrow) {
+            final AbstractArrow arrowEntity = arrow.createArrow(level, itemStack, shooter);
+            arrowEntity.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
+            level.addFreshEntity(arrowEntity);
+        }
+        else if (itemStack.getItem() instanceof SnowballItem) {
+            final Snowball snowballEntity = new Snowball(level, shooter);
+            snowballEntity.setItem(itemStack);
+            snowballEntity.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
+            level.addFreshEntity(snowballEntity);
+        }
+
+        else if (itemStack.getItem() instanceof TridentItem) {
+            final ThrownTrident thrownTrident = new ThrownTrident(level, shooter, itemStack);
+            thrownTrident.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
+            level.addFreshEntity(thrownTrident);
+        }
+        else if (itemStack.getItem() instanceof ThrowablePotionItem) {
+            final ThrownPotion thrownPotion = new ThrownPotion(level, shooter);
+            thrownPotion.setItem(itemStack);
+            thrownPotion.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
+            level.addFreshEntity(thrownPotion);
+        }
+        else if (itemStack.getItem() instanceof EggItem) {
+            final ThrownEgg thrownEgg = new ThrownEgg(level, shooter);
+            thrownEgg.setItem(itemStack);
+            thrownEgg.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
+            level.addFreshEntity(thrownEgg);
+        }
+        else if (itemStack.getItem() instanceof KnifeItem) {
+            final KnifeProjectile knifeProjectile = new KnifeProjectile(level, shooter);
+            knifeProjectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
+            level.addFreshEntity(knifeProjectile);
+        }
+        else if (itemStack.getItem() instanceof ScalpelItem) {
+            final ScalpelProjectile scalpelProjectile = new ScalpelProjectile(level, shooter);
+            scalpelProjectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
+            level.addFreshEntity(scalpelProjectile);
+        }
+        else {
+            final AbstractArrow projectile = new ItemTossProjectile(shooter, level, itemStack);
+            projectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
+            level.addFreshEntity(projectile);
+            // TODO play sound
+        }
         if (decrement) {
             itemStack.shrink(1);
         }
