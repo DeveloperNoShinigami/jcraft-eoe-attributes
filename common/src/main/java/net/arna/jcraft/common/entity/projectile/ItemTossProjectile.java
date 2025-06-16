@@ -178,6 +178,8 @@ public class ItemTossProjectile extends AbstractArrow {
             return;
         }
 
+        boolean effectActivated = false;
+
         if (entity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity)entity;
             // handle knockback
@@ -222,11 +224,13 @@ public class ItemTossProjectile extends AbstractArrow {
                     standData.setTypeAndSkin(itemStand, itemSkin);
                     JCraft.summon(level(), livingEntity);
                 }
+                effectActivated = true;
             }
         }
         // force equip thrown stuff
         if (entity instanceof Mob mob && getItem().is(JTagRegistry.EQUIPABLES)) {
             mob.equipItemIfPossible(getItem());
+            effectActivated = true;
         }
 
         // TODO spec obtainment items
@@ -240,6 +244,7 @@ public class ItemTossProjectile extends AbstractArrow {
                 setItem(Items.BOWL.getDefaultInstance());
                 dropItem(result.getLocation()); // FIXME doesn't work?
             }
+            effectActivated = true;
         }
 
         // slab iron on iron golem
@@ -250,18 +255,21 @@ public class ItemTossProjectile extends AbstractArrow {
                 float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
                 this.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0F, g);
             }
+            effectActivated = true;
         }
 
         // force equip saddles
         if (entity instanceof Saddleable saddleable && getItem().is(Items.SADDLE)) {
             saddleable.equipSaddle(null);float g = 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
             this.playSound(saddleable.getSaddleSoundEvent(), 1.0F, g);
+            effectActivated = true;
         }
 
         // force equip horse armor
         if (entity instanceof AbstractHorse horse && horse.isArmor(getItem())) {
             // this is needed because the equipArmor method of the horse wants a player
             horse.inventory.setItem(1, getItem());
+            effectActivated = true;
         }
 
         // TODO also, what about throwing a sword, bone meal, fire charge, shears,
@@ -272,6 +280,15 @@ public class ItemTossProjectile extends AbstractArrow {
         }
         // a little bit more inspiration
         if (this.getPierceLevel() <= 0) {
+            // drop if not used
+            if (!(effectActivated || getItem().is(JTagRegistry.BLINDS_ON_IMPACT) ||
+                    getItem().is(JTagRegistry.BURNS_ON_IMPACT) ||
+                    getItem().is(JTagRegistry.HEAVY_IMPACT) ||
+                    getItem().is(JTagRegistry.EXPLODES_ON_IMPACT) ||
+                    getItem().is(JTagRegistry.SLOWS_ON_IMPACT) ||
+                    getItem().is(JTagRegistry.POISONS_ON_IMPACT))) {
+                dropItem(result.getLocation());
+            }
             this.discard();
         }
     }
