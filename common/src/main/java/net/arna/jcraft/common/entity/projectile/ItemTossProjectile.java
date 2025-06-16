@@ -2,9 +2,12 @@ package net.arna.jcraft.common.entity.projectile;
 
 import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.component.living.CommonVampireComponent;
+import net.arna.jcraft.api.spec.SpecTypeUtil;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.common.item.BloodBottleItem;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JItemRegistry;
@@ -30,6 +33,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.*;
@@ -239,12 +243,25 @@ public class ItemTossProjectile extends AbstractArrow {
 
         // force feed
         if (entity instanceof LivingEntity livingEntity && getItem().isEdible()) {
-            livingEntity.eat(level(), getItem());
-            if (getItem().getItem() instanceof BowlFoodItem) {
-                setItem(Items.BOWL.getDefaultInstance());
-                dropItem(result.getLocation()); // FIXME doesn't work?
+            if (getItem().is(JItemRegistry.BLOOD_BOTTLE.get()) && livingEntity instanceof Player player) {
+                final CommonVampireComponent vampireComponent = JComponentPlatformUtils.getVampirism(player);
+                if (vampireComponent.isVampire()) {
+                    final CompoundTag nbt = getItem().getOrCreateTag();
+                    int blood = (int)Math.floor(nbt.getFloat("Blood"));
+                    vampireComponent.setBlood(Math.min(20, vampireComponent.getBlood() + blood));
+                    effectActivated = true;
+                }
             }
-            effectActivated = true;
+            else if (livingEntity instanceof Player player) {
+                if (!JComponentPlatformUtils.getVampirism(player).isVampire()) {
+                    livingEntity.eat(level(), getItem());
+                    if (getItem().getItem() instanceof BowlFoodItem) {
+                        setItem(Items.BOWL.getDefaultInstance());
+                        dropItem(result.getLocation()); // FIXME doesn't work?
+                    }
+                    effectActivated = true;
+                }
+            }
         }
 
         // slab iron on iron golem
