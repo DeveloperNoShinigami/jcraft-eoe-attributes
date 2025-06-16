@@ -64,7 +64,7 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
                     Component.literal("Countdown"),
                     Component.literal("Saves position data of all entities in a 64 block radius. Must be active to use Rewind."));
 
-    public static final RewindMove REWIND = new RewindMove(6, 5, 10, 0f)
+    public static final RewindMove REWIND = new RewindMove(6, 5, 10, 0f, 200)
             .withSound(JSoundRegistry.MANDOM_REWIND)
             .withInfo(
                     Component.literal("Rewind"),
