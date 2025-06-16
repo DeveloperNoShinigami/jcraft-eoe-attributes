@@ -211,7 +211,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
     // TODO balance x2
     public static final TossMove<StarPlatinumEntity> TOSS = new TossMove<StarPlatinumEntity>(0, 1, 1, 0.75f)
             .withAnim(State.ITEM_TOSS);
-    public static final TossChargeMove<StarPlatinumEntity> TOSS_CHARGE = new TossChargeMove<StarPlatinumEntity>(1, 3 * 20 + 1, 3 * 20, 0.75f, 10)
+    public static final TossChargeMove<StarPlatinumEntity> TOSS_CHARGE = new TossChargeMove<StarPlatinumEntity>(70, 3 * 20 + 1, 3 * 20, 1.0f, 10)
             .withFollowup(TOSS);
     public static final InhaleAttack INHALE = new InhaleAttack(800, 5, 5, 1f, 80)
             .withInfo(
