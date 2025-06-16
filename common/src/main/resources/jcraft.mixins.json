@@ -33,7 +33,6 @@
     "client.PlayerModelAccessor",
     "client.RenderTargetMixin",
     "client.TextureManagerMixin",
-    "client.WorldRendererMixin",
     "client.gravity.BiomeEffectSoundPlayerMixin",
     "client.gravity.CameraMixin",
     "client.gravity.ClientPlayerEntityMixin",

@@ -264,10 +264,8 @@ public class JClientEvents {
 
             for (final Entity entity : toStop) {
                 if (!entity.isPassenger() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle()) {
-                    if (JComponentPlatformUtils.getTimeStopData(entity).isPresent()) {
-                        JComponentPlatformUtils.getTimeStopData(entity).get().setTicks(2);
-                    }
-
+                    JComponentPlatformUtils.getTimeStopData(entity)
+                            .ifPresent(d -> d.setTicks(2));
                 }
             }
         }

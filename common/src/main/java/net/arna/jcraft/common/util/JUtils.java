@@ -506,7 +506,8 @@ public final class JUtils {
 
     public static boolean isAffectedByTimeStop(Entity entity) {
         return JComponentPlatformUtils.getTimeStopData(entity)
-                .map(data -> data.getTicks() > 0).orElse(false);
+                .map(data -> data.getTicks() > 0)
+                .orElse(false);
     }
 
     public static boolean canDamage(DamageSource damageSource, Entity ent) {

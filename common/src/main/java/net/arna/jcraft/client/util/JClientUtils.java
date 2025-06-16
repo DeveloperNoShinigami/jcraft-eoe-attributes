@@ -42,6 +42,14 @@ public class JClientUtils {
         }
     }
 
+    public static boolean isInTSRange(final Entity entity) {
+        if (entity == null) {
+            return false;
+        }
+
+        return isInTSRange(entity.position());
+    }
+
     public static boolean isInTSRange(final Vec3 pos) {
         for (final DimensionData timeStop : activeTimestops) {
             if (timeStop != null && timeStop.pos.distanceToSqr(pos.x(), pos.y(), pos.z()) <= 65536) {
