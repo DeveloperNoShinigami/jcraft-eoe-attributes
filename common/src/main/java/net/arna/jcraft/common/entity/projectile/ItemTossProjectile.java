@@ -243,6 +243,7 @@ public class ItemTossProjectile extends AbstractArrow {
 
         // force feed
         if (entity instanceof LivingEntity livingEntity && getItem().isEdible()) {
+            // FIXME Vampires can't be force-fed blood bottles
             if (getItem().getItem() instanceof BloodBottleItem && livingEntity instanceof Player player) {
                 final CommonVampireComponent vampireComponent = JComponentPlatformUtils.getVampirism(player);
                 if (vampireComponent.isVampire()) {
