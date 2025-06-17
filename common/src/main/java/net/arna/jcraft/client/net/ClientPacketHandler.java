@@ -12,6 +12,7 @@ import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.JCraftClient;
 import net.arna.jcraft.client.gui.ServerConfigUI;
@@ -473,7 +474,7 @@ public class ClientPacketHandler {
 
         client.execute(() -> {
             final Entity ent = client.level.getEntity(entID);
-            if (ent == null) {
+            if (ent == null || ent.isInvisible() || JClientUtils.shouldNotRender(ent) || ent instanceof StandEntity<?,?>) {
                 return;
             }
             final Vec3 currentPos = ent.position();
