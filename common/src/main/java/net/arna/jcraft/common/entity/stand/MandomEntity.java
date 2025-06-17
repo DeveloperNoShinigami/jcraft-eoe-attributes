@@ -23,6 +23,8 @@ import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -84,6 +86,12 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
     private static void registerMoves(MoveMap<MandomEntity, State> moves) {
         moves.register(MoveClass.ULTIMATE, REWIND, State.REWIND);
         moves.register(MoveClass.UTILITY, COUNTDOWN, State.COUNTDOWN);
+    }
+
+    @NotNull
+    @Override
+    protected AABB makeBoundingBox() {
+        return AABB.ofSize(getPosition(0f), 0d, 0d, 0d);
     }
 
     @Override
