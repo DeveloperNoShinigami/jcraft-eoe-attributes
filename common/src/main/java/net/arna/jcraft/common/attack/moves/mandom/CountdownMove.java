@@ -21,6 +21,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -77,7 +78,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
         // Follow ReturnToZeroMove pattern for saving entity data
         for (final Entity entity : toCapture) {
-            if (entity.getType() == EntityType.ARMOR_STAND) {
+            if (entity.getType() == EntityType.ARMOR_STAND || (entity instanceof final Player player && (player.isCreative() || player.isSpectator()))) {
                 continue;
             }
             final CompoundTag data = new CompoundTag();
