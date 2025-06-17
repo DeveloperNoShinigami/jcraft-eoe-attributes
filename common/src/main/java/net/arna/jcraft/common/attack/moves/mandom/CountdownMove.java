@@ -69,7 +69,9 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker));
 
         // Also include the user in the rewind
-        toCapture.add(user);
+        if (!(user instanceof Player player && (player.isCreative() || player.isSpectator()))) {
+            toCapture.add(user);
+        }
 
         timeMarkerData.clear();
         userHeadYawData.clear();
@@ -78,7 +80,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
         // Follow ReturnToZeroMove pattern for saving entity data
         for (final Entity entity : toCapture) {
-            if (entity.getType() == EntityType.ARMOR_STAND || (entity instanceof final Player player && (player.isCreative() || player.isSpectator()))) {
+            if (entity.getType() == EntityType.ARMOR_STAND) {
                 continue;
             }
             final CompoundTag data = new CompoundTag();
