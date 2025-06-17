@@ -19,6 +19,7 @@ import net.arna.jcraft.api.attack.enums.MobilityType;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.stand.SummonData;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.ImpalingThrustAttack;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.STWChargeAttack;
 import net.arna.jcraft.common.attack.moves.shadowtheworld.STWCounterAttack;
@@ -65,6 +66,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                     .skinName(Component.literal("Frost"))
                     .skinName(Component.literal("Predator"))
                     .build())
+            .summonData(SummonData.of(JSoundRegistry.STW_WARBLE))
             .build();
 
     public static final SimpleUppercutAttack<ShadowTheWorldEntity> UPPERCUT = new SimpleUppercutAttack<ShadowTheWorldEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),
