@@ -9,6 +9,8 @@ import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
@@ -106,9 +108,14 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
         Float savedPitch = savedUserPitch.get(serverPlayer);
 
         if (savedYaw != null && savedPitch != null) {
-            // Load inventory and ender chest
+            // make sure inventory doesn't get changed
             nbt.put("Inventory", serverPlayer.getInventory().save(new ListTag()));
-            nbt.put("EnderItems", serverPlayer.getEnderChestInventory().createTag());
+            // make sure ender chest and score stays the same
+            nbt.remove("EnderItems");
+            nbt.putInt("Score", serverPlayer.getScore());
+            // disable shoulder entity dupe
+            nbt.remove("ShoulderEntityLeft");
+            nbt.remove("ShoulderEntityRight");
 
             // Load the NBT data first (for inventory, etc.)
             serverPlayer.load(nbt);
