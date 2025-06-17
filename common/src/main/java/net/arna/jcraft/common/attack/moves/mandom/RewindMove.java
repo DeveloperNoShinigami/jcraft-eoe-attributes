@@ -66,6 +66,9 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
             final CompoundTag nbt = data.getValue();
 
             if (ent instanceof final ServerPlayer serverPlayer) {
+                if (serverPlayer.getAbilities().instabuild) {
+                    continue;
+                }
                 performOnServerPlayer(serverPlayer, nbt, savedUserYaw, savedUserPitch);
             } else if (ent instanceof LivingEntity livingEntity) {
                 performOnLivingEntity(livingEntity, nbt, savedUserYaw, savedUserPitch);
