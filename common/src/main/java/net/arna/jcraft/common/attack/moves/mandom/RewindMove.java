@@ -6,7 +6,11 @@ import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
@@ -114,6 +118,14 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
             // make sure ender chest and score stays the same
             nbt.remove("EnderItems");
             nbt.putInt("Score", serverPlayer.getScore());
+            // don't allow stand rewinding
+            final CompoundTag standNbt = new CompoundTag();
+            JComponentPlatformUtils.getStandComponent(serverPlayer).writeToNbt(standNbt);
+            final CompoundTag ccNbt = nbt.getCompound("cardinal_components");
+            if (ccNbt != null) {
+                ccNbt.put("jcraft:stand", standNbt);
+                nbt.put("cardinal_components", standNbt);
+            }
             // disable shoulder entity dupe
             nbt.remove("ShoulderEntityLeft");
             nbt.remove("ShoulderEntityRight");
