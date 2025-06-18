@@ -21,21 +21,26 @@ import java.util.Map;
 @Mixin(ModelBakery.class)
 public abstract class ModelBakeryMixin {
     @Unique
-    private static final String PATH_PREFIX = "models/item/stand_disc_";
+    private static final String STAND_DISC_PATH_PREFIX = "models/item/stand_disc_";
+
+    @Unique
+    private static final String SPEC_DISC_PATH_PREFIX = "models/item/spec_disc_";
 
     @Shadow protected abstract void loadTopLevel(ModelResourceLocation location);
 
     @Shadow @Final private Map<ResourceLocation, UnbakedModel> topLevelModels;
 
-    // Adds stand disc models to the top-level models in ModelBakery to ensure they can be used in item rendering.
+    // Adds stand and spec disc models to the top-level models in ModelBakery to ensure they can be used in item rendering.
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void injectStandDiscsIntoTopLevel(BlockColors blockColors, ProfilerFiller profilerFiller,
+    private void jcraft$injectDiscsIntoTopLevel(BlockColors blockColors, ProfilerFiller profilerFiller,
                                               Map<ResourceLocation, BlockModel> modelResources,
                                               Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStateResources,
                                               CallbackInfo ci) {
-        profilerFiller.push("jcraft_stand_discs");
+        profilerFiller.push("jcraft_discs");
         modelResources.entrySet().stream()
-                .filter(entry -> entry.getKey().getPath().startsWith(PATH_PREFIX))
+                .filter(entry ->
+                        entry.getKey().getPath().startsWith(STAND_DISC_PATH_PREFIX) ||
+                        entry.getKey().getPath().startsWith(SPEC_DISC_PATH_PREFIX))
                 .forEach(entry -> {
                     ResourceLocation modelId = entry.getKey().withPath(p ->
                             p.substring("models/item/".length(), p.length() - 5)); // Remove path and ".json" suffix
