@@ -108,18 +108,20 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .save(exporter);
         // stand disk
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.STAND_DISC.get())
-                .pattern("AD")
-                .define('A', JItemRegistry.STAND_ARROW.get())
+                .pattern("BBB")
+                .pattern("BAB")
+                .pattern("BDB")
+                .define('A', JItemRegistry.STAND_ARROWHEAD.get())
                 .define('D', JItemRegistry.DISC.get())
+                .define('B', JItemRegistry.POLISHED_METEORITE_BLOCK.get())
                 .unlockedBy("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_ARROW.get()))
                 .unlockedBy("has_disc", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DISC.get()))
                 .save(exporter);
         // spec disk
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.SPEC_DISC.get())
                 .pattern("DA")
-                .define('A', JItemRegistry.STAND_ARROW.get())
+                .define('A', Items.EXPERIENCE_BOTTLE)
                 .define('D', JItemRegistry.DISC.get())
-                .unlockedBy("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_ARROW.get()))
                 .unlockedBy("has_disc", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DISC.get()))
                 .save(exporter);
         // sinner's soul
