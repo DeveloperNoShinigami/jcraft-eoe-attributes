@@ -49,6 +49,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -350,6 +351,11 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                 new Vector3f(0.2f, 0.2f, 0.05f),
                 new Vector3f(0.3f, 0.01f, 0.1f),
         };
+    }
+
+    @Override
+    protected AABB makeBoundingBox() {
+        return AABB.ofSize(getPosition(0f).add(0,0.5,0),0.5,1,0.5);
     }
 
     @Override
