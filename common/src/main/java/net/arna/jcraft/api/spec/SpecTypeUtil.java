@@ -1,5 +1,6 @@
 package net.arna.jcraft.api.spec;
 
+import lombok.experimental.UtilityClass;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.registry.JSpecTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -12,7 +13,13 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+@UtilityClass
 public class SpecTypeUtil {
+
+    public static boolean isNone(final SpecType type) {
+        return type == null || type == JSpecTypeRegistry.NONE.get();
+    }
+
     public static Stream<SpecType> streamAll() {
         return StreamSupport.stream(JRegistries.SPEC_TYPE_REGISTRY.spliterator(), false);
     }

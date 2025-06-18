@@ -4,6 +4,7 @@ import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.registry.JBlockRegistry;
 import net.arna.jcraft.api.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JSpecTypeRegistry;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
@@ -104,7 +105,7 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.ROAD_ROLLER.get(), ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(JItemRegistry.DISC.get(), ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(JItemRegistry.SPEC_DISC.get(), ModelTemplates.FLAT_ITEM); // TODO replace with sophisticated custom icons like stand discs
+        generateSpecDiscModels(generator);
         generateStandDiscModels(generator);
 
         generator.generateFlatItem(JItemRegistry.STELLAR_IRON_INGOT.get(), ModelTemplates.FLAT_ITEM);
@@ -117,6 +118,20 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.AYA_TSUJI_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
         generator.generateFlatItem(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
         generator.generateFlatItem(JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
+    }
+
+    private void generateSpecDiscModels(ItemModelGenerators generator) {
+        // Generate a model for each spec.
+        for (ResourceLocation id : JRegistries.SPEC_TYPE_REGISTRY.getIds()) {
+            if (id.equals(JSpecTypeRegistry.NONE.getId())) {
+                continue;
+            }
+            generator.generateLayeredItem(id.withPath(p -> "item/spec_disc_" + p),
+                    JCraft.id("item/spec_disc"), id.withPath(p -> "item/specs/" + p));
+        }
+
+        // Generate the default spec disc model.
+        generator.generateFlatItem(JItemRegistry.SPEC_DISC.get(), ModelTemplates.FLAT_ITEM);
     }
 
     private void generateStandDiscModels(ItemModelGenerators generator) {

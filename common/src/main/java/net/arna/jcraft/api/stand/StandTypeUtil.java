@@ -1,5 +1,6 @@
 package net.arna.jcraft.api.stand;
 
+import lombok.experimental.UtilityClass;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.common.data.AttackerDataLoader;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
@@ -16,6 +17,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+@UtilityClass
 public class StandTypeUtil {
     /**
      * Checks whether the given stand type is {@code null} or the {@code NONE} stand type.
