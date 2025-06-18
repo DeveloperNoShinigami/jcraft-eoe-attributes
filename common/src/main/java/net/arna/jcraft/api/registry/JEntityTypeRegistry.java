@@ -535,14 +535,6 @@ public interface JEntityTypeRegistry {
                     .build("purple_haze_cloud")
     );
 
-    RegistrySupplier<EntityType<MetallicaForksEntity>> METALLICA_FORKS = ENTITY_TYPE_REGISTRY.register(JCraft.id("metallica_forks"),
-            () -> EntityType.Builder.of(
-                            WorldOnlyEntityFactory.from(MetallicaForksEntity::new),
-                            MobCategory.MISC
-                    ).sized(1.5f, 1.5f)
-                    .build("metallica_forks")
-    );
-
     RegistrySupplier<EntityType<PetshopEntity>> PETSHOP = ENTITY_TYPE_REGISTRY.register(JCraft.id("petshop"),
             () -> EntityType.Builder.of(
                             (EntityType<PetshopEntity> entityType, Level world) -> new PetshopEntity(world),
@@ -717,7 +709,6 @@ public interface JEntityTypeRegistry {
         EntityAttributeRegistry.register(RED_BIND, RedBindEntity::createLivingAttributes);
         EntityAttributeRegistry.register(BLOCK_PROJECTILE, BlockProjectile::createBlockAttributes);
         EntityAttributeRegistry.register(SAND_TORNADO, SandTornadoEntity::createTornadoAttributes);
-        EntityAttributeRegistry.register(METALLICA_FORKS, HGNetEntity::createNetAttributes);
 
         EntityAttributeRegistry.register(PETSHOP, PetshopEntity::createPetshopAttributes);
         EntityAttributeRegistry.register(AYA_TSUJI, AyaTsujiEntity::createAyaTsujiAttributes);

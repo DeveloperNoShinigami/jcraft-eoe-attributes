@@ -39,15 +39,6 @@ public class CreateMagneticFieldMove extends AbstractMove<CreateMagneticFieldMov
 
         final Vec3 hitPos = hitResult.getLocation();
 
-        /*
-        final MetallicaForksEntity forks = MetallicaForksEntity.fromMetallica(attacker);
-        if (forks == null) return Set.of();
-        forks.moveTo(hitPos.x, hitPos.y, hitPos.z, user.getYRot(), user.getXRot());
-        forks.setOnGround(hitResult.getType() == HitResult.Type.BLOCK);
-        GravityChangerAPI.setDefaultGravityDirection(forks, GravityChangerAPI.getGravityDirection(user));
-        attacker.level().addFreshEntity(forks);
-         */
-
         JComponentPlatformUtils.getCooldowns(user).setCooldown(CooldownType.SPECIAL2, 400);
 
         MagneticFields.createField(

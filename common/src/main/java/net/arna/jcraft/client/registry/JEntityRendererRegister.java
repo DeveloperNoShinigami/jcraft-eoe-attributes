@@ -105,7 +105,6 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.METEOR, MeteorRenderer::new),
             new RendererData<>(JEntityTypeRegistry.PH_CAPSULE, PHCapsuleRenderer::new),
             new RendererData<>(JEntityTypeRegistry.PURPLE_HAZE_CLOUD, JEntityRendererRegister::createEmpty),
-            new RendererData<>(JEntityTypeRegistry.METALLICA_FORKS, MetallicaForksRenderer::new),
             new RendererData<>(JEntityTypeRegistry.STAND_ARROW_PROJECTILE, StandArrowRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.ROAD_ROLLER, RoadRollerRenderer::new),
