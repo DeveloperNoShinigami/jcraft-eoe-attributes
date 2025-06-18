@@ -29,6 +29,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -439,8 +440,9 @@ public abstract class AbstractSimpleAttack<T extends AbstractSimpleAttack<T, A>,
         final LivingEntity user = attacker.getUser();
         final Set<T> result = new HashSet<>();
         final Predicate<? super Entity> filter = e -> e != attacker && (mayHitUser || (e != user && e != user.getVehicle() && e != JUtils.getStand(user)));
+        final Predicate<? super Entity> isCreativeStand = e -> e instanceof final StandEntity<?,?> stand && stand.getUser() instanceof final Player player && (player.isCreative() || player.isSpectator());
         for (final AABB box : boxes) {
-            for (final T entity : attacker.getEntityWorld().getEntitiesOfClass(type, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(filter))) {
+            for (final T entity : attacker.getEntityWorld().getEntitiesOfClass(type, box, EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(filter).and(isCreativeStand.negate()))) {
                 if (damageSource == null || JUtils.canDamage(damageSource, entity)) {
                     result.add(entity);
                 }
