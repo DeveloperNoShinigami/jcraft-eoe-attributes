@@ -260,7 +260,7 @@ public class JClientEvents {
             final Vec3 pos = timestop.pos;
 
             final List<? extends Entity> toStop = user.level().getEntitiesOfClass(Entity.class,
-                    new AABB(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), Timestops.timestopPredicate);
+                    new AABB(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), Timestops.TIMESTOP_PREDICATE);
 
             for (final Entity entity : toStop) {
                 if (!entity.isPassenger() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle()) {

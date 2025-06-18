@@ -26,65 +26,75 @@ import java.util.function.Predicate;
  * For clientside timestops, see {@link net.arna.jcraft.client.util.JClientUtils#activeTimestops}
  */
 public class Timestops {
-    protected static final List<DimensionData> timestops = new ArrayList<>();
+    protected static final List<DimensionData> TIMESTOPS = new ArrayList<>();
 
-    public static void enqueue(DimensionData dimensionData) {
-        timestops.add(dimensionData);
+    public static void enqueue(final DimensionData dimensionData) {
+        TIMESTOPS.add(dimensionData);
     }
 
-    public static void remove(DimensionData dimensionData) {
-        timestops.remove(dimensionData);
+    public static void remove(final DimensionData dimensionData) {
+        TIMESTOPS.remove(dimensionData);
     }
 
     /**
      * Common-side. Thus cannot access serverside data.
      */
-    public static final Predicate<Entity> timestopPredicate = entity -> {
+    public static final Predicate<Entity> TIMESTOP_PREDICATE = entity -> {
         if (entity instanceof Player player) {
-            if (entity.isSpectator()) return false;
-            if (player.isCreative()) return false;
+            if (entity.isSpectator()) {
+                return false;
+            }
+            if (player.isCreative()) {
+                return false;
+            }
         }
-        if (entity instanceof LivingEntity living) {
+        if (entity instanceof final LivingEntity living) {
             StandEntity<?, ?> stand = null;
-            if (living instanceof StandEntity<?,?> livingStand) {
+            if (living instanceof final StandEntity<?,?> livingStand) {
                 stand = livingStand;
             } else {
                 CommonStandComponent standComponent = JComponentPlatformUtils.getStandComponent(living);
-                if (standComponent.getStand() != null) stand = standComponent.getStand();
+                if (standComponent.getStand() != null) {
+                    stand = standComponent.getStand();
+                }
             }
 
             if (stand != null) {
-                if (stand instanceof KingCrimsonEntity kingCrimson) {
-                    if (kingCrimson.getTETime() > 0) return false;
+                if (stand instanceof final KingCrimsonEntity kingCrimson) {
+                    if (kingCrimson.getTETime() > 0) {
+                        return false;
+                    }
                 }
-                if (stand instanceof GEREntity requiem) {
-                    if (requiem.getState() == GEREntity.State.COUNTER) return false;
+                if (stand instanceof final GEREntity requiem) {
+                    if (requiem.getState() == GEREntity.State.COUNTER) {
+                        return false;
+                    }
                 }
             }
         }
         return true;
     };
 
-    public static void tick(MinecraftServer server) {
-        List<DimensionData> newActiveTimestops = new ArrayList<>();
+    public static void tick(final MinecraftServer server) {
+        final List<DimensionData> newActiveTimestops = new ArrayList<>();
 
-        for (DimensionData timestop : timestops) {
-            Entity user = timestop.user;
+        for (final DimensionData timestop : TIMESTOPS) {
+            final Entity user = timestop.user;
             //JCraft.LOGGER.info("SERVER: Ticking timestop " + timestop + " with user " + user + " and duration " + timestop.timer);
 
             if (user != null && user.isAlive() && timestop.timer-- > 0) {
-                ServerLevel world = server.getLevel(timestop.worldKey);
+                final ServerLevel world = server.getLevel(timestop.worldKey);
                 if (world == null) {
-                    JCraft.LOGGER.fatal("World that timestop belongs to no longer exists! Key: " + timestop.worldKey + " Timestopper: " + user);
+                    JCraft.LOGGER.warn("World that timestop belongs to no longer exists! Key: " + timestop.worldKey + " Timestopper: " + user);
                     continue;
                 }
 
-                Vec3 pos = timestop.pos;
+                final Vec3 pos = timestop.pos;
 
-                List<? extends Entity> toStop = world.getEntitiesOfClass(Entity.class,
-                        new AABB(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), timestopPredicate);
+                final List<? extends Entity> toStop = world.getEntitiesOfClass(Entity.class,
+                        new AABB(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), TIMESTOP_PREDICATE);
 
-                for (Entity entity : toStop) {
+                for (final Entity entity : toStop) {
                     if (!entity.isPassenger() && entity != user && (!(entity instanceof LivingEntity living) || entity != JUtils.getStand(living)) &&
                             entity != user.getVehicle()) {
                         if (JComponentPlatformUtils.getTimeStopData(entity).isPresent()) {
@@ -97,12 +107,12 @@ public class Timestops {
             }
         }
 
-        timestops.clear();
-        timestops.addAll(newActiveTimestops);
+        TIMESTOPS.clear();
+        TIMESTOPS.addAll(newActiveTimestops);
     }
 
     public static boolean isInTSRange(Vec3 pos) {
-        for (DimensionData timeStop : timestops) {
+        for (DimensionData timeStop : TIMESTOPS) {
             if (timeStop != null) {
                 if (timeStop.pos.distanceToSqr(pos.x(), pos.y(), pos.z()) <= 65536) {
                     return true;
@@ -114,7 +124,7 @@ public class Timestops {
     }
 
     public static boolean isInTSRange(BlockPos pos) {
-        for (DimensionData timeStop : timestops) {
+        for (DimensionData timeStop : TIMESTOPS) {
             if (timeStop != null && timeStop.pos.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return true;
             }
@@ -124,7 +134,7 @@ public class Timestops {
     }
 
     public static int getTicksIfInTSRange(BlockPos pos) {
-        for (DimensionData timeStop : timestops) {
+        for (DimensionData timeStop : TIMESTOPS) {
             if (timeStop != null && timeStop.pos.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return timeStop.timer;
             }
@@ -134,7 +144,7 @@ public class Timestops {
     }
 
     public static @Nullable DimensionData getTimestop(Entity entity) {
-        for (DimensionData d : timestops) {
+        for (DimensionData d : TIMESTOPS) {
             if (d.user == entity) {
                 return d;
             }
