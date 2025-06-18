@@ -110,6 +110,7 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
         if (savedYaw != null && savedPitch != null) {
             // make sure inventory doesn't get changed
             nbt.put("Inventory", serverPlayer.getInventory().save(new ListTag()));
+            nbt.putInt("SelectedItemSlot", serverPlayer.getInventory().selected);
             // make sure ender chest and score stays the same
             nbt.remove("EnderItems");
             nbt.putInt("Score", serverPlayer.getScore());
