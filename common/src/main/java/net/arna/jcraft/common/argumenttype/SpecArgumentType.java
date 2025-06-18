@@ -11,6 +11,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.api.registry.JSpecTypeRegistry;
 import net.arna.jcraft.api.spec.SpecType;
 import net.minecraft.network.chat.Component;
 
@@ -34,6 +35,6 @@ public class SpecArgumentType implements ArgumentType<SpecType> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
-        return JRegistries.listSuggestions(JRegistries.SPEC_TYPE_REGISTRY, builder, s -> true);
+        return JRegistries.listSuggestions(JRegistries.SPEC_TYPE_REGISTRY, builder, spec -> spec != JSpecTypeRegistry.NONE.get());
     }
 }
