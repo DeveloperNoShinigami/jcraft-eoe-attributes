@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ForgeItemModelShaperMixin {
     @Inject(method = "getItemModel(Lnet/minecraft/world/item/Item;)Lnet/minecraft/client/resources/model/BakedModel;", at = @At("RETURN"), cancellable = true)
     private void overrideStandDiscModel(Item item, CallbackInfoReturnable<BakedModel> cir) {
-        // Ensure that stand discs are rendered using a custom renderer
-        if (item == JItemRegistry.STAND_DISC.get()) {
+        // Ensure that stand and spec discs are rendered using a custom renderer
+        if (item == JItemRegistry.STAND_DISC.get() || item == JItemRegistry.SPEC_DISC.get()) {
             cir.setReturnValue(new ModelWithCustomRenderer(cir.getReturnValue()));
         }
     }
