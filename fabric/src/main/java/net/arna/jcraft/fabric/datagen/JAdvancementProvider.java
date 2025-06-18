@@ -2,7 +2,10 @@ package net.arna.jcraft.fabric.datagen;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.registry.JSpecTypeRegistry;
+import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.common.advancements.ObtainedSpecTrigger;
 import net.arna.jcraft.common.advancements.ObtainedStandTrigger;
 import net.arna.jcraft.api.registry.JBlockRegistry;
 import net.arna.jcraft.api.registry.JItemRegistry;
@@ -55,7 +58,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.recipe(JCraft.id("disc")))
                 .build(JCraft.id("obtain_stand"));
         consumer.accept(obtainStand);
-        // obtain stand CD
+        // obtain stand disc
         final Advancement obtainStandDisc = Advancement.Builder.advancement()
                 .display(JItemRegistry.STAND_DISC.get(),
                         Component.literal("Spin Me Right Round"),
@@ -71,7 +74,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         consumer.accept(obtainStandDisc);
         // obtain "all" stands
         // stand data is not available during datagen so we have to list all stands needed for the achievement
-        final var obtainables = List.of(
+        final var obtainableStands = List.of(
                 JStandTypeRegistry.STAR_PLATINUM,
                 JStandTypeRegistry.STAR_PLATINUM_THE_WORLD,
                 JStandTypeRegistry.MAGICIANS_RED,
@@ -110,7 +113,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .parent(obtainStandDisc)
                 .rewards(AdvancementRewards.Builder.experience(1395)); // that's from level 0 to 30
-        for (final RegistrySupplier<StandType> type : obtainables) {
+        for (final RegistrySupplier<StandType> type : obtainableStands) {
             obtainAllStandsBuilder.addCriterion("has_" + type.getId().getPath(), ObtainedStandTrigger.TriggerInstance.obtainedStand(type.get()));
         }
         consumer.accept(obtainAllStandsBuilder.build(JCraft.id("obtain_all_stands")));
@@ -142,6 +145,34 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.REQUIEM_ARROW.get()))
                 .build(JCraft.id("obtain_requiem_arrow"));
         consumer.accept(obtainRequiemArrow);
+        // obtain any spec
+        final Advancement obtainAnySpec = Advancement.Builder.advancement()
+                .display(JItemRegistry.BOXING_GLOVES.get(),
+                        Component.literal("You are Special"),
+                        Component.literal("Obtain any Spec"),
+                        null,
+                        FrameType.TASK,
+                        true,
+                        false,
+                        false)
+                .parent(obtainMeteoriteIronOre)
+                .addCriterion("has_spec", ObtainedSpecTrigger.TriggerInstance.obtainedSpec())
+                .build(JCraft.id("obtain_any_spec"));
+        consumer.accept(obtainAnySpec);
+        // obtain stand disc
+        final Advancement obtainSpecDisc = Advancement.Builder.advancement()
+                .display(JItemRegistry.SPEC_DISC.get(),
+                        Component.literal("Like a Record"),
+                        Component.literal("Obtain a Spec Disc"),
+                        null,
+                        FrameType.TASK,
+                        true,
+                        false,
+                        false)
+                .parent(obtainAnySpec)
+                .addCriterion("has_disc", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.SPEC_DISC.get()))
+                .build(JCraft.id("obtain_spec_disc"));
+        consumer.accept(obtainSpecDisc);
         // find stone mask
         final Advancement findStoneMask = Advancement.Builder.advancement()
                 .display(JItemRegistry.STONE_MASK.get(),
@@ -152,7 +183,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false,
                         false)
-                .parent(obtainMeteoriteIronOre)
+                .parent(obtainAnySpec)
                 .addCriterion("has_mask", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STONE_MASK.get()))
                 .build(JCraft.id("find_stone_mask"));
         consumer.accept(findStoneMask);
@@ -201,6 +232,27 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("has_bottle", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.BLOOD_BOTTLE.get()))
                 .build(JCraft.id("obtain_blood_bottle"));
         consumer.accept(obtainBloodBottle);
+        // obtain all specs
+        final var obtainableSpecs = List.of(
+                JSpecTypeRegistry.ANUBIS,
+                JSpecTypeRegistry.BRAWLER,
+                JSpecTypeRegistry.VAMPIRE
+        );
+        final Advancement.Builder obtainAllSpecsBuilder = Advancement.Builder.advancement()
+                .display(JItemRegistry.SPEC_DISC.get(),
+                        Component.literal("Legacy"),
+                        Component.literal("Obtain all Specs"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainSpecDisc)
+                .rewards(AdvancementRewards.Builder.experience(1395)); // that's from level 0 to 30
+        for (final RegistrySupplier<SpecType> type : obtainableSpecs) {
+            obtainAllSpecsBuilder.addCriterion("has_" + type.getId().getPath(), ObtainedSpecTrigger.TriggerInstance.obtainedSpec(type.get()));
+        }
+        consumer.accept(obtainAllSpecsBuilder.build(JCraft.id("obtain_all_specs")));
         // obtain any cosplay
         final Advancement obtainCosplay = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIO_CAPE.get(),

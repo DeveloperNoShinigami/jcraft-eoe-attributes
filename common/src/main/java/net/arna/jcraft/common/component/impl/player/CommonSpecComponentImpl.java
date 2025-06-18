@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.component.impl.player;
 
 import lombok.NonNull;
+import net.arna.jcraft.api.registry.JAdvancementTriggerRegistry;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.spec.SpecTypeUtil;
 import net.arna.jcraft.api.component.player.CommonSpecComponent;
@@ -35,6 +36,9 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     private void setTypeRaw(final SpecType type) {
         this.type = type;
         spec = type == null ? null : type.createSpec(user);
+        if (!SpecTypeUtil.isNone(type) && user instanceof ServerPlayer player) {
+            JAdvancementTriggerRegistry.OBTAINED_SPEC.trigger(player, type);
+        }
     }
 
     @Nullable
