@@ -17,6 +17,10 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 
 public interface JCreativeMenuTabRegistry {
     @SuppressWarnings("UnstableApiUsage") // we do not care :)
@@ -294,17 +298,24 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.DISC.get());
 
                     entries.accept(JItemRegistry.SPEC_DISC.get());
-                    for (final SpecType specType : SpecTypeUtil.streamAllRegular().toList()) {
+                    final List<SpecType> specList = new ArrayList<>(SpecTypeUtil.streamAllRegular().toList());
+                    specList.sort(Comparator.comparing(s -> s.getData().getName().getString()));
+                    for (final SpecType specType : specList) {
                         entries.accept(SpecDiscItem.createDiscStack(specType));
                     }
 
                     entries.accept(JItemRegistry.STAND_DISC.get());
-                    for (final StandType standType : StandTypeUtil.streamAllRegular().toList()) {
+                    List<StandType> standList = new ArrayList<>(StandTypeUtil.streamAllRegular().toList());
+                    final Comparator<StandType> standComp = Comparator.comparing(s -> s.getData().getInfo().getName().getString());
+                    standList.sort(standComp);
+                    for (final StandType standType : standList) {
                         for (int skin = 0; skin < standType.getData().getInfo().getSkinCount(); skin++) {
                             entries.accept(StandDiscItem.createDiscStack(standType, skin));
                         }
                     }
-                    for (final StandType standType : StandTypeUtil.streamAllEvolutions().toList()) {
+                    standList = new ArrayList<>(StandTypeUtil.streamAllEvolutions().toList());
+                    standList.sort(standComp);
+                    for (final StandType standType : standList) {
                         for (int skin = 0; skin < standType.getData().getInfo().getSkinCount(); skin++) {
                             entries.accept(StandDiscItem.createDiscStack(standType, skin));
                         }
