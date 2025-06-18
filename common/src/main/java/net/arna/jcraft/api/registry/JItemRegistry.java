@@ -24,7 +24,9 @@ public interface JItemRegistry {
 
     RegistrySupplier<Item> STAND_ARROW = register("stand_arrow", () -> new StandArrowItem(settings().rarity(Rarity.RARE).fireResistant()));
 
-    RegistrySupplier<Item> STAND_DISC = register("stand_disc", () -> new StandDiscItem(settings().rarity(Rarity.RARE).fireResistant().stacksTo(1)));
+    RegistrySupplier<Item> DISC = register("disc", () -> new Item(settings()));
+    RegistrySupplier<Item> STAND_DISC = register("stand_disc", () -> new StandDiscItem(settings().fireResistant().stacksTo(1)));
+    RegistrySupplier<Item> SPEC_DISC = register("spec_disc", () -> new SpecDiscItem(settings().fireResistant().stacksTo(1)));
 
     RegistrySupplier<Item> FV_REVOLVER = register("fv_revolver", () -> new FVRevolverItem(settings().rarity(Rarity.UNCOMMON).durability(1200)));
 

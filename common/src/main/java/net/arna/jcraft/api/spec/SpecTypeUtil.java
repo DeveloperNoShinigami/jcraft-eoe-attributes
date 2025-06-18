@@ -17,6 +17,10 @@ public class SpecTypeUtil {
         return StreamSupport.stream(JRegistries.SPEC_TYPE_REGISTRY.spliterator(), false);
     }
 
+    public static Stream<SpecType> streamAllRegular() {
+        return streamAll().filter(type -> type != JSpecTypeRegistry.NONE.get());
+    }
+
     /**
      * Reads a spec type from the given NBT compound with the given key.
      * First attempts to read a legacy integer ordinal, then a string ID.

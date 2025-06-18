@@ -23,7 +23,7 @@ import net.minecraft.world.entity.LivingEntity;
 public class BrawlerSpec extends JSpec<BrawlerSpec, BrawlerSpec.State> {
     public static final MoveSet<BrawlerSpec, State> MOVE_SET = MoveSetManager.create(JSpecTypeRegistry.BRAWLER, BrawlerSpec::registerMoves, State.class);
     public static final SpecData DATA = SpecData.builder()
-            .name(Component.literal("spec.jcraft.brawler"))
+            .name(Component.translatable("spec.jcraft.brawler"))
             .description(Component.literal("Close-range pressure and combo extension tool"))
             .details(Component.literal("""
                     Important hitconfirm: (any stand move)~stand.OFF>Combo>stand.ON+(any stand move)"""))

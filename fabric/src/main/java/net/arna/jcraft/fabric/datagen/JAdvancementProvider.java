@@ -52,6 +52,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .parent(obtainMeteoriteIronOre)
                 .addCriterion("has_stand", ObtainedStandTrigger.TriggerInstance.obtainedStand())
+                .rewards(AdvancementRewards.Builder.recipe(JCraft.id("disc")))
                 .build(JCraft.id("obtain_stand"));
         consumer.accept(obtainStand);
         // obtain stand CD

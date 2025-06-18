@@ -532,6 +532,11 @@ public class JTagProviders {
             final var obtuse = getOrCreateTagBuilder(JTagRegistry.OBTUSE);
             obtuse.forceAddTag(ItemTags.SWORDS);
             obtuse.forceAddTag(ItemTags.TOOLS);
+
+            final var discs = getOrCreateTagBuilder(JTagRegistry.DISCS);
+            discs.add(JItemRegistry.DISC.get());
+            discs.add(JItemRegistry.STAND_DISC.get());
+            discs.add(JItemRegistry.SPEC_DISC.get());
         }
     }
 

@@ -2,8 +2,11 @@ package net.arna.jcraft.api.registry;
 
 import dev.architectury.registry.CreativeTabRegistry;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.spec.SpecType;
+import net.arna.jcraft.api.spec.SpecTypeUtil;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
+import net.arna.jcraft.common.item.SpecDiscItem;
 import net.arna.jcraft.common.item.StandDiscItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -46,6 +49,7 @@ public interface JCreativeMenuTabRegistry {
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.TOOLS_AND_UTILITIES.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_ARROW.get());
             output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_DISC.get());
+            output.acceptBefore(Items.COMPASS, JItemRegistry.SPEC_DISC.get());
         });
         // combat
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.COMBAT.location()), (flags, output, canUseGameMasterBlocks) -> {
@@ -118,6 +122,7 @@ public interface JCreativeMenuTabRegistry {
             output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.DIARY_PAGE.get());
             output.acceptBefore(Items.GLASS_BOTTLE, JItemRegistry.DIOS_DIARY.get());
             output.acceptAfter(Items.GLASS_BOTTLE, JItemRegistry.BLOOD_BOTTLE.get());
+            output.acceptAfter(Items.DISC_FRAGMENT_5, JItemRegistry.DISC.get());
             output.acceptBefore(Items.WHITE_DYE, JItemRegistry.SINNERS_SOUL.get());
             output.acceptBefore(Items.WHITE_DYE, JItemRegistry.STAND_ARROWHEAD.get());
             output.acceptBefore(Items.WHITE_DYE, JItemRegistry.PRISON_KEY.get());
@@ -282,12 +287,18 @@ public interface JCreativeMenuTabRegistry {
 
     static CreativeModeTab createStandDiscItemGroup() {
         return CreativeModeTab.builder(CreativeModeTab.Row.TOP, 1)
-                .title(Component.translatable("itemGroup.jcraft.stand_discs"))
-                .icon(() -> JItemRegistry.STAND_DISC.get().getDefaultInstance())
+                .title(Component.translatable("itemGroup.jcraft.discs"))
+                .icon(() -> JItemRegistry.DISC.get().getDefaultInstance())
                 // order of the creative tab
                 .displayItems((displayContext, entries) -> {
-                    entries.accept(JItemRegistry.STAND_DISC.get());
+                    entries.accept(JItemRegistry.DISC.get());
 
+                    entries.accept(JItemRegistry.SPEC_DISC.get());
+                    for (final SpecType specType : SpecTypeUtil.streamAllRegular().toList()) {
+                        entries.accept(SpecDiscItem.createDiscStack(specType));
+                    }
+
+                    entries.accept(JItemRegistry.STAND_DISC.get());
                     for (final StandType standType : StandTypeUtil.streamAllRegular().toList()) {
                         for (int skin = 0; skin < standType.getData().getInfo().getSkinCount(); skin++) {
                             entries.accept(StandDiscItem.createDiscStack(standType, skin));

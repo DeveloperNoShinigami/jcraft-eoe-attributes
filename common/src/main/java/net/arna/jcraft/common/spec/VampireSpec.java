@@ -26,7 +26,7 @@ import net.minecraft.world.entity.LivingEntity;
 public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
     public static final MoveSet<VampireSpec, State> MOVE_SET = MoveSetManager.create(JSpecTypeRegistry.VAMPIRE, VampireSpec::registerMoves, State.class);
     public static final SpecData DATA = SpecData.builder()
-            .name(Component.literal("spec.jcraft.vampire"))
+            .name(Component.translatable("spec.jcraft.vampire"))
             .description(Component.literal("Supernatural all-ranger"))
             .details(Component.literal("""
                     PASSIVES: Burns in sunlight, Replaces hunger with blood, Night vision

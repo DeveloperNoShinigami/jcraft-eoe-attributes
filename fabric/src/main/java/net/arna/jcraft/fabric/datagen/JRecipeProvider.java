@@ -54,6 +54,15 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .requires(JBlockRegistry.STELLAR_IRON_BLOCK.get())
                 .unlockedBy("has_block", InventoryChangeTrigger.TriggerInstance.hasItems(JBlockRegistry.STELLAR_IRON_BLOCK.get()))
                 .save(exporter, JCraft.id("stellar_iron_ingot_from_block"));
+        // disc from smelting
+        SimpleCookingRecipeBuilder.smelting(
+                        Ingredient.of(Items.LIGHT_BLUE_STAINED_GLASS_PANE),
+                        RecipeCategory.MISC,
+                        JItemRegistry.DISC.get(),
+                        0.3f,
+                        200)
+                .unlockedBy("has_glass_pane", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LIGHT_BLUE_STAINED_GLASS_PANE))
+                .save(exporter, JCraft.id("disc"));
         // stellar iron block from ingot
         ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, JBlockRegistry.STELLAR_IRON_BLOCK.get())
                 .requires(JItemRegistry.STELLAR_IRON_INGOT.get())
@@ -99,12 +108,19 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .save(exporter);
         // stand disk
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.STAND_DISC.get())
-                .pattern("FFF")
-                .pattern("FAF")
-                .pattern("FFF")
+                .pattern("AD")
                 .define('A', JItemRegistry.STAND_ARROW.get())
-                .define('F', Items.DISC_FRAGMENT_5)
+                .define('D', JItemRegistry.DISC.get())
                 .unlockedBy("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_ARROW.get()))
+                .unlockedBy("has_disc", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DISC.get()))
+                .save(exporter);
+        // spec disk
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.SPEC_DISC.get())
+                .pattern("DA")
+                .define('A', JItemRegistry.STAND_ARROW.get())
+                .define('D', JItemRegistry.DISC.get())
+                .unlockedBy("has_arrow", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.STAND_ARROW.get()))
+                .unlockedBy("has_disc", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DISC.get()))
                 .save(exporter);
         // sinner's soul
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, JItemRegistry.SINNERS_SOUL.get())

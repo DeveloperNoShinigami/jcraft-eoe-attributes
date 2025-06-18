@@ -1,4 +1,6 @@
 {
+  "item.jcraft.disc": "Compact Disc",
+  "item.jcraft.spec_disc": "Spec Disc",
   "item.jcraft.stand_disc": "Stand Disc",
   "item.jcraft.stand_arrowhead": "Stand Arrowhead",
   "item.jcraft.stand_arrow": "Stand Arrow",
@@ -92,7 +94,7 @@
   "item.jcraft.darby_younger_spawn_egg": "D'arby Younger Spawn Egg",
   "itemGroup.jcraft.main": "JCraft Items",
   "itemGroup.jcraft.cosplay": "JCraft Cosplay",
-  "itemGroup.jcraft.stand_discs": "Stand Discs",
+  "itemGroup.jcraft.discs": "JCraft Discs",
   "block.jcraft.coffin": "Coffin",
   "block.jcraft.soul_block": "Block of Suffering",
   "block.jcraft.meteorite_block": "Meteorite Block",
@@ -447,6 +449,7 @@
   "jcraft.disc.combat": "Cannot use disc while in combat!",
   "jcraft.disc.stand_in_use": "Another player is already using this stand!",
   "jcraft.disc.same_stand": "You already have this stand!",
+  "jcraft.disc.same_spec": "You already have this spec!",
   "jcraft.revolver.shots": "§9Shots:",
   "jcraft.knife.chargetime": "§9Maximum charge time:",
   "jcraft.bullet.caliber": "§9Caliber:",

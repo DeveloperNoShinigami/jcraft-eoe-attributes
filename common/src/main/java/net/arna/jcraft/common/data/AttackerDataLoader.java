@@ -51,12 +51,12 @@ public class AttackerDataLoader {
     }
 
     /**
-     * Gets the StandData for a given stand type id.
+     * Gets the SpecData for a given spec type id.
      * <b>Important:</b> this is mostly for internal use only. Consider using
-     * {@link SpecType#()} or {@link StandEntity#getStandData()} instead.
-     * The main exception would be if your stand has multiple different data's, and you need a specific one.
-     * @param id The ResourceLocation of the stand type, e.g. "jcraft:star_platinum"
-     * @return The StandData if it exists, or the {@link StandData#EMPTY empty data} if it doesn't.
+     * {@link SpecType#getData()} instead.
+     * The main exception would be if your user has multiple different data's, and you need a specific one.
+     * @param id The ResourceLocation of the spec type, e.g. "jcraft:brawler"
+     * @return The SpecData if it exists, or the {@link SpecData#EMPTY empty data} if it doesn't.
      */
     public static SpecData getSpecData(final ResourceLocation id) {
         return SPEC_DATA.getOrDefault(id, SpecData.EMPTY);

@@ -27,14 +27,14 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
     }
 
     @Override
-    public void setType(final @NonNull SpecType type) {
+    public void setType(final SpecType type) {
         setTypeRaw(type);
         sync(user);
     }
 
     private void setTypeRaw(final SpecType type) {
         this.type = type;
-        spec = type.createSpec(user);
+        spec = type == null ? null : type.createSpec(user);
     }
 
     @Nullable
@@ -48,11 +48,15 @@ public abstract class CommonSpecComponentImpl implements CommonSpecComponent {
 
     public void readFromNbt(final @NonNull CompoundTag tag) {
         SpecType type = SpecTypeUtil.readFromNBT(tag, "Type");
-        if (type != null) setTypeRaw(type);
+        if (type != null) {
+            setTypeRaw(type);
+        }
     }
 
     public void writeToNbt(final @NonNull CompoundTag tag) {
-        tag.putString("Type", type.getId().toString());
+        if (type != null) {
+            tag.putString("Type", type.getId().toString());
+        }
     }
 
     public boolean shouldSyncWith(final ServerPlayer player) {
