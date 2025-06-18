@@ -38,7 +38,7 @@ public class SetStandCommand {
         final RandomSource rng = RandomSource.create();
         dispatcher.register(Commands.literal("stand")
                 .then(Commands.literal("set")
-                        .requires(source -> source.hasPermission(2) || "Arna57".equals(source.getTextName()) || "MrSterner".equals(source.getTextName()))
+                        .requires(source -> source.hasPermission(2))
                         .then(Commands.argument("targets", EntityArgument.entities())
                                 .then(Commands.argument("stand", StandArgumentType.stand())
                                         .executes(ctx -> executeSet(ctx, ctx.getArgument("stand", StandType.class), 0))

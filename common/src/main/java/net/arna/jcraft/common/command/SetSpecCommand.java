@@ -18,7 +18,7 @@ public class SetSpecCommand {
     public static void register(final CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("spec")
                 .then(Commands.literal("set")
-                        .requires(source -> source.hasPermission(2) || "Arna57".equals(source.getTextName()) || "MrSterner".equals(source.getTextName()))
+                        .requires(source -> source.hasPermission(2))
                         .then(Commands.argument("players", EntityArgument.players())
                                 .then(Commands.argument("spec", SpecArgumentType.spec())
                                         .executes(SetSpecCommand::run)
