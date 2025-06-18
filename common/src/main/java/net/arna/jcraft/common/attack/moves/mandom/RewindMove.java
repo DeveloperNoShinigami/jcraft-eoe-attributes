@@ -113,7 +113,7 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
             // make sure ender chest and score stays the same
             nbt.remove("EnderItems");
             nbt.putInt("Score", serverPlayer.getScore());
-            // don't allow stand rewinding or cooldown resets
+            // don't allow stand rewinding, cooldown resets or bloodlust changes
             final CompoundTag standNbt = new CompoundTag();
             JComponentPlatformUtils.getStandComponent(serverPlayer).writeToNbt(standNbt);
             final CompoundTag cooldownNbt = new CompoundTag();
@@ -125,12 +125,15 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
             ccNbt.put("jcraft:stand", standNbt);
             ccNbt.put("jcraft:cooldowns", cooldownNbt);
             nbt.put("cardinal_components", standNbt);
+            float attackSpeedMult = JComponentPlatformUtils.getMiscData(serverPlayer).getAttackSpeedMult();
             // disable shoulder entity dupe
             nbt.remove("ShoulderEntityLeft");
             nbt.remove("ShoulderEntityRight");
 
             // Load the NBT data first (for inventory, etc.)
             serverPlayer.load(nbt);
+            // restore bloodlust
+            JComponentPlatformUtils.getMiscData(serverPlayer).setAttackSpeedMult(attackSpeedMult);
 
             // Use teleportTo with proper rotation handling
             serverPlayer.teleportTo(serverPlayer.serverLevel(), x, y, z,
