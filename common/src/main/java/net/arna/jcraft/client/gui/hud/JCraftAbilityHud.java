@@ -10,6 +10,7 @@ import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.spec.JSpec;
+import net.arna.jcraft.common.entity.stand.MandomEntity;
 import net.arna.jcraft.common.util.ColorUtils;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JUtils;
@@ -23,6 +24,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Mth;
 
 import java.util.Map;
+import java.util.function.Function;
 
 import static net.arna.jcraft.client.JCraftClient.*;
 
@@ -99,6 +101,16 @@ public class JCraftAbilityHud {
             .put(CooldownType.SPECIAL2, SPEC_SPECIAL_2)
             .put(CooldownType.SPECIAL3, SPEC_SPECIAL_3)
             .build();
+    private static final Map<CooldownType, IconPos> MANDOM_WITH_SPEC_ICONS = ImmutableMap.<CooldownType, IconPos>builder()
+            .put(CooldownType.HEAVY, SPEC_HEAVY)
+            .put(CooldownType.BARRAGE, SPEC_BARRAGE)
+            .put(CooldownType.ULTIMATE, SPEC_ULT)
+            .put(CooldownType.SPECIAL1, SPEC_SPECIAL_1)
+            .put(CooldownType.SPECIAL2, SPEC_SPECIAL_2)
+            .put(CooldownType.SPECIAL3, SPEC_SPECIAL_3)
+            .put(CooldownType.STAND_ULTIMATE, ULT)
+            .put(CooldownType.UTILITY, UTILITY)
+            .build();
 
     private static final ResourceLocation UNIVERSAL_ID = JCraft.id("universal");
 
@@ -135,13 +147,20 @@ public class JCraftAbilityHud {
             if (stand == null) {
                 // Render cooldown HUD for specs
                 if (spec != null) {
-                    renderIcons(ctx, SPEC_ICONS, selectedX, selectedY, spec.getType().getId());
+                    renderIcons(ctx, SPEC_ICONS, selectedX, selectedY, cooldown -> spec.getType().getId());
                 }
+            } else if (stand instanceof MandomEntity && spec != null) {
+                renderIcons(ctx, MANDOM_WITH_SPEC_ICONS, selectedX, selectedY, cooldown -> {
+                    if (cooldown == CooldownType.UTILITY || cooldown == CooldownType.ULTIMATE) {
+                        return stand.getStandType().getId();
+                    }
+                    return spec.getType().getId();
+                });
             } else {
                 // Render cooldown HUD for stands
-                renderIcons(ctx, isMid ? STAND_ICONS_MID : STAND_ICONS, selectedX, selectedY, stand.getStandType().getId());
+                renderIcons(ctx, isMid ? STAND_ICONS_MID : STAND_ICONS, selectedX, selectedY, cooldown -> stand.getStandType().getId());
             }
-            renderIcons(ctx, UNIVERSAL_ICONS, selectedX, selectedY, UNIVERSAL_ID);
+            renderIcons(ctx, UNIVERSAL_ICONS, selectedX, selectedY, cooldown -> UNIVERSAL_ID);
         }
     }
 
@@ -171,7 +190,7 @@ public class JCraftAbilityHud {
      * @param type      decides which resource folder is loaded when rendering icons
      */
     private static void renderIcons(final GuiGraphics ctx, final Map<CooldownType, IconPos> icons, final int selectedX,
-                                    final int selectedY, final ResourceLocation type) {
+                                    final int selectedY, final Function<CooldownType, ResourceLocation> type) {
         final Font textRenderer = Minecraft.getInstance().gui.getFont();
 
         for (Map.Entry<CooldownType, IconPos> entry : icons.entrySet()) {
@@ -196,7 +215,7 @@ public class JCraftAbilityHud {
 
             RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
             renderBorder(ctx, iconX, iconY);
-            renderIcon(ctx, iconX, iconY, type, iconPos.name());
+            renderIcon(ctx, iconX, iconY, type.apply(cooldownType), iconPos.name());
             if (coolingDown) renderCooldown(ctx, cd, iconX, iconY);
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
