@@ -59,6 +59,10 @@ public class JCraftAbilityHud {
     private static final IconPos COOLDOWN_CANCEL = new IconPos("cooldowncancel", 24, iconSpacing * 5);
     private static final IconPos DASH = new IconPos("dash", 24, iconSpacing * 8);
 
+    // Mandom icons
+    private static final IconPos MANDOM_UTILITY = new IconPos("utility", 24, iconSpacing * 11);
+    private static final IconPos MANDOM_ULT = new IconPos("ult", 24, iconSpacing * 14);
+
     // Spec-only icons
     private static final IconPos SPEC_HEAVY = new IconPos("heavy", 0, iconSpacing * 5);
     private static final IconPos SPEC_BARRAGE = new IconPos("barrage", 0, iconSpacing * 8);
@@ -107,8 +111,8 @@ public class JCraftAbilityHud {
             .put(CooldownType.SPECIAL1, SPEC_SPECIAL_1)
             .put(CooldownType.SPECIAL2, SPEC_SPECIAL_2)
             .put(CooldownType.SPECIAL3, SPEC_SPECIAL_3)
-            .put(CooldownType.STAND_ULTIMATE, ULT)
-            .put(CooldownType.UTILITY, UTILITY)
+            .put(CooldownType.STAND_ULTIMATE, MANDOM_ULT)
+            .put(CooldownType.UTILITY, MANDOM_UTILITY)
             .build();
 
     private static final ResourceLocation UNIVERSAL_ID = JCraft.id("universal");
