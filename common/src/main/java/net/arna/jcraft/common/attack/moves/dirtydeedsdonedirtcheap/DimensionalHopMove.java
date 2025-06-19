@@ -62,7 +62,7 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
     }
 
     @Override
-    public @NonNull Set<LivingEntity> perform(final     D4CEntity attacker, final LivingEntity user) {
+    public @NonNull Set<LivingEntity> perform(final D4CEntity attacker, final LivingEntity user) {
         final Set<LivingEntity> targets = super.perform(attacker, user);
 
         final ServerLevel world = (ServerLevel) attacker.level();

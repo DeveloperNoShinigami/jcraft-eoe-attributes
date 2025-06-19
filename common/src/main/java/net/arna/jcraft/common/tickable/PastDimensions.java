@@ -55,7 +55,7 @@ public class PastDimensions {
                 continue;
             }
 
-            Vec3 dimPos = user.position(); //dimValues.pos;
+            Vec3 dimPos = user.position().add(0d, (JCraft.auWorld.getHeight() - original.getHeight()) / 2, 0d); //dimValues.pos;
             if (user instanceof ServerPlayer player) {
                 player.teleportTo(original, dimPos.x, dimPos.y, dimPos.z, player.getYRot(), player.getXRot());
             } else {
