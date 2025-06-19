@@ -76,12 +76,12 @@ public final class SandstormAttack extends AbstractSimpleAttack<SandstormAttack,
             return;
         } else {
             if (sandEntities.isEmpty()) {
-                this.superTarget = null;
+                this.superTarget = new WeakReference<>(null);
                 return;
             }
 
             if (!superTarget.isAlive()) {
-                this.superTarget = null;
+                this.superTarget = new WeakReference<>(null);
                 discardSands(attacker);
                 return;
             }
