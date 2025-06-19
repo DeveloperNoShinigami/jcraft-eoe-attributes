@@ -810,15 +810,15 @@ public final class JUtils {
             thrownEgg.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
             level.addFreshEntity(thrownEgg);
         }
-        else if (itemStack.getItem() instanceof KnifeItem) {
-            final KnifeProjectile knifeProjectile = new KnifeProjectile(level, shooter);
-            knifeProjectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
-            level.addFreshEntity(knifeProjectile);
-        }
         else if (itemStack.getItem() instanceof ScalpelItem) {
             final ScalpelProjectile scalpelProjectile = new ScalpelProjectile(level, shooter);
             scalpelProjectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
             level.addFreshEntity(scalpelProjectile);
+        }
+        else if (itemStack.getItem() instanceof KnifeItem) {
+            final KnifeProjectile knifeProjectile = new KnifeProjectile(level, shooter);
+            knifeProjectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
+            level.addFreshEntity(knifeProjectile);
         }
         else {
             final AbstractArrow projectile = new ItemTossProjectile(shooter, level, itemStack);
