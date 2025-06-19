@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
@@ -837,7 +838,7 @@ public final class JUtils {
             final AbstractArrow projectile = new ItemTossProjectile(shooter, level, itemStack);
             projectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
             level.addFreshEntity(projectile);
-            // TODO play sound
+            shooter.playSound(JSoundRegistry.TOSS.get());
         }
         if (decrement) {
             itemStack.shrink(1);
