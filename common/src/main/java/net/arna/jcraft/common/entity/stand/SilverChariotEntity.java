@@ -258,10 +258,12 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     ));
     private static final EntityDataAccessor<Boolean> HAS_RAPIER;
     private static final EntityDataAccessor<Integer> MODE;
+    private static final EntityDataAccessor<Integer> ARMOR_TIME;
 
     static {
-        MODE = SynchedEntityData.defineId(SilverChariotEntity.class, EntityDataSerializers.INT);
         HAS_RAPIER = SynchedEntityData.defineId(SilverChariotEntity.class, EntityDataSerializers.BOOLEAN);
+        MODE = SynchedEntityData.defineId(SilverChariotEntity.class, EntityDataSerializers.INT);
+        ARMOR_TIME = SynchedEntityData.defineId(SilverChariotEntity.class, EntityDataSerializers.INT);
     }
 
     public SilverChariotEntity(Level worldIn) {
@@ -305,6 +307,22 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
     @Override
     public int getModeOrdinal() {
         return getMode().ordinal();
+    }
+
+    public int getArmorTime() {
+        return entityData.get(ARMOR_TIME);
+    }
+
+    public void setArmorTime(int armorTime) {
+        entityData.set(ARMOR_TIME, armorTime);
+    }
+
+    /**
+     * Decrements the armor time and returns the decreased amount.
+     */
+    public int decrementArmorTime() {
+        setArmorTime(getArmorTime() - 1);
+        return getArmorTime();
     }
 
     private static void registerDefaultMoves(MoveMap<SilverChariotEntity, State> moves) {
@@ -358,6 +376,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
         super.defineSynchedData();
         entityData.define(HAS_RAPIER, true);
         entityData.define(MODE, Mode.REGULAR.ordinal());
+        entityData.define(ARMOR_TIME, 0);
     }
 
     @Override

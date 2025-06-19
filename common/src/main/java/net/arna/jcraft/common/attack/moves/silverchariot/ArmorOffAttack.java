@@ -11,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.Set;
 
 public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, SilverChariotEntity> {
-    private int armorTime = 0;
 
     public ArmorOffAttack(final int cooldown, final int windup, final int duration, final float moveDistance,
                           final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
@@ -28,7 +27,7 @@ public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, S
         final Set<LivingEntity> targets = super.perform(attacker, user);
 
         attacker.setMode(SilverChariotEntity.Mode.ARMORLESS);
-        armorTime = 500;
+        attacker.setArmorTime(500);
 
         return targets;
     }
@@ -43,7 +42,7 @@ public final class ArmorOffAttack extends AbstractSimpleAttack<ArmorOffAttack, S
             return;
         }
 
-        if (--armorTime <= 0) {
+        if (stand.decrementArmorTime() <= 0) {
             stand.setMode(SilverChariotEntity.Mode.REGULAR);
         }
     }
