@@ -512,7 +512,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
                 final AABB damageBox = new AABB(pos.add(1.5, 1.5, 1.5), pos.subtract(1.5, 1.5, 1.5));
                 final List<Entity> toDamage = level().getEntitiesOfClass(Entity.class,
-                        damageBox, EntitySelector.ENTITY_STILL_ALIVE);
+                        damageBox, EntitySelector.ENTITY_STILL_ALIVE.and(EntitySelector.NO_CREATIVE_OR_SPECTATOR));
                 JUtils.displayHitbox(level(), damageBox);
 
                 toDamage.remove(user);
