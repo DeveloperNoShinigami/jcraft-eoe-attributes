@@ -108,7 +108,7 @@ public interface JItemRegistry {
     RegistrySupplier<Item> GIORNO_PANTS = register("giorno_pants", () -> new GiornoClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
     RegistrySupplier<Item> GIORNO_BOOTS = register("giorno_boots", () -> new GiornoClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
-    RegistrySupplier<Item> RISOTTO_CAP = register("risotto_cap", () -> new RisottoCapItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> RISOTTO_CAP = register("risotto_cap", () -> new RisottoCapItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> RISOTTO_JACKET = register("risotto_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
     RegistrySupplier<Item> RISOTTO_PANTS = register("risotto_pants", () -> new RisottoBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
     RegistrySupplier<Item> RISOTTO_BOOTS = register("risotto_boots", () -> new RisottoBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
