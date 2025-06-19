@@ -675,7 +675,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
         for (final MoveAction<?, ? super A> action : actions) {
             if (action.getRunMoment() == RunMoment.ON_STRIKE || hit && action.getRunMoment() == RunMoment.ON_HIT) {
-                action.perform(attacker, attacker.getUserOrThrow(), Set.of());
+                action.perform(attacker, attacker.getUserOrThrow(), targets);
             }
         }
         attacker.onPerform(this, targets);
