@@ -18,6 +18,7 @@ import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
 import net.arna.jcraft.common.entity.spec.JSpecHolder;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.common.item.KnifeBundleItem;
 import net.arna.jcraft.common.item.KnifeItem;
 import net.arna.jcraft.common.item.ScalpelItem;
 import net.arna.jcraft.common.network.s2c.JExplosionPacket;
@@ -814,6 +815,18 @@ public final class JUtils {
             final ScalpelProjectile scalpelProjectile = new ScalpelProjectile(level, shooter);
             scalpelProjectile.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 1f);
             level.addFreshEntity(scalpelProjectile);
+        }
+        else if (itemStack.getItem() instanceof KnifeBundleItem) {
+            for (int i = 0; i < 9; i++) {
+                KnifeProjectile knife = new KnifeProjectile(level, shooter);
+                knife.setPos(knife.position().add(
+                        level.random.triangle(0, 0.5),
+                        level.random.triangle(0, 0.5),
+                        level.random.triangle(0, 0.5)
+                ));
+                knife.shootFromRotation(shooter, shooter.getXRot(), shooter.getYRot(), 0f, velocity, 5f);
+                level.addFreshEntity(knife);
+            }
         }
         else if (itemStack.getItem() instanceof KnifeItem) {
             final KnifeProjectile knifeProjectile = new KnifeProjectile(level, shooter);
