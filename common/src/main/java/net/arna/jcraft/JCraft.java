@@ -386,7 +386,7 @@ public final class JCraft {
     }
 
     public static StandEntity<?, ?> summon(Level world, LivingEntity user) {
-        if (user.hasEffect(JStatusRegistry.STANDLESS.get())) {
+        if (user.hasEffect(JStatusRegistry.STANDLESS.get()) || user.isSpectator()) {
             return null;
         }
         CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(user);
