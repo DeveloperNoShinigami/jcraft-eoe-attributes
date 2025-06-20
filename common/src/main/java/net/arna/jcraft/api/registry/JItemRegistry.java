@@ -110,6 +110,19 @@ public interface JItemRegistry {
     RegistrySupplier<Item> KAKYOIN_PANTS = register("kakyoin_pants", () -> new KakyoinClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
     RegistrySupplier<Item> KAKYOIN_BOOTS = register("kakyoin_boots", () -> new KakyoinClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
+    RegistrySupplier<Item> KIRA_WIG = register("kira_wig", () -> new KiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> KIRA_JACKET = register("kira_jacket", () -> new KiraJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> KIRA_PANTS = register("kira_pants", () -> new KiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> KIRA_BOOTS = register("kira_boots", () -> new KiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> KOSAKU_WIG = register("kosaku_wig", () -> new KosakuOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> KOSAKU_JACKET = register("kosaku_jacket", () -> new KosakuJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> KOSAKU_PANTS = register("kosaku_pants", () -> new KosakuOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> KOSAKU_BOOTS = register("kosaku_boots", () -> new KosakuOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> FINAL_KIRA_WIG = register("final_kira_wig", () -> new FinalKiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> FINAL_KIRA_JACKET = register("final_kira_jacket", () -> new FinalKiraJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> FINAL_KIRA_PANTS = register("final_kira_pants", () -> new FinalKiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> FINAL_KIRA_BOOTS = register("final_kira_boots", () -> new FinalKiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+
     RegistrySupplier<Item> GIORNO_WIG = register("giorno_wig", () -> new GiornoClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> GIORNO_JACKET = register("giorno_jacket", () -> new GiornoJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
     RegistrySupplier<Item> GIORNO_PANTS = register("giorno_pants", () -> new GiornoClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));

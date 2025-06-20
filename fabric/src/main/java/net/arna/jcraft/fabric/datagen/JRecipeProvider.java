@@ -498,6 +498,126 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('W', Items.WHITE_DYE)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);
+        // Kira's wig
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KIRA_WIG.get())
+                .pattern("WYW")
+                .pattern("YHY")
+                .define('H', Items.NETHERITE_HELMET)
+                .define('W', Items.WHEAT)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
+        // Kira's jacket
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KIRA_JACKET.get())
+                .pattern("BPB")
+                .pattern("BCB")
+                .pattern("BYB")
+                .define('B', Items.BLUE_DYE)
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('P', Items.PURPLE_DYE)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Kira's pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KIRA_PANTS.get())
+                .pattern("BPB")
+                .pattern("BLB")
+                .pattern("B B")
+                .define('B', Items.BLUE_DYE)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('P', Items.PURPLE_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Kira's boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KIRA_BOOTS.get())
+                .pattern(" Y ")
+                .pattern("YNY")
+                .pattern("B B")
+                .define('B', Items.BROWN_DYE)
+                .define('N', Items.NETHERITE_BOOTS)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
+        // Kosaku Kira's wig
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KOSAKU_WIG.get())
+                .pattern("WBW")
+                .pattern("BHB")
+                .define('B', Items.BLACK_DYE)
+                .define('H', Items.NETHERITE_HELMET)
+                .define('W', Items.WHEAT)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
+        // Kosaku Kira's jacket
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KOSAKU_JACKET.get())
+                .pattern("WGW")
+                .pattern("WCW")
+                .pattern("WYW")
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('G', Items.GREEN_DYE)
+                .define('W', Items.WHITE_DYE)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Kosaku Kira's pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KOSAKU_PANTS.get())
+                .pattern("WWW")
+                .pattern("GLG")
+                .pattern("W W")
+                .define('G', Items.LIGHT_GRAY_DYE)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('W', Items.WHITE_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Kosaku Kira's boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KOSAKU_BOOTS.get())
+                .pattern("PNP")
+                .pattern("U U")
+                .define('N', Items.NETHERITE_BOOTS)
+                .define('P', Items.PINK_DYE)
+                .define('U', Items.PURPLE_DYE)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
+        // Final Kira's wig
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.FINAL_KIRA_WIG.get())
+                .pattern("WBW")
+                .pattern("XHX")
+                .define('B', Items.BLACK_DYE)
+                .define('H', Items.NETHERITE_HELMET)
+                .define('W', Items.WHEAT)
+                .define('X', Items.WHITE_DYE)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
+        // Final Kira's jacket
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.FINAL_KIRA_JACKET.get())
+                .pattern("WGW")
+                .pattern("WCW")
+                .pattern("WWW")
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('G', Items.LIME_DYE)
+                .define('W', Items.WHITE_DYE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Final Kira's pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.FINAL_KIRA_PANTS.get())
+                .pattern("GWG")
+                .pattern("WLW")
+                .pattern("W W")
+                .define('G', Items.LIGHT_GRAY_DYE)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('W', Items.WHITE_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Final Kira's boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.FINAL_KIRA_BOOTS.get())
+                .pattern(" Y ")
+                .pattern("YNY")
+                .pattern("BGB")
+                .define('B', Items.BROWN_DYE)
+                .define('N', Items.NETHERITE_BOOTS)
+                .define('G', Items.GUNPOWDER)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
         // Giorno's wig
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.GIORNO_WIG.get())
                 .pattern("WWW")

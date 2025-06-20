@@ -340,6 +340,60 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_kakyoin_outfit"));
         consumer.accept(obtainKakyoinOutfit);
+        // obtain Kira outfit
+        final Advancement obtainKiraOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.KIRA_WIG.get(),
+                        Component.literal("My Name is"),
+                        Component.literal("Obtain all of Kira's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_kira_wig", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KIRA_WIG.get()))
+                .addCriterion("has_kira_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KIRA_JACKET.get()))
+                .addCriterion("has_kira_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KIRA_PANTS.get()))
+                .addCriterion("has_kira_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KIRA_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_kira_outfit"));
+        consumer.accept(obtainKiraOutfit);
+        // obtain Kosaku outfit
+        final Advancement obtainKosakuOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.KOSAKU_WIG.get(),
+                        Component.literal("A Peaceful Life"),
+                        Component.literal("Obtain all of Kosaku Kira's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainKiraOutfit)
+                .addCriterion("has_kosaku_wig", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KOSAKU_WIG.get()))
+                .addCriterion("has_kosaku_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KOSAKU_JACKET.get()))
+                .addCriterion("has_kosaku_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KOSAKU_PANTS.get()))
+                .addCriterion("has_kosaku_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.KOSAKU_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_kosaku_outfit"));
+        consumer.accept(obtainKosakuOutfit);
+        // obtain Final Kira outfit
+        final Advancement obtainFinalKiraOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.KOSAKU_WIG.get(),
+                        Component.literal("Another One"),
+                        Component.literal("Obtain all of Final Kira's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainKosakuOutfit)
+                .addCriterion("has_final_kira_wig", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.FINAL_KIRA_WIG.get()))
+                .addCriterion("has_final_kira_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.FINAL_KIRA_JACKET.get()))
+                .addCriterion("has_final_kira_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.FINAL_KIRA_PANTS.get()))
+                .addCriterion("has_final_kira_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.FINAL_KIRA_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_final_kira_outfit"));
+        consumer.accept(obtainFinalKiraOutfit);
         // obtain Giorno outfit
         final Advancement obtainGiornoOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.GIORNO_WIG.get(),

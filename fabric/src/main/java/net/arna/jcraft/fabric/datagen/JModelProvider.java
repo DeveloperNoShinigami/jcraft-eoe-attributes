@@ -70,6 +70,18 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.JOTARO_P4_CAP.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.JOTARO_P4_JACKET.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.JOTARO_P4_PANTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.KIRA_BOOTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.KIRA_WIG.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.KIRA_JACKET.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.KIRA_PANTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.KOSAKU_BOOTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.KOSAKU_WIG.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.KOSAKU_JACKET.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.KOSAKU_PANTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.FINAL_KIRA_BOOTS.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.FINAL_KIRA_WIG.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.FINAL_KIRA_JACKET.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.FINAL_KIRA_PANTS.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.GIORNO_BOOTS.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.GIORNO_WIG.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.GIORNO_JACKET.get(), ModelTemplates.FLAT_ITEM);
