@@ -137,8 +137,8 @@ public interface JItemRegistry {
     RegistrySupplier<Item> DIEGO_PANTS = register("diego_pants", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
     RegistrySupplier<Item> DIEGO_BOOTS = register("diego_boots", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
-    RegistrySupplier<Item> RINGO_OUTFIT = register("ringo_outfit", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> RINGO_BOOTS = register("ringo_boots", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> RINGO_OUTFIT = register("ringo_outfit", () -> new RingoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> RINGO_BOOTS = register("ringo_boots", () -> new RingoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
     RegistrySupplier<Item> VALENTINE_WIG = register("valentine_wig", () -> new ValentineTopItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> VALENTINE_JACKET = register("valentine_jacket", () -> new ValentineTopItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
