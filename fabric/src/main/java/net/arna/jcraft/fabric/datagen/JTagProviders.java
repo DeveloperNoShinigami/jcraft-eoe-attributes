@@ -92,6 +92,10 @@ public class JTagProviders {
 
             final var cosplay = getOrCreateTagBuilder(JTagRegistry.COSPLAY);
             cosplay.add(JItemRegistry.RED_HAT.get());
+            cosplay.add(JItemRegistry.DIO_P1_WIG.get());
+            cosplay.add(JItemRegistry.DIO_P1_JACKET.get());
+            cosplay.add(JItemRegistry.DIO_P1_PANTS.get());
+            cosplay.add(JItemRegistry.DIO_P1_BOOTS.get());
             cosplay.add(JItemRegistry.STRAIZO_PONCHO.get());
             cosplay.add(JItemRegistry.KARS_HEADWRAP.get());
             cosplay.add(JItemRegistry.JOTARO_CAP.get());

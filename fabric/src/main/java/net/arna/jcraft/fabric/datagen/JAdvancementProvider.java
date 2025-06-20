@@ -268,7 +268,25 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("has_cosplay", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(JTagRegistry.COSPLAY).build()))
                 .build(JCraft.id("obtain_cosplay"));
         consumer.accept(obtainCosplay);
-        // obtain Jotaro outfit
+        // obtain Dio P1 outfit
+        final Advancement obtainDioP1Outfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.DIO_P1_WIG.get(),
+                        Component.literal("WRYYYYYYY"),
+                        Component.literal("Obtain all of Dio's clothes from Part 1"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_dio_p1_wig", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_P1_WIG.get()))
+                .addCriterion("has_dio_p1_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_P1_JACKET.get()))
+                .addCriterion("has_dio_p1_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_P1_PANTS.get()))
+                .addCriterion("has_dio_p1_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_P1_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_dio_p1_outfit"));
+        consumer.accept(obtainDioP1Outfit);
+        // obtain Jotaro P3 outfit
         final Advancement obtainJotaroOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOTARO_CAP.get(),
                         Component.literal("ORA ORA"),
@@ -499,13 +517,13 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         final Advancement obtainDioOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIO_HEADBAND.get(),
                         Component.literal("MUDA MUDA"),
-                        Component.literal("Obtain all of Dio's clothes"),
+                        Component.literal("Obtain all of Dio's clothes from Part 3"),
                         null,
                         FrameType.CHALLENGE,
                         true,
                         true,
                         false)
-                .parent(obtainCosplay)
+                .parent(obtainDioP1Outfit)
                 .addCriterion("has_dio_headband", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_HEADBAND.get()))
                 .addCriterion("has_dio_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_JACKET.get()))
                 .addCriterion("has_dio_cape", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIO_CAPE.get()))
