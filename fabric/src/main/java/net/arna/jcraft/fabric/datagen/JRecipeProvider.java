@@ -708,6 +708,25 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('N', Items.NETHERITE_BOOTS)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);
+        // Ringo's pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.RINGO_OUTFIT.get())
+                .pattern("XXX")
+                .pattern("WLW")
+                .pattern("W W")
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('X', Items.WHITE_CARPET)
+                .define('W', Items.WHITE_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Ringo's boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.RINGO_BOOTS.get())
+                .pattern("BNB")
+                .pattern("W W")
+                .define('B', Items.BROWN_DYE)
+                .define('N', Items.NETHERITE_BOOTS)
+                .define('W', Items.WHITE_DYE)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
         // Valentine's hat
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.VALENTINE_WIG.get())
                 .pattern(" H ")

@@ -358,7 +358,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_risotto_outfit"));
         consumer.accept(obtainRisottoOutfit);
-        // obtain Risotto outfit
+        // obtain Doppio outfit
         final Advancement obtainDoppioOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DOPPIO_WIG.get(),
                         Component.literal("Ring! Ring!"),
@@ -366,7 +366,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         null,
                         FrameType.GOAL,
                         true,
-                        true,
+                        false,
                         false)
                 .parent(obtainCosplay)
                 .addCriterion("has_doppio_wig", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DOPPIO_WIG.get()))
@@ -444,6 +444,21 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_diego_outfit"));
         consumer.accept(obtainDiegoOutfit);
+        // obtain Ringo outfit
+        final Advancement obtainRingoOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.RINGO_OUTFIT.get(),
+                        Component.literal("Mere conformist"),
+                        Component.literal("Obtain all of Ringo's clothes"),
+                        null,
+                        FrameType.GOAL,
+                        true,
+                        false,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_ringo_outfit", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.RINGO_OUTFIT.get()))
+                .addCriterion("has_ringo_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.RINGO_BOOTS.get()))
+                .build(JCraft.id("obtain_ringo_outfit"));
+        consumer.accept(obtainRingoOutfit);
         // obtain Valentine outfit
         final Advancement obtainValentineOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.VALENTINE_WIG.get(),

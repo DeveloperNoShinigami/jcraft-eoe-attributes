@@ -140,6 +140,8 @@ public class JTagProviders {
             cosplay.add(JItemRegistry.DIEGO_HAT.get());
             cosplay.add(JItemRegistry.DIEGO_PANTS.get());
             cosplay.add(JItemRegistry.DIEGO_BOOTS.get());
+            cosplay.add(JItemRegistry.RINGO_OUTFIT.get());
+            cosplay.add(JItemRegistry.RINGO_BOOTS.get());
             cosplay.add(JItemRegistry.VALENTINE_WIG.get());
             cosplay.add(JItemRegistry.VALENTINE_JACKET.get());
             cosplay.add(JItemRegistry.VALENTINE_PANTS.get());
