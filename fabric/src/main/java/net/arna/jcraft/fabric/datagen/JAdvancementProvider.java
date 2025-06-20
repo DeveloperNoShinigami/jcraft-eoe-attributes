@@ -457,6 +457,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                         false)
                 .parent(obtainCosplay)
                 .addCriterion("has_diego_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIEGO_HAT.get()))
+                .addCriterion("has_diego_shirt", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIEGO_SHIRT.get()))
                 .addCriterion("has_diego_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIEGO_PANTS.get()))
                 .addCriterion("has_diego_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIEGO_BOOTS.get()))
                 .rewards(AdvancementRewards.Builder.experience(200))

@@ -726,12 +726,21 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('Y', Items.YELLOW_DYE)
                 .unlockedBy("has_leather_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER_HELMET))
                 .save(exporter);
+        // Diego's shirt
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIEGO_SHIRT.get())
+                .pattern("CCC")
+                .pattern("YXY")
+                .pattern("CCC")
+                .define('C', Items.CYAN_DYE)
+                .define('X', Items.NETHERITE_CHESTPLATE)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
         // Diego's pants
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIEGO_PANTS.get())
-                .pattern("CCC")
+                .pattern("BYB")
                 .pattern("YLY")
                 .pattern("B B")
-                .define('C', Items.CYAN_DYE)
                 .define('B', Items.BROWN_DYE)
                 .define('L', Items.NETHERITE_LEGGINGS)
                 .define('Y', Items.YELLOW_DYE)

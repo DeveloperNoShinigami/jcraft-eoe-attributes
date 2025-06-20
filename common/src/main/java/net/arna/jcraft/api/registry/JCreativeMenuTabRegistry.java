@@ -116,7 +116,8 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.GYRO_SHIRT.get(), JItemRegistry.GYRO_PANTS.get());
             output.acceptAfter(JItemRegistry.GYRO_PANTS.get(), JItemRegistry.GYRO_BOOTS.get());
             output.acceptAfter(JItemRegistry.GYRO_BOOTS.get(), JItemRegistry.DIEGO_HAT.get());
-            output.acceptAfter(JItemRegistry.DIEGO_HAT.get(), JItemRegistry.DIEGO_PANTS.get());
+            output.acceptAfter(JItemRegistry.DIEGO_HAT.get(), JItemRegistry.DIEGO_SHIRT.get());
+            output.acceptAfter(JItemRegistry.DIEGO_SHIRT.get(), JItemRegistry.DIEGO_PANTS.get());
             output.acceptAfter(JItemRegistry.DIEGO_PANTS.get(), JItemRegistry.DIEGO_BOOTS.get());
             output.acceptAfter(JItemRegistry.DIEGO_BOOTS.get(), JItemRegistry.RINGO_OUTFIT.get());
             output.acceptAfter(JItemRegistry.RINGO_OUTFIT.get(), JItemRegistry.RINGO_BOOTS.get());
@@ -305,6 +306,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.GYRO_PANTS.get());
                     entries.accept(JItemRegistry.GYRO_BOOTS.get());
                     entries.accept(JItemRegistry.DIEGO_HAT.get());
+                    entries.accept(JItemRegistry.DIEGO_SHIRT.get());
                     entries.accept(JItemRegistry.DIEGO_PANTS.get());
                     entries.accept(JItemRegistry.DIEGO_BOOTS.get());
                     entries.accept(JItemRegistry.RINGO_OUTFIT.get());

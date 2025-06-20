@@ -139,6 +139,7 @@ public interface JItemRegistry {
     RegistrySupplier<Item> GYRO_BOOTS = register("gyro_boots", () -> new GyroBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
     RegistrySupplier<Item> DIEGO_HAT = register("diego_hat", () -> new DiegoOutfitItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> DIEGO_SHIRT = register("diego_shirt", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
     RegistrySupplier<Item> DIEGO_PANTS = register("diego_pants", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
     RegistrySupplier<Item> DIEGO_BOOTS = register("diego_boots", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
