@@ -17,6 +17,8 @@ public class KosakuArmorRenderer extends JArmor<FlutteringArmorItem> {
             setBoneVisible(this.body, true);
             setBoneVisible(this.leftLeg, true);
             setBoneVisible(this.rightLeg, true);
+            setBoneVisible(this.leftArm, true);
+            setBoneVisible(this.rightArm, true);
         }
         else if (currentSlot == EquipmentSlot.FEET) {
             setBoneVisible(this.leftBoot, true);
