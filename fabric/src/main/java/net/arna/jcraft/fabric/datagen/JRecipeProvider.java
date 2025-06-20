@@ -677,6 +677,37 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('N', Items.NETHERITE_BOOTS)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);
+        // Diego's hat
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIEGO_HAT.get())
+                .pattern("YYY")
+                .pattern("CHC")
+                .pattern("C C")
+                .define('C', Items.CYAN_DYE)
+                .define('H', Items.LEATHER_HELMET)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_leather_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER_HELMET))
+                .save(exporter);
+        // Diego's pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIEGO_PANTS.get())
+                .pattern("CCC")
+                .pattern("YLY")
+                .pattern("B B")
+                .define('C', Items.CYAN_DYE)
+                .define('B', Items.BROWN_DYE)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Diego's boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIEGO_BOOTS.get())
+                .pattern("I I")
+                .pattern("BNB")
+                .pattern("B B")
+                .define('B', Items.BROWN_DYE)
+                .define('I', Items.IRON_NUGGET)
+                .define('N', Items.NETHERITE_BOOTS)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
         // Valentine's hat
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.VALENTINE_WIG.get())
                 .pattern(" H ")

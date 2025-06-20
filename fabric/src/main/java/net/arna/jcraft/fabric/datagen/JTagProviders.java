@@ -88,6 +88,7 @@ public class JTagProviders {
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.RED_HAT.getId());
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.PUCCIS_HAT.getId());
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.RISOTTO_CAP.getId());
+            getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.DIEGO_HAT.getId());
 
             final var cosplay = getOrCreateTagBuilder(JTagRegistry.COSPLAY);
             cosplay.add(JItemRegistry.RED_HAT.get());
@@ -136,6 +137,9 @@ public class JTagProviders {
             cosplay.add(JItemRegistry.GYRO_SHIRT.get());
             cosplay.add(JItemRegistry.GYRO_PANTS.get());
             cosplay.add(JItemRegistry.GYRO_BOOTS.get());
+            cosplay.add(JItemRegistry.DIEGO_HAT.get());
+            cosplay.add(JItemRegistry.DIEGO_PANTS.get());
+            cosplay.add(JItemRegistry.DIEGO_BOOTS.get());
             cosplay.add(JItemRegistry.VALENTINE_WIG.get());
             cosplay.add(JItemRegistry.VALENTINE_JACKET.get());
             cosplay.add(JItemRegistry.VALENTINE_PANTS.get());

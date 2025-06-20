@@ -216,6 +216,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("has_red_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.RED_HAT.get()))
                 .addCriterion("has_puccis_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.PUCCIS_HAT.get()))
                 .addCriterion("has_risotto_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.RISOTTO_CAP.get()))
+                .addCriterion("has_diego_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIEGO_HAT.get()))
                 .build(JCraft.id("obtain_sun_protection"));
         consumer.accept(obtainSunProtection);
         // obtain blood bottle
@@ -426,6 +427,23 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_gyro_outfit"));
         consumer.accept(obtainGyroOutfit);
+        // obtain Diego outfit
+        final Advancement obtainDiegoOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.DIEGO_HAT.get(),
+                        Component.literal("Habits can't be fixed"),
+                        Component.literal("Obtain all of Diego's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_diego_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIEGO_HAT.get()))
+                .addCriterion("has_diego_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIEGO_PANTS.get()))
+                .addCriterion("has_diego_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.DIEGO_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_diego_outfit"));
+        consumer.accept(obtainDiegoOutfit);
         // obtain Valentine outfit
         final Advancement obtainValentineOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.VALENTINE_WIG.get(),
