@@ -111,6 +111,10 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.GYRO_HAT.get(), JItemRegistry.GYRO_SHIRT.get());
             output.acceptAfter(JItemRegistry.GYRO_SHIRT.get(), JItemRegistry.GYRO_PANTS.get());
             output.acceptAfter(JItemRegistry.GYRO_PANTS.get(), JItemRegistry.GYRO_BOOTS.get());
+            output.acceptAfter(JItemRegistry.GYRO_BOOTS.get(), JItemRegistry.VALENTINE_WIG.get());
+            output.acceptAfter(JItemRegistry.VALENTINE_WIG.get(), JItemRegistry.VALENTINE_JACKET.get());
+            output.acceptAfter(JItemRegistry.VALENTINE_JACKET.get(), JItemRegistry.VALENTINE_PANTS.get());
+            output.acceptAfter(JItemRegistry.VALENTINE_PANTS.get(), JItemRegistry.VALENTINE_BOOTS.get());
             output.acceptBefore(Items.SHIELD, JItemRegistry.BOXING_GLOVES.get());
             output.acceptBefore(Items.SHIELD, JItemRegistry.STEEL_BALL.get());
             output.acceptBefore(Items.LEATHER_HORSE_ARMOR, JItemRegistry.STONE_MASK.get());
@@ -287,6 +291,10 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.GYRO_SHIRT.get());
                     entries.accept(JItemRegistry.GYRO_PANTS.get());
                     entries.accept(JItemRegistry.GYRO_BOOTS.get());
+                    entries.accept(JItemRegistry.VALENTINE_WIG.get());
+                    entries.accept(JItemRegistry.VALENTINE_JACKET.get());
+                    entries.accept(JItemRegistry.VALENTINE_PANTS.get());
+                    entries.accept(JItemRegistry.VALENTINE_BOOTS.get());
                 })
                 .build();
     }

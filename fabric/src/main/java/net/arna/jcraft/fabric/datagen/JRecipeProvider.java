@@ -201,7 +201,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy("has_white_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.WHITE_BED))
                 .unlockedBy("has_yellow_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.YELLOW_BED))
                 .save(exporter);
-        // Kars' headwrap
+        // Strazo's Poncho
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.STRAIZO_PONCHO.get())
                 .pattern("BBB")
                 .pattern("BCB")
@@ -675,6 +675,42 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('G', Items.GREEN_DYE)
                 .define('I', Items.IRON_NUGGET)
                 .define('N', Items.NETHERITE_BOOTS)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
+        // Valentine's hat
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.VALENTINE_WIG.get())
+                .pattern(" H ")
+                .pattern("W W")
+                .pattern("W W")
+                .define('H', Items.NETHERITE_HELMET)
+                .define('W', Items.WHEAT)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
+        // Valentine's jacket
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.VALENTINE_JACKET.get())
+                .pattern("PPP")
+                .pattern("PCP")
+                .pattern("WPW")
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('P', Items.PINK_DYE)
+                .define('W', Items.WHITE_DYE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Valentine's pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.VALENTINE_PANTS.get())
+                .pattern("PPP")
+                .pattern("PLP")
+                .pattern("P P")
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('P', Items.PURPLE_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Valentine's boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.VALENTINE_BOOTS.get())
+                .pattern("PNP")
+                .pattern("P P")
+                .define('N', Items.NETHERITE_BOOTS)
+                .define('P', Items.PURPLE_DYE)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);
         // Pucci's hat

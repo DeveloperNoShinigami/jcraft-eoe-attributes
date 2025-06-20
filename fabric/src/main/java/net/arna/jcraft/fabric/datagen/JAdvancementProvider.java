@@ -426,6 +426,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_gyro_outfit"));
         consumer.accept(obtainGyroOutfit);
+        // obtain Valentine outfit
+        final Advancement obtainValentineOutfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.VALENTINE_WIG.get(),
+                        Component.literal("The First Napkin"),
+                        Component.literal("Obtain all of Valentine's clothes"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainCosplay)
+                .addCriterion("has_valentine_hat", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.VALENTINE_WIG.get()))
+                .addCriterion("has_valentine_shirt", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.VALENTINE_JACKET.get()))
+                .addCriterion("has_valentine_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.VALENTINE_PANTS.get()))
+                .addCriterion("has_valentine_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.VALENTINE_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_valentine_outfit"));
+        consumer.accept(obtainValentineOutfit);
         // obtain Pucci outfit
         final Advancement obtainPucciOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.PUCCIS_HAT.get(),

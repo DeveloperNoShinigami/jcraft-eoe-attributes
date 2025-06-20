@@ -133,6 +133,11 @@ public interface JItemRegistry {
     RegistrySupplier<Item> GYRO_PANTS = register("gyro_pants", () -> new GyroBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
     RegistrySupplier<Item> GYRO_BOOTS = register("gyro_boots", () -> new GyroBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
 
+    RegistrySupplier<Item> VALENTINE_WIG = register("valentine_wig", () -> new ValentineTopItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
+    RegistrySupplier<Item> VALENTINE_JACKET = register("valentine_jacket", () -> new ValentineTopItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> VALENTINE_PANTS = register("valentine_pants", () -> new ValentineBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
+    RegistrySupplier<Item> VALENTINE_BOOTS = register("valentine_boots", () -> new ValentineBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+
     RegistrySupplier<Item> PUCCI_ROBE = register("pucci_robe", () -> new PucciRobeItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
     RegistrySupplier<Item> PUCCI_PANTS = register("pucci_pants", () -> new PucciBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
     RegistrySupplier<Item> PUCCI_BOOTS = register("pucci_boots", () -> new PucciBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
