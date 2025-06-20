@@ -154,7 +154,7 @@ public class JCraftAbilityHud {
                 }
             } else if (stand instanceof MandomEntity && spec != null) {
                 renderIcons(ctx, MANDOM_WITH_SPEC_ICONS, selectedX, selectedY, cooldown -> {
-                    if (cooldown == CooldownType.UTILITY || cooldown == CooldownType.ULTIMATE) {
+                    if (cooldown == CooldownType.UTILITY || cooldown == CooldownType.STAND_ULTIMATE) {
                         return stand.getStandType().getId();
                     }
                     return spec.getType().getId();
