@@ -241,7 +241,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
         moves.register(MoveClass.SPECIAL3, CHARGE_BARRAGE, State.BARRAGE).withCrouchingVariant(State.BARRAGE);
         moves.register(MoveClass.ULTIMATE, INHALE, State.INHALE);
 
-        moves.register(MoveClass.UTILITY, JUMP, State.JUMP).withCrouchingVariant(State.IDLE);
+        moves.register(MoveClass.UTILITY, JUMP, State.JUMP);//.withCrouchingVariant(State.IDLE);
 
         moves.register(MoveClass.STANDBY_OFF, STANDBY_OFF, State.IDLE);
         moves.register(MoveClass.TOSS, TOSS_CHARGE, State.ITEM_TOSS_CHARGE).withFollowup(State.ITEM_TOSS);
