@@ -378,7 +378,7 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         consumer.accept(obtainKosakuOutfit);
         // obtain Final Kira outfit
         final Advancement obtainFinalKiraOutfit = Advancement.Builder.advancement()
-                .display(JItemRegistry.KOSAKU_WIG.get(),
+                .display(JItemRegistry.FINAL_KIRA_WIG.get(),
                         Component.literal("Another One"),
                         Component.literal("Obtain all of Final Kira's clothes"),
                         null,
