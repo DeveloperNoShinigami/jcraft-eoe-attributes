@@ -63,7 +63,8 @@ public interface JCreativeMenuTabRegistry {
             output.acceptBefore(Items.BOW, JItemRegistry.KNIFEBUNDLE.get());
             output.acceptBefore(Items.BOW, JItemRegistry.FV_REVOLVER.get());
             output.acceptBefore(Items.BOW, JItemRegistry.BULLET.get());
-            output.acceptAfter(Items.NETHERITE_BOOTS, JItemRegistry.JOTARO_CAP.get());
+            output.acceptAfter(Items.NETHERITE_BOOTS, JItemRegistry.STRAIZO_PONCHO.get());
+            output.acceptAfter(JItemRegistry.STRAIZO_PONCHO.get(), JItemRegistry.JOTARO_CAP.get());
             output.acceptAfter(JItemRegistry.JOTARO_CAP.get(), JItemRegistry.JOTARO_JACKET.get());
             output.acceptAfter(JItemRegistry.JOTARO_JACKET.get(), JItemRegistry.JOTARO_PANTS.get());
             output.acceptAfter(JItemRegistry.JOTARO_PANTS.get(), JItemRegistry.JOTARO_BOOTS.get());
@@ -237,6 +238,7 @@ public interface JCreativeMenuTabRegistry {
                 .displayItems((displayContext, entries) -> {
                     // cosplay
                     entries.accept(JItemRegistry.RED_HAT.get());
+                    entries.accept(JItemRegistry.STRAIZO_PONCHO.get());
                     entries.accept(JItemRegistry.KARS_HEADWRAP.get());
                     entries.accept(JItemRegistry.JOTARO_CAP.get());
                     entries.accept(JItemRegistry.JOTARO_JACKET.get());

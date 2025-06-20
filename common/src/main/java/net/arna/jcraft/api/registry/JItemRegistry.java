@@ -70,6 +70,8 @@ public interface JItemRegistry {
 
     RegistrySupplier<LivingArrowItem> LIVING_ARROW = register("living_arrow", () -> new LivingArrowItem(settings().rarity(Rarity.RARE).fireResistant()));
 
+    RegistrySupplier<Item> STRAIZO_PONCHO = register("straizo_poncho", () -> new StraizoPonchoItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+
     RegistrySupplier<Item> DIO_HEADBAND = register("dio_headband", () -> new DIOJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> DIO_JACKET = register("dio_jacket", () -> new DIOJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
     RegistrySupplier<Item> DIO_PANTS = register("dio_pants", () -> new DIOtardItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));

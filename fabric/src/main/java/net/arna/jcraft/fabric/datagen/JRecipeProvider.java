@@ -202,6 +202,15 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy("has_yellow_bed", InventoryChangeTrigger.TriggerInstance.hasItems(Items.YELLOW_BED))
                 .save(exporter);
         // Kars' headwrap
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.STRAIZO_PONCHO.get())
+                .pattern("BBB")
+                .pattern("BCB")
+                .pattern(" B ")
+                .define('B', Items.BLACK_DYE)
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Kars' headwrap
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KARS_HEADWRAP.get())
                 .pattern(" C ")
                 .pattern("L L")

@@ -41,6 +41,7 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.BOXING_GLOVES.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.BULLET.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.CINDERELLA_MASK.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.STRAIZO_PONCHO.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.DIO_BOOTS.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.DIO_CAPE.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.DIO_HEADBAND.get(), ModelTemplates.FLAT_ITEM);

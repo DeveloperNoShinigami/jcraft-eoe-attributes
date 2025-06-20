@@ -90,8 +90,9 @@ public class JTagProviders {
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.RISOTTO_CAP.getId());
 
             final var cosplay = getOrCreateTagBuilder(JTagRegistry.COSPLAY);
-            cosplay.add(JItemRegistry.KARS_HEADWRAP.get());
             cosplay.add(JItemRegistry.RED_HAT.get());
+            cosplay.add(JItemRegistry.STRAIZO_PONCHO.get());
+            cosplay.add(JItemRegistry.KARS_HEADWRAP.get());
             cosplay.add(JItemRegistry.JOTARO_CAP.get());
             cosplay.add(JItemRegistry.JOTARO_JACKET.get());
             cosplay.add(JItemRegistry.JOTARO_PANTS.get());
