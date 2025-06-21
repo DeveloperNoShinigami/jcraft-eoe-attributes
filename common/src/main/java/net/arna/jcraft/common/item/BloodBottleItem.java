@@ -86,7 +86,10 @@ public class BloodBottleItem extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         CompoundTag nbt = stack.getTag();
         if (nbt != null && nbt.contains("Blood")) {
-            tooltip.add(Component.translatable("jcraft.blood_bottle.units").append(nbt.getFloat("Blood") + "/" + MAX_BLOOD));
+            tooltip.add(Component.empty()
+                    .append(Component.translatable("jcraft.blood_bottle.units"))
+                    .append(Component.literal(" "))
+                    .append(nbt.getFloat("Blood") + "/" + MAX_BLOOD));
         }
         super.appendHoverText(stack, world, tooltip, context);
     }
