@@ -70,23 +70,23 @@ public interface JItemRegistry {
 
     RegistrySupplier<LivingArrowItem> LIVING_ARROW = register("living_arrow", () -> new LivingArrowItem(settings().rarity(Rarity.RARE).fireResistant()));
 
-    RegistrySupplier<Item> DIO_P1_WIG = register("dio_p1_wig", () -> new DioP1ClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> DIO_P1_JACKET = register("dio_p1_jacket", () -> new DioP1ClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> DIO_P1_PANTS = register("dio_p1_pants", () -> new DioP1ClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> DIO_P1_BOOTS = register("dio_p1_boots", () -> new DioP1ClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> DIO_P1_WIG = register("dio_p1_wig", () -> new DioP1ClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> DIO_P1_JACKET = register("dio_p1_jacket", () -> new DioP1ClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> DIO_P1_PANTS = register("dio_p1_pants", () -> new DioP1ClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> DIO_P1_BOOTS = register("dio_p1_boots", () -> new DioP1ClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
-    RegistrySupplier<Item> STRAIZO_PONCHO = register("straizo_poncho", () -> new StraizoPonchoItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> STRAIZO_PONCHO = register("straizo_poncho", () -> new StraizoPonchoItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
 
-    RegistrySupplier<Item> DIO_HEADBAND = register("dio_headband", () -> new DIOJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> DIO_JACKET = register("dio_jacket", () -> new DIOJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> DIO_PANTS = register("dio_pants", () -> new DIOtardItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> DIO_BOOTS = register("dio_boots", () -> new DIOtardItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
-    RegistrySupplier<Item> DIO_CAPE = register("dio_cape", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> DIO_HEADBAND = register("dio_headband", () -> new DIOJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> DIO_JACKET = register("dio_jacket", () -> new DIOJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> DIO_PANTS = register("dio_pants", () -> new DIOtardItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> DIO_BOOTS = register("dio_boots", () -> new DIOtardItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
+    RegistrySupplier<Item> DIO_CAPE = register("dio_cape", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
 
-    RegistrySupplier<Item> HEAVEN_ATTAINED_WIG = register("heaven_attained_wig", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> HEAVEN_ATTAINED_SHIRT = register("heaven_attained_shirt", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> HEAVEN_ATTAINED_PANTS = register("heaven_attained_pants", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> HEAVEN_ATTAINED_BOOTS = register("heaven_attained_boots", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> HEAVEN_ATTAINED_WIG = register("heaven_attained_wig", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> HEAVEN_ATTAINED_SHIRT = register("heaven_attained_shirt", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> HEAVEN_ATTAINED_PANTS = register("heaven_attained_pants", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> HEAVEN_ATTAINED_BOOTS = register("heaven_attained_boots", () -> new HeavenAttainedItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
     RegistrySupplier<Item> KARS_HEADWRAP = register("kars_headwrap", () -> new HatItem(ArmorMaterials.IRON, settings()));
     RegistrySupplier<Item> RED_HAT = register("red_hat", () -> new HatItem(ArmorMaterials.IRON, settings()));
@@ -95,78 +95,78 @@ public interface JItemRegistry {
     RegistrySupplier<Item> STONE_MASK = register("stone_mask", () -> new StoneMaskItem(ArmorMaterials.CHAIN, ArmorItem.Type.HELMET, settings()));
     RegistrySupplier<Item> SHIV = register("shiv", () -> new ShivItem(Tiers.IRON, settings()));
 
-    RegistrySupplier<Item> JOTARO_CAP = register("jotaro_cap", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> JOTARO_JACKET = register("jotaro_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> JOTARO_PANTS = register("jotaro_pants", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> JOTARO_BOOTS = register("jotaro_boots", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> JOTARO_CAP = register("jotaro_cap", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> JOTARO_JACKET = register("jotaro_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> JOTARO_PANTS = register("jotaro_pants", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> JOTARO_BOOTS = register("jotaro_boots", () -> new JotaroClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
-    RegistrySupplier<Item> JOTARO_P4_CAP = register("jotaro_p4_cap", () -> new JotaroClothesP4Item(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> JOTARO_P4_JACKET = register("jotaro_p4_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> JOTARO_P4_PANTS = register("jotaro_p4_pants", () -> new JotaroClothesP4Item(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> JOTARO_P4_BOOTS = register("jotaro_p4_boots", () -> new JotaroClothesP4Item(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> JOTARO_P4_CAP = register("jotaro_p4_cap", () -> new JotaroClothesP4Item(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> JOTARO_P4_JACKET = register("jotaro_p4_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> JOTARO_P4_PANTS = register("jotaro_p4_pants", () -> new JotaroClothesP4Item(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> JOTARO_P4_BOOTS = register("jotaro_p4_boots", () -> new JotaroClothesP4Item(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
-    RegistrySupplier<Item> KAKYOIN_WIG = register("kakyoin_wig", () -> new KakyoinClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> KAKYOIN_COAT = register("kakyoin_coat", () -> new KakyoinCoatItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> KAKYOIN_PANTS = register("kakyoin_pants", () -> new KakyoinClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> KAKYOIN_BOOTS = register("kakyoin_boots", () -> new KakyoinClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> KAKYOIN_WIG = register("kakyoin_wig", () -> new KakyoinClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> KAKYOIN_COAT = register("kakyoin_coat", () -> new KakyoinCoatItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> KAKYOIN_PANTS = register("kakyoin_pants", () -> new KakyoinClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> KAKYOIN_BOOTS = register("kakyoin_boots", () -> new KakyoinClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
-    RegistrySupplier<Item> KIRA_WIG = register("kira_wig", () -> new KiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> KIRA_JACKET = register("kira_jacket", () -> new KiraJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> KIRA_PANTS = register("kira_pants", () -> new KiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> KIRA_BOOTS = register("kira_boots", () -> new KiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
-    RegistrySupplier<Item> KOSAKU_WIG = register("kosaku_wig", () -> new KosakuOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> KOSAKU_JACKET = register("kosaku_jacket", () -> new KosakuJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> KOSAKU_PANTS = register("kosaku_pants", () -> new KosakuOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> KOSAKU_BOOTS = register("kosaku_boots", () -> new KosakuOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
-    RegistrySupplier<Item> FINAL_KIRA_WIG = register("final_kira_wig", () -> new FinalKiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> FINAL_KIRA_JACKET = register("final_kira_jacket", () -> new FinalKiraJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> FINAL_KIRA_PANTS = register("final_kira_pants", () -> new FinalKiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> FINAL_KIRA_BOOTS = register("final_kira_boots", () -> new FinalKiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> KIRA_WIG = register("kira_wig", () -> new KiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> KIRA_JACKET = register("kira_jacket", () -> new KiraJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> KIRA_PANTS = register("kira_pants", () -> new KiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> KIRA_BOOTS = register("kira_boots", () -> new KiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
+    RegistrySupplier<Item> KOSAKU_WIG = register("kosaku_wig", () -> new KosakuOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> KOSAKU_JACKET = register("kosaku_jacket", () -> new KosakuJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> KOSAKU_PANTS = register("kosaku_pants", () -> new KosakuOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> KOSAKU_BOOTS = register("kosaku_boots", () -> new KosakuOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
+    RegistrySupplier<Item> FINAL_KIRA_WIG = register("final_kira_wig", () -> new FinalKiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> FINAL_KIRA_JACKET = register("final_kira_jacket", () -> new FinalKiraJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> FINAL_KIRA_PANTS = register("final_kira_pants", () -> new FinalKiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> FINAL_KIRA_BOOTS = register("final_kira_boots", () -> new FinalKiraOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
-    RegistrySupplier<Item> GIORNO_WIG = register("giorno_wig", () -> new GiornoClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> GIORNO_JACKET = register("giorno_jacket", () -> new GiornoJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> GIORNO_PANTS = register("giorno_pants", () -> new GiornoClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> GIORNO_BOOTS = register("giorno_boots", () -> new GiornoClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> GIORNO_WIG = register("giorno_wig", () -> new GiornoClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> GIORNO_JACKET = register("giorno_jacket", () -> new GiornoJacketItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> GIORNO_PANTS = register("giorno_pants", () -> new GiornoClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> GIORNO_BOOTS = register("giorno_boots", () -> new GiornoClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
     RegistrySupplier<Item> RISOTTO_CAP = register("risotto_cap", () -> new RisottoCapItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> RISOTTO_JACKET = register("risotto_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> RISOTTO_PANTS = register("risotto_pants", () -> new RisottoBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> RISOTTO_BOOTS = register("risotto_boots", () -> new RisottoBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> RISOTTO_JACKET = register("risotto_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> RISOTTO_PANTS = register("risotto_pants", () -> new RisottoBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> RISOTTO_BOOTS = register("risotto_boots", () -> new RisottoBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
-    RegistrySupplier<Item> DOPPIO_WIG = register("doppio_wig", () -> new DoppioClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> DOPPIO_SHIRT = register("doppio_shirt", () -> new DoppioClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
+    RegistrySupplier<Item> DOPPIO_WIG = register("doppio_wig", () -> new DoppioClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> DOPPIO_SHIRT = register("doppio_shirt", () -> new DoppioClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
 
-    RegistrySupplier<Item> DIAVOLO_WIG = register("diavolo_wig", () -> new DiavoloClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> DIAVOLO_SHIRT = register("diavolo_shirt", () -> new DiavoloShirtItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> DIAVOLO_PANTS = register("diavolo_pants", () -> new DiavoloClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> DIAVOLO_BOOTS = register("diavolo_boots", () -> new DiavoloClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> DIAVOLO_WIG = register("diavolo_wig", () -> new DiavoloClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> DIAVOLO_SHIRT = register("diavolo_shirt", () -> new DiavoloShirtItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> DIAVOLO_PANTS = register("diavolo_pants", () -> new DiavoloClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> DIAVOLO_BOOTS = register("diavolo_boots", () -> new DiavoloClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
-    RegistrySupplier<Item> JOHNNY_CAP = register("johnny_cap", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> JOHNNY_JACKET = register("johnny_jacket", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> JOHNNY_PANTS = register("johnny_pants", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> JOHNNY_BOOTS = register("johnny_boots", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> PUCCI_ROBE = register("pucci_robe", () -> new PucciRobeItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> PUCCI_PANTS = register("pucci_pants", () -> new PucciBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> PUCCI_BOOTS = register("pucci_boots", () -> new PucciBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
-    RegistrySupplier<Item> GYRO_HAT = register("gyro_hat", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> GYRO_SHIRT = register("gyro_shirt", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> GYRO_PANTS = register("gyro_pants", () -> new GyroBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> GYRO_BOOTS = register("gyro_boots", () -> new GyroBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> JOHNNY_CAP = register("johnny_cap", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> JOHNNY_JACKET = register("johnny_jacket", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> JOHNNY_PANTS = register("johnny_pants", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> JOHNNY_BOOTS = register("johnny_boots", () -> new JohnnyClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
+
+    RegistrySupplier<Item> GYRO_HAT = register("gyro_hat", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> GYRO_SHIRT = register("gyro_shirt", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> GYRO_PANTS = register("gyro_pants", () -> new GyroBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> GYRO_BOOTS = register("gyro_boots", () -> new GyroBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
     RegistrySupplier<Item> DIEGO_HAT = register("diego_hat", () -> new DiegoOutfitItem(ArmorMaterials.IRON, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> DIEGO_SHIRT = register("diego_shirt", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> DIEGO_PANTS = register("diego_pants", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> DIEGO_BOOTS = register("diego_boots", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> DIEGO_SHIRT = register("diego_shirt", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> DIEGO_PANTS = register("diego_pants", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> DIEGO_BOOTS = register("diego_boots", () -> new DiegoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
-    RegistrySupplier<Item> RINGO_OUTFIT = register("ringo_outfit", () -> new RingoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> RINGO_BOOTS = register("ringo_boots", () -> new RingoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> RINGO_OUTFIT = register("ringo_outfit", () -> new RingoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> RINGO_BOOTS = register("ringo_boots", () -> new RingoOutfitItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
-    RegistrySupplier<Item> VALENTINE_WIG = register("valentine_wig", () -> new ValentineTopItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings()));
-    RegistrySupplier<Item> VALENTINE_JACKET = register("valentine_jacket", () -> new ValentineTopItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> VALENTINE_PANTS = register("valentine_pants", () -> new ValentineBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> VALENTINE_BOOTS = register("valentine_boots", () -> new ValentineBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
-
-    RegistrySupplier<Item> PUCCI_ROBE = register("pucci_robe", () -> new PucciRobeItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings()));
-    RegistrySupplier<Item> PUCCI_PANTS = register("pucci_pants", () -> new PucciBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings()));
-    RegistrySupplier<Item> PUCCI_BOOTS = register("pucci_boots", () -> new PucciBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings()));
+    RegistrySupplier<Item> VALENTINE_WIG = register("valentine_wig", () -> new ValentineTopItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> VALENTINE_JACKET = register("valentine_jacket", () -> new ValentineTopItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> VALENTINE_PANTS = register("valentine_pants", () -> new ValentineBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> VALENTINE_BOOTS = register("valentine_boots", () -> new ValentineBottomItem(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
     RegistrySupplier<Item> CINDERELLA_MASK = register("cinderella_mask", CinderellaMaskItem::new);
 
