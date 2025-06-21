@@ -287,6 +287,10 @@ public class JServerEvents {
 
     public static EventResult entityLoad(Entity entity, boolean worldGenSpawned) {
         ServerLevel world = (ServerLevel) entity.level();
+        // FIXME this is hack, find out why our mod fucks up the Nether
+        if (world.dimension() != Level.OVERWORLD) {
+            return EventResult.pass();
+        }
 
         // If an item was spawned
         if (entity instanceof ItemEntity item) {
