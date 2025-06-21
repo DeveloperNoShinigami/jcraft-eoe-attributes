@@ -58,7 +58,7 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
                     .build())
             .build();
 
-    public static final CountdownMove COUNTDOWN = new CountdownMove(6, 10, 120, 0f)
+    public static final CountdownMove COUNTDOWN = new CountdownMove(6, 10, 120, 0f, 600)
             .withSound(JSoundRegistry.MANDOM_COUNTDOWN)
             .withInfo(
                     Component.literal("Countdown"),
