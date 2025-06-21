@@ -100,7 +100,7 @@ public class JCraftAbilityHud {
     private static final Map<CooldownType, IconPos> SPEC_ICONS = ImmutableMap.<CooldownType, IconPos>builder()
             .put(CooldownType.HEAVY, SPEC_HEAVY)
             .put(CooldownType.BARRAGE, SPEC_BARRAGE)
-            .put(CooldownType.ULTIMATE, SPEC_ULT)
+            //.put(CooldownType.ULTIMATE, SPEC_ULT)
             .put(CooldownType.SPECIAL1, SPEC_SPECIAL_1)
             .put(CooldownType.SPECIAL2, SPEC_SPECIAL_2)
             .put(CooldownType.SPECIAL3, SPEC_SPECIAL_3)
