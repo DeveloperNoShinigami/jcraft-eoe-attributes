@@ -3,6 +3,7 @@ package net.arna.jcraft.common.marker;
 import com.mojang.datafixers.util.Pair;
 import lombok.NonNull;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,18 +16,16 @@ public record BlockMarkerType(MarkerPredicate<BlockPos, BlockState> predicate) i
         return predicate.shouldSave(id, object);
     }
 
-    @NonNull
+    @NotNull
     @Override
-    public Optional<BlockMarker> save(final @NotNull BlockPos id, final @NotNull BlockState object) {
-        if (shouldSave(id, object)) {
-            return Optional.of(new BlockMarker(id, object));
-        }
-        return Optional.empty();
+    public BlockMarker save(final @NonNull BlockPos id, final @NonNull BlockState object) {
+        return new BlockMarker(id, object);
     }
 
     @NotNull
     @Override
-    public Optional<Pair<BlockPos, BlockState>> load(final @NotNull BlockMarker marker) {
+    public Optional<Pair<BlockPos, BlockState>> load(final @NonNull BlockMarker marker, final @NonNull ServerLevel level) {
+        level.setBlockAndUpdate(marker.pos(), marker.state());
         return Optional.of(Pair.of(marker.pos(), marker.state()));
     }
 
