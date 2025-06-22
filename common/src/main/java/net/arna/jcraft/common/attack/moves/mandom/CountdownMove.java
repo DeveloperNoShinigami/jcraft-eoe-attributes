@@ -31,6 +31,8 @@ import java.util.*;
 public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntity> {
     private static final int COUNTDOWN_COOLDOWN_TICKS = 120; // 6 seconds
     @Getter
+    private final int radius;
+    @Getter
     private final int maxCountdownTicks;
     @Getter
     private final Map<Entity, CompoundTag> timeMarkerData = new WeakHashMap<>();
@@ -47,8 +49,12 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
     @Getter
     private int countdownTicks;
 
-    public CountdownMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int maxCountdownTicks) {
+    public CountdownMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int radius, final int maxCountdownTicks) {
         super(cooldown, windup, duration, moveDistance);
+        if (radius < 0) {
+            throw new IllegalArgumentException("radius cannot be negative!");
+        }
+        this.radius = radius;
         if (maxCountdownTicks < 0) {
             throw new IllegalArgumentException("maxCountdownTicks cannot be negative!");
         }
@@ -76,7 +82,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
     @Override
     public @NonNull Set<LivingEntity> perform(final MandomEntity attacker, final LivingEntity user) {
         final List<Entity> toCapture = attacker.level().getEntitiesOfClass(Entity.class,
-                attacker.getBoundingBox().inflate(64),
+                attacker.getBoundingBox().inflate(radius),
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker));
 
         // Also include the user in the rewind
@@ -153,7 +159,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
     @Override
     public @NonNull CountdownMove copy() {
-        return copyExtras(new CountdownMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getMaxCountdownTicks()));
+        return copyExtras(new CountdownMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getRadius(), getMaxCountdownTicks()));
     }
 
     public record RewindData(Vec3 originalPos, Entity entity) {
@@ -164,7 +170,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
         @Override
         protected @NotNull App<RecordCodecBuilder.Mu<CountdownMove>, CountdownMove> buildCodec(RecordCodecBuilder.Instance<CountdownMove> instance) {
-            return instance.group(extras(), cooldown(), windup(), duration(), moveDistance(), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("maxCountdownTicks").forGetter(CountdownMove::getMaxCountdownTicks)).apply(instance, applyExtras(CountdownMove::new));
+            return instance.group(extras(), cooldown(), windup(), duration(), moveDistance(), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("radius").forGetter(CountdownMove::getRadius), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("maxCountdownTicks").forGetter(CountdownMove::getMaxCountdownTicks)).apply(instance, applyExtras(CountdownMove::new));
         }
     }
 }

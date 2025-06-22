@@ -54,15 +54,15 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
                     .skinName(Component.literal("Abstract"))
                     .build())
             .summonData(SummonData.builder()
-                    .sound(() -> JSoundRegistry.MANDOM_SUMMON.get())
+                    .sound(JSoundRegistry.MANDOM_SUMMON)
                     .build())
             .build();
 
-    public static final CountdownMove COUNTDOWN = new CountdownMove(6, 10, 120, 0f, 600)
+    public static final CountdownMove COUNTDOWN = new CountdownMove(6, 10, 120, 0f, 64, 600)
             .withSound(JSoundRegistry.MANDOM_COUNTDOWN)
             .withInfo(
                     Component.literal("Countdown"),
-                    Component.literal("Saves position data of all entities in a 64 block radius. Must be active to use Rewind."));
+                    Component.literal("Saves position data of all entities in a 64 block radius for 30 seconds. Must be active to use Rewind."));
 
     public static final RewindMove REWIND = new RewindMove(6, 5, 10, 0f, 200)
             .withSound(JSoundRegistry.MANDOM_REWIND)
