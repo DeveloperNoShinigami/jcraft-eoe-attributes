@@ -1,1 +1,11 @@
-{}
+{
+    "item.jcraft.spec_disc": "Диск Класу",
+    "item.jcraft.stand_disc": "Диск Стенду",
+    "item.jcraft.stand_arrowhead": "Вістря Стріли Стенду",
+    "item.jcraft.stand_arrow": "Стріла Стенду",
+    "item.jcraft.living_arrow": "Жива Стріла",
+    "item.jcraft.boxing_gloves": "Боксерські Рукавиці",
+    "item.jcraft.requiem_ruby": "Рубін-Реквієм",
+    "item.jcraft.disc": "Компакт-диск",
+    "item.jcraft.requiem_arrow": "Стріла-Реквієм"
+}
