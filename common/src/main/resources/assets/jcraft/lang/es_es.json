@@ -155,5 +155,7 @@
     "block.jcraft.stellar_iron_block": "Bloque de Hierro Estelar",
     "key.jcraft.special3": "Especial 3",
     "entity.jcraft.starplatinum.info.pro2": "largos combos de alto daño",
-    "entity.jcraft.sptw.info.pro3": "excelentes mixups"
+    "entity.jcraft.sptw.info.pro3": "excelentes mixups",
+    "item.jcraft.road_roller": "Apisonadora",
+    "key.jcraft.dash": "Propulsarse"
 }
