@@ -216,5 +216,11 @@
     "entity.jcraft.mr.info.con2": "Keine Mobilitätsoptionen",
     "entity.jcraft.hierophantgreen.info.pro2": "Gute Geschwindigkeit bei den meisten Aktionen",
     "entity.jcraft.hierophantgreen.info.pro3": "Tentakel sind extrem vielseitig",
-    "entity.jcraft.killerqueen.info.con2": "Unterdurchschnittliche Geschwindigkeit"
+    "entity.jcraft.killerqueen.info.con2": "Unterdurchschnittliche Geschwindigkeit",
+    "entity.jcraft.goldexperience": "Gold Experience",
+    "entity.jcraft.goldexperience.info.pro1": "Guter Druck",
+    "entity.jcraft.goldexperience.info.pro2": "Überdurchschnittliche Geschwindigkeit",
+    "entity.jcraft.goldexperience.info.pro3": "Exellente Verteidigung (Baum, Heilung, Schlange, Schwerer Angriff)",
+    "entity.jcraft.goldexperience.info.pro4": "Exellente Vorbereitungen",
+    "entity.jcraft.goldexperience.info.con1": "Braucht Vorbereitung, um gefährlich zu werden"
 }
