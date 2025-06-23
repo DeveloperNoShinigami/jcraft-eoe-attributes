@@ -284,7 +284,7 @@
     "entity.jcraft.horus.info.pro2": "Unblockbare Attacke",
     "entity.jcraft.horus.info.con2": "Keine schnelle, Kreuzfeuer-artige Attacke",
     "entity.jcraft.mandom": "Mandom",
-    "entity.jcraft.mandom.info.pro1": "Spezialisierungen können genutzt werden während der Stand aktiv ist",
+    "entity.jcraft.mandom.info.pro1": "Spezialitäten können genutzt werden während der Stand aktiv ist",
     "entity.jcraft.mandom.info.con1": "0 Schaden",
     "entity.jcraft.mandom.info.con3": "Sehr wenig Aktionen",
     "entity.jcraft.mandom.info.con4": "Kann nicht blocken",
@@ -326,7 +326,7 @@
     "gamerule.chanceMobSpawnsWithStand": "Prozentuale Wahrscheinlichkeit, dass Mobs mit einem Stand spawnen",
     "gamerule.allowMobEvolvedStands": "Erlaube es Mobs, mit entwickelten Stands zu spawnen",
     "gamerule.creamBlackHoleErasesBlocks": "Erlaube Creams schwarzen Loch Blöcke auszuradieren",
-    "gamerule.defaultSpec": "Standardspezialisierung",
+    "gamerule.defaultSpec": "Standardspezialität",
     "gamerule.standArrowBaseDamage": "Basisschaden vom Stand-Pfeil",
     "gamerule.keepSpec": "Behalte Spezialisierung nach Tod",
     "gamerule.keepStand": "Behalte Stand nach Tod",
@@ -349,9 +349,9 @@
     "spec.jcraft.anubis": "Anubis",
     "spec.jcraft.vampire": "Vampir",
     "spec.jcraft.none": "Keine Spezialisierung",
-    "jcraft.midnightconfig.title": "JCraft-Konfiguration",
     "stat.jcraft.stand_users_killed": "Stand-Nutzer in Ruhestand geschickt",
     "jcraft.trello.link": "Besucher unser Trello für mehr Informationen",
     "gamerule.doFallingMeteors": "Meteoriten fallen vom Himmel",
-    "subtitles.jcraft.armoredhit": "GEPANZERTER TREFFER!"
+    "subtitles.jcraft.armoredhit": "GEPANZERTER TREFFER!",
+    "jcraft.anubis.unsheathe": "Anubis zu ziehen wird deine Spezialität ändern, bist du sicher?"
 }
