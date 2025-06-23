@@ -609,13 +609,11 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .save(exporter);
         // Final Kira's boots
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.FINAL_KIRA_BOOTS.get())
-                .pattern(" Y ")
-                .pattern("YNY")
-                .pattern("BGB")
+                .pattern("GNG")
+                .pattern("B B")
                 .define('B', Items.BROWN_DYE)
                 .define('N', Items.NETHERITE_BOOTS)
-                .define('G', Items.GUNPOWDER)
-                .define('Y', Items.YELLOW_DYE)
+                .define('G', Items.GREEN_DYE)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);
         // Giorno's wig
