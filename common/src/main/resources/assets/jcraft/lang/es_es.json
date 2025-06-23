@@ -290,5 +290,10 @@
     "entity.jcraft.purple_haze_distortion.info.pro2": "presión rápida y opresiva",
     "entity.jcraft.whitesnake.info.pro3": "win condition accesible",
     "entity.jcraft.cmoon.info.con2": "escaso control en movimiento horizontal",
-    "argument.entity.options.jcraft_stand": "Entidades con stand"
+    "argument.entity.options.jcraft_stand": "Entidades con stand",
+    "entity.jcraft.mih.info.pro4": "tiempo de enfriamiento bajo",
+    "entity.jcraft.mih.info.con1": "malas opciones defensivas",
+    "entity.jcraft.mih.info.con2": "depende de un buen espaciado",
+    "entity.jcraft.theworld.info.desc": "DOMINATOR de medio rango",
+    "entity.jcraft.theworld.info.pro1": "luz rápida"
 }
