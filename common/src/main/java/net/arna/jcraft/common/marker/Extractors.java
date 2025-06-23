@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -117,6 +118,54 @@ public interface Extractors {
             dataResult.result().ifPresent(tag -> compoundTag.put(BRAIN.toString(), tag));
         }
     };
+
+    TriConsumer<ResourceLocation, Entity, CompoundTag> PLAYER = (id, entity, compoundTag) -> {
+        if (id == null || !(entity instanceof final Player player)) {
+            return;
+        }
+        LIVING_ENTITY.accept(id, entity, compoundTag);
+        if (id.equals(INVENTORY)) {
+            compoundTag.put(INVENTORY.toString(), player.getInventory().save(new ListTag()));
+        } else if (id.equals(SELECTED_ITEM_SLOT)) {
+            compoundTag.putInt(SELECTED_ITEM_SLOT.toString(), player.getInventory().selected);
+        }
+        else if (id.equals(SLEEP_TIMER)) {
+            compoundTag.putInt(SLEEP_TIMER.toString(), player.getSleepTimer());
+        }
+        else if (id.equals(XP_PROGRESS)) {
+            compoundTag.putFloat(XP_PROGRESS.toString(), player.experienceProgress);
+        }
+        else if (id.equals(XP_LEVEL)) {
+            compoundTag.putInt(XP_LEVEL.toString(), player.experienceLevel);
+        }
+        else if (id.equals(XP_TOTAL)) {
+            compoundTag.putInt(XP_TOTAL.toString(), player.totalExperience);
+        }
+        // enchantment seed cannot be set without mixin
+        else if (id.equals(SCORE)) {
+            compoundTag.putInt(SCORE.toString(), player.getScore());
+        }
+        // TODO only save specific food data stuff?
+        else if (id.equals(FOOD_DATA)) {
+            player.getFoodData().addAdditionalSaveData(compoundTag);
+        }
+        // TODO only save specific abilities?
+        else if (id.equals(PLAYER_ABILITIES)) {
+            player.getAbilities().addSaveData(compoundTag);
+        }
+        else if (id.equals(ENDER_CHEST)) {
+            compoundTag.put(ENDER_CHEST.toString(), player.getEnderChestInventory().createTag());
+        }
+        else if (id.equals(SHOULDER_ENTITY_LEFT) && !player.getShoulderEntityLeft().isEmpty()) {
+            compoundTag.put(SHOULDER_ENTITY_LEFT.toString(), player.getShoulderEntityLeft());
+        }
+        else if (id.equals(SHOULDER_ENTITY_RIGHT) && !player.getShoulderEntityRight().isEmpty()) {
+            compoundTag.put(SHOULDER_ENTITY_RIGHT.toString(), player.getShoulderEntityRight());
+        }
+        // last death location is a bit complicated
+    };
+
+    // TODO ServerPlayer
 
     TriConsumer<ResourceLocation, Entity, CompoundTag> MOB = (id, entity, compoundTag) -> {
         if (id == null || !(entity instanceof final Mob mob)) {

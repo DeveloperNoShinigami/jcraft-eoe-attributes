@@ -54,4 +54,19 @@ public interface Identifiers {
     // Animals
     ResourceLocation LOVE = new ResourceLocation(MINECRAFT, "love");
 
+    // Player
+    ResourceLocation INVENTORY = new ResourceLocation(MINECRAFT, "player_inventory");
+    ResourceLocation SELECTED_ITEM_SLOT = new ResourceLocation(MINECRAFT, "selected_item_slot");
+    ResourceLocation SLEEP_TIMER = new ResourceLocation(MINECRAFT, "sleep_timer");
+    ResourceLocation XP_PROGRESS = new ResourceLocation(MINECRAFT, "xp_progress");
+    ResourceLocation XP_LEVEL = new ResourceLocation(MINECRAFT, "xp_level");
+    ResourceLocation XP_TOTAL = new ResourceLocation(MINECRAFT, "xp_total");
+    ResourceLocation SCORE = new ResourceLocation(MINECRAFT, "score");
+    ResourceLocation FOOD_DATA = new ResourceLocation(MINECRAFT, "food_data");
+    ResourceLocation PLAYER_ABILITIES = new ResourceLocation(MINECRAFT, "player_abilities");
+    ResourceLocation ENDER_CHEST = new ResourceLocation(MINECRAFT, "ender_chest");
+    ResourceLocation SHOULDER_ENTITY_LEFT = new ResourceLocation(MINECRAFT, "shoulder_entity_left");
+    ResourceLocation SHOULDER_ENTITY_RIGHT = new ResourceLocation(MINECRAFT, "shoulder_entity_right");
+    // ResourceLocation LAST_DEATH_LOCATION = new ResourceLocation(MINECRAFT, "last_death_location");
+
 }
