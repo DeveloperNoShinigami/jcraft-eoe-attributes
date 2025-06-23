@@ -135,5 +135,10 @@
     "block.jcraft.cinderella_green_block": "Зеленина Синдерели",
     "item.jcraft.steel_ball": "Сталева куля",
     "item.jcraft.darby_older_spawn_egg": "Яйце виклику Д'арбі Старшого",
-    "block.jcraft.polished_meteorite_block": "Полірований блок метеорита"
+    "block.jcraft.polished_meteorite_block": "Полірований блок метеорита",
+    "key.jcraft.barrage": "Шквальний удар",
+    "key.jcraft.special1": "Спеціальна здібність 1",
+    "key.jcraft.special2": "Спеціальна здібність 2",
+    "key.jcraft.special3": "Спеціальна здібність 3",
+    "key.jcraft.ultimate": "Ультимейт"
 }
