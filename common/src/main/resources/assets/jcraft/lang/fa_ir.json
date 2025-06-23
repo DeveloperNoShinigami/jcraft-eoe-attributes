@@ -1,1 +1,21 @@
-{}
+{
+    "item.jcraft.spec_disc": "سیدی توانایی",
+    "item.jcraft.stand_disc": "سیدی ستند",
+    "item.jcraft.stand_arrowhead": "سره ی تیره استند",
+    "item.jcraft.stand_arrow": "تیر ستند",
+    "item.jcraft.living_arrow": "تیر زنده",
+    "item.jcraft.boxing_gloves": "دستکش های بوکس",
+    "item.jcraft.requiem_ruby": "الماس ریکیوم",
+    "item.jcraft.fv_revolver": "ریولور",
+    "item.jcraft.kq_coin": "سکه",
+    "item.jcraft.diary_page": "صفحه ی دفتر",
+    "item.jcraft.dios_diary": "دفتر دیو",
+    "item.jcraft.sinners_soul": "روه خلافی",
+    "item.jcraft.meteorite_block": "بلوک شهابسنگ",
+    "item.jcraft.polished_meteorite_block": "بلوک شهابسنگ جلا داده شده",
+    "item.jcraft.meteorite_iron_ore_block": "آلیاژ شهابسنگ",
+    "item.jcraft.hot_sand_block": "شن داغ",
+    "item.jcraft.disc": "سیدی کوچک شده",
+    "item.jcraft.requiem_arrow": "تیر ریکیوم",
+    "item.jcraft.soul_block": "بلوک زجر و درد"
+}
