@@ -178,5 +178,10 @@
     "entity.jcraft.silverchariot": "Silver Chariot",
     "entity.jcraft.kingcrimson.info.pro4": "Einfache Vorbereitungen",
     "entity.jcraft.d4c": "Filthy Acts at a Reasonable Price",
-    "entity.jcraft.cream.info.con2": "Blind und taub in der Leere"
+    "entity.jcraft.cream.info.con2": "Blind und taub in der Leere",
+    "entity.jcraft.silverchariot.info.pro1": "Schnelle leichte Attacken",
+    "entity.jcraft.silverchariot.info.pro2": "Zwei Kreuzfeuer-Angriffe",
+    "entity.jcraft.silverchariot.info.con1": "Hohe Ausfühungsbedingungen",
+    "entity.jcraft.silverchariot.info.con2": "Geringer Schaden",
+    "entity.jcraft.silverchariot.info.con3": "Nicht sehr mobil"
 }
