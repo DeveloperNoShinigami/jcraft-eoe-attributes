@@ -378,5 +378,6 @@
     "gamerule.kingCrimsonTeleportEffect": "Movimiento de teletransportación de King Crimson",
     "gamerule.chanceMobSpawnsWithStand": "Probabilidad de que el mob aparezca con Stand",
     "gamerule.allowMobEvolvedStands": "Permitir que los mobs aparezcan con stands evolucionados",
-    "gamerule.standGriefing": "Permitir a los Stands destruir el entorno"
+    "gamerule.standGriefing": "Permitir a los Stands destruir el entorno",
+    "subtitles.jcraft.twts": "Tiempo ¡Detente!"
 }
