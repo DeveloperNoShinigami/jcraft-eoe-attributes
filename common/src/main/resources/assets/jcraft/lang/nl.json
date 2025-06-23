@@ -27,5 +27,9 @@
     "item.jcraft.mock_item": "Namaak Voorwerp",
     "item.jcraft.dio_p1_wig": "DIOs Pruik",
     "item.jcraft.dio_p1_jacket": "DIOs Shirt",
-    "item.jcraft.dio_p1_boots": "DIOs Schoenen"
+    "item.jcraft.dio_p1_boots": "DIOs Schoenen",
+    "item.jcraft.bullet": "Kogel",
+    "item.jcraft.prison_key": "Gevangenis Sleutel",
+    "item.jcraft.plankton_vial": "Plankton Flesje",
+    "item.jcraft.steel_ball": "Stalen Bal"
 }
