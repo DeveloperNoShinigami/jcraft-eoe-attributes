@@ -53,7 +53,7 @@ public class StandArrowEntity extends AbstractArrow implements GeoEntity {
                 return;
             }
             final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(mob);
-            if (StandTypeUtil.isNone(standData.getType())) {
+            if (standData.getType() == null) {
                 standData.setType(StandTypeUtil.getRandomRegular(random));
                 mob.unRide();
                 JCraft.summon(mob.level(), mob);
