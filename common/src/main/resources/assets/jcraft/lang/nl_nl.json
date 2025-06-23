@@ -31,5 +31,6 @@
     "item.jcraft.bullet": "Kogel",
     "item.jcraft.prison_key": "Gevangenis Sleutel",
     "item.jcraft.plankton_vial": "Plankton Flesje",
-    "item.jcraft.steel_ball": "Stalen Bal"
+    "item.jcraft.steel_ball": "Stalen Bal",
+    "itemGroup.jcraft.main": "JCraft Voorwerpen"
 }
