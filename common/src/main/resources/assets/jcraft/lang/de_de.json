@@ -222,5 +222,22 @@
     "entity.jcraft.goldexperience.info.pro2": "Überdurchschnittliche Geschwindigkeit",
     "entity.jcraft.goldexperience.info.pro3": "Exellente Verteidigung (Baum, Heilung, Schlange, Schwerer Angriff)",
     "entity.jcraft.goldexperience.info.pro4": "Exellente Vorbereitungen",
-    "entity.jcraft.goldexperience.info.con1": "Braucht Vorbereitung, um gefährlich zu werden"
+    "entity.jcraft.goldexperience.info.con1": "Braucht Vorbereitung, um gefährlich zu werden",
+    "entity.jcraft.ger.info.pro3": "Exellente Verteidigung",
+    "entity.jcraft.gerscorpion": "Skorpion",
+    "entity.jcraft.goldexperience.info.con2": "Keine horizontalen Bewegungswerkzeuge",
+    "entity.jcraft.goldexperience.info.con3": "Die Schlange ist unzuverlässig",
+    "entity.jcraft.ger": "Gold Experience: Requiem",
+    "entity.jcraft.ger.info.pro1": "Sehr mobil",
+    "entity.jcraft.ger.info.pro2": "Großer Werkzeugkasten",
+    "entity.jcraft.ger.info.pro5": "Rückspulknopf",
+    "entity.jcraft.ger.info.con1": "Geringer Schaden",
+    "entity.jcraft.ger.info.con2": "Begrenzter Druck",
+    "entity.jcraft.gefrog": "Frosch",
+    "entity.jcraft.getree": "Baum",
+    "entity.jcraft.gesnake": "Schlange",
+    "entity.jcraft.the_sun": "The Sun",
+    "entity.jcraft.the_sun.info.con1": "Kann nicht blocken",
+    "entity.jcraft.the_sun.info.con2": "Hitzefeld beeinträchtigt den Nutzer",
+    "entity.jcraft.purple_haze": "Purple Haze"
 }
