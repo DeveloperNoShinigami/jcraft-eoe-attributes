@@ -628,4 +628,9 @@ public class JServerEvents {
             serverLevel.addFreshEntity(meteor);
         }
     }
+
+    public static EventResult beforeBlockSet(BlockPos blockPos, BlockState oldBlockState, BlockState newBlockState) {
+
+        return EventResult.pass();
+    }
 }

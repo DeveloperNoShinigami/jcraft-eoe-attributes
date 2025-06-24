@@ -62,6 +62,7 @@
     "GrindstoneScreenHandlerMixin",
     "HungerManagerMixin",
     "ItemStackMixin",
+    "LevelMixin",
     "LevelStorageAccessAccessor",
     "LightingProviderAccessor",
     "LightStorageAccessor",
