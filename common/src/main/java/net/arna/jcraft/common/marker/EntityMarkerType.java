@@ -17,11 +17,15 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class EntityMarkerType implements MarkerPredicate<UUID, Entity>, MarkerType<UUID, Entity, EntityMarker> {
+public class EntityMarkerType implements MarkerSavePredicate<UUID, Entity>, MarkerLoadPredicate<EntityMarker>, MarkerType<UUID, Entity, EntityMarker> {
 
     @NonNull
     @Getter
-    protected final MarkerPredicate<UUID, Entity> predicate;
+    protected final MarkerSavePredicate<UUID, Entity> savePredicate;
+
+    @NonNull
+    @Getter
+    protected final MarkerLoadPredicate<EntityMarker> loadPredicate;
 
     @NonNull
     protected final Set<ResourceLocation> ids = new HashSet<>();
@@ -30,19 +34,21 @@ public class EntityMarkerType implements MarkerPredicate<UUID, Entity>, MarkerTy
     protected final Set<EntityDataHandler> dataHandlers = new HashSet<>();
 
     /**
-     * @see #EntityMarkerType(MarkerPredicate, Collection, Collection)
+     * @see #EntityMarkerType(MarkerSavePredicate, MarkerLoadPredicate, Collection, Collection)
      */
-    public EntityMarkerType(final @NonNull Predicate<Entity> predicate, final @NonNull Collection<ResourceLocation> ids, final @Nullable Collection<EntityDataHandler> dataHandlers) {
-        this((id, entity) -> predicate.test(entity), ids, dataHandlers);
+    public EntityMarkerType(final @NonNull Predicate<Entity> savePredicate, final @NonNull MarkerLoadPredicate<EntityMarker> loadPredicate, final @NonNull Collection<ResourceLocation> ids, final @Nullable Collection<EntityDataHandler> dataHandlers) {
+        this((id, entity) -> savePredicate.test(entity), loadPredicate, ids, dataHandlers);
     }
 
     /**
-     * @param predicate if you want to save
-     * @param ids what you want to save
-     * @param dataHandlers how do you want to save (and load)
+     * @param savePredicate if you want to save
+     * @param loadPredicate if you want to load
+     * @param ids what you want to save and load
+     * @param dataHandlers how do you want to save and load
      */
-    public EntityMarkerType(final @NonNull MarkerPredicate<UUID, Entity> predicate, final @NonNull Collection<ResourceLocation> ids, final @Nullable Collection<EntityDataHandler> dataHandlers) {
-        this.predicate = predicate;
+    public EntityMarkerType(final @NonNull MarkerSavePredicate<UUID, Entity> savePredicate, final @NonNull MarkerLoadPredicate<EntityMarker> loadPredicate, final @NonNull Collection<ResourceLocation> ids, final @Nullable Collection<EntityDataHandler> dataHandlers) {
+        this.savePredicate = savePredicate;
+        this.loadPredicate = loadPredicate;
         this.ids.addAll(ids);
         if (dataHandlers != null) {
             this.dataHandlers.addAll(dataHandlers);
@@ -51,7 +57,12 @@ public class EntityMarkerType implements MarkerPredicate<UUID, Entity>, MarkerTy
 
     @Override
     public boolean shouldSave(final @NonNull UUID id, final @NonNull Entity object) {
-        return predicate.shouldSave(id, object);
+        return savePredicate.shouldSave(id, object);
+    }
+
+    @Override
+    public boolean shouldLoad(final @NonNull EntityMarker marker, final @NonNull ServerLevel level) {
+        return loadPredicate.shouldLoad(marker, level);
     }
 
     @NotNull
@@ -90,27 +101,19 @@ public class EntityMarkerType implements MarkerPredicate<UUID, Entity>, MarkerTy
 
     @NonNull
     @Override
-    public EntityMarkerType and(final @NonNull MarkerPredicate<UUID, Entity> other) {
-        return new EntityMarkerType(predicate.and(other), ids, dataHandlers);
-    }
-
-    public EntityMarkerType and(final @NonNull Predicate<Entity> other) {
-        return and((id, entity) -> other.test(entity));
+    public EntityMarkerType and(final @NonNull MarkerSavePredicate<UUID, Entity> other) {
+        return new EntityMarkerType(savePredicate.and(other), loadPredicate, ids, dataHandlers);
     }
 
     @NonNull
     @Override
-    public EntityMarkerType or(final @NonNull MarkerPredicate<UUID, Entity> other) {
-        return new EntityMarkerType(predicate.or(other), ids, dataHandlers);
-    }
-
-    public EntityMarkerType or(final @NonNull Predicate<Entity> other) {
-        return or((id, entity) -> other.test(entity));
+    public EntityMarkerType or(final @NonNull MarkerSavePredicate<UUID, Entity> other) {
+        return new EntityMarkerType(savePredicate.or(other), loadPredicate, ids, dataHandlers);
     }
 
     @NonNull
     @Override
-    public EntityMarkerType negate() {
-        return new EntityMarkerType(predicate.negate(), ids, dataHandlers);
+    public EntityMarkerType negateSave() {
+        return new EntityMarkerType(savePredicate.negateSave(), loadPredicate, ids, dataHandlers);
     }
 }

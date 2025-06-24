@@ -161,7 +161,6 @@ public interface Injectors {
         if (id == null || !(entity instanceof final LivingEntity livingEntity)) {
             return;
         }
-        ENTITY.accept(id, entity, compoundTag);
         if (id.equals(HEALTH)) {
             if (compoundTag.contains(HEALTH.toString())) {
                 livingEntity.setHealth(compoundTag.getFloat(HEALTH.toString()));
@@ -202,7 +201,6 @@ public interface Injectors {
         if (id == null || !(entity instanceof final Player player)) {
             return;
         }
-        LIVING_ENTITY.accept(id, entity, compoundTag);
         if (id.equals(INVENTORY)) {
             player.getInventory().clearContent();
             if (compoundTag.contains(INVENTORY.toString())) {
@@ -251,7 +249,6 @@ public interface Injectors {
         if (id == null || !(entity instanceof final Mob mob)) {
             return;
         }
-        LIVING_ENTITY.accept(id, entity, compoundTag);
         if (id.equals(CAN_PICKUP_LOOT)) {
             if (compoundTag.contains(CAN_PICKUP_LOOT.toString())) {
                 mob.setCanPickUpLoot(compoundTag.getBoolean(CAN_PICKUP_LOOT.toString()));
@@ -278,7 +275,6 @@ public interface Injectors {
         if (id == null || !(entity instanceof final AgeableMob ageableMob)) {
             return;
         }
-        MOB.accept(id, entity, compoundTag);
         if (id.equals(AGE)) {
             if (compoundTag.contains(AGE.toString())) {
                 ageableMob.setAge(compoundTag.getInt(AGE.toString()));
@@ -287,6 +283,14 @@ public interface Injectors {
                 ageableMob.setAge(0);
             }
         }
+    };
+
+    TriConsumer<ResourceLocation, Entity, CompoundTag> ALL = (id, entity, compoundTag) -> {
+        ENTITY.accept(id, entity, compoundTag);
+        LIVING_ENTITY.accept(id, entity, compoundTag);
+        PLAYER.accept(id, entity, compoundTag);
+        MOB.accept(id, entity, compoundTag);
+        AGABLE_MOB.accept(id, entity, compoundTag);
     };
 
 }

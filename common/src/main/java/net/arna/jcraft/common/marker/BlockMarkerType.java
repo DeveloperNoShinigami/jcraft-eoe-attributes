@@ -9,11 +9,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public record BlockMarkerType(MarkerPredicate<BlockPos, BlockState> predicate) implements MarkerPredicate<BlockPos, BlockState>, MarkerType<BlockPos, BlockState, BlockMarker> {
+public record BlockMarkerType(
+        MarkerSavePredicate<BlockPos, BlockState> savePredicate, MarkerLoadPredicate<BlockMarker> loadPredicate)
+        implements MarkerSavePredicate<BlockPos, BlockState>, MarkerLoadPredicate<BlockMarker>, MarkerType<BlockPos, BlockState, BlockMarker> {
 
     @Override
     public boolean shouldSave(final @NonNull BlockPos id, final @NonNull BlockState object) {
-        return predicate.shouldSave(id, object);
+        return savePredicate.shouldSave(id, object);
+    }
+
+    @Override
+    public boolean shouldLoad(final @NonNull BlockMarker marker, final @NonNull ServerLevel level) {
+        return loadPredicate.shouldLoad(marker, level);
     }
 
     @NotNull
@@ -27,23 +34,5 @@ public record BlockMarkerType(MarkerPredicate<BlockPos, BlockState> predicate) i
     public Optional<Pair<BlockPos, BlockState>> load(final @NonNull BlockMarker marker, final @NonNull ServerLevel level) {
         level.setBlockAndUpdate(marker.pos(), marker.state());
         return Optional.of(Pair.of(marker.pos(), marker.state()));
-    }
-
-    @NonNull
-    @Override
-    public BlockMarkerType and(@NonNull MarkerPredicate<BlockPos, BlockState> other) {
-        return new BlockMarkerType(predicate.and(other));
-    }
-
-    @NonNull
-    @Override
-    public BlockMarkerType or(@NonNull MarkerPredicate<BlockPos, BlockState> other) {
-        return new BlockMarkerType(predicate.or(other));
-    }
-
-    @NonNull
-    @Override
-    public BlockMarkerType negate() {
-        return new BlockMarkerType(predicate.negate());
     }
 }

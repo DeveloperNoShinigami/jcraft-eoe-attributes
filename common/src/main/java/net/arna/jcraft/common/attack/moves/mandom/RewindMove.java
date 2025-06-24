@@ -7,15 +7,16 @@ import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
+import net.arna.jcraft.common.marker.EntityMarker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.phys.Vec3;
@@ -25,6 +26,7 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
 
@@ -51,41 +53,18 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
             return Set.of();
         }
 
-        final Map<Entity, CompoundTag> savedData = countdownMove.getTimeMarkerData();
-        final Map<LivingEntity, Float> savedUserYaw = countdownMove.getUserHeadYawData();
-        final Map<LivingEntity, Float> savedUserPitch = countdownMove.getUserHeadPitchData();
-
+        final Map<UUID, EntityMarker> savedData = countdownMove.getTimeMarkerData();
         if (savedData.isEmpty()) {
             return Set.of();
         }
-
-        for (Map.Entry<Entity, CompoundTag> data : savedData.entrySet()) {
-            final Entity ent = data.getKey();
-            if (!ent.isAlive()) {
-                continue;
-            }
-            final CompoundTag nbt = data.getValue();
-
-            if (ent instanceof final ServerPlayer serverPlayer) {
-                if (serverPlayer.isCreative() || serverPlayer.isSpectator()) {
-                    continue;
-                }
-                performOnServerPlayer(serverPlayer, nbt, savedUserYaw, savedUserPitch);
-            } else if (ent instanceof LivingEntity livingEntity) {
-                performOnLivingEntity(livingEntity, nbt, savedUserYaw, savedUserPitch);
-            } else {
-                // For non-living entities, just load the NBT
-                final CompoundTag modernNbt = new CompoundTag();
-                ent.saveWithoutId(modernNbt);
-                applyModernNBT(nbt, modernNbt, Set.of("Items", "Inventory", "HandItems", "ArmorItems"));
-                ent.load(nbt);
+        for (Map.Entry<UUID, EntityMarker> data : savedData.entrySet()) {
+            if (CountdownMove.ENTITY_MARKER_TYPE.shouldLoad(data.getValue(), (ServerLevel)attacker.level())) {
+                CountdownMove.ENTITY_MARKER_TYPE.load(data.getValue(), (ServerLevel)attacker.level());
             }
         }
 
         // Clean up
         savedData.clear();
-        savedUserYaw.clear();
-        savedUserPitch.clear();
         countdownMove.getRewindInfo().clear();
         countdownMove.setCountdownActive(false);
 

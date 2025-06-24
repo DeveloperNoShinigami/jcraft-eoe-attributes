@@ -12,15 +12,21 @@ import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
+import net.arna.jcraft.common.marker.EntityDataHandler;
+import net.arna.jcraft.common.marker.EntityMarker;
+import net.arna.jcraft.common.marker.EntityMarkerType;
+import net.arna.jcraft.common.marker.Extractors;
+import net.arna.jcraft.common.marker.Identifiers;
+import net.arna.jcraft.common.marker.Injectors;
+import net.arna.jcraft.common.marker.Predicates;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -30,17 +36,31 @@ import java.util.*;
 
 public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntity> {
     private static final int COUNTDOWN_COOLDOWN_TICKS = 120; // 6 seconds
+    private static final Set<ResourceLocation> ENTITY_STUFF_TO_SAVE = Set.of(
+            Identifiers.POSITION,
+            Identifiers.YAW,
+            Identifiers.YAW_HEAD,
+            Identifiers.PITCH,
+            Identifiers.VELOCITY,
+            Identifiers.HEALTH
+    );
+    static final EntityMarkerType ENTITY_MARKER_TYPE = new EntityMarkerType(
+            // we catch all entities to save earlier in the code
+            entity -> true,
+            // but we don't know their state when loading
+            (entityMarker, serverLevel) -> {
+                final Entity entity = serverLevel.getEntity(entityMarker.id());
+                return entity != null && entity.isAlive() && (!(entity instanceof ServerPlayer player) || (!(player.isSpectator() || player.isCreative())));
+            },
+            // this is all we need to check when saving/loading
+            ENTITY_STUFF_TO_SAVE,
+            Set.of(new EntityDataHandler(Predicates.fromSet(ENTITY_STUFF_TO_SAVE), Extractors.ALL, Injectors.ALL)));
     @Getter
     private final int radius;
     @Getter
     private final int maxCountdownTicks;
     @Getter
-    private final Map<Entity, CompoundTag> timeMarkerData = new WeakHashMap<>();
-    // Store the USER's head rotation, not the stand's rotation
-    @Getter
-    private final Map<LivingEntity, Float> userHeadYawData = new WeakHashMap<>();
-    @Getter
-    private final Map<LivingEntity, Float> userHeadPitchData = new WeakHashMap<>();
+    private final Map<UUID, EntityMarker> timeMarkerData = new WeakHashMap<>();
     @Getter
     private final List<RewindData> rewindInfo = new ArrayList<>();
     @Getter
@@ -91,26 +111,14 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
         }
 
         timeMarkerData.clear();
-        userHeadYawData.clear();
-        userHeadPitchData.clear();
         rewindInfo.clear();
 
         // Follow ReturnToZeroMove pattern for saving entity data
         for (final Entity entity : toCapture) {
-            if (entity.getType() == EntityType.ARMOR_STAND) {
-                continue;
+            if (ENTITY_MARKER_TYPE.shouldSave(entity.getUUID(), entity)) {
+                timeMarkerData.put(entity.getUUID(), ENTITY_MARKER_TYPE.save(entity.getUUID(), entity));
+                rewindInfo.add(new RewindData(entity.getEyePosition(), entity));
             }
-            final CompoundTag data = new CompoundTag();
-            entity.saveWithoutId(data);
-            timeMarkerData.put(entity, data);
-
-            // Save USER rotation data separately - this is the key fix
-            if (entity instanceof LivingEntity livingEntity) {
-                userHeadYawData.put(livingEntity, livingEntity.getYHeadRot());
-                userHeadPitchData.put(livingEntity, livingEntity.getXRot());
-            }
-
-            rewindInfo.add(new RewindData(entity.getEyePosition(), entity));
         }
 
         countdownActive = true;

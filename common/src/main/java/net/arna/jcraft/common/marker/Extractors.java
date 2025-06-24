@@ -81,7 +81,6 @@ public interface Extractors {
         if (id == null || !(entity instanceof final LivingEntity livingEntity)) {
             return;
         }
-        ENTITY.accept(id, entity, compoundTag);
         if (id.equals(HEALTH)) {
             compoundTag.putFloat(HEALTH.toString(), livingEntity.getHealth());
         } else if (id.equals(HURT_TIME)) {
@@ -107,7 +106,6 @@ public interface Extractors {
         if (id == null || !(entity instanceof final Player player)) {
             return;
         }
-        LIVING_ENTITY.accept(id, entity, compoundTag);
         if (id.equals(INVENTORY)) {
             compoundTag.put(INVENTORY.toString(), player.getInventory().save(new ListTag()));
         } else if (id.equals(SELECTED_ITEM_SLOT)) {
@@ -143,7 +141,6 @@ public interface Extractors {
         if (id == null || !(entity instanceof final Mob mob)) {
             return;
         }
-        LIVING_ENTITY.accept(id, entity, compoundTag);
         if (id.equals(CAN_PICKUP_LOOT)) {
             compoundTag.putBoolean(CAN_PICKUP_LOOT.toString(), mob.canPickUpLoot());
         } else if (id.equals(PERSISTENCE_REQUIRED)) {
@@ -165,11 +162,17 @@ public interface Extractors {
         if (id == null || !(entity instanceof final AgeableMob ageableMob)) {
             return;
         }
-        MOB.accept(id, entity, compoundTag);
         if (id.equals(AGE)) {
             compoundTag.putInt(AGE.toString(), ageableMob.getAge());
         }
         // forced age cannot be set without mixin
     };
 
+    TriConsumer<ResourceLocation, Entity, CompoundTag> ALL = (id, entity, compoundTag) -> {
+        ENTITY.accept(id, entity, compoundTag);
+        LIVING_ENTITY.accept(id, entity, compoundTag);
+        PLAYER.accept(id, entity, compoundTag);
+        MOB.accept(id, entity, compoundTag);
+        AGEABLE_MOB.accept(id, entity, compoundTag);
+    };
 }
