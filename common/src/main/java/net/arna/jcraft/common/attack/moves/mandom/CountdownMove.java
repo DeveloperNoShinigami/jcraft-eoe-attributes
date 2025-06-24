@@ -62,7 +62,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
     @Getter
     private final int maxCountdownTicks;
     @Getter
-    private final Map<UUID, EntityMarker> timeMarkerData = new WeakHashMap<>();
+    private final List<EntityMarker> timeEntityMarkers = new LinkedList<>();
     @Getter
     private final List<RewindData> rewindInfo = new ArrayList<>();
     @Getter
@@ -112,13 +112,13 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             toCapture.add(user);
         }
 
-        timeMarkerData.clear();
+        timeEntityMarkers.clear();
         rewindInfo.clear();
 
         // Follow ReturnToZeroMove pattern for saving entity data
         for (final Entity entity : toCapture) {
             if (ENTITY_MARKER_TYPE.shouldSave(entity.getUUID(), entity)) {
-                timeMarkerData.put(entity.getUUID(), ENTITY_MARKER_TYPE.save(entity.getUUID(), entity));
+                timeEntityMarkers.add(ENTITY_MARKER_TYPE.save(entity.getUUID(), entity));
                 rewindInfo.add(new RewindData(entity.getEyePosition(), entity));
             }
         }

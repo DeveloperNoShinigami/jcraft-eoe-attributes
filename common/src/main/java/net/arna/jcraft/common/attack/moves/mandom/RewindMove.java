@@ -23,6 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -53,18 +54,18 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
             return Set.of();
         }
 
-        final Map<UUID, EntityMarker> savedData = countdownMove.getTimeMarkerData();
-        if (savedData.isEmpty()) {
+        final List<EntityMarker> entityMarkers = countdownMove.getTimeEntityMarkers();
+        if (entityMarkers.isEmpty()) {
             return Set.of();
         }
-        for (Map.Entry<UUID, EntityMarker> data : savedData.entrySet()) {
-            if (CountdownMove.ENTITY_MARKER_TYPE.shouldLoad(data.getValue(), (ServerLevel)attacker.level())) {
-                CountdownMove.ENTITY_MARKER_TYPE.load(data.getValue(), (ServerLevel)attacker.level());
+        for (final EntityMarker marker : entityMarkers) {
+            if (CountdownMove.ENTITY_MARKER_TYPE.shouldLoad(marker, (ServerLevel)attacker.level())) {
+                CountdownMove.ENTITY_MARKER_TYPE.load(marker, (ServerLevel)attacker.level());
             }
         }
 
         // Clean up
-        savedData.clear();
+        entityMarkers.clear();
         countdownMove.getRewindInfo().clear();
         countdownMove.setCountdownActive(false);
 
