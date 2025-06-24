@@ -32,5 +32,7 @@
     "item.jcraft.prison_key": "Gevangenis Sleutel",
     "item.jcraft.plankton_vial": "Plankton Flesje",
     "item.jcraft.steel_ball": "Stalen Bal",
-    "itemGroup.jcraft.main": "JCraft Voorwerpen"
+    "itemGroup.jcraft.main": "JCraft Voorwerpen",
+    "item.jcraft.disc": "CD",
+    "item.jcraft.spec_disc": "Spec Schijf"
 }
