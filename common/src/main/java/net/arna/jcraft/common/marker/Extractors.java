@@ -1,13 +1,10 @@
 package net.arna.jcraft.common.marker;
 
-import com.mojang.serialization.DataResult;
 import net.arna.jcraft.common.util.NbtUtils;
 import net.arna.jcraft.common.util.TriConsumer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -15,9 +12,7 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
 import static net.arna.jcraft.common.marker.Identifiers.*;
@@ -72,8 +67,6 @@ public interface Extractors {
             compoundTag.putBoolean(GLOWING.toString(), entity.hasGlowingTag());
         } else if (id.equals(TICKS_FROZEN)) {
             compoundTag.putInt(TICKS_FROZEN.toString(), entity.getTicksFrozen());
-        } else if (id.equals(VISUAL_FIRE)) {
-            compoundTag.putBoolean(VISUAL_FIRE.toString(), entity.hasGlowingTag());
         } else if (id.equals(TAGS)) {
             final ListTag listTag = new ListTag();
             for (final String string : entity.getTags()) {
@@ -93,29 +86,20 @@ public interface Extractors {
             compoundTag.putFloat(HEALTH.toString(), livingEntity.getHealth());
         } else if (id.equals(HURT_TIME)) {
             compoundTag.putInt(HURT_TIME.toString(), livingEntity.hurtTime);
-        } else if (id.equals(HURT_BY_TIMESTAMP)) {
-            compoundTag.putInt(HURT_BY_TIMESTAMP.toString(), livingEntity.getLastHurtByMobTimestamp());
         } else if (id.equals(DEATH_TIME)) {
             compoundTag.putInt(DEATH_TIME.toString(), livingEntity.deathTime);
         } else if (id.equals(ABSORPTION_AMOUNT)) {
             compoundTag.putFloat(ABSORPTION_AMOUNT.toString(), livingEntity.getAbsorptionAmount());
         } else if (id.equals(ATTRIBUTES)) {
             compoundTag.put(ATTRIBUTES.toString(), livingEntity.getAttributes().save());
-        }
-        // TODO only save certain effects?
-        else if (id.equals(ACTIVE_EFFECTS)) {
+        } else if (id.equals(ACTIVE_EFFECTS)) { // TODO only save certain effects?
             final ListTag listTag = new ListTag();
             for (final MobEffectInstance mobEffectInstance : livingEntity.getActiveEffects()) {
                 listTag.add(mobEffectInstance.save(new CompoundTag()));
             }
             compoundTag.put(ACTIVE_EFFECTS.toString(), listTag);
-        } else if (id.equals(FALL_FLYING)) {
-            compoundTag.putBoolean(FALL_FLYING.toString(), livingEntity.isFallFlying());
         } else if (id.equals(SLEEPING_POSITION) && livingEntity.getSleepingPos().isPresent()) {
             NbtUtils.put(compoundTag, SLEEPING_POSITION.toString(), livingEntity.getSleepingPos().get());
-        } else if (id.equals(BRAIN)) {
-            final DataResult<Tag> dataResult = livingEntity.getBrain().serializeStart(NbtOps.INSTANCE);
-            dataResult.result().ifPresent(tag -> compoundTag.put(BRAIN.toString(), tag));
         }
     };
 
@@ -128,17 +112,11 @@ public interface Extractors {
             compoundTag.put(INVENTORY.toString(), player.getInventory().save(new ListTag()));
         } else if (id.equals(SELECTED_ITEM_SLOT)) {
             compoundTag.putInt(SELECTED_ITEM_SLOT.toString(), player.getInventory().selected);
-        }
-        else if (id.equals(SLEEP_TIMER)) {
-            compoundTag.putInt(SLEEP_TIMER.toString(), player.getSleepTimer());
-        }
-        else if (id.equals(XP_PROGRESS)) {
+        } else if (id.equals(XP_PROGRESS)) {
             compoundTag.putFloat(XP_PROGRESS.toString(), player.experienceProgress);
-        }
-        else if (id.equals(XP_LEVEL)) {
+        } else if (id.equals(XP_LEVEL)) {
             compoundTag.putInt(XP_LEVEL.toString(), player.experienceLevel);
-        }
-        else if (id.equals(XP_TOTAL)) {
+        } else if (id.equals(XP_TOTAL)) {
             compoundTag.putInt(XP_TOTAL.toString(), player.totalExperience);
         }
         // enchantment seed cannot be set without mixin
@@ -152,16 +130,10 @@ public interface Extractors {
         // TODO only save specific abilities?
         else if (id.equals(PLAYER_ABILITIES)) {
             player.getAbilities().addSaveData(compoundTag);
-        }
-        else if (id.equals(ENDER_CHEST)) {
+        } else if (id.equals(ENDER_CHEST)) {
             compoundTag.put(ENDER_CHEST.toString(), player.getEnderChestInventory().createTag());
         }
-        else if (id.equals(SHOULDER_ENTITY_LEFT) && !player.getShoulderEntityLeft().isEmpty()) {
-            compoundTag.put(SHOULDER_ENTITY_LEFT.toString(), player.getShoulderEntityLeft());
-        }
-        else if (id.equals(SHOULDER_ENTITY_RIGHT) && !player.getShoulderEntityRight().isEmpty()) {
-            compoundTag.put(SHOULDER_ENTITY_RIGHT.toString(), player.getShoulderEntityRight());
-        }
+        // shoulder entity setting is protected
         // last death location is a bit complicated
     };
 
@@ -177,30 +149,7 @@ public interface Extractors {
         } else if (id.equals(PERSISTENCE_REQUIRED)) {
             compoundTag.putBoolean(PERSISTENCE_REQUIRED.toString(), mob.isPersistenceRequired());
         }
-        // TODO only specific armor items?
-        else if (id.equals(ARMOR_ITEMS)) {
-            final ListTag listTag = new ListTag();
-            for (final ItemStack itemStack : mob.getArmorSlots()) {
-                final CompoundTag armorTag = new CompoundTag();
-                if (!itemStack.isEmpty()) {
-                    itemStack.save(armorTag);
-                }
-                listTag.add(armorTag);
-            }
-            compoundTag.put(ARMOR_ITEMS.toString(), listTag);
-        }
-        // TODO only specific hand items?
-        else if (id.equals(HAND_ITEMS)) {
-            final ListTag listTag = new ListTag();
-            for (final ItemStack itemStack : mob.getHandSlots()) {
-                final CompoundTag handSlot = new CompoundTag();
-                if (!itemStack.isEmpty()) {
-                    itemStack.save(handSlot);
-                }
-                listTag.add(handSlot);
-            }
-            compoundTag.put(HAND_ITEMS.toString(), listTag);
-        }
+        // armor and hand items are missing setters
         // armor and hand drop chances cannot be set without mixin
         // TODO leash info
         else if (id.equals(LEFT_HANDED_MOB)) {
@@ -221,16 +170,6 @@ public interface Extractors {
             compoundTag.putInt(AGE.toString(), ageableMob.getAge());
         }
         // forced age cannot be set without mixin
-    };
-
-    TriConsumer<ResourceLocation, Entity, CompoundTag> ANIMAL = (id, entity, compoundTag) -> {
-        if (id == null || !(entity instanceof final Animal animal)) {
-            return;
-        }
-        AGEABLE_MOB.accept(id, entity, compoundTag);
-        if (id.equals(LOVE)) {
-            compoundTag.putBoolean(LOVE.toString(), animal.isInLove());
-        }
     };
 
 }

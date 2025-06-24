@@ -25,39 +25,29 @@ public interface Identifiers {
     ResourceLocation NO_GRAVITY = new ResourceLocation(MINECRAFT, "no_gravity");
     ResourceLocation GLOWING = new ResourceLocation(MINECRAFT, "glowing");
     ResourceLocation TICKS_FROZEN = new ResourceLocation(MINECRAFT, "ticks_frozen");
-    ResourceLocation VISUAL_FIRE = new ResourceLocation(MINECRAFT, "visual_fire");
     ResourceLocation TAGS = new ResourceLocation(MINECRAFT, "tags");
 
     // Living Entity
     ResourceLocation HEALTH = new ResourceLocation(MINECRAFT, "health");
     ResourceLocation HURT_TIME = new ResourceLocation(MINECRAFT, "hurt_time");
-    ResourceLocation HURT_BY_TIMESTAMP = new ResourceLocation(MINECRAFT, "hurt_by_timestamp");
     ResourceLocation DEATH_TIME = new ResourceLocation(MINECRAFT, "death_time");
     ResourceLocation ABSORPTION_AMOUNT = new ResourceLocation(MINECRAFT, "absorption_amount");
     ResourceLocation ATTRIBUTES = new ResourceLocation(MINECRAFT, "attributes");
     ResourceLocation ACTIVE_EFFECTS = new ResourceLocation(MINECRAFT, "active_effects");
-    ResourceLocation FALL_FLYING = new ResourceLocation(MINECRAFT, "active_effects");
     ResourceLocation SLEEPING_POSITION = new ResourceLocation(MINECRAFT, "sleeping_pos");
-    ResourceLocation BRAIN = new ResourceLocation(MINECRAFT, "brain");
 
     // Mobs
     ResourceLocation CAN_PICKUP_LOOT = new ResourceLocation(MINECRAFT, "can_pickup_loot");
     ResourceLocation PERSISTENCE_REQUIRED = new ResourceLocation(MINECRAFT, "can_pickup_loot");
-    ResourceLocation ARMOR_ITEMS = new ResourceLocation(MINECRAFT, "armor_items");
-    ResourceLocation HAND_ITEMS = new ResourceLocation(MINECRAFT, "hand_items");
     ResourceLocation LEFT_HANDED_MOB = new ResourceLocation(MINECRAFT, "left_handed_mob");
     ResourceLocation NO_AI = new ResourceLocation(MINECRAFT, "no_ai");
 
     // Ageable Mobs
     ResourceLocation AGE = new ResourceLocation(MINECRAFT, "age");
 
-    // Animals
-    ResourceLocation LOVE = new ResourceLocation(MINECRAFT, "love");
-
     // Player
     ResourceLocation INVENTORY = new ResourceLocation(MINECRAFT, "player_inventory");
     ResourceLocation SELECTED_ITEM_SLOT = new ResourceLocation(MINECRAFT, "selected_item_slot");
-    ResourceLocation SLEEP_TIMER = new ResourceLocation(MINECRAFT, "sleep_timer");
     ResourceLocation XP_PROGRESS = new ResourceLocation(MINECRAFT, "xp_progress");
     ResourceLocation XP_LEVEL = new ResourceLocation(MINECRAFT, "xp_level");
     ResourceLocation XP_TOTAL = new ResourceLocation(MINECRAFT, "xp_total");
@@ -65,8 +55,5 @@ public interface Identifiers {
     ResourceLocation FOOD_DATA = new ResourceLocation(MINECRAFT, "food_data");
     ResourceLocation PLAYER_ABILITIES = new ResourceLocation(MINECRAFT, "player_abilities");
     ResourceLocation ENDER_CHEST = new ResourceLocation(MINECRAFT, "ender_chest");
-    ResourceLocation SHOULDER_ENTITY_LEFT = new ResourceLocation(MINECRAFT, "shoulder_entity_left");
-    ResourceLocation SHOULDER_ENTITY_RIGHT = new ResourceLocation(MINECRAFT, "shoulder_entity_right");
-    // ResourceLocation LAST_DEATH_LOCATION = new ResourceLocation(MINECRAFT, "last_death_location");
 
 }
