@@ -58,7 +58,7 @@
     "item.jcraft.kosaku_pants": "Брюки Косаку Кіри",
     "item.jcraft.kosaku_boots": "Туфлі Косаку Кіри",
     "item.jcraft.kosaku_jacket": "Піджак Косаку Кіри",
-    "item.jcraft.soul_block": "Блок страждання",
+    "item.jcraft.soul_block": "Блок страждань",
     "item.jcraft.polished_meteorite_block": "Полірований блок метеорита",
     "item.jcraft.green_baby": "Зелене дитя",
     "item.jcraft.cinderella_mask": "Маска Синдерели",
@@ -114,7 +114,7 @@
     "itemGroup.jcraft.cosplay": "Косплеї JCraft",
     "itemGroup.jcraft.discs": "Диски JCraft",
     "block.jcraft.coffin": "Труна",
-    "block.jcraft.soul_block": "Блок страждання",
+    "block.jcraft.soul_block": "Блок страждань",
     "block.jcraft.meteorite_block": "Блок метеорита",
     "block.jcraft.meteorite_iron_ore_block": "Метеоритна залізна руда",
     "block.jcraft.hot_sand_block": "Пекучий пісок",
@@ -140,5 +140,8 @@
     "key.jcraft.special1": "Спеціальна здібність 1",
     "key.jcraft.special2": "Спеціальна здібність 2",
     "key.jcraft.special3": "Спеціальна здібність 3",
-    "key.jcraft.ultimate": "Ультимейт"
+    "key.jcraft.ultimate": "Ультимативна здібність",
+    "key.jcraft.dash": "Ривок",
+    "key.jcraft.utility": "Допоміжна здібність",
+    "key.jcraft.cooldowncancel": "Відміна перезарядки здібностей"
 }
