@@ -7,6 +7,7 @@ import lombok.NonNull;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
+import net.arna.jcraft.common.marker.BlockMarker;
 import net.arna.jcraft.common.marker.EntityMarker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -53,113 +54,29 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
             return Set.of();
         }
 
-        final List<EntityMarker> entityMarkers = countdownMove.getTimeEntityMarkers();
-        if (entityMarkers.isEmpty()) {
-            return Set.of();
+        ServerLevel level = (ServerLevel) attacker.level();
+
+        final List<BlockMarker> blockMarkers = countdownMove.getTimeBlockMarkers();
+        countdownMove.setResolving(true);
+        for (final BlockMarker marker : blockMarkers) {
+            if (CountdownMove.BLOCK_MARKER_TYPE.shouldLoad(marker, level)) {
+                CountdownMove.BLOCK_MARKER_TYPE.load(marker, level);
+            }
         }
+        final List<EntityMarker> entityMarkers = countdownMove.getTimeEntityMarkers();
         for (final EntityMarker marker : entityMarkers) {
-            if (CountdownMove.ENTITY_MARKER_TYPE.shouldLoad(marker, (ServerLevel)attacker.level())) {
-                CountdownMove.ENTITY_MARKER_TYPE.load(marker, (ServerLevel)attacker.level());
+            if (CountdownMove.ENTITY_MARKER_TYPE.shouldLoad(marker, level)) {
+                CountdownMove.ENTITY_MARKER_TYPE.load(marker, level);
             }
         }
 
         // Clean up
         entityMarkers.clear();
+        blockMarkers.clear();
         countdownMove.getRewindInfo().clear();
         countdownMove.setCountdownActive(false);
 
         return Set.of();
-    }
-
-    private void performOnServerPlayer(final ServerPlayer serverPlayer, final CompoundTag nbt, final Map<LivingEntity, Float> savedUserYaw, final Map<LivingEntity, Float> savedUserPitch) {
-        // Get saved position from NBT
-        ListTag posList = nbt.getList("Pos", 6);
-        double x = posList.getDouble(0);
-        double y = posList.getDouble(1);
-        double z = posList.getDouble(2);
-        if (serverPlayer.position().distanceTo(new Vec3(x, y, z)) > getReach()) {
-            return;
-        }
-
-        // Get saved rotations
-        Float savedYaw = savedUserYaw.get(serverPlayer);
-        Float savedPitch = savedUserPitch.get(serverPlayer);
-
-        if (savedYaw != null && savedPitch != null) {
-            // make sure inventory doesn't get changed
-            nbt.put("Inventory", serverPlayer.getInventory().save(new ListTag()));
-            nbt.putInt("SelectedItemSlot", serverPlayer.getInventory().selected);
-            // make sure ender chest and score stays the same
-            nbt.remove("EnderItems");
-            nbt.putInt("Score", serverPlayer.getScore());
-            // don't allow stand rewinding, cooldown resets or bloodlust changes
-            final CompoundTag standNbt = new CompoundTag();
-            JComponentPlatformUtils.getStandComponent(serverPlayer).writeToNbt(standNbt);
-            final CompoundTag cooldownNbt = new CompoundTag();
-            JComponentPlatformUtils.getCooldowns(serverPlayer).writeToNbt(cooldownNbt);
-            CompoundTag ccNbt = nbt.getCompound("cardinal_components");
-            if (ccNbt == null) {
-                ccNbt = new CompoundTag();
-            }
-            ccNbt.put("jcraft:stand", standNbt);
-            ccNbt.put("jcraft:cooldowns", cooldownNbt);
-            nbt.put("cardinal_components", standNbt);
-            float attackSpeedMult = JComponentPlatformUtils.getMiscData(serverPlayer).getAttackSpeedMult();
-            // disable shoulder entity dupe
-            nbt.remove("ShoulderEntityLeft");
-            nbt.remove("ShoulderEntityRight");
-
-            // Load the NBT data first (for inventory, etc.)
-            serverPlayer.load(nbt);
-            // restore bloodlust
-            JComponentPlatformUtils.getMiscData(serverPlayer).setAttackSpeedMult(attackSpeedMult);
-
-            // Use teleportTo with proper rotation handling
-            serverPlayer.teleportTo(serverPlayer.serverLevel(), x, y, z,
-                    EnumSet.noneOf(RelativeMovement.class), savedYaw, savedPitch);
-
-            // Force update head rotation for other players
-            serverPlayer.setYHeadRot(savedYaw);
-            serverPlayer.connection.send(new ClientboundRotateHeadPacket(serverPlayer, (byte)((int)(savedYaw * 256.0F / 360.0F))));
-            serverPlayer.connection.send(new ClientboundTeleportEntityPacket(serverPlayer));
-
-            // Update motion
-            serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
-        }
-    }
-
-    private void performOnLivingEntity(final LivingEntity livingEntity, final CompoundTag nbt, final Map<LivingEntity, Float> savedUserYaw, Map<LivingEntity, Float> savedUserPitch) {
-        // Get saved position from NBT
-        ListTag posList = nbt.getList("Pos", 6);
-        double x = posList.getDouble(0);
-        double y = posList.getDouble(1);
-        double z = posList.getDouble(2);
-        if (livingEntity.position().distanceTo(new Vec3(x, y, z)) > getReach()) {
-            return;
-        }
-
-        Float savedYaw = savedUserYaw.get(livingEntity);
-        Float savedPitch = savedUserPitch.get(livingEntity);
-
-        if (savedYaw != null && savedPitch != null) {
-            // Load the NBT data first
-            livingEntity.load(nbt);
-
-            // Teleport with proper rotation
-            livingEntity.teleportTo(x, y, z);
-
-            // Set all rotation values
-            livingEntity.setYRot(savedYaw);
-            livingEntity.setXRot(savedPitch);
-            livingEntity.setYHeadRot(savedYaw);
-            livingEntity.setYBodyRot(savedYaw);
-
-            // Set previous rotation values for smooth interpolation
-            livingEntity.yRotO = savedYaw;
-            livingEntity.xRotO = savedPitch;
-            livingEntity.yHeadRotO = savedYaw;
-            livingEntity.yBodyRotO = savedYaw;
-        }
     }
 
     private CountdownMove findCountdownMove(MandomEntity attacker) {

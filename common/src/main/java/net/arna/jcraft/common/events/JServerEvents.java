@@ -5,6 +5,7 @@ import dev.architectury.event.EventResult;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.moves.BlockMarkerMove;
 import net.arna.jcraft.api.registry.*;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
@@ -630,7 +631,9 @@ public class JServerEvents {
     }
 
     public static EventResult beforeBlockSet(BlockPos blockPos, BlockState oldBlockState, BlockState newBlockState) {
-
+        for (final BlockMarkerMove move : BlockMarkerMove.MOVES) {
+            move.addBlock(blockPos, oldBlockState);
+        }
         return EventResult.pass();
     }
 }

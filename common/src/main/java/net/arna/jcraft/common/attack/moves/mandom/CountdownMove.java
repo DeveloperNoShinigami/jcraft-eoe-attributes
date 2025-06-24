@@ -9,9 +9,12 @@ import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.attack.moves.BlockMarkerMove;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
+import net.arna.jcraft.common.marker.BlockMarker;
+import net.arna.jcraft.common.marker.BlockMarkerType;
 import net.arna.jcraft.common.marker.EntityDataHandler;
 import net.arna.jcraft.common.marker.EntityMarker;
 import net.arna.jcraft.common.marker.EntityMarkerType;
@@ -21,6 +24,7 @@ import net.arna.jcraft.common.marker.Injectors;
 import net.arna.jcraft.common.marker.Predicates;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,12 +33,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntity> {
+public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntity> implements BlockMarkerMove {
     private static final int COUNTDOWN_COOLDOWN_TICKS = 120; // 6 seconds
     private static final Set<ResourceLocation> ENTITY_STUFF_TO_SAVE = Set.of(
             Identifiers.POSITION,
@@ -57,12 +62,20 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             // this is all we need to check when saving/loading
             ENTITY_STUFF_TO_SAVE,
             Set.of(new EntityDataHandler(Predicates.fromSet(ENTITY_STUFF_TO_SAVE), Extractors.ALL, Injectors.ALL)));
+    static final BlockMarkerType BLOCK_MARKER_TYPE = new BlockMarkerType(
+            (pos, state) -> true, (marker, level) -> true
+    );
     @Getter
     private final int radius;
     @Getter
     private final int maxCountdownTicks;
     @Getter
     private final List<EntityMarker> timeEntityMarkers = new LinkedList<>();
+    @Getter
+    private final List<BlockMarker> timeBlockMarkers = new ArrayList<>();
+    @Getter
+    @Setter
+    private boolean resolving;
     @Getter
     private final List<RewindData> rewindInfo = new ArrayList<>();
     @Getter
@@ -81,6 +94,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             throw new IllegalArgumentException("maxCountdownTicks cannot be negative!");
         }
         this.maxCountdownTicks = maxCountdownTicks;
+        BlockMarkerMove.MOVES.add(this);
     }
 
     @Override
@@ -102,6 +116,20 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
     }
 
     @Override
+    public boolean addBlock(final @NonNull BlockPos pos, final @NonNull BlockState state) {
+        if (resolving || !BLOCK_MARKER_TYPE.shouldSave(pos, state)) {
+            return false;
+        }
+        for (final BlockMarker timeBlockMarker : timeBlockMarkers) {
+            if (timeBlockMarker.pos().equals(pos)) {
+                return false;
+            }
+        }
+        timeBlockMarkers.add(BLOCK_MARKER_TYPE.save(pos, state));
+        return true;
+    }
+
+    @Override
     public @NonNull Set<LivingEntity> perform(final MandomEntity attacker, final LivingEntity user) {
         final List<Entity> toCapture = attacker.level().getEntitiesOfClass(Entity.class,
                 attacker.getBoundingBox().inflate(radius),
@@ -113,6 +141,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
         }
 
         timeEntityMarkers.clear();
+        timeBlockMarkers.clear();
         rewindInfo.clear();
 
         // Follow ReturnToZeroMove pattern for saving entity data
@@ -125,6 +154,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
         countdownActive = true;
         countdownTicks = 0;
+        resolving = false;
 
         // Put both UTILITY and ULTIMATE on cooldown for 6 seconds
         CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(user);
