@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.marker;
 
+import net.arna.jcraft.JCraft;
 import net.minecraft.resources.ResourceLocation;
 
 public interface Identifiers {
@@ -56,4 +57,6 @@ public interface Identifiers {
     ResourceLocation PLAYER_ABILITIES = new ResourceLocation(MINECRAFT, "player_abilities");
     ResourceLocation ENDER_CHEST = new ResourceLocation(MINECRAFT, "ender_chest");
 
+    // Vampires
+    ResourceLocation BLOOD_GAUGE = JCraft.id("blood_gauge");
 }

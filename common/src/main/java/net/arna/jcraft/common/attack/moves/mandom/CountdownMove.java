@@ -42,6 +42,8 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             Identifiers.YAW_HEAD,
             Identifiers.PITCH,
             Identifiers.VELOCITY,
+            Identifiers.FOOD_DATA,
+            Identifiers.BLOOD_GAUGE,
             Identifiers.HEALTH
     );
     static final EntityMarkerType ENTITY_MARKER_TYPE = new EntityMarkerType(

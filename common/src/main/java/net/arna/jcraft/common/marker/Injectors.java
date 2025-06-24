@@ -1,7 +1,9 @@
 package net.arna.jcraft.common.marker;
 
+import net.arna.jcraft.api.component.living.CommonVampireComponent;
 import net.arna.jcraft.common.util.NbtUtils;
 import net.arna.jcraft.common.util.TriConsumer;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -285,12 +287,28 @@ public interface Injectors {
         }
     };
 
+    TriConsumer<ResourceLocation, Entity, CompoundTag> VAMPIRE = (id, entity, compoundTag) -> {
+        if (id == null || !(entity instanceof final LivingEntity livingEntity)) {
+            return;
+        }
+        final CommonVampireComponent vampire = JComponentPlatformUtils.getVampirism(livingEntity);
+        if (vampire != null && vampire.isVampire() && id.equals(BLOOD_GAUGE)) {
+            if (compoundTag.contains(BLOOD_GAUGE.toString())) {
+                vampire.setBlood(compoundTag.getFloat(BLOOD_GAUGE.toString()));
+            }
+            else {
+                vampire.setBlood(20);
+            }
+        }
+    };
+
     TriConsumer<ResourceLocation, Entity, CompoundTag> ALL = (id, entity, compoundTag) -> {
         ENTITY.accept(id, entity, compoundTag);
         LIVING_ENTITY.accept(id, entity, compoundTag);
         PLAYER.accept(id, entity, compoundTag);
         MOB.accept(id, entity, compoundTag);
         AGABLE_MOB.accept(id, entity, compoundTag);
+        VAMPIRE.accept(id, entity, compoundTag);
     };
 
 }
