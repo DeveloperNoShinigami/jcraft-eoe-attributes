@@ -464,5 +464,7 @@
     "entity.jcraft.purple_haze": "Purple Haze",
     "entity.jcraft.purple_haze_distortion": "Purple Haze: Distorsión",
     "entity.jcraft.whitesnake": "Whitesnake",
-    "entity.jcraft.mr": "Magician's Red"
+    "entity.jcraft.mr": "Magician's Red",
+    "item.jcraft.anubis": "Anubis",
+    "entity.jcraft.cmoon": "C-Moon"
 }
