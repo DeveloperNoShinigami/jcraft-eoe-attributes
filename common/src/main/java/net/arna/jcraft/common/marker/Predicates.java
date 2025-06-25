@@ -17,6 +17,6 @@ public interface Predicates {
     MarkerLoadPredicate<EntityMarker> DEFAULT_LOAD = (entityMarker, serverLevel) -> {
         final Entity entity = serverLevel.getEntity(entityMarker.id());
         return entity != null && entity.isAlive() && (!(entity instanceof ServerPlayer player) || (!(player.isSpectator() || player.isCreative())));
-    }:
+    };
 
 }

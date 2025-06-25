@@ -12,6 +12,8 @@ import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.registry.JMarkerExtractorRegistry;
+import net.arna.jcraft.api.registry.JMarkerInjectorRegistry;
 import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.api.stand.*;
 import net.arna.jcraft.common.attack.moves.mandom.CountdownMove;
@@ -58,7 +60,7 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
                     .build())
             .build();
 
-    public static final CountdownMove COUNTDOWN = new CountdownMove(6, 10, 120, 0f, 64, 600)
+    public static final CountdownMove COUNTDOWN = new CountdownMove(6, 10, 120, 0f, 64, 600, JMarkerExtractorRegistry.ALL.get(), JMarkerInjectorRegistry.ALL.get())
             .withSound(JSoundRegistry.MANDOM_COUNTDOWN)
             .withInfo(
                     Component.literal("Countdown"),

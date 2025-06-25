@@ -9,23 +9,13 @@ import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
 import net.arna.jcraft.common.marker.BlockMarker;
 import net.arna.jcraft.common.marker.EntityMarker;
-import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
-import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
-import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.RelativeMovement;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -65,8 +55,8 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
         }
         final List<EntityMarker> entityMarkers = countdownMove.getTimeEntityMarkers();
         for (final EntityMarker marker : entityMarkers) {
-            if (CountdownMove.ENTITY_MARKER_TYPE.shouldLoad(marker, level)) {
-                CountdownMove.ENTITY_MARKER_TYPE.load(marker, level);
+            if (countdownMove.getEntityMarkerType().shouldLoad(marker, level)) {
+                countdownMove.getEntityMarkerType().load(marker, level);
             }
         }
 

@@ -7,6 +7,7 @@ import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.attack.moves.BlockMarkerMove;
@@ -18,9 +19,7 @@ import net.arna.jcraft.common.marker.BlockMarkerType;
 import net.arna.jcraft.common.marker.EntityDataHandler;
 import net.arna.jcraft.common.marker.EntityMarker;
 import net.arna.jcraft.common.marker.EntityMarkerType;
-import net.arna.jcraft.common.marker.Extractors;
 import net.arna.jcraft.common.marker.Identifiers;
-import net.arna.jcraft.common.marker.Injectors;
 import net.arna.jcraft.common.marker.Predicates;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.TriConsumer;
@@ -53,14 +52,6 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             Identifiers.BLOOD_GAUGE,
             Identifiers.HEALTH
     );
-    static final EntityMarkerType ENTITY_MARKER_TYPE = new EntityMarkerType(
-            // we catch all entities to save earlier in the code
-            entity -> true,
-            // but we don't know their state when loading
-            Predicates.DEFAULT_LOAD,
-            // this is all we need to check when saving/loading
-            ENTITY_STUFF_TO_SAVE,
-            Set.of(new EntityDataHandler(Predicates.fromSet(ENTITY_STUFF_TO_SAVE), Extractors.ALL, Injectors.ALL)));
     static final BlockMarkerType BLOCK_MARKER_TYPE = new BlockMarkerType(
             (pos, state) -> true, (marker, level) -> true
     );
@@ -76,6 +67,8 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
     @Setter
     private boolean resolving;
     @Getter
+    private final EntityMarkerType entityMarkerType;
+    @Getter
     private final List<RewindData> rewindInfo = new ArrayList<>();
     @Getter
     @Setter
@@ -83,7 +76,9 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
     @Getter
     private int countdownTicks;
 
-    public CountdownMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int radius, final int maxCountdownTicks) {
+    public CountdownMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int radius, final int maxCountdownTicks,
+                         final TriConsumer<ResourceLocation,Entity,CompoundTag> extractor,
+                         final TriConsumer<ResourceLocation,Entity,CompoundTag> injector) {
         super(cooldown, windup, duration, moveDistance);
         if (radius < 0) {
             throw new IllegalArgumentException("radius cannot be negative!");
@@ -93,6 +88,14 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             throw new IllegalArgumentException("maxCountdownTicks cannot be negative!");
         }
         this.maxCountdownTicks = maxCountdownTicks;
+        entityMarkerType = new EntityMarkerType(
+                // we catch all entities to save earlier in the code
+                entity -> true,
+                // but we don't know their state when loading
+                Predicates.DEFAULT_LOAD,
+                // this is all we need to check when saving/loading
+                ENTITY_STUFF_TO_SAVE,
+                new EntityDataHandler(Predicates.fromSet(ENTITY_STUFF_TO_SAVE), extractor, injector));
         BlockMarkerMove.MOVES.add(this);
     }
 
@@ -145,8 +148,8 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
         // Follow ReturnToZeroMove pattern for saving entity data
         for (final Entity entity : toCapture) {
-            if (ENTITY_MARKER_TYPE.shouldSave(entity.getUUID(), entity)) {
-                timeEntityMarkers.add(ENTITY_MARKER_TYPE.save(entity.getUUID(), entity));
+            if (entityMarkerType.shouldSave(entity.getUUID(), entity)) {
+                timeEntityMarkers.add(entityMarkerType.save(entity.getUUID(), entity));
                 rewindInfo.add(new RewindData(entity.getEyePosition(), entity));
             }
         }
@@ -198,7 +201,8 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
     @Override
     public @NonNull CountdownMove copy() {
-        return copyExtras(new CountdownMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getRadius(), getMaxCountdownTicks()));
+        return copyExtras(new CountdownMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getRadius(), getMaxCountdownTicks(),
+                entityMarkerType.getDataHandler().extractor(), entityMarkerType.getDataHandler().injector()));
     }
 
     public record RewindData(Vec3 originalPos, Entity entity) {
@@ -209,7 +213,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
         @Override
         protected @NotNull App<RecordCodecBuilder.Mu<CountdownMove>, CountdownMove> buildCodec(RecordCodecBuilder.Instance<CountdownMove> instance) {
-            return instance.group(extras(), cooldown(), windup(), duration(), moveDistance(), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("radius").forGetter(CountdownMove::getRadius), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("maxCountdownTicks").forGetter(CountdownMove::getMaxCountdownTicks)).apply(instance, applyExtras(CountdownMove::new));
+            return instance.group(extras(), cooldown(), windup(), duration(), moveDistance(), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("radius").forGetter(CountdownMove::getRadius), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("maxCountdownTicks").forGetter(CountdownMove::getMaxCountdownTicks), JRegistries.EXTRACTOR_CODEC.fieldOf("extractor").forGetter(move -> move.getEntityMarkerType().getDataHandler().extractor()), JRegistries.INJECTOR_CODEC.fieldOf("injector").forGetter(move -> move.getEntityMarkerType().getDataHandler().injector())).apply(instance, applyExtras(CountdownMove::new));
         }
     }
 }
