@@ -1,6 +1,12 @@
 package net.arna.jcraft.common.marker;
 
+import dev.architectury.registry.registries.DeferredRegister;
+import dev.architectury.registry.registries.RegistrySupplier;
+import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.component.living.CommonVampireComponent;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.util.NbtUtils;
 import net.arna.jcraft.common.util.TriConsumer;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -12,16 +18,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.function.Supplier;
+
 import static net.arna.jcraft.common.marker.Identifiers.*;
 
-public interface Extractors {
-
-    TriConsumer<ResourceLocation, Entity, CompoundTag> ENTITY = (id, entity, compoundTag) -> {
+public interface Extractors {TriConsumer<ResourceLocation, Entity, CompoundTag> ENTITY = (id, entity, compoundTag) -> {
         if (id == null) {
             return;
         }

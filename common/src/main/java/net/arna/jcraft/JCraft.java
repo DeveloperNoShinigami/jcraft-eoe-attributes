@@ -175,6 +175,8 @@ public final class JCraft {
         MOVE_ACTION_TYPE_REGISTRY.register();
         MOVE_CONDITION_TYPE_REGISTRY.register();
         MOVE_TYPE_REGISTRY.register();
+        JMarkerExtractorRegistry.EXTRACTOR_REGISTRY.register();
+        JMarkerInjectorRegistry.INJECTOR_REGISTRY.register();
 
         JTagRegistry.init();
         JAdvancementTriggerRegistry.init();
