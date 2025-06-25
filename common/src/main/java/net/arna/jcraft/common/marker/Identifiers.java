@@ -27,6 +27,7 @@ public interface Identifiers {
     ResourceLocation GLOWING = new ResourceLocation(MINECRAFT, "glowing");
     ResourceLocation TICKS_FROZEN = new ResourceLocation(MINECRAFT, "ticks_frozen");
     ResourceLocation TAGS = new ResourceLocation(MINECRAFT, "tags");
+    ResourceLocation VEHICLE = new ResourceLocation(MINECRAFT, "vehicle");
 
     // Living Entity
     ResourceLocation HEALTH = new ResourceLocation(MINECRAFT, "health");

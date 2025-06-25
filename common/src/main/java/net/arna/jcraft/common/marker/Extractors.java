@@ -82,8 +82,9 @@ public interface Extractors {TriConsumer<ResourceLocation, Entity, CompoundTag> 
                 listTag.add(StringTag.valueOf(string));
             }
             compoundTag.put(TAGS.toString(), listTag);
+        } else if (id.equals(VEHICLE) && entity.getVehicle() != null) {
+            compoundTag.putUUID(VEHICLE.toString(), entity.getVehicle().getUUID());
         }
-        // TODO passengers?
     };
 
     TriConsumer<ResourceLocation, Entity, CompoundTag> LIVING_ENTITY = (id, entity, compoundTag) -> {

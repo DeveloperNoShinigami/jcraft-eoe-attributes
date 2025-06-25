@@ -13,6 +13,7 @@ import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AgeableMob;
@@ -61,6 +62,13 @@ public interface Injectors {
                 if (entity instanceof final LivingEntity livingEntity) {
                     livingEntity.yHeadRotO = yawHead;
                     livingEntity.yBodyRotO = yaw;
+                }
+            }
+            if (compoundTag.contains(VEHICLE.toString())) {
+                final var vehicleUuid = compoundTag.getUUID(VEHICLE.toString());
+                final Entity vehicle = ((ServerLevel)entity.level()).getEntity(vehicleUuid);
+                if (vehicle != null) {
+                    entity.startRiding(vehicle);
                 }
             }
         } else if (id.equals(VELOCITY)) {
