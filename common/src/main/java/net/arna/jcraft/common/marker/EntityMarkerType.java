@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -51,6 +52,10 @@ public class EntityMarkerType implements MarkerSavePredicate<UUID, Entity>, Mark
         this.loadPredicate = loadPredicate;
         this.ids.addAll(ids);
         this.dataHandler = dataHandler;
+    }
+
+    public Set<ResourceLocation> getIds() {
+        return Collections.unmodifiableSet(ids);
     }
 
     @Override

@@ -60,7 +60,7 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
                     .build())
             .build();
 
-    public static final CountdownMove COUNTDOWN = new CountdownMove(6, 10, 120, 0f, 64, 600, JMarkerExtractorRegistry.ALL.get(), JMarkerInjectorRegistry.ALL.get())
+    public static final CountdownMove COUNTDOWN = new CountdownMove(6, 10, 120, 0f, 64, 600, CountdownMove.ENTITY_STUFF_TO_SAVE, JMarkerExtractorRegistry.ALL.get(), JMarkerInjectorRegistry.ALL.get())
             .withSound(JSoundRegistry.MANDOM_COUNTDOWN)
             .withInfo(
                     Component.literal("Countdown"),

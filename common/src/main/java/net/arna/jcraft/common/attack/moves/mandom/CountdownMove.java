@@ -1,6 +1,7 @@
 package net.arna.jcraft.common.attack.moves.mandom;
 
 import com.mojang.datafixers.kinds.App;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
@@ -39,10 +40,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntity> implements BlockMarkerMove {
     private static final int COUNTDOWN_COOLDOWN_TICKS = 120; // 6 seconds
-    private static final Set<ResourceLocation> ENTITY_STUFF_TO_SAVE = Set.of(
+    public static final Set<ResourceLocation> ENTITY_STUFF_TO_SAVE = Set.of(
             Identifiers.POSITION,
             Identifiers.YAW,
             Identifiers.YAW_HEAD,
@@ -77,8 +79,9 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
     private int countdownTicks;
 
     public CountdownMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int radius, final int maxCountdownTicks,
-                         final TriConsumer<ResourceLocation,Entity,CompoundTag> extractor,
-                         final TriConsumer<ResourceLocation,Entity,CompoundTag> injector) {
+                         final @NonNull Set<ResourceLocation> rewindIds,
+                         final @NonNull TriConsumer<ResourceLocation,Entity,CompoundTag> extractor,
+                         final @NonNull TriConsumer<ResourceLocation,Entity,CompoundTag> injector) {
         super(cooldown, windup, duration, moveDistance);
         if (radius < 0) {
             throw new IllegalArgumentException("radius cannot be negative!");
@@ -94,8 +97,8 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
                 // but we don't know their state when loading
                 Predicates.DEFAULT_LOAD,
                 // this is all we need to check when saving/loading
-                ENTITY_STUFF_TO_SAVE,
-                new EntityDataHandler(Predicates.fromSet(ENTITY_STUFF_TO_SAVE), extractor, injector));
+                rewindIds,
+                new EntityDataHandler(Predicates.fromSet(rewindIds), extractor, injector));
         BlockMarkerMove.MOVES.add(this);
     }
 
@@ -202,7 +205,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
     @Override
     public @NonNull CountdownMove copy() {
         return copyExtras(new CountdownMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getRadius(), getMaxCountdownTicks(),
-                entityMarkerType.getDataHandler().extractor(), entityMarkerType.getDataHandler().injector()));
+                entityMarkerType.getIds(), entityMarkerType.getDataHandler().extractor(), entityMarkerType.getDataHandler().injector()));
     }
 
     public record RewindData(Vec3 originalPos, Entity entity) {
@@ -213,7 +216,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
         @Override
         protected @NotNull App<RecordCodecBuilder.Mu<CountdownMove>, CountdownMove> buildCodec(RecordCodecBuilder.Instance<CountdownMove> instance) {
-            return instance.group(extras(), cooldown(), windup(), duration(), moveDistance(), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("radius").forGetter(CountdownMove::getRadius), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("maxCountdownTicks").forGetter(CountdownMove::getMaxCountdownTicks), JRegistries.EXTRACTOR_CODEC.fieldOf("extractor").forGetter(move -> move.getEntityMarkerType().getDataHandler().extractor()), JRegistries.INJECTOR_CODEC.fieldOf("injector").forGetter(move -> move.getEntityMarkerType().getDataHandler().injector())).apply(instance, applyExtras(CountdownMove::new));
+            return instance.group(extras(), cooldown(), windup(), duration(), moveDistance(), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("radius").forGetter(CountdownMove::getRadius), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("maxCountdownTicks").forGetter(CountdownMove::getMaxCountdownTicks), Codec.STRING.listOf().xmap(list -> list.stream().map(ResourceLocation::new).collect(Collectors.toSet()), set -> set.stream().map(ResourceLocation::toString).toList()).fieldOf("rewindIds").forGetter(move -> move.getEntityMarkerType().getIds()), JRegistries.EXTRACTOR_CODEC.fieldOf("extractor").forGetter(move -> move.getEntityMarkerType().getDataHandler().extractor()), JRegistries.INJECTOR_CODEC.fieldOf("injector").forGetter(move -> move.getEntityMarkerType().getDataHandler().injector())).apply(instance, applyExtras(CountdownMove::new));
         }
     }
 }
