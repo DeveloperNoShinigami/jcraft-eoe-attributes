@@ -23,8 +23,10 @@ import net.arna.jcraft.common.marker.Identifiers;
 import net.arna.jcraft.common.marker.Injectors;
 import net.arna.jcraft.common.marker.Predicates;
 import net.arna.jcraft.common.util.CooldownType;
+import net.arna.jcraft.common.util.TriConsumer;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,10 +57,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             // we catch all entities to save earlier in the code
             entity -> true,
             // but we don't know their state when loading
-            (entityMarker, serverLevel) -> {
-                final Entity entity = serverLevel.getEntity(entityMarker.id());
-                return entity != null && entity.isAlive() && (!(entity instanceof ServerPlayer player) || (!(player.isSpectator() || player.isCreative())));
-            },
+            Predicates.DEFAULT_LOAD,
             // this is all we need to check when saving/loading
             ENTITY_STUFF_TO_SAVE,
             Set.of(new EntityDataHandler(Predicates.fromSet(ENTITY_STUFF_TO_SAVE), Extractors.ALL, Injectors.ALL)));
