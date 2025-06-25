@@ -66,10 +66,10 @@
     "item.jcraft.road_roller": "Veivals",
     "item.jcraft.cinderella_mask": "Cinderella Maske",
     "item.jcraft.blood_bottle": "Blod Flaske",
-    "item.jcraft.dio_p1_wig": "DIO’s parykk",
-    "item.jcraft.dio_p1_jacket": "DIO’s skjorte",
-    "item.jcraft.dio_p1_pants": "DIO’s bukser",
-    "item.jcraft.dio_p1_boots": "DIO’s Sko",
+    "item.jcraft.dio_p1_wig": "Dios Parykk",
+    "item.jcraft.dio_p1_jacket": "Dios Parykk",
+    "item.jcraft.dio_p1_pants": "Dios Bukser",
+    "item.jcraft.dio_p1_boots": "Dios Sko",
     "item.jcraft.straizo_poncho": "Straizo’s poncho",
     "item.jcraft.dio_headband": "DIO’s Pannebånd",
     "item.jcraft.dio_pants": "DIO’s Bukser",
@@ -283,5 +283,6 @@
     "entity.jcraft.theworld.info.pro1": "Kjapt lys",
     "entity.jcraft.theworld.info.pro2": "Motslag",
     "entity.jcraft.theworld.info.pro3": "Allsidig rekkevidde angrep",
-    "entity.jcraft.theworld.info.con1": "Ingen Nedslag"
+    "entity.jcraft.theworld.info.con1": "Ingen Nedslag",
+    "item.jcraft.jotaro_p4_cap": "Jotaro's Hatt"
 }
