@@ -211,5 +211,22 @@
     "entity.jcraft.thefool.info.pro5": "Не отримує побічний урон під час відбиття атак противника",
     "entity.jcraft.thefool.info.con2": "Дуже вразливий до шквальних атак",
     "entity.jcraft.thefool.info.con3": "Нерухомий під час підбиття атак",
-    "entity.jcraft.hierophantgreen": "Hierophant Green"
+    "entity.jcraft.hierophantgreen": "Hierophant Green",
+    "entity.jcraft.killerqueen": "Killer Queen",
+    "entity.jcraft.hierophantgreen.info.pro1": "Найкращий для дальної дистанції",
+    "entity.jcraft.hierophantgreen.info.pro2": "Висока швидкість у більшості атак",
+    "entity.jcraft.hierophantgreen.info.pro3": "Смарагдові щупальця можуть бути використані для багатьох цілей",
+    "entity.jcraft.hierophantgreen.info.con1": "Посередні комбо без використання Смарагдових щупалець",
+    "entity.jcraft.hierophantgreen.info.con2": "Посередня здатність атакувати на ближній дистанції",
+    "entity.jcraft.hg_net": "Смарагдові щупальця",
+    "entity.jcraft.hierophantgreen.info.desc": "Неотесаний СМАРАГД",
+    "entity.jcraft.killerqueen.info.desc": "Вибухове КОШЕНЯ",
+    "entity.jcraft.killerqueen.info.pro1": "Хороше знерухомленя противників",
+    "entity.jcraft.killerqueen.info.pro3": "Комбо противників легко перервати",
+    "entity.jcraft.killerqueen.info.pro4": "Легко перехопити контроль над полем бою",
+    "entity.jcraft.killerqueen.info.con3": "Здібності для комбо обмежені",
+    "entity.jcraft.kqbtd": "Killer Queen: Bites the Dust",
+    "entity.jcraft.killerqueen.info.con1": "Атаки стенду можна легко перервати",
+    "entity.jcraft.killerqueen.info.pro2": "Дуже хороші комбо",
+    "entity.jcraft.killerqueen.info.con2": "Швидкість атак нижче середньої"
 }
