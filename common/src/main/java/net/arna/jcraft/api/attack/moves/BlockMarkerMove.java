@@ -17,6 +17,12 @@ public interface BlockMarkerMove {
 
     void setResolving(final boolean resolving);
 
+    /**
+     * Maybe saves a block to be restored.
+     * @param pos the position of the block
+     * @param state the (old) block state of that position
+     * @return <code>true</code> if the block has been saved, <code>false</code> otherwise.
+     */
     boolean addBlock(final @NonNull BlockPos pos, final @NonNull BlockState state);
 
 }

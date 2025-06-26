@@ -125,6 +125,9 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
         if (resolving || !BLOCK_MARKER_TYPE.shouldSave(pos, state)) {
             return false;
         }
+        // we only want to save the block if the pos isn't already marked
+        // i.e. no point in saving that you replaced a block with dirt when it was previously already replaced,
+        // e.g. with cobblestone
         for (final BlockMarker timeBlockMarker : timeBlockMarkers) {
             if (timeBlockMarker.pos().equals(pos)) {
                 return false;
@@ -149,7 +152,6 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
         timeBlockMarkers.clear();
         rewindInfo.clear();
 
-        // Follow ReturnToZeroMove pattern for saving entity data
         for (final Entity entity : toCapture) {
             if (entityMarkerType.shouldSave(entity.getUUID(), entity)) {
                 timeEntityMarkers.add(entityMarkerType.save(entity.getUUID(), entity));
