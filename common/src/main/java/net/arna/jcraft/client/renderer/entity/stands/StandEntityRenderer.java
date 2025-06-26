@@ -45,6 +45,12 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
         super(renderManager, modelProvider);
     }
 
+    public static boolean standIsFirstPersonViewers(final StandEntity<?, ?> stand)
+    {
+        final Minecraft mcClient = Minecraft.getInstance();
+        return mcClient.options.getCameraType().isFirstPerson() && mcClient.player != null && JUtils.getStand(mcClient.player) == stand;
+    }
+
     /*
     Cutout - no alpha
     CutoutNoCull - identical (copium)
@@ -57,9 +63,7 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
     Solid - no transparency
      */
     public static RenderType renderTypeOf(final StandEntity<?, ?> stand, final ResourceLocation textureLocation) {
-        Minecraft mcClient = Minecraft.getInstance();
-        return mcClient.options.getCameraType().isFirstPerson() && mcClient.player != null && JUtils.getStand(mcClient.player) == stand ?
-                RenderType.entityNoOutline(textureLocation) : RenderType.entityTranslucent(textureLocation);
+        return standIsFirstPersonViewers(stand) ? RenderType.entityNoOutline(textureLocation) : RenderType.entityTranslucent(textureLocation);
     }
 
     @Override
