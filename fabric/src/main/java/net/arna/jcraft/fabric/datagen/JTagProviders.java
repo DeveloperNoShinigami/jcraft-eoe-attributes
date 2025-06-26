@@ -670,6 +670,9 @@ public class JTagProviders {
             getOrCreateTagBuilder(TagKey.create(Registries.ENTITY_TYPE,
                     new ResourceLocation("ad_astra", "lives_without_oxygen")))
                     .addTag(JTagRegistry.STANDS);
+            getOrCreateTagBuilder(TagKey.create(Registries.ENTITY_TYPE,
+                    new ResourceLocation("carryon", "entity_blacklist")))
+                    .addTag(JTagRegistry.STANDS);
         }
     }
 
