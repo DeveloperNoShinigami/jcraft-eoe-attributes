@@ -284,5 +284,11 @@
     "entity.jcraft.theworld.info.pro2": "Motslag",
     "entity.jcraft.theworld.info.pro3": "Allsidig rekkevidde angrep",
     "entity.jcraft.theworld.info.con1": "Ingen Nedslag",
-    "item.jcraft.jotaro_p4_cap": "Jotaro's Hatt"
+    "item.jcraft.jotaro_p4_cap": "Jotaro's Hatt",
+    "item.jcraft.risotto_boots": "Risotto’s Sko",
+    "item.jcraft.doppio_wig": "Doppio’s Parykk",
+    "item.jcraft.doppio_shirt": "Doppio’s Genser",
+    "item.jcraft.diavolo_wig": "Diavolo’s Parykk",
+    "item.jcraft.diavolo_shirt": "Diavolo’s Undertøy",
+    "item.jcraft.diavolo_pants": "Diavolo’s Bukser"
 }
