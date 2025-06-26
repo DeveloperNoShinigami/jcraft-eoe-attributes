@@ -3,16 +3,22 @@ package net.arna.jcraft.fabric.datagen;
 import net.arna.jcraft.api.registry.JBlockRegistry;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.api.registry.JTagRegistry;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagBuilder;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -632,6 +638,38 @@ public class JTagProviders {
 
             // impossible to stun
             getOrCreateRawBuilder(JTagRegistry.CANNOT_BE_STUNNED).addElement(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.WARDEN));
+
+            // stands
+            final var stands = getOrCreateTagBuilder(JTagRegistry.STANDS);
+            for (final StandType stand : StandTypeUtil.streamAll().toList()) {
+                if (stand == JStandTypeRegistry.NONE.get()) {
+                    continue;
+                }
+                stands.add(BuiltInRegistries.ENTITY_TYPE.getKey(stand.getEntityType()));
+            }
+
+            addTagsForCompatibilities(arg);
+        }
+
+        private void addTagsForCompatibilities(HolderLookup.Provider arg) {
+            getOrCreateTagBuilder(TagKey.create(Registries.ENTITY_TYPE,
+                    new ResourceLocation("ad_astra", "can_survive_extreme_cold")))
+                    .addTag(JTagRegistry.STANDS);
+            getOrCreateTagBuilder(TagKey.create(Registries.ENTITY_TYPE,
+                    new ResourceLocation("ad_astra", "can_survive_extreme_heat")))
+                    .addTag(JTagRegistry.STANDS);
+            getOrCreateTagBuilder(TagKey.create(Registries.ENTITY_TYPE,
+                    new ResourceLocation("ad_astra", "can_survive_in_acid_rain")))
+                    .addTag(JTagRegistry.STANDS);
+            getOrCreateTagBuilder(TagKey.create(Registries.ENTITY_TYPE,
+                    new ResourceLocation("ad_astra", "can_survive_in_space")))
+                    .addTag(JTagRegistry.STANDS);
+            getOrCreateTagBuilder(TagKey.create(Registries.ENTITY_TYPE,
+                    new ResourceLocation("ad_astra", "ignores_air_vortex")))
+                    .addTag(JTagRegistry.STANDS);
+            getOrCreateTagBuilder(TagKey.create(Registries.ENTITY_TYPE,
+                    new ResourceLocation("ad_astra", "lives_without_oxygen")))
+                    .addTag(JTagRegistry.STANDS);
         }
     }
 
