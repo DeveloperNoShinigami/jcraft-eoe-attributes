@@ -262,6 +262,12 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
 
     @Nullable
     @Override
+    public ItemStack getPickResult() {
+        return JItemRegistry.ROAD_ROLLER.get().getDefaultInstance();
+    }
+
+    @Nullable
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
         return JSoundRegistry.ROAD_ROLLER_HIT.get();
     }

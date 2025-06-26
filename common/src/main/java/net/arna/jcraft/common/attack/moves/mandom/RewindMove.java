@@ -9,25 +9,23 @@ import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
 import net.arna.jcraft.common.marker.BlockMarker;
 import net.arna.jcraft.common.marker.EntityMarker;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
 
     @Getter
-    private final int reach; // in Euclidian distance in meters
+    private final int reach; // in Euclidean distance in meters
 
     public RewindMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int reach) {
         super(cooldown, windup, duration, moveDistance);
         if (reach < 0) {
-            throw new IllegalArgumentException("Teleport reach cannot be negative!");
+            throw new IllegalArgumentException("Rewind teleport reach cannot be negative!");
         }
         this.reach = reach;
     }
@@ -39,7 +37,7 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
 
     @Override
     public @NonNull Set<LivingEntity> perform(final MandomEntity attacker, final LivingEntity user) {
-        CountdownMove countdownMove = findCountdownMove(attacker);
+        CountdownMove countdownMove = attacker.getMove(CountdownMove.class);
         if (countdownMove == null || !countdownMove.isCountdownActive()) {
             return Set.of();
         }
@@ -67,22 +65,6 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
         countdownMove.setCountdownActive(false);
 
         return Set.of();
-    }
-
-    private CountdownMove findCountdownMove(MandomEntity attacker) {
-        return attacker.getMoveMap().asMovesList().stream()
-                .filter(move -> move instanceof CountdownMove)
-                .map(CountdownMove.class::cast)
-                .findFirst()
-                .orElse(null);
-    }
-
-    private void applyModernNBT(final CompoundTag receiver, final CompoundTag sender, final Set<String> identifiers) {
-        for (String identifier : identifiers) {
-            if (sender.contains(identifier)) {
-                receiver.put(identifier, Objects.requireNonNull(sender.get(identifier)));
-            }
-        }
     }
 
     @Override

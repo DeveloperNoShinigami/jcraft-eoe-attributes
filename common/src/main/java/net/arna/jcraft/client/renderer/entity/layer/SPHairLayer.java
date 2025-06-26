@@ -6,6 +6,7 @@ import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.renderer.GeoRenderer;
 import mod.azure.azurelib.renderer.layer.GeoRenderLayer;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.client.renderer.entity.stands.StandEntityRenderer;
 import net.arna.jcraft.common.entity.stand.AbstractStarPlatinumEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -26,6 +27,8 @@ public class SPHairLayer extends GeoRenderLayer<AbstractStarPlatinumEntity<?, ?>
     @Override
     public void render(final PoseStack poseStack, final AbstractStarPlatinumEntity<?, ?> animatable, final BakedGeoModel bakedModel, final RenderType renderType,
                        final MultiBufferSource bufferSource, final VertexConsumer buffer, final float partialTick, final int packedLight, final int packedOverlay) {
+        if (StandEntityRenderer.standIsFirstPersonViewers(animatable)) return;
+
         final RenderType cameo = RenderType.eyes(skins.get(animatable.getSkin()));
 
         getRenderer().reRender(bakedModel, poseStack, bufferSource, animatable, cameo,

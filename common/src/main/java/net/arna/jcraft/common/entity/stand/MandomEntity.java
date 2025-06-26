@@ -128,11 +128,7 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
 
         // Special check for ULTIMATE (Rewind) - only allow if countdown is active
         if (moveClass == MoveClass.ULTIMATE) {
-            CountdownMove countdownMove = getMoveMap().asMovesList().stream()
-                    .filter(move -> move instanceof CountdownMove)
-                    .map(CountdownMove.class::cast)
-                    .findFirst()
-                    .orElse(null);
+            CountdownMove countdownMove = getMove(CountdownMove.class);
 
             if (countdownMove == null || !countdownMove.isCountdownActive()) {
                 // Countdown is not active, don't allow the ultimate
@@ -170,11 +166,7 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
     public boolean initMove(MoveClass moveClass) {
         // Special check for ULTIMATE (Rewind) - only allow if countdown is active
         if (moveClass == MoveClass.ULTIMATE) {
-            CountdownMove countdownMove = getMoveMap().asMovesList().stream()
-                    .filter(move -> move instanceof CountdownMove)
-                    .map(CountdownMove.class::cast)
-                    .findFirst()
-                    .orElse(null);
+            CountdownMove countdownMove = getMove(CountdownMove.class);
 
             if (countdownMove == null || !countdownMove.isCountdownActive()) {
                 // Countdown is not active, don't allow the ultimate
