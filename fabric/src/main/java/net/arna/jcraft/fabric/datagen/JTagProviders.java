@@ -652,6 +652,15 @@ public class JTagProviders {
             never_stands.addTag(JTagRegistry.STANDS);
             never_stands.add(JEntityTypeRegistry.SHEER_HEART_ATTACK.getId());
             never_stands.add(JEntityTypeRegistry.LIFE_DETECTOR.getId());
+            never_stands.add(JEntityTypeRegistry.GE_FROG.getId());
+            never_stands.add(JEntityTypeRegistry.GE_BUTTERFLY.getId());
+            never_stands.add(JEntityTypeRegistry.GE_SNAKE.getId());
+            never_stands.add(JEntityTypeRegistry.GER_SCORPION.getId());
+            never_stands.add(JEntityTypeRegistry.PLAYER_CLONE.getId());
+            never_stands.add(JEntityTypeRegistry.HG_NET.getId());
+            never_stands.add(JEntityTypeRegistry.RED_BIND.getId());
+            never_stands.add(JEntityTypeRegistry.SAND_TORNADO.getId());
+            never_stands.add(JEntityTypeRegistry.STAND_METEOR.getId());
 
             addTagsForCompatibilities(arg);
         }
