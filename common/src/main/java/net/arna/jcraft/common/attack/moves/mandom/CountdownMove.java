@@ -52,6 +52,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             Identifiers.FOOD_DATA,
             Identifiers.BLOOD_GAUGE,
             Identifiers.HEALTH,
+            Identifiers.ACTIVE_EFFECTS,
             Identifiers.VEHICLE
     );
     static final BlockMarkerType BLOCK_MARKER_TYPE = new BlockMarkerType(
