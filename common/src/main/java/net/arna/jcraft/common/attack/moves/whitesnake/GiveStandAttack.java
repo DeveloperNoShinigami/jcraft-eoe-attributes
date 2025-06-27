@@ -8,6 +8,7 @@ import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.api.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JTagRegistry;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.entity.stand.WhiteSnakeEntity;
@@ -52,7 +53,9 @@ public final class GiveStandAttack extends AbstractSimpleAttack<GiveStandAttack,
         final ItemStack itemStack = attacker.getOffhandItem();
 
         super.perform(attacker, user).stream().findFirst().ifPresent((target) -> {
-            if (target instanceof StandEntity<?,?> || !itemStack.is(JItemRegistry.STAND_DISC.get())) return;
+            if (target.getType().is(JTagRegistry.CAN_NEVER_HAVE_STAND) || !itemStack.is(JItemRegistry.STAND_DISC.get())) {
+                return;
+            }
 
             StandType itemStand;
             int itemSkin = 0;

@@ -7,6 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.registry.JTagRegistry;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
@@ -83,6 +84,9 @@ public class SetStandCommand {
 
         for (final Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
+                if (livingEntity.getType().is(JTagRegistry.CAN_NEVER_HAVE_STAND)) {
+                    continue;
+                }
                 final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(livingEntity);
                 if (type != null) {
                     standData.setTypeAndSkin(type, skin);
