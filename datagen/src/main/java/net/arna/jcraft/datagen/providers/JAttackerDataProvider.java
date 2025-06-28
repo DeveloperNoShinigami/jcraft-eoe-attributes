@@ -1,4 +1,4 @@
-package net.arna.jcraft.fabric.datagen;
+package net.arna.jcraft.datagen.providers;
 
 import com.mojang.serialization.Codec;
 import dev.architectury.registry.registries.Registrar;

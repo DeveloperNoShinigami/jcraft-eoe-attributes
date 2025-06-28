@@ -1,10 +1,11 @@
-package net.arna.jcraft.fabric.datagen;
+package net.arna.jcraft.datagen.providers;
 
 import com.mojang.serialization.Codec;
 import dev.architectury.registry.registries.Registrar;
 import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.datagen.JDataGen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.PackOutput;
 

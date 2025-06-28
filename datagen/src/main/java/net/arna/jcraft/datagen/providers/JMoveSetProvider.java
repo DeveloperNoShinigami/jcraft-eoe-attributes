@@ -1,4 +1,4 @@
-package net.arna.jcraft.fabric.datagen;
+package net.arna.jcraft.datagen.providers;
 
 import com.mojang.serialization.Codec;
 import lombok.Getter;
@@ -10,6 +10,7 @@ import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.attack.IAttacker;
 import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.datagen.JDataGen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricCodecDataProvider;
 import net.minecraft.data.PackOutput;

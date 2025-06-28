@@ -1,4 +1,4 @@
-package net.arna.jcraft.fabric.api;
+package net.arna.jcraft.api.datagen;
 
 import net.arna.jcraft.api.stand.StandData;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;

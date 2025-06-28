@@ -1,4 +1,4 @@
-package net.arna.jcraft.fabric.api;
+package net.arna.jcraft.api.datagen;
 
 import com.mojang.serialization.Codec;
 import lombok.Getter;

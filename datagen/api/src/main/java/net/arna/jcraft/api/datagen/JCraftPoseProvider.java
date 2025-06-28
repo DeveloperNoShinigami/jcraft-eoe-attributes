@@ -1,4 +1,4 @@
-package net.arna.jcraft.fabric.api;
+package net.arna.jcraft.api.datagen;
 
 import net.arna.jcraft.api.pose.ModelType;
 import net.arna.jcraft.api.pose.PoseModifiers;

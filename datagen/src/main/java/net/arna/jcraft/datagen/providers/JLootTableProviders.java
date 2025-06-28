@@ -1,4 +1,4 @@
-package net.arna.jcraft.fabric.datagen;
+package net.arna.jcraft.datagen.providers;
 
 import com.google.common.collect.Maps;
 import net.arna.jcraft.api.registry.JBlockRegistry;
@@ -27,7 +27,7 @@ public class JLootTableProviders {
 
     public static class BlockLoot extends FabricBlockLootTableProvider {
 
-        protected BlockLoot(FabricDataOutput output) {
+        public BlockLoot(FabricDataOutput output) {
             super(output);
         }
 

@@ -1,10 +1,10 @@
-package net.arna.jcraft.fabric.datagen;
+package net.arna.jcraft.datagen.providers;
 
 import lombok.Getter;
+import net.arna.jcraft.api.datagen.JCraftPoseProvider;
 import net.arna.jcraft.api.pose.ModelType;
-import net.arna.jcraft.common.entity.stand.*;
-import net.arna.jcraft.fabric.api.JCraftPoseProvider;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
+import net.arna.jcraft.common.entity.stand.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 
 @Getter
