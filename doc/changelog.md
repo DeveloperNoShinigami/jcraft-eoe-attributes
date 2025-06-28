@@ -11,12 +11,10 @@
 * Stand user mob follow range is now based on local difficulty
 * Stand user mobs no longer drop diamond or netherite armor
 * added (partial) translations for
-  * Arabic
   * Chinese
   * Dutch
   * English
   * German
-  * Hebrew
   * Norwegian
   * Persian
   * Polish
