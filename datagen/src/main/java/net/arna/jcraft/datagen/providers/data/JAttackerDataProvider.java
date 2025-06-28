@@ -11,6 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -31,6 +33,11 @@ public abstract class JAttackerDataProvider<T, D> extends FabricCodecDataProvide
 
     @Override
     protected final void configure(final BiConsumer<ResourceLocation, D> provider) {
+        getDataMap().forEach(provider);
+    }
+
+    public Map<ResourceLocation, D> getDataMap() {
+        Map<ResourceLocation, D> map = new HashMap<>();
         for (final Map.Entry<ResourceKey<T>, T> entry : registry.entrySet()) {
             if ("none".equals(entry.getKey().location().getPath())) continue;
 
@@ -47,9 +54,11 @@ public abstract class JAttackerDataProvider<T, D> extends FabricCodecDataProvide
 
                 // Formulate the location based on the field name
                 ResourceLocation loc = formulateLoc(type, field.getName());
-                provider.accept(loc, data);
+                map.put(loc, data);
             }
         }
+
+        return Collections.unmodifiableMap(map);
     }
 
     protected abstract Class<?> getHolderClass(T type);

@@ -22,8 +22,12 @@ import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class JDataGen implements DataGeneratorEntrypoint {
+    // Cache for entity classes to avoid repeated stack trace parsing
+    private static final ConcurrentHashMap<EntityType<?>, Class<? extends Entity>> ENTITY_CLASS_CACHE = new ConcurrentHashMap<>();
+    
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
         final FabricDataGenerator.Pack pack = generator.createPack();
@@ -88,8 +92,16 @@ public final class JDataGen implements DataGeneratorEntrypoint {
 
     @SuppressWarnings({"DataFlowIssue", "unchecked"})
     public static <E extends Entity> Class<? extends Entity> getEntityClass(EntityType<E> type) {
+        // Check cache first
+        Class<? extends Entity> cachedClass = ENTITY_CLASS_CACHE.get(type);
+        if (cachedClass != null) {
+            return cachedClass;
+        }
+        
         try {
-            return ((EntityTypeAccessor<E>) type).getFactory().create(type, null).getClass();
+            Class<? extends Entity> entityClass = ((EntityTypeAccessor<E>) type).getFactory().create(type, null).getClass();
+            ENTITY_CLASS_CACHE.put(type, entityClass);
+            return entityClass;
         } catch (Exception e) {
             // Entity type did not like the level being null, so we're going to do a disgusting hack
             // to figure out the type from the error's stack trace.
@@ -97,6 +109,17 @@ public final class JDataGen implements DataGeneratorEntrypoint {
             // The general idea is that the first class in the stack trace after the StandType.<init> method
             // that is not abstract, must be the stand entity class.
             StackTraceElement[] stackTrace = e.getStackTrace();
+            
+            // Check if stack trace is empty (due to JVM optimization)
+            if (stackTrace.length == 0) {
+                // Force a new exception to get a fresh stack trace
+                try {
+                    throw new RuntimeException("Forced exception to get stack trace for " + type);
+                } catch (RuntimeException freshException) {
+                    stackTrace = freshException.getStackTrace();
+                }
+            }
+            
             boolean foundStandEntityClass = false;
             for (StackTraceElement element : stackTrace) {
                 if (StandEntity.class.getName().equals(element.getClassName())) {
@@ -112,14 +135,17 @@ public final class JDataGen implements DataGeneratorEntrypoint {
                 try {
                     Class<?> clazz = Class.forName(element.getClassName());
                     if (!Modifier.isAbstract(clazz.getModifiers()) && Entity.class.isAssignableFrom(clazz)) {
-                        return (Class<? extends Entity>) clazz;
+                        Class<? extends Entity> entityClass = (Class<? extends Entity>) clazz;
+                        ENTITY_CLASS_CACHE.put(type, entityClass);
+                        return entityClass;
                     }
                 } catch (ClassNotFoundException ignored) {
                     // Ignore, continue searching
                 }
             }
 
-            throw new IllegalStateException("Could not determine entity class for " + type, e);
+            throw new IllegalStateException("Could not determine entity class for " + type + ". Stack trace was " + 
+                (stackTrace.length == 0 ? "empty" : "present but didn't contain expected classes"));
         }
     }
 }
