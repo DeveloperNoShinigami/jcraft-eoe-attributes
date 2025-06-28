@@ -9,6 +9,7 @@ import net.arna.jcraft.api.attack.core.MoveActionType;
 
 public interface JMoveActionTypeRegistry {
     DeferredRegister<MoveActionType<?>> MOVE_ACTION_TYPE_REGISTRY = DeferredRegister.create(JCraft.MOD_ID, JRegistries.MOVE_ACTION_TYPE_REGISTRY_KEY);
+
     RegistrySupplier<PlaySoundAction.Type> PLAY_SOUND = register("play_sound", PlaySoundAction.Type.INSTANCE);
     RegistrySupplier<CancelSpecMoveAction.Type> CANCEL_SPEC_MOVE = register("cancel_spec_move", CancelSpecMoveAction.Type.INSTANCE);
     RegistrySupplier<MetallicaAddIronAction.Type> METALLICA_ADD_IRON = register("metallica_add_iron", MetallicaAddIronAction.Type.INSTANCE);
@@ -18,6 +19,7 @@ public interface JMoveActionTypeRegistry {
     RegistrySupplier<UserAnimationAction.Type> USER_ANIMATION = register("user_animation", UserAnimationAction.Type.INSTANCE);
     RegistrySupplier<RunCommandAction.Type> RUN_COMMAND = register("run_command", RunCommandAction.Type.INSTANCE);
     RegistrySupplier<ScoreboardAction.Type> SCOREBOARD = register("scoreboard", ScoreboardAction.Type.INSTANCE);
+    RegistrySupplier<LightOnFireAction.Type> LIGHT_ON_FIRE = register("light_on_fire", LightOnFireAction.Type.INSTANCE);
 
     private static <T extends MoveActionType<?>> RegistrySupplier<T> register(String name, T type) {
         return MOVE_ACTION_TYPE_REGISTRY.register(name, () -> type);
