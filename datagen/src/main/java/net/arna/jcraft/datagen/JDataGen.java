@@ -4,6 +4,7 @@ import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.datagen.providers.data.*;
+import net.arna.jcraft.datagen.providers.resources.JLangProvider;
 import net.arna.jcraft.datagen.providers.resources.JModelProvider;
 import net.arna.jcraft.datagen.providers.resources.JPoseProvider;
 import net.arna.jcraft.mixin.EntityTypeAccessor;
@@ -40,6 +41,7 @@ public final class JDataGen implements DataGeneratorEntrypoint {
         pack.addProvider(JStandDataProvider::new);
         pack.addProvider(JSpecDataProvider::new);
         pack.addProvider(JPoseProvider::new);
+        pack.addProvider(JLangProvider::new);
 
         // Each type needs its own MoveSetProvider as they have different state classes
         // and thus different codecs.

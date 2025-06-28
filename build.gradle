@@ -92,10 +92,6 @@ subprojects {
         it.zip64 = true // Enable ZIP64 for large JARs
     }
 
-    shadowJar {
-        enabled = false // Disable the massive, useless shadow jar that Loom creates by default.
-    }
-
     // Configure Maven publishing.
     publishing {
         publications {
