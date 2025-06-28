@@ -1,4 +1,4 @@
-package net.arna.jcraft.datagen.providers;
+package net.arna.jcraft.datagen.providers.data;
 
 import net.arna.jcraft.api.registry.JConfiguredFeatureRegistry;
 import net.arna.jcraft.api.registry.JPlacedFeatureRegistry;

@@ -1,4 +1,4 @@
-package net.arna.jcraft.datagen.providers;
+package net.arna.jcraft.datagen.providers.data;
 
 import com.google.common.collect.Maps;
 import net.arna.jcraft.api.registry.JBlockRegistry;

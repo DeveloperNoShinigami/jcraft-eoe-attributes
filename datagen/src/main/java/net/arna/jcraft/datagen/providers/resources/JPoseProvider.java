@@ -1,4 +1,4 @@
-package net.arna.jcraft.datagen.providers;
+package net.arna.jcraft.datagen.providers.resources;
 
 import lombok.Getter;
 import net.arna.jcraft.api.datagen.JCraftPoseProvider;

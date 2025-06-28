@@ -1,4 +1,4 @@
-package net.arna.jcraft.datagen.providers;
+package net.arna.jcraft.datagen.providers.data;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;

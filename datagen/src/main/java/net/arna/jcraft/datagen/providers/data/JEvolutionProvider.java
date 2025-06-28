@@ -1,4 +1,4 @@
-package net.arna.jcraft.datagen.providers;
+package net.arna.jcraft.datagen.providers.data;
 
 import lombok.Getter;
 import net.arna.jcraft.JCraft;

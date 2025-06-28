@@ -1,4 +1,4 @@
-package net.arna.jcraft.datagen.providers;
+package net.arna.jcraft.datagen.providers.resources;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.JRegistries;
