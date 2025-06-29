@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow'
+    id 'com.gradleup.shadow'
 }
 
 architectury {
@@ -9,19 +9,6 @@ architectury {
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
-
-    runs {
-        datagen {
-            inherit client
-
-            name "Data Generation"
-            vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${project(":common").file("src/main/generated")}"
-            vmArg "-Dfabric-api.datagen.modid=jcraft"
-
-            runDir "build/datagen"
-        }
-    }
 }
 
 configurations {
@@ -83,18 +70,9 @@ dependencies {
     modRuntimeOnly "com.ptsmods:devlogin:3.5"
 }
 
-File generatedResourcesDir = file("src/generated/resources")
 tasks.register("copyAccessWidener", Copy) {
     from(project(":common").file("src/main/resources/jcraft.accesswidener"))
-    into(generatedResourcesDir)
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDir(generatedResourcesDir)
-        }
-    }
+    into(sourceSets.named("main").get().resources.srcDirs.first())
 }
 
 processResources {

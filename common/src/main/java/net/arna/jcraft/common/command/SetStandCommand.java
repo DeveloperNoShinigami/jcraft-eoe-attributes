@@ -7,10 +7,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.api.registry.JTagRegistry;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
-import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.CommandSourceStack;
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Collection;
+import java.util.List;
 
 import static net.arna.jcraft.JCraft.summon;
 
@@ -71,18 +73,29 @@ public class SetStandCommand {
         // Check if the player is allowed to use the stand
         if (JServerConfig.EXCLUSIVE_STANDS.getValue()) {
             // Throw error if multiple players are selected and exclusive stands are enabled
-            if (targets.stream().filter(t -> t instanceof Player).count() > 1) {
-                throw EXCLUSIVE_STANDS_MULTIPLE_PLAYERS.create();
-            }
+            List<Player> playerTargets = targets.stream()
+                    .filter(e -> e instanceof Player)
+                    .map(e -> (Player) e)
+                    .toList();
+            int playerTargetCount = playerTargets.size();
+            if (playerTargetCount > 0) {
+                if (playerTargetCount > 1) {
+                    throw EXCLUSIVE_STANDS_MULTIPLE_PLAYERS.create();
+                }
 
-            // Check if the stand is already taken
-            if (JCraft.getExclusiveStandsData().isStandUsed(type)) {
-                throw EXCLUSIVE_STANDS_STAND_TAKEN.create();
+                // Check if the stand is already taken by another player
+                CommonStandComponent firstPlayerStandComp = JComponentPlatformUtils.getStandComponent(playerTargets.get(0));
+                if (firstPlayerStandComp.getType() != type && JCraft.getExclusiveStandsData().isStandUsed(type)) {
+                    throw EXCLUSIVE_STANDS_STAND_TAKEN.create();
+                }
             }
         }
 
         for (final Entity entity : targets) {
             if (entity instanceof LivingEntity livingEntity) {
+                if (livingEntity.getType().is(JTagRegistry.CAN_NEVER_HAVE_STAND)) {
+                    continue;
+                }
                 final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(livingEntity);
                 if (type != null) {
                     standData.setTypeAndSkin(type, skin);

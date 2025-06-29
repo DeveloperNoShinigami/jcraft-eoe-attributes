@@ -6,6 +6,7 @@ import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.registry.JTagRegistry;
 import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -53,7 +54,7 @@ public class StandArrowEntity extends AbstractArrow implements GeoEntity {
                 return;
             }
             final CommonStandComponent standData = JComponentPlatformUtils.getStandComponent(mob);
-            if (StandTypeUtil.isNone(standData.getType())) {
+            if (standData.getType() == null && !mob.getType().is(JTagRegistry.CAN_NEVER_HAVE_STAND)) {
                 standData.setType(StandTypeUtil.getRandomRegular(random));
                 mob.unRide();
                 JCraft.summon(mob.level(), mob);

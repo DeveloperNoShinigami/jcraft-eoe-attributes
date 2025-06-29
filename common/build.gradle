@@ -43,6 +43,10 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
+shadowJar {
+    enabled = false // Disable the massive, useless shadow jar that Loom creates by default.
+}
+
 test {
     useJUnitPlatform()
 }
