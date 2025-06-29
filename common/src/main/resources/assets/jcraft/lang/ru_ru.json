@@ -8,6 +8,8 @@
   "block.jcraft.meteorite_block": "Блок Метеорита",
   "block.jcraft.meteorite_iron_ore_block": "Руда Метеорита",
   "block.jcraft.polished_meteorite_block": "Полированный Блок Метеорита",
+  "block.jcraft.soul_wood_block": "Древо грехов",
+  "block.jcraft.stellar_iron_block": "Блок звёздного металла",
   "commands.gravity.get.self": "Ваша Гравитация Такая %s",
   "container.jcraft.main_menu": "JCraft Меню",
   "death.attack.jcraft.stand": "%1$s был повержен",
