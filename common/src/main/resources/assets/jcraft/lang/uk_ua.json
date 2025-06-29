@@ -56,6 +56,8 @@
   "entity.jcraft.cinderella": "Синдерела",
   "entity.jcraft.cinderella.info.desc": "шо за хуйня, воно вміє битись?",
   "entity.jcraft.cmoon": "C-Moon",
+  "entity.jcraft.cmoon.info.con1": "Ефективність дуже сильно залежить від навичок власника",
+  "entity.jcraft.cmoon.info.con2": "Обмежений у контрольованому горизонтальному пересуванні",
   "entity.jcraft.cream": "Cream",
   "entity.jcraft.cream.info.con1": "Урон від атак може сильно варіюватись",
   "entity.jcraft.cream.info.con2": "Сліпий та глухий у пустоті",
