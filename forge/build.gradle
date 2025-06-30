@@ -66,6 +66,13 @@ dependencies {
 
     //modImplementation("com.fusionflux:gravity_api-forge-${gravity_api_version}"){ transitive = false }
 
+    // compatibilities
+    // for enigmatic legacy
+    modRuntimeOnly("curse.maven:curios-309927:6418456")
+    modRuntimeOnly("curse.maven:caelus-308989:4581481")
+    modRuntimeOnly("curse.maven:patchouli-306770:4636277")
+    modRuntimeOnly("curse.maven:enigmatic-legacy-336184:5600004")
+
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle(project(path: ':common', configuration: 'transformProductionForge')){ transitive = false }
 }
