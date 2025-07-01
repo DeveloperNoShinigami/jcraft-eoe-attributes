@@ -1,1 +1,11 @@
-{}
+{
+  "advancements.jcraft.find_stone_mask.description": "Trouver un masque de pierre",
+  "advancements.jcraft.find_stone_mask.title": "Ça va piquer…",
+  "advancements.jcraft.obtain_all_specs.description": "Aucun pouvoir ne vous échappe",
+  "advancements.jcraft.obtain_all_specs.title": "Lignée sacrée",
+  "advancements.jcraft.obtain_all_stands.description": "Vous possédez tout les stands! Rien ne peut vous arrêter",
+  "advancements.jcraft.obtain_all_stands.title": "Roundabout",
+  "advancements.jcraft.obtain_any_spec.description": "Vous tenez votre premier pouvoir entre vos mains",
+  "advancements.jcraft.obtain_any_spec.title": "Héritier de la lignée",
+  "advancements.jcraft.obtain_blood_bottle.description": "Le sang coule... le destin s'écrit"
+}
