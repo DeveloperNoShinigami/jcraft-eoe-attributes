@@ -117,7 +117,7 @@ public final class JCraft {
 
     // Gamerules
     //public static final GameRules.Key<GameRules.BooleanRule> KINGCRIMSON_TELEPORT_EFFECT = GameRuleRegistry.register("kingCrimsonTeleportEffect", GameRules.Category.MISC, GameRuleFactory.createBooleanRule(false));
-    public static final GameRules.Key<BooleanValue> COMBO_COUNTER = register("comboCounter", Category.MISC, BooleanValue.create(true));
+    //public static final GameRules.Key<BooleanValue> COMBO_COUNTER = register("comboCounter", Category.MISC, BooleanValue.create(true));
     public static final GameRules.Key<IntegerValue> CHANCE_MOB_SPAWNS_WITH_STAND = register("chanceMobSpawnsWithStand", Category.MOBS, IntegerValue.create(5));
     public static final GameRules.Key<BooleanValue> ALLOW_MOB_EVOLVED_STANDS = register("allowMobEvolvedStands", Category.MOBS, BooleanValue.create(false));
     public static final GameRules.Key<BooleanValue> STAND_GRIEFING = register("standGriefing", Category.MISC, BooleanValue.create(true));

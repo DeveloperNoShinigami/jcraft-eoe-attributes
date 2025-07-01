@@ -1240,11 +1240,12 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      */
     public static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel,
                                    boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source,
-                                   @Nullable Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
+                                   @Nullable Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation,
+                                   boolean canBackstab, boolean unblockable) {
         if (world == null || world.isClientSide || ent == null || !ent.canBeSeenAsEnemy()) {
             return;
         }
-        if (world.getGameRules().getBoolean(JCraft.COMBO_COUNTER) && attacker instanceof ServerPlayer playerEntity) {
+        if (attacker instanceof ServerPlayer playerEntity) {
             comboCounterLogic(playerEntity, ent);
         }
 
@@ -1264,11 +1265,12 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      */
     public static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel,
                                    boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source,
-                                   @Nullable Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab) {
+                                   @Nullable Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation,
+                                   boolean canBackstab) {
         if (world == null || world.isClientSide || ent == null || !ent.canBeSeenAsEnemy()) {
             return;
         }
-        if (world.getGameRules().getBoolean(JCraft.COMBO_COUNTER) && attacker instanceof ServerPlayer playerEntity) {
+        if (attacker instanceof ServerPlayer playerEntity) {
             comboCounterLogic(playerEntity, ent);
         }
 
@@ -1292,7 +1294,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         if (world == null || world.isClientSide || ent == null || !ent.canBeSeenAsEnemy()) {
             return;
         }
-        if (world.getGameRules().getBoolean(JCraft.COMBO_COUNTER) && attacker instanceof ServerPlayer playerEntity) {
+        if (attacker instanceof ServerPlayer playerEntity) {
             comboCounterLogic(playerEntity, ent);
         }
         baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, false, false);
