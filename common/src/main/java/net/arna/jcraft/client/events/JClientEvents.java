@@ -164,7 +164,7 @@ public class JClientEvents {
         }
 
         // Draw Combo Counter
-        if (comboCounter > 0 && framesSinceCounted <= 180) { //TODO: Combo Counter CLIENT option
+        if (comboCounter > 0 && JClientConfig.getInstance().isComboCounter() && framesSinceCounted <= 180) {
             String remark = "epic tod free download";
             if (comboCounter < JCraftClient.comboRemarks.size() * 7) {
                 remark = comboRemarks.get(Math.floorDiv(comboCounter, 7));
