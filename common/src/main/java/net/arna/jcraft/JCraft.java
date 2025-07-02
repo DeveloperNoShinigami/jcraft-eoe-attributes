@@ -83,6 +83,7 @@ import org.jetbrains.annotations.Range;
 
 import java.util.*;
 
+import static net.arna.jcraft.api.component.world.CommonShockwaveHandlerComponent.Shockwave;
 import static net.arna.jcraft.api.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.api.registry.JBlockRegistry.BLOCK_REGISTRY;
 import static net.arna.jcraft.api.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
@@ -526,7 +527,7 @@ public final class JCraft {
                             case Z -> new Vec3(delta.x, delta.y, 0);
                         };
 
-                        JComponentPlatformUtils.getShockwaveHandler(world).addShockwave(stand.getEyePosition(), delta, 1.5f);
+                        JComponentPlatformUtils.getShockwaveHandler(world).addShockwave(stand.getEyePosition(), delta, 1.5f, Shockwave.Type.PUSHBLOCK);
 
                         JUtils.addVelocity(target,
                                 delta

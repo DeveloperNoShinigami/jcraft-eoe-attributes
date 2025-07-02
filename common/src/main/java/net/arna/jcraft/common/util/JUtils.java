@@ -766,7 +766,7 @@ public final class JUtils {
         }
 
         final String stringName = entity.getName().toString().toLowerCase(Locale.ROOT);
-        return stringName.contains("iron") || stringName.contains("ferro");
+        return stringName.contains("iron") || stringName.contains("ferro"); // Cross-mod compatibility :D
     }
 
     public static boolean shouldRenderStandsFor(Player player) {
