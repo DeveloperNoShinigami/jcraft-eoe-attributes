@@ -918,7 +918,7 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .pattern("PLP")
                 .pattern("P P")
                 .define('L', Items.NETHERITE_LEGGINGS)
-                .define('P', Items.PURPLE_DYE)
+                .define('P', Items.MAGENTA_DYE)
                 .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
                 .save(exporter);
         // Valentine's boots
