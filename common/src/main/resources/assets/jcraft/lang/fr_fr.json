@@ -1,6 +1,6 @@
 {
   "advancements.jcraft.find_stone_mask.description": "Trouver un Masque de Pierre",
-  "advancements.jcraft.find_stone_mask.title": "Ca vas piquer…",
+  "advancements.jcraft.find_stone_mask.title": "Attention, ca vas piquer…",
   "advancements.jcraft.obtain_all_specs.description": "Aucun pouvoir ne vous échappe",
   "advancements.jcraft.obtain_all_specs.title": "Lignée sacrée",
   "advancements.jcraft.obtain_all_stands.description": "Vous possédez tout les stands! Rien ne peut vous arrêter",
@@ -14,7 +14,7 @@
   "advancements.jcraft.obtain_cosplay.description": "Obtenir toutes les tenues",
   "advancements.jcraft.obtain_cosplay.title": "Look Bizarroïde",
   "advancements.jcraft.obtain_diary_page.description": "Obtenir une page du journal",
-  "advancements.jcraft.obtain_diary_page.title": "C'était moi, DIO",
+  "advancements.jcraft.obtain_diary_page.title": "C'était moi, §kDIO",
   "advancements.jcraft.obtain_diavolo_outfit.description": "Obtenir la tenue de Diavolo",
   "advancements.jcraft.obtain_diavolo_outfit.title": "C'est un test",
   "advancements.jcraft.obtain_diego_outfit.description": "Obtenir la tenue de Diego",
@@ -72,7 +72,17 @@
   "argument.entity.options.jcraft_stand": "Entités possédant un stand",
   "argument.entity.options.jcraft_timestopped": "Entités figées dans le temps",
   "biome.jcraft.devils_palm": "La paume du diable",
+  "block.jcraft.cinderella_green_block": "Block vert de Cinderella",
   "block.jcraft.coffin": "Cercueil",
+  "block.jcraft.foolish_sand_block": "Le sable du fou",
+  "block.jcraft.hot_sand_block": "Sable chaud",
   "block.jcraft.meteorite_block": "Block de météorite",
-  "block.jcraft.meteorite_iron_ore_block": "Morceau de météorite"
+  "block.jcraft.meteorite_iron_ore_block": "Morceau de météorite",
+  "block.jcraft.polished_meteorite_block": "Block de météorite polie",
+  "commands.gravity.get.other": "%s's la gravité est %s",
+  "commands.gravity.get.self": "Votre gravité actuelle est %s",
+  "commands.gravity.set.other": "Définir %s's gravité sur %s",
+  "commands.gravity.set.self": "Définir sa propre gravité sur %s",
+  "container.jcraft.main_menu": "Menu JCraft",
+  "death.attack.jcraft.jbleeding": "%1$s a négligé son garrot"
 }
