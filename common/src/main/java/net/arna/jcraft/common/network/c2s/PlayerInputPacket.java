@@ -376,24 +376,23 @@ public class PlayerInputPacket {
             return;
         }
 
-        MobEffectInstance stun = player.getEffect(JStatusRegistry.DAZED.get());
-        if (stun != null) {
-            if (blocking) {
-                StandEntity<?, ?> stand = JUtils.getStand(player);
+        if (blocking) {
+            StandEntity<?, ?> stand = JUtils.getStand(player);
 
-                // This check is redundant, but I'm putting it here if we add spec blocking in the future.
-                if (stand == null) {
-                    JCraft.LOGGER.warn("Player " + player + " was blocking despite having no stand?");
-                } else {
-                    if (stand.getMoveStun() < 2) {
-                        return;
-                    }
-                    // Else is in blockstun due to an attack
-
-                    JCraft.tryPushBlock((ServerLevel) player.level(), player, stand);
-                }
-
+            // This check is redundant, but I'm putting it here if we add spec blocking in the future.
+            if (stand == null) {
+                JCraft.LOGGER.warn("Player " + player + " was blocking despite having no stand?");
             } else {
+                if (stand.getMoveStun() < 2) {
+                    return;
+                }
+                // Else is in blockstun due to an attack
+
+                JCraft.tryPushBlock((ServerLevel) player.level(), player, stand);
+            }
+        } else {
+            MobEffectInstance stun = player.getEffect(JStatusRegistry.DAZED.get());
+            if (stun != null) {
                 JCraft.comboBreak((ServerLevel) player.level(), player, stun);
             }
         }

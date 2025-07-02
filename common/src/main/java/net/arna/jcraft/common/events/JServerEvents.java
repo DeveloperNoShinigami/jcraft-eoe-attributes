@@ -172,6 +172,9 @@ public class JServerEvents {
         JCraft.burstTimers.clear();
         JCraft.burstTimers.putAll(newBurstTimers);
 
+        // Pushblock cooldown ticking
+        pushblockCooldowns.replaceAll((key, value) -> value - 1);
+
         // Dash handling
         for (Map.Entry<LivingEntity, DashData> entry : new HashSet<>(JCraft.dashes.entrySet())) {
             DashData dash = entry.getValue();

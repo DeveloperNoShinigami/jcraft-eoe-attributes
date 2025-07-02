@@ -5,23 +5,25 @@ import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.registry.registries.DeferredRegister;
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.api.JRegistries;
+import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.api.registry.*;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.argumenttype.StandArgumentType;
 import net.arna.jcraft.common.block.CoffinBlock;
-import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
-import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.effects.DazedStatusEffect;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
-import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
 import net.arna.jcraft.common.gravity.util.GravityChannel;
@@ -85,13 +87,13 @@ import static net.arna.jcraft.api.registry.JBlockEntityTypeRegistry.BLOCK_ENTITY
 import static net.arna.jcraft.api.registry.JBlockRegistry.BLOCK_REGISTRY;
 import static net.arna.jcraft.api.registry.JEntityTypeRegistry.ENTITY_TYPE_REGISTRY;
 import static net.arna.jcraft.api.registry.JItemRegistry.ITEM_REGISTRY;
+import static net.arna.jcraft.api.registry.JMarkerExtractorRegistry.EXTRACTOR_REGISTRY;
+import static net.arna.jcraft.api.registry.JMarkerInjectorRegistry.INJECTOR_REGISTRY;
 import static net.arna.jcraft.api.registry.JMoveActionTypeRegistry.MOVE_ACTION_TYPE_REGISTRY;
 import static net.arna.jcraft.api.registry.JMoveConditionTypeRegistry.MOVE_CONDITION_TYPE_REGISTRY;
 import static net.arna.jcraft.api.registry.JMoveTypeRegistry.MOVE_TYPE_REGISTRY;
 import static net.arna.jcraft.api.registry.JSpecTypeRegistry.SPEC_TYPE_REGISTRY;
 import static net.arna.jcraft.api.registry.JStandTypeRegistry.STAND_TYPE_REGISTRY;
-import static net.arna.jcraft.api.registry.JMarkerExtractorRegistry.EXTRACTOR_REGISTRY;
-import static net.arna.jcraft.api.registry.JMarkerInjectorRegistry.INJECTOR_REGISTRY;
 import static net.minecraft.world.level.GameRules.*;
 
 public final class JCraft {
@@ -138,6 +140,7 @@ public final class JCraft {
     private static final List<ChunkPos> preloadedChunks = new ArrayList<>();
 
     public static final Object2IntMap<LivingEntity> burstTimers = new Object2IntOpenHashMap<>();
+    public static final Object2IntMap<LivingEntity> pushblockCooldowns = new Object2IntOpenHashMap<>();
 
     public static final Map<LivingEntity, DashData> dashes = new WeakHashMap<>();
 
@@ -453,10 +456,16 @@ public final class JCraft {
     }
 
     public static void tryPushBlock(final ServerLevel world, final LivingEntity user, final @NonNull StandEntity<?, ?> stand) {
+        if (pushblockCooldowns.getOrDefault(user, -1) > 0) {
+            return;
+        }
+
         final float third = stand.getMaxStandGauge() / 3.0f;
         final float gauge = stand.getStandGauge();
 
         if (gauge > third) {
+            pushblockCooldowns.put(user, 8);
+
             stand.setStandGauge(gauge - third);
 
             stand.setMoveStun(10);
@@ -467,31 +476,45 @@ public final class JCraft {
             final Vec3 position = user.position();
             final double userWidth = user.getBbWidth();
 
+            IntSet pushed = new IntOpenHashSet();
+
             for (final Entity entity : world.getAllEntities()) {
                 if (entity == user || entity == stand) continue;
 
                 if (entity instanceof final LivingEntity living) {
                     LivingEntity target = living;
 
+                    // If the target is using a stand, we consider the closer entity for pushblock distance calculations
+                    final CommonStandComponent standComponent = JComponentPlatformUtils.getStandComponent(living);
+                    if (standComponent.getStand() != null) {
+                        final StandEntity<?, ?> targetStand = standComponent.getStand();
+                        if (targetStand.distanceToSqr(position) < living.distanceToSqr(position)) target = targetStand;
+                    }
+
                     final double distance = target.position().distanceTo(position);
                     final double radius = target.getBbWidth() + 2.0;
 
+                    // If the target is a non-remote stand, we want to target its user instead
                     if (target instanceof StandEntity<?,?> standTarget) {
                         if (!standTarget.isRemote() && standTarget.hasUser()) {
                             target = standTarget.getUserOrThrow();
-
-                            if (DashData.isDashing(target)) {
-                                DashData.getDash(target).finished = true;
-                            }
                         }
                     }
 
+                    // Mark pushed and don't push the same entity more than once
+                    final int id = target.getId();
+                    if (pushed.contains(id)) continue;
+
                     if (distance < radius) {
-                        double launchVel = target.onGround() ? 1.0 : 0.35;
+                        if (DashData.isDashing(target)) {
+                            DashData.getDash(target).finished = true;
+                        }
+
+                        double launchVel = target.onGround() ? 1.5 : 0.75;
 
                         // The closer they are, the harder they're pushed
                         if (distance < userWidth * 2.0) {
-                            launchVel += (userWidth * 2.0 - distance);
+                            launchVel += (userWidth * 2.0 - distance) / 1.5;
                         }
 
                         Vec3 delta = target.position().subtract(position).normalize();
@@ -503,14 +526,16 @@ public final class JCraft {
                             case Z -> new Vec3(delta.x, delta.y, 0);
                         };
 
-                        if (user instanceof ServerPlayer serverPlayer) serverPlayer.sendSystemMessage(Component.literal(String.valueOf(launchVel)));
-
                         JComponentPlatformUtils.getShockwaveHandler(world).addShockwave(stand.getEyePosition(), delta, 1.5f);
 
                         JUtils.addVelocity(target,
                                 delta
                                 .scale(launchVel)
                         );
+
+                        pushed.add(id);
+
+                        // if (user instanceof ServerPlayer serverPlayer) serverPlayer.sendSystemMessage( Component.literal(launchVel + "; " + id) );
                     }
                 }
             }
