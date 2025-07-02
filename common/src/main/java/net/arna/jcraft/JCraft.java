@@ -22,6 +22,7 @@ import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.effects.DazedStatusEffect;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.config.GravityChangerConfig;
 import net.arna.jcraft.common.gravity.util.GravityChannel;
 import net.arna.jcraft.common.loot.JLootTableHelper;
@@ -449,6 +450,71 @@ public final class JCraft {
         buf.writeDouble(sparkSpeed);
 
         ServerChannelFeedbackPacket.send(JUtils.around(world, new Vec3(x, y, z), 128), buf);
+    }
+
+    public static void tryPushBlock(final ServerLevel world, final LivingEntity user, final @NonNull StandEntity<?, ?> stand) {
+        final float third = stand.getMaxStandGauge() / 3.0f;
+        final float gauge = stand.getStandGauge();
+
+        if (gauge > third) {
+            stand.setStandGauge(gauge - third);
+
+            stand.setMoveStun(10);
+
+            world.playSound(null, user, JSoundRegistry.STAND_PUSHBLOCK.get(), SoundSource.PLAYERS, 1, 1);
+
+            JUtils.setVelocity(user, Vec3.ZERO);
+            final Vec3 position = user.position();
+            final double userWidth = user.getBbWidth();
+
+            for (final Entity entity : world.getAllEntities()) {
+                if (entity == user || entity == stand) continue;
+
+                if (entity instanceof final LivingEntity living) {
+                    LivingEntity target = living;
+
+                    final double distance = target.position().distanceTo(position);
+                    final double radius = target.getBbWidth() + 2.0;
+
+                    if (target instanceof StandEntity<?,?> standTarget) {
+                        if (!standTarget.isRemote() && standTarget.hasUser()) {
+                            target = standTarget.getUserOrThrow();
+
+                            if (DashData.isDashing(target)) {
+                                DashData.getDash(target).finished = true;
+                            }
+                        }
+                    }
+
+                    if (distance < radius) {
+                        double launchVel = target.onGround() ? 1.0 : 0.35;
+
+                        // The closer they are, the harder they're pushed
+                        if (distance < userWidth * 2.0) {
+                            launchVel += (userWidth * 2.0 - distance);
+                        }
+
+                        Vec3 delta = target.position().subtract(position).normalize();
+
+                        // The launch should be horizontal from the victims POV
+                        delta = switch (GravityChangerAPI.getGravityDirection(target).getAxis()) {
+                            case X -> new Vec3(0, delta.y, delta.z);
+                            case Y -> new Vec3( delta.x, 0, delta.z);
+                            case Z -> new Vec3(delta.x, delta.y, 0);
+                        };
+
+                        if (user instanceof ServerPlayer serverPlayer) serverPlayer.sendSystemMessage(Component.literal(String.valueOf(launchVel)));
+
+                        JComponentPlatformUtils.getShockwaveHandler(world).addShockwave(stand.getEyePosition(), delta, 1.5f);
+
+                        JUtils.addVelocity(target,
+                                delta
+                                .scale(launchVel)
+                        );
+                    }
+                }
+            }
+        }
     }
 
     /**

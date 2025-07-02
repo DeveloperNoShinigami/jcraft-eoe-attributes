@@ -144,6 +144,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     protected boolean standby = false;
 
     public static final float ATTACK_ROTATION = 90f;
+    @Getter
     protected float maxStandGauge = 90f;
 
     @Getter @Setter
@@ -1725,8 +1726,14 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         stand.wantToBlock = wantToBlock;
 
         if (wantToBlock) {
-            if (!stand.blocking && stand.canAttack() && !DashData.isDashing(mob)) {
-                stand.tryBlock();
+            if (!stand.blocking) {
+                if (stand.canAttack() && !DashData.isDashing(mob)) {
+                    stand.tryBlock();
+                }
+            } else if (stand.getMoveStun() > 1) { // Being made to block by an enemy
+                if (stand.random.nextDouble() > 0.96) {
+                    JCraft.tryPushBlock((ServerLevel) stand.level(), mob, stand);
+                }
             }
         } else {
             stand.blocking = false;

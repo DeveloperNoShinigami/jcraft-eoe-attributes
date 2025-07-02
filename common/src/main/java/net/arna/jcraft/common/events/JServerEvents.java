@@ -73,10 +73,10 @@ public class JServerEvents {
             Enchantments.ALL_DAMAGE_PROTECTION, Enchantments.PROJECTILE_PROTECTION, Enchantments.BLAST_PROTECTION, Enchantments.FIRE_PROTECTION, Enchantments.UNBREAKING);
 
     private static final List<List<Item>> EQUIPMENT = List.of(
-            List.of(Items.AIR, Items.GOLDEN_BOOTS, Items.CHAINMAIL_BOOTS, Items.IRON_BOOTS, Items.DIAMOND_BOOTS, Items.NETHERITE_BOOTS),
-            List.of(Items.AIR, Items.GOLDEN_LEGGINGS, Items.CHAINMAIL_LEGGINGS, Items.IRON_LEGGINGS, Items.DIAMOND_LEGGINGS, Items.NETHERITE_LEGGINGS),
-            List.of(Items.AIR, Items.GOLDEN_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE),
-            List.of(Items.AIR, Items.GOLDEN_HELMET, Items.CHAINMAIL_HELMET, Items.IRON_HELMET, Items.DIAMOND_HELMET, Items.NETHERITE_HELMET)
+            List.of(Items.AIR, Items.GOLDEN_BOOTS,      Items.CHAINMAIL_BOOTS,      Items.IRON_BOOTS,      Items.DIAMOND_BOOTS,      Items.NETHERITE_BOOTS      ),
+            List.of(Items.AIR, Items.GOLDEN_LEGGINGS,   Items.CHAINMAIL_LEGGINGS,   Items.IRON_LEGGINGS,   Items.DIAMOND_LEGGINGS,   Items.NETHERITE_LEGGINGS   ),
+            List.of(Items.AIR, Items.GOLDEN_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE ),
+            List.of(Items.AIR, Items.GOLDEN_HELMET,     Items.CHAINMAIL_HELMET,     Items.IRON_HELMET,     Items.DIAMOND_HELMET,     Items.NETHERITE_HELMET     )
     );
 
     public static void finishLoading(final MinecraftServer server) {
@@ -87,10 +87,6 @@ public class JServerEvents {
     public static void saveExclusives(final MinecraftServer server) {
         JCraft.getExclusiveStandsData().saveToDefaultFile(server);
     }
-
-    private static final int PREDICTION_RADIUS = 6 * 16;
-    private static final int MAX_COMPENSATION_MS = 250; // Game is barely playable at this point
-    private static final double MS_TO_TICKS = 1000.0 / 20.0; // 1000ms = 1s, 1s = 20t
 
     public static void serverPostTick(MinecraftServer server) {
         if (JCraft.preloadLockTicks > 0) {

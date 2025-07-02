@@ -694,10 +694,13 @@ public final class JUtils {
     public static Collection<ServerPlayer> around(ServerLevel world, Vec3 pos, double radius) {
         double radiusSq = radius * radius;
 
-        return world.players()
-                .stream()
-                .filter((p) -> p.distanceToSqr(pos) <= radiusSq)
-                .collect(Collectors.toList());
+        List<ServerPlayer> list = new ArrayList<>();
+        for (ServerPlayer p : world.players()) {
+            if (p.distanceToSqr(pos) <= radiusSq) {
+                list.add(p);
+            }
+        }
+        return list;
     }
 
     public static Collection<ServerPlayer> all(MinecraftServer server) {
