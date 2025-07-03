@@ -337,7 +337,7 @@
   "entity.jcraft.purple_haze_distortion.info.con2": "средний урон без вируса",
   "entity.jcraft.purple_haze_distortion.info.con3": "утилита без движений",
   "entity.jcraft.purple_haze_distortion.info.desc": "Пространственная ТАКТИКА Токсином",
-  "entity.jcraft.purple_haze_distortion.info.freeSpace": "ПАССИВНЫЙ: 66%-ная устойчивость к Фиолетовому Дыму\n\nКлючевая Активность:\nЛёгкий Удар > Рекка1~Рекка2 > Нижний Лёгкий Удар > Шквал Ударами >…\n…нижний Лёгкий ~Лёгкий Удар\n…Удар о землю\n…Лёгкий Удар > Схватить",
+  "entity.jcraft.purple_haze_distortion.info.freeSpace": "ПАССИВНЫЙ: 66%-ная устойчивость к Фиолетовому Дыму\n\nКлючевая Активность:\nЛёгкий > Рекка1~Рекка2 > Нижний Лёгкий > Шквал Ударами >…\n…нижний Лёгкий ~Лёгкий\n…Удар о землю\n…Лёгкий > Схватить",
   "entity.jcraft.purple_haze_distortion.info.pro1": "быстрое реагирование",
   "entity.jcraft.purple_haze_distortion.info.pro2": "гнетущее, быстрое давление",
   "entity.jcraft.purple_haze_distortion.info.pro3": "хороший контроль зоны",
