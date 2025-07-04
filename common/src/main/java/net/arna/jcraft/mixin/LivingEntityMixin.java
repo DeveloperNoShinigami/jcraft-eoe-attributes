@@ -1,6 +1,7 @@
 package net.arna.jcraft.mixin;
 
 import lombok.NonNull;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.MoveUsage;
 import net.arna.jcraft.api.attack.moves.AbstractCounterAttack;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
@@ -71,8 +72,10 @@ public abstract class LivingEntityMixin implements IJCraftComboTracker {
             final HashSet<MoveUsage> moveList = usedComboMoves.get(attacker);
 
             for (MoveUsage pastUsage : moveList) {
-                // Ensure the same move usage only adds to the move list once
-                if (moveUsage != pastUsage && pastUsage.move() == move) { // TODO: move hashing instead of equality checks
+                if (
+                        moveUsage != pastUsage // Ensure the same move usage only adds to the move list once
+                        && Attacks.prototypeMatch(pastUsage.move(), move) // Move equality check that doesn't use instances
+                ) { // TODO: verify prototypeMatch() filters appropriately
                     return true;
                 }
             }

@@ -872,6 +872,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         cast.mobilityType = mobilityType;
         cast.animation = animation;
         cast.mayHitUser = mayHitUser;
+        cast.loopPrevention = loopPrevention;
         copiedExtras = true;
         return base;
     }

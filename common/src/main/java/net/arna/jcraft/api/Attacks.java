@@ -450,4 +450,15 @@ public interface Attacks {
             ent.die(damageSource);
         }
     }
+
+    static boolean prototypeMatch(AbstractMove<?, ?> a, AbstractMove<?, ?> b) {
+        if (a.getClass() != b.getClass()) return false;
+        if (a.getMoveClass() != b.getMoveClass()) return false;
+        if (a.isAerialVariant() != b.isAerialVariant()) return false;
+        if (a.isCrouchingVariant() != b.isCrouchingVariant()) return false;
+        if (a.getCooldown() != b.getCooldown()) return false;
+        if (a.getDuration() != b.getDuration()) return false;
+
+        return true;
+    }
 }
