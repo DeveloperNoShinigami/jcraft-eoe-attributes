@@ -87,7 +87,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     """, ModifierCondition.RIGHT_ARM_EMPTY))
             .build();
 
-    public static final SimpleUppercutAttack<StarPlatinumEntity> UPPERCUT = new SimpleUppercutAttack<StarPlatinumEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),
+    public static final SimpleUppercutAttack<StarPlatinumEntity> UPPERCUT = new SimpleUppercutAttack<StarPlatinumEntity>(JCraft.LIGHT_COOLDOWN,
             8, 14, 0.75f, 6f, 20, 1.5f, 0.25f, -0.6f, 0.75f)
             .withAnim(State.UPPERCUT)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -135,7 +135,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     Component.translatable("jcraft.starplatinum.crsp1hit"),
                     Component.empty()
             );
-    public static final GrabAttack<StarPlatinumEntity, State> GRAB = new GrabAttack<>(280, 8, 20,
+    public static final GrabAttack<StarPlatinumEntity, State> GRAB = new GrabAttack<>(0, 8, 20,
             1f, 2f, 20, 1.5f, 0.1f, 0f, GRAB_HIT,
             StateContainer.of(State.GRAB_HIT), 11, 0.8)
             .withSound(JSoundRegistry.SPTW_GRAB)
@@ -146,7 +146,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     Component.translatable("jcraft.starplatinum.crsp1"),
                     Component.literal("Blockable grab, knocks down.")
             );
-    public static final SimpleAttack<StarPlatinumEntity> STAR_FINGER = new SimpleAttack<StarPlatinumEntity>(200,
+    public static final SimpleAttack<StarPlatinumEntity> STAR_FINGER = new SimpleAttack<StarPlatinumEntity>(0,
             12, 20, 0.75f, 5f, 30, 1.75f, -0.4f, -0.25f)
             .withCrouchingVariant(GRAB)
             .withSound(JSoundRegistry.STAR_FINGER)
@@ -156,7 +156,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     Component.translatable("jcraft.starplatinum.sp1"),
                     Component.literal("Medium windup combo starter/extender, vacuums on hit, unsafe on block.")
             );
-    public static final SimpleUppercutAttack<StarPlatinumEntity> KNEE_UP = new SimpleUppercutAttack<StarPlatinumEntity>(30,
+    public static final SimpleUppercutAttack<StarPlatinumEntity> KNEE_UP = new SimpleUppercutAttack<StarPlatinumEntity>(0,
             8, 14, 0.75f, 4f, 13, 1.6f, 0.2f, -0.4f, 0.5f)
             .withSound(JSoundRegistry.STAR_PLATINUM_KNEE)
             .withImpactSound(JSoundRegistry.IMPACT_6)
@@ -165,7 +165,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     Component.translatable("jcraft.starplatinum.airsp2"),
                     Component.literal("Launches upward, larger and higher hitbox, higher stun, less damage.")
             );
-    public static final SimpleAttack<StarPlatinumEntity> KNEE = new SimpleAttack<StarPlatinumEntity>(20,
+    public static final SimpleAttack<StarPlatinumEntity> KNEE = new SimpleAttack<StarPlatinumEntity>(0,
             7, 12, 0.9f, 6f, 9, 1.5f, 0.3f, 0f)
             .withAerialVariant(KNEE_UP)
             .withSound(JSoundRegistry.STAR_PLATINUM_KNEE)
@@ -175,7 +175,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     Component.translatable("jcraft.starplatinum.sp2"),
                     Component.literal("Fast poke, low stun.")
             );
-    public static final ChargeBarrageAttack<StarPlatinumEntity> SHORT_CHARGE_BARRAGE = new ChargeBarrageAttack<StarPlatinumEntity>(280, 5, 25,
+    public static final ChargeBarrageAttack<StarPlatinumEntity> SHORT_CHARGE_BARRAGE = new ChargeBarrageAttack<StarPlatinumEntity>(140, 5, 25,
             6f, 0.6f, 15, 1.5f, 0.1f, 0f, 3, true)
             .withSound(JSoundRegistry.STAR_PLATINUM_LUNGING_BARRAGE)
             .withShockwaves()
@@ -184,7 +184,7 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     Component.translatable("jcraft.starplatinum.crsp3"),
                     Component.literal("Lasts shorter. Less punishable on whiff.")
             );
-    public static final ChargeBarrageAttack<StarPlatinumEntity> CHARGE_BARRAGE = new ChargeBarrageAttack<StarPlatinumEntity>(280, 5, 55,
+    public static final ChargeBarrageAttack<StarPlatinumEntity> CHARGE_BARRAGE = new ChargeBarrageAttack<StarPlatinumEntity>(140, 5, 55,
             7f, 0.6f, 15, 1.5f, 0.1f, 0f, 3, false)
             .withSound(JSoundRegistry.STAR_PLATINUM_ADVANCING_BARRAGE)
             .withShockwaves()

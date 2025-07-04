@@ -127,7 +127,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, high stun")
             );
-    public static final SingularityAttack SINGULARITY = new SingularityAttack(260, 11, 23,
+    public static final SingularityAttack SINGULARITY = new SingularityAttack(140, 11, 23,
             1f, 0f, 25, 2f, 0.4f, 0.2f, true)
             .withSound(JSoundRegistry.TWOH_SINGULARITY)
             .withAnim(State.SINGULARITY)
@@ -140,7 +140,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("block bypass (stun will always hit, but the opponent can stay blocking)")
             );
     public static final SimpleUppercutAttack<TheWorldOverHeavenEntity> OVERHEAD_KICK = new SimpleUppercutAttack<TheWorldOverHeavenEntity>(
-            200, 10, 20, 1.25f, 8f, 20, 1.5f, 0.3f, 0f, -1)
+            0, 10, 20, 1.25f, 8f, 20, 1.5f, 0.3f, 0f, -1)
             //.withSound(JSoundRegistry.TWOH_HEAVY)
             .withAnim(State.AIR_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -152,7 +152,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("Overhead Kick"),
                     Component.literal("high damage, good reach, launches down")
             );
-    public static final SingularityAttack TRUE_STRIKE = new SingularityAttack(200, 10, 22,
+    public static final SingularityAttack TRUE_STRIKE = new SingularityAttack(0, 10, 22,
             1f, 0f, 20, 2f, 0.3f, 0f, false)
             .withBlockStun(20)
             .withAerialVariant(OVERHEAD_KICK)
@@ -209,7 +209,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     SPECIAL 2 - applies every damage over time effect to victims
                     SPECIAL 3 - heals and enslaves mobs"""));
 
-    public static final AerialDivineFinisherAttack AERIAL_DIVINE_FINISHER = new AerialDivineFinisherAttack(280,
+    public static final AerialDivineFinisherAttack AERIAL_DIVINE_FINISHER = new AerialDivineFinisherAttack(200,
             16, 22, 0.75f, 0f, 20, 1.5f, 0f, 0f)
             .withSound(JSoundRegistry.TWOH_KNIFETHROW)
             .withBlockStun(6)

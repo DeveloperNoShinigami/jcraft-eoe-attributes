@@ -142,7 +142,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                     Component.literal("short windup, harming teleport with hitstun and light knockback")
             );
     public static final KnockdownAttack<MadeInHeavenEntity> LEG_CRUSHER = new KnockdownAttack<MadeInHeavenEntity>(
-            80, 9, 19, 0.85f, 7f, 22, 1.5f, 0.35f, 0.2f, 45)
+            0, 9, 19, 0.85f, 7f, 22, 1.5f, 0.35f, 0.2f, 45)
             .withSound(JSoundRegistry.MIH_LEGCRUSHER)
             .withImpactSound(JSoundRegistry.TW_KICK_HIT)
             .withExtraHitBox(0, -0.5, 1)
@@ -152,8 +152,8 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                     Component.literal("Leg Crusher"),
                     Component.literal("knocks down (2s)")
             );
-    public static final SimpleAttack<MadeInHeavenEntity> LOW_KICK = new SimpleAttack<MadeInHeavenEntity>(80,
-            8, 17, 0.85f, 6f, 26, 1.5f, 0.25f, 0.2f)
+    public static final SimpleAttack<MadeInHeavenEntity> LOW_KICK = new SimpleAttack<MadeInHeavenEntity>(
+            0, 8, 17, 0.85f, 6f, 26, 1.5f, 0.25f, 0.2f)
             .withCrouchingVariant(LEG_CRUSHER)
             .withSound(JSoundRegistry.MIH_LEGCRUSHER)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -164,7 +164,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                     Component.literal("Low Kick"),
                     Component.literal("combo starter/extender, mih hoofs the enemies legs in a quick, stunning attack")
             );
-    public static final FuryChopAttack FURY_CHOP = new FuryChopAttack(200, 15, 24, 0.85f,
+    public static final FuryChopAttack FURY_CHOP = new FuryChopAttack(0, 15, 24, 0.85f,
             7f, 20, 1.6f, 0.25f, 0.2f)
             .withSound(JSoundRegistry.MIH_FURYCHOP)
             .withImpactSound(JSoundRegistry.IMPACT_2)
@@ -196,7 +196,7 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
                             it is charged by landing hits
                             the speedometer impacts the level of speed and haste granted by Time Acceleration
                             if the speedometer is full and the charging period finishes, enemies become standless for 15s"""));
-    public static final CircleAttack CIRCLE = new CircleAttack(400, 13, 14, 1.25f)
+    public static final CircleAttack CIRCLE = new CircleAttack(300, 13, 14, 1.25f)
             .withSound(JSoundRegistry.MIH_CIRCLE)
             .withInfo(
                     Component.literal("Heaven's Judgement"),

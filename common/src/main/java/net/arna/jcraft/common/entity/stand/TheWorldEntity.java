@@ -91,7 +91,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
                     """, ModifierCondition.USER_NOT_SPRINTING))
             .build();
 
-    public static final SimpleAttack<TheWorldEntity> LOW_KICK = new SimpleAttack<TheWorldEntity>(20, 8, 14, 0.75f,
+    public static final SimpleAttack<TheWorldEntity> LOW_KICK = new SimpleAttack<TheWorldEntity>(0, 8, 14, 0.75f,
             6f, 17, 1.5f, 0.2f, 0.65f)
             .withAnim(State.LOW)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -130,7 +130,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, high stun")
             );
-    public static final SimpleAttack<TheWorldEntity> SWEEP = new SimpleAttack<TheWorldEntity>(40, 6, 16, 0.75f, 5f,
+    public static final SimpleAttack<TheWorldEntity> SWEEP = new SimpleAttack<TheWorldEntity>(0, 6, 16, 0.75f, 5f,
             16, 1.85f, 0.5f, 0.4f)
             .withSound(JSoundRegistry.TW_KICK)
             .withImpactSound(JSoundRegistry.TW_KICK_HIT)
@@ -140,7 +140,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
                     Component.literal("Sweep"),
                     Component.literal("fast, decent stun")
             );
-    public static final SimpleUppercutAttack<TheWorldEntity> ROUNDHOUSE = new SimpleUppercutAttack<TheWorldEntity>(20, 7, 13, 0.75f, 5f,
+    public static final SimpleUppercutAttack<TheWorldEntity> ROUNDHOUSE = new SimpleUppercutAttack<TheWorldEntity>(0, 7, 13, 0.75f, 5f,
             10, 1.75f, 0.5f, -0.2f, 0.4f)
             .withCrouchingVariant(SWEEP)
             .withSound(JSoundRegistry.TW_KICK)
@@ -168,7 +168,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
                     Component.literal("Feign Barrage"),
                     Component.literal("counter, 0.25s windup, 2.25s duration, teleports and knocks down on hit")
             );
-    public static final TWDonutAttack DONUT = new TWDonutAttack(220, 20, 42, 1f,
+    public static final TWDonutAttack DONUT = new TWDonutAttack(0, 20, 42, 1f,
             9f, 52, 2f, 1f, 0f)
             .withSound(JSoundRegistry.TW_DONUT)
             .withImpactSound(JSoundRegistry.TW_DONUT_HIT)
@@ -185,7 +185,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
                     Component.literal("Timeskip"),
                     Component.literal("14m range")
             );
-    public static final SimpleAttack<TheWorldEntity> LUNGE = new SimpleAttack<TheWorldEntity>(160, 9, 14,
+    public static final SimpleAttack<TheWorldEntity> LUNGE = new SimpleAttack<TheWorldEntity>(100, 9, 14,
             1f, 5f, 12, 1.5f, 0.6f, 0.2f)
             .withExtraHitBox(1)
             .withInitAction(LungeAction.lunge(0.75f, 0f).isNotFree())
@@ -198,7 +198,7 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
                     Component.literal("user & stand charge forward, launches")
             );
     public static final TWChargeAttack CHARGE = new TWChargeAttack(
-            280, 5, 19, 7.5f, 5f, 20, 1.5f, 0.25f, 0)
+            100, 5, 19, 7.5f, 5f, 20, 1.5f, 0.25f, 0)
             .withCrouchingVariant(LUNGE)
             .withSound(JSoundRegistry.TW_CHARGE)
             .withImpactSound(JSoundRegistry.TW_CHARGE_HIT)

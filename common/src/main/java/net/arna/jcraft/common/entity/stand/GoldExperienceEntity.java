@@ -71,7 +71,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             .build();
 
     // JCraft.lightCooldown -> 0 | 0.5f -> 0.35f
-    public static final BerryBushAttack BERRY_BUSH = new BerryBushAttack(120, 16, 20,
+    public static final BerryBushAttack BERRY_BUSH = new BerryBushAttack(100, 16, 20,
             1.25f, 4f, 5, 1.5f, 0.75f, 0.2f)
             .withAnim(State.LIFE_GIVER)
             .withImpactSound(JSoundRegistry.IMPACT_4)
@@ -101,7 +101,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                     Component.literal("quick combo starter, low stun")
             );
     public static final SimpleAttack<GoldExperienceEntity> HEAVY = new SimpleAttack<GoldExperienceEntity>(
-            200, 13, 22, 1f, 9f, 10, 1.5f, 1.5f, 0f)
+            0, 13, 22, 1f, 9f, 10, 1.5f, 1.5f, 0f)
             .withExtraHitBox(new HitBoxData(0, 0, 1.25))
 //            .withSound(JSoundRegistry.GE_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_2)
@@ -142,7 +142,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                     Component.literal("Tree Summon"),
                     Component.literal("two-hitting launch")
             );
-    public static final LifeGiverAttack LIFE_GIVER = new LifeGiverAttack(400, 16, 25, 1f)
+    public static final LifeGiverAttack LIFE_GIVER = new LifeGiverAttack(300, 16, 25, 1f)
             .withSound(JSoundRegistry.GE_HEAL)
             .withInfo(
                     Component.literal("Life Giver"),
@@ -183,7 +183,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                     Component.literal("links into Light")
             );
     public static final SimpleAttack<GoldExperienceEntity> REKKA1 = new SimpleAttack<GoldExperienceEntity>
-            (160, 7, 14, 1f, 5f, 15, 1.5f, 0.5f, 0f)
+            (0, 7, 14, 1f, 5f, 15, 1.5f, 0.5f, 0f)
             .withAnim(State.REKKA1)
             .withSound(JSoundRegistry.GE_REKKA1)
             .withImpactSound(JSoundRegistry.IMPACT_2)

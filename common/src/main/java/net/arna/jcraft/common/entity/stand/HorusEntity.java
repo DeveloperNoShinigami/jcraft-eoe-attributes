@@ -100,7 +100,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("Low Claw"),
                     Component.literal("faster and further hitting than standing, but doesn't combo into anything")
             );
-    public static final SimpleAttack<HorusEntity> LIGHT_AIR = SimpleAttack.<HorusEntity>lightAttack(
+    public static final SimpleAttack<HorusEntity> LIGHT_AIR = SimpleAttack.<HorusEntity>lightAttack( //todo: buff ts
                     6, 11, 0.75f, 5f, 12, 0.25f, 0.5f)
             //.withFollowup(LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_3)
@@ -131,7 +131,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("Detonate"),
                     Component.empty()
             );
-    public static final StompAttack STOMP = new StompAttack(140, 11, 22, 0.75f,
+    public static final StompAttack STOMP = new StompAttack(0, 11, 22, 0.75f,
             9f, 12, 1.3f, 0.6f, 0.4f)
             .withFollowup(DETONATE)
             .withSound(JSoundRegistry.HORUS_STOMP)
@@ -144,7 +144,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             );
     // Utility
     public static final HorusDivekickAttack DIVEKICK = new HorusDivekickAttack(
-            280, 8, 25, 8, 6f, 19, 1.5f, 0.23f, 0.3f)
+            240, 8, 25, 8, 6f, 19, 1.5f, 0.23f, 0.3f)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -156,7 +156,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                             Removes fall damage.""")
             );
     // Special 1
-    public static final IceLanceAttack LANCE = new IceLanceAttack(100, 18, 24, 0.75f)
+    public static final IceLanceAttack LANCE = new IceLanceAttack(80, 18, 24, 0.75f)
             .withAnim(State.LANCE)
             .withInfo(
                     Component.literal("Ice Lance"),
@@ -181,7 +181,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.empty()
             );
     public static final SimpleHoldableMove<HorusEntity> CHARGE_ICICLE = new SimpleHoldableMove<HorusEntity>(
-            100, IcicleFireAttack.MAX_ICICLE_CHARGE_TIME + 1, IcicleFireAttack.MAX_ICICLE_CHARGE_TIME, 0.75f, 9)
+            0, IcicleFireAttack.MAX_ICICLE_CHARGE_TIME + 1, IcicleFireAttack.MAX_ICICLE_CHARGE_TIME, 0.75f, 9)
             .withFollowup(CHARGE_FIRE)
             .withArmor(3)
             .withInfo(

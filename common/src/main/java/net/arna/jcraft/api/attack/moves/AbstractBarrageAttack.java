@@ -96,7 +96,6 @@ public abstract class AbstractBarrageAttack<T extends AbstractBarrageAttack<T, A
 
             if (moveStun > twoThirdsDuration) {
                 int newStun = (int) Mth.sqrt(originalStun / (moveStun - twoThirdsDuration)) + originalStun / interval;
-                JCraft.LOGGER.info("winding barrage stun: " + newStun);
                 withStun(newStun);
             } else {
                 withStun(originalStun);

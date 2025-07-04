@@ -101,7 +101,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .build();
 
     public static final SimpleMultiHitAttack<TheFoolEntity> DRILL = new SimpleMultiHitAttack<TheFoolEntity>(
-            20, 14, 1.5f, 2.5f, 7, 1.5f, 0.2f, 0.25f, IntSet.of(5, 8, 11))
+            0, 14, 1.5f, 2.5f, 7, 1.5f, 0.2f, 0.25f, IntSet.of(5, 8, 11))
             .withAnim(State.DRILL)
             .withBlockStun(4)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
@@ -147,7 +147,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Component.literal("3-hit Combo"), Component.literal("fast knockdown provider"));
-    public static final TFLaunchAttack LAUNCH = new TFLaunchAttack(240, 16, 20,
+    public static final TFLaunchAttack LAUNCH = new TFLaunchAttack(0, 16, 20,
             1.25f, 8f, 25, 2f, 0.5f, -0.3f)
             .withSound(JSoundRegistry.FOOL_LAUNCH)
             .withAction(EffectAction.inflict(MobEffects.LEVITATION, 5, 19, true, false))
@@ -170,7 +170,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Component.literal("Slam"),
                     Component.literal("")
             );
-    public static final PoundAttack POUND = new PoundAttack(220, 7, 22, 1.25f,
+    public static final PoundAttack POUND = new PoundAttack(0, 7, 22, 1.25f,
             4f, 25, 1.5f, 0.1f, -0.1f)
             .withFollowup(SLAM)
             .withSound(JSoundRegistry.FOOL_BARK2)
@@ -183,7 +183,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     SPECIAL 1 - no sand
                     SPECIAL 2 - semicircle
                     SPECIAL 3 - diagonal pattern (influenced by where the user is looking)"""));
-    public static final SandCloneMove SAND_CLONE = new SandCloneMove(300, 7, 11, 1f)
+    public static final SandCloneMove SAND_CLONE = new SandCloneMove(200, 7, 11, 1f)
             .withSound(SoundEvents.SAND_PLACE)
             .withInfo(
                     Component.literal("Sand Manipulation"),
@@ -203,13 +203,13 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Component.literal("Sandwave"),
                     Component.literal("The Fool turns into a quick sandwave that knocks anything it touches down")
             );
-    public static final SandTornadoMove SAND_TORNADO = new SandTornadoMove(280, 12, 13, 1f)
+    public static final SandTornadoMove SAND_TORNADO = new SandTornadoMove(200, 12, 13, 1f)
             .withSound(JSoundRegistry.FOOL_LAUNCH)
             .withInfo(
                     Component.literal("Sand Tornado"),
                     Component.literal("summons a slow, stunning sand tornado")
             );
-    public static final TFChargeAttack CHARGE = new TFChargeAttack(220, 5, 20, 7f,
+    public static final TFChargeAttack CHARGE = new TFChargeAttack(200, 5, 20, 7f,
             6f, 10, 1.5f, 1.2f, 0f)
             .withSound(JSoundRegistry.FOOL_CHARGE)
             .withImpactSound(JSoundRegistry.IMPACT_2)

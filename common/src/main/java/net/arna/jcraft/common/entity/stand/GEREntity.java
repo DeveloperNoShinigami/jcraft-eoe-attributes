@@ -96,7 +96,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     Component.literal("Downward Kick"),
                     Component.literal("medium stun combo starter, low hitbox, low blockstun")
             );
-    public static final OverheadKickAttack OVERHEAD_KICK = new OverheadKickAttack(140, 14, 24,
+    public static final OverheadKickAttack OVERHEAD_KICK = new OverheadKickAttack(0, 14, 24,
             1f, 9f, 40, 1.5f, 0.8f, 0.25f)
             .withSound(JSoundRegistry.GER_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -115,7 +115,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     Component.literal("Kick Barrage (Final Hit)"),
                     Component.empty()
             );
-    public static final BarrageAttack<GEREntity> KICK_BARRAGE = new BarrageAttack<GEREntity>(280, 0, 48,
+    public static final BarrageAttack<GEREntity> KICK_BARRAGE = new BarrageAttack<GEREntity>(140, 0, 48,
             1f, 1f, 20, 1.5f, 0.3f, 0f, 3)
             .withFinisher(37, KICK_BARRAGE_FINISHER)
             .withSound(JSoundRegistry.GER_KICKBARRAGE)
@@ -133,7 +133,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")
             );
-    public static final KnockdownAttack<GEREntity> OVERHEAD_SMASH = new KnockdownAttack<GEREntity>(220, 10, 19,
+    public static final KnockdownAttack<GEREntity> OVERHEAD_SMASH = new KnockdownAttack<GEREntity>(0, 10, 19,
             1f, 9f, 10, 1.5f, 1.1f, 0f, 30)
             .withAerialVariant(OVERHEAD_KICK)
             .withSound(JSoundRegistry.GER_HEAVY)
@@ -175,7 +175,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     Component.literal("Life Beam"),
                     Component.literal("")
             );
-    public static final SimpleHoldableMove<GEREntity> LIFE_BEAM_CHARGE = new SimpleHoldableMove<GEREntity>(280,
+    public static final SimpleHoldableMove<GEREntity> LIFE_BEAM_CHARGE = new SimpleHoldableMove<GEREntity>(100,
             0, 40, 1.1f, 9)
             .withFollowup(LIFE_BEAM)
             .withSound(JSoundRegistry.GER_LASER)

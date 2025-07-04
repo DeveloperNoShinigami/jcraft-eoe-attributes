@@ -123,10 +123,12 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     @Override
-    public void setCurrentMove(AbstractMove<?, ? super A> move) {
+    public void setCurrentMove(@Nullable AbstractMove<?, ? super A> move) {
         previousAttack = curMove;
         curMove = move;
-        moveUsage = new MoveUsage(user.tickCount, move);
+        if (curMove != null) {
+            moveUsage = new MoveUsage(user.tickCount, move);
+        }
     }
 
     @Override
@@ -257,7 +259,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             return true;
         }
 
-        curMove = move;
+        setCurrentMove(move);
         moveStun = move.getDuration();
 
         if (curMove instanceof AbstractMultiHitAttack<?, ?> multiHitAttack) {

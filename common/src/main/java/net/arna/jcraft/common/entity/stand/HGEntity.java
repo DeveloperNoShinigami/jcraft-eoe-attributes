@@ -118,7 +118,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.literal("quick combo starter")
             );
     public static final SimpleAttack<HGEntity> SENDOFF = new SimpleAttack<HGEntity>(
-            180, 11, 20, 1, 8f, 16, 2f, 1.5f, 0)
+            0, 11, 20, 1, 8f, 16, 2f, 1.5f, 0)
             .withSound(JSoundRegistry.WS_DONUT)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_3)
@@ -149,7 +149,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.empty()
             );
     public static final SimpleAttack<HGEntity> EXTEND_FORWARD = new SimpleAttack<HGEntity>(
-            100, 10, 21, 1f, 5, 15, 1.5f, 0.7f, 0.2f)
+            0, 10, 21, 1f, 5, 15, 1.5f, 0.7f, 0.2f)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withSound(JSoundRegistry.HG_EXTEND)
             .withExtraHitBox(2, -0.1, 1.5)
@@ -169,7 +169,7 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.empty()
             );
     public static final SimpleAttack<HGEntity> EXTEND_UP = new SimpleAttack<HGEntity>(
-            100, 10, 21, 1f, 5, 15, 1.5f, 0.7f, -0.2f)
+            0, 10, 21, 1f, 5, 15, 1.5f, 0.7f, -0.2f)
             .withCrouchingVariant(EXTEND_FORWARD)
 
             .withSound(JSoundRegistry.HG_EXTEND)

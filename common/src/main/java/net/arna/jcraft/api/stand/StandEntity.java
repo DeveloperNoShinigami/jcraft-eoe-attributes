@@ -577,10 +577,12 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     @Override
-    public void setCurrentMove(AbstractMove<?, ? super E> move) {
+    public void setCurrentMove(@Nullable AbstractMove<?, ? super E> move) {
         prevMove = curMove;
         curMove = move;
-        moveUsage = new MoveUsage(tickCount, curMove);
+        if (curMove != null) {
+            moveUsage = new MoveUsage(tickCount, curMove);
+        }
     }
 
     @Override
