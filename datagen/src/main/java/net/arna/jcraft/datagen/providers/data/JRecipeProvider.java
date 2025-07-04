@@ -914,11 +914,12 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .save(exporter);
         // Valentine's pants
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.VALENTINE_PANTS.get())
-                .pattern("PPP")
+                .pattern("PMP")
                 .pattern("PLP")
                 .pattern("P P")
                 .define('L', Items.NETHERITE_LEGGINGS)
-                .define('P', Items.MAGENTA_DYE)
+                .define('M', Items.MAGENTA_DYE)
+                .define('P', Items.PINK_DYE)
                 .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
                 .save(exporter);
         // Valentine's boots
