@@ -5,6 +5,7 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -146,7 +147,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withImpactSound(JSoundRegistry.CMOON_GRAV_PUNCH_HIT)
             .withAction(CMoonInversionAction.addInversion(40, 0.5f, false))
             .withHyperArmor()
-            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
             .withExtraHitBox(1d)
             .withInfo(
                     Component.literal("Only One Punch"),
@@ -157,7 +158,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withSound(JSoundRegistry.CMOON_GROUNDSLAM)
             .withImpactSound(JSoundRegistry.IMPACT_10)
             .withAction(CMoonInversionAction.addInversion(40, 0.5f, false))
-            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withStaticY()
             .withInfo(
@@ -300,7 +301,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
 
             if (time < 1) {
                 final LivingEntity entity = inversion.getEntity();
-                damage(this, inversion.getDamage(), level().damageSources().mobAttack(user), entity);
+                Attacks.damage(this, inversion.getDamage(), level().damageSources().mobAttack(user), entity);
                 inversions.remove(i);
 
                 if (inversion.doSlow) {

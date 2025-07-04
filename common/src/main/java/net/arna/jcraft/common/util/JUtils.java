@@ -85,7 +85,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static net.arna.jcraft.api.stand.StandEntity.damageLogic;
+import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public final class JUtils {
     public static final float DEG_TO_RAD = 0.017453292F;

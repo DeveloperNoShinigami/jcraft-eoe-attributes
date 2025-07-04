@@ -170,7 +170,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             .withAction(EffectAction.inflict(JStatusRegistry.KNOCKDOWN, 25, 0, true, false))
             .withLaunchNoShockwave()
             .withImpactSound(JSoundRegistry.IMPACT_5)
-            .withBlockableType(BlockableType.NON_BLOCKABLE)
+            .withBlockableType(BlockableType.UNBLOCKABLE)
             .withInfo(
                     Component.literal("Charge"),
                     Component.literal("4 block range, unblockable knockdown")
@@ -182,7 +182,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             .withImpactSound(JSoundRegistry.IMPACT_5)
             .withLaunch()
             .withHyperArmor()
-            .withBlockableType(BlockableType.NON_BLOCKABLE)
+            .withBlockableType(BlockableType.UNBLOCKABLE)
             .withInfo(
                     Component.literal("Destroy"),
                     Component.literal("slow, uninterruptible, unblockable knockdown"));

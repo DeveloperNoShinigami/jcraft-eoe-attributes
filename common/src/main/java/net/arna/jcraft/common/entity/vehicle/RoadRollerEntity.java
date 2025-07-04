@@ -8,15 +8,14 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
-import net.arna.jcraft.common.gravity.util.RotationUtil;
-import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JItemRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JStatusRegistry;
+import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
+import net.arna.jcraft.common.gravity.util.RotationUtil;
+import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -51,6 +50,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
+import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     private static boolean recipeChecked = false;
@@ -316,7 +317,7 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
 
                     final LivingEntity target = JUtils.getUserIfStand(living);
                     if (getOwner() != target) {
-                        StandEntity.damageLogic(level(), target, target.position().subtract(position()), 25, 3,
+                        damageLogic(level(), target, target.position().subtract(position()), 25, 3,
                                 false, 12.0f, false, 21, ds, getOwner(), CommonHitPropertyComponent.HitAnimation.CRUSH, false);
                     }
                 }

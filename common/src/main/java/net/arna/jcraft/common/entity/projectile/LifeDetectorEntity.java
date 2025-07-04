@@ -10,11 +10,11 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -36,6 +36,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
+
+import static net.arna.jcraft.api.Attacks.*;
 
 public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
     private static final EntityDataAccessor<Boolean> EXPLODED;
@@ -88,7 +90,7 @@ public class LifeDetectorEntity extends JAttackEntity implements GeoEntity {
             }
             final LivingEntity target = JUtils.getUserIfStand(living);
             final Vec3 kbVec = target.position().subtract(pos).normalize();
-            StandEntity.damageLogic(level(), target, kbVec, 10, 1, false, 5f, true, 9,
+            damageLogic(level(), target, kbVec, 10, 1, false, 5f, true, 9,
                     level().damageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false);
         }
 

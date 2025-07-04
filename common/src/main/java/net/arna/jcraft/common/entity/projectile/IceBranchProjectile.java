@@ -11,11 +11,10 @@ import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -32,6 +31,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.Set;
+
+import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
     private static final int MAX_CHAIN_LENGTH = 10;
@@ -135,7 +136,7 @@ public class IceBranchProjectile extends AbstractArrow implements GeoEntity {
 
                 LivingEntity target = JUtils.getUserIfStand(living);
 
-                StandEntity.damageLogic(level, target, Vec3.ZERO,
+                damageLogic(level, target, Vec3.ZERO,
                         30 - 10 * chainIndex / MAX_CHAIN_LENGTH, 0, false, 4f, true,
                         10, level.damageSources().mobAttack(livingOwner), livingOwner,
                         CommonHitPropertyComponent.HitAnimation.MID);

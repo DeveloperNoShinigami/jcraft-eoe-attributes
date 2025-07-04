@@ -1,8 +1,6 @@
 package net.arna.jcraft.api.stand;
 
 import com.google.common.base.MoreObjects;
-import dev.architectury.networking.NetworkManager;
-import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.Pair;
 import lombok.Getter;
 import lombok.NonNull;
@@ -16,6 +14,8 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.AttackData;
+import net.arna.jcraft.api.MoveUsage;
 import net.arna.jcraft.api.attack.IAttacker;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
@@ -30,27 +30,21 @@ import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JStatRegistry;
+import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
-import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.PurpleHazeEntity;
-import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
-import net.arna.jcraft.common.network.s2c.ComboCounterPacket;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
 import net.arna.jcraft.common.util.*;
-import net.arna.jcraft.mixin.LivingEntityInvoker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.api.registry.JPacketRegistry;
-import net.arna.jcraft.api.registry.JSoundRegistry;
-import net.arna.jcraft.api.registry.JStatRegistry;
-import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -77,7 +71,6 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -88,6 +81,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import static net.arna.jcraft.JCraft.comboBreak;
+import static net.arna.jcraft.api.Attacks.damageLogic;
 import static net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 
 public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S> & StandAnimationState<E>>
@@ -151,6 +145,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     protected MoveInputType queuedMove;
     private MoveInputType holdingType;
     private AbstractMove<?, ? super E> curMove;
+    @Getter
+    private MoveUsage moveUsage;
     public AbstractMove<?, ? super E> prevMove;
     public int armorPoints;
     private boolean performedThisTick;
@@ -584,6 +580,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     public void setCurrentMove(AbstractMove<?, ? super E> move) {
         prevMove = curMove;
         curMove = move;
+        moveUsage = new MoveUsage(tickCount, curMove);
     }
 
     @Override
@@ -737,122 +734,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     public final void onUserMoveInput(MoveInputType type, boolean pressed, boolean moveInitiated) {
         onUserMoveInput(getCurrentMove(), type, pressed, moveInitiated);
-    }
-
-    /**
-     * Basic damage method, you likely want to use baseDamageLogic or damageLogic instead
-     *
-     * @param damage       damage in half hearts
-     * @param damageSource source of damage
-     * @param ent          entity to harm
-     */
-    public static void damage(final @Nullable Entity attacker, float damage, final DamageSource damageSource, final LivingEntity ent) {
-        if (!JUtils.canDamage(damageSource, ent)) {
-            return;
-        }
-
-        float scaling = ((IDamageScaler) ent).jcraft$getDamageScaling();
-        //JCraft.LOGGER.info("Damaging entity: " + ent + " with damage: " + damage + " and scaling: " + scaling);
-        damage *= scaling;
-
-        if (JServerConfig.HEALTH_TO_DAMAGE_SCALING.getValue()) {
-            float healthRatio = ent.getMaxHealth() / 20.0f;
-            float damageAdjustment = healthRatio - 1.0f;
-
-            if (damageAdjustment > 0.0f) {
-                damage *= (1.0f + damageAdjustment / 5.0f);
-            }
-        }
-
-        float armor = ent.getArmorValue();
-        float toughness = (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
-
-        // raw damage goes into statistics
-        if (JUtils.getUserIfStand(attacker) instanceof final Player player) {
-            player.awardStat(JStatRegistry.RAW_DAMAGE.get(), (int)damage);
-        }
-
-        // Players are hit as if they have unenchanted netherite
-        if (ent instanceof Player) {
-            armor = 20.0f;
-            toughness = 12.0f;
-        } else if ( // Standless non-players have received damage multiplied
-                !(ent instanceof StandEntity<?,?>)
-                && JUtils.getStand(ent) == null
-        ) {
-            damage *= JServerConfig.VS_STANDLESS_DAMAGE_MULTIPLIER.getValue();
-        }
-
-        // All stands ignore 10% of armor & armor toughness
-        // Armor and toughness considerations are also capped in here at netherite levels
-        damage = JUtils.getDamageThroughArmor(damage, armor * 0.9f, toughness * 0.9f);
-        damage = ((LivingEntityInvoker) ent).invokeModifyAppliedDamage(damageSource, damage);
-
-        // Apply absorption
-        applyAbsorptionAndStats(damage, damageSource, ent);
-    }
-
-    private static void applyAbsorptionAndStats(float damage, final DamageSource damageSource, final LivingEntity ent) {
-        float f = damage;
-        damage = Math.max(damage - ent.getAbsorptionAmount(), 0.0F);
-        ent.setAbsorptionAmount(ent.getAbsorptionAmount() - (f - damage));
-
-        if (damage <= 0) {
-            return;
-        }
-
-        final float h = ent.getHealth();
-        final LivingEntityInvoker invoker = (LivingEntityInvoker) ent;
-
-        // Statistics
-        final Level world = ent.level();
-        if (ent instanceof Player) {
-            NetworkManager.sendToPlayers(JUtils.tracking(ent), JPacketRegistry.S2C_STAND_HURT, new FriendlyByteBuf(Unpooled.buffer()).writeVarInt(ent.getId()));
-        } else {
-            world.broadcastEntityEvent(ent, (byte) 2);
-        }
-
-        ent.level().broadcastDamageEvent(ent, damageSource);
-        invoker.callPlayHurtSound(damageSource);
-        invoker.setLastDamageTaken(damage);
-        invoker.setLastDamageSource(damageSource);
-        invoker.setLastDamageTime(world.getGameTime());
-
-        ent.invulnerableTime = 20;
-        ent.hurtDuration = ent.hurtTime = 10;
-
-        ent.setHealth(h - damage);
-        ent.getCombatTracker().recordDamage(damageSource, damage);
-        ent.gameEvent(GameEvent.ENTITY_DAMAGE);
-        if (damageSource.getEntity() instanceof LivingEntity livingAttacker) {
-            ent.setLastHurtByMob(livingAttacker);
-        }
-        if (ent.isDeadOrDying()) {
-            ent.die(damageSource);
-        }
-    }
-
-    /**
-     * Basic damage method, ignores potion effects and enchantments, accounts for armor and damage scaling
-     *
-     * @param damage       damage in half hearts
-     * @param damageSource source of damage
-     * @param ent          entity to harm
-     */
-    public static void trueDamage(float damage, DamageSource damageSource, LivingEntity ent) {
-        if (ent == null || ent.isRemoved() || ent.isDeadOrDying()) {
-            return;
-        }
-
-        float scaling = ((IDamageScaler) ent).jcraft$getDamageScaling();
-        //JCraft.LOGGER.info("True damaging entity: " + ent + " with damage: " + damage + " and scaling: " + scaling);
-        damage *= scaling;
-
-        // All stands ignore 10% of armor & armor toughness
-        damage = JUtils.getDamageThroughArmor(damage, (float) ent.getArmorValue() * 0.9f, (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 0.9f);
-
-        // Apply absorption
-        applyAbsorptionAndStats(damage, damageSource, ent);
     }
 
     // Stock attacks to define
@@ -1191,7 +1072,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
     }
 
-    private boolean canBlock() {
+    public boolean canBlock() {
         return !blocking && (user == null || !DashData.isDashing(user)) && canAttack();
     }
 
@@ -1226,273 +1107,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 : ATTACK_ROTATION;
 
         setRotationOffset(rotation);
-    }
-
-    /**
-     * Highest level damage method, handles combo counting, DEFAULTS unblockable TO FALSE
-     *
-     * @param world        world to process damage in
-     * @param ent          victim
-     * @param kbVec        knockback vector to apply
-     * @param stunTicks    stun duration in ticks
-     * @param overrideStun will the attack override all other types of stun?
-     * @param damage       damage in half hearts
-     * @param lift         will the attack lift the victim upon an aerial hit?
-     */
-    public static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel,
-                                   boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source,
-                                   @Nullable Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation,
-                                   boolean canBackstab, boolean unblockable) {
-        if (world == null || world.isClientSide || ent == null || !ent.canBeSeenAsEnemy()) {
-            return;
-        }
-        if (attacker instanceof ServerPlayer playerEntity) {
-            comboCounterLogic(playerEntity, ent);
-        }
-
-        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, canBackstab, unblockable);
-    }
-
-    /**
-     * Highest level damage method, handles combo counting, DEFAULTS unblockable TO FALSE
-     *
-     * @param world        world to process damage in
-     * @param ent          victim
-     * @param kbVec        knockback vector to apply
-     * @param stunTicks    stun duration in ticks
-     * @param overrideStun will the attack override all other types of stun?
-     * @param damage       damage in half hearts
-     * @param lift         will the attack lift the victim upon an aerial hit?
-     */
-    public static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel,
-                                   boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source,
-                                   @Nullable Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation,
-                                   boolean canBackstab) {
-        if (world == null || world.isClientSide || ent == null || !ent.canBeSeenAsEnemy()) {
-            return;
-        }
-        if (attacker instanceof ServerPlayer playerEntity) {
-            comboCounterLogic(playerEntity, ent);
-        }
-
-        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, canBackstab, false);
-    }
-
-    /**
-     * Highest level damage method, handles combo counting, DEFAULTS canBackstab and unblockable TO FALSE
-     *
-     * @param world        world to process damage in
-     * @param ent          victim
-     * @param kbVec        knockback vector to apply
-     * @param stunTicks    stun duration in ticks
-     * @param overrideStun will the attack override all other types of stun?
-     * @param damage       damage in half hearts
-     * @param lift         will the attack lift the victim upon an aerial hit?
-     */
-    public static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel,
-                                   boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source,
-                                   @Nullable Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation) {
-        if (world == null || world.isClientSide || ent == null || !ent.canBeSeenAsEnemy()) {
-            return;
-        }
-        if (attacker instanceof ServerPlayer playerEntity) {
-            comboCounterLogic(playerEntity, ent);
-        }
-        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, false, false);
-    }
-
-    /**
-     * Handles combo counting for specific player
-     *
-     * @param playerEntity attacker
-     */
-    private static void comboCounterLogic(ServerPlayer playerEntity, LivingEntity victim) {
-        if (victim == null || victim instanceof IOwnable ownable && ownable.getMaster() == playerEntity) {
-            return;
-        }
-        if (!JServerConfig.ENABLE_FRIENDLY_FIRE.getValue() && victim.isAlliedTo(playerEntity)) {
-            return;
-        }
-
-        IComboCounter comboCounter = (IComboCounter) playerEntity;
-
-        if (comboCounter.jcraft$getLastAttacked() != victim) {
-            comboCounter.jcraft$setComboCount(1);
-        } else {
-            MobEffectInstance stun = comboCounter.jcraft$getLastAttacked().getEffect(JStatusRegistry.DAZED.get());
-            if (stun != null && stun.getAmplifier() != 2) {
-                comboCounter.jcraft$incrementComboCount();
-            } else {
-                comboCounter.jcraft$setComboCount(1);
-            }
-
-            ComboCounterPacket.send(playerEntity, comboCounter.jcraft$getComboCount(), ((IDamageScaler) victim).jcraft$getDamageScaling());
-        }
-
-        comboCounter.jcraft$setLastAttacked(victim);
-    }
-
-    /**
-     * Mid-level damage method, handles blocking, lifting, counters, velocity modification
-     *
-     * @param ent          victim
-     * @param kbVec        knockback vector to apply
-     * @param stunTicks    stun duration in ticks
-     * @param overrideStun will the attack override all other types of stun?
-     * @param damage       damage in half hearts
-     * @param lift         will the attack lift the victim upon an aerial hit?
-     * @param hitAnimation animation the opponent will do when they are hit
-     */
-    private static void baseDamageLogic(LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel, boolean overrideStun,
-                                        float damage, boolean lift, int blockstun, DamageSource source, @Nullable Entity attacker,
-                                        CommonHitPropertyComponent.HitAnimation hitAnimation, boolean canBackstab, boolean unblockable) {
-        if (ent instanceof ICustomDamageHandler customDamageHandler) {
-            if (!customDamageHandler.handleDamage(kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, canBackstab, unblockable)) {
-                return;
-            }
-        }
-
-        if (ent != null && !JServerConfig.ENABLE_FRIENDLY_FIRE.getValue() && attacker != null && ent.isAlliedTo(attacker)) {
-            return;
-        }
-
-        boolean hit = true;
-        boolean tsHit = JUtils.isAffectedByTimeStop(ent);
-
-        final StandEntity<?, ?> stand = JUtils.getStand(ent);
-        if (stand != null) {
-            // If a stand wants to block and can, but didn't get the chance to due to execution order, prompt blocking here.
-            if (stand.wantToBlock && stand.canBlock()) {
-                stand.tryBlock();
-            }
-
-            AbstractMove<?, ?> standAttack = stand.getCurrentMove();
-            if (standAttack != null) {
-                // Counter check
-                if (!tsHit && standAttack.isCounter() && stand.getMoveStun() < standAttack.getWindupPoint()) {
-                    //noinspection unchecked
-                    ((AbstractCounterAttack<?, StandEntity<?, ?>>) standAttack).counter(stand, attacker, source);
-                    ent.removeEffect(JStatusRegistry.DAZED.get());
-                    return;
-                }
-
-                if (--stand.armorPoints < 0) {
-                    stand.cancelMove(true);
-                } else {
-                    JComponentPlatformUtils.getMiscData(ent).displayArmoredHit();
-                }
-            }
-
-            if (stand.blocking && !stand.isRemote()) {
-                boolean backstabbed = false;
-                if (attacker != null) {
-                    double delta = Math.abs((ent.yHeadRot + 90.0f) % 360.0f - (attacker.getYHeadRot() + 90.0f) % 360.0f);
-                    if (canBackstab && (360.0 - delta % 360.0 < 45 || delta % 360.0 < 45) && ent.distanceToSqr(attacker.position()) >= 1.5625) { // Backstab logic
-                        JCraft.createParticle((ServerLevel) attacker.level(), ent.getX(), attacker.getEyeY(), ent.getZ(), JParticleType.BACK_STAB);
-                        stand.playSound(JSoundRegistry.BACKSTAB.get(), 1, 1);
-                        stand.blocking = false;
-                        overrideStun = true;
-                        backstabbed = true;
-                    }
-                }
-
-                if (!backstabbed && !unblockable) { // Didn't backstab, not unblockable
-                    //JCraft.LOGGER.info("Enemy blocked attack, setting blockstun to: " + blockstun);
-                    stand.setMoveStun(blockstun);
-                    stand.setStandGauge(stand.getStandGauge() - 2 * damage);
-                    stand.playSound(JSoundRegistry.STAND_BLOCK.get(), 1, 1);
-                    hit = false;
-                    overrideStun = false;
-                } else {
-                    stand.blocking = false;
-                }
-            }
-        }
-
-        if (ent == null) return;
-        if (tsHit) {
-            stunLevel = 3;
-            if (stunTicks > 20) {
-                stunTicks = 20;
-            }
-            lift = false;
-        }
-
-        // Stun application & overriding
-        IDamageScaler damageScaler = (IDamageScaler) ent;
-
-        if (JServerConfig.ENABLE_IPS.getValue()) {
-            float scaling = damageScaler.jcraft$getDamageScaling();
-            stunTicks *= (int) (scaling * 0.2 + 0.8);
-        }
-
-        if (hit) {
-            damageScaler.jcraft$increaseHitCount();
-
-            MobEffectInstance stun = ent.getEffect(JStatusRegistry.DAZED.get());
-            if (stun != null) {
-                if (overrideStun) {
-                    ent.removeEffect(JStatusRegistry.DAZED.get());
-                }
-            }
-
-            JCraft.stun(ent, stunTicks, stunLevel, attacker);
-
-            if (hitAnimation != null) {
-                JComponentPlatformUtils.getHitProperties(ent).setHitAnimation(hitAnimation, stunTicks);
-            }
-
-            if (!tsHit) {
-                ent.push(kbVec.x, kbVec.y, kbVec.z);
-            }
-        }
-
-        // Interrupting spec moves
-        if (ent instanceof Player playerEntity) {
-            JSpec<?, ?> spec = JUtils.getSpec(playerEntity);
-            if (spec != null && spec.curMove != null) {
-                if (--spec.armorPoints < 0) {
-                    spec.cancelMove(true);
-                } else {
-                    JComponentPlatformUtils.getMiscData(playerEntity).displayArmoredHit();
-                }
-            }
-        }
-
-        // Aerial hits keep the victim up
-        if (lift) {
-            Vec3 vel = ent.getDeltaMovement();
-            double finalY = vel.y;
-
-            if (!ent.onGround()) {
-                finalY = Mth.clamp(vel.y / 2, 0.085, 0.25);
-            }
-
-            GravityChangerAPI.setWorldVelocity(ent,
-                    new Vec3(
-                            Mth.clamp(vel.x, -1, 1),
-                            Mth.clamp(finalY, -0.25, 0.25),
-                            Mth.clamp(vel.z, -1, 1)
-                    ));
-        }
-
-        damage(attacker, damage, source, ent);
-        if ((ent.isDeadOrDying() || ent.getHealth() <= 0f) && attacker instanceof final LivingEntity livingAttacker) {
-            final StandEntity<?, ?> standAttacker = JUtils.getStand(livingAttacker);
-            if (standAttacker != null) {
-                standAttacker.freshKill(ent);
-            }
-            if (stand != null && stand.hasUser() && // if killed entity was a using a stand
-                    (standAttacker != null ? standAttacker.getUser() : livingAttacker) instanceof final Player player && !player.level().isClientSide()) {
-                player.awardStat(JStatRegistry.STAND_USERS_KILLED.get());
-            }
-        }
-
-        if (tsHit) {
-            JComponentPlatformUtils.getTimeStopData(ent).ifPresent(ts -> ts.addTotalVelocity(kbVec));
-        } else {
-            JUtils.syncVelocityUpdate(ent);
-        }
     }
 
     protected boolean shouldNotPlaySummonSound() {
@@ -2237,7 +1851,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     @Override
     public boolean handleDamage(Vec3 kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift,
                                 int blockstun, DamageSource source, Entity attacker, CommonHitPropertyComponent.HitAnimation hitAnimation,
-                                boolean canBackstab, boolean unblockable) {
+                                MoveUsage moveUsage, boolean canBackstab, boolean unblockable) {
         if (!hasUser()) return false;
         boolean hit = true;
 
@@ -2275,7 +1889,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         if (hit) {
-            damageLogic(level(), user, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, canBackstab, unblockable);
+            damageLogic(
+                    level(),
+                    user,
+                    new AttackData(kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, moveUsage, canBackstab, unblockable)
+            );
         }
         return false;
     }
@@ -2317,6 +1935,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     /**
      * Gets called after damage calculation if the damaged entity was slain.
      */
-    protected void freshKill(@Nullable LivingEntity entity) {
+    public void freshKill(@Nullable LivingEntity entity) {
     }
 }

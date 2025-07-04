@@ -56,8 +56,8 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      */
     private T originalMove = getThis();
     private MoveClass moveClass;
-    private int cooldown, windup;
-    private int duration;
+    private int cooldown;
+    private int windup, duration;
     private float moveDistance;
     /**
      * This move's assigned animation
@@ -71,6 +71,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
     private IntObjectPair<AbstractMove<?, ? super A>> finisher;
     protected MobilityType mobilityType;
     private Boolean isHoldable;
+    private boolean loopPrevention = true;
     private OptionalInt followupFrame = OptionalInt.empty();
 
     // Properties that are NOT serialized (usually set in constructor)
@@ -211,6 +212,16 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
         this.aerialVariant = aerialVariant.copy();
         this.aerialVariant.isAerialVariant = true;
+        return getThis();
+    }
+
+    /**
+     * Disables loop prevention on this move.
+     *
+     * @return This move
+     */
+    public T noLoopPrevention() {
+        this.loopPrevention = false;
         return getThis();
     }
 

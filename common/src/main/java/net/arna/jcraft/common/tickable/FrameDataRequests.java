@@ -214,7 +214,7 @@ public class FrameDataRequests {
         }
 
         if (move instanceof final AbstractSimpleAttack<?, ?> attack) {
-            if (attack.getBlockableType() == BlockableType.NON_BLOCKABLE_EFFECTS_ONLY) {
+            if (attack.getBlockableType() == BlockableType.UNBLOCKABLE_EFFECTS_ONLY) {
                 stringBuilder.append("§rEffects on hit are §5Unblockable§r\n");
             }
 
@@ -224,7 +224,7 @@ public class FrameDataRequests {
                         .append("Knockback: §6").append(attack.getKnockback()).append("§r\n");
 
                 stringBuilder.append("Advantage on hit: §c").append(attack.getStun() - recovery - 1).append("§r ticks of ").append(attack.getStunType()).append(" Stun\n");
-                if (attack.getBlockableType() == BlockableType.NON_BLOCKABLE) {
+                if (attack.getBlockableType() == BlockableType.UNBLOCKABLE) {
                     stringBuilder.append("§5Unblockable§r\n");
                 } else {
                     stringBuilder.append("Advantage on block: §5").append(attack.getBlockStun() - recovery).append("§r ticks");

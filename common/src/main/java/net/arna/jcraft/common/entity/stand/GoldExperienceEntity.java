@@ -155,7 +155,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             9f, 60, 2f, 0.9f, 0f)
 //            .withSound(JSoundRegistry.GE_ULT)
             .withImpactSound(JSoundRegistry.IMPACT_10)
-            .withBlockableType(BlockableType.NON_BLOCKABLE)
+            .withBlockableType(BlockableType.UNBLOCKABLE)
             .withInfo(
                     Component.literal("Overclock"),
                     Component.literal("slow, unblockable, devastating stun")

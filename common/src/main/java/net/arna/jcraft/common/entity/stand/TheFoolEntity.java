@@ -227,7 +227,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             .withImpactSound(JSoundRegistry.TW_KICK_HIT)
             .withExtraHitBox(1.5)
             .withHyperArmor()
-            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(
                     Component.literal("Suffocating Sandstorm"),

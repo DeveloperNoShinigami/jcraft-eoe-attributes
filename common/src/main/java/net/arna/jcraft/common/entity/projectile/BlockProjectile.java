@@ -12,10 +12,9 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -45,6 +44,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Set;
+
+import static net.arna.jcraft.api.Attacks.damageLogic;
 
 /**
  * Used in C-Moon's {@link net.arna.jcraft.common.attack.moves.cmoon.LaunchAttack}
@@ -186,7 +187,7 @@ public class BlockProjectile extends JAttackEntity implements GeoEntity {
                         continue;
                     }
                     hit = true;
-                    StandEntity.damageLogic(level(), target, getDeltaMovement(), 15, 1, true,
+                    damageLogic(level(), target, getDeltaMovement(), 15, 1, true,
                             6, false, 11, damageSource, master, CommonHitPropertyComponent.HitAnimation.MID, false);
                 }
             }

@@ -11,12 +11,11 @@ import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -36,6 +35,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
+
+import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
     public static final BlockParticleOption ICE_PARTICLE = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.ICE.defaultBlockState());
@@ -157,7 +158,7 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
 
                     int stun = 15;
 
-                    StandEntity.damageLogic(level(), target, kbVec,
+                    damageLogic(level(), target, kbVec,
                             stun, 3, false, 3f, true,
                             4, level().damageSources().mobAttack(livingOwner), livingOwner,
                             CommonHitPropertyComponent.HitAnimation.CRUSH, false, false);
@@ -208,7 +209,7 @@ public class LargeIcicleProjectile extends AbstractArrow implements GeoEntity {
             int stun = (int) (15 * scale);
             if (instant) stun += 9;
 
-            StandEntity.damageLogic(level(), target, kbVec,
+            damageLogic(level(), target, kbVec,
                     stun, 3, false, 7f * scale + (perfect ? 3f : 0), true,
                     (int) (13.0f * scale), level().damageSources().mobAttack(livingOwner), livingOwner,
                     CommonHitPropertyComponent.HitAnimation.CRUSH, false, perfect);

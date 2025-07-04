@@ -6,10 +6,9 @@ import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
@@ -29,6 +28,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+
+import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public class BulletProjectile extends AbstractArrow implements GeoEntity {
     private int stunTicks;
@@ -138,7 +139,7 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
             if (!level().isClientSide) {
                 final Entity owner = getOwner();
                 final LivingEntity target = JUtils.getUserIfStand(living);
-                StandEntity.damageLogic(level(), target, getDeltaMovement().normalize(),
+                damageLogic(level(), target, getDeltaMovement().normalize(),
                         stunTicks, 1, false, damage, true, (int) (4 + damage),
                         level().damageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
                 JUtils.serverPlaySound(JSoundRegistry.BULLET_PENETRATE.get(), (ServerLevel) level(), position(), 32);
