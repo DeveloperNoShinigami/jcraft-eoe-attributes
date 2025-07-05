@@ -24,6 +24,10 @@ public class AttackData {
     boolean canBackstab = false;
     boolean unblockable = false;
 
+
+
+    boolean cancelMoves = true;
+
     public AttackData() {
 
     }

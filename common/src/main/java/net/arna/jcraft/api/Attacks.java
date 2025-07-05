@@ -47,7 +47,7 @@ public interface Attacks {
      * @param damage       damage in half hearts
      * @param lift         will the attack lift the victim upon an aerial hit?
      */
-    @Deprecated(forRemoval = false)
+    @Deprecated(forRemoval = false, since = "0.17.3")
     static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel,
                                    boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source,
                                    @Nullable Entity attacker, HitAnimation hitAnimation,
@@ -59,7 +59,7 @@ public interface Attacks {
             comboCounterLogic(playerEntity, ent);
         }
 
-        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, canBackstab, unblockable);
+        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, canBackstab, unblockable, false);
     }
 
     /**
@@ -74,7 +74,7 @@ public interface Attacks {
      * @param damage       damage in half hearts
      * @param lift         will the attack lift the victim upon an aerial hit?
      */
-    @Deprecated(forRemoval = false)
+    @Deprecated(forRemoval = false, since = "0.17.3")
     static void damageLogic(Level world, LivingEntity ent, Vec3 kbVec, int stunTicks, int stunLevel,
                                    boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source,
                                    @Nullable Entity attacker, HitAnimation hitAnimation,
@@ -86,7 +86,7 @@ public interface Attacks {
             comboCounterLogic(playerEntity, ent);
         }
 
-        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, canBackstab, false);
+        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, canBackstab, false, false);
     }
 
     /**
@@ -111,7 +111,7 @@ public interface Attacks {
         if (attacker instanceof ServerPlayer playerEntity) {
             comboCounterLogic(playerEntity, ent);
         }
-        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, false, false);
+        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, false, false, false);
     }
 
     static void damageLogic(Level world, LivingEntity victim, AttackData attackData) {
@@ -126,7 +126,7 @@ public interface Attacks {
         baseDamageLogic(victim,
                 attackData.kbVec, attackData.stunTicks, attackData.stunLevel, attackData.overrideStun,
                 attackData.damage, attackData.lift, attackData.blockstun, attackData.source, attackData.attacker,
-                attackData.hitAnimation, attackData.moveUsage, false, false);
+                attackData.hitAnimation, attackData.moveUsage, attackData.canBackstab, attackData.unblockable, attackData.cancelMoves);
     }
 
     /**
@@ -164,7 +164,7 @@ public interface Attacks {
      * Mid-level damage method, handles blocking, lifting, counters, velocity modification, and more.
      * Unpacks {@link AttackData} into its parameters.
      *
-     * @param victim          victim
+     * @param victim       victim
      * @param kbVec        knockback vector to apply
      * @param stunTicks    stun duration in ticks
      * @param overrideStun will the attack override all other types of stun?
@@ -174,8 +174,8 @@ public interface Attacks {
      */
     static void baseDamageLogic(LivingEntity victim, Vec3 kbVec, int stunTicks, int stunLevel, boolean overrideStun,
                                 float damage, boolean lift, int blockstun, DamageSource source, @Nullable Entity attacker,
-                                HitAnimation hitAnimation, @Nullable MoveUsage moveUsage,
-                                boolean canBackstab, boolean unblockable) {
+                                HitAnimation hitAnimation, @Nullable MoveUsage moveUsage, boolean canBackstab, boolean unblockable,
+                                boolean cancelAttack) {
         if (victim instanceof ICustomDamageHandler customDamageHandler) {
             if (!customDamageHandler.handleDamage(kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, moveUsage, canBackstab, unblockable)) {
                 return;
@@ -207,7 +207,7 @@ public interface Attacks {
                 }
 
                 if (--stand.armorPoints < 0) {
-                    stand.cancelMove(true);
+                    if (cancelAttack) stand.cancelMove(true);
                 } else {
                     JComponentPlatformUtils.getMiscData(victim).displayArmoredHit();
                 }
@@ -290,7 +290,7 @@ public interface Attacks {
             JSpec<?, ?> spec = JUtils.getSpec(playerEntity);
             if (spec != null && spec.curMove != null) {
                 if (--spec.armorPoints < 0) {
-                    spec.cancelMove(true);
+                    if (cancelAttack) spec.cancelMove(true);
                 } else {
                     JComponentPlatformUtils.getMiscData(playerEntity).displayArmoredHit();
                 }

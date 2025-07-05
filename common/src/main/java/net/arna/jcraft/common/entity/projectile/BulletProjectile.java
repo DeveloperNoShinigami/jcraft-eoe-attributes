@@ -5,6 +5,7 @@ import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
+import net.arna.jcraft.api.AttackData;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
@@ -35,6 +36,7 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
     private int stunTicks;
     private float damage;
     private float mass; // Used for penetration calculation
+    private boolean cancelMoves = false;
 
     private static final EntityDataAccessor<Float> CALIBER; //mm
 
@@ -139,9 +141,17 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
             if (!level().isClientSide) {
                 final Entity owner = getOwner();
                 final LivingEntity target = JUtils.getUserIfStand(living);
-                damageLogic(level(), target, getDeltaMovement().normalize(),
+
+                AttackData attackData = new AttackData( getDeltaMovement().normalize(),
                         stunTicks, 1, false, damage, true, (int) (4 + damage),
-                        level().damageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
+                        level().damageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID,
+                        null, false, false
+                );
+
+                attackData.setCancelMoves(cancelMoves);
+
+                damageLogic(level(), target, attackData);
+
                 JUtils.serverPlaySound(JSoundRegistry.BULLET_PENETRATE.get(), (ServerLevel) level(), position(), 32);
                 discard();
             }
