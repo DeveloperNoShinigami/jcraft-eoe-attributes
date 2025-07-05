@@ -59,7 +59,7 @@ public interface Attacks {
             comboCounterLogic(playerEntity, ent);
         }
 
-        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, canBackstab, unblockable, false);
+        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, canBackstab, unblockable, true);
     }
 
     /**
@@ -86,7 +86,7 @@ public interface Attacks {
             comboCounterLogic(playerEntity, ent);
         }
 
-        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, canBackstab, false, false);
+        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, canBackstab, false, true);
     }
 
     /**
@@ -111,7 +111,7 @@ public interface Attacks {
         if (attacker instanceof ServerPlayer playerEntity) {
             comboCounterLogic(playerEntity, ent);
         }
-        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, false, false, false);
+        baseDamageLogic(ent, kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, null, false, false, true);
     }
 
     static void damageLogic(Level world, LivingEntity victim, AttackData attackData) {

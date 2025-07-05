@@ -10,6 +10,7 @@ public class CooldownCancelPacket {
     public static void handle(FriendlyByteBuf buf, NetworkManager.PacketContext context) {
         ServerPlayer player = (ServerPlayer) context.getPlayer();
 
+        //TODO: make accessible in survival via default OFF config
         if (player.isCreative()) {
             JComponentPlatformUtils.getCooldowns(player).cooldownCancel();
         }
