@@ -28,6 +28,7 @@ public interface JCreativeMenuTabRegistry {
         JCraft.CREATIVE_TAB_REGISTRY.register("general", JCreativeMenuTabRegistry::createJcraftItemGroup);
         JCraft.CREATIVE_TAB_REGISTRY.register("cosplay", JCreativeMenuTabRegistry::createJcraftCosplayGroup);
         JCraft.CREATIVE_TAB_REGISTRY.register("stand_discs", JCreativeMenuTabRegistry::createStandDiscItemGroup);
+        JCraft.CREATIVE_TAB_REGISTRY.register("music_discs", JCreativeMenuTabRegistry::createMusicDiscItemGroup);
         // building blocks
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.BRICKS, JItemRegistry.METEORITE_BLOCK.get());
@@ -54,6 +55,7 @@ public interface JCreativeMenuTabRegistry {
             output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_ARROW.get());
             output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_DISC.get());
             output.acceptBefore(Items.COMPASS, JItemRegistry.SPEC_DISC.get());
+            output.accept(JItemRegistry.DISC_STAND_PROUD.get());
         });
         // combat
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.COMBAT.location()), (flags, output, canUseGameMasterBlocks) -> {
@@ -377,4 +379,17 @@ public interface JCreativeMenuTabRegistry {
                 })
                 .build();
     }
+
+
+    static CreativeModeTab createMusicDiscItemGroup() {
+        return CreativeModeTab.builder(CreativeModeTab.Row.TOP, 3)
+                .title(Component.translatable("itemGroup.jcraft.music_discs"))
+                .icon(() -> JItemRegistry.DISC_STAND_PROUD.get().getDefaultInstance())
+                // order of the creative tab
+                .displayItems((displayContext, entries) -> {
+                    entries.accept(JItemRegistry.DISC_STAND_PROUD.get());
+                })
+                .build();
+    }
+
 }

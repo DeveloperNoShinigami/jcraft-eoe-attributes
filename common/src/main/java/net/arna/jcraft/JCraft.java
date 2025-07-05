@@ -164,6 +164,9 @@ public final class JCraft {
         JParticleTypeRegistry.init();
         PARTICLES.register();
 
+        JSoundRegistry.init();
+        SOUNDS.register();
+
         ENTITY_TYPE_REGISTRY.register();
         BLOCK_REGISTRY.register();
         ITEM_REGISTRY.register();
@@ -191,9 +194,6 @@ public final class JCraft {
 
         JStatusRegistry.init();
         EFFECTS.register();
-
-        JSoundRegistry.init();
-        SOUNDS.register();
 
         JEntityTypeRegistry.registerAttributes();
 

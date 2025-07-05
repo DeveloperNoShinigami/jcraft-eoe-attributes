@@ -311,6 +311,9 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> ROAD_ROLLER_IGNITION = register("rrignition");
     RegistrySupplier<SoundEvent> ROAD_ROLLER_ACTIVE = register("rractive");
 
+    // MUSIC DISCS
+    RegistrySupplier<SoundEvent> STAND_PROUD = register("stand_proud");
+
     static void init() {
         // intentionally left empty
     }

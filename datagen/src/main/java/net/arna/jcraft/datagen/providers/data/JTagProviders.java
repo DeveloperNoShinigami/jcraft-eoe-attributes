@@ -88,6 +88,9 @@ public class JTagProviders {
             getOrCreateRawBuilder(ItemTags.SOUL_FIRE_BASE_BLOCKS).addElement(JItemRegistry.SOUL_BLOCK.getId());
             getOrCreateRawBuilder(ItemTags.ARROWS).addElement(JItemRegistry.STAND_ARROW.getId());
 
+            final var musicDiscs = getOrCreateRawBuilder(ItemTags.MUSIC_DISCS);
+            musicDiscs.addElement(JItemRegistry.DISC_STAND_PROUD.getId());
+
             getOrCreateRawBuilder(JTagRegistry.SOUL_LOG_ITEMS).addElement(JItemRegistry.SOUL_WOOD_BLOCK.getId());
 
             getOrCreateRawBuilder(JTagRegistry.PROTECTS_FROM_SUN).addElement(JItemRegistry.KARS_HEADWRAP.getId());

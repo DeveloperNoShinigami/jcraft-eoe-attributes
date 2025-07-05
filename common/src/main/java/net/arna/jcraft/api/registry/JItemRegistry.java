@@ -9,6 +9,7 @@ import net.arna.jcraft.common.entity.vehicle.RoadRollerEntity;
 import net.arna.jcraft.common.item.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.*;
 
 import java.util.LinkedHashMap;
@@ -27,6 +28,8 @@ public interface JItemRegistry {
     RegistrySupplier<Item> DISC = register("disc", () -> new Item(settings()));
     RegistrySupplier<Item> STAND_DISC = register("stand_disc", () -> new StandDiscItem(settings().fireResistant().stacksTo(1)));
     RegistrySupplier<Item> SPEC_DISC = register("spec_disc", () -> new SpecDiscItem(settings().fireResistant().stacksTo(1)));
+
+    RegistrySupplier<Item> DISC_STAND_PROUD = register("disc_stand_proud", () -> new RecordItem(1, JSoundRegistry.STAND_PROUD.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 92));
 
     RegistrySupplier<Item> FV_REVOLVER = register("fv_revolver", () -> new FVRevolverItem(settings().rarity(Rarity.UNCOMMON).durability(1200)));
 

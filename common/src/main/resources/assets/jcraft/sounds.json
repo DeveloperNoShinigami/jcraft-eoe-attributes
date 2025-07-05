@@ -1174,5 +1174,10 @@
     "sounds": [
       "jcraft:vehicles/roadroller/ignition"
     ]
+  },
+  "stand_proud": {
+    "sounds": [
+      "jcraft:discs/stand_proud"
+    ]
   }
 }
