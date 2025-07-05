@@ -79,6 +79,7 @@
   "block.jcraft.meteorite_block": "Block de météorite",
   "block.jcraft.meteorite_iron_ore_block": "Morceau de météorite",
   "block.jcraft.polished_meteorite_block": "Block de météorite polie",
+  "block.jcraft.soul_block": "Block du châtiment",
   "commands.gravity.get.other": "%s's la gravité est %s",
   "commands.gravity.get.self": "Votre gravité actuelle est %s",
   "commands.gravity.set.other": "Définir %s's gravité sur %s",
