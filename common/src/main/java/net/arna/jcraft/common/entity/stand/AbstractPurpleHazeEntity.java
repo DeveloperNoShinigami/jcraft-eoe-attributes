@@ -139,7 +139,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
                     Component.literal("Rekka (2nd Hit)"),
                     Component.literal("links into Light")
             );
-    public static final PHRekkaAttack REKKA1 = new PHRekkaAttack(0, 7, 14, 1f,
+    public static final PHRekkaAttack REKKA1 = new PHRekkaAttack(100, 7, 14, 1f,
             4f, 15, 1.5f, 0.5f, 0f)
             .withSound(JSoundRegistry.PH_REKKA1)
             .withImpactSound(JSoundRegistry.IMPACT_1)

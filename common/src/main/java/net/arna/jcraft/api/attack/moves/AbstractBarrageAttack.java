@@ -7,7 +7,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
-import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.IAttacker;
 import net.arna.jcraft.api.attack.enums.StunType;
 import net.arna.jcraft.api.registry.JSoundRegistry;

@@ -10,9 +10,11 @@ import net.arna.jcraft.api.registry.JTagRegistry;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
+import net.arna.jcraft.common.network.s2c.IPSTriggeredPacket;
 import net.arna.jcraft.common.util.IJCraftComboTracker;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -76,11 +78,17 @@ public abstract class LivingEntityMixin implements IJCraftComboTracker {
                         moveUsage != pastUsage // Ensure the same move usage only adds to the move list once
                         && Attacks.prototypeMatch(pastUsage.move(), move) // Move equality check that doesn't use instances
                 ) { // TODO: verify prototypeMatch() filters appropriately
+                    LivingEntity attackerUser = JUtils.getUserIfStand(attacker);
+
+                    if (attackerUser instanceof ServerPlayer serverPlayer) {
+                        IPSTriggeredPacket.send(serverPlayer);
+                    }
+
                     return true;
                 }
             }
 
-            if (move.isLoopPrevention()) { // TODO: apply noLoopPrevention() to moves
+            if (move.isLoopPrevention()) { // TODO: verify noLoopPrevention() is applied to all intended moves
                 moveList.add(moveUsage);
                 return false;
             }

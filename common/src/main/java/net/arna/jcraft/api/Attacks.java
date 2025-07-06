@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import static net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation;
 
 public interface Attacks {
+
     /**
      * (LEGACY) Highest level damage method, handles combo counting, DEFAULTS unblockable TO FALSE
      * Use {@link Attacks#damageLogic(Level, LivingEntity, AttackData)} instead.
@@ -251,10 +252,12 @@ public interface Attacks {
         // Stun application & overriding
         IJCraftComboTracker comboTracker = (IJCraftComboTracker) victim;
 
+        /*
         if (JServerConfig.ENABLE_IPS.getValue()) {
             float scaling = comboTracker.jcraft$getDamageScaling();
             stunTicks *= (int) (scaling * 0.2 + 0.8);
         }
+         */
 
         LivingEntity livingAttacker = null;
         if (attacker instanceof LivingEntity l) livingAttacker = l;

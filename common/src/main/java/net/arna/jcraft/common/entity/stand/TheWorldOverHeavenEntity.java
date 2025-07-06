@@ -164,7 +164,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Component.literal("True Strike"),
-                    Component.literal("damage ignores potions and enchantments, low stun, high blockstun, medium windup")
+                    Component.literal("damage ignores potions and enchantments, good stun, high blockstun, medium windup")
             );
     public static final SmiteAttack AIR_SMITE = new SmiteAttack(300, 10, 20, 1f,
             6f, 21, 3f, 0f, 0f, true, 7, 9)

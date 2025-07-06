@@ -3,28 +3,27 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.stand.SummonData;
-import net.arna.jcraft.api.attack.MoveSet;
-import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.PlaySoundAction;
-import net.arna.jcraft.api.attack.enums.MoveClass;
-import net.arna.jcraft.api.attack.MoveMap;
-import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.attack.moves.horus.*;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleHoldableMove;
-import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.entity.projectile.LargeIcicleProjectile;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.api.registry.JSoundRegistry;
-import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -91,7 +90,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("Finisher"),
                     Component.literal("quick combo finisher")
             );
-    public static final SimpleAttack<HorusEntity> LIGHT_LOW = new SimpleAttack<HorusEntity>(JCraft.LIGHT_COOLDOWN,
+    public static final SimpleAttack<HorusEntity> LIGHT_LOW = new SimpleAttack<HorusEntity>(9,
                     5, 9, 0.95f, 4f, 8, 1.25f, 0.25f, 0.5f)
             //.withFollowup(LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_9)
@@ -100,10 +99,10 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("Low Claw"),
                     Component.literal("faster and further hitting than standing, but doesn't combo into anything")
             );
-    public static final SimpleAttack<HorusEntity> LIGHT_AIR = SimpleAttack.<HorusEntity>lightAttack( //todo: buff ts
-                    6, 11, 0.75f, 5f, 12, 0.25f, 0.5f)
+    public static final SimpleAttack<HorusEntity> LIGHT_AIR = new SimpleAttack<HorusEntity>(11,
+                    6, 11, 0.75f, 5f, 12, 1.5f, 0.25f, 0.5f)
             //.withFollowup(LIGHT_FOLLOWUP)
-            .withImpactSound(JSoundRegistry.IMPACT_3)
+            .withImpactSound(JSoundRegistry.IMPACT_9)
             .withInfo(
                     Component.literal("Downward Claw"),
                     Component.literal("quick combo starter, meant for air-to-ground")
@@ -131,7 +130,7 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("Detonate"),
                     Component.empty()
             );
-    public static final StompAttack STOMP = new StompAttack(0, 11, 22, 0.75f,
+    public static final StompAttack STOMP = new StompAttack(22, 11, 22, 0.75f,
             9f, 12, 1.3f, 0.6f, 0.4f)
             .withFollowup(DETONATE)
             .withSound(JSoundRegistry.HORUS_STOMP)
