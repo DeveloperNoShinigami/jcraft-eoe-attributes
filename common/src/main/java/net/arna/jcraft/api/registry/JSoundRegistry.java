@@ -313,6 +313,19 @@ public interface JSoundRegistry {
 
     // MUSIC DISCS
     RegistrySupplier<SoundEvent> STAND_PROUD = register("stand_proud");
+    RegistrySupplier<SoundEvent> CRUCIFIED = register("crucified");
+    RegistrySupplier<SoundEvent> HALLELUJAH_CHORUS = register("hallelujah_chorus");
+    RegistrySupplier<SoundEvent> WONDER_OF_YOU = register("wonder_of_you");
+    RegistrySupplier<SoundEvent> AWAKEN = register("awaken");
+    RegistrySupplier<SoundEvent> DARK_REBIRTH = register("dark_rebirth");
+    RegistrySupplier<SoundEvent> KIRA_THEME = register("kira_theme");
+    RegistrySupplier<SoundEvent> GIORNO_THEME = register("giorno_theme");
+    RegistrySupplier<SoundEvent> JONATHAN_THEME = register("jonathan_theme");
+    RegistrySupplier<SoundEvent> JOLYNE_THEME = register("jolyne_theme");
+    RegistrySupplier<SoundEvent> JOTARO_THEME = register("jotaro_theme");
+    RegistrySupplier<SoundEvent> TORTURE_DANCE = register("torture_dance");
+    RegistrySupplier<SoundEvent> UN_ALTRA_PERSONA = register("un_altra_persona");
+
 
     static void init() {
         // intentionally left empty

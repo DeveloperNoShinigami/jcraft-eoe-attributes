@@ -56,6 +56,7 @@ public interface JCreativeMenuTabRegistry {
             output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_DISC.get());
             output.acceptBefore(Items.COMPASS, JItemRegistry.SPEC_DISC.get());
             output.accept(JItemRegistry.DISC_STAND_PROUD.get());
+            output.accept(JItemRegistry.DISC_CRUCIFIED.get());
         });
         // combat
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.COMBAT.location()), (flags, output, canUseGameMasterBlocks) -> {
@@ -388,6 +389,18 @@ public interface JCreativeMenuTabRegistry {
                 // order of the creative tab
                 .displayItems((displayContext, entries) -> {
                     entries.accept(JItemRegistry.DISC_STAND_PROUD.get());
+                    entries.accept(JItemRegistry.DISC_CRUCIFIED.get());
+                    entries.accept(JItemRegistry.DISC_HALLELUJAH_CHORUS.get());
+                    entries.accept(JItemRegistry.DISC_WONDER_OF_YOU.get());
+                    entries.accept(JItemRegistry.DISC_AWAKEN.get());
+                    entries.accept(JItemRegistry.DISC_DARK_REBIRTH.get());
+                    entries.accept(JItemRegistry.DISC_KIRA_THEME.get());
+                    entries.accept(JItemRegistry.DISC_GIORNO_THEME.get());
+                    entries.accept(JItemRegistry.DISC_JONATHAN_THEME.get());
+                    entries.accept(JItemRegistry.DISC_JOLYNE_THEME.get());
+                    entries.accept(JItemRegistry.DISC_JOTARO_THEME.get());
+                    entries.accept(JItemRegistry.DISC_TORTURE_DANCE.get());
+                    entries.accept(JItemRegistry.DISC_UN_ALTRA_PERSONA.get());
                 })
                 .build();
     }

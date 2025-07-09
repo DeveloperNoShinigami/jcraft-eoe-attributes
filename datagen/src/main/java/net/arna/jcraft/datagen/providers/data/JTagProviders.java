@@ -90,6 +90,18 @@ public class JTagProviders {
 
             final var musicDiscs = getOrCreateRawBuilder(ItemTags.MUSIC_DISCS);
             musicDiscs.addElement(JItemRegistry.DISC_STAND_PROUD.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_CRUCIFIED.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_HALLELUJAH_CHORUS.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_WONDER_OF_YOU.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_AWAKEN.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_DARK_REBIRTH.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_KIRA_THEME.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_GIORNO_THEME.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_JONATHAN_THEME.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_JOLYNE_THEME.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_JOTARO_THEME.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_TORTURE_DANCE.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_UN_ALTRA_PERSONA.getId());
 
             getOrCreateRawBuilder(JTagRegistry.SOUL_LOG_ITEMS).addElement(JItemRegistry.SOUL_WOOD_BLOCK.getId());
 

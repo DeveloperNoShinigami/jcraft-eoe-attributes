@@ -1179,5 +1179,65 @@
     "sounds": [
       "jcraft:discs/stand_proud"
     ]
+  },
+  "crucified": {
+    "sounds": [
+      "jcraft:discs/crucified"
+    ]
+  },
+  "hallelujah_chorus": {
+    "sounds": [
+      "jcraft:discs/hallelujah_chorus"
+    ]
+  },
+  "wonder_of_you": {
+    "sounds": [
+      "jcraft:discs/wonder_of_you"
+    ]
+  },
+  "awaken": {
+    "sounds": [
+      "jcraft:discs/awaken"
+    ]
+  },
+  "dark_rebirth": {
+    "sounds": [
+      "jcraft:discs/dark_rebirth"
+    ]
+  },
+  "kira_theme": {
+    "sounds": [
+      "jcraft:discs/kira_theme"
+    ]
+  },
+  "giorno_theme": {
+    "sounds": [
+      "jcraft:discs/giorno_theme"
+    ]
+  },
+  "jonathan_theme": {
+    "sounds": [
+      "jcraft:discs/jonathan_theme"
+    ]
+  },
+  "jolyne_theme": {
+    "sounds": [
+      "jcraft:discs/jolyne_theme"
+    ]
+  },
+  "jotaro_theme": {
+    "sounds": [
+      "jcraft:discs/jotaro_theme"
+    ]
+  },
+  "torture_dance": {
+    "sounds": [
+      "jcraft:discs/torture_dance"
+    ]
+  },
+  "un_altra_persona": {
+    "sounds": [
+      "jcraft:discs/un_altra_persona"
+    ]
   }
 }
