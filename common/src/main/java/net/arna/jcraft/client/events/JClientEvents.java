@@ -271,7 +271,7 @@ public class JClientEvents {
                     new AABB(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), Timestops.TIMESTOP_PREDICATE);
 
             for (final Entity entity : toStop) {
-                if (!entity.isPassenger() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle()) {
+                if (entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle()) {
                     JComponentPlatformUtils.getTimeStopData(entity)
                             .ifPresent(d -> d.setTicks(2));
                 }

@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.moves.AbstractCounterAttack;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JStatRegistry;
@@ -461,6 +462,15 @@ public interface Attacks {
         if (a.isCrouchingVariant() != b.isCrouchingVariant()) return false;
         if (a.getCooldown() != b.getCooldown()) return false;
         if (a.getDuration() != b.getDuration()) return false;
+        if (a.getWindup() != b.getWindup()) return false;
+
+        if (a instanceof AbstractSimpleAttack<?, ?> aa) {
+            if (b instanceof AbstractSimpleAttack<?, ?> ab) {
+                if (aa.getStun() != ab.getStun()) return false;
+            } else {
+                return false;
+            }
+        }
 
         return true;
     }
