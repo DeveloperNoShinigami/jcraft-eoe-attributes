@@ -8,15 +8,15 @@ import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.api.component.living.CommonBombTrackerComponent;
+import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JStatusRegistry;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.projectile.BubbleProjectile;
 import net.arna.jcraft.common.entity.stand.AbstractKillerQueenEntity;
-import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
-import net.arna.jcraft.api.registry.JSoundRegistry;
-import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -27,6 +27,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
+
+import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public final class KQDetonateAttack extends AbstractMove<KQDetonateAttack, AbstractKillerQueenEntity<?, ?>> {
     public KQDetonateAttack(final int cooldown, final int windup, final int duration, final float moveDistance) {
@@ -88,7 +90,7 @@ public final class KQDetonateAttack extends AbstractMove<KQDetonateAttack, Abstr
 
         for (LivingEntity living : toExplode) {
             final Vec3 kbVec = living.getEyePosition().subtract(pos).normalize();
-            StandEntity.damageLogic(stand.level(), living, kbVec, 2, 3, true, 11f, false, 4, damageSource, user, null);
+            damageLogic(stand.level(), living, kbVec, 2, 3, true, 11f, false, 4, damageSource, user, null);
             living.addEffect(new MobEffectInstance(JStatusRegistry.KNOCKDOWN.get(), 35, 0, true, false));
         }
     }

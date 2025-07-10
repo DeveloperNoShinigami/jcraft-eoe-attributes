@@ -26,6 +26,7 @@ public class JClientConfig implements ConfigData {
     private boolean disableNarrator = true;
     private boolean timeEraseShader = true;
     private boolean epitaphOverlay = true;
+    private boolean comboCounter = true;
 
     public static void load() {
         instance = AutoConfig.getConfigHolder(JClientConfig.class).getConfig();

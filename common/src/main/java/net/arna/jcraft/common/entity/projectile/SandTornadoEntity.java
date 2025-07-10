@@ -10,11 +10,11 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.common.util.IOwnable;
 import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -36,6 +36,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+
+import static net.arna.jcraft.api.Attacks.*;
 
 public class SandTornadoEntity extends JAttackEntity implements GeoEntity, IOwnable {
     private static final EntityDataAccessor<Boolean> DISAPPEARED;
@@ -103,7 +105,7 @@ public class SandTornadoEntity extends JAttackEntity implements GeoEntity, IOwna
                     if (target.isPassengerOfSameVehicle(master)) {
                         return;
                     }
-                    StandEntity.damageLogic(level(), target, circulation, 10, 1, false, 2f, true, 6,
+                    damageLogic(level(), target, circulation, 10, 1, false, 2f, true, 6,
                             level().damageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false);
                 }
                 hitsLeft--;

@@ -5,6 +5,7 @@ import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -117,7 +118,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, medium stun")
             );
-    public static final SimpleAttack<CMoonEntity> GUT_PUNCH = new SimpleAttack<CMoonEntity>(200, 19, 30,
+    public static final SimpleAttack<CMoonEntity> GUT_PUNCH = new SimpleAttack<CMoonEntity>(0, 19, 30,
             1f, 8f, 10, 2f, 1.5f, 0f)
             .withSound(JSoundRegistry.CMOON_DONUT)
             .withImpactSound(JSoundRegistry.TW_KICK_HIT)
@@ -130,7 +131,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                     Component.literal("Gut Punch"),
                     Component.literal("slow, uninterruptible combo finisher")
             );
-    public static final LaunchAttack LAUNCH = new LaunchAttack(260, 14, 21, 0.75f,
+    public static final LaunchAttack LAUNCH = new LaunchAttack(0, 14, 21, 0.75f,
             5f, 19, 1.75f, 0.9f, 0.3f)
             .withSound(JSoundRegistry.CMOON_GROUNDSHOOT)
             .withImpactSound(JSoundRegistry.IMPACT_5)
@@ -146,18 +147,18 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withImpactSound(JSoundRegistry.CMOON_GRAV_PUNCH_HIT)
             .withAction(CMoonInversionAction.addInversion(40, 0.5f, false))
             .withHyperArmor()
-            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
             .withExtraHitBox(1d)
             .withInfo(
                     Component.literal("Only One Punch"),
                     Component.literal("inverts enemy gravity and floats on hit (3s), high stun")
             );
-    public static final CGroundSlamAttack GROUND_SLAM = new CGroundSlamAttack(240, 10, 18,
+    public static final CGroundSlamAttack GROUND_SLAM = new CGroundSlamAttack(0, 10, 18,
             1f, 7f, 17, 3f, 0.2f, 1.4f)
             .withSound(JSoundRegistry.CMOON_GROUNDSLAM)
             .withImpactSound(JSoundRegistry.IMPACT_10)
             .withAction(CMoonInversionAction.addInversion(40, 0.5f, false))
-            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withStaticY()
             .withInfo(
@@ -300,7 +301,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
 
             if (time < 1) {
                 final LivingEntity entity = inversion.getEntity();
-                damage(this, inversion.getDamage(), level().damageSources().mobAttack(user), entity);
+                Attacks.damage(this, inversion.getDamage(), level().damageSources().mobAttack(user), entity);
                 inversions.remove(i);
 
                 if (inversion.doSlow) {

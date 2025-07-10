@@ -59,7 +59,7 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
             .summonData(SummonData.of(JSoundRegistry.STAR_PLATINUM_SUMMON))
             .build();
 
-    public static final SPTWGroundSlamAttack GROUND_SLAM = new SPTWGroundSlamAttack(20, 12, 19,
+    public static final SPTWGroundSlamAttack GROUND_SLAM = new SPTWGroundSlamAttack(0, 12, 19,
             0.75f, 7f, 11, 1.8f, 0f, 0.8f)
             .withAnim(State.GROUND_SLAM)
             .withImpactSound(JSoundRegistry.IMPACT_8)
@@ -107,7 +107,7 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
                     Teleports forward 2.5m after a short windup, then delivers a fast, low stun hit.
                     Crouch to turn around after teleport.""")
             );
-    public static final SimpleAttack<SPTWEntity> BACKHAND = new SimpleAttack<SPTWEntity>(240, 7, 12,
+    public static final SimpleAttack<SPTWEntity> BACKHAND = new SimpleAttack<SPTWEntity>(0, 7, 12,
             0.75f, 6f, 20, 1.5f, 0.25f, 0f)
             .withSound(JSoundRegistry.SPTW_BACKHAND)
             .withImpactSound(JSoundRegistry.IMPACT_1)

@@ -14,6 +14,7 @@ import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -54,6 +55,9 @@ public class RazorCoughAttack extends AbstractMove<RazorCoughAttack, MetallicaEn
                         20 * 20,
                         amplifier
                 ));
+
+                if (target instanceof Player) field.time = 0;
+                else field.time -= MagneticFields.MagneticField.TICKS_TO_LIVE / 3;
             }
         });
 

@@ -152,6 +152,13 @@ public class JCraftClient {
     public static float damageScaling = 1.00f;
     public static int framesSinceCounted = 0;
 
+    public static int IPSTriggerFramesLeft = 0;
+    public static final int IPS_TRIGGER_FRAMES = 120;
+
+    public static void markIPSTriggered() {
+        IPSTriggerFramesLeft = IPS_TRIGGER_FRAMES;
+    }
+
 
     public static void markComboStarted() {
         comboStarted = true;

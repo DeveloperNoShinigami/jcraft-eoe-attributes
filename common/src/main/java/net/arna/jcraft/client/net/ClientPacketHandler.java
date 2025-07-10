@@ -98,6 +98,11 @@ public class ClientPacketHandler {
         register(S2C_ATTACKER_DATA, ClientPacketHandler::handleAttackerData);
         register(S2C_MANDOM_DATA, ClientPacketHandler::handleMandomData);
         register(S2C_STONE_MASK_CLENCH, ClientPacketHandler::handleStoneMaskClench);
+        register(S2C_IPS_TRIGGERED, ClientPacketHandler::handleIPSTriggered);
+    }
+
+    private static void handleIPSTriggered(final @NonNull Minecraft client, FriendlyByteBuf buf) {
+        JCraftClient.markIPSTriggered();
     }
 
     private static void handleStoneMaskClench(final @NonNull Minecraft client, final FriendlyByteBuf buf) {

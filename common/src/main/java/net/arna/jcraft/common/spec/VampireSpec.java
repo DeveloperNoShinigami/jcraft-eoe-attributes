@@ -34,7 +34,7 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
                     Bloodsuck is extremely rewarding and allows linking into almost any move."""))
             .build();
 
-    public static final SimpleUppercutAttack<VampireSpec> AIR_KICK = new SimpleUppercutAttack<VampireSpec>(30, 6,
+    public static final SimpleUppercutAttack<VampireSpec> AIR_KICK = new SimpleUppercutAttack<VampireSpec>(0, 6,
             12, 1f, 5f, 14, 1.5f, 0.2f, 0.5f, -0.5f)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withStaticY()
@@ -42,14 +42,14 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withInfo(Component.literal("Axe Kick"), Component.literal("jab"));
 
-    public static final SimpleUppercutAttack<VampireSpec> SWEEP = new SimpleUppercutAttack<VampireSpec>(30, 6,
+    public static final SimpleUppercutAttack<VampireSpec> SWEEP = new SimpleUppercutAttack<VampireSpec>(0, 6,
             12, 1f, 5f, 12, 1.5f, 0.2f, 0.5f, 0.5f)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withStaticY()
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withInfo(Component.literal("Sweep Kick"), Component.literal("fast launcher"));
 
-    public static final SimpleAttack<VampireSpec> ROUNDHOUSE = new SimpleAttack<VampireSpec>(30, 8,
+    public static final SimpleAttack<VampireSpec> ROUNDHOUSE = new SimpleAttack<VampireSpec>(0, 8,
             15, 1f, 6f, 19, 1.5f, 1.5f, 0f)
             .withCrouchingVariant(SWEEP)
             .withAerialVariant(AIR_KICK)

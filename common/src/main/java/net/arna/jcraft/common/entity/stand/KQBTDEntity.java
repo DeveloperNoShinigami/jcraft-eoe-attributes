@@ -77,21 +77,22 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
             .build();
     public static final Supplier<IPoseModifier> POSE = AbstractKillerQueenEntity.POSE;
 
-    public static final ElbowAttack ELBOW = new ElbowAttack(60, 5, 9, 0.75f,
+    public static final ElbowAttack ELBOW = new ElbowAttack(0, 5, 9, 0.75f,
             7.5f, 10, 1f, 1.1f, 0f)
             .withSound(JSoundRegistry.KQBTD_ELBOW)
             .withImpactSound(JSoundRegistry.IMPACT_4)
             .withHitSpark(JParticleType.HIT_SPARK_2)
+            .withBlockStun(3)
             .withInfo(
                     Component.literal("Elbow"),
-                    Component.literal("fast, short-range knockback")
+                    Component.literal("fast, short-range knockback, very low blockstun")
             );
     public static final BubbleCounterAttack BUBBLE_COUNTER = new BubbleCounterAttack(480, 5, 20, 1f)
             .withInfo(
                     Component.literal("Stray Cat Counter"),
                     Component.literal("0.25s windup counter, turns opponent into your primary bomb")
             );
-    public static final BubbleAttack BUBBLE = new BubbleAttack(220, 15, 18, 0.75f)
+    public static final BubbleAttack BUBBLE = new BubbleAttack(60, 15, 18, 0.75f)
             .withCrouchingVariant(BUBBLE_COUNTER)
             .withSound(JSoundRegistry.KQ_UPPERCUT)
             .withInfo(
@@ -105,7 +106,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
                     Component.empty()
             );
     public static final BTDPlantAttack BTD_PLANT = new BTDPlantAttack(800, 14, 24, 1f, 10, 1.5f, 0f)
-            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
             .withBlockStun(8)
             .withInfo(
                     Component.literal("Bites the Dust Plant"),

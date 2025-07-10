@@ -10,7 +10,6 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.nbt.CompoundTag;
@@ -25,6 +24,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
+import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public class RedBindEntity extends JAttackEntity implements GeoEntity {
     private LivingEntity boundEntity;
@@ -102,7 +103,7 @@ public class RedBindEntity extends JAttackEntity implements GeoEntity {
         if (master != null) {
             final Vec3 vel = boundEntity.position().add(0, 0.5, 0).subtract(master.position());
             final Vec3 launch = vel.normalize().scale(1.25);
-            StandEntity.damageLogic(boundEntity.level(), boundEntity, launch, 20, 3, true,
+            damageLogic(boundEntity.level(), boundEntity, launch, 20, 3, true,
                     6, false, 4, level().damageSources().mobAttack(master), master, CommonHitPropertyComponent.HitAnimation.MID, false, true);
         }
 

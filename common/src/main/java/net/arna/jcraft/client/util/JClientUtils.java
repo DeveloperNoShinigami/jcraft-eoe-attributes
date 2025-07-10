@@ -2,10 +2,13 @@ package net.arna.jcraft.client.util;
 
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.AnimationProcessor;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
-import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.common.entity.stand.*;
+import net.arna.jcraft.common.entity.stand.CreamEntity;
+import net.arna.jcraft.common.entity.stand.D4CEntity;
+import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
+import net.arna.jcraft.common.entity.stand.MetallicaEntity;
 import net.arna.jcraft.common.util.DimensionData;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.client.Minecraft;
@@ -19,7 +22,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static net.arna.jcraft.common.util.JUtils.DEG_TO_RAD;
 import static net.arna.jcraft.common.util.JUtils.deltaPos;
@@ -28,6 +33,7 @@ public class JClientUtils {
 
     // Timestop tracking
     public static List<DimensionData> activeTimestops = new ArrayList<>();
+    public static Map<Entity, Double> timestopTimestamps = new HashMap<>();
 
     // Mustn't directly remove the DimensionData due to the possibility of a ConcurrentModificationException
     // Setting the timer to 0 will make the next tick remove it

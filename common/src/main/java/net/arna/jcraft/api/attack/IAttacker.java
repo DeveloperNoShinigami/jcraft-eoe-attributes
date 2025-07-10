@@ -1,5 +1,6 @@
 package net.arna.jcraft.api.attack;
 
+import net.arna.jcraft.api.MoveUsage;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
@@ -99,4 +100,6 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
     boolean performedThisTick();
 
     A getThis();
+
+    MoveUsage getMoveUsage();
 }

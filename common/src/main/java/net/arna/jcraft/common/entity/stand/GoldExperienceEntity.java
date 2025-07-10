@@ -3,31 +3,29 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import net.arna.jcraft.api.attack.*;
-import net.arna.jcraft.api.attack.core.HitBoxData;
 import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.core.HitBoxData;
 import net.arna.jcraft.api.attack.enums.BlockableType;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.stand.SummonData;
-import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.attack.moves.goldexperience.BerryBushAttack;
 import net.arna.jcraft.common.attack.moves.goldexperience.LifeGiverAttack;
 import net.arna.jcraft.common.attack.moves.goldexperience.OverclockAttack;
 import net.arna.jcraft.common.attack.moves.goldexperience.TreeAttack;
-import net.arna.jcraft.common.attack.moves.shared.HealMove;
-import net.arna.jcraft.common.attack.moves.shared.KnockdownAttack;
-import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
-import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
-import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.api.registry.JSoundRegistry;
-import net.arna.jcraft.api.registry.JStandTypeRegistry;
-import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -71,7 +69,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             .build();
 
     // JCraft.lightCooldown -> 0 | 0.5f -> 0.35f
-    public static final BerryBushAttack BERRY_BUSH = new BerryBushAttack(120, 16, 20,
+    public static final BerryBushAttack BERRY_BUSH = new BerryBushAttack(100, 16, 20,
             1.25f, 4f, 5, 1.5f, 0.75f, 0.2f)
             .withAnim(State.LIFE_GIVER)
             .withImpactSound(JSoundRegistry.IMPACT_4)
@@ -100,8 +98,8 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                     Component.literal("Punch"),
                     Component.literal("quick combo starter, low stun")
             );
-    public static final SimpleAttack<GoldExperienceEntity> HEAVY = new SimpleAttack<GoldExperienceEntity>(
-            200, 13, 22, 1f, 9f, 10, 1.5f, 1.5f, 0f)
+    public static final MovementSlowingSimpleAttack<GoldExperienceEntity> HEAVY = new MovementSlowingSimpleAttack<GoldExperienceEntity>(
+            0, 13, 22, 1f, 9f, 10, 1.5f, 1.5f, 0f)
             .withExtraHitBox(new HitBoxData(0, 0, 1.25))
 //            .withSound(JSoundRegistry.GE_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_2)
@@ -142,7 +140,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                     Component.literal("Tree Summon"),
                     Component.literal("two-hitting launch")
             );
-    public static final LifeGiverAttack LIFE_GIVER = new LifeGiverAttack(400, 16, 25, 1f)
+    public static final LifeGiverAttack LIFE_GIVER = new LifeGiverAttack(300, 16, 25, 1f)
             .withSound(JSoundRegistry.GE_HEAL)
             .withInfo(
                     Component.literal("Life Giver"),
@@ -155,7 +153,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             9f, 60, 2f, 0.9f, 0f)
 //            .withSound(JSoundRegistry.GE_ULT)
             .withImpactSound(JSoundRegistry.IMPACT_10)
-            .withBlockableType(BlockableType.NON_BLOCKABLE)
+            .withBlockableType(BlockableType.UNBLOCKABLE)
             .withInfo(
                     Component.literal("Overclock"),
                     Component.literal("slow, unblockable, devastating stun")
@@ -183,7 +181,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                     Component.literal("links into Light")
             );
     public static final SimpleAttack<GoldExperienceEntity> REKKA1 = new SimpleAttack<GoldExperienceEntity>
-            (160, 7, 14, 1f, 5f, 15, 1.5f, 0.5f, 0f)
+            (0, 7, 14, 1f, 5f, 15, 1.5f, 0.5f, 0f)
             .withAnim(State.REKKA1)
             .withSound(JSoundRegistry.GE_REKKA1)
             .withImpactSound(JSoundRegistry.IMPACT_2)
@@ -271,7 +269,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
 
     @Override
     public void queueMove(MoveInputType type) {
-        if (getState() == State.REKKA2 && type == MoveInputType.SPECIAL2) return;
+        if (type == MoveInputType.SPECIAL2) return;
         super.queueMove(type);
     }
 

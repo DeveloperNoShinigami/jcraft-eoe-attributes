@@ -1,15 +1,20 @@
 package net.arna.jcraft.mixin;
 
+import lombok.NonNull;
+import net.arna.jcraft.api.Attacks;
+import net.arna.jcraft.api.MoveUsage;
 import net.arna.jcraft.api.attack.moves.AbstractCounterAttack;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
-import net.arna.jcraft.common.config.JServerConfig;
-import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
-import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.common.util.IDamageScaler;
-import net.arna.jcraft.common.util.JUtils;
-import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.arna.jcraft.api.registry.JTagRegistry;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.common.config.JServerConfig;
+import net.arna.jcraft.common.entity.stand.KingCrimsonEntity;
+import net.arna.jcraft.common.network.s2c.IPSTriggeredPacket;
+import net.arna.jcraft.common.util.IJCraftComboTracker;
+import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,8 +28,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements IDamageScaler {
+public abstract class LivingEntityMixin implements IJCraftComboTracker {
     @Shadow protected int lastHurtByPlayerTime;
     @Shadow @Nullable protected Player lastHurtByPlayer;
     // Damage scaling
@@ -32,6 +41,9 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     private float damageScaling = 1.00f;
     @Unique
     private int hitCount = 0;
+    // The relevant HashSets are lazy-loaded
+    @Unique
+    private final Map<LivingEntity, HashSet<MoveUsage>> usedComboMoves = new HashMap<>();
 
     @Override
     public float jcraft$getDamageScaling() {
@@ -46,12 +58,54 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     @Override
     public void jcraft$increaseHitCount() {
         hitCount++;
-        damageScaling = Math.max(JServerConfig.DAMAGE_SCALING_MINIMUM.getValue(),
-                damageScaling - JServerConfig.SCALING_PENALTY_PER_HIT.getValue());
+        damageScaling = Math.max(
+                JServerConfig.DAMAGE_SCALING_MINIMUM.getValue(),
+                damageScaling - JServerConfig.SCALING_PENALTY_PER_HIT.getValue()
+        );
+    }
+
+    /**
+     * @return Whether this move was present in the combo beforehand
+     */
+    @Override
+    public boolean jcraft$addMoveToCombo(@NonNull LivingEntity attacker, MoveUsage moveUsage) {
+        if (usedComboMoves.containsKey(attacker)) {
+            final AbstractMove<?, ?> move = moveUsage.move();
+            final HashSet<MoveUsage> moveList = usedComboMoves.get(attacker);
+
+            for (MoveUsage pastUsage : moveList) {
+                if (
+                        moveUsage != pastUsage // Ensure the same move usage only adds to the move list once
+                        && Attacks.prototypeMatch(pastUsage.move(), move) // Move equality check that doesn't use instances
+                ) { // TODO: verify prototypeMatch() filters appropriately
+                    LivingEntity attackerUser = JUtils.getUserIfStand(attacker);
+
+                    if (attackerUser instanceof ServerPlayer serverPlayer) {
+                        IPSTriggeredPacket.send(serverPlayer);
+                    }
+
+                    return true;
+                }
+            }
+
+            if (move.isLoopPrevention()) { // TODO: verify noLoopPrevention() is applied to all intended moves
+                moveList.add(moveUsage);
+                return false;
+            }
+        } else {
+            final HashSet<MoveUsage> moveList = new HashSet<>(2);
+            moveList.add(moveUsage);
+
+            usedComboMoves.put(attacker, moveList);
+        }
+        return false;
     }
 
     @Override
-    public void jcraft$resetHitCount() {
+    public void jcraft$resetCombo() {
+        for (var entry : usedComboMoves.entrySet()) {
+            entry.getValue().clear();
+        }
         damageScaling = 1.00f;
         hitCount = 0;
     }
@@ -61,7 +115,7 @@ public abstract class LivingEntityMixin implements IDamageScaler {
     public void jcraft$tick(CallbackInfo callbackInfo) {
         LivingEntity living = LivingEntity.class.cast(this);
         if (hitCount > 0 && !living.hasEffect(JStatusRegistry.DAZED.get())) {
-            ((IDamageScaler) this).jcraft$resetHitCount();
+            ((IJCraftComboTracker) this).jcraft$resetCombo();
         }
     }
 

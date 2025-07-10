@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import lombok.Setter;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.MoveUsage;
 import net.arna.jcraft.api.attack.IAttacker;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
@@ -58,6 +59,8 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
     private S state;
 
+    @Getter
+    private MoveUsage moveUsage;
     public AbstractMove<?, ? super A> curMove;
     public AbstractMove<?, ? super A> previousAttack;
 
@@ -120,9 +123,12 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     }
 
     @Override
-    public void setCurrentMove(AbstractMove<?, ? super A> move) {
+    public void setCurrentMove(@Nullable AbstractMove<?, ? super A> move) {
         previousAttack = curMove;
         curMove = move;
+        if (curMove != null) {
+            moveUsage = new MoveUsage(user.tickCount, move);
+        }
     }
 
     @Override
@@ -253,7 +259,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             return true;
         }
 
-        curMove = move;
+        setCurrentMove(move);
         moveStun = move.getDuration();
 
         if (curMove instanceof AbstractMultiHitAttack<?, ?> multiHitAttack) {

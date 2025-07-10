@@ -19,6 +19,7 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> STAND_SUMMON = register("standsummon");
     RegistrySupplier<SoundEvent> STAND_DESUMMON = register("desummon");
     RegistrySupplier<SoundEvent> STAND_BLOCK = register("standblock");
+    RegistrySupplier<SoundEvent> STAND_PUSHBLOCK = register("standpushblock");
     RegistrySupplier<SoundEvent> BACKSTAB = register("backstab");
     RegistrySupplier<SoundEvent> ARMORED_HIT = register("armoredhit");
     RegistrySupplier<SoundEvent> COMBO_BREAK = register("combobreak");
