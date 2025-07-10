@@ -31,7 +31,6 @@ public interface JItemRegistry {
     RegistrySupplier<Item> SPEC_DISC = register("spec_disc", () -> new SpecDiscItem(settings().fireResistant().stacksTo(1)));
 
     //DISCS
-    //TODO - ADD TEXTURES
     RegistrySupplier<Item> DISC_STAND_PROUD = register("disc_stand_proud", () -> new RecordItem(1, JSoundRegistry.STAND_PROUD.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 92));
     RegistrySupplier<Item> DISC_CRUCIFIED = register("disc_crucified", () -> new RecordItem(1, JSoundRegistry.CRUCIFIED.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 212));
     RegistrySupplier<Item> DISC_AWAKEN = register("disc_awaken", () -> new RecordItem(1, JSoundRegistry.AWAKEN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 221));
