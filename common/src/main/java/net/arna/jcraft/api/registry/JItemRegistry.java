@@ -5,6 +5,7 @@ import dev.architectury.platform.Platform;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.entity.vehicle.RoadRollerEntity;
 import net.arna.jcraft.common.item.*;
 import net.minecraft.core.registries.Registries;
@@ -29,7 +30,20 @@ public interface JItemRegistry {
     RegistrySupplier<Item> STAND_DISC = register("stand_disc", () -> new StandDiscItem(settings().fireResistant().stacksTo(1)));
     RegistrySupplier<Item> SPEC_DISC = register("spec_disc", () -> new SpecDiscItem(settings().fireResistant().stacksTo(1)));
 
+    //DISCS
     RegistrySupplier<Item> DISC_STAND_PROUD = register("disc_stand_proud", () -> new RecordItem(1, JSoundRegistry.STAND_PROUD.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 92));
+    RegistrySupplier<Item> DISC_CRUCIFIED = register("disc_crucified", () -> new RecordItem(1, JSoundRegistry.CRUCIFIED.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 212));
+    RegistrySupplier<Item> DISC_AWAKEN = register("disc_awaken", () -> new RecordItem(1, JSoundRegistry.AWAKEN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 221));
+    RegistrySupplier<Item> DISC_DARK_REBIRTH = register("disc_dark_rebirth", () -> new RecordItem(1, JSoundRegistry.DARK_REBIRTH.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 68));
+    RegistrySupplier<Item> DISC_KIRA_THEME = register("disc_kira_theme", () -> new RecordItem(1, JSoundRegistry.KIRA_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 46));
+    RegistrySupplier<Item> DISC_GIORNO_THEME = register("disc_giorno_theme", () -> new RecordItem(1, JSoundRegistry.GIORNO_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 269));
+    RegistrySupplier<Item> DISC_JONATHAN_THEME = register("disc_jonathan_theme", () -> new RecordItem(1, JSoundRegistry.JONATHAN_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 53));
+    RegistrySupplier<Item> DISC_JOLYNE_THEME = register("disc_jolyne_theme", () -> new RecordItem(1, JSoundRegistry.JOLYNE_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 240));
+    RegistrySupplier<Item> DISC_JOTARO_THEME = register("disc_jotaro_theme", () -> new RecordItem(1, JSoundRegistry.JOTARO_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 49));
+    RegistrySupplier<Item> DISC_TORTURE_DANCE = register("disc_torture_dance", () -> new RecordItem(1, JSoundRegistry.TORTURE_DANCE.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 97));
+    RegistrySupplier<Item> DISC_WONDER_OF_YOU = register("disc_wonder_of_you", () -> new RecordItem(1, JSoundRegistry.WONDER_OF_YOU.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 28));
+    RegistrySupplier<Item> DISC_HALLELUJAH_CHORUS = register("disc_hallelujah_chorus", () -> new RecordItem(1, JSoundRegistry.HALLELUJAH_CHORUS.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 209));
+    RegistrySupplier<Item> DISC_UN_ALTRA_PERSONA = register("disc_un_altra_persona", () -> new RecordItem(1, JSoundRegistry.UN_ALTRA_PERSONA.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 153));
 
     RegistrySupplier<Item> FV_REVOLVER = register("fv_revolver", () -> new FVRevolverItem(settings().rarity(Rarity.UNCOMMON).durability(1200)));
 
