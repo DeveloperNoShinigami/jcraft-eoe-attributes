@@ -478,7 +478,6 @@
   "move.jcraft.metallica.default.barrage.description": "高速で確実なコンボのスターター/エクステンダー、強度のスタン、他のラッシュよりもヒットボックスが小さい",
   "move.jcraft.metallica.default.barrage.name": "ラッシュ",
   "move.jcraft.metallica.default.bisect.description": "時間経過とともに鉄を消費し、より大きく強力になるチャージ式の発射物。\nブロック不可。",
-  "move.jcraft.metallica.default.cleave.followup.description": "",
   "move.jcraft.metallica.default.give_scalpel.cr.name": "メスの生成",
   "move.jcraft.metallica.default.grab.description": "ブロック不可、低酸素状態を付与する（10秒）。\n鉄分を30回復する。\nスペックの技と併用することはできず、上書きされる。",
   "move.jcraft.metallica.default.grab.name": "掴み",
