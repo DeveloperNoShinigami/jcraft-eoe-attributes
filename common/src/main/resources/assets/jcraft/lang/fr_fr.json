@@ -143,8 +143,15 @@
   "entity.jcraft.cream.info.con3": "au dessus de la majorité des cooldowns",
   "entity.jcraft.cream.info.desc": "SETUP a courte portée",
   "entity.jcraft.cream.info.freeSpace": "BNBs (i. - in Cream):\n    Léger>Assaut>Léger>Choppe\n    i.Léger>terre+s.OFF>s.ON+Assaut>Léger>Charge>Choppe\n    Coup tranchant>Destruction>Surprise\n    Coup tranchant>Vide",
+  "entity.jcraft.cream.info.pro1": "offre plusieurs façon de traverser les bloc",
+  "entity.jcraft.cream.info.pro2": "Mode «void» extrêmement puissant",
+  "entity.jcraft.cream.info.pro3": "Ideal pour une percée ciblée",
   "entity.jcraft.cream.info.pro4": "Bonne mobilité",
   "entity.jcraft.cream.info.skin1": "Menace",
+  "entity.jcraft.cream.info.skin2": "Annihilateur",
+  "entity.jcraft.cream.info.skin3": "vide blanc",
   "entity.jcraft.d4c": "Dirty Deeds Done Dirt Cheap",
+  "entity.jcraft.d4c.info.con1": "les setups et combos optimaux nécessitent de l'anticipation",
+  "entity.jcraft.d4c.info.con2": "moins rapide que la moyenne",
   "entity.jcraft.d4c.info.pro1": "Bons outils de combo"
 }
