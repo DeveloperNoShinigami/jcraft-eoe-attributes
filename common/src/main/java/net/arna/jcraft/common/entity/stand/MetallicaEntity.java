@@ -197,7 +197,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.sms"))
             .withCondition(MetallicaIronCondition.atLeast(IRON_MAX / 2.0f));
-    public static final RemoteScalpelMove REMOTE_SCALPEL_MOVE = new RemoteScalpelMove(60, 7, 12, 0)
+    public static final RemoteScalpelMove REMOTE_SCALPEL_MOVE = new RemoteScalpelMove(0, 7, 12, 0)
             .withInfo(
                     Component.literal("Scalpel Toss (Remote)"),
                     Component.literal("""
@@ -207,7 +207,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.rs"))
             .withCondition(MetallicaIronCondition.atLeast(ScalpelProjectile.IRON_COST));
-    public static final FanTossAttack FAN_TOSS = new FanTossAttack(60, 7, 12, 0.75f)
+    public static final FanTossAttack FAN_TOSS = new FanTossAttack(0, 7, 12, 0.75f)
             .withSound(JSoundRegistry.METALLICA_SCALPEL_SUMMON)
             .withInfo(
                     Component.literal("Scalpel Toss (Wide)"),
@@ -217,7 +217,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.ft"))
             .withCondition(MetallicaIronCondition.atLeast(ScalpelProjectile.IRON_COST));
-    public static final PreciseTossAttack PRECISE_TOSS = new PreciseTossAttack(60, 7, 12, 0.75f)
+    public static final PreciseTossAttack PRECISE_TOSS = new PreciseTossAttack(0, 7, 12, 0.75f)
             .withSound(JSoundRegistry.METALLICA_SCALPEL_SUMMON)
             .withCrouchingVariant(REMOTE_SCALPEL_MOVE)
             .withAerialVariant(FAN_TOSS)
@@ -400,6 +400,12 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
     public boolean initMove(MoveClass moveClass) {
         if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
         if (tryFollowUp(moveClass, MoveClass.HEAVY)) return true;
+        if (moveClass == MoveClass.SPECIAL2 && canAttack()) {
+            if (getUserOrThrow().isShiftKeyDown()) {
+                setMove(RAZOR_COUGH_ATTACK, State.NONE);
+                return true;
+            }
+        }
         return super.initMove(moveClass);
     }
 

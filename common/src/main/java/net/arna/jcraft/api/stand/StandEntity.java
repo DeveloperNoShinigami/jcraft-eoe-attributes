@@ -37,6 +37,7 @@ import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
+import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.PurpleHazeEntity;
 import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
@@ -1779,7 +1780,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             }
         }
 
-        if (movesOnCooldown > 5 && !(mob instanceof StandEntity<?, ?>)) {
+        if (movesOnCooldown > 5 && JServerConfig.SURVIVAL_CDC.getValue() && !(mob instanceof StandEntity<?, ?>)) {
             cooldowns.cooldownCancel(); // >5 = 80+%
         }
 
