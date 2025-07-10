@@ -56,10 +56,10 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
                     .freeSpace(Component.literal("""
                             BNBs:
                                 -the sauce boss
-                                (Light>)Charge>cr.Light>Roundhouse>Barrage>Light>Donut>Roundhouse>Light~Light
+                                (Light>)Charge>cr.Light>Roundhouse>Barrage>Light>Donut>Sweep>Light~Light
                             
                                 -the afternoon coffee
-                                Donut>Roundhouse>Charge>Light>Barrage>Roundhouse>Light~Light"""))
+                                Donut>Sweep>Charge>Light>Barrage>Roundhouse>Light~Light"""))
                     .skinName(Component.literal("OVA"))
                     .skinName(Component.literal("Black"))
                     .skinName(Component.literal("Greatest High"))

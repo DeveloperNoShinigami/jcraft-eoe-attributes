@@ -76,6 +76,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
             );
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
             30, 6, 10, 0.75f, 3f, 10, 1.5f, 0.25f, 0.1f)
+            .noLoopPrevention()
             .withImpactSound(JSoundRegistry.IMPACT_6)
             .withCrouchingVariant(DETONATE)
             // implemented in class: .withFollowup(LIGHT_FOLLOWUP)

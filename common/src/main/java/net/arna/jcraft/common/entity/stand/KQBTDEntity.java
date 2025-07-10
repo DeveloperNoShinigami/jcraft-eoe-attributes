@@ -82,9 +82,10 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
             .withSound(JSoundRegistry.KQBTD_ELBOW)
             .withImpactSound(JSoundRegistry.IMPACT_4)
             .withHitSpark(JParticleType.HIT_SPARK_2)
+            .withBlockStun(3)
             .withInfo(
                     Component.literal("Elbow"),
-                    Component.literal("fast, short-range knockback")
+                    Component.literal("fast, short-range knockback, very low blockstun")
             );
     public static final BubbleCounterAttack BUBBLE_COUNTER = new BubbleCounterAttack(480, 5, 20, 1f)
             .withInfo(

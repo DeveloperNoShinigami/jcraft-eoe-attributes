@@ -916,7 +916,7 @@
   "move.jcraft.killer_queen_bites_the_dust.default.bomb_plant.name": "Bomb Plant",
   "move.jcraft.killer_queen_bites_the_dust.default.detonate.cr.description": "tiny windup, move queueing is disabled while Detonate is active",
   "move.jcraft.killer_queen_bites_the_dust.default.detonate.cr.name": "Detonate",
-  "move.jcraft.killer_queen_bites_the_dust.default.elbow.description": "fast, short-range knockback",
+  "move.jcraft.killer_queen_bites_the_dust.default.elbow.description": "fast, short-range knockback, very low blockstun",
   "move.jcraft.killer_queen_bites_the_dust.default.elbow.name": "Elbow",
   "move.jcraft.killer_queen_bites_the_dust.default.explosive_dash.description": "instantly boosts the user in the aimed direction",
   "move.jcraft.killer_queen_bites_the_dust.default.explosive_dash.name": "Explosive Dash",

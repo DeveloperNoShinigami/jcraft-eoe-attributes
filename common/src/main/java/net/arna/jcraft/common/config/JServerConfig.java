@@ -84,6 +84,7 @@ public class JServerConfig {
 
     // Misc options
     private static final String GAMEPLAY = "gameplay";
+    // public static final BooleanOption ENABLE_HITSTOP = new BooleanOption("enableHitstop", GAMEPLAY, false);
     public static final BooleanOption EXCLUSIVE_STANDS = new BooleanOption("exclusiveStands", GAMEPLAY, false);
     public static final BooleanOption STAND_USER_SIGHT = new BooleanOption("standUserSight", GAMEPLAY, false);
     public static final BooleanOption SPAWNER_STANDS = new BooleanOption("spawnerStands", GAMEPLAY, true);

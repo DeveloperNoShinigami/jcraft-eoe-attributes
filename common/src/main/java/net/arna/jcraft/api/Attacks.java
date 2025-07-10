@@ -355,6 +355,8 @@ public interface Attacks {
         //JCraft.LOGGER.info("Damaging entity: " + ent + " with damage: " + damage + " and scaling: " + scaling);
         damage *= scaling;
 
+        //tryApplyHitstop(attacker, ent, damage);
+
         if (JServerConfig.HEALTH_TO_DAMAGE_SCALING.getValue()) {
             float healthRatio = ent.getMaxHealth() / 20.0f;
             float damageAdjustment = healthRatio - 1.0f;
@@ -392,6 +394,32 @@ public interface Attacks {
         applyAbsorptionAndStats(damage, damageSource, ent);
     }
 
+    /*
+    static void tryApplyHitstop(@Nullable Entity attacker, LivingEntity victim, float damage) {
+        if (damage < 3.0f) return;
+
+        final int hitstop = (int) (damage / 2.5f);
+
+        if (JServerConfig.ENABLE_HITSTOP.getValue()) {
+            if (attacker instanceof LivingEntity livingAttacker) {
+                JComponentPlatformUtils.getTimeStopData(attacker).ifPresent(data -> data.setTicks(hitstop));
+
+                StandEntity<?, ?> attackerStand = JUtils.getStand(livingAttacker);
+                if (attackerStand != null) {
+                    JComponentPlatformUtils.getTimeStopData(attackerStand).ifPresent(data -> data.setTicks(hitstop));
+                }
+            }
+
+            JComponentPlatformUtils.getTimeStopData(victim).ifPresent(data -> data.setTicks(hitstop));
+
+            StandEntity<?, ?> victimStand = JUtils.getStand(victim);
+            if (victimStand != null) {
+                JComponentPlatformUtils.getTimeStopData(victimStand).ifPresent(data -> data.setTicks(hitstop));
+            }
+        }
+    }
+     */
+
     /**
      * Basic damage method, ignores potion effects and enchantments, accounts for armor and damage scaling
      *
@@ -403,6 +431,8 @@ public interface Attacks {
         if (ent == null || ent.isRemoved() || ent.isDeadOrDying()) {
             return;
         }
+
+        //tryApplyHitstop(damageSource.getEntity(), ent, damage);
 
         float scaling = ((IJCraftComboTracker) ent).jcraft$getDamageScaling();
         //JCraft.LOGGER.info("True damaging entity: " + ent + " with damage: " + damage + " and scaling: " + scaling);
