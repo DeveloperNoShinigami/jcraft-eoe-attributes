@@ -1,5 +1,7 @@
 package net.arna.jcraft.common.entity;
 
+import dev.architectury.networking.NetworkManager;
+import io.netty.buffer.Unpooled;
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -10,14 +12,19 @@ import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.arna.jcraft.api.registry.JStatusRegistry;
+import net.arna.jcraft.common.network.s2c.DamageNumberPacket;
 import net.arna.jcraft.common.util.ICustomDamageHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -31,8 +38,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamageHandler {
     public static final int HIT_ANIMATION_LENGTH = 20; // Length of hit animation in ticks
@@ -134,6 +144,11 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
                                 net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation hitAnimation,
                                 boolean canBackstab, boolean unblockable) {
         if (!this.level().isClientSide && !this.isRemoved()) {
+            // Send damage number packet
+            if (damage > 0) {
+                sendDamageNumberPacket(this, damage);
+            }
+
             if (attacker != null) {
                 double deltaX = attacker.getX() - this.getX();
                 double deltaZ = attacker.getZ() - this.getZ();
@@ -182,6 +197,11 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     public boolean hurt(@NotNull DamageSource source, float amount) {
         if (!this.level().isClientSide && !this.isRemoved()) {
             if (!this.isInvulnerableTo(source) && !this.invisible) {
+                // Send damage number packet
+                if (amount > 0) {
+                    sendDamageNumberPacket(this, amount);
+                }
+
                 // Face the attacker if there is one
                 Entity directAttacker = source.getEntity();
                 if (directAttacker != null) {
@@ -206,6 +226,23 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
             }
         }
         return false;
+    }
+
+    private static void sendDamageNumberPacket(TrainingDummyEntity entity, float damage) {
+        if (!(entity.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        Vec3 pos = entity.position();
+        List<ServerPlayer> nearbyPlayers = serverLevel.getEntitiesOfClass(ServerPlayer.class,
+                new AABB(pos.add(64, 64, 64), pos.subtract(64, 64, 64)));
+
+        if (!nearbyPlayers.isEmpty()) {
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            new DamageNumberPacket(entity.getId(), damage).write(buf);
+
+            NetworkManager.sendToPlayers(nearbyPlayers, JPacketRegistry.S2C_DAMAGE_NUMBER, buf);
+        }
     }
 
     @Override

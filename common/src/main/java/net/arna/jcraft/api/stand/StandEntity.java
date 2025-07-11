@@ -35,11 +35,13 @@ import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.config.JServerConfig;
+import net.arna.jcraft.common.entity.TrainingDummyEntity;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.PurpleHazeEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
 import net.arna.jcraft.common.network.s2c.ComboCounterPacket;
+import net.arna.jcraft.common.network.s2c.DamageNumberPacket;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.mixin.LivingEntityInvoker;
@@ -78,6 +80,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -844,14 +847,35 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         float scaling = ((IDamageScaler) ent).jcraft$getDamageScaling();
-        //JCraft.LOGGER.info("True damaging entity: " + ent + " with damage: " + damage + " and scaling: " + scaling);
         damage *= scaling;
+
+        // Send damage number packet for training dummies
+        if (ent instanceof TrainingDummyEntity && !ent.level().isClientSide && damage > 0) {
+            sendDamageNumberPacketForTrueDamage((TrainingDummyEntity) ent, damage);
+        }
 
         // All stands ignore 10% of armor & armor toughness
         damage = JUtils.getDamageThroughArmor(damage, (float) ent.getArmorValue() * 0.9f, (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 0.9f);
 
         // Apply absorption
         applyAbsorptionAndStats(damage, damageSource, ent);
+    }
+
+    private static void sendDamageNumberPacketForTrueDamage(TrainingDummyEntity entity, float damage) {
+        if (!(entity.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        Vec3 pos = entity.position();
+        List<ServerPlayer> nearbyPlayers = serverLevel.getEntitiesOfClass(ServerPlayer.class,
+                new AABB(pos.add(64, 64, 64), pos.subtract(64, 64, 64)));
+
+        if (!nearbyPlayers.isEmpty()) {
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            new DamageNumberPacket(entity.getId(), damage).write(buf);
+
+            NetworkManager.sendToPlayers(nearbyPlayers, JPacketRegistry.S2C_DAMAGE_NUMBER, buf);
+        }
     }
 
     // Stock attacks to define
