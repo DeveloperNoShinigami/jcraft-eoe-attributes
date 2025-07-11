@@ -57,6 +57,7 @@ public interface JItemRegistry {
 
     RegistrySupplier<DIOsDiaryItem> DIOS_DIARY = register("dios_diary", () -> new DIOsDiaryItem(settings().rarity(Rarity.EPIC).fireResistant()));
 
+    RegistrySupplier<TrainingDummyItem> TRAINING_DUMMY = register("training_dummy", () -> new TrainingDummyItem(settings().stacksTo(1)));
 
     RegistrySupplier<Item> SINNERS_SOUL = register("sinners_soul", () -> new SinnersSoulItem(settings()));
 

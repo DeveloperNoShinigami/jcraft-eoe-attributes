@@ -207,6 +207,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.KQ_COIN.get());
                     entries.accept(JItemRegistry.FOOLISH_SAND_BLOCK.get());
                     // misc
+                    entries.accept(JItemRegistry.TRAINING_DUMMY.get());
                     entries.accept(JItemRegistry.HOT_SAND_BLOCK.get());
                     entries.accept(JItemRegistry.CINDERELLA_GREEN_BLOCK.get());
                     entries.accept(JItemRegistry.SINNERS_SOUL.get());
