@@ -326,6 +326,24 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> TORTURE_DANCE = register("torture_dance");
     RegistrySupplier<SoundEvent> UN_ALTRA_PERSONA = register("un_altra_persona");
 
+    RegistrySupplier<SoundEvent> SONO_CHI_NO_SADAME = register("sono_chi_no_sadame");
+    RegistrySupplier<SoundEvent> BLOODY_STREAM = register("bloody_stream");
+    RegistrySupplier<SoundEvent> END_OF_THE_WORLD = register("end_of_the_world");
+    RegistrySupplier<SoundEvent> CRAZY_NOISY_BIZARRE_TOWN = register("crazy_noisy_bizarre_town");
+    RegistrySupplier<SoundEvent> CHASE = register("chase");
+    RegistrySupplier<SoundEvent> GREAT_DAYS = register("great_days");
+    RegistrySupplier<SoundEvent> FIGHTING_GOLD = register("fighting_gold");
+    RegistrySupplier<SoundEvent> TRAITORS_REQUIEM = register("traitors_requiem");
+    RegistrySupplier<SoundEvent> STONE_OCEAN = register("stone_ocean");
+    RegistrySupplier<SoundEvent> HEAVENS_FALLING_DOWN = register("heavens_falling_down");
+    RegistrySupplier<SoundEvent> TO_BE_CONTINUED = register("to_be_continued");
+    RegistrySupplier<SoundEvent> WALK_LIKE_AN_EGYPTIAN = register("walk_like_an_egyptian");
+    RegistrySupplier<SoundEvent> OINGO_BOINGO = register("oingo_boingo");
+    RegistrySupplier<SoundEvent> I_WANT_YOU = register("i_want_you");
+    RegistrySupplier<SoundEvent> FREEKN_YOU = register("freekn_you");
+    RegistrySupplier<SoundEvent> MODERN_CRUSADERS = register("modern_crusaders");
+
+
 
     static void init() {
         // intentionally left empty
