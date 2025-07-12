@@ -63,7 +63,7 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0)
                 .add(Attributes.ARMOR, 5.0)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0);
+                .add(Attributes.KNOCKBACK_RESISTANCE, 2.0);
     }
 
     public TrainingDummyEntity(Level level, double x, double y, double z) {
@@ -92,8 +92,18 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     }
 
     private boolean isOnRedSandstoneSlab() {
-        BlockPos belowPos = this.blockPosition().below();
-        return this.level().getBlockState(belowPos).is(Blocks.CUT_RED_SANDSTONE_SLAB);
+        // Check a small area around the entity's feet for cut red sandstone slabs
+        BlockPos center = this.blockPosition();
+
+        // Check current position and one block down
+        for (int y = 0; y >= -1; y--) {
+            BlockPos checkPos = center.offset(0, y, 0);
+            if (this.level().getBlockState(checkPos).is(Blocks.CUT_RED_SANDSTONE_SLAB)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -192,15 +202,10 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
         // Do nothing - prevents actual health reduction
     }
 
-    // Override hurt to prevent vanilla knockback calculations
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
         if (!this.level().isClientSide && !this.isRemoved()) {
             if (!this.isInvulnerableTo(source) && !this.invisible) {
-                // Send damage number packet
-                if (amount > 0) {
-                    sendDamageNumberPacket(this, amount);
-                }
 
                 // Face the attacker if there is one
                 Entity directAttacker = source.getEntity();
@@ -263,22 +268,34 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
             }
         }
 
-        // Immediate return to leash position after knockback - no waiting
+        // Pure physics-based leash constraint - no AI
         if (this.isLeashed()) {
             Entity holder = this.getLeashHolder();
             if (holder != null) {
-                double requiredDistance;
-                if (holder instanceof net.minecraft.world.entity.decoration.LeashFenceKnotEntity) {
-                    requiredDistance = 0.25D; // 0.25 blocks from fence
-                } else {
-                    requiredDistance = 1.0D; // 1 block from player
-                }
-
-                // If knocked back beyond required distance, immediately start moving back
-                if (this.distanceToSqr(holder) > requiredDistance) {
-                    this.getNavigation().moveTo(holder, 1.0D); // Faster return speed
-                }
+                enforceLeashDistance(holder);
             }
+        }
+    }
+
+    private void enforceLeashDistance(Entity holder) {
+        double targetDistance = 2.0D; // 2 blocks
+        double currentDistance = this.distanceTo(holder);
+
+        if (currentDistance > targetDistance) {
+            // Too far - apply spring force toward holder
+            Vec3 holderPos = holder.position();
+            Vec3 myPos = this.position();
+            Vec3 direction = holderPos.subtract(myPos).normalize();
+
+            // Spring force proportional to distance over limit
+            double excess = currentDistance - targetDistance;
+            double springForce = excess * 0.2D; // Adjust for spring strength
+
+            Vec3 currentVel = this.getDeltaMovement();
+            Vec3 correction = direction.scale(springForce);
+
+            this.setDeltaMovement(currentVel.add(correction));
+            this.hasImpulse = true;
         }
     }
 
@@ -316,8 +333,8 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
                 if (holder == null) return false;
 
                 if (holder instanceof net.minecraft.world.entity.decoration.LeashFenceKnotEntity) {
-                    // For fence posts, move directly to the fence (0.5 block distance)
-                    return TrainingDummyEntity.this.distanceToSqr(holder) > 0.25D; // 0.5 blocks
+                    // For fence posts, move directly to the fence (0.25 block distance)
+                    return TrainingDummyEntity.this.distanceToSqr(holder) > 0.25D; // 0.25 blocks
                 } else if (holder instanceof LivingEntity) {
                     // For players/entities, keep 1 block distance
                     return TrainingDummyEntity.this.distanceToSqr(holder) > 1.0D;
