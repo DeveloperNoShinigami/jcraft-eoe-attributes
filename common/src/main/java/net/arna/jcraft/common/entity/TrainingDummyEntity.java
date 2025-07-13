@@ -132,7 +132,7 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
 
         // ONLY pick up if BOTH hands are completely empty
         if (mainHand.isEmpty() && offHand.isEmpty()) {
-            if (!player.level().isClientSide) {
+            if (!player.level().isClientSide()) {
                 ItemStack dummyItem = new ItemStack(JItemRegistry.TRAINING_DUMMY.get());
                 player.getInventory().add(dummyItem);
                 this.discard();
@@ -153,7 +153,7 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
                                 boolean lift, int blockstun, DamageSource source, Entity attacker,
                                 net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation hitAnimation,
                                 boolean canBackstab, boolean unblockable) {
-        if (!this.level().isClientSide && !this.isRemoved()) {
+        if (!this.level().isClientSide() && !this.isRemoved()) {
             // Send damage number packet
             if (damage > 0) {
                 sendDamageNumberPacket(this, damage);
@@ -204,7 +204,7 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
-        if (!this.level().isClientSide && !this.isRemoved()) {
+        if (!this.level().isClientSide() && !this.isRemoved()) {
             if (!this.isInvulnerableTo(source) && !this.invisible) {
 
                 // Face the attacker if there is one
@@ -260,7 +260,7 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
         }
 
         // Update knockdown sync on server side
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             boolean hasKnockdown = this.hasEffect(JStatusRegistry.KNOCKDOWN.get());
             boolean currentSyncValue = this.entityData.get(HAS_KNOCKDOWN);
             if (currentSyncValue != hasKnockdown) {
@@ -302,12 +302,12 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     @Override
     public void handleEntityEvent(byte id) {
         if (id == 32) {
-            if (this.level().isClientSide) {
+            if (this.level().isClientSide()) {
                 this.level().playLocalSound(this.getX(), this.getY(), this.getZ(),
                         SoundEvents.WOOL_STEP, this.getSoundSource(), 0.3F, 1.0F, false);
             }
         } else if (id == 2) {
-            if (this.level().isClientSide) {
+            if (this.level().isClientSide()) {
                 this.hurtTime = this.hurtDuration = 10;
             }
         } else {
@@ -405,7 +405,7 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     // Required abstract methods
     @Override
     public @NotNull Iterable<ItemStack> getArmorSlots() {
-        return java.util.Collections.emptyList();
+        return List.of();
     }
 
     @Override
@@ -524,7 +524,7 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     private PlayState predicate(AnimationState<TrainingDummyEntity> state) {
         // Check knockdown first
         boolean hasKnockdown;
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             hasKnockdown = this.entityData.get(HAS_KNOCKDOWN);
         } else {
             hasKnockdown = this.hasEffect(JStatusRegistry.KNOCKDOWN.get());
