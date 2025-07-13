@@ -1,6 +1,7 @@
 package net.arna.jcraft.api.component.world;
 
 import lombok.Data;
+import lombok.Getter;
 import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec2;
@@ -41,6 +42,7 @@ public interface CommonShockwaveHandlerComponent {
 
     @Data
     class Shockwave {
+        @Getter
         public enum Type {
             DEFAULT(0, ""),
             PUSHBLOCK(1, "pb");
@@ -50,8 +52,8 @@ public interface CommonShockwaveHandlerComponent {
                 this.name = name;
             }
 
-            public final int id;
-            public final String name;
+            private final int id;
+            private final String name;
 
             public static Type of(int id) {
                 if (id > values().length) throw new IllegalArgumentException("Index out of bounds");
