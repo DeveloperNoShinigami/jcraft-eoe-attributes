@@ -27,6 +27,8 @@ public class JClientConfig implements ConfigData {
     private boolean timeEraseShader = true;
     private boolean epitaphOverlay = true;
     private boolean comboCounter = true;
+    private boolean dynamicFirstPersonStandOpacity = true;
+    private float firstPersonStandOpacityMult = 1.0f;
 
     public static void load() {
         instance = AutoConfig.getConfigHolder(JClientConfig.class).getConfig();
