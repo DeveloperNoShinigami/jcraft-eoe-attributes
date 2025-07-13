@@ -850,7 +850,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         damage *= scaling;
 
         // Send damage number packet for training dummies
-        if (ent instanceof TrainingDummyEntity && !ent.level().isClientSide && damage > 0) {
+        if (ent instanceof TrainingDummyEntity && !ent.level().isClientSide() && damage > 0) {
             sendDamageNumberPacketForTrueDamage((TrainingDummyEntity) ent, damage);
         }
 
