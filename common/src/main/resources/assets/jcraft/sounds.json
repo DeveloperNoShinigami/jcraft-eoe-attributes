@@ -695,12 +695,12 @@
       "jcraft:stands/theworldoverheaven/overwrite"
     ]
   },
-  "twohowarida": {
+  "twohairknives": {
     "sounds": [
-      "jcraft:stands/theworldoverheaven/owarida"
+      "jcraft:stands/theworldoverheaven/air_knives_2"
     ]
   },
-  "twohairknives": {
+  "twohknives": {
     "sounds": [
       "jcraft:stands/theworldoverheaven/air_knives"
     ]

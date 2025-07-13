@@ -224,8 +224,8 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> TWOH_CHARGE_OVERWRITE = register("twohchargeoverwrite");
     RegistrySupplier<SoundEvent> TWOH_CHARGE = register("twohcharge");
     RegistrySupplier<SoundEvent> TWOH_OVERWRITE = register("twohoverwrite");
-    RegistrySupplier<SoundEvent> TWOH_KNIFETHROW = register("twohowarida");
-    RegistrySupplier<SoundEvent> TWOH_AIRKNIVES = register("twohairknives");
+    RegistrySupplier<SoundEvent> TWOH_KNIFETHROW = register("twohairknives");
+    RegistrySupplier<SoundEvent> TWOH_AIRKNIVES = register("twohknives");
 
     // Star Platinum: The World
     RegistrySupplier<SoundEvent> SPTW_GRAB = register("sptwgrab");
