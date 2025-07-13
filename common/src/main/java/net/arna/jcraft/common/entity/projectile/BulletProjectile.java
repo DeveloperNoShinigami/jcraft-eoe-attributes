@@ -145,10 +145,8 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
                 AttackData attackData = new AttackData( getDeltaMovement().normalize(),
                         stunTicks, 1, false, damage, true, (int) (4 + damage),
                         level().damageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID,
-                        null, false, false
+                        null, false, false, cancelMoves
                 );
-
-                attackData = attackData.withCancelMoves(cancelMoves);
 
                 damageLogic(level(), target, attackData);
 
