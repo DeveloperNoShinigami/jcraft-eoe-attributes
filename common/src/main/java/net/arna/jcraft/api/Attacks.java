@@ -497,6 +497,7 @@ public interface Attacks {
         if (a instanceof AbstractSimpleAttack<?, ?> aa) {
             if (b instanceof AbstractSimpleAttack<?, ?> ab) {
                 if (aa.getStun() != ab.getStun()) return false;
+                if (aa.getOffset() != ab.getOffset()) return false;
             } else {
                 return false;
             }

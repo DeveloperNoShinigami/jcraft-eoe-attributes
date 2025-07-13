@@ -126,6 +126,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     // JCraft.lightCooldown -> 0 | 0.55f -> 0.4f
     public static final SimpleAttack<GEREntity> PUNCH = new SimpleAttack<GEREntity>(JCraft.LIGHT_COOLDOWN / 2,
             5, 9, 0.75f, 5f, 8, 1.5f, 0.2f, -0.1f)
+            .noLoopPrevention()
             .withAerialVariant(DOWNWARD_KICK)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withBlockStun(4)

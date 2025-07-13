@@ -166,7 +166,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("True Strike"),
                     Component.literal("damage ignores potions and enchantments, good stun, high blockstun, medium windup")
             );
-    public static final SmiteAttack AIR_SMITE = new SmiteAttack(300, 10, 20, 1f,
+    public static final SmiteAttack AIR_SMITE = new SmiteAttack(200, 10, 20, 1f,
             6f, 21, 3f, 0f, 0f, true, 7, 9)
             .withSound(JSoundRegistry.TWOH_SMITE)
             .withBlockStun(13)
@@ -175,7 +175,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("You won't run away!"),
                     Component.literal("summons a weaker lightning bolt at the aimed position")
             );
-    public static final SmiteAttack SMITE = new SmiteAttack(300, 10, 20, 1f,
+    public static final SmiteAttack SMITE = new SmiteAttack(200, 10, 20, 1f,
             8f, 21, 3f, 0f, 0f, false, 7, 9)
             .withAerialVariant(AIR_SMITE)
             .withSound(JSoundRegistry.TWOH_SMITE)
@@ -197,8 +197,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("Overwrite (Hit)"),
                     Component.empty()
             );
-    // Does absolutely nothing on its own.
-    public static final ChargeOverwriteMove CHARGE_OVERWRITE = new ChargeOverwriteMove(
+    public static final ChargeOverwriteMove CHARGE_OVERWRITE = new ChargeOverwriteMove( // Does absolutely nothing on its own.
             360, 71, 70, 1f, 20)
             .withFollowup(OVERWRITE)
             .withSound(JSoundRegistry.TWOH_CHARGE_OVERWRITE)
@@ -215,7 +214,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             .withBlockStun(6)
             .withInfo(
                     Component.literal("Aerial Divine Finisher"),
-                    Component.empty()
+                    Component.literal("briefly stalls mid-air")
             );
     public static final DivineFinisherAttack DIVINE_FINISHER = new DivineFinisherAttack(280, 16, 22,
             0.75f, 0f, 20, 1.5f, 0f, 0f)

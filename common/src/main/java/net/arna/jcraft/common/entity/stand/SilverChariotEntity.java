@@ -159,7 +159,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     Component.literal("fast reliable combo starter/extender, low stun")
             );
 
-    public static final RayDartAttack RAY_DART_LOW = new RayDartAttack(0, 10, 18,
+    public static final RayDartAttack RAY_DART_LOW = new RayDartAttack(100, 10, 18,
             0.65f, 6f, 20, 1.75f, 0.25f, 0.2f)
             .withSound(JSoundRegistry.SC_CHARGE)
             .withSound(SoundEvents.PLAYER_ATTACK_SWEEP)
@@ -168,7 +168,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     Component.literal("Lacerate"),
                     Component.literal("Anubis Chariot and the user charge forward, high stun, low blockstun.")
             );
-    public static final RayDartAttack RAY_DART_HIGH = new RayDartAttack(0, 12, 20,
+    public static final RayDartAttack RAY_DART_HIGH = new RayDartAttack(100, 12, 20,
             0.65f, 6f, 15, 2.0f, 0.25f, 0.2f)
             .withCrouchingVariant(RAY_DART_LOW)
             .withSound(JSoundRegistry.SC_CHARGE)

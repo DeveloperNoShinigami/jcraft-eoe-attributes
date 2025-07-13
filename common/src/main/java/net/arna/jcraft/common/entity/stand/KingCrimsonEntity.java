@@ -10,6 +10,7 @@ import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.pose.ModifierCondition;
@@ -331,11 +332,19 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                 return super.initMove(moveClass);
             }
             default -> {
+                if (moveClass == MoveClass.HEAVY && getState() == State.HEAVY && queuedMove == MoveInputType.HEAVY)
+                    queuedMove = null;
                 return super.initMove(moveClass);
             }
         }
 
         return true;
+    }
+
+    @Override
+    public void queueMove(MoveInputType type) {
+        if ( (getState() == State.HEAVY || getState() == State.OVERHEAD) && type == MoveInputType.HEAVY) return;
+        super.queueMove(type);
     }
 
     public void moveCancel() {

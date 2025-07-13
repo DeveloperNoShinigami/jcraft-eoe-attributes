@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.Getter;
 import lombok.NonNull;
+import net.arna.jcraft.api.AttackData;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.enums.MobilityType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
@@ -88,8 +89,12 @@ public final class SpeedSliceAttack extends AbstractMove<SpeedSliceAttack, MadeI
 
         for (final LivingEntity ent : targets) {
             LivingEntity target = JUtils.getUserIfStand(ent);
-            damageLogic(world, target, kbVec.scale(knockback).add(0, knockback / 4, 0),
-                    stunTicks, stunType, false, damage, true, (int) (4 + damage), playerSource, user, CommonHitPropertyComponent.HitAnimation.MID);
+            damageLogic(world, target, new AttackData(
+                    kbVec.scale(knockback).add(0, knockback / 4, 0),
+                    stunTicks, stunType, false, damage, true, (int) (4 + damage),
+                    playerSource, user, CommonHitPropertyComponent.HitAnimation.MID, attacker.getMoveUsage(),
+                    false, false
+            ));
         }
 
         if (attacker.getAccelTime() > 0 && !targets.isEmpty()) {

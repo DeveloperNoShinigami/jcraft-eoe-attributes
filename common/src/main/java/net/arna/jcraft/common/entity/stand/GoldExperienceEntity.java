@@ -91,6 +91,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             );
     public static final SimpleAttack<GoldExperienceEntity> LIGHT = new SimpleAttack<GoldExperienceEntity>(
             15, 6, 9, 0.75f, 5f, 7, 1.5f, 0.2f, -0.1f)
+            .noLoopPrevention()
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(BERRY_BUSH)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -269,7 +270,8 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
 
     @Override
     public void queueMove(MoveInputType type) {
-        if (type == MoveInputType.SPECIAL2) return;
+        if ( (getState() == State.REKKA2 || getState() == State.REKKA3) && type == MoveInputType.SPECIAL2) return;
+
         super.queueMove(type);
     }
 
