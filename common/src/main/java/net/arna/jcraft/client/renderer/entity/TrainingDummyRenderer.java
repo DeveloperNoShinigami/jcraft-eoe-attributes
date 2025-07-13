@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import mod.azure.azurelib.cache.object.BakedGeoModel;
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.client.model.entity.TrainingDummyModel;
 import net.arna.jcraft.common.entity.TrainingDummyEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -22,7 +23,7 @@ public class TrainingDummyRenderer extends GeoEntityRenderer<TrainingDummyEntity
 
     @Override
     public ResourceLocation getTextureLocation(TrainingDummyEntity animatable) {
-        return new ResourceLocation("jcraft", "textures/entity/training_dummy.png");
+        return JCraft.id("textures/entity/training_dummy.png");
     }
 
     @Override
