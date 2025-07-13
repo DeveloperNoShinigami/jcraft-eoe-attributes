@@ -155,6 +155,24 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.DISC_TORTURE_DANCE.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_UN_ALTRA_PERSONA.get(), ModelTemplates.MUSIC_DISC);
 
+        generator.generateFlatItem(JItemRegistry.DISC_SONO_CHI_NO_SADAME.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_BLOODY_STREAM.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_END_OF_THE_WORLD.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_CRAZY_NOISY_BIZARRE_TOWN.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_CHASE.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_GREAT_DAYS.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_FIGHTING_GOLD.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_TRAITORS_REQUIEM.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_STONE_OCEAN.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_HEAVENS_FALLING_DOWN.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_TO_BE_CONTINUED.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_WALK_LIKE_AN_EGYPTIAN.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_OINGO_BOINGO.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_I_WANT_YOU.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_FREEKN_YOU.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_MODERN_CRUSADERS.get(), ModelTemplates.MUSIC_DISC);
+
+
         generator.generateFlatItem(JItemRegistry.PETSHOP_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
         generator.generateFlatItem(JItemRegistry.AYA_TSUJI_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
         generator.generateFlatItem(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get(), SPAWN_EGG_MODEL);

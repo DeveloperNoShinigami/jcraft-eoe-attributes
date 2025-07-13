@@ -45,6 +45,24 @@ public interface JItemRegistry {
     RegistrySupplier<Item> DISC_HALLELUJAH_CHORUS = register("disc_hallelujah_chorus", () -> new RecordItem(1, JSoundRegistry.HALLELUJAH_CHORUS.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 209));
     RegistrySupplier<Item> DISC_UN_ALTRA_PERSONA = register("disc_un_altra_persona", () -> new RecordItem(1, JSoundRegistry.UN_ALTRA_PERSONA.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 153));
 
+    RegistrySupplier<Item> DISC_SONO_CHI_NO_SADAME = register("disc_sono_chi_no_sadame", () -> new RecordItem(1, JSoundRegistry.SONO_CHI_NO_SADAME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 87));
+    RegistrySupplier<Item> DISC_BLOODY_STREAM = register("disc_bloody_stream", () -> new RecordItem(1, JSoundRegistry.BLOODY_STREAM.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 95));
+    RegistrySupplier<Item> DISC_END_OF_THE_WORLD = register("disc_end_of_the_world", () -> new RecordItem(1, JSoundRegistry.END_OF_THE_WORLD.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 87));
+    RegistrySupplier<Item> DISC_CRAZY_NOISY_BIZARRE_TOWN = register("disc_crazy_noisy_bizarre_town", () -> new RecordItem(1, JSoundRegistry.CRAZY_NOISY_BIZARRE_TOWN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 185));
+    RegistrySupplier<Item> DISC_CHASE = register("disc_chase", () -> new RecordItem(1, JSoundRegistry.CHASE.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 135));
+    RegistrySupplier<Item> DISC_GREAT_DAYS = register("disc_great_days", () -> new RecordItem(1, JSoundRegistry.GREAT_DAYS.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 242));
+    RegistrySupplier<Item> DISC_FIGHTING_GOLD = register("disc_fighting_gold", () -> new RecordItem(1, JSoundRegistry.FIGHTING_GOLD.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 253));
+    RegistrySupplier<Item> DISC_TRAITORS_REQUIEM = register("disc_traitors_requiem", () -> new RecordItem(1, JSoundRegistry.TRAITORS_REQUIEM.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 91));
+    RegistrySupplier<Item> DISC_STONE_OCEAN = register("disc_stone_ocean", () -> new RecordItem(1, JSoundRegistry.STONE_OCEAN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 92));
+    RegistrySupplier<Item> DISC_HEAVENS_FALLING_DOWN = register("disc_heavens_falling_down", () -> new RecordItem(1, JSoundRegistry.HEAVENS_FALLING_DOWN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 77));
+    RegistrySupplier<Item> DISC_TO_BE_CONTINUED = register("disc_to_be_continued", () -> new RecordItem(1, JSoundRegistry.TO_BE_CONTINUED.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 18));
+    RegistrySupplier<Item> DISC_WALK_LIKE_AN_EGYPTIAN = register("disc_walk_like_an_egyptian", () -> new RecordItem(1, JSoundRegistry.WALK_LIKE_AN_EGYPTIAN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 40));
+    RegistrySupplier<Item> DISC_OINGO_BOINGO = register("disc_oingo_boingo", () -> new RecordItem(1, JSoundRegistry.OINGO_BOINGO.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 84));
+    RegistrySupplier<Item> DISC_I_WANT_YOU = register("disc_i_want_you", () -> new RecordItem(1, JSoundRegistry.I_WANT_YOU.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 200));
+    RegistrySupplier<Item> DISC_FREEKN_YOU = register("disc_freekn_you", () -> new RecordItem(1, JSoundRegistry.FREEKN_YOU.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 118));
+    RegistrySupplier<Item> DISC_MODERN_CRUSADERS = register("disc_modern_crusaders", () -> new RecordItem(1, JSoundRegistry.MODERN_CRUSADERS.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 160));
+
+
     RegistrySupplier<Item> FV_REVOLVER = register("fv_revolver", () -> new FVRevolverItem(settings().rarity(Rarity.UNCOMMON).durability(1200)));
 
     RegistrySupplier<Item> BULLET = register("bullet", () -> new BulletItem(settings()));
