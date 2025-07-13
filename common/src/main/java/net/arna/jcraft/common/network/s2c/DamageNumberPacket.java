@@ -6,18 +6,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 
-public class DamageNumberPacket { //friggin packet yo :)
-    private final int entityId;
-    private final float damageAmount;
-
-    public DamageNumberPacket(int entityId, float damageAmount) {
-        this.entityId = entityId;
-        this.damageAmount = damageAmount;
-    }
+public record DamageNumberPacket(int entityId, float damageAmount) { //friggin packet yo :)
 
     public DamageNumberPacket(FriendlyByteBuf buf) {
-        this.entityId = buf.readInt();
-        this.damageAmount = buf.readFloat();
+        this(buf.readInt(), buf.readFloat());
     }
 
     public void write(FriendlyByteBuf buf) {
