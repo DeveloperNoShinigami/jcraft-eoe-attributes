@@ -219,7 +219,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
     public static final DivineFinisherAttack DIVINE_FINISHER = new DivineFinisherAttack(280, 16, 22,
             0.75f, 0f, 20, 1.5f, 0f, 0f)
             .withAerialVariant(AERIAL_DIVINE_FINISHER)
-            .withSound(JSoundRegistry.TWOH_AIRKNIVES)
+            .withSound(JSoundRegistry.TWOH_KNIFESUMMON)
             .withBlockStun(6)
             .withInfo(
                     Component.literal("Divine Finisher"),
