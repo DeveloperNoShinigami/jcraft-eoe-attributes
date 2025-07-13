@@ -121,14 +121,14 @@ public interface Attacks {
             return;
         }
 
-        if (attackData.attacker instanceof ServerPlayer playerEntity) {
+        if (attackData.attacker() instanceof ServerPlayer playerEntity) {
             comboCounterLogic(playerEntity, victim);
         }
 
         baseDamageLogic(victim,
-                attackData.kbVec, attackData.stunTicks, attackData.stunLevel, attackData.overrideStun,
-                attackData.damage, attackData.lift, attackData.blockstun, attackData.source, attackData.attacker,
-                attackData.hitAnimation, attackData.moveUsage, attackData.canBackstab, attackData.unblockable, attackData.cancelMoves);
+                attackData.kbVec(), attackData.stunTicks(), attackData.stunLevel(), attackData.overrideStun(),
+                attackData.damage(), attackData.lift(), attackData.blockStun(), attackData.source(), attackData.attacker(),
+                attackData.hitAnimation(), attackData.moveUsage(), attackData.canBackstab(), attackData.unblockable(), attackData.cancelMoves());
     }
 
     /**

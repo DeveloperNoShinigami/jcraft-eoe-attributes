@@ -148,7 +148,7 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
                         null, false, false
                 );
 
-                attackData.setCancelMoves(cancelMoves);
+                attackData = attackData.withCancelMoves(cancelMoves);
 
                 damageLogic(level(), target, attackData);
 

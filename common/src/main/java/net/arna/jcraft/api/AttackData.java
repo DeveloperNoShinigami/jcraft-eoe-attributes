@@ -1,6 +1,6 @@
 package net.arna.jcraft.api;
 
-import lombok.Data;
+import lombok.With;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
@@ -8,42 +8,14 @@ import net.minecraft.world.phys.Vec3;
 import static net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation;
 import static net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation.MID;
 
-@Data
-public class AttackData {
-    Vec3 kbVec = Vec3.ZERO;
-    int stunTicks = 0;
-    int stunLevel = 1;
-    boolean overrideStun = false;
-    float damage = 0.0f;
-    boolean lift = false;
-    int blockstun = 0;
-    DamageSource source = null;
-    Entity attacker = null;
-    HitAnimation hitAnimation = MID;
-    MoveUsage moveUsage = null;
-    boolean canBackstab = false;
-    boolean unblockable = false;
-
-
-
-    boolean cancelMoves = true;
+@With
+public record AttackData(Vec3 kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockStun, DamageSource source, Entity attacker, HitAnimation hitAnimation, MoveUsage moveUsage, boolean canBackstab, boolean unblockable, boolean cancelMoves) {
 
     public AttackData() {
-
+        this(Vec3.ZERO, 0, 1, false, 0.0f, false, 0, null, null, MID, null, false, false);
     }
-    public AttackData(Vec3 kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage, boolean lift, int blockstun, DamageSource source, Entity attacker, HitAnimation hitAnimation, MoveUsage moveUsage, boolean canBackstab, boolean unblockable) {
-        this.kbVec = kbVec;
-        this.stunTicks = stunTicks;
-        this.stunLevel = stunLevel;
-        this.overrideStun = overrideStun;
-        this.damage = damage;
-        this.lift = lift;
-        this.blockstun = blockstun;
-        this.source = source;
-        this.attacker = attacker;
-        this.hitAnimation = hitAnimation;
-        this.moveUsage = moveUsage;
-        this.canBackstab = canBackstab;
-        this.unblockable = unblockable;
+
+    public AttackData(final Vec3 kbVec, final int stunTicks, final int stunLevel, final boolean overrideStun, final float damage, final boolean lift, final int blockStun, final DamageSource source, final Entity attacker, final HitAnimation hitAnimation, final MoveUsage moveUsage, final boolean canBackstab, final boolean unblockable) {
+        this(kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockStun, source, attacker, hitAnimation, moveUsage, canBackstab, unblockable, true);
     }
 }
