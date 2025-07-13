@@ -1,5 +1,6 @@
 package net.arna.jcraft.client.rendering;
 
+import lombok.experimental.UtilityClass;
 import net.arna.jcraft.common.entity.TrainingDummyEntity;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.Entity;
@@ -8,6 +9,7 @@ import net.minecraft.world.level.Level;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+@UtilityClass
 public class DamageIndicatorManager {
     private static final Map<TrainingDummyEntity, Integer> dummyPositionCounter = new WeakHashMap<>();
     private static SimpleParticleType DAMAGE_NUMBER_PARTICLE;
