@@ -747,7 +747,7 @@
   "jcraft.serverconfig.option.mihAccelerateTicks": "Made in Heaven time accel duration",
   "jcraft.serverconfig.option.mihTimeAccelerationDuration": "Made in Heaven Time Accel Duration",
   "jcraft.serverconfig.option.miningBarrage": "Barrage Mining",
-  "jcraft.serverconfig.option.reduceDeadlyExplosions": "Reduce Deadly Explosion Power (End Crystals, Beds, Respawn Anchors)",
+  "jcraft.serverconfig.option.reduceDeadlyExplosions": "Reduce Big Explosion Damage",
   "jcraft.serverconfig.option.scalingPenaltyPerHit": "Scaling Penalty per Hit",
   "jcraft.serverconfig.option.shaSearchRadius": "Sheer Heart Attack search radius",
   "jcraft.serverconfig.option.spawnerStands": "Spawner Stands",
