@@ -695,12 +695,12 @@
       "jcraft:stands/theworldoverheaven/overwrite"
     ]
   },
-  "twohowarida": {
+  "twohairknives": {
     "sounds": [
-      "jcraft:stands/theworldoverheaven/owarida"
+      "jcraft:stands/theworldoverheaven/air_knives_2"
     ]
   },
-  "twohairknives": {
+  "twohknives": {
     "sounds": [
       "jcraft:stands/theworldoverheaven/air_knives"
     ]
@@ -1205,6 +1205,11 @@
       "jcraft:discs/awaken"
     ]
   },
+  "propaganda": {
+    "sounds": [
+      "jcraft:discs/propaganda"
+    ]
+  },
   "dark_rebirth": {
     "sounds": [
       "jcraft:discs/dark_rebirth"
@@ -1225,6 +1230,11 @@
       "jcraft:discs/jonathan_theme"
     ]
   },
+  "josuke_theme": {
+    "sounds": [
+      "jcraft:discs/josuke_theme"
+    ]
+  },
   "jolyne_theme": {
     "sounds": [
       "jcraft:discs/jolyne_theme"
@@ -1243,6 +1253,86 @@
   "un_altra_persona": {
     "sounds": [
       "jcraft:discs/un_altra_persona"
+    ]
+  },
+  "sono_chi_no_sadame": {
+    "sounds": [
+      "jcraft:discs/sono_chi_no_sadame"
+    ]
+  },
+  "bloody_stream": {
+    "sounds": [
+      "jcraft:discs/bloody_stream"
+    ]
+  },
+  "end_of_the_world": {
+    "sounds": [
+      "jcraft:discs/end_of_the_world"
+    ]
+  },
+  "crazy_noisy_bizarre_town": {
+    "sounds": [
+      "jcraft:discs/crazy_noisy_bizarre_town"
+    ]
+  },
+  "chase": {
+    "sounds": [
+      "jcraft:discs/chase"
+    ]
+  },
+  "great_days": {
+    "sounds": [
+      "jcraft:discs/great_days"
+    ]
+  },
+  "fighting_gold": {
+    "sounds": [
+      "jcraft:discs/fighting_gold"
+    ]
+  },
+  "traitors_requiem": {
+    "sounds": [
+      "jcraft:discs/traitors_requiem"
+    ]
+  },
+  "stone_ocean": {
+    "sounds": [
+      "jcraft:discs/stone_ocean"
+    ]
+  },
+  "heavens_falling_down": {
+    "sounds": [
+      "jcraft:discs/heavens_falling_down"
+    ]
+  },
+  "to_be_continued": {
+    "sounds": [
+      "jcraft:discs/to_be_continued"
+    ]
+  },
+  "walk_like_an_egyptian": {
+    "sounds": [
+      "jcraft:discs/walk_like_an_egyptian"
+    ]
+  },
+  "oingo_boingo": {
+    "sounds": [
+      "jcraft:discs/oingo_boingo"
+    ]
+  },
+  "i_want_you": {
+    "sounds": [
+      "jcraft:discs/i_want_you"
+    ]
+  },
+  "freekn_you": {
+    "sounds": [
+      "jcraft:discs/freekn_you"
+    ]
+  },
+  "modern_crusaders": {
+    "sounds": [
+      "jcraft:discs/modern_crusaders"
     ]
   }
 }

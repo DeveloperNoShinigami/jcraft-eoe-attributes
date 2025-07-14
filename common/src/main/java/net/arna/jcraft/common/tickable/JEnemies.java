@@ -2,6 +2,7 @@ package net.arna.jcraft.common.tickable;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
+import net.arna.jcraft.api.registry.JTagRegistry;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.resources.ResourceKey;
@@ -24,6 +25,9 @@ public class JEnemies {
     public static void add(Mob entity) {
         if (entity.level().isClientSide()) {
             throw new UnsupportedOperationException("Attempted to add an enemy to JEnemies from the clientside!");
+        }
+        if (entity.getType().is(JTagRegistry.NO_STAND_USER_AI)) {
+            return;
         }
         if (enemies.containsKey(entity)) {
             return;

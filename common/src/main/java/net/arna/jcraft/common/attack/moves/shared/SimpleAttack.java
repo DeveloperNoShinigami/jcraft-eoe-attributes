@@ -38,7 +38,7 @@ public final class SimpleAttack<A extends IAttacker<? extends A, ?>> extends Abs
     public static <A extends IAttacker<? extends A, ?>> SimpleAttack<A> lightAttack(final int windup, final int duration,
                                                                                     final float moveDistance, final float damage, final int stun,
                                                                                     final float knockback, final float offset) {
-        return new SimpleAttack<A>(duration, windup, duration, moveDistance, damage, stun, 1.5f, knockback, offset).noLoopPrevention();
+        return new SimpleAttack<A>(duration + stun, windup, duration, moveDistance, damage, stun, 1.5f, knockback, offset).noLoopPrevention();
     }
 
     @Override

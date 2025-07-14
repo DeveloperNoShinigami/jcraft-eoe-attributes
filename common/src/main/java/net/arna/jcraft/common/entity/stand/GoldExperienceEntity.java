@@ -69,16 +69,16 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
             .build();
 
     // JCraft.lightCooldown -> 0 | 0.5f -> 0.35f
-    public static final BerryBushAttack BERRY_BUSH = new BerryBushAttack(100, 16, 20,
-            1.25f, 4f, 5, 1.5f, 0.75f, 0.2f)
+    public static final BerryBushAttack BERRY_BUSH = new BerryBushAttack(40,
+            16, 20, 1.25f, 4f, 5, 1.5f, 0.75f, 0.2f)
             .withAnim(State.LIFE_GIVER)
             .withImpactSound(JSoundRegistry.IMPACT_4)
             .withInfo(
                     Component.literal("Place Berry Bush"),
                     Component.literal("places an almost-ripe berry bush on the ground, this move cannot be aimed up or down")
             );
-    public static final SimpleAttack<GoldExperienceEntity> LIGHT_FOLLOWUP = new SimpleAttack<GoldExperienceEntity>(
-            0, 7, 12, 0.75f, 6, 7, 1.5f, 1f, -0.1f)
+    public static final SimpleAttack<GoldExperienceEntity> LIGHT_FOLLOWUP = new SimpleAttack<GoldExperienceEntity>(0,
+            7, 12, 0.75f, 6, 7, 1.5f, 1f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
@@ -89,8 +89,9 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                     Component.literal("Punch"),
                     Component.literal("quick combo finisher")
             );
-    public static final SimpleAttack<GoldExperienceEntity> LIGHT = new SimpleAttack<GoldExperienceEntity>(
-            15, 6, 9, 0.75f, 5f, 7, 1.5f, 0.2f, -0.1f)
+    public static final SimpleAttack<GoldExperienceEntity> LIGHT = new SimpleAttack<GoldExperienceEntity>(15,
+            6, 9, 0.75f, 5f, 7, 1.5f, 0.2f, -0.1f)
+            .noLoopPrevention()
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(BERRY_BUSH)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -98,8 +99,8 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                     Component.literal("Punch"),
                     Component.literal("quick combo starter, low stun")
             );
-    public static final MovementSlowingSimpleAttack<GoldExperienceEntity> HEAVY = new MovementSlowingSimpleAttack<GoldExperienceEntity>(
-            0, 13, 22, 1f, 9f, 10, 1.5f, 1.5f, 0f)
+    public static final MovementSlowingSimpleAttack<GoldExperienceEntity> HEAVY = new MovementSlowingSimpleAttack<GoldExperienceEntity>(22,
+            13, 22, 1f, 9f, 10, 1.5f, 1.5f, 0f)
             .withExtraHitBox(new HitBoxData(0, 0, 1.25))
 //            .withSound(JSoundRegistry.GE_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_2)
@@ -269,7 +270,8 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
 
     @Override
     public void queueMove(MoveInputType type) {
-        if (type == MoveInputType.SPECIAL2) return;
+        if ( (getState() == State.REKKA2 || getState() == State.REKKA3) && type == MoveInputType.SPECIAL2) return;
+
         super.queueMove(type);
     }
 

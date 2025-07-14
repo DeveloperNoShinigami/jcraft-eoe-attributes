@@ -98,8 +98,8 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("Low Kick"),
                     Component.literal("quick combo starter")
             );
-    public static final SimpleAttack<TheWorldOverHeavenEntity> LIGHT_FOLLOWUP = new SimpleAttack<TheWorldOverHeavenEntity>(
-            0, 9, 13, 0.75f, 6f, 8, 1.75f, 1.25f, -0.1f)
+    public static final SimpleAttack<TheWorldOverHeavenEntity> LIGHT_FOLLOWUP = new SimpleAttack<TheWorldOverHeavenEntity>(0,
+            9, 13, 0.75f, 6f, 8, 1.75f, 1.25f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
@@ -119,16 +119,16 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")
             );
-    public static final MainBarrageAttack<TheWorldOverHeavenEntity> BARRAGE = new MainBarrageAttack<TheWorldOverHeavenEntity>(
-            280, 0, 40, 0.75f, 1f, 30, 2f, 0.1f, 0f, 3, Blocks.OBSIDIAN.defaultDestroyTime())
+    public static final MainBarrageAttack<TheWorldOverHeavenEntity> BARRAGE = new MainBarrageAttack<TheWorldOverHeavenEntity>(280,
+            0, 40, 0.75f, 1f, 30, 2f, 0.1f, 0f, 3, Blocks.OBSIDIAN.defaultDestroyTime())
             .withSound(JSoundRegistry.TWOH_BARRAGE)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, high stun")
             );
-    public static final SingularityAttack SINGULARITY = new SingularityAttack(140, 11, 23,
-            1f, 0f, 25, 2f, 0.4f, 0.2f, true)
+    public static final SingularityAttack SINGULARITY = new SingularityAttack(140,
+            11, 23,1f, 0f, 25, 2f, 0.4f, 0.2f, true)
             .withSound(JSoundRegistry.TWOH_SINGULARITY)
             .withAnim(State.SINGULARITY)
             .withImpactSound(JSoundRegistry.IMPACT_12)
@@ -139,8 +139,8 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("Singularity"),
                     Component.literal("block bypass (stun will always hit, but the opponent can stay blocking)")
             );
-    public static final SimpleUppercutAttack<TheWorldOverHeavenEntity> OVERHEAD_KICK = new SimpleUppercutAttack<TheWorldOverHeavenEntity>(
-            0, 10, 20, 1.25f, 8f, 20, 1.5f, 0.3f, 0f, -1)
+    public static final SimpleUppercutAttack<TheWorldOverHeavenEntity> OVERHEAD_KICK = new SimpleUppercutAttack<TheWorldOverHeavenEntity>(0,
+            10, 20, 1.25f, 8f, 20, 1.5f, 0.3f, 0f, -1)
             //.withSound(JSoundRegistry.TWOH_HEAVY)
             .withAnim(State.AIR_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -152,8 +152,8 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("Overhead Kick"),
                     Component.literal("high damage, good reach, launches down")
             );
-    public static final SingularityAttack TRUE_STRIKE = new SingularityAttack(0, 10, 22,
-            1f, 0f, 20, 2f, 0.3f, 0f, false)
+    public static final SingularityAttack TRUE_STRIKE = new SingularityAttack(0,
+            10, 22,1f, 0f, 20, 2f, 0.3f, 0f, false)
             .withBlockStun(20)
             .withAerialVariant(OVERHEAD_KICK)
             .withCrouchingVariant(SINGULARITY)
@@ -166,8 +166,8 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("True Strike"),
                     Component.literal("damage ignores potions and enchantments, good stun, high blockstun, medium windup")
             );
-    public static final SmiteAttack AIR_SMITE = new SmiteAttack(300, 10, 20, 1f,
-            6f, 21, 3f, 0f, 0f, true, 7, 9)
+    public static final SmiteAttack AIR_SMITE = new SmiteAttack(200,
+            10, 20, 1f,6f, 21, 3f, 0f, 0f, true, 7, 9)
             .withSound(JSoundRegistry.TWOH_SMITE)
             .withBlockStun(13)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
@@ -175,8 +175,8 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("You won't run away!"),
                     Component.literal("summons a weaker lightning bolt at the aimed position")
             );
-    public static final SmiteAttack SMITE = new SmiteAttack(300, 10, 20, 1f,
-            8f, 21, 3f, 0f, 0f, false, 7, 9)
+    public static final SmiteAttack SMITE = new SmiteAttack(200,
+            10, 20, 1f,8f, 21, 3f, 0f, 0f, false, 7, 9)
             .withAerialVariant(AIR_SMITE)
             .withSound(JSoundRegistry.TWOH_SMITE)
             .withBlockStun(13)
@@ -197,8 +197,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
                     Component.literal("Overwrite (Hit)"),
                     Component.empty()
             );
-    // Does absolutely nothing on its own.
-    public static final ChargeOverwriteMove CHARGE_OVERWRITE = new ChargeOverwriteMove(
+    public static final ChargeOverwriteMove CHARGE_OVERWRITE = new ChargeOverwriteMove( // Does absolutely nothing on its own.
             360, 71, 70, 1f, 20)
             .withFollowup(OVERWRITE)
             .withSound(JSoundRegistry.TWOH_CHARGE_OVERWRITE)
@@ -215,12 +214,12 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             .withBlockStun(6)
             .withInfo(
                     Component.literal("Aerial Divine Finisher"),
-                    Component.empty()
+                    Component.literal("briefly stalls mid-air")
             );
-    public static final DivineFinisherAttack DIVINE_FINISHER = new DivineFinisherAttack(280, 16, 22,
-            0.75f, 0f, 20, 1.5f, 0f, 0f)
+    public static final DivineFinisherAttack DIVINE_FINISHER = new DivineFinisherAttack(280,
+            16, 22,0.75f, 0f, 20, 1.5f, 0f, 0f)
             .withAerialVariant(AERIAL_DIVINE_FINISHER)
-            .withSound(JSoundRegistry.TWOH_AIRKNIVES)
+            .withSound(JSoundRegistry.TWOH_KNIFESUMMON)
             .withBlockStun(6)
             .withInfo(
                     Component.literal("Divine Finisher"),

@@ -1,4 +1,4 @@
-package net.arna.jcraft.mixin.client;
+package net.arna.jcraft.fabric.mixin.client;
 
 import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.util.RenderUtils;

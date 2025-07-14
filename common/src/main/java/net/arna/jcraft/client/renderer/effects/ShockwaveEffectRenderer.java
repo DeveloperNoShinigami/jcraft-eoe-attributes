@@ -31,7 +31,7 @@ public class ShockwaveEffectRenderer {
 
             // Generate ResourceLocation for each index, prefixed with type.name
             for (int i = 0; i < Shockwave.MAX_AGE; i++) {
-                ResourceLocation id = JCraft.id("textures/effect/shockwave/" + type.name + "_" + i + ".png");
+                ResourceLocation id = JCraft.id("textures/effect/shockwave/" + type.getName() + "_" + i + ".png");
                 list.add(id);
             }
 

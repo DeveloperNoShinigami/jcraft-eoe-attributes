@@ -97,8 +97,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     Component.translatable("jcraft.starplatinum.crm1"),
                     Component.literal("Slower combo starter, launches vertically, good anti-air.")
             );
-    public static final SimpleAttack<StarPlatinumEntity> LIGHT_FOLLOWUP = new SimpleAttack<StarPlatinumEntity>(
-            0, 6, 10, 0.75f, 6f, 8, 1.5f, 1f, -0.25f)
+    public static final SimpleAttack<StarPlatinumEntity> LIGHT_FOLLOWUP = new SimpleAttack<StarPlatinumEntity>(0,
+            6, 10, 0.75f, 6f, 8, 1.5f, 1f, -0.25f)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
@@ -135,8 +135,8 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
                     Component.translatable("jcraft.starplatinum.crsp1hit"),
                     Component.empty()
             );
-    public static final GrabAttack<StarPlatinumEntity, State> GRAB = new GrabAttack<>(0, 8, 20,
-            1f, 2f, 20, 1.5f, 0.1f, 0f, GRAB_HIT,
+    public static final GrabAttack<StarPlatinumEntity, State> GRAB = new GrabAttack<>(0,
+            8, 20,1f, 2f, 20, 1.5f, 0.1f, 0f, GRAB_HIT,
             StateContainer.of(State.GRAB_HIT), 11, 0.8)
             .withSound(JSoundRegistry.SPTW_GRAB)
             .withImpactSound(JSoundRegistry.SPTW_GRABHIT)

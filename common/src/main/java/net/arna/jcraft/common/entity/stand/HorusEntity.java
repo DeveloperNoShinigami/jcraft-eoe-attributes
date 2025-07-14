@@ -67,8 +67,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
             .summonData(SummonData.of(JSoundRegistry.HORUS_SUMMON))
             .build();
 
-    public static final SimpleAttack<HorusEntity> LIGHT_CROUCHING_FOLLOWUP = new SimpleAttack<HorusEntity>(
-            0, 15, 25, 0.75f, 7f, 25, 1.85f, 1.5f, 0.2f)
+    public static final SimpleAttack<HorusEntity> LIGHT_CROUCHING_FOLLOWUP = new SimpleAttack<HorusEntity>(0,
+            15, 25, 0.75f, 7f, 25, 1.85f, 1.5f, 0.2f)
             .withAnim(State.IMPALE)
             .withImpactSound(JSoundRegistry.IMPACT_9)
             .withBlockStun(25)
@@ -78,8 +78,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("Impale"),
                     Component.literal("slow reset tool, high stun and blockstun")
             );
-    public static final SimpleAttack<HorusEntity> LIGHT_FOLLOWUP = new SimpleAttack<HorusEntity>(
-            0, 9, 13, 0.75f, 6f, 10, 1.5f, 1f, 0.2f)
+    public static final SimpleAttack<HorusEntity> LIGHT_FOLLOWUP = new SimpleAttack<HorusEntity>(0,
+            9, 13, 0.75f, 6f, 10, 1.5f, 1f, 0.2f)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withCrouchingVariant(LIGHT_CROUCHING_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_3)
@@ -117,8 +117,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("Slash"),
                     Component.literal("quick combo starter, has a standing and crouching followup")
             );
-    public static final HorusBarrageAttack BARRAGE = new HorusBarrageAttack(240, 5, 80,
-            0.75f, 0, 0, 0, 0, 0, 5)
+    public static final HorusBarrageAttack BARRAGE = new HorusBarrageAttack(240,
+            5, 80,0.75f, 0, 0, 0, 0, 0, 5)
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("4s max duration, can be held")
@@ -142,8 +142,8 @@ public class HorusEntity extends StandEntity<HorusEntity, HorusEntity.State> {
                     Component.literal("summons a large icicle, press Heavy again to detonate it")
             );
     // Utility
-    public static final HorusDivekickAttack DIVEKICK = new HorusDivekickAttack(
-            240, 8, 25, 8, 6f, 19, 1.5f, 0.23f, 0.3f)
+    public static final HorusDivekickAttack DIVEKICK = new HorusDivekickAttack(240,
+            8, 25, 8, 6f, 19, 1.5f, 0.23f, 0.3f)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withHitSpark(JParticleType.HIT_SPARK_2)

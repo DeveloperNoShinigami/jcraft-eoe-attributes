@@ -93,10 +93,13 @@ public abstract class LivingEntityMixin implements IJCraftComboTracker {
                 return false;
             }
         } else {
+            final AbstractMove<?, ?> move = moveUsage.move();
             final HashSet<MoveUsage> moveList = new HashSet<>(2);
-            moveList.add(moveUsage);
 
-            usedComboMoves.put(attacker, moveList);
+            if (move.isLoopPrevention()) {
+                moveList.add(moveUsage);
+                usedComboMoves.put(attacker, moveList);
+            }
         }
         return false;
     }

@@ -38,7 +38,9 @@ public class MagiciansRedRenderer extends StandEntityRenderer<MagiciansRedEntity
             model.getBone("rope3").ifPresent(bone -> {
                 final Vector3d localPos = bone.getLocalPosition();
                 Direction gravity = GravityChangerAPI.getGravityDirection(animatable);
-                if (gravity.getAxis().isHorizontal()) gravity = gravity.getOpposite();
+                if (gravity.getAxis().isHorizontal()) {
+                    gravity = gravity.getOpposite();
+                }
 
                 final Vec3 worldPos = RotationUtil.vecWorldToPlayer(localPos.x, localPos.y, localPos.z, gravity).add(animatable.position());
 

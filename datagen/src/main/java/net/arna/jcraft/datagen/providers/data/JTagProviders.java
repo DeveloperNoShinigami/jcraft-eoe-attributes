@@ -67,6 +67,8 @@ public class JTagProviders {
             getOrCreateRawBuilder(JTagRegistry.IRON_BLOCKS).addElement(BuiltInRegistries.BLOCK.getKey(Blocks.ANVIL));
             getOrCreateRawBuilder(JTagRegistry.IRON_BLOCKS).addElement(BuiltInRegistries.BLOCK.getKey(Blocks.CHIPPED_ANVIL));
             getOrCreateRawBuilder(JTagRegistry.IRON_BLOCKS).addElement(BuiltInRegistries.BLOCK.getKey(Blocks.DAMAGED_ANVIL));
+
+            getOrCreateRawBuilder(JTagRegistry.DUMMY_KNOCKBACK_BLOCKING).addElement(BuiltInRegistries.BLOCK.getKey(Blocks.CUT_RED_SANDSTONE_SLAB));
         }
     }
 
@@ -89,19 +91,38 @@ public class JTagProviders {
             getOrCreateRawBuilder(ItemTags.ARROWS).addElement(JItemRegistry.STAND_ARROW.getId());
 
             final var musicDiscs = getOrCreateRawBuilder(ItemTags.MUSIC_DISCS);
-            musicDiscs.addElement(JItemRegistry.DISC_STAND_PROUD.getId());
             musicDiscs.addElement(JItemRegistry.DISC_CRUCIFIED.getId());
             musicDiscs.addElement(JItemRegistry.DISC_HALLELUJAH_CHORUS.getId());
             musicDiscs.addElement(JItemRegistry.DISC_WONDER_OF_YOU.getId());
             musicDiscs.addElement(JItemRegistry.DISC_AWAKEN.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_PROPAGANDA.getId());
             musicDiscs.addElement(JItemRegistry.DISC_DARK_REBIRTH.getId());
             musicDiscs.addElement(JItemRegistry.DISC_KIRA_THEME.getId());
             musicDiscs.addElement(JItemRegistry.DISC_GIORNO_THEME.getId());
             musicDiscs.addElement(JItemRegistry.DISC_JONATHAN_THEME.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_JOSUKE_THEME.getId());
             musicDiscs.addElement(JItemRegistry.DISC_JOLYNE_THEME.getId());
             musicDiscs.addElement(JItemRegistry.DISC_JOTARO_THEME.getId());
             musicDiscs.addElement(JItemRegistry.DISC_TORTURE_DANCE.getId());
             musicDiscs.addElement(JItemRegistry.DISC_UN_ALTRA_PERSONA.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_STAND_PROUD.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_SONO_CHI_NO_SADAME.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_BLOODY_STREAM.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_END_OF_THE_WORLD.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_CRAZY_NOISY_BIZARRE_TOWN.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_CHASE.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_GREAT_DAYS.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_FIGHTING_GOLD.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_TRAITORS_REQUIEM.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_STONE_OCEAN.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_HEAVENS_FALLING_DOWN.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_TO_BE_CONTINUED.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_WALK_LIKE_AN_EGYPTIAN.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_OINGO_BOINGO.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_I_WANT_YOU.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_FREEKN_YOU.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_MODERN_CRUSADERS.getId());
+
 
             getOrCreateRawBuilder(JTagRegistry.SOUL_LOG_ITEMS).addElement(JItemRegistry.SOUL_WOOD_BLOCK.getId());
 
@@ -663,19 +684,22 @@ public class JTagProviders {
                 stands.add(BuiltInRegistries.ENTITY_TYPE.getKey(stand.getEntityType()));
             }
 
-            final var never_stands = getOrCreateTagBuilder(JTagRegistry.CAN_NEVER_HAVE_STAND);
-            never_stands.addTag(JTagRegistry.STANDS);
-            never_stands.add(JEntityTypeRegistry.SHEER_HEART_ATTACK.getId());
-            never_stands.add(JEntityTypeRegistry.LIFE_DETECTOR.getId());
-            never_stands.add(JEntityTypeRegistry.GE_FROG.getId());
-            never_stands.add(JEntityTypeRegistry.GE_BUTTERFLY.getId());
-            never_stands.add(JEntityTypeRegistry.GE_SNAKE.getId());
-            never_stands.add(JEntityTypeRegistry.GER_SCORPION.getId());
-            never_stands.add(JEntityTypeRegistry.PLAYER_CLONE.getId());
-            never_stands.add(JEntityTypeRegistry.HG_NET.getId());
-            never_stands.add(JEntityTypeRegistry.RED_BIND.getId());
-            never_stands.add(JEntityTypeRegistry.SAND_TORNADO.getId());
-            never_stands.add(JEntityTypeRegistry.STAND_METEOR.getId());
+            final var neverStands = getOrCreateTagBuilder(JTagRegistry.CAN_NEVER_HAVE_STAND);
+            neverStands.addTag(JTagRegistry.STANDS);
+            neverStands.add(JEntityTypeRegistry.SHEER_HEART_ATTACK.getId());
+            neverStands.add(JEntityTypeRegistry.LIFE_DETECTOR.getId());
+            neverStands.add(JEntityTypeRegistry.GE_FROG.getId());
+            neverStands.add(JEntityTypeRegistry.GE_BUTTERFLY.getId());
+            neverStands.add(JEntityTypeRegistry.GE_SNAKE.getId());
+            neverStands.add(JEntityTypeRegistry.GER_SCORPION.getId());
+            neverStands.add(JEntityTypeRegistry.PLAYER_CLONE.getId());
+            neverStands.add(JEntityTypeRegistry.HG_NET.getId());
+            neverStands.add(JEntityTypeRegistry.RED_BIND.getId());
+            neverStands.add(JEntityTypeRegistry.SAND_TORNADO.getId());
+            neverStands.add(JEntityTypeRegistry.STAND_METEOR.getId());
+
+            final var noAIStandUsers = getOrCreateTagBuilder(JTagRegistry.NO_STAND_USER_AI);
+            noAIStandUsers.add(JEntityTypeRegistry.TRAINING_DUMMY.getId());
 
             addTagsForCompatibilities(arg);
         }

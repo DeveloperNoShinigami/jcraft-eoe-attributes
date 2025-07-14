@@ -208,6 +208,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.FOOLISH_SAND_BLOCK.get());
                     // misc
                     entries.accept(JItemRegistry.HOT_SAND_BLOCK.get());
+                    entries.accept(JItemRegistry.TRAINING_DUMMY.get());
                     entries.accept(JItemRegistry.CINDERELLA_GREEN_BLOCK.get());
                     entries.accept(JItemRegistry.SINNERS_SOUL.get());
                     entries.accept(JItemRegistry.SOUL_BLOCK.get());
@@ -388,19 +389,37 @@ public interface JCreativeMenuTabRegistry {
                 .icon(() -> JItemRegistry.DISC_STAND_PROUD.get().getDefaultInstance())
                 // order of the creative tab
                 .displayItems((displayContext, entries) -> {
-                    entries.accept(JItemRegistry.DISC_STAND_PROUD.get());
                     entries.accept(JItemRegistry.DISC_CRUCIFIED.get());
                     entries.accept(JItemRegistry.DISC_HALLELUJAH_CHORUS.get());
                     entries.accept(JItemRegistry.DISC_WONDER_OF_YOU.get());
                     entries.accept(JItemRegistry.DISC_AWAKEN.get());
+                    entries.accept(JItemRegistry.DISC_PROPAGANDA.get());
                     entries.accept(JItemRegistry.DISC_DARK_REBIRTH.get());
                     entries.accept(JItemRegistry.DISC_KIRA_THEME.get());
                     entries.accept(JItemRegistry.DISC_GIORNO_THEME.get());
                     entries.accept(JItemRegistry.DISC_JONATHAN_THEME.get());
                     entries.accept(JItemRegistry.DISC_JOLYNE_THEME.get());
                     entries.accept(JItemRegistry.DISC_JOTARO_THEME.get());
+                    entries.accept(JItemRegistry.DISC_JOSUKE_THEME.get());
                     entries.accept(JItemRegistry.DISC_TORTURE_DANCE.get());
                     entries.accept(JItemRegistry.DISC_UN_ALTRA_PERSONA.get());
+                    entries.accept(JItemRegistry.DISC_STAND_PROUD.get());
+                    entries.accept(JItemRegistry.DISC_SONO_CHI_NO_SADAME.get());
+                    entries.accept(JItemRegistry.DISC_BLOODY_STREAM.get());
+                    entries.accept(JItemRegistry.DISC_END_OF_THE_WORLD.get());
+                    entries.accept(JItemRegistry.DISC_CRAZY_NOISY_BIZARRE_TOWN.get());
+                    entries.accept(JItemRegistry.DISC_CHASE.get());
+                    entries.accept(JItemRegistry.DISC_GREAT_DAYS.get());
+                    entries.accept(JItemRegistry.DISC_FIGHTING_GOLD.get());
+                    entries.accept(JItemRegistry.DISC_TRAITORS_REQUIEM.get());
+                    entries.accept(JItemRegistry.DISC_STONE_OCEAN.get());
+                    entries.accept(JItemRegistry.DISC_HEAVENS_FALLING_DOWN.get());
+                    entries.accept(JItemRegistry.DISC_TO_BE_CONTINUED.get());
+                    entries.accept(JItemRegistry.DISC_WALK_LIKE_AN_EGYPTIAN.get());
+                    entries.accept(JItemRegistry.DISC_OINGO_BOINGO.get());
+                    entries.accept(JItemRegistry.DISC_I_WANT_YOU.get());
+                    entries.accept(JItemRegistry.DISC_FREEKN_YOU.get());
+                    entries.accept(JItemRegistry.DISC_MODERN_CRUSADERS.get());
                 })
                 .build();
     }

@@ -61,7 +61,7 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
             compound.putFloat("yaw", shockwave.getYaw());
             compound.putFloat("scale", shockwave.getScale());
             compound.putInt("age", shockwave.getAge());
-            compound.putInt("type", shockwave.getType().id);
+            compound.putInt("type", shockwave.getType().getId());
             list.add(compound);
         }
         tag.put("shockwaves", list);
@@ -83,7 +83,7 @@ public class CommonShockwaveHandlerComponentImpl implements CommonShockwaveHandl
             buf.writeFloat(sw.getYaw());
             buf.writeFloat(sw.getScale());
             buf.writeInt(sw.getAge());
-            buf.writeInt(sw.getType().id);
+            buf.writeInt(sw.getType().getId());
         }
     }
 
