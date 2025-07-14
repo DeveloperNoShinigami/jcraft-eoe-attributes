@@ -140,6 +140,7 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.PLANKTON_VIAL.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.PRISON_KEY.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.STEEL_BALL.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.TRAINING_DUMMY.get(), ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(JItemRegistry.DISC_STAND_PROUD.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_CRUCIFIED.get(), ModelTemplates.MUSIC_DISC);

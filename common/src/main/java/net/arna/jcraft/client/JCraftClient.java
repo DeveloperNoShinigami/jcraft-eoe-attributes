@@ -13,6 +13,8 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.pose.PoseModifiers;
+import net.arna.jcraft.client.rendering.DamageIndicatorManager;
+import net.arna.jcraft.client.particle.DamageNumberParticle;
 import net.arna.jcraft.client.rendering.StandUserPoseLoader;
 import net.arna.jcraft.client.gravity.util.GravityChannelClient;
 import net.arna.jcraft.client.gui.hud.JCraftAbilityHud;
@@ -243,6 +245,8 @@ public class JCraftClient {
         ParticleProviderRegistry.register(JParticleTypeRegistry.SUN_LOCK_ON, BackstabParticle.Factory::new); // 9 frames, reusing
         ParticleProviderRegistry.register(JParticleTypeRegistry.PURPLE_HAZE_CLOUD, PurpleHazeCloudParticle.Factory::new);
         ParticleProviderRegistry.register(JParticleTypeRegistry.PURPLE_HAZE_PARTICLE, PurpleHazeErraticParticle.Factory::new);
+        ParticleProviderRegistry.register(JParticleTypeRegistry.DAMAGE_NUMBER, DamageNumberParticle.Factory::new);
+        DamageIndicatorManager.setDamageNumberParticle(JParticleTypeRegistry.DAMAGE_NUMBER.get());
     }
 
     @Getter
