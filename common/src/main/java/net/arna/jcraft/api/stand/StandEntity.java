@@ -868,7 +868,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         Vec3 pos = entity.position();
-        final int radius = Math.max(0, JClientConfig.getInstance().getDummyDamageIndicatorRange());
+        final int radius = Math.max(0, JServerConfig.DUMMY_DAMAGE_INDICATOR_RANGE.getValue());
         List<ServerPlayer> nearbyPlayers = serverLevel.getEntitiesOfClass(ServerPlayer.class,
                 new AABB(pos.add(radius, radius, radius), pos.subtract(radius, radius, radius)));
 
