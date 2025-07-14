@@ -75,7 +75,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
                     Component.literal("tiny windup, move queueing is disabled while Detonate is active")
             );
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = new SimpleAttack<AbstractKillerQueenEntity<?, ?>>(
-            30, 6, 10, 0.75f, 3f, 10, 1.5f, 0.25f, 0.1f)
+            25, 6, 10, 0.75f, 3f, 10, 1.5f, 0.25f, 0.1f)
             .noLoopPrevention()
             .withImpactSound(JSoundRegistry.IMPACT_6)
             .withCrouchingVariant(DETONATE)

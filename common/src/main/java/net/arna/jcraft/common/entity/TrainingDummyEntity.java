@@ -10,6 +10,7 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
+import net.arna.jcraft.api.MoveUsage;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JItemRegistry;
 import net.arna.jcraft.api.registry.JPacketRegistry;
@@ -34,6 +35,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -152,39 +156,39 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     public boolean handleDamage(Vec3 kbVec, int stunTicks, int stunLevel, boolean overrideStun, float damage,
                                 boolean lift, int blockstun, DamageSource source, Entity attacker,
                                 net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation hitAnimation,
-                                boolean canBackstab, boolean unblockable) {
-        if (!this.level().isClientSide() && !this.isRemoved()) {
+                                MoveUsage moveUsage, boolean canBackstab, boolean unblockable) {
+        if (!level().isClientSide() && !isRemoved()) {
             // Send damage number packet
             if (damage > 0) {
                 sendDamageNumberPacket(this, damage);
             }
 
             if (attacker != null) {
-                double deltaX = attacker.getX() - this.getX();
-                double deltaZ = attacker.getZ() - this.getZ();
+                double deltaX = attacker.getX() - getX();
+                double deltaZ = attacker.getZ() - getZ();
                 float yaw = (float) (Math.atan2(deltaZ, deltaX) * 180.0D / Math.PI) - 90.0F;
-                this.setYRot(yaw);
-                this.setYHeadRot(yaw);
-                this.setYBodyRot(yaw);
+                setYRot(yaw);
+                setYHeadRot(yaw);
+                setYBodyRot(yaw);
             }
 
             // Trigger hit animation by incrementing counter and setting start time
-            int currentCounter = this.entityData.get(HIT_COUNTER);
-            this.entityData.set(HIT_COUNTER, currentCounter + 1);
-            this.entityData.set(HIT_START_TIME, this.level().getGameTime());
+            int currentCounter = entityData.get(HIT_COUNTER);
+            entityData.set(HIT_COUNTER, currentCounter + 1);
+            entityData.set(HIT_START_TIME, level().getGameTime());
 
-            this.level().broadcastEntityEvent(this, (byte)32);
-            this.level().broadcastEntityEvent(this, (byte)2);
+            level().broadcastEntityEvent(this, (byte)32);
+            level().broadcastEntityEvent(this, (byte)2);
 
             // Apply knockback ONLY if the move specifies it and not on red sandstone slab
             if (!isOnKnockbackBlockingBlock() && kbVec != null && (kbVec.x != 0 || kbVec.y != 0 || kbVec.z != 0)) {
-                this.push(kbVec.x, kbVec.y, kbVec.z);
-                this.hasImpulse = true;
+                push(kbVec.x, kbVec.y, kbVec.z);
+                hasImpulse = true;
             }
 
             // Dazed effect util for combos
             if (stunTicks > 0) {
-                this.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                addEffect(new net.minecraft.world.effect.MobEffectInstance(
                         JStatusRegistry.DAZED.get(),
                         stunTicks,
                         stunLevel,
@@ -204,8 +208,8 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
 
     @Override
     public boolean hurt(@NotNull DamageSource source, float amount) {
-        if (!this.level().isClientSide() && !this.isRemoved()) {
-            if (!this.isInvulnerableTo(source) && !this.invisible) {
+        if (!level().isClientSide() && !isRemoved()) {
+            if (!isInvulnerableTo(source) && !invisible) {
                 // Send damage number packet
                 if (amount > 0) {
                     sendDamageNumberPacket(this, amount);
@@ -214,22 +218,22 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
                 // Face the attacker if there is one
                 Entity directAttacker = source.getEntity();
                 if (directAttacker != null) {
-                    double deltaX = directAttacker.getX() - this.getX();
-                    double deltaZ = directAttacker.getZ() - this.getZ();
+                    double deltaX = directAttacker.getX() - getX();
+                    double deltaZ = directAttacker.getZ() - getZ();
                     float yaw = (float) (Math.atan2(deltaZ, deltaX) * 180.0D / Math.PI) - 90.0F;
-                    this.setYRot(yaw);
-                    this.setYHeadRot(yaw);
-                    this.setYBodyRot(yaw);
+                    setYRot(yaw);
+                    setYHeadRot(yaw);
+                    setYBodyRot(yaw);
                 }
 
                 // Trigger hit animation by incrementing counter and setting start time
-                int currentCounter = this.entityData.get(HIT_COUNTER);
-                this.entityData.set(HIT_COUNTER, currentCounter + 1);
-                this.entityData.set(HIT_START_TIME, this.level().getGameTime());
+                int currentCounter = entityData.get(HIT_COUNTER);
+                entityData.set(HIT_COUNTER, currentCounter + 1);
+                entityData.set(HIT_START_TIME, level().getGameTime());
 
                 // Play sounds and damage effects
-                this.level().broadcastEntityEvent(this, (byte)32);
-                this.level().broadcastEntityEvent(this, (byte)2);
+                level().broadcastEntityEvent(this, (byte)32);
+                level().broadcastEntityEvent(this, (byte)2);
 
                 return true;
             }
@@ -259,22 +263,22 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
         super.tick();
 
         // Force health to always be at maximum
-        if (this.getHealth() < this.getMaxHealth()) {
-            this.setHealth(this.getMaxHealth());
+        if (getHealth() < getMaxHealth()) {
+            setHealth(getMaxHealth());
         }
 
         // Update knockdown sync on server side
-        if (!this.level().isClientSide()) {
-            boolean hasKnockdown = this.hasEffect(JStatusRegistry.KNOCKDOWN.get());
-            boolean currentSyncValue = this.entityData.get(HAS_KNOCKDOWN);
+        if (!level().isClientSide()) {
+            boolean hasKnockdown = hasEffect(JStatusRegistry.KNOCKDOWN.get());
+            boolean currentSyncValue = entityData.get(HAS_KNOCKDOWN);
             if (currentSyncValue != hasKnockdown) {
-                this.entityData.set(HAS_KNOCKDOWN, hasKnockdown);
+                entityData.set(HAS_KNOCKDOWN, hasKnockdown);
             }
         }
 
         // Pure physics-based leash constraint - no AI
-        if (this.isLeashed()) {
-            Entity holder = this.getLeashHolder();
+        if (isLeashed()) {
+            Entity holder = getLeashHolder();
             if (holder != null) {
                 enforceLeashDistance(holder);
             }
@@ -283,36 +287,36 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
 
     private void enforceLeashDistance(Entity holder) {
         double targetDistance = 2.0D; // 2 blocks
-        double currentDistance = this.distanceTo(holder);
+        double currentDistance = distanceTo(holder);
 
         if (currentDistance > targetDistance) {
             // Too far - apply spring force toward holder
             Vec3 holderPos = holder.position();
-            Vec3 myPos = this.position();
+            Vec3 myPos = position();
             Vec3 direction = holderPos.subtract(myPos).normalize();
 
             // Spring force proportional to distance over limit
             double excess = currentDistance - targetDistance;
             double springForce = excess * 0.2D; // Adjust for spring strength
 
-            Vec3 currentVel = this.getDeltaMovement();
+            Vec3 currentVel = getDeltaMovement();
             Vec3 correction = direction.scale(springForce);
 
-            this.setDeltaMovement(currentVel.add(correction));
-            this.hasImpulse = true;
+            setDeltaMovement(currentVel.add(correction));
+            hasImpulse = true;
         }
     }
 
     @Override
     public void handleEntityEvent(byte id) {
         if (id == 32) {
-            if (this.level().isClientSide()) {
-                this.level().playLocalSound(this.getX(), this.getY(), this.getZ(),
-                        SoundEvents.WOOL_STEP, this.getSoundSource(), 0.3F, 1.0F, false);
+            if (level().isClientSide()) {
+                level().playLocalSound(getX(), getY(), getZ(),
+                        SoundEvents.WOOL_STEP, getSoundSource(), 0.3F, 1.0F, false);
             }
         } else if (id == 2) {
-            if (this.level().isClientSide()) {
-                this.hurtTime = this.hurtDuration = 10;
+            if (level().isClientSide()) {
+                hurtTime = hurtDuration = 10;
             }
         } else {
             super.handleEntityEvent(id);
@@ -323,34 +327,34 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     @Override
     protected void registerGoals() {
         // Add basic movement goal when leashed
-        this.goalSelector.addGoal(0, new net.minecraft.world.entity.ai.goal.FloatGoal(this));
+        goalSelector.addGoal(0, new FloatGoal(this));
         // Simple goal to move toward leash holder
-        this.goalSelector.addGoal(1, new net.minecraft.world.entity.ai.goal.Goal() {
+        goalSelector.addGoal(1, new Goal() {
             {
-                this.setFlags(java.util.EnumSet.of(net.minecraft.world.entity.ai.goal.Goal.Flag.MOVE));
+                setFlags(java.util.EnumSet.of(Flag.MOVE));
             }
 
             @Override
             public boolean canUse() {
-                if (!TrainingDummyEntity.this.isLeashed()) return false;
-                Entity holder = TrainingDummyEntity.this.getLeashHolder();
+                if (!isLeashed()) return false;
+                Entity holder = getLeashHolder();
                 if (holder == null) return false;
 
-                if (holder instanceof net.minecraft.world.entity.decoration.LeashFenceKnotEntity) {
+                if (holder instanceof LeashFenceKnotEntity) {
                     // For fence posts, move directly to the fence (0.25 block distance)
-                    return TrainingDummyEntity.this.distanceToSqr(holder) > 0.25D; // 0.25 blocks
+                    return distanceToSqr(holder) > 0.25D; // 0.25 blocks
                 } else if (holder instanceof LivingEntity) {
                     // For players/entities, keep 1 block distance
-                    return TrainingDummyEntity.this.distanceToSqr(holder) > 1.0D;
+                    return distanceToSqr(holder) > 1.0D;
                 }
                 return false;
             }
 
             @Override
             public void tick() {
-                Entity holder = TrainingDummyEntity.this.getLeashHolder();
+                Entity holder = getLeashHolder();
                 if (holder != null) {
-                    TrainingDummyEntity.this.getNavigation().moveTo(holder, 0.5D);
+                    getNavigation().moveTo(holder, 0.5D);
                 }
             }
         });
@@ -361,11 +365,11 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     protected void customServerAiStep() {
         // Don't call super to prevent normal mob AI behavior like looking around
         // Only do essential leash following
-        if (this.isLeashed()) {
-            Entity holder = this.getLeashHolder();
+        if (isLeashed()) {
+            Entity holder = getLeashHolder();
             if (holder != null) {
                 double requiredDistance;
-                if (holder instanceof net.minecraft.world.entity.decoration.LeashFenceKnotEntity) {
+                if (holder instanceof LeashFenceKnotEntity) {
                     // For fence posts, move directly to the fence
                     requiredDistance = 0.25D; // 0.25 blocks
                 } else if (holder instanceof LivingEntity) {

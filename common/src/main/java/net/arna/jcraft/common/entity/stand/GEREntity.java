@@ -96,8 +96,8 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     Component.literal("Downward Kick"),
                     Component.literal("medium stun combo starter, low hitbox, low blockstun")
             );
-    public static final OverheadKickAttack OVERHEAD_KICK = new OverheadKickAttack(0, 14, 24,
-            1f, 9f, 40, 1.5f, 0.8f, 0.25f)
+    public static final OverheadKickAttack OVERHEAD_KICK = new OverheadKickAttack(24,
+            14, 24, 1f, 9f, 40, 1.5f, 0.8f, 0.25f)
             .withSound(JSoundRegistry.GER_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withExtraHitBox(0, -1, 1)

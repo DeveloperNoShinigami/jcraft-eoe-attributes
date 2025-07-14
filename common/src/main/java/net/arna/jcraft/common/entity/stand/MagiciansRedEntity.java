@@ -95,8 +95,8 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
                     Component.literal("Redirect"),
                     Component.literal("redirects all the users ankhs to where they're looking")
             );
-    public static final SimpleAttack<MagiciansRedEntity> LIGHT_FOLLOWUP = new SimpleAttack<MagiciansRedEntity>(
-            0, 6, 14, 0.65f, 6f, 12, 1.5f, 1.2f, -0.1f)
+    public static final SimpleAttack<MagiciansRedEntity> LIGHT_FOLLOWUP = new SimpleAttack<MagiciansRedEntity>(0,
+            6, 14, 0.65f, 6f, 12, 1.5f, 1.2f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
@@ -144,8 +144,8 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
                     Component.literal("Hammerfist"),
                     Component.literal("two-hit launcher")
             );
-    public static final FlamethrowerAttack FLAMETHROWER = new FlamethrowerAttack(200, 0,
-            40, 0.75f, 0.4f, 0, 2, 0.25f, 0, 3)
+    public static final FlamethrowerAttack FLAMETHROWER = new FlamethrowerAttack(200,
+            0,40, 0.75f, 0.4f, 0, 2, 0.25f, 0, 3)
             .withArmor(1)
             .withSound(JSoundRegistry.MR_BARRAGE)
             .withInfo(
@@ -170,7 +170,8 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
                     Component.literal("Crossfire Hurricane"),
                     Component.literal("summons slow, homing fire hurricane that knocks down, lasts for 3 seconds after hitting anything")
             );
-    public static final RedBindAttack RED_BIND = new RedBindAttack(100, 12, 22, 0.75f, 3, 15, 1.5f, 0, 0)
+    public static final RedBindAttack RED_BIND = new RedBindAttack(100,
+            12, 22, 0.75f, 3, 15, 1.5f, 0, 0)
             .withSound(JSoundRegistry.MR_REDBIND)
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withInfo(

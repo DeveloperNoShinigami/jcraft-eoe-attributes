@@ -41,7 +41,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
                     Component.literal("Hammerfist"),
                     Component.literal("1s knockdown")
             );
-    public static final BackhandAttack BACKHAND = new BackhandAttack(20, 6, 14, 0.75f,
+    public static final BackhandAttack BACKHAND = new BackhandAttack(14, 6, 14, 0.75f,
             6f, 20, 1.5f, 0.25f, -0.6f, 0.5f)
             .withFollowup(BACKHAND_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_4)
@@ -64,7 +64,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             );
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> LIGHT = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
-            30, 6, 9, 0.75f, 5f, 11, 1.5f, 0.25f, 0.1f)
+            9, 6, 9, 0.75f, 5f, 11, 1.5f, 0.25f, 0.1f)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(BACKHAND)
@@ -75,7 +75,7 @@ public abstract sealed class AbstractPurpleHazeEntity<E extends AbstractPurpleHa
             );
 
     public static final SimpleAttack<AbstractPurpleHazeEntity<?, ?>> HEAVY = new SimpleAttack<AbstractPurpleHazeEntity<?, ?>>(
-            0, 10, 20, 0.75f, 7f, 14, 2.0f, 1.25f, -0.1f)
+            20, 10, 20, 0.75f, 7f, 14, 2.0f, 1.25f, -0.1f)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
             .withInfo(

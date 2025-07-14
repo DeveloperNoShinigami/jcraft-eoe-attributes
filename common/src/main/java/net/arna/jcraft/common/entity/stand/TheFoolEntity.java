@@ -100,8 +100,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     .build())
             .build();
 
-    public static final SimpleMultiHitAttack<TheFoolEntity> DRILL = new SimpleMultiHitAttack<TheFoolEntity>(
-            0, 14, 1.5f, 2.5f, 7, 1.5f, 0.2f, 0.25f, IntSet.of(5, 8, 11))
+    public static final SimpleMultiHitAttack<TheFoolEntity> DRILL = new SimpleMultiHitAttack<TheFoolEntity>(0,
+            14, 1.5f, 2.5f, 7, 1.5f, 0.2f, 0.25f, IntSet.of(5, 8, 11))
             .withAnim(State.DRILL)
             .withBlockStun(4)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
@@ -110,8 +110,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Component.literal("Drill"),
                     Component.literal("fast, multi-hitting combo starter, low stun and blockstun")
             );
-    public static final SimpleAttack<TheFoolEntity> LIGHT_FOLLOWUP = new SimpleAttack<TheFoolEntity>(
-            0, 9, 16, 1.5f, 6f, 9, 2f, 1.5f, 0)
+    public static final SimpleAttack<TheFoolEntity> LIGHT_FOLLOWUP = new SimpleAttack<TheFoolEntity>(0,
+            9, 16, 1.5f, 6f, 9, 2f, 1.5f, 0)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withLaunch()
@@ -124,6 +124,7 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
             );
     public static final SimpleAttack<TheFoolEntity> LIGHT = new SimpleAttack<TheFoolEntity>(30, 7,
             14, 1.5f, 6, 15, 2, 0.5f, -0.1f)
+            .noLoopPrevention()
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withExtraHitBox(0, 0.25, 1)
             .withFollowup(LIGHT_FOLLOWUP)
@@ -132,23 +133,23 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Component.literal("Swipe"),
                     Component.literal("slow, long-reaching poke")
             );
-    public static final AirBarrageAttack AIR_BARRAGE = new AirBarrageAttack(240, 0, 30,
-            1f, 1f, 10, 2f, 0.1f, 0f, 3)
+    public static final AirBarrageAttack AIR_BARRAGE = new AirBarrageAttack(240,
+            0, 30,1f, 1f, 10, 2f, 0.1f, 0f, 3)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withInfo(
                     Component.literal("Burn Rubber"),
                     Component.literal("slows down all movement, combo starter/extender")
             );
-    public static final TFComboAttack COMBO = new TFComboAttack(200, 29, 1.5f, 4.5f,
-            20, 1.75f, 0.1f, -0.1f, IntSet.of(6, 14, 18, 19))
+    public static final TFComboAttack COMBO = new TFComboAttack(200,
+            29, 1.5f, 4.5f,20, 1.75f, 0.1f, -0.1f, IntSet.of(6, 14, 18, 19))
             .withAerialVariant(AIR_BARRAGE)
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withExtraHitBox(0.5, 0, 1.25)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
                     Component.literal("3-hit Combo"), Component.literal("fast knockdown provider"));
-    public static final TFLaunchAttack LAUNCH = new TFLaunchAttack(0, 16, 20,
-            1.25f, 8f, 25, 2f, 0.5f, -0.3f)
+    public static final TFLaunchAttack LAUNCH = new TFLaunchAttack(20,
+            16, 20,1.25f, 8f, 25, 2f, 0.5f, -0.3f)
             .withSound(JSoundRegistry.FOOL_LAUNCH)
             .withAction(EffectAction.inflict(MobEffects.LEVITATION, 5, 19, true, false))
             .withExtraHitBox(1.5)
@@ -159,8 +160,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Component.literal("Launch"),
                     Component.literal("uninterruptible, slow, vertically launching uppercut")
             );
-    public static final SlamAttack SLAM = new SlamAttack(0, 4, 10, 1.25f, 4f,
-            24, 2f, 0.2f, 0.1f)
+    public static final SlamAttack SLAM = new SlamAttack(10,
+            4, 10, 1.25f, 4f,24, 2f, 0.2f, 0.1f)
             .withBlockStun(5)
             .withSound(JSoundRegistry.FOOL_BARK1)
             .withImpactSound(JSoundRegistry.IMPACT_2)
@@ -170,8 +171,8 @@ public class TheFoolEntity extends StandEntity<TheFoolEntity, TheFoolEntity.Stat
                     Component.literal("Slam"),
                     Component.literal("")
             );
-    public static final PoundAttack POUND = new PoundAttack(0, 7, 22, 1.25f,
-            4f, 25, 1.5f, 0.1f, -0.1f)
+    public static final PoundAttack POUND = new PoundAttack(0,
+            7, 22, 1.25f,4f, 25, 1.5f, 0.1f, -0.1f)
             .withFollowup(SLAM)
             .withSound(JSoundRegistry.FOOL_BARK2)
             .withImpactSound(JSoundRegistry.IMPACT_2)

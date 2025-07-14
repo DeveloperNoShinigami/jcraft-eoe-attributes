@@ -13,8 +13,10 @@ import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.config.JServerConfig;
+import net.arna.jcraft.common.entity.TrainingDummyEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.network.s2c.ComboCounterPacket;
+import net.arna.jcraft.common.network.s2c.DamageNumberPacket;
 import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.mixin.LivingEntityInvoker;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -30,8 +32,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 import static net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation;
 
@@ -179,7 +184,10 @@ public interface Attacks {
                                 HitAnimation hitAnimation, @Nullable MoveUsage moveUsage, boolean canBackstab, boolean unblockable,
                                 boolean cancelAttack) {
         if (victim instanceof ICustomDamageHandler customDamageHandler) {
-            if (!customDamageHandler.handleDamage(kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun, source, attacker, hitAnimation, moveUsage, canBackstab, unblockable)) {
+            if (!customDamageHandler.handleDamage(
+                    kbVec, stunTicks, stunLevel, overrideStun, damage, lift, blockstun,
+                    source, attacker, hitAnimation, moveUsage, canBackstab, unblockable)
+            ) {
                 return;
             }
         }
@@ -438,11 +446,34 @@ public interface Attacks {
         //JCraft.LOGGER.info("True damaging entity: " + ent + " with damage: " + damage + " and scaling: " + scaling);
         damage *= scaling;
 
+        // Send damage number packet for training dummies
+        if (ent instanceof TrainingDummyEntity && !ent.level().isClientSide() && damage > 0) {
+            sendDamageNumberPacketForTrueDamage((TrainingDummyEntity) ent, damage);
+        }
+
         // All stands ignore 10% of armor & armor toughness
         damage = JUtils.getDamageThroughArmor(damage, (float) ent.getArmorValue() * 0.9f, (float) ent.getAttributeValue(Attributes.ARMOR_TOUGHNESS) * 0.9f);
 
         // Apply absorption
         applyAbsorptionAndStats(damage, damageSource, ent);
+    }
+
+    static void sendDamageNumberPacketForTrueDamage(TrainingDummyEntity entity, float damage) {
+        if (!(entity.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        Vec3 pos = entity.position();
+        final int radius = Math.max(0, JServerConfig.DUMMY_DAMAGE_INDICATOR_RANGE.getValue());
+        List<ServerPlayer> nearbyPlayers = serverLevel.getEntitiesOfClass(ServerPlayer.class,
+                new AABB(pos.add(radius, radius, radius), pos.subtract(radius, radius, radius)));
+
+        if (!nearbyPlayers.isEmpty()) {
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+            new DamageNumberPacket(entity.getId(), damage).write(buf);
+
+            NetworkManager.sendToPlayers(nearbyPlayers, JPacketRegistry.S2C_DAMAGE_NUMBER, buf);
+        }
     }
 
     static void applyAbsorptionAndStats(float damage, final DamageSource damageSource, final LivingEntity ent) {
@@ -498,6 +529,7 @@ public interface Attacks {
             if (b instanceof AbstractSimpleAttack<?, ?> ab) {
                 if (aa.getStun() != ab.getStun()) return false;
                 if (aa.getOffset() != ab.getOffset()) return false;
+                if (aa.getKnockback() != ab.getKnockback()) return false;
             } else {
                 return false;
             }

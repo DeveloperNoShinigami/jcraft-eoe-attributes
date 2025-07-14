@@ -105,7 +105,8 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
                     Component.literal("Detonate"),
                     Component.empty()
             );
-    public static final BTDPlantAttack BTD_PLANT = new BTDPlantAttack(800, 14, 24, 1f, 10, 1.5f, 0f)
+    public static final BTDPlantAttack BTD_PLANT = new BTDPlantAttack(800,
+            14, 24, 1f, 10, 1.5f, 0f)
             .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
             .withBlockStun(8)
             .withInfo(
@@ -120,8 +121,8 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
                     Component.literal("Takedown (hit)"),
                     Component.empty()
             );
-    public static final GrabAttack<KQBTDEntity, State> GRAB = new GrabAttack<>(220, 12, 28,
-            0.75f, 0f, 20, 1.75f, 0.1f, 0f, GRAB_HIT,
+    public static final GrabAttack<KQBTDEntity, State> GRAB = new GrabAttack<>(220,
+            12, 28,0.75f, 0f, 20, 1.75f, 0.1f, 0f, GRAB_HIT,
             StateContainer.of(State.GRAB_HIT), 31, 1)
             .withInfo(
                     Component.literal("Takedown"),

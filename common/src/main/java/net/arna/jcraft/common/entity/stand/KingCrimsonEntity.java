@@ -119,13 +119,12 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                     Component.literal("Sweep"),
                     Component.literal("quick combo finisher, knocks down")
             );
-    public static final SimpleMultiHitAttack<KingCrimsonEntity> DUAL_CHOP = new SimpleMultiHitAttack<KingCrimsonEntity>(
-            40, 23, 0.85f, 4f, 21, 1.5f, 0.2f, -0.1f,
-            IntSet.of(10, 16))
+    public static final SimpleMultiHitAttack<KingCrimsonEntity> DUAL_CHOP = new SimpleMultiHitAttack<KingCrimsonEntity>(40,
+            23, 0.85f, 4f, 21, 1.5f, 0.2f, -0.1f, IntSet.of(10, 16))
+            .noLoopPrevention()
             .withSound(JSoundRegistry.KC_DUAL_CHOP)
             .withCrouchingVariant(SWEEP)
             .withImpactSound(JSoundRegistry.IMPACT_4)
-            .noLoopPrevention()
             .withInfo(
                     Component.literal("Dual Chop"),
                     Component.literal("quick combo starter")
@@ -176,8 +175,8 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                     Component.literal("Blood Throw"),
                     Component.literal("throws a stunning, blinding blood projectile, crouch while it comes out for higher speed")
             );
-    public static final SimpleAttack<KingCrimsonEntity> EYE_CHOP = new SimpleAttack<KingCrimsonEntity>(
-            0, 20, 29, 1f, 9f, 27, 1.75f, 0.7f, -0.3f)
+    public static final SimpleAttack<KingCrimsonEntity> EYE_CHOP = new SimpleAttack<KingCrimsonEntity>(0,
+            20, 29, 1f, 9f, 27, 1.75f, 0.7f, -0.3f)
             .withCrouchingVariant(BLOOD_THROW)
             .withSound(JSoundRegistry.KC_EYE_CHOP)
             .withImpactSound(JSoundRegistry.IMPACT_9)
@@ -190,7 +189,7 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
                     Component.literal("Eye Chop"),
                     Component.literal("blindness on hit, combo starter, low blockstun")
             );
-    public static final KCDonutAttack DONUT = new KCDonutAttack(0, 30, 48, 1f,
+    public static final KCDonutAttack DONUT = new KCDonutAttack(48, 30, 48, 1f,
             14f, 10, 1.75f, 1.5f, 0.1f)
             .withSound(JSoundRegistry.KC_DONUT)
             .withImpactSound(JSoundRegistry.IMPACT_7)
