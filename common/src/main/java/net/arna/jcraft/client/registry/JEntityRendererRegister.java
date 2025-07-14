@@ -120,6 +120,7 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.MANDOM, MandomRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.STAND_METEOR, StandMeteorRenderer::new),
+            new RendererData<>(JEntityTypeRegistry.TRAINING_DUMMY, TrainingDummyRenderer::new),
 
             new RendererData<>(JEntityTypeRegistry.ITEM_TOSS_PROJECTILE, ItemTossProjectileRenderer::new)
     };

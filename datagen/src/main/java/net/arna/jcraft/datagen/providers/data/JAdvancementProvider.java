@@ -19,6 +19,7 @@ import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -33,8 +34,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain meteorite iron ore
         final Advancement obtainMeteoriteIronOre = Advancement.Builder.advancement()
                 .display(JBlockRegistry.METEORITE_IRON_ORE_BLOCK.get(),
-                        Component.literal("On the Precipice of Greatness"),
-                        Component.literal("Obtain Meteorite Iron Ore"),
+                        Component.translatable("advancements.jcraft.obtain_meteorite_iron_ore.title"),
+                        Component.translatable("advancements.jcraft.obtain_meteorite_iron_ore.description"),
                         JCraft.id("textures/block/foolish_sand_block.png"),
                         FrameType.TASK,
                         true,
@@ -46,8 +47,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain stand
         final Advancement obtainStand = Advancement.Builder.advancement()
                 .display(JItemRegistry.STAND_ARROW.get(),
-                        Component.literal("Stand Proud"),
-                        Component.literal("Obtain a Stand"),
+                        Component.translatable("advancements.jcraft.obtain_stand.title"),
+                        Component.translatable("advancements.jcraft.obtain_stand.description"),
                         null,
                         FrameType.TASK,
                         true,
@@ -61,8 +62,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain stand disc
         final Advancement obtainStandDisc = Advancement.Builder.advancement()
                 .display(JItemRegistry.STAND_DISC.get(),
-                        Component.literal("Spin Me Right Round"),
-                        Component.literal("Obtain a Stand Disc"),
+                        Component.translatable("advancements.jcraft.obtain_stand_disc.title"),
+                        Component.translatable("advancements.jcraft.obtain_stand_disc.description"),
                         null,
                         FrameType.TASK,
                         true,
@@ -104,8 +105,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         );
         final Advancement.Builder obtainAllStandsBuilder = Advancement.Builder.advancement()
                 .display(JItemRegistry.STAND_DISC.get(),
-                        Component.literal("Roundabout"),
-                        Component.literal("Obtain all Stands"),
+                        Component.translatable("advancements.jcraft.obtain_all_stands.title"),
+                        Component.translatable("advancements.jcraft.obtain_all_stands.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -120,8 +121,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain living arrow
         final Advancement obtainLivingArrow = Advancement.Builder.advancement()
                 .display(JItemRegistry.LIVING_ARROW.get(),
-                        Component.literal("It's Alive!"),
-                        Component.literal("Obtain a Living Arrow"),
+                        Component.translatable("advancements.jcraft.obtain_living_arrow.title"),
+                        Component.translatable("advancements.jcraft.obtain_living_arrow.description"),
                         null,
                         FrameType.GOAL,
                         true,
@@ -134,8 +135,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain requiem arrow
         final Advancement obtainRequiemArrow = Advancement.Builder.advancement()
                 .display(JItemRegistry.REQUIEM_ARROW.get(),
-                        Component.literal("Requiem"),
-                        Component.literal("Obtain a Requiem Arrow"),
+                        Component.translatable("advancements.jcraft.obtain_requiem_arrow.title"),
+                        Component.translatable("advancements.jcraft.obtain_requiem_arrow.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -148,8 +149,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain any spec
         final Advancement obtainAnySpec = Advancement.Builder.advancement()
                 .display(JItemRegistry.BOXING_GLOVES.get(),
-                        Component.literal("You are Special"),
-                        Component.literal("Obtain any Spec"),
+                        Component.translatable("advancements.jcraft.obtain_any_spec.title"),
+                        Component.translatable("advancements.jcraft.obtain_any_spec.description"),
                         null,
                         FrameType.TASK,
                         true,
@@ -162,8 +163,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain stand disc
         final Advancement obtainSpecDisc = Advancement.Builder.advancement()
                 .display(JItemRegistry.SPEC_DISC.get(),
-                        Component.literal("Like a Record"),
-                        Component.literal("Obtain a Spec Disc"),
+                        Component.translatable("advancements.jcraft.obtain_spec_disc.title"),
+                        Component.translatable("advancements.jcraft.obtain_spec_disc.description"),
                         null,
                         FrameType.TASK,
                         true,
@@ -176,8 +177,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // find stone mask
         final Advancement findStoneMask = Advancement.Builder.advancement()
                 .display(JItemRegistry.STONE_MASK.get(),
-                        Component.literal("This is gonna hurt…"),
-                        Component.literal("Find a Stone Mask"),
+                        Component.translatable("advancements.jcraft.find_stone_mask.title"),
+                        Component.translatable("advancements.jcraft.find_stone_mask.description"),
                         null,
                         FrameType.TASK,
                         true,
@@ -190,8 +191,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain coffin block
         final Advancement obtainCoffin = Advancement.Builder.advancement()
                 .display(JItemRegistry.COFFIN_BLOCK.get(),
-                        Component.literal("Sleepy Vampire"),
-                        Component.literal("Obtain a Coffin"),
+                        Component.translatable("advancements.jcraft.obtain_coffin.title"),
+                        Component.translatable("advancements.jcraft.obtain_coffin.description"),
                         null,
                         FrameType.TASK,
                         true,
@@ -204,8 +205,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain sun protections
         final Advancement obtainSunProtection = Advancement.Builder.advancement()
                 .display(JItemRegistry.KARS_HEADWRAP.get(),
-                        Component.literal("Rise and Shine"),
-                        Component.literal("Obtain all sun protection items"),
+                        Component.translatable("advancements.jcraft.obtain_sun_protection.title"),
+                        Component.translatable("advancements.jcraft.obtain_sun_protection.description"),
                         null,
                         FrameType.GOAL,
                         true,
@@ -222,8 +223,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain blood bottle
         final Advancement obtainBloodBottle = Advancement.Builder.advancement()
                 .display(JItemRegistry.BLOOD_BOTTLE.get(),
-                        Component.literal("Not Kool-Aid"),
-                        Component.literal("Obtain a Blood Bottle"),
+                        Component.translatable("advancements.jcraft.obtain_blood_bottle.title"),
+                        Component.translatable("advancements.jcraft.obtain_blood_bottle.description"),
                         null,
                         FrameType.TASK,
                         true,
@@ -241,8 +242,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         );
         final Advancement.Builder obtainAllSpecsBuilder = Advancement.Builder.advancement()
                 .display(JItemRegistry.SPEC_DISC.get(),
-                        Component.literal("Legacy"),
-                        Component.literal("Obtain all Specs"),
+                        Component.translatable("advancements.jcraft.obtain_all_specs.title"),
+                        Component.translatable("advancements.jcraft.obtain_all_specs.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -254,11 +255,59 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
             obtainAllSpecsBuilder.addCriterion("has_" + type.getId().getPath(), ObtainedSpecTrigger.TriggerInstance.obtainedSpec(type.get()));
         }
         consumer.accept(obtainAllSpecsBuilder.build(JCraft.id("obtain_all_specs")));
+        // obtain all music discs
+        final var obtainableDiscs = List.of(
+                JItemRegistry.DISC_STAND_PROUD,
+                JItemRegistry.DISC_CRUCIFIED,
+                JItemRegistry.DISC_AWAKEN,
+                JItemRegistry.DISC_DARK_REBIRTH,
+                JItemRegistry.DISC_KIRA_THEME,
+                JItemRegistry.DISC_GIORNO_THEME,
+                JItemRegistry.DISC_JONATHAN_THEME,
+                JItemRegistry.DISC_JOLYNE_THEME,
+                JItemRegistry.DISC_JOTARO_THEME,
+                JItemRegistry.DISC_TORTURE_DANCE,
+                JItemRegistry.DISC_WONDER_OF_YOU,
+                JItemRegistry.DISC_HALLELUJAH_CHORUS,
+                JItemRegistry.DISC_UN_ALTRA_PERSONA,
+                JItemRegistry.DISC_SONO_CHI_NO_SADAME,
+                JItemRegistry.DISC_BLOODY_STREAM,
+                JItemRegistry.DISC_END_OF_THE_WORLD,
+                JItemRegistry.DISC_CRAZY_NOISY_BIZARRE_TOWN,
+                JItemRegistry.DISC_CHASE,
+                JItemRegistry.DISC_GREAT_DAYS,
+                JItemRegistry.DISC_FIGHTING_GOLD,
+                JItemRegistry.DISC_TRAITORS_REQUIEM,
+                JItemRegistry.DISC_STONE_OCEAN,
+                JItemRegistry.DISC_HEAVENS_FALLING_DOWN,
+                JItemRegistry.DISC_TO_BE_CONTINUED,
+                JItemRegistry.DISC_WALK_LIKE_AN_EGYPTIAN,
+                JItemRegistry.DISC_OINGO_BOINGO,
+                JItemRegistry.DISC_I_WANT_YOU,
+                JItemRegistry.DISC_FREEKN_YOU,
+                JItemRegistry.DISC_MODERN_CRUSADERS,
+                JItemRegistry.DISC_JOSUKE_THEME,
+                JItemRegistry.DISC_PROPAGANDA
+        );
+        final Advancement.Builder obtainAllMusicDiscsBuilder = Advancement.Builder.advancement()
+                .display(JItemRegistry.DISC_STAND_PROUD.get(),
+                        Component.translatable("advancements.jcraft.obtain_all_music_discs.title"),
+                        Component.translatable("advancements.jcraft.obtain_all_music_discs.description"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainMeteoriteIronOre);
+        for (final RegistrySupplier<Item> disc : obtainableDiscs) {
+            obtainAllMusicDiscsBuilder.addCriterion("has_" + disc.getId().getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(disc.get()));
+        }
+        consumer.accept(obtainAllMusicDiscsBuilder.build(JCraft.id("obtain_all_music_discs")));
         // obtain any cosplay
         final Advancement obtainCosplay = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIO_CAPE.get(),
-                        Component.literal("Bizarre Outfit"),
-                        Component.literal("Obtain any cosplay piece"),
+                        Component.translatable("advancements.jcraft.obtain_cosplay.title"),
+                        Component.translatable("advancements.jcraft.obtain_cosplay.description"),
                         null,
                         FrameType.GOAL,
                         true,
@@ -271,8 +320,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Dio P1 outfit
         final Advancement obtainDioP1Outfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIO_P1_WIG.get(),
-                        Component.literal("WRYYYYYYY"),
-                        Component.literal("Obtain all of Dio's clothes from Part 1"),
+                        Component.translatable("advancements.jcraft.obtain_dio_p1_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_dio_p1_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -289,8 +338,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Jotaro P3 outfit
         final Advancement obtainJotaroOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOTARO_CAP.get(),
-                        Component.literal("ORA ORA"),
-                        Component.literal("Obtain all of Jotaro's clothes from Part 3"),
+                        Component.translatable("advancements.jcraft.obtain_jotaro_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_jotaro_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -307,8 +356,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Jotaro P4 outfit
         final Advancement obtainJotaroP4Outfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOTARO_P4_CAP.get(),
-                        Component.literal("Ugly watch"),
-                        Component.literal("Obtain all of Jotaro's clothes from Part 4"),
+                        Component.translatable("advancements.jcraft.obtain_jotaro_p4_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_jotaro_p4_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -325,8 +374,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Kakyoin outfit
         final Advancement obtainKakyoinOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.KAKYOIN_WIG.get(),
-                        Component.literal("I see"),
-                        Component.literal("Obtain all of Kakyoin's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_kakyoin_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_kakyoin_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -343,8 +392,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Kira outfit
         final Advancement obtainKiraOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.KIRA_WIG.get(),
-                        Component.literal("My Name is"),
-                        Component.literal("Obtain all of Kira's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_kira_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_kira_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -361,8 +410,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Kosaku outfit
         final Advancement obtainKosakuOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.KOSAKU_WIG.get(),
-                        Component.literal("A Peaceful Life"),
-                        Component.literal("Obtain all of Kosaku Kira's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_kosaku_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_kosaku_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -379,8 +428,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Final Kira outfit
         final Advancement obtainFinalKiraOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.FINAL_KIRA_WIG.get(),
-                        Component.literal("Another One"),
-                        Component.literal("Obtain all of Final Kira's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_final_kira_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_final_kira_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -397,8 +446,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Giorno outfit
         final Advancement obtainGiornoOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.GIORNO_WIG.get(),
-                        Component.literal("I have a dream"),
-                        Component.literal("Obtain all of Giorno's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_giorno_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_giorno_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -415,8 +464,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Risotto outfit
         final Advancement obtainRisottoOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.RISOTTO_CAP.get(),
-                        Component.literal("I know how I'll kill you"),
-                        Component.literal("Obtain all of Risotto's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_risotto_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_risotto_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -433,8 +482,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Doppio outfit
         final Advancement obtainDoppioOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DOPPIO_WIG.get(),
-                        Component.literal("Ring! Ring!"),
-                        Component.literal("Obtain all of Doppio's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_doppio_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_doppio_outfit.description"),
                         null,
                         FrameType.GOAL,
                         true,
@@ -448,8 +497,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Diavolo outfit
         final Advancement obtainDiavoloOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIAVOLO_WIG.get(),
-                        Component.literal("This is a test"),
-                        Component.literal("Obtain all of Diavolo's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_diavolo_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_diavolo_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -466,8 +515,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Johnny outfit
         final Advancement obtainJohnnyOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.JOHNNY_CAP.get(),
-                        Component.literal("No Wavering"),
-                        Component.literal("Obtain all of Johnny's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_johnny_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_johnny_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -484,8 +533,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Gyro outfit
         final Advancement obtainGyroOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.GYRO_HAT.get(),
-                        Component.literal("Pizza Mozzarella"),
-                        Component.literal("Obtain all of Gyro's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_gyro_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_gyro_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -502,8 +551,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Diego outfit
         final Advancement obtainDiegoOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIEGO_HAT.get(),
-                        Component.literal("Habits can't be fixed"),
-                        Component.literal("Obtain all of Diego's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_diego_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_diego_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -520,8 +569,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Ringo outfit
         final Advancement obtainRingoOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.RINGO_OUTFIT.get(),
-                        Component.literal("Mere conformist"),
-                        Component.literal("Obtain all of Ringo's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_ringo_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_ringo_outfit.description"),
                         null,
                         FrameType.GOAL,
                         true,
@@ -535,8 +584,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Valentine outfit
         final Advancement obtainValentineOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.VALENTINE_WIG.get(),
-                        Component.literal("The First Napkin"),
-                        Component.literal("Obtain all of Valentine's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_valentine_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_valentine_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -553,8 +602,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Pucci outfit
         final Advancement obtainPucciOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.PUCCIS_HAT.get(),
-                        Component.literal("Count prime numbers"),
-                        Component.literal("Obtain all of Pucci's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_pucci_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_pucci_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -571,8 +620,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Dio outfit
         final Advancement obtainDioOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIO_HEADBAND.get(),
-                        Component.literal("MUDA MUDA"),
-                        Component.literal("Obtain all of Dio's clothes from Part 3"),
+                        Component.translatable("advancements.jcraft.obtain_dio_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_dio_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -591,8 +640,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Heaven Attained outfit
         final Advancement obtainHeavenAttainedOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.HEAVEN_ATTAINED_WIG.get(),
-                        Component.literal("Heaven attained"),
-                        Component.literal("Obtain all of Heaven attained Dio's clothes"),
+                        Component.translatable("advancements.jcraft.obtain_heaven_attained_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_heaven_attained_outfit.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
@@ -609,8 +658,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Diary Page
         final Advancement obtainDiaryPage = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIARY_PAGE.get(),
-                        Component.literal("It was me, §kDIO"),
-                        Component.literal("Obtain a Diary Page"),
+                        Component.translatable("advancements.jcraft.obtain_diary_page.title"),
+                        Component.translatable("advancements.jcraft.obtain_diary_page.description"),
                         null,
                         FrameType.GOAL,
                         true,
@@ -624,8 +673,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         // obtain Dio's diary
         final Advancement obtainDiosDiary = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIOS_DIARY.get(),
-                        Component.literal("It was me, DIO!"),
-                        Component.literal("Obtain DIO's diary"),
+                        Component.translatable("advancements.jcraft.obtain_dios_diary.title"),
+                        Component.translatable("advancements.jcraft.obtain_dios_diary.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,

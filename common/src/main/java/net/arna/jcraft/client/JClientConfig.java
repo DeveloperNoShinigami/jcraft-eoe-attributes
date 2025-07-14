@@ -26,6 +26,8 @@ public class JClientConfig implements ConfigData {
     private boolean disableNarrator = true;
     private boolean timeEraseShader = true;
     private boolean epitaphOverlay = true;
+    private int dummyDamageIndicatorColor = 0xffff4444; // bright red
+    private int dummyDamageIndicatorColorShadow = 0xff401010; // dark red shadow
     private boolean comboCounter = true;
     private boolean dynamicFirstPersonStandOpacity = true;
     private float firstPersonStandOpacityMult = 1.0f;

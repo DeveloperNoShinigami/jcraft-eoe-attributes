@@ -140,6 +140,41 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.PLANKTON_VIAL.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.PRISON_KEY.get(), ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(JItemRegistry.STEEL_BALL.get(), ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(JItemRegistry.TRAINING_DUMMY.get(), ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(JItemRegistry.DISC_STAND_PROUD.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_CRUCIFIED.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_HALLELUJAH_CHORUS.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_WONDER_OF_YOU.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_AWAKEN.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_PROPAGANDA.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_DARK_REBIRTH.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_KIRA_THEME.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_GIORNO_THEME.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_JONATHAN_THEME.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_JOLYNE_THEME.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_JOTARO_THEME.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_JOSUKE_THEME.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_TORTURE_DANCE.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_UN_ALTRA_PERSONA.get(), ModelTemplates.MUSIC_DISC);
+
+        generator.generateFlatItem(JItemRegistry.DISC_SONO_CHI_NO_SADAME.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_BLOODY_STREAM.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_END_OF_THE_WORLD.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_CRAZY_NOISY_BIZARRE_TOWN.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_CHASE.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_GREAT_DAYS.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_FIGHTING_GOLD.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_TRAITORS_REQUIEM.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_STONE_OCEAN.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_HEAVENS_FALLING_DOWN.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_TO_BE_CONTINUED.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_WALK_LIKE_AN_EGYPTIAN.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_OINGO_BOINGO.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_I_WANT_YOU.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_FREEKN_YOU.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_MODERN_CRUSADERS.get(), ModelTemplates.MUSIC_DISC);
+
 
         generator.generateFlatItem(JItemRegistry.PETSHOP_SPAWN_EGG.get(), SPAWN_EGG_MODEL);
         generator.generateFlatItem(JItemRegistry.AYA_TSUJI_SPAWN_EGG.get(), SPAWN_EGG_MODEL);

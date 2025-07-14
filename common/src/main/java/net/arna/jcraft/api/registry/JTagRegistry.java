@@ -35,6 +35,7 @@ public interface JTagRegistry {
 
     TagKey<Block> SOUL_LOG_BLOCKS = TagKey.create(Registries.BLOCK, JCraft.id("soul_logs"));
     TagKey<Block> IRON_BLOCKS = TagKey.create(Registries.BLOCK, JCraft.id("iron_blocks"));
+    TagKey<Block> DUMMY_KNOCKBACK_BLOCKING = TagKey.create(Registries.BLOCK, JCraft.id("dummy_knockback_blocking"));
 
     TagKey<EntityType<?>> FERROUS_ENTITIES = TagKey.create(Registries.ENTITY_TYPE, JCraft.id("ferrous_entities"));
     TagKey<EntityType<?>> CAN_HAVE_STAND = TagKey.create(Registries.ENTITY_TYPE, JCraft.id("can_have_stand"));

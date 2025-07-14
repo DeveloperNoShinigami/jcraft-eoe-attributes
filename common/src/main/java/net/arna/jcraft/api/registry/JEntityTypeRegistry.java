@@ -645,6 +645,12 @@ public interface JEntityTypeRegistry {
                     MobCategory.CREATURE
             ).sized(0.3f, 0.9f).build("mandom")
     );
+    RegistrySupplier<EntityType<TrainingDummyEntity>> TRAINING_DUMMY = ENTITY_TYPE_REGISTRY.register(JCraft.id("training_dummy"),
+            () -> EntityType.Builder.of(
+                    (EntityType<TrainingDummyEntity> entityType, Level world) -> new TrainingDummyEntity(entityType, world),
+                    MobCategory.CREATURE
+            ).sized(0.6f, 1.8f).build("training_dummy")
+    );
 
 
     static void registerAttributes() {
@@ -697,6 +703,7 @@ public interface JEntityTypeRegistry {
                 .add(Attributes.ATTACK_DAMAGE, 4)
                 .add(Attributes.ATTACK_KNOCKBACK, 0));
 
+        EntityAttributeRegistry.register(TRAINING_DUMMY, TrainingDummyEntity::createLivingAttributes);
         EntityAttributeRegistry.register(GER_SCORPION, () -> GERScorpionEntity.createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.3)
                 .add(Attributes.MAX_HEALTH, 10)

@@ -29,6 +29,7 @@ public interface JParticleTypeRegistry {
     RegistrySupplier<SimpleParticleType> SUN_LOCK_ON = PARTICLES.register("sun_lock_on", () -> new SimpleParticleType(false));
     RegistrySupplier<SimpleParticleType> PURPLE_HAZE_CLOUD = PARTICLES.register("purple_haze_cloud", () -> new SimpleParticleType(false));
     RegistrySupplier<SimpleParticleType> PURPLE_HAZE_PARTICLE = PARTICLES.register("purple_haze_particle", () -> new SimpleParticleType(false));
+    RegistrySupplier<SimpleParticleType> DAMAGE_NUMBER = PARTICLES.register("damage_number", () -> new SimpleParticleType(false));
 
     static void init() {
         // intentionally left empty
