@@ -42,6 +42,7 @@ public interface JTagRegistry {
     TagKey<EntityType<?>> CANNOT_BE_STUNNED = TagKey.create(Registries.ENTITY_TYPE, JCraft.id("cannot_be_stunned"));
     TagKey<EntityType<?>> STANDS = TagKey.create(Registries.ENTITY_TYPE, JCraft.id("stands"));
     TagKey<EntityType<?>> CAN_NEVER_HAVE_STAND = TagKey.create(Registries.ENTITY_TYPE, JCraft.id("can_never_have_stand"));
+    TagKey<EntityType<?>> NO_STAND_USER_AI = TagKey.create(Registries.ENTITY_TYPE, JCraft.id("no_stand_user_ai"));
 
     TagKey<Biome> METEORS_CAN_FALL = TagKey.create(Registries.BIOME, JCraft.id("meteors_can_fall"));
 
