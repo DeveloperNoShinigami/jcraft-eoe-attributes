@@ -67,6 +67,8 @@ public class JTagProviders {
             getOrCreateRawBuilder(JTagRegistry.IRON_BLOCKS).addElement(BuiltInRegistries.BLOCK.getKey(Blocks.ANVIL));
             getOrCreateRawBuilder(JTagRegistry.IRON_BLOCKS).addElement(BuiltInRegistries.BLOCK.getKey(Blocks.CHIPPED_ANVIL));
             getOrCreateRawBuilder(JTagRegistry.IRON_BLOCKS).addElement(BuiltInRegistries.BLOCK.getKey(Blocks.DAMAGED_ANVIL));
+
+            getOrCreateRawBuilder(JTagRegistry.DUMMY_KNOCKBACK_BLOCKING).addElement(BuiltInRegistries.BLOCK.getKey(Blocks.CUT_RED_SANDSTONE_SLAB));
         }
     }
 

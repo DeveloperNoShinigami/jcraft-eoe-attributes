@@ -14,6 +14,7 @@ import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JItemRegistry;
 import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.arna.jcraft.api.registry.JStatusRegistry;
+import net.arna.jcraft.api.registry.JTagRegistry;
 import net.arna.jcraft.common.network.s2c.DamageNumberPacket;
 import net.arna.jcraft.common.util.ICustomDamageHandler;
 import net.minecraft.core.BlockPos;
@@ -36,7 +37,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -91,14 +91,14 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
         this.setInvisible(compound.getBoolean("Invisible"));
     }
 
-    private boolean isOnRedSandstoneSlab() {
+    private boolean isOnKnockbackBlockingBlock() {
         // Check a small area around the entity's feet for cut red sandstone slabs
         BlockPos center = this.blockPosition();
 
         // Check current position and one block down
         for (int y = 0; y >= -1; y--) {
             BlockPos checkPos = center.offset(0, y, 0);
-            if (this.level().getBlockState(checkPos).is(Blocks.CUT_RED_SANDSTONE_SLAB)) {
+            if (this.level().getBlockState(checkPos).is(JTagRegistry.DUMMY_KNOCKBACK_BLOCKING)) {
                 return true;
             }
         }
@@ -108,12 +108,12 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
 
     @Override
     public boolean isPushable() {
-        return !isOnRedSandstoneSlab();
+        return !isOnKnockbackBlockingBlock();
     }
 
     @Override
     protected void doPush(@NotNull Entity entity) {
-        if (!isOnRedSandstoneSlab()) {
+        if (!isOnKnockbackBlockingBlock()) {
             super.doPush(entity);
         }
     }
@@ -177,7 +177,7 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
             this.level().broadcastEntityEvent(this, (byte)2);
 
             // Apply knockback ONLY if the move specifies it and not on red sandstone slab
-            if (!isOnRedSandstoneSlab() && kbVec != null && (kbVec.x != 0 || kbVec.y != 0 || kbVec.z != 0)) {
+            if (!isOnKnockbackBlockingBlock() && kbVec != null && (kbVec.x != 0 || kbVec.y != 0 || kbVec.z != 0)) {
                 this.push(kbVec.x, kbVec.y, kbVec.z);
                 this.hasImpulse = true;
             }
