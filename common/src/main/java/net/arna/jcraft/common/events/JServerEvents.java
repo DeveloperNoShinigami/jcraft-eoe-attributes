@@ -631,8 +631,10 @@ public class JServerEvents {
     }
 
     public static EventResult beforeBlockSet(BlockPos blockPos, BlockState oldBlockState, BlockState newBlockState) {
-        for (final BlockMarkerMove move : BlockMarkerMove.MOVES) {
-            move.addBlock(blockPos, oldBlockState);
+        synchronized (BlockMarkerMove.MOVES) {
+            for (final BlockMarkerMove move : BlockMarkerMove.MOVES) {
+                move.addBlock(blockPos, oldBlockState);
+            }
         }
         return EventResult.pass();
     }
