@@ -89,7 +89,6 @@ public class JTagProviders {
             getOrCreateRawBuilder(ItemTags.ARROWS).addElement(JItemRegistry.STAND_ARROW.getId());
 
             final var musicDiscs = getOrCreateRawBuilder(ItemTags.MUSIC_DISCS);
-            musicDiscs.addElement(JItemRegistry.DISC_STAND_PROUD.getId());
             musicDiscs.addElement(JItemRegistry.DISC_CRUCIFIED.getId());
             musicDiscs.addElement(JItemRegistry.DISC_HALLELUJAH_CHORUS.getId());
             musicDiscs.addElement(JItemRegistry.DISC_WONDER_OF_YOU.getId());
@@ -102,6 +101,24 @@ public class JTagProviders {
             musicDiscs.addElement(JItemRegistry.DISC_JOTARO_THEME.getId());
             musicDiscs.addElement(JItemRegistry.DISC_TORTURE_DANCE.getId());
             musicDiscs.addElement(JItemRegistry.DISC_UN_ALTRA_PERSONA.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_STAND_PROUD.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_SONO_CHI_NO_SADAME.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_BLOODY_STREAM.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_END_OF_THE_WORLD.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_CRAZY_NOISY_BIZARRE_TOWN.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_CHASE.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_GREAT_DAYS.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_FIGHTING_GOLD.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_TRAITORS_REQUIEM.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_STONE_OCEAN.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_HEAVENS_FALLING_DOWN.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_TO_BE_CONTINUED.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_WALK_LIKE_AN_EGYPTIAN.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_OINGO_BOINGO.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_I_WANT_YOU.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_FREEKN_YOU.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_MODERN_CRUSADERS.getId());
+
 
             getOrCreateRawBuilder(JTagRegistry.SOUL_LOG_ITEMS).addElement(JItemRegistry.SOUL_WOOD_BLOCK.getId());
 
