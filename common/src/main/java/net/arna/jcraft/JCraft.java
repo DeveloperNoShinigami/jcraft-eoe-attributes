@@ -237,7 +237,6 @@ public final class JCraft {
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_REMOTE_STAND_INTERACT, RemoteStandInteractPacket::handle);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_PREDICTION_TRIGGER, PredictionTriggerPacket::handle);
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, JPacketRegistry.C2S_MENU_CALL, MenuCallPacket::handle);
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, JPacketRegistry.S2C_DAMAGE_NUMBER, DamageNumberPacket::handle);
     }
 
     public static void postInit() {
