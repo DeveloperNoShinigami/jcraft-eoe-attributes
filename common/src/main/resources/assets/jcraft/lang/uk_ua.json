@@ -336,6 +336,7 @@
   "entity.jcraft.purple_haze_distortion.info.con2": "Посередня шкода противникам без використання вірусу",
   "entity.jcraft.purple_haze_distortion.info.con3": "Відсутні здібності для пересування",
   "entity.jcraft.purple_haze_distortion.info.desc": "Токсичний ГАРЦІВНИК",
+  "entity.jcraft.purple_haze_distortion.info.freeSpace": "ПАССИВКА: 66% стійкості до ефекту Purple Haze\n\nBNB-и:\nЛегкий > Рекка1~Рекка2 > присідання Легкий > Серія ударів >...\n...присідання Легкий~Легкий\n...Удар по землі\n...Легкий > Хват",
   "entity.jcraft.purple_haze_distortion.info.pro1": "Дуже швидкі атаки, не дають противнику часу відпочити",
   "entity.jcraft.purple_haze_distortion.info.pro2": "Швидкі та ефективні інструменти тиску на противника",
   "entity.jcraft.purple_haze_distortion.info.pro3": "Чудовий контроль над полем бою",
