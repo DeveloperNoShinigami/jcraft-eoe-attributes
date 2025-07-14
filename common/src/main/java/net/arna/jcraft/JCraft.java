@@ -205,6 +205,7 @@ public final class JCraft {
         ENCHANTMENT.register();
 
         JLootTableHelper.registerLootTables();
+        JLootTableHelper.registerMusicDiscLootTables();
 
         TimeAccelStatePacket.init(); // register event handlers for time acceleration
 
