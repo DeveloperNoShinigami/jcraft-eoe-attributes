@@ -5,12 +5,10 @@ import dev.architectury.platform.Platform;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.IAttackerType;
 import net.arna.jcraft.common.entity.vehicle.RoadRollerEntity;
 import net.arna.jcraft.common.item.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.*;
 
 import java.util.LinkedHashMap;
@@ -56,7 +54,8 @@ public interface JItemRegistry {
     RegistrySupplier<Item> DISC_STONE_OCEAN = register("disc_stone_ocean", () -> new RecordItem(1, JSoundRegistry.STONE_OCEAN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 86));
     RegistrySupplier<Item> DISC_HEAVENS_FALLING_DOWN = register("disc_heavens_falling_down", () -> new RecordItem(1, JSoundRegistry.HEAVENS_FALLING_DOWN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 77));
     RegistrySupplier<Item> DISC_TO_BE_CONTINUED = register("disc_to_be_continued", () -> new RecordItem(1, JSoundRegistry.TO_BE_CONTINUED.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 18));
-    RegistrySupplier<Item> DISC_WALK_LIKE_AN_EGYPTIAN = register("disc_walk_like_an_egyptian", () -> new RecordItem(1, JSoundRegistry.WALK_LIKE_AN_EGYPTIAN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 40));    RegistrySupplier<Item> DISC_OINGO_BOINGO = register("disc_oingo_boingo", () -> new RecordItem(1, JSoundRegistry.OINGO_BOINGO.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 84));
+    RegistrySupplier<Item> DISC_WALK_LIKE_AN_EGYPTIAN = register("disc_walk_like_an_egyptian", () -> new RecordItem(1, JSoundRegistry.WALK_LIKE_AN_EGYPTIAN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 40));
+    RegistrySupplier<Item> DISC_OINGO_BOINGO = register("disc_oingo_boingo", () -> new RecordItem(1, JSoundRegistry.OINGO_BOINGO.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 84));
     RegistrySupplier<Item> DISC_I_WANT_YOU = register("disc_i_want_you", () -> new RecordItem(1, JSoundRegistry.I_WANT_YOU.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 197));
     RegistrySupplier<Item> DISC_FREEKN_YOU = register("disc_freekn_you", () -> new RecordItem(1, JSoundRegistry.FREEKN_YOU.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 116));
     RegistrySupplier<Item> DISC_MODERN_CRUSADERS = register("disc_modern_crusaders", () -> new RecordItem(1, JSoundRegistry.MODERN_CRUSADERS.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 156));
