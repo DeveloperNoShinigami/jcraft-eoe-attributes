@@ -206,6 +206,10 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     public boolean hurt(@NotNull DamageSource source, float amount) {
         if (!this.level().isClientSide() && !this.isRemoved()) {
             if (!this.isInvulnerableTo(source) && !this.invisible) {
+                // Send damage number packet
+                if (amount > 0) {
+                    sendDamageNumberPacket(this, amount);
+                }
 
                 // Face the attacker if there is one
                 Entity directAttacker = source.getEntity();
