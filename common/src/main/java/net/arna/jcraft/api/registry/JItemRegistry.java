@@ -32,7 +32,7 @@ public interface JItemRegistry {
 
     //DISCS
     RegistrySupplier<Item> DISC_STAND_PROUD = register("disc_stand_proud", () -> new RecordItem(1, JSoundRegistry.STAND_PROUD.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 92));
-    RegistrySupplier<Item> DISC_CRUCIFIED = register("disc_crucified", () -> new RecordItem(1, JSoundRegistry.CRUCIFIED.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 212));
+    RegistrySupplier<Item> DISC_CRUCIFIED = register("disc_crucified", () -> new RecordItem(1, JSoundRegistry.CRUCIFIED.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 210));
     RegistrySupplier<Item> DISC_AWAKEN = register("disc_awaken", () -> new RecordItem(1, JSoundRegistry.AWAKEN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 195));
     RegistrySupplier<Item> DISC_DARK_REBIRTH = register("disc_dark_rebirth", () -> new RecordItem(1, JSoundRegistry.DARK_REBIRTH.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 64));
     RegistrySupplier<Item> DISC_KIRA_THEME = register("disc_kira_theme", () -> new RecordItem(1, JSoundRegistry.KIRA_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 46));
