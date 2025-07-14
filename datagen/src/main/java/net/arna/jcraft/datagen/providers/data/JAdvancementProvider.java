@@ -285,7 +285,9 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 JItemRegistry.DISC_OINGO_BOINGO,
                 JItemRegistry.DISC_I_WANT_YOU,
                 JItemRegistry.DISC_FREEKN_YOU,
-                JItemRegistry.DISC_MODERN_CRUSADERS
+                JItemRegistry.DISC_MODERN_CRUSADERS,
+                JItemRegistry.DISC_JOSUKE_THEME,
+                JItemRegistry.DISC_PROPAGANDA
         );
         final Advancement.Builder obtainAllMusicDiscsBuilder = Advancement.Builder.advancement()
                 .display(JItemRegistry.DISC_STAND_PROUD.get(),

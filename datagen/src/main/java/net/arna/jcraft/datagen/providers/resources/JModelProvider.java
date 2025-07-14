@@ -147,12 +147,14 @@ public class JModelProvider extends FabricModelProvider {
         generator.generateFlatItem(JItemRegistry.DISC_HALLELUJAH_CHORUS.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_WONDER_OF_YOU.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_AWAKEN.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_PROPAGANDA.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_DARK_REBIRTH.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_KIRA_THEME.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_GIORNO_THEME.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_JONATHAN_THEME.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_JOLYNE_THEME.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_JOTARO_THEME.get(), ModelTemplates.MUSIC_DISC);
+        generator.generateFlatItem(JItemRegistry.DISC_JOSUKE_THEME.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_TORTURE_DANCE.get(), ModelTemplates.MUSIC_DISC);
         generator.generateFlatItem(JItemRegistry.DISC_UN_ALTRA_PERSONA.get(), ModelTemplates.MUSIC_DISC);
 

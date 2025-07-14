@@ -95,10 +95,12 @@ public class JTagProviders {
             musicDiscs.addElement(JItemRegistry.DISC_HALLELUJAH_CHORUS.getId());
             musicDiscs.addElement(JItemRegistry.DISC_WONDER_OF_YOU.getId());
             musicDiscs.addElement(JItemRegistry.DISC_AWAKEN.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_PROPAGANDA.getId());
             musicDiscs.addElement(JItemRegistry.DISC_DARK_REBIRTH.getId());
             musicDiscs.addElement(JItemRegistry.DISC_KIRA_THEME.getId());
             musicDiscs.addElement(JItemRegistry.DISC_GIORNO_THEME.getId());
             musicDiscs.addElement(JItemRegistry.DISC_JONATHAN_THEME.getId());
+            musicDiscs.addElement(JItemRegistry.DISC_JOSUKE_THEME.getId());
             musicDiscs.addElement(JItemRegistry.DISC_JOLYNE_THEME.getId());
             musicDiscs.addElement(JItemRegistry.DISC_JOTARO_THEME.getId());
             musicDiscs.addElement(JItemRegistry.DISC_TORTURE_DANCE.getId());

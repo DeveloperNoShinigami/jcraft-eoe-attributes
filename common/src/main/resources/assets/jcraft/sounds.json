@@ -1200,6 +1200,11 @@
       "jcraft:discs/awaken"
     ]
   },
+  "propaganda": {
+    "sounds": [
+      "jcraft:discs/propaganda"
+    ]
+  },
   "dark_rebirth": {
     "sounds": [
       "jcraft:discs/dark_rebirth"
@@ -1218,6 +1223,11 @@
   "jonathan_theme": {
     "sounds": [
       "jcraft:discs/jonathan_theme"
+    ]
+  },
+  "josuke_theme": {
+    "sounds": [
+      "jcraft:discs/josuke_theme"
     ]
   },
   "jolyne_theme": {

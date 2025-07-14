@@ -393,12 +393,14 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.DISC_HALLELUJAH_CHORUS.get());
                     entries.accept(JItemRegistry.DISC_WONDER_OF_YOU.get());
                     entries.accept(JItemRegistry.DISC_AWAKEN.get());
+                    entries.accept(JItemRegistry.DISC_PROPAGANDA.get());
                     entries.accept(JItemRegistry.DISC_DARK_REBIRTH.get());
                     entries.accept(JItemRegistry.DISC_KIRA_THEME.get());
                     entries.accept(JItemRegistry.DISC_GIORNO_THEME.get());
                     entries.accept(JItemRegistry.DISC_JONATHAN_THEME.get());
                     entries.accept(JItemRegistry.DISC_JOLYNE_THEME.get());
                     entries.accept(JItemRegistry.DISC_JOTARO_THEME.get());
+                    entries.accept(JItemRegistry.DISC_JOSUKE_THEME.get());
                     entries.accept(JItemRegistry.DISC_TORTURE_DANCE.get());
                     entries.accept(JItemRegistry.DISC_UN_ALTRA_PERSONA.get());
                     entries.accept(JItemRegistry.DISC_STAND_PROUD.get());

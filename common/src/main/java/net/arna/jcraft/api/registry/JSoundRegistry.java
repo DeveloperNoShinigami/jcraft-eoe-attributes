@@ -319,8 +319,10 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> AWAKEN = register("awaken");
     RegistrySupplier<SoundEvent> DARK_REBIRTH = register("dark_rebirth");
     RegistrySupplier<SoundEvent> KIRA_THEME = register("kira_theme");
+    RegistrySupplier<SoundEvent> PROPAGANDA = register("propaganda");
     RegistrySupplier<SoundEvent> GIORNO_THEME = register("giorno_theme");
     RegistrySupplier<SoundEvent> JONATHAN_THEME = register("jonathan_theme");
+    RegistrySupplier<SoundEvent> JOSUKE_THEME = register("josuke_theme");
     RegistrySupplier<SoundEvent> JOLYNE_THEME = register("jolyne_theme");
     RegistrySupplier<SoundEvent> JOTARO_THEME = register("jotaro_theme");
     RegistrySupplier<SoundEvent> TORTURE_DANCE = register("torture_dance");

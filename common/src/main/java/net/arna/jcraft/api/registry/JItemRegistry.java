@@ -33,9 +33,10 @@ public interface JItemRegistry {
     RegistrySupplier<Item> DISC_CRUCIFIED = register("disc_crucified", () -> new RecordItem(1, JSoundRegistry.CRUCIFIED.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 210));
     RegistrySupplier<Item> DISC_AWAKEN = register("disc_awaken", () -> new RecordItem(1, JSoundRegistry.AWAKEN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 195));
     RegistrySupplier<Item> DISC_DARK_REBIRTH = register("disc_dark_rebirth", () -> new RecordItem(1, JSoundRegistry.DARK_REBIRTH.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 64));
-    RegistrySupplier<Item> DISC_KIRA_THEME = register("disc_kira_theme", () -> new RecordItem(1, JSoundRegistry.KIRA_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 46));
+    RegistrySupplier<Item> DISC_KIRA_THEME = register("disc_kira_theme", () -> new RecordItem(1, JSoundRegistry.KIRA_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 177));
     RegistrySupplier<Item> DISC_GIORNO_THEME = register("disc_giorno_theme", () -> new RecordItem(1, JSoundRegistry.GIORNO_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 266));
     RegistrySupplier<Item> DISC_JONATHAN_THEME = register("disc_jonathan_theme", () -> new RecordItem(1, JSoundRegistry.JONATHAN_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 49));
+    RegistrySupplier<Item> DISC_JOSUKE_THEME = register("disc_josuke_theme", () -> new RecordItem(1, JSoundRegistry.JOSUKE_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 238));
     RegistrySupplier<Item> DISC_JOLYNE_THEME = register("disc_jolyne_theme", () -> new RecordItem(1, JSoundRegistry.JOLYNE_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 237));
     RegistrySupplier<Item> DISC_JOTARO_THEME = register("disc_jotaro_theme", () -> new RecordItem(1, JSoundRegistry.JOTARO_THEME.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 49));
     RegistrySupplier<Item> DISC_TORTURE_DANCE = register("disc_torture_dance", () -> new RecordItem(1, JSoundRegistry.TORTURE_DANCE.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 97));
@@ -52,7 +53,8 @@ public interface JItemRegistry {
     RegistrySupplier<Item> DISC_FIGHTING_GOLD = register("disc_fighting_gold", () -> new RecordItem(1, JSoundRegistry.FIGHTING_GOLD.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 252));
     RegistrySupplier<Item> DISC_TRAITORS_REQUIEM = register("disc_traitors_requiem", () -> new RecordItem(1, JSoundRegistry.TRAITORS_REQUIEM.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 88));
     RegistrySupplier<Item> DISC_STONE_OCEAN = register("disc_stone_ocean", () -> new RecordItem(1, JSoundRegistry.STONE_OCEAN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 86));
-    RegistrySupplier<Item> DISC_HEAVENS_FALLING_DOWN = register("disc_heavens_falling_down", () -> new RecordItem(1, JSoundRegistry.HEAVENS_FALLING_DOWN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 77));
+    RegistrySupplier<Item> DISC_HEAVENS_FALLING_DOWN = register("disc_heavens_falling_down", () -> new RecordItem(1, JSoundRegistry.HEAVENS_FALLING_DOWN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 205));
+    RegistrySupplier<Item> DISC_PROPAGANDA = register("disc_propaganda", () -> new RecordItem(1, JSoundRegistry.PROPAGANDA.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 179));
     RegistrySupplier<Item> DISC_TO_BE_CONTINUED = register("disc_to_be_continued", () -> new RecordItem(1, JSoundRegistry.TO_BE_CONTINUED.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 18));
     RegistrySupplier<Item> DISC_WALK_LIKE_AN_EGYPTIAN = register("disc_walk_like_an_egyptian", () -> new RecordItem(1, JSoundRegistry.WALK_LIKE_AN_EGYPTIAN.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 40));
     RegistrySupplier<Item> DISC_OINGO_BOINGO = register("disc_oingo_boingo", () -> new RecordItem(1, JSoundRegistry.OINGO_BOINGO.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 84));

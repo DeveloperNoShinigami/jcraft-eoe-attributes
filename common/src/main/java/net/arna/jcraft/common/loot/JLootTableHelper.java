@@ -96,6 +96,8 @@ public class JLootTableHelper {
                 .add(LootItem.lootTableItem(JItemRegistry.DISC_JOTARO_THEME.get()).setWeight(1))
                 .add(LootItem.lootTableItem(JItemRegistry.DISC_TORTURE_DANCE.get()).setWeight(1))
                 .add(LootItem.lootTableItem(JItemRegistry.DISC_UN_ALTRA_PERSONA.get()).setWeight(1))
+                .add(LootItem.lootTableItem(JItemRegistry.DISC_JOSUKE_THEME.get()).setWeight(1))
+                .add(LootItem.lootTableItem(JItemRegistry.DISC_PROPAGANDA.get()).setWeight(1))
                 .when(LootItemRandomChanceCondition.randomChance(0.25f))
         );
     }
