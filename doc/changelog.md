@@ -54,6 +54,7 @@
 * fixed recipe for Valentine's pants
 * fixed TW rotation bug
 * fixed minor Road Roller UV issue
+* fixed LifeGiver taking items from creative hotbar
 ### Known Bugs
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
   this bug is EVIL and has an unclear source >:(
