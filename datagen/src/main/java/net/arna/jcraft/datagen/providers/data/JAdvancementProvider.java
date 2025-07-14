@@ -241,8 +241,8 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
         );
         final Advancement.Builder obtainAllSpecsBuilder = Advancement.Builder.advancement()
                 .display(JItemRegistry.SPEC_DISC.get(),
-                        Component.literal("advancements.jcraft.obtain_all_specs.title"),
-                        Component.literal("advancements.jcraft.obtain_all_specs.description"),
+                        Component.translatable("advancements.jcraft.obtain_all_specs.title"),
+                        Component.translatable("advancements.jcraft.obtain_all_specs.description"),
                         null,
                         FrameType.CHALLENGE,
                         true,
