@@ -2,6 +2,8 @@ package net.arna.jcraft.common.events;
 
 import dev.architectury.event.CompoundEventResult;
 import dev.architectury.event.EventResult;
+import dev.architectury.event.events.common.InteractionEvent;
+import dev.architectury.event.events.common.PlayerEvent;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.arna.jcraft.JCraft;
@@ -18,6 +20,7 @@ import net.arna.jcraft.common.entity.StandMeteorEntity;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.MockItem;
+import net.arna.jcraft.common.item.Peacemaker;
 import net.arna.jcraft.common.network.s2c.AttackerDataPacket;
 import net.arna.jcraft.common.saveddata.ExclusiveStandsData;
 import net.arna.jcraft.common.tickable.*;
@@ -97,6 +100,7 @@ public class JServerEvents {
         }
 
         RevolverFire.tick(server);
+        PeacemakerReload.tick(server);
         PastDimensions.tick(server);
         Timestops.tick(server);
         Revivables.tick(server);

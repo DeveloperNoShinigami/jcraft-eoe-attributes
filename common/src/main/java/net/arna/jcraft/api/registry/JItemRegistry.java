@@ -46,6 +46,7 @@ public interface JItemRegistry {
     RegistrySupplier<Item> DISC_UN_ALTRA_PERSONA = register("disc_un_altra_persona", () -> new RecordItem(1, JSoundRegistry.UN_ALTRA_PERSONA.get(), new Item.Properties().stacksTo(1).rarity(Rarity.RARE), 153));
 
     RegistrySupplier<Item> FV_REVOLVER = register("fv_revolver", () -> new FVRevolverItem(settings().rarity(Rarity.UNCOMMON).durability(1200)));
+    RegistrySupplier<Item> PEACEMAKER = register("peacemaker", () -> new Peacemaker(settings().rarity(Rarity.RARE).stacksTo(1)));
 
     RegistrySupplier<Item> BULLET = register("bullet", () -> new BulletItem(settings()));
 

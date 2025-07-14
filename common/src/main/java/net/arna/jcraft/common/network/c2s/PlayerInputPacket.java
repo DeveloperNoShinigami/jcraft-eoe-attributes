@@ -12,6 +12,7 @@ import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.entity.vehicle.AbstractGroundVehicleEntity;
 import net.arna.jcraft.common.events.JServerPlayerInputEvent;
+import net.arna.jcraft.common.item.Peacemaker;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.util.*;
@@ -301,8 +302,17 @@ public class PlayerInputPacket {
                     }
                 }
                 case LIGHT -> {
+                    // First check if player is holding a Peacemaker
+                    boolean peacemakerHandled = Peacemaker.handleLeftClick(player);
+                    if (peacemakerHandled) {
+                        future.complete(true);
+                        return;
+                    }
+
+                    // If not handled by Peacemaker, proceed with normal stand logic
                     StandEntity<?, ?> stand = JUtils.getStand(player);
                     if (stand == null || !stand.allowMoveHandling()) {
+                        future.complete(false);
                         return;
                     }
 
