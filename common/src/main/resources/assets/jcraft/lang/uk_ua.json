@@ -325,6 +325,7 @@
   "entity.jcraft.purple_haze.info.con1": "Неконтрольований",
   "entity.jcraft.purple_haze.info.con2": "Може, та буде наносити шкоду власнику",
   "entity.jcraft.purple_haze.info.desc": "Навіжена біологічна ЗБРОЯ",
+  "entity.jcraft.purple_haze.info.freeSpace": "ПАССИВКА: Лють\nНакопичується, поки стенд викликаний.\nЗаповнюється за 1 хвилину. При максимумі аура червоніє.\nЛють зменшується наполовину за кожну живу істоту, яку вбиває Purple Haze.\nPurple Haze може атакувати свого користувача, шанс зростає з рівнем люті.\n\nЕВОЛЮЦІЯ: Дайте Purple Haze будь-яку квітку після вбивства користувача стенда.\nзробіть це 5 разів та PH еволюціонує в Purple Haze: Distortion.",
   "entity.jcraft.purple_haze.info.pro1": "Дуже швидкі атаки, не дають противнику часу відпочити",
   "entity.jcraft.purple_haze.info.pro2": "Швидкі та ефективні інструменти тиску на противника",
   "entity.jcraft.purple_haze.info.pro3": "Чудовий контроль над полем бою",
