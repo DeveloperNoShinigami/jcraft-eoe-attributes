@@ -26,6 +26,9 @@ public class JClientConfig implements ConfigData {
     private boolean disableNarrator = true;
     private boolean timeEraseShader = true;
     private boolean epitaphOverlay = true;
+    private int dummyDamageIndicatorRange = 64;
+    private int dummyDamageIndicatorColor = 0xffff4444; // bright red
+    private int dummyDamageIndicatorColorShadow = 0xff401010; // dark red shadow
 
     public static void load() {
         instance = AutoConfig.getConfigHolder(JClientConfig.class).getConfig();

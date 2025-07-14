@@ -31,6 +31,7 @@ import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.api.spec.JSpec;
+import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
@@ -867,8 +868,9 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         }
 
         Vec3 pos = entity.position();
+        final int radius = Math.max(0, JClientConfig.getInstance().getDummyDamageIndicatorRange());
         List<ServerPlayer> nearbyPlayers = serverLevel.getEntitiesOfClass(ServerPlayer.class,
-                new AABB(pos.add(64, 64, 64), pos.subtract(64, 64, 64)));
+                new AABB(pos.add(radius, radius, radius), pos.subtract(radius, radius, radius)));
 
         if (!nearbyPlayers.isEmpty()) {
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());

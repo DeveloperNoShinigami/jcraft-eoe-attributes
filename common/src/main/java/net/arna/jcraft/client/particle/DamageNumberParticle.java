@@ -3,6 +3,7 @@ package net.arna.jcraft.client.particle;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.arna.jcraft.client.JClientConfig;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -14,7 +15,6 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
@@ -46,8 +46,8 @@ public class DamageNumberParticle extends Particle {
         this.lifetime = 35; // ~1.75 seconds at 20 tps
 
         // Red color for damage
-        this.color = 0xffff4444; // Bright red
-        this.darkColor = FastColor.ARGB32.color(255, 64, 16, 16); // Dark red shadow
+        this.color = JClientConfig.getInstance().getDummyDamageIndicatorColor();
+        this.darkColor = JClientConfig.getInstance().getDummyDamageIndicatorColorShadow();
 
         this.text = Component.literal(DF.format(Math.abs(damageAmount)));
 
