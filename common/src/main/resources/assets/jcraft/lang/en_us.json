@@ -601,6 +601,7 @@
   "item.jcraft.meteorite_block": "Meteorite Block",
   "item.jcraft.meteorite_iron_ore_block": "Meteorite Iron Ore",
   "item.jcraft.mock_item": "Mock Item",
+  "item.jcraft.peacemaker": "Peacemaker",
   "item.jcraft.petshop_spawn_egg": "Petshop Spawn Egg",
   "item.jcraft.plankton_vial": "Plankton Vial",
   "item.jcraft.polished_meteorite_block": "Polished Meteorite Block",
@@ -1509,6 +1510,7 @@
   "text.autoconfig.jcraft.option.uiPosition": "UI Position",
   "text.autoconfig.jcraft.option.verticalHudOffset": "Vertical HUD Offset (+DOWN/-UP)",
   "text.autoconfig.jcraft.title": "JCraft Config",
+  "tooltip.jcraft.peacemaker.shots": "Shots:",
   "warning.jcraft.spec.change": "Using this will change your spec, are you sure?",
   "warning.jcraft.stand.change": "Using this will change your stand, are you sure?"
 }

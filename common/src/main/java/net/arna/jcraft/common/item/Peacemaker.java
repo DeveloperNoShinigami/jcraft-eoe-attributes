@@ -1,5 +1,7 @@
 package net.arna.jcraft.common.item;
 
+import net.arna.jcraft.api.spec.JSpec;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.entity.projectile.BulletProjectile;
 import net.arna.jcraft.common.tickable.PeacemakerReload;
 import net.arna.jcraft.common.tickable.RevolverFire;
@@ -7,12 +9,11 @@ import net.arna.jcraft.common.util.DimensionData;
 import net.arna.jcraft.api.registry.JItemRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JStatusRegistry;
-import net.arna.jcraft.api.registry.JParticleTypeRegistry;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -22,7 +23,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -132,6 +132,18 @@ public class Peacemaker extends Item {
 
         if (player.hasEffect(JStatusRegistry.DAZED.get())) {
             return true; // We handled it (by doing nothing), don't let other systems try
+        }
+
+        // Check if player has an active stand with moveStun > 0
+        StandEntity<?, ?> stand = JUtils.getStand(player);
+        if (stand != null && stand.getMoveStun() > 0) {
+            return true; // We handled it (by doing nothing) - stand is busy
+        }
+
+        // Check if player has an active spec with moveStun > 0
+        JSpec<?, ?> spec = JUtils.getSpec(player);
+        if (spec != null && spec.getMoveStun() > 0) {
+            return true; // We handled it (by doing nothing) - spec is busy
         }
 
         CompoundTag data = peacemakerStack.getOrCreateTag();
