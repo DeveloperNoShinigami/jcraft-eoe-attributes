@@ -732,6 +732,7 @@
   "jcraft.serverconfig.option.cmoonUltRange": "C-moon Ult Range",
   "jcraft.serverconfig.option.cmoonUtilDuration": "C-moon Util Duration",
   "jcraft.serverconfig.option.cooldownMultiplier": "Cooldown Duration Multiplier",
+  "jcraft.serverconfig.option.creamItemErase": "Cream Destroys Items",
   "jcraft.serverconfig.option.damageScalingMinimum": "Damage Scaling Minimum",
   "jcraft.serverconfig.option.defSpec": "Default Spec",
   "jcraft.serverconfig.option.disableCombatElytra": "Disable Elytra in Combat",
