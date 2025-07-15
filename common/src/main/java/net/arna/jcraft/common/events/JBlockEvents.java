@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface JBlockEvents<T> {
     /**
-     * Invoked directly before a block is being set.
+     * Invoked directly before a block is being set, unless the block is not being changed or it happens during chunk generation.
      */
     Event<BeforeSet> BEFORE_SET = EventFactory.createEventResult();
 
