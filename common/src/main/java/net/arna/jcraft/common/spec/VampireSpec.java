@@ -66,7 +66,7 @@ public class VampireSpec extends JSpec<VampireSpec, VampireSpec.State> {
 
     public static final BloodSuckHitsAttack BLOODSUCK_HITS = new BloodSuckHitsAttack(0, 25, 1f,
             4, 5, 1.5f, 0.6f, -0.1f, IntSet.of(8, 16, 24))
-            .withStunType(StunType.LAUNCH)
+            .withStunType(StunType.UNBURSTABLE)
             .withInfo(Component.literal("Blood Suck (Hit)"), Component.empty());
     public static final BloodSuckAttack BLOODSUCK = new BloodSuckAttack(240, 10, 18,
             1f, 1f, BLOODSUCK_HITS.getDuration(), 1.5f, 0f, 0f, BLOODSUCK_HITS,
