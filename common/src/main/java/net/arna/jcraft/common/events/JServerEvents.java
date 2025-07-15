@@ -512,58 +512,59 @@ public class JServerEvents {
         // No snowball shenanigans
         if (damage < 0.01f) return EventResult.pass();
         if (entity.level() instanceof ServerLevel serverWorld) {
-            boolean toLaunch = false;
-            Entity attacker = source.getEntity();
-            MobEffectInstance stun = entity.getEffect(JStatusRegistry.DAZED.get());
-
-            if (stun != null && stun.getAmplifier() != 2) {
-                boolean projectileAttack = false;
-                // Only apply stun nerfs if hit with a weapon or a projectile
-                if (attacker instanceof LivingEntity living) {
-                    projectileAttack = source.is(DamageTypeTags.IS_PROJECTILE);
-                    boolean hasWeapon = projectileAttack;
-                    if (!hasWeapon) {
-                        hasWeapon = !living.getMainHandItem().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty();
-                    }
-                    toLaunch = hasWeapon;
-                }
-
-                if (source.is(DamageTypes.EXPLOSION)) {
-                    toLaunch = true;
-                }
-
-                if (toLaunch) {
-                    int duration = stun.getDuration() / 3;
-
-                    entity.removeEffect(JStatusRegistry.DAZED.get());
-                    JCraft.stun(entity, duration, 3, attacker);
-
-                    Vec3i upVec = GravityChangerAPI.getGravityDirection(entity).getNormal();
-                    Vec3 upVecD = new Vec3(-upVec.getX() / 3.0, -upVec.getY() / 3.0, -upVec.getZ() / 3.0);
-
-                    Vec3 sourcePos = source.getSourcePosition();
-                    if (sourcePos == null) { // RNG Launch upwards
-                        sourcePos = new Vec3(
-                                entity.getRandom().nextGaussian(),
-                                entity.getRandom().nextGaussian(),
-                                entity.getRandom().nextGaussian())
-                                .add(entity.position())
-                                .subtract(upVecD);
-                    }
-
-                    Vec3 knockback = entity.position().subtract(sourcePos).normalize().add(upVecD);
-                    GravityChangerAPI.setWorldVelocity(entity, knockback);
-                    entity.hurtMarked = true;
-
-                    JCraft.createParticle(serverWorld,
-                            entity.getX() - upVec.getX(),
-                            entity.getY() - upVec.getY(),
-                            entity.getZ() - upVec.getZ(),
-                            projectileAttack ? JParticleType.STUN_PIERCE : JParticleType.STUN_SLASH);
-                }
-            }
+            maybeLaunch(entity, source, serverWorld, entity.getEffect(JStatusRegistry.DAZED.get()), source.getEntity());
         }
         return EventResult.pass();
+    }
+
+    public static void maybeLaunch(LivingEntity entity, DamageSource source, ServerLevel serverWorld, MobEffectInstance stun, Entity attacker) {
+        if (stun != null && stun.getAmplifier() != 2) {
+            boolean toLaunch = false;
+            boolean projectileAttack = false;
+            // Only apply stun nerfs if hit with a weapon or a projectile
+            if (attacker instanceof LivingEntity living) {
+                projectileAttack = source.is(DamageTypeTags.IS_PROJECTILE);
+                boolean hasWeapon = projectileAttack;
+                if (!hasWeapon) {
+                    hasWeapon = !living.getMainHandItem().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty();
+                }
+                toLaunch = hasWeapon;
+            }
+
+            if (source.is(DamageTypes.EXPLOSION)) {
+                toLaunch = true;
+            }
+
+            if (toLaunch) {
+                int duration = stun.getDuration() / 3;
+
+                entity.removeEffect(JStatusRegistry.DAZED.get());
+                JCraft.stun(entity, duration, 3, attacker);
+
+                Vec3i upVec = GravityChangerAPI.getGravityDirection(entity).getNormal();
+                Vec3 upVecD = new Vec3(-upVec.getX() / 3.0, -upVec.getY() / 3.0, -upVec.getZ() / 3.0);
+
+                Vec3 sourcePos = source.getSourcePosition();
+                if (sourcePos == null) { // RNG Launch upwards
+                    sourcePos = new Vec3(
+                            entity.getRandom().nextGaussian(),
+                            entity.getRandom().nextGaussian(),
+                            entity.getRandom().nextGaussian())
+                            .add(entity.position())
+                            .subtract(upVecD);
+                }
+
+                Vec3 knockback = entity.position().subtract(sourcePos).normalize().add(upVecD);
+                GravityChangerAPI.setWorldVelocity(entity, knockback);
+                entity.hurtMarked = true;
+
+                JCraft.createParticle(serverWorld,
+                        entity.getX() - upVec.getX(),
+                        entity.getY() - upVec.getY(),
+                        entity.getZ() - upVec.getZ(),
+                        projectileAttack ? JParticleType.STUN_PIERCE : JParticleType.STUN_SLASH);
+            }
+        }
     }
 
     public static InteractionResult allowSleep(Player player, BlockPos sleepingPos) {

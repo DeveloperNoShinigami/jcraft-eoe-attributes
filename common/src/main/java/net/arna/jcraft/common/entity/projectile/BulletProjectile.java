@@ -6,7 +6,9 @@ import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.common.events.JServerEvents;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
@@ -20,6 +22,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -113,7 +117,7 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
                     this.level().gameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Context.of(this, blockState));
 
                     // Add block hit particle effect (when bullet stops/lodges)
-                    if (!level().isClientSide && level() instanceof ServerLevel serverLevel) {
+                    if (!level().isClientSide() && level() instanceof ServerLevel serverLevel) {
                         serverLevel.sendParticles(
                                 JParticleTypeRegistry.HITSPARK_1.get(), // Use hitspark_1 for block hits
                                 getX(), getY(), getZ(),
@@ -124,7 +128,7 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
                     }
 
                     discard();
-                } else if (!level().isClientSide) {
+                } else if (!level().isClientSide()) {
                     JUtils.serverPlaySound(JSoundRegistry.BULLET_PENETRATE.get(), (ServerLevel) level(), position(), 32);
 
                     // Add penetration particle effect
@@ -140,7 +144,7 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
                 }
             } else { // Ricochet
                 setDeltaMovement(impactVec.add(normal).scale(0.5 / hardness));
-                if (!level().isClientSide) {
+                if (!level().isClientSide()) {
                     JUtils.serverPlaySound(JSoundRegistry.BULLET_RICOCHET.get(), (ServerLevel) level(), position(), 32);
 
                     // Add ricochet particle effect
@@ -168,20 +172,26 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
     protected void onHitEntity(EntityHitResult entityHitResult) {
         final Entity entity = entityHitResult.getEntity();
         if (entity instanceof LivingEntity living) {
-            if (!level().isClientSide) {
+            if (!level().isClientSide()) {
                 final Entity owner = getOwner();
                 final LivingEntity target = JUtils.getUserIfStand(living);
+                DamageSource thrown = level().damageSources().thrown(this, owner);
                 StandEntity.damageLogic(level(), target, getDeltaMovement().normalize(),
                         stunTicks, 1, false, damage, true, (int) (4 + damage),
-                        level().damageSources().thrown(this, owner), owner, CommonHitPropertyComponent.HitAnimation.MID);
+                        thrown, owner, CommonHitPropertyComponent.HitAnimation.MID);
+
+                if (entity instanceof LivingEntity livingEntity) {
+                    JServerEvents.maybeLaunch(livingEntity, thrown, (ServerLevel) level(), livingEntity.getEffect(JStatusRegistry.DAZED.get()), owner );
+                }
+
                 JUtils.serverPlaySound(JSoundRegistry.BULLET_PENETRATE.get(), (ServerLevel) level(), position(), 32);
 
                 // Add entity hit particle effect
                 if (level() instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(
-                            JParticleTypeRegistry.HITSPARK_2.get(), // jcraft:hitspark_2
+                            JParticleTypeRegistry.HITSPARK_2.get(),
                             getX(), getY(), getZ(),
-                            1, // particle count (more particles for entity hits)
+                            1, // particle count
                             0, 0, 0, // spread
                             0 // speed
                     );
@@ -199,7 +209,7 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
         super.tick();
 
         // Only create particle trail if bullet is moving and not stuck in ground
-        if (!this.level().isClientSide && this.level() instanceof ServerLevel serverLevel && !this.inGround) {
+        if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel && !this.inGround) {
             // Get current velocity
             Vec3 velocity = this.getDeltaMovement();
             double speed = velocity.length();
