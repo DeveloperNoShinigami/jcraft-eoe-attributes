@@ -100,7 +100,9 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
                 // this is all we need to check when saving/loading
                 rewindIds,
                 new EntityDataHandler(Predicates.fromSet(rewindIds), extractor, injector));
-        BlockMarkerMove.MOVES.add(this);
+        synchronized (BlockMarkerMove.MOVES) {
+            BlockMarkerMove.MOVES.add(this);
+        }
     }
 
     @Override
