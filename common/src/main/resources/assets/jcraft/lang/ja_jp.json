@@ -476,7 +476,6 @@
   "jcraft.serverconfig.option.twTimeStopDuration": "ザ・ワールドの時止めの持続時間",
   "jcraft.serverconfig.option.twohTimeStopDuration": "ザ・ワールド・オーバーヘブンの時止めの持続時間",
   "jcraft.serverconfig.option.useFoolishSand": "愚かなる砂の使用",
-  "jcraft.serverconfig.option.vsStandlessDamageMultiplier": "",
   "jcraft.serverconfig.option.wsStealStands": "ホワイトスネイクのスタンドの盗み",
   "jcraft.sheathedanubis.blockdesc": "§eしゃがみ + 右クリック§9で§eブロック§9を使用できる。",
   "jcraft.sheathedanubis.desc": "§e納める§9ことができる",
