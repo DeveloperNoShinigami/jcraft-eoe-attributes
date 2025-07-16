@@ -9,19 +9,23 @@ import net.minecraft.resources.ResourceLocation;
  * The {@link GeoModel} for {@link GESnakeEntity}.
  * @see net.arna.jcraft.client.renderer.entity.GESnakeRenderer GESnakeRenderer
  */
-public class GESnakeModel extends GeoModel<GESnakeEntity> {
+public final class GESnakeModel extends GeoModel<GESnakeEntity> {
+    private static final ResourceLocation model = JCraft.id("geo/gesnake.geo.json");
+    private static final ResourceLocation texture = JCraft.id("textures/entity/gesnake.png");
+    private static final ResourceLocation animation = JCraft.id("animations/gesnake.animation.json");
+
     @Override
-    public ResourceLocation getModelResource(final GESnakeEntity object) {
-        return JCraft.id("geo/gesnake.geo.json");
+    public ResourceLocation getModelResource(final GESnakeEntity animatable) {
+        return model;
     }
 
     @Override
-    public ResourceLocation getTextureResource(final GESnakeEntity object) {
-        return JCraft.id("textures/entity/gesnake.png");
+    public ResourceLocation getTextureResource(final GESnakeEntity animatable) {
+        return texture;
     }
 
     @Override
     public ResourceLocation getAnimationResource(final GESnakeEntity animatable) {
-        return JCraft.id("animations/gesnake.animation.json");
+        return animation;
     }
 }

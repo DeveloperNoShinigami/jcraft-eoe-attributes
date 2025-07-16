@@ -12,25 +12,30 @@ import java.util.Map;
  * The {@link GeoModel} for {@link IceBranchProjectile}.
  * @see net.arna.jcraft.client.renderer.entity.projectiles.IceBranchRenderer IceBranchRenderer
  */
-public class IceBranchModel extends GeoModel<IceBranchProjectile> {
+public final class IceBranchModel extends GeoModel<IceBranchProjectile> {
     public static final Map<Integer, ResourceLocation> skins = new HashMap<>();
+
     static {
         for (int i = 0; i < 3; i++) {
             skins.put(i, JCraft.id("textures/entity/ice_branch/ice_branch_" + i + ".png"));
         }
     }
+
+    private static final ResourceLocation model = JCraft.id("geo/ice_branch.geo.json");
+    private static final ResourceLocation animation = JCraft.id("animations/ice_branch.animation.json");
+
     @Override
-    public ResourceLocation getModelResource(final IceBranchProjectile object) {
-        return JCraft.id("geo/ice_branch.geo.json");
+    public ResourceLocation getModelResource(final IceBranchProjectile animatable) {
+        return model;
     }
 
     @Override
-    public ResourceLocation getTextureResource(final IceBranchProjectile object) {
-        return skins.get(object.getId() % 3);
+    public ResourceLocation getTextureResource(final IceBranchProjectile animatable) {
+        return skins.get(animatable.getId() % 3);
     }
 
     @Override
     public ResourceLocation getAnimationResource(final IceBranchProjectile animatable) {
-        return JCraft.id("animations/ice_branch.animation.json");
+        return animation;
     }
 }

@@ -19,7 +19,7 @@ public class PurpleHazeModel extends StandEntityModel<AbstractPurpleHazeEntity<?
     }
 
     @Override
-    public ResourceLocation getModelResource(AbstractPurpleHazeEntity<?, ?> object) {
+    public ResourceLocation getModelResource(AbstractPurpleHazeEntity<?, ?> animatable) {
         return MODEL;
     }
 }
