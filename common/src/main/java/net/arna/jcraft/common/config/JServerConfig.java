@@ -72,6 +72,7 @@ public class JServerConfig {
     public static final BooleanOption MINING_BARRAGE = new BooleanOption("miningBarrage", INTERACTION, true);
     public static final FloatOption METEOR_SPAWN_RATE = new FloatOption("meteorSpawnRate", INTERACTION, 0.02f, 0f, 1f);
     public static final IntOption DUMMY_DAMAGE_INDICATOR_RANGE = new IntOption("dummyDamageIndicatorRange", INTERACTION, 64, 0, 512);
+    public static final BooleanOption CREAM_ITEM_ERASE = new BooleanOption("creamItemErase", INTERACTION, true);
     /*
     public static final BooleanOption UNIVERSAL_ABILITIES = new BooleanOption("universalAbilities", INTERACTION, true);
     public static final BooleanOption STAND_GRIEFING = new BooleanOption("standGriefing", INTERACTION, true);
