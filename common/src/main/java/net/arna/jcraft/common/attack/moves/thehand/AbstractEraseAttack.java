@@ -23,7 +23,7 @@ public abstract class AbstractEraseAttack<T extends AbstractEraseAttack<T>> exte
                                final float damage, final int stun, final float hitboxSize, final float knockback,
                                final float offset) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
-        withBlockableType(BlockableType.UNBLOCKABLE);
+        withBlockableType(BlockableType.NON_BLOCKABLE);
         withHitSpark(JParticleType.INVERTED_HIT_SPARK_3);
     }
 

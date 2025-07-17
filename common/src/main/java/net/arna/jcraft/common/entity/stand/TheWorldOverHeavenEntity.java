@@ -132,7 +132,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             .withSound(JSoundRegistry.TWOH_SINGULARITY)
             .withAnim(State.SINGULARITY)
             .withImpactSound(JSoundRegistry.IMPACT_12)
-            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withInfo(
@@ -159,7 +159,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             .withCrouchingVariant(SINGULARITY)
             .withSound(JSoundRegistry.TWOH_HEAVY)
             .withImpactSound(JSoundRegistry.IMPACT_12)
-            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withInfo(
@@ -191,7 +191,7 @@ public class TheWorldOverHeavenEntity extends StandEntity<TheWorldOverHeavenEnti
             .withImpactSound(JSoundRegistry.IMPACT_5)
             .withLaunch()
             .withHyperArmor()
-            .withBlockableType(BlockableType.UNBLOCKABLE)
+            .withBlockableType(BlockableType.NON_BLOCKABLE)
             .withHitSpark(JParticleType.HIT_SPARK_3)
             .withInfo(
                     Component.literal("Overwrite (Hit)"),

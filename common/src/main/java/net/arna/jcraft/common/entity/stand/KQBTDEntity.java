@@ -107,7 +107,7 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
             );
     public static final BTDPlantAttack BTD_PLANT = new BTDPlantAttack(800,
             14, 24, 1f, 10, 1.5f, 0f)
-            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withBlockStun(8)
             .withInfo(
                     Component.literal("Bites the Dust Plant"),

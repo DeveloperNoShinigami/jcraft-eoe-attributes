@@ -7,8 +7,8 @@ import net.arna.jcraft.common.util.JCodecUtils;
 @Getter
 public enum BlockableType {
     BLOCKABLE(false, false),
-    UNBLOCKABLE(true, true),
-    UNBLOCKABLE_EFFECTS_ONLY(false, true);
+    NON_BLOCKABLE(true, true),
+    NON_BLOCKABLE_EFFECTS_ONLY(false, true);
 
     public static final Codec<BlockableType> CODEC = JCodecUtils.createEnumCodec(BlockableType.class);
 

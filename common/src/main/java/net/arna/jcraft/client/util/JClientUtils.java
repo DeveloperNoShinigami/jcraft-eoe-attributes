@@ -21,10 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static net.arna.jcraft.common.util.JUtils.DEG_TO_RAD;
 import static net.arna.jcraft.common.util.JUtils.deltaPos;
@@ -32,8 +29,8 @@ import static net.arna.jcraft.common.util.JUtils.deltaPos;
 public class JClientUtils {
 
     // Timestop tracking
-    public static List<DimensionData> activeTimestops = new ArrayList<>();
-    public static Map<Entity, Double> timestopTimestamps = new HashMap<>();
+    public static final List<DimensionData> activeTimestops = new ArrayList<>();
+    public static final Map<Entity, Double> timestopTimestamps = new WeakHashMap<>();
 
     // Mustn't directly remove the DimensionData due to the possibility of a ConcurrentModificationException
     // Setting the timer to 0 will make the next tick remove it
