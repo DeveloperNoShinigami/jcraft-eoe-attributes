@@ -3,7 +3,9 @@ package net.arna.jcraft.client.registry;
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.NonNull;
+import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import net.arna.jcraft.client.model.entity.BisectModel;
+import net.arna.jcraft.client.model.entity.spec.VampireSpecUserModel;
 import net.arna.jcraft.client.renderer.entity.*;
 import net.arna.jcraft.client.renderer.entity.npc.*;
 import net.arna.jcraft.client.renderer.entity.projectiles.*;
@@ -122,7 +124,9 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.STAND_METEOR, StandMeteorRenderer::new),
             new RendererData<>(JEntityTypeRegistry.TRAINING_DUMMY, TrainingDummyRenderer::new),
 
-            new RendererData<>(JEntityTypeRegistry.ITEM_TOSS_PROJECTILE, ItemTossProjectileRenderer::new)
+            new RendererData<>(JEntityTypeRegistry.ITEM_TOSS_PROJECTILE, ItemTossProjectileRenderer::new),
+
+            new RendererData<>(JEntityTypeRegistry.VAMPIRE_SPEC_USER, context -> new GeoEntityRenderer<>(context, new VampireSpecUserModel()))
     };
 
     static void registerEntityRenderers(Consumer<RendererData<?>> consumer) {

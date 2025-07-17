@@ -158,7 +158,7 @@ public class MandomEntity extends StandEntity<MandomEntity, MandomEntity.State> 
     }
 
     @Override
-    protected AbstractMove<?, ? super MandomEntity> getFallbackMove() {
+    public AbstractMove<?, ? super MandomEntity> getFallbackMove() {
         return null;
     }
 

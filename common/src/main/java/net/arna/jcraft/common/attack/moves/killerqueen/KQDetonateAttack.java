@@ -4,6 +4,7 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.MoveSelectionResult;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
@@ -60,13 +61,13 @@ public final class KQDetonateAttack extends AbstractMove<KQDetonateAttack, Abstr
     }
 
     @Override
-    public StandEntity.MoveSelectionResult specificMoveSelectionCriterion(AbstractKillerQueenEntity<?, ?> attacker,
-                                                                          LivingEntity mob, LivingEntity target, int stunTicks,
-                                                                          int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand,
-                                                                          AbstractMove<?, ?> enemyAttack) {
+    public MoveSelectionResult specificMoveSelectionCriterion(AbstractKillerQueenEntity<?, ?> attacker,
+                                                                                  LivingEntity mob, LivingEntity target, int stunTicks,
+                                                                                  int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand,
+                                                                                  AbstractMove<?, ?> enemyAttack) {
         final Vec3 bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
         return bombPos != null && target.distanceToSqr(bombPos) < 9.0D ?
-                StandEntity.MoveSelectionResult.USE : StandEntity.MoveSelectionResult.PASS;
+                MoveSelectionResult.USE : MoveSelectionResult.PASS;
     }
 
     @Override

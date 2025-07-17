@@ -3,6 +3,7 @@ package net.arna.jcraft.common.attack.moves.metallica;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.NonNull;
+import net.arna.jcraft.api.MoveSelectionResult;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractBarrageAttack;
@@ -79,11 +80,11 @@ public class HarvestMove extends AbstractBarrageAttack<HarvestMove, MetallicaEnt
     }
 
     @Override
-    public StandEntity.MoveSelectionResult specificMoveSelectionCriterion(MetallicaEntity attacker, LivingEntity mob,
-                                                                          LivingEntity target, int stunTicks,
-                                                                          int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand,
-                                                                          AbstractMove<?, ?> enemyAttack) {
-        return attacker.getIron() >= MetallicaEntity.IRON_MAX ? StandEntity.MoveSelectionResult.STOP : StandEntity.MoveSelectionResult.PASS;
+    public MoveSelectionResult specificMoveSelectionCriterion(MetallicaEntity attacker, LivingEntity mob,
+                                                                                  LivingEntity target, int stunTicks,
+                                                                                  int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand,
+                                                                                  AbstractMove<?, ?> enemyAttack) {
+        return attacker.getIron() >= MetallicaEntity.IRON_MAX ? MoveSelectionResult.STOP : MoveSelectionResult.PASS;
     }
 
     @Override

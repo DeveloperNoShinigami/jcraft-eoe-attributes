@@ -3,6 +3,7 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.NonNull;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
+import net.arna.jcraft.api.MoveSelectionResult;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -277,12 +278,12 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
 
     @Override
     public MoveSelectionResult specificMoveSelectionCriterion(AbstractMove<?, ? super GoldExperienceEntity> attack,
-                                                              LivingEntity mob, LivingEntity target, int stunTicks,
-                                                              int enemyMoveStun, double distance,
-                                                              StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
+                                                                                  LivingEntity mob, LivingEntity target, int stunTicks,
+                                                                                  int enemyMoveStun, double distance,
+                                                                                  StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
         return attack == LIFE_GIVER ?
                 mob.getMainHandItem().isEmpty() && mob.getOffhandItem().isEmpty() ?
-                        MoveSelectionResult.STOP : MoveSelectionResult.USE :
+                        net.arna.jcraft.api.MoveSelectionResult.STOP : net.arna.jcraft.api.MoveSelectionResult.USE :
                 super.specificMoveSelectionCriterion(attack, mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
     }
 

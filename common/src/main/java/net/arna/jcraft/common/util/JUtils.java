@@ -16,7 +16,7 @@ import net.arna.jcraft.common.entity.projectile.ItemTossProjectile;
 import net.arna.jcraft.common.entity.projectile.JAttackEntity;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
-import net.arna.jcraft.common.entity.spec.JSpecHolder;
+import net.arna.jcraft.api.spec.JSpecHolder;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.KnifeBundleItem;

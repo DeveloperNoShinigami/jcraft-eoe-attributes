@@ -18,7 +18,6 @@ import net.arna.jcraft.api.attack.moves.AbstractMultiHitAttack;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
-import net.arna.jcraft.common.entity.spec.JSpecHolder;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
@@ -133,9 +132,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
     @Override
     public void setState(S state) {
-        if (player == null) return;
-        PlayerAnimPacket.sendSpec(player, JUtils.around((ServerLevel) user.level(), user.position(), JUtils.PLAYER_ANIMATION_DIST),
-                (this.state = state).getKey(getThis()), moveStun, 1f);
+        setAnimation((this.state = state).getKey(getThis()), moveStun, 1f);
     }
 
     @Override

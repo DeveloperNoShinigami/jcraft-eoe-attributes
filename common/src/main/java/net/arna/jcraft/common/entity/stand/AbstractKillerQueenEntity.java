@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.entity.stand;
 
+import net.arna.jcraft.api.MoveSelectionResult;
 import net.arna.jcraft.api.attack.enums.BlockableType;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
@@ -177,9 +178,9 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
 
     @Override
     public MoveSelectionResult specificMoveSelectionCriterion(AbstractMove<?, ? super E> attack, LivingEntity mob, LivingEntity target, int stunTicks,
-                                                              int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
+                                                                                  int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
         if (enemyStand != null && enemyStand.blocking) {
-            return MoveSelectionResult.STOP;
+            return net.arna.jcraft.api.MoveSelectionResult.STOP;
         }
         return super.specificMoveSelectionCriterion(attack, mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
     }
