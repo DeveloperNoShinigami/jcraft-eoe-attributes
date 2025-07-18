@@ -35,6 +35,7 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -240,6 +241,9 @@ public class HGNetEntity extends JAttackEntity implements GeoEntity, ICustomDama
 
     private void tryConstrict(Entity entity) {
         if (entity == null) {
+            return;
+        }
+        if ((entity instanceof Player player && (player.isCreative() || player.isSpectator()))) {
             return;
         }
         if (!JUtils.canAct(this)) {

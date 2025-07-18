@@ -69,6 +69,8 @@
 * fixed TW rotation bug
 * fixed minor Road Roller UV issue
 * fixed LifeGiver taking items from creative hotbar
+* fixed freeze issue and reenabled Stand user mobs in the nether
+* fixed HG tentacles activating on creative or spectator player
 ### Known Bugs
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
   this bug is EVIL and has an unclear source >:(
