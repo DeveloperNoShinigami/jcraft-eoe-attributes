@@ -93,7 +93,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
                     Component.literal("fast reliable combo starter/extender, medium stun")
             );
     public static final BombPlantAttack BOMB_PLANT = new BombPlantAttack(140, 12, 20, 1f, 9, 1.5f, 0f)
-            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withBlockStun(8)
             .withInfo(
                     Component.literal("Bomb Plant"),

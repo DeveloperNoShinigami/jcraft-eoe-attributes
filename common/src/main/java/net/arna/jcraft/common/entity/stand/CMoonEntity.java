@@ -147,7 +147,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withImpactSound(JSoundRegistry.CMOON_GRAV_PUNCH_HIT)
             .withAction(CMoonInversionAction.addInversion(40, 0.5f, false))
             .withHyperArmor()
-            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withExtraHitBox(1d)
             .withInfo(
                     Component.literal("Only One Punch"),
@@ -158,7 +158,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
             .withSound(JSoundRegistry.CMOON_GROUNDSLAM)
             .withImpactSound(JSoundRegistry.IMPACT_10)
             .withAction(CMoonInversionAction.addInversion(40, 0.5f, false))
-            .withBlockableType(BlockableType.UNBLOCKABLE_EFFECTS_ONLY)
+            .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withHitSpark(JParticleType.HIT_SPARK_2)
             .withStaticY()
             .withInfo(

@@ -21,6 +21,7 @@ import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.cream.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
@@ -170,7 +171,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             .withAction(EffectAction.inflict(JStatusRegistry.KNOCKDOWN, 25, 0, true, false))
             .withLaunchNoShockwave()
             .withImpactSound(JSoundRegistry.IMPACT_5)
-            .withBlockableType(BlockableType.UNBLOCKABLE)
+            .withBlockableType(BlockableType.NON_BLOCKABLE)
             .withInfo(
                     Component.literal("Charge"),
                     Component.literal("4 block range, unblockable knockdown")
@@ -182,7 +183,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
             .withImpactSound(JSoundRegistry.IMPACT_5)
             .withLaunch()
             .withHyperArmor()
-            .withBlockableType(BlockableType.UNBLOCKABLE)
+            .withBlockableType(BlockableType.NON_BLOCKABLE)
             .withInfo(
                     Component.literal("Destroy"),
                     Component.literal("slow, uninterruptible, unblockable knockdown"));
@@ -475,6 +476,12 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                         if (level().getBlockState(p).getBlock().getExplosionResistance() > 100.1f) {
                             return;
                         }
+
+                        if (!JServerConfig.CREAM_ITEM_ERASE.getValue()) {
+                            // Drop items before destroying the block
+                            level().getBlockState(p).getBlock().dropResources(level().getBlockState(p), level(), p);
+                        }
+
                         level().setBlockAndUpdate(p, Block.stateById(0));
                     });
                 }
@@ -532,9 +539,11 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
                 }
 
                 for (Entity ent : toDamage) {
-                    if (ent instanceof ItemEntity) {
-                        ent.discard();
-                        continue;
+                     if (ent instanceof ItemEntity) {
+                         if (JServerConfig.CREAM_ITEM_ERASE.getValue()) {
+                             ent.discard();
+                         }
+                         continue;
                     }
                     if (ent instanceof LivingEntity livingEntity) {
                         if (hurt) {

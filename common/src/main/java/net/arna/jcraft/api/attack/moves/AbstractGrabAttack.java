@@ -54,7 +54,7 @@ public abstract class AbstractGrabAttack<T extends AbstractGrabAttack<T, A, S>, 
         // Grabs cannot be burst out of, or blocked
         withStunType(StunType.UNBURSTABLE);
         withOverrideStun();
-        withBlockableType(BlockableType.UNBLOCKABLE);
+        withBlockableType(BlockableType.NON_BLOCKABLE);
     }
 
     @Override
@@ -64,7 +64,7 @@ public abstract class AbstractGrabAttack<T extends AbstractGrabAttack<T, A, S>, 
             return targets;
         }
 
-        final boolean unblockable = getBlockableType() == BlockableType.UNBLOCKABLE;
+        final boolean unblockable = getBlockableType() == BlockableType.NON_BLOCKABLE;
 
         boolean anyHit = false;
         for (LivingEntity target : targets) {
