@@ -56,11 +56,11 @@
   * damage indicator display range can be changed in server config
   * like armor stand, can be equipped with a lobotomized Stand
 ### NPCs & Stands
-* …
+* added attack icons for Horus
 ### Configs
 * Cream can be disabled to void the items it destroys in server config
 ### Commands
-* …
+* added `/cooldown cancel`
 ### Bug Fixes
 * fixed the exclusive stands bug
   * you should now be able to change your Stand skin when the option is enabled
