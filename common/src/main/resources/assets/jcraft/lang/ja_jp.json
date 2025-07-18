@@ -764,7 +764,6 @@
   "move.jcraft.metallica.default.harvest_iron.description": "見ているブロックから0.15秒間隔で鉄分を1個引き寄せる。\n鉄塊から引き寄せる場合は3倍速い。\n最大5mの範囲。\nキューに入れられない。",
   "move.jcraft.metallica.default.harvest_iron.name": "鉄分の引き寄せ",
   "move.jcraft.metallica.default.impale.followup.description": "素早いコンボスターター",
-  "move.jcraft.metallica.default.invisibility.air.name": "透明化",
   "move.jcraft.metallica.default.slice.description": "素早いコンボスターター",
   "move.jcraft.metallica.default.slice_2nd_hit.followup.description": "素早いコンボスターター",
   "move.jcraft.purple_haze.default.backhand.cr.name": "バックハンド",
