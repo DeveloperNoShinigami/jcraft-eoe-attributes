@@ -728,7 +728,6 @@
   "move.jcraft.horus.default.icicle_fire.followup.name": "つらら発射",
   "move.jcraft.horus.default.impale.cr.description": "低速リセットツール、強度のスタンとブロックスタン",
   "move.jcraft.horus.default.low_claw.cr.description": "立っているより速く遠くへ打てるが、コンボにはならない",
-  "move.jcraft.horus.default.low_claw.cr.name": "",
   "move.jcraft.horus.default.perfect_freeze.description": "近くにいるすべての敵を凍らせる\n氷の枝を3本召喚し相手を追いかける\n近くにあるすべての投擲物を止める",
   "move.jcraft.horus.default.perfect_freeze.name": "完璧な凍結",
   "move.jcraft.killer_queen.default.barrage.description": "高速で確実なコンボのスターター/エクステンダー、中程度のスタン",
