@@ -36,6 +36,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -93,7 +94,7 @@ public class JServerEvents {
             JCraft.preloadLockTicks--;
         }
 
-        RevolverFire.tick(server);
+        // RevolverFire.tick(server);
         PastDimensions.tick(server);
         Timestops.tick(server);
         Revivables.tick(server);
@@ -287,10 +288,6 @@ public class JServerEvents {
 
     public static EventResult entityLoad(Entity entity, boolean worldGenSpawned) {
         ServerLevel world = (ServerLevel) entity.level();
-        // FIXME this is hack, find out why our mod fucks up the Nether
-        if (world.dimension() != Level.OVERWORLD && world.dimension() != JDimensionRegistry.AU_DIMENSION_KEY) {
-            return EventResult.pass();
-        }
 
         // If an item was spawned
         if (entity instanceof ItemEntity item) {
@@ -348,6 +345,10 @@ public class JServerEvents {
                 return EventResult.pass();
             }
 
+            if (!mob.getType().is(JTagRegistry.CAN_HAVE_STAND)) {
+                return EventResult.pass();
+            }
+
             // Create new stand user mobs
             if (standData.isTagged()) {
                 return EventResult.pass();
@@ -356,10 +357,7 @@ public class JServerEvents {
                 return EventResult.pass();
             }
 
-            if (!mob.getType().is(JTagRegistry.CAN_HAVE_STAND)) {
-                return EventResult.pass();
-            }
-            Random random = new Random();
+            RandomSource random = mob.getRandom();
             GameRules gameRules = world.getGameRules();
 
             standData.setTagged(true);
@@ -380,7 +378,7 @@ public class JServerEvents {
             AttributeInstance followRange = mob.getAttribute(Attributes.FOLLOW_RANGE);
             if (followRange != null) {
                 followRange.setBaseValue(Mth.clamp(
-                        128 * entity.level().getCurrentDifficultyAt(entity.blockPosition()).getEffectiveDifficulty() / 6.75,
+                        128d * (1d + entity.level().getDifficulty().getId()) / 4d,
                         10d, 128d));
             }
             AttributeInstance movementSpeed = mob.getAttribute(Attributes.MOVEMENT_SPEED);

@@ -44,7 +44,7 @@ public final class AerialDivineFinisherAttack extends AbstractSimpleAttack<Aeria
 
         final RandomSource random = attacker.getRandom();
         for (int i = 0; i < 8; i++) {
-            final var knife = new KnifeProjectile(attacker.level(), user);
+            final KnifeProjectile knife = new KnifeProjectile(attacker.level(), user);
             knife.setLightning(true);
             knife.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             knife.explosive = true;

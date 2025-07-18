@@ -465,81 +465,82 @@ public final class JCraft {
         final float third = stand.getMaxStandGauge() / 3.0f;
         final float gauge = stand.getStandGauge();
 
-        if (gauge > third) {
-            pushblockCooldowns.put(user, 8);
+        if (gauge <= third) {
+            return;
+        }
 
-            stand.setStandGauge(gauge - third);
+        pushblockCooldowns.put(user, 8);
 
-            stand.setMoveStun(10);
+        stand.setStandGauge(gauge - third);
 
-            world.playSound(null, user, JSoundRegistry.STAND_PUSHBLOCK.get(), SoundSource.PLAYERS, 1, 1);
+        stand.setMoveStun(10);
 
-            JUtils.setVelocity(user, Vec3.ZERO);
-            final Vec3 position = user.position();
-            final double userWidth = user.getBbWidth();
+        world.playSound(null, user, JSoundRegistry.STAND_PUSHBLOCK.get(), SoundSource.PLAYERS, 1, 1);
 
-            IntSet pushed = new IntOpenHashSet();
+        JUtils.setVelocity(user, Vec3.ZERO);
+        final Vec3 position = user.position();
+        final double userWidth = user.getBbWidth();
 
-            for (final Entity entity : world.getAllEntities()) {
-                if (entity == user || entity == stand) continue;
+        final IntSet pushed = new IntOpenHashSet();
 
-                if (entity instanceof final LivingEntity living) {
-                    LivingEntity target = living;
+        for (final Entity entity : world.getAllEntities()) {
+            if (entity == user || entity == stand) continue;
+            if (!(entity instanceof final LivingEntity living)) continue;
 
-                    // If the target is using a stand, we consider the closer entity for pushblock distance calculations
-                    final CommonStandComponent standComponent = JComponentPlatformUtils.getStandComponent(living);
-                    if (standComponent.getStand() != null) {
-                        final StandEntity<?, ?> targetStand = standComponent.getStand();
-                        if (targetStand.distanceToSqr(position) < living.distanceToSqr(position)) target = targetStand;
-                    }
+            LivingEntity target = living;
 
-                    final double distance = target.position().distanceTo(position);
-                    final double radius = target.getBbWidth() + 2.0;
+            // If the target is using a stand, we consider the closer entity for pushblock distance calculations
+            final CommonStandComponent standComponent = JComponentPlatformUtils.getStandComponent(living);
+            if (standComponent.getStand() != null) {
+                final StandEntity<?, ?> targetStand = standComponent.getStand();
+                if (targetStand.distanceToSqr(position) < living.distanceToSqr(position)) target = targetStand;
+            }
 
-                    // If the target is a non-remote stand, we want to target its user instead
-                    if (target instanceof StandEntity<?,?> standTarget) {
-                        if (!standTarget.isRemote() && standTarget.hasUser()) {
-                            target = standTarget.getUserOrThrow();
-                        }
-                    }
+            final double distance = target.position().distanceTo(position);
+            final double radius = target.getBbWidth() + 2.0;
 
-                    // Mark pushed and don't push the same entity more than once
-                    final int id = target.getId();
-                    if (pushed.contains(id)) continue;
-
-                    if (distance < radius) {
-                        if (DashData.isDashing(target)) {
-                            DashData.getDash(target).finished = true;
-                        }
-
-                        double launchVel = target.onGround() ? 1.5 : 0.75;
-
-                        // The closer they are, the harder they're pushed
-                        if (distance < userWidth * 2.0) {
-                            launchVel += (userWidth * 2.0 - distance) / 1.5;
-                        }
-
-                        Vec3 delta = target.position().subtract(position).normalize();
-
-                        // The launch should be horizontal from the victims POV
-                        delta = switch (GravityChangerAPI.getGravityDirection(target).getAxis()) {
-                            case X -> new Vec3(0, delta.y, delta.z);
-                            case Y -> new Vec3( delta.x, 0, delta.z);
-                            case Z -> new Vec3(delta.x, delta.y, 0);
-                        };
-
-                        JComponentPlatformUtils.getShockwaveHandler(world).addShockwave(stand.getEyePosition(), delta, 1.5f, Shockwave.Type.PUSHBLOCK);
-
-                        JUtils.addVelocity(target,
-                                delta
-                                .scale(launchVel)
-                        );
-
-                        pushed.add(id);
-
-                        // if (user instanceof ServerPlayer serverPlayer) serverPlayer.sendSystemMessage( Component.literal(launchVel + "; " + id) );
-                    }
+            // If the target is a non-remote stand, we want to target its user instead
+            if (target instanceof StandEntity<?,?> standTarget) {
+                if (!standTarget.isRemote() && standTarget.hasUser()) {
+                    target = standTarget.getUserOrThrow();
                 }
+            }
+
+            // Mark pushed and don't push the same entity more than once
+            final int id = target.getId();
+            if (pushed.contains(id)) continue;
+
+            if (distance < radius) {
+                if (DashData.isDashing(target)) {
+                    DashData.getDash(target).finished = true;
+                }
+
+                double launchVel = target.onGround() ? 1.5 : 0.75;
+
+                // The closer they are, the harder they're pushed
+                if (distance < userWidth * 2.0) {
+                    launchVel += (userWidth * 2.0 - distance) / 1.5;
+                }
+
+                Vec3 delta = target.position().subtract(position).normalize();
+
+                // The launch should be horizontal from the victims POV
+                delta = switch (GravityChangerAPI.getGravityDirection(target).getAxis()) {
+                    case X -> new Vec3(0, delta.y, delta.z);
+                    case Y -> new Vec3( delta.x, 0, delta.z);
+                    case Z -> new Vec3(delta.x, delta.y, 0);
+                };
+
+                JComponentPlatformUtils.getShockwaveHandler(world).addShockwave(stand.getEyePosition(), delta, 1.5f, Shockwave.Type.PUSHBLOCK);
+
+                JUtils.addVelocity(target,
+                        delta
+                        .scale(launchVel)
+                );
+
+                pushed.add(id);
+
+                // if (user instanceof ServerPlayer serverPlayer) serverPlayer.sendSystemMessage( Component.literal(launchVel + "; " + id) );
             }
         }
     }

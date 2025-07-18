@@ -50,7 +50,7 @@ public final class RageAttack extends AbstractMultiHitAttack<RageAttack, TheHand
     public RageAttack(final int cooldown, final int duration, final float moveDistance, final float damage, final int stun,
                       final float hitboxSize, final float knockback, final float offset, final IntSet hitMoments) {
         super(cooldown, duration, moveDistance, damage, stun, hitboxSize, knockback, offset, hitMoments);
-        withBlockableType(BlockableType.UNBLOCKABLE);
+        withBlockableType(BlockableType.NON_BLOCKABLE);
         withHitSpark(JParticleType.INVERTED_HIT_SPARK_3);
     }
 
