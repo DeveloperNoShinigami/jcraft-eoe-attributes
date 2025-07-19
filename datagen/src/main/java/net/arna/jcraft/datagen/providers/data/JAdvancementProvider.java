@@ -19,7 +19,6 @@ import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -255,54 +254,6 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
             obtainAllSpecsBuilder.addCriterion("has_" + type.getId().getPath(), ObtainedSpecTrigger.TriggerInstance.obtainedSpec(type.get()));
         }
         consumer.accept(obtainAllSpecsBuilder.build(JCraft.id("obtain_all_specs")));
-        // obtain all music discs
-        final var obtainableDiscs = List.of(
-                JItemRegistry.DISC_STAND_PROUD,
-                JItemRegistry.DISC_CRUCIFIED,
-                JItemRegistry.DISC_AWAKEN,
-                JItemRegistry.DISC_DARK_REBIRTH,
-                JItemRegistry.DISC_KIRA_THEME,
-                JItemRegistry.DISC_GIORNO_THEME,
-                JItemRegistry.DISC_JONATHAN_THEME,
-                JItemRegistry.DISC_JOLYNE_THEME,
-                JItemRegistry.DISC_JOTARO_THEME,
-                JItemRegistry.DISC_TORTURE_DANCE,
-                JItemRegistry.DISC_WONDER_OF_YOU,
-                JItemRegistry.DISC_HALLELUJAH_CHORUS,
-                JItemRegistry.DISC_UN_ALTRA_PERSONA,
-                JItemRegistry.DISC_SONO_CHI_NO_SADAME,
-                JItemRegistry.DISC_BLOODY_STREAM,
-                JItemRegistry.DISC_END_OF_THE_WORLD,
-                JItemRegistry.DISC_CRAZY_NOISY_BIZARRE_TOWN,
-                JItemRegistry.DISC_CHASE,
-                JItemRegistry.DISC_GREAT_DAYS,
-                JItemRegistry.DISC_FIGHTING_GOLD,
-                JItemRegistry.DISC_TRAITORS_REQUIEM,
-                JItemRegistry.DISC_STONE_OCEAN,
-                JItemRegistry.DISC_HEAVENS_FALLING_DOWN,
-                JItemRegistry.DISC_TO_BE_CONTINUED,
-                JItemRegistry.DISC_WALK_LIKE_AN_EGYPTIAN,
-                JItemRegistry.DISC_OINGO_BOINGO,
-                JItemRegistry.DISC_I_WANT_YOU,
-                JItemRegistry.DISC_FREEKN_YOU,
-                JItemRegistry.DISC_MODERN_CRUSADERS,
-                JItemRegistry.DISC_JOSUKE_THEME,
-                JItemRegistry.DISC_PROPAGANDA
-        );
-        final Advancement.Builder obtainAllMusicDiscsBuilder = Advancement.Builder.advancement()
-                .display(JItemRegistry.DISC_STAND_PROUD.get(),
-                        Component.translatable("advancements.jcraft.obtain_all_music_discs.title"),
-                        Component.translatable("advancements.jcraft.obtain_all_music_discs.description"),
-                        null,
-                        FrameType.CHALLENGE,
-                        true,
-                        true,
-                        false)
-                .parent(obtainMeteoriteIronOre);
-        for (final RegistrySupplier<Item> disc : obtainableDiscs) {
-            obtainAllMusicDiscsBuilder.addCriterion("has_" + disc.getId().getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(disc.get()));
-        }
-        consumer.accept(obtainAllMusicDiscsBuilder.build(JCraft.id("obtain_all_music_discs")));
         // obtain any cosplay
         final Advancement obtainCosplay = Advancement.Builder.advancement()
                 .display(JItemRegistry.DIO_CAPE.get(),
