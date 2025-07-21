@@ -1,6 +1,6 @@
 {
   "type": "minecraft:jigsaw",
-  "biomes": "#jcraft:has_structure/vampire_lair",
+  "biomes": "minecraft:dark_forest",
   "step": "surface_structures",
   "spawn_overrides": {},
   "terrain_adaptation": "none",
