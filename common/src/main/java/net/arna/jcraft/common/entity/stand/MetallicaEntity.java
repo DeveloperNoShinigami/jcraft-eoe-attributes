@@ -146,7 +146,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
                     Component.literal("fast reliable combo starter/extender, high stun, smaller hitbox than most barrages")
             )
             .withInitAction(UserAnimationAction.play("mtl.brg"));
-    public static final KnockdownAttack<MetallicaEntity> SWEEP = new KnockdownAttack<MetallicaEntity>(40,
+    public static final KnockdownAttack<MetallicaEntity> SWEEP = new KnockdownAttack<MetallicaEntity>(0,
             7, 14, 0.75f, 5f, 8, 1.5f, 0.3f, 0.4f, 35)
             .withSound(JSoundRegistry.METALLICA_BLADE_SWIPE)
             .withImpactSound(SoundEvents.PLAYER_ATTACK_SWEEP)
@@ -178,7 +178,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.clv"))
             .withCondition(MetallicaIronCondition.atLeast(IRON_MAX / 2.0f));
-    public static final SimpleUppercutAttack<MetallicaEntity> SMASH = new SimpleUppercutAttack<MetallicaEntity>(200,
+    public static final SimpleUppercutAttack<MetallicaEntity> SMASH = new SimpleUppercutAttack<MetallicaEntity>(0,
             11, 21, 1.0f, 7.5f, 18,2.0f,  2.0f, 0.2f, -0.5f)
             .withSound(JSoundRegistry.D4C_LIGHT)
             .withCrouchingVariant(SWEEP)
@@ -197,7 +197,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.sms"))
             .withCondition(MetallicaIronCondition.atLeast(IRON_MAX / 2.0f));
-    public static final RemoteScalpelMove REMOTE_SCALPEL_MOVE = new RemoteScalpelMove(60, 7, 12, 0)
+    public static final RemoteScalpelMove REMOTE_SCALPEL_MOVE = new RemoteScalpelMove(0, 7, 12, 0)
             .withInfo(
                     Component.literal("Scalpel Toss (Remote)"),
                     Component.literal("""
@@ -207,7 +207,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.rs"))
             .withCondition(MetallicaIronCondition.atLeast(ScalpelProjectile.IRON_COST));
-    public static final FanTossAttack FAN_TOSS = new FanTossAttack(60, 7, 12, 0.75f)
+    public static final FanTossAttack FAN_TOSS = new FanTossAttack(0, 7, 12, 0.75f)
             .withSound(JSoundRegistry.METALLICA_SCALPEL_SUMMON)
             .withInfo(
                     Component.literal("Scalpel Toss (Wide)"),
@@ -217,7 +217,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             )
             .withInitAction(UserAnimationAction.play("mtl.ft"))
             .withCondition(MetallicaIronCondition.atLeast(ScalpelProjectile.IRON_COST));
-    public static final PreciseTossAttack PRECISE_TOSS = new PreciseTossAttack(60, 7, 12, 0.75f)
+    public static final PreciseTossAttack PRECISE_TOSS = new PreciseTossAttack(0, 7, 12, 0.75f)
             .withSound(JSoundRegistry.METALLICA_SCALPEL_SUMMON)
             .withCrouchingVariant(REMOTE_SCALPEL_MOVE)
             .withAerialVariant(FAN_TOSS)
@@ -315,7 +315,7 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
             .withInitAction(UserAnimationAction.play("mtl.ivs"))
             .withCondition(MetallicaIronCondition.atLeast(5.0f));
     public static final HarvestMove HARVEST = new HarvestMove(60 * 20, 0.75f, 3)
-            .withAerialVariant(GO_INVISIBLE)
+            .withCrouchingVariant(GO_INVISIBLE)
             .withInfo(
                     Component.literal("Harvest Iron"),
                     Component.literal("""
@@ -393,13 +393,19 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
 
         moves.register(MoveClass.ULTIMATE, BISECT_CHARGE, State.BISECT).withFollowup(State.NONE);
 
-        moves.register(MoveClass.UTILITY, HARVEST, State.HARVEST).withAerialVariant(State.NONE);
+        moves.register(MoveClass.UTILITY, HARVEST, State.HARVEST).withCrouchingVariant(State.NONE);
     }
 
     @Override
     public boolean initMove(MoveClass moveClass) {
         if (tryFollowUp(moveClass, MoveClass.LIGHT)) return true;
         if (tryFollowUp(moveClass, MoveClass.HEAVY)) return true;
+        if (moveClass == MoveClass.SPECIAL2 && canAttack()) {
+            if (getUserOrThrow().isShiftKeyDown()) {
+                setMove(RAZOR_COUGH_ATTACK, State.NONE);
+                return true;
+            }
+        }
         return super.initMove(moveClass);
     }
 

@@ -71,7 +71,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                     Component.literal("Stomp (Second Hit)"),
                     Component.literal("Lifts knocked down enemies off the ground.")
             );
-    public static final SimpleAttack<TheHandEntity> CROUCHING_LIGHT = new SimpleAttack<TheHandEntity>((int) (JCraft.LIGHT_COOLDOWN * 2.0),
+    public static final SimpleAttack<TheHandEntity> CROUCHING_LIGHT = new SimpleAttack<TheHandEntity>(JCraft.LIGHT_COOLDOWN,
             9, 14, 0.5f, 5f, 15, 1.5f, 0.25f, 0.4f)
             .withFollowup(CROUCHING_LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -100,6 +100,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
             .withCrouchingVariant(CROUCHING_LIGHT)
             .withImpactSound(JSoundRegistry.IMPACT_6)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
+            .noLoopPrevention()
             .withInfo(
                     Component.literal("Punch"),
                     Component.literal("Relatively quick combo starter."));
@@ -114,7 +115,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                     Component.literal("Stomp Barrage (Last Hit)"),
                     Component.literal("Lifts knocked down enemies off the ground.")
             );
-    public static final SimpleMultiHitAttack<TheHandEntity> STOMP_BARRAGE = new SimpleMultiHitAttack<TheHandEntity>(180,
+    public static final SimpleMultiHitAttack<TheHandEntity> STOMP_BARRAGE = new SimpleMultiHitAttack<TheHandEntity>(100,
             33, 1.0f, 1.0f, 10, 1.5f, 0.3f, 0.2f, IntSet.of(6, 9, 13, 16, 19, 22))
             .withSound(JSoundRegistry.THE_HAND_KICK_BARRAGE)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -135,7 +136,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                     Component.literal("fast reliable combo starter/extender, high stun")
             );
 
-    public static final KnockdownAttack<TheHandEntity> SWEEP = new KnockdownAttack<TheHandEntity>(100, 13, 18, 1.0f,
+    public static final KnockdownAttack<TheHandEntity> SWEEP = new KnockdownAttack<TheHandEntity>(0, 13, 18, 1.0f,
             9f, 15, 1.6f, 0.4f, 0.3f, 35)
             .withSound(JSoundRegistry.D4C_LIGHT)
             .withAnim(State.SWEEP)
@@ -145,7 +146,7 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
                     Component.literal("Sweep"),
                     Component.literal("Can be comboed out of with cr.M1~M1>...")
             );
-    public static final SimpleUppercutAttack<TheHandEntity> KICK = new SimpleUppercutAttack<TheHandEntity>(100, 13, 24, 0.75f,
+    public static final SimpleUppercutAttack<TheHandEntity> KICK = new SimpleUppercutAttack<TheHandEntity>(0, 13, 24, 0.75f,
             9f, 12, 2f, 1.1f, 0.1f, 0.3f)
             .withSound(JSoundRegistry.D4C_LIGHT)
             .withCrouchingVariant(SWEEP)

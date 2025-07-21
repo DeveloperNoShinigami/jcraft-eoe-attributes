@@ -8,6 +8,7 @@ import mod.azure.azurelib.constant.DataTickets;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.model.data.EntityModelData;
 import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import net.arna.jcraft.client.JClientConfig;
 import net.arna.jcraft.client.model.entity.stand.StandEntityModel;
 import net.arna.jcraft.client.util.JClientUtils;
 import net.arna.jcraft.api.stand.StandEntity;
@@ -239,7 +240,14 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
             return stand.getAlphaOverride();
         }
 
-        final float a = Mth.clamp((float) stand.distanceToSqr(Minecraft.getInstance().player) / 2f, 0, 1);
+        final JClientConfig config = JClientConfig.getInstance();
+        final float alphaMult = config.getFirstPersonStandOpacityMult();
+
+        final float a =
+                config.isDynamicFirstPersonStandOpacity() ?
+                        alphaMult * Mth.clamp((float) stand.distanceToSqr(Minecraft.getInstance().player) / 2f, 0, 1) :
+                        alphaMult;
+
         if (!stand.hasAlphaOverride()) {
             return a; // If we don't have an override, use this alpha value.
         }

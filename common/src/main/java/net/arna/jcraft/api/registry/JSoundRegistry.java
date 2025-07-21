@@ -19,6 +19,7 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> STAND_SUMMON = register("standsummon");
     RegistrySupplier<SoundEvent> STAND_DESUMMON = register("desummon");
     RegistrySupplier<SoundEvent> STAND_BLOCK = register("standblock");
+    RegistrySupplier<SoundEvent> STAND_PUSHBLOCK = register("standpushblock");
     RegistrySupplier<SoundEvent> BACKSTAB = register("backstab");
     RegistrySupplier<SoundEvent> ARMORED_HIT = register("armoredhit");
     RegistrySupplier<SoundEvent> COMBO_BREAK = register("combobreak");
@@ -223,8 +224,8 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> TWOH_CHARGE_OVERWRITE = register("twohchargeoverwrite");
     RegistrySupplier<SoundEvent> TWOH_CHARGE = register("twohcharge");
     RegistrySupplier<SoundEvent> TWOH_OVERWRITE = register("twohoverwrite");
-    RegistrySupplier<SoundEvent> TWOH_KNIFETHROW = register("twohowarida");
-    RegistrySupplier<SoundEvent> TWOH_AIRKNIVES = register("twohairknives");
+    RegistrySupplier<SoundEvent> TWOH_KNIFETHROW = register("twohairknives");
+    RegistrySupplier<SoundEvent> TWOH_KNIFESUMMON = register("twohknives");
 
     // Star Platinum: The World
     RegistrySupplier<SoundEvent> SPTW_GRAB = register("sptwgrab");
@@ -311,22 +312,6 @@ public interface JSoundRegistry {
     RegistrySupplier<SoundEvent> ROAD_ROLLER_SLAM = register("rrslam");
     RegistrySupplier<SoundEvent> ROAD_ROLLER_IGNITION = register("rrignition");
     RegistrySupplier<SoundEvent> ROAD_ROLLER_ACTIVE = register("rractive");
-
-    // MUSIC DISCS
-    RegistrySupplier<SoundEvent> STAND_PROUD = register("stand_proud");
-    RegistrySupplier<SoundEvent> CRUCIFIED = register("crucified");
-    RegistrySupplier<SoundEvent> HALLELUJAH_CHORUS = register("hallelujah_chorus");
-    RegistrySupplier<SoundEvent> WONDER_OF_YOU = register("wonder_of_you");
-    RegistrySupplier<SoundEvent> AWAKEN = register("awaken");
-    RegistrySupplier<SoundEvent> DARK_REBIRTH = register("dark_rebirth");
-    RegistrySupplier<SoundEvent> KIRA_THEME = register("kira_theme");
-    RegistrySupplier<SoundEvent> GIORNO_THEME = register("giorno_theme");
-    RegistrySupplier<SoundEvent> JONATHAN_THEME = register("jonathan_theme");
-    RegistrySupplier<SoundEvent> JOLYNE_THEME = register("jolyne_theme");
-    RegistrySupplier<SoundEvent> JOTARO_THEME = register("jotaro_theme");
-    RegistrySupplier<SoundEvent> TORTURE_DANCE = register("torture_dance");
-    RegistrySupplier<SoundEvent> UN_ALTRA_PERSONA = register("un_altra_persona");
-
 
     static void init() {
         // intentionally left empty

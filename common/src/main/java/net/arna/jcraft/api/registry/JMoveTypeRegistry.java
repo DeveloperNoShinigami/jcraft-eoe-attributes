@@ -182,6 +182,7 @@ public interface JMoveTypeRegistry {
     RegistrySupplier<MoveType<?>> SHARED_PILOT_MODE_MOVE = register("shared_pilot_mode_move", PilotModeMove.Type.INSTANCE);
 //    RegistrySupplier<MoveType<?>> SHARED_REKKA_ATTACK = register("shared_rekka_attack", RekkaAttack.Type.INSTANCE); // unused
     RegistrySupplier<MoveType<?>> SHARED_SIMPLE_ATTACK = register("shared_simple_attack", SimpleAttack.Type.INSTANCE);
+    RegistrySupplier<MoveType<?>> SHARED_MOVEMENT_SLOWING_SIMPLE_ATTACK = register("shared_movement_slowing_simple_attack", MovementSlowingSimpleAttack.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> SHARED_SIMPLE_HOLDABLE_MOVE = register("shared_simple_holdable_move", SimpleHoldableMove.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> SHARED_SIMPLE_MULTI_HIT_ATTACK = register("shared_simple_multi_hit_attack", SimpleMultiHitAttack.Type.INSTANCE);
     RegistrySupplier<MoveType<?>> SHARED_SIMPLE_UPPERCUT_ATTACK = register("shared_simple_uppercut_attack", SimpleUppercutAttack.Type.INSTANCE);

@@ -7,6 +7,7 @@ import dev.architectury.event.events.common.PlayerEvent;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.moves.BlockMarkerMove;
 import net.arna.jcraft.api.registry.*;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
@@ -38,6 +39,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -75,10 +77,10 @@ public class JServerEvents {
             Enchantments.ALL_DAMAGE_PROTECTION, Enchantments.PROJECTILE_PROTECTION, Enchantments.BLAST_PROTECTION, Enchantments.FIRE_PROTECTION, Enchantments.UNBREAKING);
 
     private static final List<List<Item>> EQUIPMENT = List.of(
-            List.of(Items.AIR, Items.GOLDEN_BOOTS, Items.CHAINMAIL_BOOTS, Items.IRON_BOOTS, Items.DIAMOND_BOOTS, Items.NETHERITE_BOOTS),
-            List.of(Items.AIR, Items.GOLDEN_LEGGINGS, Items.CHAINMAIL_LEGGINGS, Items.IRON_LEGGINGS, Items.DIAMOND_LEGGINGS, Items.NETHERITE_LEGGINGS),
-            List.of(Items.AIR, Items.GOLDEN_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE),
-            List.of(Items.AIR, Items.GOLDEN_HELMET, Items.CHAINMAIL_HELMET, Items.IRON_HELMET, Items.DIAMOND_HELMET, Items.NETHERITE_HELMET)
+            List.of(Items.AIR, Items.GOLDEN_BOOTS,      Items.CHAINMAIL_BOOTS,      Items.IRON_BOOTS,      Items.DIAMOND_BOOTS,      Items.NETHERITE_BOOTS      ),
+            List.of(Items.AIR, Items.GOLDEN_LEGGINGS,   Items.CHAINMAIL_LEGGINGS,   Items.IRON_LEGGINGS,   Items.DIAMOND_LEGGINGS,   Items.NETHERITE_LEGGINGS   ),
+            List.of(Items.AIR, Items.GOLDEN_CHESTPLATE, Items.CHAINMAIL_CHESTPLATE, Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.NETHERITE_CHESTPLATE ),
+            List.of(Items.AIR, Items.GOLDEN_HELMET,     Items.CHAINMAIL_HELMET,     Items.IRON_HELMET,     Items.DIAMOND_HELMET,     Items.NETHERITE_HELMET     )
     );
 
     public static void finishLoading(final MinecraftServer server) {
@@ -89,10 +91,6 @@ public class JServerEvents {
     public static void saveExclusives(final MinecraftServer server) {
         JCraft.getExclusiveStandsData().saveToDefaultFile(server);
     }
-
-    private static final int PREDICTION_RADIUS = 6 * 16;
-    private static final int MAX_COMPENSATION_MS = 250; // Game is barely playable at this point
-    private static final double MS_TO_TICKS = 1000.0 / 20.0; // 1000ms = 1s, 1s = 20t
 
     public static void serverPostTick(MinecraftServer server) {
         if (JCraft.preloadLockTicks > 0) {
@@ -178,6 +176,9 @@ public class JServerEvents {
 
         JCraft.burstTimers.clear();
         JCraft.burstTimers.putAll(newBurstTimers);
+
+        // Pushblock cooldown ticking
+        pushblockCooldowns.replaceAll((key, value) -> value - 1);
 
         // Dash handling
         for (Map.Entry<LivingEntity, DashData> entry : new HashSet<>(JCraft.dashes.entrySet())) {
@@ -291,10 +292,6 @@ public class JServerEvents {
 
     public static EventResult entityLoad(Entity entity, boolean worldGenSpawned) {
         ServerLevel world = (ServerLevel) entity.level();
-        // FIXME this is hack, find out why our mod fucks up the Nether
-        if (world.dimension() != Level.OVERWORLD && world.dimension() != JDimensionRegistry.AU_DIMENSION_KEY) {
-            return EventResult.pass();
-        }
 
         // If an item was spawned
         if (entity instanceof ItemEntity item) {
@@ -352,6 +349,10 @@ public class JServerEvents {
                 return EventResult.pass();
             }
 
+            if (!mob.getType().is(JTagRegistry.CAN_HAVE_STAND)) {
+                return EventResult.pass();
+            }
+
             // Create new stand user mobs
             if (standData.isTagged()) {
                 return EventResult.pass();
@@ -360,10 +361,7 @@ public class JServerEvents {
                 return EventResult.pass();
             }
 
-            if (!mob.getType().is(JTagRegistry.CAN_HAVE_STAND)) {
-                return EventResult.pass();
-            }
-            Random random = new Random();
+            RandomSource random = mob.getRandom();
             GameRules gameRules = world.getGameRules();
 
             standData.setTagged(true);
@@ -384,7 +382,7 @@ public class JServerEvents {
             AttributeInstance followRange = mob.getAttribute(Attributes.FOLLOW_RANGE);
             if (followRange != null) {
                 followRange.setBaseValue(Mth.clamp(
-                        128 * entity.level().getCurrentDifficultyAt(entity.blockPosition()).getEffectiveDifficulty() / 6.75,
+                        128d * (1d + entity.level().getDifficulty().getId()) / 4d,
                         10d, 128d));
             }
             AttributeInstance movementSpeed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
@@ -632,5 +630,14 @@ public class JServerEvents {
             meteor.setPos(randomPos);
             serverLevel.addFreshEntity(meteor);
         }
+    }
+
+    public static EventResult beforeBlockSet(BlockPos blockPos, BlockState oldBlockState, BlockState newBlockState) {
+        synchronized (BlockMarkerMove.MOVES) {
+            for (final BlockMarkerMove move : BlockMarkerMove.MOVES) {
+                move.addBlock(blockPos, oldBlockState);
+            }
+        }
+        return EventResult.pass();
     }
 }

@@ -106,7 +106,7 @@ subprojects {
         repositories {
             maven {
                 name = 'planetMaven'
-                url = 'https://maven.planetteamspeak.dev/releases'
+                url = 'https://maven-up.jcraft-eoe.com/releases/'
                 credentials(org.gradle.api.credentials.PasswordCredentials)
                 authentication {
                     //noinspection GroovyAssignabilityCheck

@@ -82,8 +82,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
             .summonData(SummonData.of(JSoundRegistry.WS_SUMMON))
             .build();
 
-    public static final SimpleUppercutAttack<WhiteSnakeEntity> UPPERCUT = new SimpleUppercutAttack<WhiteSnakeEntity>(
-            20, 8, 14, 1, 6f, 16, 1.25f, 0.5f, -0.5f, 0.5f)
+    public static final SimpleUppercutAttack<WhiteSnakeEntity> UPPERCUT = new SimpleUppercutAttack<WhiteSnakeEntity>(0,
+            8, 14, 1, 6f, 16, 1.25f, 0.5f, -0.5f, 0.5f)
             .withAnim(State.UPPERCUT)
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withExtraHitBox(1)
@@ -91,8 +91,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                     Component.literal("Uppercut"),
                     Component.literal("decent stun, launches up")
             );
-    public static final SimpleAttack<WhiteSnakeEntity> LIGHT_FOLLOWUP = new SimpleAttack<WhiteSnakeEntity>(
-            0, 7, 13, 0.75f, 6f, 10, 1.5f, 1f, 0.2f)
+    public static final SimpleAttack<WhiteSnakeEntity> LIGHT_FOLLOWUP = new SimpleAttack<WhiteSnakeEntity>(0,
+            7, 13, 0.75f, 6f, 10, 1.5f, 1f, 0.2f)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withLaunch()
@@ -111,8 +111,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")
             );
-    public static final SimpleAttack<WhiteSnakeEntity> MEDIUM = new SimpleAttack<WhiteSnakeEntity>(
-            60, 8, 13, 1, 7f, 16, 1.75f, 0.4f, 0)
+    public static final SimpleAttack<WhiteSnakeEntity> MEDIUM = new SimpleAttack<WhiteSnakeEntity>(0,
+            8, 13, 1, 7f, 16, 1.75f, 0.4f, 0)
             .withSound(JSoundRegistry.WS_DONUT)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_2)
@@ -121,15 +121,16 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                     Component.literal("Gut Punch"),
                     Component.literal("combo starter/extender")
             );
-    public static final MainBarrageAttack<WhiteSnakeEntity> BARRAGE = new MainBarrageAttack<WhiteSnakeEntity>(
-            240, 0, 40, 0.75f, 1, 20, 2, 0.25f, 0, 3, Blocks.OAK_PLANKS.defaultDestroyTime())
+    public static final MainBarrageAttack<WhiteSnakeEntity> BARRAGE = new MainBarrageAttack<WhiteSnakeEntity>(240,
+            0, 40, 0.75f, 1, 20, 2, 0.25f, 0, 3, Blocks.OAK_PLANKS.defaultDestroyTime())
             .withSound(JSoundRegistry.WS_BARRAGE)
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, medium stun")
             );
-    public static final GiveStandAttack GIVE_STAND = new GiveStandAttack(400, 22, 34, 1, 1, 2, 0, 0)
+    public static final GiveStandAttack GIVE_STAND = new GiveStandAttack(400,
+            22, 34, 1, 1, 2, 0, 0)
             .withSound(JSoundRegistry.WS_STAND_DISC)
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withHitSpark(null)
@@ -139,8 +140,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                     Component.literal("Give Stand Disk"),
                     Component.literal("gives a single hit target a stand, provided they do not have one already, from a disk in the user's off hand")
             );
-    public static final SimpleAttack<WhiteSnakeEntity> STAND_DISC = new SimpleAttack<WhiteSnakeEntity>(
-            480, 22, 34, 1, 8f, 20, 2, 0.5f, 0)
+    public static final SimpleAttack<WhiteSnakeEntity> STAND_DISC = new SimpleAttack<WhiteSnakeEntity>(480,
+            22, 34, 1, 8f, 20, 2, 0.5f, 0)
             .withSound(JSoundRegistry.WS_STAND_DISC)
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withAction(EffectAction.inflict(JStatusRegistry.STANDLESS, 160, 0))
@@ -153,8 +154,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                     Component.literal("Take Stand Disk"),
                     Component.literal("uninterruptible & unblockable, removes enemy stand for 8s")
             );
-    public static final SimpleAttack<WhiteSnakeEntity> LEG_CRUSHER = new SimpleAttack<WhiteSnakeEntity>(
-            240, 16, 22, 0.75f, 7, 32, 1.75f, 0.35f, 0.4f)
+    public static final SimpleAttack<WhiteSnakeEntity> LEG_CRUSHER = new SimpleAttack<WhiteSnakeEntity>(0,
+            16, 22, 0.75f, 7, 32, 1.75f, 0.35f, 0.4f)
             .withSound(JSoundRegistry.WS_LEGCRUSH)
             .withImpactSound(JSoundRegistry.TW_KICK_HIT)
             .withHitSpark(JParticleType.HIT_SPARK_3)
@@ -163,8 +164,8 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                     Component.literal("Leg Crusher"),
                     Component.literal("high stun, medium windup")
             );
-    public static final SimpleAttack<WhiteSnakeEntity> MEMORY_DISC = new SimpleAttack<WhiteSnakeEntity>(
-            280, 22, 34, 1, 7f, 20, 2, 0.5f, 0)
+    public static final SimpleAttack<WhiteSnakeEntity> MEMORY_DISC = new SimpleAttack<WhiteSnakeEntity>(140,
+            22, 34, 1, 7f, 20, 2, 0.5f, 0)
             .withSound(JSoundRegistry.WS_MEMORY_DISC)
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withAction(EffectAction.inflict(
@@ -179,23 +180,23 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
                     Component.literal("Take Memory Disk"),
                     Component.literal("uninterruptible& unblockable, gives mining fatigue & weakness for 30s")
             );
-    public static final ChargedSpewAttack CHARGED_SPEW = new ChargedSpewAttack(
-            200, 20, 26, 0.75f, 0f, 0, 2f, 0f, 0f)
+    public static final ChargedSpewAttack CHARGED_SPEW = new ChargedSpewAttack(40,
+            20, 26, 0.75f, 0f, 0, 2f, 0f, 0f)
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withInfo(
                     Component.literal("Poison Spew"),
                     Component.literal("fires a spread of 5 acid projectiles that slow enemies and persist on the surface they hits for 5s")
             );
-    public static final PoisonSpewAttack POISON_SPEW = new PoisonSpewAttack(
-            200, 10, 14, 0.75f, 0f, 0, 2f, 0f, 0f)
+    public static final PoisonSpewAttack POISON_SPEW = new PoisonSpewAttack(20,
+            10, 14, 0.75f, 0f, 0, 2f, 0f, 0f)
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withCrouchingVariant(CHARGED_SPEW)
             .withInfo(
                     Component.literal("Poison Spew"),
                     Component.literal("fires an acid projectile that slows enemies and persists on the surface it hits for 5s")
             );
-    public static final MeltYourHeartAttack MELT_YOUR_HEART = new MeltYourHeartAttack(
-            800, 40, 50, 1f, 3f, 20, 2f, 1f, 0f)
+    public static final MeltYourHeartAttack MELT_YOUR_HEART = new MeltYourHeartAttack(800,
+            40, 50, 1f, 3f, 20, 2f, 1f, 0f)
             .withSound(JSoundRegistry.WS_MYH)
             .withImpactSound(JSoundRegistry.IMPACT_2)
             .withHyperArmor()

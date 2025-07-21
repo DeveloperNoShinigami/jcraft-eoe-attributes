@@ -19,6 +19,7 @@ import net.arna.jcraft.client.gui.ServerConfigUI;
 import net.arna.jcraft.client.gui.hud.EpitaphOverlay;
 import net.arna.jcraft.client.renderer.effects.AttackHitboxEffectRenderer;
 import net.arna.jcraft.client.renderer.effects.TimeErasePredictionEffectRenderer;
+import net.arna.jcraft.client.rendering.DamageIndicatorManager;
 import net.arna.jcraft.client.rendering.handler.CrimsonShaderHandler;
 import net.arna.jcraft.client.rendering.handler.ZaWarudoShaderHandler;
 import net.arna.jcraft.client.util.JClientUtils;
@@ -98,6 +99,25 @@ public class ClientPacketHandler {
         register(S2C_ATTACKER_DATA, ClientPacketHandler::handleAttackerData);
         register(S2C_MANDOM_DATA, ClientPacketHandler::handleMandomData);
         register(S2C_STONE_MASK_CLENCH, ClientPacketHandler::handleStoneMaskClench);
+        register(S2C_IPS_TRIGGERED, ClientPacketHandler::handleIPSTriggered);
+        register(S2C_DAMAGE_NUMBER, ClientPacketHandler::handleDamageNumber);
+    }
+
+    private static void handleDamageNumber(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
+        int entityId = buf.readInt();
+        float damageAmount = buf.readFloat();
+
+        // Execute on client thread
+        client.execute(() -> {
+            Entity entity = Minecraft.getInstance().level.getEntity(entityId);
+            if (entity != null) {
+                DamageIndicatorManager.spawnDamageNumber(entity, damageAmount);
+            }
+        });
+    }
+
+    private static void handleIPSTriggered(final @NonNull Minecraft client, FriendlyByteBuf buf) {
+        JCraftClient.markIPSTriggered();
     }
 
     private static void handleStoneMaskClench(final @NonNull Minecraft client, final FriendlyByteBuf buf) {

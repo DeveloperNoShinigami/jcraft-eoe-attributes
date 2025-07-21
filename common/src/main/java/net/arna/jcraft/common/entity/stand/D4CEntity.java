@@ -56,7 +56,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                     .proCount(4)
                     .conCount(2)
                     .freeSpace(Component.literal("""
-                        BNBs:
+                        BNBs: (outdated)
                             -the lazy zoner
                             Light>Barrage>Light>Grab/Charge
                         
@@ -77,8 +77,8 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             .withInfo(
                     Component.literal("Item Place"),
                     Component.literal("places an item from an alternate universe on the ground, which attracts other such items"));
-    public static final SimpleAttack<D4CEntity> LIGHT_FOLLOWUP = new SimpleAttack<D4CEntity>(
-            0, 9, 14, 0.75f, 7f, 8, 1.75f, 1.25f, -0.1f)
+    public static final SimpleAttack<D4CEntity> LIGHT_FOLLOWUP = new SimpleAttack<D4CEntity>(0,
+            9, 14, 0.75f, 7f, 8, 1.75f, 1.25f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withSound(JSoundRegistry.D4C_LIGHT)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -91,6 +91,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                     Component.literal("combo finisher, more blockstun than other light followups"));
     public static final SimpleAttack<D4CEntity> CHOP = new SimpleAttack<D4CEntity>(JCraft.LIGHT_COOLDOWN,
             9, 15, 0.75f, 5f, 20, 1.5f, 0.25f, -0.1f)
+            .noLoopPrevention()
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(ITEM_PLACE)
             .withImpactSound(JSoundRegistry.IMPACT_2)
@@ -105,7 +106,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, high stun"));
-    public static final SimpleAttack<D4CEntity> CHARGE = new SimpleAttack<D4CEntity>(200, 14, 25,
+    public static final SimpleAttack<D4CEntity> CHARGE = new SimpleAttack<D4CEntity>(100, 14, 25,
             1f, 8f, 12, 2f, 1.5f, -0.2f)
             .withInitAction(LungeAction.lunge(0.75f, 0.15f).onGround())
             .withSound(JSoundRegistry.D4C_HEAVY)
@@ -153,11 +154,11 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
             .withInfo(
                     Component.literal("Grab"),
                     Component.literal("unblockable, combo finisher"));
-    public static final D4CCounterAttack COUNTER = new D4CCounterAttack(400, 5, 35, 0.75f)
+    public static final D4CCounterAttack COUNTER = new D4CCounterAttack(300, 5, 35, 0.75f)
             .withInfo(
                     Component.literal("Counter"),
                     Component.literal("0.25s startup, 1.5s duration, high damage, knocks back when hit"));
-    public static final CloneSpawnMove CLONE_SPAWN = new CloneSpawnMove(400, 40, 50, 1f)
+    public static final CloneSpawnMove CLONE_SPAWN = new CloneSpawnMove(300, 40, 50, 1f)
             .withSound(JSoundRegistry.D4C_DIMHOP)
             .withInfo(
                     Component.literal("Dimensional Clone"),
@@ -168,7 +169,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                             SPECIAL 1 - Wooden Axe
                             SPECIAL 2 - Bow
                             SPECIAL 3 - None"""));
-    public static final FlagMove FLAG = new FlagMove(280, 10, 60, 0f)
+    public static final FlagMove FLAG = new FlagMove(200, 10, 60, 0f)
             .withSound(JSoundRegistry.D4C_UTILITY)
             .withInfo(
                     Component.literal("Dimensional Phase"),

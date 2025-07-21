@@ -97,7 +97,7 @@ public class JClientEvents {
         final StandEntity<?, ?> stand = JUtils.getStand(player);
         final Font textRenderer = client.gui.getFont();
 
-        final int selectedX = getHudX(client.getWindow().getGuiScaledWidth(), 128) + config.getHorizontalHudOffset();
+        int selectedX = getHudX(client.getWindow().getGuiScaledWidth(), 128) + config.getHorizontalHudOffset();
         int selectedY = client.getWindow().getGuiScaledHeight() + config.getVerticalHudOffset();
 
         switch (config.getUiPosition()) {
@@ -164,7 +164,7 @@ public class JClientEvents {
         }
 
         // Draw Combo Counter
-        if (comboCounter > 0 && player.level().getGameRules().getBoolean(JCraft.COMBO_COUNTER) && framesSinceCounted <= 180) {
+        if (comboCounter > 0 && JClientConfig.getInstance().isComboCounter() && framesSinceCounted <= 180) {
             String remark = "epic tod free download";
             if (comboCounter < JCraftClient.comboRemarks.size() * 7) {
                 remark = comboRemarks.get(Math.floorDiv(comboCounter, 7));
@@ -178,12 +178,20 @@ public class JClientEvents {
                 comboStarted = false;
             }
 
+            boolean ipsTriggered = IPSTriggerFramesLeft-- > 0;
+            if (ipsTriggered) {
+                selectedX += random.nextFloat() * IPSTriggerFramesLeft / 20.0f;
+                selectedY += random.nextFloat() * IPSTriggerFramesLeft / 20.0f;
+            }
+
             ctx.drawString(
                     textRenderer,
                     comboCounter + " - (" + Math.round(damageScaling * 100f) + "%) - " + remark,
                     (int) (selectedX + (isMid && useIcons ? 54f : 0) + (recentHit ? tickDelta * random.nextFloat() * 5f : 0)),
                     (int) (selectedY * (1.15f) + (recentHit ? tickDelta * random.nextFloat() * 5f : 0)),
-                    ColorUtils.HSBAtoRGBA(comboCounter / 360f - 1f, comboStarted ? framesSinceComboStarted / 60f : 1f, 1f, 0.8f)
+                    ipsTriggered ?
+                            ColorUtils.HSBAtoRGBA(0.5f, (IPS_TRIGGER_FRAMES - IPSTriggerFramesLeft) / (float)IPS_TRIGGER_FRAMES, 1f, 0.8f) :
+                            ColorUtils.HSBAtoRGBA(comboCounter / 360f - 1f, comboStarted ? framesSinceComboStarted / 60f : 1f, 1f, 0.8f)
             );
         }
     }
@@ -263,7 +271,7 @@ public class JClientEvents {
                     new AABB(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), Timestops.TIMESTOP_PREDICATE);
 
             for (final Entity entity : toStop) {
-                if (!entity.isPassenger() && entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle()) {
+                if (entity != user && entity != JUtils.getStand(user) && entity != user.getVehicle()) {
                     JComponentPlatformUtils.getTimeStopData(entity)
                             .ifPresent(d -> d.setTicks(2));
                 }

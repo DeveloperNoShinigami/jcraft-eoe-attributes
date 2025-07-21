@@ -60,7 +60,8 @@ public class JServerConfig {
     public static final FloatOption SCALING_PENALTY_PER_HIT = new FloatOption("scalingPenaltyPerHit", BALANCE, 0.02f);
     public static final BooleanOption ENABLE_MOVE_COOLDOWNS = new BooleanOption("enableMoveCooldowns", BALANCE, true);
     public static final FloatOption COOLDOWN_MULTIPLIER = new FloatOption("cooldownMultiplier", BALANCE, 1.0f);
-    public static final BooleanOption ENABLE_IPS = new BooleanOption("enableIPS", BALANCE, false);
+    // public static final BooleanOption ENABLE_IPS = new BooleanOption("enableIPS", BALANCE, false);
+    public static final BooleanOption SURVIVAL_CDC = new BooleanOption("survivalCDC", BALANCE, false);
     public static final BooleanOption ENABLE_FRIENDLY_FIRE = new BooleanOption("enableFriendlyFire", BALANCE, true);
 
     private static final String MINECRAFT_REBALANCE = "minecraft_rebalance";
@@ -71,6 +72,8 @@ public class JServerConfig {
     private static final String INTERACTION = "interaction";
     public static final BooleanOption MINING_BARRAGE = new BooleanOption("miningBarrage", INTERACTION, true);
     public static final FloatOption METEOR_SPAWN_RATE = new FloatOption("meteorSpawnRate", INTERACTION, 0.02f, 0f, 1f);
+    public static final IntOption DUMMY_DAMAGE_INDICATOR_RANGE = new IntOption("dummyDamageIndicatorRange", INTERACTION, 64, 0, 512);
+    public static final BooleanOption CREAM_ITEM_ERASE = new BooleanOption("creamItemErase", INTERACTION, true);
     /*
     public static final BooleanOption UNIVERSAL_ABILITIES = new BooleanOption("universalAbilities", INTERACTION, true);
     public static final BooleanOption STAND_GRIEFING = new BooleanOption("standGriefing", INTERACTION, true);
@@ -83,6 +86,7 @@ public class JServerConfig {
 
     // Misc options
     private static final String GAMEPLAY = "gameplay";
+    // public static final BooleanOption ENABLE_HITSTOP = new BooleanOption("enableHitstop", GAMEPLAY, false);
     public static final BooleanOption EXCLUSIVE_STANDS = new BooleanOption("exclusiveStands", GAMEPLAY, false);
     public static final BooleanOption STAND_USER_SIGHT = new BooleanOption("standUserSight", GAMEPLAY, false);
     public static final BooleanOption SPAWNER_STANDS = new BooleanOption("spawnerStands", GAMEPLAY, true);

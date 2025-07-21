@@ -68,16 +68,16 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
             .summonData(SummonData.of(JSoundRegistry.HG_SUMMON))
             .build();
 
-    public static final SimpleUppercutAttack<HGEntity> AIR_LIGHT = new SimpleUppercutAttack<HGEntity>(
-            JCraft.LIGHT_COOLDOWN, 7, 14, 0.75f, 5f, 15, 1.5f, 0.4f, -0.3f, 0.4f)
+    public static final SimpleUppercutAttack<HGEntity> AIR_LIGHT = new SimpleUppercutAttack<HGEntity>(0,
+            7, 14, 0.75f, 5f, 15, 1.5f, 0.4f, -0.3f, 0.4f)
             .withAnim(State.AIR_LIGHT)
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withInfo(
                     Component.literal("Backward Flip Kick"),
                     Component.literal("launches up")
             );
-    public static final KnockdownAttack<HGEntity> CROUCHING_LIGHT_FOLLOWUP = new KnockdownAttack<HGEntity>(
-            0, 9, 16, 0.75f, 6f, 13, 1.75f, 0.75f, 0.4f, 35)
+    public static final KnockdownAttack<HGEntity> CROUCHING_LIGHT_FOLLOWUP = new KnockdownAttack<HGEntity>(0,
+            9, 16, 0.75f, 6f, 13, 1.75f, 0.75f, 0.4f, 35)
             .withSound(JSoundRegistry.HG_CROUCH_LIGHT)
             .withAnim(State.CROUCHING_LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -96,8 +96,8 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.literal("quick combo starter")
             );
 
-    public static final SimpleUppercutAttack<HGEntity> LIGHT_FOLLOWUP = new SimpleUppercutAttack<HGEntity>(
-            0, 10, 15, 0.75f, 6f, 13, 1.75f, 0.5f, -0.2f, 0.4f)
+    public static final SimpleUppercutAttack<HGEntity> LIGHT_FOLLOWUP = new SimpleUppercutAttack<HGEntity>(0,
+            10, 15, 0.75f, 6f, 13, 1.75f, 0.5f, -0.2f, 0.4f)
             .withSound(JSoundRegistry.HG_LIGHT_FOLLOWUP)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_3)
@@ -117,8 +117,8 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")
             );
-    public static final SimpleAttack<HGEntity> SENDOFF = new SimpleAttack<HGEntity>(
-            180, 11, 20, 1, 8f, 16, 2f, 1.5f, 0)
+    public static final SimpleAttack<HGEntity> SENDOFF = new SimpleAttack<HGEntity>(0,
+            11, 20, 1, 8f, 16, 2f, 1.5f, 0)
             .withSound(JSoundRegistry.WS_DONUT)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withHitSpark(JParticleType.HIT_SPARK_3)
@@ -139,8 +139,8 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.literal("fast reliable combo starter/extender, medium stun")
             );
 
-    public static final SimpleAttack<HGEntity> EXTEND_FORWARD_SECOND = new SimpleAttack<HGEntity>(
-            0, 13, 21, 1f, 5, 16, 0, 0.4f, 0)
+    public static final SimpleAttack<HGEntity> EXTEND_FORWARD_SECOND = new SimpleAttack<HGEntity>(0,
+            13, 21, 1f, 5, 16, 0, 0.4f, 0)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.LOW)
             .withExtraHitBox(2.5, -0.5, 1.5)
             .withExtraHitBox(3.5, -0.6, 1.5)
@@ -148,8 +148,8 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.literal("Extend (Forward, Second Hit)"),
                     Component.empty()
             );
-    public static final SimpleAttack<HGEntity> EXTEND_FORWARD = new SimpleAttack<HGEntity>(
-            100, 10, 21, 1f, 5, 15, 1.5f, 0.7f, 0.2f)
+    public static final SimpleAttack<HGEntity> EXTEND_FORWARD = new SimpleAttack<HGEntity>(0,
+            10, 21, 1f, 5, 15, 1.5f, 0.7f, 0.2f)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.CRUSH)
             .withSound(JSoundRegistry.HG_EXTEND)
             .withExtraHitBox(2, -0.1, 1.5)
@@ -159,8 +159,8 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.literal("Hierophant extends its arm forward in a far-reaching attack")
             );
 
-    public static final SimpleAttack<HGEntity> EXTEND_UP_SECOND = new SimpleAttack<HGEntity>(
-            0, 13, 21, 1f, 5, 16, 0, 0.4f, 0)
+    public static final SimpleAttack<HGEntity> EXTEND_UP_SECOND = new SimpleAttack<HGEntity>(0,
+            13, 21, 1f, 5, 16, 0, 0.4f, 0)
             .withHitAnimation(CommonHitPropertyComponent.HitAnimation.HIGH)
             .withExtraHitBox(2, 0.5, 1.5)
             .withExtraHitBox(3, 0.75, 1.5)
@@ -168,8 +168,8 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.literal("Extend (Upward, Second Hit)"),
                     Component.empty()
             );
-    public static final SimpleAttack<HGEntity> EXTEND_UP = new SimpleAttack<HGEntity>(
-            100, 10, 21, 1f, 5, 15, 1.5f, 0.7f, -0.2f)
+    public static final SimpleAttack<HGEntity> EXTEND_UP = new SimpleAttack<HGEntity>(0,
+            10, 21, 1f, 5, 15, 1.5f, 0.7f, -0.2f)
             .withCrouchingVariant(EXTEND_FORWARD)
 
             .withSound(JSoundRegistry.HG_EXTEND)
@@ -188,7 +188,8 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
                     Component.literal("Emerald Splash (Fire)"),
                     Component.empty()
             );
-    public static final SimpleHoldableMove<HGEntity> EMERALD_CHARGE = new SimpleHoldableMove<HGEntity>(100, 0, 40, 1, 7)
+    public static final SimpleHoldableMove<HGEntity> EMERALD_CHARGE = new SimpleHoldableMove<HGEntity>(100,
+            0, 40, 1, 7)
             .withFollowup(EMERALD_SPLASH)
             .withInfo(
                     Component.literal("Emerald Splash"),

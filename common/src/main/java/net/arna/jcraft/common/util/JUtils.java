@@ -85,7 +85,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static net.arna.jcraft.api.stand.StandEntity.damageLogic;
+import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public final class JUtils {
     public static final float DEG_TO_RAD = 0.017453292F;
@@ -694,10 +694,13 @@ public final class JUtils {
     public static Collection<ServerPlayer> around(ServerLevel world, Vec3 pos, double radius) {
         double radiusSq = radius * radius;
 
-        return world.players()
-                .stream()
-                .filter((p) -> p.distanceToSqr(pos) <= radiusSq)
-                .collect(Collectors.toList());
+        List<ServerPlayer> list = new ArrayList<>();
+        for (ServerPlayer p : world.players()) {
+            if (p.distanceToSqr(pos) <= radiusSq) {
+                list.add(p);
+            }
+        }
+        return list;
     }
 
     public static Collection<ServerPlayer> all(MinecraftServer server) {
@@ -763,7 +766,7 @@ public final class JUtils {
         }
 
         final String stringName = entity.getName().toString().toLowerCase(Locale.ROOT);
-        return stringName.contains("iron") || stringName.contains("ferro");
+        return stringName.contains("iron") || stringName.contains("ferro"); // Cross-mod compatibility :D
     }
 
     public static boolean shouldRenderStandsFor(Player player) {

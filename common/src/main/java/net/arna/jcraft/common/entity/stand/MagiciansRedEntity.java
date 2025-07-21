@@ -95,8 +95,8 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
                     Component.literal("Redirect"),
                     Component.literal("redirects all the users ankhs to where they're looking")
             );
-    public static final SimpleAttack<MagiciansRedEntity> LIGHT_FOLLOWUP = new SimpleAttack<MagiciansRedEntity>(
-            0, 6, 14, 0.65f, 6f, 12, 1.5f, 1.2f, -0.1f)
+    public static final SimpleAttack<MagiciansRedEntity> LIGHT_FOLLOWUP = new SimpleAttack<MagiciansRedEntity>(0,
+            6, 14, 0.65f, 6f, 12, 1.5f, 1.2f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
@@ -115,7 +115,7 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")
             );
-    public static final KnockdownAttack<MagiciansRedEntity> HEAVY = new KnockdownAttack<MagiciansRedEntity>(100,
+    public static final KnockdownAttack<MagiciansRedEntity> HEAVY = new KnockdownAttack<MagiciansRedEntity>(0,
             12, 22, 1f, 7f, 10, 1.75f, 0.5f, 0.6f, 40)
             .withAnim(State.HEAVY)
             .withSound(JSoundRegistry.MR_HEAVY)
@@ -133,7 +133,7 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
                     Component.literal("Hammerfist Flare"),
                     Component.literal("launcher")
             );
-    public static final SimpleAttack<MagiciansRedEntity> HAMMERFIST = new SimpleAttack<MagiciansRedEntity>(100,
+    public static final SimpleAttack<MagiciansRedEntity> HAMMERFIST = new SimpleAttack<MagiciansRedEntity>(0,
             10, 20, 1f, 3f, 13, 1.75f, 0.2f, 0)
             .withSound(JSoundRegistry.MR_CROSSFIRE)
             .withFinisher(15, HAMMERFIST_FLARE)
@@ -144,8 +144,8 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
                     Component.literal("Hammerfist"),
                     Component.literal("two-hit launcher")
             );
-    public static final FlamethrowerAttack FLAMETHROWER = new FlamethrowerAttack(300, 0,
-            40, 0.75f, 0.4f, 0, 2, 0.25f, 0, 3)
+    public static final FlamethrowerAttack FLAMETHROWER = new FlamethrowerAttack(200,
+            0,40, 0.75f, 0.4f, 0, 2, 0.25f, 0, 3)
             .withArmor(1)
             .withSound(JSoundRegistry.MR_BARRAGE)
             .withInfo(
@@ -170,14 +170,15 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
                     Component.literal("Crossfire Hurricane"),
                     Component.literal("summons slow, homing fire hurricane that knocks down, lasts for 3 seconds after hitting anything")
             );
-    public static final RedBindAttack RED_BIND = new RedBindAttack(300, 12, 22, 0.75f, 3, 15, 1.5f, 0, 0)
+    public static final RedBindAttack RED_BIND = new RedBindAttack(100,
+            12, 22, 0.75f, 3, 15, 1.5f, 0, 0)
             .withSound(JSoundRegistry.MR_REDBIND)
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withInfo(
                     Component.literal("Red Bind"),
                     Component.literal("on hit, wraps opponent in fiery rings that launch them in the direction they are hit")
             );
-    public static final LifeDetectorAttack LIFE_DETECTOR = new LifeDetectorAttack(280, 13, 20, 0.75f)
+    public static final LifeDetectorAttack LIFE_DETECTOR = new LifeDetectorAttack(200, 13, 20, 0.75f)
             .withSound(JSoundRegistry.MR_DETECTOR)
             .withInfo(
                     Component.literal("Life Detector"),

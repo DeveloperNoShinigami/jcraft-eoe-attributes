@@ -59,8 +59,8 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
             .summonData(SummonData.of(JSoundRegistry.STAR_PLATINUM_SUMMON))
             .build();
 
-    public static final SPTWGroundSlamAttack GROUND_SLAM = new SPTWGroundSlamAttack(20, 12, 19,
-            0.75f, 7f, 11, 1.8f, 0f, 0.8f)
+    public static final SPTWGroundSlamAttack GROUND_SLAM = new SPTWGroundSlamAttack(0,
+            12, 19,0.75f, 7f, 11, 1.8f, 0f, 0.8f)
             .withAnim(State.GROUND_SLAM)
             .withImpactSound(JSoundRegistry.IMPACT_8)
             .withLaunchNoShockwave()
@@ -81,8 +81,8 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
                     Component.translatable("jcraft.starplatinum.m1m1"),
                     Component.literal("quick combo finisher")
             );
-    public static final SimpleAttack<SPTWEntity> PUNCH = SimpleAttack.<SPTWEntity>lightAttack(5, 7,
-                    0.75f, 5f, 10, 0.2f, -0.1f)
+    public static final SimpleAttack<SPTWEntity> PUNCH = SimpleAttack.<SPTWEntity>lightAttack(5,
+                    7,0.75f, 5f, 10, 0.2f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(GROUND_SLAM)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -90,15 +90,15 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
                     Component.translatable("jcraft.starplatinum.m1"),
                     Component.literal("quick combo starter, low knockback")
             );
-    public static final MainBarrageAttack<SPTWEntity> BARRAGE = new MainBarrageAttack<SPTWEntity>(280, 0,
-            40, 0.75f, 1f, 30, 2f, 0.25f, 0f, 3, Blocks.OBSIDIAN.defaultDestroyTime())
+    public static final MainBarrageAttack<SPTWEntity> BARRAGE = new MainBarrageAttack<SPTWEntity>(280,
+            0,40, 0.75f, 1f, 30, 2f, 0.25f, 0f, 3, Blocks.OBSIDIAN.defaultDestroyTime())
             .withSound(JSoundRegistry.STAR_PLATINUM_BARRAGE)
             .withInfo(
                     Component.translatable("jcraft.generic.barrage"),
                     Component.literal("fast reliable combo starter/extender, high stun")
             );
-    public static final TimeStrikeAttack TIME_STRIKE = new TimeStrikeAttack(300, 7,
-            11, 0.75f, 5f, 12, 1.5f, 0.6f, -0.25f)
+    public static final TimeStrikeAttack TIME_STRIKE = new TimeStrikeAttack(300,
+            7, 11, 0.75f, 5f, 12, 1.5f, 0.6f, -0.25f)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withExtraHitBox(1f)
             .withInfo(
@@ -107,8 +107,8 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
                     Teleports forward 2.5m after a short windup, then delivers a fast, low stun hit.
                     Crouch to turn around after teleport.""")
             );
-    public static final SimpleAttack<SPTWEntity> BACKHAND = new SimpleAttack<SPTWEntity>(240, 7, 12,
-            0.75f, 6f, 20, 1.5f, 0.25f, 0f)
+    public static final SimpleAttack<SPTWEntity> BACKHAND = new SimpleAttack<SPTWEntity>(0,
+            7, 12,0.75f, 6f, 20, 1.5f, 0.25f, 0f)
             .withSound(JSoundRegistry.SPTW_BACKHAND)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withExtraHitBox(1f)
@@ -151,8 +151,8 @@ public final class SPTWEntity extends AbstractStarPlatinumEntity<SPTWEntity, SPT
                     Component.translatable("jcraft.sptw.sp3hit"),
                     Component.empty()
             );
-    public static final GrabAttack<SPTWEntity, State> GRAB = new GrabAttack<>(280, 8, 20,
-            1f, 2f, 20, 1.5f, 0.1f, 0f, GRAB_HIT, StateContainer.of(State.GRAB_HIT))
+    public static final GrabAttack<SPTWEntity, State> GRAB = new GrabAttack<>(280,
+            8, 20,1f, 2f, 20, 1.5f, 0.1f, 0f, GRAB_HIT, StateContainer.of(State.GRAB_HIT))
             .withCrouchingVariant(GRAB2)
             .withSound(JSoundRegistry.SPTW_GRAB)
             .withImpactSound(JSoundRegistry.SPTW_GRABHIT)

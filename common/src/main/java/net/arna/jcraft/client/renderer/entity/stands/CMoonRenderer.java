@@ -38,7 +38,7 @@ public class CMoonRenderer extends StandEntityRenderer<CMoonEntity> {
                                final float green, final float blue, final float alpha) {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick,
                 packedLight, packedOverlay, red, green, blue, getAlpha(animatable, partialTick));
-        // todo: try to replace this with a particle keyframe
+
         if (stand.getState() == CMoonEntity.State.GRAV_PUNCH && stand.getCurrentMove() != null &&
                 stand.getMoveStun() > stand.getCurrentMove().getWindupPoint()) {
             if (currentTick < 0 || currentTick != stand.tickCount) {

@@ -69,7 +69,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
             .summonData(SummonData.of(JSoundRegistry.STW_WARBLE))
             .build();
 
-    public static final SimpleUppercutAttack<ShadowTheWorldEntity> UPPERCUT = new SimpleUppercutAttack<ShadowTheWorldEntity>((int) (JCraft.LIGHT_COOLDOWN * 1.5),
+    public static final SimpleUppercutAttack<ShadowTheWorldEntity> UPPERCUT = new SimpleUppercutAttack<ShadowTheWorldEntity>(0,
             10, 16, 0.75f, 6f, 20, 1.5f, 0.25f, -0.6f, 1.0f)
             .withAnim(State.UPPERCUT)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -88,7 +88,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                     Component.literal("Punch"),
                     Component.literal("quick combo starter")
             );
-    public static final KnockdownAttack<ShadowTheWorldEntity> GUARD_CANCEL = new KnockdownAttack<ShadowTheWorldEntity>(7 * 20,
+    public static final KnockdownAttack<ShadowTheWorldEntity> GUARD_CANCEL = new KnockdownAttack<ShadowTheWorldEntity>(0,
             10, 16, 0.75f, 7f, 12, 1.75f, 2f, 0f, 25)
             .withAnim(State.GUARD_CANCEL)
             .withHyperArmor()
@@ -100,8 +100,8 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                     Component.literal("Shoulder Bash"),
                     Component.literal("uninterruptible get-off-me tool, brief knockdown")
             );
-    public static final LungeAttack LUNGE = new LungeAttack(40, 14, 20, 0.75f,
-            8f, 19, 1.6f, 2f, 0f, 10, 6)
+    public static final LungeAttack LUNGE = new LungeAttack(0,
+            14, 20, 0.75f,8f, 19, 1.6f, 2f, 0f, 10, 6)
             .withCrouchingVariant(GUARD_CANCEL)
             .withSound(JSoundRegistry.STW_WARBLE)
             .withImpactSound(JSoundRegistry.TW_KICK_HIT)
@@ -120,7 +120,7 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
                     Component.literal("3 Hit Combo (Finisher)"),
                     Component.empty()
             );
-    public static final SimpleMultiHitAttack<ShadowTheWorldEntity> THREE_HIT = new SimpleMultiHitAttack<ShadowTheWorldEntity>(100,
+    public static final SimpleMultiHitAttack<ShadowTheWorldEntity> THREE_HIT = new SimpleMultiHitAttack<ShadowTheWorldEntity>(0,
             24, 0.85f, 4f, 15, 1.5f, 0.35f, 0.2f, IntSet.of(6, 14))
             .withFinisher(20, KNOCKDOWN)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -138,8 +138,8 @@ public final class ShadowTheWorldEntity extends AbstractTheWorldEntity<ShadowThe
             )
             .markRanged()
             .withMobilityType(MobilityType.TELEPORT);
-    public static final STWChargeAttack CHARGE = new STWChargeAttack(
-            280, 5, 19, 5.0f, 5f, 20, 1.5f, 0.25f, 0)
+    public static final STWChargeAttack CHARGE = new STWChargeAttack(100,
+            5, 19, 5.0f, 5f, 20, 1.5f, 0.25f, 0)
             .withSound(JSoundRegistry.TW_CHARGE)
             .withSound(JSoundRegistry.STW_WARBLE)
             .withImpactSound(JSoundRegistry.TW_CHARGE_HIT)

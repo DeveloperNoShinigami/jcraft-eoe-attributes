@@ -94,15 +94,15 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                         (Light>)Charge~Barrage>Light>Spinning Blade>Light~Light
                         (Light>)Charge~Barrage>God of Death""")));
 
-    public static final LastShotAttack LAST_SHOT = new LastShotAttack(140, 12, 15, 1f)
+    public static final LastShotAttack LAST_SHOT = new LastShotAttack(100, 12, 15, 1f)
             .withAnim(State.LAST_SHOT)
             .withInfo(
                     Component.literal("Last Shot"),
                     Component.literal("Silver Chariot fires his rapier, which can bounce 5 times off walls, " +
                             "nerfs all hitboxes and damage by 25% until returned")
             );
-    public static final SimpleAttack<SilverChariotEntity> LIGHT_FOLLOWUP = new SimpleAttack<SilverChariotEntity>(
-            0, 6, 14, 0.65f, 6f, 12, 1.5f, 1.2f, -0.1f)
+    public static final SimpleAttack<SilverChariotEntity> LIGHT_FOLLOWUP = new SimpleAttack<SilverChariotEntity>(0,
+            6, 14, 0.65f, 6f, 12, 1.5f, 1.2f, -0.1f)
             .withAnim(State.LIGHT_FOLLOWUP)
             .withImpactSound(JSoundRegistry.IMPACT_1)
             .withLaunch()
@@ -112,8 +112,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     Component.literal("Slash"),
                     Component.literal("quick combo finisher")
             );
-    public static final SimpleAttack<SilverChariotEntity> LIGHT = SimpleAttack.<SilverChariotEntity>lightAttack(5, 9, 0.65f, 5f,
-                    11, 0.15f, -0.1f)
+    public static final SimpleAttack<SilverChariotEntity> LIGHT = SimpleAttack.<SilverChariotEntity>lightAttack(
+            5, 9, 0.65f, 5f,11, 0.15f, -0.1f)
             .withFollowup(LIGHT_FOLLOWUP)
             .withCrouchingVariant(LAST_SHOT)
             .withSound(JSoundRegistry.SC_POKE)
@@ -121,15 +121,15 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     Component.literal("Stab"),
                     Component.literal("quick combo starter, links into Spinning Blade while armor is off")
             );
-    public static final MainBarrageAttack<SilverChariotEntity> BARRAGE = new MainBarrageAttack<SilverChariotEntity>(
-            240, 0, 40, 0.65f, 0.9f, 25, 2.25f, 0.1f, 0f, 3, 1.25F)
+    public static final MainBarrageAttack<SilverChariotEntity> BARRAGE = new MainBarrageAttack<SilverChariotEntity>(240,
+            0, 40, 0.65f, 0.9f, 25, 2.25f, 0.1f, 0f, 3, 1.25F)
             .withSound(JSoundRegistry.SC_BARRAGE)
             .withInfo(
                     Component.literal("Barrage"),
                     Component.literal("fast reliable combo starter/extender, high stun")
             );
-    public static final SimpleAttack<SilverChariotEntity> HEAVY = new SimpleAttack<SilverChariotEntity>(
-            200, 20, 28, 0.65f, 8f, 10, 2f, 1.5f, 0f)
+    public static final SimpleAttack<SilverChariotEntity> HEAVY = new SimpleAttack<SilverChariotEntity>(28,
+            20, 28, 0.65f, 8f, 10, 2f, 1.5f, 0f)
             .withExtraHitBox(2, 0.1, 1)
             .withSound(JSoundRegistry.SC_HEAVY)
             .withHitSpark(JParticleType.HIT_SPARK_3)
@@ -140,8 +140,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     Component.literal("slow, uninterruptible launcher")
             );
 
-    public static final SpinBarrageAttack ANUBIS_SPIN_BARRAGE = new SpinBarrageAttack(0, 7, 24,
-            0.65f, 1f, 10, 2f, 0.1f, -0.2f, 2)
+    public static final SpinBarrageAttack ANUBIS_SPIN_BARRAGE = new SpinBarrageAttack(0,
+            7, 24,0.65f, 1f, 10, 2f, 0.15f, -0.2f, 2)
             .withAnim(State.SPIN_2)
             .withCondition(HoldingAnubisCondition.holdingAnubis())
             .withSound(JSoundRegistry.SC_SPIN)
@@ -149,8 +149,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     Component.literal("Divine Blade"),
                     Component.literal("fast reliable combo starter/extender, low stun")
             );
-    public static final BarrageAttack<SilverChariotEntity> SPIN_BARRAGE = new BarrageAttack<SilverChariotEntity>(240, 7, 24,
-            0.65f, 1f, 10, 2f, 0.1f, -0.2f, 2)
+    public static final BarrageAttack<SilverChariotEntity> SPIN_BARRAGE = new BarrageAttack<SilverChariotEntity>(100,
+            7, 24,0.65f, 1f, 10, 2f, 0.1f, -0.2f, 2)
             .withFollowup(ANUBIS_SPIN_BARRAGE)
             .withFollowupFrame(6)
             .withSound(JSoundRegistry.SC_SPIN)
@@ -159,8 +159,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     Component.literal("fast reliable combo starter/extender, low stun")
             );
 
-    public static final RayDartAttack RAY_DART_LOW = new RayDartAttack(100, 10, 18,
-            0.65f, 6f, 20, 1.75f, 0.25f, 0.2f)
+    public static final RayDartAttack RAY_DART_LOW = new RayDartAttack(100,
+            10, 18,0.65f, 6f, 20, 1.75f, 0.25f, 0.2f)
             .withSound(JSoundRegistry.SC_CHARGE)
             .withSound(SoundEvents.PLAYER_ATTACK_SWEEP)
             .withBlockStun(9)
@@ -168,8 +168,8 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     Component.literal("Lacerate"),
                     Component.literal("Anubis Chariot and the user charge forward, high stun, low blockstun.")
             );
-    public static final RayDartAttack RAY_DART_HIGH = new RayDartAttack(100, 12, 20,
-            0.65f, 6f, 15, 2.0f, 0.25f, 0.2f)
+    public static final RayDartAttack RAY_DART_HIGH = new RayDartAttack(100,
+            12, 20,0.65f, 6f, 15, 2.0f, 0.25f, 0.2f)
             .withCrouchingVariant(RAY_DART_LOW)
             .withSound(JSoundRegistry.SC_CHARGE)
             .withImpactSound(JSoundRegistry.IMPACT_1)
@@ -179,7 +179,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     Component.literal("Split"),
                     Component.literal("Anubis Chariot and the user charge forward, low stun, high blockstun.")
             );
-    public static final CleaveAttack CLEAVE = new CleaveAttack(260, 12, 21, 0.75f, 9f,
+    public static final CleaveAttack CLEAVE = new CleaveAttack(0, 12, 21, 0.75f, 9f,
             20, 2.5f, 0.8f, 0f)
             .withSound(JSoundRegistry.SC_CLEAVE)
             .withImpactSound(SoundEvents.PLAYER_ATTACK_SWEEP)
@@ -246,7 +246,7 @@ public class SilverChariotEntity extends StandEntity<SilverChariotEntity, Silver
                     Component.empty()
             );
     public static final SimpleHoldableMove<SilverChariotEntity> CIRCLE_CHARGE = new SimpleHoldableMove<SilverChariotEntity>(
-            260, 101, 100, 0.65f, 15)
+            0, 101, 100, 0.65f, 15)
             .withFollowup(CIRCLE_SLASH.withAnim(State.CIRCLE_SLASH))
             .withArmor(2)
             .withInfo(

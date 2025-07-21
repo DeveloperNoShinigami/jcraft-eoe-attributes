@@ -117,7 +117,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                             At max size, the meteor is explosive.""")
             );
 
-    private static final FireMeteorAttack STARBURST = new FireMeteorAttack(100, 24, 3, 1.75f,
+    private static final FireMeteorAttack STARBURST = new FireMeteorAttack(40, 24, 3, 1.75f,
             2.5f, 10f, false, IntSet.of(8, 16, 24))
             .withInfo(
                     Component.nullToEmpty("Starburst"),
@@ -126,7 +126,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                             Amount of meteors changes proportional to the size of The Sun.""")
             );
 
-    private static final MeteorShowerAttack METEOR_SHOWER = new MeteorShowerAttack(100, 10, 110, 2)
+    private static final MeteorShowerAttack METEOR_SHOWER = new MeteorShowerAttack(120, 10, 110, 2)
             .withSound(JSoundRegistry.SUN_SHOWER)
             .withoutSlowness()
             .withInfo(
@@ -136,7 +136,7 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
                             Amount of meteors changes proportional to the size of The Sun.""")
             );
 
-    private static final FireSunBeamAttack INCINERATING_SUNSHINE = new FireSunBeamAttack(200, 8, 24, 3, 2.5f)
+    private static final FireSunBeamAttack INCINERATING_SUNSHINE = new FireSunBeamAttack(180, 8, 24, 3, 2.5f)
             .withInfo(
                     Component.nullToEmpty("Incinerating Sunshine"),
                     Component.nullToEmpty("Fires 3 sunbeams.")

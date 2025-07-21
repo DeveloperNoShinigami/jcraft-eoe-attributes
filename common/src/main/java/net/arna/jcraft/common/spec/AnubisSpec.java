@@ -43,13 +43,13 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
                     Not hitting opponents reduces Bloodlust by one stack every 4 seconds."""))
             .build();
 
-    public static final SimpleAnubisAttack AERIAL_CLEAVE = new SimpleAnubisAttack(100, 9, 15, 1f, 5f,
+    public static final SimpleAnubisAttack AERIAL_CLEAVE = new SimpleAnubisAttack(0, 9, 15, 1f, 5f,
             15, 1.75f, 0.4f, 0.3f, true, true)
             .withSound(JSoundRegistry.ANUBIS_SLASH)
             .withImpactSound(SoundEvents.PLAYER_ATTACK_SWEEP)
             .withHitSpark(JParticleType.SWEEP_ATTACK)
             .withInfo(Component.literal("Aerial Cleave"), Component.literal("interruptible faster recovery"));
-    public static final SimpleAnubisAttack SLASH = new SimpleAnubisAttack(220, 9, 20, 1f, 6f,
+    public static final SimpleAnubisAttack SLASH = new SimpleAnubisAttack(20, 9, 20, 1f, 6f,
             15, 1.75f, 0.9f, 0f, true, true)
             .withAerialVariant(AERIAL_CLEAVE)
             .withSound(JSoundRegistry.ANUBIS_SLASH)
@@ -57,12 +57,12 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
             .withHitSpark(JParticleType.SWEEP_ATTACK)
             .withHyperArmor()
             .withInfo(Component.literal("Slash"), Component.literal("uninterruptible get-off-me tool"));
-    public static final SimpleAnubisAttack POMMEL = new SimpleAnubisAttack(180, 5, 8,
+    public static final SimpleAnubisAttack POMMEL = new SimpleAnubisAttack(20, 5, 8,
             1f, 4f, 7, 1.25f, 0.2f, 0f, false, true)
             .withSound(JSoundRegistry.ANUBIS_POMMEL)
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withInfo(Component.literal("Pommel Strike"), Component.literal("fast jab"));
-    public static final SimpleAnubisMultiHitAttack REKKA2 = new SimpleAnubisMultiHitAttack(180,
+    public static final SimpleAnubisMultiHitAttack REKKA2 = new SimpleAnubisMultiHitAttack(10,
             26, 1f, 4f, 15, 1.75f, 0.2f, -0.1f, IntSet.of(8, 20), false)
             .withSound(JSoundRegistry.ANUBIS_REKKA2)
             .withImpactSound(JSoundRegistry.IMPACT_4)
@@ -71,22 +71,22 @@ public class AnubisSpec extends JSpec<AnubisSpec, AnubisSpec.State> {
             0, 40, 1f, 7f, 15, 2f, 0.9f, 0f,
             IntSet.of(32), 35)
             .withHitSpark(JParticleType.SWEEP_ATTACK);
-    public static final Rekka3Attack REKKA3 = new Rekka3Attack(180, 40, 1f, 4f,
+    public static final Rekka3Attack REKKA3 = new Rekka3Attack(10, 40, 1f, 4f,
             15, 1.75f, 0.6f, -0.1f, IntSet.of(8, 20, 32))
             .withFollowup(REKKA_FINISHER)
             .withSound(JSoundRegistry.ANUBIS_REKKA3)
             .withImpactSound(JSoundRegistry.IMPACT_4)
             .withInfo(Component.literal("Cleaving Strikes (3 Hits)"), Component.literal("last hit knocks down if on 0 Bloodlust"));
-    public static final LowKickAttack LOW_KICK = new LowKickAttack(40, 10, 17,
+    public static final LowKickAttack LOW_KICK = new LowKickAttack(5, 10, 17,
             1.5f, 6f, 15, 1.33f, 0.3f, 0f, 0.3f)
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withStaticY()
             .withInfo(Component.literal("Low Kick"), Component.literal("sheathed-only, launches slightly up"));
-    public static final SimpleAnubisMultiHitAttack UNSHEATHING_SWEEP = new SimpleAnubisMultiHitAttack(100, 16, 1f,
+    public static final SimpleAnubisMultiHitAttack UNSHEATHING_SWEEP = new SimpleAnubisMultiHitAttack(5, 16, 1f,
             3f, 10, 1.25f, 0.3f, 0.3f, IntSet.of(6, 10), true)
             .withImpactSound(JSoundRegistry.IMPACT_3)
             .withInfo(Component.literal("Unsheating Sweep"), Component.literal("2 hits, knocks down"));
-    public static final UnsheathingAttack UNSHEATHING_ATTACK = new UnsheathingAttack(100, 6, 12, 1f, 5f,
+    public static final UnsheathingAttack UNSHEATHING_ATTACK = new UnsheathingAttack(5, 6, 12, 1f, 5f,
             13, 1.75f, 0.5f, 0f)
             .withCrouchingVariant(UNSHEATHING_SWEEP)
             .withImpactSound(SoundEvents.PLAYER_ATTACK_SWEEP)

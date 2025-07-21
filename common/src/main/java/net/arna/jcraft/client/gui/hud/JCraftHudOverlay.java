@@ -25,12 +25,21 @@ public class JCraftHudOverlay {
     private static final ResourceLocation FULL_GAUGE = JCraft.id("textures/gui/full_gauge.png");
     private static final int gaugeWidth = 42;
     private static int gaugeHeightOffset;
-    private static final int gaugeHeightOffsetMax = -65;
-    private static final Gauge BLOCK_GAUGE = new Gauge(0.5f, 0.5f, 1.0f, 90);
-    private static final Gauge SUN_SIZE_GAUGE = new Gauge(1.0f, 0.7f, 0.4f, 30);
-    private static final Gauge TIME_ACCEL_GAUGE = new Gauge(1.0f, 0.8f, 0.0f, MadeInHeavenEntity.MAXIMUM_SPEEDOMETER);
-    private static final Gauge BLOODLUST_GAUGE = new Gauge(0.8f, 0.1f, 0.2f, 5);
-    private static final Gauge IRON_GAUGE = new Gauge(0.7f, 0.7f, 0.9f, (int) MetallicaEntity.IRON_MAX);
+    private static final int GAUGE_HEIGHT_OFFSET_MAX = -65;
+    private static int lastStandGauge = 90;
+    private static int standGaugeFlashTicks = 0;
+    private static final int STAND_GAUGE_FLASH_DURATION = 60;
+
+    private static final Vector3f
+            BLOCK_GAUGE_UNDER_THIRD = new Vector3f(0.5f, 0.5f, 1.0f),
+            BLOCK_GAUGE_OVER_THIRD = new Vector3f(0.55f, 0.8f, 1.0f);
+
+    private static final Gauge
+            BLOCK_GAUGE = new Gauge(0.5f, 0.5f, 1.0f, 90),
+            SUN_SIZE_GAUGE = new Gauge(1.0f, 0.7f, 0.4f, 30),
+            TIME_ACCEL_GAUGE = new Gauge(1.0f, 0.8f, 0.0f, MadeInHeavenEntity.MAXIMUM_SPEEDOMETER),
+            BLOODLUST_GAUGE = new Gauge(0.8f, 0.1f, 0.2f, 5),
+            IRON_GAUGE = new Gauge(0.7f, 0.7f, 0.9f, (int) MetallicaEntity.IRON_MAX);
 
     public static void render(final GuiGraphics ctx) {
         final Minecraft client = Minecraft.getInstance();
@@ -42,13 +51,15 @@ public class JCraftHudOverlay {
         final LocalPlayer player = client.player;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
-        gaugeHeightOffset = gaugeHeightOffsetMax;
+        gaugeHeightOffset = GAUGE_HEIGHT_OFFSET_MAX;
         final int gaugeX = x - gaugeWidth / 2;
 
         if (client.gui.overlayMessageTime > 0) gaugeHeightOffset -= 12;
 
         final StandEntity<?, ?> stand = JUtils.getStand(player);
         if (stand != null) {
+            standGaugeFlashTicks--;
+
             if (stand instanceof TheSunEntity theSun) {
                 final float darken = (theSun.isPassive() ? 0.4f : 0.0f);
                 SUN_SIZE_GAUGE.render(ctx,
@@ -59,7 +70,27 @@ public class JCraftHudOverlay {
                         height + gaugeHeightOffset,
                         (int) (theSun.getRawScale() * 10.0F));
             } else {
-                BLOCK_GAUGE.render(ctx, gaugeX, height + gaugeHeightOffset, (int) stand.getStandGauge());
+                final float standGauge = stand.getStandGauge();
+                Vector3f color = standGauge > stand.getMaxStandGauge() / 3.0f ?
+                        BLOCK_GAUGE_OVER_THIRD :
+                        BLOCK_GAUGE_UNDER_THIRD;
+
+                color = new Vector3f(color); // Writable copy
+
+                final int intStandGauge = (int) standGauge;
+
+                if (intStandGauge > lastStandGauge) {
+                    standGaugeFlashTicks = STAND_GAUGE_FLASH_DURATION;
+                }
+
+                if (standGaugeFlashTicks > 0) {
+                    float lighten = standGaugeFlashTicks / (float)STAND_GAUGE_FLASH_DURATION;
+                    color.add(lighten, lighten, lighten);
+                }
+
+                BLOCK_GAUGE.render(ctx, color.x, color.y, color.z, gaugeX, height + gaugeHeightOffset, intStandGauge);
+
+                lastStandGauge = intStandGauge;
             }
             if (stand instanceof MadeInHeavenEntity madeInHeaven && madeInHeaven.getAccelTime() > 0) {
                 TIME_ACCEL_GAUGE.render(ctx, gaugeX, height + gaugeHeightOffset, madeInHeaven.getSpeedometer());

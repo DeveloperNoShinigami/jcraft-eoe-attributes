@@ -11,9 +11,8 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
-import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +22,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Set;
+
+import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public class GETreeEntity extends AbstractArrow implements GeoEntity {
     private final Vec3 launchVec;
@@ -78,7 +79,7 @@ public class GETreeEntity extends AbstractArrow implements GeoEntity {
 
                 final LivingEntity target = JUtils.getUserIfStand(living);
                 if (livingOwner != target) {
-                    StandEntity.damageLogic(level(), target, Vec3.ZERO, 25, 3,
+                    damageLogic(level(), target, Vec3.ZERO, 25, 3,
                             false, 7f, false, 11, ds, livingOwner, CommonHitPropertyComponent.HitAnimation.MID, false);
                 }
                 JUtils.addVelocity(target, launchVec.x, launchVec.y, launchVec.z);

@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated(forRemoval = true, since = "0.17.3")
 public class RevolverFire {
     protected static final List<DimensionData> toFire = new ArrayList<>();
 

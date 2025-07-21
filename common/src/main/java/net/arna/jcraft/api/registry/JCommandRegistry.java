@@ -22,5 +22,6 @@ public interface JCommandRegistry {
         JConfigCommand.register(dispatcher);
         JCraftHelpCommand.register(dispatcher);
         JCraftChangesCommand.register(dispatcher);
+        CooldownCancelCommand.register(dispatcher);
     }
 }

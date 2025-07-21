@@ -5,14 +5,15 @@ import mod.azure.azurelib.animatable.GeoEntity;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.util.AzureLibUtil;
+import net.arna.jcraft.api.AttackData;
 import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.registry.JParticleTypeRegistry;
 import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.events.JServerEvents;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
-import net.arna.jcraft.api.registry.JParticleTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
@@ -36,10 +37,13 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import static net.arna.jcraft.api.Attacks.damageLogic;
+
 public class BulletProjectile extends AbstractArrow implements GeoEntity {
     private int stunTicks;
     private float damage;
     private float mass; // Used for penetration calculation
+    private boolean cancelMoves = false;
 
     private static final EntityDataAccessor<Float> CALIBER; //mm
 
@@ -176,14 +180,18 @@ public class BulletProjectile extends AbstractArrow implements GeoEntity {
                 final Entity owner = getOwner();
                 final LivingEntity target = JUtils.getUserIfStand(living);
                 DamageSource thrown = level().damageSources().thrown(this, owner);
-                StandEntity.damageLogic(level(), target, getDeltaMovement().normalize(),
+
+                AttackData attackData = new AttackData( getDeltaMovement().normalize(),
                         stunTicks, 1, false, damage, true, (int) (4 + damage),
-                        thrown, owner, CommonHitPropertyComponent.HitAnimation.MID);
+                        thrown, owner, CommonHitPropertyComponent.HitAnimation.MID,
+                        null, false, false, cancelMoves
+                );
+
+                damageLogic(level(), target, attackData);
 
                 if (entity instanceof LivingEntity livingEntity) {
                     JServerEvents.maybeLaunch(livingEntity, thrown, (ServerLevel) level(), livingEntity.getEffect(JStatusRegistry.DAZED.get()), owner );
                 }
-
                 JUtils.serverPlaySound(JSoundRegistry.BULLET_PENETRATE.get(), (ServerLevel) level(), position(), 32);
 
                 // Add entity hit particle effect

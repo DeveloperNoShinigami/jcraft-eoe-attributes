@@ -28,7 +28,6 @@ public interface JCreativeMenuTabRegistry {
         JCraft.CREATIVE_TAB_REGISTRY.register("general", JCreativeMenuTabRegistry::createJcraftItemGroup);
         JCraft.CREATIVE_TAB_REGISTRY.register("cosplay", JCreativeMenuTabRegistry::createJcraftCosplayGroup);
         JCraft.CREATIVE_TAB_REGISTRY.register("stand_discs", JCreativeMenuTabRegistry::createStandDiscItemGroup);
-        JCraft.CREATIVE_TAB_REGISTRY.register("music_discs", JCreativeMenuTabRegistry::createMusicDiscItemGroup);
         // building blocks
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.BRICKS, JItemRegistry.METEORITE_BLOCK.get());
@@ -55,8 +54,6 @@ public interface JCreativeMenuTabRegistry {
             output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_ARROW.get());
             output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_DISC.get());
             output.acceptBefore(Items.COMPASS, JItemRegistry.SPEC_DISC.get());
-            output.accept(JItemRegistry.DISC_STAND_PROUD.get());
-            output.accept(JItemRegistry.DISC_CRUCIFIED.get());
         });
         // combat
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.COMBAT.location()), (flags, output, canUseGameMasterBlocks) -> {
@@ -208,6 +205,7 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.FOOLISH_SAND_BLOCK.get());
                     // misc
                     entries.accept(JItemRegistry.HOT_SAND_BLOCK.get());
+                    entries.accept(JItemRegistry.TRAINING_DUMMY.get());
                     entries.accept(JItemRegistry.CINDERELLA_GREEN_BLOCK.get());
                     entries.accept(JItemRegistry.SINNERS_SOUL.get());
                     entries.accept(JItemRegistry.SOUL_BLOCK.get());
@@ -379,30 +377,6 @@ public interface JCreativeMenuTabRegistry {
                             entries.accept(StandDiscItem.createDiscStack(standType, skin));
                         }
                     }
-                })
-                .build();
-    }
-
-
-    static CreativeModeTab createMusicDiscItemGroup() {
-        return CreativeModeTab.builder(CreativeModeTab.Row.TOP, 3)
-                .title(Component.translatable("itemGroup.jcraft.music_discs"))
-                .icon(() -> JItemRegistry.DISC_STAND_PROUD.get().getDefaultInstance())
-                // order of the creative tab
-                .displayItems((displayContext, entries) -> {
-                    entries.accept(JItemRegistry.DISC_STAND_PROUD.get());
-                    entries.accept(JItemRegistry.DISC_CRUCIFIED.get());
-                    entries.accept(JItemRegistry.DISC_HALLELUJAH_CHORUS.get());
-                    entries.accept(JItemRegistry.DISC_WONDER_OF_YOU.get());
-                    entries.accept(JItemRegistry.DISC_AWAKEN.get());
-                    entries.accept(JItemRegistry.DISC_DARK_REBIRTH.get());
-                    entries.accept(JItemRegistry.DISC_KIRA_THEME.get());
-                    entries.accept(JItemRegistry.DISC_GIORNO_THEME.get());
-                    entries.accept(JItemRegistry.DISC_JONATHAN_THEME.get());
-                    entries.accept(JItemRegistry.DISC_JOLYNE_THEME.get());
-                    entries.accept(JItemRegistry.DISC_JOTARO_THEME.get());
-                    entries.accept(JItemRegistry.DISC_TORTURE_DANCE.get());
-                    entries.accept(JItemRegistry.DISC_UN_ALTRA_PERSONA.get());
                 })
                 .build();
     }
