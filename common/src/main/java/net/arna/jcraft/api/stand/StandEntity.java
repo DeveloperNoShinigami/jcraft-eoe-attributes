@@ -34,6 +34,8 @@ import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JStatRegistry;
 import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.arna.jcraft.api.spec.JSpec;
+import net.arna.jcraft.common.ai.AttackerBrainInfo;
+import net.arna.jcraft.common.ai.CombatInstantContext;
 import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
@@ -1232,6 +1234,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     public abstract @NonNull E getThis();
 
+    @Override
+    public void plan(int aiLevel, AttackerBrainInfo info, CombatInstantContext combatCtx) {
+        throw new UnsupportedOperationException("unimplemented");
+    }
+
     // Physical properties
     @Override
     public void push(@NonNull Entity entity) {}
@@ -1281,6 +1288,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
      * Handles movement, stand control, system mechanic control for Stand User mobs while they have a target.
      * General-purpose, and should be specialized to allow the AIs better control of their stands.
      */
+    @Deprecated(forRemoval = true)
     public static void standUserCombatAI(Mob mob, LivingEntity target, StandEntity<?, ?> stand) {
         if (mob == target || !JUtils.canDamage(JDamageSources.stand(stand), target)) {
             return;

@@ -98,7 +98,7 @@ public class JServerEvents {
         PastDimensions.tick(server);
         Timestops.tick(server);
         Revivables.tick(server);
-        JEnemies.tick(server);
+        JEnemies.tick();
         FrameDataRequests.tick();
         MagneticFields.tick();
         RazorCoughs.tick();
@@ -407,21 +407,15 @@ public class JServerEvents {
             int baseArmorLevel = random.nextInt(1, 6);
             int enchantsSize = JCRAFT_ARMOR_ENCHANTS.size();
             for (int i = 0; i < 4; i++) {
-                itemStack = new ItemStack(EQUIPMENT.get(i).get(baseArmorLevel + random.nextInt(-1, 1)));
+                final int armorLevel = baseArmorLevel + random.nextInt(-1, 1); // TODO: scale with difficulty
+
+                itemStack = new ItemStack(EQUIPMENT.get(i).get(armorLevel));
                 enchantment = JCRAFT_ARMOR_ENCHANTS.get(random.nextInt(enchantsSize));
                 itemStack.enchant(enchantment, enchantment.getMaxLevel());
                 armorItems.set(i, itemStack);
-                if (itemStack.is(Items.NETHERITE_HELMET) || itemStack.is(Items.DIAMOND_HELMET)) {
-                    mob.setDropChance(EquipmentSlot.HEAD, 0f);
-                }
-                else if (itemStack.is(Items.NETHERITE_CHESTPLATE) || itemStack.is(Items.DIAMOND_CHESTPLATE)) {
-                    mob.setDropChance(EquipmentSlot.CHEST, 0f);
-                }
-                else if (itemStack.is(Items.NETHERITE_LEGGINGS) || itemStack.is(Items.DIAMOND_LEGGINGS)) {
-                    mob.setDropChance(EquipmentSlot.LEGS, 0f);
-                }
-                else if (itemStack.is(Items.NETHERITE_BOOTS) || itemStack.is(Items.DIAMOND_BOOTS)) {
-                    mob.setDropChance(EquipmentSlot.FEET, 0f);
+
+                if (armorLevel >= 4) { // 4 is Diamond level
+                    mob.setDropChance(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i), 0f);
                 }
             }
 

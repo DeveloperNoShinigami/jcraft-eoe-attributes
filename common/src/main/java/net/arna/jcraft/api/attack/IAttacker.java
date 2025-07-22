@@ -11,6 +11,8 @@ import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.common.ai.AttackerBrainInfo;
+import net.arna.jcraft.common.ai.CombatInstantContext;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -114,11 +116,14 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
 
     MoveUsage getMoveUsage();
 
+    void plan(int aiLevel, AttackerBrainInfo info, CombatInstantContext combatCtx);
+
     // MOVE SELECTION LOGIC; STAYING HERE UNTIL I REWORK THE _ENTIRE_ ATTACKER USER AI SYSTEM
 
     default @Nullable MoveMap.Entry<A, S> getFirstValidEntry(final MoveClass moveClass) {
-        boolean crouching = hasUser() && getUserOrThrow().isShiftKeyDown();
-        boolean aerial = hasUser() && !getUserOrThrow().onGround();
+        boolean hasUser = hasUser();
+        boolean crouching = hasUser && getUserOrThrow().isShiftKeyDown();
+        boolean aerial = hasUser && !getUserOrThrow().onGround();
         return getMoveMap().getFirstValidEntry(moveClass, getThis(), crouching, aerial);
     }
 
@@ -129,16 +134,14 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
      */
     default AbstractMove<?, ? super A> getFallbackMove() {
         MoveMap.Entry<A, S> lightEntry = getFirstValidEntry(MoveClass.LIGHT);
-        if (lightEntry == null) {
-            MoveMap.Entry<A, S> heavyEntry = getFirstValidEntry(MoveClass.HEAVY);
-            if (heavyEntry == null) {
-                JCraft.LOGGER.warn("Couldn't find light or heavy attack entry while running selectAttack on attacker: {}", this);
-                return null;
-            } else {
-                return heavyEntry.getMove();
-            }
+        if (lightEntry != null) return lightEntry.getMove();
+
+        MoveMap.Entry<A, S> heavyEntry = getFirstValidEntry(MoveClass.HEAVY);
+        if (heavyEntry == null) {
+            JCraft.LOGGER.warn("Couldn't find light or heavy attack entry while running selectAttack on attacker: {}", this);
+            return null;
         } else {
-            return lightEntry.getMove();
+            return heavyEntry.getMove();
         }
     }
 
@@ -151,17 +154,17 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
     }
 
      /**
-     * Selects an attack to perform for attacker user AI.
-     * @param cooldowns The cooldowns component of the mob.
-     * @param mob The mob entity using the attacker.
-     * @param target The target entity.
-            * @param stunTicks The stun ticks of the mob.
-     * @param enemyMoveStun The move stun of the enemy attack, if any.
-     * @param distance The distance to the target.
-            * @param enemyStand The enemy stand, if any.
-     * @param enemyAttack The current attack of the enemy, if any.
-     * @return A Pair containing the selected move and whether it requires crouching, or null if no suitable attack was found.
-     */
+      * Selects an attack to perform for attacker user AI.
+      * @param cooldowns The cooldowns component of the mob.
+      * @param mob The mob entity using the attacker.
+      * @param target The target entity.
+      * @param stunTicks The stun ticks of the mob.
+      * @param enemyMoveStun The move stun of the enemy attack, if any.
+      * @param distance The distance to the target.
+      * @param enemyStand The enemy stand, if any.
+      * @param enemyAttack The current attack of the enemy, if any.
+      * @return A Pair containing the selected move and whether it requires crouching, or null if no suitable attack was found.
+      */
      default @Nullable Pair<AbstractMove<?, ? super A>, Boolean> selectAttack(
              CommonCooldownsComponent cooldowns, LivingEntity mob,
              LivingEntity target, int stunTicks, int enemyMoveStun,

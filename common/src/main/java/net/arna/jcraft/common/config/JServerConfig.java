@@ -63,6 +63,7 @@ public class JServerConfig {
     // public static final BooleanOption ENABLE_IPS = new BooleanOption("enableIPS", BALANCE, false);
     public static final BooleanOption SURVIVAL_CDC = new BooleanOption("survivalCDC", BALANCE, false);
     public static final BooleanOption ENABLE_FRIENDLY_FIRE = new BooleanOption("enableFriendlyFire", BALANCE, true);
+    public static final IntOption BASE_AI_LEVEL = new IntOption("baseAILevel", BALANCE, 10);
 
     private static final String MINECRAFT_REBALANCE = "minecraft_rebalance";
     public static final BooleanOption REDUCE_DEADLY_EXPLOSIONS = new BooleanOption("reduceDeadlyExplosions", MINECRAFT_REBALANCE, true);
