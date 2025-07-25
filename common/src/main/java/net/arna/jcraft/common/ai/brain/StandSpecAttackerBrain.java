@@ -7,11 +7,11 @@ import net.minecraft.world.entity.Mob;
 
 public interface StandSpecAttackerBrain extends IJAttackerBrain {
     static void tick(Mob mob, AttackerBrainInfo info) {
-
+//TODO: impl
     }
 
     static void plan(final int aiLevel, final AttackerBrainInfo info, final CombatInstantContext combatCtx) {
-        if (IJAttackerBrain.planDefense(info)) return;
-
+        IJAttackerBrain.planDefense(info);
+//TODO: impl
     }
 }

@@ -47,6 +47,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
@@ -850,5 +851,30 @@ public final class JUtils {
 
     public static void tossItem(final Player player) {
         tossItem(player, player.level(), player.getItemInHand(InteractionHand.MAIN_HAND), 1f, !player.getAbilities().instabuild);
+    }
+
+    public static double nullSafeDistanceSqr(@Nullable LivingEntity a, @Nullable LivingEntity b) {
+        if (a == null || b == null) return Double.MAX_VALUE;
+        return a.distanceToSqr(b);
+    }
+
+    /**
+     * Returns the minimum of any number of {@code double}s
+     */
+    public static double min(double[] arr) {
+        double min = Double.MAX_VALUE;
+        for (double v : arr) {
+            if (v < min) min = v;
+        }
+        return min;
+    }
+
+    /**
+     * Selects a random element from the given varargs using the provided {@link RandomSource}.
+     */
+    @SafeVarargs
+    public static <T> T chooseRandom(RandomSource rng, T... items) {
+        if (items == null || items.length == 0) throw new IllegalArgumentException("At least one item must be provided.");
+        return items[rng.nextInt(items.length)];
     }
 }

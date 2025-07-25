@@ -8,11 +8,11 @@ import net.minecraft.world.entity.Mob;
 
 public interface SpecAttackerBrain extends IJAttackerBrain {
     static void tick(Mob mob, AttackerBrainInfo info) {
-
+//TODO: impl
     }
 
     static void plan(final int aiLevel, final AttackerBrainInfo info, final CombatInstantContext combatCtx) {
-        if (IJAttackerBrain.planDefense(info)) return;
+        IJAttackerBrain.planDefense(info);
         final JSpec<?, ?> spec = combatCtx.getAttackerCtx().spec();
         if (spec == null) return;
         spec.plan(aiLevel, info, combatCtx);

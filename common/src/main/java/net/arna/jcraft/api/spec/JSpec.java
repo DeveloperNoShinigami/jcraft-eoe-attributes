@@ -17,7 +17,9 @@ import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.attack.moves.AbstractMultiHitAttack;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.common.ai.AttackerBrainInfo;
+import net.arna.jcraft.common.ai.CombatEntityContext;
 import net.arna.jcraft.common.ai.CombatInstantContext;
+import net.arna.jcraft.common.ai.IJAttackerBrain;
 import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
@@ -35,8 +37,14 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.control.LookControl;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.NoSuchElementException;
@@ -130,6 +138,14 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         if (curMove != null) {
             moveUsage = new MoveUsage(user.tickCount, move);
         }
+    }
+
+    @Override
+    public void queueMove(MoveInputType type) {
+        if (user == null) {
+            return;
+        }
+        queuedMove = type;
     }
 
     @Override
@@ -434,7 +450,45 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     public abstract A getThis();
 
     @Override
-    public void plan(int aiLevel, AttackerBrainInfo info, CombatInstantContext combatCtx) {
-        throw new UnsupportedOperationException("unimplemented");
+    public void executePlan(int aiLevel, AttackerBrainInfo info, CombatInstantContext combatCtx) {
+        final CombatEntityContext attackerCtx = combatCtx.getAttackerCtx();
+        final CombatEntityContext targetCtx = combatCtx.getTargetCtx();
+
+        Mob mob = (Mob) attackerCtx.entity(); // Guaranteed by contract
+        PathfinderMob pathfinder = (mob instanceof PathfinderMob pathfinderMob) ? pathfinderMob : null;
+        final LivingEntity target = targetCtx.entity();
+        final LookControl lookControl = mob.getLookControl();
+
+        switch (info.getState()) {
+            case IDLE -> {}
+            case APPROACH -> {
+                final PathNavigation navigation = mob.getNavigation();
+                navigation.moveTo(target,1.0);
+            }
+            case PRESSURE, COMBOING -> { // TODO: split
+            }
+            case DISENGAGE, KEEPAWAY -> { // TODO: split
+                if (pathfinder == null) return;
+                if (info.getAwayPos() == null || pathfinder.distanceToSqr(info.getAwayPos()) < 3.0) {
+                    info.setAwayPos(DefaultRandomPos.getPosAway(pathfinder, 16, 7, target.position()));
+                }
+                final Vec3 away = info.getAwayPos();
+                if (away != null) {
+                    mob.getNavigation().moveTo(away.x, away.y, away.z, 1.0);
+                }
+
+                // TODO: move selection
+            }
+            case DEFENSE -> {
+            }
+            case COMBOED -> { // Random chance Combo Break given aiLevel is high enough
+                if (aiLevel <= IJAttackerBrain.BEGINNER_LEVEL) return;
+
+                if (user.getRandom().nextFloat() < 0.1f && (targetCtx.standAttack() != null || targetCtx.specAttack() != null)) {
+                    JCraft.comboBreak((ServerLevel) user.level(), user, combatCtx.getAttackerCtx().stun());
+                }
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + info.getState());
+        }
     }
 }

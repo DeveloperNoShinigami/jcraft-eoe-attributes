@@ -12,14 +12,19 @@ import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.ai.AttackerBrainInfo;
+import net.arna.jcraft.common.ai.CombatEntityContext;
 import net.arna.jcraft.common.ai.CombatInstantContext;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.config.JServerConfig;
+import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.JumpControl;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,6 +88,8 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
 
     void cancelMove();
 
+    void queueMove(MoveInputType type);
+
     boolean isRemote();
 
     AbstractMove<?, ? super A> getCurrentMove();
@@ -116,7 +123,48 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
 
     MoveUsage getMoveUsage();
 
-    void plan(int aiLevel, AttackerBrainInfo info, CombatInstantContext combatCtx);
+    void executePlan(int aiLevel, AttackerBrainInfo info, CombatInstantContext combatCtx);
+
+    default void plan(int aiLevel, AttackerBrainInfo info, CombatInstantContext combatCtx) {
+        // Lower AI levels switch plans slower.
+        if (info.getTicksSinceStateChange() <= aiLevel / 4) return;
+
+        final CombatEntityContext attackerCtx = combatCtx.getAttackerCtx();
+        final CombatEntityContext targetCtx = combatCtx.getTargetCtx();
+
+        AttackerBrainInfo.State state = info.getState();
+        if (state == AttackerBrainInfo.State.COMBOED) {
+            // If we are no longer stunned, or are somehow immediately blocking after being comboed, we are now on defense.
+            if (attackerCtx.stun() == null || attackerCtx.blocking()) state = AttackerBrainInfo.State.DEFENSE;
+                // If we are stunned and not blocking, then we are indeed being comboed and should execute a counter-plan later.
+            else return;
+        } else if (state == AttackerBrainInfo.State.DEFENSE) {
+            // If we are on defense, and neither side has an advantage, or the opponent is somehow disadvantaged, we can move out of defense.
+            if (attackerCtx.moveStun() >= targetCtx.moveStun()) state = AttackerBrainInfo.State.IDLE;
+                // Otherwise, we stay on defense.
+            else return;
+        }
+
+        final double distance = combatCtx.getDistanceBetween();
+
+        if (distance <= 6.0) { // TODO: turn 6.0 into a modifiable approachableEngagementDistance
+            if (targetCtx.blocking() || targetCtx.moveStun() < 1) {
+                state = AttackerBrainInfo.State.PRESSURE;
+            } else if (targetCtx.stun() != null) {
+                state = AttackerBrainInfo.State.COMBOING;
+            }
+        } else {
+            // Generic random choice for neutral, TODO: this should have more nuance later.
+            if (info.getTicksSinceStateChange() % 10 == 0 && getBaseEntity().getRandom().nextBoolean()) {
+                state = JUtils.chooseRandom(getBaseEntity().getRandom(),
+                        AttackerBrainInfo.State.APPROACH,
+                        AttackerBrainInfo.State.KEEPAWAY,
+                        AttackerBrainInfo.State.DISENGAGE);
+            }
+        }
+
+        info.setState(state);
+    }
 
     // MOVE SELECTION LOGIC; STAYING HERE UNTIL I REWORK THE _ENTIRE_ ATTACKER USER AI SYSTEM
 
@@ -151,6 +199,52 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
     default MoveSelectionResult specificMoveSelectionCriterion(AbstractMove<?, ? super A> attack, LivingEntity mob, LivingEntity target, int stunTicks,
                                                               int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
         return attack.specificMoveSelectionCriterion(getThis(), mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
+    }
+
+    /**
+     * @return A Pair containing the selected move, and a bool of whether the move is a crouching variant. Null if no selection.
+     */
+    default @Nullable Pair<AbstractMove<?, ? super A>, Boolean> doMoveSelection(
+            Mob mob, LivingEntity target, JumpControl mobJumpControl, StandEntity<?, ?> enemyStand,
+            AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {
+
+        final Pair<AbstractMove<?, ? super A>, Boolean> selectedAttackData = this.selectAttack(
+                (mob instanceof StandEntity<?, ?> standEntity && standEntity.hasUser()) ? // Ensure correct cooldown read/write
+                        JComponentPlatformUtils.getCooldowns(standEntity.getUser()) :
+                        JComponentPlatformUtils.getCooldowns(mob),
+                mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
+
+        if (selectedAttackData == null) return null;
+
+        final AbstractMove<?, ?> selectedAttack = selectedAttackData.first();
+
+        if (selectedAttack == null) return null;
+
+        boolean shouldPerformMove = this.getMoveStun() < 1;
+
+        if (this.getCurrentMove() != null && this.getCurrentMove().getFollowup() != null) {
+            shouldPerformMove = true;
+        }
+
+        mob.setShiftKeyDown(selectedAttackData.second());
+        if (selectedAttack.isAerialVariant()) {
+            mobJumpControl.jump();
+            mob.setOnGround(false);
+        }
+
+        if (shouldPerformMove) {
+            //JCraft.LOGGER.info("Stand User AI: Performing attack " + selectedAttack);
+            if (selectedAttack.getMoveClass() == null) {
+                JCraft.LOGGER.error("Attempting to use move with unset MoveClass: {}, stand: {}",
+                        selectedAttack.getName().getString(), this);
+            } else {
+                this.initMove(selectedAttack.getMoveClass());
+            }
+        } else {
+            this.queueMove(MoveInputType.fromMoveClass(selectedAttack.getMoveClass()));
+        }
+
+        return selectedAttackData;
     }
 
      /**

@@ -1,11 +1,9 @@
 package net.arna.jcraft.common.tickable;
 
-import com.mojang.datafixers.util.Pair;
 import net.arna.jcraft.api.registry.JTagRegistry;
-import net.arna.jcraft.api.spec.SpecType;
-import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.spec.SpecTypeUtil;
+import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.common.ai.AttackerBrainInfo;
-import net.arna.jcraft.common.ai.IJAttackerBrain;
 import net.arna.jcraft.common.ai.brain.SpecAttackerBrain;
 import net.arna.jcraft.common.ai.brain.StandAttackerBrain;
 import net.arna.jcraft.common.ai.brain.StandSpecAttackerBrain;
@@ -14,7 +12,6 @@ import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.world.entity.Mob;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Stores and updates all MobEntities that use Stands.
@@ -24,7 +21,6 @@ public class JEnemies {
      * A Map of Stand and Spec types to their relevant IJAttackerBrain
      * Each IJAttackerBrain instance is a static processor which must be fed instance data
      */
-    private static final ConcurrentHashMap<Pair<StandType, SpecType>, IJAttackerBrain> attackerBrains = new ConcurrentHashMap<>();
     private static final TickableHashMap<Mob, AttackerBrainInfo> enemies = new TickableHashMap<>();
 
     public static void add(Mob entity) {
@@ -57,8 +53,8 @@ public class JEnemies {
                 final var specType = JComponentPlatformUtils.getSpecData(mob).getType();
                 final var info = enemyData.getValue();
 
-                final boolean hasSpec = specType != null;
-                final boolean hasStand = standType != null;
+                final boolean hasSpec = !SpecTypeUtil.isNone(specType);
+                final boolean hasStand = !StandTypeUtil.isNone(standType);
 
                 if (hasStand && hasSpec) StandSpecAttackerBrain.tick(mob, info);
                 else if (hasStand) StandAttackerBrain.tick(mob, info);
@@ -68,5 +64,9 @@ public class JEnemies {
                 iter.remove();
             }
         });
+    }
+
+    public static boolean contains(Mob mob) {
+        return enemies.containsKey(mob);
     }
 }

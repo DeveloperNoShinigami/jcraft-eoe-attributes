@@ -77,7 +77,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     // Properties that are NOT serialized (usually set in constructor)
     // Used to help AI know how and when to use this attack.
-    protected boolean ranged, barrage, multiHit, charge, counter, dash, grab;
+    protected boolean ranged, barrage, multiHit, charge, counter, dash, grab; // todo: bitset (u8)
     protected boolean copyOnUse;
     protected boolean mayHitUser;
     /**
