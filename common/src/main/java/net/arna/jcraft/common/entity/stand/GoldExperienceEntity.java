@@ -283,7 +283,7 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
                                                                                   StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
         return attack == LIFE_GIVER ?
                 mob.getMainHandItem().isEmpty() && mob.getOffhandItem().isEmpty() ?
-                        net.arna.jcraft.api.MoveSelectionResult.STOP : net.arna.jcraft.api.MoveSelectionResult.USE :
+                        MoveSelectionResult.STOP : MoveSelectionResult.USE :
                 super.specificMoveSelectionCriterion(attack, mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
     }
 

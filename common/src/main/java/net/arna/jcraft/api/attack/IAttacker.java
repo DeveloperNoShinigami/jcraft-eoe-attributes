@@ -131,7 +131,7 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
 
     default void plan(int aiLevel, AttackerBrainInfo info, CombatInstantContext combatCtx) {
         // Lower AI levels switch plans slower.
-        if (info.getTicksSinceStateChange() <= aiLevel / 4) return;
+        if (info.getTicksSinceStateChange() <= (20 - aiLevel) / 4) return;
 
         final CombatEntityContext attackerCtx = combatCtx.getAttackerCtx();
         final CombatEntityContext targetCtx = combatCtx.getTargetCtx();
@@ -212,7 +212,7 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
     /**
      * Selects and uses a move
      */
-    default AbstractMove<?, ? super A> doMoveSelection(AttackerBrainInfo info, Mob mob, LivingEntity target, JumpControl mobJumpControl,
+    default @Nullable AbstractMove<?, ? super A> doMoveSelection(AttackerBrainInfo info, Mob mob, LivingEntity target, JumpControl mobJumpControl,
                                  StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {
 
         final AbstractMove<?, ? super A> selectedAttack = this.selectAttack(info,
@@ -265,7 +265,7 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
       * @param distance The distance to the target.
       * @param enemyStand The enemy stand, if any.
       * @param enemyAttack The current attack of the enemy, if any.
-      * @return A Pair containing the selected move and whether it requires crouching, or null if no suitable attack was found.
+      * @return The selected move
       */
      default @Nullable AbstractMove<?, ? super A> selectAttack(
              AttackerBrainInfo info,
@@ -403,7 +403,7 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
 
              // If the opponent isn't using a move, prioritize attack with higher or equal initiation time
              // Randomize, it's good for gameplay.
-             if (baseSelectionCondition && random.nextBoolean() || random.nextFloat() <= 0.05f) {
+             if ( (baseSelectionCondition && random.nextBoolean()) || random.nextFloat() <= 0.05f) {
                  if (state == AttackerBrainInfo.State.COMBOING) {
                      // Account for IPS
                      if (attack.isLoopPrevention() && ((IJCraftComboTracker)target).jcraft$comboFromAttackerContains(mob, attack)) {

@@ -587,6 +587,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return;
         }
         if (type == null) {
+            queuedMove = null;
             return;
         }
 
@@ -1259,12 +1260,23 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     void randomlyDesireStandOff(int aiLevel, float baseChance, float subtraction, int maxAILevel,
                                 AttackerBrainInfo info, CombatEntityContext attackerCtx, AbstractMove<?, ?> selectedAttack) {
+        if (info.getDesiredStandOffTime() > 0) {
+            if (random.nextBoolean()) queueMove(null);
+            return;
+        }
+
         float chanceToDesireStandOff = baseChance;
+
         if (aiLevel < maxAILevel) { // [14, 0]
             chanceToDesireStandOff -= (maxAILevel - aiLevel) * subtraction;
         }
+
         if (attackerCtx.spec() != null && (selectedAttack == null || random.nextFloat() <= chanceToDesireStandOff)) {
-            info.setDesiredStandOffTime(random.nextInt(aiLevel < IJAttackerBrain.COMPETITIVE_LEVEL ? 40 : 20));
+            final int attackDuration = selectedAttack == null ? 0 : selectedAttack.getDuration();
+            int maxStandOffDuration = aiLevel < IJAttackerBrain.COMPETITIVE_LEVEL ? 20 : 10;
+            // Occasionally decide to go spec-only for a short while
+            if (random.nextFloat() <= 0.1f) maxStandOffDuration *= 4;
+            info.setDesiredStandOffTime(attackDuration + random.nextInt(maxStandOffDuration));
         }
     }
 
@@ -1318,7 +1330,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                         targetCtx.stun() != null ? targetCtx.stun().getDuration() : 0
                 );
 
-                randomlyDesireStandOff(aiLevel, 0.2f, 0.005f, IJAttackerBrain.COMPETITIVE_LEVEL, info, attackerCtx, selectedAttack);
+                randomlyDesireStandOff(aiLevel, 0.2f, 0.009f, IJAttackerBrain.COMPETITIVE_LEVEL, info, attackerCtx, selectedAttack);
 
                 if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
                 if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, user);
@@ -1348,7 +1360,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                         targetCtx.stun() != null ? targetCtx.stun().getDuration() : 0
                 );
 
-                randomlyDesireStandOff(aiLevel, 0.02f, 0.003f, IJAttackerBrain.COMPETITIVE_LEVEL, info, attackerCtx, selectedAttack);
+                randomlyDesireStandOff(aiLevel, 0.05f, 0.003f, IJAttackerBrain.COMPETITIVE_LEVEL, info, attackerCtx, selectedAttack);
 
                 if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
                 if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, user);
@@ -1482,7 +1494,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         return wantToBlock;
     }
 
-    enum DesiredBlocking {
+    public enum DesiredBlocking {
         PASS(false, false, false),
         BLOCK(true, false, true),
         DONT_BLOCK(true, false, false),

@@ -854,7 +854,7 @@ public final class JUtils {
     }
 
     public static double nullSafeDistanceSqr(@Nullable LivingEntity a, @Nullable LivingEntity b) {
-        if (a == null || b == null) return Double.MAX_VALUE;
+        if (a == null || b == null) return Double.POSITIVE_INFINITY;
         return a.distanceToSqr(b);
     }
 
@@ -862,7 +862,7 @@ public final class JUtils {
      * Returns the minimum of any number of {@code double}s
      */
     public static double min(double... arr) {
-        double min = Double.MAX_VALUE;
+        double min = Double.POSITIVE_INFINITY;
         for (double v : arr) {
             if (v < min) min = v;
         }
@@ -871,9 +871,11 @@ public final class JUtils {
 
     /**
      * Selects a random element from the given varargs using the provided {@link RandomSource}.
+     *
+     * @throws IllegalArgumentException If no items are provided.
      */
     @SafeVarargs
-    public static <T> T chooseRandom(RandomSource rng, T... items) {
+    public static <T> @NonNull T chooseRandom(@NonNull RandomSource rng, T... items) {
         if (items == null || items.length == 0) throw new IllegalArgumentException("At least one item must be provided.");
         return items[rng.nextInt(items.length)];
     }

@@ -158,7 +158,8 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
     @Override
     public void setState(S state) {
-        setAnimation((this.state = state).getKey(getThis()), moveStun, 1f);
+        this.state = state;
+        setAnimation(state.getKey(getThis()), moveStun, 1f);
     }
 
     @Override
@@ -489,7 +490,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
             }
             case PRESSURE, COMBOING -> {
                 final PathNavigation navigation = mob.getNavigation();
-                Path path = navigation.createPath(target, 2);
+                Path path = navigation.createPath(target, 1); // as opposed to a stands 2
                 if (path != null) navigation.moveTo(path, 1.0);
 
                 lookControl.setLookAt(target);

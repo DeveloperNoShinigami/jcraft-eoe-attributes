@@ -9,6 +9,12 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 public interface IJAttackerBrain {
+    int MIN_LEVEL = 0; // abysmal dogshit
+    int BEGINNER_LEVEL = 3;
+    int INTERMEDIATE_LEVEL = 10;
+    int COMPETITIVE_LEVEL = 15;
+    int MAX_LEVEL = 20; // GOAT
+
     static void planDefense(final AttackerBrainInfo info) {
         info.tick();
 
@@ -58,10 +64,4 @@ public interface IJAttackerBrain {
 
         return reactionTime;
     }
-
-    int MIN_LEVEL = 0; // abysmal dogshit
-    int BEGINNER_LEVEL = 3;
-    int INTERMEDIATE_LEVEL = 10;
-    int COMPETITIVE_LEVEL = 15;
-    int MAX_LEVEL = 20; // GOAT
 }

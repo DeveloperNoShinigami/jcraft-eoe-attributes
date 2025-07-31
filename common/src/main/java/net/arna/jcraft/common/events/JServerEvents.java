@@ -414,7 +414,8 @@ public class JServerEvents {
                 itemStack.enchant(enchantment, enchantment.getMaxLevel());
                 armorItems.set(i, itemStack);
 
-                if (armorLevel >= 4) { // 4 is Diamond level
+                final int diamondLevel = 4; // Check above
+                if (armorLevel >= diamondLevel) {
                     mob.setDropChance(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i), 0f);
                 }
             }

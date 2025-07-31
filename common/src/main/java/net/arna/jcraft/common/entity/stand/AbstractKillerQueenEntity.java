@@ -180,7 +180,7 @@ public abstract sealed class AbstractKillerQueenEntity<E extends AbstractKillerQ
     public MoveSelectionResult specificMoveSelectionCriterion(AbstractMove<?, ? super E> attack, LivingEntity mob, LivingEntity target, int stunTicks,
                                                                                   int enemyMoveStun, double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
         if (enemyStand != null && enemyStand.blocking) {
-            return net.arna.jcraft.api.MoveSelectionResult.STOP;
+            return MoveSelectionResult.STOP;
         }
         return super.specificMoveSelectionCriterion(attack, mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
     }
