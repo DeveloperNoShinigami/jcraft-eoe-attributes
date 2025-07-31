@@ -1150,6 +1150,11 @@
       "jcraft:projectiles/bullet/penetrate"
     ]
   },
+  "reload": {
+    "sounds": [
+      "jcraft:projectiles/bullet/load"
+    ]
+  },
   "shatread": {
     "sounds": [
       "jcraft:sheerheartattack/sha_tread"

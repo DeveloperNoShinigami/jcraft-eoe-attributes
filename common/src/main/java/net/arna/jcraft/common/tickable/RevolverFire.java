@@ -2,6 +2,7 @@ package net.arna.jcraft.common.tickable;
 
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.item.FVRevolverItem;
+import net.arna.jcraft.common.item.Peacemaker;
 import net.arna.jcraft.common.util.DimensionData;
 import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.server.MinecraftServer;
@@ -14,6 +15,7 @@ import java.util.List;
 @Deprecated(forRemoval = true, since = "0.17.3")
 public class RevolverFire {
     protected static final List<DimensionData> toFire = new ArrayList<>();
+
 
     public static void enqueue(DimensionData dimensionData) {
         toFire.add(dimensionData);
@@ -41,6 +43,8 @@ public class RevolverFire {
                     ItemStack main = user.getMainHandItem();
                     if (main.getItem() == JItemRegistry.FV_REVOLVER.get()) {
                         FVRevolverItem.fire(main, world, user);
+                    } else if (main.getItem() == JItemRegistry.PEACEMAKER.get()) {
+                        Peacemaker.fireStatic(main, world, user);
                     }
                 }
             }
