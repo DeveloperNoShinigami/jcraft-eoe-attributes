@@ -394,7 +394,6 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     public void desummon() {
         // Stop voiding if voiding
         if (getVoidTime() > 0) {
-            if (getMoveStun() > 0) return;
             setVoidTime(0);
             return;
         }
@@ -405,7 +404,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
     @Override
     public void remove(@NonNull RemovalReason reason) {
-        if (getUser() instanceof Player player && player.getAbilities().flying && !player.isCreative() && !player.isSpectator()) {
+        if (getUser() instanceof Player player && !player.isCreative() && !player.isSpectator()) {
             final Abilities abilities = player.getAbilities();
 
             abilities.flying = false;
