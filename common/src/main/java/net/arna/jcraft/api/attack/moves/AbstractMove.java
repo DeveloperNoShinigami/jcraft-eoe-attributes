@@ -504,15 +504,31 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         return isCrouchingVariant;
     }
 
+    public T markCrouchingVariant() {
+        isCrouchingVariant = true;
+        return getThis();
+    }
+
     @SuppressWarnings({"LombokGetterMayBeUsed", "RedundantSuppression"})
     public boolean isAerialVariant() {
         return isAerialVariant;
+    }
+
+    public T markAerialVariant() {
+        isAerialVariant = true;
+        return getThis();
     }
 
     @SuppressWarnings({"LombokGetterMayBeUsed", "RedundantSuppression"})
     public boolean isFollowup() {
         return isFollowup;
     }
+
+    public T markFollowup() {
+        isFollowup = true;
+        return getThis();
+    }
+
 
     /**
      * Called when this move is registered to a {@link MoveMap MoveMap}.

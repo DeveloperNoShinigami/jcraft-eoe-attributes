@@ -861,7 +861,7 @@ public final class JUtils {
     /**
      * Returns the minimum of any number of {@code double}s
      */
-    public static double min(double[] arr) {
+    public static double min(double... arr) {
         double min = Double.MAX_VALUE;
         for (double v : arr) {
             if (v < min) min = v;

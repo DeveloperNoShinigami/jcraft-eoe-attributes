@@ -1,12 +1,13 @@
 package net.arna.jcraft.api.attack;
 
-import it.unimi.dsi.fastutil.Pair;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.Attacks;
 import net.arna.jcraft.api.MoveSelectionResult;
 import net.arna.jcraft.api.MoveUsage;
 import net.arna.jcraft.api.attack.enums.MobilityType;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.enums.MoveInputType;
+import net.arna.jcraft.api.attack.enums.StunType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
@@ -16,10 +17,12 @@ import net.arna.jcraft.common.ai.CombatEntityContext;
 import net.arna.jcraft.common.ai.CombatInstantContext;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.config.JServerConfig;
+import net.arna.jcraft.common.util.IJCraftComboTracker;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -135,23 +138,25 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
         AttackerBrainInfo.State state = info.getState();
         if (state == AttackerBrainInfo.State.COMBOED) {
             // If we are no longer stunned, or are somehow immediately blocking after being comboed, we are now on defense.
-            if (attackerCtx.stun() == null || attackerCtx.blocking()) state = AttackerBrainInfo.State.DEFENSE;
+            if (attackerCtx.stun() == null || attackerCtx.blocking())
+                state = AttackerBrainInfo.State.DEFENSE;
                 // If we are stunned and not blocking, then we are indeed being comboed and should execute a counter-plan later.
             else return;
         } else if (state == AttackerBrainInfo.State.DEFENSE) {
             // If we are on defense, and neither side has an advantage, or the opponent is somehow disadvantaged, we can move out of defense.
-            if (attackerCtx.moveStun() >= targetCtx.moveStun()) state = AttackerBrainInfo.State.IDLE;
+            if (attackerCtx.disadvantage() <= targetCtx.disadvantage())
+                state = AttackerBrainInfo.State.IDLE;
                 // Otherwise, we stay on defense.
             else return;
         }
 
         final double distance = combatCtx.getDistanceBetween();
 
-        if (distance <= 6.0) { // TODO: turn 6.0 into a modifiable approachableEngagementDistance
-            if (targetCtx.blocking() || targetCtx.moveStun() < 1) {
-                state = AttackerBrainInfo.State.PRESSURE;
-            } else if (targetCtx.stun() != null) {
+        if (distance <= getEngagementDistance()) {
+            if (targetCtx.stun() != null && !targetCtx.blocking()) {
                 state = AttackerBrainInfo.State.COMBOING;
+            } else if (targetCtx.moveStun() < 1) {
+                state = AttackerBrainInfo.State.PRESSURE;
             }
         } else {
             // Generic random choice for neutral, TODO: this should have more nuance later.
@@ -166,7 +171,9 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
         info.setState(state);
     }
 
-    // MOVE SELECTION LOGIC; STAYING HERE UNTIL I REWORK THE _ENTIRE_ ATTACKER USER AI SYSTEM
+    default double getEngagementDistance() {
+        return 6.0;
+    }
 
     default @Nullable MoveMap.Entry<A, S> getFirstValidEntry(final MoveClass moveClass) {
         boolean hasUser = hasUser();
@@ -202,32 +209,32 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
     }
 
     /**
-     * @return A Pair containing the selected move, and a bool of whether the move is a crouching variant. Null if no selection.
+     * Selects and uses a move
      */
-    default @Nullable Pair<AbstractMove<?, ? super A>, Boolean> doMoveSelection(
-            Mob mob, LivingEntity target, JumpControl mobJumpControl, StandEntity<?, ?> enemyStand,
-            AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {
+    default AbstractMove<?, ? super A> doMoveSelection(AttackerBrainInfo info, Mob mob, LivingEntity target, JumpControl mobJumpControl,
+                                 StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {
 
-        final Pair<AbstractMove<?, ? super A>, Boolean> selectedAttackData = this.selectAttack(
+        final AbstractMove<?, ? super A> selectedAttack = this.selectAttack(info,
                 (mob instanceof StandEntity<?, ?> standEntity && standEntity.hasUser()) ? // Ensure correct cooldown read/write
                         JComponentPlatformUtils.getCooldowns(standEntity.getUser()) :
                         JComponentPlatformUtils.getCooldowns(mob),
                 mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
 
-        if (selectedAttackData == null) return null;
-
-        final AbstractMove<?, ?> selectedAttack = selectedAttackData.first();
-
         if (selectedAttack == null) return null;
 
         boolean shouldPerformMove = this.getMoveStun() < 1;
 
-        if (this.getCurrentMove() != null && this.getCurrentMove().getFollowup() != null) {
-            shouldPerformMove = true;
+        final AbstractMove<?, ? super A> currentMove = getCurrentMove();
+
+        if (currentMove != null) {
+            AbstractMove<?, ? super A> followup = currentMove.getFollowup();
+            if (followup != null && Attacks.prototypeMatch(followup, selectedAttack)) shouldPerformMove = true;
         }
 
-        mob.setShiftKeyDown(selectedAttackData.second());
+        mob.setShiftKeyDown(selectedAttack.isCrouchingVariant());
+
         if (selectedAttack.isAerialVariant()) {
+            mob.setJumping(true);
             mobJumpControl.jump();
             mob.setOnGround(false);
         }
@@ -244,7 +251,7 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
             this.queueMove(MoveInputType.fromMoveClass(selectedAttack.getMoveClass()));
         }
 
-        return selectedAttackData;
+        return selectedAttack;
     }
 
      /**
@@ -259,157 +266,179 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
       * @param enemyAttack The current attack of the enemy, if any.
       * @return A Pair containing the selected move and whether it requires crouching, or null if no suitable attack was found.
       */
-     default @Nullable Pair<AbstractMove<?, ? super A>, Boolean> selectAttack(
+     default @Nullable AbstractMove<?, ? super A> selectAttack(
+             AttackerBrainInfo info,
              CommonCooldownsComponent cooldowns, LivingEntity mob,
              LivingEntity target, int stunTicks, int enemyMoveStun,
              double distance, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
 
-        AbstractMove<?, ? super A> selectedAttack;
-        boolean needsCrouch = false;
-        boolean doFinalChecks = true; // Refuses to run the move if certain conditions are met
-        boolean enemyIsAttacking = enemyAttack != null;
+         final AttackerBrainInfo.State state = info.getState();
 
-        // If the opponent is countering, don't attack
-        if (enemyIsAttacking && enemyAttack.isCounter()) {
-            return null;
-        }
-        int movesOnCooldown = 0;
+         AbstractMove<?, ? super A> selectedAttack;
+         boolean doFinalChecks = true; // Refuses to run the move if certain conditions are met
+         boolean enemyIsAttacking = enemyAttack != null;
 
-        selectedAttack = getFallbackMove(); // Fallback to light or heavy attack
-        if (selectedAttack == null) {
-            return null;
-        }
+         // If the opponent is countering, don't attack
+         if (enemyIsAttacking && enemyAttack.isCounter()) {
+             return null;
+         }
+         int movesOnCooldown = 0;
 
-        int selectedAttackInitTime = selectedAttack.getDuration() - selectedAttack.getWindup();
+         selectedAttack = getFallbackMove(); // Fallback to light or heavy attack
+         if (selectedAttack == null) {
+             return null;
+         }
 
-        for (AbstractMove<?, ? super A> attack : getMoveMap().asMovesList()) {
-            needsCrouch = attack.isCrouchingVariant();
-            int windupPoint = attack.getWindupPoint();
+         int selectedAttackInitTime = selectedAttack.getDuration() - selectedAttack.getWindup();
 
-            if (attack.isFollowup()) {
-                // Discount any followup attacks when there is no move to follow up from
-                if (getCurrentMove() == null || getCurrentMove().getFollowup() != null) continue;
-            } else if (cooldowns.getCooldown(attack.getMoveClass().getDefaultCooldownType()) > 0) {
-                // Discount any on-cooldown non-followup attacks
-                movesOnCooldown++;
-                continue;
-            }
+         for (AbstractMove<?, ? super A> attack : getMoveMap().asMovesList()) {
+             int windupPoint = attack.getWindupPoint();
 
-            // Selection of characteristic moves with custom usage logic
-            MoveSelectionResult result = specificMoveSelectionCriterion(attack, mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
-            if (result == MoveSelectionResult.USE) {
-                selectedAttack = attack;
-                break;
-            }
-            if (result == MoveSelectionResult.STOP) {
-                continue;
-            }
+             if (attack.isFollowup()) {
+                 // Discount any followup attacks when there is no move to follow up from
+                 if (getCurrentMove() == null || getCurrentMove().getFollowup() == null) continue;
+             } else if (cooldowns.getCooldown(attack.getMoveClass().getDefaultCooldownType()) > 0 && attack.getCooldown() != 0) {
+                 // Discount any on-cooldown non-followup attacks
+                 movesOnCooldown++;
+                 continue;
+             }
 
-            // Use mobility if opponent is far away
-            if (attack.getMobilityType() != null) {
-                // ...and isn't being comboed or is blocking
-                if (stunTicks > 0) {
-                    continue;
-                }
+             // Selection of characteristic moves with custom usage logic
+             MoveSelectionResult result = specificMoveSelectionCriterion(attack, mob, target, stunTicks, enemyMoveStun, distance, enemyStand, enemyAttack);
+             if (result == MoveSelectionResult.USE) {
+                 selectedAttack = attack;
+                 break;
+             }
+             if (result == MoveSelectionResult.STOP) {
+                 continue;
+             }
 
-                if (attack.getMobilityType() != MobilityType.HIGHJUMP && distance > 6) {
-                    if (target.onGround()) {
-                        if (attack.getMobilityType() == MobilityType.TELEPORT) {
-                            // Intentionally looks at target's feet as to hit the ground exactly at it
-                            mob.lookAt(EntityAnchorArgument.Anchor.EYES, target.position());
-                        } else if (attack.getMobilityType() == MobilityType.DASH) {
-                            // Look at target itself as a dash works best at that angle
-                            mob.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition().add(0, 0.5, 0));
-                        }
-                    }
+             // Use mobility if opponent is far away
+             if (attack.getMobilityType() != null) {
+                 // ...and isn't being comboed or is blocking
+                 if (stunTicks > 0) {
+                     continue;
+                 }
 
-                    if (attack.getMobilityType() == MobilityType.FLIGHT) {
-                        mob.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
-                    }
+                 if (attack.getMobilityType() != MobilityType.HIGHJUMP && distance > 6) {
+                     if (target.onGround()) {
+                         if (attack.getMobilityType() == MobilityType.TELEPORT) {
+                             // Intentionally looks at target's feet as to hit the ground exactly at it
+                             mob.lookAt(EntityAnchorArgument.Anchor.EYES, target.position());
+                         } else if (attack.getMobilityType() == MobilityType.DASH) {
+                             // Look at target itself as a dash works best at that angle
+                             mob.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition().add(0, 0.5, 0));
+                         }
+                     }
 
-                    selectedAttack = attack;
-                    break;
-                } // If target is considerably above the mob, or the mob is going to get hit
-                else if (target.getY() > mob.getY() + 2 || (enemyAttack != null && enemyStand != null && enemyAttack.hasWindupPassed(enemyStand))) {
-                    selectedAttack = attack;
-                    break;
-                }
-            }
+                     if (attack.getMobilityType() == MobilityType.FLIGHT) {
+                         mob.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
+                     }
 
-            // Use counter if opponent is using a non-ranged move
-            if (enemyIsAttacking && enemyAttack != null && !enemyAttack.isRanged() && attack.isCounter()) {
-                if (enemyStand != null && !enemyStand.blocking && enemyMoveStun > 0) {
-                    selectedAttack = attack;
-                    break;
-                }
-                continue;
-            }
+                     selectedAttack = attack;
+                     break;
+                 } // If target is considerably above the mob, or the mob is going to get hit
+                 else if (target.getY() > mob.getY() + 2 || (enemyAttack != null && enemyStand != null && enemyAttack.hasWindupPassed(enemyStand))) {
+                     selectedAttack = attack;
+                     break;
+                 }
+             }
 
-            boolean isBarrage = attack.isBarrage();
-            boolean isCharge = attack.isCharge();
-            if (distance <= 5) {
-                //todo: expand on mob.canSee(target), because placing fences down doesn't cause them to want to break through
-                if (isBarrage && !isCharge && !mob.hasLineOfSight(target)) // Mine towards target if possible
-                {
-                    if (attack instanceof MainBarrageAttack<?>) {
-                        selectedAttack = attack;
-                        needsCrouch = true;
-                        doFinalChecks = false; // Disregards range limitation
-                        break;
-                    }
-                }
+             // Use counter if opponent is using a non-ranged move
+             if (enemyIsAttacking && enemyAttack != null && !enemyAttack.isRanged() && attack.isCounter()) {
+                 if (enemyStand != null && !enemyStand.blocking && enemyMoveStun > 0) {
+                     selectedAttack = attack;
+                     break;
+                 }
+                 continue;
+             }
+
+             boolean isBarrage = attack.isBarrage();
+             boolean isCharge = attack.isCharge();
+             if (distance <= 5) {
+                 //todo: expand on mob.canSee(target), because placing fences down doesn't cause them to want to break through
+                 if (isBarrage && !isCharge && !mob.hasLineOfSight(target)) // Mine towards target if possible
+                 {
+                     if (attack instanceof MainBarrageAttack<?>) {
+                         selectedAttack = attack;
+                         doFinalChecks = false; // Disregards range limitation
+                         break;
+                     }
+                 }
 
                 /*
                 Use a barrage (or variant thereof) if the opponent is stunned, not blocking, and it's off cooldown,
                 because it's a free combo extender and has a lower windup than light
                  */
-                if (distance <= 2) {
-                    if (isBarrage || (attack.isMultiHit() && attack.hasWindupPassed(this))) {
-                        // Combo extend
-                        if (enemyStand == null || !enemyStand.blocking) {
-                            selectedAttack = attack;
-                            break;
-                        }
-                        continue;
-                    }
-                }
-            }
+                 if (distance <= 2) {
+                     if (isBarrage || (attack.isMultiHit() && attack.hasWindupPassed(this))) {
+                         // Combo extend
+                         if (enemyStand == null || !enemyStand.blocking) {
+                             selectedAttack = attack;
+                             break;
+                         }
+                         continue;
+                     }
+                 }
+             }
 
-            // If the opponent is out of exactly twice the range it would take him to get to the user within the move being complete, use a projectile
-            if (attack.isRanged() && distance > attack.getDuration() * target.getAttributeValue(Attributes.MOVEMENT_SPEED) * 2) {
-                mob.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
-                selectedAttack = attack;
-                break;
-            }
+             // If the opponent is out of exactly twice the range it would take him to get to the user within the move being complete, use a projectile
+             if (attack.isRanged() && distance > attack.getDuration() * target.getAttributeValue(Attributes.MOVEMENT_SPEED) * 2) {
+                 mob.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
+                 selectedAttack = attack;
+                 break;
+             }
 
-            // If the opponent isn't using a move, prioritize attack with higher or equal initiation time
-            if (windupPoint <= stunTicks && windupPoint >= selectedAttackInitTime) {
-                selectedAttackInitTime = windupPoint;
-                selectedAttack = attack;
-            }
-        }
+             final RandomSource random = mob.getRandom();
 
-        if (movesOnCooldown > 5 && JServerConfig.SURVIVAL_CDC.getValue() && !(mob instanceof StandEntity<?, ?>)) {
-            cooldowns.cooldownCancel(); // >5 = 80+%
-        }
+             boolean baseSelectionCondition = switch (state) {
+                 case KEEPAWAY, DISENGAGE, DEFENSE -> windupPoint <= selectedAttackInitTime || attack.isRanged() || attack.getArmor() > 0;
+                 case COMBOING -> windupPoint <= stunTicks && windupPoint >= selectedAttackInitTime;
+                 case PRESSURE -> windupPoint <= selectedAttackInitTime;
+                 default -> windupPoint <= stunTicks;
+             };
 
-        if (doFinalChecks) {
-            if (selectedAttack.isCounter()) {
-                if (stunTicks > 0) {
-                    selectedAttack = null; // You can't combo into a counter
-                }
-            } else {
-                if ( // Non-ranged offensive attacks aren't chosen if the opponent is too far
-                        selectedAttack.getMobilityType() == null &&
-                                selectedAttack instanceof AbstractSimpleAttack<?, ?> boxAttack &&
-                                boxAttack.getHitboxSize() > 0 &&
-                                !selectedAttack.isRanged() &&
-                                distance > selectedAttack.getMoveDistance() + boxAttack.getHitboxSize()) {
-                    selectedAttack = null;
-                }
-            }
-        }
+             // If the opponent isn't using a move, prioritize attack with higher or equal initiation time
+             // Randomize, it's good for gameplay.
+             if (baseSelectionCondition && random.nextBoolean() || random.nextFloat() <= 0.05f) {
+                 if (state == AttackerBrainInfo.State.COMBOING) {
+                     // Account for IPS
+                     if (attack.isLoopPrevention() && ((IJCraftComboTracker)target).jcraft$comboFromAttackerContains(mob, attack))
+                         continue;
 
-        return Pair.of(selectedAttack, needsCrouch);
-    }
+                     if (attack instanceof AbstractSimpleAttack<?,?> simpleAttack && simpleAttack.getStunType() == StunType.LAUNCH && random.nextFloat() <= 0.9f)
+                         continue;
+                 }
+
+                 selectedAttackInitTime = windupPoint;
+                 selectedAttack = attack;
+             }
+         }
+
+         if (movesOnCooldown > 5 && JServerConfig.SURVIVAL_CDC.getValue() && !(mob instanceof StandEntity<?, ?>)) {
+             cooldowns.cooldownCancel(); // >5 = 80+%
+         }
+
+         if (doFinalChecks) {
+             if (selectedAttack.isCounter()) {
+                 if (stunTicks > 0) {
+                     selectedAttack = null; // You can't combo into a counter
+                 }
+             } else {
+                 if ( (state != AttackerBrainInfo.State.PRESSURE && state != AttackerBrainInfo.State.COMBOING) &&
+                         ( // Non-ranged offensive attacks aren't chosen if the opponent is too far
+                         selectedAttack.getMobilityType() == null &&
+                         selectedAttack instanceof AbstractSimpleAttack<?, ?> boxAttack &&
+                         boxAttack.getHitboxSize() > 0 &&
+                         !selectedAttack.isRanged() &&
+                         distance > selectedAttack.getMoveDistance() + boxAttack.getHitboxSize()
+                         )
+                 ) {
+                     selectedAttack = null;
+                 }
+             }
+         }
+
+         return selectedAttack;
+     }
 }

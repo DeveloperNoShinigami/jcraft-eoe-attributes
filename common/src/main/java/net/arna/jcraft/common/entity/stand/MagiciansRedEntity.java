@@ -262,6 +262,11 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
     }
 
     @Override
+    public double getEngagementDistance() {
+        return 32.0;
+    }
+
+    @Override
     public void tick() {
         super.tick();
 

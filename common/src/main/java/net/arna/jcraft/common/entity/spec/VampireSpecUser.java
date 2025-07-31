@@ -30,6 +30,6 @@ public class VampireSpecUser extends SpecUserMob {
     }
 
     public static AttributeSupplier.Builder createUserAttributes() {
-        return createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.35);
+        return createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.45);
     }
 }

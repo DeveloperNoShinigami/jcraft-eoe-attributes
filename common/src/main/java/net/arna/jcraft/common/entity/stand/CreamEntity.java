@@ -393,8 +393,9 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
     @Override
     public void desummon() {
         // Stop voiding if voiding
-        if (this.getVoidTime() > 0) {
-            this.setVoidTime(0);
+        if (getVoidTime() > 0) {
+            if (getMoveStun() > 0) return;
+            setVoidTime(0);
             return;
         }
 

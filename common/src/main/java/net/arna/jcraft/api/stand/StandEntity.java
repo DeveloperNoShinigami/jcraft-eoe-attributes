@@ -59,6 +59,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.control.JumpControl;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
@@ -66,6 +67,7 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -580,8 +582,11 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     }
 
     @Override
-    public void queueMove(MoveInputType type) {
+    public void queueMove(@Nullable MoveInputType type) {
         if (user == null) {
+            return;
+        }
+        if (type == null) {
             return;
         }
 
@@ -1255,7 +1260,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     // AI Methods
     @Override
     public void executePlan(int aiLevel, AttackerBrainInfo info, CombatInstantContext combatCtx) {
-        // TODO: dashing control
         final CombatEntityContext attackerCtx = combatCtx.getAttackerCtx();
         final CombatEntityContext targetCtx = combatCtx.getTargetCtx();
 
@@ -1263,22 +1267,36 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
         PathfinderMob pathfinder = (mob instanceof PathfinderMob pathfinderMob) ? pathfinderMob : null;
         final LivingEntity target = targetCtx.entity();
         final LookControl lookControl = mob.getLookControl();
+        final JumpControl jumpControl = mob.getJumpControl();
 
-        // TODO: random blocking periods
         boolean wantToBlock = doAutoBlocking(mob, info.getAiLevel(), info.getReactionTime(), targetCtx, combatCtx.getDistanceBetween());
+        final AttackerBrainInfo.State state = info.getState();
 
-        switch (info.getState()) {
+        switch (state) {
             case IDLE -> {}
             case APPROACH -> {
                 final PathNavigation navigation = mob.getNavigation();
-                navigation.moveTo(target,1.0);
-                lookControl.setLookAt(target);
-            }
-            case PRESSURE, COMBOING -> { // TODO: split
+                navigation.moveTo(target, 1.0);
+
                 lookControl.setLookAt(target);
 
-                // TODO: better move selection
-                doMoveSelection(
+                if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
+                if (random.nextFloat() > 0.2f) {
+                    DashData.tryDash(random.nextBoolean() ? -1 : 1, random.nextBoolean() ? -1 : 1, user);
+                    if (random.nextBoolean())
+                        jumpControl.jump();
+                }
+            }
+            case PRESSURE, COMBOING -> {
+                final PathNavigation navigation = mob.getNavigation();
+                Path path = navigation.createPath(target, 2);
+                if (path != null) navigation.moveTo(path, 1.0);
+
+                lookControl.setLookAt(target);
+
+                if (isFree() && !isRemote()) break;
+                final AbstractMove<?, ? super E> selectedAttack = doMoveSelection(
+                        info,
                         mob,
                         target,
                         mob.getJumpControl(),
@@ -1288,27 +1306,77 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                         targetCtx.moveStun(),
                         targetCtx.stun() != null ? targetCtx.stun().getDuration() : 0
                 );
+                if (attackerCtx.spec() != null && (selectedAttack == null || random.nextFloat() > 0.1f)) info.setDesiredStandOffTime(random.nextInt(20));
+
+                if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
+                if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, user);
             }
-            case DISENGAGE, KEEPAWAY -> { // TODO: split
-                if (pathfinder == null) return;
+            case DISENGAGE, KEEPAWAY -> {
+                if (pathfinder == null) break;
                 if (info.getAwayPos() == null || pathfinder.distanceToSqr(info.getAwayPos()) < 3.0) {
-                    info.setAwayPos(DefaultRandomPos.getPosAway(pathfinder, 16, 7, target.position()));
+                    info.setAwayPos(DefaultRandomPos.getPosAway(pathfinder, state == AttackerBrainInfo.State.DISENGAGE ? 16 : 8, 7, target.position()));
                 }
                 final Vec3 away = info.getAwayPos();
                 if (away != null) {
                     mob.getNavigation().moveTo(away.x, away.y, away.z, 1.0);
                 }
 
-                // TODO: move selection here
+                lookControl.setLookAt(target);
+
+                if (isFree() && !isRemote()) break;
+                final AbstractMove<?, ? super E> selectedAttack = doMoveSelection(
+                        info,
+                        mob,
+                        target,
+                        mob.getJumpControl(),
+                        targetCtx.stand(),
+                        targetCtx.standAttack() != null ? targetCtx.standAttack() : targetCtx.specAttack(),
+                        combatCtx.getDistanceBetween(),
+                        targetCtx.moveStun(),
+                        targetCtx.stun() != null ? targetCtx.stun().getDuration() : 0
+                );
+                if (attackerCtx.spec() != null && (selectedAttack == null || random.nextFloat() > 0.05f)) info.setDesiredStandOffTime(random.nextInt(20));
+
+                if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
+                if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, user);
             }
             case DEFENSE -> {
-                if (aiLevel <= IJAttackerBrain.BEGINNER_LEVEL) return;
+                lookControl.setLookAt(target);
+
+                if (aiLevel <= IJAttackerBrain.BEGINNER_LEVEL) break;
 
                 float chanceToPushblock = 0.03f;
                 if (aiLevel >= IJAttackerBrain.INTERMEDIATE_LEVEL) chanceToPushblock += 0.01f * aiLevel / (float)IJAttackerBrain.INTERMEDIATE_LEVEL;
+                float chanceToStrikeBack = 0.1f;
 
-                if (blocking && getMoveStun() > 1 && random.nextFloat() <= chanceToPushblock) {
-                    JCraft.tryPushBlock((ServerLevel) level(), user, this);
+                if (blocking) {
+                    if (getMoveStun() > 1) {
+                        if (random.nextFloat() <= chanceToPushblock) {
+                            JCraft.tryPushBlock((ServerLevel) level(), user, this);
+                        }
+                    } else {
+                        // Want to strike back
+                        if (random.nextFloat() <= chanceToStrikeBack && targetCtx.noWindupsPassed()) {
+                            wantToBlock = false;
+                            tryUnblock();
+
+                            if (isFree() && !isRemote()) break;
+                            doMoveSelection(
+                                    info,
+                                    mob,
+                                    target,
+                                    mob.getJumpControl(),
+                                    targetCtx.stand(),
+                                    targetCtx.standAttack() != null ? targetCtx.standAttack() : targetCtx.specAttack(),
+                                    combatCtx.getDistanceBetween(),
+                                    targetCtx.moveStun(),
+                                    targetCtx.stun() != null ? targetCtx.stun().getDuration() : 0
+                            );
+                        // Resummoning technique to gain back stand gauge
+                        } else if (aiLevel >= IJAttackerBrain.COMPETITIVE_LEVEL && getStandGauge() < getMaxStandGauge() / 3) {
+                            info.setDesiredStandOffTime(1 + random.nextInt(5));
+                        }
+                    }
                 }
             }
             case COMBOED -> {

@@ -36,14 +36,17 @@ public class AttackerBrainInfo {
     private int reactionTime = 0;
     @Getter @Setter
     private Vec3 awayPos = null;
+    @Getter @Setter
+    private int desiredStandOffTime = 0;
 
     public void setState(@NonNull State state) {
-        this.ticksSinceStateChange = 0;
+        if (this.state != state) this.ticksSinceStateChange = 0;
         this.state = state;
     }
 
     public void tick() {
         ticksSinceStateChange++;
+        desiredStandOffTime--;
     }
 
     public AttackerBrainInfo(int aiLevel) {

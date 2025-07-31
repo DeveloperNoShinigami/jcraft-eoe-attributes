@@ -16,6 +16,7 @@ import net.arna.jcraft.api.attack.enums.MoveInputType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.attack.moves.AbstractMultiHitAttack;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
+import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.ai.AttackerBrainInfo;
 import net.arna.jcraft.common.ai.CombatEntityContext;
 import net.arna.jcraft.common.ai.CombatInstantContext;
@@ -26,6 +27,7 @@ import net.arna.jcraft.common.network.s2c.PlayerAnimPacket;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
 import net.arna.jcraft.common.util.CooldownType;
+import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.SpecAnimationState;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -34,21 +36,27 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.control.JumpControl;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
+
+import static net.arna.jcraft.JCraft.comboBreak;
 
 /**
  * Class that needs to be instantiated per-entity to contain temporary data relating to their current state.
@@ -458,37 +466,102 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
         PathfinderMob pathfinder = (mob instanceof PathfinderMob pathfinderMob) ? pathfinderMob : null;
         final LivingEntity target = targetCtx.entity();
         final LookControl lookControl = mob.getLookControl();
+        final JumpControl jumpControl = mob.getJumpControl();
 
-        switch (info.getState()) {
+        final AttackerBrainInfo.State state = info.getState();
+
+        final RandomSource random = getBaseEntity().getRandom();
+
+        switch (state) {
             case IDLE -> {}
             case APPROACH -> {
                 final PathNavigation navigation = mob.getNavigation();
-                navigation.moveTo(target,1.0);
+                navigation.moveTo(target, 1.0);
+
+                lookControl.setLookAt(target);
+
+                if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
+                if (random.nextFloat() > 0.2f) {
+                    DashData.tryDash(random.nextBoolean() ? -1 : 1, random.nextBoolean() ? -1 : 1, user);
+                    if (random.nextBoolean())
+                        jumpControl.jump();
+                }
             }
-            case PRESSURE, COMBOING -> { // TODO: split
+            case PRESSURE, COMBOING -> {
+                final PathNavigation navigation = mob.getNavigation();
+                Path path = navigation.createPath(target, 2);
+                if (path != null) navigation.moveTo(path, 1.0);
+
+                lookControl.setLookAt(target);
+
+                doMoveSelection(
+                        info,
+                        mob,
+                        target,
+                        mob.getJumpControl(),
+                        targetCtx.stand(),
+                        targetCtx.standAttack() != null ? targetCtx.standAttack() : targetCtx.specAttack(),
+                        combatCtx.getDistanceBetween(),
+                        targetCtx.moveStun(),
+                        targetCtx.stun() != null ? targetCtx.stun().getDuration() : 0
+                );
+
+                if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
+                if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, user);
             }
-            case DISENGAGE, KEEPAWAY -> { // TODO: split
-                if (pathfinder == null) return;
+            case DISENGAGE, KEEPAWAY, DEFENSE -> {
+                if (pathfinder == null) break;
                 if (info.getAwayPos() == null || pathfinder.distanceToSqr(info.getAwayPos()) < 3.0) {
-                    info.setAwayPos(DefaultRandomPos.getPosAway(pathfinder, 16, 7, target.position()));
+                    info.setAwayPos(DefaultRandomPos.getPosAway(pathfinder, state == AttackerBrainInfo.State.DISENGAGE ? 16 : 8, 7, target.position()));
                 }
                 final Vec3 away = info.getAwayPos();
                 if (away != null) {
                     mob.getNavigation().moveTo(away.x, away.y, away.z, 1.0);
                 }
 
-                // TODO: move selection
-            }
-            case DEFENSE -> {
-            }
-            case COMBOED -> { // Random chance Combo Break given aiLevel is high enough
-                if (aiLevel <= IJAttackerBrain.BEGINNER_LEVEL) return;
+                lookControl.setLookAt(target);
 
-                if (user.getRandom().nextFloat() < 0.1f && (targetCtx.standAttack() != null || targetCtx.specAttack() != null)) {
-                    JCraft.comboBreak((ServerLevel) user.level(), user, combatCtx.getAttackerCtx().stun());
+                doMoveSelection(
+                        info,
+                        mob,
+                        target,
+                        mob.getJumpControl(),
+                        targetCtx.stand(),
+                        targetCtx.standAttack() != null ? targetCtx.standAttack() : targetCtx.specAttack(),
+                        combatCtx.getDistanceBetween(),
+                        targetCtx.moveStun(),
+                        targetCtx.stun() != null ? targetCtx.stun().getDuration() : 0
+                );
+
+                if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
+                if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, user);
+            }
+            case COMBOED -> {
+                if (aiLevel <= IJAttackerBrain.BEGINNER_LEVEL) return;
+                final MobEffectInstance stun = combatCtx.getAttackerCtx().stun();
+                if (stun == null) return;
+
+                final boolean lowHP = user.getHealth() < user.getMaxHealth() / 2.0f || user.getHealth() < 5f;
+                final boolean enemyIsActing = targetCtx.standAttack() != null || targetCtx.specAttack() != null;
+
+                boolean burstCondition;
+                if (aiLevel >= IJAttackerBrain.COMPETITIVE_LEVEL) burstCondition = lowHP && enemyIsActing || random.nextFloat() < 0.02f;
+                else if (aiLevel >= IJAttackerBrain.INTERMEDIATE_LEVEL) burstCondition = lowHP || enemyIsActing || random.nextFloat() < 0.05f;
+                else burstCondition = random.nextFloat() < 0.1f;
+
+                if (burstCondition) {
+                    comboBreak((ServerLevel) user.level(), user, stun);
                 }
             }
             default -> throw new IllegalStateException("Unexpected value: " + info.getState());
         }
+    }
+
+    @Override
+    public AbstractMove<?, ? super A> doMoveSelection(AttackerBrainInfo info, Mob mob, LivingEntity target, JumpControl mobJumpControl, StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack, double distance, int enemyMoveStun, int stunTicks) {
+        final StandEntity<?, ?> stand = JUtils.getStand(mob);
+        if (stand != null && stand.allowMoveHandling()) return null;
+
+        return IAttacker.super.doMoveSelection(info, mob, target, mobJumpControl, enemyStand, enemyAttack, distance, enemyMoveStun, stunTicks);
     }
 }

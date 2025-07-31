@@ -10,19 +10,13 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.attack.enums.MoveInputType;
-import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.component.player.CommonSpecComponent;
-import net.arna.jcraft.api.registry.JStatusRegistry;
-import net.arna.jcraft.api.stand.StandEntity;
-import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -50,6 +44,9 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity
         super(entityType, level);
 
         component = JComponentPlatformUtils.getSpecData(this);
+
+        if (level.isClientSide()) return;
+        JEnemies.add(this);
     }
 
     @Override
@@ -72,59 +69,6 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity
                 if (target.distanceToSqr(this) > 1.0) {
                     Vec3 posTowards = DefaultRandomPos.getPosTowards(this, 2, 7, target.position(), 1.5707963705062866);
                     if (posTowards != null) getNavigation().moveTo(posTowards.x, posTowards.y, posTowards.z, 1.0);
-                }
-
-                // Move Selection
-                final MobEffectInstance targetStun = target.getEffect(JStatusRegistry.DAZED.get());
-                final int targetStunTicks = targetStun == null ? 0 : targetStun.getDuration();
-
-                final StandEntity<?, ?> targetStand = JUtils.getStand(target);
-                final JSpec<?, ?> targetSpec = JUtils.getSpec(target);
-
-                final AbstractMove<?, ?> targetStandAttack = targetStand == null ? null : targetStand.getCurrentMove();
-                final AbstractMove<?, ?> targetSpecAttack = targetSpec == null ? null : targetSpec.getCurrentMove();
-
-                final AbstractMove<?, ?> targetAttack = targetStandAttack == null ? targetSpecAttack : targetStandAttack;
-
-                final int targetStandMoveStun = targetStand == null ? 0 : targetStand.getMoveStun();
-                final int targetSpecMoveStun = targetSpec == null ? 0 : targetSpec.getMoveStun();
-
-                final int targetMoveStun = Math.max(targetStandMoveStun, targetSpecMoveStun);
-
-                var selection = spec.selectAttack(
-                        JComponentPlatformUtils.getCooldowns(this),
-                        this, target,
-                        targetStunTicks, targetMoveStun,
-                        this.distanceTo(target),
-                        targetStand, targetAttack
-                        );
-
-                final AbstractMove<?, ?> selectedMove = selection.left();
-
-                if (selectedMove != null) {
-                    boolean shouldPerformMove = spec.getMoveStun() < 1;
-
-                    if (spec.getCurrentMove() != null && spec.getCurrentMove().getFollowup() != null) {
-                        shouldPerformMove = true;
-                    }
-
-                    setShiftKeyDown(selection.second());
-                    if (selectedMove.isAerialVariant()) {
-                        jumpControl.jump();
-                        setOnGround(false);
-                    }
-
-                    if (shouldPerformMove) {
-                        //JCraft.LOGGER.info("Stand User AI: Performing attack " + selectedAttack);
-                        if (selectedMove.getMoveClass() == null) {
-                            JCraft.LOGGER.error("Attempting to use move with unset MoveClass: {}, stand: {}",
-                                    selectedMove.getName().getString(), this);
-                        } else {
-                            spec.initMove(selectedMove.getMoveClass());
-                        }
-                    } else {
-                        spec.queuedMove = MoveInputType.fromMoveClass(selectedMove.getMoveClass());
-                    }
                 }
             }
 

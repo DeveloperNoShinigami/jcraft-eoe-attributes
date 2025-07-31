@@ -16,12 +16,12 @@ public class CombatInstantContext {
         targetCtx = CombatEntityContext.from(target);
 
         distanceBetween = Math.sqrt(
-                JUtils.min(new double[]{
+                JUtils.min(
                         JUtils.nullSafeDistanceSqr(attacker, target),
                         JUtils.nullSafeDistanceSqr(attacker, targetCtx.stand()),
                         JUtils.nullSafeDistanceSqr(attackerCtx.stand(), target),
                         JUtils.nullSafeDistanceSqr(attackerCtx.stand(), targetCtx.stand())
-                })
+                )
         );
     }
 
