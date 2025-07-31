@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.tickable;
 
+import lombok.experimental.UtilityClass;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.item.Peacemaker;
 import net.arna.jcraft.common.util.DimensionData;
@@ -12,19 +13,20 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
+@UtilityClass
 public class PeacemakerReload {
-    protected static final List<DimensionData> toReload = new ArrayList<>();
-    private static final List<DimensionData> toAdd = new ArrayList<>();
+    private final List<DimensionData> toReload = new ArrayList<>();
+    private final List<DimensionData> toAdd = new ArrayList<>();
 
-    public static void enqueue(DimensionData dimensionData) {
+    public void enqueue(DimensionData dimensionData) {
         toAdd.add(dimensionData);
     }
 
-    public static void remove(DimensionData dimensionData) {
+    public void remove(DimensionData dimensionData) {
         toReload.remove(dimensionData);
     }
 
-    public static void tick(MinecraftServer server) {
+    public void tick(MinecraftServer server) {
         // First, add any new entries that were queued during the last tick
         if (!toAdd.isEmpty()) {
             toReload.addAll(toAdd);
