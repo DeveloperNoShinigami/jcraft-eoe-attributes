@@ -8,20 +8,23 @@ import net.minecraft.resources.ResourceLocation;
 /**
  * Model for the TrainingDummyEntity
  */
-public class TrainingDummyModel extends GeoModel<TrainingDummyEntity> {
+public final class TrainingDummyModel extends GeoModel<TrainingDummyEntity> {
+    private static final ResourceLocation model = JCraft.id("geo/training_dummy.geo.json");
+    private static final ResourceLocation texture = JCraft.id("textures/entity/training_dummy.png");
+    private static final ResourceLocation animation = JCraft.id("animations/training_dummy.animation.json");
 
     @Override
-    public ResourceLocation getModelResource(TrainingDummyEntity animatable) {
-        return JCraft.id("geo/training_dummy.geo.json");
+    public ResourceLocation getModelResource(final TrainingDummyEntity animatable) {
+        return model;
     }
 
     @Override
-    public ResourceLocation getTextureResource(TrainingDummyEntity animatable) {
-        return JCraft.id("textures/entity/training_dummy.png");
+    public ResourceLocation getTextureResource(final TrainingDummyEntity animatable) {
+        return texture;
     }
 
     @Override
-    public ResourceLocation getAnimationResource(TrainingDummyEntity animatable) {
-        return JCraft.id("animations/training_dummy.animation.json");
+    public ResourceLocation getAnimationResource(final TrainingDummyEntity animatable) {
+        return animation;
     }
 }

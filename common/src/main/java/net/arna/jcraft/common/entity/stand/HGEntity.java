@@ -307,6 +307,11 @@ public class HGEntity extends StandEntity<HGEntity, HGEntity.State> {
     }
 
     @Override
+    public double getEngagementDistance() {
+        return 64.0;
+    }
+
+    @Override
     public void tick() {
         super.tick();
 

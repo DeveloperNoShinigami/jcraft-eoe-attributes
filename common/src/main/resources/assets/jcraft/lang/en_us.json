@@ -674,6 +674,7 @@
   "jcraft.serverconfig.category.interaction": "Interaction",
   "jcraft.serverconfig.category.minecraft_rebalance": "Minecraft Balance",
   "jcraft.serverconfig.option.barrageMiningSpeed": "Barrage Mining Speed",
+  "jcraft.serverconfig.option.baseAILevel": "Base AI Level",
   "jcraft.serverconfig.option.cmoonUltRange": "C-moon Ult Range",
   "jcraft.serverconfig.option.cmoonUtilDuration": "C-moon Util Duration",
   "jcraft.serverconfig.option.cooldownMultiplier": "Cooldown Duration Multiplier",

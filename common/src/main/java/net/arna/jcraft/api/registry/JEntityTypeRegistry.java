@@ -12,6 +12,7 @@ import net.arna.jcraft.common.entity.npc.DarbyOlderEntity;
 import net.arna.jcraft.common.entity.npc.DarbyYoungerEntity;
 import net.arna.jcraft.common.entity.npc.PetshopEntity;
 import net.arna.jcraft.common.entity.projectile.*;
+import net.arna.jcraft.common.entity.spec.VampireSpecUser;
 import net.arna.jcraft.common.entity.stand.*;
 import net.arna.jcraft.common.entity.vehicle.RoadRollerEntity;
 import net.minecraft.core.registries.Registries;
@@ -652,6 +653,13 @@ public interface JEntityTypeRegistry {
             ).sized(0.6f, 1.8f).build("training_dummy")
     );
 
+    RegistrySupplier<EntityType<VampireSpecUser>> VAMPIRE_SPEC_USER = ENTITY_TYPE_REGISTRY.register(JCraft.id("vampire_spec_user"),
+            () -> EntityType.Builder.of(
+                    WorldOnlyEntityFactory.from(VampireSpecUser::new),
+                    MobCategory.CREATURE
+            ).sized(0.6f, 1.8f).build("vampire_spec_user")
+    );
+
 
     static void registerAttributes() {
         EntityAttributeRegistry.register(STAR_PLATINUM, StarPlatinumEntity::createMobAttributes);
@@ -732,6 +740,8 @@ public interface JEntityTypeRegistry {
                 .add(Attributes.ARMOR, 2)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.9)
         );
+
+        EntityAttributeRegistry.register(VAMPIRE_SPEC_USER, VampireSpecUser::createUserAttributes);
     }
 
     static void init() {

@@ -19,7 +19,7 @@ public class StarPlatinumModel extends StandEntityModel<AbstractStarPlatinumEnti
     }
 
     @Override
-    public ResourceLocation getModelResource(final AbstractStarPlatinumEntity<?, ?> object) {
+    public ResourceLocation getModelResource(final AbstractStarPlatinumEntity<?, ?> animatable) {
         return MODEL;
     }
 }

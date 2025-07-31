@@ -9,19 +9,23 @@ import net.minecraft.resources.ResourceLocation;
  * The {@link GeoModel} for {@link PetshopEntity}.
  * @see net.arna.jcraft.client.renderer.entity.npc.PetshopRenderer PetshopRenderer
  */
-public class PetshopModel extends GeoModel<PetshopEntity> {
+public final class PetshopModel extends GeoModel<PetshopEntity> {
+    private static final ResourceLocation model = JCraft.id("geo/aya_tsuji.geo.json");
+    private static final ResourceLocation texture = JCraft.id("textures/entity/aya_tsuji.png");
+    private static final ResourceLocation animation = JCraft.id("animations/aya_tsuji.animation.json");
+
     @Override
     public ResourceLocation getModelResource(final PetshopEntity animatable) {
-        return JCraft.id("geo/petshop.geo.json");
+        return model;
     }
 
     @Override
     public ResourceLocation getTextureResource(final PetshopEntity animatable) {
-        return JCraft.id("textures/entity/petshop.png");
+        return texture;
     }
 
     @Override
     public ResourceLocation getAnimationResource(final PetshopEntity animatable) {
-        return JCraft.id("animations/petshop.animation.json");
+        return animation;
     }
 }

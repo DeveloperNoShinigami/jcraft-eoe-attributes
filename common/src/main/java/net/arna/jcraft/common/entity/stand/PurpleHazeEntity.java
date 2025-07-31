@@ -318,8 +318,6 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                         {
                             navigation.moveTo(target, speed);
                         }
-
-                        standUserCombatAI(this, target, this);
                     }
 
                     if (!isRemote) {

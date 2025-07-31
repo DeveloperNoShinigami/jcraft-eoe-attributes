@@ -31,12 +31,7 @@ import net.arna.jcraft.common.network.s2c.ShaderActivationPacket;
 import net.arna.jcraft.common.network.s2c.TimeAccelStatePacket;
 import net.arna.jcraft.api.spec.JSpec;
 import net.arna.jcraft.common.splatter.Splatter;
-import net.arna.jcraft.common.util.DimensionData;
-import net.arna.jcraft.common.util.IJCraftAnimatedPlayer;
-import net.arna.jcraft.common.util.IJExplosion;
-import net.arna.jcraft.common.util.JExplosionModifier;
-import net.arna.jcraft.common.util.JParticleType;
-import net.arna.jcraft.common.util.JUtils;
+import net.arna.jcraft.common.util.*;
 import net.arna.jcraft.api.registry.JParticleTypeRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -61,13 +56,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.IntStream;
 
 import static net.arna.jcraft.api.registry.JPacketRegistry.*;
 
@@ -121,7 +112,7 @@ public class ClientPacketHandler {
     }
 
     private static void handleStoneMaskClench(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
-        if (client.level == null || client.player == null) {
+        if (client.level == null) {
             return;
         }
 
@@ -172,6 +163,10 @@ public class ClientPacketHandler {
     }
 
     private static void handlePrediction(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
+        if (client.level == null) {
+            return;
+        }
+
         final int size = buf.readInt();
         if (size == 0) {
             return;
@@ -192,7 +187,7 @@ public class ClientPacketHandler {
     }
 
     private static void handleTimeStop(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
-        if (client.level == null || client.player == null) {
+        if (client.level == null) {
             return;
         }
 
@@ -229,7 +224,7 @@ public class ClientPacketHandler {
     }
 
     public static void handleAnimation(final @NonNull Minecraft client, final FriendlyByteBuf buf) {
-        if (client.level == null || client.player == null) {
+        if (client.level == null) {
             return;
         }
 
@@ -299,19 +294,20 @@ public class ClientPacketHandler {
             case (1) -> {
                 final int count = buf.readVarInt();
 
-                final List<AABB> boxes = IntStream.range(0, count)
-                        .mapToObj(i -> {
-                            double minX = buf.readDouble();
-                            double minY = buf.readDouble();
-                            double minZ = buf.readDouble();
+                final AABB[] boxes = new AABB[count];
 
-                            double maxX = buf.readDouble();
-                            double maxY = buf.readDouble();
-                            double maxZ = buf.readDouble();
+                for (int i = 0; i < count; i++) {
+                    final double
+                        minX = buf.readDouble(),
+                        minY = buf.readDouble(),
+                        minZ = buf.readDouble(),
 
-                            return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
-                        })
-                        .toList();
+                        maxX = buf.readDouble(),
+                        maxY = buf.readDouble(),
+                        maxZ = buf.readDouble();
+
+                    boxes[i] = new AABB(minX, minY, minZ, maxX, maxY, maxZ);
+                }
 
                 // Run on render thread to avoid concurrency issues.
                 RenderSystem.recordRenderCall(() -> AttackHitboxEffectRenderer.addHitboxes(boxes));

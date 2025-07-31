@@ -12,20 +12,24 @@ import net.minecraft.util.Mth;
  * The {@link GeoModel} for {@link AyaTsujiEntity}.
  * @see net.arna.jcraft.client.renderer.entity.npc.AyaTsujiRenderer AyaTsujiRenderer
  */
-public class AyaTsujiModel extends GeoModel<AyaTsujiEntity> {
+public final class AyaTsujiModel extends GeoModel<AyaTsujiEntity> {
+    private static final ResourceLocation model = JCraft.id("geo/aya_tsuji.geo.json");
+    private static final ResourceLocation texture = JCraft.id("textures/entity/aya_tsuji.png");
+    private static final ResourceLocation animation = JCraft.id("animations/aya_tsuji.animation.json");
+
     @Override
     public ResourceLocation getModelResource(final AyaTsujiEntity animatable) {
-        return JCraft.id("geo/aya_tsuji.geo.json");
+        return model;
     }
 
     @Override
     public ResourceLocation getTextureResource(final AyaTsujiEntity animatable) {
-        return JCraft.id("textures/entity/aya_tsuji.png");
+        return texture;
     }
 
     @Override
     public ResourceLocation getAnimationResource(final AyaTsujiEntity animatable) {
-        return JCraft.id("animations/aya_tsuji.animation.json");
+        return animation;
     }
 
     @Override

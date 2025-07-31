@@ -3,13 +3,14 @@ package net.arna.jcraft.client.registry;
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
 import lombok.NonNull;
+import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.client.model.entity.BisectModel;
+import net.arna.jcraft.client.model.entity.spec.VampireSpecUserModel;
 import net.arna.jcraft.client.renderer.entity.*;
 import net.arna.jcraft.client.renderer.entity.npc.*;
 import net.arna.jcraft.client.renderer.entity.projectiles.*;
 import net.arna.jcraft.client.renderer.entity.stands.*;
 import net.arna.jcraft.client.renderer.entity.vehicles.RoadRollerRenderer;
-import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -122,7 +123,9 @@ public interface JEntityRendererRegister {
             new RendererData<>(JEntityTypeRegistry.STAND_METEOR, StandMeteorRenderer::new),
             new RendererData<>(JEntityTypeRegistry.TRAINING_DUMMY, TrainingDummyRenderer::new),
 
-            new RendererData<>(JEntityTypeRegistry.ITEM_TOSS_PROJECTILE, ItemTossProjectileRenderer::new)
+            new RendererData<>(JEntityTypeRegistry.ITEM_TOSS_PROJECTILE, ItemTossProjectileRenderer::new),
+
+            new RendererData<>(JEntityTypeRegistry.VAMPIRE_SPEC_USER, context -> new SpecUserRenderer<>(context, new VampireSpecUserModel()))
     };
 
     static void registerEntityRenderers(Consumer<RendererData<?>> consumer) {

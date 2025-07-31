@@ -1,5 +1,6 @@
 package net.arna.jcraft.common.effects;
 
+import net.arna.jcraft.common.tickable.JEnemies;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -82,11 +83,11 @@ public class DazedStatusEffect extends MobEffect {
         if (amplifier == 2) {
             return; // Blockstun should not disable targetting
         }
-        if (!(entity instanceof Mob mob)) {
-            return;
+        if (entity instanceof Mob mob) {
+            if (JEnemies.contains(mob)) return;
+            mob.setTarget(null);
+            mob.setAggressive(false);
         }
-        mob.setTarget(null);
-        mob.setAggressive(false);
     }
 
     @Override

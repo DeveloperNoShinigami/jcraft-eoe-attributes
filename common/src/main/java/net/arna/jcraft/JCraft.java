@@ -394,6 +394,8 @@ public final class JCraft {
         auWorld.setChunkForced(chunkX, chunkZ, true);
     }
 
+    public static StandEntity<?, ?> summon(LivingEntity user) { return summon(user.level(), user); }
+
     public static StandEntity<?, ?> summon(Level world, LivingEntity user) {
         if (user.hasEffect(JStatusRegistry.STANDLESS.get()) || user.isSpectator()) {
             return null;
@@ -549,9 +551,8 @@ public final class JCraft {
      * This attack is blockable, launches and stuns on hit.
      */
     public static void comboBreak(ServerLevel world, LivingEntity player, MobEffectInstance stun) {
-        if (player.isSpectator()) {
-            return;
-        }
+        if (stun == null) return;
+        if (player.isSpectator()) return;
         CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(player);
 
         if (stun.getDuration() > 1 && DazedStatusEffect.canBeComboBroken(stun.getAmplifier()) && cooldowns.getCooldown(CooldownType.COMBO_BREAKER) <= 0) {

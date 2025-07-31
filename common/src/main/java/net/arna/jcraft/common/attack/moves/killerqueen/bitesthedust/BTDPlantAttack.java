@@ -4,6 +4,7 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import lombok.NonNull;
+import net.arna.jcraft.api.MoveSelectionResult;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
@@ -126,15 +127,15 @@ public final class BTDPlantAttack extends AbstractSimpleAttack<BTDPlantAttack, K
     }
 
     @Override
-    public StandEntity.MoveSelectionResult specificMoveSelectionCriterion(KQBTDEntity attacker, LivingEntity mob,
-                                                                          LivingEntity target, int stunTicks, int enemyMoveStun,
-                                                                          double distance, StandEntity<?, ?> enemyStand,
-                                                                          AbstractMove<?, ?> enemyAttack) {
+    public MoveSelectionResult specificMoveSelectionCriterion(KQBTDEntity attacker, LivingEntity mob,
+                                                                                  LivingEntity target, int stunTicks, int enemyMoveStun,
+                                                                                  double distance, StandEntity<?, ?> enemyStand,
+                                                                                  AbstractMove<?, ?> enemyAttack) {
         if (attacker.getBtdEntity().get() != null) {
-            return StandEntity.MoveSelectionResult.USE;
+            return MoveSelectionResult.USE;
         }
 
-        return StandEntity.MoveSelectionResult.PASS;
+        return MoveSelectionResult.PASS;
     }
 
     @Override
