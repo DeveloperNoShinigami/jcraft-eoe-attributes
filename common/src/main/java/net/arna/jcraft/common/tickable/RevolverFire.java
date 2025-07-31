@@ -29,14 +29,15 @@ public class RevolverFire {
         List<DimensionData> newToFire = new ArrayList<>();
 
         for (DimensionData toFireData : toFire) {
-            LivingEntity user = toFireData.user;
+            final LivingEntity user = toFireData.getUser();
             if (user != null && user.isAlive()) {
-                if (toFireData.timer-- > 0) {
+                if (toFireData.getTimer() > 0) {
+                    toFireData.decreaseTimer();
                     newToFire.add(toFireData);
                 } else {
-                    ServerLevel world = server.getLevel(toFireData.worldKey);
+                    ServerLevel world = server.getLevel(toFireData.getWorldKey());
                     if (world == null) {
-                        JCraft.LOGGER.fatal("World that toFireData belongs to no longer exists! Key: " + toFireData.worldKey + " user: " + user);
+                        JCraft.LOGGER.fatal("World that toFireData belongs to no longer exists! Key: " + toFireData.getWorldKey() + " user: " + user);
                         continue;
                     }
 

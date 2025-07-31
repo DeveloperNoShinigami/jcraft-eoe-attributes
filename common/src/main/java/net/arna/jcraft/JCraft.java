@@ -352,7 +352,7 @@ public final class JCraft {
         // Synchronization
         TimeStopStatePacket.send(serverWorld.players(), TimeStopStatePacket.createStopPacket(timestopper.getId()));
 
-        Vec3 position = Objects.requireNonNull(timestop.pos);
+        Vec3 position = Objects.requireNonNull(timestop.getPos());
 
         List<ServerPlayer> toUnfreeze = serverWorld.getEntitiesOfClass(ServerPlayer.class,
                 new AABB(position.add(96.0, 96.0, 96.0), position.subtract(96.0, 96.0, 96.0)), EntitySelector.LIVING_ENTITY_STILL_ALIVE);

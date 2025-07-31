@@ -36,11 +36,11 @@ public class JClientUtils {
     // Setting the timer to 0 will make the next tick remove it
     public static void removeTimestop(final int timestopperId) {
         for (DimensionData timestop : activeTimestops) {
-            final Entity timestopper = timestop.user;
+            final Entity timestopper = timestop.getUser();
             if (timestopper.getId() != timestopperId) {
                 continue;
             }
-            timestop.timer = 0;
+            timestop.setTimer(0);
             return;
         }
     }
@@ -55,7 +55,7 @@ public class JClientUtils {
 
     public static boolean isInTSRange(final Vec3 pos) {
         for (final DimensionData timeStop : activeTimestops) {
-            if (timeStop != null && timeStop.pos.distanceToSqr(pos.x(), pos.y(), pos.z()) <= 65536) {
+            if (timeStop != null && timeStop.getPos().distanceToSqr(pos.x(), pos.y(), pos.z()) <= 65536) {
                 return true;
             }
         }
@@ -64,7 +64,7 @@ public class JClientUtils {
 
     public static boolean isInTSRange(final BlockPos pos) {
         for (final DimensionData timeStop : activeTimestops) {
-            if (timeStop != null && timeStop.pos.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
+            if (timeStop != null && timeStop.getPos().distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
                 return true;
             }
         }
@@ -73,8 +73,8 @@ public class JClientUtils {
 
     public static int getTicksIfInTSRange(final BlockPos pos) {
         for (final DimensionData timeStop : activeTimestops) {
-            if (timeStop != null && timeStop.pos.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
-                return timeStop.timer;
+            if (timeStop != null && timeStop.getPos().distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= 65536) {
+                return timeStop.getTimer();
             }
         }
         return 0;

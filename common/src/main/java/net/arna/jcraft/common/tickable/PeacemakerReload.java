@@ -37,14 +37,16 @@ public class PeacemakerReload {
         List<DimensionData> newToReload = new ArrayList<>();
 
         for (DimensionData toReloadData : toReload) {
-            LivingEntity user = toReloadData.user;
+            LivingEntity user = toReloadData.getUser();
             if (user != null && user.isAlive()) {
-                if (toReloadData.timer-- > 0) {
+                final int timer = toReloadData.getTimer();
+                if (timer > 0) {
+                    toReloadData.decreaseTimer();
                     newToReload.add(toReloadData);
                 } else {
-                    ServerLevel world = server.getLevel(toReloadData.worldKey);
+                    ServerLevel world = server.getLevel(toReloadData.getWorldKey());
                     if (world == null) {
-                        JCraft.LOGGER.fatal("World that toReloadData belongs to no longer exists! Key: " + toReloadData.worldKey + " user: " + user);
+                        JCraft.LOGGER.warn("World that toReloadData belongs to no longer exists! Key: " + toReloadData.getWorldKey() + " user: " + user);
                         continue;
                     }
 

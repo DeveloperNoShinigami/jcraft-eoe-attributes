@@ -258,14 +258,23 @@ public class JClientEvents {
 
         while (iter.hasNext()) {
             final DimensionData timestop = iter.next();
-            final LivingEntity user = timestop.user;
+            final LivingEntity user = timestop.getUser();
 
-            if (user == null || !user.isAlive() || --timestop.timer <= 0) {
-                iter.remove();
-                continue;
+            if (user != null && user.isAlive()) {
+                timestop.decreaseTimer();
+                if (timestop.getTimer() <= 0) {
+                    iter.remove();
+                    continue;
+                }
+            }
+            else {
+                if (timestop.getTimer() <= 0) {
+                    iter.remove();
+                    continue;
+                }
             }
 
-            final Vec3 pos = timestop.pos;
+            final Vec3 pos = timestop.getPos();
 
             final List<? extends Entity> toStop = user.level().getEntitiesOfClass(Entity.class,
                     new AABB(pos.add(96.0, 96.0, 96.0), pos.subtract(96.0, 96.0, 96.0)), Timestops.TIMESTOP_PREDICATE);
