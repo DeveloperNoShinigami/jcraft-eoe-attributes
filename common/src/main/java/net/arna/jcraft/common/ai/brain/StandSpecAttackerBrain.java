@@ -26,6 +26,8 @@ public interface StandSpecAttackerBrain extends IJAttackerBrain {
 
     static void plan(final int aiLevel, final AttackerBrainInfo info, final CombatInstantContext combatCtx) {
         IJAttackerBrain.planDefense(info);
+        IJAttackerBrain.pacing(info, combatCtx);
+
         final StandEntity<?, ?> stand = combatCtx.getAttackerCtx().stand();
         if (stand != null) {
             stand.plan(aiLevel, info, combatCtx);

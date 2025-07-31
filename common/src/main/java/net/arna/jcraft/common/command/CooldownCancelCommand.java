@@ -6,7 +6,8 @@ import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Collection;
 
@@ -16,12 +17,12 @@ public class CooldownCancelCommand {
                 Commands.literal("cooldown")
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.literal("cancel")
-                                .then(Commands.argument("players", EntityArgument.players())
+                                .then(Commands.argument("entities", EntityArgument.entities())
                                         .executes(CooldownCancelCommand::run)
                                 )
                         )
                         .then(Commands.literal("reset")
-                                .then(Commands.argument("players", EntityArgument.players())
+                                .then(Commands.argument("entities", EntityArgument.entities())
                                         .executes(CooldownCancelCommand::run)
                                 )
                         )
@@ -30,7 +31,7 @@ public class CooldownCancelCommand {
         dispatcher.register(
                 Commands.literal("cdc")
                         .requires(source -> source.hasPermission(2))
-                        .then(Commands.argument("players", EntityArgument.players())
+                        .then(Commands.argument("entities", EntityArgument.entities())
                                 .executes(CooldownCancelCommand::run)
                         )
         );
@@ -38,10 +39,10 @@ public class CooldownCancelCommand {
 
     public static int run(final CommandContext<CommandSourceStack> ctx) {
         try {
-            final Collection<? extends Player> targets = EntityArgument.getPlayers(ctx, "players");
+            final Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "entities");
 
-            for (Player player : targets) {
-                JComponentPlatformUtils.getCooldowns(player).clear();
+            for (Entity entity : targets) {
+                if (entity instanceof LivingEntity living) JComponentPlatformUtils.getCooldowns(living).clear();
             }
 
             return 1;

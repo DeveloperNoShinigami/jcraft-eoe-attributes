@@ -1257,6 +1257,17 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     public abstract @NonNull E getThis();
 
+    void randomlyDesireStandOff(int aiLevel, float baseChance, float subtraction, int maxAILevel,
+                                AttackerBrainInfo info, CombatEntityContext attackerCtx, AbstractMove<?, ?> selectedAttack) {
+        float chanceToDesireStandOff = baseChance;
+        if (aiLevel < maxAILevel) { // [14, 0]
+            chanceToDesireStandOff -= (maxAILevel - aiLevel) * subtraction;
+        }
+        if (attackerCtx.spec() != null && (selectedAttack == null || random.nextFloat() <= chanceToDesireStandOff)) {
+            info.setDesiredStandOffTime(random.nextInt(aiLevel < IJAttackerBrain.COMPETITIVE_LEVEL ? 40 : 20));
+        }
+    }
+
     // AI Methods
     @Override
     public void executePlan(int aiLevel, AttackerBrainInfo info, CombatInstantContext combatCtx) {
@@ -1294,7 +1305,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
                 lookControl.setLookAt(target);
 
-                if (isFree() && !isRemote()) break;
+                if (isFree() && !isRemote() || info.desiresNoAttack()) break;
                 final AbstractMove<?, ? super E> selectedAttack = doMoveSelection(
                         info,
                         mob,
@@ -1306,7 +1317,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                         targetCtx.moveStun(),
                         targetCtx.stun() != null ? targetCtx.stun().getDuration() : 0
                 );
-                if (attackerCtx.spec() != null && (selectedAttack == null || random.nextFloat() > 0.1f)) info.setDesiredStandOffTime(random.nextInt(20));
+
+                randomlyDesireStandOff(aiLevel, 0.2f, 0.005f, IJAttackerBrain.COMPETITIVE_LEVEL, info, attackerCtx, selectedAttack);
 
                 if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
                 if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, user);
@@ -1323,7 +1335,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
                 lookControl.setLookAt(target);
 
-                if (isFree() && !isRemote()) break;
+                if (isFree() && !isRemote() || info.desiresNoAttack()) break;
                 final AbstractMove<?, ? super E> selectedAttack = doMoveSelection(
                         info,
                         mob,
@@ -1335,7 +1347,8 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                         targetCtx.moveStun(),
                         targetCtx.stun() != null ? targetCtx.stun().getDuration() : 0
                 );
-                if (attackerCtx.spec() != null && (selectedAttack == null || random.nextFloat() > 0.05f)) info.setDesiredStandOffTime(random.nextInt(20));
+
+                randomlyDesireStandOff(aiLevel, 0.02f, 0.003f, IJAttackerBrain.COMPETITIVE_LEVEL, info, attackerCtx, selectedAttack);
 
                 if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
                 if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, user);
@@ -1360,7 +1373,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                             wantToBlock = false;
                             tryUnblock();
 
-                            if (isFree() && !isRemote()) break;
+                            if (isFree() && !isRemote() || info.desiresNoAttack()) break;
                             doMoveSelection(
                                     info,
                                     mob,

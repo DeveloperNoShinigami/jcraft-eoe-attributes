@@ -24,6 +24,8 @@ public interface SpecAttackerBrain extends IJAttackerBrain {
 
     static void plan(final int aiLevel, final AttackerBrainInfo info, final CombatInstantContext combatCtx) {
         IJAttackerBrain.planDefense(info);
+        IJAttackerBrain.pacing(info, combatCtx);
+
         final JSpec<?, ?> spec = combatCtx.getAttackerCtx().spec();
         if (spec == null) return;
         spec.plan(aiLevel, info, combatCtx);

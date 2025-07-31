@@ -67,7 +67,7 @@ public final class KQDetonateAttack extends AbstractMove<KQDetonateAttack, Abstr
                                                                                   AbstractMove<?, ?> enemyAttack) {
         final Vec3 bombPos = JComponentPlatformUtils.getBombTracker(mob).getMainBomb().getBombPos();
         return bombPos != null && target.distanceToSqr(bombPos) < 9.0D ?
-                MoveSelectionResult.USE : MoveSelectionResult.PASS;
+                MoveSelectionResult.USE : MoveSelectionResult.STOP;
     }
 
     @Override

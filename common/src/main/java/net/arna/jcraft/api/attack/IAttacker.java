@@ -15,6 +15,7 @@ import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.ai.AttackerBrainInfo;
 import net.arna.jcraft.common.ai.CombatEntityContext;
 import net.arna.jcraft.common.ai.CombatInstantContext;
+import net.arna.jcraft.common.ai.IJAttackerBrain;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.util.IJCraftComboTracker;
@@ -291,6 +292,10 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
 
          int selectedAttackInitTime = selectedAttack.getDuration() - selectedAttack.getWindup();
 
+         final RandomSource random = mob.getRandom();
+
+         final int aiLevel = info.getAiLevel();
+
          for (AbstractMove<?, ? super A> attack : getMoveMap().asMovesList()) {
              int windupPoint = attack.getWindupPoint();
 
@@ -389,8 +394,6 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
                  break;
              }
 
-             final RandomSource random = mob.getRandom();
-
              boolean baseSelectionCondition = switch (state) {
                  case KEEPAWAY, DISENGAGE, DEFENSE -> windupPoint <= selectedAttackInitTime || attack.isRanged() || attack.getArmor() > 0;
                  case COMBOING -> windupPoint <= stunTicks && windupPoint >= selectedAttackInitTime;
@@ -403,11 +406,21 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
              if (baseSelectionCondition && random.nextBoolean() || random.nextFloat() <= 0.05f) {
                  if (state == AttackerBrainInfo.State.COMBOING) {
                      // Account for IPS
-                     if (attack.isLoopPrevention() && ((IJCraftComboTracker)target).jcraft$comboFromAttackerContains(mob, attack))
+                     if (attack.isLoopPrevention() && ((IJCraftComboTracker)target).jcraft$comboFromAttackerContains(mob, attack)) {
                          continue;
+                     }
 
-                     if (attack instanceof AbstractSimpleAttack<?,?> simpleAttack && simpleAttack.getStunType() == StunType.LAUNCH && random.nextFloat() <= 0.9f)
+                     float chanceToNotUseLaunchAttack = 0.9f;
+                     if (aiLevel < IJAttackerBrain.COMPETITIVE_LEVEL) { // [14, 0]
+                         chanceToNotUseLaunchAttack -= (IJAttackerBrain.COMPETITIVE_LEVEL - aiLevel) * 0.02f;
+                     }
+
+                     // Use launching attacks less
+                     if (attack instanceof AbstractSimpleAttack<?,?> simpleAttack &&
+                             simpleAttack.getStunType() == StunType.LAUNCH &&
+                             random.nextFloat() <= chanceToNotUseLaunchAttack) {
                          continue;
+                     }
                  }
 
                  selectedAttackInitTime = windupPoint;
@@ -421,8 +434,8 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
 
          if (doFinalChecks) {
              if (selectedAttack.isCounter()) {
-                 if (stunTicks > 0) {
-                     selectedAttack = null; // You can't combo into a counter
+                 if (aiLevel > IJAttackerBrain.BEGINNER_LEVEL && stunTicks > 0) {
+                     return null; // You can't combo into a counter
                  }
              } else {
                  if ( (state != AttackerBrainInfo.State.PRESSURE && state != AttackerBrainInfo.State.COMBOING) &&
@@ -434,7 +447,7 @@ public interface IAttacker<A extends IAttacker<? extends A, S>, S extends Enum<?
                          distance > selectedAttack.getMoveDistance() + boxAttack.getHitboxSize()
                          )
                  ) {
-                     selectedAttack = null;
+                     return null;
                  }
              }
          }

@@ -27,6 +27,18 @@ public interface IJAttackerBrain {
         }
     }
 
+    static void pacing(final AttackerBrainInfo info, final CombatInstantContext combatCtx) {
+        final int aiLevel = info.getAiLevel();
+        final RandomSource random = combatCtx.getAttackerCtx().entity().getRandom();
+
+        if (aiLevel < IJAttackerBrain.INTERMEDIATE_LEVEL) { // [9, 0]
+            final float chanceToDoNothing = (IJAttackerBrain.INTERMEDIATE_LEVEL - aiLevel) * 0.11f;
+            if (random.nextFloat() > chanceToDoNothing) {
+                info.setDesiredNoAttackTime(random.nextInt(20 - aiLevel));
+            }
+        }
+    }
+
     @Nullable
     static CombatInstantContext target(Mob mob, AttackerBrainInfo info) {
         LivingEntity target = mob.getTarget();

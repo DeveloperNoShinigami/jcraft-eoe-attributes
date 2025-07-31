@@ -494,6 +494,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
                 lookControl.setLookAt(target);
 
+                if (info.desiresNoAttack()) break;
                 doMoveSelection(
                         info,
                         mob,
@@ -521,6 +522,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
 
                 lookControl.setLookAt(target);
 
+                if (info.desiresNoAttack()) break;
                 doMoveSelection(
                         info,
                         mob,
