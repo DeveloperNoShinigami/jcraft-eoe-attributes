@@ -37,7 +37,7 @@ public class RevolverFire {
                 } else {
                     ServerLevel world = server.getLevel(toFireData.getWorldKey());
                     if (world == null) {
-                        JCraft.LOGGER.fatal("World that toFireData belongs to no longer exists! Key: " + toFireData.getWorldKey() + " user: " + user);
+                        JCraft.LOGGER.warn("World that toFireData belongs to no longer exists! Key: " + toFireData.getWorldKey() + " user: " + user);
                         continue;
                     }
 

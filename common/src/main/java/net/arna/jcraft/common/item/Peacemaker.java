@@ -31,6 +31,10 @@ import java.util.List;
 
 public class Peacemaker extends Item {
 
+    public static final String SHOTS_ID = "Shots";
+    public static final String RELOADING_ID = "Reloading";
+    public static final int MAX_ROUNDS = 6;
+
     public Peacemaker(Properties settings) {
         super(settings);
     }
@@ -39,8 +43,8 @@ public class Peacemaker extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         CompoundTag itemData = stack.getTag();
 
-        if (itemData != null && itemData.contains("Shots")) {
-            tooltip.add(Component.translatable("tooltip.jcraft.peacemaker.shots").append(" §e" + itemData.get("Shots")));
+        if (itemData != null && itemData.contains(SHOTS_ID)) {
+            tooltip.add(Component.translatable("tooltip.jcraft.peacemaker.shots").append(" §e" + itemData.get(SHOTS_ID)));
         }
 
         super.appendHoverText(stack, world, tooltip, context);
@@ -72,31 +76,32 @@ public class Peacemaker extends Item {
         }
 
         // Creative mode players don't need to reload
-        if (user.isCreative()) {
-            return InteractionResultHolder.fail(itemStack);
-        }
+        // But they are allowed to!
+//        if (user.isCreative()) {
+//            return InteractionResultHolder.fail(itemStack);
+//        }
 
         CompoundTag data = itemStack.getOrCreateTag();
-        int shots = data.getInt("Shots");
+        int shots = data.getInt(SHOTS_ID);
 
         // Check if already at max capacity
-        if (shots >= 6) {
+        if (shots >= MAX_ROUNDS) {
             return InteractionResultHolder.fail(itemStack);
         }
 
         // Check if already reloading
-        if (data.getBoolean("Reloading")) {
+        if (data.getBoolean(RELOADING_ID) && user.getCooldowns().isOnCooldown(JItemRegistry.PEACEMAKER.get())) {
             return InteractionResultHolder.fail(itemStack);
         }
 
         // Check if player has bullets
-        if (!hasBulletInInventory(user)) {
+        if (!user.isCreative() && !hasBulletInInventory(user)) {
             return InteractionResultHolder.fail(itemStack);
         }
 
         if (!world.isClientSide) {
             // Start reload process
-            data.putBoolean("Reloading", true);
+            data.putBoolean(RELOADING_ID, true);
             // Put shooting on cooldown during reload (3 seconds = 60 ticks)
             user.getCooldowns().addCooldown(JItemRegistry.PEACEMAKER.get(), 60); // 3 second cooldown during reload
             PeacemakerReload.enqueue(new DimensionData(user, world.dimension(), 10)); // 10 ticks between bullets
@@ -106,10 +111,10 @@ public class Peacemaker extends Item {
         return InteractionResultHolder.success(itemStack);
     }
 
-    // NEW: Method to handle left-click firing via PlayerInputPacket
+    // method to handle left-click firing via PlayerInputPacket
     public static boolean handleLeftClick(Player player) {
-        ItemStack mainHand = player.getMainHandItem();
-        ItemStack offHand = player.getOffhandItem();
+        final ItemStack mainHand = player.getMainHandItem();
+        final ItemStack offHand = player.getOffhandItem();
 
         // Check if player is holding a peacemaker in either hand
         ItemStack peacemakerStack = null;
@@ -147,17 +152,15 @@ public class Peacemaker extends Item {
         }
 
         CompoundTag data = peacemakerStack.getOrCreateTag();
-        int shots = data.getInt("Shots");
+        int shots = data.getInt(SHOTS_ID);
 
         // Check if reloading
-        if (data.getBoolean("Reloading")) {
+        if (data.getBoolean(RELOADING_ID)) {
             return true; // We handled it (by doing nothing)
         }
 
         // Creative mode has infinite bullets
-        if (player.isCreative()) {
-            // Don't check shot count in creative mode - always allow firing
-        } else if (shots < 1) {
+        if (shots < 1 && !player.isCreative()) {
             return true; // We handled it (by doing nothing)
         }
 
@@ -175,7 +178,7 @@ public class Peacemaker extends Item {
     // Static fire method for RevolverFire to call
     public static void fireStatic(ItemStack itemStack, Level world, LivingEntity user) {
         CompoundTag data = itemStack.getOrCreateTag();
-        int shots = data.getInt("Shots");
+        int shots = data.getInt(SHOTS_ID);
 
         // Creative mode players have infinite bullets
         if (user instanceof Player player && player.isCreative()) {
@@ -184,13 +187,13 @@ public class Peacemaker extends Item {
             if (shots < 1) {
                 return;
             }
-            data.putInt("Shots", shots - 1);
+            data.putInt(SHOTS_ID, shots - 1);
         }
 
         world.playSound(null, user.getX(), user.getY(), user.getZ(), JSoundRegistry.REVOLVER_FIRE.get(), SoundSource.PLAYERS, 1f, 1f);
 
         BulletProjectile bullet = new BulletProjectile(world, user, 9f, 10f, 2, 5);
-        bullet.shootFromRotation(user, user.getXRot(), user.getYRot(), 0f, 10, 0F);
+        bullet.shootFromRotation(user, user.getXRot(), user.getYRot(), 0f, 10, 0f);
 
         // Add campfire smoke particles at bullet spawn position
         if (world instanceof ServerLevel serverLevel) {
@@ -220,34 +223,34 @@ public class Peacemaker extends Item {
 
     public static void finishReload(ItemStack itemStack, Level world, LivingEntity user) {
         CompoundTag data = itemStack.getOrCreateTag();
-        int shots = data.getInt("Shots");
+        int shots = data.getInt(SHOTS_ID);
 
-        if (shots >= 6) {
-            data.putBoolean("Reloading", false);
+        if (shots >= MAX_ROUNDS) {
+            data.putBoolean(RELOADING_ID, false);
             return;
         }
 
         if (user instanceof Player player) {
             // Consume one bullet from inventory
             if (consumeBulletFromInventory(player)) {
-                data.putInt("Shots", shots + 1);
+                data.putInt(SHOTS_ID, shots + 1);
                 // Play reload sound from JSoundRegistry
                 world.playSound(null, user.getX(), user.getY(), user.getZ(), JSoundRegistry.LOAD.get(), SoundSource.PLAYERS, 0.7f, 1.0f);
 
                 // Check if we need to reload more bullets
-                if (data.getInt("Shots") < 6 && hasBulletInInventory(player)) {
+                if (data.getInt(SHOTS_ID) < MAX_ROUNDS && hasBulletInInventory(player)) {
                     // Queue next bullet reload (10 ticks between each bullet)
                     PeacemakerReload.enqueue(new DimensionData(user, world.dimension(), 10));
                     // Keep cooldown active during reload (3 seconds total)
                     player.getCooldowns().addCooldown(JItemRegistry.PEACEMAKER.get(), 60);
                 } else {
                     // Finished reloading - remove cooldown
-                    data.putBoolean("Reloading", false);
+                    data.putBoolean(RELOADING_ID, false);
                     player.getCooldowns().removeCooldown(JItemRegistry.PEACEMAKER.get());
                 }
             } else {
                 // No more bullets available - remove cooldown
-                data.putBoolean("Reloading", false);
+                data.putBoolean(RELOADING_ID, false);
                 player.getCooldowns().removeCooldown(JItemRegistry.PEACEMAKER.get());
             }
         }
@@ -270,10 +273,10 @@ public class Peacemaker extends Item {
 
     @Override
     public ItemStack getDefaultInstance() {
-        ItemStack s = new ItemStack(this);
-        CompoundTag nbt = s.getOrCreateTag();
-        nbt.putInt("Shots", 6);
-        nbt.putBoolean("Reloading", false);
-        return s;
+        ItemStack stack = new ItemStack(this);
+        CompoundTag nbt = stack.getOrCreateTag();
+        nbt.putInt(SHOTS_ID, MAX_ROUNDS);
+        nbt.putBoolean(RELOADING_ID, false);
+        return stack;
     }
 }
