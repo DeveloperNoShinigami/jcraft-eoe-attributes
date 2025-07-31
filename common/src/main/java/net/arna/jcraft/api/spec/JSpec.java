@@ -337,6 +337,7 @@ public abstract class JSpec<A extends JSpec<A, S>, S extends Enum<S> & SpecAnima
     public void cancelMove(boolean offensiveCancel) {
         if (curMove != null) {
             if (offensiveCancel && !performedThisTick && curMove.shouldPerform(getThis(), getMoveStun() - 1)) {
+                setPerformedThisTick(true);
                 curMove.perform(getThis(), getUserOrThrow());
             }
             if (curMove != null) {
