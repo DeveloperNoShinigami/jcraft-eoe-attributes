@@ -33,6 +33,7 @@ public class LevelMixin {
                 return;
             }
             // avoid chunk generation
+            // todo: pliz make the mixin itself just not apply to a select few classes
             for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
                 if ((MINECRAFT_SERVER_NAME.equals(element.getClassName()) && "prepareLevels".equals(element.getMethodName())) ||
                         LEVEL_CHUNK_NAME.equals(element.getClassName()) && "postProcessGeneration".equals(element.getMethodName())) {

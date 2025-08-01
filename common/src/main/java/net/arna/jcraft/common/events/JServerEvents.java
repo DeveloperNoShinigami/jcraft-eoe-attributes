@@ -5,20 +5,20 @@ import dev.architectury.event.EventResult;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.attack.moves.BlockMarkerMove;
-import net.arna.jcraft.api.registry.*;
-import net.arna.jcraft.api.stand.StandType;
-import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
-import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.api.component.living.CommonVampireComponent;
+import net.arna.jcraft.api.registry.*;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
+import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.data.AttackerDataLoader;
 import net.arna.jcraft.common.entity.StandMeteorEntity;
-import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.MockItem;
+import net.arna.jcraft.common.marker.BlockMarkerMoves;
 import net.arna.jcraft.common.network.s2c.AttackerDataPacket;
 import net.arna.jcraft.common.saveddata.ExclusiveStandsData;
 import net.arna.jcraft.common.tickable.*;
@@ -630,11 +630,10 @@ public class JServerEvents {
         if (oldBlockState.is(BlockTags.LEAVES) && newBlockState.is(BlockTags.LEAVES)) {
             return EventResult.pass();
         }
-        synchronized (BlockMarkerMove.MOVES) {
-            for (final BlockMarkerMove move : BlockMarkerMove.MOVES) {
-                move.addBlock(blockPos, oldBlockState);
-            }
-        }
+
+        BlockMarkerMoves.mergeQueue();
+        BlockMarkerMoves.forEach(move -> move.addBlock(blockPos, oldBlockState));
+
         return EventResult.pass();
     }
 }
