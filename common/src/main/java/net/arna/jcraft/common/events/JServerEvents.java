@@ -34,6 +34,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -626,6 +627,9 @@ public class JServerEvents {
     }
 
     public static EventResult beforeBlockSet(BlockPos blockPos, BlockState oldBlockState, BlockState newBlockState) {
+        if (oldBlockState.is(BlockTags.LEAVES) && newBlockState.is(BlockTags.LEAVES)) {
+            return EventResult.pass();
+        }
         synchronized (BlockMarkerMove.MOVES) {
             for (final BlockMarkerMove move : BlockMarkerMove.MOVES) {
                 move.addBlock(blockPos, oldBlockState);
