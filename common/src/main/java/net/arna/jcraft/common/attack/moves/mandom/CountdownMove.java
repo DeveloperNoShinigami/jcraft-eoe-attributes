@@ -100,6 +100,9 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
                 // this is all we need to check when saving/loading
                 rewindIds,
                 new EntityDataHandler(Predicates.fromSet(rewindIds), extractor, injector));
+        synchronized (BlockMarkerMove.MOVES) {
+            BlockMarkerMove.MOVES.add(this);
+        }
     }
 
     @Override
@@ -124,6 +127,14 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
     public boolean addBlock(final @NonNull BlockPos pos, final @NonNull BlockState state) {
         if (resolving || !BLOCK_MARKER_TYPE.shouldSave(pos, state)) {
             return false;
+        }
+        // we only want to save the block if the pos isn't already marked
+        // i.e. no point in saving that you replaced a block with dirt when it was previously already replaced,
+        // e.g. with cobblestone
+        for (final BlockMarker timeBlockMarker : timeBlockMarkers) {
+            if (timeBlockMarker.pos().equals(pos)) {
+                return false;
+            }
         }
         timeBlockMarkers.add(BLOCK_MARKER_TYPE.save(pos, state));
         return true;
@@ -150,13 +161,6 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
                 rewindInfo.add(new RewindData(entity.getEyePosition(), entity));
             }
         }
-
-        final BlockPos pos = attacker.getOnPos().above();
-        BlockPos.betweenClosed(pos.offset(-radius, -radius, -radius), pos.offset(radius, radius, radius))
-                .forEach(p -> {
-                    final BlockState state = attacker.level().getBlockState(p);
-                    addBlock(p, state);
-                });
 
         countdownActive = true;
         countdownTicks = 0;
