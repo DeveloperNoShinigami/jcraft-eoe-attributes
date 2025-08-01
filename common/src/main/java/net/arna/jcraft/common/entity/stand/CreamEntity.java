@@ -479,7 +479,7 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
                         if (!JServerConfig.CREAM_ITEM_ERASE.getValue()) {
                             // Drop items before destroying the block
-                            level().getBlockState(p).getBlock().dropResources(level().getBlockState(p), level(), p);
+                            Block.dropResources(level().getBlockState(p), level(), p);
                         }
 
                         level().setBlockAndUpdate(p, Block.stateById(0));

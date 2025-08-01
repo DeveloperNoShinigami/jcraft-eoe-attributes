@@ -450,8 +450,6 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     public void togglePilotMode() {
         setRemote(!isRemote());
-//        registerMoves(); // Switching movesets
-        // TODO
     }
 
     /**
