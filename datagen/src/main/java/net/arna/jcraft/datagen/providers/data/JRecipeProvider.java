@@ -838,9 +838,10 @@ public class JRecipeProvider extends FabricRecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.DIEGO_HAT.get())
                 .pattern("YYY")
                 .pattern("CHC")
-                .pattern("C C")
+                .pattern("S S")
                 .define('C', Items.CYAN_DYE)
                 .define('H', Items.LEATHER_HELMET)
+                .define('S', Items.STRING)
                 .define('Y', Items.YELLOW_DYE)
                 .unlockedBy("has_leather_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.LEATHER_HELMET))
                 .save(exporter);
