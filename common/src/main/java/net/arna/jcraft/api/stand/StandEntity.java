@@ -39,6 +39,7 @@ import net.arna.jcraft.common.attack.core.MoveMapImpl;
 import net.arna.jcraft.common.attack.core.itfs.AttackRotationOffsetOverride;
 import net.arna.jcraft.common.entity.damage.JDamageSources;
 import net.arna.jcraft.common.entity.stand.PurpleHazeEntity;
+import net.arna.jcraft.common.marker.BlockMarkerMoves;
 import net.arna.jcraft.common.network.c2s.PlayerInputPacket;
 import net.arna.jcraft.common.tickable.MoveTickQueue;
 import net.arna.jcraft.common.util.*;
@@ -825,6 +826,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
             return;
         }
         playDesummonSound = playSound;
+        BlockMarkerMoves.remove(this);
         discard();
     }
 
