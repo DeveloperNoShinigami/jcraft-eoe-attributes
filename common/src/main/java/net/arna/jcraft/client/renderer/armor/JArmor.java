@@ -95,7 +95,9 @@ public class JArmor<T extends Item & GeoItem> extends GeoArmorRenderer<T> {
 
         if (leftArm != null && rightArm != null) {
             leftArm.setScaleX(0.75f);
+            leftArm.setPivotX(-4.5f); // Default pivot is -5
             rightArm.setScaleX(0.75f);
+            rightArm.setPivotX(4.5f);
         }
     }
 }
