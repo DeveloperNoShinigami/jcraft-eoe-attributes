@@ -96,8 +96,6 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
                 // this is all we need to check when saving/loading
                 rewindIds,
                 new EntityDataHandler(Predicates.fromSet(rewindIds), extractor, injector));
-
-        BlockMarkerMoves.add(this);
     }
 
     @Override
@@ -145,6 +143,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
     @Override
     public @NonNull Set<LivingEntity> perform(final MandomEntity attacker, final LivingEntity user) {
+        BlockMarkerMoves.add(attacker, this);
         final List<Entity> toCapture = attacker.level().getEntitiesOfClass(Entity.class,
                 attacker.getBoundingBox().inflate(radius),
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker));

@@ -631,7 +631,7 @@ public class JServerEvents {
             return EventResult.pass();
         }
 
-        BlockMarkerMoves.mergeQueue();
+        BlockMarkerMoves.mergeQueues();
         BlockMarkerMoves.forEach(move -> move.addBlock(blockPos, oldBlockState));
 
         return EventResult.pass();
