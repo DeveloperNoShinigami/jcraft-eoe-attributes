@@ -173,6 +173,7 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(Items.CREEPER_SPAWN_EGG, JItemRegistry.DARBY_OLDER_SPAWN_EGG.get());
             output.acceptAfter(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get(), JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get());
             output.acceptAfter(Items.PARROT_SPAWN_EGG, JItemRegistry.PETSHOP_SPAWN_EGG.get());
+            output.acceptAfter(Items.TURTLE_SPAWN_EGG, JItemRegistry.VAMPIRE_SPAWN_EGG.get());
         });
     }
 
@@ -245,6 +246,8 @@ public interface JCreativeMenuTabRegistry {
                         nbt.put("StoredEnchantments", enchantments);
                         entries.accept(stack);
                     }
+                    // spawn eggs season 1
+                    entries.accept(JItemRegistry.VAMPIRE_SPAWN_EGG.get());
                     // spawn eggs season 3
                     entries.accept(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get());
                     entries.accept(JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get());
