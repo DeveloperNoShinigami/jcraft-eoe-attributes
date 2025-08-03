@@ -468,7 +468,6 @@
   "jcraft.serverconfig.option.mihTimeAccelerationDuration": "メイド・イン・ヘブンの時の加速の持続時間",
   "jcraft.serverconfig.option.miningBarrage": "ラッシュの採掘",
   "jcraft.serverconfig.option.reduceDeadlyExplosions": "大きい爆発ダメージの軽減",
-  "jcraft.serverconfig.option.scalingPenaltyPerHit": "",
   "jcraft.serverconfig.option.shaSearchRadius": "シアーハートアタックの探知範囲",
   "jcraft.serverconfig.option.sptwIgniteCampfires": "スタープラチナ・ザ・ワールドの焚き火への点火",
   "jcraft.serverconfig.option.sptwTimeStopDuration": "スタープラチナ・ザ・ワールドの時止めの持続時間",
