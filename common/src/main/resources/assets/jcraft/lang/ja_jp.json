@@ -261,7 +261,6 @@
   "gamerule.comboCounter": "コンボカウンターを表示する",
   "gamerule.creamBlackHoleErasesBlocks": "クリームの暗黒空間がブロックを消せるようにする",
   "gamerule.defaultSpec": "デフォルトのスペック",
-  "gamerule.doFallingMeteors": "",
   "gamerule.keepSpec": "死亡時のスペック保持",
   "gamerule.keepStand": "死亡時のスタンド保持",
   "gamerule.showHitboxes": "JCraftのヒットボックス表示",
