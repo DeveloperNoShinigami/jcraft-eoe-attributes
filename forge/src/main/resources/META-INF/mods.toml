@@ -38,7 +38,7 @@ side = "BOTH"
 [[dependencies.jcraft]]
 modId = "azurelib"
 mandatory = true
-versionRange = "[3.0.15,)"
+versionRange = "[1.0.34,)"
 ordering = "AFTER"
 side = "BOTH"
 
