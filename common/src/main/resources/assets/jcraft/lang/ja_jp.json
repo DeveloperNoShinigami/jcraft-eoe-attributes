@@ -716,7 +716,6 @@
   "move.jcraft.horus.default.finisher.followup.name": "フィニッシャー",
   "move.jcraft.horus.default.ice_lance.cr.description": "スピードも遅く、クールダウンもやや長い。\n2秒後に爆発する大きな氷柱を発射する。",
   "move.jcraft.horus.default.ice_lance.cr.name": "氷の槍",
-  "move.jcraft.horus.default.icicle_charge.description": "",
   "move.jcraft.horus.default.icicle_charge.name": "つららチャージ",
   "move.jcraft.horus.default.icicle_fire.followup.name": "つらら発射",
   "move.jcraft.horus.default.impale.cr.description": "低速なリセットの選択肢、強度のスタンとガードスタン",
