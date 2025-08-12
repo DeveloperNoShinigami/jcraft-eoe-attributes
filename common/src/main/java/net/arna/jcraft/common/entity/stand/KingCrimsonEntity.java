@@ -362,8 +362,10 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
     @Override
     public void desummon() {
-        if (this.getTETime() < 1) {
+        if (getTETime() < 1) {
             super.desummon();
+        } else {
+            getTimeEraseMove().cancelTE(this);
         }
     }
 

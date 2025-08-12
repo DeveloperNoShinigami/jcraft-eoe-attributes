@@ -54,6 +54,7 @@
 * fixed minor Road Roller UV issue
 * fixed LifeGiver taking items from creative hotbar
 * fixed HG tentacles activating on creative or spectator player
+* fixed KC being able to create permanent Time Erase clones
 ### Known Bugs
 * Enemies can attack through dimensions (hit something -> D4C ult -> attacked by out-of-world ent)
 
