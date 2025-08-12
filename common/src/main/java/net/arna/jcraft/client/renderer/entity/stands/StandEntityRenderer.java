@@ -46,6 +46,11 @@ public class StandEntityRenderer<T extends StandEntity<?, ?>> extends GeoEntityR
         super(renderManager, modelProvider);
     }
 
+    @Override
+    public ResourceLocation getTextureLocation(T animatable) {
+        return getGeoModel().getTextureResource(animatable);
+    }
+
     public static boolean standIsFirstPersonViewers(final StandEntity<?, ?> stand)
     {
         final Minecraft mcClient = Minecraft.getInstance();

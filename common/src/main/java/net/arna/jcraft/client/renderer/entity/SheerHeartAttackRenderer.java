@@ -21,6 +21,6 @@ public class SheerHeartAttackRenderer extends GeoEntityRenderer<SheerHeartAttack
 
     @Override
     public RenderType getRenderType(final SheerHeartAttackEntity animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
-        return RenderType.entityTranslucent(this.getTextureLocation(animatable));
+        return RenderType.entityTranslucent(getGeoModel().getTextureResource(animatable));
     }
 }

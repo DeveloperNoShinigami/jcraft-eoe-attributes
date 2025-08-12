@@ -20,6 +20,9 @@ public class CoffinTileRenderer extends GeoBlockRenderer<CoffinTileEntity> {
         if (BedPart.HEAD == animatable.getBlockState().getValue(BedBlock.PART)) {
             return;
         }
-        super.render(animatable, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+
+        this.animatable = animatable;
+
+        defaultRender(poseStack, this.animatable, bufferSource, null, null, 0, partialTick, packedLight);
     }
 }
