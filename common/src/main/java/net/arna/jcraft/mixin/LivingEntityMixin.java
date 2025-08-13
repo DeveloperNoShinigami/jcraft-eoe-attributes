@@ -105,6 +105,18 @@ public abstract class LivingEntityMixin implements IJCraftComboTracker {
     }
 
     @Override
+    public boolean jcraft$comboFromAttackerContains(LivingEntity attacker, AbstractMove<?, ?> move) {
+        if (!usedComboMoves.containsKey(attacker))
+            return false;
+
+        for (var moveUsage : usedComboMoves.get(attacker)) {
+            if (Attacks.prototypeMatch(moveUsage.move(), move)) return true;
+        }
+
+        return false;
+    }
+
+    @Override
     public void jcraft$resetCombo() {
         for (var entry : usedComboMoves.entrySet()) {
             entry.getValue().clear();

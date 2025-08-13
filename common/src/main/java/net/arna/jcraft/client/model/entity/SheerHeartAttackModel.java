@@ -9,20 +9,23 @@ import net.minecraft.resources.ResourceLocation;
  * The {@link GeoModel} for {@link SheerHeartAttackEntity}.
  * @see net.arna.jcraft.client.renderer.entity.SheerHeartAttackRenderer SheerHeartAttackRenderer
  */
-public class SheerHeartAttackModel extends GeoModel<SheerHeartAttackEntity> {
+public final class SheerHeartAttackModel extends GeoModel<SheerHeartAttackEntity> {
+    private static final ResourceLocation model = JCraft.id("geo/sha.geo.json");
+    private static final ResourceLocation texture = JCraft.id("textures/entity/sha.png");
+    private static final ResourceLocation animation = JCraft.id("animations/sha.animation.json");
 
     @Override
-    public ResourceLocation getModelResource(final SheerHeartAttackEntity object) {
-        return JCraft.id("geo/sha.geo.json");
+    public ResourceLocation getModelResource(final SheerHeartAttackEntity animatable) {
+        return model;
     }
 
     @Override
-    public ResourceLocation getTextureResource(final SheerHeartAttackEntity object) {
-        return JCraft.id("textures/entity/sha.png");
+    public ResourceLocation getTextureResource(final SheerHeartAttackEntity animatable) {
+        return texture;
     }
 
     @Override
     public ResourceLocation getAnimationResource(final SheerHeartAttackEntity animatable) {
-        return JCraft.id("animations/sha.animation.json");
+        return animation;
     }
 }

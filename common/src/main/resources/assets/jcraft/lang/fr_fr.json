@@ -1,9 +1,11 @@
 {
   "advancements.jcraft.find_stone_mask.description": "Trouver un Masque de Pierre",
   "advancements.jcraft.find_stone_mask.title": "Attention, ca vas piquer…",
+  "advancements.jcraft.obtain_all_music_discs.description": "Obtenir tout les disques de musique de JCraft",
+  "advancements.jcraft.obtain_all_music_discs.title": "Disque Jockey",
   "advancements.jcraft.obtain_all_specs.description": "Aucun pouvoir ne vous échappe",
-  "advancements.jcraft.obtain_all_specs.title": "Lignée sacrée",
-  "advancements.jcraft.obtain_all_stands.description": "Vous possédez tout les stands! Rien ne peut vous arrêter",
+  "advancements.jcraft.obtain_all_specs.title": "héritage",
+  "advancements.jcraft.obtain_all_stands.description": "Obtenir tout les stands",
   "advancements.jcraft.obtain_all_stands.title": "Roundabout",
   "advancements.jcraft.obtain_any_spec.description": "Vous tenez votre premier pouvoir entre vos mains",
   "advancements.jcraft.obtain_any_spec.title": "Héritier de la lignée",
@@ -153,5 +155,11 @@
   "entity.jcraft.d4c": "Dirty Deeds Done Dirt Cheap",
   "entity.jcraft.d4c.info.con1": "les setups et combos optimaux nécessitent de l'anticipation",
   "entity.jcraft.d4c.info.con2": "moins rapide que la moyenne",
-  "entity.jcraft.d4c.info.pro1": "Bons outils de combo"
+  "entity.jcraft.d4c.info.desc": "Toute portée TRICKSTER polyvalent",
+  "entity.jcraft.d4c.info.pro1": "Bons outils de combo",
+  "entity.jcraft.d4c.info.pro2": "contre",
+  "entity.jcraft.d4c.info.pro3": "setup extensibles",
+  "entity.jcraft.d4c.info.pro4": "bon pour mettre la pression",
+  "entity.jcraft.d4c.info.skin1": "Jojoyageur",
+  "entity.jcraft.d4c.info.skin2": "Teaser"
 }

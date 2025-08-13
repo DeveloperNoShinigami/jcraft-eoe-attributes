@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public class SandTornadoRenderer extends GeoEntityRenderer<SandTornadoEntity> {
     @Override
     public RenderType getRenderType(final SandTornadoEntity animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucent(getGeoModel().getTextureResource(animatable));
     }
 
     @Override

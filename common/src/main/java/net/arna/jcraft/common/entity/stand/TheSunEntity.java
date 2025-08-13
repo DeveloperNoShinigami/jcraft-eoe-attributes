@@ -384,6 +384,10 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
         return other.canBeCollidedWith() && !this.isPassengerOfSameVehicle(other);
     }
 
+    @Override
+    public double getEngagementDistance() {
+        return 128.0;
+    }
 
     @Override
     public void tick() {

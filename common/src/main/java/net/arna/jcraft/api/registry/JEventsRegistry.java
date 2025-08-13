@@ -33,7 +33,7 @@ public interface JEventsRegistry {
             AttackerDataPacket.send(List.of(player));
         });
 
-        LifecycleEvent.SERVER_STARTING.register(JServerConfig::load);
+        LifecycleEvent.SERVER_BEFORE_START.register(JServerConfig::load);
         LifecycleEvent.SERVER_STARTED.register(JServerEvents::finishLoading);
         LifecycleEvent.SERVER_STOPPED.register(JServerEvents::saveExclusives);
     }

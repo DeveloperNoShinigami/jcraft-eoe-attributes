@@ -14,6 +14,9 @@ import net.arna.jcraft.api.attack.enums.StunType;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
+import net.arna.jcraft.common.ai.AttackerBrainInfo;
+import net.arna.jcraft.common.ai.IJAttackerBrain;
+import net.arna.jcraft.common.ai.brain.StandAttackerBrain;
 import net.arna.jcraft.common.attack.moves.purplehaze.BackhandAttack;
 import net.arna.jcraft.common.attack.moves.purplehaze.PHGroundSlamAttack;
 import net.arna.jcraft.common.attack.moves.purplehaze.PHRekkaAttack;
@@ -131,6 +134,12 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
     public static final int MAX_RAGE = 20 * 60;
     private int rage = 0;
     private boolean flowerable = false, hasFlower = false, toEvolve = false;
+    private final AttackerBrainInfo attackerBrainInfo = new AttackerBrainInfo(IJAttackerBrain.COMPETITIVE_LEVEL);
+    final Comparator<Entity> distanceComparator = (entity1, entity2) -> {
+        double distance1 = this.distanceToSqr(entity1);
+        double distance2 = this.distanceToSqr(entity2);
+        return Double.compare(distance1, distance2);
+    };
 
     public PurpleHazeEntity(Level worldIn) {
         super(JStandTypeRegistry.PURPLE_HAZE.get(), worldIn);
@@ -283,11 +292,6 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(EntitySelector.LIVING_ENTITY_STILL_ALIVE));
                         potentialTargets.remove(this);
 
-                        Comparator<Entity> distanceComparator = (entity1, entity2) -> {
-                            double distance1 = this.distanceToSqr(entity1);
-                            double distance2 = this.distanceToSqr(entity2);
-                            return Double.compare(distance1, distance2);
-                        };
                         potentialTargets.sort(distanceComparator);
 
                         for (LivingEntity potentialTarget : potentialTargets) {
@@ -318,8 +322,6 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
                         {
                             navigation.moveTo(target, speed);
                         }
-
-                        standUserCombatAI(this, target, this);
                     }
 
                     if (!isRemote) {
@@ -329,6 +331,7 @@ public final class PurpleHazeEntity extends AbstractPurpleHazeEntity<PurpleHazeE
 
                 if (isRemote) {
                     tickRemoteState(getMoveControl().getSpeedModifier(), getMoveControl().strafeRight, onGround());
+                    StandAttackerBrain.tick(this, attackerBrainInfo);
                 }
             }
         }

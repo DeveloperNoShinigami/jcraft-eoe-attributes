@@ -14,13 +14,7 @@ import net.arna.jcraft.api.attack.moves.BlockMarkerMove;
 import net.arna.jcraft.api.component.living.CommonCooldownsComponent;
 import net.arna.jcraft.api.registry.JPacketRegistry;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
-import net.arna.jcraft.common.marker.BlockMarker;
-import net.arna.jcraft.common.marker.BlockMarkerType;
-import net.arna.jcraft.common.marker.EntityDataHandler;
-import net.arna.jcraft.common.marker.EntityMarker;
-import net.arna.jcraft.common.marker.EntityMarkerType;
-import net.arna.jcraft.common.marker.Identifiers;
-import net.arna.jcraft.common.marker.Predicates;
+import net.arna.jcraft.common.marker.*;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.TriConsumer;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
@@ -56,7 +50,8 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             Identifiers.VEHICLE
     );
     static final BlockMarkerType BLOCK_MARKER_TYPE = new BlockMarkerType(
-            (pos, state) -> true, (marker, level) -> true
+            (pos, state) -> false,
+            (marker, level) -> true
     );
     @Getter
     private final int radius;
@@ -78,6 +73,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
     private boolean countdownActive = false;
     @Getter
     private int countdownTicks;
+    private BlockPos attackerBlockPos;
 
     public CountdownMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int radius, final int maxCountdownTicks,
                          final @NonNull Set<ResourceLocation> rewindIds,
@@ -100,9 +96,6 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
                 // this is all we need to check when saving/loading
                 rewindIds,
                 new EntityDataHandler(Predicates.fromSet(rewindIds), extractor, injector));
-        synchronized (BlockMarkerMove.MOVES) {
-            BlockMarkerMove.MOVES.add(this);
-        }
     }
 
     @Override
@@ -125,6 +118,14 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
     @Override
     public boolean addBlock(final @NonNull BlockPos pos, final @NonNull BlockState state) {
+        if (!countdownActive) {
+            return false;
+        }
+
+        if (pos.distSqr(attackerBlockPos) > radius * radius) {
+            return false;
+        }
+
         if (resolving || !BLOCK_MARKER_TYPE.shouldSave(pos, state)) {
             return false;
         }
@@ -142,6 +143,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
 
     @Override
     public @NonNull Set<LivingEntity> perform(final MandomEntity attacker, final LivingEntity user) {
+        BlockMarkerMoves.add(attacker, this);
         final List<Entity> toCapture = attacker.level().getEntitiesOfClass(Entity.class,
                 attacker.getBoundingBox().inflate(radius),
                 EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(e -> e != attacker));
@@ -154,6 +156,8 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
         timeEntityMarkers.clear();
         timeBlockMarkers.clear();
         rewindInfo.clear();
+
+        attackerBlockPos = attacker.blockPosition();
 
         for (final Entity entity : toCapture) {
             if (entityMarkerType.shouldSave(entity.getUUID(), entity)) {

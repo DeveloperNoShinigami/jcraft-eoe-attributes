@@ -9,19 +9,23 @@ import net.minecraft.resources.ResourceLocation;
  * The {@link GeoModel} for {@link GEButterflyEntity}.
  * @see net.arna.jcraft.client.renderer.entity.GEButterflyRenderer GEButterflyRenderer
  */
-public class GEButterflyModel extends GeoModel<GEButterflyEntity> {
+public final class GEButterflyModel extends GeoModel<GEButterflyEntity> {
+    private static final ResourceLocation model = JCraft.id("geo/gebutterfly.geo.json");
+    private static final ResourceLocation texture = JCraft.id("textures/entity/gebutterfly.png");
+    private static final ResourceLocation animation = JCraft.id("animations/gebutterfly.animation.json");
+
     @Override
-    public ResourceLocation getModelResource(final GEButterflyEntity object) {
-        return JCraft.id("geo/gebutterfly.geo.json");
+    public ResourceLocation getModelResource(final GEButterflyEntity animatable) {
+        return model;
     }
 
     @Override
-    public ResourceLocation getTextureResource(final GEButterflyEntity object) {
-        return JCraft.id("textures/entity/gebutterfly.png");
+    public ResourceLocation getTextureResource(final GEButterflyEntity animatable) {
+        return texture;
     }
 
     @Override
     public ResourceLocation getAnimationResource(final GEButterflyEntity animatable) {
-        return JCraft.id("animations/gebutterfly.animation.json");
+        return animation;
     }
 }

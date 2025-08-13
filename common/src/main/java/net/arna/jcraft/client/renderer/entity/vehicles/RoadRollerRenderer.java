@@ -21,7 +21,7 @@ public class RoadRollerRenderer extends GeoEntityRenderer<RoadRollerEntity> {
 
     @Override
     public RenderType getRenderType(final RoadRollerEntity animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
+        return RenderType.entityTranslucent(getGeoModel().getTextureResource(animatable));
     }
 
     @Override

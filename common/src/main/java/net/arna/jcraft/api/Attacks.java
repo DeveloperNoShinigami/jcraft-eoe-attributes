@@ -298,14 +298,12 @@ public interface Attacks {
         }
 
         // Interrupting spec moves
-        if (victim instanceof Player playerEntity) {
-            JSpec<?, ?> spec = JUtils.getSpec(playerEntity);
-            if (spec != null && spec.curMove != null) {
-                if (--spec.armorPoints < 0) {
-                    if (cancelAttack) spec.cancelMove(true);
-                } else {
-                    JComponentPlatformUtils.getMiscData(playerEntity).displayArmoredHit();
-                }
+        JSpec<?, ?> spec = JUtils.getSpec(victim);
+        if (spec != null && spec.curMove != null) {
+            if (--spec.armorPoints < 0) {
+                if (cancelAttack) spec.cancelMove(true);
+            } else {
+                JComponentPlatformUtils.getMiscData(victim).displayArmoredHit();
             }
         }
 

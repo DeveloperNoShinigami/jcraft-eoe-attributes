@@ -16,7 +16,7 @@ import net.arna.jcraft.common.entity.projectile.ItemTossProjectile;
 import net.arna.jcraft.common.entity.projectile.JAttackEntity;
 import net.arna.jcraft.common.entity.projectile.KnifeProjectile;
 import net.arna.jcraft.common.entity.projectile.ScalpelProjectile;
-import net.arna.jcraft.common.entity.spec.JSpecHolder;
+import net.arna.jcraft.api.spec.JSpecHolder;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.KnifeBundleItem;
@@ -47,6 +47,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
@@ -850,5 +851,32 @@ public final class JUtils {
 
     public static void tossItem(final Player player) {
         tossItem(player, player.level(), player.getItemInHand(InteractionHand.MAIN_HAND), 1f, !player.getAbilities().instabuild);
+    }
+
+    public static double nullSafeDistanceSqr(@Nullable LivingEntity a, @Nullable LivingEntity b) {
+        if (a == null || b == null) return Double.POSITIVE_INFINITY;
+        return a.distanceToSqr(b);
+    }
+
+    /**
+     * Returns the minimum of any number of {@code double}s
+     */
+    public static double min(double... arr) {
+        double min = Double.POSITIVE_INFINITY;
+        for (double v : arr) {
+            if (v < min) min = v;
+        }
+        return min;
+    }
+
+    /**
+     * Selects a random element from the given varargs using the provided {@link RandomSource}.
+     *
+     * @throws IllegalArgumentException If no items are provided.
+     */
+    @SafeVarargs
+    public static <T> @NonNull T chooseRandom(@NonNull RandomSource rng, T... items) {
+        if (items == null || items.length == 0) throw new IllegalArgumentException("At least one item must be provided.");
+        return items[rng.nextInt(items.length)];
     }
 }

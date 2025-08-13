@@ -9,19 +9,23 @@ import net.minecraft.resources.ResourceLocation;
  * The {@link GeoModel} for {@link DarbyOlderEntity}.
  * @see net.arna.jcraft.client.renderer.entity.npc.DarbyOlderRenderer DarbyOlderRenderer
  */
-public class DarbyOlderModel extends GeoModel<DarbyOlderEntity> {
+public final class DarbyOlderModel extends GeoModel<DarbyOlderEntity> {
+    private static final ResourceLocation model = JCraft.id("geo/darby_older.geo.json");
+    private static final ResourceLocation texture = JCraft.id("textures/entity/darby_older.png");
+    private static final ResourceLocation animation = JCraft.id("animations/darby_older.animation.json");
+
     @Override
     public ResourceLocation getModelResource(final DarbyOlderEntity animatable) {
-        return JCraft.id("geo/darby_older.geo.json");
+        return model;
     }
 
     @Override
     public ResourceLocation getTextureResource(final DarbyOlderEntity animatable) {
-        return JCraft.id("textures/entity/darby_older.png");
+        return texture;
     }
 
     @Override
     public ResourceLocation getAnimationResource(final DarbyOlderEntity animatable) {
-        return JCraft.id("animations/darby_older.animation.json");
+        return animation;
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public interface Identifiers {
 
-    String MINECRAFT = "minecraft";
+    String MINECRAFT = ResourceLocation.DEFAULT_NAMESPACE;
 
     // Entity
     ResourceLocation POSITION = new ResourceLocation(MINECRAFT, "pos");

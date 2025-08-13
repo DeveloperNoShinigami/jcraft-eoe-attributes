@@ -9,20 +9,28 @@ import net.minecraft.resources.ResourceLocation;
  * The {@link GeoModel} for {@link GERScorpionEntity}.
  * @see net.arna.jcraft.client.renderer.entity.GERScorpionRenderer GERScorpionRenderer
  */
-public class GERScorpionModel extends GeoModel<GERScorpionEntity> {
+public final class GERScorpionModel extends GeoModel<GERScorpionEntity> {
+    private static final ResourceLocation model = JCraft.id("geo/gerscorpion.geo.json");
+
+    private static final ResourceLocation
+            texture = JCraft.id("textures/entity/rock.png"),
+            rock = JCraft.id("textures/entity/gerscorpion.png");
+
+    private static final ResourceLocation animation = JCraft.id("animations/gerscorpion.animation.json");
+
     @Override
-    public ResourceLocation getModelResource(final GERScorpionEntity object) {
-        return JCraft.id("geo/gerscorpion.geo.json");
+    public ResourceLocation getModelResource(final GERScorpionEntity animatable) {
+        return model;
     }
 
     @Override
-    public ResourceLocation getTextureResource(final GERScorpionEntity object) {
-        return object.isRock() ? JCraft.id("textures/entity/rock.png") : JCraft.id("textures/entity/gerscorpion.png");
+    public ResourceLocation getTextureResource(final GERScorpionEntity animatable) {
+        return animatable.isRock() ? rock : texture;
     }
 
     @Override
     public ResourceLocation getAnimationResource(final GERScorpionEntity animatable) {
-        return JCraft.id("animations/gerscorpion.animation.json");
+        return animation;
     }
 
 }

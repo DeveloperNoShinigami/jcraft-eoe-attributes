@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.MoveSelectionResult;
 import net.arna.jcraft.api.attack.*;
 import net.arna.jcraft.api.attack.core.MoveAction;
 import net.arna.jcraft.api.attack.core.MoveCondition;
@@ -76,7 +77,7 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
 
     // Properties that are NOT serialized (usually set in constructor)
     // Used to help AI know how and when to use this attack.
-    protected boolean ranged, barrage, multiHit, charge, counter, dash, grab;
+    protected boolean ranged, barrage, multiHit, charge, counter, dash, grab; // todo: bitset (u8)
     protected boolean copyOnUse;
     protected boolean mayHitUser;
     /**
@@ -503,15 +504,31 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
         return isCrouchingVariant;
     }
 
+    public T markCrouchingVariant() {
+        isCrouchingVariant = true;
+        return getThis();
+    }
+
     @SuppressWarnings({"LombokGetterMayBeUsed", "RedundantSuppression"})
     public boolean isAerialVariant() {
         return isAerialVariant;
+    }
+
+    public T markAerialVariant() {
+        isAerialVariant = true;
+        return getThis();
     }
 
     @SuppressWarnings({"LombokGetterMayBeUsed", "RedundantSuppression"})
     public boolean isFollowup() {
         return isFollowup;
     }
+
+    public T markFollowup() {
+        isFollowup = true;
+        return getThis();
+    }
+
 
     /**
      * Called when this move is registered to a {@link MoveMap MoveMap}.
@@ -798,12 +815,12 @@ public abstract class AbstractMove<T extends AbstractMove<T, A>, A extends IAtta
      * @param enemyStand The stand of the target.
      * @param enemyAttack The attack the target is currently performing (if any).
      * @return The result of the move selection criterion. Pass by default.
-     * @see StandEntity.MoveSelectionResult
+     * @see MoveSelectionResult
      */
-    public StandEntity.MoveSelectionResult specificMoveSelectionCriterion(A attacker, LivingEntity mob, LivingEntity target, int stunTicks,
-                                                                          int enemyMoveStun, double distance,
-                                                                          StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
-        return StandEntity.MoveSelectionResult.PASS;
+    public MoveSelectionResult specificMoveSelectionCriterion(A attacker, LivingEntity mob, LivingEntity target, int stunTicks,
+                                                                                  int enemyMoveStun, double distance,
+                                                                                  StandEntity<?, ?> enemyStand, AbstractMove<?, ?> enemyAttack) {
+        return MoveSelectionResult.PASS;
     }
 
     /**

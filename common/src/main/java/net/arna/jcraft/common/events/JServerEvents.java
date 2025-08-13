@@ -5,20 +5,20 @@ import dev.architectury.event.EventResult;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.attack.moves.BlockMarkerMove;
-import net.arna.jcraft.api.registry.*;
-import net.arna.jcraft.api.stand.StandType;
-import net.arna.jcraft.api.stand.StandTypeUtil;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
-import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.api.component.living.CommonStandComponent;
 import net.arna.jcraft.api.component.living.CommonVampireComponent;
+import net.arna.jcraft.api.registry.*;
+import net.arna.jcraft.api.stand.StandEntity;
+import net.arna.jcraft.api.stand.StandType;
+import net.arna.jcraft.api.stand.StandTypeUtil;
+import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.data.AttackerDataLoader;
 import net.arna.jcraft.common.entity.StandMeteorEntity;
-import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.item.MockItem;
+import net.arna.jcraft.common.marker.BlockMarkerMoves;
 import net.arna.jcraft.common.network.s2c.AttackerDataPacket;
 import net.arna.jcraft.common.saveddata.ExclusiveStandsData;
 import net.arna.jcraft.common.tickable.*;
@@ -34,8 +34,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -93,11 +95,13 @@ public class JServerEvents {
             JCraft.preloadLockTicks--;
         }
 
+        //noinspection removal
         RevolverFire.tick(server);
+        PeacemakerReload.tick(server);
         PastDimensions.tick(server);
         Timestops.tick(server);
         Revivables.tick(server);
-        JEnemies.tick(server);
+        JEnemies.tick();
         FrameDataRequests.tick();
         MagneticFields.tick();
         RazorCoughs.tick();
@@ -287,10 +291,6 @@ public class JServerEvents {
 
     public static EventResult entityLoad(Entity entity, boolean worldGenSpawned) {
         ServerLevel world = (ServerLevel) entity.level();
-        // FIXME this is hack, find out why our mod fucks up the Nether
-        if (world.dimension() != Level.OVERWORLD && world.dimension() != JDimensionRegistry.AU_DIMENSION_KEY) {
-            return EventResult.pass();
-        }
 
         // If an item was spawned
         if (entity instanceof ItemEntity item) {
@@ -348,6 +348,10 @@ public class JServerEvents {
                 return EventResult.pass();
             }
 
+            if (!mob.getType().is(JTagRegistry.CAN_HAVE_STAND)) {
+                return EventResult.pass();
+            }
+
             // Create new stand user mobs
             if (standData.isTagged()) {
                 return EventResult.pass();
@@ -356,10 +360,7 @@ public class JServerEvents {
                 return EventResult.pass();
             }
 
-            if (!mob.getType().is(JTagRegistry.CAN_HAVE_STAND)) {
-                return EventResult.pass();
-            }
-            Random random = new Random();
+            RandomSource random = mob.getRandom();
             GameRules gameRules = world.getGameRules();
 
             standData.setTagged(true);
@@ -380,7 +381,7 @@ public class JServerEvents {
             AttributeInstance followRange = mob.getAttribute(Attributes.FOLLOW_RANGE);
             if (followRange != null) {
                 followRange.setBaseValue(Mth.clamp(
-                        128 * entity.level().getCurrentDifficultyAt(entity.blockPosition()).getEffectiveDifficulty() / 6.75,
+                        128d * (1d + entity.level().getDifficulty().getId()) / 4d,
                         10d, 128d));
             }
             AttributeInstance movementSpeed = mob.getAttribute(Attributes.MOVEMENT_SPEED);
@@ -409,21 +410,16 @@ public class JServerEvents {
             int baseArmorLevel = random.nextInt(1, 6);
             int enchantsSize = JCRAFT_ARMOR_ENCHANTS.size();
             for (int i = 0; i < 4; i++) {
-                itemStack = new ItemStack(EQUIPMENT.get(i).get(baseArmorLevel + random.nextInt(-1, 1)));
+                final int armorLevel = baseArmorLevel + random.nextInt(-1, 1); // TODO: scale with difficulty
+
+                itemStack = new ItemStack(EQUIPMENT.get(i).get(armorLevel));
                 enchantment = JCRAFT_ARMOR_ENCHANTS.get(random.nextInt(enchantsSize));
                 itemStack.enchant(enchantment, enchantment.getMaxLevel());
                 armorItems.set(i, itemStack);
-                if (itemStack.is(Items.NETHERITE_HELMET) || itemStack.is(Items.DIAMOND_HELMET)) {
-                    mob.setDropChance(EquipmentSlot.HEAD, 0f);
-                }
-                else if (itemStack.is(Items.NETHERITE_CHESTPLATE) || itemStack.is(Items.DIAMOND_CHESTPLATE)) {
-                    mob.setDropChance(EquipmentSlot.CHEST, 0f);
-                }
-                else if (itemStack.is(Items.NETHERITE_LEGGINGS) || itemStack.is(Items.DIAMOND_LEGGINGS)) {
-                    mob.setDropChance(EquipmentSlot.LEGS, 0f);
-                }
-                else if (itemStack.is(Items.NETHERITE_BOOTS) || itemStack.is(Items.DIAMOND_BOOTS)) {
-                    mob.setDropChance(EquipmentSlot.FEET, 0f);
+
+                final int diamondLevel = 4; // Check above
+                if (armorLevel >= diamondLevel) {
+                    mob.setDropChance(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i), 0f);
                 }
             }
 
@@ -508,58 +504,59 @@ public class JServerEvents {
         // No snowball shenanigans
         if (damage < 0.01f) return EventResult.pass();
         if (entity.level() instanceof ServerLevel serverWorld) {
-            boolean toLaunch = false;
-            Entity attacker = source.getEntity();
-            MobEffectInstance stun = entity.getEffect(JStatusRegistry.DAZED.get());
-
-            if (stun != null && stun.getAmplifier() != 2) {
-                boolean projectileAttack = false;
-                // Only apply stun nerfs if hit with a weapon or a projectile
-                if (attacker instanceof LivingEntity living) {
-                    projectileAttack = source.is(DamageTypeTags.IS_PROJECTILE);
-                    boolean hasWeapon = projectileAttack;
-                    if (!hasWeapon) {
-                        hasWeapon = !living.getMainHandItem().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty();
-                    }
-                    toLaunch = hasWeapon;
-                }
-
-                if (source.is(DamageTypes.EXPLOSION)) {
-                    toLaunch = true;
-                }
-
-                if (toLaunch) {
-                    int duration = stun.getDuration() / 3;
-
-                    entity.removeEffect(JStatusRegistry.DAZED.get());
-                    JCraft.stun(entity, duration, 3, attacker);
-
-                    Vec3i upVec = GravityChangerAPI.getGravityDirection(entity).getNormal();
-                    Vec3 upVecD = new Vec3(-upVec.getX() / 3.0, -upVec.getY() / 3.0, -upVec.getZ() / 3.0);
-
-                    Vec3 sourcePos = source.getSourcePosition();
-                    if (sourcePos == null) { // RNG Launch upwards
-                        sourcePos = new Vec3(
-                                entity.getRandom().nextGaussian(),
-                                entity.getRandom().nextGaussian(),
-                                entity.getRandom().nextGaussian())
-                                .add(entity.position())
-                                .subtract(upVecD);
-                    }
-
-                    Vec3 knockback = entity.position().subtract(sourcePos).normalize().add(upVecD);
-                    GravityChangerAPI.setWorldVelocity(entity, knockback);
-                    entity.hurtMarked = true;
-
-                    JCraft.createParticle(serverWorld,
-                            entity.getX() - upVec.getX(),
-                            entity.getY() - upVec.getY(),
-                            entity.getZ() - upVec.getZ(),
-                            projectileAttack ? JParticleType.STUN_PIERCE : JParticleType.STUN_SLASH);
-                }
-            }
+            maybeLaunch(entity, source, serverWorld, entity.getEffect(JStatusRegistry.DAZED.get()), source.getEntity());
         }
         return EventResult.pass();
+    }
+
+    public static void maybeLaunch(LivingEntity entity, DamageSource source, ServerLevel serverWorld, MobEffectInstance stun, Entity attacker) {
+        if (stun != null && stun.getAmplifier() != 2) {
+            boolean toLaunch = false;
+            boolean projectileAttack = false;
+            // Only apply stun nerfs if hit with a weapon or a projectile
+            if (attacker instanceof LivingEntity living) {
+                projectileAttack = source.is(DamageTypeTags.IS_PROJECTILE);
+                boolean hasWeapon = projectileAttack;
+                if (!hasWeapon) {
+                    hasWeapon = !living.getMainHandItem().getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty();
+                }
+                toLaunch = hasWeapon;
+            }
+
+            if (source.is(DamageTypes.EXPLOSION)) {
+                toLaunch = true;
+            }
+
+            if (toLaunch) {
+                int duration = stun.getDuration() / 3;
+
+                entity.removeEffect(JStatusRegistry.DAZED.get());
+                JCraft.stun(entity, duration, 3, attacker);
+
+                Vec3i upVec = GravityChangerAPI.getGravityDirection(entity).getNormal();
+                Vec3 upVecD = new Vec3(-upVec.getX() / 3.0, -upVec.getY() / 3.0, -upVec.getZ() / 3.0);
+
+                Vec3 sourcePos = source.getSourcePosition();
+                if (sourcePos == null) { // RNG Launch upwards
+                    sourcePos = new Vec3(
+                            entity.getRandom().nextGaussian(),
+                            entity.getRandom().nextGaussian(),
+                            entity.getRandom().nextGaussian())
+                            .add(entity.position())
+                            .subtract(upVecD);
+                }
+
+                Vec3 knockback = entity.position().subtract(sourcePos).normalize().add(upVecD);
+                GravityChangerAPI.setWorldVelocity(entity, knockback);
+                entity.hurtMarked = true;
+
+                JCraft.createParticle(serverWorld,
+                        entity.getX() - upVec.getX(),
+                        entity.getY() - upVec.getY(),
+                        entity.getZ() - upVec.getZ(),
+                        projectileAttack ? JParticleType.STUN_PIERCE : JParticleType.STUN_SLASH);
+            }
+        }
     }
 
     public static InteractionResult allowSleep(Player player, BlockPos sleepingPos) {
@@ -630,11 +627,13 @@ public class JServerEvents {
     }
 
     public static EventResult beforeBlockSet(BlockPos blockPos, BlockState oldBlockState, BlockState newBlockState) {
-        synchronized (BlockMarkerMove.MOVES) {
-            for (final BlockMarkerMove move : BlockMarkerMove.MOVES) {
-                move.addBlock(blockPos, oldBlockState);
-            }
+        if (oldBlockState.is(BlockTags.LEAVES) && newBlockState.is(BlockTags.LEAVES)) {
+            return EventResult.pass();
         }
+
+        BlockMarkerMoves.mergeQueues();
+        BlockMarkerMoves.forEach(move -> move.addBlock(blockPos, oldBlockState));
+
         return EventResult.pass();
     }
 }

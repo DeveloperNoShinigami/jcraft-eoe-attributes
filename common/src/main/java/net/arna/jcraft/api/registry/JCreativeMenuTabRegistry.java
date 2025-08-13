@@ -28,7 +28,6 @@ public interface JCreativeMenuTabRegistry {
         JCraft.CREATIVE_TAB_REGISTRY.register("general", JCreativeMenuTabRegistry::createJcraftItemGroup);
         JCraft.CREATIVE_TAB_REGISTRY.register("cosplay", JCreativeMenuTabRegistry::createJcraftCosplayGroup);
         JCraft.CREATIVE_TAB_REGISTRY.register("stand_discs", JCreativeMenuTabRegistry::createStandDiscItemGroup);
-        JCraft.CREATIVE_TAB_REGISTRY.register("music_discs", JCreativeMenuTabRegistry::createMusicDiscItemGroup);
         // building blocks
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS.location()), (flags, output, canUseGameMasterBlocks) -> {
             output.acceptBefore(Items.BRICKS, JItemRegistry.METEORITE_BLOCK.get());
@@ -55,8 +54,6 @@ public interface JCreativeMenuTabRegistry {
             output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_ARROW.get());
             output.acceptBefore(Items.COMPASS, JItemRegistry.STAND_DISC.get());
             output.acceptBefore(Items.COMPASS, JItemRegistry.SPEC_DISC.get());
-            output.accept(JItemRegistry.DISC_STAND_PROUD.get());
-            output.accept(JItemRegistry.DISC_CRUCIFIED.get());
         });
         // combat
         CreativeTabRegistry.modifyBuiltin(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.COMBAT.location()), (flags, output, canUseGameMasterBlocks) -> {
@@ -176,6 +173,7 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(Items.CREEPER_SPAWN_EGG, JItemRegistry.DARBY_OLDER_SPAWN_EGG.get());
             output.acceptAfter(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get(), JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get());
             output.acceptAfter(Items.PARROT_SPAWN_EGG, JItemRegistry.PETSHOP_SPAWN_EGG.get());
+            output.acceptAfter(Items.TURTLE_SPAWN_EGG, JItemRegistry.VAMPIRE_SPAWN_EGG.get());
         });
     }
 
@@ -225,6 +223,8 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.BOXING_GLOVES.get());
                     entries.accept(JItemRegistry.STONE_MASK.get());
                     entries.accept(JItemRegistry.COFFIN_BLOCK.get());
+                    entries.accept(JItemRegistry.PEACEMAKER.get());
+
                     // vehicles
                     entries.accept(JItemRegistry.ROAD_ROLLER.get());
                     // blood bottles
@@ -246,6 +246,8 @@ public interface JCreativeMenuTabRegistry {
                         nbt.put("StoredEnchantments", enchantments);
                         entries.accept(stack);
                     }
+                    // spawn eggs season 1
+                    entries.accept(JItemRegistry.VAMPIRE_SPAWN_EGG.get());
                     // spawn eggs season 3
                     entries.accept(JItemRegistry.DARBY_OLDER_SPAWN_EGG.get());
                     entries.accept(JItemRegistry.DARBY_YOUNGER_SPAWN_EGG.get());
@@ -378,48 +380,6 @@ public interface JCreativeMenuTabRegistry {
                             entries.accept(StandDiscItem.createDiscStack(standType, skin));
                         }
                     }
-                })
-                .build();
-    }
-
-
-    static CreativeModeTab createMusicDiscItemGroup() {
-        return CreativeModeTab.builder(CreativeModeTab.Row.TOP, 3)
-                .title(Component.translatable("itemGroup.jcraft.music_discs"))
-                .icon(() -> JItemRegistry.DISC_STAND_PROUD.get().getDefaultInstance())
-                // order of the creative tab
-                .displayItems((displayContext, entries) -> {
-                    entries.accept(JItemRegistry.DISC_CRUCIFIED.get());
-                    entries.accept(JItemRegistry.DISC_HALLELUJAH_CHORUS.get());
-                    entries.accept(JItemRegistry.DISC_WONDER_OF_YOU.get());
-                    entries.accept(JItemRegistry.DISC_AWAKEN.get());
-                    entries.accept(JItemRegistry.DISC_PROPAGANDA.get());
-                    entries.accept(JItemRegistry.DISC_DARK_REBIRTH.get());
-                    entries.accept(JItemRegistry.DISC_KIRA_THEME.get());
-                    entries.accept(JItemRegistry.DISC_GIORNO_THEME.get());
-                    entries.accept(JItemRegistry.DISC_JONATHAN_THEME.get());
-                    entries.accept(JItemRegistry.DISC_JOLYNE_THEME.get());
-                    entries.accept(JItemRegistry.DISC_JOTARO_THEME.get());
-                    entries.accept(JItemRegistry.DISC_JOSUKE_THEME.get());
-                    entries.accept(JItemRegistry.DISC_TORTURE_DANCE.get());
-                    entries.accept(JItemRegistry.DISC_UN_ALTRA_PERSONA.get());
-                    entries.accept(JItemRegistry.DISC_STAND_PROUD.get());
-                    entries.accept(JItemRegistry.DISC_SONO_CHI_NO_SADAME.get());
-                    entries.accept(JItemRegistry.DISC_BLOODY_STREAM.get());
-                    entries.accept(JItemRegistry.DISC_END_OF_THE_WORLD.get());
-                    entries.accept(JItemRegistry.DISC_CRAZY_NOISY_BIZARRE_TOWN.get());
-                    entries.accept(JItemRegistry.DISC_CHASE.get());
-                    entries.accept(JItemRegistry.DISC_GREAT_DAYS.get());
-                    entries.accept(JItemRegistry.DISC_FIGHTING_GOLD.get());
-                    entries.accept(JItemRegistry.DISC_TRAITORS_REQUIEM.get());
-                    entries.accept(JItemRegistry.DISC_STONE_OCEAN.get());
-                    entries.accept(JItemRegistry.DISC_HEAVENS_FALLING_DOWN.get());
-                    entries.accept(JItemRegistry.DISC_TO_BE_CONTINUED.get());
-                    entries.accept(JItemRegistry.DISC_WALK_LIKE_AN_EGYPTIAN.get());
-                    entries.accept(JItemRegistry.DISC_OINGO_BOINGO.get());
-                    entries.accept(JItemRegistry.DISC_I_WANT_YOU.get());
-                    entries.accept(JItemRegistry.DISC_FREEKN_YOU.get());
-                    entries.accept(JItemRegistry.DISC_MODERN_CRUSADERS.get());
                 })
                 .build();
     }

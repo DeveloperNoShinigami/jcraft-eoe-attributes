@@ -4,13 +4,13 @@ import com.mojang.datafixers.util.Pair;
 import lombok.NonNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public record BlockMarkerType(
-        MarkerSavePredicate<BlockPos, BlockState> savePredicate, MarkerLoadPredicate<BlockMarker> loadPredicate)
+public record BlockMarkerType(MarkerSavePredicate<BlockPos, BlockState> savePredicate, MarkerLoadPredicate<BlockMarker> loadPredicate)
         implements MarkerSavePredicate<BlockPos, BlockState>, MarkerLoadPredicate<BlockMarker>, MarkerType<BlockPos, BlockState, BlockMarker> {
 
     @Override
@@ -32,7 +32,7 @@ public record BlockMarkerType(
     @NotNull
     @Override
     public Optional<Pair<BlockPos, BlockState>> load(final @NonNull BlockMarker marker, final @NonNull ServerLevel level) {
-        level.setBlockAndUpdate(marker.pos(), marker.state());
+        level.setBlock(marker.pos(), marker.state(), Block.UPDATE_CLIENTS);
         return Optional.of(Pair.of(marker.pos(), marker.state()));
     }
 }

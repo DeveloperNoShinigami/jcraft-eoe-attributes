@@ -214,7 +214,6 @@ public final class JCraft {
         ENCHANTMENT.register();
 
         JLootTableHelper.registerLootTables();
-        JLootTableHelper.registerMusicDiscLootTables();
 
         TimeAccelStatePacket.init(); // register event handlers for time acceleration
 
@@ -353,7 +352,7 @@ public final class JCraft {
         // Synchronization
         TimeStopStatePacket.send(serverWorld.players(), TimeStopStatePacket.createStopPacket(timestopper.getId()));
 
-        Vec3 position = Objects.requireNonNull(timestop.pos);
+        Vec3 position = Objects.requireNonNull(timestop.getPos());
 
         List<ServerPlayer> toUnfreeze = serverWorld.getEntitiesOfClass(ServerPlayer.class,
                 new AABB(position.add(96.0, 96.0, 96.0), position.subtract(96.0, 96.0, 96.0)), EntitySelector.LIVING_ENTITY_STILL_ALIVE);
@@ -394,6 +393,8 @@ public final class JCraft {
         preloadedChunks.add(new ChunkPos(chunkX, chunkZ));
         auWorld.setChunkForced(chunkX, chunkZ, true);
     }
+
+    public static StandEntity<?, ?> summon(LivingEntity user) { return summon(user.level(), user); }
 
     public static StandEntity<?, ?> summon(Level world, LivingEntity user) {
         if (user.hasEffect(JStatusRegistry.STANDLESS.get()) || user.isSpectator()) {
@@ -550,9 +551,8 @@ public final class JCraft {
      * This attack is blockable, launches and stuns on hit.
      */
     public static void comboBreak(ServerLevel world, LivingEntity player, MobEffectInstance stun) {
-        if (player.isSpectator()) {
-            return;
-        }
+        if (stun == null) return;
+        if (player.isSpectator()) return;
         CommonCooldownsComponent cooldowns = JComponentPlatformUtils.getCooldowns(player);
 
         if (stun.getDuration() > 1 && DazedStatusEffect.canBeComboBroken(stun.getAmplifier()) && cooldowns.getCooldown(CooldownType.COMBO_BREAKER) <= 0) {
