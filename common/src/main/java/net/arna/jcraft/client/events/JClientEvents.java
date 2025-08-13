@@ -268,10 +268,8 @@ public class JClientEvents {
                 }
             }
             else {
-                if (timestop.getTimer() <= 0) {
-                    iter.remove();
-                    continue;
-                }
+                iter.remove();
+                continue;
             }
 
             final Vec3 pos = timestop.getPos();
