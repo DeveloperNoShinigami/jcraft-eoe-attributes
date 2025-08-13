@@ -1305,7 +1305,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
                 if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
                 if (random.nextFloat() > 0.2f) {
-                    DashData.tryDash(random.nextBoolean() ? -1 : 1, random.nextBoolean() ? -1 : 1, user);
+                    DashData.tryDash(random.nextBoolean() ? -1 : 1, random.nextBoolean() ? -1 : 1, isRemote() ? this : user);
                     if (random.nextBoolean())
                         jumpControl.jump();
                 }
@@ -1333,7 +1333,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 randomlyDesireStandOff(aiLevel, 0.2f, 0.009f, IJAttackerBrain.COMPETITIVE_LEVEL, info, attackerCtx, selectedAttack);
 
                 if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
-                if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, user);
+                if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, isRemote() ? this : user);
             }
             case DISENGAGE, KEEPAWAY -> {
                 if (pathfinder == null) break;
@@ -1363,7 +1363,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 randomlyDesireStandOff(aiLevel, 0.05f, 0.003f, IJAttackerBrain.COMPETITIVE_LEVEL, info, attackerCtx, selectedAttack);
 
                 if (aiLevel < IJAttackerBrain.BEGINNER_LEVEL) break;
-                if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, user);
+                if (random.nextFloat() > 0.1f) DashData.tryDash(1, random.nextBoolean() ? -1 : 1, isRemote() ? this : user);
             }
             case DEFENSE -> {
                 lookControl.setLookAt(target);

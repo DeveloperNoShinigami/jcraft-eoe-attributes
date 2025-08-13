@@ -80,7 +80,7 @@ public class PurpleHazeRenderer extends StandEntityRenderer<AbstractPurpleHazeEn
 
     @Override
     public RenderType getRenderType(final AbstractPurpleHazeEntity<?, ?> animatable, final ResourceLocation texture, final @Nullable MultiBufferSource bufferSource, final float partialTick) {
-        return StandEntityRenderer.renderTypeOf(animatable, texture);
+        return RenderType.entityTranslucent(texture);
     }
 
     @Override
