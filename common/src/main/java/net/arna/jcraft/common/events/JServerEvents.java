@@ -464,32 +464,36 @@ public class JServerEvents {
         return CompoundEventResult.pass();
     }
 
-    public static EventResult death(LivingEntity living, DamageSource source) {
-        if (living.level() instanceof ServerLevel serverWorld) {
-            if (living instanceof ServerPlayer serverPlayer) {
-                GameRules gameRules = serverWorld.getGameRules();
+    public static EventResult death(final LivingEntity living, final DamageSource source) {
+        if (living.level() instanceof final ServerLevel serverWorld) {
+            if (living instanceof final ServerPlayer serverPlayer) {
+                final GameRules gameRules = serverWorld.getGameRules();
+
                 if (!gameRules.getBoolean(JCraft.KEEP_STAND)) {
                     JComponentPlatformUtils.getStandComponent(living).setTypeAndSkin(JStandTypeRegistry.NONE.get(), 0);
                 }
+
                 if (!gameRules.getBoolean(JCraft.KEEP_SPEC)) {
                     JComponentPlatformUtils.getSpecData(serverPlayer)
                             .setType(JSpecTypeRegistry.NONE.get());
                 }
 
                 if (source.getEntity() instanceof LivingEntity killer) {
+                    if (serverPlayer.getId() == killer.getId()) return EventResult.pass();
+
                     JComponentPlatformUtils.getCooldowns(killer).clear(CooldownType.COMBO_BREAKER);
 
                     boolean killVampirism = JServerConfig.KILL_VAMPIRISM.getValue();
-                    if (killer instanceof ServerPlayer killerPlayer) {
-                        if (killVampirism) {
+
+                    if (killVampirism) {
+                        if (killer instanceof ServerPlayer killerPlayer) {
                             killerPlayer.getFoodData().eat(20, 20f);
                             CommonVampireComponent vampireComponent = JComponentPlatformUtils.getVampirism(killerPlayer);
                             if (vampireComponent.isVampire()) {
                                 vampireComponent.setBlood(20.0f);
                             }
                         }
-                    }
-                    if (killVampirism) {
+
                         killer.setHealth(killer.getMaxHealth());
                     }
                 }
