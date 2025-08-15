@@ -11,6 +11,7 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.api.component.player.CommonSpecComponent;
+import net.arna.jcraft.common.food.IFoodData;
 import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -26,19 +27,28 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity {
+public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity, IFoodData {
+    // TODO: add metallica anims to the player anims these guys use
+    // TODO: healing
+    // TODO: anubis-specific sheathing
+
     protected final CommonSpecComponent component;
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     private static final EntityDataAccessor<Boolean> ANIMATION_RESET = SynchedEntityData.defineId(SpecUserMob.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(SpecUserMob.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Float> ANIMATION_SPEED = SynchedEntityData.defineId(SpecUserMob.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(SpecUserMob.class, EntityDataSerializers.INT);
+
+    protected FoodData foodData = null;
 
     public SpecUserMob(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
@@ -80,6 +90,16 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity
         }
     }
 
+    protected int getInitialVariant() { return 0; }
+
+    public void setVariant(int variant) {
+        entityData.set(VARIANT, variant);
+    }
+
+    public int getVariant() {
+        return entityData.get(VARIANT);
+    }
+
     protected void registerGoals() {
         goalSelector.addGoal(0, new FloatGoal(this));
         goalSelector.addGoal(3, new RandomStrollGoal(this, 0.6));
@@ -97,6 +117,12 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity
         entityData.define(ANIMATION, "");
         entityData.define(ANIMATION_SPEED, 1.0f);
         entityData.define(ANIMATION_RESET, false);
+        entityData.define(VARIANT, getInitialVariant());
+    }
+
+    @Override
+    public @Nullable FoodData getFoodData() {
+        return foodData;
     }
 
     @Override
