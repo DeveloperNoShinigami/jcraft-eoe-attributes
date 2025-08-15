@@ -14,6 +14,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
@@ -26,6 +27,14 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ClusterStructure extends Structure {
+
+    private static boolean overlapsAny(BoundingBox candidate, BoundingBox[] existing) {
+        for (BoundingBox box : existing) {
+            if (box == null) continue;
+            if (box.intersects(candidate)) return true;
+        }
+        return false;
+    }
 
     public static final MapCodec<ClusterStructure> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             settingsCodec(inst),
@@ -90,17 +99,21 @@ public class ClusterStructure extends Structure {
             int z = ch.getMiddleBlockZ();
             int y = ctx.chunkGenerator().getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, ctx.heightAccessor(), ctx.randomState());
 
+            BoundingBox[] occupied = new BoundingBox[1 + count];
+
             BlockPos mainPos = new BlockPos(x, y, z);
             builder.addPiece(ClusterTemplatePiece.fromPoolElement(
                     ctx.structureTemplateManager(), mainElem, mainPos, mainRot));
+            BoundingBox mainBox = mainElem.getBoundingBox(ctx.structureTemplateManager(), mainPos, mainRot);
+            occupied[0] = mainBox;
 
             // Satellites
-            if (!satelliteCandidates.isEmpty() && count > 0) {
-                for (int i = 0; i < count; i++) {
+            for (int i = 0; i < count && !satelliteCandidates.isEmpty(); i++) {
+                int tries = 0;
+                while (tries++ < 10) {
                     SinglePoolElement choice = satelliteCandidates.get(rand.nextInt(satelliteCandidates.size()));
                     Rotation rot = randomRotation(rand);
 
-                    // Scatter in a disk
                     double angle = rand.nextDouble() * Math.PI * 2.0;
                     int r = (int) Math.round(rand.nextDouble() * radius);
                     int sx = x + (int) Math.round(Math.cos(angle) * r);
@@ -108,8 +121,14 @@ public class ClusterStructure extends Structure {
                     int sy = ctx.chunkGenerator().getFirstOccupiedHeight(sx, sz, Heightmap.Types.WORLD_SURFACE_WG, ctx.heightAccessor(), ctx.randomState());
 
                     BlockPos sPos = new BlockPos(sx, sy, sz);
-                    builder.addPiece(ClusterTemplatePiece.fromPoolElement(
-                            ctx.structureTemplateManager(), choice, sPos, rot));
+                    BoundingBox satBox = choice.getBoundingBox(ctx.structureTemplateManager(), sPos, rot);
+
+                    if (!overlapsAny(satBox, occupied)) {
+                        occupied[i + 1] = satBox; // because 0 is mainBox
+                        builder.addPiece(ClusterTemplatePiece.fromPoolElement(
+                                ctx.structureTemplateManager(), choice, sPos, rot));
+                        break;
+                    }
                 }
             }
         };
