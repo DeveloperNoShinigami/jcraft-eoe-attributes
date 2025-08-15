@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:jigsaw",
+  "type": "jcraft:cluster",
   "biomes": "minecraft:cherry_grove",
   "step": "surface_structures",
   "spawn_overrides": {},
