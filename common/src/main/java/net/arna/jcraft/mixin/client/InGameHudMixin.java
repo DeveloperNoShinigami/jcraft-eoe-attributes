@@ -61,7 +61,7 @@ public abstract class InGameHudMixin {
         if (JComponentPlatformUtils.getVampirism(player).isVampire()) {
             instance.blit(jcraft$currentBloodIcon, x, y, 0, 0, uWidth, vHeight, 9, 9);
         } else {
-            original.call();
+            original.call(instance, atlasLocation, x, y, uOffset, vOffset, uWidth, vHeight);
         }
     }
 
