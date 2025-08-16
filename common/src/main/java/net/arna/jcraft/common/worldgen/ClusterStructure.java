@@ -10,6 +10,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Rotation;
@@ -19,12 +20,14 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class ClusterStructure extends Structure {
 
@@ -39,21 +42,27 @@ public class ClusterStructure extends Structure {
     public static final MapCodec<ClusterStructure> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             settingsCodec(inst),
             ResourceLocation.CODEC.fieldOf("start_pool").forGetter(s -> s.startPool),
+            Codec.BOOL.optionalFieldOf("one_main_structure", true).forGetter(s -> s.oneMainStructure),
             Codec.INT.optionalFieldOf("radius", 32).forGetter(s -> s.radius),
+            Codec.INT.optionalFieldOf("bury_depth", 0).forGetter(s -> s.buryDepth),
             Codec.INT.optionalFieldOf("min_satellites", 2).forGetter(s -> s.minSatellites),
             Codec.INT.optionalFieldOf("max_satellites", 5).forGetter(s -> s.maxSatellites)
             ).apply(inst, ClusterStructure::new)
     );
 
     private final ResourceLocation startPool;
+    private final boolean oneMainStructure;
     private final int radius;
+    private final int buryDepth;
     private final int minSatellites;
     private final int maxSatellites;
 
-    public ClusterStructure(Structure.StructureSettings settings, ResourceLocation startPool, int radius, int minSatellites, int maxSatellites) {
+    public ClusterStructure(Structure.StructureSettings settings, ResourceLocation startPool, boolean oneMainStructure, int radius, int buryDepth, int minSatellites, int maxSatellites) {
         super(settings);
         this.startPool = startPool;
+        this.oneMainStructure = oneMainStructure;
         this.radius = Math.max(1, radius);
+        this.buryDepth = buryDepth;
         this.minSatellites = Math.max(0, minSatellites);
         this.maxSatellites = Math.max(this.minSatellites, maxSatellites);
     }
@@ -75,37 +84,47 @@ public class ClusterStructure extends Structure {
         StructureTemplatePool pool = optPool.get().value();
 
         // Extract only SinglePoolElements (templates). We ignore Feature/Empty/List pool elements on purpose.
-        List<SinglePoolElement> allSingles = pool.templates.stream()
-                .filter(e -> e instanceof SinglePoolElement)
-                .map(e -> (SinglePoolElement) e)
-                .collect(Collectors.toList());
+        List<SinglePoolElement> allSingles = new ArrayList<>();
+        for (StructurePoolElement e : pool.templates) {
+            if (e instanceof SinglePoolElement singlePoolElement) {
+                allSingles.add(singlePoolElement);
+            }
+        }
 
         if (allSingles.isEmpty()) return Optional.empty();
 
-        // Main = first single element in the pool
-        SinglePoolElement mainElem = allSingles.get(0);
-
-        // Candidate satellites = all others
-        List<SinglePoolElement> satelliteCandidates = allSingles.subList(1, allSingles.size());
         int count = clampRandom(ctx.random(), minSatellites, maxSatellites);
 
         Consumer<StructurePiecesBuilder> generator = (builder) -> {
-            RandomSource rand = ctx.random();
-            Rotation mainRot = randomRotation(rand);
+            final RandomSource rand = ctx.random();
 
-            // Place main at chunk center surface
             ChunkPos ch = ctx.chunkPos();
             int x = ch.getMiddleBlockX();
             int z = ch.getMiddleBlockZ();
-            int y = ctx.chunkGenerator().getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, ctx.heightAccessor(), ctx.randomState());
+            int y = ctx.chunkGenerator().getFirstOccupiedHeight(x, z, Heightmap.Types.OCEAN_FLOOR_WG, ctx.heightAccessor(), ctx.randomState());
 
-            BoundingBox[] occupied = new BoundingBox[1 + count];
+            final BoundingBox[] occupied = new BoundingBox[1 + count];
 
-            BlockPos mainPos = new BlockPos(x, y, z);
-            builder.addPiece(ClusterTemplatePiece.fromPoolElement(
-                    ctx.structureTemplateManager(), mainElem, mainPos, mainRot));
-            BoundingBox mainBox = mainElem.getBoundingBox(ctx.structureTemplateManager(), mainPos, mainRot);
-            occupied[0] = mainBox;
+            final List<SinglePoolElement> satelliteCandidates;
+
+            final StructureTemplateManager manager = ctx.structureTemplateManager();
+
+            if (oneMainStructure) {
+                // Main = first single element in the pool
+                final SinglePoolElement mainElem = allSingles.get(0);
+
+                final BlockPos mainPos = new BlockPos(x, y, z);
+                final Rotation mainRot = randomRotation(rand);
+
+                builder.addPiece(ClusterTemplatePiece.fromPoolElement(manager, mainElem, mainPos, mainRot));
+                BoundingBox mainBox = mainElem.getBoundingBox(manager, mainPos, mainRot);
+                occupied[0] = mainBox;
+
+                // Candidate satellites = all others
+                satelliteCandidates = allSingles.subList(1, allSingles.size());
+            } else {
+                satelliteCandidates = allSingles;
+            }
 
             // Satellites
             for (int i = 0; i < count && !satelliteCandidates.isEmpty(); i++) {
@@ -114,19 +133,23 @@ public class ClusterStructure extends Structure {
                     SinglePoolElement choice = satelliteCandidates.get(rand.nextInt(satelliteCandidates.size()));
                     Rotation rot = randomRotation(rand);
 
-                    double angle = rand.nextDouble() * Math.PI * 2.0;
+                    final double angle = rand.nextDouble() * Math.PI * 2.0;
                     int r = (int) Math.round(rand.nextDouble() * radius);
                     int sx = x + (int) Math.round(Math.cos(angle) * r);
                     int sz = z + (int) Math.round(Math.sin(angle) * r);
                     int sy = ctx.chunkGenerator().getFirstOccupiedHeight(sx, sz, Heightmap.Types.WORLD_SURFACE_WG, ctx.heightAccessor(), ctx.randomState());
 
+                    if (buryDepth > 0) {
+                        sy = Mth.clamp(sy - buryDepth, ctx.heightAccessor().getMinBuildHeight(), ctx.heightAccessor().getMaxBuildHeight());
+                    }
+
                     BlockPos sPos = new BlockPos(sx, sy, sz);
-                    BoundingBox satBox = choice.getBoundingBox(ctx.structureTemplateManager(), sPos, rot);
+                    BoundingBox satBox = choice.getBoundingBox(manager, sPos, rot);
 
                     if (!overlapsAny(satBox, occupied)) {
                         occupied[i + 1] = satBox; // because 0 is mainBox
                         builder.addPiece(ClusterTemplatePiece.fromPoolElement(
-                                ctx.structureTemplateManager(), choice, sPos, rot));
+                                manager, choice, sPos, rot));
                         break;
                     }
                 }
