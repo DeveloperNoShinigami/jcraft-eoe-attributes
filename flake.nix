@@ -33,6 +33,15 @@
 
             runClient
             runServer
+
+            libpulseaudio
+            libGL
+            glfw
+            openal
+            stdenv.cc.cc.lib
+            jdk21
+            flite
+
           ];
         };
       }
