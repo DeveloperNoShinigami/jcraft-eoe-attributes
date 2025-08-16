@@ -15,6 +15,10 @@
       system:
       let
         pkgs = import nixpkgs { inherit system; };
+
+        runClient = pkgs.writeShellScriptBin "runClient" (''gradle runClient'');
+        runServer = pkgs.writeShellScriptBin "runClient" (''gradle runServer'');
+
       in
       rec {
         devShell = pkgs.mkShell {
@@ -26,6 +30,9 @@
             jdk17
             gradle_8
             zenity
+
+            runClient
+            runServer
           ];
         };
       }
