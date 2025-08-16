@@ -42,7 +42,7 @@ public class ExplosionMixin implements IJExplosion {
 
     @ModifyExpressionValue(method = "finalizeExplosion", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/Explosion;fire:Z"))
     private boolean overrideCreateFire(boolean original) {
-        if (modifier.getCreateFire() == null) {
+        if (modifier == null || modifier.getCreateFire() == null) {
             return original;
         }
         return modifier.getCreateFire();
