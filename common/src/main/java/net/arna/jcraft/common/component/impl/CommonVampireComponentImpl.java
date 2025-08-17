@@ -65,6 +65,10 @@ public abstract class CommonVampireComponentImpl implements CommonVampireCompone
         // Vampires do not have to breathe.
         entity.setAirSupply(entity.getMaxAirSupply());
 
+        if (foodData == null && entity instanceof IFoodData iFoodData) {
+            foodData = iFoodData.getFoodData();
+        }
+
         // Replace food logic with blood logic. (Optional)
         if (foodData != null) {
             if (blood < 1 && --starveTick < 1) {

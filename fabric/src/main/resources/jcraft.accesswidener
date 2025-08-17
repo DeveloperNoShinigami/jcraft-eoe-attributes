@@ -33,6 +33,7 @@ accessible method net/minecraft/world/entity/LivingEntity dismountVehicle (Lnet/
 accessible field net/minecraft/world/entity/monster/Witch attackPlayersGoal Lnet/minecraft/world/entity/ai/goal/target/NearestAttackableWitchTargetGoal;
 accessible method net/minecraft/world/entity/projectile/ThrownPotion applySplash (Ljava/util/List;Lnet/minecraft/world/entity/Entity;)V
 accessible method net/minecraft/world/entity/projectile/ThrownPotion makeAreaOfEffectCloud (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/alchemy/Potion;)V
+accessible field net/minecraft/world/entity/projectile/AbstractArrow inGround Z
 accessible field net/minecraft/world/entity/boss/wither/WitherBoss LIVING_ENTITY_SELECTOR Ljava/util/function/Predicate;
 mutable field net/minecraft/world/entity/boss/wither/WitherBoss LIVING_ENTITY_SELECTOR Ljava/util/function/Predicate;
 accessible field net/minecraft/world/entity/boss/wither/WitherBoss TARGETING_CONDITIONS Lnet/minecraft/world/entity/ai/targeting/TargetingConditions;
