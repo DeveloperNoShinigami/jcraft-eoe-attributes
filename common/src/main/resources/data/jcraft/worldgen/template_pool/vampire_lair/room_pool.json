@@ -15,7 +15,7 @@
       "weight": 2,
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "jcraft:vampire_lair/enchantment_room",
+        "location": "jcraft:vampire_lair/enchantment_room_trapped",
         "projection": "rigid",
         "processors": "minecraft:empty"
       }
@@ -24,7 +24,7 @@
       "weight": 2,
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "jcraft:vampire_lair/ghast_room",
+        "location": "jcraft:vampire_lair/torture_room",
         "projection": "rigid",
         "processors": "minecraft:empty"
       }
@@ -52,6 +52,42 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "jcraft:vampire_lair/treasure_room",
+        "projection": "rigid",
+        "processors": "minecraft:empty"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "jcraft:vampire_lair/library",
+        "projection": "rigid",
+        "processors": "minecraft:empty"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "jcraft:vampire_lair/large_room",
+        "projection": "rigid",
+        "processors": "minecraft:empty"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "jcraft:vampire_lair/large_room_1",
+        "projection": "rigid",
+        "processors": "minecraft:empty"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "jcraft:vampire_lair/large_room_3",
         "projection": "rigid",
         "processors": "minecraft:empty"
       }
