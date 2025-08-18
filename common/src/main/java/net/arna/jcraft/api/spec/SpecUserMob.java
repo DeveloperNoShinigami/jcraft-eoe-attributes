@@ -10,11 +10,15 @@ import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
+import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.component.player.CommonSpecComponent;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
+import net.arna.jcraft.common.events.JServerEvents;
 import net.arna.jcraft.common.food.IFoodData;
 import net.arna.jcraft.common.tickable.JEnemies;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -34,6 +38,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static net.arna.jcraft.api.stand.StandTypeUtil.generateStandTypeForMob;
 
 public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity, IFoodData {
     // TODO: add metallica anims to the player anims these guys use
@@ -109,6 +115,65 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity
 
         targetSelector.addGoal(1, new HurtByTargetGoal(this));
         targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, true));
+    }
+
+    @Override
+    public void load(CompoundTag compound) {
+        super.load(compound);
+
+        if (compound.contains("Reroll")) {
+            reroll(compound.getCompound("Reroll"));
+        }
+    }
+
+    protected void rerollVariant() {
+        setVariant(random.nextInt(3));
+    }
+
+    protected void rerollStand(float standChance) {
+        final var standComponent = JComponentPlatformUtils.getStandComponent(this);
+
+        if (random.nextFloat() * 100.0f > standChance) {
+            standComponent.setType(JStandTypeRegistry.NONE.get());
+            return;
+        }
+
+        standComponent.setType(generateStandTypeForMob(this, level().getGameRules()));
+
+        if (random.nextFloat() > 0.9f) {
+            standComponent.setSkin(random.nextInt(3));
+        }
+    }
+
+    protected void rerollSpec() {
+        component.setType(SpecTypeUtil.getRandom(random));
+    }
+
+    protected void rerollEquipment() {
+        JServerEvents.armorMob(this);
+    }
+
+    protected void reroll(CompoundTag nbt) {
+        if (nbt.contains("Variant")) {
+            rerollVariant();
+        }
+
+        if (nbt.contains("Stand")) {
+            float standChance = nbt.contains("StandChance")
+                    ? nbt.getFloat("StandChance")
+                    : level().getGameRules().getInt(JCraft.CHANCE_MOB_SPAWNS_WITH_STAND);
+            rerollStand(standChance);
+        }
+
+        if (nbt.contains("Spec")) {
+            rerollSpec();
+        }
+
+        if (nbt.contains("Equipment")) {
+            rerollEquipment();
+        }
+
+        nbt.remove("Reroll");
     }
 
     @Override

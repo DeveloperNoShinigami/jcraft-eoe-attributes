@@ -372,9 +372,7 @@ public class JServerEvents {
             if (100 - random.nextInt(0, 100) > gameRules.getInt(CHANCE_MOB_SPAWNS_WITH_STAND)) {
                 return EventResult.pass();
             }
-            final StandType type = gameRules.getBoolean(ALLOW_MOB_EVOLVED_STANDS)
-                    ? StandTypeUtil.getRandom(entity.level().random)
-                    : StandTypeUtil.getRandomRegular(entity.level().random);
+            final StandType type = StandTypeUtil.generateStandTypeForMob(entity, gameRules);
             standData.setType(type);
 
             // ATTRIBUTES
@@ -394,7 +392,7 @@ public class JServerEvents {
                 return EventResult.pass();
             }
 
-            NonNullList<ItemStack> handItems = (NonNullList<ItemStack>) mob.getHandSlots(), armorItems = (NonNullList<ItemStack>) mob.getArmorSlots();
+            NonNullList<ItemStack> handItems = (NonNullList<ItemStack>) mob.getHandSlots();
             // Silver chariot users may spawn with Anubis (25% chance)
             if (type == JStandTypeRegistry.SILVER_CHARIOT.get() && random.nextInt(5) == 4) {
                 handItems.set(0, new ItemStack(JItemRegistry.ANUBIS.get()));
@@ -405,27 +403,34 @@ public class JServerEvents {
                 mob.setDropChance(EquipmentSlot.OFFHAND, 100f);
             }
 
-            Enchantment enchantment;
-            ItemStack itemStack;
-            int baseArmorLevel = random.nextInt(1, 6);
-            int enchantsSize = JCRAFT_ARMOR_ENCHANTS.size();
-            for (int i = 0; i < 4; i++) {
-                final int armorLevel = baseArmorLevel + random.nextInt(-1, 1); // TODO: scale with difficulty
-
-                itemStack = new ItemStack(EQUIPMENT.get(i).get(armorLevel));
-                enchantment = JCRAFT_ARMOR_ENCHANTS.get(random.nextInt(enchantsSize));
-                itemStack.enchant(enchantment, enchantment.getMaxLevel());
-                armorItems.set(i, itemStack);
-
-                final int diamondLevel = 4; // Check above
-                if (armorLevel >= diamondLevel) {
-                    mob.setDropChance(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i), 0f);
-                }
-            }
+            armorMob(mob);
 
             JEnemies.add(mob);
         }
         return EventResult.pass();
+    }
+
+    public static void armorMob(Mob mob) {
+        final RandomSource random = mob.getRandom();
+        final NonNullList<ItemStack> armorItems = (NonNullList<ItemStack>) mob.getArmorSlots();
+
+        Enchantment enchantment;
+        ItemStack itemStack;
+        int baseArmorLevel = random.nextInt(1, 6);
+        int enchantsSize = JCRAFT_ARMOR_ENCHANTS.size();
+        for (int i = 0; i < 4; i++) {
+            final int armorLevel = baseArmorLevel + random.nextInt(-1, 1);
+
+            itemStack = new ItemStack(EQUIPMENT.get(i).get(armorLevel));
+            enchantment = JCRAFT_ARMOR_ENCHANTS.get(random.nextInt(enchantsSize));
+            itemStack.enchant(enchantment, enchantment.getMaxLevel());
+            armorItems.set(i, itemStack);
+
+            final int diamondLevel = 4; // Check above
+            if (armorLevel >= diamondLevel) {
+                mob.setDropChance(EquipmentSlot.byTypeAndIndex(EquipmentSlot.Type.ARMOR, i), 0f);
+            }
+        }
     }
 
     public static EventResult rightClickBlock(Player player, InteractionHand hand, BlockPos blockPos, Direction direction) {
