@@ -24,7 +24,7 @@
       "weight": 2,
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "jcraft:vampire_lair/large_corridor_1",
+        "location": "jcraft:vampire_lair/corridor/variant_3",
         "projection": "rigid",
         "processors": "minecraft:empty"
       }
@@ -33,7 +33,7 @@
       "weight": 2,
       "element": {
         "element_type": "minecraft:single_pool_element",
-        "location": "jcraft:vampire_lair/large_corridor_2",
+        "location": "jcraft:vampire_lair/corridor/variant_4",
         "projection": "rigid",
         "processors": "minecraft:empty"
       }

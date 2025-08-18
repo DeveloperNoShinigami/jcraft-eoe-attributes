@@ -66,28 +66,10 @@
       }
     },
     {
-      "weight": 1,
+      "weight": 3,
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "jcraft:vampire_lair/large_room",
-        "projection": "rigid",
-        "processors": "minecraft:empty"
-      }
-    },
-    {
-      "weight": 1,
-      "element": {
-        "element_type": "minecraft:single_pool_element",
-        "location": "jcraft:vampire_lair/large_room_1",
-        "projection": "rigid",
-        "processors": "minecraft:empty"
-      }
-    },
-    {
-      "weight": 1,
-      "element": {
-        "element_type": "minecraft:single_pool_element",
-        "location": "jcraft:vampire_lair/large_room_3",
         "projection": "rigid",
         "processors": "minecraft:empty"
       }
