@@ -16,6 +16,7 @@ import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.common.events.JServerEvents;
 import net.arna.jcraft.common.food.IFoodData;
 import net.arna.jcraft.common.tickable.JEnemies;
+import net.arna.jcraft.common.util.DashData;
 import net.arna.jcraft.platform.JComponentPlatformUtils;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
@@ -90,7 +91,8 @@ public class SpecUserMob extends PathfinderMob implements JSpecHolder, GeoEntity
 
             spec.tickSpec();
 
-            if (spec.getMoveStun() <= 0) setAnimation("", 1.0f);
+            // TODO: make animations run once without needing to be reset like this (like player animator)
+            if (spec.getMoveStun() <= 0 && !DashData.isDashing(this)) setAnimation("", 1.0f);
         } else {
             setAnimation("", 1.0f);
         }

@@ -5,8 +5,8 @@ import net.arna.jcraft.common.entity.spec.AnubisSpecUser;
 import net.minecraft.resources.ResourceLocation;
 
 public class AnubisSpecUserModel extends SpecUserModel<AnubisSpecUser> {
-    private static final ResourceLocation model = JCraft.id("geo/humanoid.geo.json");
-    private static final ResourceLocation texture = JCraft.id("textures/entity/vampire_spec_user.png");
+    private static final ResourceLocation model = JCraft.id("geo/chaka.geo.json");
+    private static final ResourceLocation texture = JCraft.id("textures/entity/chaka.png");
 
     @Override
     public ResourceLocation getModelResource(final AnubisSpecUser animatable) {
