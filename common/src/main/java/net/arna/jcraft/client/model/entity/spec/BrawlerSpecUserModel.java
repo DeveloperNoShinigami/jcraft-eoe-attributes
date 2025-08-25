@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class BrawlerSpecUserModel extends SpecUserModel<BrawlerSpecUser> {
     private static final ResourceLocation model = JCraft.id("geo/humanoid.geo.json");
-    private static final ResourceLocation texture = JCraft.id("textures/entity/vampire_spec_user.png");
+    private static final ResourceLocation texture = JCraft.id("textures/entity/jonathan.png");
 
     @Override
     public ResourceLocation getModelResource(final BrawlerSpecUser animatable) {
