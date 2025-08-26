@@ -65,6 +65,11 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
         this.setMaxUpStep(0.0F);
     }
 
+    @Override
+    public boolean isPersistenceRequired() {
+        return true;
+    }
+
     public static AttributeSupplier.@NotNull Builder createLivingAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0)
