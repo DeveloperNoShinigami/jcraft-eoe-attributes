@@ -271,7 +271,7 @@
   "entity.jcraft.mandom": "マンダム",
   "entity.jcraft.mandom.info.con1": "0のダメージ出力",
   "entity.jcraft.mandom.info.con2": "戦闘能力なし",
-  "entity.jcraft.mandom.info.con3": "超小型のムーブセット",
+  "entity.jcraft.mandom.info.con3": "超小型の技構成",
   "entity.jcraft.mandom.info.con4": "ガードできない",
   "entity.jcraft.mandom.info.desc": "厄介な補正切りの設置キャラ",
   "entity.jcraft.mandom.info.freeSpace": "マンダムは非戦闘スタンドである。その目的\nは起こることあるいは起こるかもしれないことを\n設置技か補正切りすること",
