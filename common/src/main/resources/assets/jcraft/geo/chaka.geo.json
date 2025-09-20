@@ -67,7 +67,7 @@
 				{
 					"name": "bipedHandRight",
 					"parent": "lower_armRight",
-					"pivot": [-5.95, 12.875, 0.2]
+					"pivot": [-5.95, 12.875, -0.8]
 				},
 				{
 					"name": "leftArm",
@@ -90,7 +90,7 @@
 				{
 					"name": "bipedHandLeft",
 					"parent": "lower_armLeft",
-					"pivot": [6.05, 12.875, 0.2]
+					"pivot": [6.05, 12.875, -0.8]
 				},
 				{
 					"name": "rightLeg",
