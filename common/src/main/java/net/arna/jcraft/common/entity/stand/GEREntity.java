@@ -195,7 +195,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     Component.literal("Nullification"),
                     Component.literal("0.25s windup, 1.5s counter, stuns on hit")
             );
-    public static final ReturnToZeroMove RETURN_TO_ZERO = new ReturnToZeroMove(1200, 30, 32, 1f, 64, CountdownMove.ENTITY_STUFF_TO_SAVE, JMarkerExtractorRegistry.ALL.get(), JMarkerInjectorRegistry.ALL.get())
+    public static final ReturnToZeroMove RETURN_TO_ZERO = new ReturnToZeroMove(1200, 30, 32, 1f, 64, 200, CountdownMove.ENTITY_STUFF_TO_SAVE, JMarkerExtractorRegistry.ALL.get(), JMarkerInjectorRegistry.ALL.get())
             .withSound(JSoundRegistry.GER_SETUP)
             .withInfo(
                     Component.literal("Return to Zero"),

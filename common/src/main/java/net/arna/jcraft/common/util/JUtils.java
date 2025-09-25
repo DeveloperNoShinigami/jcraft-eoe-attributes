@@ -853,7 +853,7 @@ public final class JUtils {
         tossItem(player, player.level(), player.getItemInHand(InteractionHand.MAIN_HAND), 1f, !player.getAbilities().instabuild);
     }
 
-    public static double nullSafeDistanceSqr(@Nullable LivingEntity a, @Nullable LivingEntity b) {
+    public static double nullSafeDistanceSqr(@Nullable Entity a, @Nullable Entity b) {
         if (a == null || b == null) return Double.POSITIVE_INFINITY;
         return a.distanceToSqr(b);
     }

@@ -9,6 +9,7 @@ import net.arna.jcraft.api.attack.moves.AbstractMove;
 import net.arna.jcraft.common.entity.stand.MandomEntity;
 import net.arna.jcraft.common.marker.BlockMarker;
 import net.arna.jcraft.common.marker.EntityMarker;
+import net.arna.jcraft.common.util.JUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.LivingEntity;
@@ -53,7 +54,7 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
         }
         final List<EntityMarker> entityMarkers = countdownMove.getTimeEntityMarkers();
         for (final EntityMarker marker : entityMarkers) {
-            if (countdownMove.getEntityMarkerType().shouldLoad(marker, level)) {
+            if (countdownMove.getEntityMarkerType().shouldLoad(marker, level) && (JUtils.nullSafeDistanceSqr(level.getEntity(marker.id()), attacker.getUser()) <= reach * reach)) {
                 countdownMove.getEntityMarkerType().load(marker, level);
             }
         }

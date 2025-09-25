@@ -16,6 +16,7 @@ import net.arna.jcraft.common.marker.EntityMarkerType;
 import net.arna.jcraft.common.marker.Predicates;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.TriConsumer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -36,13 +37,15 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
     @Getter
     private final int radius;
     @Getter
+    private final int reach;
+    @Getter
     private final EntityMarkerType entityMarkerType;
     private final List<EntityMarker> returnEntityMarkers = new LinkedList<>();
     @Getter
     private final List<CountdownMove.RewindData> returnInfo = new ArrayList<>();
     private boolean started;
 
-    public ReturnToZeroMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int radius,
+    public ReturnToZeroMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int radius, final int reach,
                             final @NonNull Set<ResourceLocation> rewindIds,
                             final @NonNull TriConsumer<ResourceLocation,Entity,CompoundTag> extractor,
                             final @NonNull TriConsumer<ResourceLocation,Entity,CompoundTag> injector) {
@@ -51,6 +54,10 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
             throw new IllegalArgumentException("radius cannot be negative!");
         }
         this.radius = radius;
+        if (reach < 0) {
+            throw new IllegalArgumentException("RTZ teleport reach cannot be negative!");
+        }
+        this.reach = reach;
         entityMarkerType = new EntityMarkerType(
                 // we catch all entities to save earlier in the code
                 entity -> true,
@@ -97,7 +104,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
 
         ServerLevel level = (ServerLevel) attacker.level();
         for (final EntityMarker marker : returnEntityMarkers) {
-            if (entityMarkerType.shouldLoad(marker, level)) {
+            if (entityMarkerType.shouldLoad(marker, level)  && (JUtils.nullSafeDistanceSqr(level.getEntity(marker.id()), attacker.getUser()) <= reach * reach)) {
                 entityMarkerType.load(marker, level);
             }
         }
@@ -141,7 +148,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
 
     @Override
     public @NonNull ReturnToZeroMove copy() {
-        return copyExtras(new ReturnToZeroMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getRadius(),
+        return copyExtras(new ReturnToZeroMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getRadius(), getReach(),
                 entityMarkerType.getIds(), entityMarkerType.getDataHandler().extractor(), entityMarkerType.getDataHandler().injector()));
     }
 
@@ -150,7 +157,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
 
         @Override
         protected @NotNull App<RecordCodecBuilder.Mu<ReturnToZeroMove>, ReturnToZeroMove> buildCodec(RecordCodecBuilder.Instance<ReturnToZeroMove> instance) {
-            return instance.group(extras(), cooldown(), windup(), duration(), moveDistance(), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("radius").forGetter(ReturnToZeroMove::getRadius), ResourceLocation.CODEC.listOf().xmap(list -> list.stream().collect(Collectors.toSet()), set -> set.stream().toList()).fieldOf("rewindIds").forGetter(move -> move.getEntityMarkerType().getIds()), JRegistries.EXTRACTOR_CODEC.fieldOf("extractor").forGetter(move -> move.getEntityMarkerType().getDataHandler().extractor()), JRegistries.INJECTOR_CODEC.fieldOf("injector").forGetter(move -> move.getEntityMarkerType().getDataHandler().injector())).apply(instance, applyExtras(ReturnToZeroMove::new));
+            return instance.group(extras(), cooldown(), windup(), duration(), moveDistance(), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("radius").forGetter(ReturnToZeroMove::getRadius), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("reach").forGetter(ReturnToZeroMove::getReach), ResourceLocation.CODEC.listOf().xmap(list -> list.stream().collect(Collectors.toSet()), set -> set.stream().toList()).fieldOf("rewindIds").forGetter(move -> move.getEntityMarkerType().getIds()), JRegistries.EXTRACTOR_CODEC.fieldOf("extractor").forGetter(move -> move.getEntityMarkerType().getDataHandler().extractor()), JRegistries.INJECTOR_CODEC.fieldOf("injector").forGetter(move -> move.getEntityMarkerType().getDataHandler().injector())).apply(instance, applyExtras(ReturnToZeroMove::new));
         }
     }
 }
