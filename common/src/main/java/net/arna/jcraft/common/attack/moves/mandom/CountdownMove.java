@@ -43,6 +43,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             Identifiers.YAW_HEAD,
             Identifiers.PITCH,
             Identifiers.VELOCITY,
+            Identifiers.FALL_DISTANCE,
             Identifiers.FOOD_DATA,
             Identifiers.BLOOD_GAUGE,
             Identifiers.HEALTH,
