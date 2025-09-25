@@ -107,6 +107,11 @@ public interface JItemRegistry {
     RegistrySupplier<Item> JOTARO_P4_PANTS = register("jotaro_p4_pants", () -> new JotaroClothesP4Item(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
     RegistrySupplier<Item> JOTARO_P4_BOOTS = register("jotaro_p4_boots", () -> new JotaroClothesP4Item(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
 
+    RegistrySupplier<Item> JOTARO_P6_CAP = register("jotaro_p6_cap", () -> new JotaroClothesP6Item(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
+    RegistrySupplier<Item> JOTARO_P6_JACKET = register("jotaro_p6_jacket", () -> new FlutteringArmorItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
+    RegistrySupplier<Item> JOTARO_P6_PANTS = register("jotaro_p6_pants", () -> new JotaroClothesP6Item(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));
+    RegistrySupplier<Item> JOTARO_P6_BOOTS = register("jotaro_p6_boots", () -> new JotaroClothesP6Item(ArmorMaterials.NETHERITE, ArmorItem.Type.BOOTS, settings().fireResistant()));
+
     RegistrySupplier<Item> KAKYOIN_WIG = register("kakyoin_wig", () -> new KakyoinClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.HELMET, settings().fireResistant()));
     RegistrySupplier<Item> KAKYOIN_COAT = register("kakyoin_coat", () -> new KakyoinCoatItem(ArmorMaterials.NETHERITE, ArmorItem.Type.CHESTPLATE, settings().fireResistant()));
     RegistrySupplier<Item> KAKYOIN_PANTS = register("kakyoin_pants", () -> new KakyoinClothesItem(ArmorMaterials.NETHERITE, ArmorItem.Type.LEGGINGS, settings().fireResistant()));

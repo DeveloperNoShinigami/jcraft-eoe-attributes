@@ -115,7 +115,11 @@ public interface JCreativeMenuTabRegistry {
             output.acceptAfter(JItemRegistry.DIAVOLO_WIG.get(), JItemRegistry.DIAVOLO_SHIRT.get());
             output.acceptAfter(JItemRegistry.DIAVOLO_SHIRT.get(), JItemRegistry.DIAVOLO_PANTS.get());
             output.acceptAfter(JItemRegistry.DIAVOLO_PANTS.get(), JItemRegistry.DIAVOLO_BOOTS.get());
-            output.acceptAfter(JItemRegistry.DIAVOLO_BOOTS.get(), JItemRegistry.PUCCIS_HAT.get());
+            output.acceptAfter(JItemRegistry.DIAVOLO_BOOTS.get(), JItemRegistry.JOTARO_P6_CAP.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P6_BOOTS.get(), JItemRegistry.JOTARO_P6_JACKET.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P6_JACKET.get(), JItemRegistry.JOTARO_P6_PANTS.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P6_PANTS.get(), JItemRegistry.JOTARO_P6_BOOTS.get());
+            output.acceptAfter(JItemRegistry.JOTARO_P6_BOOTS.get(), JItemRegistry.PUCCIS_HAT.get());
             output.acceptAfter(JItemRegistry.PUCCIS_HAT.get(), JItemRegistry.PUCCI_ROBE.get());
             output.acceptAfter(JItemRegistry.PUCCI_ROBE.get(), JItemRegistry.PUCCI_PANTS.get());
             output.acceptAfter(JItemRegistry.PUCCI_PANTS.get(), JItemRegistry.PUCCI_BOOTS.get());
@@ -328,6 +332,10 @@ public interface JCreativeMenuTabRegistry {
                     entries.accept(JItemRegistry.DIAVOLO_SHIRT.get());
                     entries.accept(JItemRegistry.DIAVOLO_PANTS.get());
                     entries.accept(JItemRegistry.DIAVOLO_BOOTS.get());
+                    entries.accept(JItemRegistry.JOTARO_P6_CAP.get());
+                    entries.accept(JItemRegistry.JOTARO_P6_JACKET.get());
+                    entries.accept(JItemRegistry.JOTARO_P6_PANTS.get());
+                    entries.accept(JItemRegistry.JOTARO_P6_BOOTS.get());
                     entries.accept(JItemRegistry.PUCCIS_HAT.get());
                     entries.accept(JItemRegistry.PUCCI_ROBE.get());
                     entries.accept(JItemRegistry.PUCCI_PANTS.get());

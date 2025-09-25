@@ -322,6 +322,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_jotaro_p4_outfit"));
         consumer.accept(obtainJotaroP4Outfit);
+        // obtain Jotaro P6 outfit
+        final Advancement obtainJotaroP6Outfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.JOTARO_P6_CAP.get(),
+                        Component.translatable("advancements.jcraft.obtain_jotaro_p6_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_jotaro_p6_outfit.description"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainJotaroP4Outfit)
+                .addCriterion("has_jotaro_p6_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P6_CAP.get()))
+                .addCriterion("has_jotaro_p6_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P6_JACKET.get()))
+                .addCriterion("has_jotaro_p6_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P6_PANTS.get()))
+                .addCriterion("has_jotaro_p6_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P6_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_jotaro_p6_outfit"));
+        consumer.accept(obtainJotaroP6Outfit);
         // obtain Kakyoin outfit
         final Advancement obtainKakyoinOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.KAKYOIN_WIG.get(),

@@ -9,7 +9,7 @@
 7. If additional block or item tags apply, add them in `JTagProviders` as well.
 8. If the block is involved in recipes, add them to `JRecipeProvider`.
 9. If getting the block is worth an advancement, add it to `JAdvancementProvider`.
-10. Run datagen (on fabric).
+10. Run datagen.
 11. Add the block to `JCreativeMenuTabRegistry` to the JCraft tab and possibly to other tabs as well.
 12. Add the texture(s) for the block in `textures/block`.
 13. Test your addition.
@@ -34,7 +34,7 @@
 4. If item tags apply, add them in `JTagProviders.JItemTags` as well. 
 5. If the item is involved in recipes, add them to `JRecipeProvider`. 
 6. If getting the item is worth an advancement, add it to `JAdvancementProvider`. 
-7. Run datagen (on fabric). 
+7. Run datagen. 
 8. Add the item to `JCreativeMenuTabRegistry` to the JCraft tab and possibly to other tabs as well. 
 9. Add the texture(s) for the block in `textures/item`. 
 10. Test your addition.
