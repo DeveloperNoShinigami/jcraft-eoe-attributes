@@ -8,12 +8,8 @@ import lombok.NonNull;
 import net.arna.jcraft.api.JRegistries;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractMove;
-import net.arna.jcraft.common.attack.moves.mandom.CountdownMove;
 import net.arna.jcraft.common.entity.stand.GEREntity;
-import net.arna.jcraft.common.marker.EntityDataHandler;
-import net.arna.jcraft.common.marker.EntityMarker;
-import net.arna.jcraft.common.marker.EntityMarkerType;
-import net.arna.jcraft.common.marker.Predicates;
+import net.arna.jcraft.common.marker.*;
 import net.arna.jcraft.common.network.s2c.ServerChannelFeedbackPacket;
 import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.common.util.JUtils;
@@ -42,7 +38,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
     private final EntityMarkerType entityMarkerType;
     private final List<EntityMarker> returnEntityMarkers = new LinkedList<>();
     @Getter
-    private final List<CountdownMove.RewindData> returnInfo = new ArrayList<>();
+    private final List<RewindData> returnInfo = new ArrayList<>();
     private boolean started;
 
     public ReturnToZeroMove(final int cooldown, final int windup, final int duration, final float moveDistance, final int radius, final int reach,
@@ -58,14 +54,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
             throw new IllegalArgumentException("RTZ teleport reach cannot be negative!");
         }
         this.reach = reach;
-        entityMarkerType = new EntityMarkerType(
-                // we catch all entities to save earlier in the code
-                entity -> true,
-                // but we don't know their state when loading
-                Predicates.DEFAULT_LOAD,
-                // this is all we need to check when saving/loading
-                rewindIds,
-                new EntityDataHandler(Predicates.fromSet(rewindIds), extractor, injector));
+        entityMarkerType = EntityMarkerType.defaultType(rewindIds, extractor, injector);
     }
 
     @Override
@@ -89,7 +78,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
         for (final Entity entity : toReturn) {
             if (entityMarkerType.shouldSave(entity.getUUID(), entity)) {
                 returnEntityMarkers.add(entityMarkerType.save(entity.getUUID(), entity));
-                returnInfo.add(new CountdownMove.RewindData(entity.getEyePosition(), entity));
+                returnInfo.add(new RewindData(entity.getEyePosition(), entity));
             }
         }
         started = true;
@@ -122,7 +111,7 @@ public final class ReturnToZeroMove extends AbstractMove<ReturnToZeroMove, GEREn
         if (!(attacker.getUser() instanceof ServerPlayer serverPlayer)) {
             return;
         }
-        for (final CountdownMove.RewindData data : returnInfo) {
+        for (final RewindData data : returnInfo) {
             final Entity entity = data.entity();
             if (entity == null || !entity.isAlive()) {
                 continue;

@@ -54,7 +54,7 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
         }
         final List<EntityMarker> entityMarkers = countdownMove.getTimeEntityMarkers();
         for (final EntityMarker marker : entityMarkers) {
-            if (countdownMove.getEntityMarkerType().shouldLoad(marker, level) && (JUtils.nullSafeDistanceSqr(level.getEntity(marker.id()), attacker.getUser()) <= reach * reach)) {
+            if (countdownMove.getEntityMarkerType().shouldLoad(marker, level) && JUtils.nullSafeDistanceSqr(level.getEntity(marker.id()), attacker.getUser()) <= reach * reach) {
                 countdownMove.getEntityMarkerType().load(marker, level);
             }
         }

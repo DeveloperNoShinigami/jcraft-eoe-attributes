@@ -720,7 +720,9 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
                 return false;
             }
 
-            if (!move.isManualCooldown()) cooldowns.setCooldown(cooldownType, move.getCooldown());
+            if (!move.isManualCooldown()) {
+                cooldowns.setCooldown(cooldownType, move.getCooldown());
+            }
         }
 
         setMove(move, animState);

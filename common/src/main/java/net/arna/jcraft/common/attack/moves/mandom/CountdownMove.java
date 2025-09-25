@@ -90,14 +90,7 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
             throw new IllegalArgumentException("maxCountdownTicks cannot be negative!");
         }
         this.maxCountdownTicks = maxCountdownTicks;
-        entityMarkerType = new EntityMarkerType(
-                // we catch all entities to save earlier in the code
-                entity -> true,
-                // but we don't know their state when loading
-                Predicates.DEFAULT_LOAD,
-                // this is all we need to check when saving/loading
-                rewindIds,
-                new EntityDataHandler(Predicates.fromSet(rewindIds), extractor, injector));
+        entityMarkerType = EntityMarkerType.defaultType(rewindIds, extractor, injector);
     }
 
     @Override
@@ -217,9 +210,6 @@ public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntit
     public @NonNull CountdownMove copy() {
         return copyExtras(new CountdownMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getRadius(), getMaxCountdownTicks(),
                 entityMarkerType.getIds(), entityMarkerType.getDataHandler().extractor(), entityMarkerType.getDataHandler().injector()));
-    }
-
-    public record RewindData(Vec3 originalPos, Entity entity) {
     }
 
     public static class Type extends AbstractMove.Type<CountdownMove> {
