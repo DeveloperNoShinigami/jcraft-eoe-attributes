@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 public final class CountdownMove extends AbstractMove<CountdownMove, MandomEntity> implements BlockMarkerMove {
     private static final int COUNTDOWN_COOLDOWN_TICKS = 120; // 6 seconds
+    // note that ReturnToZero move uses this same set as a default as well
     public static final Set<ResourceLocation> ENTITY_STUFF_TO_SAVE = Set.of(
             Identifiers.POSITION,
             Identifiers.YAW,

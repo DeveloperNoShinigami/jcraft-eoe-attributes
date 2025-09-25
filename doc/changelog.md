@@ -13,6 +13,7 @@
 * …
 ### Bug Fixes
 * Mandom rewinds fall distance again
+* GER now uses same internal mechanism as Mandom, hence the backpack dupe is fixed
 * some cosplay nitpicks
 ### Known Bugs
 * …

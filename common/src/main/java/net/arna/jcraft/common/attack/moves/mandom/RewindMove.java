@@ -42,7 +42,7 @@ public final class RewindMove extends AbstractMove<RewindMove, MandomEntity> {
             return Set.of();
         }
 
-        ServerLevel level = (ServerLevel) attacker.level();
+        final ServerLevel level = (ServerLevel) attacker.level();
 
         final List<BlockMarker> blockMarkers = countdownMove.getTimeBlockMarkers();
         countdownMove.setResolving(true);
