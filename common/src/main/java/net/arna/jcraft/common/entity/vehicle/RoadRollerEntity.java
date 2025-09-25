@@ -12,6 +12,7 @@ import net.arna.jcraft.api.registry.JEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JItemRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JStatusRegistry;
+import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.gravity.util.RotationUtil;
 import net.arna.jcraft.common.util.JUtils;
@@ -155,7 +156,7 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
     }
 
     private static final double INLINE_SPEED = 0.1d, TURN_RATE = 5.0d;
-    private static final Map<BlockState, BlockState> flattenedBlockStates = Map.ofEntries(
+    private static final Map<BlockState, BlockState> FLATTENED_BLOCK_STATES = Map.ofEntries(
             Map.entry(Blocks.DIRT.defaultBlockState(), Blocks.FARMLAND.defaultBlockState()),
             Map.entry(Blocks.GRASS_BLOCK.defaultBlockState(), Blocks.DIRT_PATH.defaultBlockState()),
             Map.entry(Blocks.COBBLESTONE.defaultBlockState(), Blocks.STONE.defaultBlockState()),
@@ -230,10 +231,13 @@ public class RoadRollerEntity extends AbstractGroundVehicleEntity {
 
                         final BlockState state = serverLevel.getBlockState(blockPos);
                         final Block block = state.getBlock();
-                        if (flattenedBlockStates.containsKey(state))
-                            serverLevel.setBlock(blockPos, flattenedBlockStates.get(state), Block.UPDATE_ALL);
+                        if (FLATTENED_BLOCK_STATES.containsKey(state)) {
+                            if (JServerConfig.ROLLER_FLATTENING.getValue()) {
+                                serverLevel.setBlock(blockPos, FLATTENED_BLOCK_STATES.get(state), Block.UPDATE_ALL);
+                            }
+                        }
                         // Break replaceable blocks or ones under a certain resistance on the same height level as the Road Roller
-                        else if (block != Blocks.DIRT_PATH &&
+                        else if (block != Blocks.DIRT_PATH && JServerConfig.ROLLER_DESTROYING.getValue() &&
                                 (state.canBeReplaced() || (y == 0 && block.getExplosionResistance() <= 3.0f))
                         ) {
                             serverLevel.destroyBlock(blockPos, true);
