@@ -262,7 +262,9 @@ public class Peacemaker extends Item {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
             if (stack.getItem() == JItemRegistry.BULLET.get()) {
-                stack.shrink(1);
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
                 return true;
             }
         }
