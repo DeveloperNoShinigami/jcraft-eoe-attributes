@@ -71,7 +71,7 @@ public class Peacemaker extends Item {
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         ItemStack itemStack = user.getItemInHand(hand);
 
-        if (user.hasEffect(JStatusRegistry.DAZED.get())) {
+        if (user.hasEffect(JStatusRegistry.DAZED.get()) || user.isSpectator()) {
             return InteractionResultHolder.fail(itemStack);
         }
 
@@ -181,9 +181,7 @@ public class Peacemaker extends Item {
         int shots = data.getInt(SHOTS_ID);
 
         // Creative mode players have infinite bullets
-        if (user instanceof Player player && player.isCreative()) {
-            // Don't consume shots in creative mode
-        } else {
+        if (!(user instanceof Player player && player.isCreative())) {
             if (shots < 1) {
                 return;
             }
