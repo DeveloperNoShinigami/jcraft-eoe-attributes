@@ -18,6 +18,7 @@
 * GER now uses same internal mechanism as Mandom, hence the backpack dupe is fixed
 * same for BTD Ult
 * Spec User NPCs don't try to attack creative players who attacked them any longer 
+* Cream can no longer be cheesed to give you unending invulnerability
 * some cosplay nitpicks
 ### Known Bugs
 * …
