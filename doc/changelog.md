@@ -14,6 +14,7 @@
 ### Commands
 * …
 ### Bug Fixes
+* Mobs now drop XP and player-specific loot if killed by stands
 * Mandom rewinds fall distance again
 * GER now uses same internal mechanism as Mandom, hence the backpack dupe is fixed
 * same for BTD Ult
