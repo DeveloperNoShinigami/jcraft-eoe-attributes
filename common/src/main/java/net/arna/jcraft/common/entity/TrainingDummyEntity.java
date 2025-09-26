@@ -128,7 +128,7 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     // Override Mob's lead behavior to allow leashing
     @Override
     public boolean canBeLeashed(Player player) {
-        return true;
+        return !player.isSpectator();
     }
 
     @Override
@@ -213,14 +213,14 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     public boolean hurt(@NotNull DamageSource source, float amount) {
         if (!level().isClientSide() && !isRemoved()) {
             if (!isInvulnerableTo(source) && !invisible) {
-                // Send damage number packet
-                if (amount > 0) {
+                // Send damage number packet. Also don't show /kill damage
+                if (amount > 0 && amount < Float.MAX_VALUE) {
                     sendDamageNumberPacket(this, amount);
                 }
 
-                // Face the attacker if there is one
+                // Face the attacker if there is one, don't face on /kill though
                 Entity directAttacker = source.getEntity();
-                if (directAttacker != null) {
+                if (directAttacker != null && amount < Float.MAX_VALUE) {
                     double deltaX = directAttacker.getX() - getX();
                     double deltaZ = directAttacker.getZ() - getZ();
                     float yaw = (float) (Math.atan2(deltaZ, deltaX) * 180.0D / Math.PI) - 90.0F;
@@ -234,11 +234,7 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
                 entityData.set(HIT_COUNTER, currentCounter + 1);
                 entityData.set(HIT_START_TIME, level().getGameTime());
 
-                // Play sounds and damage effects
-                level().broadcastEntityEvent(this, (byte)32);
-                level().broadcastEntityEvent(this, (byte)2);
-
-                return true;
+                return super.hurt(source, amount);
             }
         }
         return false;
@@ -264,12 +260,6 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     @Override
     public void tick() {
         super.tick();
-
-        // Force health to always be at maximum
-        if (getHealth() < getMaxHealth()) {
-            setHealth(getMaxHealth());
-        }
-
         // Update knockdown sync on server side
         if (!level().isClientSide()) {
             boolean hasKnockdown = hasEffect(JStatusRegistry.KNOCKDOWN.get());

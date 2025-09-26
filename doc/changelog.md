@@ -1,6 +1,6 @@
 # Changelog
 ## General
-* …
+* added a hidden advancement for the real hardcore players
 ### Blocks & Items
 * added Jotaro Cosplay from Part 6
 * Diego outfit has been updated

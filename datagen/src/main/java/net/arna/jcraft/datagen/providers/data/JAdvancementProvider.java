@@ -2,22 +2,20 @@ package net.arna.jcraft.datagen.providers.data;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.registry.JSpecTypeRegistry;
+import net.arna.jcraft.api.registry.*;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.advancements.ObtainedSpecTrigger;
 import net.arna.jcraft.common.advancements.ObtainedStandTrigger;
-import net.arna.jcraft.api.registry.JBlockRegistry;
-import net.arna.jcraft.api.registry.JItemRegistry;
-import net.arna.jcraft.api.registry.JStandTypeRegistry;
-import net.arna.jcraft.api.registry.JTagRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.FrameType;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -654,5 +652,20 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(800))
                 .build(JCraft.id("obtain_dios_diary"));
         consumer.accept(obtainDiosDiary);
+        // obtain stand
+        final Advancement killDummy = Advancement.Builder.advancement()
+                .display(JItemRegistry.TRAINING_DUMMY.get(),
+                        Component.translatable("advancements.jcraft.kill_dummy.title"),
+                        Component.translatable("advancements.jcraft.kill_dummy.description"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        true)
+                .parent(obtainMeteoriteIronOre)
+                .addCriterion("killed_dummy", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(JEntityTypeRegistry.TRAINING_DUMMY.get())))
+                .rewards(AdvancementRewards.Builder.experience(1000))
+                .build(JCraft.id("kill_dummy"));
+        consumer.accept(killDummy);
     }
 }
