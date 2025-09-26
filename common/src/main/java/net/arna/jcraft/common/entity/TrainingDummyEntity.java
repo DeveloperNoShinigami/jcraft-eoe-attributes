@@ -202,6 +202,10 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
 
     @Override
     protected void actuallyHurt(@NotNull DamageSource damageSource, float damageAmount) {
+        // make sure that /kill and void damage from the void works
+        if (damageAmount >= Float.MAX_VALUE || position().y() < level().getMinBuildHeight()) {
+            super.actuallyHurt(damageSource, damageAmount);
+        }
         // Do nothing - prevents actual health reduction
     }
 
