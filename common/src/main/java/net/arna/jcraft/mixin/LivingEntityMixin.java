@@ -163,17 +163,6 @@ public abstract class LivingEntityMixin implements IJCraftComboTracker {
         }
     }
 
-    @Inject(at = @At("RETURN"), method = "hurt")
-    private void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValueZ() && source.getEntity() instanceof StandEntity<?,?> stand && stand.hasUser()) {
-            final LivingEntity user = stand.getUser();
-            if (user instanceof Player player) {
-                this.lastHurtByPlayerTime = 100;
-                this.lastHurtByPlayer = player;
-            }
-        }
-    }
-
     // Counter hook - Living entity
     @Inject(cancellable = true, at = @At("HEAD"), method = "actuallyHurt")
     protected void jcraft$applyDamage(DamageSource source, float amount, CallbackInfo info) {
