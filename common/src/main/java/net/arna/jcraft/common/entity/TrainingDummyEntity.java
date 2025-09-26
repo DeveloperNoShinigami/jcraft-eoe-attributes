@@ -69,8 +69,7 @@ public class TrainingDummyEntity extends Mob implements GeoEntity, ICustomDamage
     public static AttributeSupplier.@NotNull Builder createLivingAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0)
-                .add(Attributes.ARMOR, 5.0)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 2.0);
+                .add(Attributes.ARMOR, 5.0);
     }
 
     public TrainingDummyEntity(Level level, double x, double y, double z) {

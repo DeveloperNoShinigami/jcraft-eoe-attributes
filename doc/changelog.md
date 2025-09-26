@@ -20,6 +20,7 @@
 * same for BTD Ult
 * Spec User NPCs don't try to attack creative players who attacked them any longer 
 * Cream can no longer be cheesed to give you unending invulnerability
+* Training Dummy no longer has doubled knockback
 * some cosplay nitpicks
 ### Known Bugs
 * …
