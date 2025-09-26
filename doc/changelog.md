@@ -16,6 +16,7 @@
 * Mandom rewinds fall distance again
 * GER now uses same internal mechanism as Mandom, hence the backpack dupe is fixed
 * same for BTD Ult
+* Spec User NPCs don't try to attack creative players who attacked them any longer 
 * some cosplay nitpicks
 ### Known Bugs
 * …
