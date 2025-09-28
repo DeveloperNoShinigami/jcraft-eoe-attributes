@@ -398,7 +398,7 @@ public class JServerEvents {
                 handItems.set(0, new ItemStack(JItemRegistry.ANUBIS.get()));
             }
 
-            if (random.nextInt(0, 100) >= 90) {
+            if (random.nextInt(0, 100) <= 100 * JServerConfig.STAND_ARROW_SPAWN_RATE.getValue()) {
                 handItems.set(1, new ItemStack(JItemRegistry.STAND_ARROW.get()));
                 mob.setDropChance(EquipmentSlot.OFFHAND, 100f);
             }

@@ -9,6 +9,7 @@
 * Training Dummy is now vulnerable if below build height (to be able to die in the void) and killable via /kill
 ### Configs
 * made Roadroller paving/destruction configurable via server config
+* made Stand Arrow Spawn Rate configurable via server config
 * C-Moon's Ult range is now configurable via its moveset
 * C-Moon's Ult can exclude entities via "gravitychanger:forbidden_entities" and "gravitychanger:forbidden_entity_rendering"; this is not new, but now item frames and paintings are included by default
 * D4C's Dimensional Hop duration is now configurable via its moveset
