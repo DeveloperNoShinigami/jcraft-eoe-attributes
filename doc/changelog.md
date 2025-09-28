@@ -1,6 +1,7 @@
 # Changelog
 ## General
 * added a hidden advancement for the real hardcore players
+* players can no longer activate end portals in D4C's alt dimension
 ### Blocks & Items
 * added Jotaro Cosplay from Part 6 (thanks Bob)
 * Diego outfit has been updated

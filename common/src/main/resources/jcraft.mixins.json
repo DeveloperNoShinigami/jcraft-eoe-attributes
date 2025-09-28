@@ -51,6 +51,7 @@
     "BedBlockMixin",
     "ChunkLightProviderAccessor",
     "EndCrystalEntityMixin",
+    "EnderEyeItemMixin",
     "EndPortalBlockMixin",
     "EntityMixin",
     "EntitySelectorOptionsMixin",
