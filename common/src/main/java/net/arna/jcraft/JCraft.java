@@ -589,10 +589,16 @@ public final class JCraft {
         return null;
     }
 
-    public static void dimensionHop(LivingEntity entity, int heightOffset) {
-        ServerLevel original = (ServerLevel) entity.level();
-        MinecraftServer server = original.getServer();
-        ServerLevel au = server.getLevel(JDimensionRegistry.AU_DIMENSION_KEY);
+    /**
+     * @param entity the entity to hop
+     * @param heightOffset the height offset
+     * @param time the time in the other dimension
+     * @throws IllegalArgumentException If <code>time</code> is not positive.
+     */
+    public static void dimensionHop(final LivingEntity entity, final int heightOffset, final int time) {
+        final ServerLevel original = (ServerLevel) entity.level();
+        final MinecraftServer server = original.getServer();
+        final ServerLevel au = server.getLevel(JDimensionRegistry.AU_DIMENSION_KEY);
         if (au == null) {
             JCraft.LOGGER.fatal("Alternate universe world does not exist!");
             return;
@@ -601,11 +607,11 @@ public final class JCraft {
             return;
         }
 
-        Vec3 pos = entity.position();
+        final Vec3 pos = entity.position();
         LivingEntity finalEnt = entity;
 
         if (entity instanceof ServerPlayer player) {
-            ChunkPos chunkPos = new ChunkPos(BlockPos.containing(pos.x, pos.y, pos.z));
+            final ChunkPos chunkPos = new ChunkPos(BlockPos.containing(pos.x, pos.y, pos.z));
             au.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkPos, 1, player.getId());
             player.teleportTo(au, pos.x, pos.y - heightOffset, pos.z, entity.getYRot(), entity.getXRot());
             player.connection.send(
@@ -621,7 +627,7 @@ public final class JCraft {
         }
 
         finalEnt.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 100, 9, true, false, true));
-        PastDimensions.enqueue(new DimensionData(finalEnt, pos, original.dimension()));
+        PastDimensions.enqueue(new DimensionData(finalEnt, pos, original.dimension(), time)); // throws IAE
     }
 
     public static boolean wasRecentlyAttacked(CombatTracker tracker) {

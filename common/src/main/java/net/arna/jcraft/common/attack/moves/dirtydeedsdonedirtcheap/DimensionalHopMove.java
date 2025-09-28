@@ -3,6 +3,7 @@ package net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
+import lombok.Getter;
 import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveType;
@@ -20,6 +21,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.TicketType;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.DataLayer;
@@ -36,9 +38,18 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHopMove, D4CEntity> {
+
+    @Getter
+    private final int dimensionalHopDuration;
+
     public DimensionalHopMove(final int cooldown, final int windup, final int duration, final float moveDistance,
-                              final float damage, final int stun, final float hitboxSize, final float knockback, final float offset) {
+                              final float damage, final int stun, final float hitboxSize, final float knockback, final float offset,
+                              final int dimensionalHopDuration) {
         super(cooldown, windup, duration, moveDistance, damage, stun, hitboxSize, knockback, offset);
+        if (dimensionalHopDuration < 0) {
+            throw new IllegalArgumentException("dimensionHopTime cannot be negative!");
+        }
+        this.dimensionalHopDuration = dimensionalHopDuration;
     }
 
     @Override
@@ -64,6 +75,9 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
     @Override
     public @NonNull Set<LivingEntity> perform(final D4CEntity attacker, final LivingEntity user) {
         final Set<LivingEntity> targets = super.perform(attacker, user);
+        if (dimensionalHopDuration == 0) {
+            return targets;
+        }
 
         final ServerLevel world = (ServerLevel) attacker.level();
 
@@ -91,7 +105,7 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
         toHop.add(user);
         int heightOffset = JCraft.auWorld.getHeight() - world.getHeight();
         for (LivingEntity entity : toHop) {
-            JCraft.dimensionHop(entity, heightOffset / 2);
+            JCraft.dimensionHop(entity, heightOffset / 2, dimensionalHopDuration);
         }
 
         return targets;
@@ -234,7 +248,7 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
     @Override
     public @NonNull DimensionalHopMove copy() {
         return copyExtras(new DimensionalHopMove(getCooldown(), getWindup(), getDuration(), getMoveDistance(), getDamage(),
-                getStun(), getHitboxSize(), getKnockback(), getOffset()));
+                getStun(), getHitboxSize(), getKnockback(), getOffset(), getDimensionalHopDuration()));
     }
 
     public static class Type extends AbstractSimpleAttack.Type<DimensionalHopMove> {
@@ -242,7 +256,8 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
 
         @Override
         protected @NotNull App<RecordCodecBuilder.Mu<DimensionalHopMove>, DimensionalHopMove> buildCodec(RecordCodecBuilder.Instance<DimensionalHopMove> instance) {
-            return attackDefault(instance, DimensionalHopMove::new);
+            return instance.group(cooldown(), windup(), duration(), moveDistance(), damage(),
+                    stun(), hitboxSize(), knockback(), offset(), ExtraCodecs.NON_NEGATIVE_INT.fieldOf("dimensionalHopDuration").forGetter(DimensionalHopMove::getDimensionalHopDuration)).apply(instance, DimensionalHopMove::new);
         }
     }
 }

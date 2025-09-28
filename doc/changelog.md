@@ -10,6 +10,7 @@
 ### Configs
 * made Roadroller paving/destruction configurable via server config
 * C-Moon's Ult range is now configurable via its moveset
+* D4C's Dimensional Hop duration is now configurable via its moveset
 * Mandom, BTD Ult and GER RTZ max reach is configurable via their movesets
 ### Commands
 * …

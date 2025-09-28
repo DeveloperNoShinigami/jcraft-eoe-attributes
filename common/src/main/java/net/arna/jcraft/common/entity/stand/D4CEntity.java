@@ -118,7 +118,7 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
                     Component.literal("Charge"),
                     Component.literal("user & stand charge forward, uninterruptible launcher"));
     public static final DimensionalHopMove DIM_HOP = new DimensionalHopMove(1200, 40, 60,
-            1f, 0f, 0, 1.75f, 0f, 0f)
+            1f, 0f, 0, 1.75f, 0f, 0f, 300)
             .withSound(JSoundRegistry.D4C_DIMHOP)
             .withInfo(
                     Component.literal("Dimensional Hop"),
