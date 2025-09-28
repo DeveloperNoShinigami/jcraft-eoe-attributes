@@ -70,6 +70,11 @@ public class JTagProviders {
             getOrCreateRawBuilder(JTagRegistry.IRON_BLOCKS).addElement(BuiltInRegistries.BLOCK.getKey(Blocks.DAMAGED_ANVIL));
 
             getOrCreateRawBuilder(JTagRegistry.DUMMY_KNOCKBACK_BLOCKING).addElement(BuiltInRegistries.BLOCK.getKey(Blocks.CUT_RED_SANDSTONE_SLAB));
+
+            final var auReplacedWithAir = getOrCreateTagBuilder(JTagRegistry.AU_REPLACED_WITH_AIR);
+            auReplacedWithAir.add(Blocks.NETHER_PORTAL);
+            auReplacedWithAir.add(Blocks.END_PORTAL);
+            auReplacedWithAir.add(Blocks.END_GATEWAY);
         }
     }
 

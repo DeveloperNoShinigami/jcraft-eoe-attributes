@@ -8,6 +8,7 @@ import lombok.NonNull;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveType;
 import net.arna.jcraft.api.attack.moves.AbstractSimpleAttack;
+import net.arna.jcraft.api.registry.JTagRegistry;
 import net.arna.jcraft.common.entity.stand.D4CEntity;
 import net.arna.jcraft.common.tickable.PastDimensions;
 import net.arna.jcraft.mixin.ChunkLightProviderAccessor;
@@ -24,6 +25,7 @@ import net.minecraft.server.level.TicketType;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.DataLayer;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
@@ -230,6 +232,10 @@ public final class DimensionalHopMove extends AbstractSimpleAttack<DimensionalHo
                 new BlockPos(origin.getMaxBlockX() + 3 * 16, world.getMaxBuildHeight(), origin.getMaxBlockZ() + 3 * 16))) {
             auWorld.removeBlockEntity(pos); // Ensure the old one is gone.
             auWorld.getBlockEntity(pos); // Creates the BE if it does not yet exist while there should be one.
+
+            if (auWorld.getBlockState(pos).is(JTagRegistry.AU_REPLACED_WITH_AIR)) {
+                auWorld.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            }
 
             // If some mod felt the need to overwrite the light system,
             // they have probably improved the efficiency of this method.
