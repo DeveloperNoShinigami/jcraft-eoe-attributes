@@ -1,9 +1,7 @@
 package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.util.RenderUtils;
@@ -15,6 +13,8 @@ import net.arna.jcraft.api.attack.enums.BlockableType;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.attack.enums.StunType;
 import net.arna.jcraft.api.pose.modifier.IPoseModifier;
+import net.arna.jcraft.api.registry.JMarkerExtractorRegistry;
+import net.arna.jcraft.api.registry.JMarkerInjectorRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.api.stand.StandData;
@@ -22,18 +22,16 @@ import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.stand.SummonData;
 import net.arna.jcraft.common.attack.moves.killerqueen.bitesthedust.*;
+import net.arna.jcraft.common.attack.moves.mandom.CountdownMove;
 import net.arna.jcraft.common.attack.moves.shared.GrabAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.util.CooldownType;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
-import java.lang.ref.WeakReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -99,14 +97,14 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
                     Component.literal("Stray Cat Bubble"),
                     Component.literal("launches an explosive bubble guided by your view rotation")
             );
-    public static final BTDDetonateAttack BTD_DETONATE = new BTDDetonateAttack(20, 5, 6, 0.75f)
+    public static final BTDDetonateAttack BTD_DETONATE = new BTDDetonateAttack(20, 5, 6, 0.75f, 200)
             .withSound(JSoundRegistry.KQ_DETONATE)
             .withInfo(
                     Component.literal("Detonate"),
                     Component.empty()
             );
     public static final BTDPlantAttack BTD_PLANT = new BTDPlantAttack(800,
-            14, 24, 1f, 10, 1.5f, 0f)
+            14, 24, 1f, 10, 1.5f, 0f, BTDPlantAttack.ENTITY_STUFF_TO_SAVE, JMarkerExtractorRegistry.ALL.get(), JMarkerInjectorRegistry.ALL.get())
             .withBlockableType(BlockableType.NON_BLOCKABLE_EFFECTS_ONLY)
             .withBlockStun(8)
             .withInfo(
@@ -133,11 +131,6 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LOW = AbstractKillerQueenEntity.LOW.copy().withAnim(State.LOW);
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT_FOLLOWUP = AbstractKillerQueenEntity.LIGHT_FOLLOWUP.copy().withAnim(State.LIGHT_FOLLOWUP).withFollowup(LOW);
     public static final SimpleAttack<AbstractKillerQueenEntity<?, ?>> LIGHT = AbstractKillerQueenEntity.LIGHT.copy().withFollowup(LIGHT_FOLLOWUP);
-
-    @Getter @Setter
-    private WeakReference<LivingEntity> btdEntity = new WeakReference<>(null);
-    @Getter @Setter
-    private Vec3 btdPos = Vec3.ZERO;
 
     public KQBTDEntity(Level worldIn) {
         super(JStandTypeRegistry.KILLER_QUEEN_BITES_THE_DUST.get(), worldIn);
@@ -182,7 +175,8 @@ public final class KQBTDEntity extends AbstractKillerQueenEntity<KQBTDEntity, KQ
     @Override
     public boolean initMove(MoveClass moveClass) {
         if (moveClass == MoveClass.ULTIMATE) {
-            if (btdEntity.get() != null) {
+            final BTDPlantAttack btdPlantAttack = getMove(BTDPlantAttack.class);
+            if (btdPlantAttack != null && btdPlantAttack.getEntityMarker() != null) {
                 return handleMove(BTD_DETONATE, CooldownType.ULTIMATE, State.DETONATE);
             } else {
                 return handleMove(MoveClass.ULTIMATE);

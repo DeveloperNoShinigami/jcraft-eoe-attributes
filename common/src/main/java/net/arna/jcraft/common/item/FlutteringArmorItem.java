@@ -12,12 +12,7 @@ import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.renderer.GeoArmorRenderer;
 import mod.azure.azurelib.util.AzureLibUtil;
-import net.arna.jcraft.client.renderer.armor.DIOCapeRenderer;
-import net.arna.jcraft.client.renderer.armor.GyroTopRenderer;
-import net.arna.jcraft.client.renderer.armor.HeavenAttainedArmorRenderer;
-import net.arna.jcraft.client.renderer.armor.JotaroCoatP4Renderer;
-import net.arna.jcraft.client.renderer.armor.JotaroCoatRenderer;
-import net.arna.jcraft.client.renderer.armor.RisottoTopRenderer;
+import net.arna.jcraft.client.renderer.armor.*;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.api.registry.JItemRegistry;
 import net.minecraft.client.model.HumanoidModel;
@@ -76,6 +71,8 @@ public class FlutteringArmorItem extends ArmorItem implements GeoItem {
                         this.renderer = new JotaroCoatRenderer();
                     } else if (itemStack.is(JItemRegistry.JOTARO_P4_JACKET.get())) {
                         this.renderer = new JotaroCoatP4Renderer();
+                    } else if (itemStack.is(JItemRegistry.JOTARO_P6_JACKET.get())) {
+                        this.renderer = new JotaroCoatP6Renderer();
                     } else if (itemStack.is(JItemRegistry.HEAVEN_ATTAINED_SHIRT.get())) {
                         this.renderer = new HeavenAttainedArmorRenderer();
                     } else if (itemStack.is(JItemRegistry.RISOTTO_JACKET.get())) {

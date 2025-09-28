@@ -497,6 +497,47 @@ public class JRecipeProvider extends FabricRecipeProvider {
                 .define('W', Items.WHITE_DYE)
                 .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
                 .save(exporter);
+        // Jotaro's P6 cap
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.JOTARO_P6_CAP.get())
+                .pattern("LGB")
+                .pattern("BHB")
+                .define('B', Items.BLACK_DYE)
+                .define('H', Items.NETHERITE_HELMET)
+                .define('L', Items.LIME_DYE)
+                .define('G', Items.GOLD_NUGGET)
+                .unlockedBy("has_netherite_helmet", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_HELMET))
+                .save(exporter);
+        // Jotaro's P6 jacket
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.JOTARO_P6_JACKET.get())
+                .pattern("B B")
+                .pattern("LCL")
+                .pattern("BWB")
+                .define('B', Items.BLACK_DYE)
+                .define('C', Items.NETHERITE_CHESTPLATE)
+                .define('L', Items.LIME_DYE)
+                .define('W', Items.WHITE_DYE)
+                .unlockedBy("has_netherite_chestplate", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_CHESTPLATE))
+                .save(exporter);
+        // Jotaro's P6 pants
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.JOTARO_P6_PANTS.get())
+                .pattern("YBY")
+                .pattern("BLB")
+                .pattern("Y Y")
+                .define('B', Items.BLACK_DYE)
+                .define('L', Items.NETHERITE_LEGGINGS)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_leggings", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_LEGGINGS))
+                .save(exporter);
+        // Jotaro's P6 boots
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.JOTARO_P6_BOOTS.get())
+                .pattern("O O")
+                .pattern("YNY")
+                .pattern("Y Y")
+                .define('N', Items.NETHERITE_BOOTS)
+                .define('O', Items.ORANGE_DYE)
+                .define('Y', Items.YELLOW_DYE)
+                .unlockedBy("has_netherite_boots", InventoryChangeTrigger.TriggerInstance.hasItems(Items.NETHERITE_BOOTS))
+                .save(exporter);
         // Kira's wig
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, JItemRegistry.KIRA_WIG.get())
                 .pattern("WYW")

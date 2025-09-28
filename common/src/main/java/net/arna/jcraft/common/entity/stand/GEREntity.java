@@ -10,12 +10,15 @@ import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.api.attack.enums.MoveClass;
 import net.arna.jcraft.api.pose.modifier.IPoseModifier;
 import net.arna.jcraft.api.pose.modifier.LevitationPoseModifier;
+import net.arna.jcraft.api.registry.JMarkerExtractorRegistry;
+import net.arna.jcraft.api.registry.JMarkerInjectorRegistry;
 import net.arna.jcraft.api.registry.JSoundRegistry;
 import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.common.attack.moves.goldexperience.requiem.*;
+import net.arna.jcraft.common.attack.moves.mandom.CountdownMove;
 import net.arna.jcraft.common.attack.moves.shared.*;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
@@ -192,7 +195,7 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
                     Component.literal("Nullification"),
                     Component.literal("0.25s windup, 1.5s counter, stuns on hit")
             );
-    public static final ReturnToZeroMove RETURN_TO_ZERO = new ReturnToZeroMove(1200, 30, 32, 1f)
+    public static final ReturnToZeroMove RETURN_TO_ZERO = new ReturnToZeroMove(1200, 30, 32, 1f, 64, 200, CountdownMove.ENTITY_STUFF_TO_SAVE, JMarkerExtractorRegistry.ALL.get(), JMarkerInjectorRegistry.ALL.get())
             .withSound(JSoundRegistry.GER_SETUP)
             .withInfo(
                     Component.literal("Return to Zero"),
@@ -241,10 +244,12 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
     @Override
     public boolean initMove(MoveClass moveClass) {
         if (moveClass == MoveClass.ULTIMATE) {
-            ReturnToZeroMove rtzMove = getMoveMap().findMoveByType(ReturnToZeroMove.class).orElse(null);
+            final ReturnToZeroMove rtzMove = getMoveMap().findMoveByType(ReturnToZeroMove.class).orElse(null);
             if (rtzMove != null && rtzMove.returnToZero(this)) {
                 return true;
-            } else return super.initMove(moveClass);
+            } else {
+                return super.initMove(moveClass);
+            }
         } else if (tryFollowUp(moveClass, MoveClass.LIGHT)) {
             return true;
         } else {

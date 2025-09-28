@@ -2,22 +2,20 @@ package net.arna.jcraft.datagen.providers.data;
 
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.arna.jcraft.JCraft;
-import net.arna.jcraft.api.registry.JSpecTypeRegistry;
+import net.arna.jcraft.api.registry.*;
 import net.arna.jcraft.api.spec.SpecType;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.common.advancements.ObtainedSpecTrigger;
 import net.arna.jcraft.common.advancements.ObtainedStandTrigger;
-import net.arna.jcraft.api.registry.JBlockRegistry;
-import net.arna.jcraft.api.registry.JItemRegistry;
-import net.arna.jcraft.api.registry.JStandTypeRegistry;
-import net.arna.jcraft.api.registry.JTagRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.FrameType;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.KilledTrigger;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -322,6 +320,24 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(200))
                 .build(JCraft.id("obtain_jotaro_p4_outfit"));
         consumer.accept(obtainJotaroP4Outfit);
+        // obtain Jotaro P6 outfit
+        final Advancement obtainJotaroP6Outfit = Advancement.Builder.advancement()
+                .display(JItemRegistry.JOTARO_P6_CAP.get(),
+                        Component.translatable("advancements.jcraft.obtain_jotaro_p6_outfit.title"),
+                        Component.translatable("advancements.jcraft.obtain_jotaro_p6_outfit.description"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        false)
+                .parent(obtainJotaroP4Outfit)
+                .addCriterion("has_jotaro_p6_cap", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P6_CAP.get()))
+                .addCriterion("has_jotaro_p6_jacket", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P6_JACKET.get()))
+                .addCriterion("has_jotaro_p6_pants", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P6_PANTS.get()))
+                .addCriterion("has_jotaro_p6_boots", InventoryChangeTrigger.TriggerInstance.hasItems(JItemRegistry.JOTARO_P6_BOOTS.get()))
+                .rewards(AdvancementRewards.Builder.experience(200))
+                .build(JCraft.id("obtain_jotaro_p6_outfit"));
+        consumer.accept(obtainJotaroP6Outfit);
         // obtain Kakyoin outfit
         final Advancement obtainKakyoinOutfit = Advancement.Builder.advancement()
                 .display(JItemRegistry.KAKYOIN_WIG.get(),
@@ -636,5 +652,20 @@ public class JAdvancementProvider extends FabricAdvancementProvider {
                 .rewards(AdvancementRewards.Builder.experience(800))
                 .build(JCraft.id("obtain_dios_diary"));
         consumer.accept(obtainDiosDiary);
+        // obtain stand
+        final Advancement killDummy = Advancement.Builder.advancement()
+                .display(JItemRegistry.TRAINING_DUMMY.get(),
+                        Component.translatable("advancements.jcraft.kill_dummy.title"),
+                        Component.translatable("advancements.jcraft.kill_dummy.description"),
+                        null,
+                        FrameType.CHALLENGE,
+                        true,
+                        true,
+                        true)
+                .parent(obtainMeteoriteIronOre)
+                .addCriterion("killed_dummy", KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().of(JEntityTypeRegistry.TRAINING_DUMMY.get())))
+                .rewards(AdvancementRewards.Builder.experience(1000))
+                .build(JCraft.id("kill_dummy"));
+        consumer.accept(killDummy);
     }
 }

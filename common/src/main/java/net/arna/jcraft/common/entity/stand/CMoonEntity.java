@@ -174,7 +174,7 @@ public class CMoonEntity extends StandEntity<CMoonEntity, CMoonEntity.State> {
                             lasts 10 seconds
                             swap between attraction/repulsion by pressing ultimate again""")
             );
-    public static final GravityShiftPulseMove GRAV_SHIFT_PULSE = new GravityShiftPulseMove(1400, 20, 32, 1f)
+    public static final GravityShiftPulseMove GRAV_SHIFT_PULSE = new GravityShiftPulseMove(1400, 20, 32, 1f, 16)
             .withCrouchingVariant(GRAV_SHIFT)
             .withSound(JSoundRegistry.CMOON_GRAVSHIFT_DIRECTIONAL)
             .withInfo(

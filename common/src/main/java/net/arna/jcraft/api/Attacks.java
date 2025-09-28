@@ -508,6 +508,14 @@ public interface Attacks {
         ent.gameEvent(GameEvent.ENTITY_DAMAGE);
         if (damageSource.getEntity() instanceof LivingEntity livingAttacker) {
             ent.setLastHurtByMob(livingAttacker);
+            if (livingAttacker instanceof Player player) {
+                invoker.setLastHurtByPlayerTime(100);
+                ent.setLastHurtByPlayer(player);
+            }
+            else if (livingAttacker instanceof StandEntity<?,?> stand && stand.hasUser() && stand.getUser() instanceof Player player) {
+                invoker.setLastHurtByPlayerTime(100);
+                ent.setLastHurtByPlayer(player);
+            }
         }
         if (ent.isDeadOrDying()) {
             ent.die(damageSource);
