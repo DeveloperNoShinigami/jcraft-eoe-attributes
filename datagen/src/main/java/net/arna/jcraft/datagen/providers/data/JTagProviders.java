@@ -7,6 +7,7 @@ import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.api.registry.JTagRegistry;
 import net.arna.jcraft.api.stand.StandType;
 import net.arna.jcraft.api.stand.StandTypeUtil;
+import net.arna.jcraft.common.gravity.util.EntityTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
@@ -675,6 +676,15 @@ public class JTagProviders {
 
             final var noAIStandUsers = getOrCreateTagBuilder(JTagRegistry.NO_STAND_USER_AI);
             noAIStandUsers.add(JEntityTypeRegistry.TRAINING_DUMMY.getId());
+
+            final var gravityForbiddenEntities = getOrCreateTagBuilder(EntityTags.FORBIDDEN_ENTITIES);
+            gravityForbiddenEntities.add(EntityType.ITEM_FRAME);
+            gravityForbiddenEntities.add(EntityType.GLOW_ITEM_FRAME);
+            gravityForbiddenEntities.add(EntityType.PAINTING);
+            final var gravityForbiddenEntitiesRendering = getOrCreateTagBuilder(EntityTags.FORBIDDEN_ENTITY_RENDERING);
+            gravityForbiddenEntitiesRendering.add(EntityType.ITEM_FRAME);
+            gravityForbiddenEntitiesRendering.add(EntityType.GLOW_ITEM_FRAME);
+            gravityForbiddenEntitiesRendering.add(EntityType.PAINTING);
 
             addTagsForCompatibilities(arg);
         }
