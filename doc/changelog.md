@@ -2,7 +2,7 @@
 ## General
 * added a hidden advancement for the real hardcore players
 ### Blocks & Items
-* added Jotaro Cosplay from Part 6
+* added Jotaro Cosplay from Part 6 (thanks Bob)
 * Diego outfit has been updated
 ### NPCs & Stands
 * (re)added max reach for Mandom, BTD Ult and GER RTZ teleport, all default to 200 blocks
