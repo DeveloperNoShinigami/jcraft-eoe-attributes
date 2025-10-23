@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
@@ -31,8 +33,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.joml.Vector3f;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -273,38 +273,34 @@ public final class StarPlatinumEntity extends AbstractStarPlatinumEntity<StarPla
 
     // Animation code
     public enum State implements StandAnimationState<StarPlatinumEntity> {
-        IDLE((starPlatinum, builder) -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.starplatinum." +
-                (starPlatinum.getInhaleTime() > 0 ? "inhaleidle" : "idle")))),
-        PUNCH(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.light"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.starplatinum.block"))),
-        HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.heavy"))),
-        GROUND_BREAKER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.ground_slam"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.starplatinum.barrage"))),
-        STAR_FINGER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.star_finger"))),
-        INHALE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.inhale"))),
-        KNEE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.knee"))),
-        KNEE_UP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.knee_up"))),
-        JUMP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.jump"))),
-        GRAB(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.grab"))),
-        GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.grabhit"))),
-        UPPERCUT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.uppercut"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.light_followup"))),
-        ITEM_TOSS_CHARGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.starplatinum.itemthrow_charge"))),
-        ITEM_TOSS(builder -> builder.setAnimation(RawAnimation.begin().thenPlay("animation.starplatinum.itemthrow")));
+        // TODO reenable inhaleidle
+        IDLE(AzCommand.create("base_controller", "idle", AzPlayBehaviors.LOOP)),
+        PUNCH(AzCommand.create("base_controller", "animation.starplatinum.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.starplatinum.block", AzPlayBehaviors.LOOP)),
+        HEAVY(AzCommand.create("base_controller", "animation.starplatinum.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GROUND_BREAKER(AzCommand.create("base_controller", "animation.starplatinum.ground_slam", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(AzCommand.create("base_controller", "animation.starplatinum.barrage", AzPlayBehaviors.LOOP)),
+        STAR_FINGER(AzCommand.create("base_controller", "animation.starplatinum.star_finger", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        INHALE(AzCommand.create("base_controller", "animation.starplatinum.inhale", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        KNEE(AzCommand.create("base_controller", "animation.starplatinum.knee", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        KNEE_UP(AzCommand.create("base_controller", "animation.starplatinum.knee_up", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        JUMP(AzCommand.create("base_controller", "animation.starplatinum.jump", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB(AzCommand.create("base_controller", "animation.starplatinum.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT(AzCommand.create("base_controller", "animation.starplatinum.grabhit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        UPPERCUT(AzCommand.create("base_controller", "animation.starplatinum.uppercut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.starplatinum.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ITEM_TOSS_CHARGE(AzCommand.create("base_controller", "animation.starplatinum.itemthrow_charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ITEM_TOSS(AzCommand.create("base_controller", "animation.starplatinum.itemthrow", AzPlayBehaviors.PLAY_ONCE));
 
-        private final BiConsumer<StarPlatinumEntity, AnimationState<StarPlatinumEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<StarPlatinumEntity>> animator) {
-            this((stand, builder) -> animator.accept(builder));
-        }
-
-        State(BiConsumer<StarPlatinumEntity, AnimationState<StarPlatinumEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(StarPlatinumEntity attacker, AnimationState<StarPlatinumEntity> builder) {
-            animator.accept(attacker, builder);
+        public void playAnimation(StarPlatinumEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 

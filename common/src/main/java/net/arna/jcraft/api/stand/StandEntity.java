@@ -4,7 +4,6 @@ import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.AttackData;
 import net.arna.jcraft.api.MoveUsage;
@@ -159,7 +158,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     // Data
     @Getter
     private final StandType standType;
-    private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
+    //private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     protected Vector3f[] auraColors = {new Vector3f(), new Vector3f(1f, 0f, 0f), new Vector3f(0f, 1f, 0f), new Vector3f(0f, 0f, 1f)};
 
     protected StandEntity(StandType type, Level world) {
@@ -1609,11 +1608,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
 
     // Animation code
 
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(getThis(), "controller", 0, this::predicate));
-    }
-
+    /*
     private PlayState predicate(AnimationState<E> state) {
         AnimationController<E> controller = state.getController();
 
@@ -1637,6 +1632,7 @@ public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S>
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
     }
+     */
 
     @Override
     public boolean isSilent() {
