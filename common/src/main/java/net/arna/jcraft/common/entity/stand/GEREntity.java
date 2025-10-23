@@ -1,8 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
@@ -38,7 +38,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static net.arna.jcraft.api.component.living.CommonHitPropertyComponent.HitAnimation.CRUSH;
@@ -321,32 +320,32 @@ public class GEREntity extends StandEntity<GEREntity, GEREntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<GEREntity> {
-        IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.ger.idle"))),
-        LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.light"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.ger.block"))),
-        HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.heavy"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.ger.barrage"))),
-        HEAL_SELF(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.healself"))),
-        HEAL(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.heal"))),
-        LASER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.laser"))),
-        LASER_FIRE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.laser_fire"))),
-        COUNTER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.counter"))),
-        COUNTER_MISS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.counter_miss"))),
-        AIR_HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.airheavy"))),
-        AIR_LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.airlight"))),
-        AIR_BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.airbarrage"))),
-        SETUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.setup"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ger.light_followup")));
+        IDLE(AzCommand.create("base_controller", "animation.ger.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(AzCommand.create("base_controller", "animation.ger.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.ger.block", AzPlayBehaviors.LOOP)),
+        HEAVY(AzCommand.create("base_controller", "animation.ger.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(AzCommand.create("base_controller", "animation.ger.barrage", AzPlayBehaviors.LOOP)),
+        HEAL_SELF(AzCommand.create("base_controller", "animation.ger.healself", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        HEAL(AzCommand.create("base_controller", "animation.ger.heal", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LASER(AzCommand.create("base_controller", "animation.ger.laser", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LASER_FIRE(AzCommand.create("base_controller", "animation.ger.laser_fire", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER(AzCommand.create("base_controller", "animation.ger.counter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER_MISS(AzCommand.create("base_controller", "animation.ger.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        AIR_HEAVY(AzCommand.create("base_controller", "animation.ger.airheavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        AIR_LIGHT(AzCommand.create("base_controller", "animation.ger.airlight", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        AIR_BARRAGE(AzCommand.create("base_controller", "animation.ger.airbarrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SETUP(AzCommand.create("base_controller", "animation.ger.setup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.ger.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
-        private final Consumer<AnimationState<GEREntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<GEREntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(GEREntity attacker, AnimationState<GEREntity> state) {
-            animator.accept(state);
+        public void playAnimation(GEREntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 

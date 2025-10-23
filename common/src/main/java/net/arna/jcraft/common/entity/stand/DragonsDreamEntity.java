@@ -1,7 +1,6 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
-import mod.azure.azurelib.core.animation.AnimationState;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -39,7 +38,7 @@ public class DragonsDreamEntity extends StandEntity<DragonsDreamEntity, DragonsD
         BLOCK;
 
         @Override
-        public void playAnimation(DragonsDreamEntity attacker, AnimationState<DragonsDreamEntity> state) {
+        public void playAnimation(DragonsDreamEntity attacker) {
             // TODO Arna
         }
     }

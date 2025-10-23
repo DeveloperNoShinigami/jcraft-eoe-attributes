@@ -4,29 +4,31 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.StateContainer;
+import net.arna.jcraft.api.attack.enums.BlockableType;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
+import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.stand.SummonData;
-import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.EffectAction;
-import net.arna.jcraft.api.attack.enums.BlockableType;
-import net.arna.jcraft.api.attack.enums.MoveClass;
-import net.arna.jcraft.api.attack.MoveMap;
-import net.arna.jcraft.api.attack.MoveSet;
-import net.arna.jcraft.api.attack.StateContainer;
 import net.arna.jcraft.common.attack.moves.cream.*;
 import net.arna.jcraft.common.attack.moves.shared.*;
-import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.config.JServerConfig;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.JUtils;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.api.registry.JSoundRegistry;
-import net.arna.jcraft.api.registry.JStandTypeRegistry;
-import net.arna.jcraft.api.registry.JStatusRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -55,8 +57,6 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Cream">Cream</a>.
@@ -681,40 +681,37 @@ public class CreamEntity extends StandEntity<CreamEntity, CreamEntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<CreamEntity> {
-        IDLE((cream, builder) -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.cream." + (cream.getVoidTime() > 0 ? "void" : cream.isHalfBall() ? "ball" : "") + "idle"))),
-        LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.light"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.light_followup"))),
-        BALL_LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.balllight"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.cream.block"))),
-        BALL_BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.cream.ballblock"))),
-        HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.heavy"))),
-        BALL_HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.ballheavy"))),
-        COMBO(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.combo"))),
-        BALL_COMBO(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.ballcombo"))),
-        CONSUME(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.consume"))),
-        BALL_CONSUME(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.ballconsume"))),
-        SURPRISE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.surprise"))),
-        CHARGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.charge"))),
-        GRAB(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.grab"))),
-        GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.grab_hit"))),
-        ENTER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.enter"))),
-        EXIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.exit"))),
-        DESTROY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.destroy"))),
-        BITE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.cream.bite")));
+        // ("animation.cream." + (cream.getVoidTime() > 0 ? "void" : cream.isHalfBall() ? "ball" : "") + "idle")
+        IDLE(AzCommand.create("base_controller", "animation.cream.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(AzCommand.create("base_controller", "animation.cream.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.cream.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BALL_LIGHT(AzCommand.create("base_controller", "animation.cream.balllight", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.cream.block", AzPlayBehaviors.LOOP)),
+        BALL_BLOCK(AzCommand.create("base_controller", "animation.cream.ballblock", AzPlayBehaviors.LOOP)),
+        HEAVY(AzCommand.create("base_controller", "animation.cream.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BALL_HEAVY(AzCommand.create("base_controller", "animation.cream.ballheavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COMBO(AzCommand.create("base_controller", "animation.cream.combo", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BALL_COMBO(AzCommand.create("base_controller", "animation.cream.ballcombo", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CONSUME(AzCommand.create("base_controller", "animation.cream.consume", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BALL_CONSUME(AzCommand.create("base_controller", "animation.cream.ballconsume", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SURPRISE(AzCommand.create("base_controller", "animation.cream.surprise", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CHARGE(AzCommand.create("base_controller", "animation.cream.charge", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB(AzCommand.create("base_controller", "animation.cream.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT(AzCommand.create("base_controller", "animation.cream.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ENTER(AzCommand.create("base_controller", "animation.cream.enter", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        EXIT(AzCommand.create("base_controller", "animation.cream.exit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DESTROY(AzCommand.create("base_controller", "animation.cream.destroy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BITE(AzCommand.create("base_controller", "animation.cream.bite", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
-        private final BiConsumer<CreamEntity, AnimationState<CreamEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<CreamEntity>> animator) {
-            this((creamEntity, builder) -> animator.accept(builder));
-        }
-
-        State(BiConsumer<CreamEntity, AnimationState<CreamEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(CreamEntity attacker, AnimationState<CreamEntity> state) {
-            animator.accept(attacker, state);
+        public void playAnimation(CreamEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 

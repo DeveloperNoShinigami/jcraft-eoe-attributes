@@ -2,36 +2,36 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
+import net.arna.jcraft.api.attack.MoveMap;
+import net.arna.jcraft.api.attack.MoveSet;
+import net.arna.jcraft.api.attack.MoveSetManager;
+import net.arna.jcraft.api.attack.enums.MoveClass;
+import net.arna.jcraft.api.attack.enums.StunType;
+import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
+import net.arna.jcraft.api.registry.JItemRegistry;
+import net.arna.jcraft.api.registry.JSoundRegistry;
+import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
 import net.arna.jcraft.api.stand.SummonData;
-import net.arna.jcraft.api.attack.MoveSet;
-import net.arna.jcraft.api.attack.MoveSetManager;
 import net.arna.jcraft.common.attack.actions.LungeAction;
 import net.arna.jcraft.common.attack.actions.PlaySoundAction;
-import net.arna.jcraft.api.attack.enums.MoveClass;
-import net.arna.jcraft.api.attack.MoveMap;
-import net.arna.jcraft.api.attack.enums.StunType;
 import net.arna.jcraft.common.attack.moves.dirtydeedsdonedirtcheap.*;
 import net.arna.jcraft.common.attack.moves.shared.MainBarrageAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleAttack;
 import net.arna.jcraft.common.attack.moves.shared.SimpleMultiHitAttack;
-import net.arna.jcraft.api.component.living.CommonHitPropertyComponent;
 import net.arna.jcraft.common.util.JParticleType;
 import net.arna.jcraft.common.util.StandAnimationState;
-import net.arna.jcraft.api.registry.JItemRegistry;
-import net.arna.jcraft.api.registry.JSoundRegistry;
-import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import org.joml.Vector3f;
-
-import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Dirty_Deeds_Done_Dirt_Cheap">Dirty Deeds Done Dirt Cheap</a>.
@@ -257,30 +257,30 @@ public class D4CEntity extends StandEntity<D4CEntity, D4CEntity.State> {
 
     // Animation code
     public enum State implements StandAnimationState<D4CEntity> {
-        IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.d4c.idle"))),
-        LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.light"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.d4c.block"))),
-        HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.heavy"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.d4c.barrage"))),
-        DIM_HOP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.dimhop"))),
-        THROW(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.throw"))),
-        THROW_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.throwhit"))),
-        COUNTER(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.d4c.counter"))),
-        COUNTER_MISS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.counter_miss"))),
-        GIVE_GUN(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.givegun"))),
-        FLAG(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.flag"))),
-        ITEM_PLACE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.itemplace"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.d4c.light_followup")));
+        IDLE(AzCommand.create("base_controller", "animation.d4c.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(AzCommand.create("base_controller", "animation.d4c.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.d4c.block", AzPlayBehaviors.LOOP)),
+        HEAVY(AzCommand.create("base_controller", "animation.d4c.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(AzCommand.create("base_controller", "animation.d4c.barrage", AzPlayBehaviors.LOOP)),
+        DIM_HOP(AzCommand.create("base_controller", "animation.d4c.dimhop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        THROW(AzCommand.create("base_controller", "animation.d4c.throw", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        THROW_HIT(AzCommand.create("base_controller", "animation.d4c.throwhit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER(AzCommand.create("base_controller", "animation.d4c.counter", AzPlayBehaviors.LOOP)),
+        COUNTER_MISS(AzCommand.create("base_controller", "animation.d4c.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GIVE_GUN(AzCommand.create("base_controller", "animation.d4c.givegun", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        FLAG(AzCommand.create("base_controller", "animation.d4c.flag", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ITEM_PLACE(AzCommand.create("base_controller", "animation.d4c.itemplace", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.d4c.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
-        private final Consumer<AnimationState<D4CEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<D4CEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(D4CEntity attacker, AnimationState<D4CEntity> state) {
-            animator.accept(state);
+        public void playAnimation(D4CEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 
