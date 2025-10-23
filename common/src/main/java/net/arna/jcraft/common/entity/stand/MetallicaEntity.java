@@ -3,6 +3,8 @@ package net.arna.jcraft.common.entity.stand;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
@@ -54,7 +56,6 @@ import org.joml.Vector3f;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Metallica">Metallica</a>.
@@ -505,33 +506,33 @@ public class MetallicaEntity extends StandEntity<MetallicaEntity, MetallicaEntit
 
     // Animations
     public enum State implements StandAnimationState<MetallicaEntity> {
-        IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.idle"))),
-        NONE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.idle"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.block"))),
-        LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.light"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.light2"))),
-        LIGHT_FINAL(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.light3"))),
-        PRECISE_TOSS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.precise_toss"))),
-        FAN_TOSS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.metallica.fan_toss"))),
-        HARVEST(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.harvest"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.barrage"))),
-        SMASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.smash"))),
-        CLEAVE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.cleave"))),
-        SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.sweep"))),
-        GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.grab_hit"))),
-        BISECT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.bisect"))),
-        GIVE_SCALPEL(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.metallica.give_scalpel"))),
+        IDLE(AzCommand.create("base_controller", "animation.metallica.idle", AzPlayBehaviors.LOOP)),
+        NONE(AzCommand.create("base_controller", "animation.metallica.idle", AzPlayBehaviors.LOOP)),
+        BLOCK(AzCommand.create("base_controller", "animation.metallica.block", AzPlayBehaviors.LOOP)),
+        LIGHT(AzCommand.create("base_controller", "animation.metallica.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.metallica.light2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FINAL(AzCommand.create("base_controller", "animation.metallica.light3", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        PRECISE_TOSS(AzCommand.create("base_controller", "animation.metallica.precise_toss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        FAN_TOSS(AzCommand.create("base_controller", "animation.metallica.fan_toss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        HARVEST(AzCommand.create("base_controller", "animation.metallica.harvest", AzPlayBehaviors.LOOP)),
+        BARRAGE(AzCommand.create("base_controller", "animation.metallica.barrage", AzPlayBehaviors.LOOP)),
+        SMASH(AzCommand.create("base_controller", "animation.metallica.smash", AzPlayBehaviors.LOOP)),
+        CLEAVE(AzCommand.create("base_controller", "animation.metallica.cleave", AzPlayBehaviors.LOOP)),
+        SWEEP(AzCommand.create("base_controller", "animation.metallica.sweep", AzPlayBehaviors.LOOP)),
+        GRAB_HIT(AzCommand.create("base_controller", "animation.metallica.grab_hit", AzPlayBehaviors.LOOP)),
+        BISECT(AzCommand.create("base_controller", "animation.metallica.bisect", AzPlayBehaviors.LOOP)),
+        GIVE_SCALPEL(AzCommand.create("base_controller", "animation.metallica.give_scalpel", AzPlayBehaviors.LOOP)),
         ;
 
-        private final Consumer<AnimationState<MetallicaEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<MetallicaEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(MetallicaEntity attacker, AnimationState<MetallicaEntity> builder) {
-            animator.accept(builder);
+        public void playAnimation(MetallicaEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 

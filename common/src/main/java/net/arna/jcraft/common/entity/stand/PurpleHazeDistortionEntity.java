@@ -2,6 +2,8 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -24,9 +26,6 @@ import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3f;
-
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Purple_Haze_Distortion">Purple Haze Distortion</a>.
@@ -167,52 +166,48 @@ public final class PurpleHazeDistortionEntity extends AbstractPurpleHazeEntity<P
 
     // Animation code
     public enum State implements StandAnimationState<PurpleHazeDistortionEntity> {
-        IDLE((PurpleHaze, builder) -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.idle"))),
-        PUNCH(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.light"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.block"))),
-        HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.heavy"))),
+        IDLE(AzCommand.create("base_controller", "animation.purple_haze.idle", AzPlayBehaviors.LOOP)),
+        PUNCH(AzCommand.create("base_controller", "animation.purple_haze.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.purple_haze.block", AzPlayBehaviors.LOOP)),
+        HEAVY(AzCommand.create("base_controller", "animation.purple_haze.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        FULL_RELEASE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.full_release"))),
-        GROUND_SLAM(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.ground_slam"))),
+        FULL_RELEASE(AzCommand.create("base_controller", "animation.purple_haze.full_release", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GROUND_SLAM(AzCommand.create("base_controller", "animation.purple_haze.ground_slam", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.barrage"))),
-        LAUNCH(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.launch"))),
-        LAUNCH2(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.launch2"))),
+        BARRAGE(AzCommand.create("base_controller", "animation.purple_haze.barrage", AzPlayBehaviors.LOOP)),
+        LAUNCH(AzCommand.create("base_controller", "animation.purple_haze.launch", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LAUNCH2(AzCommand.create("base_controller", "animation.purple_haze.launch2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        REKKA1(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.rekka1"))),
-        REKKA2(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.rekka2"))),
-        REKKA3(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.rekka3"))),
+        REKKA1(AzCommand.create("base_controller", "animation.purple_haze.rekka1", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REKKA2(AzCommand.create("base_controller", "animation.purple_haze.rekka2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REKKA3(AzCommand.create("base_controller", "animation.purple_haze.rekka3", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        GRAB(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.grab"))),
-        GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.grab_hit"))),
+        GRAB(AzCommand.create("base_controller", "animation.purple_haze.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT(AzCommand.create("base_controller", "animation.purple_haze.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        BACKHAND(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.backhand"))),
-        BACKHAND_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.backhand_followup"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.purple_haze.light_followup"))),
+        BACKHAND(AzCommand.create("base_controller", "animation.purple_haze.backhand", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BACKHAND_FOLLOWUP(AzCommand.create("base_controller", "animation.purple_haze.backhand_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.purple_haze.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        FORWARD(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.forw"))),
-        BACKWARD(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.back"))),
-        LEFT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.left"))),
-        RIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.right"))),
-        FORWARD_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.fdash"))),
-        BACKWARD_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.bdash"))),
-        LEFT_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.ldash"))),
-        RIGHT_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.purple_haze.rdash"))),
+        FORWARD(AzCommand.create("base_controller", "animation.purple_haze.forw", AzPlayBehaviors.LOOP)),
+        BACKWARD(AzCommand.create("base_controller", "animation.purple_haze.back", AzPlayBehaviors.LOOP)),
+        LEFT(AzCommand.create("base_controller", "animation.purple_haze.left", AzPlayBehaviors.LOOP)),
+        RIGHT(AzCommand.create("base_controller", "animation.purple_haze.right", AzPlayBehaviors.LOOP)),
+        FORWARD_DASH(AzCommand.create("base_controller", "animation.purple_haze.fdash", AzPlayBehaviors.LOOP)),
+        BACKWARD_DASH(AzCommand.create("base_controller", "animation.purple_haze.bdash", AzPlayBehaviors.LOOP)),
+        LEFT_DASH(AzCommand.create("base_controller", "animation.purple_haze.ldash", AzPlayBehaviors.LOOP)),
+        RIGHT_DASH(AzCommand.create("base_controller", "animation.purple_haze.rdash", AzPlayBehaviors.LOOP)),
         ;
 
-        private final BiConsumer<PurpleHazeDistortionEntity, AnimationState<PurpleHazeDistortionEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<PurpleHazeDistortionEntity>> animator) {
-            this((silverChariot, builder) -> animator.accept(builder));
-        }
-
-        State(BiConsumer<PurpleHazeDistortionEntity, AnimationState<PurpleHazeDistortionEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(PurpleHazeDistortionEntity attacker, AnimationState<PurpleHazeDistortionEntity> state) {
-            animator.accept(attacker, state);
+        public void playAnimation(PurpleHazeDistortionEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 

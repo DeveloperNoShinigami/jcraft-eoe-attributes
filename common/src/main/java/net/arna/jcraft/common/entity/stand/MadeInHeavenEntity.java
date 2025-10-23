@@ -2,8 +2,8 @@ package net.arna.jcraft.common.entity.stand;
 
 import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -49,7 +49,6 @@ import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Made_in_Heaven">Made In Heaven</a>.
@@ -423,30 +422,30 @@ public class MadeInHeavenEntity extends StandEntity<MadeInHeavenEntity, MadeInHe
 
     // Animation code
     public enum State implements StandAnimationState<MadeInHeavenEntity> {
-        IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.mih.idle"))),
-        SLICE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.slice"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.mih.block"))),
-        DONUT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.donut"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.mih.barrage"))),
-        SPEED_SLICE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.speedslice"))),
-        JUDGEMENT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.judgement"))),
-        LEG_CRUSHER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.legcrusher"))),
-        FURY_CHOP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.furychop"))),
-        TIME_ACCELERATION(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.taccel"))),
-        CIRCLE_STARTUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.circlestartup"))),
-        SPEED_CHOP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.speedchop"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.light_followup"))),
-        LOW_KICK(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mih.lowkick")));
+        IDLE(AzCommand.create("base_controller", "animation.mih.idle", AzPlayBehaviors.LOOP)),
+        SLICE(AzCommand.create("base_controller", "animation.mih.slice", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.mih.block", AzPlayBehaviors.LOOP)),
+        DONUT(AzCommand.create("base_controller", "animation.mih.donut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(AzCommand.create("base_controller", "animation.mih.barrage", AzPlayBehaviors.LOOP)),
+        SPEED_SLICE(AzCommand.create("base_controller", "animation.mih.speedslice", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        JUDGEMENT(AzCommand.create("base_controller", "animation.mih.judgement", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LEG_CRUSHER(AzCommand.create("base_controller", "animation.mih.legcrusher", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        FURY_CHOP(AzCommand.create("base_controller", "animation.mih.furychop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TIME_ACCELERATION(AzCommand.create("base_controller", "animation.mih.taccel", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CIRCLE_STARTUP(AzCommand.create("base_controller", "animation.mih.circlestartup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SPEED_CHOP(AzCommand.create("base_controller", "animation.mih.speedchop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.mih.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LOW_KICK(AzCommand.create("base_controller", "animation.mih.lowkick", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
-        private final Consumer<AnimationState<MadeInHeavenEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<MadeInHeavenEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(MadeInHeavenEntity attacker, AnimationState<MadeInHeavenEntity> builder) {
-            animator.accept(builder);
+        public void playAnimation(MadeInHeavenEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 

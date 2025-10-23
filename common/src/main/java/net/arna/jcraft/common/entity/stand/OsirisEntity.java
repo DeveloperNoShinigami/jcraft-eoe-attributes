@@ -12,7 +12,6 @@ import net.arna.jcraft.api.registry.JStandTypeRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import mod.azure.azurelib.core.animation.AnimationState;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Osiris">Osiris</a>.
@@ -45,7 +44,7 @@ public class OsirisEntity extends StandEntity<OsirisEntity, OsirisEntity.State> 
         BLOCK;
 
         @Override
-        public void playAnimation(OsirisEntity attacker, AnimationState<OsirisEntity> state) {
+        public void playAnimation(OsirisEntity attacker) {
             // TODO Arna
         }
     }

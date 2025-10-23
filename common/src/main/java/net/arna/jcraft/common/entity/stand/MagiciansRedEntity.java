@@ -1,8 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
@@ -305,29 +305,29 @@ public class MagiciansRedEntity extends StandEntity<MagiciansRedEntity, Magician
 
     // Animation code
     public enum State implements StandAnimationState<MagiciansRedEntity> {
-        IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.mr.idle"))),
-        LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.light"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.mr.block"))),
-        HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.heavy"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.barrage"))),
-        CROSSFIRE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.crossfire"))),
-        CROSSFIRE_HURRICANE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.crossfirehurricane"))),
-        CROSSFIRE_VARIATION(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.crossfirevariation"))),
-        REDIRECT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.redirect"))),
-        RED_BIND(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.redbind"))),
-        DETECTOR(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.detector"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.light_followup"))),
-        HAMMER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.mr.hammer")));
+        IDLE(AzCommand.create("base_controller", "animation.mr.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(AzCommand.create("base_controller", "animation.mr.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.mr.block", AzPlayBehaviors.LOOP)),
+        HEAVY(AzCommand.create("base_controller", "animation.mr.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(AzCommand.create("base_controller", "animation.mr.barrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CROSSFIRE(AzCommand.create("base_controller", "animation.mr.crossfire", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CROSSFIRE_HURRICANE(AzCommand.create("base_controller", "animation.mr.crossfirehurricane", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CROSSFIRE_VARIATION(AzCommand.create("base_controller", "animation.mr.crossfirevariation", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REDIRECT(AzCommand.create("base_controller", "animation.mr.redirect", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        RED_BIND(AzCommand.create("base_controller", "animation.mr.redbind", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DETECTOR(AzCommand.create("base_controller", "animation.mr.detector", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.mr.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        HAMMER(AzCommand.create("base_controller", "animation.mr.hammer", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
-        private final Consumer<AnimationState<MagiciansRedEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<MagiciansRedEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(MagiciansRedEntity attacker, AnimationState<MagiciansRedEntity> builder) {
-            animator.accept(builder);
+        public void playAnimation(MagiciansRedEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 
