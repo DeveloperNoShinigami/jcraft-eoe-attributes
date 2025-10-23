@@ -2,8 +2,8 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
@@ -28,8 +28,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-
-import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/The_Hand">The Hand</a>.
@@ -291,34 +289,34 @@ public class TheHandEntity extends StandEntity<TheHandEntity, TheHandEntity.Stat
     }
 
     public enum State implements StandAnimationState<TheHandEntity> {
-        IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.the_hand.idle"))),
-        LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.light"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.light2"))),
-        CROUCHING_LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.crouching_light"))),
-        CROUCHING_LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.crouching_light2"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.the_hand.block"))),
-        KICK(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.heavy"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.the_hand.barrage"))),
-        ERASE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.erase"))),
-        ERASE_GROUND(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.erase_ground"))),
-        ERASE_SPACE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.erase_space"))),
-        SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.the_hand.sweep"))),
-        GRAB(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.grab"))),
-        GRAB_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.grab_hit"))),
-        STOMP_BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.stomp_barrage"))),
-        RAGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.rage"))),
-        RAGE_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.the_hand.rage_followup"))),
+        IDLE(AzCommand.create("base_controller", "animation.the_hand.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(AzCommand.create("base_controller", "animation.the_hand.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.the_hand.light2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CROUCHING_LIGHT(AzCommand.create("base_controller", "animation.the_hand.crouching_light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CROUCHING_LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.the_hand.crouching_light2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.the_hand.block", AzPlayBehaviors.LOOP)),
+        KICK(AzCommand.create("base_controller", "animation.the_hand.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(AzCommand.create("base_controller", "animation.the_hand.barrage", AzPlayBehaviors.LOOP)),
+        ERASE(AzCommand.create("base_controller", "animation.the_hand.erase", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ERASE_GROUND(AzCommand.create("base_controller", "animation.the_hand.erase_ground", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ERASE_SPACE(AzCommand.create("base_controller", "animation.the_hand.erase_space", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SWEEP(AzCommand.create("base_controller", "animation.the_hand.sweep", AzPlayBehaviors.LOOP)),
+        GRAB(AzCommand.create("base_controller", "animation.the_hand.grab", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        GRAB_HIT(AzCommand.create("base_controller", "animation.the_hand.grab_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        STOMP_BARRAGE(AzCommand.create("base_controller", "animation.the_hand.stomp_barrage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        RAGE(AzCommand.create("base_controller", "animation.the_hand.rage", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        RAGE_FOLLOWUP(AzCommand.create("base_controller", "animation.the_hand.rage_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
         ;
 
-        private final Consumer<AnimationState<TheHandEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<TheHandEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(TheHandEntity attacker, AnimationState<TheHandEntity> state) {
-            animator.accept(state);
+        public void playAnimation(TheHandEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 
