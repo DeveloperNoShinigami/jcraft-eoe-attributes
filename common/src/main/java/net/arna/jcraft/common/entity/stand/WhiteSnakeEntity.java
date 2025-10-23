@@ -1,6 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
@@ -35,9 +37,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Whitesnake">Whitesnake</a>.
@@ -366,43 +365,40 @@ public class WhiteSnakeEntity extends StandEntity<WhiteSnakeEntity, WhiteSnakeEn
 
     // Animation code
     public enum State implements StandAnimationState<WhiteSnakeEntity> {
-        IDLE((whitesnake, builder) -> builder.setAnimation(RawAnimation.begin().thenLoop(whitesnake.isRemote() ? "animation.whitesnake.remote_idle" : "animation.whitesnake.idle"))),
-        LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.light"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.whitesnake.block"))),
-        MEDIUM(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.medium"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.whitesnake.barrage"))),
-        LEG_CRUSHER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.legcrusher"))),
-        ACID_SPEW(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.acidspew"))),
-        ACID_SPEW_CHARGED(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.acidspew_charged"))),
-        DISC_TAKE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.disc_take"))),
-        DISC_GIVE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.disc_give"))),
-        UPPERCUT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.uppercut"))),
+        // TODO reenable remote idle
+        IDLE(AzCommand.create("base_controller", "animation.whitesnake.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(AzCommand.create("base_controller", "animation.whitesnake.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.whitesnake.block", AzPlayBehaviors.LOOP)),
+        MEDIUM(AzCommand.create("base_controller", "animation.whitesnake.medium", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(AzCommand.create("base_controller", "animation.whitesnake.barrage", AzPlayBehaviors.LOOP)),
+        LEG_CRUSHER(AzCommand.create("base_controller", "animation.whitesnake.legcrusher", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ACID_SPEW(AzCommand.create("base_controller", "animation.whitesnake.acidspew", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ACID_SPEW_CHARGED(AzCommand.create("base_controller", "animation.whitesnake.acidspew_charged", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DISC_TAKE(AzCommand.create("base_controller", "animation.whitesnake.disc_take", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DISC_GIVE(AzCommand.create("base_controller", "animation.whitesnake.disc_give", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        UPPERCUT(AzCommand.create("base_controller", "animation.whitesnake.uppercut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
 
-        FORWARD(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.whitesnake.forw"))),
-        BACKWARD(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.whitesnake.back"))),
-        LEFT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.whitesnake.left"))),
-        RIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.whitesnake.right"))),
-        FORWARD_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.whitesnake.fdash"))),
-        BACKWARD_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.whitesnake.bdash"))),
-        LEFT_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.whitesnake.ldash"))),
-        RIGHT_DASH(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.whitesnake.rdash"))),
+        FORWARD(AzCommand.create("base_controller", "animation.whitesnake.forw", AzPlayBehaviors.LOOP)),
+        BACKWARD(AzCommand.create("base_controller", "animation.whitesnake.back", AzPlayBehaviors.LOOP)),
+        LEFT(AzCommand.create("base_controller", "animation.whitesnake.left", AzPlayBehaviors.LOOP)),
+        RIGHT(AzCommand.create("base_controller", "animation.whitesnake.right", AzPlayBehaviors.LOOP)),
+        FORWARD_DASH(AzCommand.create("base_controller", "animation.whitesnake.fdash", AzPlayBehaviors.LOOP)),
+        BACKWARD_DASH(AzCommand.create("base_controller", "animation.whitesnake.bdash", AzPlayBehaviors.LOOP)),
+        LEFT_DASH(AzCommand.create("base_controller", "animation.whitesnake.ldash", AzPlayBehaviors.LOOP)),
+        RIGHT_DASH(AzCommand.create("base_controller", "animation.whitesnake.rdash", AzPlayBehaviors.LOOP)),
 
-        MELT_YOUR_HEART(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.meltyourheart"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.whitesnake.light_followup")));
+        MELT_YOUR_HEART(AzCommand.create("base_controller", "animation.whitesnake.meltyourheart", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.whitesnake.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
-        private final BiConsumer<WhiteSnakeEntity, AnimationState<WhiteSnakeEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<WhiteSnakeEntity>> animator) {
-            this((whiteSnake, builder) -> animator.accept(builder));
-        }
-
-        State(BiConsumer<WhiteSnakeEntity, AnimationState<WhiteSnakeEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(WhiteSnakeEntity attacker, AnimationState<WhiteSnakeEntity> builder) {
-            animator.accept(attacker, builder);
+        public void playAnimation(WhiteSnakeEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 

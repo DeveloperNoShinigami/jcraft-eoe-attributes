@@ -2,6 +2,8 @@ package net.arna.jcraft.common.entity.stand;
 
 import com.mojang.datafixers.util.Either;
 import lombok.NonNull;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -31,7 +33,6 @@ import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -268,32 +269,32 @@ public final class TheWorldEntity extends AbstractTheWorldEntity<TheWorldEntity,
 
     // Animation code
     public enum State implements StandAnimationState<TheWorldEntity> {
-        IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.theworld.idle"))),
-        LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.light"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.theworld.block"))),
-        DONUT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.donut"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.theworld.barrage"))),
-        TIME_STOP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.timestop"))),
-        CHARGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.theworld.charge"))),
-        CHARGE_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.charge_hit"))),
-        ROUNDHOUSE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.roundhouse"))),
-        SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.sweep"))),
-        COUNTER_HIT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.counter_hit"))),
-        COUNTER_MISS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.counter_miss"))),
-        LOW(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.low"))),
-        TIMESKIP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.theworld.idle"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.light_followup"))),
-        LUNGE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.theworld.lunge")));
+        IDLE(AzCommand.create("base_controller", "animation.theworld.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(AzCommand.create("base_controller", "animation.theworld.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.theworld.block", AzPlayBehaviors.LOOP)),
+        DONUT(AzCommand.create("base_controller", "animation.theworld.donut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(AzCommand.create("base_controller", "animation.theworld.barrage", AzPlayBehaviors.LOOP)),
+        TIME_STOP(AzCommand.create("base_controller", "animation.theworld.timestop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        CHARGE(AzCommand.create("base_controller", "animation.theworld.charge", AzPlayBehaviors.LOOP)),
+        CHARGE_HIT(AzCommand.create("base_controller", "animation.theworld.charge_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        ROUNDHOUSE(AzCommand.create("base_controller", "animation.theworld.roundhouse", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SWEEP(AzCommand.create("base_controller", "animation.theworld.sweep", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER_HIT(AzCommand.create("base_controller", "animation.theworld.counter_hit", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER_MISS(AzCommand.create("base_controller", "animation.theworld.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LOW(AzCommand.create("base_controller", "animation.theworld.low", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TIMESKIP(AzCommand.create("base_controller", "animation.theworld.idle", AzPlayBehaviors.LOOP)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.theworld.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LUNGE(AzCommand.create("base_controller", "animation.theworld.lunge", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
-        private final Consumer<AnimationState<TheWorldEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<TheWorldEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(TheWorldEntity attacker, AnimationState<TheWorldEntity> builder) {
-            animator.accept(builder);
+        public void playAnimation(TheWorldEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 

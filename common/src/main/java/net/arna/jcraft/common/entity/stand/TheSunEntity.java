@@ -2,8 +2,8 @@ package net.arna.jcraft.common.entity.stand;
 
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.api.stand.StandData;
 import net.arna.jcraft.api.stand.StandEntity;
 import net.arna.jcraft.api.stand.StandInfo;
@@ -58,8 +58,6 @@ import org.joml.Vector3f;
 
 import java.util.Collection;
 import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Sun">The Sun</a>.
@@ -556,22 +554,18 @@ public final class TheSunEntity extends StandEntity<TheSunEntity, TheSunEntity.S
 
     // Animation code
     public enum State implements StandAnimationState<TheSunEntity> {
-        IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.sun.idle"))),
+        IDLE(AzCommand.create("base_controller", "animation.sun.idle", AzPlayBehaviors.LOOP)),
         ;
 
-        private final BiConsumer<TheSunEntity, AnimationState<TheSunEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<TheSunEntity>> animator) {
-            this((silverChariot, builder) -> animator.accept(builder));
-        }
-
-        State(BiConsumer<TheSunEntity, AnimationState<TheSunEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(TheSunEntity attacker, AnimationState<TheSunEntity> builder) {
-            animator.accept(attacker, builder);
+        public void playAnimation(TheSunEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 
