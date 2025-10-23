@@ -3,8 +3,6 @@ package net.arna.jcraft.common.entity.vehicle;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.gravity.api.GravityChangerAPI;
@@ -31,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 
-public abstract class AbstractGroundVehicleEntity extends LivingEntity implements GeoEntity {
+public abstract class AbstractGroundVehicleEntity extends LivingEntity {
     // Movement Inputs
     protected boolean
     left = false,

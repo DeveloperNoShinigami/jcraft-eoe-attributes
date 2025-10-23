@@ -1,15 +1,14 @@
 package net.arna.jcraft.common.util;
 
+import mod.azure.azurelib.animation.controller.AzAnimationController;
+import mod.azure.azurelib.animation.controller.AzAnimationControllerContainer;
 import net.arna.jcraft.api.attack.IAttacker;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
 
-public interface StandAnimationState<A extends IAttacker<A, ?> & GeoEntity> {
+public interface StandAnimationState<A extends IAttacker<A, ?>> {
 
     void playAnimation(A attacker, AnimationState<A> state);
 
-    default void configureController(A attacker, AnimationController<A> controller) {
+    default void configureController(A attacker, AzAnimationControllerContainer<A> controllers) {
         // no-op by default
     }
 }

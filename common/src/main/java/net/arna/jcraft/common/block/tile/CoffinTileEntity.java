@@ -1,21 +1,14 @@
 package net.arna.jcraft.common.block.tile;
 
-import mod.azure.azurelib.animatable.GeoBlockEntity;
 import net.arna.jcraft.common.block.CoffinBlock;
 import net.arna.jcraft.api.registry.JBlockEntityTypeRegistry;
 import net.arna.jcraft.api.registry.JBlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 
-public class CoffinTileEntity extends BlockEntity implements GeoBlockEntity {
+public class CoffinTileEntity extends BlockEntity {
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     public CoffinTileEntity(final BlockPos pos, final BlockState state) {

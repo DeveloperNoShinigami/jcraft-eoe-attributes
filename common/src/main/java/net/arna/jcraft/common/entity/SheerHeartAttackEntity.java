@@ -1,12 +1,5 @@
 package net.arna.jcraft.common.entity;
 
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.common.entity.ai.goal.SHAAttackGoal;
@@ -41,7 +34,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SheerHeartAttackEntity extends Mob implements GeoEntity, IOwnable {
+public class SheerHeartAttackEntity extends Mob implements IOwnable {
     private static final EntityDataAccessor<Optional<UUID>> OWNER_ID = SynchedEntityData.defineId(SheerHeartAttackEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private LivingEntity master;
 

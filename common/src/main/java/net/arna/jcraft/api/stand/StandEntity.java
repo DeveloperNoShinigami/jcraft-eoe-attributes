@@ -4,13 +4,6 @@ import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationController;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
 import mod.azure.azurelib.util.AzureLibUtil;
 import net.arna.jcraft.JCraft;
 import net.arna.jcraft.api.AttackData;
@@ -83,7 +76,7 @@ import static net.arna.jcraft.JCraft.comboBreak;
 import static net.arna.jcraft.api.Attacks.damageLogic;
 
 public abstract class StandEntity<E extends StandEntity<E, S>, S extends Enum<S> & StandAnimationState<E>>
-        extends Mob implements GeoEntity, IAttacker<E, S>, ICustomDamageHandler, MoveSet.ReloadListener<E, S> {
+        extends Mob implements IAttacker<E, S>, ICustomDamageHandler, MoveSet.ReloadListener<E, S> {
 
     // TODO: finish custom player idle poses for all stands
 
