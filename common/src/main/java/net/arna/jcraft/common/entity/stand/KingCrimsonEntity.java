@@ -4,6 +4,8 @@ import dev.architectury.networking.NetworkManager;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import lombok.NonNull;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
 import net.arna.jcraft.api.attack.MoveSetManager;
@@ -47,7 +49,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -388,31 +389,31 @@ public class KingCrimsonEntity extends StandEntity<KingCrimsonEntity, KingCrimso
 
     // Animations
     public enum State implements StandAnimationState<KingCrimsonEntity> {
-        IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.kingcrimson.idle"))),
-        DUAL_CHOP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.dual_chop"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.kingcrimson.block"))),
-        OVERHEAD(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.overhead"))),
-        DONUT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.donut"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.kingcrimson.barrage"))),
-        EYE_CHOP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.eye_chop"))),
-        TIME_ERASE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.time_erase"))),
-        EPITAPH(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.epitaph"))),
-        HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.heavy"))),
-        BLOOD_THROW(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.bloodthrow"))),
-        PREDICT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.predict"))),
-        COUNTER_MISS(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.counter_miss"))),
-        SWEEP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.kingcrimson.sweep"))),
-        TIME_SKIP(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.kingcrimson.idle")));
+        IDLE(AzCommand.create("base_controller", "animation.kingcrimson.idle", AzPlayBehaviors.LOOP)),
+        DUAL_CHOP(AzCommand.create("base_controller", "animation.kingcrimson.dual_chop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.kingcrimson.block", AzPlayBehaviors.LOOP)),
+        OVERHEAD(AzCommand.create("base_controller", "animation.kingcrimson.overhead", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        DONUT(AzCommand.create("base_controller", "animation.kingcrimson.donut", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(AzCommand.create("base_controller", "animation.kingcrimson.barrage", AzPlayBehaviors.LOOP)),
+        EYE_CHOP(AzCommand.create("base_controller", "animation.kingcrimson.eye_chop", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TIME_ERASE(AzCommand.create("base_controller", "animation.kingcrimson.time_erase", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        EPITAPH(AzCommand.create("base_controller", "animation.kingcrimson.epitaph", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        HEAVY(AzCommand.create("base_controller", "animation.kingcrimson.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOOD_THROW(AzCommand.create("base_controller", "animation.kingcrimson.bloodthrow", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        PREDICT(AzCommand.create("base_controller", "animation.kingcrimson.predict", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        COUNTER_MISS(AzCommand.create("base_controller", "animation.kingcrimson.counter_miss", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        SWEEP(AzCommand.create("base_controller", "animation.kingcrimson.sweep", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TIME_SKIP(AzCommand.create("base_controller", "animation.kingcrimson.idle", AzPlayBehaviors.LOOP));
 
-        private final Consumer<AnimationState<KingCrimsonEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<KingCrimsonEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(KingCrimsonEntity attacker, AnimationState<KingCrimsonEntity> builder) {
-            animator.accept(builder);
+        public void playAnimation(KingCrimsonEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 

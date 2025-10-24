@@ -1,8 +1,8 @@
 package net.arna.jcraft.common.entity.stand;
 
 import lombok.NonNull;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
+import mod.azure.azurelib.animation.dispatch.command.AzCommand;
+import mod.azure.azurelib.animation.play_behavior.AzPlayBehaviors;
 import net.arna.jcraft.api.MoveSelectionResult;
 import net.arna.jcraft.api.attack.MoveMap;
 import net.arna.jcraft.api.attack.MoveSet;
@@ -33,8 +33,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
-
-import java.util.function.Consumer;
 
 /**
  * The {@link StandEntity} for <a href="https://jojowiki.com/Gold_Experience">Gold Experience</a>.
@@ -308,30 +306,30 @@ public class GoldExperienceEntity extends StandEntity<GoldExperienceEntity, Gold
 
     // Animation code
     public enum State implements StandAnimationState<GoldExperienceEntity> {
-        IDLE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.ge.idle"))),
-        LIGHT(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.light"))),
-        BLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.ge.block"))),
-        HEAVY(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.heavy"))),
-        BARRAGE(builder -> builder.setAnimation(RawAnimation.begin().thenLoop("animation.ge.barrage"))),
-        HEAL_SELF(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.healself"))),
-        HEAL(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.heal"))),
-        TREE(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.tree"))),
-        LIFE_GIVER(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.lifegiver"))),
-        REKKA1(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.rekka1"))),
-        REKKA2(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.rekka2"))),
-        REKKA3(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.rekka3"))),
-        OVERCLOCK(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.overclock"))),
-        LIGHT_FOLLOWUP(builder -> builder.setAnimation(RawAnimation.begin().thenPlayAndHold("animation.ge.light_followup")));
+        IDLE(AzCommand.create("base_controller", "animation.ge.idle", AzPlayBehaviors.LOOP)),
+        LIGHT(AzCommand.create("base_controller", "animation.ge.light", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BLOCK(AzCommand.create("base_controller", "animation.ge.block", AzPlayBehaviors.LOOP)),
+        HEAVY(AzCommand.create("base_controller", "animation.ge.heavy", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        BARRAGE(AzCommand.create("base_controller", "animation.ge.barrage", AzPlayBehaviors.LOOP)),
+        HEAL_SELF(AzCommand.create("base_controller", "animation.ge.healself", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        HEAL(AzCommand.create("base_controller", "animation.ge.heal", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        TREE(AzCommand.create("base_controller", "animation.ge.tree", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIFE_GIVER(AzCommand.create("base_controller", "animation.ge.lifegiver", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REKKA1(AzCommand.create("base_controller", "animation.ge.rekka1", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REKKA2(AzCommand.create("base_controller", "animation.ge.rekka2", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        REKKA3(AzCommand.create("base_controller", "animation.ge.rekka3", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        OVERCLOCK(AzCommand.create("base_controller", "animation.ge.overclock", AzPlayBehaviors.HOLD_ON_LAST_FRAME)),
+        LIGHT_FOLLOWUP(AzCommand.create("base_controller", "animation.ge.light_followup", AzPlayBehaviors.HOLD_ON_LAST_FRAME));
 
-        private final Consumer<AnimationState<GoldExperienceEntity>> animator;
+        private final AzCommand animator;
 
-        State(Consumer<AnimationState<GoldExperienceEntity>> animator) {
+        State(AzCommand animator) {
             this.animator = animator;
         }
 
         @Override
-        public void playAnimation(GoldExperienceEntity attacker, AnimationState<GoldExperienceEntity> builder) {
-            animator.accept(builder);
+        public void playAnimation(GoldExperienceEntity attacker) {
+            animator.sendForEntity(attacker);
         }
     }
 
